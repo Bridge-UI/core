@@ -1,44 +1,44 @@
-export interface ButtonColor {
+export interface ButtonColorItem {
   base: string;
   hover: string;
   focus: string;
 }
 
-export interface ButtonColors {
-  none: ButtonColor;
-  primary: ButtonColor;
-  secondary: ButtonColor;
-  positive: ButtonColor;
-  negative: ButtonColor;
-  warning: ButtonColor;
-  info: ButtonColor;
-  white: ButtonColor;
-  black: ButtonColor;
-  slate: ButtonColor;
-  gray: ButtonColor;
-  zinc: ButtonColor;
-  neutral: ButtonColor;
-  stone: ButtonColor;
-  red: ButtonColor;
-  orange: ButtonColor;
-  yellow: ButtonColor;
-  amber: ButtonColor;
-  lime: ButtonColor;
-  green: ButtonColor;
-  emerald: ButtonColor;
-  teal: ButtonColor;
-  cyan: ButtonColor;
-  sky: ButtonColor;
-  blue: ButtonColor;
-  indigo: ButtonColor;
-  violet: ButtonColor;
-  purple: ButtonColor;
-  fuchsia: ButtonColor;
-  pink: ButtonColor;
-  rose: ButtonColor;
+export interface ButtonColor {
+  none: ButtonColorItem;
+  primary: ButtonColorItem;
+  secondary: ButtonColorItem;
+  positive: ButtonColorItem;
+  negative: ButtonColorItem;
+  warning: ButtonColorItem;
+  info: ButtonColorItem;
+  white: ButtonColorItem;
+  black: ButtonColorItem;
+  slate: ButtonColorItem;
+  gray: ButtonColorItem;
+  zinc: ButtonColorItem;
+  neutral: ButtonColorItem;
+  stone: ButtonColorItem;
+  red: ButtonColorItem;
+  orange: ButtonColorItem;
+  yellow: ButtonColorItem;
+  amber: ButtonColorItem;
+  lime: ButtonColorItem;
+  green: ButtonColorItem;
+  emerald: ButtonColorItem;
+  teal: ButtonColorItem;
+  cyan: ButtonColorItem;
+  sky: ButtonColorItem;
+  blue: ButtonColorItem;
+  indigo: ButtonColorItem;
+  violet: ButtonColorItem;
+  purple: ButtonColorItem;
+  fuchsia: ButtonColorItem;
+  pink: ButtonColorItem;
+  rose: ButtonColorItem;
 }
 
-export const flat: ButtonColors = {
+export const flat: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -256,7 +256,7 @@ export const flat: ButtonColors = {
   },
 };
 
-export const light: ButtonColors = {
+export const light: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -470,7 +470,7 @@ export const light: ButtonColors = {
   },
 };
 
-export const solid: ButtonColors = {
+export const solid: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -660,7 +660,7 @@ export const solid: ButtonColors = {
   },
 };
 
-export const outline: ButtonColors = {
+export const outline: ButtonColor = {
   none: {
     base: "",
     hover: "",

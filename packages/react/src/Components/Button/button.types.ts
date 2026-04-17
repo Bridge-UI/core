@@ -1,5 +1,5 @@
 export interface ButtonSizeOverrides {}
-export interface ButtonColorsOverrides {}
+export interface ButtonColorOverrides {}
 export interface ButtonRoundedOverrides {}
 export interface ButtonVariantOverrides {}
 
@@ -86,7 +86,7 @@ export interface ButtonProps {
    *
    * @default "none"
    */
-  rounded?: "none" | "sm" | "md" | "lg" | "xl" | "xxl";
+  rounded?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl" | "full";
 
   /**
    * The size of the button.

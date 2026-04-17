@@ -1,4 +1,4 @@
-export interface ButtonSizes {
+export interface ButtonSize {
   xxs: string;
   xs: string;
   sm: string;
@@ -8,7 +8,7 @@ export interface ButtonSizes {
   xxl: string;
 }
 
-export const base: ButtonSizes = {
+export const base: ButtonSize = {
   xxs: "gap-x-0.5 text-2xs px-2 py-0.5",
   xs: "gap-x-1 text-xs px-2.5 py-1.5",
   sm: "gap-x-2 text-sm leading-4 px-3 py-2",
@@ -18,7 +18,7 @@ export const base: ButtonSizes = {
   xxl: "gap-x-3 text-xl px-7 py-4",
 };
 
-export const mini: ButtonSizes = {
+export const mini: ButtonSize = {
   xxs: "text-2xs w-5 h-5",
   xs: "text-xs w-7 h-7",
   sm: "text-sm w-8 h-8",
