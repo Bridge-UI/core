@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "bridge-ui-core",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.3",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "prettier-plugin-tailwindcss": "^0.6.14"
+  }
+}
