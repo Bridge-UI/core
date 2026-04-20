@@ -1,16 +1,16 @@
 // ** External Imports
 import { Component } from "vue";
 
-export interface ButtonSizeOverrides {}
-export interface ButtonColorOverrides {}
-export interface ButtonRoundedOverrides {}
-export interface ButtonVariantOverrides {}
+export interface MiniButtonSizeOverrides {}
+export interface MiniButtonColorOverrides {}
+export interface MiniButtonRoundedOverrides {}
+export interface MiniButtonVariantOverrides {}
 
-export interface ButtonClasses {
+export interface MiniButtonClasses {
   /**
-   * The classes to apply to the left icon.
+   * The classes to apply to the icon.
    */
-  leftIcon?: string | undefined;
+  icon?: string | undefined;
 
   /**
    * The classes to apply to the loading.
@@ -18,17 +18,12 @@ export interface ButtonClasses {
   loading?: string | undefined;
 
   /**
-   * The classes to apply to the right icon.
-   */
-  rightIcon?: string | undefined;
-
-  /**
    * The classes to apply to the root.
    */
   root?: string | undefined;
 }
 
-export interface ButtonProps {
+export interface MiniButtonProps {
   /**
    * The element to render as.
    *
@@ -41,7 +36,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  classes?: ButtonClasses | undefined;
+  classes?: MiniButtonClasses | undefined;
 
   /**
    * The color to apply to the button.
@@ -58,13 +53,6 @@ export interface ButtonProps {
   disabled?: boolean | undefined;
 
   /**
-   * Whether the button is full width.
-   *
-   * @default false
-   */
-  full?: boolean | undefined;
-
-  /**
    * The href to apply to the button.
    *
    * @default undefined
@@ -72,11 +60,11 @@ export interface ButtonProps {
   href?: string | undefined;
 
   /**
-   * The left icon to apply to the button.
+   * The icon to apply to the button.
    *
    * @default undefined
    */
-  leftIcon?: any;
+  icon?: any;
 
   /**
    * Whether the button is loading.
@@ -84,13 +72,6 @@ export interface ButtonProps {
    * @default false
    */
   loading?: boolean | undefined;
-
-  /**
-   * The right icon to apply to the button.
-   *
-   * @default undefined
-   */
-  rightIcon?: any;
 
   /**
    * The roundedness of the button.
@@ -114,19 +95,9 @@ export interface ButtonProps {
   variant?: "flat" | "light" | "solid" | "outline";
 }
 
-export interface ButtonSlots {
-  /**
-   * The slot to apply to the append.
-   */
-  append?: Component | undefined;
-
+export interface MiniButtonSlots {
   /**
    * The slot to apply to the default.
    */
   default?: Component | undefined;
-
-  /**
-   * The slot to apply to the prepend.
-   */
-  prepend?: Component | undefined;
 }

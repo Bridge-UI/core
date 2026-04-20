@@ -1,7 +1,32 @@
+// ** External Imports
+import { Component } from "vue";
+
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
 export interface ButtonRoundedOverrides {}
 export interface ButtonVariantOverrides {}
+
+export interface ButtonClasses {
+  /**
+   * The classes to apply to the left icon.
+   */
+  leftIcon?: string | undefined;
+
+  /**
+   * The classes to apply to the loading.
+   */
+  loading?: string | undefined;
+
+  /**
+   * The classes to apply to the right icon.
+   */
+  rightIcon?: string | undefined;
+
+  /**
+   * The classes to apply to the root.
+   */
+  root?: string | undefined;
+}
 
 export interface ButtonProps {
   /**
@@ -12,18 +37,11 @@ export interface ButtonProps {
   as?: "a" | "span" | "button";
 
   /**
-   * The children to render.
-   *
-   * @default undefined
-   */
-  children?: any;
-
-  /**
    * The classes to apply to the button.
    *
    * @default undefined
    */
-  classes?: any;
+  classes?: ButtonClasses | undefined;
 
   /**
    * The color to apply to the button.
@@ -52,13 +70,6 @@ export interface ButtonProps {
    * @default undefined
    */
   href?: string | undefined;
-
-  /**
-   * The icon to apply to the button.
-   *
-   * @default undefined
-   */
-  icon?: any;
 
   /**
    * The left icon to apply to the button.
@@ -101,4 +112,21 @@ export interface ButtonProps {
    * @default "flat"
    */
   variant?: "flat" | "light" | "solid" | "outline";
+}
+
+export interface ButtonSlots {
+  /**
+   * The slot to apply to the append.
+   */
+  append?: Component | undefined;
+
+  /**
+   * The slot to apply to the default.
+   */
+  default?: Component | undefined;
+
+  /**
+   * The slot to apply to the prepend.
+   */
+  prepend?: Component | undefined;
 }
