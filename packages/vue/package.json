@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "name": "@bridge-ui/vue",
   "peerDependencies": {
+    "lucide-vue-next": ">=0.400.0",
     "vue": "^3.4.0"
   },
   "dependencies": {
@@ -10,8 +11,9 @@
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
     "@tailwindcss/cli": "^4.1.11",
+    "@types/node": "^22.14.0",
+    "lucide-vue-next": "^0.471.0",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
     "vue": "^3.5.13",
