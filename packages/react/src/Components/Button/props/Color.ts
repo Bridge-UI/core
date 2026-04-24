@@ -38,7 +38,7 @@ export interface ButtonColor {
   rose: ButtonColorItem;
 }
 
-export const flat: ButtonColor = {
+export const flatProps: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -196,7 +196,7 @@ export const flat: ButtonColor = {
   },
 };
 
-export const light: ButtonColor = {
+export const lightProps: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -354,7 +354,7 @@ export const light: ButtonColor = {
   },
 };
 
-export const solid: ButtonColor = {
+export const solidProps: ButtonColor = {
   none: {
     base: "",
     hover: "",
@@ -512,7 +512,7 @@ export const solid: ButtonColor = {
   },
 };
 
-export const outline: ButtonColor = {
+export const outlineProps: ButtonColor = {
   none: {
     base: "",
     hover: "",

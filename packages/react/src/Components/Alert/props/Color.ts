@@ -15,7 +15,7 @@ export interface AlertColor {
   info: AlertColorItem;
 }
 
-export const flat: AlertColor = {
+export const flatProps: AlertColor = {
   primary: {
     icon: "bell",
     iconColor: "text-primary-800 dark:text-primary-200",
@@ -54,7 +54,7 @@ export const flat: AlertColor = {
   },
 };
 
-export const solid: AlertColor = {
+export const solidProps: AlertColor = {
   primary: {
     icon: "bell",
     iconColor: "text-white dark:text-black",
@@ -93,7 +93,7 @@ export const solid: AlertColor = {
   },
 };
 
-export const outline: AlertColor = {
+export const outlineProps: AlertColor = {
   primary: {
     icon: "bell",
     iconColor: "text-primary-800 dark:text-primary-600",

@@ -11,7 +11,7 @@ export interface AlertRounded {
   full: string;
 }
 
-export const rounded: AlertRounded = {
+export const roundedProps: AlertRounded = {
   none: "rounded-none",
   xs: "rounded-xs",
   sm: "rounded-sm",

@@ -10,7 +10,7 @@ export interface AlertShadow {
   inner: string;
 }
 
-export const shadow: AlertShadow = {
+export const shadowProps: AlertShadow = {
   none: "shadow-none",
   xs: "shadow-xs",
   sm: "shadow-sm",

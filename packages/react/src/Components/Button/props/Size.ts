@@ -8,7 +8,7 @@ export interface ButtonSize {
   xxl: string;
 }
 
-export const size: ButtonSize = {
+export const sizeProps: ButtonSize = {
   xxs: "gap-x-0.5 text-2xs px-2 py-0.5",
   xs: "gap-x-1 text-xs px-2.5 py-1.5",
   sm: "gap-x-2 text-sm leading-4 px-3 py-2",

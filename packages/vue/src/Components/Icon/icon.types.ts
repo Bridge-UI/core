@@ -1,20 +1,27 @@
+// ** External Imports
+import type { LucideIcon } from "lucide-vue-next";
+
+// ** Local Imports
+import type { IconSize } from "@/Components/Icon/props/Size";
+import type { MergeProps } from "@/Utils/types";
+
 export interface IconSizeOverrides {}
 
 export type IconProps = {
   /**
    * The classes to apply to the icon.
    */
-  class?: string | undefined;
+  class?: string;
 
   /**
    * Lucide icon component.
    */
-  icon: any;
+  icon: LucideIcon;
 
   /**
    * The size of the icon.
    *
    * @default "md"
    */
-  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+  size?: MergeProps<IconSize, IconSizeOverrides>;
 };

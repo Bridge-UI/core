@@ -11,7 +11,7 @@ export interface ButtonRounded {
   full: string;
 }
 
-export const rounded: ButtonRounded = {
+export const roundedProps: ButtonRounded = {
   none: "rounded-none",
   xs: "rounded-xs",
   sm: "rounded-sm",

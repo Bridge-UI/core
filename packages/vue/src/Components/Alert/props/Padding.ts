@@ -5,7 +5,7 @@ export interface AlertPadding {
   large: string;
 }
 
-export const padding: AlertPadding = {
+export const paddingProps: AlertPadding = {
   none: "ml-2",
   small: "pl-1 mt-1 ml-3",
   medium: "pl-1 mt-2 ml-5",

@@ -8,7 +8,7 @@ export interface IconSize {
   xxl: string;
 }
 
-export const size: IconSize = {
+export const sizeProps: IconSize = {
   xxs: "w-2 h-2",
   xs: "w-3 h-3",
   sm: "w-3.5 h-3.5",
