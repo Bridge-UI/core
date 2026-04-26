@@ -38,6 +38,7 @@ export interface ButtonColor {
   rose: ButtonColorItem;
 }
 
+// prettier-ignore
 export const flatProps: ButtonColor = {
   none: {
     base: "",
@@ -196,6 +197,7 @@ export const flatProps: ButtonColor = {
   },
 };
 
+// prettier-ignore
 export const lightProps: ButtonColor = {
   none: {
     base: "",
@@ -354,6 +356,7 @@ export const lightProps: ButtonColor = {
   },
 };
 
+// prettier-ignore
 export const solidProps: ButtonColor = {
   none: {
     base: "",
@@ -512,6 +515,7 @@ export const solidProps: ButtonColor = {
   },
 };
 
+// prettier-ignore
 export const outlineProps: ButtonColor = {
   none: {
     base: "",

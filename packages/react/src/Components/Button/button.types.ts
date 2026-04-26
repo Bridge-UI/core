@@ -1,6 +1,12 @@
 // ** External Imports
 import { Component } from "vue";
 
+// ** Local Imports
+import type { ButtonColor } from "@/Components/Button/props/Color";
+import type { ButtonRounded } from "@/Components/Button/props/Rounded";
+import type { ButtonSize } from "@/Components/Button/props/Size";
+import type { MergeProps, UnionProps } from "@/Utils/types";
+
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
 export interface ButtonRoundedOverrides {}
@@ -46,9 +52,9 @@ export interface ButtonProps {
   /**
    * The color to apply to the button.
    *
-   * @default undefined
+   * @default "primary"
    */
-  color?: any;
+  color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
    * Whether the button is disabled.
@@ -97,21 +103,24 @@ export interface ButtonProps {
    *
    * @default "none"
    */
-  rounded?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl" | "full";
+  rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
   /**
    * The size of the button.
    *
    * @default "md"
    */
-  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+  size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
    * The variant of the button.
    *
    * @default "flat"
    */
-  variant?: "flat" | "light" | "solid" | "outline";
+  variant?: UnionProps<
+    "flat" | "light" | "solid" | "outline",
+    ButtonVariantOverrides
+  >;
 }
 
 export interface ButtonSlots {

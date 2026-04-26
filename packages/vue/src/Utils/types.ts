@@ -21,3 +21,13 @@ export type MergeProps<
   Base extends object,
   Overrides extends object,
 > = keyof Overwrite<Base, Overrides>;
+
+/**
+ * Fixed union of property keys `Base`, plus any keys from `Overrides` (e.g.
+ * declaration merging on an empty overrides interface).
+ *
+ * @internal
+ */
+export type UnionProps<Base extends PropertyKey, Overrides extends object> =
+  | Base
+  | keyof Overrides;

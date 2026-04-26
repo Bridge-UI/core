@@ -1,3 +1,10 @@
+// ** Local Imports
+import type { AlertColor } from "@/Components/Alert/props/Color";
+import type { AlertPadding } from "@/Components/Alert/props/Padding";
+import type { AlertRounded } from "@/Components/Alert/props/Rounded";
+import type { AlertShadow } from "@/Components/Alert/props/Shadow";
+import type { MergeProps, UnionProps } from "@/Utils/types";
+
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
 export interface AlertPaddingOverrides {}
@@ -22,9 +29,9 @@ export interface AlertProps {
   /**
    * The color to apply to the alert.
    *
-   * @default undefined
+   * @default "primary"
    */
-  color?: any;
+  color?: MergeProps<AlertColor, AlertColorOverrides>;
 
   /**
    * The icon to apply to the alert.
@@ -38,21 +45,21 @@ export interface AlertProps {
    *
    * @default "none"
    */
-  padding?: "none" | "small" | "medium" | "large";
+  padding?: MergeProps<AlertPadding, AlertPaddingOverrides>;
 
   /**
    * The roundedness of the alert.
    *
    * @default "none"
    */
-  rounded?: "none" | "xs" | "sm" | "base" | "md" | "lg" | "xl" | "xxl" | "xxxl" | "full";
+  rounded?: MergeProps<AlertRounded, AlertRoundedOverrides>;
 
   /**
    * The shadow to apply to the alert.
    *
    * @default "none"
    */
-  shadow?: "none" | "xs" | "sm" | "base" | "md" | "lg" | "xl" | "xxl" | "inner";
+  shadow?: MergeProps<AlertShadow, AlertShadowOverrides>;
 
   /**
    * The title to apply to the alert.
@@ -66,5 +73,5 @@ export interface AlertProps {
    *
    * @default "flat"
    */
-  variant?: "flat" | "solid" | "outline";
+  variant?: UnionProps<"flat" | "solid" | "outline", AlertVariantOverrides>;
 }
