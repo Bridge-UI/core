@@ -1,8 +1,10 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
+import type { AlertProps, AlertSlots } from "@/Components/Alert/alert.types";
 
-defineProps<AlertProps>();
+const props = defineProps<AlertProps>();
+
+const slots = defineSlots<AlertSlots>();
 </script>
 
 <template>

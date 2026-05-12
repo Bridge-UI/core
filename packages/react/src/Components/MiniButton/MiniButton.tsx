@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { MiniButtonProps } from "@/Components/MiniButton/miniButton.types";
 
-function MiniButton(_props: MiniButtonProps) {
+function MiniButton(props: MiniButtonProps) {
   return <div>MiniButton</div>;
 }
 

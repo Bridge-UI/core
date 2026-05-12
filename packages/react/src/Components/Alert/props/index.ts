@@ -5,3 +5,4 @@ export type {
 export type { AlertPadding } from "@/Components/Alert/props/Padding";
 export type { AlertRounded } from "@/Components/Alert/props/Rounded";
 export type { AlertShadow } from "@/Components/Alert/props/Shadow";
+export type { AlertVariant } from "@/Components/Alert/props/Variant";

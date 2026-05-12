@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button/button.types";
 
-function Button(_props: ButtonProps) {
+function Button(props: ButtonProps) {
   return <div>Button</div>;
 }
 

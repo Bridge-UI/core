@@ -1,4 +1,5 @@
 // ** External Imports
+import { LucideIcon } from "lucide-vue-next";
 import { Component } from "vue";
 
 // ** Local Imports
@@ -7,8 +8,9 @@ import type {
   AlertPadding,
   AlertRounded,
   AlertShadow,
+  AlertVariant,
 } from "@/Components/Alert/props";
-import type { MergeProps, UnionProps } from "@/Utils";
+import type { MergeProps } from "@/Utils";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
@@ -58,7 +60,7 @@ export interface AlertProps {
    *
    * @default undefined
    */
-  icon?: any;
+  icon?: LucideIcon;
 
   /**
    * The padding to apply to the alert.
@@ -93,7 +95,7 @@ export interface AlertProps {
    *
    * @default "flat"
    */
-  variant?: UnionProps<"flat" | "solid" | "outline", AlertVariantOverrides>;
+  variant?: MergeProps<AlertVariant, AlertVariantOverrides>;
 }
 
 export interface AlertSlots {
@@ -110,10 +112,15 @@ export interface AlertSlots {
   /**
    * The slot to apply to the footer.
    */
-  footer?: any;
+  footer?: Component;
 
   /**
    * The slot to apply to the header.
    */
-  header?: any;
+  header?: Component;
+
+  /**
+   * The slot to apply to the icon.
+   */
+  icon?: Component;
 }

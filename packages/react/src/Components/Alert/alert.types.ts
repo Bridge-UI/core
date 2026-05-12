@@ -1,4 +1,5 @@
 // ** External Imports
+import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 // ** Local Imports
@@ -7,8 +8,9 @@ import type {
   AlertPadding,
   AlertRounded,
   AlertShadow,
+  AlertVariant,
 } from "@/Components/Alert/props";
-import type { MergeProps, UnionProps } from "@/Utils";
+import type { MergeProps } from "@/Utils";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
@@ -65,7 +67,7 @@ export interface AlertProps {
    *
    * @default undefined
    */
-  icon?: any;
+  icon?: LucideIcon;
 
   /**
    * The padding to apply to the alert.
@@ -89,6 +91,13 @@ export interface AlertProps {
   shadow?: MergeProps<AlertShadow, AlertShadowOverrides>;
 
   /**
+   * The slots to apply to the alert.
+   *
+   * @default undefined
+   */
+  slots?: AlertSlots;
+
+  /**
    * The title to apply to the alert.
    *
    * @default undefined
@@ -100,7 +109,7 @@ export interface AlertProps {
    *
    * @default "flat"
    */
-  variant?: UnionProps<"flat" | "solid" | "outline", AlertVariantOverrides>;
+  variant?: MergeProps<AlertVariant, AlertVariantOverrides>;
 }
 
 export interface AlertSlots {
@@ -118,4 +127,9 @@ export interface AlertSlots {
    * The slot to apply to the header.
    */
   header?: ReactNode;
+
+  /**
+   * The slot to apply to the icon.
+   */
+  icon?: ReactNode;
 }
