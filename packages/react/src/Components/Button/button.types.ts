@@ -1,11 +1,14 @@
 // ** External Imports
-import { Component } from "vue";
+import { ReactNode } from "react";
 
 // ** Local Imports
-import type { ButtonColor } from "@/Components/Button/props/Color";
-import type { ButtonRounded } from "@/Components/Button/props/Rounded";
-import type { ButtonSize } from "@/Components/Button/props/Size";
-import type { MergeProps, UnionProps } from "@/Utils";
+import type {
+  ButtonColor,
+  ButtonRounded,
+  ButtonSize,
+  ButtonVariant,
+} from "@/Components/Button/props";
+import type { MergeProps } from "@/Utils";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
@@ -41,6 +44,13 @@ export interface ButtonProps {
    * @default "button"
    */
   as?: "a" | "span" | "button";
+
+  /**
+   * The children to apply to the button.
+   *
+   * @default undefined
+   */
+  children?: ReactNode;
 
   /**
    * The classes to apply to the button.
@@ -113,29 +123,28 @@ export interface ButtonProps {
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
+   * The slots to apply to the button.
+   *
+   * @default undefined
+   */
+  slots?: ButtonSlots;
+
+  /**
    * The variant of the button.
    *
    * @default "flat"
    */
-  variant?: UnionProps<
-    "flat" | "light" | "solid" | "outline",
-    ButtonVariantOverrides
-  >;
+  variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
 }
 
 export interface ButtonSlots {
   /**
    * The slot to apply to the append.
    */
-  append?: Component;
-
-  /**
-   * The slot to apply to the default.
-   */
-  default?: Component;
+  append?: ReactNode;
 
   /**
    * The slot to apply to the prepend.
    */
-  prepend?: Component;
+  prepend?: ReactNode;
 }

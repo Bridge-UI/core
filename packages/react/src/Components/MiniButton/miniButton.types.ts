@@ -1,5 +1,15 @@
 // ** External Imports
-import { Component } from "vue";
+import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
+
+// ** Local Imports
+import type {
+  ButtonColor,
+  ButtonRounded,
+  ButtonVariant,
+} from "@/Components/Button/props";
+import { MiniButtonSize } from "@/Components/MiniButton/props";
+import type { MergeProps } from "@/Utils";
 
 export interface MiniButtonSizeOverrides {}
 export interface MiniButtonColorOverrides {}
@@ -32,6 +42,13 @@ export interface MiniButtonProps {
   as?: "a" | "span" | "button";
 
   /**
+   * The children to apply to the button.
+   *
+   * @default undefined
+   */
+  children?: ReactNode;
+
+  /**
    * The classes to apply to the button.
    *
    * @default undefined
@@ -43,7 +60,7 @@ export interface MiniButtonProps {
    *
    * @default undefined
    */
-  color?: any;
+  color?: MergeProps<ButtonColor, MiniButtonColorOverrides>;
 
   /**
    * Whether the button is disabled.
@@ -64,7 +81,7 @@ export interface MiniButtonProps {
    *
    * @default undefined
    */
-  icon?: any;
+  icon?: LucideIcon;
 
   /**
    * Whether the button is loading.
@@ -78,26 +95,19 @@ export interface MiniButtonProps {
    *
    * @default "none"
    */
-  rounded?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl" | "full";
+  rounded?: MergeProps<ButtonRounded, MiniButtonRoundedOverrides>;
 
   /**
    * The size of the button.
    *
    * @default "md"
    */
-  size?: "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl";
+  size?: MergeProps<MiniButtonSize, MiniButtonSizeOverrides>;
 
   /**
    * The variant of the button.
    *
    * @default "flat"
    */
-  variant?: "flat" | "light" | "solid" | "outline";
-}
-
-export interface MiniButtonSlots {
-  /**
-   * The slot to apply to the default.
-   */
-  default?: Component;
+  variant?: MergeProps<ButtonVariant, MiniButtonVariantOverrides>;
 }

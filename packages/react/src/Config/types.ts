@@ -10,6 +10,7 @@ import {
   ButtonProps,
   ButtonSlots,
 } from "@/Components/Button/button.types";
+import { ButtonColorItem } from "@/Components/Button/props";
 import type { IconProps } from "@/Components/Icon/icon.types";
 import {
   MiniButtonClasses,
@@ -44,6 +45,7 @@ export type BridgeUIComponentsConfig = Partial<{
     customProps: Partial<{
       size: Record<string, string>;
       rounded: Record<string, string>;
+      variant: Record<string, Record<string, ButtonColorItem>>;
     }>;
   }>;
   MiniButton: Partial<{
@@ -52,7 +54,6 @@ export type BridgeUIComponentsConfig = Partial<{
     defaultProps: Partial<MiniButtonProps>;
     customProps: Partial<{
       size: Record<string, string>;
-      rounded: Record<string, string>;
     }>;
   }>;
   Icon: Partial<{

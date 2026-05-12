@@ -2,10 +2,13 @@
 import { Component } from "vue";
 
 // ** Local Imports
-import type { ButtonColor } from "@/Components/Button/props/Color";
-import type { ButtonRounded } from "@/Components/Button/props/Rounded";
-import type { ButtonSize } from "@/Components/Button/props/Size";
-import type { MergeProps, UnionProps } from "@/Utils";
+import type {
+  ButtonColor,
+  ButtonRounded,
+  ButtonSize,
+  ButtonVariant,
+} from "@/Components/Button/props";
+import type { MergeProps } from "@/Utils";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
@@ -117,10 +120,7 @@ export interface ButtonProps {
    *
    * @default "flat"
    */
-  variant?: UnionProps<
-    "flat" | "light" | "solid" | "outline",
-    ButtonVariantOverrides
-  >;
+  variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
 }
 
 export interface ButtonSlots {
