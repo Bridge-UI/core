@@ -1,15 +1,17 @@
 // ** Local Imports
 import type { BridgeUIComponentsConfig } from "@/Config/types";
 
-export function mergePropsWithBridgeUIDefaults<P extends object>(
-  componentName: string,
+export function mergePropsWithBridgeUIDefaults<
+  K extends keyof BridgeUIComponentsConfig,
+  P extends object,
+>(
+  componentName: K,
   props: P,
   components: BridgeUIComponentsConfig | null | undefined,
   libDefaults?: Partial<P>,
 ): P {
-  const fromRegistry = components?.[componentName]?.defaultProps as
-    | Partial<P>
-    | undefined;
+  const entry = components?.[componentName];
+  const fromRegistry = entry?.defaultProps as Partial<P> | undefined;
 
   return {
     ...(libDefaults ?? {}),

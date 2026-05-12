@@ -1,3 +1,23 @@
+// ** Local Imports
+import {
+  AlertClasses,
+  AlertProps,
+  AlertSlots,
+} from "@/Components/Alert/alert.types";
+import type { AlertColorItem } from "@/Components/Alert/props";
+import {
+  ButtonClasses,
+  ButtonProps,
+  ButtonSlots,
+} from "@/Components/Button/button.types";
+import type { ButtonColorItem } from "@/Components/Button/props";
+import type { IconProps } from "@/Components/Icon/icon.types";
+import {
+  MiniButtonClasses,
+  MiniButtonProps,
+  MiniButtonSlots,
+} from "@/Components/MiniButton/miniButton.types";
+
 export type Direction = "ltr" | "rtl";
 
 export interface BridgeUIGlobal {
@@ -6,16 +26,45 @@ export interface BridgeUIGlobal {
   direction: Direction;
 }
 
-export interface BridgeUIComponentOverride {
-  defaultProps?: Record<string, unknown>;
-  customProps?: Record<string, Record<string, unknown>>;
-}
-
-export type BridgeUIComponentsConfig = Record<
-  string,
-  BridgeUIComponentOverride
->;
-
+export type BridgeUIComponentsConfig = Partial<{
+  Alert: Partial<{
+    slots: Partial<AlertSlots>;
+    classes: Partial<AlertClasses>;
+    defaultProps: Partial<AlertProps>;
+    customProps: Partial<{
+      shadow: Record<string, string>;
+      padding: Record<string, string>;
+      rounded: Record<string, string>;
+      color: Record<string, AlertColorItem>;
+    }>;
+  }>;
+  Button: Partial<{
+    slots: Partial<ButtonSlots>;
+    classes: Partial<ButtonClasses>;
+    defaultProps: Partial<ButtonProps>;
+    customProps: Partial<{
+      size: Record<string, string>;
+      rounded: Record<string, string>;
+      color: Record<string, ButtonColorItem>;
+    }>;
+  }>;
+  MiniButton: Partial<{
+    slots: Partial<MiniButtonSlots>;
+    classes: Partial<MiniButtonClasses>;
+    defaultProps: Partial<MiniButtonProps>;
+    customProps: Partial<{
+      size: Record<string, string>;
+      rounded: Record<string, string>;
+      color: Record<string, ButtonColorItem>;
+    }>;
+  }>;
+  Icon: Partial<{
+    defaultProps: Partial<IconProps>;
+    customProps: Partial<{
+      size: Record<string, string>;
+    }>;
+  }>;
+}>;
 export interface BridgeUIOptions {
   global?: Partial<BridgeUIGlobal>;
   components?: BridgeUIComponentsConfig;

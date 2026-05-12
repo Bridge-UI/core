@@ -13,7 +13,6 @@ export {
   resolveBridgeUIOptions,
 } from "@/Config";
 export type {
-  BridgeUIComponentOverride,
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,

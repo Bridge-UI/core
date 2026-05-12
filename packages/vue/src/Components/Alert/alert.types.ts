@@ -1,8 +1,13 @@
+// ** External Imports
+import { Component } from "vue";
+
 // ** Local Imports
-import type { AlertColor } from "@/Components/Alert/props/Color";
-import type { AlertPadding } from "@/Components/Alert/props/Padding";
-import type { AlertRounded } from "@/Components/Alert/props/Rounded";
-import type { AlertShadow } from "@/Components/Alert/props/Shadow";
+import type {
+  AlertColor,
+  AlertPadding,
+  AlertRounded,
+  AlertShadow,
+} from "@/Components/Alert/props";
 import type { MergeProps, UnionProps } from "@/Utils";
 
 export interface AlertColorOverrides {}
@@ -11,20 +16,35 @@ export interface AlertPaddingOverrides {}
 export interface AlertRoundedOverrides {}
 export interface AlertVariantOverrides {}
 
-export interface AlertProps {
+export interface AlertClasses {
   /**
-   * The children to render.
-   *
-   * @default undefined
+   * The classes to apply to the description.
    */
-  children?: any;
+  description?: string;
 
+  /**
+   * The classes to apply to the icon.
+   */
+  icon?: string;
+
+  /**
+   * The classes to apply to the root.
+   */
+  root?: string;
+
+  /**
+   * The classes to apply to the title.
+   */
+  title?: string;
+}
+
+export interface AlertProps {
   /**
    * The classes to apply to the alert.
    *
    * @default undefined
    */
-  classes?: any;
+  classes?: AlertClasses;
 
   /**
    * The color to apply to the alert.
@@ -66,7 +86,7 @@ export interface AlertProps {
    *
    * @default undefined
    */
-  title?: string | undefined;
+  title?: string;
 
   /**
    * The variant of the alert.
@@ -74,4 +94,26 @@ export interface AlertProps {
    * @default "flat"
    */
   variant?: UnionProps<"flat" | "solid" | "outline", AlertVariantOverrides>;
+}
+
+export interface AlertSlots {
+  /**
+   * The slot to apply to the action.
+   */
+  action?: Component;
+
+  /**
+   * The slot to apply to the default.
+   */
+  default?: Component;
+
+  /**
+   * The slot to apply to the footer.
+   */
+  footer?: any;
+
+  /**
+   * The slot to apply to the header.
+   */
+  header?: any;
 }

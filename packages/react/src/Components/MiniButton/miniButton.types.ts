@@ -10,17 +10,17 @@ export interface MiniButtonClasses {
   /**
    * The classes to apply to the icon.
    */
-  icon?: string | undefined;
+  icon?: string;
 
   /**
    * The classes to apply to the loading.
    */
-  loading?: string | undefined;
+  loading?: string;
 
   /**
    * The classes to apply to the root.
    */
-  root?: string | undefined;
+  root?: string;
 }
 
 export interface MiniButtonProps {
@@ -36,7 +36,7 @@ export interface MiniButtonProps {
    *
    * @default undefined
    */
-  classes?: MiniButtonClasses | undefined;
+  classes?: MiniButtonClasses;
 
   /**
    * The color to apply to the button.
@@ -50,14 +50,14 @@ export interface MiniButtonProps {
    *
    * @default false
    */
-  disabled?: boolean | undefined;
+  disabled?: boolean;
 
   /**
    * The href to apply to the button.
    *
    * @default undefined
    */
-  href?: string | undefined;
+  href?: string;
 
   /**
    * The icon to apply to the button.
@@ -71,7 +71,7 @@ export interface MiniButtonProps {
    *
    * @default false
    */
-  loading?: boolean | undefined;
+  loading?: boolean;
 
   /**
    * The roundedness of the button.
@@ -99,5 +99,5 @@ export interface MiniButtonSlots {
   /**
    * The slot to apply to the default.
    */
-  default?: Component | undefined;
+  default?: Component;
 }

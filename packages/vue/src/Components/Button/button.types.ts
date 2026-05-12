@@ -16,22 +16,22 @@ export interface ButtonClasses {
   /**
    * The classes to apply to the left icon.
    */
-  leftIcon?: string | undefined;
+  leftIcon?: string;
 
   /**
    * The classes to apply to the loading.
    */
-  loading?: string | undefined;
+  loading?: string;
 
   /**
    * The classes to apply to the right icon.
    */
-  rightIcon?: string | undefined;
+  rightIcon?: string;
 
   /**
    * The classes to apply to the root.
    */
-  root?: string | undefined;
+  root?: string;
 }
 
 export interface ButtonProps {
@@ -47,7 +47,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  classes?: ButtonClasses | undefined;
+  classes?: ButtonClasses;
 
   /**
    * The color to apply to the button.
@@ -61,21 +61,21 @@ export interface ButtonProps {
    *
    * @default false
    */
-  disabled?: boolean | undefined;
+  disabled?: boolean;
 
   /**
    * Whether the button is full width.
    *
    * @default false
    */
-  full?: boolean | undefined;
+  full?: boolean;
 
   /**
    * The href to apply to the button.
    *
    * @default undefined
    */
-  href?: string | undefined;
+  href?: string;
 
   /**
    * The left icon to apply to the button.
@@ -89,7 +89,7 @@ export interface ButtonProps {
    *
    * @default false
    */
-  loading?: boolean | undefined;
+  loading?: boolean;
 
   /**
    * The right icon to apply to the button.
@@ -127,15 +127,15 @@ export interface ButtonSlots {
   /**
    * The slot to apply to the append.
    */
-  append?: Component | undefined;
+  append?: Component;
 
   /**
    * The slot to apply to the default.
    */
-  default?: Component | undefined;
+  default?: Component;
 
   /**
    * The slot to apply to the prepend.
    */
-  prepend?: Component | undefined;
+  prepend?: Component;
 }
