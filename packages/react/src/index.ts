@@ -1,3 +1,4 @@
+// ** Exports
 export { default as Alert, type AlertProps } from "@/Components/Alert";
 export { default as Button, type ButtonProps } from "@/Components/Button";
 export { default as Icon, type IconProps } from "@/Components/Icon";
@@ -18,10 +19,6 @@ export type {
   BridgeUIOptions,
   Direction,
 } from "@/Config";
-export {
-  BridgeUIContext,
-  BridgeUIProvider,
-  useBridgeUI,
-  useBridgeUIOptional,
-} from "@/Provider";
+export { BridgeUIContext, BridgeUIProvider, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextValue, BridgeUIProviderProps } from "@/Provider";
+export { mergePropsWithBridgeUIDefaults } from "@/Utils";

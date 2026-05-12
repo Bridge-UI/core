@@ -3,7 +3,7 @@ import type { AlertColor } from "@/Components/Alert/props/Color";
 import type { AlertPadding } from "@/Components/Alert/props/Padding";
 import type { AlertRounded } from "@/Components/Alert/props/Rounded";
 import type { AlertShadow } from "@/Components/Alert/props/Shadow";
-import type { MergeProps, UnionProps } from "@/Utils/types";
+import type { MergeProps, UnionProps } from "@/Utils";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}

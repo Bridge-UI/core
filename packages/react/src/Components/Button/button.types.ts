@@ -5,7 +5,7 @@ import { Component } from "vue";
 import type { ButtonColor } from "@/Components/Button/props/Color";
 import type { ButtonRounded } from "@/Components/Button/props/Rounded";
 import type { ButtonSize } from "@/Components/Button/props/Size";
-import type { MergeProps, UnionProps } from "@/Utils/types";
+import type { MergeProps, UnionProps } from "@/Utils";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}

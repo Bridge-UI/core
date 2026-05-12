@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 
 // ** Local Imports
 import type { IconSize } from "@/Components/Icon/props/Size";
-import type { MergeProps } from "@/Utils/types";
+import type { MergeProps } from "@/Utils";
 
 export interface IconSizeOverrides {}
 
