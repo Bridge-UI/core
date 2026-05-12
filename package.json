@@ -5,8 +5,17 @@
     "packages/*"
   ],
   "scripts": {
+    "deps": "npm install",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "dev:vue": "npm run dev -w @bridge-ui/vue",
+    "dev:react": "npm run dev -w @bridge-ui/react",
+    "build:vue": "npm run build -w @bridge-ui/vue",
+    "build:react": "npm run build -w @bridge-ui/react",
+    "install:vue": "npm install -w @bridge-ui/vue",
+    "install:react": "npm install -w @bridge-ui/react",
+    "type-check:vue": "npm run type-check -w @bridge-ui/vue",
+    "type-check:react": "npm run type-check -w @bridge-ui/react"
   },
   "devDependencies": {
     "prettier": "^3.8.3",
