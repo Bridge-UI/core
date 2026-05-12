@@ -1,5 +1,6 @@
 // ** Exports
-export { default as Alert, type AlertProps } from "@/Components/Alert";
+export { default as Alert, useAlert } from "@/Components/Alert";
+export type { AlertClasses, AlertProps, AlertSlots } from "@/Components/Alert";
 export { default as Button, type ButtonProps } from "@/Components/Button";
 export { default as Icon, type IconProps } from "@/Components/Icon";
 export {
@@ -20,4 +21,3 @@ export type {
 } from "@/Config";
 export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextApi } from "@/Provider";
-export { mergePropsWithBridgeUIDefaults } from "@/Utils";

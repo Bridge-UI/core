@@ -1,6 +1,6 @@
 // ** External Imports
-import { LucideIcon } from "lucide-vue-next";
-import { Component } from "vue";
+import type { LucideIcon } from "lucide-vue-next";
+import type { Slot } from "vue";
 
 // ** Local Imports
 import type {
@@ -20,9 +20,9 @@ export interface AlertVariantOverrides {}
 
 export interface AlertClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the body.
    */
-  description?: string;
+  body?: string;
 
   /**
    * The classes to apply to the icon.
@@ -56,30 +56,30 @@ export interface AlertProps {
   color?: MergeProps<AlertColor, AlertColorOverrides>;
 
   /**
-   * The icon to apply to the alert.
+   * The icon to apply to the alert. Use `null` to omit the prop icon.
    *
    * @default undefined
    */
-  icon?: LucideIcon;
+  icon?: LucideIcon | null;
 
   /**
    * The padding to apply to the alert.
    *
-   * @default "none"
+   * @default "medium"
    */
   padding?: MergeProps<AlertPadding, AlertPaddingOverrides>;
 
   /**
    * The roundedness of the alert.
    *
-   * @default "none"
+   * @default "md"
    */
   rounded?: MergeProps<AlertRounded, AlertRoundedOverrides>;
 
   /**
    * The shadow to apply to the alert.
    *
-   * @default "none"
+   * @default "sm"
    */
   shadow?: MergeProps<AlertShadow, AlertShadowOverrides>;
 
@@ -98,29 +98,29 @@ export interface AlertProps {
   variant?: MergeProps<AlertVariant, AlertVariantOverrides>;
 }
 
-export interface AlertSlots {
+export type AlertSlots = {
   /**
-   * The slot to apply to the action.
+   * Replaces the entire alert header area (title row, icon, action).
    */
-  action?: Component;
+  header?: Slot<undefined>;
 
   /**
-   * The slot to apply to the default.
+   * Content aligned to the right of the title row (e.g. dismiss or link).
    */
-  default?: Component;
+  action?: Slot<undefined>;
 
   /**
-   * The slot to apply to the footer.
+   * Main body text below the title row.
    */
-  footer?: Component;
+  default?: Slot<undefined>;
 
   /**
-   * The slot to apply to the header.
+   * Footer below the body, with top border spacing.
    */
-  header?: Component;
+  footer?: Slot<undefined>;
 
   /**
-   * The slot to apply to the icon.
+   * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.
    */
-  icon?: Component;
-}
+  icon?: Slot<undefined>;
+};

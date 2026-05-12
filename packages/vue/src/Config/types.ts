@@ -1,21 +1,12 @@
 // ** Local Imports
-import {
-  AlertClasses,
-  AlertProps,
-  AlertSlots,
-} from "@/Components/Alert/alert.types";
+import { AlertClasses, AlertProps } from "@/Components/Alert/alert.types";
 import { AlertColorItem } from "@/Components/Alert/props";
-import {
-  ButtonClasses,
-  ButtonProps,
-  ButtonSlots,
-} from "@/Components/Button/button.types";
+import { ButtonClasses, ButtonProps } from "@/Components/Button/button.types";
 import { ButtonColorItem } from "@/Components/Button/props";
 import type { IconProps } from "@/Components/Icon/icon.types";
 import {
   MiniButtonClasses,
   MiniButtonProps,
-  MiniButtonSlots,
 } from "@/Components/MiniButton/miniButton.types";
 
 export type Direction = "ltr" | "rtl";
@@ -28,9 +19,10 @@ export interface BridgeUIGlobal {
 
 export type BridgeUIComponentsConfig = Partial<{
   Alert: Partial<{
-    slots: Partial<AlertSlots>;
     classes: Partial<AlertClasses>;
-    defaultProps: Partial<AlertProps>;
+    defaultProps: Partial<
+      Pick<AlertProps, "color" | "shadow" | "padding" | "rounded" | "variant">
+    >;
     customProps: Partial<{
       shadow: Record<string, string>;
       padding: Record<string, string>;
@@ -39,9 +31,10 @@ export type BridgeUIComponentsConfig = Partial<{
     }>;
   }>;
   Button: Partial<{
-    slots: Partial<ButtonSlots>;
     classes: Partial<ButtonClasses>;
-    defaultProps: Partial<ButtonProps>;
+    defaultProps: Partial<
+      Pick<ButtonProps, "size" | "color" | "rounded" | "variant">
+    >;
     customProps: Partial<{
       size: Record<string, string>;
       rounded: Record<string, string>;
@@ -49,15 +42,16 @@ export type BridgeUIComponentsConfig = Partial<{
     }>;
   }>;
   MiniButton: Partial<{
-    slots: Partial<MiniButtonSlots>;
     classes: Partial<MiniButtonClasses>;
-    defaultProps: Partial<MiniButtonProps>;
+    defaultProps: Partial<
+      Pick<MiniButtonProps, "size" | "color" | "rounded" | "variant">
+    >;
     customProps: Partial<{
       size: Record<string, string>;
     }>;
   }>;
   Icon: Partial<{
-    defaultProps: Partial<IconProps>;
+    defaultProps: Partial<Pick<IconProps, "size">>;
     customProps: Partial<{
       size: Record<string, string>;
     }>;

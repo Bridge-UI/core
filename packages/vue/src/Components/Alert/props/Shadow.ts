@@ -1,8 +1,8 @@
 export interface AlertShadow {
   none: string;
+  xxs: string;
   xs: string;
   sm: string;
-  base: string;
   md: string;
   lg: string;
   xl: string;
@@ -12,12 +12,12 @@ export interface AlertShadow {
 
 export const shadowProps: AlertShadow = {
   none: "shadow-none",
+  xxs: "shadow-2xs",
   xs: "shadow-xs",
   sm: "shadow-sm",
-  base: "shadow-sm",
   md: "shadow-md",
   lg: "shadow-lg",
   xl: "shadow-xl",
   xxl: "shadow-2xl",
-  inner: "shadow-inner",
+  inner: "inset-shadow-sm",
 };

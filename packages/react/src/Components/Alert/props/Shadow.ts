@@ -19,5 +19,5 @@ export const shadowProps: AlertShadow = {
   lg: "shadow-lg",
   xl: "shadow-xl",
   xxl: "shadow-2xl",
-  inner: "shadow-inner",
+  inner: "inset-shadow-sm",
 };
