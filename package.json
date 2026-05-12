@@ -8,6 +8,8 @@
     "deps": "npm install",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "lint": "eslint packages/vue/src packages/react/src",
+    "lint:fix": "eslint packages/vue/src packages/react/src --fix",
     "dev:vue": "npm run dev -w @bridge-ui/vue",
     "dev:react": "npm run dev -w @bridge-ui/react",
     "build:vue": "npm run build -w @bridge-ui/vue",
@@ -18,8 +20,18 @@
     "type-check:react": "npm run type-check -w @bridge-ui/react"
   },
   "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@eslint/js": "^9.39.1",
+    "jiti": "^2.4.2",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-vue": "^9.32.0",
     "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.6.14"
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1",
+    "vue-eslint-parser": "^9.4.3"
   }
 }

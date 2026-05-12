@@ -1,4 +1,5 @@
 // ** External Imports
+import type { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 // ** Local Imports
@@ -92,7 +93,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  leftIcon?: any;
+  leftIcon?: LucideIcon;
 
   /**
    * Whether the button is loading.
@@ -106,7 +107,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  rightIcon?: any;
+  rightIcon?: LucideIcon;
 
   /**
    * The roundedness of the button.

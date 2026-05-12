@@ -1,5 +1,6 @@
 // ** External Imports
-import { Component } from "vue";
+import type { LucideIcon } from "lucide-vue-next";
+import type { Component } from "vue";
 
 // ** Local Imports
 import type {
@@ -85,7 +86,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  leftIcon?: any;
+  leftIcon?: LucideIcon;
 
   /**
    * Whether the button is loading.
@@ -99,7 +100,7 @@ export interface ButtonProps {
    *
    * @default undefined
    */
-  rightIcon?: any;
+  rightIcon?: LucideIcon;
 
   /**
    * The roundedness of the button.
