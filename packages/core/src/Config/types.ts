@@ -1,6 +1,22 @@
 // ** Local Imports
-import type { AlertColorItem } from "@core/Components/Alert";
-import type { ButtonColorItem } from "@core/Components/Button";
+import type {
+  AlertColor,
+  AlertColorItem,
+  AlertPadding,
+  AlertRounded,
+  AlertShadow,
+  AlertVariant,
+} from "@core/Components/Alert";
+import type {
+  ButtonColor,
+  ButtonColorItem,
+  ButtonRounded,
+  ButtonSize,
+  ButtonVariant,
+} from "@core/Components/Button";
+import type { IconSize } from "@core/Components/Icon";
+import type { MiniButtonSize } from "@core/Components/MiniButton";
+import type { Overwrite } from "@core/Utils/types";
 
 export type Direction = "ltr" | "rtl";
 
@@ -10,57 +26,72 @@ export interface BridgeUIGlobal {
   direction: Direction;
 }
 
+export interface AlertConfigOverrides {}
+export interface ButtonConfigOverrides {}
+export interface IconConfigOverrides {}
+export interface MiniButtonConfigOverrides {}
+
+interface AlertConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof AlertColor;
+    shadow: keyof AlertShadow;
+    padding: keyof AlertPadding;
+    rounded: keyof AlertRounded;
+    variant: keyof AlertVariant;
+  }>;
+  customProps: Partial<{
+    shadow: Record<string, string>;
+    padding: Record<string, string>;
+    rounded: Record<string, string>;
+    variant: Record<string, Record<string, AlertColorItem>>;
+  }>;
+}
+
+interface ButtonConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof ButtonSize;
+    color: keyof ButtonColor;
+    rounded: keyof ButtonRounded;
+    variant: keyof ButtonVariant;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+    rounded: Record<string, string>;
+    variant: Record<string, Record<string, ButtonColorItem>>;
+  }>;
+}
+
+interface IconConfigBase {
+  defaultProps: Partial<{
+    size: keyof IconSize;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
+interface MiniButtonConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof MiniButtonSize;
+    color: keyof ButtonColor;
+    rounded: keyof ButtonRounded;
+    variant: keyof ButtonVariant;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
 export type BridgeUIComponentsConfig = Partial<{
-  Alert: Partial<{
-    classes: object;
-    defaultProps: Partial<{
-      color: string;
-      shadow: string;
-      padding: string;
-      rounded: string;
-      variant: string;
-    }>;
-    customProps: Partial<{
-      shadow: Record<string, string>;
-      padding: Record<string, string>;
-      rounded: Record<string, string>;
-      variant: Record<string, Record<string, AlertColorItem>>;
-    }>;
-  }>;
-  Button: Partial<{
-    classes: object;
-    defaultProps: Partial<{
-      size: string;
-      color: string;
-      rounded: string;
-      variant: string;
-    }>;
-    customProps: Partial<{
-      size: Record<string, string>;
-      rounded: Record<string, string>;
-      variant: Record<string, Record<string, ButtonColorItem>>;
-    }>;
-  }>;
-  MiniButton: Partial<{
-    classes: object;
-    defaultProps: Partial<{
-      size: string;
-      color: string;
-      rounded: string;
-      variant: string;
-    }>;
-    customProps: Partial<{
-      size: Record<string, string>;
-    }>;
-  }>;
-  Icon: Partial<{
-    defaultProps: Partial<{
-      size: string;
-    }>;
-    customProps: Partial<{
-      size: Record<string, string>;
-    }>;
-  }>;
+  Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
+  Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
+  Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
+  MiniButton: Partial<
+    Overwrite<MiniButtonConfigBase, MiniButtonConfigOverrides>
+  >;
 }>;
 
 export interface BridgeUIOptions {

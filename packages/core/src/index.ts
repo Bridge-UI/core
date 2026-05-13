@@ -23,10 +23,14 @@ export {
   resolveBridgeUIOptions,
 } from "@core/Config";
 export type {
+  AlertConfigOverrides,
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
+  ButtonConfigOverrides,
   Direction,
+  IconConfigOverrides,
+  MiniButtonConfigOverrides,
 } from "@core/Config";
 export { mergePropsWithBridgeUIDefaults } from "@core/Utils";
 export type { MergeProps, Overwrite, UnionProps } from "@core/Utils";
