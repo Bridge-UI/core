@@ -8,10 +8,11 @@ export interface ButtonColorItem {
 // prettier-ignore
 export interface ButtonColor {
   "none": ButtonColorItem;
+  "dark": ButtonColorItem;
   "primary": ButtonColorItem;
   "secondary": ButtonColorItem;
-  "positive": ButtonColorItem;
-  "negative": ButtonColorItem;
+  "success": ButtonColorItem;
+  "error": ButtonColorItem;
   "warning": ButtonColorItem;
   "info": ButtonColorItem;
   "white": ButtonColorItem;
@@ -47,25 +48,30 @@ export const flatProps: ButtonColor = {
     "hover": "",
     "focus": "",
   },
+  "dark": {
+    "base": "text-dark-600 dark:text-dark-400",
+    "hover": "hover:text-dark-700 hover:bg-dark-400/25 dark:hover:text-dark-300/90 dark:hover:bg-dark-600/15",
+    "focus": "focus:ring-offset-0 focus:text-dark-700 focus:bg-dark-400/25 focus:ring-dark-600 dark:focus:text-dark-300/90 dark:focus:bg-dark-400/15 dark:focus:ring-dark-500",
+  },
   "primary": {
     "base": "text-primary-600",
     "hover": "hover:text-primary-700 hover:bg-primary-400/25 dark:hover:text-primary-500 dark:hover:bg-primary-600/15",
     "focus": "focus:ring-offset-0 focus:text-primary-700 focus:bg-primary-400/25 focus:ring-primary-600 dark:focus:text-primary-500 dark:focus:bg-primary-600/15 dark:focus:ring-primary-700",
   },
   "secondary": {
-    "base": "text-secondary-600 dark:text-secondary-400",
-    "hover": "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-300/90 dark:hover:bg-secondary-600/15",
-    "focus": "focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-300/90 dark:focus:bg-secondary-400/15 dark:focus:ring-secondary-500",
+    "base": "text-secondary-600",
+    "hover": "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-500 dark:hover:bg-secondary-600/15",
+    "focus": "focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-500 dark:focus:bg-secondary-600/15 dark:focus:ring-secondary-700",
   },
-  "positive": {
-    "base": "text-positive-600 dark:text-positive-500/90",
-    "hover": "hover:text-positive-700 hover:bg-positive-400/25 dark:hover:text-positive-500 dark:hover:bg-positive-600/15",
-    "focus": "focus:ring-offset-0 focus:text-positive-700 focus:bg-positive-400/25 focus:ring-positive-600 dark:focus:text-positive-500 dark:focus:bg-positive-600/15 dark:focus:ring-positive-700",
+  "success": {
+    "base": "text-success-600 dark:text-success-500/90",
+    "hover": "hover:text-success-700 hover:bg-success-400/25 dark:hover:text-success-500 dark:hover:bg-success-600/15",
+    "focus": "focus:ring-offset-0 focus:text-success-700 focus:bg-success-400/25 focus:ring-success-600 dark:focus:text-success-500 dark:focus:bg-success-600/15 dark:focus:ring-success-700",
   },
-  "negative": {
-    "base": "text-negative-600",
-    "hover": "hover:text-negative-700 hover:bg-negative-400/25 dark:hover:text-negative-500 dark:hover:bg-negative-600/15",
-    "focus": "focus:ring-offset-0 focus:text-negative-700 focus:bg-negative-400/25 focus:ring-negative-600 dark:focus:text-negative-500 dark:focus:bg-negative-600/15 dark:focus:ring-negative-700",
+  "error": {
+    "base": "text-error-600",
+    "hover": "hover:text-error-700 hover:bg-error-400/25 dark:hover:text-error-500 dark:hover:bg-error-600/15",
+    "focus": "focus:ring-offset-0 focus:text-error-700 focus:bg-error-400/25 focus:ring-error-600 dark:focus:text-error-500 dark:focus:bg-error-600/15 dark:focus:ring-error-700",
   },
   "warning": {
     "base": "text-warning-600",
@@ -79,7 +85,7 @@ export const flatProps: ButtonColor = {
   },
   "white": {
     "base": "text-white dark:text-white/80",
-    "hover": "hover:text-slate-100 hover:bg-slate-100/25 focus:ring-offset-background-dark dark:hover:text-slate-100/100 dark:hover:bg-slate-600/15",
+    "hover": "hover:text-slate-100 hover:bg-slate-100/25 focus:ring-offset-dark-900 dark:hover:text-slate-100/100 dark:hover:bg-slate-600/15",
     "focus": "focus:ring-offset-0 focus:text-slate-100 focus:bg-slate-100/25 focus:ring-white dark:focus:text-slate-100/100 dark:focus:bg-slate-400/15 dark:focus:ring-white/70",
   },
   "black": {
@@ -206,6 +212,11 @@ export const lightProps: ButtonColor = {
     "hover": "",
     "focus": "",
   },
+  "dark": {
+    "base": "text-dark-600 bg-dark-300/60 dark:bg-dark-600/60 dark:text-dark-400",
+    "hover": "hover:text-dark-800 hover:bg-dark-400/60 dark:hover:text-dark-400 dark:hover:bg-dark-500/30",
+    "focus": "focus:ring-offset-2 focus:text-dark-800 focus:bg-dark-400/60 focus:ring-dark-400 dark:focus:text-dark-400 dark:focus:bg-dark-500/30 dark:focus:ring-dark-700",
+  },
   "primary": {
     "base": "text-primary-600 bg-primary-300/60 dark:bg-primary-600/60 dark:text-primary-400",
     "hover": "hover:text-primary-800 hover:bg-primary-400/60 dark:hover:text-primary-400 dark:hover:bg-primary-500/30",
@@ -216,15 +227,15 @@ export const lightProps: ButtonColor = {
     "hover": "hover:text-secondary-800 hover:bg-secondary-400/60 dark:hover:text-secondary-400 dark:hover:bg-secondary-500/30",
     "focus": "focus:ring-offset-2 focus:text-secondary-800 focus:bg-secondary-400/60 focus:ring-secondary-400 dark:focus:text-secondary-400 dark:focus:bg-secondary-500/30 dark:focus:ring-secondary-700",
   },
-  "positive": {
-    "base": "text-positive-600 bg-positive-300/60 dark:bg-positive-600/60 dark:text-positive-500",
-    "hover": "hover:text-positive-800 hover:bg-positive-400/60 dark:hover:text-positive-400 dark:hover:bg-positive-500/30",
-    "focus": "focus:ring-offset-2 focus:text-positive-800 focus:bg-positive-400/60 focus:ring-positive-400 dark:focus:text-positive-400 dark:focus:bg-positive-500/30 dark:focus:ring-positive-700",
+  "success": {
+    "base": "text-success-600 bg-success-300/60 dark:bg-success-600/60 dark:text-success-500",
+    "hover": "hover:text-success-800 hover:bg-success-400/60 dark:hover:text-success-400 dark:hover:bg-success-500/30",
+    "focus": "focus:ring-offset-2 focus:text-success-800 focus:bg-success-400/60 focus:ring-success-400 dark:focus:text-success-400 dark:focus:bg-success-500/30 dark:focus:ring-success-700",
   },
-  "negative": {
-    "base": "text-negative-600 bg-negative-300/60 dark:bg-negative-600/60 dark:text-negative-500",
-    "hover": "hover:text-negative-800 hover:bg-negative-400/60 dark:hover:text-negative-400 dark:hover:bg-negative-500/30",
-    "focus": "focus:ring-offset-2 focus:text-negative-800 focus:bg-negative-400/60 focus:ring-negative-400 dark:focus:text-negative-400 dark:focus:bg-negative-500/30 dark:focus:ring-negative-700",
+  "error": {
+    "base": "text-error-600 bg-error-300/60 dark:bg-error-600/60 dark:text-error-500",
+    "hover": "hover:text-error-800 hover:bg-error-400/60 dark:hover:text-error-400 dark:hover:bg-error-500/30",
+    "focus": "focus:ring-offset-2 focus:text-error-800 focus:bg-error-400/60 focus:ring-error-400 dark:focus:text-error-400 dark:focus:bg-error-500/30 dark:focus:ring-error-700",
   },
   "warning": {
     "base": "text-warning-600 bg-warning-300/60 dark:bg-warning-600/60 dark:text-warning-500",
@@ -365,6 +376,11 @@ export const solidProps: ButtonColor = {
     "hover": "",
     "focus": "",
   },
+  "dark": {
+    "base": "text-white bg-dark-500 dark:bg-dark-700",
+    "hover": "hover:text-white hover:bg-dark-600 dark:hover:bg-dark-600",
+    "focus": "focus:text-white focus:ring-offset-2 focus:bg-dark-600 focus:ring-dark-600 dark:focus:bg-dark-600 dark:focus:ring-dark-600",
+  },
   "primary": {
     "base": "text-white bg-primary-500 dark:bg-primary-700",
     "hover": "hover:text-white hover:bg-primary-600 dark:hover:bg-primary-600",
@@ -375,15 +391,15 @@ export const solidProps: ButtonColor = {
     "hover": "hover:text-white hover:bg-secondary-600 dark:hover:bg-secondary-600",
     "focus": "focus:text-white focus:ring-offset-2 focus:bg-secondary-600 focus:ring-secondary-600 dark:focus:bg-secondary-600 dark:focus:ring-secondary-600",
   },
-  "positive": {
-    "base": "text-white bg-positive-500 dark:bg-positive-700",
-    "hover": "hover:text-white hover:bg-positive-600 dark:hover:bg-positive-600",
-    "focus": "focus:text-white focus:ring-offset-2 focus:bg-positive-600 focus:ring-positive-600 dark:focus:bg-positive-600 dark:focus:ring-positive-600",
+  "success": {
+    "base": "text-white bg-success-500 dark:bg-success-700",
+    "hover": "hover:text-white hover:bg-success-600 dark:hover:bg-success-600",
+    "focus": "focus:text-white focus:ring-offset-2 focus:bg-success-600 focus:ring-success-600 dark:focus:bg-success-600 dark:focus:ring-success-600",
   },
-  "negative": {
-    "base": "text-white bg-negative-500 dark:bg-negative-700",
-    "hover": "hover:text-white hover:bg-negative-600 dark:hover:bg-negative-600",
-    "focus": "focus:text-white focus:ring-offset-2 focus:bg-negative-600 focus:ring-negative-600 dark:focus:bg-negative-600 dark:focus:ring-negative-600",
+  "error": {
+    "base": "text-white bg-error-500 dark:bg-error-700",
+    "hover": "hover:text-white hover:bg-error-600 dark:hover:bg-error-600",
+    "focus": "focus:text-white focus:ring-offset-2 focus:bg-error-600 focus:ring-error-600 dark:focus:bg-error-600 dark:focus:ring-error-600",
   },
   "warning": {
     "base": "text-white bg-warning-500 dark:bg-warning-700",
@@ -398,7 +414,7 @@ export const solidProps: ButtonColor = {
   "white": {
     "base": "bg-white text-slate-500 dark:text-slate-100 dark:bg-white dark:text-slate-700",
     "hover": "hover:text-slate-600 hover:bg-slate-50 dark:hover:text-black dark:hover:bg-white",
-    "focus": "focus:text-slate-600 focus:bg-slate-50 focus:ring-white focus:ring-offset-background-dark dark:focus:bg-white dark:focus:ring-white",
+    "focus": "focus:text-slate-600 focus:bg-slate-50 focus:ring-white focus:ring-offset-dark-900 dark:focus:bg-white dark:focus:ring-white",
   },
   "black": {
     "base": "bg-black text-white dark:border-slate-700 dark:bg-slate-700",
@@ -524,25 +540,30 @@ export const outlineProps: ButtonColor = {
     "hover": "",
     "focus": "",
   },
+  "dark": {
+    "base": "text-dark-600 border border-dark-600 dark:text-dark-400 dark:border-dark-400",
+    "hover": "hover:text-dark-700 hover:bg-dark-400/25 dark:hover:text-dark-300/90 dark:hover:bg-dark-400/15",
+    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-dark-700 focus:bg-dark-400/25 focus:ring-dark-600 dark:focus:text-dark-300/90 dark:focus:bg-dark-400/15 dark:focus:ring-dark-500",
+  },
   "primary": {
     "base": "text-primary-600 border border-primary-600",
     "hover": "hover:text-primary-700 hover:bg-primary-400/25 dark:hover:text-primary-500 dark:hover:bg-primary-600/15",
     "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-primary-700 focus:bg-primary-400/25 focus:ring-primary-600 dark:focus:text-primary-500 dark:focus:bg-primary-600/15 dark:focus:ring-primary-700",
   },
   "secondary": {
-    "base": "text-secondary-600 border border-secondary-600 dark:text-secondary-400 dark:border-secondary-400",
-    "hover": "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-300/90 dark:hover:bg-secondary-400/15",
-    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-300/90 dark:focus:bg-secondary-400/15 dark:focus:ring-secondary-500",
+    "base": "text-secondary-600 border border-secondary-600",
+    "hover": "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-500 dark:hover:bg-secondary-600/15",
+    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-500 dark:focus:bg-secondary-600/15 dark:focus:ring-secondary-700",
   },
-  "positive": {
-    "base": "text-positive-600 border border-positive-600 dark:text-positive-500/90 dark:border-positive-500/80",
-    "hover": "hover:text-positive-700 hover:bg-positive-400/25 dark:hover:text-positive-500 dark:hover:bg-positive-600/15",
-    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-positive-700 focus:bg-positive-400/25 focus:ring-positive-600 dark:focus:text-positive-500 dark:focus:bg-positive-600/15 dark:focus:ring-positive-700",
+  "success": {
+    "base": "text-success-600 border border-success-600 dark:text-success-500/90 dark:border-success-500/80",
+    "hover": "hover:text-success-700 hover:bg-success-400/25 dark:hover:text-success-500 dark:hover:bg-success-600/15",
+    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-success-700 focus:bg-success-400/25 focus:ring-success-600 dark:focus:text-success-500 dark:focus:bg-success-600/15 dark:focus:ring-success-700",
   },
-  "negative": {
-    "base": "text-negative-600 border border-negative-600",
-    "hover": "hover:text-negative-700 hover:bg-negative-400/25 dark:hover:text-negative-500 dark:hover:bg-negative-600/15",
-    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-negative-700 focus:bg-negative-400/25 focus:ring-negative-600 dark:focus:text-negative-500 dark:focus:bg-negative-600/15 dark:focus:ring-negative-700",
+  "error": {
+    "base": "text-error-600 border border-error-600",
+    "hover": "hover:text-error-700 hover:bg-error-400/25 dark:hover:text-error-500 dark:hover:bg-error-600/15",
+    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-error-700 focus:bg-error-400/25 focus:ring-error-600 dark:focus:text-error-500 dark:focus:bg-error-600/15 dark:focus:ring-error-700",
   },
   "warning": {
     "base": "text-warning-600 border border-warning-600",
@@ -557,7 +578,7 @@ export const outlineProps: ButtonColor = {
   "white": {
     "base": "text-white border border-white dark:border-white/80",
     "hover": "hover:text-white hover:bg-white/30 dark:hover:text-white dark:hover:bg-white",
-    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-white focus:bg-slate-100/25 focus:ring-white focus:ring-offset-background-dark dark:focus:text-white dark:focus:bg-white dark:focus:ring-white/80",
+    "focus": "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-white focus:bg-slate-100/25 focus:ring-white focus:ring-offset-dark-900 dark:focus:text-white dark:focus:bg-white dark:focus:ring-white/80",
   },
   "black": {
     "base": "text-black border border-black dark:border-black",

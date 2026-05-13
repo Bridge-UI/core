@@ -9,16 +9,23 @@ export interface AlertColorItem {
 
 // prettier-ignore
 export interface AlertColor {
+  "dark": AlertColorItem;
   "primary": AlertColorItem;
   "secondary": AlertColorItem;
-  "positive": AlertColorItem;
-  "negative": AlertColorItem;
+  "success": AlertColorItem;
+  "error": AlertColorItem;
   "warning": AlertColorItem;
   "info": AlertColorItem;
 }
 
 // prettier-ignore
 export const flatProps: AlertColor = {
+  "dark": {
+    "icon": "information-circle",
+    "iconColor": "text-dark-800 dark:text-dark-200",
+    "text": "text-dark-800 dark:text-dark-200",
+    "background": "bg-dark-50 dark:bg-dark-900/70",
+  },
   "primary": {
     "icon": "bell",
     "iconColor": "text-primary-800 dark:text-primary-200",
@@ -31,17 +38,17 @@ export const flatProps: AlertColor = {
     "text": "text-secondary-800 dark:text-secondary-200",
     "background": "bg-secondary-50 dark:bg-secondary-900/70",
   },
-  "positive": {
+  "success": {
     "icon": "check-circle",
-    "iconColor": "text-positive-800 dark:text-positive-200",
-    "text": "text-positive-800 dark:text-positive-200",
-    "background": "bg-positive-50 dark:bg-positive-900/70",
+    "iconColor": "text-success-800 dark:text-success-200",
+    "text": "text-success-800 dark:text-success-200",
+    "background": "bg-success-50 dark:bg-success-900/70",
   },
-  "negative": {
+  "error": {
     "icon": "x-circle",
-    "iconColor": "text-negative-800 dark:text-negative-200",
-    "text": "text-negative-800 dark:text-negative-200",
-    "background": "bg-negative-50 dark:bg-negative-900/70",
+    "iconColor": "text-error-800 dark:text-error-200",
+    "text": "text-error-800 dark:text-error-200",
+    "background": "bg-error-50 dark:bg-error-900/70",
   },
   "warning": {
     "icon": "exclamation-triangle",
@@ -59,6 +66,12 @@ export const flatProps: AlertColor = {
 
 // prettier-ignore
 export const solidProps: AlertColor = {
+  "dark": {
+    "icon": "information-circle",
+    "iconColor": "text-white dark:text-black",
+    "text": "text-white dark:text-black",
+    "background": "bg-dark-600 dark:bg-dark-600",
+  },
   "primary": {
     "icon": "bell",
     "iconColor": "text-white dark:text-black",
@@ -71,17 +84,17 @@ export const solidProps: AlertColor = {
     "text": "text-white dark:text-black",
     "background": "bg-secondary-600 dark:bg-secondary-600",
   },
-  "positive": {
+  "success": {
     "icon": "check-circle",
     "iconColor": "text-white dark:text-black",
     "text": "text-white dark:text-black",
-    "background": "bg-positive-600 dark:bg-positive-600",
+    "background": "bg-success-600 dark:bg-success-600",
   },
-  "negative": {
+  "error": {
     "icon": "x-circle",
     "iconColor": "text-white dark:text-black",
     "text": "text-white dark:text-black",
-    "background": "bg-negative-600 dark:bg-negative-600",
+    "background": "bg-error-600 dark:bg-error-600",
   },
   "warning": {
     "icon": "exclamation-triangle",
@@ -99,6 +112,13 @@ export const solidProps: AlertColor = {
 
 // prettier-ignore
 export const outlineProps: AlertColor = {
+  "dark": {
+    "icon": "information-circle",
+    "iconColor": "text-dark-800 dark:text-dark-600",
+    "text": "text-dark-800 dark:text-dark-600",
+    "border": "border border-dark-600",
+    "background": "bg-transparent",
+  },
   "primary": {
     "icon": "bell",
     "iconColor": "text-primary-800 dark:text-primary-600",
@@ -113,18 +133,18 @@ export const outlineProps: AlertColor = {
     "border": "border border-secondary-600",
     "background": "bg-transparent",
   },
-  "positive": {
+  "success": {
     "icon": "check-circle",
-    "iconColor": "text-positive-800 dark:text-positive-600",
-    "text": "text-positive-800 dark:text-positive-600",
-    "border": "border border-positive-600",
+    "iconColor": "text-success-800 dark:text-success-600",
+    "text": "text-success-800 dark:text-success-600",
+    "border": "border border-success-600",
     "background": "bg-transparent",
   },
-  "negative": {
+  "error": {
     "icon": "x-circle",
-    "iconColor": "text-negative-800 dark:text-negative-600",
-    "text": "text-negative-800 dark:text-negative-600",
-    "border": "border border-negative-600",
+    "iconColor": "text-error-800 dark:text-error-600",
+    "text": "text-error-800 dark:text-error-600",
+    "border": "border border-error-600",
     "background": "bg-transparent",
   },
   "warning": {
