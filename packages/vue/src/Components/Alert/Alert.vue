@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// ** External Imports
-import { isNil } from "es-toolkit/compat";
-
 // ** Local Imports
 import type { AlertProps, AlertSlots } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
@@ -18,6 +15,7 @@ const {
   bodyClasses,
   iconClasses,
   rootClasses,
+  resolvedIcon,
   showTitleRow,
   titleClasses,
   hasDefaultBody,
@@ -40,9 +38,9 @@ const {
           <slot v-if="slots.icon" name="icon" />
 
           <Icon
-            :icon="merged.icon"
+            :icon="resolvedIcon"
             :class="iconClasses"
-            v-else-if="!isNil(merged.icon)"
+            v-else-if="resolvedIcon"
           />
         </template>
 

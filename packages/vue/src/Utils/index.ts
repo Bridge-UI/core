@@ -98,5 +98,6 @@ export function useBridgeUIMergedRegistryClasses<C extends object>(
   );
 }
 
+// ** Exports
 export { mergePropsWithBridgeUIDefaults } from "@core/Utils";
 export type { MergeProps, Overwrite, UnionProps } from "@core/Utils/types";

@@ -1,7 +1,16 @@
 // ** External Imports
 import clsx from "clsx";
-import { get } from "es-toolkit/compat";
+import { get, isNull } from "es-toolkit/compat";
 import { toMerged } from "es-toolkit/object";
+import type { LucideIcon } from "lucide-vue-next";
+import {
+  Bell,
+  CircleAlert,
+  CircleCheck,
+  CircleX,
+  Info,
+  TriangleAlert,
+} from "lucide-vue-next";
 import { twMerge } from "tailwind-merge";
 import { computed, useSlots } from "vue";
 
@@ -19,6 +28,16 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
+  dark: Info,
+  primary: Bell,
+  error: CircleX,
+  secondary: Info,
+  info: CircleAlert,
+  success: CircleCheck,
+  warning: TriangleAlert,
+};
 
 export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
   const slots = useSlots();
@@ -65,20 +84,24 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
     ) as unknown as typeof variantProps;
   });
 
-  const hasIconProp = computed(() => {
-    return merged.value.icon != null;
-  });
-
-  const showIcon = computed(() => {
-    return Boolean(slots.icon) || hasIconProp.value;
-  });
-
   const colorKey = computed(() => {
     return (merged.value.color ?? "primary") as keyof AlertColor;
   });
 
   const variantKey = computed(() => {
     return (merged.value.variant ?? "flat") as keyof typeof variantProps;
+  });
+
+  const resolvedIcon = computed(() => {
+    if (isNull(merged.value.icon)) {
+      return null;
+    }
+
+    return merged.value.icon ?? defaultIcons[colorKey.value];
+  });
+
+  const showIcon = computed(() => {
+    return Boolean(slots.icon) || resolvedIcon.value != null;
   });
 
   const palette = computed(() => {
@@ -94,7 +117,7 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
   const showTitleRow = computed(() => {
     return (
       !slots.header &&
-      Boolean(merged.value.title || hasIconProp.value || slots.icon)
+      Boolean(merged.value.title || resolvedIcon.value != null || slots.icon)
     );
   });
 
@@ -150,9 +173,9 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
     showIcon,
     bodyClasses,
     bridgeAlert,
-    hasIconProp,
     iconClasses,
     rootClasses,
+    resolvedIcon,
     showTitleRow,
     titleClasses,
     mergedClasses,

@@ -10,7 +10,7 @@ export interface MiniButtonSize {
 }
 
 // prettier-ignore
-export const size: MiniButtonSize = {
+export const sizeProps: MiniButtonSize = {
   "2xs": "text-2xs w-5 h-5",
   "xs": "text-xs w-7 h-7",
   "sm": "text-sm w-8 h-8",

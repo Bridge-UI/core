@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { Component } from "vue";
+import type { Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -113,15 +113,15 @@ export interface ButtonSlots {
   /**
    * The slot to apply to the append.
    */
-  append?: Component;
+  append?: Slot<undefined>;
 
   /**
    * The slot to apply to the default.
    */
-  default?: Component;
+  default?: Slot<undefined>;
 
   /**
    * The slot to apply to the prepend.
    */
-  prepend?: Component;
+  prepend?: Slot<undefined>;
 }

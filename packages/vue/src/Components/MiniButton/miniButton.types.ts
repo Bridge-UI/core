@@ -1,6 +1,6 @@
 // ** External Imports
-import { LucideIcon } from "lucide-vue-next";
-import { Component } from "vue";
+import type { LucideIcon } from "lucide-vue-next";
+import type { Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -109,5 +109,5 @@ export interface MiniButtonSlots {
   /**
    * The slot to apply to the default.
    */
-  default?: Component;
+  default?: Slot<undefined>;
 }
