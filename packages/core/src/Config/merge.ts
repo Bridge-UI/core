@@ -7,8 +7,8 @@ import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
-} from "@/Config/types";
-import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
+} from "@core/Config/types";
+import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
 
 export function mergeBridgeUIGlobal(
   base: BridgeUIGlobal,

@@ -2,14 +2,14 @@
 import { LucideIcon } from "lucide-vue-next";
 import { Component } from "vue";
 
-// ** Local Imports
+// ** Core Imports
 import type {
   ButtonColor,
   ButtonRounded,
   ButtonVariant,
-} from "@/Components/Button/props";
-import { MiniButtonSize } from "@/Components/MiniButton/props";
-import type { MergeProps } from "@/Utils";
+  MergeProps,
+  MiniButtonSize,
+} from "@bridge-ui/core";
 
 export interface MiniButtonSizeOverrides {}
 export interface MiniButtonColorOverrides {}

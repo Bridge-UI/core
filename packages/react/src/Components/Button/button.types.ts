@@ -2,14 +2,14 @@
 import type { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
-// ** Local Imports
+// ** Core Imports
 import type {
   ButtonColor,
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@/Components/Button/props";
-import type { MergeProps } from "@/Utils";
+  MergeProps,
+} from "@bridge-ui/core";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
@@ -17,24 +17,9 @@ export interface ButtonRoundedOverrides {}
 export interface ButtonVariantOverrides {}
 
 export interface ButtonClasses {
-  /**
-   * The classes to apply to the left icon.
-   */
   leftIcon?: string;
-
-  /**
-   * The classes to apply to the loading.
-   */
   loading?: string;
-
-  /**
-   * The classes to apply to the right icon.
-   */
   rightIcon?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
   root?: string;
 }
 

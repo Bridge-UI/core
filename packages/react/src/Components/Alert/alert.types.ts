@@ -2,15 +2,15 @@
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
-// ** Local Imports
+// ** Core Imports
 import type {
   AlertColor,
   AlertPadding,
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@/Components/Alert/props";
-import type { MergeProps } from "@/Utils";
+  MergeProps,
+} from "@bridge-ui/core";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
@@ -20,9 +20,9 @@ export interface AlertVariantOverrides {}
 
 export interface AlertClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the body.
    */
-  description?: string;
+  body?: string;
 
   /**
    * The classes to apply to the icon.

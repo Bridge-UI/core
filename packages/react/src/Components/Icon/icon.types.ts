@@ -1,9 +1,8 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
 
-// ** Local Imports
-import type { IconSize } from "@/Components/Icon/props/Size";
-import type { MergeProps } from "@/Utils";
+// ** Core Imports
+import type { IconSize, MergeProps } from "@bridge-ui/core";
 
 export interface IconSizeOverrides {}
 

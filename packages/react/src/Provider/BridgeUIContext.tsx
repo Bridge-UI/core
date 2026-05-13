@@ -1,8 +1,8 @@
 // ** External Imports
 import { createContext, type ReactNode } from "react";
 
-// ** Local Imports
-import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@/Config";
+// ** Core Imports
+import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
 
 export interface BridgeUIContextValue {
   global: BridgeUIGlobal;

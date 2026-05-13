@@ -7,17 +7,17 @@ export {
   default as MiniButton,
   type MiniButtonProps,
 } from "@/Components/MiniButton";
+export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
+export type { BridgeUIContextApi } from "@/Provider";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-} from "@/Config";
+} from "@bridge-ui/core";
 export type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
   Direction,
-} from "@/Config";
-export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
-export type { BridgeUIContextApi } from "@/Provider";
+} from "@bridge-ui/core";

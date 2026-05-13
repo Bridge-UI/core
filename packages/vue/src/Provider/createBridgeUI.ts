@@ -2,8 +2,10 @@
 import type { App, Plugin } from "vue";
 import { computed } from "vue";
 
+// ** Core Imports
+import type { BridgeUIOptions } from "@bridge-ui/core";
+
 // ** Local Imports
-import type { BridgeUIOptions } from "@/Config";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
 

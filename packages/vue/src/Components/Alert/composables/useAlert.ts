@@ -5,13 +5,15 @@ import { toMerged } from "es-toolkit/object";
 import { twMerge } from "tailwind-merge";
 import { computed, useSlots } from "vue";
 
+// ** Core Imports
+import type { AlertColor } from "@bridge-ui/core";
+import { paddingProps } from "@core/Components/Alert/Padding";
+import { roundedProps } from "@core/Components/Alert/Rounded";
+import { shadowProps } from "@core/Components/Alert/Shadow";
+import { variantProps } from "@core/Components/Alert/Variant";
+
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";
-import type { AlertColor } from "@/Components/Alert/props";
-import { paddingProps } from "@/Components/Alert/props/Padding";
-import { roundedProps } from "@/Components/Alert/props/Rounded";
-import { shadowProps } from "@/Components/Alert/props/Shadow";
-import { variantProps } from "@/Components/Alert/props/Variant";
 import {
   mergeBridgeUIStringMap,
   useBridgeUIComponent,

@@ -2,8 +2,10 @@
 // ** External Imports
 import { computed, inject, provide } from "vue";
 
+// ** Core Imports
+import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
+
 // ** Local Imports
-import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@/Config";
 import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";

@@ -2,15 +2,15 @@
 import type { LucideIcon } from "lucide-vue-next";
 import type { Slot } from "vue";
 
-// ** Local Imports
+// ** Core Imports
 import type {
   AlertColor,
   AlertPadding,
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@/Components/Alert/props";
-import type { MergeProps } from "@/Utils";
+  MergeProps,
+} from "@bridge-ui/core";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}

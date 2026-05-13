@@ -8,8 +8,6 @@
     "deps": "npm install",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "lint": "eslint packages/vue/src packages/react/src",
-    "lint:fix": "eslint packages/vue/src packages/react/src --fix",
     "dev:vue": "npm run dev -w @bridge-ui/vue",
     "dev:react": "npm run dev -w @bridge-ui/react",
     "build:vue": "npm run build -w @bridge-ui/vue",
@@ -17,7 +15,11 @@
     "install:vue": "npm install -w @bridge-ui/vue",
     "install:react": "npm install -w @bridge-ui/react",
     "type-check:vue": "npm run type-check -w @bridge-ui/vue",
-    "type-check:react": "npm run type-check -w @bridge-ui/react"
+    "type-check:core": "npm run type-check -w @bridge-ui/core",
+    "type-check:react": "npm run type-check -w @bridge-ui/react",
+    "type-check": "npm run type-check:core && npm run type-check:vue && npm run type-check:react",
+    "lint": "eslint packages/vue/src packages/react/src packages/core/src",
+    "lint:fix": "eslint packages/vue/src packages/react/src packages/core/src --fix"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

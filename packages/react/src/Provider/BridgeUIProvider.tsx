@@ -2,14 +2,16 @@
 import { toMerged } from "es-toolkit/object";
 import { useCallback, useContext, useMemo, useState } from "react";
 
-// ** Local Imports
+// ** Core Imports
 import {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   type BridgeUIComponentsConfig,
   type BridgeUIGlobal,
-} from "@/Config";
+} from "@bridge-ui/core";
+
+// ** Local Imports
 import {
   BridgeUIContext,
   type BridgeUIContextValue,

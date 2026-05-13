@@ -4,9 +4,11 @@ import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 import { computed } from "vue";
 
+// ** Core Imports
+import { sizeProps } from "@core/Components/Icon/Size";
+
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon/icon.types";
-import { sizeProps } from "@/Components/Icon/props/Size";
 
 const props = withDefaults(defineProps<IconProps>(), {
   size: "md",

@@ -3,11 +3,11 @@ export {
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-} from "@/Config/merge";
-export { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
+} from "@core/Config/merge";
+export { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
 export type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
   Direction,
-} from "@/Config/types";
+} from "@core/Config/types";

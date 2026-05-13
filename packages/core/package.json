@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "name": "@bridge-ui/core",
+  "exports": {
+    "./*": "./src/*",
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "es-toolkit": "^1.46.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  }
+}
