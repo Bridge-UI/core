@@ -50,10 +50,4 @@ export default defineConfig(
     },
   },
   eslintConfigPrettier,
-  {
-    rules: {
-      "quote-props": ["error", "consistent-as-needed"],
-      "vue/quote-props": ["error", "consistent-as-needed"],
-    },
-  },
 );

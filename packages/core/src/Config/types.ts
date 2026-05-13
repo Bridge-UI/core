@@ -75,8 +75,8 @@ interface IconConfigBase {
 interface MiniButtonConfigBase {
   classes: object;
   defaultProps: Partial<{
-    size: keyof MiniButtonSize;
     color: keyof ButtonColor;
+    size: keyof MiniButtonSize;
     rounded: keyof ButtonRounded;
     variant: keyof ButtonVariant;
   }>;

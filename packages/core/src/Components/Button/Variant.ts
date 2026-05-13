@@ -7,16 +7,18 @@ import {
   solidProps,
 } from "@core/Components/Button/Color";
 
+// prettier-ignore
 export interface ButtonVariant {
-  flat: ButtonColor;
-  light: ButtonColor;
-  solid: ButtonColor;
-  outline: ButtonColor;
+  "flat": ButtonColor;
+  "light": ButtonColor;
+  "solid": ButtonColor;
+  "outline": ButtonColor;
 }
 
+// prettier-ignore
 export const variantProps: ButtonVariant = {
-  flat: flatProps,
-  light: lightProps,
-  solid: solidProps,
-  outline: outlineProps,
+  "flat": flatProps,
+  "light": lightProps,
+  "solid": solidProps,
+  "outline": outlineProps,
 };
