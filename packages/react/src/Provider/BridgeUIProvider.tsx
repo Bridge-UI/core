@@ -29,22 +29,31 @@ function useBridgeUIContextValue(
     useState<BridgeUIComponentsConfig>({});
 
   const baseGlobal = useMemo(() => {
-    return mergeBridgeUIGlobal(
-      parent?.global ?? BRIDGE_UI_DEFAULT_GLOBAL,
-      globalProp,
-    );
+    return mergeBridgeUIGlobal({
+      partials: [globalProp],
+      base: parent?.global ?? BRIDGE_UI_DEFAULT_GLOBAL,
+    });
   }, [parent, globalProp]);
 
   const global = useMemo(() => {
-    return mergeBridgeUIGlobal(baseGlobal, globalPatch);
+    return mergeBridgeUIGlobal({
+      base: baseGlobal,
+      partials: [globalPatch],
+    });
   }, [baseGlobal, globalPatch]);
 
   const baseComponents = useMemo(() => {
-    return mergeBridgeUIComponents(parent?.components ?? {}, componentsProp);
+    return mergeBridgeUIComponents({
+      partials: [componentsProp],
+      base: parent?.components ?? {},
+    });
   }, [parent, componentsProp]);
 
   const components = useMemo(() => {
-    return mergeBridgeUIComponents(baseComponents, componentsPatch);
+    return mergeBridgeUIComponents({
+      base: baseComponents,
+      partials: [componentsPatch],
+    });
   }, [baseComponents, componentsPatch]);
 
   const setGlobal = useCallback((patch: Partial<BridgeUIGlobal>) => {
@@ -52,12 +61,17 @@ function useBridgeUIContextValue(
   }, []);
 
   const setComponents = useCallback((patch: BridgeUIComponentsConfig) => {
-    setComponentsPatch((prev) => mergeBridgeUIComponents(prev, patch));
+    setComponentsPatch((prev) => {
+      return mergeBridgeUIComponents({
+        base: prev,
+        partials: [patch],
+      });
+    });
   }, []);
 
   return useMemo(() => {
-    return { global, components, setGlobal, setComponents };
-  }, [components, global, setComponents, setGlobal]);
+    return { global, setGlobal, components, setComponents };
+  }, [global, setGlobal, components, setComponents]);
 }
 
 export function BridgeUIProvider({

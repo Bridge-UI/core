@@ -8,7 +8,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "es-toolkit": "^1.46.1"
+    "clsx": "^2.1.1",
+    "es-toolkit": "^1.46.1",
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,7 +1,3 @@
-// ** External Imports
-import { reduce } from "es-toolkit/compat";
-import { toMerged } from "es-toolkit/object";
-
 // ** Local Imports
 import type {
   BridgeUIComponentsConfig,
@@ -9,31 +5,29 @@ import type {
   BridgeUIOptions,
 } from "@core/Config/types";
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
+import { mergeBridgeUILayeredClasses } from "@core/Utils";
 
-export function mergeBridgeUIGlobal(
-  base: BridgeUIGlobal,
-  ...partials: Array<Partial<BridgeUIGlobal> | undefined>
-): BridgeUIGlobal {
-  return reduce(
-    partials,
-    (acc: BridgeUIGlobal, partial) => {
-      return partial ? toMerged(acc, partial) : acc;
-    },
-    { ...base },
-  );
+export function mergeBridgeUIGlobal({
+  base,
+  partials,
+}: {
+  base: BridgeUIGlobal;
+  partials: Array<Partial<BridgeUIGlobal> | undefined>;
+}): BridgeUIGlobal {
+  return mergeBridgeUILayeredClasses(base, ...partials) as BridgeUIGlobal;
 }
 
-export function mergeBridgeUIComponents(
-  base: BridgeUIComponentsConfig,
-  ...partials: Array<BridgeUIComponentsConfig | undefined>
-): BridgeUIComponentsConfig {
-  return reduce(
-    partials,
-    (acc: BridgeUIComponentsConfig, partial) => {
-      return partial ? toMerged(acc, partial) : acc;
-    },
-    toMerged({}, base),
-  );
+export function mergeBridgeUIComponents({
+  base,
+  partials,
+}: {
+  base: BridgeUIComponentsConfig;
+  partials: Array<BridgeUIComponentsConfig | undefined>;
+}): BridgeUIComponentsConfig {
+  return mergeBridgeUILayeredClasses(
+    base,
+    ...partials,
+  ) as BridgeUIComponentsConfig;
 }
 
 export function resolveBridgeUIOptions(options: BridgeUIOptions = {}): {
@@ -41,7 +35,13 @@ export function resolveBridgeUIOptions(options: BridgeUIOptions = {}): {
   components: BridgeUIComponentsConfig;
 } {
   return {
-    components: mergeBridgeUIComponents({}, options.components),
-    global: mergeBridgeUIGlobal(BRIDGE_UI_DEFAULT_GLOBAL, options.global),
+    components: mergeBridgeUIComponents({
+      base: {},
+      partials: [options.components],
+    }),
+    global: mergeBridgeUIGlobal({
+      partials: [options.global],
+      base: BRIDGE_UI_DEFAULT_GLOBAL,
+    }),
   };
 }

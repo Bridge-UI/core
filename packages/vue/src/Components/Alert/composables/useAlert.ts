@@ -1,7 +1,5 @@
 // ** External Imports
-import clsx from "clsx";
 import { get, isNull } from "es-toolkit/compat";
-import { toMerged } from "es-toolkit/object";
 import type { LucideIcon } from "lucide-vue-next";
 import {
   Bell,
@@ -11,11 +9,10 @@ import {
   Info,
   TriangleAlert,
 } from "lucide-vue-next";
-import { twMerge } from "tailwind-merge";
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import type { AlertColor } from "@bridge-ui/core";
+import { cn, type AlertColor } from "@bridge-ui/core";
 import { paddingProps } from "@core/Components/Alert/Padding";
 import { roundedProps } from "@core/Components/Alert/Rounded";
 import { shadowProps } from "@core/Components/Alert/Shadow";
@@ -24,6 +21,7 @@ import { variantProps } from "@core/Components/Alert/Variant";
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";
 import {
+  mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -48,40 +46,37 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
     defaults,
   );
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses(bridgeAlert, props);
+  const mergedClasses = useBridgeUIMergedRegistryClasses({
+    props,
+    entry: bridgeAlert,
+  });
 
   const mergedShadowMap = computed(() => {
-    return mergeBridgeUIStringMap(
-      shadowProps,
-      bridgeAlert.value?.customProps?.shadow,
-    );
+    return mergeBridgeUIStringMap({
+      lib: shadowProps,
+      provider: bridgeAlert.value?.customProps?.shadow,
+    });
   });
 
   const mergedPaddingMap = computed(() => {
-    return mergeBridgeUIStringMap(
-      paddingProps,
-      bridgeAlert.value?.customProps?.padding,
-    );
+    return mergeBridgeUIStringMap({
+      lib: paddingProps,
+      provider: bridgeAlert.value?.customProps?.padding,
+    });
   });
 
   const mergedRoundedMap = computed(() => {
-    return mergeBridgeUIStringMap(
-      roundedProps,
-      bridgeAlert.value?.customProps?.rounded,
-    );
+    return mergeBridgeUIStringMap({
+      lib: roundedProps,
+      provider: bridgeAlert.value?.customProps?.rounded,
+    });
   });
 
   const mergedVariantProps = computed(() => {
-    return toMerged(
-      toMerged(
-        {} as Record<PropertyKey, unknown>,
-        variantProps as unknown as Record<PropertyKey, unknown>,
-      ),
-      (bridgeAlert.value?.customProps?.variant ?? {}) as Record<
-        PropertyKey,
-        unknown
-      >,
-    ) as unknown as typeof variantProps;
+    return mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeAlert.value?.customProps?.variant,
+    ) as typeof variantProps;
   });
 
   const colorKey = computed(() => {
@@ -97,7 +92,7 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
       return null;
     }
 
-    return merged.value.icon ?? defaultIcons[colorKey.value];
+    return merged.value.icon ?? get(defaultIcons, colorKey.value);
   });
 
   const showIcon = computed(() => {
@@ -105,7 +100,7 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
   });
 
   const palette = computed(() => {
-    return mergedVariantProps.value[variantKey.value][colorKey.value];
+    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
   });
 
   const hasDefaultBody = computed(() => {
@@ -122,47 +117,39 @@ export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
   });
 
   const iconClasses = computed(() => {
-    return twMerge(
-      clsx(
-        palette.value.iconColor,
-        "w-5 h-5 mr-3 shrink-0",
-        get(mergedClasses.value, "icon"),
-      ),
+    return cn(
+      palette.value.iconColor,
+      "w-5 h-5 mr-3 shrink-0",
+      get(mergedClasses.value, "icon"),
     );
   });
 
   const titleClasses = computed(() => {
-    return twMerge(
-      clsx(
-        palette.value.text,
-        "text-sm whitespace-normal",
-        get(mergedClasses.value, "title"),
-        hasDefaultBody.value ? "font-semibold" : "font-normal",
-      ),
+    return cn(
+      palette.value.text,
+      "text-sm whitespace-normal",
+      get(mergedClasses.value, "title"),
+      hasDefaultBody.value ? "font-semibold" : "font-normal",
     );
   });
 
   const bodyClasses = computed(() => {
-    return twMerge(
-      clsx(
-        "grow text-sm",
-        palette.value.text,
-        get(mergedClasses.value, "body"),
-        get(mergedPaddingMap.value, merged.value.padding ?? "none"),
-      ),
+    return cn(
+      "grow text-sm",
+      palette.value.text,
+      get(mergedClasses.value, "body"),
+      get(mergedPaddingMap.value, merged.value.padding ?? "none"),
     );
   });
 
   const rootClasses = computed(() => {
-    return twMerge(
-      clsx(
-        palette.value.border,
-        palette.value.background,
-        "w-full flex flex-col p-4",
-        get(mergedClasses.value, "root"),
-        get(mergedShadowMap.value, merged.value.shadow ?? "none"),
-        get(mergedRoundedMap.value, merged.value.rounded ?? "none"),
-      ),
+    return cn(
+      palette.value.border,
+      palette.value.background,
+      "w-full flex flex-col p-4",
+      get(mergedClasses.value, "root"),
+      get(mergedShadowMap.value, merged.value.shadow ?? "none"),
+      get(mergedRoundedMap.value, merged.value.rounded ?? "none"),
     );
   });
 

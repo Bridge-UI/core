@@ -32,5 +32,10 @@ export type {
   IconConfigOverrides,
   MiniButtonConfigOverrides,
 } from "@core/Config";
-export { mergePropsWithBridgeUIDefaults } from "@core/Utils";
+export {
+  cn,
+  mergeBridgeUILayeredClasses,
+  mergeBridgeUIStringMap,
+  mergePropsWithBridgeUIDefaults,
+} from "@core/Utils";
 export type { MergeProps, Overwrite, UnionProps } from "@core/Utils";

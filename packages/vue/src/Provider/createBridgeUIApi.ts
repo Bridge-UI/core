@@ -26,25 +26,31 @@ export function createBridgeUIApi(
   const componentsPatch = shallowRef<BridgeUIComponentsConfig>({});
 
   const baseGlobal = computed(() => {
-    return mergeBridgeUIGlobal(
-      parent ? parent.global.value : BRIDGE_UI_DEFAULT_GLOBAL,
-      optionsRef.value.global,
-    );
+    return mergeBridgeUIGlobal({
+      partials: [optionsRef.value.global],
+      base: parent ? parent.global.value : BRIDGE_UI_DEFAULT_GLOBAL,
+    });
   });
 
   const global = computed(() => {
-    return mergeBridgeUIGlobal(baseGlobal.value, globalPatch.value);
+    return mergeBridgeUIGlobal({
+      base: baseGlobal.value,
+      partials: [globalPatch.value],
+    });
   });
 
   const baseComponents = computed(() => {
-    return mergeBridgeUIComponents(
-      parent ? parent.components.value : {},
-      optionsRef.value.components,
-    );
+    return mergeBridgeUIComponents({
+      partials: [optionsRef.value.components],
+      base: parent ? parent.components.value : {},
+    });
   });
 
   const components = computed(() => {
-    return mergeBridgeUIComponents(baseComponents.value, componentsPatch.value);
+    return mergeBridgeUIComponents({
+      base: baseComponents.value,
+      partials: [componentsPatch.value],
+    });
   });
 
   function setGlobal(patch: Partial<BridgeUIGlobal>) {
@@ -52,10 +58,10 @@ export function createBridgeUIApi(
   }
 
   function setComponents(patch: BridgeUIComponentsConfig) {
-    componentsPatch.value = mergeBridgeUIComponents(
-      componentsPatch.value,
-      patch,
-    );
+    componentsPatch.value = mergeBridgeUIComponents({
+      base: componentsPatch.value,
+      partials: [patch],
+    });
   }
 
   return { global, components, setGlobal, setComponents };

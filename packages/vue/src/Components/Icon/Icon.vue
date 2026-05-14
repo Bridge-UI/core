@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
-import clsx from "clsx";
-import { twMerge } from "tailwind-merge";
+import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
+import { cn } from "@bridge-ui/core";
 import { sizeProps } from "@core/Components/Icon/Size";
 
 // ** Local Imports
@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<IconProps>(), {
 });
 
 const mergedClass = computed(() => {
-  return twMerge(clsx(sizeProps[props.size], props.class));
+  return cn(get(sizeProps, props.size), props.class);
 });
 </script>
 

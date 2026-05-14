@@ -13,8 +13,11 @@ export { BridgeUIContext, BridgeUIProvider, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextValue, BridgeUIProviderProps } from "@/Provider";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
+  cn,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
+  mergeBridgeUILayeredClasses,
+  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
   resolveBridgeUIOptions,
 } from "@bridge-ui/core";
