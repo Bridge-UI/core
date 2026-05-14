@@ -2,23 +2,36 @@
   "type": "module",
   "version": "0.0.0",
   "name": "@bridge-ui/react",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme.css": "./dist/theme.css"
+  },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
+    "@bridge-ui/core": "*",
     "lucide-react": ">=0.400.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@bridge-ui/core": "*",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^2.6.0"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && cp src/theme.css dist/theme.css",
     "dev": "vite build --watch",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@bridge-ui/core": "*",
     "@tailwindcss/cli": "^4.1.11",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.2",

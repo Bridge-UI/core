@@ -11,8 +11,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@core/*": ["../core/src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

@@ -10,8 +10,7 @@
     "types": ["node"],
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@core/*": ["../core/src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "env.d.ts"]

@@ -13,10 +13,10 @@ import { computed, useSlots } from "vue";
 
 // ** Core Imports
 import { cn, type AlertColor } from "@bridge-ui/core";
-import { paddingProps } from "@core/Components/Alert/Padding";
-import { roundedProps } from "@core/Components/Alert/Rounded";
-import { shadowProps } from "@core/Components/Alert/Shadow";
-import { variantProps } from "@core/Components/Alert/Variant";
+import { paddingProps } from "@bridge-ui/core/Components/Alert/Padding";
+import { roundedProps } from "@bridge-ui/core/Components/Alert/Rounded";
+import { shadowProps } from "@bridge-ui/core/Components/Alert/Shadow";
+import { variantProps } from "@bridge-ui/core/Components/Alert/Variant";
 
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";

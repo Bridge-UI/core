@@ -31,7 +31,7 @@ export interface ButtonConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface MiniButtonConfigOverrides {}
 
-interface AlertConfigBase {
+export interface AlertConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof AlertColor;
@@ -48,7 +48,7 @@ interface AlertConfigBase {
   }>;
 }
 
-interface ButtonConfigBase {
+export interface ButtonConfigBase {
   classes: object;
   defaultProps: Partial<{
     size: keyof ButtonSize;
@@ -63,7 +63,7 @@ interface ButtonConfigBase {
   }>;
 }
 
-interface IconConfigBase {
+export interface IconConfigBase {
   defaultProps: Partial<{
     size: keyof IconSize;
   }>;
@@ -72,7 +72,7 @@ interface IconConfigBase {
   }>;
 }
 
-interface MiniButtonConfigBase {
+export interface MiniButtonConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof ButtonColor;

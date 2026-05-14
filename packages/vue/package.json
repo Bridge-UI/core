@@ -2,24 +2,40 @@
   "type": "module",
   "version": "0.0.0",
   "name": "@bridge-ui/vue",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme.css": "./dist/theme.css"
+  },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
+    "@bridge-ui/core": "*",
     "lucide-vue-next": ">=0.400.0",
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "@bridge-ui/core": "*",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^2.6.0"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && cp src/theme.css dist/theme.css",
     "dev": "vite build --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
     "type-check": "vue-tsc --noEmit"
   },
   "devDependencies": {
+    "@bridge-ui/core": "*",
     "@tailwindcss/cli": "^4.1.11",
     "@types/node": "^22.14.0",
+    "@vue/test-utils": "^2.4.10",
     "lucide-vue-next": "^0.471.0",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",

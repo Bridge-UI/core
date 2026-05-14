@@ -7,6 +7,9 @@ import type {
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
 import { mergeBridgeUILayeredClasses } from "@core/Utils";
 
+/**
+ * Merges the base and partials into a single object.
+ */
 export function mergeBridgeUIGlobal({
   base,
   partials,
@@ -17,6 +20,9 @@ export function mergeBridgeUIGlobal({
   return mergeBridgeUILayeredClasses(base, ...partials) as BridgeUIGlobal;
 }
 
+/**
+ * Merges the base and partials into a single object.
+ */
 export function mergeBridgeUIComponents({
   base,
   partials,
@@ -30,6 +36,9 @@ export function mergeBridgeUIComponents({
   ) as BridgeUIComponentsConfig;
 }
 
+/**
+ * Resolves the bridge UI options.
+ */
 export function resolveBridgeUIOptions(options: BridgeUIOptions = {}): {
   global: BridgeUIGlobal;
   components: BridgeUIComponentsConfig;

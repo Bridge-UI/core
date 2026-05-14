@@ -1,12 +1,30 @@
 {
   "type": "module",
   "version": "0.0.0",
-  "main": "src/index.ts",
   "name": "@bridge-ui/core",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
-    "./*": "./src/*",
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./Config": {
+      "types": "./dist/Config/index.d.ts",
+      "import": "./dist/Config/index.js"
+    },
+    "./Utils": {
+      "types": "./dist/Utils/index.d.ts",
+      "import": "./dist/Utils/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
@@ -17,6 +35,9 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "test:run": "vitest run",
     "type-check": "tsc --noEmit"
   }
 }

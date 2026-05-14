@@ -3,7 +3,7 @@ import { get } from "es-toolkit/compat";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
-import { sizeProps } from "@core/Components/Icon/Size";
+import { sizeProps } from "@bridge-ui/core/Components/Icon/Size";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon/icon.types";

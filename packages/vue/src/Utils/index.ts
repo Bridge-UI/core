@@ -3,11 +3,11 @@ import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
 // ** Core Imports
-import type { BridgeUIComponentsConfig } from "@core/Config/types";
+import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config/types";
 import {
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
-} from "@core/Utils";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";
@@ -73,5 +73,9 @@ export {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
-} from "@core/Utils";
-export type { MergeProps, Overwrite, UnionProps } from "@core/Utils/types";
+} from "@bridge-ui/core/Utils";
+export type {
+  MergeProps,
+  Overwrite,
+  UnionProps,
+} from "@bridge-ui/core/Utils/types";
