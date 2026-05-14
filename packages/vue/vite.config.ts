@@ -8,10 +8,19 @@ import dts from "vite-plugin-dts";
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
-  plugins: [vue(), dts({ tsconfigPath: "./tsconfig.json" })],
   resolve: {
     alias: { "@": resolve(__dirname, "src") },
   },
+  plugins: [
+    vue(),
+    dts({
+      tsconfigPath: "./tsconfig.json",
+      beforeWriteFile: (filePath, content) => ({
+        filePath,
+        content: content.replace(/\{\n\}/g, "{}"),
+      }),
+    }),
+  ],
   build: {
     lib: { entry: resolve(__dirname, "src/index.ts"), formats: ["es"] },
     rollupOptions: {
