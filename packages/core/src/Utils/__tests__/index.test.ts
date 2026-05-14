@@ -15,7 +15,9 @@ test("it should merge simple class strings", () => {
 });
 
 test("it should handle conditional classes via clsx", () => {
-  expect(cn("base", false && "hidden", "visible")).toBe("base visible");
+  const condition = false;
+  
+  expect(cn("base", condition && "hidden", "visible")).toBe("base visible");
 });
 
 test("it should deduplicate tailwind classes via twMerge", () => {
@@ -138,7 +140,7 @@ test("it should apply libDefaults when props are missing keys", () => {
     components: null,
     componentName: "Alert",
     props: { color: "error" as const },
-    libDefaults: { shadow: "md" as any },
+    libDefaults: { shadow: "md" as never },
   });
 
   expect(result).toEqual({ color: "error", shadow: "md" });
@@ -153,7 +155,7 @@ test("it should let registry defaultProps override libDefaults", () => {
     props: {},
     components,
     componentName: "Alert",
-    libDefaults: { color: "info" as any },
+    libDefaults: { color: "info" as never },
   });
 
   expect(result).toEqual({ color: "success" });
@@ -168,7 +170,7 @@ test("it should let instance props override everything", () => {
     components,
     componentName: "Alert",
     props: { color: "error" as const },
-    libDefaults: { color: "info" as any },
+    libDefaults: { color: "info" as never },
   });
 
   expect(result).toEqual({ color: "error" });
