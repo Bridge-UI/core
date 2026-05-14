@@ -28,6 +28,8 @@
   "scripts": {
     "build": "vite build && cp src/theme.css dist/theme.css",
     "dev": "vite build --watch",
+    "test:cy": "cypress run --component",
+    "test:cy:open": "cypress open --component",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {

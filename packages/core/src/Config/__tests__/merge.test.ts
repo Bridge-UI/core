@@ -9,8 +9,6 @@ import {
 } from "@core/Config/merge";
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
 
-// -- mergeBridgeUIGlobal
-
 test("it should return base when no partials provided", () => {
   const result = mergeBridgeUIGlobal({
     partials: [],
@@ -57,8 +55,6 @@ test("it should skip undefined global partials", () => {
   });
 });
 
-// -- mergeBridgeUIComponents
-
 test("it should return base when no component partials provided", () => {
   const result = mergeBridgeUIComponents({
     base: {},
@@ -78,8 +74,6 @@ test("it should merge component configs from partials", () => {
     Alert: { defaultProps: { color: "error" } },
   });
 });
-
-// -- resolveBridgeUIOptions
 
 test("it should return defaults when called with no options", () => {
   const result = resolveBridgeUIOptions();

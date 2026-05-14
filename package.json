@@ -25,6 +25,8 @@
     "test:run": "npm run test:run -w @bridge-ui/core && npm run test:run -w @bridge-ui/vue",
     "test:core": "npm run test:run -w @bridge-ui/core",
     "test:vue": "npm run test:run -w @bridge-ui/vue",
+    "test:cy:vue": "npm run test:cy -w @bridge-ui/vue",
+    "test:cy:react": "npm run test:cy -w @bridge-ui/react",
     "lint": "eslint packages/vue/src packages/react/src packages/core/src",
     "lint:fix": "eslint packages/vue/src packages/react/src packages/core/src --fix"
   },
@@ -32,6 +34,7 @@
     "@eslint/js": "^9.39.1",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^5.2.3",
+    "cypress": "^15.15.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^5.2.0",

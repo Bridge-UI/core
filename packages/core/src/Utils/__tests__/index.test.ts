@@ -10,8 +10,6 @@ import {
   mergePropsWithBridgeUIDefaults,
 } from "@core/Utils";
 
-// -- cn
-
 test("it should merge simple class strings", () => {
   expect(cn("foo", "bar")).toBe("foo bar");
 });
@@ -39,8 +37,6 @@ test("it should handle undefined and null", () => {
 test("it should return empty string for no inputs", () => {
   expect(cn()).toBe("");
 });
-
-// -- mergeBridgeUILayeredClasses
 
 test("it should return empty object when no layers provided", () => {
   expect(mergeBridgeUILayeredClasses()).toEqual({});
@@ -91,8 +87,6 @@ test("it should merge three layers progressively", () => {
   expect(result).toEqual({ a: "1", b: "3", c: "5", d: "6" });
 });
 
-// -- mergeBridgeUIStringMap
-
 test("it should return lib map when no provider given", () => {
   const lib = { none: "", sm: "shadow-sm", md: "shadow-md" };
 
@@ -126,8 +120,6 @@ test("it should handle undefined provider", () => {
     a: "1",
   });
 });
-
-// -- mergePropsWithBridgeUIDefaults
 
 test("it should return props as-is when no defaults or registry", () => {
   const props = { color: "info" as const, shadow: "sm" as const };

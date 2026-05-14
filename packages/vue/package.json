@@ -29,6 +29,8 @@
     "dev": "vite build --watch",
     "test": "vitest",
     "test:run": "vitest run",
+    "test:cy": "cypress run --component",
+    "test:cy:open": "cypress open --component",
     "type-check": "vue-tsc --noEmit"
   },
   "devDependencies": {
