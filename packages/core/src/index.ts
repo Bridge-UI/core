@@ -8,14 +8,90 @@ export type {
   AlertVariant,
 } from "@core/Components/Alert";
 export type {
+  AvatarColor,
+  AvatarColorItem,
+  AvatarRounded,
+  AvatarSize,
+} from "@core/Components/Avatar";
+export type {
+  BadgeColor,
+  BadgeColorItem,
+  BadgeRounded,
+  BadgeSize,
+  BadgeVariant,
+} from "@core/Components/Badge";
+export type {
   ButtonColor,
   ButtonColorItem,
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
 } from "@core/Components/Button";
+export type {
+  CardPadding,
+  CardRounded,
+  CardShadow,
+} from "@core/Components/Card";
+export type {
+  CheckboxColor,
+  CheckboxColorItem,
+  CheckboxRounded,
+  CheckboxSize,
+} from "@core/Components/Checkbox";
 export type { IconSize } from "@core/Components/Icon";
+export type { LinkColor, LinkColorItem, LinkSize } from "@core/Components/Link";
+export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 export type { MiniButtonSize } from "@core/Components/MiniButton";
+export type {
+  ModalRounded,
+  ModalShadow,
+  ModalSize,
+} from "@core/Components/Modal";
+export type {
+  NumberInputColor,
+  NumberInputColorItem,
+  NumberInputRounded,
+  NumberInputSize,
+  NumberInputVariant,
+} from "@core/Components/NumberInput";
+export type {
+  PasswordInputColor,
+  PasswordInputColorItem,
+  PasswordInputRounded,
+  PasswordInputSize,
+  PasswordInputVariant,
+} from "@core/Components/PasswordInput";
+export type {
+  RadioColor,
+  RadioColorItem,
+  RadioSize,
+} from "@core/Components/Radio";
+export type {
+  SelectColor,
+  SelectColorItem,
+  SelectRounded,
+  SelectSize,
+  SelectVariant,
+} from "@core/Components/Select";
+export type {
+  TextareaColor,
+  TextareaColorItem,
+  TextareaRounded,
+  TextareaSize,
+  TextareaVariant,
+} from "@core/Components/Textarea";
+export type {
+  TextInputColor,
+  TextInputColorItem,
+  TextInputRounded,
+  TextInputSize,
+  TextInputVariant,
+} from "@core/Components/TextInput";
+export type {
+  ToggleColor,
+  ToggleColorItem,
+  ToggleSize,
+} from "@core/Components/Toggle";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
@@ -24,13 +100,27 @@ export {
 } from "@core/Config";
 export type {
   AlertConfigOverrides,
+  AvatarConfigOverrides,
+  BadgeConfigOverrides,
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
   ButtonConfigOverrides,
+  CardConfigOverrides,
+  CheckboxConfigOverrides,
   Direction,
   IconConfigOverrides,
+  LinkConfigOverrides,
+  MenuConfigOverrides,
   MiniButtonConfigOverrides,
+  ModalConfigOverrides,
+  NumberInputConfigOverrides,
+  PasswordInputConfigOverrides,
+  RadioConfigOverrides,
+  SelectConfigOverrides,
+  TextInputConfigOverrides,
+  TextareaConfigOverrides,
+  ToggleConfigOverrides,
 } from "@core/Config";
 export {
   cn,
