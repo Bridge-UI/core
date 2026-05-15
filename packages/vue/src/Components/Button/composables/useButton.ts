@@ -4,11 +4,17 @@ import { Loader2 } from "lucide-vue-next";
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import type { ButtonColorItem, Direction } from "@bridge-ui/core";
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
-import { roundedProps } from "@bridge-ui/core/Components/Button/Rounded";
-import { sizeProps as buttonSizeProps } from "@bridge-ui/core/Components/Button/Size";
-import { variantProps } from "@bridge-ui/core/Components/Button/Variant";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  type Direction,
+} from "@bridge-ui/core";
+import {
+  roundedProps,
+  sizeProps,
+  variantProps,
+  type ButtonColorItem,
+} from "@bridge-ui/core/Components/Button";
 
 // ** Local Imports
 import type {
@@ -27,23 +33,21 @@ export function useButton(
 ) {
   const slots = useSlots();
 
+  const bridge = useBridgeUI();
+
+  const direction = computed((): Direction => {
+    return bridge?.global.value.direction ?? "ltr";
+  });
+
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
     props,
     libDefaults,
     componentName: "Button",
   });
 
-  const mergedRegistryClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>(
-    {
-      entry: bridgeButton,
-      props,
-    },
-  );
-
-  const bridge = useBridgeUI();
-
-  const direction = computed((): Direction => {
-    return bridge?.global.value.direction ?? "ltr";
+  const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
+    entry: bridgeButton,
+    props,
   });
 
   const mergedVariantMap = computed(() => {
@@ -55,7 +59,7 @@ export function useButton(
 
   const sizeClassMap = computed(() => {
     return mergeBridgeUILayeredClasses(
-      buttonSizeProps,
+      sizeProps,
       bridgeButton.value?.customProps?.size,
     );
   });
@@ -106,8 +110,8 @@ export function useButton(
       "disabled:opacity-80 disabled:cursor-not-allowed",
       get(roundedClassMap.value, [merged.value.rounded]),
       get(sizeClassMap.value, [merged.value.size]),
-      mergedRegistryClasses.value.root,
       merged.value.full && "w-full",
+      mergedClasses.value.root,
       colorClasses.value,
     );
   });
@@ -133,15 +137,15 @@ export function useButton(
   });
 
   const endIconClass = computed(() => {
-    return cn("shrink-0", mergedRegistryClasses.value.endIcon);
+    return cn("shrink-0", mergedClasses.value.endIcon);
   });
 
   const startIconClass = computed(() => {
-    return cn("shrink-0", mergedRegistryClasses.value.startIcon);
+    return cn("shrink-0", mergedClasses.value.startIcon);
   });
 
   const spinnerIconClass = computed(() => {
-    return cn("shrink-0 animate-spin", mergedRegistryClasses.value.loading);
+    return cn("shrink-0 animate-spin", mergedClasses.value.loading);
   });
 
   return {

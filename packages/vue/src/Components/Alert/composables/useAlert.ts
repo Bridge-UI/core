@@ -12,14 +12,18 @@ import {
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import { cn, type AlertColor } from "@bridge-ui/core";
-import { paddingProps } from "@bridge-ui/core/Components/Alert/Padding";
-import { roundedProps } from "@bridge-ui/core/Components/Alert/Rounded";
-import { shadowProps } from "@bridge-ui/core/Components/Alert/Shadow";
-import { variantProps } from "@bridge-ui/core/Components/Alert/Variant";
+import { cn, type Direction } from "@bridge-ui/core";
+import {
+  paddingProps,
+  roundedProps,
+  shadowProps,
+  variantProps,
+  type AlertColor,
+} from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";
+import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
@@ -39,6 +43,12 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
 
 export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
   const slots = useSlots();
+
+  const bridge = useBridgeUI();
+
+  const direction = computed((): Direction => {
+    return bridge?.global.value.direction ?? "ltr";
+  });
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     props,
@@ -118,8 +128,8 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
 
   const iconClasses = computed(() => {
     return cn(
+      "w-5 h-5 shrink-0",
       palette.value.iconColor,
-      "w-5 h-5 mr-3 shrink-0",
       get(mergedClasses.value, "icon"),
     );
   });
@@ -127,16 +137,16 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
   const titleClasses = computed(() => {
     return cn(
       palette.value.text,
-      "text-sm whitespace-normal",
       get(mergedClasses.value, "title"),
+      "text-start text-sm whitespace-normal",
       hasDefaultBody.value ? "font-semibold" : "font-normal",
     );
   });
 
   const bodyClasses = computed(() => {
     return cn(
-      "grow text-sm",
       palette.value.text,
+      "grow text-sm text-start",
       get(mergedClasses.value, "body"),
       get(mergedPaddingMap.value, merged.value.padding ?? "none"),
     );
@@ -158,6 +168,7 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
     merged,
     palette,
     showIcon,
+    direction,
     bodyClasses,
     bridgeAlert,
     iconClasses,

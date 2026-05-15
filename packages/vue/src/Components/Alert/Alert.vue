@@ -12,6 +12,7 @@ const {
   slots,
   merged,
   showIcon,
+  direction,
   bodyClasses,
   iconClasses,
   rootClasses,
@@ -29,11 +30,11 @@ const {
 </script>
 
 <template>
-  <div :class="rootClasses">
+  <div :dir="direction" :class="rootClasses">
     <slot v-if="slots.header" name="header" />
 
     <div v-else-if="showTitleRow" class="flex justify-between items-start">
-      <div class="flex items-start">
+      <div class="flex items-start gap-x-3">
         <template v-if="showIcon">
           <slot v-if="slots.icon" name="icon" />
 
