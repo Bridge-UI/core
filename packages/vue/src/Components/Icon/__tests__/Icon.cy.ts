@@ -2,7 +2,7 @@
 import { Info } from "lucide-vue-next";
 
 // ** Local Imports
-import Icon from "@/Components/Icon/Icon.vue";
+import Icon from "@/Components/Icon";
 
 test("it should render an SVG element", () => {
   cy.mount(Icon, { props: { icon: Info } });

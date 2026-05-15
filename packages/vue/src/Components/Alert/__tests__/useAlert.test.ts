@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
+import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 
 const libDefaults: Partial<AlertProps> = {

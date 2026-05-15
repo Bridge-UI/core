@@ -2,8 +2,12 @@
 export { useSelect } from "@/Components/Select/composables/useSelect";
 export type {
   SelectClasses,
+  SelectColorOverrides,
   SelectOption,
   SelectProps,
+  SelectRoundedOverrides,
+  SelectSizeOverrides,
   SelectSlots,
+  SelectVariantOverrides,
 } from "@/Components/Select/select.types";
 export { default } from "@/Components/Select/Select.vue";

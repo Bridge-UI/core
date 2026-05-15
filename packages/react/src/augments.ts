@@ -1,56 +1,32 @@
 // ** Local Imports
-import type { AlertClasses, AlertProps } from "@/Components/Alert/alert.types";
-import type {
-  AvatarClasses,
-  AvatarProps,
-} from "@/Components/Avatar/avatar.types";
-import type { BadgeClasses, BadgeProps } from "@/Components/Badge/badge.types";
-import type {
-  ButtonClasses,
-  ButtonProps,
-} from "@/Components/Button/button.types";
-import type { CardClasses, CardProps } from "@/Components/Card/card.types";
-import type {
-  CheckboxClasses,
-  CheckboxProps,
-} from "@/Components/Checkbox/checkbox.types";
-import type { IconProps } from "@/Components/Icon/icon.types";
-import type { LinkClasses, LinkProps } from "@/Components/Link/link.types";
-import type { MenuClasses, MenuProps } from "@/Components/Menu/menu.types";
-import type {
-  MiniBadgeClasses,
-  MiniBadgeProps,
-} from "@/Components/MiniBadge/miniBadge.types";
+import type { AlertClasses, AlertProps } from "@/Components/Alert";
+import type { AvatarClasses, AvatarProps } from "@/Components/Avatar";
+import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
+import type { ButtonClasses, ButtonProps } from "@/Components/Button";
+import type { CardClasses, CardProps } from "@/Components/Card";
+import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
+import type { IconProps } from "@/Components/Icon";
+import type { LinkClasses, LinkProps } from "@/Components/Link";
+import type { MenuClasses, MenuProps } from "@/Components/Menu";
+import type { MiniBadgeClasses, MiniBadgeProps } from "@/Components/MiniBadge";
 import type {
   MiniButtonClasses,
   MiniButtonProps,
-} from "@/Components/MiniButton/miniButton.types";
-import type { ModalClasses, ModalProps } from "@/Components/Modal/modal.types";
+} from "@/Components/MiniButton";
+import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type {
   NumberInputClasses,
   NumberInputProps,
-} from "@/Components/NumberInput/numberInput.types";
+} from "@/Components/NumberInput";
 import type {
   PasswordInputClasses,
   PasswordInputProps,
-} from "@/Components/PasswordInput/passwordInput.types";
-import type { RadioClasses, RadioProps } from "@/Components/Radio/radio.types";
-import type {
-  SelectClasses,
-  SelectProps,
-} from "@/Components/Select/select.types";
-import type {
-  TextareaClasses,
-  TextareaProps,
-} from "@/Components/Textarea/textarea.types";
-import type {
-  TextInputClasses,
-  TextInputProps,
-} from "@/Components/TextInput/textInput.types";
-import type {
-  ToggleClasses,
-  ToggleProps,
-} from "@/Components/Toggle/toggle.types";
+} from "@/Components/PasswordInput";
+import type { RadioClasses, RadioProps } from "@/Components/Radio";
+import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
+import type { TextInputClasses, TextInputProps } from "@/Components/TextInput";
+import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
   interface AlertConfigOverrides {

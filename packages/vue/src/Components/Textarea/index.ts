@@ -2,7 +2,11 @@
 export { useTextarea } from "@/Components/Textarea/composables/useTextarea";
 export type {
   TextareaClasses,
+  TextareaColorOverrides,
   TextareaProps,
+  TextareaRoundedOverrides,
+  TextareaSizeOverrides,
   TextareaSlots,
+  TextareaVariantOverrides,
 } from "@/Components/Textarea/textarea.types";
 export { default } from "@/Components/Textarea/Textarea.vue";
