@@ -1,4 +1,5 @@
 // ** Exports
+export { useTextInput } from "@/Components/TextInput/composables/useTextInput";
 export type {
   TextInputClasses,
   TextInputProps,

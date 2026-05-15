@@ -40,11 +40,11 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
 export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
   const slots = useSlots();
 
-  const { entry: bridgeAlert, merged } = useBridgeUIComponent(
-    "Alert",
+  const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     props,
-    defaults,
-  );
+    libDefaults: defaults,
+    componentName: "Alert",
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     props,

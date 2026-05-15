@@ -40,7 +40,7 @@ export interface BadgeProps {
   /**
    * The roundedness of the badge.
    *
-   * @default "full"
+   * @default "sm"
    */
   rounded?: MergeProps<BadgeRounded, BadgeRoundedOverrides>;
 
@@ -54,7 +54,7 @@ export interface BadgeProps {
   /**
    * The variant of the badge.
    *
-   * @default "flat"
+   * @default "solid"
    */
   variant?: MergeProps<BadgeVariant, BadgeVariantOverrides>;
 }

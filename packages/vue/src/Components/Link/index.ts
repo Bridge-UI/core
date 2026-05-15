@@ -1,4 +1,5 @@
 // ** Exports
+export { useLink } from "@/Components/Link/composables/useLink";
 export type {
   LinkClasses,
   LinkProps,

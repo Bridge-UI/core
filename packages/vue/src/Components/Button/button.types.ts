@@ -90,7 +90,7 @@ export interface ButtonProps {
   /**
    * The roundedness of the button.
    *
-   * @default "none"
+   * @default "sm"
    */
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
@@ -104,7 +104,7 @@ export interface ButtonProps {
   /**
    * The variant of the button.
    *
-   * @default "flat"
+   * @default "solid"
    */
   variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
 }

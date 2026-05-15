@@ -1,4 +1,5 @@
 // ** Exports
+export { useToggle } from "@/Components/Toggle/composables/useToggle";
 export type {
   ToggleClasses,
   ToggleProps,

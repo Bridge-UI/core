@@ -133,7 +133,7 @@ export interface NumberInputProps {
   /**
    * The roundedness of the number input.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<NumberInputRounded, NumberInputRoundedOverrides>;
 

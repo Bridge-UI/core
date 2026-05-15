@@ -94,7 +94,7 @@ export interface RadioProps {
   /**
    * The size of the radio.
    *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<RadioSize, RadioSizeOverrides>;
 

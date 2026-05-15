@@ -51,7 +51,7 @@ export interface MiniButtonProps {
   /**
    * The color to apply to the button.
    *
-   * @default undefined
+   * @default "primary"
    */
   color?: MergeProps<ButtonColor, MiniButtonColorOverrides>;
 
@@ -86,7 +86,7 @@ export interface MiniButtonProps {
   /**
    * The roundedness of the button.
    *
-   * @default "none"
+   * @default "sm"
    */
   rounded?: MergeProps<ButtonRounded, MiniButtonRoundedOverrides>;
 
@@ -100,7 +100,7 @@ export interface MiniButtonProps {
   /**
    * The variant of the button.
    *
-   * @default "flat"
+   * @default "solid"
    */
   variant?: MergeProps<ButtonVariant, MiniButtonVariantOverrides>;
 }

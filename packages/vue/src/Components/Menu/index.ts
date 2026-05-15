@@ -1,4 +1,5 @@
 // ** Exports
+export { useMenu } from "@/Components/Menu/composables/useMenu";
 export type {
   MenuClasses,
   MenuProps,

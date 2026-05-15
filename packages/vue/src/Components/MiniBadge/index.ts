@@ -1,4 +1,5 @@
 // ** Exports
+export { useMiniBadge } from "@/Components/MiniBadge/composables/useMiniBadge";
 export type {
   MiniBadgeClasses,
   MiniBadgeProps,

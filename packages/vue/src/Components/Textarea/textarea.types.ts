@@ -116,7 +116,7 @@ export interface TextareaProps {
   /**
    * The roundedness of the textarea.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<TextareaRounded, TextareaRoundedOverrides>;
 

@@ -72,7 +72,7 @@ export interface AlertProps {
   /**
    * The roundedness of the alert.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<AlertRounded, AlertRoundedOverrides>;
 

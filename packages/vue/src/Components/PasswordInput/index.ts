@@ -1,4 +1,5 @@
 // ** Exports
+export { usePasswordInput } from "@/Components/PasswordInput/composables/usePasswordInput";
 export type {
   PasswordInputClasses,
   PasswordInputProps,

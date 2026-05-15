@@ -1,4 +1,5 @@
 // ** Exports
+export { useRadio } from "@/Components/Radio/composables/useRadio";
 export type {
   RadioClasses,
   RadioProps,

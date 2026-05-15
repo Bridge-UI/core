@@ -114,7 +114,7 @@ export interface PasswordInputProps {
   /**
    * The roundedness of the password input.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<PasswordInputRounded, PasswordInputRoundedOverrides>;
 

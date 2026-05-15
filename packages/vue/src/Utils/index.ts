@@ -22,7 +22,15 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
 export function useBridgeUIComponent<
   K extends keyof BridgeUIComponentsConfig,
   P extends object,
->(componentName: K, props: P, libDefaults?: Partial<P>) {
+>({
+  props,
+  libDefaults,
+  componentName,
+}: {
+  props: P;
+  componentName: K;
+  libDefaults?: Partial<P>;
+}) {
   const bridge = useBridgeUI();
 
   const components = computed(() => {

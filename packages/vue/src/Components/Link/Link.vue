@@ -1,10 +1,29 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { LinkProps } from "@/Components/Link/link.types";
+import type { LinkProps, LinkSlots } from "@/Components/Link";
+import { useLink } from "@/Components/Link";
 
-defineProps<LinkProps>();
+defineSlots<LinkSlots>();
+
+const props = defineProps<LinkProps>();
+
+const { slots, merged } = useLink(props, {
+  size: "md",
+  color: "primary",
+  underline: "hover",
+});
 </script>
 
 <template>
-  <div />
+  <component
+    :href="merged.href"
+    :is="merged.href ? 'a' : 'span'"
+    class="inline-block text-center font-semibold"
+  >
+    <slot name="prepend" />
+
+    <slot />
+
+    <slot name="append" />
+  </component>
 </template>

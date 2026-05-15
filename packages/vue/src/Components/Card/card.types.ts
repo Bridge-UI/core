@@ -53,7 +53,7 @@ export interface CardProps {
   /**
    * The roundedness of the card.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<CardRounded, CardRoundedOverrides>;
 

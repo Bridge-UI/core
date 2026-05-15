@@ -1,4 +1,5 @@
 // ** Exports
+export { useSelect } from "@/Components/Select/composables/useSelect";
 export type {
   SelectClasses,
   SelectOption,

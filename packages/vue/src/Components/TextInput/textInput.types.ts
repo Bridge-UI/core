@@ -134,7 +134,7 @@ export interface TextInputProps {
   /**
    * The roundedness of the text input.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<TextInputRounded, TextInputRoundedOverrides>;
 

@@ -114,7 +114,7 @@ export interface CheckboxProps {
   /**
    * The size of the checkbox.
    *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
 }

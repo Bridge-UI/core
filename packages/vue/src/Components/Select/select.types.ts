@@ -139,7 +139,7 @@ export interface SelectProps {
   /**
    * The roundedness of the select.
    *
-   * @default "md"
+   * @default "sm"
    */
   rounded?: MergeProps<SelectRounded, SelectRoundedOverrides>;
 

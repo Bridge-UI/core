@@ -87,7 +87,7 @@ export interface ToggleProps {
   /**
    * The size of the toggle.
    *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 }

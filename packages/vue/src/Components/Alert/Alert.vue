@@ -21,7 +21,7 @@ const {
   hasDefaultBody,
 } = useAlert(props, {
   shadow: "sm",
-  rounded: "md",
+  rounded: "sm",
   variant: "flat",
   color: "primary",
   padding: "medium",

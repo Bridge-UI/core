@@ -1,4 +1,5 @@
 // ** Exports
+export { useTextarea } from "@/Components/Textarea/composables/useTextarea";
 export type {
   TextareaClasses,
   TextareaProps,

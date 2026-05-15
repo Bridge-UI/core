@@ -40,21 +40,21 @@ export interface MiniBadgeProps {
   /**
    * The roundedness of the badge.
    *
-   * @default "full"
+   * @default "sm"
    */
   rounded?: MergeProps<BadgeRounded, MiniBadgeRoundedOverrides>;
 
   /**
    * The size of the badge.
    *
-   * @default "xs"
+   * @default "sm"
    */
   size?: MergeProps<MiniBadgeSize, MiniBadgeSizeOverrides>;
 
   /**
    * The variant of the badge.
    *
-   * @default "flat"
+   * @default "solid"
    */
   variant?: MergeProps<BadgeVariant, MiniBadgeVariantOverrides>;
 }

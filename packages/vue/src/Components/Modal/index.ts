@@ -1,4 +1,5 @@
 // ** Exports
+export { useModal } from "@/Components/Modal/composables/useModal";
 export type {
   ModalClasses,
   ModalProps,

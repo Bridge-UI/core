@@ -1,4 +1,5 @@
 // ** Exports
+export { useNumberInput } from "@/Components/NumberInput/composables/useNumberInput";
 export type {
   NumberInputClasses,
   NumberInputProps,
