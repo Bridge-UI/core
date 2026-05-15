@@ -18,6 +18,10 @@ import type { IconProps } from "@/Components/Icon/icon.types";
 import type { LinkClasses, LinkProps } from "@/Components/Link/link.types";
 import type { MenuClasses, MenuProps } from "@/Components/Menu/menu.types";
 import type {
+  MiniBadgeClasses,
+  MiniBadgeProps,
+} from "@/Components/MiniBadge/miniBadge.types";
+import type {
   MiniButtonClasses,
   MiniButtonProps,
 } from "@/Components/MiniButton/miniButton.types";
@@ -97,6 +101,13 @@ declare module "@bridge-ui/core" {
   interface MenuConfigOverrides {
     classes: MenuClasses;
     defaultProps: Partial<Pick<MenuProps, "rounded" | "shadow">>;
+  }
+
+  interface MiniBadgeConfigOverrides {
+    classes: MiniBadgeClasses;
+    defaultProps: Partial<
+      Pick<MiniBadgeProps, "size" | "color" | "rounded" | "variant">
+    >;
   }
 
   interface MiniButtonConfigOverrides {

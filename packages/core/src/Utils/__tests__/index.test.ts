@@ -16,7 +16,7 @@ test("it should merge simple class strings", () => {
 
 test("it should handle conditional classes via clsx", () => {
   const condition = false;
-  
+
   expect(cn("base", condition && "hidden", "visible")).toBe("base visible");
 });
 

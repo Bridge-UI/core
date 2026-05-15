@@ -19,6 +19,7 @@ export type {
   IconConfigOverrides,
   LinkConfigOverrides,
   MenuConfigOverrides,
+  MiniBadgeConfigOverrides,
   MiniButtonConfigOverrides,
   ModalConfigOverrides,
   NumberInputConfigOverrides,

@@ -41,6 +41,7 @@ import type {
 import type { IconSize } from "@core/Components/Icon";
 import type { LinkColor, LinkColorItem, LinkSize } from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
+import type { MiniBadgeSize } from "@core/Components/MiniBadge";
 import type { MiniButtonSize } from "@core/Components/MiniButton";
 import type {
   ModalRounded,
@@ -111,6 +112,7 @@ export interface CheckboxConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
+export interface MiniBadgeConfigOverrides {}
 export interface MiniButtonConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberInputConfigOverrides {}
@@ -240,6 +242,19 @@ export interface MenuConfigBase {
   customProps: Partial<{
     rounded: Record<string, string>;
     shadow: Record<string, string>;
+  }>;
+}
+
+export interface MiniBadgeConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof BadgeColor;
+    size: keyof MiniBadgeSize;
+    rounded: keyof BadgeRounded;
+    variant: keyof BadgeVariant;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
   }>;
 }
 
@@ -379,6 +394,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
+  MiniBadge: Partial<Overwrite<MiniBadgeConfigBase, MiniBadgeConfigOverrides>>;
   MiniButton: Partial<
     Overwrite<MiniButtonConfigBase, MiniButtonConfigOverrides>
   >;

@@ -21,6 +21,8 @@ export { default as Link } from "@/Components/Link";
 export type { LinkClasses, LinkProps, LinkSlots } from "@/Components/Link";
 export { default as Menu } from "@/Components/Menu";
 export type { MenuClasses, MenuProps, MenuSlots } from "@/Components/Menu";
+export { default as MiniBadge } from "@/Components/MiniBadge";
+export type { MiniBadgeClasses, MiniBadgeProps } from "@/Components/MiniBadge";
 export {
   default as MiniButton,
   type MiniButtonProps,
