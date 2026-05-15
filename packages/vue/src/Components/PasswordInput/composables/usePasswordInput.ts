@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function usePasswordInput(
   props: PasswordInputProps,
-  defaults: Partial<PasswordInputProps>,
+  libDefaults: Partial<PasswordInputProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgePasswordInput, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "PasswordInput",
   });
 

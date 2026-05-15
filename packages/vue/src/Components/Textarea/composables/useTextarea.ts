@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function useTextarea(
   props: TextareaProps,
-  defaults: Partial<TextareaProps>,
+  libDefaults: Partial<TextareaProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgeTextarea, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Textarea",
   });
 

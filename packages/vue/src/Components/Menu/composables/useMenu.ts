@@ -5,12 +5,12 @@ import { useSlots } from "vue";
 import type { MenuProps } from "@/Components/Menu/menu.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useMenu(props: MenuProps, defaults: Partial<MenuProps>) {
+export function useMenu(props: MenuProps, libDefaults: Partial<MenuProps>) {
   const slots = useSlots();
 
   const { entry: bridgeMenu, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Menu",
   });
 

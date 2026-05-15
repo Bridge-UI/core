@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function useMiniBadge(
   props: MiniBadgeProps,
-  defaults: Partial<MiniBadgeProps>,
+  libDefaults: Partial<MiniBadgeProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgeMiniBadge, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "MiniBadge",
   });
 

@@ -5,12 +5,12 @@ import { useSlots } from "vue";
 import type { ModalProps } from "@/Components/Modal/modal.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useModal(props: ModalProps, defaults: Partial<ModalProps>) {
+export function useModal(props: ModalProps, libDefaults: Partial<ModalProps>) {
   const slots = useSlots();
 
   const { entry: bridgeModal, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Modal",
   });
 

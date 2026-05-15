@@ -7,7 +7,7 @@ import { defineComponent, h } from "vue";
 import type { AlertProps } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 
-const defaults: Partial<AlertProps> = {
+const libDefaults: Partial<AlertProps> = {
   color: "primary",
   variant: "flat",
   shadow: "none",
@@ -20,7 +20,7 @@ function mountUseAlert(props: AlertProps = {}) {
 
   const Wrapper = defineComponent({
     setup() {
-      result = useAlert(props, defaults);
+      result = useAlert(props, libDefaults);
 
       return () => h("div");
     },

@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function useMiniButton(
   props: MiniButtonProps,
-  defaults: Partial<MiniButtonProps>,
+  libDefaults: Partial<MiniButtonProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgeMiniButton, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "MiniButton",
   });
 

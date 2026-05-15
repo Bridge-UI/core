@@ -5,12 +5,12 @@ import { useSlots } from "vue";
 import type { RadioProps } from "@/Components/Radio/radio.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useRadio(props: RadioProps, defaults: Partial<RadioProps>) {
+export function useRadio(props: RadioProps, libDefaults: Partial<RadioProps>) {
   const slots = useSlots();
 
   const { entry: bridgeRadio, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Radio",
   });
 

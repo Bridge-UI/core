@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function useNumberInput(
   props: NumberInputProps,
-  defaults: Partial<NumberInputProps>,
+  libDefaults: Partial<NumberInputProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgeNumberInput, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "NumberInput",
   });
 

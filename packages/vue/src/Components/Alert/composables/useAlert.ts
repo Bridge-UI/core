@@ -37,12 +37,12 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export function useAlert(props: AlertProps, defaults: Partial<AlertProps>) {
+export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
   const slots = useSlots();
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Alert",
   });
 

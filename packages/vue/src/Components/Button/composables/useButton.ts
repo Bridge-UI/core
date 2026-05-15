@@ -5,13 +5,16 @@ import { useSlots } from "vue";
 import type { ButtonProps } from "@/Components/Button/button.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useButton(props: ButtonProps, defaults: Partial<ButtonProps>) {
+export function useButton(
+  props: ButtonProps,
+  libDefaults: Partial<ButtonProps>,
+) {
   const slots = useSlots();
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
-    componentName: "Button",
     props,
-    libDefaults: defaults,
+    libDefaults,
+    componentName: "Button",
   });
 
   return {

@@ -7,13 +7,13 @@ import { useBridgeUIComponent } from "@/Utils";
 
 export function useCheckbox(
   props: CheckboxProps,
-  defaults: Partial<CheckboxProps>,
+  libDefaults: Partial<CheckboxProps>,
 ) {
   const slots = useSlots();
 
   const { entry: bridgeCheckbox, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Checkbox",
   });
 

@@ -5,12 +5,12 @@ import { useSlots } from "vue";
 import type { IconProps } from "@/Components/Icon/icon.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useIcon(props: IconProps, defaults: Partial<IconProps>) {
+export function useIcon(props: IconProps, libDefaults: Partial<IconProps>) {
   const slots = useSlots();
 
   const { entry: bridgeIcon, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Icon",
   });
 

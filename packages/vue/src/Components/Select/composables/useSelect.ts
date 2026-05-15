@@ -5,12 +5,15 @@ import { useSlots } from "vue";
 import type { SelectProps } from "@/Components/Select/select.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useSelect(props: SelectProps, defaults: Partial<SelectProps>) {
+export function useSelect(
+  props: SelectProps,
+  libDefaults: Partial<SelectProps>,
+) {
   const slots = useSlots();
 
   const { entry: bridgeSelect, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Select",
   });
 

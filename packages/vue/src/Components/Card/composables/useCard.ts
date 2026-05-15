@@ -5,12 +5,12 @@ import { useSlots } from "vue";
 import type { CardProps } from "@/Components/Card/card.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useCard(props: CardProps, defaults: Partial<CardProps>) {
+export function useCard(props: CardProps, libDefaults: Partial<CardProps>) {
   const slots = useSlots();
 
   const { entry: bridgeCard, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Card",
   });
 

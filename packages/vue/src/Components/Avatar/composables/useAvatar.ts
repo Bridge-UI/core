@@ -5,12 +5,15 @@ import { useSlots } from "vue";
 import type { AvatarProps } from "@/Components/Avatar/avatar.types";
 import { useBridgeUIComponent } from "@/Utils";
 
-export function useAvatar(props: AvatarProps, defaults: Partial<AvatarProps>) {
+export function useAvatar(
+  props: AvatarProps,
+  libDefaults: Partial<AvatarProps>,
+) {
   const slots = useSlots();
 
   const { entry: bridgeAvatar, merged } = useBridgeUIComponent({
     props,
-    libDefaults: defaults,
+    libDefaults,
     componentName: "Avatar",
   });
 
