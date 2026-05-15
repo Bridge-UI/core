@@ -57,7 +57,9 @@ function useBridgeUIContextValue(
   }, [baseComponents, componentsPatch]);
 
   const setGlobal = useCallback((patch: Partial<BridgeUIGlobal>) => {
-    setGlobalPatch((prev) => toMerged(prev, patch));
+    setGlobalPatch((prev) => {
+      return toMerged(prev, patch);
+    });
   }, []);
 
   const setComponents = useCallback((patch: BridgeUIComponentsConfig) => {

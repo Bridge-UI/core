@@ -18,9 +18,9 @@ export interface ButtonVariantOverrides {}
 
 export interface ButtonClasses {
   /**
-   * The classes to apply to the left icon.
+   * The classes to apply to the end icon.
    */
-  leftIcon?: string;
+  endIcon?: string;
 
   /**
    * The classes to apply to the loading.
@@ -28,14 +28,14 @@ export interface ButtonClasses {
   loading?: string;
 
   /**
-   * The classes to apply to the right icon.
-   */
-  rightIcon?: string;
-
-  /**
    * The classes to apply to the root.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the start icon.
+   */
+  startIcon?: string;
 }
 
 export interface ButtonProps {
@@ -75,6 +75,13 @@ export interface ButtonProps {
   disabled?: boolean;
 
   /**
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * Whether the button is full width.
    *
    * @default false
@@ -89,13 +96,6 @@ export interface ButtonProps {
   href?: string;
 
   /**
-   * The left icon to apply to the button.
-   *
-   * @default undefined
-   */
-  leftIcon?: LucideIcon;
-
-  /**
    * Whether the button is loading.
    *
    * @default false
@@ -103,16 +103,9 @@ export interface ButtonProps {
   loading?: boolean;
 
   /**
-   * The right icon to apply to the button.
-   *
-   * @default undefined
-   */
-  rightIcon?: LucideIcon;
-
-  /**
    * The roundedness of the button.
    *
-   * @default "none"
+   * @default "sm"
    */
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
@@ -124,6 +117,13 @@ export interface ButtonProps {
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
+
+  /**
    * The slots to apply to the button.
    *
    * @default undefined
@@ -133,19 +133,19 @@ export interface ButtonProps {
   /**
    * The variant of the button.
    *
-   * @default "flat"
+   * @default "solid"
    */
   variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
 }
 
 export interface ButtonSlots {
   /**
-   * The slot to apply to the append.
+   * Slot at the inline end (respects `BridgeUI` global `direction`).
    */
-  append?: ReactNode;
+  end?: ReactNode;
 
   /**
-   * The slot to apply to the prepend.
+   * Slot at the inline start (respects `BridgeUI` global `direction`).
    */
-  prepend?: ReactNode;
+  start?: ReactNode;
 }

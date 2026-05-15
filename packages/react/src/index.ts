@@ -2,7 +2,7 @@
 import "@/augments";
 
 // ** Exports
-export { default as Alert } from "@/Components/Alert";
+export { default as Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
   AlertColorOverrides,
@@ -30,7 +30,11 @@ export type {
   BadgeSizeOverrides,
   BadgeVariantOverrides,
 } from "@/Components/Badge";
-export { default as Button, type ButtonProps } from "@/Components/Button";
+export {
+  default as Button,
+  useButton,
+  type ButtonProps,
+} from "@/Components/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,

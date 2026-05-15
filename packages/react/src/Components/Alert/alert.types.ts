@@ -63,30 +63,30 @@ export interface AlertProps {
   color?: MergeProps<AlertColor, AlertColorOverrides>;
 
   /**
-   * The icon to apply to the alert.
+   * The icon to apply to the alert. Use `null` to omit the prop icon.
    *
    * @default undefined
    */
-  icon?: LucideIcon;
+  icon?: LucideIcon | null;
 
   /**
    * The padding to apply to the alert.
    *
-   * @default "none"
+   * @default "medium"
    */
   padding?: MergeProps<AlertPadding, AlertPaddingOverrides>;
 
   /**
    * The roundedness of the alert.
    *
-   * @default "none"
+   * @default "sm"
    */
   rounded?: MergeProps<AlertRounded, AlertRoundedOverrides>;
 
   /**
    * The shadow to apply to the alert.
    *
-   * @default "none"
+   * @default "sm"
    */
   shadow?: MergeProps<AlertShadow, AlertShadowOverrides>;
 

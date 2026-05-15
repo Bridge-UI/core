@@ -8,3 +8,4 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button/button.types";
+export { useButton } from "@/Components/Button/hooks/useButton";
