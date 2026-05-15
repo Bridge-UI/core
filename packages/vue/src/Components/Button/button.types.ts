@@ -17,10 +17,25 @@ export interface ButtonRoundedOverrides {}
 export interface ButtonVariantOverrides {}
 
 export interface ButtonClasses {
-  leftIcon?: string;
+  /**
+   * The classes to apply to the end icon.
+   */
+  endIcon?: string;
+
+  /**
+   * The classes to apply to the loading.
+   */
   loading?: string;
-  rightIcon?: string;
+
+  /**
+   * The classes to apply to the root.
+   */
   root?: string;
+
+  /**
+   * The classes to apply to the start icon.
+   */
+  startIcon?: string;
 }
 
 export interface ButtonProps {
@@ -67,11 +82,11 @@ export interface ButtonProps {
   href?: string;
 
   /**
-   * The left icon to apply to the button.
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
    *
    * @default undefined
    */
-  leftIcon?: LucideIcon;
+  startIcon?: LucideIcon;
 
   /**
    * Whether the button is loading.
@@ -81,11 +96,11 @@ export interface ButtonProps {
   loading?: boolean;
 
   /**
-   * The right icon to apply to the button.
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
    *
    * @default undefined
    */
-  rightIcon?: LucideIcon;
+  endIcon?: LucideIcon;
 
   /**
    * The roundedness of the button.
@@ -111,17 +126,17 @@ export interface ButtonProps {
 
 export interface ButtonSlots {
   /**
-   * The slot to apply to the append.
-   */
-  append?: Slot<undefined>;
-
-  /**
-   * The slot to apply to the default.
+   * The default slot (label / main content).
    */
   default?: Slot<undefined>;
 
   /**
-   * The slot to apply to the prepend.
+   * Slot at the inline end (respects `BridgeUI` global `direction`).
    */
-  prepend?: Slot<undefined>;
+  end?: Slot<undefined>;
+
+  /**
+   * Slot at the inline start (respects `BridgeUI` global `direction`).
+   */
+  start?: Slot<undefined>;
 }

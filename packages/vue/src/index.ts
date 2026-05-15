@@ -12,7 +12,11 @@ export type {
 } from "@/Components/Avatar";
 export { default as Badge } from "@/Components/Badge";
 export type { BadgeClasses, BadgeProps, BadgeSlots } from "@/Components/Badge";
-export { default as Button, type ButtonProps } from "@/Components/Button";
+export {
+  default as Button,
+  type ButtonProps,
+  type ButtonSlots,
+} from "@/Components/Button";
 export { default as Card } from "@/Components/Card";
 export type { CardClasses, CardProps, CardSlots } from "@/Components/Card";
 export { default as Checkbox } from "@/Components/Checkbox";
