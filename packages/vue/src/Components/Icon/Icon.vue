@@ -5,7 +5,7 @@ import { computed } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Icon/Size";
+import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon/icon.types";

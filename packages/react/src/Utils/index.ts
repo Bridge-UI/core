@@ -4,8 +4,4 @@ export {
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
-export type {
-  MergeProps,
-  Overwrite,
-  UnionProps,
-} from "@bridge-ui/core/Utils/types";
+export type { MergeProps, Overwrite, UnionProps } from "@bridge-ui/core/Utils";

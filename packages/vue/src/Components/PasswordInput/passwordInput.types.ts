@@ -155,4 +155,14 @@ export interface PasswordInputSlots {
    * Custom label content.
    */
   label?: Slot<undefined>;
+
+  /**
+   * Content at the inline start of the input.
+   */
+  left?: Slot<undefined>;
+
+  /**
+   * Content at the inline end of the input.
+   */
+  right?: Slot<undefined>;
 }

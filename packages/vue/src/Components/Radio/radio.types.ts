@@ -78,6 +78,13 @@ export interface RadioProps {
   label?: string;
 
   /**
+   * The `name` attribute shared by radios in the same group.
+   *
+   * @default undefined
+   */
+  name?: string;
+
+  /**
    * The currently selected value in the radio group.
    *
    * @default undefined

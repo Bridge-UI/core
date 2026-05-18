@@ -3,7 +3,7 @@ import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
 // ** Core Imports
-import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config/types";
+import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -15,6 +15,16 @@ import { useBridgeUI } from "@/Provider/useBridgeUI";
 type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
   BridgeUIComponentsConfig[K]
 >;
+
+export type UseBridgeUIComponentReturn<
+  K extends keyof BridgeUIComponentsConfig,
+  P extends object,
+> = {
+  merged: ComputedRef<P>;
+  bridge: ReturnType<typeof useBridgeUI>;
+  entry: ComputedRef<RegistryEntryFor<K> | undefined>;
+  components: ComputedRef<BridgeUIComponentsConfig | null>;
+};
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.
@@ -30,7 +40,7 @@ export function useBridgeUIComponent<
   props: P;
   componentName: K;
   libDefaults?: Partial<P>;
-}) {
+}): UseBridgeUIComponentReturn<K, P> {
   const bridge = useBridgeUI();
 
   const components = computed(() => {
@@ -68,12 +78,12 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   props: { classes?: Partial<C> };
   entry: ComputedRef<{ classes?: object } | undefined>;
 }) {
-  return computed(() =>
-    mergeBridgeUILayeredClasses(
+  return computed(() => {
+    return mergeBridgeUILayeredClasses(
       entry.value?.classes as Partial<C> | undefined,
       props.classes,
-    ),
-  );
+    );
+  });
 }
 
 // ** Exports
@@ -82,8 +92,4 @@ export {
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
-export type {
-  MergeProps,
-  Overwrite,
-  UnionProps,
-} from "@bridge-ui/core/Utils/types";
+export type { MergeProps, Overwrite, UnionProps } from "@bridge-ui/core/Utils";

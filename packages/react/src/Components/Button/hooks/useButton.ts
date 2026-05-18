@@ -93,9 +93,10 @@ export function useButton(
     );
   }, [bridgeButton?.customProps?.rounded]);
 
-  const colorItem = get(mergedVariantMap, [merged.variant, merged.color]) as
-    | ButtonColorItem
-    | undefined;
+  const colorItem = get(mergedVariantMap, [
+    merged.variant ?? "solid",
+    merged.color ?? "primary",
+  ]) as ButtonColorItem | undefined;
 
   const colorClasses = cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
 
@@ -112,10 +113,10 @@ export function useButton(
     "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
     "transition-all ease-in-out duration-200 focus:ring-2",
     "disabled:opacity-80 disabled:cursor-not-allowed",
-    get(roundedClassMap, merged.rounded),
-    get(sizeClassMap, merged.size),
-    merged.full && "w-full",
+    get(roundedClassMap, merged.rounded ?? "sm"),
+    get(sizeClassMap, merged.size ?? "md"),
     get(mergedClasses, "root"),
+    merged.full && "w-full",
     colorClasses,
   );
 

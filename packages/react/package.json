@@ -9,6 +9,18 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./Utils": {
+      "import": "./dist/Utils/index.js",
+      "types": "./dist/Utils/index.d.ts"
+    },
+    "./Provider": {
+      "import": "./dist/Provider/index.js",
+      "types": "./dist/Provider/index.d.ts"
+    },
+    "./Components/*": {
+      "import": "./dist/Components/*/index.js",
+      "types": "./dist/Components/*/index.d.ts"
+    },
     "./theme.css": "./dist/theme.css"
   },
   "files": [

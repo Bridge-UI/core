@@ -25,7 +25,7 @@ const { slots, merged } = useRadio(props, {
         :value="merged.value"
         :disabled="merged.disabled"
         :required="merged.required"
-        :checked="merged.modelValue"
+        :checked="merged.modelValue === merged.value"
       />
 
       <span>{{ merged.label }}</span>
@@ -39,7 +39,7 @@ const { slots, merged } = useRadio(props, {
       :value="merged.value"
       :disabled="merged.disabled"
       :required="merged.required"
-      :checked="merged.modelValue"
+      :checked="merged.modelValue === merged.value"
     />
 
     <slot v-if="slots.description" name="description" />

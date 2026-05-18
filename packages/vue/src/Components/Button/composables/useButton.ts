@@ -73,8 +73,8 @@ export function useButton(
 
   const colorItem = computed((): ButtonColorItem | undefined => {
     return get(mergedVariantMap.value, [
-      merged.value.variant,
-      merged.value.color,
+      merged.value.variant ?? "solid",
+      merged.value.color ?? "primary",
     ]) as ButtonColorItem | undefined;
   });
 
@@ -106,10 +106,10 @@ export function useButton(
     return cn(
       "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
       "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
+      get(roundedClassMap.value, merged.value.rounded ?? "sm"),
       "transition-all ease-in-out duration-200 focus:ring-2",
+      get(sizeClassMap.value, merged.value.size ?? "md"),
       "disabled:opacity-80 disabled:cursor-not-allowed",
-      get(roundedClassMap.value, [merged.value.rounded]),
-      get(sizeClassMap.value, [merged.value.size]),
       merged.value.full && "w-full",
       mergedClasses.value.root,
       colorClasses.value,
