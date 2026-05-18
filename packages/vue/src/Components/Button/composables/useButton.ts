@@ -4,11 +4,7 @@ import { Loader2 } from "lucide-vue-next";
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  type Direction,
-} from "@bridge-ui/core";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
   roundedProps,
   sizeProps,
@@ -21,7 +17,6 @@ import type {
   ButtonClasses,
   ButtonProps,
 } from "@/Components/Button/button.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -32,12 +27,6 @@ export function useButton(
   libDefaults: Partial<ButtonProps>,
 ) {
   const slots = useSlots();
-
-  const bridge = useBridgeUI();
-
-  const direction = computed((): Direction => {
-    return bridge?.global.value.direction ?? "ltr";
-  });
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
     props,
@@ -154,7 +143,6 @@ export function useButton(
     merged,
     isAnchor,
     isButton,
-    direction,
     rootClass,
     isDisabled,
     showEndIcon,

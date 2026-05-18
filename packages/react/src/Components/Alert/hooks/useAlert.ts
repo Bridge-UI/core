@@ -12,7 +12,7 @@ import {
 import { useMemo } from "react";
 
 // ** Core Imports
-import type { AlertColor, Direction } from "@bridge-ui/core";
+import type { AlertColor } from "@bridge-ui/core";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -51,8 +51,6 @@ export function useAlert(
   options: UseAlertOptions,
 ) {
   const bridge = useBridgeUI();
-
-  const direction: Direction = bridge?.global.direction ?? "ltr";
 
   const components = bridge?.components ?? null;
 
@@ -172,7 +170,6 @@ export function useAlert(
     merged,
     palette,
     showIcon,
-    direction,
     bodyClasses,
     iconClasses,
     rootClasses,

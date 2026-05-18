@@ -12,7 +12,7 @@ import {
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import { cn, type Direction } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 import {
   paddingProps,
   roundedProps,
@@ -23,7 +23,6 @@ import {
 
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
@@ -43,12 +42,6 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
 
 export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
   const slots = useSlots();
-
-  const bridge = useBridgeUI();
-
-  const direction = computed((): Direction => {
-    return bridge?.global.value.direction ?? "ltr";
-  });
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     props,
@@ -168,7 +161,6 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
     merged,
     palette,
     showIcon,
-    direction,
     bodyClasses,
     bridgeAlert,
     iconClasses,

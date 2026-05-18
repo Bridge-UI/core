@@ -140,12 +140,12 @@ export interface ButtonProps {
 
 export interface ButtonSlots {
   /**
-   * Slot at the inline end (respects `BridgeUI` global `direction`).
+   * Slot at the inline end (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
    */
   end?: ReactNode;
 
   /**
-   * Slot at the inline start (respects `BridgeUI` global `direction`).
+   * Slot at the inline start (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
    */
   start?: ReactNode;
 }

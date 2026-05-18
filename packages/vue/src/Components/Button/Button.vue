@@ -16,7 +16,6 @@ const {
   merged,
   isAnchor,
   isButton,
-  direction,
   rootClass,
   isDisabled,
   showEndIcon,
@@ -40,7 +39,6 @@ const {
 <template>
   <component
     :is="tag"
-    :dir="direction"
     :class="rootClass"
     :type="isButton ? 'button' : undefined"
     :disabled="isButton ? isDisabled : undefined"

@@ -131,12 +131,12 @@ export interface ButtonSlots {
   default?: Slot<undefined>;
 
   /**
-   * Slot at the inline end (respects `BridgeUI` global `direction`).
+   * Slot at the inline end (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
    */
   end?: Slot<undefined>;
 
   /**
-   * Slot at the inline start (respects `BridgeUI` global `direction`).
+   * Slot at the inline start (follows `dir` on an ancestor, e.g. `<html dir="rtl">`).
    */
   start?: Slot<undefined>;
 }

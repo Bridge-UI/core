@@ -9,7 +9,6 @@ function Alert(props: AlertProps) {
   const {
     merged,
     showIcon,
-    direction,
     bodyClasses,
     iconClasses,
     rootClasses,
@@ -30,7 +29,7 @@ function Alert(props: AlertProps) {
   );
 
   return (
-    <div dir={direction} className={rootClasses}>
+    <div className={rootClasses}>
       {slots?.header}
 
       {!slots?.header && showTitleRow && (

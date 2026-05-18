@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
-import type { ButtonColorItem, Direction } from "@bridge-ui/core";
+import type { ButtonColorItem } from "@bridge-ui/core";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -33,8 +33,6 @@ export function useButton(
   options: UseButtonOptions,
 ) {
   const bridge = useBridgeUI();
-
-  const direction: Direction = bridge?.global.direction ?? "ltr";
 
   const components = bridge?.components ?? null;
 
@@ -147,7 +145,6 @@ export function useButton(
     merged,
     isAnchor,
     isButton,
-    direction,
     rootClass,
     isDisabled,
     showEndIcon,

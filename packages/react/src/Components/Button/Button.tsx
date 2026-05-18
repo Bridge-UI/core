@@ -14,7 +14,6 @@ function Button(props: ButtonProps) {
     merged,
     isAnchor,
     isButton,
-    direction,
     rootClass,
     isDisabled,
     showEndIcon,
@@ -43,7 +42,6 @@ function Button(props: ButtonProps) {
   return createElement(
     tag,
     {
-      dir: direction,
       className: rootClass,
       type: isButton ? "button" : undefined,
       disabled: isButton ? isDisabled : undefined,
