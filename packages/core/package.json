@@ -34,14 +34,14 @@
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^3.6.0"
   },
+  "scripts": {
+    "build": "vite build",
+    "type-check": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^6.0.3"
-  },
-  "scripts": {
-    "build": "vite build",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "type-check": "tsc --noEmit"
   }
 }

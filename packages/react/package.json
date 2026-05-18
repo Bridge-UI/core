@@ -40,11 +40,11 @@
   "scripts": {
     "build": "vite build && cp src/theme.css dist/theme.css",
     "dev": "vite build --watch",
+    "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
     "test:cy": "cypress run --component",
-    "test:cy:open": "cypress open --component",
-    "type-check": "tsc --noEmit"
+    "test:cy:open": "cypress open --component"
   },
   "devDependencies": {
     "@bridge-ui/core": "*",
