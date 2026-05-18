@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/NumberInput/NumberInput";
+export { default as NumberInput } from "@/Components/NumberInput/NumberInput";
 export type {
   NumberInputClasses,
   NumberInputColorOverrides,

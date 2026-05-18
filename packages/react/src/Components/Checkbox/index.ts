@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Checkbox/Checkbox";
+export { default as Checkbox } from "@/Components/Checkbox/Checkbox";
 export type {
   CheckboxClasses,
   CheckboxColorOverrides,

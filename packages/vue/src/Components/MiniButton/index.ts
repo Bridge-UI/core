@@ -9,4 +9,4 @@ export type {
   MiniButtonSlots,
   MiniButtonVariantOverrides,
 } from "@/Components/MiniButton/miniButton.types";
-export { default } from "@/Components/MiniButton/MiniButton.vue";
+export { default as MiniButton } from "@/Components/MiniButton/MiniButton.vue";

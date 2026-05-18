@@ -9,4 +9,4 @@ export type {
   TextInputSlots,
   TextInputVariantOverrides,
 } from "@/Components/TextInput/textInput.types";
-export { default } from "@/Components/TextInput/TextInput.vue";
+export { default as TextInput } from "@/Components/TextInput/TextInput.vue";

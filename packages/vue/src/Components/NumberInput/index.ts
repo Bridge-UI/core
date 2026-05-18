@@ -9,4 +9,4 @@ export type {
   NumberInputSlots,
   NumberInputVariantOverrides,
 } from "@/Components/NumberInput/numberInput.types";
-export { default } from "@/Components/NumberInput/NumberInput.vue";
+export { default as NumberInput } from "@/Components/NumberInput/NumberInput.vue";

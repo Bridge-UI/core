@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Badge/Badge";
+export { default as Badge } from "@/Components/Badge/Badge";
 export type {
   BadgeClasses,
   BadgeColorOverrides,

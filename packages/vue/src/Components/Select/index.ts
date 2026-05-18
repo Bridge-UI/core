@@ -10,4 +10,4 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select/select.types";
-export { default } from "@/Components/Select/Select.vue";
+export { default as Select } from "@/Components/Select/Select.vue";

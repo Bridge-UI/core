@@ -5,7 +5,7 @@ import type {
   ButtonProps,
   ButtonSlots,
 } from "@/Components/Button/button.types";
-import Icon from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<ButtonSlots>();
 

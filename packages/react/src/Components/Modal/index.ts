@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Modal/Modal";
+export { default as Modal } from "@/Components/Modal/Modal";
 export type {
   ModalClasses,
   ModalProps,

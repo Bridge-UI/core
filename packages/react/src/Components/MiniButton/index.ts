@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/MiniButton/MiniButton";
+export { default as MiniButton } from "@/Components/MiniButton/MiniButton";
 export type {
   MiniButtonClasses,
   MiniButtonColorOverrides,

@@ -1,4 +1,5 @@
-export { default } from "@/Components/Button/Button";
+// ** Exports
+export { default as Button } from "@/Components/Button/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,

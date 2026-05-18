@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Select/Select";
+export { default as Select } from "@/Components/Select/Select";
 export type {
   SelectClasses,
   SelectColorOverrides,

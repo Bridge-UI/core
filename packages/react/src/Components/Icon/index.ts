@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Icon/Icon";
+export { default as Icon } from "@/Components/Icon/Icon";
 export type {
   IconProps,
   IconSizeOverrides,

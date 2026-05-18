@@ -8,4 +8,4 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal/modal.types";
-export { default } from "@/Components/Modal/Modal.vue";
+export { default as Modal } from "@/Components/Modal/Modal.vue";

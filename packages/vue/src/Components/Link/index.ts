@@ -7,4 +7,4 @@ export type {
   LinkSizeOverrides,
   LinkSlots,
 } from "@/Components/Link/link.types";
-export { default } from "@/Components/Link/Link.vue";
+export { default as Link } from "@/Components/Link/Link.vue";

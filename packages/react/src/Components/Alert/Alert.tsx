@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/hooks/useAlert";
-import Icon from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 
 function Alert(props: AlertProps) {
   const { children, slots, ...rest } = props;

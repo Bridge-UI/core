@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { AlertProps, AlertSlots } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
-import Icon from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<AlertSlots>();
 

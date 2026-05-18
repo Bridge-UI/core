@@ -7,4 +7,4 @@ export type {
   ToggleSizeOverrides,
   ToggleSlots,
 } from "@/Components/Toggle/toggle.types";
-export { default } from "@/Components/Toggle/Toggle.vue";
+export { default as Toggle } from "@/Components/Toggle/Toggle.vue";

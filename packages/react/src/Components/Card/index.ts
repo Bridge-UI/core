@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Card/Card";
+export { default as Card } from "@/Components/Card/Card";
 export type {
   CardClasses,
   CardPaddingOverrides,

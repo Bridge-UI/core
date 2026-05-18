@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/MiniBadge/MiniBadge";
+export { default as MiniBadge } from "@/Components/MiniBadge/MiniBadge";
 export type {
   MiniBadgeClasses,
   MiniBadgeColorOverrides,

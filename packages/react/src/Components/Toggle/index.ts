@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Toggle/Toggle";
+export { default as Toggle } from "@/Components/Toggle/Toggle";
 export type {
   ToggleClasses,
   ToggleColorOverrides,

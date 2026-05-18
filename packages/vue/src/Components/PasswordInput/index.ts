@@ -9,4 +9,4 @@ export type {
   PasswordInputSlots,
   PasswordInputVariantOverrides,
 } from "@/Components/PasswordInput/passwordInput.types";
-export { default } from "@/Components/PasswordInput/PasswordInput.vue";
+export { default as PasswordInput } from "@/Components/PasswordInput/PasswordInput.vue";

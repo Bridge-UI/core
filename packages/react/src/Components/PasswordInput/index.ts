@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/PasswordInput/PasswordInput";
+export { default as PasswordInput } from "@/Components/PasswordInput/PasswordInput";
 export type {
   PasswordInputClasses,
   PasswordInputColorOverrides,

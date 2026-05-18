@@ -7,4 +7,4 @@ export type {
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio/radio.types";
-export { default } from "@/Components/Radio/Radio.vue";
+export { default as Radio } from "@/Components/Radio/Radio.vue";

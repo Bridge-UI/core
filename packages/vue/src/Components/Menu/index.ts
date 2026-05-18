@@ -7,4 +7,4 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu/menu.types";
-export { default } from "@/Components/Menu/Menu.vue";
+export { default as Menu } from "@/Components/Menu/Menu.vue";

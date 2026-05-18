@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Textarea/Textarea";
+export { default as Textarea } from "@/Components/Textarea/Textarea";
 export type {
   TextareaClasses,
   TextareaColorOverrides,

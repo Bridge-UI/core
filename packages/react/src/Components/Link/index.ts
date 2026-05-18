@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/Link/Link";
+export { default as Link } from "@/Components/Link/Link";
 export type {
   LinkClasses,
   LinkColorOverrides,

@@ -9,4 +9,4 @@ export type {
   MiniBadgeSlots,
   MiniBadgeVariantOverrides,
 } from "@/Components/MiniBadge/miniBadge.types";
-export { default } from "@/Components/MiniBadge/MiniBadge.vue";
+export { default as MiniBadge } from "@/Components/MiniBadge/MiniBadge.vue";

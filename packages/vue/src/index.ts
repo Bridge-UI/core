@@ -2,7 +2,7 @@
 import "@/augments";
 
 // ** Exports
-export { default as Alert, useAlert } from "@/Components/Alert";
+export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
   AlertColorOverrides,
@@ -13,7 +13,7 @@ export type {
   AlertSlots,
   AlertVariantOverrides,
 } from "@/Components/Alert";
-export { default as Avatar } from "@/Components/Avatar";
+export { Avatar } from "@/Components/Avatar";
 export type {
   AvatarClasses,
   AvatarColorOverrides,
@@ -22,7 +22,7 @@ export type {
   AvatarSizeOverrides,
   AvatarSlots,
 } from "@/Components/Avatar";
-export { default as Badge } from "@/Components/Badge";
+export { Badge } from "@/Components/Badge";
 export type {
   BadgeClasses,
   BadgeColorOverrides,
@@ -32,7 +32,7 @@ export type {
   BadgeSlots,
   BadgeVariantOverrides,
 } from "@/Components/Badge";
-export { default as Button, useButton } from "@/Components/Button";
+export { Button, useButton } from "@/Components/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,
@@ -42,7 +42,7 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
-export { default as Card } from "@/Components/Card";
+export { Card } from "@/Components/Card";
 export type {
   CardClasses,
   CardPaddingOverrides,
@@ -51,7 +51,7 @@ export type {
   CardShadowOverrides,
   CardSlots,
 } from "@/Components/Card";
-export { default as Checkbox } from "@/Components/Checkbox";
+export { Checkbox } from "@/Components/Checkbox";
 export type {
   CheckboxClasses,
   CheckboxColorOverrides,
@@ -60,9 +60,9 @@ export type {
   CheckboxSizeOverrides,
   CheckboxSlots,
 } from "@/Components/Checkbox";
-export { default as Icon, type IconProps } from "@/Components/Icon";
+export { Icon, type IconProps } from "@/Components/Icon";
 export type { IconSizeOverrides } from "@/Components/Icon";
-export { default as Link } from "@/Components/Link";
+export { Link } from "@/Components/Link";
 export type {
   LinkClasses,
   LinkColorOverrides,
@@ -70,7 +70,7 @@ export type {
   LinkSizeOverrides,
   LinkSlots,
 } from "@/Components/Link";
-export { default as Menu } from "@/Components/Menu";
+export { Menu } from "@/Components/Menu";
 export type {
   MenuClasses,
   MenuProps,
@@ -78,7 +78,7 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu";
-export { default as MiniBadge } from "@/Components/MiniBadge";
+export { MiniBadge } from "@/Components/MiniBadge";
 export type {
   MiniBadgeClasses,
   MiniBadgeColorOverrides,
@@ -89,7 +89,7 @@ export type {
   MiniBadgeVariantOverrides,
 } from "@/Components/MiniBadge";
 export {
-  default as MiniButton,
+  MiniButton,
   type MiniButtonProps,
   type MiniButtonSlots,
 } from "@/Components/MiniButton";
@@ -100,7 +100,7 @@ export type {
   MiniButtonSizeOverrides,
   MiniButtonVariantOverrides,
 } from "@/Components/MiniButton";
-export { default as Modal } from "@/Components/Modal";
+export { Modal } from "@/Components/Modal";
 export type {
   ModalClasses,
   ModalProps,
@@ -109,7 +109,7 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";
-export { default as NumberInput } from "@/Components/NumberInput";
+export { NumberInput } from "@/Components/NumberInput";
 export type {
   NumberInputClasses,
   NumberInputColorOverrides,
@@ -119,7 +119,7 @@ export type {
   NumberInputSlots,
   NumberInputVariantOverrides,
 } from "@/Components/NumberInput";
-export { default as PasswordInput } from "@/Components/PasswordInput";
+export { PasswordInput } from "@/Components/PasswordInput";
 export type {
   PasswordInputClasses,
   PasswordInputColorOverrides,
@@ -129,7 +129,7 @@ export type {
   PasswordInputSlots,
   PasswordInputVariantOverrides,
 } from "@/Components/PasswordInput";
-export { default as Radio } from "@/Components/Radio";
+export { Radio } from "@/Components/Radio";
 export type {
   RadioClasses,
   RadioColorOverrides,
@@ -137,7 +137,7 @@ export type {
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio";
-export { default as Select } from "@/Components/Select";
+export { Select } from "@/Components/Select";
 export type {
   SelectClasses,
   SelectColorOverrides,
@@ -148,7 +148,7 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
-export { default as Textarea } from "@/Components/Textarea";
+export { Textarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,
   TextareaColorOverrides,
@@ -158,7 +158,7 @@ export type {
   TextareaSlots,
   TextareaVariantOverrides,
 } from "@/Components/Textarea";
-export { default as TextInput } from "@/Components/TextInput";
+export { TextInput } from "@/Components/TextInput";
 export type {
   TextInputClasses,
   TextInputColorOverrides,
@@ -168,7 +168,7 @@ export type {
   TextInputSlots,
   TextInputVariantOverrides,
 } from "@/Components/TextInput";
-export { default as Toggle } from "@/Components/Toggle";
+export { Toggle } from "@/Components/Toggle";
 export type {
   ToggleClasses,
   ToggleColorOverrides,

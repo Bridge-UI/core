@@ -4,7 +4,7 @@ import { createElement, Fragment } from "react";
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button/button.types";
 import { useButton } from "@/Components/Button/hooks/useButton";
-import Icon from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 
 function Button(props: ButtonProps) {
   const { children, slots, ...rest } = props;

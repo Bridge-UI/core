@@ -9,4 +9,4 @@ export type {
   TextareaSlots,
   TextareaVariantOverrides,
 } from "@/Components/Textarea/textarea.types";
-export { default } from "@/Components/Textarea/Textarea.vue";
+export { default as Textarea } from "@/Components/Textarea/Textarea.vue";

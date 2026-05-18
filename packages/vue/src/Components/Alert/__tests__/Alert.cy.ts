@@ -1,5 +1,5 @@
 // ** Local Imports
-import Alert from "@/Components/Alert";
+import { Alert } from "@/Components/Alert";
 
 test("it should render with default props", () => {
   cy.mount(Alert);

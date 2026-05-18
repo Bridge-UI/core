@@ -4,4 +4,4 @@ export type {
   IconProps,
   IconSizeOverrides,
 } from "@/Components/Icon/icon.types";
-export { default } from "@/Components/Icon/Icon.vue";
+export { default as Icon } from "@/Components/Icon/Icon.vue";

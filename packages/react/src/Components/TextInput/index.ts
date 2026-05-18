@@ -1,5 +1,5 @@
 // ** Exports
-export { default } from "@/Components/TextInput/TextInput";
+export { default as TextInput } from "@/Components/TextInput/TextInput";
 export type {
   TextInputClasses,
   TextInputColorOverrides,

@@ -8,5 +8,5 @@ export type {
   BadgeSlots,
   BadgeVariantOverrides,
 } from "@/Components/Badge/badge.types";
-export { default } from "@/Components/Badge/Badge.vue";
+export { default as Badge } from "@/Components/Badge/Badge.vue";
 export { useBadge } from "@/Components/Badge/composables/useBadge";
