@@ -2,7 +2,7 @@
 import { Info } from "lucide-react";
 
 // ** Local Imports
-import Icon from "@/Components/Icon/Icon";
+import { Icon } from "@/Components/Icon";
 
 test("it should render an SVG element", () => {
   cy.mount(<Icon icon={Info} />);
@@ -32,4 +32,16 @@ test("it should merge custom className prop", () => {
   cy.mount(<Icon icon={Info} className="text-red-500" />);
 
   cy.get("svg").should("have.class", "text-red-500");
+});
+
+test("it should apply lg size classes", () => {
+  cy.mount(<Icon icon={Info} size="lg" />);
+
+  cy.get("svg").should("have.class", "w-5").and("have.class", "h-5");
+});
+
+test("it should apply 2xs size classes", () => {
+  cy.mount(<Icon icon={Info} size="2xs" />);
+
+  cy.get("svg").should("have.class", "w-2").and("have.class", "h-2");
 });

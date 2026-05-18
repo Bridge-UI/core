@@ -1,15 +1,14 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
-
-// ** Core Imports
-import { cn } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Icon";
+import { createElement } from "react";
 
 // ** Local Imports
-import type { IconProps } from "@/Components/Icon/icon.types";
+import type { IconProps } from "@/Components/Icon";
+import { useIcon } from "@/Components/Icon";
 
-function Icon({ className, size = "md", icon: IconComponent }: IconProps) {
-  return <IconComponent className={cn(get(sizeProps, size), className)} />;
+function Icon(props: IconProps) {
+  const { merged, mergedClass } = useIcon(props, { size: "md" });
+
+  return createElement(merged.icon, { className: mergedClass });
 }
 
 export default Icon;

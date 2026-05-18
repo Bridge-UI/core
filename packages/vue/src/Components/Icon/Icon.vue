@@ -1,24 +1,13 @@
 <script setup lang="ts">
-// ** External Imports
-import { get } from "es-toolkit/compat";
-import { computed } from "vue";
-
-// ** Core Imports
-import { cn } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Icon";
-
 // ** Local Imports
-import type { IconProps } from "@/Components/Icon/icon.types";
+import type { IconProps } from "@/Components/Icon";
+import { useIcon } from "@/Components/Icon";
 
-const props = withDefaults(defineProps<IconProps>(), {
-  size: "md",
-});
+const props = defineProps<IconProps>();
 
-const mergedClass = computed(() => {
-  return cn(get(sizeProps, props.size), props.class);
-});
+const { merged, mergedClass } = useIcon(props, { size: "md" });
 </script>
 
 <template>
-  <component :is="props.icon" :class="mergedClass" />
+  <component :is="merged.icon" :class="mergedClass" />
 </template>

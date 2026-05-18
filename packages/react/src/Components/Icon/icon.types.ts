@@ -8,7 +8,7 @@ export interface IconSizeOverrides {}
 
 export type IconProps = {
   /**
-   * The classes to apply to the icon.
+   * The class names to apply to the icon.
    */
   className?: string;
 

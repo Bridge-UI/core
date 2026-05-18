@@ -1,4 +1,5 @@
 // ** External Imports
+import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "cypress";
 import { resolve } from "node:path";
@@ -12,7 +13,7 @@ export default defineConfig({
       bundler: "vite",
       framework: "vue",
       viteConfig: {
-        plugins: [vue()],
+        plugins: [vue(), tailwindcss()],
         resolve: {
           alias: { "@": resolve(__dirname, "src") },
         },

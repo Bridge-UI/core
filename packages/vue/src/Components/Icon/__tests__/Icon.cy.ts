@@ -33,3 +33,15 @@ test("it should merge custom class prop", () => {
 
   cy.get("svg").should("have.class", "text-red-500");
 });
+
+test("it should apply lg size classes", () => {
+  cy.mount(Icon, { props: { icon: Info, size: "lg" } });
+
+  cy.get("svg").should("have.class", "w-5").and("have.class", "h-5");
+});
+
+test("it should apply 2xs size classes", () => {
+  cy.mount(Icon, { props: { icon: Info, size: "2xs" } });
+
+  cy.get("svg").should("have.class", "w-2").and("have.class", "h-2");
+});

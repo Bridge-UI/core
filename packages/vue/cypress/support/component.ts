@@ -1,5 +1,7 @@
 import { mount } from "cypress/vue";
 
+import "@/theme.css";
+
 declare global {
   const test: Mocha.TestFunction;
 

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed } from "vue";
+import { useMemo } from "react";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -17,9 +17,9 @@ export function useIcon(props: IconProps, libDefaults: Partial<IconProps>) {
     componentName: "Icon",
   });
 
-  const mergedClass = computed(() => {
-    return cn(get(sizeProps, merged.value.size ?? "md"), merged.value.class);
-  });
+  const mergedClass = useMemo(() => {
+    return cn(get(sizeProps, merged.size ?? "md"), merged.className);
+  }, [merged.size, merged.className]);
 
   return {
     merged,

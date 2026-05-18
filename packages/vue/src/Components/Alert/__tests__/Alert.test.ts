@@ -1,0 +1,69 @@
+// ** External Imports
+import { mount } from "@vue/test-utils";
+import { expect, test } from "vitest";
+
+// ** Local Imports
+import { Alert } from "@/Components/Alert";
+
+test("it should render the root element", () => {
+  const wrapper = mount(Alert);
+
+  expect(wrapper.find(".w-full").exists()).toBe(true);
+});
+
+test("it should render a title when title prop is provided", () => {
+  const wrapper = mount(Alert, { props: { title: "Heads up!" } });
+
+  expect(wrapper.text()).toContain("Heads up!");
+});
+
+test("it should render body content via default slot", () => {
+  const wrapper = mount(Alert, {
+    props: { title: "Info" },
+    slots: { default: "This is the body content" },
+  });
+
+  expect(wrapper.text()).toContain("This is the body content");
+});
+
+test("it should render the default icon for error color", () => {
+  const wrapper = mount(Alert, { props: { title: "Error", color: "error" } });
+
+  expect(wrapper.find("svg").exists()).toBe(true);
+});
+
+test("it should not render an icon when icon is null", () => {
+  const wrapper = mount(Alert, { props: { title: "No icon", icon: null } });
+
+  expect(wrapper.find("svg").exists()).toBe(false);
+});
+
+test("it should apply rounded classes when rounded prop is set", () => {
+  const wrapper = mount(Alert, { props: { title: "Rounded", rounded: "lg" } });
+
+  expect(wrapper.find(".w-full").classes()).toContain("rounded-lg");
+});
+
+test("it should apply shadow classes when shadow prop is set", () => {
+  const wrapper = mount(Alert, { props: { title: "Shadow", shadow: "md" } });
+
+  expect(wrapper.find(".w-full").classes()).toContain("shadow-md");
+});
+
+test("it should render footer slot content", () => {
+  const wrapper = mount(Alert, {
+    props: { title: "With footer" },
+    slots: { footer: "Footer content" },
+  });
+
+  expect(wrapper.text()).toContain("Footer content");
+});
+
+test("it should render action slot content", () => {
+  const wrapper = mount(Alert, {
+    props: { title: "With action" },
+    slots: { action: "Dismiss" },
+  });
+
+  expect(wrapper.text()).toContain("Dismiss");
+});

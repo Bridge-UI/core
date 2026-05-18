@@ -1,4 +1,6 @@
 // ** External Imports
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "cypress";
 import { resolve } from "node:path";
 import { fileURLToPath, URL } from "node:url";
@@ -11,6 +13,7 @@ export default defineConfig({
       bundler: "vite",
       framework: "react",
       viteConfig: {
+        plugins: [react(), tailwindcss()],
         resolve: {
           alias: { "@": resolve(__dirname, "src") },
         },
