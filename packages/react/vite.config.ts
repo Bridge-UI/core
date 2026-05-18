@@ -13,6 +13,7 @@ export default defineConfig({
   plugins: [
     dts({
       tsconfigPath: "./tsconfig.json",
+      entryRoot: resolve(__dirname, "src"),
       beforeWriteFile: (filePath, content) => ({
         filePath,
         content: content.replace(/\{\n\}/g, "{}"),

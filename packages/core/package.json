@@ -6,20 +6,24 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./Config": {
-      "types": "./dist/Config/index.d.ts",
-      "import": "./dist/Config/index.js"
+      "import": "./dist/Config/index.js",
+      "types": "./dist/Config/index.d.ts"
     },
     "./Utils": {
-      "types": "./dist/Utils/index.d.ts",
-      "import": "./dist/Utils/index.js"
+      "import": "./dist/Utils/index.js",
+      "types": "./dist/Utils/index.d.ts"
     },
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js"
+    "./Components/*/*": {
+      "import": "./dist/Components/*/*.js",
+      "types": "./dist/Components/*/*.d.ts"
+    },
+    "./Components/*": {
+      "import": "./dist/Components/*/index.js",
+      "types": "./dist/Components/*/index.d.ts"
     }
   },
   "files": [
