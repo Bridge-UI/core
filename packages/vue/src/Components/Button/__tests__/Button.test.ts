@@ -28,14 +28,41 @@ test("it should show loading spinner when loading", () => {
     slots: { default: "Saving" },
   });
 
-  expect(wrapper.find("button").attributes("aria-busy")).toBe("true");
+  expect(wrapper.text()).not.toContain("Saving");
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
+  expect(wrapper.find("button").attributes("aria-busy")).toBe("true");
+});
+
+test("it should render text prop when default slot is not used", () => {
+  const wrapper = mount(Button, { props: { text: "Click me" } });
+
+  expect(wrapper.text()).toContain("Click me");
+  expect(wrapper.find("button").exists()).toBe(true);
+});
+
+test("it should prefer text prop over default slot", () => {
+  const wrapper = mount(Button, {
+    props: { text: "From prop" },
+    slots: { default: "From slot" },
+  });
+
+  expect(wrapper.text()).toContain("From prop");
+  expect(wrapper.text()).not.toContain("From slot");
+});
+
+test("it should replace text with spinner when loading", () => {
+  const wrapper = mount(Button, {
+    props: { loading: true, text: "Saving" },
+  });
+
+  expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
+  expect(wrapper.text()).not.toContain("Saving");
 });
 
 test("it should render start icon when startIcon prop is set", () => {
   const wrapper = mount(Button, {
-    props: { startIcon: CircleAlert },
     slots: { default: "With icon" },
+    props: { startIcon: CircleAlert },
   });
 
   expect(wrapper.find("button svg").exists()).toBe(true);
@@ -43,8 +70,8 @@ test("it should render start icon when startIcon prop is set", () => {
 
 test("it should render as anchor when as is a", () => {
   const wrapper = mount(Button, {
-    props: { as: "a", href: "https://example.com" },
     slots: { default: "Link" },
+    props: { as: "a", href: "https://example.com" },
   });
 
   const anchor = wrapper.find("a");
@@ -65,8 +92,8 @@ test("it should apply full width class when full is true", () => {
 test("it should render start slot content", () => {
   const wrapper = mount(Button, {
     slots: {
-      default: "Label",
       start: "◀",
+      default: "Label",
     },
   });
 

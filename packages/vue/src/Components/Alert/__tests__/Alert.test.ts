@@ -61,8 +61,8 @@ test("it should render footer slot content", () => {
 
 test("it should render action slot content", () => {
   const wrapper = mount(Alert, {
-    props: { title: "With action" },
     slots: { action: "Dismiss" },
+    props: { title: "With action" },
   });
 
   expect(wrapper.text()).toContain("Dismiss");

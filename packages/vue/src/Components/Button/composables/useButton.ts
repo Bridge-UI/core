@@ -109,6 +109,14 @@ export function useButton(
     return merged.value.loading;
   });
 
+  const hasDefaultSlot = computed(() => {
+    return !!slots.default;
+  });
+
+  const showText = computed(() => {
+    return !merged.value.loading && !!merged.value.text;
+  });
+
   const showEndIcon = computed(() => {
     return !merged.value.loading && !!merged.value.endIcon;
   });
@@ -123,6 +131,10 @@ export function useButton(
 
   const showStartSlot = computed(() => {
     return !merged.value.loading && !merged.value.startIcon && !!slots.start;
+  });
+
+  const showDefaultSlot = computed(() => {
+    return !merged.value.loading && hasDefaultSlot.value && !merged.value.text;
   });
 
   const endIconClass = computed(() => {
@@ -143,6 +155,7 @@ export function useButton(
     merged,
     isAnchor,
     isButton,
+    showText,
     rootClass,
     isDisabled,
     showEndIcon,
@@ -153,6 +166,7 @@ export function useButton(
     showStartIcon,
     showStartSlot,
     startIconClass,
+    showDefaultSlot,
     spinnerIconClass,
     spinnerIcon: Loader2,
   };

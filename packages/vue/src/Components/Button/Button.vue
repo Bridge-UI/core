@@ -16,6 +16,7 @@ const {
   merged,
   isAnchor,
   isButton,
+  showText,
   rootClass,
   isDisabled,
   showEndIcon,
@@ -26,6 +27,7 @@ const {
   showStartIcon,
   showStartSlot,
   startIconClass,
+  showDefaultSlot,
   spinnerIconClass,
 } = useButton(props, {
   size: "md",
@@ -47,34 +49,38 @@ const {
     :href="isAnchor && !isDisabled && merged.href ? merged.href : undefined"
   >
     <Icon
-      :size="merged.size"
-      :class="startIconClass"
-      :icon="merged.startIcon"
-      v-if="showStartIcon && merged.startIcon"
-    />
-
-    <div v-else-if="showStartSlot" class="inline-flex shrink-0 items-center">
-      <slot name="start" />
-    </div>
-
-    <slot />
-
-    <Icon
-      :size="merged.size"
-      :class="endIconClass"
-      :icon="merged.endIcon"
-      v-if="showEndIcon && merged.endIcon"
-    />
-
-    <div v-else-if="showEndSlot" class="inline-flex shrink-0 items-center">
-      <slot name="end" />
-    </div>
-
-    <Icon
       v-if="showSpinner"
       :icon="spinnerIcon"
       :size="merged.size"
       :class="spinnerIconClass"
     />
+
+    <template v-else>
+      <Icon
+        :size="merged.size"
+        :class="startIconClass"
+        :icon="merged.startIcon"
+        v-if="showStartIcon && merged.startIcon"
+      />
+
+      <div v-else-if="showStartSlot" class="inline-flex shrink-0 items-center">
+        <slot name="start" />
+      </div>
+
+      <template v-if="showText">{{ merged.text }}</template>
+
+      <slot v-else-if="showDefaultSlot" />
+
+      <Icon
+        :size="merged.size"
+        :class="endIconClass"
+        :icon="merged.endIcon"
+        v-if="showEndIcon && merged.endIcon"
+      />
+
+      <div v-else-if="showEndSlot" class="inline-flex shrink-0 items-center">
+        <slot name="end" />
+      </div>
+    </template>
   </component>
 </template>

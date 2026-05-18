@@ -117,6 +117,13 @@ export interface ButtonProps {
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
+   * Label text when `children` is not provided.
+   *
+   * @default undefined
+   */
+  text?: string;
+
+  /**
    * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
    *
    * @default undefined

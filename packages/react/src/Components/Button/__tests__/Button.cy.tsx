@@ -19,8 +19,15 @@ test("it should apply disabled attribute when disabled", () => {
 test("it should show loading spinner when loading", () => {
   cy.mount(<Button loading>Saving</Button>);
 
-  cy.get("button").should("have.attr", "aria-busy", "true");
   cy.get("svg.animate-spin").should("exist");
+  cy.get("button").should("not.contain.text", "Saving");
+  cy.get("button").should("have.attr", "aria-busy", "true");
+});
+
+test("it should render text prop when children are not provided", () => {
+  cy.mount(<Button text="Click me" />);
+
+  cy.get("button").should("exist").and("contain.text", "Click me");
 });
 
 test("it should render start icon when startIcon prop is set", () => {
@@ -52,6 +59,6 @@ test("it should render start slot content", () => {
     </Button>,
   );
 
-  cy.get("[data-cy=start-slot]").should("be.visible");
   cy.contains("Label").should("be.visible");
+  cy.get("[data-cy=start-slot]").should("be.visible");
 });

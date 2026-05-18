@@ -25,8 +25,15 @@ test("it should show loading spinner when loading", () => {
     slots: { default: () => "Saving" },
   });
 
-  cy.get("button").should("have.attr", "aria-busy", "true");
   cy.get("svg.animate-spin").should("exist");
+  cy.get("button").should("not.contain.text", "Saving");
+  cy.get("button").should("have.attr", "aria-busy", "true");
+});
+
+test("it should render text prop when default slot is not used", () => {
+  cy.mount(Button, { props: { text: "Click me" } });
+
+  cy.get("button").should("exist").and("contain.text", "Click me");
 });
 
 test("it should render start icon when startIcon prop is set", () => {
@@ -40,8 +47,8 @@ test("it should render start icon when startIcon prop is set", () => {
 
 test("it should render as anchor when as is a", () => {
   cy.mount(Button, {
-    props: { as: "a", href: "https://example.com" },
     slots: { default: () => "Link" },
+    props: { as: "a", href: "https://example.com" },
   });
 
   cy.get("a").should("have.attr", "href", "https://example.com");
@@ -59,8 +66,8 @@ test("it should apply full width class when full is true", () => {
 test("it should render start slot content", () => {
   cy.mount(Button, {
     slots: {
-      default: () => "Label",
       start: () => "◀",
+      default: () => "Label",
     },
   });
 

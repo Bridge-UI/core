@@ -89,9 +89,15 @@ export function useButton(
 
   const showSpinner = merged.loading;
 
+  const showText = !merged.loading && !!merged.text;
+
   const showEndIcon = !merged.loading && !!merged.endIcon;
 
+  const hasChildren = children != null && children !== false;
+
   const showStartIcon = !merged.loading && !!merged.startIcon;
+
+  const showChildren = !merged.loading && hasChildren && !merged.text;
 
   const showEndSlot = !merged.loading && !merged.endIcon && slots?.end != null;
 
@@ -111,6 +117,7 @@ export function useButton(
     children,
     isAnchor,
     isButton,
+    showText,
     rootClass,
     isDisabled,
     showEndIcon,
@@ -118,6 +125,7 @@ export function useButton(
     showSpinner,
     bridgeButton,
     endIconClass,
+    showChildren,
     showStartIcon,
     showStartSlot,
     startIconClass,

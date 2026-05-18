@@ -10,10 +10,10 @@ function Button(props: ButtonProps) {
   const {
     tag,
     slots,
-    children,
     merged,
     isAnchor,
     isButton,
+    showText,
     rootClass,
     isDisabled,
     showEndIcon,
@@ -21,6 +21,7 @@ function Button(props: ButtonProps) {
     showSpinner,
     spinnerIcon,
     endIconClass,
+    showChildren,
     showStartIcon,
     showStartSlot,
     startIconClass,
@@ -46,38 +47,48 @@ function Button(props: ButtonProps) {
       href: isAnchor && !isDisabled && merged.href ? merged.href : undefined,
     },
     <Fragment>
-      {showStartIcon && merged.startIcon && (
-        <Icon
-          size={merged.size}
-          icon={merged.startIcon}
-          className={startIconClass}
-        />
-      )}
-
-      {showStartSlot && (
-        <div className="inline-flex shrink-0 items-center">{slots?.start}</div>
-      )}
-
-      {children}
-
-      {showEndIcon && merged.endIcon && (
-        <Icon
-          size={merged.size}
-          icon={merged.endIcon}
-          className={endIconClass}
-        />
-      )}
-
-      {showEndSlot && (
-        <div className="inline-flex shrink-0 items-center">{slots?.end}</div>
-      )}
-
       {showSpinner && (
         <Icon
           icon={SpinnerIcon}
           size={merged.size}
           className={spinnerIconClass}
         />
+      )}
+
+      {!showSpinner && (
+        <Fragment>
+          {showStartIcon && merged.startIcon && (
+            <Icon
+              size={merged.size}
+              icon={merged.startIcon}
+              className={startIconClass}
+            />
+          )}
+
+          {showStartSlot && (
+            <div className="inline-flex shrink-0 items-center">
+              {slots?.start}
+            </div>
+          )}
+
+          {showText && merged.text}
+
+          {showChildren && props.children}
+
+          {showEndIcon && merged.endIcon && (
+            <Icon
+              size={merged.size}
+              icon={merged.endIcon}
+              className={endIconClass}
+            />
+          )}
+
+          {showEndSlot && (
+            <div className="inline-flex shrink-0 items-center">
+              {slots?.end}
+            </div>
+          )}
+        </Fragment>
       )}
     </Fragment>,
   );

@@ -99,3 +99,21 @@ test("it should include full width class when full is true", () => {
 
   expect(rootClass.value).toContain("w-full");
 });
+
+test("it should show text when text prop is set", () => {
+  const { showText } = mountUseButton({ text: "Label" });
+
+  expect(showText.value).toBe(true);
+});
+
+test("it should hide default slot when text prop is set", () => {
+  const { showDefaultSlot } = mountUseButton({ text: "Label" });
+
+  expect(showDefaultSlot.value).toBe(false);
+});
+
+test("it should hide text when loading", () => {
+  const { showText } = mountUseButton({ loading: true, text: "Label" });
+
+  expect(showText.value).toBe(false);
+});

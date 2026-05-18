@@ -117,6 +117,13 @@ export interface ButtonProps {
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
+   * Label text when the default slot is not used.
+   *
+   * @default undefined
+   */
+  text?: string;
+
+  /**
    * The variant of the button.
    *
    * @default "solid"

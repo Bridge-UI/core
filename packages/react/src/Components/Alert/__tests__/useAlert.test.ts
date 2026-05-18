@@ -75,8 +75,8 @@ test("it should compute title classes with font-semibold when body exists", () =
     children: "Body",
   });
 
-  expect(result.current.titleClasses).toContain("font-semibold");
   expect(result.current.hasDefaultBody).toBe(true);
+  expect(result.current.titleClasses).toContain("font-semibold");
 });
 
 test("it should show title row when title prop is provided", () => {

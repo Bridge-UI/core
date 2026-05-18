@@ -92,3 +92,21 @@ test("it should expose children from props", () => {
 
   expect(result.current.children).toBe("Click");
 });
+
+test("it should show text when text prop is set", () => {
+  const { result } = renderUseButton({ text: "Label" });
+
+  expect(result.current.showText).toBe(true);
+});
+
+test("it should hide children when text prop is set", () => {
+  const { result } = renderUseButton({ text: "Label", children: "Label" });
+
+  expect(result.current.showChildren).toBe(false);
+});
+
+test("it should hide text when loading", () => {
+  const { result } = renderUseButton({ loading: true, text: "Label" });
+
+  expect(result.current.showText).toBe(false);
+});
