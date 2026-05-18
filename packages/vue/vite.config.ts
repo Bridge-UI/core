@@ -52,7 +52,6 @@ export default defineConfig({
     dts({
       entryRoot: srcDir,
       tsconfigPath: "./tsconfig.json",
-      bundledPackages: ["@bridge-ui/core"],
       beforeWriteFile: (filePath, content) => ({
         filePath,
         content: content.replace(/\{\n\}/g, "{}"),
