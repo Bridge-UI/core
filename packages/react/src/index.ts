@@ -174,6 +174,8 @@ export {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 export type { MergeProps, Overwrite, UnionProps } from "@/Utils";
 export {

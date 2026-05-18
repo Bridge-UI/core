@@ -100,11 +100,6 @@ export interface AlertProps {
 
 export type AlertSlots = {
   /**
-   * Replaces the entire alert header area (title row, icon, action).
-   */
-  header?: Slot<undefined>;
-
-  /**
    * Content aligned to the right of the title row (e.g. dismiss or link).
    */
   action?: Slot<undefined>;
@@ -118,6 +113,11 @@ export type AlertSlots = {
    * Footer below the body, with top border spacing.
    */
   footer?: Slot<undefined>;
+
+  /**
+   * Replaces the entire alert header area (title row, icon, action).
+   */
+  header?: Slot<undefined>;
 
   /**
    * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.

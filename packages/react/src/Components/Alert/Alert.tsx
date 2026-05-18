@@ -1,13 +1,13 @@
 // ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
-import { useAlert } from "@/Components/Alert/hooks/useAlert";
+import type { AlertProps } from "@/Components/Alert";
+import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
 
 function Alert(props: AlertProps) {
-  const { children, slots, ...rest } = props;
-
   const {
+    slots,
     merged,
+    children,
     showIcon,
     bodyClasses,
     iconClasses,
@@ -16,17 +16,13 @@ function Alert(props: AlertProps) {
     showTitleRow,
     titleClasses,
     hasDefaultBody,
-  } = useAlert(
-    rest,
-    {
-      shadow: "sm",
-      rounded: "sm",
-      variant: "flat",
-      color: "primary",
-      padding: "medium",
-    },
-    { children, slots },
-  );
+  } = useAlert(props, {
+    shadow: "sm",
+    rounded: "sm",
+    variant: "flat",
+    color: "primary",
+    padding: "medium",
+  });
 
   return (
     <div className={rootClasses}>

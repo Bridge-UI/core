@@ -4,16 +4,12 @@ import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
-import type { ButtonColorItem } from "@bridge-ui/core";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  mergePropsWithBridgeUIDefaults,
-} from "@bridge-ui/core";
-import {
-  sizeProps as buttonSizeProps,
   roundedProps,
+  sizeProps,
   variantProps,
+  type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
 
 // ** Local Imports
@@ -21,54 +17,27 @@ import type {
   ButtonClasses,
   ButtonProps,
 } from "@/Components/Button/button.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
-
-export type UseButtonOptions = {
-  slots?: ButtonProps["slots"];
-};
+import {
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 
 export function useButton(
-  propsForMerge: Omit<ButtonProps, "children" | "slots">,
+  props: ButtonProps,
   libDefaults: Partial<ButtonProps>,
-  options: UseButtonOptions,
 ) {
-  const bridge = useBridgeUI();
+  const { children, slots, ...propsForMerge } = props;
 
-  const components = bridge?.components ?? null;
-
-  const bridgeButton = components?.Button;
-
-  const merged = useMemo(() => {
-    return mergePropsWithBridgeUIDefaults({
-      props: propsForMerge as object,
-      libDefaults,
-      componentName: "Button",
-      components,
-    }) as Omit<ButtonProps, "children" | "slots">;
-  }, [
-    components,
+  const { entry: bridgeButton, merged } = useBridgeUIComponent({
     libDefaults,
-    bridgeButton,
-    propsForMerge.as,
-    propsForMerge.full,
-    propsForMerge.href,
-    propsForMerge.size,
-    propsForMerge.color,
-    propsForMerge.classes,
-    propsForMerge.endIcon,
-    propsForMerge.loading,
-    propsForMerge.rounded,
-    propsForMerge.variant,
-    propsForMerge.disabled,
-    propsForMerge.startIcon,
-  ]);
+    props: propsForMerge,
+    componentName: "Button",
+  });
 
-  const mergedClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      bridgeButton?.classes as Partial<ButtonClasses> | undefined,
-      propsForMerge.classes,
-    );
-  }, [bridgeButton?.classes, propsForMerge.classes]);
+  const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
+    entry: bridgeButton,
+    props: propsForMerge,
+  });
 
   const mergedVariantMap = useMemo(() => {
     return mergeBridgeUILayeredClasses(
@@ -79,7 +48,7 @@ export function useButton(
 
   const sizeClassMap = useMemo(() => {
     return mergeBridgeUILayeredClasses(
-      buttonSizeProps,
+      sizeProps,
       bridgeButton?.customProps?.size,
     );
   }, [bridgeButton?.customProps?.size]);
@@ -113,12 +82,10 @@ export function useButton(
     "disabled:opacity-80 disabled:cursor-not-allowed",
     get(roundedClassMap, merged.rounded ?? "sm"),
     get(sizeClassMap, merged.size ?? "md"),
-    get(mergedClasses, "root"),
     merged.full && "w-full",
+    mergedClasses.root,
     colorClasses,
   );
-
-  const slots = options.slots;
 
   const showSpinner = merged.loading;
 
@@ -131,18 +98,17 @@ export function useButton(
   const showStartSlot =
     !merged.loading && !merged.startIcon && slots?.start != null;
 
-  const endIconClass = cn("shrink-0", get(mergedClasses, "endIcon"));
+  const endIconClass = cn("shrink-0", mergedClasses.endIcon);
 
-  const startIconClass = cn("shrink-0", get(mergedClasses, "startIcon"));
+  const startIconClass = cn("shrink-0", mergedClasses.startIcon);
 
-  const spinnerIconClass = cn(
-    "shrink-0 animate-spin",
-    get(mergedClasses, "loading"),
-  );
+  const spinnerIconClass = cn("shrink-0 animate-spin", mergedClasses.loading);
 
   return {
     tag,
+    slots,
     merged,
+    children,
     isAnchor,
     isButton,
     rootClass,
@@ -150,9 +116,10 @@ export function useButton(
     showEndIcon,
     showEndSlot,
     showSpinner,
+    bridgeButton,
+    endIconClass,
     showStartIcon,
     showStartSlot,
-    endIconClass,
     startIconClass,
     spinnerIconClass,
     spinnerIcon: Loader2,

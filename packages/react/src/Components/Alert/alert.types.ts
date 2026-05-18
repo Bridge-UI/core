@@ -114,22 +114,22 @@ export interface AlertProps {
 
 export interface AlertSlots {
   /**
-   * The slot to apply to the action.
+   * Content aligned to the right of the title row (e.g. dismiss or link).
    */
   action?: ReactNode;
 
   /**
-   * The slot to apply to the footer.
+   * Footer below the body, with top border spacing.
    */
   footer?: ReactNode;
 
   /**
-   * The slot to apply to the header.
+   * Replaces the entire alert header area (title row, icon, action).
    */
   header?: ReactNode;
 
   /**
-   * The slot to apply to the icon.
+   * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.
    */
   icon?: ReactNode;
 }

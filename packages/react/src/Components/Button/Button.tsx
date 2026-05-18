@@ -2,15 +2,15 @@
 import { createElement, Fragment } from "react";
 
 // ** Local Imports
-import type { ButtonProps } from "@/Components/Button/button.types";
-import { useButton } from "@/Components/Button/hooks/useButton";
+import type { ButtonProps } from "@/Components/Button";
+import { useButton } from "@/Components/Button";
 import { Icon } from "@/Components/Icon";
 
 function Button(props: ButtonProps) {
-  const { children, slots, ...rest } = props;
-
   const {
     tag,
+    slots,
+    children,
     merged,
     isAnchor,
     isButton,
@@ -25,17 +25,13 @@ function Button(props: ButtonProps) {
     showStartSlot,
     startIconClass,
     spinnerIconClass,
-  } = useButton(
-    rest,
-    {
-      size: "md",
-      as: "button",
-      rounded: "sm",
-      color: "primary",
-      variant: "solid",
-    },
-    { slots },
-  );
+  } = useButton(props, {
+    size: "md",
+    as: "button",
+    rounded: "sm",
+    color: "primary",
+    variant: "solid",
+  });
 
   const SpinnerIcon = spinnerIcon;
 

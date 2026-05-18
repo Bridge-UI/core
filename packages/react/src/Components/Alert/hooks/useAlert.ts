@@ -12,23 +12,23 @@ import {
 import { useMemo } from "react";
 
 // ** Core Imports
-import type { AlertColor } from "@bridge-ui/core";
-import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
-  mergePropsWithBridgeUIDefaults,
-} from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 import {
   paddingProps,
   roundedProps,
   shadowProps,
   variantProps,
+  type AlertColor,
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
-import type { AlertClasses, AlertProps } from "@/Components/Alert/alert.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
+import type { AlertProps } from "@/Components/Alert/alert.types";
+import {
+  mergeBridgeUILayeredClasses,
+  mergeBridgeUIStringMap,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 
 const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   dark: Info,
@@ -40,49 +40,19 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export type UseAlertOptions = {
-  children?: AlertProps["children"];
-  slots?: AlertProps["slots"];
-};
+export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
+  const { children, slots, ...propsForMerge } = props;
 
-export function useAlert(
-  propsForMerge: Omit<AlertProps, "children" | "slots">,
-  libDefaults: Partial<AlertProps>,
-  options: UseAlertOptions,
-) {
-  const bridge = useBridgeUI();
-
-  const components = bridge?.components ?? null;
-
-  const bridgeAlert = components?.Alert;
-
-  const merged = useMemo(() => {
-    return mergePropsWithBridgeUIDefaults({
-      props: propsForMerge as object,
-      libDefaults,
-      componentName: "Alert",
-      components,
-    }) as Omit<AlertProps, "children" | "slots">;
-  }, [
-    components,
-    bridgeAlert,
+  const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     libDefaults,
-    propsForMerge.icon,
-    propsForMerge.color,
-    propsForMerge.title,
-    propsForMerge.shadow,
-    propsForMerge.classes,
-    propsForMerge.padding,
-    propsForMerge.rounded,
-    propsForMerge.variant,
-  ]);
+    props: propsForMerge,
+    componentName: "Alert",
+  });
 
-  const mergedClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      bridgeAlert?.classes as Partial<AlertClasses> | undefined,
-      propsForMerge.classes,
-    );
-  }, [bridgeAlert?.classes, propsForMerge.classes]);
+  const mergedClasses = useBridgeUIMergedRegistryClasses({
+    entry: bridgeAlert,
+    props: propsForMerge,
+  });
 
   const mergedShadowMap = useMemo(() => {
     return mergeBridgeUIStringMap({
@@ -124,13 +94,11 @@ export function useAlert(
     return merged.icon ?? get(defaultIcons, colorKey);
   }, [colorKey, merged.icon]);
 
-  const slots = options.slots;
+  const hasDefaultBody = Boolean(children);
 
   const showIcon = Boolean(slots?.icon) || resolvedIcon != null;
 
   const palette = get(mergedVariantProps, [variantKey, colorKey]);
-
-  const hasDefaultBody = Boolean(options.children);
 
   const showTitleRow =
     !slots?.header &&
@@ -169,13 +137,20 @@ export function useAlert(
     slots,
     merged,
     palette,
+    children,
     showIcon,
     bodyClasses,
+    bridgeAlert,
     iconClasses,
     rootClasses,
     resolvedIcon,
     showTitleRow,
     titleClasses,
+    mergedClasses,
     hasDefaultBody,
+    mergedShadowMap,
+    mergedPaddingMap,
+    mergedRoundedMap,
+    mergedVariantProps,
   };
 }
