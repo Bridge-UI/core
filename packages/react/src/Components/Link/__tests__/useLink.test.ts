@@ -66,8 +66,8 @@ test("it should expose rootHtmlProps for additional attributes", () => {
     "data-testid": "link",
   });
 
-  expect(result.current.rootHtmlProps.id).toBe("docs-link");
   expect(result.current.merged.href).toBe("/docs");
+  expect(result.current.rootHtmlProps.id).toBe("docs-link");
 });
 
 test("it should apply className after classes.root in rootClass", () => {

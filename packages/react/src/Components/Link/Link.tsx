@@ -12,13 +12,13 @@ function Link(props: LinkProps) {
     rootClass,
     isDisabled,
     showAppend,
-    showPrepend,
     hasChildren,
-    rootHtmlProps,
-    showLeftIcon,
-    showRightIcon,
+    showPrepend,
     leftIconBind,
+    showLeftIcon,
     rightIconBind,
+    rootHtmlProps,
+    showRightIcon,
   } = useLink(props, {
     size: "md",
     color: "primary",
@@ -29,10 +29,10 @@ function Link(props: LinkProps) {
     <a
       {...rootHtmlProps}
       className={rootClass}
-      aria-disabled={isDisabled ? true : undefined}
       href={isDisabled ? undefined : merged.href}
-      rel={merged.external && !isDisabled ? "noopener noreferrer" : undefined}
+      aria-disabled={isDisabled ? true : undefined}
       target={merged.external && !isDisabled ? "_blank" : undefined}
+      rel={merged.external && !isDisabled ? "noopener noreferrer" : undefined}
     >
       {showPrepend && slots?.prepend}
 

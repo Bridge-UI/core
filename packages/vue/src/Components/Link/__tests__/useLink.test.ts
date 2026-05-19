@@ -60,8 +60,8 @@ test("it should expose rootBind for additional attributes", () => {
     "data-testid": "link",
   });
 
-  expect(rootBind.value.id).toBe("docs-link");
   expect(merged.value.href).toBe("/docs");
+  expect(rootBind.value.id).toBe("docs-link");
 });
 
 test("it should apply class after classes.root in rootClass", () => {

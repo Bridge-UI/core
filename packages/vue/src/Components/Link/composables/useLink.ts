@@ -27,21 +27,21 @@ import {
 
 const linkBridgeKeys = [
   "href",
-  "color",
   "size",
+  "color",
   "classes",
   "disabled",
   "external",
-  "underline",
   "leftIcon",
   "rightIcon",
+  "underline",
   "partsProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
 
 const underlineClasses = {
   always: "underline",
-  hover: "hover:underline",
   none: "no-underline",
+  hover: "hover:underline",
 } as const;
 
 export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
@@ -113,24 +113,25 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   });
 
   // Visibility
-  const showLeftIcon = computed(() => {
-    return Boolean(merged.value.leftIcon);
-  });
 
-  const showRightIcon = computed(() => {
-    return Boolean(merged.value.rightIcon);
+  const showAppend = computed(() => {
+    return Boolean(slots.append);
   });
 
   const showPrepend = computed(() => {
     return Boolean(slots.prepend);
   });
 
-  const showAppend = computed(() => {
-    return Boolean(slots.append);
-  });
-
   const showDefaultSlot = computed(() => {
     return Boolean(slots.default);
+  });
+
+  const showLeftIcon = computed(() => {
+    return Boolean(merged.value.leftIcon);
+  });
+
+  const showRightIcon = computed(() => {
+    return Boolean(merged.value.rightIcon);
   });
 
   // Parts
@@ -153,16 +154,16 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   return {
     slots,
     merged,
-    rootBind,
     iconSize,
+    rootBind,
     rootClass,
     isDisabled,
     showAppend,
     showPrepend,
+    leftIconBind,
     showLeftIcon,
+    rightIconBind,
     showRightIcon,
     showDefaultSlot,
-    leftIconBind,
-    rightIconBind,
   };
 }

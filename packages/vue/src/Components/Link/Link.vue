@@ -12,17 +12,17 @@ const props = defineProps<LinkOwnProps>();
 
 const {
   merged,
-  rootBind,
   iconSize,
+  rootBind,
   rootClass,
   isDisabled,
   showAppend,
   showPrepend,
+  leftIconBind,
   showLeftIcon,
+  rightIconBind,
   showRightIcon,
   showDefaultSlot,
-  leftIconBind,
-  rightIconBind,
 } = useLink(props, {
   size: "md",
   color: "primary",
@@ -34,10 +34,10 @@ const {
   <a
     v-bind="rootBind"
     :class="rootClass"
-    :aria-disabled="isDisabled ? true : undefined"
     :href="isDisabled ? undefined : merged.href"
-    :rel="merged.external && !isDisabled ? 'noopener noreferrer' : undefined"
+    :aria-disabled="isDisabled ? true : undefined"
     :target="merged.external && !isDisabled ? '_blank' : undefined"
+    :rel="merged.external && !isDisabled ? 'noopener noreferrer' : undefined"
   >
     <slot v-if="showPrepend" name="prepend" />
 

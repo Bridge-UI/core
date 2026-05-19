@@ -50,6 +50,6 @@ test("it should render prepend slot content", () => {
     </Link>,
   );
 
-  cy.get("[data-cy=prepend]").should("be.visible");
   cy.contains("Docs").should("be.visible");
+  cy.get("[data-cy=prepend]").should("be.visible");
 });

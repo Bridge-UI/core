@@ -27,8 +27,8 @@ test("it should apply aria-disabled when disabled", () => {
 
   const link = screen.getByText("Disabled");
 
-  expect(link.getAttribute("aria-disabled")).toBe("true");
   expect(link.getAttribute("href")).toBeNull();
+  expect(link.getAttribute("aria-disabled")).toBe("true");
 });
 
 test("it should open in a new tab when external is true", () => {
@@ -74,8 +74,8 @@ test("it should render prepend slot content", () => {
     </Link>,
   );
 
-  expect(screen.getByTestId("prepend")).toBeTruthy();
   expect(screen.getByText("Docs")).toBeTruthy();
+  expect(screen.getByTestId("prepend")).toBeTruthy();
 });
 
 test("it should merge className with root classes", () => {

@@ -27,21 +27,21 @@ import {
 
 const linkBridgeKeys = [
   "href",
-  "color",
   "size",
+  "color",
   "classes",
   "disabled",
   "external",
-  "underline",
   "leftIcon",
   "rightIcon",
+  "underline",
   "partsProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
 
 const underlineClasses = {
   always: "underline",
-  hover: "hover:underline",
   none: "no-underline",
+  hover: "hover:underline",
 } as const;
 
 export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
@@ -131,12 +131,12 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
     rootClass,
     isDisabled,
     showAppend,
-    showPrepend,
     hasChildren,
-    rootHtmlProps,
-    showLeftIcon,
-    showRightIcon,
+    showPrepend,
     leftIconBind,
+    showLeftIcon,
     rightIconBind,
+    rootHtmlProps,
+    showRightIcon,
   };
 }

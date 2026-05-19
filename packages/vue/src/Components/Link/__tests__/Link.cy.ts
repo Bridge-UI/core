@@ -16,8 +16,8 @@ test("it should render as an anchor with default slot content", () => {
 
 test("it should apply aria-disabled when disabled", () => {
   cy.mount(Link, {
-    props: { href: "/docs", disabled: true },
     slots: { default: () => "Disabled" },
+    props: { href: "/docs", disabled: true },
   });
 
   cy.get("a").should("have.attr", "aria-disabled", "true");
@@ -25,8 +25,8 @@ test("it should apply aria-disabled when disabled", () => {
 
 test("it should open in a new tab when external is true", () => {
   cy.mount(Link, {
-    props: { href: "https://example.com", external: true },
     slots: { default: () => "External" },
+    props: { href: "https://example.com", external: true },
   });
 
   cy.get("a")
@@ -36,8 +36,8 @@ test("it should open in a new tab when external is true", () => {
 
 test("it should render left icon when leftIcon prop is set", () => {
   cy.mount(Link, {
-    props: { href: "/docs", leftIcon: Info },
     slots: { default: () => "Docs" },
+    props: { href: "/docs", leftIcon: Info },
   });
 
   cy.get("a svg").should("have.length.at.least", 1);

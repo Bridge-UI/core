@@ -21,20 +21,20 @@ test("it should render as an anchor with default slot content", () => {
 
 test("it should apply aria-disabled when disabled", () => {
   const wrapper = mount(Link, {
-    props: { href: "/docs", disabled: true },
     slots: { default: "Disabled" },
+    props: { href: "/docs", disabled: true },
   });
 
   const anchor = wrapper.find("a");
 
-  expect(anchor.attributes("aria-disabled")).toBe("true");
   expect(anchor.attributes("href")).toBeUndefined();
+  expect(anchor.attributes("aria-disabled")).toBe("true");
 });
 
 test("it should open in a new tab when external is true", () => {
   const wrapper = mount(Link, {
-    props: { href: "https://example.com", external: true },
     slots: { default: "External" },
+    props: { href: "https://example.com", external: true },
   });
 
   const anchor = wrapper.find("a");
@@ -45,8 +45,8 @@ test("it should open in a new tab when external is true", () => {
 
 test("it should render left icon when leftIcon prop is set", () => {
   const wrapper = mount(Link, {
-    props: { href: "/docs", leftIcon: Info },
     slots: { default: "Docs" },
+    props: { href: "/docs", leftIcon: Info },
   });
 
   expect(wrapper.find("a svg").exists()).toBe(true);
@@ -67,8 +67,8 @@ test("it should render prepend slot content", () => {
 
 test("it should merge class with root classes", () => {
   const wrapper = mount(Link, {
-    props: { href: "/docs", class: "custom-link" },
     slots: { default: "Styled" },
+    props: { href: "/docs", class: "custom-link" },
   });
 
   expect(wrapper.find("a").classes()).toContain("custom-link");
@@ -78,8 +78,8 @@ test("it should forward fallthrough attrs to the root element", () => {
   const wrapper = mount(Link, {
     slots: { default: "Docs" },
     attrs: {
-      id: "link-from-attrs",
       href: "/docs",
+      id: "link-from-attrs",
       "data-testid": "link-attrs",
     },
   });
@@ -92,6 +92,7 @@ test("it should forward fallthrough attrs to the root element", () => {
 
 test("it should forward partsProps to icon sub-parts", () => {
   const wrapper = mount(Link, {
+    slots: { default: "Docs" },
     props: {
       href: "/docs",
       leftIcon: Info,
@@ -99,7 +100,6 @@ test("it should forward partsProps to icon sub-parts", () => {
         leftIcon: { id: "link-left-icon" },
       },
     },
-    slots: { default: "Docs" },
   });
 
   expect(wrapper.find("#link-left-icon").exists()).toBe(true);
