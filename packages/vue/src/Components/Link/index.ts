@@ -3,6 +3,8 @@ export { useLink } from "@/Components/Link/composables/useLink";
 export type {
   LinkClasses,
   LinkColorOverrides,
+  LinkOwnProps,
+  LinkPartsProps,
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,

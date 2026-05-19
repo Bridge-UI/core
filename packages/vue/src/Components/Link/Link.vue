@@ -1,13 +1,29 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { LinkProps, LinkSlots } from "@/Components/Link";
-import { useLink } from "@/Components/Link";
+import { Icon } from "@/Components/Icon";
+import { useLink } from "@/Components/Link/composables/useLink";
+import type { LinkOwnProps, LinkSlots } from "@/Components/Link/link.types";
 
 defineSlots<LinkSlots>();
 
-const props = defineProps<LinkProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useLink(props, {
+const props = defineProps<LinkOwnProps>();
+
+const {
+  merged,
+  rootBind,
+  iconSize,
+  rootClass,
+  isDisabled,
+  showAppend,
+  showPrepend,
+  showLeftIcon,
+  showRightIcon,
+  showDefaultSlot,
+  leftIconBind,
+  rightIconBind,
+} = useLink(props, {
   size: "md",
   color: "primary",
   underline: "hover",
@@ -15,15 +31,32 @@ const { slots, merged } = useLink(props, {
 </script>
 
 <template>
-  <component
-    :href="merged.href"
-    :is="merged.href ? 'a' : 'span'"
-    class="inline-block text-center font-semibold"
+  <a
+    v-bind="rootBind"
+    :class="rootClass"
+    :aria-disabled="isDisabled ? true : undefined"
+    :href="isDisabled ? undefined : merged.href"
+    :rel="merged.external && !isDisabled ? 'noopener noreferrer' : undefined"
+    :target="merged.external && !isDisabled ? '_blank' : undefined"
   >
-    <slot name="prepend" />
+    <slot v-if="showPrepend" name="prepend" />
 
-    <slot />
+    <Icon
+      v-if="showLeftIcon && merged.leftIcon"
+      :icon="merged.leftIcon"
+      :size="iconSize"
+      v-bind="leftIconBind"
+    />
 
-    <slot name="append" />
-  </component>
+    <slot v-if="showDefaultSlot" />
+
+    <Icon
+      v-if="showRightIcon && merged.rightIcon"
+      :icon="merged.rightIcon"
+      :size="iconSize"
+      v-bind="rightIconBind"
+    />
+
+    <slot v-if="showAppend" name="append" />
+  </a>
 </template>

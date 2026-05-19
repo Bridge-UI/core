@@ -1,32 +1,64 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { LinkColor, LinkSize, MergeProps } from "@bridge-ui/core";
+import type {
+  LinkColor,
+  LinkSize,
+  MergeHtmlProps,
+  MergeProps,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
 
 export interface LinkSizeOverrides {}
 export interface LinkColorOverrides {}
 
 export interface LinkClasses {
   /**
-   * The classes to apply to the icon.
+   * The classes to apply to the left icon.
    */
-  icon?: string;
+  leftIcon?: string;
 
   /**
    * The classes to apply to the root.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the right icon.
+   */
+  rightIcon?: string;
 }
 
-export interface LinkProps {
+export interface LinkPartsProps {
+  /**
+   * Props forwarded to the left `Icon` (`icon` is set by the link).
+   */
+  leftIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the right `Icon` (`icon` is set by the link).
+   */
+  rightIcon?: Partial<Omit<IconProps, "icon">>;
+}
+
+export interface LinkOwnProps {
   /**
    * The children to render.
    *
    * @default undefined
    */
   children?: ReactNode;
+
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  className?: string;
 
   /**
    * The classes to apply to the link.
@@ -71,6 +103,14 @@ export interface LinkProps {
   leftIcon?: LucideIcon;
 
   /**
+   * Extra props for internal parts (`leftIcon`, `rightIcon`, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  partsProps?: LinkPartsProps;
+
+  /**
    * The icon to display after the link text.
    *
    * @default undefined
@@ -101,12 +141,17 @@ export interface LinkProps {
 
 export interface LinkSlots {
   /**
-   * The slot for the append content.
+   * Content after the label (inline end).
    */
   append?: ReactNode;
 
   /**
-   * The slot for the prepend content.
+   * Content before the label (inline start).
    */
   prepend?: ReactNode;
 }
+
+export type LinkProps = MergeHtmlProps<
+  LinkOwnProps,
+  AnchorHTMLAttributes<HTMLAnchorElement>
+>;
