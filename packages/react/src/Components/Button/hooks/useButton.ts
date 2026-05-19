@@ -106,6 +106,7 @@ export function useButton(
   // Root
   const rootClass = cn(
     "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
+    "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
     "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
     "transition-all ease-in-out duration-200 focus:ring-2",
     "disabled:opacity-80 disabled:cursor-not-allowed",

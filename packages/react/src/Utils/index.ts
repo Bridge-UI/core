@@ -28,6 +28,59 @@ export type UseBridgeUIComponentReturn<
 };
 
 /**
+ * Merges a part's `className` with a computed class string (registry + `classes.*`).
+ */
+export function mergePartBind<T extends { className?: string } | undefined>(
+  part: T,
+  classValue: string,
+): Omit<NonNullable<T>, "className"> & { className: string } {
+  return {
+    ...(part ?? {}),
+    className: cn(classValue, part?.className),
+  } as Omit<NonNullable<T>, "className"> & { className: string };
+}
+
+/**
+ * Splits merged component props into Bridge registry props, peeled own props,
+ * and native HTML attributes for the root element.
+ */
+export function splitComponentProps<
+  P extends object,
+  const PeelKeys extends ReadonlyArray<keyof P>,
+  const BridgeKeys extends ReadonlyArray<keyof P>,
+>(
+  props: P,
+  {
+    peel,
+    bridgeKeys,
+  }: {
+    peel: PeelKeys;
+    bridgeKeys: BridgeKeys;
+  },
+): Pick<P, PeelKeys[number]> & {
+  propsForMerge: Pick<P, BridgeKeys[number]>;
+  rootHtmlProps: Omit<P, BridgeKeys[number] | PeelKeys[number]>;
+} {
+  const peelKeyList = [...peel] as (keyof P)[];
+
+  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
+
+  const peeled = pick(props, peelKeyList) as Pick<P, PeelKeys[number]>;
+
+  const propsForMerge = pick(props, bridgeKeyList) as Pick<
+    P,
+    BridgeKeys[number]
+  >;
+
+  const rootHtmlProps = omit(props, [...bridgeKeyList, ...peelKeyList]) as Omit<
+    P,
+    BridgeKeys[number] | PeelKeys[number]
+  >;
+
+  return { ...peeled, propsForMerge, rootHtmlProps };
+}
+
+/**
  * Registry entry + props merged with Bridge defaults for a named component.
  */
 export function useBridgeUIComponent<
@@ -81,59 +134,6 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
       props.classes,
     );
   }, [entry?.classes, props.classes]);
-}
-
-/**
- * Splits merged component props into Bridge registry props, peeled own props,
- * and native HTML attributes for the root element.
- */
-export function splitComponentProps<
-  P extends object,
-  const PeelKeys extends ReadonlyArray<keyof P>,
-  const BridgeKeys extends ReadonlyArray<keyof P>,
->(
-  props: P,
-  {
-    peel,
-    bridgeKeys,
-  }: {
-    peel: PeelKeys;
-    bridgeKeys: BridgeKeys;
-  },
-): Pick<P, PeelKeys[number]> & {
-  propsForMerge: Pick<P, BridgeKeys[number]>;
-  rootHtmlProps: Omit<P, BridgeKeys[number] | PeelKeys[number]>;
-} {
-  const peelKeyList = [...peel] as (keyof P)[];
-
-  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
-
-  const peeled = pick(props, peelKeyList) as Pick<P, PeelKeys[number]>;
-
-  const propsForMerge = pick(props, bridgeKeyList) as Pick<
-    P,
-    BridgeKeys[number]
-  >;
-
-  const rootHtmlProps = omit(props, [...bridgeKeyList, ...peelKeyList]) as Omit<
-    P,
-    BridgeKeys[number] | PeelKeys[number]
-  >;
-
-  return { ...peeled, propsForMerge, rootHtmlProps };
-}
-
-/**
- * Merges a part's `className` with a computed class string (registry + `classes.*`).
- */
-export function mergePartBind<T extends { className?: string } | undefined>(
-  part: T,
-  classValue: string,
-): Omit<NonNullable<T>, "className"> & { className: string } {
-  return {
-    ...(part ?? {}),
-    className: cn(classValue, part?.className),
-  } as Omit<NonNullable<T>, "className"> & { className: string };
 }
 
 // ** Exports

@@ -140,3 +140,9 @@ test("it should apply className after classes.root in rootClass", () => {
   expect(result.current.rootClass).toContain("p-4");
   expect(result.current.rootClass).not.toContain("p-2");
 });
+
+test("it should include aria-disabled styles for non-button elements", () => {
+  const { result } = renderUseButton({ as: "a", href: "#" });
+
+  expect(result.current.rootClass).toContain("aria-disabled:opacity-80");
+});

@@ -147,3 +147,9 @@ test("it should apply class after classes.root in rootClass", () => {
   expect(rootClass.value).toContain("p-4");
   expect(rootClass.value).not.toContain("p-2");
 });
+
+test("it should include aria-disabled styles for non-button elements", () => {
+  const { rootClass } = mountUseButton({ as: "a", href: "#" });
+
+  expect(rootClass.value).toContain("aria-disabled:opacity-80");
+});
