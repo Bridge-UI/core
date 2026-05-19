@@ -1,29 +1,69 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { MiniButtonProps, MiniButtonSlots } from "@/Components/MiniButton";
-import { useMiniButton } from "@/Components/MiniButton";
+import { Icon } from "@/Components/Icon";
+import { useMiniButton } from "@/Components/MiniButton/composables/useMiniButton";
+import type {
+  MiniButtonOwnProps,
+  MiniButtonSlots,
+} from "@/Components/MiniButton/miniButton.types";
 
 defineSlots<MiniButtonSlots>();
 
-const props = defineProps<MiniButtonProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useMiniButton(props, {
-  size: "md",
+const props = defineProps<MiniButtonOwnProps>();
+
+const {
+  tag,
+  merged,
+  rootBind,
+  iconSize,
+  isAnchor,
+  isButton,
+  rootClass,
+  showIcon,
+  iconBind,
+  isDisabled,
+  showSpinner,
+  showDefaultSlot,
+  spinnerIcon,
+  loadingIconBind,
+} = useMiniButton(props, {
   as: "button",
-  rounded: "sm",
+  size: "md",
+  rounded: "none",
   color: "primary",
-  variant: "solid",
+  variant: "flat",
 });
 </script>
 
 <template>
   <component
-    type="button"
-    :href="merged.href"
-    :is="merged.as ?? 'button'"
-    :disabled="merged.disabled"
-    class="inline-flex items-center justify-center outline-none"
+    :is="tag"
+    v-bind="rootBind"
+    :class="rootClass"
+    :type="isButton ? 'button' : undefined"
+    :disabled="isButton ? isDisabled : undefined"
+    :aria-busy="merged.loading ? true : undefined"
+    :aria-disabled="isDisabled && !isButton ? true : undefined"
+    :href="isAnchor && !isDisabled && merged.href ? merged.href : undefined"
   >
-    <slot />
+    <Icon
+      v-if="showSpinner"
+      :icon="spinnerIcon"
+      :size="iconSize"
+      v-bind="loadingIconBind"
+    />
+
+    <template v-else>
+      <slot v-if="showDefaultSlot" />
+
+      <Icon
+        v-else-if="showIcon && merged.icon"
+        :icon="merged.icon"
+        :size="iconSize"
+        v-bind="iconBind"
+      />
+    </template>
   </component>
 </template>

@@ -3,6 +3,8 @@ export { useMiniButton } from "@/Components/MiniButton/composables/useMiniButton
 export type {
   MiniButtonClasses,
   MiniButtonColorOverrides,
+  MiniButtonOwnProps,
+  MiniButtonPartsProps,
   MiniButtonProps,
   MiniButtonRoundedOverrides,
   MiniButtonSizeOverrides,
