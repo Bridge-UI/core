@@ -39,7 +39,12 @@ export type {
   CheckboxSize,
 } from "@core/Components/Checkbox";
 export type { IconSize } from "@core/Components/Icon";
-export type { LinkColor, LinkColorItem, LinkSize } from "@core/Components/Link";
+export type {
+  LinkColor,
+  LinkColorItem,
+  LinkSize,
+  LinkUnderline,
+} from "@core/Components/Link";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 export type { MiniBadgeSize } from "@core/Components/MiniBadge";
 export type { MiniButtonSize } from "@core/Components/MiniButton";

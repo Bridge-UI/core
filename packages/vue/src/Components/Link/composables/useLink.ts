@@ -7,8 +7,10 @@ import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
   colorProps,
   sizeProps,
+  underlineProps,
   type LinkColor,
   type LinkSize,
+  type LinkUnderline,
 } from "@bridge-ui/core/Components/Link";
 
 // ** Local Imports
@@ -37,12 +39,6 @@ const linkBridgeKeys = [
   "underline",
   "partsProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
-
-const underlineClasses = {
-  always: "underline",
-  none: "no-underline",
-  hover: "hover:underline",
-} as const;
 
 export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   // Setup
@@ -81,6 +77,13 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
     });
   });
 
+  const mergedUnderlineMap = computed(() => {
+    return mergeBridgeUIStringMap({
+      lib: underlineProps,
+      provider: bridgeLink.value?.customProps?.underline,
+    });
+  });
+
   // Theme
   const colorKey = computed(() => {
     return (merged.value.color ?? "primary") as keyof LinkColor;
@@ -105,7 +108,10 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
       "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
       colorItem.value?.base,
       colorItem.value?.hover,
-      underlineClasses[merged.value.underline ?? "hover"],
+      get(
+        mergedUnderlineMap.value,
+        (merged.value.underline ?? "hover") as keyof LinkUnderline,
+      ),
       get(mergedSizeMap.value, merged.value.size ?? "md"),
       mergedClasses.value.root,
       userClass,

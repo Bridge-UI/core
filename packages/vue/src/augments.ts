@@ -74,7 +74,7 @@ declare module "@bridge-ui/core" {
 
   interface LinkConfigOverrides {
     classes: LinkClasses;
-    defaultProps: Partial<Pick<LinkProps, "size" | "color">>;
+    defaultProps: Partial<Pick<LinkProps, "size" | "color" | "underline">>;
   }
 
   interface MenuConfigOverrides {

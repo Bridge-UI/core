@@ -44,7 +44,15 @@ test("it should show right icon when rightIcon is set", () => {
 test("it should apply hover underline classes by default", () => {
   const { result } = renderUseLink();
 
+  expect(result.current.rootClass).toContain("no-underline");
   expect(result.current.rootClass).toContain("hover:underline");
+});
+
+test("it should apply none underline when underline is none", () => {
+  const { result } = renderUseLink({ underline: "none" });
+
+  expect(result.current.rootClass).toContain("no-underline");
+  expect(result.current.rootClass).not.toContain("hover:underline");
 });
 
 test("it should apply always underline when underline is always", () => {

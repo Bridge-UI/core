@@ -39,7 +39,12 @@ import type {
   CheckboxSize,
 } from "@core/Components/Checkbox";
 import type { IconSize } from "@core/Components/Icon";
-import type { LinkColor, LinkColorItem, LinkSize } from "@core/Components/Link";
+import type {
+  LinkColor,
+  LinkColorItem,
+  LinkSize,
+  LinkUnderline,
+} from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type { MiniBadgeSize } from "@core/Components/MiniBadge";
 import type { MiniButtonSize } from "@core/Components/MiniButton";
@@ -226,10 +231,12 @@ export interface LinkConfigBase {
   defaultProps: Partial<{
     size: keyof LinkSize;
     color: keyof LinkColor;
+    underline: keyof LinkUnderline;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
     color: Record<string, LinkColorItem>;
+    underline: Record<string, string>;
   }>;
 }
 

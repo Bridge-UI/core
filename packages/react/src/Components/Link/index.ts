@@ -9,4 +9,5 @@ export type {
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,
+  LinkUnderlineOverrides,
 } from "@/Components/Link/link.types";

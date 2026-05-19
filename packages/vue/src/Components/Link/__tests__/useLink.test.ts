@@ -50,7 +50,15 @@ test("it should show left icon when leftIcon is set", () => {
 test("it should apply hover underline classes by default", () => {
   const { rootClass } = mountUseLink();
 
+  expect(rootClass.value).toContain("no-underline");
   expect(rootClass.value).toContain("hover:underline");
+});
+
+test("it should apply none underline when underline is none", () => {
+  const { rootClass } = mountUseLink({ underline: "none" });
+
+  expect(rootClass.value).toContain("no-underline");
+  expect(rootClass.value).not.toContain("hover:underline");
 });
 
 test("it should expose rootBind for additional attributes", () => {

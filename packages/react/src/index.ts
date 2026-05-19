@@ -69,6 +69,7 @@ export type {
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,
+  LinkUnderlineOverrides,
 } from "@/Components/Link";
 export { Menu } from "@/Components/Menu";
 export type {

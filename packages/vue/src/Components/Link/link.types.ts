@@ -6,6 +6,7 @@ import type { AnchorHTMLAttributes, Slot } from "vue";
 import type {
   LinkColor,
   LinkSize,
+  LinkUnderline,
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
@@ -15,6 +16,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface LinkSizeOverrides {}
 export interface LinkColorOverrides {}
+export interface LinkUnderlineOverrides {}
 
 export interface LinkClasses {
   /**
@@ -122,7 +124,7 @@ export interface LinkOwnProps {
    *
    * @default "hover"
    */
-  underline?: "hover" | "always" | "none";
+  underline?: MergeProps<LinkUnderline, LinkUnderlineOverrides>;
 }
 
 export interface LinkSlots {
