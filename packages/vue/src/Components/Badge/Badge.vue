@@ -1,22 +1,22 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { BadgeProps, BadgeSlots } from "@/Components/Badge";
-import { useBadge } from "@/Components/Badge";
+import type { BadgeOwnProps } from "@/Components/Badge/badge.types";
+import { useBadge } from "@/Components/Badge/composables/useBadge";
 
-defineSlots<BadgeSlots>();
+defineOptions({ inheritAttrs: false });
 
-const props = defineProps<BadgeProps>();
+const props = defineProps<BadgeOwnProps>();
 
-const { slots, merged } = useBadge(props, {
+const { rootBind, rootClass } = useBadge(props, {
   size: "sm",
-  rounded: "sm",
   color: "primary",
-  variant: "solid",
+  rounded: "full",
+  variant: "flat",
 });
 </script>
 
 <template>
-  <span class="inline-flex items-center justify-center outline-none">
+  <span :class="rootClass" v-bind="rootBind">
     <slot />
   </span>
 </template>

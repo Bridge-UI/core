@@ -2,6 +2,7 @@
 export type {
   BadgeClasses,
   BadgeColorOverrides,
+  BadgeOwnProps,
   BadgeProps,
   BadgeRoundedOverrides,
   BadgeSizeOverrides,

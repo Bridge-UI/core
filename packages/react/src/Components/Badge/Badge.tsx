@@ -1,10 +1,20 @@
 // ** Local Imports
-import type { BadgeProps } from "@/Components/Badge/badge.types";
+import type { BadgeProps } from "@/Components/Badge";
+import { useBadge } from "@/Components/Badge";
 
 function Badge(props: BadgeProps) {
-  void props;
+  const { children, rootClass, rootHtmlProps } = useBadge(props, {
+    size: "sm",
+    color: "primary",
+    rounded: "full",
+    variant: "flat",
+  });
 
-  return <div>Badge</div>;
+  return (
+    <span {...rootHtmlProps} className={rootClass}>
+      {children}
+    </span>
+  );
 }
 
 export default Badge;

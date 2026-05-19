@@ -1,5 +1,5 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -7,6 +7,7 @@ import type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -22,7 +23,14 @@ export interface BadgeClasses {
   root?: string;
 }
 
-export interface BadgeProps {
+export interface BadgeOwnProps {
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  class?: string;
+
   /**
    * The classes to apply to the badge.
    *
@@ -40,7 +48,7 @@ export interface BadgeProps {
   /**
    * The roundedness of the badge.
    *
-   * @default "sm"
+   * @default "full"
    */
   rounded?: MergeProps<BadgeRounded, BadgeRoundedOverrides>;
 
@@ -54,7 +62,7 @@ export interface BadgeProps {
   /**
    * The variant of the badge.
    *
-   * @default "solid"
+   * @default "flat"
    */
   variant?: MergeProps<BadgeVariant, BadgeVariantOverrides>;
 }
@@ -63,5 +71,7 @@ export interface BadgeSlots {
   /**
    * The content of the badge.
    */
-  default?: Slot<undefined>;
+  default?: Slot;
 }
+
+export type BadgeProps = MergeHtmlProps<BadgeOwnProps, HTMLAttributes>;
