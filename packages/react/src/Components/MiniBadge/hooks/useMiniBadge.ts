@@ -25,8 +25,8 @@ import {
 } from "@/Utils";
 
 const miniBadgeBridgeKeys = [
-  "color",
   "size",
+  "color",
   "classes",
   "rounded",
   "variant",

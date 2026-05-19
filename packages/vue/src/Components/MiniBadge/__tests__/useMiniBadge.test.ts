@@ -12,9 +12,9 @@ import {
 
 const libDefaults: Partial<MiniBadgeOwnProps> = {
   size: "xs",
-  color: "primary",
   rounded: "full",
   variant: "flat",
+  color: "primary",
 };
 
 function mountUseMiniBadge(props: MiniBadgeProps = {}) {

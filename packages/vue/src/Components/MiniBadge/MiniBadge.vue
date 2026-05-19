@@ -9,9 +9,9 @@ const props = defineProps<MiniBadgeOwnProps>();
 
 const { rootBind, rootClass } = useMiniBadge(props, {
   size: "xs",
-  color: "primary",
   rounded: "full",
   variant: "flat",
+  color: "primary",
 });
 </script>
 

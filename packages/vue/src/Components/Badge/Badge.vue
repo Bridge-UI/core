@@ -9,9 +9,9 @@ const props = defineProps<BadgeOwnProps>();
 
 const { rootBind, rootClass } = useBadge(props, {
   size: "sm",
-  color: "primary",
   rounded: "full",
   variant: "flat",
+  color: "primary",
 });
 </script>
 

@@ -12,9 +12,9 @@ import {
 
 const libDefaults: Partial<BadgeOwnProps> = {
   size: "sm",
-  color: "primary",
   rounded: "full",
   variant: "flat",
+  color: "primary",
 };
 
 function mountUseBadge(props: BadgeProps = {}) {
@@ -36,8 +36,8 @@ function mountUseBadge(props: BadgeProps = {}) {
 test("it should merge default color and variant", () => {
   const { merged } = mountUseBadge();
 
-  expect(merged.value.color).toBe("primary");
   expect(merged.value.variant).toBe("flat");
+  expect(merged.value.color).toBe("primary");
 });
 
 test("it should override color when prop is passed", () => {

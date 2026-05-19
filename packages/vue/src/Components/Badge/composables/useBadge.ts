@@ -25,8 +25,8 @@ import {
 } from "@/Utils";
 
 const badgeBridgeKeys = [
-  "color",
   "size",
+  "color",
   "classes",
   "rounded",
   "variant",

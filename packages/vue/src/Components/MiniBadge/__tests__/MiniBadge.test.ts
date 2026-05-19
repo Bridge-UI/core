@@ -8,8 +8,8 @@ import { MiniBadge } from "@/Components/MiniBadge";
 test("it should render default slot content", () => {
   const wrapper = mount(MiniBadge, { slots: { default: "3" } });
 
-  expect(wrapper.find("span").exists()).toBe(true);
   expect(wrapper.text()).toContain("3");
+  expect(wrapper.find("span").exists()).toBe(true);
 });
 
 test("it should apply xs size by default", () => {

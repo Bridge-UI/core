@@ -8,8 +8,8 @@ import { Badge } from "@/Components/Badge";
 test("it should render default slot content", () => {
   const wrapper = mount(Badge, { slots: { default: "New" } });
 
-  expect(wrapper.find("span").exists()).toBe(true);
   expect(wrapper.text()).toContain("New");
+  expect(wrapper.find("span").exists()).toBe(true);
 });
 
 test("it should apply rounded-full by default", () => {

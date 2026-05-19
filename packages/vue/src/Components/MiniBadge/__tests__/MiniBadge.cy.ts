@@ -15,8 +15,8 @@ test("it should apply xs size by default", () => {
 
 test("it should merge custom class", () => {
   cy.mount(MiniBadge, {
-    props: { class: "custom-mini-badge" },
     slots: { default: () => "Styled" },
+    props: { class: "custom-mini-badge" },
   });
 
   cy.get("span").should("have.class", "custom-mini-badge");
