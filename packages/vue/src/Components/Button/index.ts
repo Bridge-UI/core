@@ -1,12 +1,13 @@
 // ** Exports
+export { default as Button } from "@/Components/Button/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,
+  ButtonOwnProps,
   ButtonProps,
   ButtonRoundedOverrides,
   ButtonSizeOverrides,
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button/button.types";
-export { default as Button } from "@/Components/Button/Button.vue";
 export { useButton } from "@/Components/Button/composables/useButton";

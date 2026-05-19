@@ -4,9 +4,13 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useAlert, type AlertProps } from "@/Components/Alert";
+import {
+  useAlert,
+  type AlertOwnProps,
+  type AlertProps,
+} from "@/Components/Alert";
 
-const libDefaults: Partial<AlertProps> = {
+const libDefaults: Partial<AlertOwnProps> = {
   color: "primary",
   variant: "flat",
   shadow: "none",
@@ -92,4 +96,20 @@ test("it should hide title row when no title, icon, or icon slot", () => {
   const { showTitleRow } = mountUseAlert({ icon: null });
 
   expect(showTitleRow.value).toBe(false);
+});
+
+test("it should merge class into rootClasses", () => {
+  const { rootClasses } = mountUseAlert({ class: "custom-alert" });
+
+  expect(rootClasses.value).toContain("custom-alert");
+});
+
+test("it should expose rootBind for additional attributes", () => {
+  const { rootBind } = mountUseAlert({
+    id: "alert-root",
+    "data-testid": "alert",
+  });
+
+  expect(rootBind.value.id).toBe("alert-root");
+  expect(rootBind.value["data-testid"]).toBe("alert");
 });

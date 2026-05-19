@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
@@ -8,6 +8,7 @@ import type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -38,7 +39,7 @@ export interface ButtonClasses {
   startIcon?: string;
 }
 
-export interface ButtonProps {
+export interface ButtonOwnProps {
   /**
    * The element to render as.
    *
@@ -52,6 +53,13 @@ export interface ButtonProps {
    * @default undefined
    */
   children?: ReactNode;
+
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  className?: string;
 
   /**
    * The classes to apply to the button.
@@ -156,3 +164,8 @@ export interface ButtonSlots {
    */
   start?: ReactNode;
 }
+
+export type ButtonProps = MergeHtmlProps<
+  ButtonOwnProps,
+  HTMLAttributes<HTMLElement>
+>;

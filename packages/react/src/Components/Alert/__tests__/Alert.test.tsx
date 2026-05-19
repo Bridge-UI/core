@@ -72,3 +72,24 @@ test("it should render action slot content", () => {
 
   expect(screen.getByText("Dismiss")).toBeTruthy();
 });
+
+test("it should merge className with root classes", () => {
+  const { container } = render(
+    <Alert title="Custom class" className="custom-alert" />,
+  );
+
+  const root = container.querySelector(".w-full");
+
+  expect(root?.classList.contains("custom-alert")).toBe(true);
+});
+
+test("it should forward additional attributes to the root element", () => {
+  const { container } = render(
+    <Alert title="With id" id="alert-root" data-testid="alert" />,
+  );
+
+  const root = container.querySelector("#alert-root");
+
+  expect(root).not.toBeNull();
+  expect(root?.getAttribute("data-testid")).toBe("alert");
+});

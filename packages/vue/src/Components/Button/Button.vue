@@ -1,21 +1,24 @@
 <script setup lang="ts">
 // ** Local Imports
-import { useButton } from "@/Components/Button";
 import type {
-  ButtonProps,
+  ButtonOwnProps,
   ButtonSlots,
 } from "@/Components/Button/button.types";
+import { useButton } from "@/Components/Button/composables/useButton";
 import { Icon } from "@/Components/Icon";
 
 defineSlots<ButtonSlots>();
 
-const props = defineProps<ButtonProps>();
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<ButtonOwnProps>();
 
 const {
   tag,
   merged,
   isAnchor,
   isButton,
+  rootBind,
   showText,
   rootClass,
   isDisabled,
@@ -41,6 +44,7 @@ const {
 <template>
   <component
     :is="tag"
+    v-bind="rootBind"
     :class="rootClass"
     :type="isButton ? 'button' : undefined"
     :disabled="isButton ? isDisabled : undefined"

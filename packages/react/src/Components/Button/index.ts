@@ -3,6 +3,7 @@ export { default as Button } from "@/Components/Button/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,
+  ButtonOwnProps,
   ButtonProps,
   ButtonRoundedOverrides,
   ButtonSizeOverrides,

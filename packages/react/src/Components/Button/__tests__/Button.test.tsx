@@ -94,3 +94,26 @@ test("it should render start slot content", () => {
   expect(screen.getByText("Label")).toBeTruthy();
   expect(screen.getByTestId("start-slot")).toBeTruthy();
 });
+
+test("it should merge className with root classes", () => {
+  const { container } = render(
+    <Button className="custom-button">Styled</Button>,
+  );
+
+  expect(
+    container.querySelector("button")?.classList.contains("custom-button"),
+  ).toBe(true);
+});
+
+test("it should forward additional attributes to the root element", () => {
+  render(
+    <Button id="submit-btn" data-testid="button">
+      Submit
+    </Button>,
+  );
+
+  const button = screen.getByRole("button", { name: "Submit" });
+
+  expect(button.id).toBe("submit-btn");
+  expect(button.getAttribute("data-testid")).toBe("button");
+});

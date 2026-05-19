@@ -77,4 +77,9 @@ export function mergePropsWithBridgeUIDefaults<
   return mergeBridgeUILayeredClasses<P>(libDefaults, fromRegistry, props) as P;
 }
 
-export type { MergeProps, Overwrite, UnionProps } from "@core/Utils/types";
+export type {
+  MergeHtmlProps,
+  MergeProps,
+  Overwrite,
+  UnionProps,
+} from "@core/Utils/types";

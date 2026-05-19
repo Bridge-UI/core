@@ -3,9 +3,13 @@ import { renderHook } from "@testing-library/react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { useAlert, type AlertProps } from "@/Components/Alert";
+import {
+  useAlert,
+  type AlertOwnProps,
+  type AlertProps,
+} from "@/Components/Alert";
 
-const libDefaults: Partial<AlertProps> = {
+const libDefaults: Partial<AlertOwnProps> = {
   color: "primary",
   variant: "flat",
   shadow: "none",
@@ -95,4 +99,20 @@ test("it should expose children from props", () => {
   const { result } = renderUseAlert({ children: "Body text" });
 
   expect(result.current.children).toBe("Body text");
+});
+
+test("it should merge className into rootClasses", () => {
+  const { result } = renderUseAlert({ className: "custom-alert" });
+
+  expect(result.current.rootClasses).toContain("custom-alert");
+});
+
+test("it should expose rootHtmlProps for additional attributes", () => {
+  const { result } = renderUseAlert({
+    id: "alert-root",
+    "data-testid": "alert",
+  });
+
+  expect(result.current.rootHtmlProps.id).toBe("alert-root");
+  expect(result.current.rootHtmlProps["data-testid"]).toBe("alert");
 });

@@ -15,6 +15,7 @@ function Alert(props: AlertProps) {
     resolvedIcon,
     showTitleRow,
     titleClasses,
+    rootHtmlProps,
     hasDefaultBody,
   } = useAlert(props, {
     shadow: "sm",
@@ -25,7 +26,7 @@ function Alert(props: AlertProps) {
   });
 
   return (
-    <div className={rootClasses}>
+    <div className={rootClasses} {...rootHtmlProps}>
       {slots?.header}
 
       {!slots?.header && showTitleRow && (

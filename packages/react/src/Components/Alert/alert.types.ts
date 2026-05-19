@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
@@ -9,6 +9,7 @@ import type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -40,13 +41,20 @@ export interface AlertClasses {
   title?: string;
 }
 
-export interface AlertProps {
+export interface AlertOwnProps {
   /**
    * The children to render.
    *
    * @default undefined
    */
   children?: ReactNode;
+
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  className?: string;
 
   /**
    * The classes to apply to the alert.
@@ -133,3 +141,8 @@ export interface AlertSlots {
    */
   icon?: ReactNode;
 }
+
+export type AlertProps = MergeHtmlProps<
+  AlertOwnProps,
+  HTMLAttributes<HTMLDivElement>
+>;

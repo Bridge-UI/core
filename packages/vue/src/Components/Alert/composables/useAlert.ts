@@ -9,7 +9,7 @@ import {
   Info,
   TriangleAlert,
 } from "lucide-vue-next";
-import { computed, useSlots } from "vue";
+import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -22,7 +22,7 @@ import {
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
+import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
@@ -40,18 +40,62 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
+export function useAlert(
+  props: AlertProps,
+  libDefaults: Partial<AlertOwnProps>,
+) {
   const slots = useSlots();
+  const attrs = useAttrs();
+
+  const {
+    icon,
+    color,
+    title,
+    shadow,
+    classes,
+    padding,
+    rounded,
+    variant,
+    class: userClass,
+  } = props;
+
+  const propsForMerge = {
+    icon,
+    color,
+    title,
+    shadow,
+    classes,
+    padding,
+    rounded,
+    variant,
+  };
+
+  const rootBind = computed(() => {
+    const {
+      icon: _icon,
+      class: _class,
+      color: _color,
+      title: _title,
+      shadow: _shadow,
+      classes: _classes,
+      padding: _padding,
+      rounded: _rounded,
+      variant: _variant,
+      ...rootHtmlPropsFromProps
+    } = props;
+
+    return { ...rootHtmlPropsFromProps, ...attrs };
+  });
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
-    props,
     libDefaults,
+    props: propsForMerge,
     componentName: "Alert",
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    props,
     entry: bridgeAlert,
+    props: propsForMerge,
   });
 
   const mergedShadowMap = computed(() => {
@@ -129,30 +173,31 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
 
   const titleClasses = computed(() => {
     return cn(
-      palette.value.text,
-      get(mergedClasses.value, "title"),
       "text-start text-sm whitespace-normal",
       hasDefaultBody.value ? "font-semibold" : "font-normal",
+      palette.value.text,
+      get(mergedClasses.value, "title"),
     );
   });
 
   const bodyClasses = computed(() => {
     return cn(
-      palette.value.text,
       "grow text-sm text-start",
-      get(mergedClasses.value, "body"),
+      palette.value.text,
       get(mergedPaddingMap.value, merged.value.padding ?? "none"),
+      get(mergedClasses.value, "body"),
     );
   });
 
   const rootClasses = computed(() => {
     return cn(
+      "w-full flex flex-col p-4",
       palette.value.border,
       palette.value.background,
-      "w-full flex flex-col p-4",
-      get(mergedClasses.value, "root"),
       get(mergedShadowMap.value, merged.value.shadow ?? "none"),
       get(mergedRoundedMap.value, merged.value.rounded ?? "none"),
+      get(mergedClasses.value, "root"),
+      userClass,
     );
   });
 
@@ -160,6 +205,7 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
     slots,
     merged,
     palette,
+    rootBind,
     showIcon,
     bodyClasses,
     bridgeAlert,

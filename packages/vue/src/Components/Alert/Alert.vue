@@ -1,16 +1,19 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { AlertProps, AlertSlots } from "@/Components/Alert";
-import { useAlert } from "@/Components/Alert";
+import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
+import { useAlert } from "@/Components/Alert/composables/useAlert";
 import { Icon } from "@/Components/Icon";
 
 defineSlots<AlertSlots>();
 
-const props = defineProps<AlertProps>();
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<AlertOwnProps>();
 
 const {
   slots,
   merged,
+  rootBind,
   showIcon,
   bodyClasses,
   iconClasses,
@@ -29,7 +32,7 @@ const {
 </script>
 
 <template>
-  <div :class="rootClasses">
+  <div :class="rootClasses" v-bind="rootBind">
     <slot v-if="slots.header" name="header" />
 
     <div v-else-if="showTitleRow" class="flex justify-between items-start">

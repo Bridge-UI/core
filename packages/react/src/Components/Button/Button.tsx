@@ -22,6 +22,7 @@ function Button(props: ButtonProps) {
     spinnerIcon,
     endIconClass,
     showChildren,
+    rootHtmlProps,
     showStartIcon,
     showStartSlot,
     startIconClass,
@@ -39,6 +40,7 @@ function Button(props: ButtonProps) {
   return createElement(
     tag,
     {
+      ...rootHtmlProps,
       className: rootClass,
       type: isButton ? "button" : undefined,
       disabled: isButton ? isDisabled : undefined,

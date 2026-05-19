@@ -100,3 +100,27 @@ test("it should render start slot content", () => {
   expect(wrapper.text()).toContain("◀");
   expect(wrapper.text()).toContain("Label");
 });
+
+test("it should merge class with root classes", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Styled" },
+    props: { class: "custom-button" },
+  });
+
+  expect(wrapper.find("button").classes()).toContain("custom-button");
+});
+
+test("it should forward additional attributes to the root element", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Submit" },
+    props: {
+      id: "submit-btn",
+      "data-testid": "button",
+    },
+  });
+
+  const button = wrapper.find("#submit-btn");
+
+  expect(button.exists()).toBe(true);
+  expect(button.attributes("data-testid")).toBe("button");
+});

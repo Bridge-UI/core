@@ -31,3 +31,12 @@ export type MergeProps<
 export type UnionProps<Base extends PropertyKey, Overrides extends object> =
   | Base
   | keyof Overrides;
+
+/**
+ * Own props plus native HTML attributes for the root element.
+ * Pass framework `HTMLAttributes` as the second argument (React, Vue, etc.).
+ */
+export type MergeHtmlProps<
+  OwnProps extends object,
+  HtmlAttributes extends object,
+> = OwnProps & Omit<HtmlAttributes, keyof OwnProps>;

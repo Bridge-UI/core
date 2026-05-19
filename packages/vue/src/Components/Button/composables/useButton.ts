@@ -1,7 +1,7 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
 import { Loader2 } from "lucide-vue-next";
-import { computed, useSlots } from "vue";
+import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
@@ -15,6 +15,7 @@ import {
 // ** Local Imports
 import type {
   ButtonClasses,
+  ButtonOwnProps,
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
@@ -24,19 +25,75 @@ import {
 
 export function useButton(
   props: ButtonProps,
-  libDefaults: Partial<ButtonProps>,
+  libDefaults: Partial<ButtonOwnProps>,
 ) {
   const slots = useSlots();
+  const attrs = useAttrs();
+
+  const {
+    as,
+    full,
+    href,
+    size,
+    text,
+    color,
+    classes,
+    endIcon,
+    loading,
+    rounded,
+    variant,
+    disabled,
+    startIcon,
+    class: userClass,
+  } = props;
+
+  const propsForMerge = {
+    as,
+    full,
+    href,
+    size,
+    text,
+    color,
+    classes,
+    endIcon,
+    loading,
+    rounded,
+    variant,
+    disabled,
+    startIcon,
+  };
+
+  const rootBind = computed(() => {
+    const {
+      as: _as,
+      full: _full,
+      href: _href,
+      size: _size,
+      text: _text,
+      class: _class,
+      color: _color,
+      classes: _classes,
+      endIcon: _endIcon,
+      loading: _loading,
+      rounded: _rounded,
+      variant: _variant,
+      disabled: _disabled,
+      startIcon: _startIcon,
+      ...rootHtmlPropsFromProps
+    } = props;
+
+    return { ...rootHtmlPropsFromProps, ...attrs };
+  });
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
-    props,
     libDefaults,
+    props: propsForMerge,
     componentName: "Button",
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
     entry: bridgeButton,
-    props,
+    props: propsForMerge,
   });
 
   const mergedVariantMap = computed(() => {
@@ -95,13 +152,14 @@ export function useButton(
     return cn(
       "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
       "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
-      get(roundedClassMap.value, merged.value.rounded ?? "sm"),
       "transition-all ease-in-out duration-200 focus:ring-2",
-      get(sizeClassMap.value, merged.value.size ?? "md"),
       "disabled:opacity-80 disabled:cursor-not-allowed",
+      colorClasses.value,
+      get(roundedClassMap.value, merged.value.rounded ?? "sm"),
+      get(sizeClassMap.value, merged.value.size ?? "md"),
       merged.value.full && "w-full",
       mergedClasses.value.root,
-      colorClasses.value,
+      userClass,
     );
   });
 
@@ -155,6 +213,7 @@ export function useButton(
     merged,
     isAnchor,
     isButton,
+    rootBind,
     showText,
     rootClass,
     isDisabled,

@@ -1,8 +1,8 @@
 // ** Local Imports
-import type { AlertClasses, AlertProps } from "@/Components/Alert";
+import type { AlertClasses, AlertOwnProps } from "@/Components/Alert";
 import type { AvatarClasses, AvatarProps } from "@/Components/Avatar";
 import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
-import type { ButtonClasses, ButtonProps } from "@/Components/Button";
+import type { ButtonClasses, ButtonOwnProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { IconProps } from "@/Components/Icon";
@@ -32,7 +32,10 @@ declare module "@bridge-ui/core" {
   interface AlertConfigOverrides {
     classes: AlertClasses;
     defaultProps: Partial<
-      Pick<AlertProps, "color" | "shadow" | "padding" | "rounded" | "variant">
+      Pick<
+        AlertOwnProps,
+        "color" | "shadow" | "padding" | "rounded" | "variant"
+      >
     >;
   }
 
@@ -51,7 +54,7 @@ declare module "@bridge-ui/core" {
   interface ButtonConfigOverrides {
     classes: ButtonClasses;
     defaultProps: Partial<
-      Pick<ButtonProps, "size" | "color" | "rounded" | "variant">
+      Pick<ButtonOwnProps, "size" | "color" | "rounded" | "variant">
     >;
   }
 

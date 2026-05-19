@@ -67,3 +67,26 @@ test("it should render action slot content", () => {
 
   expect(wrapper.text()).toContain("Dismiss");
 });
+
+test("it should merge class with root classes", () => {
+  const wrapper = mount(Alert, {
+    props: { title: "Custom class", class: "custom-alert" },
+  });
+
+  expect(wrapper.find(".w-full").classes()).toContain("custom-alert");
+});
+
+test("it should forward additional attributes to the root element", () => {
+  const wrapper = mount(Alert, {
+    props: {
+      title: "With id",
+      id: "alert-root",
+      "data-testid": "alert",
+    },
+  });
+
+  const root = wrapper.find("#alert-root");
+
+  expect(root.exists()).toBe(true);
+  expect(root.attributes("data-testid")).toBe("alert");
+});

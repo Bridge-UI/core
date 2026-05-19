@@ -185,7 +185,12 @@ export {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-export type { MergeProps, Overwrite, UnionProps } from "@/Utils";
+export type {
+  MergeHtmlProps,
+  MergeProps,
+  Overwrite,
+  UnionProps,
+} from "@/Utils";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   cn,

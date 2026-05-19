@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -8,6 +8,7 @@ import type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -38,13 +39,20 @@ export interface ButtonClasses {
   startIcon?: string;
 }
 
-export interface ButtonProps {
+export interface ButtonOwnProps {
   /**
    * The element to render as.
    *
    * @default "button"
    */
   as?: "a" | "span" | "button";
+
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  class?: string;
 
   /**
    * The classes to apply to the button.
@@ -147,3 +155,5 @@ export interface ButtonSlots {
    */
   start?: Slot<undefined>;
 }
+
+export type ButtonProps = MergeHtmlProps<ButtonOwnProps, HTMLAttributes>;

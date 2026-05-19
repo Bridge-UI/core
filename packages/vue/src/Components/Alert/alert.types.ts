@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -9,6 +9,7 @@ import type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -40,7 +41,14 @@ export interface AlertClasses {
   title?: string;
 }
 
-export interface AlertProps {
+export interface AlertOwnProps {
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  class?: string;
+
   /**
    * The classes to apply to the alert.
    *
@@ -124,3 +132,5 @@ export type AlertSlots = {
    */
   icon?: Slot<undefined>;
 };
+
+export type AlertProps = MergeHtmlProps<AlertOwnProps, HTMLAttributes>;

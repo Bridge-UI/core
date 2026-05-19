@@ -1,7 +1,9 @@
 // ** Exports
+export { default as Alert } from "@/Components/Alert/Alert";
 export type {
   AlertClasses,
   AlertColorOverrides,
+  AlertOwnProps,
   AlertPaddingOverrides,
   AlertProps,
   AlertRoundedOverrides,
@@ -9,5 +11,4 @@ export type {
   AlertSlots,
   AlertVariantOverrides,
 } from "@/Components/Alert/alert.types";
-export { default as Alert } from "@/Components/Alert/Alert.vue";
 export { useAlert } from "@/Components/Alert/composables/useAlert";

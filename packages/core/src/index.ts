@@ -130,4 +130,9 @@ export {
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
 } from "@core/Utils";
-export type { MergeProps, Overwrite, UnionProps } from "@core/Utils";
+export type {
+  MergeHtmlProps,
+  MergeProps,
+  Overwrite,
+  UnionProps,
+} from "@core/Utils";

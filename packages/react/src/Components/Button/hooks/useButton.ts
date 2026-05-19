@@ -15,6 +15,7 @@ import {
 // ** Local Imports
 import type {
   ButtonClasses,
+  ButtonOwnProps,
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
@@ -24,9 +25,43 @@ import {
 
 export function useButton(
   props: ButtonProps,
-  libDefaults: Partial<ButtonProps>,
+  libDefaults: Partial<ButtonOwnProps>,
 ) {
-  const { children, slots, ...propsForMerge } = props;
+  const {
+    as,
+    full,
+    href,
+    size,
+    text,
+    color,
+    slots,
+    classes,
+    endIcon,
+    loading,
+    rounded,
+    variant,
+    children,
+    disabled,
+    className,
+    startIcon,
+    ...rootHtmlProps
+  } = props;
+
+  const propsForMerge = {
+    as,
+    full,
+    href,
+    size,
+    text,
+    color,
+    classes,
+    endIcon,
+    loading,
+    rounded,
+    variant,
+    disabled,
+    startIcon,
+  };
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
     libDefaults,
@@ -80,11 +115,12 @@ export function useButton(
     "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
     "transition-all ease-in-out duration-200 focus:ring-2",
     "disabled:opacity-80 disabled:cursor-not-allowed",
+    colorClasses,
     get(roundedClassMap, merged.rounded ?? "sm"),
     get(sizeClassMap, merged.size ?? "md"),
     merged.full && "w-full",
     mergedClasses.root,
-    colorClasses,
+    className,
   );
 
   const showSpinner = merged.loading;
@@ -126,6 +162,7 @@ export function useButton(
     bridgeButton,
     endIconClass,
     showChildren,
+    rootHtmlProps,
     showStartIcon,
     showStartSlot,
     startIconClass,

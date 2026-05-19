@@ -22,7 +22,7 @@ import {
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
+import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
@@ -40,8 +40,35 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
-  const { children, slots, ...propsForMerge } = props;
+export function useAlert(
+  props: AlertProps,
+  libDefaults: Partial<AlertOwnProps>,
+) {
+  const {
+    icon,
+    color,
+    slots,
+    title,
+    shadow,
+    classes,
+    padding,
+    rounded,
+    variant,
+    children,
+    className,
+    ...rootHtmlProps
+  } = props;
+
+  const propsForMerge = {
+    icon,
+    color,
+    title,
+    shadow,
+    classes,
+    padding,
+    rounded,
+    variant,
+  };
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     libDefaults,
@@ -111,26 +138,27 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
   );
 
   const titleClasses = cn(
-    palette.text,
-    get(mergedClasses, "title"),
     "text-start text-sm whitespace-normal",
     hasDefaultBody ? "font-semibold" : "font-normal",
+    palette.text,
+    get(mergedClasses, "title"),
   );
 
   const bodyClasses = cn(
-    palette.text,
     "grow text-sm text-start",
-    get(mergedClasses, "body"),
+    palette.text,
     get(mergedPaddingMap, merged.padding ?? "none"),
+    get(mergedClasses, "body"),
   );
 
   const rootClasses = cn(
+    "w-full flex flex-col p-4",
     palette.border,
     palette.background,
-    "w-full flex flex-col p-4",
-    get(mergedClasses, "root"),
     get(mergedShadowMap, merged.shadow ?? "none"),
     get(mergedRoundedMap, merged.rounded ?? "none"),
+    get(mergedClasses, "root"),
+    className,
   );
 
   return {
@@ -147,6 +175,7 @@ export function useAlert(props: AlertProps, libDefaults: Partial<AlertProps>) {
     showTitleRow,
     titleClasses,
     mergedClasses,
+    rootHtmlProps,
     hasDefaultBody,
     mergedShadowMap,
     mergedPaddingMap,

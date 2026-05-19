@@ -3,6 +3,7 @@ export { default as Alert } from "@/Components/Alert/Alert";
 export type {
   AlertClasses,
   AlertColorOverrides,
+  AlertOwnProps,
   AlertPaddingOverrides,
   AlertProps,
   AlertRoundedOverrides,

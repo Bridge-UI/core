@@ -5,9 +5,13 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useButton, type ButtonProps } from "@/Components/Button";
+import {
+  useButton,
+  type ButtonOwnProps,
+  type ButtonProps,
+} from "@/Components/Button";
 
-const libDefaults: Partial<ButtonProps> = {
+const libDefaults: Partial<ButtonOwnProps> = {
   as: "button",
   size: "md",
   color: "primary",
@@ -116,4 +120,20 @@ test("it should hide text when loading", () => {
   const { showText } = mountUseButton({ loading: true, text: "Label" });
 
   expect(showText.value).toBe(false);
+});
+
+test("it should merge class into rootClass", () => {
+  const { rootClass } = mountUseButton({ class: "custom-button" });
+
+  expect(rootClass.value).toContain("custom-button");
+});
+
+test("it should expose rootBind for additional attributes", () => {
+  const { rootBind } = mountUseButton({
+    id: "submit-btn",
+    "data-testid": "button",
+  });
+
+  expect(rootBind.value.id).toBe("submit-btn");
+  expect(rootBind.value["data-testid"]).toBe("button");
 });

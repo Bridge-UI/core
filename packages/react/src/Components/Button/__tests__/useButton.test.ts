@@ -4,9 +4,13 @@ import { CircleAlert } from "lucide-react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { useButton, type ButtonProps } from "@/Components/Button";
+import {
+  useButton,
+  type ButtonOwnProps,
+  type ButtonProps,
+} from "@/Components/Button";
 
-const libDefaults: Partial<ButtonProps> = {
+const libDefaults: Partial<ButtonOwnProps> = {
   as: "button",
   size: "md",
   color: "primary",
@@ -109,4 +113,20 @@ test("it should hide text when loading", () => {
   const { result } = renderUseButton({ loading: true, text: "Label" });
 
   expect(result.current.showText).toBe(false);
+});
+
+test("it should merge className into rootClass", () => {
+  const { result } = renderUseButton({ className: "custom-button" });
+
+  expect(result.current.rootClass).toContain("custom-button");
+});
+
+test("it should expose rootHtmlProps for additional attributes", () => {
+  const { result } = renderUseButton({
+    id: "submit-btn",
+    "data-testid": "button",
+  });
+
+  expect(result.current.rootHtmlProps.id).toBe("submit-btn");
+  expect(result.current.rootHtmlProps["data-testid"]).toBe("button");
 });
