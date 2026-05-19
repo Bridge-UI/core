@@ -1,6 +1,11 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { HTMLAttributes, Slot } from "vue";
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  Slot,
+} from "vue";
 
 // ** Core Imports
 import type {
@@ -156,4 +161,8 @@ export interface ButtonSlots {
   start?: Slot<undefined>;
 }
 
-export type ButtonProps = MergeHtmlProps<ButtonOwnProps, HTMLAttributes>;
+// prettier-ignore
+export type ButtonProps =
+  | MergeHtmlProps<ButtonOwnProps & { as: "span" }, HTMLAttributes>
+  | MergeHtmlProps<ButtonOwnProps & { as: "a" }, AnchorHTMLAttributes>
+  | MergeHtmlProps<ButtonOwnProps & { as?: "button" }, ButtonHTMLAttributes>;

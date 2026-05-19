@@ -19,9 +19,26 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+const buttonBridgeKeys = [
+  "as",
+  "full",
+  "href",
+  "size",
+  "text",
+  "color",
+  "classes",
+  "endIcon",
+  "loading",
+  "rounded",
+  "variant",
+  "disabled",
+  "startIcon",
+] as const satisfies readonly (keyof ButtonOwnProps)[];
 
 export function useButton(
   props: ButtonProps,
@@ -30,60 +47,11 @@ export function useButton(
   const slots = useSlots();
   const attrs = useAttrs();
 
-  const {
-    as,
-    full,
-    href,
-    size,
-    text,
-    color,
-    classes,
-    endIcon,
-    loading,
-    rounded,
-    variant,
-    disabled,
-    startIcon,
-    class: userClass,
-  } = props;
-
-  const propsForMerge = {
-    as,
-    full,
-    href,
-    size,
-    text,
-    color,
-    classes,
-    endIcon,
-    loading,
-    rounded,
-    variant,
-    disabled,
-    startIcon,
-  };
-
-  const rootBind = computed(() => {
-    const {
-      as: _as,
-      full: _full,
-      href: _href,
-      size: _size,
-      text: _text,
-      class: _class,
-      color: _color,
-      classes: _classes,
-      endIcon: _endIcon,
-      loading: _loading,
-      rounded: _rounded,
-      variant: _variant,
-      disabled: _disabled,
-      startIcon: _startIcon,
-      ...rootHtmlPropsFromProps
-    } = props;
-
-    return { ...rootHtmlPropsFromProps, ...attrs };
-  });
+  const { userClass, propsForMerge, rootBind } = splitComponentProps(
+    props,
+    attrs,
+    { bridgeKeys: buttonBridgeKeys },
+  );
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
     libDefaults,

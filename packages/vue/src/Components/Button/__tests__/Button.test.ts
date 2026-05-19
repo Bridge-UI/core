@@ -124,3 +124,33 @@ test("it should forward additional attributes to the root element", () => {
   expect(button.exists()).toBe(true);
   expect(button.attributes("data-testid")).toBe("button");
 });
+
+test("it should forward fallthrough attrs to the root element", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Submit" },
+    attrs: {
+      id: "button-from-attrs",
+      "data-testid": "button-attrs",
+    },
+  });
+
+  const root = wrapper.find("#button-from-attrs");
+
+  expect(root.exists()).toBe(true);
+  expect(root.attributes("data-testid")).toBe("button-attrs");
+});
+
+test("it should apply user class after classes.root (tailwind-merge)", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Priority" },
+    props: {
+      class: "p-4",
+      classes: { root: "p-2" },
+    },
+  });
+
+  const root = wrapper.find("button");
+
+  expect(root.classes()).toContain("p-4");
+  expect(root.classes()).not.toContain("p-2");
+});

@@ -26,9 +26,21 @@ import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
+  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+const alertBridgeKeys = [
+  "icon",
+  "color",
+  "title",
+  "shadow",
+  "classes",
+  "padding",
+  "rounded",
+  "variant",
+] as const satisfies readonly (keyof AlertOwnProps)[];
 
 const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   dark: Info,
@@ -47,45 +59,11 @@ export function useAlert(
   const slots = useSlots();
   const attrs = useAttrs();
 
-  const {
-    icon,
-    color,
-    title,
-    shadow,
-    classes,
-    padding,
-    rounded,
-    variant,
-    class: userClass,
-  } = props;
-
-  const propsForMerge = {
-    icon,
-    color,
-    title,
-    shadow,
-    classes,
-    padding,
-    rounded,
-    variant,
-  };
-
-  const rootBind = computed(() => {
-    const {
-      icon: _icon,
-      class: _class,
-      color: _color,
-      title: _title,
-      shadow: _shadow,
-      classes: _classes,
-      padding: _padding,
-      rounded: _rounded,
-      variant: _variant,
-      ...rootHtmlPropsFromProps
-    } = props;
-
-    return { ...rootHtmlPropsFromProps, ...attrs };
-  });
+  const { userClass, propsForMerge, rootBind } = splitComponentProps(
+    props,
+    attrs,
+    { bridgeKeys: alertBridgeKeys },
+  );
 
   const { entry: bridgeAlert, merged } = useBridgeUIComponent({
     libDefaults,

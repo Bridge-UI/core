@@ -1,4 +1,5 @@
 // ** External Imports
+import { pick } from "es-toolkit/compat";
 import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
@@ -84,6 +85,62 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
       props.classes,
     );
   });
+}
+
+/**
+ * Merges non–own-props from `props` with fallthrough `attrs` for the root element.
+ * Own prop keys are omitted so they are not duplicated on the DOM node.
+ */
+function buildRootBind<P extends object>(
+  props: P,
+  attrs: Record<string, unknown>,
+  omitKeys: readonly (keyof P)[],
+): ComputedRef<Record<string, unknown>> {
+  return computed(() => {
+    const rootHtmlPropsFromProps = { ...props } as Record<string, unknown>;
+
+    for (const key of omitKeys) {
+      delete rootHtmlPropsFromProps[key as string];
+    }
+
+    return { ...rootHtmlPropsFromProps, ...attrs };
+  });
+}
+
+/**
+ * Splits merged component props into Bridge registry props, user root class,
+ * and a computed `rootBind` for the root element (`props` HTML + fallthrough attrs).
+ */
+export function splitComponentProps<
+  P extends object,
+  const BridgeKeys extends ReadonlyArray<keyof P>,
+>(
+  props: P,
+  attrs: Record<string, unknown>,
+  {
+    bridgeKeys,
+    classKey = "class" as keyof P,
+  }: {
+    classKey?: keyof P;
+    bridgeKeys: BridgeKeys;
+  },
+): {
+  userClass: string | undefined;
+  rootBind: ComputedRef<Record<string, unknown>>;
+  propsForMerge: Pick<P, BridgeKeys[number]>;
+} {
+  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
+
+  const userClass = props[classKey] as string | undefined;
+
+  const rootBind = buildRootBind(props, attrs, [...bridgeKeyList, classKey]);
+
+  const propsForMerge = pick(props, bridgeKeyList) as Pick<
+    P,
+    BridgeKeys[number]
+  >;
+
+  return { propsForMerge, userClass, rootBind };
 }
 
 // ** Exports

@@ -90,3 +90,33 @@ test("it should forward additional attributes to the root element", () => {
   expect(root.exists()).toBe(true);
   expect(root.attributes("data-testid")).toBe("alert");
 });
+
+test("it should forward fallthrough attrs to the root element", () => {
+  const wrapper = mount(Alert, {
+    props: { title: "With attrs" },
+    attrs: {
+      id: "alert-from-attrs",
+      "data-testid": "alert-attrs",
+    },
+  });
+
+  const root = wrapper.find("#alert-from-attrs");
+
+  expect(root.exists()).toBe(true);
+  expect(root.attributes("data-testid")).toBe("alert-attrs");
+});
+
+test("it should apply user class after classes.root (tailwind-merge)", () => {
+  const wrapper = mount(Alert, {
+    props: {
+      class: "p-4",
+      title: "Priority",
+      classes: { root: "p-2" },
+    },
+  });
+
+  const root = wrapper.find(".w-full");
+
+  expect(root.classes()).toContain("p-4");
+  expect(root.classes()).not.toContain("p-2");
+});

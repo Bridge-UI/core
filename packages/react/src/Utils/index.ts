@@ -1,4 +1,5 @@
 // ** External Imports
+import { omit, pick } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -79,6 +80,46 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
       props.classes,
     );
   }, [entry?.classes, props.classes]);
+}
+
+/**
+ * Splits merged component props into Bridge registry props, peeled own props,
+ * and native HTML attributes for the root element.
+ */
+export function splitComponentProps<
+  P extends object,
+  const PeelKeys extends ReadonlyArray<keyof P>,
+  const BridgeKeys extends ReadonlyArray<keyof P>,
+>(
+  props: P,
+  {
+    peel,
+    bridgeKeys,
+  }: {
+    peel: PeelKeys;
+    bridgeKeys: BridgeKeys;
+  },
+): Pick<P, PeelKeys[number]> & {
+  propsForMerge: Pick<P, BridgeKeys[number]>;
+  rootHtmlProps: Omit<P, BridgeKeys[number] | PeelKeys[number]>;
+} {
+  const peelKeyList = [...peel] as (keyof P)[];
+
+  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
+
+  const peeled = pick(props, peelKeyList) as Pick<P, PeelKeys[number]>;
+
+  const propsForMerge = pick(props, bridgeKeyList) as Pick<
+    P,
+    BridgeKeys[number]
+  >;
+
+  const rootHtmlProps = omit(props, [...bridgeKeyList, ...peelKeyList]) as Omit<
+    P,
+    BridgeKeys[number] | PeelKeys[number]
+  >;
+
+  return { ...peeled, propsForMerge, rootHtmlProps };
 }
 
 // ** Exports

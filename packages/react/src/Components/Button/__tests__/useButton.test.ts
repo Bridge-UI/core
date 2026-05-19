@@ -130,3 +130,13 @@ test("it should expose rootHtmlProps for additional attributes", () => {
   expect(result.current.rootHtmlProps.id).toBe("submit-btn");
   expect(result.current.rootHtmlProps["data-testid"]).toBe("button");
 });
+
+test("it should apply className after classes.root in rootClass", () => {
+  const { result } = renderUseButton({
+    className: "p-4",
+    classes: { root: "p-2" },
+  });
+
+  expect(result.current.rootClass).toContain("p-4");
+  expect(result.current.rootClass).not.toContain("p-2");
+});

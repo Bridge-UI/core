@@ -41,6 +41,11 @@ export interface AlertClasses {
   title?: string;
 }
 
+/**
+ * Alert banner. Does not set `role` or `aria-live` by default — pass them when needed:
+ * urgent dynamic messages: `role="alert"` and optionally `aria-live="assertive"`;
+ * non-interrupting updates: `role="status"` and `aria-live="polite"`.
+ */
 export interface AlertOwnProps {
   /**
    * Extra classes merged with the root element (and `classes.root`).

@@ -113,3 +113,13 @@ test("it should expose rootBind for additional attributes", () => {
   expect(rootBind.value.id).toBe("alert-root");
   expect(rootBind.value["data-testid"]).toBe("alert");
 });
+
+test("it should apply class after classes.root in rootClasses", () => {
+  const { rootClasses } = mountUseAlert({
+    class: "p-4",
+    classes: { root: "p-2" },
+  });
+
+  expect(rootClasses.value).toContain("p-4");
+  expect(rootClasses.value).not.toContain("p-2");
+});

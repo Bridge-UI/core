@@ -26,7 +26,7 @@ function Alert(props: AlertProps) {
   });
 
   return (
-    <div className={rootClasses} {...rootHtmlProps}>
+    <div {...rootHtmlProps} className={rootClasses}>
       {slots?.header}
 
       {!slots?.header && showTitleRow && (

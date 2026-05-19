@@ -117,3 +117,16 @@ test("it should forward additional attributes to the root element", () => {
   expect(button.id).toBe("submit-btn");
   expect(button.getAttribute("data-testid")).toBe("button");
 });
+
+test("it should apply user className after classes.root (tailwind-merge)", () => {
+  const { container } = render(
+    <Button className="p-4" classes={{ root: "p-2" }}>
+      Priority
+    </Button>,
+  );
+
+  const root = container.querySelector("button");
+
+  expect(root?.classList.contains("p-4")).toBe(true);
+  expect(root?.classList.contains("p-2")).toBe(false);
+});

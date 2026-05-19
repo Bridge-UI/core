@@ -93,3 +93,14 @@ test("it should forward additional attributes to the root element", () => {
   expect(root).not.toBeNull();
   expect(root?.getAttribute("data-testid")).toBe("alert");
 });
+
+test("it should apply user className after classes.root (tailwind-merge)", () => {
+  const { container } = render(
+    <Alert className="p-4" title="Priority" classes={{ root: "p-2" }} />,
+  );
+
+  const root = container.querySelector(".w-full");
+
+  expect(root?.classList.contains("p-4")).toBe(true);
+  expect(root?.classList.contains("p-2")).toBe(false);
+});

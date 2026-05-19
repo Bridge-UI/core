@@ -1,6 +1,11 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { HTMLAttributes, ReactNode } from "react";
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 
 // ** Core Imports
 import type {
@@ -165,7 +170,8 @@ export interface ButtonSlots {
   start?: ReactNode;
 }
 
-export type ButtonProps = MergeHtmlProps<
-  ButtonOwnProps,
-  HTMLAttributes<HTMLElement>
->;
+// prettier-ignore
+export type ButtonProps =
+  | MergeHtmlProps<ButtonOwnProps & { as: "span" }, HTMLAttributes<HTMLSpanElement>>
+  | MergeHtmlProps<ButtonOwnProps & { as: "a" }, AnchorHTMLAttributes<HTMLAnchorElement>>
+  | MergeHtmlProps<ButtonOwnProps & { as?: "button" }, ButtonHTMLAttributes<HTMLButtonElement>>;

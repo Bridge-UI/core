@@ -19,49 +19,36 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+const buttonBridgeKeys = [
+  "as",
+  "full",
+  "href",
+  "size",
+  "text",
+  "color",
+  "classes",
+  "endIcon",
+  "loading",
+  "rounded",
+  "variant",
+  "disabled",
+  "startIcon",
+] as const satisfies readonly (keyof ButtonOwnProps)[];
 
 export function useButton(
   props: ButtonProps,
   libDefaults: Partial<ButtonOwnProps>,
 ) {
-  const {
-    as,
-    full,
-    href,
-    size,
-    text,
-    color,
-    slots,
-    classes,
-    endIcon,
-    loading,
-    rounded,
-    variant,
-    children,
-    disabled,
-    className,
-    startIcon,
-    ...rootHtmlProps
-  } = props;
-
-  const propsForMerge = {
-    as,
-    full,
-    href,
-    size,
-    text,
-    color,
-    classes,
-    endIcon,
-    loading,
-    rounded,
-    variant,
-    disabled,
-    startIcon,
-  };
+  const { className, children, slots, propsForMerge, rootHtmlProps } =
+    splitComponentProps(props, {
+      bridgeKeys: buttonBridgeKeys,
+      peel: ["className", "children", "slots"],
+    });
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent({
     libDefaults,

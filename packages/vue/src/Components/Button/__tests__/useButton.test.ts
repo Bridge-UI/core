@@ -137,3 +137,13 @@ test("it should expose rootBind for additional attributes", () => {
   expect(rootBind.value.id).toBe("submit-btn");
   expect(rootBind.value["data-testid"]).toBe("button");
 });
+
+test("it should apply class after classes.root in rootClass", () => {
+  const { rootClass } = mountUseButton({
+    class: "p-4",
+    classes: { root: "p-2" },
+  });
+
+  expect(rootClass.value).toContain("p-4");
+  expect(rootClass.value).not.toContain("p-2");
+});

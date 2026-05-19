@@ -116,3 +116,13 @@ test("it should expose rootHtmlProps for additional attributes", () => {
   expect(result.current.rootHtmlProps.id).toBe("alert-root");
   expect(result.current.rootHtmlProps["data-testid"]).toBe("alert");
 });
+
+test("it should apply className after classes.root in rootClasses", () => {
+  const { result } = renderUseAlert({
+    className: "p-4",
+    classes: { root: "p-2" },
+  });
+
+  expect(result.current.rootClasses).toContain("p-4");
+  expect(result.current.rootClasses).not.toContain("p-2");
+});
