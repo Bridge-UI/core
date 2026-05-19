@@ -12,6 +12,7 @@ export type {
   ButtonClasses,
   ButtonColorOverrides,
   ButtonOwnProps,
+  ButtonPartsProps,
   ButtonProps,
   ButtonRoundedOverrides,
   ButtonSizeOverrides,

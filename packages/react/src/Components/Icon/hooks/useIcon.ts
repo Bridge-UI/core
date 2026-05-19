@@ -7,23 +7,37 @@ import { cn } from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
-import type { IconProps } from "@/Components/Icon/icon.types";
-import { useBridgeUIComponent } from "@/Utils";
+import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";
+import { splitComponentProps, useBridgeUIComponent } from "@/Utils";
 
-export function useIcon(props: IconProps, libDefaults: Partial<IconProps>) {
-  const { entry: bridgeIcon, merged } = useBridgeUIComponent({
+const iconBridgeKeys = [
+  "icon",
+  "size",
+] as const satisfies readonly (keyof IconOwnProps)[];
+
+export function useIcon(props: IconProps, libDefaults: Partial<IconOwnProps>) {
+  const { className, propsForMerge, rootHtmlProps } = splitComponentProps(
     props,
+    {
+      peel: ["className"],
+      bridgeKeys: iconBridgeKeys,
+    },
+  );
+
+  const { entry: bridgeIcon, merged } = useBridgeUIComponent({
     libDefaults,
+    props: propsForMerge,
     componentName: "Icon",
   });
 
   const mergedClass = useMemo(() => {
-    return cn(get(sizeProps, merged.size ?? "md"), merged.className);
-  }, [merged.size, merged.className]);
+    return cn(get(sizeProps, merged.size ?? "md"), className);
+  }, [className, merged.size]);
 
   return {
     merged,
     bridgeIcon,
     mergedClass,
+    rootHtmlProps,
   };
 }

@@ -16,17 +16,19 @@ function Button(props: ButtonProps) {
     showText,
     rootClass,
     isDisabled,
+    endIconBind,
+    endSlotBind,
     showEndIcon,
     showEndSlot,
     showSpinner,
     spinnerIcon,
-    endIconClass,
     showChildren,
     rootHtmlProps,
     showStartIcon,
     showStartSlot,
-    startIconClass,
-    spinnerIconClass,
+    startIconBind,
+    startSlotBind,
+    loadingIconBind,
   } = useButton(props, {
     size: "md",
     as: "button",
@@ -50,11 +52,7 @@ function Button(props: ButtonProps) {
     },
     <Fragment>
       {showSpinner && (
-        <Icon
-          icon={SpinnerIcon}
-          size={merged.size}
-          className={spinnerIconClass}
-        />
+        <Icon icon={SpinnerIcon} size={merged.size} {...loadingIconBind} />
       )}
 
       {!showSpinner && (
@@ -63,33 +61,21 @@ function Button(props: ButtonProps) {
             <Icon
               size={merged.size}
               icon={merged.startIcon}
-              className={startIconClass}
+              {...startIconBind}
             />
           )}
 
-          {showStartSlot && (
-            <div className="inline-flex shrink-0 items-center">
-              {slots?.start}
-            </div>
-          )}
+          {showStartSlot && <div {...startSlotBind}>{slots?.start}</div>}
 
           {showText && merged.text}
 
           {showChildren && props.children}
 
           {showEndIcon && merged.endIcon && (
-            <Icon
-              size={merged.size}
-              icon={merged.endIcon}
-              className={endIconClass}
-            />
+            <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />
           )}
 
-          {showEndSlot && (
-            <div className="inline-flex shrink-0 items-center">
-              {slots?.end}
-            </div>
-          )}
+          {showEndSlot && <div {...endSlotBind}>{slots?.end}</div>}
         </Fragment>
       )}
     </Fragment>,

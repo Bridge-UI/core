@@ -13,6 +13,9 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
+
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
 export interface AlertPaddingOverrides {}
@@ -39,6 +42,23 @@ export interface AlertClasses {
    * The classes to apply to the title.
    */
   title?: string;
+}
+
+export interface AlertPartsProps {
+  /**
+   * Props forwarded to the default body container.
+   */
+  body?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the default `Icon` (`icon` is set by the alert).
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the title container.
+   */
+  title?: HTMLAttributes;
 }
 
 /**
@@ -83,6 +103,14 @@ export interface AlertOwnProps {
   padding?: MergeProps<AlertPadding, AlertPaddingOverrides>;
 
   /**
+   * Extra props for internal parts (`icon`, `title`, `body`, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  partsProps?: AlertPartsProps;
+
+  /**
    * The roundedness of the alert.
    *
    * @default "sm"
@@ -111,7 +139,7 @@ export interface AlertOwnProps {
   variant?: MergeProps<AlertVariant, AlertVariantOverrides>;
 }
 
-export type AlertSlots = {
+export interface AlertSlots {
   /**
    * Content aligned to the right of the title row (e.g. dismiss or link).
    */
@@ -136,6 +164,6 @@ export type AlertSlots = {
    * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.
    */
   icon?: Slot<undefined>;
-};
+}
 
 export type AlertProps = MergeHtmlProps<AlertOwnProps, HTMLAttributes>;

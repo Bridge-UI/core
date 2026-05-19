@@ -56,6 +56,18 @@ test("it should apply lg size classes", () => {
   expect(svg?.classList.contains("h-5")).toBe(true);
 });
 
+test("it should forward additional attributes to the svg element", () => {
+  const { container } = render(
+    <Icon icon={Info} id="info-icon" data-testid="icon" aria-hidden />,
+  );
+
+  const svg = container.querySelector("#info-icon");
+
+  expect(svg).not.toBeNull();
+  expect(svg?.getAttribute("data-testid")).toBe("icon");
+  expect(svg?.getAttribute("aria-hidden")).toBe("true");
+});
+
 test("it should apply 2xs size classes", () => {
   const { container } = render(<Icon icon={Info} size="2xs" />);
 

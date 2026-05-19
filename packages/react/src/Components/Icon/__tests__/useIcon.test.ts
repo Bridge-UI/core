@@ -4,9 +4,9 @@ import { Info } from "lucide-react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { useIcon, type IconProps } from "@/Components/Icon";
+import { useIcon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 
-const libDefaults: Partial<IconProps> = {
+const libDefaults: Partial<IconOwnProps> = {
   size: "md",
 };
 
@@ -38,7 +38,7 @@ test("it should merge custom className from props", () => {
     className: "text-primary-500",
   });
 
-  expect(result.current.merged.className).toBe("text-primary-500");
+  expect(result.current.mergedClass).toContain("text-primary-500");
 });
 
 test("it should compute mergedClass with size and className", () => {

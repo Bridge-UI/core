@@ -26,6 +26,7 @@ import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
+  mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -40,6 +41,7 @@ const alertBridgeKeys = [
   "padding",
   "rounded",
   "variant",
+  "partsProps",
 ] as const satisfies readonly (keyof AlertOwnProps)[];
 
 const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
@@ -179,12 +181,29 @@ export function useAlert(
     );
   });
 
+  const partsProps = computed(() => merged.value.partsProps);
+
+  const iconBind = computed(() => {
+    return mergePartBind(partsProps.value?.icon, iconClasses.value);
+  });
+
+  const titleBind = computed(() => {
+    return mergePartBind(partsProps.value?.title, titleClasses.value);
+  });
+
+  const bodyBind = computed(() => {
+    return mergePartBind(partsProps.value?.body, bodyClasses.value);
+  });
+
   return {
     slots,
     merged,
     palette,
+    bodyBind,
+    iconBind,
     rootBind,
     showIcon,
+    titleBind,
     bodyClasses,
     bridgeAlert,
     iconClasses,

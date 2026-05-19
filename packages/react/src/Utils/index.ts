@@ -3,6 +3,7 @@ import { omit, pick } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
+import { cn } from "@bridge-ui/core";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
@@ -120,6 +121,19 @@ export function splitComponentProps<
   >;
 
   return { ...peeled, propsForMerge, rootHtmlProps };
+}
+
+/**
+ * Merges a part's `className` with a computed class string (registry + `classes.*`).
+ */
+export function mergePartBind<T extends { className?: string } | undefined>(
+  part: T,
+  classValue: string,
+): Omit<NonNullable<T>, "className"> & { className: string } {
+  return {
+    ...(part ?? {}),
+    className: cn(classValue, part?.className),
+  } as Omit<NonNullable<T>, "className"> & { className: string };
 }
 
 // ** Exports

@@ -13,14 +13,14 @@ const props = defineProps<AlertOwnProps>();
 const {
   slots,
   merged,
+  bodyBind,
+  iconBind,
   rootBind,
   showIcon,
-  bodyClasses,
-  iconClasses,
+  titleBind,
   rootClasses,
   resolvedIcon,
   showTitleRow,
-  titleClasses,
   hasDefaultBody,
 } = useAlert(props, {
   shadow: "sm",
@@ -41,13 +41,13 @@ const {
           <slot v-if="slots.icon" name="icon" />
 
           <Icon
-            :icon="resolvedIcon"
-            :class="iconClasses"
             v-else-if="resolvedIcon"
+            :icon="resolvedIcon"
+            v-bind="iconBind"
           />
         </template>
 
-        <div :class="titleClasses">
+        <div v-bind="titleBind">
           {{ merged.title }}
         </div>
       </div>
@@ -55,7 +55,7 @@ const {
       <slot v-if="slots.action" name="action" />
     </div>
 
-    <div v-if="hasDefaultBody" :class="bodyClasses">
+    <div v-if="hasDefaultBody" v-bind="bodyBind">
       <slot />
     </div>
 

@@ -45,6 +45,38 @@ test("it should merge custom class prop", () => {
   expect(wrapper.find("svg").classes()).toContain("text-red-500");
 });
 
+test("it should forward additional attributes to the svg element", () => {
+  const wrapper = mount(Icon, {
+    props: {
+      icon: Info,
+      id: "info-icon",
+      "aria-hidden": true,
+      "data-testid": "icon",
+    },
+  });
+
+  const svg = wrapper.find("#info-icon");
+
+  expect(svg.exists()).toBe(true);
+  expect(svg.attributes("data-testid")).toBe("icon");
+  expect(svg.attributes("aria-hidden")).toBe("true");
+});
+
+test("it should forward fallthrough attrs to the svg element", () => {
+  const wrapper = mount(Icon, {
+    props: { icon: Info },
+    attrs: {
+      id: "icon-from-attrs",
+      "data-testid": "icon-attrs",
+    },
+  });
+
+  const svg = wrapper.find("#icon-from-attrs");
+
+  expect(svg.exists()).toBe(true);
+  expect(svg.attributes("data-testid")).toBe("icon-attrs");
+});
+
 test("it should apply lg size classes", () => {
   const wrapper = mount(Icon, { props: { icon: Info, size: "lg" } });
 

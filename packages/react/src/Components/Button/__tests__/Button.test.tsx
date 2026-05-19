@@ -130,3 +130,31 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
   expect(root?.classList.contains("p-4")).toBe(true);
   expect(root?.classList.contains("p-2")).toBe(false);
 });
+
+test("it should forward partsProps to icon sub-parts", () => {
+  const { container } = render(
+    <Button
+      text="Save"
+      startIcon={CircleAlert}
+      partsProps={{
+        startIcon: { id: "start-icon" },
+      }}
+    />,
+  );
+
+  expect(container.querySelector("#start-icon")).toBeTruthy();
+});
+
+test("it should forward partsProps to slot wrappers", () => {
+  const { container } = render(
+    <Button
+      text="Label"
+      slots={{ start: "◀" }}
+      partsProps={{
+        start: { "data-testid": "start-slot" },
+      }}
+    />,
+  );
+
+  expect(container.querySelector('[data-testid="start-slot"]')).toBeTruthy();
+});

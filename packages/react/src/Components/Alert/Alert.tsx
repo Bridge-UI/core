@@ -2,19 +2,20 @@
 import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
+import { isNull } from "es-toolkit/compat";
 
 function Alert(props: AlertProps) {
   const {
     slots,
     merged,
+    bodyBind,
     children,
+    iconBind,
     showIcon,
-    bodyClasses,
-    iconClasses,
+    titleBind,
     rootClasses,
     resolvedIcon,
     showTitleRow,
-    titleClasses,
     rootHtmlProps,
     hasDefaultBody,
   } = useAlert(props, {
@@ -33,18 +34,18 @@ function Alert(props: AlertProps) {
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-x-3">
             {showIcon &&
-              (slots?.icon != null
+              (!isNull(slots?.icon)
                 ? slots.icon
-                : resolvedIcon && (
-                    <Icon icon={resolvedIcon} className={iconClasses} />
-                  ))}
-            <div className={titleClasses}>{merged.title}</div>
+                : resolvedIcon && <Icon icon={resolvedIcon} {...iconBind} />)}
+
+            <div {...titleBind}>{merged.title}</div>
           </div>
+
           {slots?.action}
         </div>
       )}
 
-      {hasDefaultBody && <div className={bodyClasses}>{children}</div>}
+      {hasDefaultBody && <div {...bodyBind}>{children}</div>}
 
       {slots?.footer}
     </div>

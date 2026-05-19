@@ -140,6 +140,37 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("button-attrs");
 });
 
+test("it should forward partsProps to icon sub-parts", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Save" },
+    props: {
+      startIcon: CircleAlert,
+      partsProps: {
+        endIcon: { id: "end-icon" },
+        startIcon: { id: "start-icon" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#start-icon").exists()).toBe(true);
+});
+
+test("it should forward partsProps to slot wrappers", () => {
+  const wrapper = mount(Button, {
+    slots: {
+      start: "◀",
+      default: "Label",
+    },
+    props: {
+      partsProps: {
+        start: { "data-testid": "start-slot" },
+      },
+    },
+  });
+
+  expect(wrapper.find('[data-testid="start-slot"]').exists()).toBe(true);
+});
+
 test("it should apply user class after classes.root (tailwind-merge)", () => {
   const wrapper = mount(Button, {
     slots: { default: "Priority" },

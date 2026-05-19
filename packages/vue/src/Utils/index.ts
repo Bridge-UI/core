@@ -4,6 +4,7 @@ import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
 // ** Core Imports
+import { cn } from "@bridge-ui/core";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
@@ -141,6 +142,25 @@ export function splitComponentProps<
   >;
 
   return { propsForMerge, userClass, rootBind };
+}
+
+/**
+ * Merges a part's `class` with a computed class string (registry + `classes.*`).
+ */
+export function mergePartBind<T extends object | undefined>(
+  part: T,
+  classValue: string,
+): Omit<NonNullable<T>, "class"> & { class: string } {
+  const partClass =
+    part && "class" in part ? (part as { class?: unknown }).class : undefined;
+
+  return {
+    ...(part ?? {}),
+    class: cn(
+      classValue,
+      typeof partClass === "string" ? partClass : undefined,
+    ),
+  } as Omit<NonNullable<T>, "class"> & { class: string };
 }
 
 // ** Exports

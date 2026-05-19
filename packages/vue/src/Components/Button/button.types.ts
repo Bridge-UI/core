@@ -17,6 +17,9 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
+
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
 export interface ButtonRoundedOverrides {}
@@ -42,6 +45,33 @@ export interface ButtonClasses {
    * The classes to apply to the start icon.
    */
   startIcon?: string;
+}
+
+export interface ButtonPartsProps {
+  /**
+   * Props forwarded to the inline-end slot wrapper.
+   */
+  end?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the end `Icon` (`icon` is set by the button).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the loading spinner `Icon`.
+   */
+  loading?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the inline-start slot wrapper.
+   */
+  start?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the button).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
 export interface ButtonOwnProps {
@@ -81,6 +111,13 @@ export interface ButtonOwnProps {
   disabled?: boolean;
 
   /**
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * Whether the button is full width.
    *
    * @default false
@@ -95,13 +132,6 @@ export interface ButtonOwnProps {
   href?: string;
 
   /**
-   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
-   *
-   * @default undefined
-   */
-  startIcon?: LucideIcon;
-
-  /**
    * Whether the button is loading.
    *
    * @default false
@@ -109,11 +139,12 @@ export interface ButtonOwnProps {
   loading?: boolean;
 
   /**
-   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   * Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.).
+   * Root HTML attributes stay on the component top level.
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  partsProps?: ButtonPartsProps;
 
   /**
    * The roundedness of the button.
@@ -128,6 +159,13 @@ export interface ButtonOwnProps {
    * @default "md"
    */
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
+
+  /**
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
 
   /**
    * Label text when the default slot is not used.

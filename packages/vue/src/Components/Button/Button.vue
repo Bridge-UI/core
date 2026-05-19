@@ -22,16 +22,18 @@ const {
   showText,
   rootClass,
   isDisabled,
+  endIconBind,
+  endSlotBind,
   showEndIcon,
   showEndSlot,
   showSpinner,
   spinnerIcon,
-  endIconClass,
   showStartIcon,
   showStartSlot,
-  startIconClass,
+  startIconBind,
+  startSlotBind,
   showDefaultSlot,
-  spinnerIconClass,
+  loadingIconBind,
 } = useButton(props, {
   size: "md",
   as: "button",
@@ -56,18 +58,18 @@ const {
       v-if="showSpinner"
       :icon="spinnerIcon"
       :size="merged.size"
-      :class="spinnerIconClass"
+      v-bind="loadingIconBind"
     />
 
     <template v-else>
       <Icon
-        :size="merged.size"
-        :class="startIconClass"
-        :icon="merged.startIcon"
         v-if="showStartIcon && merged.startIcon"
+        :icon="merged.startIcon"
+        :size="merged.size"
+        v-bind="startIconBind"
       />
 
-      <div v-else-if="showStartSlot" class="inline-flex shrink-0 items-center">
+      <div v-else-if="showStartSlot" v-bind="startSlotBind">
         <slot name="start" />
       </div>
 
@@ -76,13 +78,13 @@ const {
       <slot v-else-if="showDefaultSlot" />
 
       <Icon
-        :size="merged.size"
-        :class="endIconClass"
-        :icon="merged.endIcon"
         v-if="showEndIcon && merged.endIcon"
+        :icon="merged.endIcon"
+        :size="merged.size"
+        v-bind="endIconBind"
       />
 
-      <div v-else-if="showEndSlot" class="inline-flex shrink-0 items-center">
+      <div v-else-if="showEndSlot" v-bind="endSlotBind">
         <slot name="end" />
       </div>
     </template>

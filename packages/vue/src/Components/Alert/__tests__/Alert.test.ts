@@ -106,6 +106,35 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("alert-attrs");
 });
 
+test("it should forward partsProps to the default icon", () => {
+  const wrapper = mount(Alert, {
+    props: {
+      title: "Notice",
+      partsProps: {
+        icon: { id: "alert-icon" },
+      },
+    },
+  });
+
+  expect(wrapper.find("#alert-icon").exists()).toBe(true);
+});
+
+test("it should forward partsProps to title and body containers", () => {
+  const wrapper = mount(Alert, {
+    props: {
+      title: "Title",
+      partsProps: {
+        body: { id: "alert-body" },
+        title: { id: "alert-title" },
+      },
+    },
+    slots: { default: "Body text" },
+  });
+
+  expect(wrapper.find("#alert-body").exists()).toBe(true);
+  expect(wrapper.find("#alert-title").exists()).toBe(true);
+});
+
 test("it should apply user class after classes.root (tailwind-merge)", () => {
   const wrapper = mount(Alert, {
     props: {

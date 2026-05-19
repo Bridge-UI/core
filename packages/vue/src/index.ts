@@ -60,7 +60,7 @@ export type {
   CheckboxSizeOverrides,
   CheckboxSlots,
 } from "@/Components/Checkbox";
-export { Icon, type IconProps } from "@/Components/Icon";
+export { Icon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 export type { IconSizeOverrides } from "@/Components/Icon";
 export { Link } from "@/Components/Link";
 export type {

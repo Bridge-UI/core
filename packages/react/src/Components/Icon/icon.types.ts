@@ -1,14 +1,17 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
+import type { SVGAttributes } from "react";
 
 // ** Core Imports
-import type { IconSize, MergeProps } from "@bridge-ui/core";
+import type { IconSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
 export interface IconSizeOverrides {}
 
-export type IconProps = {
+export interface IconOwnProps {
   /**
-   * The class names to apply to the icon.
+   * Extra classes merged with size classes from the registry.
+   *
+   * @default undefined
    */
   className?: string;
 
@@ -23,4 +26,9 @@ export type IconProps = {
    * @default "md"
    */
   size?: MergeProps<IconSize, IconSizeOverrides>;
-};
+}
+
+export type IconProps = MergeHtmlProps<
+  IconOwnProps,
+  SVGAttributes<SVGSVGElement>
+>;

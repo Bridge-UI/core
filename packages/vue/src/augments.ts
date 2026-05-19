@@ -5,7 +5,7 @@ import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonOwnProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
-import type { IconProps } from "@/Components/Icon";
+import type { IconOwnProps } from "@/Components/Icon";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { MiniBadgeClasses, MiniBadgeProps } from "@/Components/MiniBadge";
@@ -69,7 +69,7 @@ declare module "@bridge-ui/core" {
   }
 
   interface IconConfigOverrides {
-    defaultProps: Partial<Pick<IconProps, "size">>;
+    defaultProps: Partial<Pick<IconOwnProps, "size">>;
   }
 
   interface LinkConfigOverrides {

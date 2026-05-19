@@ -13,6 +13,7 @@ export type {
   AlertColorOverrides,
   AlertOwnProps,
   AlertPaddingOverrides,
+  AlertPartsProps,
   AlertProps,
   AlertRoundedOverrides,
   AlertShadowOverrides,

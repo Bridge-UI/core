@@ -17,6 +17,9 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
+
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
 export interface ButtonRoundedOverrides {}
@@ -42,6 +45,33 @@ export interface ButtonClasses {
    * The classes to apply to the start icon.
    */
   startIcon?: string;
+}
+
+export interface ButtonPartsProps {
+  /**
+   * Props forwarded to the inline-end slot wrapper.
+   */
+  end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the end `Icon` (`icon` is set by the button).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the loading spinner `Icon`.
+   */
+  loading?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the inline-start slot wrapper.
+   */
+  start?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the button).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
 export interface ButtonOwnProps {
@@ -116,6 +146,14 @@ export interface ButtonOwnProps {
   loading?: boolean;
 
   /**
+   * Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  partsProps?: ButtonPartsProps;
+
+  /**
    * The roundedness of the button.
    *
    * @default "sm"
@@ -137,18 +175,18 @@ export interface ButtonOwnProps {
   text?: string;
 
   /**
-   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
-   *
-   * @default undefined
-   */
-  startIcon?: LucideIcon;
-
-  /**
    * The slots to apply to the button.
    *
    * @default undefined
    */
   slots?: ButtonSlots;
+
+  /**
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
 
   /**
    * The variant of the button.

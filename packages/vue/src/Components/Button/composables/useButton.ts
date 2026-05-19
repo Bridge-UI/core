@@ -19,6 +19,7 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -38,6 +39,7 @@ const buttonBridgeKeys = [
   "variant",
   "disabled",
   "startIcon",
+  "partsProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
 
 export function useButton(
@@ -175,6 +177,34 @@ export function useButton(
     return cn("shrink-0 animate-spin", mergedClasses.value.loading);
   });
 
+  const partsProps = computed(() => merged.value.partsProps);
+
+  const loadingIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.loading, spinnerIconClass.value);
+  });
+
+  const startIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.startIcon, startIconClass.value);
+  });
+
+  const endIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.endIcon, endIconClass.value);
+  });
+
+  const startSlotBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.start,
+      "inline-flex shrink-0 items-center",
+    );
+  });
+
+  const endSlotBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.end,
+      "inline-flex shrink-0 items-center",
+    );
+  });
+
   return {
     tag,
     slots,
@@ -185,6 +215,8 @@ export function useButton(
     showText,
     rootClass,
     isDisabled,
+    endIconBind,
+    endSlotBind,
     showEndIcon,
     showEndSlot,
     showSpinner,
@@ -192,7 +224,10 @@ export function useButton(
     endIconClass,
     showStartIcon,
     showStartSlot,
+    startIconBind,
+    startSlotBind,
     startIconClass,
+    loadingIconBind,
     showDefaultSlot,
     spinnerIconClass,
     spinnerIcon: Loader2,
