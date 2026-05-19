@@ -64,6 +64,10 @@ export function useMiniButton(
   });
 
   // Registry maps
+  const mergedRoundedMap = useMemo(() => {
+    return roundedProps;
+  }, []);
+
   const mergedVariantMap = useMemo(() => {
     return variantProps;
   }, []);
@@ -75,19 +79,15 @@ export function useMiniButton(
     });
   }, [bridgeMiniButton?.customProps?.size]);
 
-  const mergedRoundedMap = useMemo(() => {
-    return roundedProps;
-  }, []);
-
   // Theme
   const colorItem = get(mergedVariantMap, [
     merged.variant ?? "flat",
     merged.color ?? "primary",
   ]) as ButtonColorItem | undefined;
 
-  const colorClasses = cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
-
   const iconSize = (merged.size ?? "md") as keyof IconSize;
+
+  const colorClasses = cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
 
   // Element
   const tag = merged.as ?? "button";
@@ -115,11 +115,11 @@ export function useMiniButton(
   // Visibility
   const showSpinner = merged.loading;
 
+  const showIcon = !merged.loading && Boolean(merged.icon);
+
   const hasChildren = children != null && children !== false;
 
   const showDefault = !merged.loading && hasChildren && !merged.icon;
-
-  const showIcon = !merged.loading && Boolean(merged.icon);
 
   // Parts
   const partsProps = merged.partsProps;
@@ -138,14 +138,14 @@ export function useMiniButton(
     tag,
     merged,
     children,
+    iconBind,
     iconSize,
     isAnchor,
     isButton,
-    rootClass,
     showIcon,
-    showDefault,
-    iconBind,
+    rootClass,
     isDisabled,
+    showDefault,
     showSpinner,
     rootHtmlProps,
     loadingIconBind,

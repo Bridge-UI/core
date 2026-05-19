@@ -15,8 +15,8 @@ test("it should render a button with an icon", () => {
     <MiniButton icon={Settings} aria-label="Settings" />,
   );
 
-  expect(screen.getByRole("button", { name: "Settings" })).toBeTruthy();
   expect(container.querySelector("button svg")).not.toBeNull();
+  expect(screen.getByRole("button", { name: "Settings" })).toBeTruthy();
 });
 
 test("it should apply disabled attribute when disabled", () => {
@@ -42,24 +42,24 @@ test("it should render as anchor when as is a", () => {
   const { container } = render(
     <MiniButton
       as="a"
-      href="https://example.com"
       icon={Settings}
       aria-label="Settings"
+      href="https://example.com"
     />,
   );
 
   const link = screen.getByRole("link", { name: "Settings" });
 
-  expect(link.getAttribute("href")).toBe("https://example.com");
   expect(container.querySelector("a svg")).not.toBeNull();
+  expect(link.getAttribute("href")).toBe("https://example.com");
 });
 
 test("it should merge className with root classes", () => {
   const { container } = render(
     <MiniButton
       icon={Settings}
-      className="custom-mini-button"
       aria-label="Settings"
+      className="custom-mini-button"
     />,
   );
 
@@ -73,8 +73,8 @@ test("it should forward additional attributes to the root element", () => {
     <MiniButton
       icon={Settings}
       id="settings-btn"
-      data-testid="mini-button"
       aria-label="Settings"
+      data-testid="mini-button"
     />,
   );
 
@@ -91,8 +91,8 @@ test("it should render children in place of the icon", () => {
     </MiniButton>,
   );
 
-  expect(screen.getByTestId("avatar").textContent).toBe("AB");
   expect(screen.queryByRole("img")).toBeNull();
+  expect(screen.getByTestId("avatar").textContent).toBe("AB");
 });
 
 test("it should hide children when loading", () => {

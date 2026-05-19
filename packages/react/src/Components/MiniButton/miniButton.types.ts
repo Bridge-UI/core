@@ -56,19 +56,19 @@ export interface MiniButtonPartsProps {
 
 export interface MiniButtonOwnProps {
   /**
+   * The element to render as.
+   *
+   * @default "button"
+   */
+  as?: "a" | "span" | "button";
+
+  /**
    * Content rendered in place of the icon. Hidden while `loading` is true.
    * Ignored when `icon` is set.
    *
    * @default undefined
    */
   children?: ReactNode;
-
-  /**
-   * The element to render as.
-   *
-   * @default "button"
-   */
-  as?: "a" | "span" | "button";
 
   /**
    * Extra classes merged with the root element (and `classes.root`).

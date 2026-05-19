@@ -12,11 +12,11 @@ import {
 } from "@/Components/MiniButton";
 
 const libDefaults: Partial<MiniButtonOwnProps> = {
-  as: "button",
   size: "md",
-  color: "primary",
+  as: "button",
   variant: "flat",
   rounded: "none",
+  color: "primary",
 };
 
 function mountUseMiniButton(
@@ -51,9 +51,9 @@ test("it should be disabled when loading", () => {
     loading: true,
   });
 
+  expect(showIcon.value).toBe(false);
   expect(isDisabled.value).toBe(true);
   expect(showSpinner.value).toBe(true);
-  expect(showIcon.value).toBe(false);
 });
 
 test("it should show icon when not loading", () => {
@@ -70,8 +70,8 @@ test("it should show default slot instead of icon when slot is provided", () => 
     },
   );
 
-  expect(showDefaultSlot.value).toBe(true);
   expect(showIcon.value).toBe(false);
+  expect(showDefaultSlot.value).toBe(true);
 });
 
 test("it should hide default slot when loading", () => {
@@ -82,8 +82,8 @@ test("it should hide default slot when loading", () => {
     },
   );
 
-  expect(showDefaultSlot.value).toBe(false);
   expect(showSpinner.value).toBe(true);
+  expect(showDefaultSlot.value).toBe(false);
 });
 
 test("it should prefer icon over default slot when both are provided", () => {
@@ -94,8 +94,8 @@ test("it should prefer icon over default slot when both are provided", () => {
     },
   );
 
-  expect(showDefaultSlot.value).toBe(false);
   expect(showIcon.value).toBe(true);
+  expect(showDefaultSlot.value).toBe(false);
 });
 
 test("it should merge class into rootClass", () => {

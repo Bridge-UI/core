@@ -7,8 +7,8 @@ import { MiniButton } from "@/Components/MiniButton";
 test("it should render a button with an icon", () => {
   cy.mount(<MiniButton icon={Settings} aria-label="Settings" />);
 
-  cy.get("button").should("exist").and("have.attr", "aria-label", "Settings");
   cy.get("button svg").should("exist");
+  cy.get("button").should("exist").and("have.attr", "aria-label", "Settings");
 });
 
 test("it should apply disabled attribute when disabled", () => {
@@ -28,9 +28,9 @@ test("it should render as anchor when as is a", () => {
   cy.mount(
     <MiniButton
       as="a"
-      href="https://example.com"
       icon={Settings}
       aria-label="Settings"
+      href="https://example.com"
     />,
   );
 

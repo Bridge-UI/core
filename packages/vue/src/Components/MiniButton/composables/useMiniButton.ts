@@ -68,6 +68,10 @@ export function useMiniButton(
   });
 
   // Registry maps
+  const mergedRoundedMap = computed(() => {
+    return roundedProps;
+  });
+
   const mergedVariantMap = computed(() => {
     return variantProps;
   });
@@ -79,10 +83,6 @@ export function useMiniButton(
     });
   });
 
-  const mergedRoundedMap = computed(() => {
-    return roundedProps;
-  });
-
   // Theme
   const colorItem = computed((): ButtonColorItem | undefined => {
     return get(mergedVariantMap.value, [
@@ -91,16 +91,16 @@ export function useMiniButton(
     ]) as ButtonColorItem | undefined;
   });
 
+  const iconSize = computed(() => {
+    return (merged.value.size ?? "md") as keyof IconSize;
+  });
+
   const colorClasses = computed(() => {
     return cn(
       colorItem.value?.base,
       colorItem.value?.hover,
       colorItem.value?.focus,
     );
-  });
-
-  const iconSize = computed(() => {
-    return (merged.value.size ?? "md") as keyof IconSize;
   });
 
   // Element
@@ -145,12 +145,12 @@ export function useMiniButton(
     return Boolean(slots.default);
   });
 
-  const showDefaultSlot = computed(() => {
-    return !merged.value.loading && hasDefaultSlot.value && !merged.value.icon;
-  });
-
   const showIcon = computed(() => {
     return !merged.value.loading && Boolean(merged.value.icon);
+  });
+
+  const showDefaultSlot = computed(() => {
+    return !merged.value.loading && hasDefaultSlot.value && !merged.value.icon;
   });
 
   // Parts
@@ -173,17 +173,17 @@ export function useMiniButton(
   return {
     tag,
     merged,
-    rootBind,
+    iconBind,
     iconSize,
     isAnchor,
     isButton,
-    rootClass,
+    rootBind,
     showIcon,
-    iconBind,
+    rootClass,
     isDisabled,
     showSpinner,
+    loadingIconBind,
     showDefaultSlot,
     spinnerIcon: Loader2,
-    loadingIconBind,
   };
 }

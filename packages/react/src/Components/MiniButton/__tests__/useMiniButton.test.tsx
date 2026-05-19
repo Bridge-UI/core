@@ -11,11 +11,11 @@ import {
 } from "@/Components/MiniButton";
 
 const libDefaults: Partial<MiniButtonOwnProps> = {
-  as: "button",
   size: "md",
-  color: "primary",
+  as: "button",
   variant: "flat",
   rounded: "none",
+  color: "primary",
 };
 
 function renderUseMiniButton(props: MiniButtonProps = { icon: Info }) {
@@ -45,9 +45,9 @@ test("it should be disabled when disabled prop is true", () => {
 test("it should be disabled when loading is true", () => {
   const { result } = renderUseMiniButton({ icon: Info, loading: true });
 
+  expect(result.current.showIcon).toBe(false);
   expect(result.current.isDisabled).toBe(true);
   expect(result.current.showSpinner).toBe(true);
-  expect(result.current.showIcon).toBe(false);
 });
 
 test("it should show icon when not loading", () => {
@@ -61,8 +61,8 @@ test("it should show default content instead of icon when children are provided"
     children: <span>AB</span>,
   });
 
-  expect(result.current.showDefault).toBe(true);
   expect(result.current.showIcon).toBe(false);
+  expect(result.current.showDefault).toBe(true);
 });
 
 test("it should hide default content when loading", () => {
@@ -71,8 +71,8 @@ test("it should hide default content when loading", () => {
     children: <span>AB</span>,
   });
 
-  expect(result.current.showDefault).toBe(false);
   expect(result.current.showSpinner).toBe(true);
+  expect(result.current.showDefault).toBe(false);
 });
 
 test("it should prefer icon over children when both are provided", () => {
@@ -81,8 +81,8 @@ test("it should prefer icon over children when both are provided", () => {
     children: <span>AB</span>,
   });
 
-  expect(result.current.showDefault).toBe(false);
   expect(result.current.showIcon).toBe(true);
+  expect(result.current.showDefault).toBe(false);
 });
 
 test("it should compute rootClass as a non-empty string", () => {

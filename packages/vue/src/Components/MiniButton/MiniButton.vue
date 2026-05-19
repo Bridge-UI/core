@@ -16,24 +16,24 @@ const props = defineProps<MiniButtonOwnProps>();
 const {
   tag,
   merged,
-  rootBind,
+  iconBind,
   iconSize,
   isAnchor,
   isButton,
-  rootClass,
+  rootBind,
   showIcon,
-  iconBind,
+  rootClass,
   isDisabled,
   showSpinner,
-  showDefaultSlot,
   spinnerIcon,
   loadingIconBind,
+  showDefaultSlot,
 } = useMiniButton(props, {
-  as: "button",
   size: "md",
+  as: "button",
   rounded: "none",
-  color: "primary",
   variant: "flat",
+  color: "primary",
 });
 </script>
 

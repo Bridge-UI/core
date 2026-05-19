@@ -19,8 +19,8 @@ test("it should render a button with an icon", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   const wrapper = mount(MiniButton, {
-    props: { icon: Settings, disabled: true },
     attrs: { "aria-label": "Settings" },
+    props: { icon: Settings, disabled: true },
   });
 
   expect(wrapper.find("button").attributes("disabled")).toBeDefined();
@@ -28,8 +28,8 @@ test("it should apply disabled attribute when disabled", () => {
 
 test("it should show loading spinner when loading", () => {
   const wrapper = mount(MiniButton, {
-    props: { icon: Settings, loading: true },
     attrs: { "aria-label": "Settings" },
+    props: { icon: Settings, loading: true },
   });
 
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
@@ -38,21 +38,21 @@ test("it should show loading spinner when loading", () => {
 
 test("it should render as anchor when as is a", () => {
   const wrapper = mount(MiniButton, {
-    props: { as: "a", href: "https://example.com", icon: Settings },
     attrs: { "aria-label": "Settings" },
+    props: { as: "a", href: "https://example.com", icon: Settings },
   });
 
   const anchor = wrapper.find("a");
 
   expect(anchor.exists()).toBe(true);
-  expect(anchor.attributes("href")).toBe("https://example.com");
   expect(anchor.find("svg").exists()).toBe(true);
+  expect(anchor.attributes("href")).toBe("https://example.com");
 });
 
 test("it should merge class with root classes", () => {
   const wrapper = mount(MiniButton, {
-    props: { icon: Settings, class: "custom-mini-button" },
     attrs: { "aria-label": "Settings" },
+    props: { icon: Settings, class: "custom-mini-button" },
   });
 
   expect(wrapper.find("button").classes()).toContain("custom-mini-button");
@@ -63,8 +63,8 @@ test("it should forward fallthrough attrs to the root element", () => {
     props: { icon: Settings },
     attrs: {
       id: "settings-btn",
-      "data-testid": "mini-button",
       "aria-label": "Settings",
+      "data-testid": "mini-button",
     },
   });
 
@@ -82,8 +82,8 @@ test("it should render default slot in place of the icon", () => {
     },
   });
 
-  expect(wrapper.find("[data-testid='avatar']").text()).toBe("AB");
   expect(wrapper.find("svg").exists()).toBe(false);
+  expect(wrapper.find("[data-testid='avatar']").text()).toBe("AB");
 });
 
 test("it should hide default slot when loading", () => {
@@ -95,8 +95,8 @@ test("it should hide default slot when loading", () => {
     },
   });
 
-  expect(wrapper.find("[data-testid='avatar']").exists()).toBe(false);
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
+  expect(wrapper.find("[data-testid='avatar']").exists()).toBe(false);
 });
 
 test("it should prefer icon over default slot when both are provided", () => {
@@ -108,19 +108,19 @@ test("it should prefer icon over default slot when both are provided", () => {
     },
   });
 
-  expect(wrapper.find("[data-testid='avatar']").exists()).toBe(false);
   expect(wrapper.find("svg").exists()).toBe(true);
+  expect(wrapper.find("[data-testid='avatar']").exists()).toBe(false);
 });
 
 test("it should forward partsProps to icon sub-parts", () => {
   const wrapper = mount(MiniButton, {
+    attrs: { "aria-label": "Settings" },
     props: {
       icon: Settings,
       partsProps: {
         icon: { id: "mini-button-icon" },
       },
     },
-    attrs: { "aria-label": "Settings" },
   });
 
   expect(wrapper.find("#mini-button-icon").exists()).toBe(true);
