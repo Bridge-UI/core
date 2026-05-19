@@ -70,7 +70,7 @@ test("it should include rounded classes when rounded is set", () => {
 test("it should compute title classes with font-normal when no body", () => {
   const { result } = renderUseAlert({ title: "Test" });
 
-  expect(result.current.titleClasses).toContain("font-normal");
+  expect(result.current.titleBind.className).toContain("font-normal");
 });
 
 test("it should compute title classes with font-semibold when body exists", () => {
@@ -80,7 +80,7 @@ test("it should compute title classes with font-semibold when body exists", () =
   });
 
   expect(result.current.hasDefaultBody).toBe(true);
-  expect(result.current.titleClasses).toContain("font-semibold");
+  expect(result.current.titleBind.className).toContain("font-semibold");
 });
 
 test("it should show title row when title prop is provided", () => {

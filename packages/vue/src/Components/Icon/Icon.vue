@@ -12,7 +12,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<IconOwnProps>();
 
-const { merged, mergedClass, rootBind } = useIcon(props, attrs, { size: "md" });
+const { merged, rootBind, mergedClass } = useIcon(props, attrs, { size: "md" });
 </script>
 
 <template>

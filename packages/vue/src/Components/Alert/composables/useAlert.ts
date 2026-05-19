@@ -58,6 +58,7 @@ export function useAlert(
   props: AlertProps,
   libDefaults: Partial<AlertOwnProps>,
 ) {
+  // Setup
   const slots = useSlots();
   const attrs = useAttrs();
 
@@ -78,6 +79,7 @@ export function useAlert(
     props: propsForMerge,
   });
 
+  // Registry maps
   const mergedShadowMap = computed(() => {
     return mergeBridgeUIStringMap({
       lib: shadowProps,
@@ -106,12 +108,17 @@ export function useAlert(
     ) as typeof variantProps;
   });
 
+  // Theme
   const colorKey = computed(() => {
     return (merged.value.color ?? "primary") as keyof AlertColor;
   });
 
   const variantKey = computed(() => {
     return (merged.value.variant ?? "flat") as keyof typeof variantProps;
+  });
+
+  const palette = computed(() => {
+    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
   });
 
   const resolvedIcon = computed(() => {
@@ -122,18 +129,15 @@ export function useAlert(
     return merged.value.icon ?? get(defaultIcons, colorKey.value);
   });
 
-  const showIcon = computed(() => {
-    return Boolean(slots.icon) || resolvedIcon.value != null;
-  });
-
-  const palette = computed(() => {
-    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
-  });
-
+  // Visibility
   const hasDefaultBody = computed(() => {
     const d = slots.default?.();
 
     return Boolean(d && d.length > 0);
+  });
+
+  const showIcon = computed(() => {
+    return Boolean(slots.icon) || resolvedIcon.value != null;
   });
 
   const showTitleRow = computed(() => {
@@ -143,32 +147,7 @@ export function useAlert(
     );
   });
 
-  const iconClasses = computed(() => {
-    return cn(
-      "w-5 h-5 shrink-0",
-      palette.value.iconColor,
-      get(mergedClasses.value, "icon"),
-    );
-  });
-
-  const titleClasses = computed(() => {
-    return cn(
-      "text-start text-sm whitespace-normal",
-      hasDefaultBody.value ? "font-semibold" : "font-normal",
-      palette.value.text,
-      get(mergedClasses.value, "title"),
-    );
-  });
-
-  const bodyClasses = computed(() => {
-    return cn(
-      "grow text-sm text-start",
-      palette.value.text,
-      get(mergedPaddingMap.value, merged.value.padding ?? "none"),
-      get(mergedClasses.value, "body"),
-    );
-  });
-
+  // Root
   const rootClasses = computed(() => {
     return cn(
       "w-full flex flex-col p-4",
@@ -181,41 +160,55 @@ export function useAlert(
     );
   });
 
+  // Parts
   const partsProps = computed(() => merged.value.partsProps);
 
   const iconBind = computed(() => {
-    return mergePartBind(partsProps.value?.icon, iconClasses.value);
+    return mergePartBind(
+      partsProps.value?.icon,
+      cn(
+        "w-5 h-5 shrink-0",
+        palette.value.iconColor,
+        get(mergedClasses.value, "icon"),
+      ),
+    );
   });
 
   const titleBind = computed(() => {
-    return mergePartBind(partsProps.value?.title, titleClasses.value);
+    return mergePartBind(
+      partsProps.value?.title,
+      cn(
+        "text-start text-sm whitespace-normal",
+        hasDefaultBody.value ? "font-semibold" : "font-normal",
+        palette.value.text,
+        get(mergedClasses.value, "title"),
+      ),
+    );
   });
 
   const bodyBind = computed(() => {
-    return mergePartBind(partsProps.value?.body, bodyClasses.value);
+    return mergePartBind(
+      partsProps.value?.body,
+      cn(
+        "grow text-sm text-start",
+        palette.value.text,
+        get(mergedPaddingMap.value, merged.value.padding ?? "none"),
+        get(mergedClasses.value, "body"),
+      ),
+    );
   });
 
   return {
     slots,
     merged,
-    palette,
     bodyBind,
     iconBind,
     rootBind,
     showIcon,
     titleBind,
-    bodyClasses,
-    bridgeAlert,
-    iconClasses,
     rootClasses,
     resolvedIcon,
     showTitleRow,
-    titleClasses,
-    mergedClasses,
     hasDefaultBody,
-    mergedShadowMap,
-    mergedPaddingMap,
-    mergedRoundedMap,
-    mergedVariantProps,
   };
 }

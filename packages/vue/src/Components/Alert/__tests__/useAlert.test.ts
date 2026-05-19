@@ -81,9 +81,9 @@ test("it should include rounded classes when rounded is set", () => {
 });
 
 test("it should compute title classes with font-normal when no body", () => {
-  const { titleClasses } = mountUseAlert({ title: "Test" });
+  const { titleBind } = mountUseAlert({ title: "Test" });
 
-  expect(titleClasses.value).toContain("font-normal");
+  expect(titleBind.value.class).toContain("font-normal");
 });
 
 test("it should show title row when title prop is provided", () => {

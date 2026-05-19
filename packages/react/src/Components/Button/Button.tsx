@@ -11,6 +11,7 @@ function Button(props: ButtonProps) {
     tag,
     slots,
     merged,
+    children,
     isAnchor,
     isButton,
     showText,
@@ -69,7 +70,7 @@ function Button(props: ButtonProps) {
 
           {showText && merged.text}
 
-          {showChildren && props.children}
+          {showChildren && children}
 
           {showEndIcon && merged.endIcon && (
             <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />

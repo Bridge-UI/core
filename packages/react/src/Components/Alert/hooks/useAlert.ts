@@ -58,6 +58,7 @@ export function useAlert(
   props: AlertProps,
   libDefaults: Partial<AlertOwnProps>,
 ) {
+  // Setup
   const { className, children, slots, propsForMerge, rootHtmlProps } =
     splitComponentProps(props, {
       bridgeKeys: alertBridgeKeys,
@@ -75,6 +76,7 @@ export function useAlert(
     props: propsForMerge,
   });
 
+  // Registry maps
   const mergedShadowMap = useMemo(() => {
     return mergeBridgeUIStringMap({
       lib: shadowProps,
@@ -103,9 +105,12 @@ export function useAlert(
     ) as typeof variantProps;
   }, [bridgeAlert?.customProps?.variant]);
 
+  // Theme
   const colorKey = (merged.color ?? "primary") as keyof AlertColor;
 
   const variantKey = (merged.variant ?? "flat") as keyof typeof variantProps;
+
+  const palette = get(mergedVariantProps, [variantKey, colorKey]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
@@ -115,36 +120,16 @@ export function useAlert(
     return merged.icon ?? get(defaultIcons, colorKey);
   }, [colorKey, merged.icon]);
 
+  // Visibility
   const hasDefaultBody = Boolean(children);
 
   const showIcon = Boolean(slots?.icon) || resolvedIcon != null;
-
-  const palette = get(mergedVariantProps, [variantKey, colorKey]);
 
   const showTitleRow =
     !slots?.header &&
     Boolean(merged.title || resolvedIcon != null || slots?.icon);
 
-  const iconClasses = cn(
-    "w-5 h-5 shrink-0",
-    palette.iconColor,
-    get(mergedClasses, "icon"),
-  );
-
-  const titleClasses = cn(
-    "text-start text-sm whitespace-normal",
-    hasDefaultBody ? "font-semibold" : "font-normal",
-    palette.text,
-    get(mergedClasses, "title"),
-  );
-
-  const bodyClasses = cn(
-    "grow text-sm text-start",
-    palette.text,
-    get(mergedPaddingMap, merged.padding ?? "none"),
-    get(mergedClasses, "body"),
-  );
-
+  // Root
   const rootClasses = cn(
     "w-full flex flex-col p-4",
     palette.border,
@@ -155,36 +140,46 @@ export function useAlert(
     className,
   );
 
+  // Parts
   const partsProps = merged.partsProps;
 
-  const iconBind = mergePartBind(partsProps?.icon, iconClasses);
+  const iconBind = mergePartBind(
+    partsProps?.icon,
+    cn("w-5 h-5 shrink-0", palette.iconColor, get(mergedClasses, "icon")),
+  );
 
-  const titleBind = mergePartBind(partsProps?.title, titleClasses);
+  const titleBind = mergePartBind(
+    partsProps?.title,
+    cn(
+      "text-start text-sm whitespace-normal",
+      hasDefaultBody ? "font-semibold" : "font-normal",
+      palette.text,
+      get(mergedClasses, "title"),
+    ),
+  );
 
-  const bodyBind = mergePartBind(partsProps?.body, bodyClasses);
+  const bodyBind = mergePartBind(
+    partsProps?.body,
+    cn(
+      "grow text-sm text-start",
+      palette.text,
+      get(mergedPaddingMap, merged.padding ?? "none"),
+      get(mergedClasses, "body"),
+    ),
+  );
 
   return {
     slots,
     merged,
-    palette,
     bodyBind,
     children,
     iconBind,
     showIcon,
     titleBind,
-    bodyClasses,
-    bridgeAlert,
-    iconClasses,
     rootClasses,
     resolvedIcon,
     showTitleRow,
-    titleClasses,
-    mergedClasses,
     rootHtmlProps,
     hasDefaultBody,
-    mergedShadowMap,
-    mergedPaddingMap,
-    mergedRoundedMap,
-    mergedVariantProps,
   };
 }

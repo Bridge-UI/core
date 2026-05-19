@@ -46,6 +46,7 @@ export function useButton(
   props: ButtonProps,
   libDefaults: Partial<ButtonOwnProps>,
 ) {
+  // Setup
   const slots = useSlots();
   const attrs = useAttrs();
 
@@ -66,6 +67,7 @@ export function useButton(
     props: propsForMerge,
   });
 
+  // Registry maps
   const mergedVariantMap = computed(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
@@ -87,6 +89,7 @@ export function useButton(
     );
   });
 
+  // Theme
   const colorItem = computed((): ButtonColorItem | undefined => {
     return get(mergedVariantMap.value, [
       merged.value.variant ?? "solid",
@@ -102,6 +105,11 @@ export function useButton(
     );
   });
 
+  // Element
+  const tag = computed(() => {
+    return merged.value.as ?? "button";
+  });
+
   const isAnchor = computed(() => {
     return tag.value === "a";
   });
@@ -110,14 +118,11 @@ export function useButton(
     return tag.value === "button";
   });
 
-  const tag = computed(() => {
-    return merged.value.as ?? "button";
-  });
-
   const isDisabled = computed(() => {
     return merged.value.disabled || merged.value.loading;
   });
 
+  // Root
   const rootClass = computed(() => {
     return cn(
       "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
@@ -133,6 +138,7 @@ export function useButton(
     );
   });
 
+  // Visibility
   const showSpinner = computed(() => {
     return merged.value.loading;
   });
@@ -165,30 +171,28 @@ export function useButton(
     return !merged.value.loading && hasDefaultSlot.value && !merged.value.text;
   });
 
-  const endIconClass = computed(() => {
-    return cn("shrink-0", mergedClasses.value.endIcon);
-  });
-
-  const startIconClass = computed(() => {
-    return cn("shrink-0", mergedClasses.value.startIcon);
-  });
-
-  const spinnerIconClass = computed(() => {
-    return cn("shrink-0 animate-spin", mergedClasses.value.loading);
-  });
-
+  // Parts
   const partsProps = computed(() => merged.value.partsProps);
 
-  const loadingIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.loading, spinnerIconClass.value);
+  const endIconBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.endIcon,
+      cn("shrink-0", mergedClasses.value.endIcon),
+    );
   });
 
   const startIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.startIcon, startIconClass.value);
+    return mergePartBind(
+      partsProps.value?.startIcon,
+      cn("shrink-0", mergedClasses.value.startIcon),
+    );
   });
 
-  const endIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.endIcon, endIconClass.value);
+  const endSlotBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.end,
+      "inline-flex shrink-0 items-center",
+    );
   });
 
   const startSlotBind = computed(() => {
@@ -198,10 +202,10 @@ export function useButton(
     );
   });
 
-  const endSlotBind = computed(() => {
+  const loadingIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.end,
-      "inline-flex shrink-0 items-center",
+      partsProps.value?.loading,
+      cn("shrink-0 animate-spin", mergedClasses.value.loading),
     );
   });
 
@@ -220,16 +224,12 @@ export function useButton(
     showEndIcon,
     showEndSlot,
     showSpinner,
-    bridgeButton,
-    endIconClass,
     showStartIcon,
     showStartSlot,
     startIconBind,
     startSlotBind,
-    startIconClass,
     loadingIconBind,
     showDefaultSlot,
-    spinnerIconClass,
     spinnerIcon: Loader2,
   };
 }

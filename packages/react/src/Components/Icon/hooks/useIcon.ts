@@ -3,7 +3,7 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
@@ -16,6 +16,7 @@ const iconBridgeKeys = [
 ] as const satisfies readonly (keyof IconOwnProps)[];
 
 export function useIcon(props: IconProps, libDefaults: Partial<IconOwnProps>) {
+  // Setup
   const { className, propsForMerge, rootHtmlProps } = splitComponentProps(
     props,
     {
@@ -30,13 +31,21 @@ export function useIcon(props: IconProps, libDefaults: Partial<IconOwnProps>) {
     componentName: "Icon",
   });
 
+  // Registry maps
+  const sizeClassMap = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeIcon?.customProps?.size,
+    );
+  }, [bridgeIcon?.customProps?.size]);
+
+  // Root
   const mergedClass = useMemo(() => {
-    return cn(get(sizeProps, merged.size ?? "md"), className);
-  }, [className, merged.size]);
+    return cn(get(sizeClassMap, merged.size ?? "md"), className);
+  }, [className, merged.size, sizeClassMap]);
 
   return {
     merged,
-    bridgeIcon,
     mergedClass,
     rootHtmlProps,
   };

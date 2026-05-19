@@ -3,7 +3,7 @@ import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
@@ -20,6 +20,7 @@ export function useIcon(
   attrs: Record<string, unknown>,
   libDefaults: Partial<IconOwnProps>,
 ) {
+  // Setup
   const { userClass, propsForMerge, rootBind } = splitComponentProps(
     props,
     attrs,
@@ -32,14 +33,22 @@ export function useIcon(
     componentName: "Icon",
   });
 
+  // Registry maps
+  const sizeClassMap = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeIcon.value?.customProps?.size,
+    );
+  });
+
+  // Root
   const mergedClass = computed(() => {
-    return cn(get(sizeProps, merged.value.size ?? "md"), userClass);
+    return cn(get(sizeClassMap.value, merged.value.size ?? "md"), userClass);
   });
 
   return {
     merged,
     rootBind,
-    bridgeIcon,
     mergedClass,
   };
 }
