@@ -1,11 +1,12 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   BadgeColor,
   BadgeRounded,
   BadgeVariant,
+  MergeHtmlProps,
   MergeProps,
   MiniBadgeSize,
 } from "@bridge-ui/core";
@@ -22,13 +23,20 @@ export interface MiniBadgeClasses {
   root?: string;
 }
 
-export interface MiniBadgeProps {
+export interface MiniBadgeOwnProps {
   /**
    * The children to render.
    *
    * @default undefined
    */
   children?: ReactNode;
+
+  /**
+   * Extra classes merged with the root element (and `classes.root`).
+   *
+   * @default undefined
+   */
+  className?: string;
 
   /**
    * The classes to apply to the badge.
@@ -65,3 +73,8 @@ export interface MiniBadgeProps {
    */
   variant?: MergeProps<BadgeVariant, MiniBadgeVariantOverrides>;
 }
+
+export type MiniBadgeProps = MergeHtmlProps<
+  MiniBadgeOwnProps,
+  HTMLAttributes<HTMLSpanElement>
+>;

@@ -1,22 +1,22 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { MiniBadgeProps, MiniBadgeSlots } from "@/Components/MiniBadge";
-import { useMiniBadge } from "@/Components/MiniBadge";
+import { useMiniBadge } from "@/Components/MiniBadge/composables/useMiniBadge";
+import type { MiniBadgeOwnProps } from "@/Components/MiniBadge/miniBadge.types";
 
-defineSlots<MiniBadgeSlots>();
+defineOptions({ inheritAttrs: false });
 
-const props = defineProps<MiniBadgeProps>();
+const props = defineProps<MiniBadgeOwnProps>();
 
-const { slots, merged } = useMiniBadge(props, {
-  size: "sm",
-  rounded: "sm",
+const { rootBind, rootClass } = useMiniBadge(props, {
+  size: "xs",
   color: "primary",
-  variant: "solid",
+  rounded: "full",
+  variant: "flat",
 });
 </script>
 
 <template>
-  <span class="inline-flex items-center justify-center outline-none">
+  <span :class="rootClass" v-bind="rootBind">
     <slot />
   </span>
 </template>

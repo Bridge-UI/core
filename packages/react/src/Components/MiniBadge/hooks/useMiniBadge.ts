@@ -1,6 +1,6 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed, useAttrs } from "vue";
+import { useMemo } from "react";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -37,13 +37,11 @@ export function useMiniBadge(
   libDefaults: Partial<MiniBadgeOwnProps>,
 ) {
   // Setup
-  const attrs = useAttrs();
-
-  const { userClass, propsForMerge, rootBind } = splitComponentProps(
-    props,
-    attrs,
-    { bridgeKeys: miniBadgeBridgeKeys },
-  );
+  const { className, children, propsForMerge, rootHtmlProps } =
+    splitComponentProps(props, {
+      bridgeKeys: miniBadgeBridgeKeys,
+      peel: ["className", "children"],
+    });
 
   const { entry: bridgeMiniBadge, merged } = useBridgeUIComponent({
     libDefaults,
@@ -57,53 +55,46 @@ export function useMiniBadge(
   });
 
   // Registry maps
-  const mergedSizeMap = computed(() => {
+  const mergedSizeMap = useMemo(() => {
     return mergeBridgeUIStringMap({
       lib: sizeProps,
-      provider: bridgeMiniBadge.value?.customProps?.size,
+      provider: bridgeMiniBadge?.customProps?.size,
     });
-  });
+  }, [bridgeMiniBadge?.customProps?.size]);
 
-  const mergedRoundedMap = computed(() => {
+  const mergedRoundedMap = useMemo(() => {
     return mergeBridgeUIStringMap({
       lib: roundedProps,
     });
-  });
+  }, []);
 
-  const mergedVariantProps = computed(() => {
+  const mergedVariantProps = useMemo(() => {
     return variantProps;
-  });
+  }, []);
 
   // Theme
-  const colorKey = computed(() => {
-    return (merged.value.color ?? "primary") as keyof BadgeColor;
-  });
+  const colorKey = (merged.color ?? "primary") as keyof BadgeColor;
 
-  const variantKey = computed(() => {
-    return (merged.value.variant ?? "flat") as keyof typeof variantProps;
-  });
+  const variantKey = (merged.variant ?? "flat") as keyof typeof variantProps;
 
-  const palette = computed(() => {
-    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
-  });
+  const palette = get(mergedVariantProps, [variantKey, colorKey]);
 
   // Root
-  const rootClass = computed(() => {
-    return cn(
-      "inline-flex items-center justify-center font-medium whitespace-nowrap",
-      palette.value.text,
-      palette.value.background,
-      palette.value.border,
-      get(mergedSizeMap.value, merged.value.size ?? "xs"),
-      get(mergedRoundedMap.value, merged.value.rounded ?? "full"),
-      mergedClasses.value.root,
-      userClass,
-    );
-  });
+  const rootClass = cn(
+    "inline-flex items-center justify-center font-medium whitespace-nowrap",
+    palette.text,
+    palette.background,
+    palette.border,
+    get(mergedSizeMap, merged.size ?? "xs"),
+    get(mergedRoundedMap, merged.rounded ?? "full"),
+    mergedClasses.root,
+    className,
+  );
 
   return {
     merged,
-    rootBind,
+    children,
     rootClass,
+    rootHtmlProps,
   };
 }

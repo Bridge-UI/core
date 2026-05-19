@@ -3,6 +3,7 @@ export { useMiniBadge } from "@/Components/MiniBadge/composables/useMiniBadge";
 export type {
   MiniBadgeClasses,
   MiniBadgeColorOverrides,
+  MiniBadgeOwnProps,
   MiniBadgeProps,
   MiniBadgeRoundedOverrides,
   MiniBadgeSizeOverrides,
