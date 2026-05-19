@@ -22,10 +22,11 @@ export type {
   AvatarSizeOverrides,
   AvatarSlots,
 } from "@/Components/Avatar";
-export { Badge } from "@/Components/Badge";
+export { Badge, useBadge } from "@/Components/Badge";
 export type {
   BadgeClasses,
   BadgeColorOverrides,
+  BadgeOwnProps,
   BadgeProps,
   BadgeRoundedOverrides,
   BadgeSizeOverrides,
@@ -62,10 +63,12 @@ export type {
 } from "@/Components/Checkbox";
 export { Icon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 export type { IconSizeOverrides } from "@/Components/Icon";
-export { Link } from "@/Components/Link";
+export { Link, useLink } from "@/Components/Link";
 export type {
   LinkClasses,
   LinkColorOverrides,
+  LinkOwnProps,
+  LinkPartsProps,
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,
@@ -78,26 +81,27 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu";
-export { MiniBadge } from "@/Components/MiniBadge";
+export { MiniBadge, useMiniBadge } from "@/Components/MiniBadge";
 export type {
   MiniBadgeClasses,
   MiniBadgeColorOverrides,
+  MiniBadgeOwnProps,
   MiniBadgeProps,
   MiniBadgeRoundedOverrides,
   MiniBadgeSizeOverrides,
   MiniBadgeSlots,
   MiniBadgeVariantOverrides,
 } from "@/Components/MiniBadge";
-export {
-  MiniButton,
-  type MiniButtonProps,
-  type MiniButtonSlots,
-} from "@/Components/MiniButton";
+export { MiniButton, useMiniButton } from "@/Components/MiniButton";
 export type {
   MiniButtonClasses,
   MiniButtonColorOverrides,
+  MiniButtonOwnProps,
+  MiniButtonPartsProps,
+  MiniButtonProps,
   MiniButtonRoundedOverrides,
   MiniButtonSizeOverrides,
+  MiniButtonSlots,
   MiniButtonVariantOverrides,
 } from "@/Components/MiniButton";
 export { Modal } from "@/Components/Modal";
