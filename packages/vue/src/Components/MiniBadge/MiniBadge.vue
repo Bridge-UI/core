@@ -8,8 +8,8 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<MiniBadgeOwnProps>();
 
 const { rootBind, rootClass } = useMiniBadge(props, {
-  size: "xs",
-  rounded: "full",
+  size: "sm",
+  rounded: "md",
   variant: "flat",
   color: "primary",
 });

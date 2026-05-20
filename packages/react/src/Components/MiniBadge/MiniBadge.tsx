@@ -4,8 +4,8 @@ import { useMiniBadge } from "@/Components/MiniBadge";
 
 function MiniBadge(props: MiniBadgeProps) {
   const { children, rootClass, rootHtmlProps } = useMiniBadge(props, {
-    size: "xs",
-    rounded: "full",
+    size: "sm",
+    rounded: "md",
     variant: "flat",
     color: "primary",
   });

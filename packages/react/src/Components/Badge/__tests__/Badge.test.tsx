@@ -21,11 +21,11 @@ test("it should render as a span element", () => {
   expect(container.querySelector("span")).not.toBeNull();
 });
 
-test("it should apply rounded-full by default", () => {
+test("it should apply rounded-md by default", () => {
   const { container } = render(<Badge>Label</Badge>);
 
   expect(
-    container.querySelector("span")?.classList.contains("rounded-full"),
+    container.querySelector("span")?.classList.contains("rounded-md"),
   ).toBe(true);
 });
 

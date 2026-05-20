@@ -12,7 +12,7 @@ import {
 
 const libDefaults: Partial<BadgeOwnProps> = {
   size: "sm",
-  rounded: "full",
+  rounded: "md",
   variant: "flat",
   color: "primary",
 };

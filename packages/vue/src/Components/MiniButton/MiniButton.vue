@@ -31,7 +31,7 @@ const {
 } = useMiniButton(props, {
   size: "md",
   as: "button",
-  rounded: "none",
+  rounded: "md",
   variant: "flat",
   color: "primary",
 });

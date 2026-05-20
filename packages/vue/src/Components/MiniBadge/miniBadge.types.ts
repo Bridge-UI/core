@@ -48,14 +48,14 @@ export interface MiniBadgeOwnProps {
   /**
    * The roundedness of the badge.
    *
-   * @default "full"
+   * @default "md"
    */
   rounded?: MergeProps<BadgeRounded, MiniBadgeRoundedOverrides>;
 
   /**
    * The size of the badge.
    *
-   * @default "xs"
+   * @default "sm"
    */
   size?: MergeProps<MiniBadgeSize, MiniBadgeSizeOverrides>;
 

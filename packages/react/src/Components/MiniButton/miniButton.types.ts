@@ -130,7 +130,7 @@ export interface MiniButtonOwnProps {
   /**
    * The roundedness of the mini button.
    *
-   * @default "none"
+   * @default "md"
    */
   rounded?: MergeProps<ButtonRounded, MiniButtonRoundedOverrides>;
 

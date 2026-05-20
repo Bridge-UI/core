@@ -90,7 +90,7 @@ export function useBadge(
     palette.background,
     palette.border,
     get(mergedSizeMap, merged.size ?? "sm"),
-    get(mergedRoundedMap, merged.rounded ?? "full"),
+    get(mergedRoundedMap, merged.rounded ?? "md"),
     mergedClasses.root,
     className,
   );

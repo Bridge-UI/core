@@ -13,8 +13,8 @@ import {
 const libDefaults: Partial<MiniButtonOwnProps> = {
   size: "md",
   as: "button",
+  rounded: "md",
   variant: "flat",
-  rounded: "none",
   color: "primary",
 };
 

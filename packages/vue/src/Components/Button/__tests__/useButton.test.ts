@@ -12,11 +12,11 @@ import {
 } from "@/Components/Button";
 
 const libDefaults: Partial<ButtonOwnProps> = {
-  as: "button",
   size: "md",
+  as: "button",
+  rounded: "md",
   color: "primary",
   variant: "solid",
-  rounded: "sm",
 };
 
 function mountUseButton(props: ButtonProps = {}) {

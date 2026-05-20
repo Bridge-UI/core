@@ -149,7 +149,7 @@ export interface ButtonOwnProps {
   /**
    * The roundedness of the button.
    *
-   * @default "sm"
+   * @default "md"
    */
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 

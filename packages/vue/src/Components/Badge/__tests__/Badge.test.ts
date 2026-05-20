@@ -12,10 +12,10 @@ test("it should render default slot content", () => {
   expect(wrapper.find("span").exists()).toBe(true);
 });
 
-test("it should apply rounded-full by default", () => {
+test("it should apply rounded-md by default", () => {
   const wrapper = mount(Badge, { slots: { default: "Label" } });
 
-  expect(wrapper.find("span").classes()).toContain("rounded-full");
+  expect(wrapper.find("span").classes()).toContain("rounded-md");
 });
 
 test("it should merge class with root classes", () => {

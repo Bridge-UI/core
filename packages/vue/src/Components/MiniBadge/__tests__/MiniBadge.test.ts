@@ -12,10 +12,10 @@ test("it should render default slot content", () => {
   expect(wrapper.find("span").exists()).toBe(true);
 });
 
-test("it should apply xs size by default", () => {
+test("it should apply sm size by default", () => {
   const wrapper = mount(MiniBadge, { slots: { default: "1" } });
 
-  expect(wrapper.find("span").classes()).toContain("min-w-5");
+  expect(wrapper.find("span").classes()).toContain("min-w-6");
 });
 
 test("it should merge class with root classes", () => {

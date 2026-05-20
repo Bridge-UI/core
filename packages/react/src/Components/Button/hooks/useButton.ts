@@ -111,7 +111,7 @@ export function useButton(
     "transition-all ease-in-out duration-200 focus:ring-2",
     "disabled:opacity-80 disabled:cursor-not-allowed",
     colorClasses,
-    get(roundedClassMap, merged.rounded ?? "sm"),
+    get(roundedClassMap, merged.rounded ?? "md"),
     get(sizeClassMap, merged.size ?? "md"),
     merged.full && "w-full",
     mergedClasses.root,

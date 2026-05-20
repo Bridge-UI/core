@@ -129,7 +129,7 @@ export function useMiniButton(
       "transition-all ease-in-out duration-200 focus:ring-2",
       "disabled:opacity-80 disabled:cursor-not-allowed",
       colorClasses.value,
-      get(mergedRoundedMap.value, merged.value.rounded ?? "none"),
+      get(mergedRoundedMap.value, merged.value.rounded ?? "md"),
       get(mergedSizeMap.value, merged.value.size ?? "md"),
       mergedClasses.value.root,
       userClass,

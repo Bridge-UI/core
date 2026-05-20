@@ -26,7 +26,7 @@ function MiniButton(props: MiniButtonProps) {
   } = useMiniButton(props, {
     size: "md",
     as: "button",
-    rounded: "none",
+    rounded: "md",
     variant: "flat",
     color: "primary",
   });

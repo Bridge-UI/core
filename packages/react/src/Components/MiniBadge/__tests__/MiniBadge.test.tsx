@@ -21,12 +21,12 @@ test("it should render as a span element", () => {
   expect(container.querySelector("span")).not.toBeNull();
 });
 
-test("it should apply xs size by default", () => {
+test("it should apply sm size by default", () => {
   const { container } = render(<MiniBadge>1</MiniBadge>);
 
   const root = container.querySelector("span");
 
-  expect(root?.className).toContain("min-w-5");
+  expect(root?.className).toContain("min-w-6");
 });
 
 test("it should merge className with root classes", () => {

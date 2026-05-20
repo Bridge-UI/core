@@ -6,6 +6,7 @@ export interface BadgeSize {
   "md": string;
   "lg": string;
   "xl": string;
+  "2xl": string;
 }
 
 // prettier-ignore
@@ -16,4 +17,5 @@ export const sizeProps: BadgeSize = {
   "md": "text-sm px-2.5 py-1",
   "lg": "text-sm px-3 py-1",
   "xl": "text-base px-3 py-1.5",
+  "2xl": "text-lg px-4 py-2",
 };

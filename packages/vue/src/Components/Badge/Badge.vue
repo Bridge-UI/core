@@ -9,7 +9,7 @@ const props = defineProps<BadgeOwnProps>();
 
 const { rootBind, rootClass } = useBadge(props, {
   size: "sm",
-  rounded: "full",
+  rounded: "md",
   variant: "flat",
   color: "primary",
 });

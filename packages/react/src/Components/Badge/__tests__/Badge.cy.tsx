@@ -7,10 +7,10 @@ test("it should render with default props", () => {
   cy.get("span").should("exist").and("contain.text", "New");
 });
 
-test("it should apply rounded-full by default", () => {
+test("it should apply rounded-md by default", () => {
   cy.mount(<Badge>Label</Badge>);
 
-  cy.get("span").should("have.class", "rounded-full");
+  cy.get("span").should("have.class", "rounded-md");
 });
 
 test("it should render error color", () => {

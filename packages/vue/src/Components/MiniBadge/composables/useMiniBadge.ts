@@ -94,8 +94,8 @@ export function useMiniBadge(
       palette.value.text,
       palette.value.background,
       palette.value.border,
-      get(mergedSizeMap.value, merged.value.size ?? "xs"),
-      get(mergedRoundedMap.value, merged.value.rounded ?? "full"),
+      get(mergedSizeMap.value, merged.value.size ?? "sm"),
+      get(mergedRoundedMap.value, merged.value.rounded ?? "md"),
       mergedClasses.value.root,
       userClass,
     );

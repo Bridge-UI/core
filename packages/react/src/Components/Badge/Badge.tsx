@@ -5,7 +5,7 @@ import { useBadge } from "@/Components/Badge";
 function Badge(props: BadgeProps) {
   const { children, rootClass, rootHtmlProps } = useBadge(props, {
     size: "sm",
-    rounded: "full",
+    rounded: "md",
     variant: "flat",
     color: "primary",
   });

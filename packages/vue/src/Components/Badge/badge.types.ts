@@ -48,7 +48,7 @@ export interface BadgeOwnProps {
   /**
    * The roundedness of the badge.
    *
-   * @default "full"
+   * @default "md"
    */
   rounded?: MergeProps<BadgeRounded, BadgeRoundedOverrides>;
 

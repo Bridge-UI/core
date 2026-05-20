@@ -33,7 +33,7 @@ function Button(props: ButtonProps) {
   } = useButton(props, {
     size: "md",
     as: "button",
-    rounded: "sm",
+    rounded: "md",
     color: "primary",
     variant: "solid",
   });

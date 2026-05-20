@@ -10,8 +10,8 @@ import {
 } from "@/Components/MiniBadge";
 
 const libDefaults: Partial<MiniBadgeOwnProps> = {
-  size: "xs",
-  rounded: "full",
+  size: "sm",
+  rounded: "md",
   variant: "flat",
   color: "primary",
 };
@@ -23,14 +23,14 @@ function renderUseMiniBadge(props: MiniBadgeProps = {}) {
 test("it should merge default size and variant", () => {
   const { result } = renderUseMiniBadge();
 
-  expect(result.current.merged.size).toBe("xs");
+  expect(result.current.merged.size).toBe("sm");
   expect(result.current.merged.variant).toBe("flat");
 });
 
 test("it should override size when prop is passed", () => {
-  const { result } = renderUseMiniBadge({ size: "sm" });
+  const { result } = renderUseMiniBadge({ size: "md" });
 
-  expect(result.current.merged.size).toBe("sm");
+  expect(result.current.merged.size).toBe("md");
 });
 
 test("it should compute rootClass as a non-empty string", () => {
