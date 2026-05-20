@@ -1,5 +1,5 @@
 // ** External Imports
-import { CircleAlert } from "lucide-vue-next";
+import { CircleAlert, Settings } from "lucide-vue-next";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
@@ -73,4 +73,45 @@ test("it should render start slot content", () => {
 
   cy.contains("◀").should("be.visible");
   cy.contains("Label").should("be.visible");
+});
+
+test("it should render mini density with icon", () => {
+  cy.mount(Button, {
+    props: {
+      icon: Settings,
+      density: "mini",
+      "aria-label": "Settings",
+    },
+  });
+
+  cy.get("button svg").should("exist");
+  cy.get("button").should("have.class", "w-7");
+  cy.get("button").should("not.have.class", "w-full");
+});
+
+test("it should disable mini density button", () => {
+  cy.mount(Button, {
+    props: {
+      icon: Settings,
+      disabled: true,
+      density: "mini",
+      "aria-label": "Settings",
+    },
+  });
+
+  cy.get("button").should("be.disabled");
+});
+
+test("it should show spinner when mini density is loading", () => {
+  cy.mount(Button, {
+    props: {
+      loading: true,
+      icon: Settings,
+      density: "mini",
+      "aria-label": "Settings",
+    },
+  });
+
+  cy.get("svg.animate-spin").should("exist");
+  cy.get("button").should("have.attr", "aria-busy", "true");
 });

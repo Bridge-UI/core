@@ -1,6 +1,8 @@
 // ** External Imports
 import { CircleAlert } from "lucide-react";
 
+import { Settings } from "lucide-react";
+
 // ** Local Imports
 import { Button } from "@/Components/Button";
 
@@ -61,4 +63,29 @@ test("it should render start slot content", () => {
 
   cy.contains("Label").should("be.visible");
   cy.get("[data-cy=start-slot]").should("be.visible");
+});
+
+test("it should render mini density with icon", () => {
+  cy.mount(<Button density="mini" icon={Settings} aria-label="Settings" />);
+
+  cy.get("button svg").should("exist");
+  cy.get("button").should("have.class", "w-7");
+  cy.get("button").should("not.have.class", "w-full");
+});
+
+test("it should disable mini density button", () => {
+  cy.mount(
+    <Button density="mini" icon={Settings} disabled aria-label="Settings" />,
+  );
+
+  cy.get("button").should("be.disabled");
+});
+
+test("it should show spinner when mini density is loading", () => {
+  cy.mount(
+    <Button density="mini" loading icon={Settings} aria-label="Settings" />,
+  );
+
+  cy.get("svg.animate-spin").should("exist");
+  cy.get("button").should("have.attr", "aria-busy", "true");
 });

@@ -107,7 +107,7 @@ export function useBadge(
   // Root
   const rootClass = computed(() => {
     return cn(
-      "inline-flex items-center justify-center font-medium whitespace-nowrap",
+      "inline-flex w-fit items-center justify-center font-medium whitespace-nowrap",
       paletteClass.value.text,
       paletteClass.value.background,
       paletteClass.value.border,

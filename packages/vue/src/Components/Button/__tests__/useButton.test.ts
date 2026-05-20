@@ -98,10 +98,18 @@ test("it should compute rootClass as a non-empty string", () => {
   expect(rootClass.value.length).toBeGreaterThan(0);
 });
 
+test("it should shrink-wrap width when full is false", () => {
+  const { rootClass } = mountUseButton();
+
+  expect(rootClass.value).toContain("w-fit");
+  expect(rootClass.value).not.toContain("w-full");
+});
+
 test("it should include full width class when full is true", () => {
   const { rootClass } = mountUseButton({ full: true });
 
   expect(rootClass.value).toContain("w-full");
+  expect(rootClass.value).not.toContain("w-fit");
 });
 
 test("it should show text when text prop is set", () => {
@@ -161,7 +169,8 @@ test("it should use mini size classes when density is mini", () => {
   });
 
   expect(isMini.value).toBe(true);
-  expect(rootClass.value).toContain("min-w-7");
+  expect(rootClass.value).toContain("w-7");
+  expect(rootClass.value).not.toContain("w-full");
 });
 
 test("it should show icon when density is mini and icon is set", () => {
@@ -189,13 +198,33 @@ test("it should show default slot instead of icon when mini and slot is provided
   mount(Wrapper, { slots: { default: () => "AB" } });
 
   expect(result.showIcon.value).toBe(false);
-  expect(result.showDefaultSlotMini.value).toBe(true);
+  expect(result.showDefault.value).toBe(true);
+});
+
+test("it should default to flat variant when density is mini and variant is omitted", () => {
+  const { rootClass } = mountUseButton({
+    density: "mini",
+    icon: CircleAlert,
+  });
+
+  expect(rootClass.value).toContain("text-primary-600");
+  expect(rootClass.value).not.toContain("bg-primary-500");
+});
+
+test("it should honor explicit variant when density is mini", () => {
+  const { rootClass } = mountUseButton({
+    density: "mini",
+    variant: "solid",
+    icon: CircleAlert,
+  });
+
+  expect(rootClass.value).toContain("bg-primary-500");
 });
 
 test("it should not include full width class when density is mini", () => {
   const { rootClass } = mountUseButton({
-    density: "mini",
     full: true,
+    density: "mini",
     icon: CircleAlert,
   });
 

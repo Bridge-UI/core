@@ -15,16 +15,17 @@ const props = defineProps<ButtonOwnProps>();
 
 const {
   tag,
+  isMini,
   merged,
+  iconBind,
+  iconSize,
   isAnchor,
   isButton,
   rootBind,
-  iconSize,
+  showIcon,
   showText,
   rootClass,
-  iconBind,
   isDisabled,
-  showIcon,
   endIconBind,
   endSlotBind,
   showEndIcon,
@@ -36,7 +37,7 @@ const {
   startIconBind,
   startSlotBind,
   showDefaultSlot,
-  showDefaultSlotMini,
+  showDefault,
   loadingIconBind,
 } = useButton(props, {
   size: "md",
@@ -65,8 +66,8 @@ const {
       v-bind="loadingIconBind"
     />
 
-    <template v-else>
-      <slot v-if="showDefaultSlotMini" />
+    <template v-else-if="isMini">
+      <slot v-if="showDefault" />
 
       <Icon
         v-else-if="showIcon && merged.icon"
@@ -74,7 +75,9 @@ const {
         :size="iconSize"
         v-bind="iconBind"
       />
+    </template>
 
+    <template v-else>
       <Icon
         v-if="showStartIcon && merged.startIcon"
         :icon="merged.startIcon"

@@ -9,6 +9,7 @@ import {
   densityProps,
   roundedProps,
   variantProps,
+  type ButtonColor,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
 import type { IconSize } from "@bridge-ui/core/Components/Icon";
@@ -96,10 +97,16 @@ export function useButton(
 
   const isMini = densityKey === "mini";
 
-  const colorItem = get(mergedVariantProps, [
-    merged.variant ?? (isMini ? "flat" : "solid"),
-    merged.color ?? "primary",
-  ]) as ButtonColorItem | undefined;
+  const colorKey = (merged.color ?? "primary") as keyof ButtonColor;
+
+  const variantKey = (propsForMerge.variant ??
+    (isMini
+      ? "flat"
+      : (merged.variant ?? "solid"))) as keyof typeof variantProps;
+
+  const colorItem = get(mergedVariantProps, [variantKey, colorKey]) as
+    | ButtonColorItem
+    | undefined;
 
   const colorClasses = cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
 
@@ -120,17 +127,18 @@ export function useButton(
 
   // Root
   const rootClass = cn(
-    isMini
-      ? "inline-flex shrink-0 items-center justify-center cursor-pointer outline-none outline-hidden"
-      : "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
     "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
+    "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center",
     "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
     "transition-all ease-in-out duration-200 focus:ring-2",
     "disabled:opacity-80 disabled:cursor-not-allowed",
+    { "group hover:shadow-xs": !isMini },
+    { "w-full": !isMini && merged.full },
+    { "w-fit": !isMini && !merged.full },
+    { "shrink-0": isMini },
     colorClasses,
     get(roundedClassMap, merged.rounded ?? "md"),
     sizeClass,
-    !isMini && merged.full && "w-full",
     mergedClasses.root,
     className,
   );
@@ -138,27 +146,32 @@ export function useButton(
   // Visibility
   const showSpinner = merged.loading;
 
-  const showText = !isMini && !merged.loading && !!merged.text;
+  const canShowContent = !merged.loading;
 
-  const showEndIcon = !isMini && !merged.loading && !!merged.endIcon;
+  const showIcon = canShowContent && Boolean(merged.icon);
 
-  const showStartIcon = !isMini && !merged.loading && !!merged.startIcon;
+  const showDefault = canShowContent && hasChildren && !merged.icon;
 
-  const showChildren =
-    !isMini && !merged.loading && hasChildren && !merged.text;
+  const showText = canShowContent && !!merged.text;
 
-  const showEndSlot =
-    !isMini && !merged.loading && !merged.endIcon && slots?.end != null;
+  const showEndIcon = canShowContent && !!merged.endIcon;
 
-  // prettier-ignore
-  const showStartSlot = !isMini && !merged.loading && !merged.startIcon && slots?.start != null;
+  const showStartIcon = canShowContent && !!merged.startIcon;
 
-  const showIcon = isMini && !merged.loading && Boolean(merged.icon);
+  const showChildren = canShowContent && hasChildren && !merged.text;
 
-  const showDefault = isMini && !merged.loading && hasChildren && !merged.icon;
+  const showEndSlot = canShowContent && !merged.endIcon && slots?.end != null;
+
+  const showStartSlot =
+    canShowContent && !merged.startIcon && slots?.start != null;
 
   // Parts
   const partsProps = merged.partsProps;
+
+  const iconBind = mergePartBind(
+    partsProps?.icon,
+    cn("shrink-0", mergedClasses.icon),
+  );
 
   const endIconBind = mergePartBind(
     partsProps?.endIcon,
@@ -168,11 +181,6 @@ export function useButton(
   const startIconBind = mergePartBind(
     partsProps?.startIcon,
     cn("shrink-0", mergedClasses.startIcon),
-  );
-
-  const iconBind = mergePartBind(
-    partsProps?.icon,
-    cn("shrink-0", mergedClasses.icon),
   );
 
   const endSlotBind = mergePartBind(
@@ -193,17 +201,17 @@ export function useButton(
   return {
     tag,
     slots,
+    isMini,
     merged,
     children,
-    isMini,
+    iconSize,
+    iconBind,
     isAnchor,
     isButton,
-    iconSize,
     showText,
-    rootClass,
-    iconBind,
-    isDisabled,
     showIcon,
+    rootClass,
+    isDisabled,
     endIconBind,
     endSlotBind,
     showEndIcon,

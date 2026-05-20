@@ -92,7 +92,7 @@ export function useBadge(
 
   // Root
   const rootClass = cn(
-    "inline-flex items-center justify-center font-medium whitespace-nowrap",
+    "inline-flex w-fit items-center justify-center font-medium whitespace-nowrap",
     paletteClass.text,
     paletteClass.background,
     paletteClass.border,

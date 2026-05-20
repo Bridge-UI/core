@@ -85,10 +85,18 @@ test("it should compute rootClass as a non-empty string", () => {
   expect(result.current.rootClass.length).toBeGreaterThan(0);
 });
 
+test("it should shrink-wrap width when full is false", () => {
+  const { result } = renderUseButton();
+
+  expect(result.current.rootClass).toContain("w-fit");
+  expect(result.current.rootClass).not.toContain("w-full");
+});
+
 test("it should include full width class when full is true", () => {
   const { result } = renderUseButton({ full: true });
 
   expect(result.current.rootClass).toContain("w-full");
+  expect(result.current.rootClass).not.toContain("w-fit");
 });
 
 test("it should expose children from props", () => {
@@ -151,7 +159,8 @@ test("it should use mini size classes when density is mini", () => {
   const { result } = renderUseButton({ density: "mini", icon: CircleAlert });
 
   expect(result.current.isMini).toBe(true);
-  expect(result.current.rootClass).toContain("min-w-7");
+  expect(result.current.rootClass).toContain("w-7");
+  expect(result.current.rootClass).not.toContain("w-full");
 });
 
 test("it should show icon when density is mini and icon is set", () => {
@@ -180,6 +189,23 @@ test("it should prefer icon over children when both are provided in mini density
 
   expect(result.current.showIcon).toBe(true);
   expect(result.current.showDefault).toBe(false);
+});
+
+test("it should default to flat variant when density is mini and variant is omitted", () => {
+  const { result } = renderUseButton({ density: "mini", icon: CircleAlert });
+
+  expect(result.current.rootClass).toContain("text-primary-600");
+  expect(result.current.rootClass).not.toContain("bg-primary-500");
+});
+
+test("it should honor explicit variant when density is mini", () => {
+  const { result } = renderUseButton({
+    density: "mini",
+    variant: "solid",
+    icon: CircleAlert,
+  });
+
+  expect(result.current.rootClass).toContain("bg-primary-500");
 });
 
 test("it should not include full width class when density is mini", () => {

@@ -9,6 +9,7 @@ import {
   densityProps,
   roundedProps,
   variantProps,
+  type ButtonColor,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
 import type { IconSize } from "@bridge-ui/core/Components/Icon";
@@ -105,11 +106,21 @@ export function useButton(
     return densityKey.value === "mini";
   });
 
+  const colorKey = computed(() => {
+    return (merged.value.color ?? "primary") as keyof ButtonColor;
+  });
+
+  const variantKey = computed(() => {
+    return (propsForMerge.variant ??
+      (isMini.value
+        ? "flat"
+        : (merged.value.variant ?? "solid"))) as keyof typeof variantProps;
+  });
+
   const colorItem = computed((): ButtonColorItem | undefined => {
-    return get(mergedVariantProps.value, [
-      merged.value.variant ?? (isMini.value ? "flat" : "solid"),
-      merged.value.color ?? "primary",
-    ]) as ButtonColorItem | undefined;
+    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]) as
+      | ButtonColorItem
+      | undefined;
   });
 
   const colorClasses = computed(() => {
@@ -152,17 +163,18 @@ export function useButton(
   // Root
   const rootClass = computed(() => {
     return cn(
-      isMini.value
-        ? "inline-flex shrink-0 items-center justify-center cursor-pointer outline-none outline-hidden"
-        : "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
       "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
+      "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center",
       "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
       "transition-all ease-in-out duration-200 focus:ring-2",
       "disabled:opacity-80 disabled:cursor-not-allowed",
+      { "w-full": !isMini.value && merged.value.full },
+      { "w-fit": !isMini.value && !merged.value.full },
+      { "group hover:shadow-xs": !isMini.value },
+      { "shrink-0": isMini.value },
       colorClasses.value,
       get(roundedClassMap.value, merged.value.rounded ?? "md"),
       sizeClass.value,
-      !isMini.value && merged.value.full && "w-full",
       mergedClasses.value.root,
       userClass,
     );
@@ -173,60 +185,51 @@ export function useButton(
     return merged.value.loading;
   });
 
+  const canShowContent = computed(() => {
+    return !merged.value.loading;
+  });
+
   const showText = computed(() => {
-    return !isMini.value && !merged.value.loading && !!merged.value.text;
+    return canShowContent.value && !!merged.value.text;
   });
 
   const showEndIcon = computed(() => {
-    return !isMini.value && !merged.value.loading && !!merged.value.endIcon;
+    return canShowContent.value && !!merged.value.endIcon;
   });
 
   const showStartIcon = computed(() => {
-    return !isMini.value && !merged.value.loading && !!merged.value.startIcon;
-  });
-
-  const showEndSlot = computed(() => {
-    return (
-      !isMini.value &&
-      !merged.value.loading &&
-      !merged.value.endIcon &&
-      !!slots.end
-    );
-  });
-
-  const showStartSlot = computed(() => {
-    return (
-      !isMini.value &&
-      !merged.value.loading &&
-      !merged.value.startIcon &&
-      !!slots.start
-    );
-  });
-
-  const showDefaultSlot = computed(() => {
-    return (
-      !isMini.value &&
-      !merged.value.loading &&
-      hasDefaultSlot.value &&
-      !merged.value.text
-    );
+    return canShowContent.value && !!merged.value.startIcon;
   });
 
   const showIcon = computed(() => {
-    return isMini.value && !merged.value.loading && Boolean(merged.value.icon);
+    return canShowContent.value && Boolean(merged.value.icon);
   });
 
-  const showDefaultSlotMini = computed(() => {
-    return (
-      isMini.value &&
-      !merged.value.loading &&
-      hasDefaultSlot.value &&
-      !merged.value.icon
-    );
+  const showEndSlot = computed(() => {
+    return canShowContent.value && !!slots.end && !merged.value.endIcon;
+  });
+
+  const showStartSlot = computed(() => {
+    return canShowContent.value && !!slots.start && !merged.value.startIcon;
+  });
+
+  const showDefault = computed(() => {
+    return canShowContent.value && !merged.value.icon && hasDefaultSlot.value;
+  });
+
+  const showDefaultSlot = computed(() => {
+    return canShowContent.value && !merged.value.text && hasDefaultSlot.value;
   });
 
   // Parts
   const partsProps = computed(() => merged.value.partsProps);
+
+  const iconBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.icon,
+      cn("shrink-0", mergedClasses.value.icon),
+    );
+  });
 
   const endIconBind = computed(() => {
     return mergePartBind(
@@ -239,13 +242,6 @@ export function useButton(
     return mergePartBind(
       partsProps.value?.startIcon,
       cn("shrink-0", mergedClasses.value.startIcon),
-    );
-  });
-
-  const iconBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.icon,
-      cn("shrink-0", mergedClasses.value.icon),
     );
   });
 
@@ -273,17 +269,17 @@ export function useButton(
   return {
     tag,
     slots,
-    merged,
     isMini,
+    merged,
+    iconBind,
+    iconSize,
     isAnchor,
     isButton,
     rootBind,
-    iconSize,
     showText,
-    rootClass,
-    iconBind,
-    isDisabled,
     showIcon,
+    rootClass,
+    isDisabled,
     endIconBind,
     endSlotBind,
     showEndIcon,
@@ -295,7 +291,7 @@ export function useButton(
     startSlotBind,
     loadingIconBind,
     showDefaultSlot,
-    showDefaultSlotMini,
+    showDefault,
     spinnerIcon: Loader2,
   };
 }

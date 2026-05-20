@@ -11,13 +11,13 @@ export interface ButtonSize {
 
 // prettier-ignore
 export const miniSizeProps: ButtonSize = {
-  "2xs": "text-2xs min-w-4 h-4",
-  "xs": "text-2xs min-w-5 h-5",
-  "sm": "text-xs min-w-6 h-6",
-  "md": "text-xs min-w-7 h-7",
-  "lg": "text-sm min-w-8 h-8",
-  "xl": "text-sm min-w-9 h-9",
-  "2xl": "text-base min-w-10 h-10",
+  "2xs": "text-2xs w-4 h-4",
+  "xs": "text-2xs w-5 h-5",
+  "sm": "text-xs w-6 h-6",
+  "md": "text-xs w-7 h-7",
+  "lg": "text-sm w-8 h-8",
+  "xl": "text-sm w-9 h-9",
+  "2xl": "text-base w-10 h-10",
 };
 
 // prettier-ignore
