@@ -77,3 +77,9 @@ test("it should apply class after classes.root in rootClass", () => {
   expect(rootClass.value).toContain("p-4");
   expect(rootClass.value).not.toContain("p-2");
 });
+
+test("it should apply mini size classes when density is mini", () => {
+  const { rootClass } = mountUseBadge({ density: "mini" });
+
+  expect(rootClass.value).toContain("min-w-6");
+});

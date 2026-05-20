@@ -3,6 +3,7 @@ export { default as Badge } from "@/Components/Badge/Badge";
 export type {
   BadgeClasses,
   BadgeColorOverrides,
+  BadgeDensityOverrides,
   BadgeOwnProps,
   BadgeProps,
   BadgeRoundedOverrides,

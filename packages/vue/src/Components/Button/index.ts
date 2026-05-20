@@ -11,6 +11,7 @@ export const Button = ButtonVue as DefineComponent<ButtonProps>;
 export type {
   ButtonClasses,
   ButtonColorOverrides,
+  ButtonDensityOverrides,
   ButtonOwnProps,
   ButtonPartsProps,
   ButtonProps,

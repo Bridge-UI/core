@@ -12,6 +12,7 @@ const { rootBind, rootClass } = useBadge(props, {
   rounded: "md",
   variant: "flat",
   color: "primary",
+  density: "default",
 });
 </script>
 

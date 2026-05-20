@@ -10,6 +10,7 @@ import type {
 // ** Core Imports
 import type {
   ButtonColor,
+  ButtonDensity,
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
@@ -22,6 +23,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
+export interface ButtonDensityOverrides {}
 export interface ButtonRoundedOverrides {}
 export interface ButtonVariantOverrides {}
 
@@ -30,6 +32,11 @@ export interface ButtonClasses {
    * The classes to apply to the end icon.
    */
   endIcon?: string;
+
+  /**
+   * The classes to apply to the icon (mini density).
+   */
+  icon?: string;
 
   /**
    * The classes to apply to the loading.
@@ -52,6 +59,11 @@ export interface ButtonPartsProps {
    * Props forwarded to the inline-end slot wrapper.
    */
   end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the icon `Icon` (`icon` is set by the button).
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
 
   /**
    * Props forwarded to the end `Icon` (`icon` is set by the button).
@@ -118,6 +130,13 @@ export interface ButtonOwnProps {
   disabled?: boolean;
 
   /**
+   * The density of the button.
+   *
+   * @default "default"
+   */
+  density?: MergeProps<ButtonDensity, ButtonDensityOverrides>;
+
+  /**
    * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
    *
    * @default undefined
@@ -137,6 +156,13 @@ export interface ButtonOwnProps {
    * @default undefined
    */
   href?: string;
+
+  /**
+   * Icon for mini density (replaces label and start/end icons).
+   *
+   * @default undefined
+   */
+  icon?: LucideIcon;
 
   /**
    * Whether the button is loading.

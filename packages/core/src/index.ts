@@ -16,6 +16,7 @@ export type {
 export type {
   BadgeColor,
   BadgeColorItem,
+  BadgeDensity,
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
@@ -23,6 +24,7 @@ export type {
 export type {
   ButtonColor,
   ButtonColorItem,
+  ButtonDensity,
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
@@ -116,8 +118,6 @@ export type {
   IconConfigOverrides,
   LinkConfigOverrides,
   MenuConfigOverrides,
-  MiniBadgeConfigOverrides,
-  MiniButtonConfigOverrides,
   ModalConfigOverrides,
   NumberInputConfigOverrides,
   PasswordInputConfigOverrides,

@@ -4,6 +4,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   BadgeColor,
+  BadgeDensity,
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
@@ -13,6 +14,7 @@ import type {
 
 export interface BadgeSizeOverrides {}
 export interface BadgeColorOverrides {}
+export interface BadgeDensityOverrides {}
 export interface BadgeRoundedOverrides {}
 export interface BadgeVariantOverrides {}
 
@@ -51,6 +53,13 @@ export interface BadgeOwnProps {
    * @default "primary"
    */
   color?: MergeProps<BadgeColor, BadgeColorOverrides>;
+
+  /**
+   * The density of the badge.
+   *
+   * @default "default"
+   */
+  density?: MergeProps<BadgeDensity, BadgeDensityOverrides>;
 
   /**
    * The roundedness of the badge.

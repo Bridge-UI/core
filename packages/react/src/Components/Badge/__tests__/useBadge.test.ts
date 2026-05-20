@@ -71,3 +71,9 @@ test("it should apply className after classes.root in rootClass", () => {
   expect(result.current.rootClass).toContain("p-4");
   expect(result.current.rootClass).not.toContain("p-2");
 });
+
+test("it should apply mini size classes when density is mini", () => {
+  const { result } = renderUseBadge({ density: "mini" });
+
+  expect(result.current.rootClass).toContain("min-w-6");
+});

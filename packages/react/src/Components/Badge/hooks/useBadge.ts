@@ -5,7 +5,7 @@ import { useMemo } from "react";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
-  defaultSizeProps,
+  densityProps,
   roundedProps,
   variantProps,
   type BadgeColor,
@@ -25,9 +25,10 @@ import {
 } from "@/Utils";
 
 const badgeBridgeKeys = [
-  "color",
   "size",
+  "color",
   "classes",
+  "density",
   "rounded",
   "variant",
 ] as const satisfies readonly (keyof BadgeOwnProps)[];
@@ -55,19 +56,19 @@ export function useBadge(
   });
 
   // Registry maps
-  const mergedSizeMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: defaultSizeProps,
-      provider: bridgeBadge?.customProps?.size,
-    });
-  }, [bridgeBadge?.customProps?.size]);
-
   const mergedRoundedMap = useMemo(() => {
     return mergeBridgeUIStringMap({
       lib: roundedProps,
       provider: bridgeBadge?.customProps?.rounded,
     });
   }, [bridgeBadge?.customProps?.rounded]);
+
+  const mergedDensityProps = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      densityProps,
+      bridgeBadge?.customProps?.density,
+    );
+  }, [bridgeBadge?.customProps?.density]);
 
   const mergedVariantProps = useMemo(() => {
     return mergeBridgeUILayeredClasses(
@@ -77,19 +78,25 @@ export function useBadge(
   }, [bridgeBadge?.customProps?.variant]);
 
   // Theme
+  const sizeKey = merged.size ?? "sm";
+
   const colorKey = (merged.color ?? "primary") as keyof BadgeColor;
 
   const variantKey = (merged.variant ?? "flat") as keyof typeof variantProps;
 
-  const palette = get(mergedVariantProps, [variantKey, colorKey]);
+  const densityKey = (merged.density ?? "default") as keyof typeof densityProps;
+
+  const sizeClass = get(mergedDensityProps, [densityKey, sizeKey]);
+
+  const paletteClass = get(mergedVariantProps, [variantKey, colorKey]);
 
   // Root
   const rootClass = cn(
     "inline-flex items-center justify-center font-medium whitespace-nowrap",
-    palette.text,
-    palette.background,
-    palette.border,
-    get(mergedSizeMap, merged.size ?? "sm"),
+    paletteClass.text,
+    paletteClass.background,
+    paletteClass.border,
+    sizeClass,
     get(mergedRoundedMap, merged.rounded ?? "md"),
     mergedClasses.root,
     className,

@@ -5,6 +5,8 @@ export {
   solidProps,
 } from "@core/Components/Badge/Color";
 export type { BadgeColor, BadgeColorItem } from "@core/Components/Badge/Color";
+export { densityProps } from "@core/Components/Badge/Density";
+export type { BadgeDensity } from "@core/Components/Badge/Density";
 export { roundedProps } from "@core/Components/Badge/Rounded";
 export type { BadgeRounded } from "@core/Components/Badge/Rounded";
 export { defaultSizeProps, miniSizeProps } from "@core/Components/Badge/Size";

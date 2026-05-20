@@ -5,7 +5,7 @@ import { computed, useAttrs } from "vue";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
-  defaultSizeProps,
+  densityProps,
   roundedProps,
   variantProps,
   type BadgeColor,
@@ -28,6 +28,7 @@ const badgeBridgeKeys = [
   "size",
   "color",
   "classes",
+  "density",
   "rounded",
   "variant",
 ] as const satisfies readonly (keyof BadgeOwnProps)[];
@@ -57,18 +58,18 @@ export function useBadge(
   });
 
   // Registry maps
-  const mergedSizeMap = computed(() => {
-    return mergeBridgeUIStringMap({
-      lib: defaultSizeProps,
-      provider: bridgeBadge.value?.customProps?.size,
-    });
-  });
-
   const mergedRoundedMap = computed(() => {
     return mergeBridgeUIStringMap({
       lib: roundedProps,
       provider: bridgeBadge.value?.customProps?.rounded,
     });
+  });
+
+  const mergedDensityProps = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      densityProps,
+      bridgeBadge.value?.customProps?.density,
+    );
   });
 
   const mergedVariantProps = computed(() => {
@@ -79,6 +80,10 @@ export function useBadge(
   });
 
   // Theme
+  const sizeKey = computed(() => {
+    return merged.value.size ?? "sm";
+  });
+
   const colorKey = computed(() => {
     return (merged.value.color ?? "primary") as keyof BadgeColor;
   });
@@ -87,7 +92,15 @@ export function useBadge(
     return (merged.value.variant ?? "flat") as keyof typeof variantProps;
   });
 
-  const palette = computed(() => {
+  const densityKey = computed(() => {
+    return (merged.value.density ?? "default") as keyof typeof densityProps;
+  });
+
+  const sizeClass = computed(() => {
+    return get(mergedDensityProps.value, [densityKey.value, sizeKey.value]);
+  });
+
+  const paletteClass = computed(() => {
     return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
   });
 
@@ -95,10 +108,10 @@ export function useBadge(
   const rootClass = computed(() => {
     return cn(
       "inline-flex items-center justify-center font-medium whitespace-nowrap",
-      palette.value.text,
-      palette.value.background,
-      palette.value.border,
-      get(mergedSizeMap.value, merged.value.size ?? "sm"),
+      paletteClass.value.text,
+      paletteClass.value.background,
+      paletteClass.value.border,
+      sizeClass.value,
       get(mergedRoundedMap.value, merged.value.rounded ?? "md"),
       mergedClasses.value.root,
       userClass,

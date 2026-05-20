@@ -1,18 +1,13 @@
 // ** Local Imports
-import type { AlertClasses, AlertOwnProps } from "@/Components/Alert";
+import type { AlertClasses, AlertProps } from "@/Components/Alert";
 import type { AvatarClasses, AvatarProps } from "@/Components/Avatar";
 import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
-import type { ButtonClasses, ButtonOwnProps } from "@/Components/Button";
+import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
-import type { IconOwnProps } from "@/Components/Icon";
+import type { IconProps } from "@/Components/Icon";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
-import type { MiniBadgeClasses, MiniBadgeProps } from "@/Components/MiniBadge";
-import type {
-  MiniButtonClasses,
-  MiniButtonProps,
-} from "@/Components/MiniButton";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type {
   NumberInputClasses,
@@ -32,10 +27,7 @@ declare module "@bridge-ui/core" {
   interface AlertConfigOverrides {
     classes: AlertClasses;
     defaultProps: Partial<
-      Pick<
-        AlertOwnProps,
-        "color" | "shadow" | "padding" | "rounded" | "variant"
-      >
+      Pick<AlertProps, "color" | "shadow" | "padding" | "rounded" | "variant">
     >;
   }
 
@@ -47,14 +39,14 @@ declare module "@bridge-ui/core" {
   interface BadgeConfigOverrides {
     classes: BadgeClasses;
     defaultProps: Partial<
-      Pick<BadgeProps, "size" | "color" | "rounded" | "variant">
+      Pick<BadgeProps, "size" | "color" | "density" | "rounded" | "variant">
     >;
   }
 
   interface ButtonConfigOverrides {
     classes: ButtonClasses;
     defaultProps: Partial<
-      Pick<ButtonOwnProps, "size" | "color" | "rounded" | "variant">
+      Pick<ButtonProps, "size" | "color" | "density" | "rounded" | "variant">
     >;
   }
 
@@ -69,7 +61,7 @@ declare module "@bridge-ui/core" {
   }
 
   interface IconConfigOverrides {
-    defaultProps: Partial<Pick<IconOwnProps, "size">>;
+    defaultProps: Partial<Pick<IconProps, "size">>;
   }
 
   interface LinkConfigOverrides {
@@ -80,20 +72,6 @@ declare module "@bridge-ui/core" {
   interface MenuConfigOverrides {
     classes: MenuClasses;
     defaultProps: Partial<Pick<MenuProps, "rounded" | "shadow">>;
-  }
-
-  interface MiniBadgeConfigOverrides {
-    classes: MiniBadgeClasses;
-    defaultProps: Partial<
-      Pick<MiniBadgeProps, "size" | "color" | "rounded" | "variant">
-    >;
-  }
-
-  interface MiniButtonConfigOverrides {
-    classes: MiniButtonClasses;
-    defaultProps: Partial<
-      Pick<MiniButtonProps, "size" | "color" | "rounded" | "variant">
-    >;
   }
 
   interface ModalConfigOverrides {

@@ -6,11 +6,12 @@ import { computed, useAttrs, useSlots } from "vue";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
-  defaultSizeProps,
+  densityProps,
   roundedProps,
   variantProps,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
+import type { IconSize } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import type {
@@ -29,10 +30,12 @@ const buttonBridgeKeys = [
   "as",
   "full",
   "href",
+  "icon",
   "size",
   "text",
   "color",
   "classes",
+  "density",
   "endIcon",
   "loading",
   "rounded",
@@ -68,17 +71,17 @@ export function useButton(
   });
 
   // Registry maps
-  const mergedVariantMap = computed(() => {
+  const mergedVariantProps = computed(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
       bridgeButton.value?.customProps?.variant,
     );
   });
 
-  const sizeClassMap = computed(() => {
+  const mergedDensityProps = computed(() => {
     return mergeBridgeUILayeredClasses(
-      defaultSizeProps,
-      bridgeButton.value?.customProps?.size,
+      densityProps,
+      bridgeButton.value?.customProps?.density,
     );
   });
 
@@ -90,9 +93,21 @@ export function useButton(
   });
 
   // Theme
+  const densityKey = computed(() => {
+    return (merged.value.density ?? "default") as keyof typeof densityProps;
+  });
+
+  const sizeKey = computed(() => {
+    return merged.value.size ?? "md";
+  });
+
+  const isMini = computed(() => {
+    return densityKey.value === "mini";
+  });
+
   const colorItem = computed((): ButtonColorItem | undefined => {
-    return get(mergedVariantMap.value, [
-      merged.value.variant ?? "solid",
+    return get(mergedVariantProps.value, [
+      merged.value.variant ?? (isMini.value ? "flat" : "solid"),
       merged.value.color ?? "primary",
     ]) as ButtonColorItem | undefined;
   });
@@ -103,6 +118,14 @@ export function useButton(
       colorItem.value?.hover,
       colorItem.value?.focus,
     );
+  });
+
+  const sizeClass = computed(() => {
+    return get(mergedDensityProps.value, [densityKey.value, sizeKey.value]);
+  });
+
+  const iconSize = computed(() => {
+    return sizeKey.value as keyof IconSize;
   });
 
   // Element
@@ -118,6 +141,10 @@ export function useButton(
     return tag.value === "button";
   });
 
+  const hasDefaultSlot = computed(() => {
+    return !!slots.default;
+  });
+
   const isDisabled = computed(() => {
     return merged.value.disabled || merged.value.loading;
   });
@@ -125,15 +152,17 @@ export function useButton(
   // Root
   const rootClass = computed(() => {
     return cn(
-      "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
+      isMini.value
+        ? "inline-flex shrink-0 items-center justify-center cursor-pointer outline-none outline-hidden"
+        : "cursor-pointer outline-none outline-hidden inline-flex justify-center items-center group hover:shadow-xs",
       "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
       "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
       "transition-all ease-in-out duration-200 focus:ring-2",
       "disabled:opacity-80 disabled:cursor-not-allowed",
       colorClasses.value,
       get(roundedClassMap.value, merged.value.rounded ?? "md"),
-      get(sizeClassMap.value, merged.value.size ?? "md"),
-      merged.value.full && "w-full",
+      sizeClass.value,
+      !isMini.value && merged.value.full && "w-full",
       mergedClasses.value.root,
       userClass,
     );
@@ -144,32 +173,56 @@ export function useButton(
     return merged.value.loading;
   });
 
-  const hasDefaultSlot = computed(() => {
-    return !!slots.default;
-  });
-
   const showText = computed(() => {
-    return !merged.value.loading && !!merged.value.text;
+    return !isMini.value && !merged.value.loading && !!merged.value.text;
   });
 
   const showEndIcon = computed(() => {
-    return !merged.value.loading && !!merged.value.endIcon;
+    return !isMini.value && !merged.value.loading && !!merged.value.endIcon;
   });
 
   const showStartIcon = computed(() => {
-    return !merged.value.loading && !!merged.value.startIcon;
+    return !isMini.value && !merged.value.loading && !!merged.value.startIcon;
   });
 
   const showEndSlot = computed(() => {
-    return !merged.value.loading && !merged.value.endIcon && !!slots.end;
+    return (
+      !isMini.value &&
+      !merged.value.loading &&
+      !merged.value.endIcon &&
+      !!slots.end
+    );
   });
 
   const showStartSlot = computed(() => {
-    return !merged.value.loading && !merged.value.startIcon && !!slots.start;
+    return (
+      !isMini.value &&
+      !merged.value.loading &&
+      !merged.value.startIcon &&
+      !!slots.start
+    );
   });
 
   const showDefaultSlot = computed(() => {
-    return !merged.value.loading && hasDefaultSlot.value && !merged.value.text;
+    return (
+      !isMini.value &&
+      !merged.value.loading &&
+      hasDefaultSlot.value &&
+      !merged.value.text
+    );
+  });
+
+  const showIcon = computed(() => {
+    return isMini.value && !merged.value.loading && Boolean(merged.value.icon);
+  });
+
+  const showDefaultSlotMini = computed(() => {
+    return (
+      isMini.value &&
+      !merged.value.loading &&
+      hasDefaultSlot.value &&
+      !merged.value.icon
+    );
   });
 
   // Parts
@@ -186,6 +239,13 @@ export function useButton(
     return mergePartBind(
       partsProps.value?.startIcon,
       cn("shrink-0", mergedClasses.value.startIcon),
+    );
+  });
+
+  const iconBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.icon,
+      cn("shrink-0", mergedClasses.value.icon),
     );
   });
 
@@ -214,12 +274,16 @@ export function useButton(
     tag,
     slots,
     merged,
+    isMini,
     isAnchor,
     isButton,
     rootBind,
+    iconSize,
     showText,
     rootClass,
+    iconBind,
     isDisabled,
+    showIcon,
     endIconBind,
     endSlotBind,
     showEndIcon,
@@ -231,6 +295,7 @@ export function useButton(
     startSlotBind,
     loadingIconBind,
     showDefaultSlot,
+    showDefaultSlotMini,
     spinnerIcon: Loader2,
   };
 }

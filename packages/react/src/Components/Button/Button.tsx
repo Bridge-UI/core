@@ -14,12 +14,16 @@ function Button(props: ButtonProps) {
     children,
     isAnchor,
     isButton,
+    iconSize,
     showText,
     rootClass,
+    iconBind,
     isDisabled,
+    showIcon,
     endIconBind,
     endSlotBind,
     showEndIcon,
+    showDefault,
     showEndSlot,
     showSpinner,
     spinnerIcon,
@@ -53,11 +57,17 @@ function Button(props: ButtonProps) {
     },
     <Fragment>
       {showSpinner && (
-        <Icon icon={SpinnerIcon} size={merged.size} {...loadingIconBind} />
+        <Icon icon={SpinnerIcon} size={iconSize} {...loadingIconBind} />
       )}
 
       {!showSpinner && (
         <Fragment>
+          {showDefault && children}
+
+          {showIcon && merged.icon && (
+            <Icon icon={merged.icon} size={iconSize} {...iconBind} />
+          )}
+
           {showStartIcon && merged.startIcon && (
             <Icon
               size={merged.size}

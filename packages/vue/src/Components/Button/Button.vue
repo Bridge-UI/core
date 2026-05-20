@@ -19,9 +19,12 @@ const {
   isAnchor,
   isButton,
   rootBind,
+  iconSize,
   showText,
   rootClass,
+  iconBind,
   isDisabled,
+  showIcon,
   endIconBind,
   endSlotBind,
   showEndIcon,
@@ -33,6 +36,7 @@ const {
   startIconBind,
   startSlotBind,
   showDefaultSlot,
+  showDefaultSlotMini,
   loadingIconBind,
 } = useButton(props, {
   size: "md",
@@ -57,11 +61,20 @@ const {
     <Icon
       v-if="showSpinner"
       :icon="spinnerIcon"
-      :size="merged.size"
+      :size="iconSize"
       v-bind="loadingIconBind"
     />
 
     <template v-else>
+      <slot v-if="showDefaultSlotMini" />
+
+      <Icon
+        v-else-if="showIcon && merged.icon"
+        :icon="merged.icon"
+        :size="iconSize"
+        v-bind="iconBind"
+      />
+
       <Icon
         v-if="showStartIcon && merged.startIcon"
         :icon="merged.startIcon"

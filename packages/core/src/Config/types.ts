@@ -16,6 +16,7 @@ import type {
 import type {
   BadgeColor,
   BadgeColorItem,
+  BadgeDensity,
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
@@ -23,6 +24,7 @@ import type {
 import type {
   ButtonColor,
   ButtonColorItem,
+  ButtonDensity,
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
@@ -115,8 +117,6 @@ export interface CheckboxConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
-export interface MiniBadgeConfigOverrides {}
-export interface MiniButtonConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberInputConfigOverrides {}
 export interface PasswordInputConfigOverrides {}
@@ -162,11 +162,12 @@ export interface BadgeConfigBase {
   defaultProps: Partial<{
     size: keyof BadgeSize;
     color: keyof BadgeColor;
+    density: keyof BadgeDensity;
     rounded: keyof BadgeRounded;
     variant: keyof BadgeVariant;
   }>;
   customProps: Partial<{
-    size: Record<string, string>;
+    density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
     variant: Record<string, Record<string, BadgeColorItem>>;
   }>;
@@ -177,11 +178,12 @@ export interface ButtonConfigBase {
   defaultProps: Partial<{
     size: keyof ButtonSize;
     color: keyof ButtonColor;
+    density: keyof ButtonDensity;
     rounded: keyof ButtonRounded;
     variant: keyof ButtonVariant;
   }>;
   customProps: Partial<{
-    size: Record<string, string>;
+    density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
     variant: Record<string, Record<string, ButtonColorItem>>;
   }>;
@@ -247,32 +249,6 @@ export interface MenuConfigBase {
   customProps: Partial<{
     rounded: Record<string, string>;
     shadow: Record<string, string>;
-  }>;
-}
-
-export interface MiniBadgeConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof BadgeSize;
-    color: keyof BadgeColor;
-    rounded: keyof BadgeRounded;
-    variant: keyof BadgeVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, string>;
-  }>;
-}
-
-export interface MiniButtonConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof ButtonSize;
-    color: keyof ButtonColor;
-    rounded: keyof ButtonRounded;
-    variant: keyof ButtonVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, string>;
   }>;
 }
 
@@ -399,10 +375,6 @@ export type BridgeUIComponentsConfig = Partial<{
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
-  MiniBadge: Partial<Overwrite<MiniBadgeConfigBase, MiniBadgeConfigOverrides>>;
-  MiniButton: Partial<
-    Overwrite<MiniButtonConfigBase, MiniButtonConfigOverrides>
-  >;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   NumberInput: Partial<
     Overwrite<NumberInputConfigBase, NumberInputConfigOverrides>

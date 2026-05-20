@@ -153,3 +153,51 @@ test("it should include aria-disabled styles for non-button elements", () => {
 
   expect(rootClass.value).toContain("aria-disabled:opacity-80");
 });
+
+test("it should use mini size classes when density is mini", () => {
+  const { isMini, rootClass } = mountUseButton({
+    density: "mini",
+    icon: CircleAlert,
+  });
+
+  expect(isMini.value).toBe(true);
+  expect(rootClass.value).toContain("min-w-7");
+});
+
+test("it should show icon when density is mini and icon is set", () => {
+  const { showIcon, showText } = mountUseButton({
+    density: "mini",
+    icon: CircleAlert,
+  });
+
+  expect(showIcon.value).toBe(true);
+  expect(showText.value).toBe(false);
+});
+
+test("it should show default slot instead of icon when mini and slot is provided", () => {
+  let result!: ReturnType<typeof useButton>;
+
+  const Wrapper = defineComponent({
+    setup(_, { slots }) {
+      result = useButton({ density: "mini" }, libDefaults);
+
+      return () => h("div", slots.default?.());
+    },
+    slots: Object as unknown as { default: () => unknown },
+  });
+
+  mount(Wrapper, { slots: { default: () => "AB" } });
+
+  expect(result.showIcon.value).toBe(false);
+  expect(result.showDefaultSlotMini.value).toBe(true);
+});
+
+test("it should not include full width class when density is mini", () => {
+  const { rootClass } = mountUseButton({
+    density: "mini",
+    full: true,
+    icon: CircleAlert,
+  });
+
+  expect(rootClass.value).not.toContain("w-full");
+});

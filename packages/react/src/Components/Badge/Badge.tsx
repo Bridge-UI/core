@@ -8,6 +8,7 @@ function Badge(props: BadgeProps) {
     rounded: "md",
     variant: "flat",
     color: "primary",
+    density: "default",
   });
 
   return (

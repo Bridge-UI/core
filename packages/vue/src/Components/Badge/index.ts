@@ -11,6 +11,7 @@ export const Badge = BadgeVue as DefineComponent<BadgeProps>;
 export type {
   BadgeClasses,
   BadgeColorOverrides,
+  BadgeDensityOverrides,
   BadgeOwnProps,
   BadgeProps,
   BadgeRoundedOverrides,

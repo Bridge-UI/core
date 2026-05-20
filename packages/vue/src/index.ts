@@ -26,6 +26,7 @@ export { Badge, useBadge } from "@/Components/Badge";
 export type {
   BadgeClasses,
   BadgeColorOverrides,
+  BadgeDensityOverrides,
   BadgeOwnProps,
   BadgeProps,
   BadgeRoundedOverrides,
@@ -37,6 +38,7 @@ export { Button, useButton } from "@/Components/Button";
 export type {
   ButtonClasses,
   ButtonColorOverrides,
+  ButtonDensityOverrides,
   ButtonProps,
   ButtonRoundedOverrides,
   ButtonSizeOverrides,
@@ -82,29 +84,6 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu";
-export { MiniBadge, useMiniBadge } from "@/Components/MiniBadge";
-export type {
-  MiniBadgeClasses,
-  MiniBadgeColorOverrides,
-  MiniBadgeOwnProps,
-  MiniBadgeProps,
-  MiniBadgeRoundedOverrides,
-  MiniBadgeSizeOverrides,
-  MiniBadgeSlots,
-  MiniBadgeVariantOverrides,
-} from "@/Components/MiniBadge";
-export { MiniButton, useMiniButton } from "@/Components/MiniButton";
-export type {
-  MiniButtonClasses,
-  MiniButtonColorOverrides,
-  MiniButtonOwnProps,
-  MiniButtonPartsProps,
-  MiniButtonProps,
-  MiniButtonRoundedOverrides,
-  MiniButtonSizeOverrides,
-  MiniButtonSlots,
-  MiniButtonVariantOverrides,
-} from "@/Components/MiniButton";
 export { Modal } from "@/Components/Modal";
 export type {
   ModalClasses,

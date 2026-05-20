@@ -146,3 +146,48 @@ test("it should include aria-disabled styles for non-button elements", () => {
 
   expect(result.current.rootClass).toContain("aria-disabled:opacity-80");
 });
+
+test("it should use mini size classes when density is mini", () => {
+  const { result } = renderUseButton({ density: "mini", icon: CircleAlert });
+
+  expect(result.current.isMini).toBe(true);
+  expect(result.current.rootClass).toContain("min-w-7");
+});
+
+test("it should show icon when density is mini and icon is set", () => {
+  const { result } = renderUseButton({ density: "mini", icon: CircleAlert });
+
+  expect(result.current.showIcon).toBe(true);
+  expect(result.current.showText).toBe(false);
+});
+
+test("it should show default content instead of icon when mini and children are provided", () => {
+  const { result } = renderUseButton({
+    density: "mini",
+    children: "AB",
+  });
+
+  expect(result.current.showIcon).toBe(false);
+  expect(result.current.showDefault).toBe(true);
+});
+
+test("it should prefer icon over children when both are provided in mini density", () => {
+  const { result } = renderUseButton({
+    density: "mini",
+    icon: CircleAlert,
+    children: "AB",
+  });
+
+  expect(result.current.showIcon).toBe(true);
+  expect(result.current.showDefault).toBe(false);
+});
+
+test("it should not include full width class when density is mini", () => {
+  const { result } = renderUseButton({
+    density: "mini",
+    full: true,
+    icon: CircleAlert,
+  });
+
+  expect(result.current.rootClass).not.toContain("w-full");
+});
