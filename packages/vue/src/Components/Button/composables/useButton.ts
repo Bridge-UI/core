@@ -21,6 +21,7 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  hasNamedSlot,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -153,7 +154,7 @@ export function useButton(
   });
 
   const hasDefaultSlot = computed(() => {
-    return !!slots.default;
+    return hasNamedSlot(slots, "default");
   });
 
   const isDisabled = computed(() => {
@@ -206,11 +207,19 @@ export function useButton(
   });
 
   const showEndSlot = computed(() => {
-    return canShowContent.value && !!slots.end && !merged.value.endIcon;
+    return (
+      canShowContent.value &&
+      !merged.value.endIcon &&
+      hasNamedSlot(slots, "end")
+    );
   });
 
   const showStartSlot = computed(() => {
-    return canShowContent.value && !!slots.start && !merged.value.startIcon;
+    return (
+      canShowContent.value &&
+      !merged.value.startIcon &&
+      hasNamedSlot(slots, "start")
+    );
   });
 
   const showDefault = computed(() => {
@@ -282,6 +291,7 @@ export function useButton(
     isDisabled,
     endIconBind,
     endSlotBind,
+    showDefault,
     showEndIcon,
     showEndSlot,
     showSpinner,
@@ -291,7 +301,6 @@ export function useButton(
     startSlotBind,
     loadingIconBind,
     showDefaultSlot,
-    showDefault,
     spinnerIcon: Loader2,
   };
 }

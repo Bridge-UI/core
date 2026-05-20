@@ -20,6 +20,7 @@ import type {
   LinkProps,
 } from "@/Components/Link/link.types";
 import {
+  hasNamedSlot,
   mergeBridgeUIStringMap,
   mergePartBind,
   splitComponentProps,
@@ -110,9 +111,9 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
 
   const showRightIcon = Boolean(merged.rightIcon);
 
-  const showPrepend = slots?.prepend != null;
+  const showAppend = hasNamedSlot(slots, "append");
 
-  const showAppend = slots?.append != null;
+  const showPrepend = hasNamedSlot(slots, "prepend");
 
   const hasChildren = children != null && children !== false;
 

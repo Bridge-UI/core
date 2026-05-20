@@ -24,6 +24,8 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
+  hasNamedSlot,
+  hasSlotOrProp,
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePartBind,
@@ -137,13 +139,14 @@ export function useAlert(
   });
 
   const showIcon = computed(() => {
-    return Boolean(slots.icon) || resolvedIcon.value != null;
+    return hasNamedSlot(slots, "icon") || resolvedIcon.value != null;
   });
 
+  // prettier-ignore
   const showTitleRow = computed(() => {
     return (
-      !slots.header &&
-      Boolean(merged.value.title || resolvedIcon.value != null || slots.icon)
+      !showHeaderSlot.value &&
+      (hasSlotOrProp(slots, "title", merged.value.title) || resolvedIcon.value != null || showIconSlot.value)
     );
   });
 
@@ -161,7 +164,25 @@ export function useAlert(
   });
 
   // Parts
-  const partsProps = computed(() => merged.value.partsProps);
+  const partsProps = computed(() => {
+    return merged.value.partsProps;
+  });
+
+  const showIconSlot = computed(() => {
+    return hasNamedSlot(slots, "icon");
+  });
+
+  const showFooterSlot = computed(() => {
+    return hasNamedSlot(slots, "footer");
+  });
+
+  const showActionSlot = computed(() => {
+    return hasNamedSlot(slots, "action");
+  });
+
+  const showHeaderSlot = computed(() => {
+    return hasNamedSlot(slots, "header");
+  });
 
   const iconBind = computed(() => {
     return mergePartBind(
@@ -208,7 +229,11 @@ export function useAlert(
     titleBind,
     rootClasses,
     resolvedIcon,
+    showIconSlot,
     showTitleRow,
     hasDefaultBody,
+    showActionSlot,
+    showFooterSlot,
+    showHeaderSlot,
   };
 }

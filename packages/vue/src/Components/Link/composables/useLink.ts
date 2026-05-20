@@ -20,6 +20,7 @@ import type {
   LinkProps,
 } from "@/Components/Link/link.types";
 import {
+  hasNamedSlot,
   mergeBridgeUIStringMap,
   mergePartBind,
   splitComponentProps,
@@ -121,15 +122,15 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   // Visibility
 
   const showAppend = computed(() => {
-    return Boolean(slots.append);
+    return hasNamedSlot(slots, "append");
   });
 
   const showPrepend = computed(() => {
-    return Boolean(slots.prepend);
+    return hasNamedSlot(slots, "prepend");
   });
 
   const showDefaultSlot = computed(() => {
-    return Boolean(slots.default);
+    return hasNamedSlot(slots, "default");
   });
 
   const showLeftIcon = computed(() => {

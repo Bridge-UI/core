@@ -11,7 +11,6 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<AlertOwnProps>();
 
 const {
-  slots,
   merged,
   bodyBind,
   iconBind,
@@ -20,8 +19,12 @@ const {
   titleBind,
   rootClasses,
   resolvedIcon,
+  showIconSlot,
   showTitleRow,
   hasDefaultBody,
+  showActionSlot,
+  showFooterSlot,
+  showHeaderSlot,
 } = useAlert(props, {
   shadow: "sm",
   rounded: "sm",
@@ -33,12 +36,12 @@ const {
 
 <template>
   <div :class="rootClasses" v-bind="rootBind">
-    <slot v-if="slots.header" name="header" />
+    <slot v-if="showHeaderSlot" name="header" />
 
     <div v-else-if="showTitleRow" class="flex justify-between items-start">
       <div class="flex items-start gap-x-3">
         <template v-if="showIcon">
-          <slot v-if="slots.icon" name="icon" />
+          <slot v-if="showIconSlot" name="icon" />
 
           <Icon
             v-else-if="resolvedIcon"
@@ -52,13 +55,13 @@ const {
         </div>
       </div>
 
-      <slot v-if="slots.action" name="action" />
+      <slot v-if="showActionSlot" name="action" />
     </div>
 
     <div v-if="hasDefaultBody" v-bind="bodyBind">
       <slot />
     </div>
 
-    <slot v-if="slots.footer" name="footer" />
+    <slot v-if="showFooterSlot" name="footer" />
   </div>
 </template>

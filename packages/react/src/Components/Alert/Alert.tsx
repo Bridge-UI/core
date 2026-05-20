@@ -14,6 +14,7 @@ function Alert(props: AlertProps) {
     titleBind,
     rootClasses,
     resolvedIcon,
+    showIconSlot,
     showTitleRow,
     rootHtmlProps,
     hasDefaultBody,
@@ -29,12 +30,12 @@ function Alert(props: AlertProps) {
     <div {...rootHtmlProps} className={rootClasses}>
       {slots?.header}
 
-      {!slots?.header && showTitleRow && (
+      {showTitleRow && (
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-x-3">
             {showIcon &&
-              (slots?.icon != null
-                ? slots.icon
+              (showIconSlot
+                ? slots?.icon
                 : resolvedIcon != null && (
                     <Icon icon={resolvedIcon} {...iconBind} />
                   ))}

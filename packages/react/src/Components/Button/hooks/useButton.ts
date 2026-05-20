@@ -21,6 +21,7 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  hasNamedSlot,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -160,10 +161,11 @@ export function useButton(
 
   const showChildren = canShowContent && hasChildren && !merged.text;
 
-  const showEndSlot = canShowContent && !merged.endIcon && slots?.end != null;
+  // prettier-ignore
+  const showEndSlot = canShowContent && !merged.endIcon && hasNamedSlot(slots, "end");
 
-  const showStartSlot =
-    canShowContent && !merged.startIcon && slots?.start != null;
+  // prettier-ignore
+  const showStartSlot = canShowContent && !merged.startIcon && hasNamedSlot(slots, "start");
 
   // Parts
   const partsProps = merged.partsProps;

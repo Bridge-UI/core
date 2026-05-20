@@ -24,6 +24,8 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
+  hasNamedSlot,
+  hasSlotOrProp,
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePartBind,
@@ -123,11 +125,12 @@ export function useAlert(
   // Visibility
   const hasDefaultBody = Boolean(children);
 
-  const showIcon = Boolean(slots?.icon) || resolvedIcon != null;
+  const showIcon = hasNamedSlot(slots, "icon") || resolvedIcon != null;
 
+  // prettier-ignore
   const showTitleRow =
-    !slots?.header &&
-    Boolean(merged.title || resolvedIcon != null || slots?.icon);
+    !hasNamedSlot(slots, "header") &&
+    (hasSlotOrProp(slots, "title", merged.title) || resolvedIcon != null || hasNamedSlot(slots, "icon"));
 
   // Root
   const rootClasses = cn(
@@ -142,6 +145,8 @@ export function useAlert(
 
   // Parts
   const partsProps = merged.partsProps;
+
+  const showIconSlot = hasNamedSlot(slots, "icon");
 
   const iconBind = mergePartBind(
     partsProps?.icon,
@@ -178,6 +183,7 @@ export function useAlert(
     titleBind,
     rootClasses,
     resolvedIcon,
+    showIconSlot,
     showTitleRow,
     rootHtmlProps,
     hasDefaultBody,
