@@ -90,26 +90,26 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";
-export { NumberInput } from "@/Components/NumberInput";
+export { NumberField } from "@/Components/NumberField";
 export type {
-  NumberInputClasses,
-  NumberInputColorOverrides,
-  NumberInputProps,
-  NumberInputRoundedOverrides,
-  NumberInputSizeOverrides,
-  NumberInputSlots,
-  NumberInputVariantOverrides,
-} from "@/Components/NumberInput";
-export { PasswordInput } from "@/Components/PasswordInput";
+  NumberFieldClasses,
+  NumberFieldColorOverrides,
+  NumberFieldProps,
+  NumberFieldRoundedOverrides,
+  NumberFieldSizeOverrides,
+  NumberFieldSlots,
+  NumberFieldVariantOverrides,
+} from "@/Components/NumberField";
+export { PasswordField } from "@/Components/PasswordField";
 export type {
-  PasswordInputClasses,
-  PasswordInputColorOverrides,
-  PasswordInputProps,
-  PasswordInputRoundedOverrides,
-  PasswordInputSizeOverrides,
-  PasswordInputSlots,
-  PasswordInputVariantOverrides,
-} from "@/Components/PasswordInput";
+  PasswordFieldClasses,
+  PasswordFieldColorOverrides,
+  PasswordFieldProps,
+  PasswordFieldRoundedOverrides,
+  PasswordFieldSizeOverrides,
+  PasswordFieldSlots,
+  PasswordFieldVariantOverrides,
+} from "@/Components/PasswordField";
 export { Radio } from "@/Components/Radio";
 export type {
   RadioClasses,
@@ -139,16 +139,16 @@ export type {
   TextareaSlots,
   TextareaVariantOverrides,
 } from "@/Components/Textarea";
-export { TextInput } from "@/Components/TextInput";
+export { TextField } from "@/Components/TextField";
 export type {
-  TextInputClasses,
-  TextInputColorOverrides,
-  TextInputProps,
-  TextInputRoundedOverrides,
-  TextInputSizeOverrides,
-  TextInputSlots,
-  TextInputVariantOverrides,
-} from "@/Components/TextInput";
+  TextFieldClasses,
+  TextFieldColorOverrides,
+  TextFieldProps,
+  TextFieldRoundedOverrides,
+  TextFieldSizeOverrides,
+  TextFieldSlots,
+  TextFieldVariantOverrides,
+} from "@/Components/TextField";
 export { Toggle } from "@/Components/Toggle";
 export type {
   ToggleClasses,

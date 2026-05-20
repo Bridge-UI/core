@@ -54,20 +54,6 @@ export type {
   ModalSize,
 } from "@core/Components/Modal";
 export type {
-  NumberInputColor,
-  NumberInputColorItem,
-  NumberInputRounded,
-  NumberInputSize,
-  NumberInputVariant,
-} from "@core/Components/NumberInput";
-export type {
-  PasswordInputColor,
-  PasswordInputColorItem,
-  PasswordInputRounded,
-  PasswordInputSize,
-  PasswordInputVariant,
-} from "@core/Components/PasswordInput";
-export type {
   RadioColor,
   RadioColorItem,
   RadioSize,
@@ -87,12 +73,12 @@ export type {
   TextareaVariant,
 } from "@core/Components/Textarea";
 export type {
-  TextInputColor,
-  TextInputColorItem,
-  TextInputRounded,
-  TextInputSize,
-  TextInputVariant,
-} from "@core/Components/TextInput";
+  TextFieldColor,
+  TextFieldColorItem,
+  TextFieldRounded,
+  TextFieldSize,
+  TextFieldVariant,
+} from "@core/Components/TextField";
 export type {
   ToggleColor,
   ToggleColorItem,
@@ -119,11 +105,9 @@ export type {
   LinkConfigOverrides,
   MenuConfigOverrides,
   ModalConfigOverrides,
-  NumberInputConfigOverrides,
-  PasswordInputConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
-  TextInputConfigOverrides,
+  TextFieldConfigOverrides,
   TextareaConfigOverrides,
   ToggleConfigOverrides,
 } from "@core/Config";

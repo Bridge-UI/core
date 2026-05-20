@@ -9,18 +9,10 @@ import type { IconProps } from "@/Components/Icon";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
-import type {
-  NumberInputClasses,
-  NumberInputProps,
-} from "@/Components/NumberInput";
-import type {
-  PasswordInputClasses,
-  PasswordInputProps,
-} from "@/Components/PasswordInput";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
-import type { TextInputClasses, TextInputProps } from "@/Components/TextInput";
+import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
@@ -79,20 +71,6 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<Pick<ModalProps, "size" | "rounded" | "shadow">>;
   }
 
-  interface NumberInputConfigOverrides {
-    classes: NumberInputClasses;
-    defaultProps: Partial<
-      Pick<NumberInputProps, "size" | "color" | "rounded" | "variant">
-    >;
-  }
-
-  interface PasswordInputConfigOverrides {
-    classes: PasswordInputClasses;
-    defaultProps: Partial<
-      Pick<PasswordInputProps, "size" | "color" | "rounded" | "variant">
-    >;
-  }
-
   interface RadioConfigOverrides {
     classes: RadioClasses;
     defaultProps: Partial<Pick<RadioProps, "size" | "color">>;
@@ -112,10 +90,10 @@ declare module "@bridge-ui/core" {
     >;
   }
 
-  interface TextInputConfigOverrides {
-    classes: TextInputClasses;
+  interface TextFieldConfigOverrides {
+    classes: TextFieldClasses;
     defaultProps: Partial<
-      Pick<TextInputProps, "size" | "color" | "rounded" | "variant">
+      Pick<TextFieldProps, "size" | "color" | "rounded" | "variant">
     >;
   }
 

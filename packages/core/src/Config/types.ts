@@ -54,20 +54,6 @@ import type {
   ModalSize,
 } from "@core/Components/Modal";
 import type {
-  NumberInputColor,
-  NumberInputColorItem,
-  NumberInputRounded,
-  NumberInputSize,
-  NumberInputVariant,
-} from "@core/Components/NumberInput";
-import type {
-  PasswordInputColor,
-  PasswordInputColorItem,
-  PasswordInputRounded,
-  PasswordInputSize,
-  PasswordInputVariant,
-} from "@core/Components/PasswordInput";
-import type {
   RadioColor,
   RadioColorItem,
   RadioSize,
@@ -87,12 +73,12 @@ import type {
   TextareaVariant,
 } from "@core/Components/Textarea";
 import type {
-  TextInputColor,
-  TextInputColorItem,
-  TextInputRounded,
-  TextInputSize,
-  TextInputVariant,
-} from "@core/Components/TextInput";
+  TextFieldColor,
+  TextFieldColorItem,
+  TextFieldRounded,
+  TextFieldSize,
+  TextFieldVariant,
+} from "@core/Components/TextField";
 import type {
   ToggleColor,
   ToggleColorItem,
@@ -118,12 +104,10 @@ export interface IconConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
-export interface NumberInputConfigOverrides {}
-export interface PasswordInputConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface TextareaConfigOverrides {}
-export interface TextInputConfigOverrides {}
+export interface TextFieldConfigOverrides {}
 export interface ToggleConfigOverrides {}
 
 export interface AlertConfigBase {
@@ -266,36 +250,6 @@ export interface ModalConfigBase {
   }>;
 }
 
-export interface NumberInputConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof NumberInputSize;
-    color: keyof NumberInputColor;
-    rounded: keyof NumberInputRounded;
-    variant: keyof NumberInputVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, string>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, NumberInputColorItem>>;
-  }>;
-}
-
-export interface PasswordInputConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof PasswordInputSize;
-    color: keyof PasswordInputColor;
-    rounded: keyof PasswordInputRounded;
-    variant: keyof PasswordInputVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, string>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, PasswordInputColorItem>>;
-  }>;
-}
-
 export interface RadioConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -338,18 +292,18 @@ export interface TextareaConfigBase {
   }>;
 }
 
-export interface TextInputConfigBase {
+export interface TextFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
-    size: keyof TextInputSize;
-    color: keyof TextInputColor;
-    rounded: keyof TextInputRounded;
-    variant: keyof TextInputVariant;
+    size: keyof TextFieldSize;
+    color: keyof TextFieldColor;
+    rounded: keyof TextFieldRounded;
+    variant: keyof TextFieldVariant;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
     rounded: Record<string, string>;
-    variant: Record<string, Record<string, TextInputColorItem>>;
+    variant: Record<string, Record<string, TextFieldColorItem>>;
   }>;
 }
 
@@ -376,16 +330,10 @@ export type BridgeUIComponentsConfig = Partial<{
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
-  NumberInput: Partial<
-    Overwrite<NumberInputConfigBase, NumberInputConfigOverrides>
-  >;
-  PasswordInput: Partial<
-    Overwrite<PasswordInputConfigBase, PasswordInputConfigOverrides>
-  >;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
-  TextInput: Partial<Overwrite<TextInputConfigBase, TextInputConfigOverrides>>;
+  TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;
 
