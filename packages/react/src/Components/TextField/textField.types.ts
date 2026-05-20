@@ -1,15 +1,19 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  MergeHtmlProps,
   MergeProps,
   TextFieldColor,
   TextFieldRounded,
   TextFieldSize,
   TextFieldVariant,
 } from "@bridge-ui/core";
+
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
 
 export interface TextFieldSizeOverrides {}
 export interface TextFieldColorOverrides {}
@@ -18,9 +22,9 @@ export interface TextFieldVariantOverrides {}
 
 export interface TextFieldClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the inline-end adornment (icon or slot).
    */
-  description?: string;
+  end?: string;
 
   /**
    * The classes to apply to the error message.
@@ -28,175 +32,249 @@ export interface TextFieldClasses {
   error?: string;
 
   /**
-   * The classes to apply to the input.
+   * The classes to apply to the label + corner header row.
+   */
+  header?: string;
+
+  /**
+   * The classes to apply to the input element.
    */
   input?: string;
 
   /**
-   * The classes to apply to the label.
+   * The classes to apply to the corner label (inline end of the header).
+   */
+  corner?: string;
+
+  /**
+   * The classes to apply to the primary label (inline start of the header).
    */
   label?: string;
 
   /**
-   * The classes to apply to the left section.
-   */
-  leftSection?: string;
-
-  /**
-   * The classes to apply to the right section.
-   */
-  rightSection?: string;
-
-  /**
-   * The classes to apply to the root.
+   * The classes to apply to the root wrapper.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the inline-start adornment (icon or slot).
+   */
+  start?: string;
+
+  /**
+   * The classes to apply to the input container (`<label>` wrapper).
+   */
+  container?: string;
 }
 
-export interface TextFieldProps {
+export interface TextFieldPartsProps {
   /**
-   * The classes to apply to the text input.
+   * Props forwarded to the input container (`<label>`).
+   */
+  container?: HTMLAttributes<HTMLLabelElement>;
+
+  /**
+   * Props forwarded to the corner label element.
+   */
+  corner?: HTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the inline-end adornment wrapper.
+   */
+  end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-end `Icon` (`icon` is set by the field).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the error message element.
+   */
+  error?: HTMLAttributes<HTMLParagraphElement>;
+
+  /**
+   * Props forwarded to the label + corner header row.
+   */
+  header?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the `<input>`.
+   */
+  input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
+
+  /**
+   * Props forwarded to the primary label element.
+   */
+  label?: HTMLAttributes<HTMLLabelElement>;
+
+  /**
+   * Props forwarded to the root wrapper.
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start adornment wrapper.
+   */
+  start?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the field).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
+}
+
+export interface TextFieldOwnProps {
+  /**
+   * Extra classes merged with the root wrapper (and `classes.root`).
+   *
+   * @default undefined
+   */
+  className?: string;
+
+  /**
+   * The classes to apply to the text field.
    *
    * @default undefined
    */
   classes?: TextFieldClasses;
 
   /**
-   * The color to apply to the text input.
+   * The color to apply to the text field.
    *
    * @default "primary"
    */
   color?: MergeProps<TextFieldColor, TextFieldColorOverrides>;
 
   /**
-   * The description text below the label.
+   * Secondary label text at the inline end of the header row.
    *
    * @default undefined
    */
-  description?: string;
+  corner?: string;
 
   /**
-   * Whether the text input is disabled.
+   * Whether the text field is disabled.
    *
    * @default false
    */
   disabled?: boolean;
 
   /**
-   * The error message to display.
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
+   * The error message to display below the field.
    *
    * @default undefined
    */
   error?: string;
 
   /**
-   * The label text for the text input.
+   * When `true`, error text and the error icon are not shown.
+   *
+   * @default false
+   */
+  errorless?: boolean;
+
+  /**
+   * The primary label text above the field.
    *
    * @default undefined
    */
   label?: string;
 
   /**
-   * The icon to display on the left side.
+   * Extra props for internal parts (`start`, `end`, `input`, etc.).
+   * Native `<input>` attributes stay on the component top level.
    *
    * @default undefined
    */
-  leftIcon?: LucideIcon;
+  partsProps?: TextFieldPartsProps;
 
   /**
-   * Callback when the value changes.
-   *
-   * @default undefined
-   */
-  onChange?: (value: string) => void;
-
-  /**
-   * The placeholder text.
-   *
-   * @default undefined
-   */
-  placeholder?: string;
-
-  /**
-   * Whether the text input is required.
+   * Whether the text field is read-only.
    *
    * @default false
    */
-  required?: boolean;
+  readonly?: boolean;
 
   /**
-   * The icon to display on the right side.
-   *
-   * @default undefined
-   */
-  rightIcon?: LucideIcon;
-
-  /**
-   * The roundedness of the text input.
+   * The roundedness of the text field.
    *
    * @default "md"
    */
   rounded?: MergeProps<TextFieldRounded, TextFieldRoundedOverrides>;
 
   /**
-   * The size of the text input.
+   * The size of the text field.
    *
    * @default "md"
    */
   size?: MergeProps<TextFieldSize, TextFieldSizeOverrides>;
 
   /**
-   * The slots to apply to the text input.
+   * The slots to apply to the text field.
    *
    * @default undefined
    */
   slots?: TextFieldSlots;
 
   /**
-   * The HTML input type.
-   *
-   * @default "text"
-   */
-  type?: string;
-
-  /**
-   * The value of the text input.
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
    *
    * @default undefined
    */
-  value?: string;
+  startIcon?: LucideIcon;
 
   /**
-   * The variant of the text input.
+   * The variant of the text field.
    *
    * @default "outline"
    */
   variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
+
+  /**
+   * When `true` and the field is invalid, shows an error icon at the inline end
+   * when no `endIcon` or `end` slot is present.
+   *
+   * @default true
+   */
+  withErrorIcon?: boolean;
 }
 
 export interface TextFieldSlots {
   /**
-   * The slot for the description.
+   * Slot at the inline end of the header row (secondary label).
    */
-  description?: ReactNode;
+  corner?: ReactNode;
 
   /**
-   * The slot for the error message.
+   * Slot at the inline end of the input container.
+   */
+  end?: ReactNode;
+
+  /**
+   * Custom error message content.
    */
   error?: ReactNode;
 
   /**
-   * The slot for the label.
+   * Slot at the inline start of the header row (primary label).
    */
   label?: ReactNode;
 
   /**
-   * The slot for the left section.
+   * Slot at the inline start of the input container.
    */
-  left?: ReactNode;
-
-  /**
-   * The slot for the right section.
-   */
-  right?: ReactNode;
+  start?: ReactNode;
 }
+
+export type TextFieldProps = MergeHtmlProps<
+  TextFieldOwnProps,
+  InputHTMLAttributes<HTMLInputElement>
+>;

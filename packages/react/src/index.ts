@@ -139,10 +139,12 @@ export type {
   TextareaSlots,
   TextareaVariantOverrides,
 } from "@/Components/Textarea";
-export { TextField } from "@/Components/TextField";
+export { TextField, useTextField } from "@/Components/TextField";
 export type {
   TextFieldClasses,
   TextFieldColorOverrides,
+  TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldProps,
   TextFieldRoundedOverrides,
   TextFieldSizeOverrides,

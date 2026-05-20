@@ -93,7 +93,10 @@ declare module "@bridge-ui/core" {
   interface TextFieldConfigOverrides {
     classes: TextFieldClasses;
     defaultProps: Partial<
-      Pick<TextFieldProps, "size" | "color" | "rounded" | "variant">
+      Pick<
+        TextFieldProps,
+        "size" | "color" | "rounded" | "variant" | "withErrorIcon"
+      >
     >;
   }
 

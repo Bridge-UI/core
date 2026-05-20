@@ -76,8 +76,10 @@ import type {
   TextFieldColor,
   TextFieldColorItem,
   TextFieldRounded,
+  TextFieldRoundedItem,
   TextFieldSize,
   TextFieldVariant,
+  TextFieldVariantItem,
 } from "@core/Components/TextField";
 import type {
   ToggleColor,
@@ -302,8 +304,9 @@ export interface TextFieldConfigBase {
   }>;
   customProps: Partial<{
     size: Record<string, string>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, TextFieldColorItem>>;
+    color: Record<string, TextFieldColorItem>;
+    rounded: Record<string, TextFieldRoundedItem>;
+    variant: Record<string, TextFieldVariantItem>;
   }>;
 }
 

@@ -1,21 +1,42 @@
-// ** Local Imports
-import type { TextFieldColor } from "@core/Components/TextField/Color";
-import {
-  filledProps,
-  outlineProps,
-  underlinedProps,
-} from "@core/Components/TextField/Color";
+// prettier-ignore
+export interface TextFieldVariantItem {
+  /**
+   * Structural classes for the input container (`<label>` wrapper).
+   */
+  "container": string;
+
+  /**
+   * Optional extra classes merged on the container for this variant.
+   */
+  "input"?: string;
+
+  /**
+   * Optional extra classes for the inline-start adornment region.
+   */
+  "start"?: string;
+
+  /**
+   * Optional extra classes for the inline-end adornment region.
+   */
+  "end"?: string;
+}
 
 // prettier-ignore
 export interface TextFieldVariant {
-  "outline": TextFieldColor;
-  "filled": TextFieldColor;
-  "underlined": TextFieldColor;
+  "filled": TextFieldVariantItem;
+  "outline": TextFieldVariantItem;
+  "underlined": TextFieldVariantItem;
 }
 
 // prettier-ignore
 export const variantProps: TextFieldVariant = {
-  "outline": outlineProps,
-  "filled": filledProps,
-  "underlined": underlinedProps,
+  "outline": {
+    "container": "bg-white dark:bg-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus-within:ring-2",
+  },
+  "filled": {
+    "container": "bg-gray-100 dark:bg-gray-800 border-transparent ring-1 ring-inset ring-transparent focus-within:ring-2",
+  },
+  "underlined": {
+    "container": "rounded-none ring-0 border-0 border-b border-gray-300 dark:border-gray-600 focus-within:ring-0 bg-transparent",
+  },
 };

@@ -76,8 +76,10 @@ export type {
   TextFieldColor,
   TextFieldColorItem,
   TextFieldRounded,
+  TextFieldRoundedItem,
   TextFieldSize,
   TextFieldVariant,
+  TextFieldVariantItem,
 } from "@core/Components/TextField";
 export type {
   ToggleColor,

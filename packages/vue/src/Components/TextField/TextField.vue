@@ -1,46 +1,132 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { TextFieldProps, TextFieldSlots } from "@/Components/TextField";
-import { useTextField } from "@/Components/TextField";
+import { Icon } from "@/Components/Icon";
+import { useTextField } from "@/Components/TextField/composables/useTextField";
+import type {
+  TextFieldOwnProps,
+  TextFieldSlots,
+} from "@/Components/TextField/textField.types";
 
 defineSlots<TextFieldSlots>();
 
-const props = defineProps<TextFieldProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useTextField(props, {
+const props = defineProps<TextFieldOwnProps>();
+
+const emit = defineEmits<{
+  "update:modelValue": [value: string];
+}>();
+
+const {
+  slots,
+  merged,
+  errorIcon,
+  inputBind,
+  labelBind,
+  rootBind,
+  endBind,
+  errorBind,
+  startBind,
+  cornerBind,
+  headerBind,
+  endIconBind,
+  containerBind,
+  startIconBind,
+  endSlotClass,
+  startSlotClass,
+  showHeader,
+  showEndIcon,
+  showErrorIcon,
+  invalidated,
+  showStartIcon,
+  hasStartSlot,
+  hasEndSlot,
+  inputId,
+  isDisabled,
+  isReadonly,
+} = useTextField(props, {
   size: "md",
-  type: "text",
-  rounded: "sm",
+  rounded: "md",
   color: "primary",
   variant: "outline",
+  withErrorIcon: true,
 });
 </script>
 
 <template>
-  <div class="w-full">
-    <slot v-if="slots.label" name="label" />
+  <div
+    v-bind="rootBind"
+    :aria-disabled="isDisabled || undefined"
+    :aria-readonly="isReadonly || undefined"
+    :data-invalid="invalidated || undefined"
+  >
+    <div v-if="showHeader" v-bind="headerBind">
+      <label
+        v-if="slots.label || merged.label"
+        v-bind="labelBind"
+        :for="inputId"
+      >
+        <slot v-if="slots.label" name="label" />
 
-    <label v-else-if="merged.label">
-      {{ merged.label }}
-    </label>
+        <template v-else>{{ merged.label }}</template>
+      </label>
 
-    <div class="relative flex items-center">
-      <slot name="left" />
+      <span v-if="slots.corner || merged.corner" v-bind="cornerBind">
+        <slot v-if="slots.corner" name="corner" />
 
-      <input
-        :type="merged.type"
-        :value="merged.modelValue"
-        :disabled="merged.disabled"
-        :required="merged.required"
-        class="w-full bg-transparent"
-        :placeholder="merged.placeholder"
-      />
-
-      <slot name="right" />
+        <template v-else>{{ merged.corner }}</template>
+      </span>
     </div>
 
-    <slot v-if="slots.description" name="description" />
+    <label v-bind="containerBind" :for="inputId">
+      <div v-if="hasStartSlot" :class="startSlotClass">
+        <slot name="start" />
+      </div>
 
-    <slot v-if="slots.error" name="error" />
+      <div v-else-if="showStartIcon && merged.startIcon" v-bind="startBind">
+        <Icon
+          :icon="merged.startIcon"
+          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          v-bind="startIconBind"
+        />
+      </div>
+
+      <input
+        v-bind="inputBind"
+        @input="
+          emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        "
+      />
+
+      <div v-if="hasEndSlot" :class="endSlotClass">
+        <slot name="end" />
+      </div>
+
+      <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">
+        <Icon
+          :icon="merged.endIcon"
+          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          v-bind="endIconBind"
+        />
+      </div>
+
+      <div v-else-if="showErrorIcon" v-bind="endBind">
+        <Icon
+          :icon="errorIcon"
+          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          v-bind="endIconBind"
+        />
+      </div>
+    </label>
+
+    <p
+      v-if="!merged.errorless && invalidated && (slots.error || merged.error)"
+      v-bind="errorBind"
+      :id="`${inputId}-error`"
+    >
+      <slot v-if="slots.error" name="error" />
+
+      <template v-else>{{ merged.error }}</template>
+    </p>
   </div>
 </template>

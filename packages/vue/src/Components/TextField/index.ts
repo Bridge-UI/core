@@ -3,6 +3,8 @@ export { useTextField } from "@/Components/TextField/composables/useTextField";
 export type {
   TextFieldClasses,
   TextFieldColorOverrides,
+  TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldProps,
   TextFieldRoundedOverrides,
   TextFieldSizeOverrides,
