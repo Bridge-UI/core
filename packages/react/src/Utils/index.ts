@@ -138,6 +138,13 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
 
 // ** Exports
 export {
+  hasNamedSlot,
+  hasSlotOrProp,
+  isPropPresent,
+  resolveSlotOrProp,
+} from "@/Utils/slotOrProp";
+export type { SlotMap } from "@/Utils/slotOrProp";
+export {
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,

@@ -21,6 +21,8 @@ import type {
   TextFieldProps,
 } from "@/Components/TextField/textField.types";
 import {
+  hasNamedSlot,
+  hasSlotOrProp,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -31,6 +33,7 @@ const textFieldBridgeKeys = [
   "classes",
   "color",
   "corner",
+  "description",
   "disabled",
   "endIcon",
   "error",
@@ -51,6 +54,7 @@ export function useTextField(
   props: TextFieldProps,
   libDefaults: Partial<TextFieldOwnProps>,
 ) {
+  // Setup
   const autoId = useId();
 
   const { className, slots, propsForMerge, rootHtmlProps } =
@@ -70,6 +74,7 @@ export function useTextField(
     props: propsForMerge,
   });
 
+  // Registry maps
   const mergedColorProps = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       colorProps,
@@ -98,6 +103,7 @@ export function useTextField(
     );
   }, [bridgeTextField?.customProps?.size]);
 
+  // Theme
   const variantKey = merged.variant ?? "outline";
 
   const colorKey = (merged.color ?? "primary") as keyof TextFieldColor;
@@ -114,11 +120,27 @@ export function useTextField(
 
   const sizeClass = get(mergedSizeMap, sizeKey);
 
+  // State
+  const inputId = rootHtmlProps.id ?? autoId;
+
+  const isDisabled = Boolean(merged.disabled);
+
+  const isReadonly = Boolean(merged.readonly);
+
   const invalidated = Boolean(merged.error);
 
-  const hasStartSlot = slots?.start != null;
+  const hasStartSlot = hasNamedSlot(slots, "start");
 
-  const hasEndSlot = slots?.end != null;
+  const hasEndSlot = hasNamedSlot(slots, "end");
+
+  const headerJustify = hasSlotOrProp(slots, "label", merged.label)
+    ? "justify-between items-end"
+    : "justify-end";
+
+  // Visibility
+  const showHeader =
+    hasSlotOrProp(slots, "label", merged.label) ||
+    hasSlotOrProp(slots, "corner", merged.corner);
 
   const showStartIcon = merged.startIcon != null && !hasStartSlot;
 
@@ -131,19 +153,15 @@ export function useTextField(
     !showEndIcon &&
     !hasEndSlot;
 
-  const showHeader = Boolean(
-    merged.label || merged.corner || slots?.label || slots?.corner,
-  );
+  const showDescription =
+    !invalidated && hasSlotOrProp(slots, "description", merged.description);
 
-  const headerJustify =
-    merged.label || slots?.label ? "justify-between items-end" : "justify-end";
+  const showError =
+    !merged.errorless &&
+    invalidated &&
+    hasSlotOrProp(slots, "error", merged.error);
 
-  const inputId = rootHtmlProps.id ?? autoId;
-
-  const isDisabled = Boolean(merged.disabled);
-
-  const isReadonly = Boolean(merged.readonly);
-
+  // Root
   const rootClass = cn(
     "w-full relative",
     "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60",
@@ -152,6 +170,7 @@ export function useTextField(
     className,
   );
 
+  // Header
   const headerClass = cn("flex mb-1", headerJustify, mergedClasses.header);
 
   const labelClass = cn(
@@ -164,6 +183,7 @@ export function useTextField(
     mergedClasses.corner,
   );
 
+  // Container
   const containerClass = cn(
     "relative flex justify-between gap-x-2 items-center",
     "transition-all ease-in-out duration-150",
@@ -205,6 +225,13 @@ export function useTextField(
     mergedClasses.end,
   );
 
+  const startSlotClass =
+    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
+
+  const endSlotClass =
+    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+
+  // Input
   const inputClass = cn(
     "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
     "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
@@ -212,40 +239,38 @@ export function useTextField(
     mergedClasses.input,
   );
 
+  // Footer
+  const descriptionClass = cn(
+    "mt-2 text-sm text-gray-500 dark:text-gray-400",
+    mergedClasses.description,
+  );
+
   const errorClass = cn(
     "mt-2 text-sm text-error-600 dark:text-error-400",
     mergedClasses.error,
   );
 
-  const startSlotClass = cn(
-    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5",
-  );
+  // Parts
+  const partsProps = merged.partsProps;
 
-  const endSlotClass = cn(
-    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5",
-  );
+  const rootBind = mergePartBind(partsProps?.root, rootClass);
 
-  const rootBind = mergePartBind(merged.partsProps?.root, rootClass);
+  const headerBind = mergePartBind(partsProps?.header, headerClass);
 
-  const headerBind = mergePartBind(merged.partsProps?.header, headerClass);
+  const labelBind = mergePartBind(partsProps?.label, labelClass);
 
-  const labelBind = mergePartBind(merged.partsProps?.label, labelClass);
+  const cornerBind = mergePartBind(partsProps?.corner, cornerClass);
 
-  const cornerBind = mergePartBind(merged.partsProps?.corner, cornerClass);
+  const containerBind = mergePartBind(partsProps?.container, containerClass);
 
-  const containerBind = mergePartBind(
-    merged.partsProps?.container,
-    containerClass,
-  );
+  const startBind = mergePartBind(partsProps?.start, startClass);
 
-  const startBind = mergePartBind(merged.partsProps?.start, startClass);
-
-  const endBind = mergePartBind(merged.partsProps?.end, endClass);
+  const endBind = mergePartBind(partsProps?.end, endClass);
 
   const inputBind = mergePartBind(
     {
       ...rootHtmlProps,
-      ...merged.partsProps?.input,
+      ...partsProps?.input,
       id: inputId,
       disabled: isDisabled,
       readOnly: isReadonly,
@@ -254,38 +279,46 @@ export function useTextField(
     inputClass,
   );
 
-  const startIconBind = mergePartBind(merged.partsProps?.startIcon, "");
+  const startIconBind = mergePartBind(partsProps?.startIcon, "");
 
-  const endIconBind = mergePartBind(merged.partsProps?.endIcon, "");
+  const endIconBind = mergePartBind(partsProps?.endIcon, "");
 
-  const errorBind = mergePartBind(merged.partsProps?.error, errorClass);
+  const descriptionBind = mergePartBind(
+    partsProps?.description,
+    descriptionClass,
+  );
+
+  const errorBind = mergePartBind(partsProps?.error, errorClass);
 
   return {
     slots,
     merged,
     errorIcon,
-    inputBind,
-    labelBind,
-    rootBind,
-    endBind,
-    errorBind,
-    startBind,
-    cornerBind,
-    headerBind,
-    endIconBind,
-    containerBind,
-    startIconBind,
-    endSlotClass,
-    startSlotClass,
-    showHeader,
-    showEndIcon,
-    showErrorIcon,
-    invalidated,
-    showStartIcon,
-    hasStartSlot,
-    hasEndSlot,
     inputId,
     isDisabled,
     isReadonly,
+    invalidated,
+    hasStartSlot,
+    hasEndSlot,
+    showHeader,
+    showStartIcon,
+    showEndIcon,
+    showErrorIcon,
+    showDescription,
+    showError,
+    startSlotClass,
+    endSlotClass,
+    rootBind,
+    headerBind,
+    labelBind,
+    cornerBind,
+    containerBind,
+    startBind,
+    endBind,
+    inputBind,
+    startIconBind,
+    endIconBind,
+    descriptionBind,
+    errorBind,
   };
 }

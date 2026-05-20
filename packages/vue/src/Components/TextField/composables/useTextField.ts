@@ -20,6 +20,8 @@ import type {
   TextFieldOwnProps,
 } from "@/Components/TextField/textField.types";
 import {
+  hasNamedSlot,
+  hasSlotOrProp,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -30,6 +32,7 @@ const textFieldBridgeKeys = [
   "classes",
   "color",
   "corner",
+  "description",
   "disabled",
   "endIcon",
   "error",
@@ -51,10 +54,9 @@ export function useTextField(
   props: TextFieldOwnProps,
   libDefaults: Partial<TextFieldOwnProps>,
 ) {
+  // Setup
   const slots = useSlots();
-
   const attrs = useAttrs();
-
   const autoId = useId();
 
   const { userClass, propsForMerge } = splitComponentProps(props, attrs, {
@@ -73,6 +75,7 @@ export function useTextField(
     props: propsForMerge,
   });
 
+  // Registry maps
   const mergedColorProps = computed(() => {
     return mergeBridgeUILayeredClasses(
       colorProps,
@@ -101,6 +104,7 @@ export function useTextField(
     );
   });
 
+  // Theme
   const variantKey = computed(() => merged.value.variant ?? "outline");
 
   const colorKey = computed(
@@ -125,11 +129,31 @@ export function useTextField(
 
   const sizeClass = computed(() => get(mergedSizeMap.value, sizeKey.value));
 
+  // State
+  const inputId = computed(() => (attrs.id as string | undefined) ?? autoId);
+
+  const isDisabled = computed(() => Boolean(merged.value.disabled));
+
+  const isReadonly = computed(() => Boolean(merged.value.readonly));
+
   const invalidated = computed(() => Boolean(merged.value.error));
 
-  const hasStartSlot = computed(() => slots.start != null);
+  const hasStartSlot = computed(() => hasNamedSlot(slots, "start"));
 
-  const hasEndSlot = computed(() => slots.end != null);
+  const hasEndSlot = computed(() => hasNamedSlot(slots, "end"));
+
+  const headerJustify = computed(() =>
+    hasSlotOrProp(slots, "label", merged.value.label)
+      ? "justify-between items-end"
+      : "justify-end",
+  );
+
+  // Visibility
+  const showHeader = computed(
+    () =>
+      hasSlotOrProp(slots, "label", merged.value.label) ||
+      hasSlotOrProp(slots, "corner", merged.value.corner),
+  );
 
   const showStartIcon = computed(
     () => merged.value.startIcon != null && !hasStartSlot.value,
@@ -148,24 +172,20 @@ export function useTextField(
       !hasEndSlot.value,
   );
 
-  const showHeader = computed(() =>
-    Boolean(
-      merged.value.label || merged.value.corner || slots.label || slots.corner,
-    ),
+  const showDescription = computed(
+    () =>
+      !invalidated.value &&
+      hasSlotOrProp(slots, "description", merged.value.description),
   );
 
-  const headerJustify = computed(() =>
-    merged.value.label || slots.label
-      ? "justify-between items-end"
-      : "justify-end",
+  const showError = computed(
+    () =>
+      !merged.value.errorless &&
+      invalidated.value &&
+      hasSlotOrProp(slots, "error", merged.value.error),
   );
 
-  const inputId = computed(() => (attrs.id as string | undefined) ?? autoId);
-
-  const isDisabled = computed(() => Boolean(merged.value.disabled));
-
-  const isReadonly = computed(() => Boolean(merged.value.readonly));
-
+  // Root
   const rootClass = computed(() =>
     cn(
       "w-full relative",
@@ -176,6 +196,7 @@ export function useTextField(
     ),
   );
 
+  // Header
   const headerClass = computed(() =>
     cn("flex mb-1", headerJustify.value, mergedClasses.value.header),
   );
@@ -191,6 +212,7 @@ export function useTextField(
     cn("text-sm text-gray-500 dark:text-gray-400", mergedClasses.value.corner),
   );
 
+  // Container
   const containerClass = computed(() =>
     cn(
       "relative flex justify-between gap-x-2 items-center",
@@ -238,12 +260,27 @@ export function useTextField(
     ),
   );
 
+  const startSlotClass =
+    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
+
+  const endSlotClass =
+    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+
+  // Input
   const inputClass = computed(() =>
     cn(
       "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
       "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
       "disabled:cursor-not-allowed",
       mergedClasses.value.input,
+    ),
+  );
+
+  // Footer
+  const descriptionClass = computed(() =>
+    cn(
+      "mt-2 text-sm text-gray-500 dark:text-gray-400",
+      mergedClasses.value.description,
     ),
   );
 
@@ -254,45 +291,42 @@ export function useTextField(
     ),
   );
 
-  const startSlotClass =
-    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
-
-  const endSlotClass =
-    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+  // Parts
+  const partsProps = computed(() => merged.value.partsProps);
 
   const rootBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.root, rootClass.value),
+    mergePartBind(partsProps.value?.root, rootClass.value),
   );
 
   const headerBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.header, headerClass.value),
+    mergePartBind(partsProps.value?.header, headerClass.value),
   );
 
   const labelBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.label, labelClass.value),
+    mergePartBind(partsProps.value?.label, labelClass.value),
   );
 
   const cornerBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.corner, cornerClass.value),
+    mergePartBind(partsProps.value?.corner, cornerClass.value),
   );
 
   const containerBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.container, containerClass.value),
+    mergePartBind(partsProps.value?.container, containerClass.value),
   );
 
   const startBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.start, startClass.value),
+    mergePartBind(partsProps.value?.start, startClass.value),
   );
 
   const endBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.end, endClass.value),
+    mergePartBind(partsProps.value?.end, endClass.value),
   );
 
   const inputBind = computed(() =>
     mergePartBind(
       {
         ...attrs,
-        ...merged.value.partsProps?.input,
+        ...partsProps.value?.input,
         id: inputId.value,
         disabled: isDisabled.value,
         readonly: isReadonly.value,
@@ -304,43 +338,50 @@ export function useTextField(
   );
 
   const startIconBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.startIcon, ""),
+    mergePartBind(partsProps.value?.startIcon, ""),
   );
 
   const endIconBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.endIcon, ""),
+    mergePartBind(partsProps.value?.endIcon, ""),
+  );
+
+  const descriptionBind = computed(() =>
+    mergePartBind(partsProps.value?.description, descriptionClass.value),
   );
 
   const errorBind = computed(() =>
-    mergePartBind(merged.value.partsProps?.error, errorClass.value),
+    mergePartBind(partsProps.value?.error, errorClass.value),
   );
 
   return {
     slots,
     merged,
     errorIcon,
-    inputBind,
-    labelBind,
-    rootBind,
-    endBind,
-    errorBind,
-    startBind,
-    cornerBind,
-    headerBind,
-    endIconBind,
-    containerBind,
-    startIconBind,
-    endSlotClass,
-    startSlotClass,
-    showHeader,
-    showEndIcon,
-    showErrorIcon,
-    invalidated,
-    showStartIcon,
-    hasStartSlot,
-    hasEndSlot,
     inputId,
     isDisabled,
     isReadonly,
+    invalidated,
+    hasStartSlot,
+    hasEndSlot,
+    showHeader,
+    showStartIcon,
+    showEndIcon,
+    showErrorIcon,
+    showDescription,
+    showError,
+    startSlotClass,
+    endSlotClass,
+    rootBind,
+    headerBind,
+    labelBind,
+    cornerBind,
+    containerBind,
+    startBind,
+    endBind,
+    inputBind,
+    startIconBind,
+    endIconBind,
+    descriptionBind,
+    errorBind,
   };
 }

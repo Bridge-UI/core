@@ -6,6 +6,7 @@ import type {
   TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
+import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 defineSlots<TextFieldSlots>();
 
@@ -26,6 +27,9 @@ const {
   rootBind,
   endBind,
   errorBind,
+  descriptionBind,
+  showDescription,
+  showError,
   startBind,
   cornerBind,
   headerBind,
@@ -62,19 +66,18 @@ const {
   >
     <div v-if="showHeader" v-bind="headerBind">
       <label
-        v-if="slots.label || merged.label"
+        v-if="hasSlotOrProp(slots, 'label', merged.label)"
         v-bind="labelBind"
         :for="inputId"
       >
-        <slot v-if="slots.label" name="label" />
-
-        <template v-else>{{ merged.label }}</template>
+        <component :is="resolveSlotOrProp(slots, 'label', merged.label)" />
       </label>
 
-      <span v-if="slots.corner || merged.corner" v-bind="cornerBind">
-        <slot v-if="slots.corner" name="corner" />
-
-        <template v-else>{{ merged.corner }}</template>
+      <span
+        v-if="hasSlotOrProp(slots, 'corner', merged.corner)"
+        v-bind="cornerBind"
+      >
+        <component :is="resolveSlotOrProp(slots, 'corner', merged.corner)" />
       </span>
     </div>
 
@@ -86,7 +89,7 @@ const {
       <div v-else-if="showStartIcon && merged.startIcon" v-bind="startBind">
         <Icon
           :icon="merged.startIcon"
-          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          :size="merged.size ?? 'md'"
           v-bind="startIconBind"
         />
       </div>
@@ -105,7 +108,7 @@ const {
       <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">
         <Icon
           :icon="merged.endIcon"
-          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          :size="merged.size ?? 'md'"
           v-bind="endIconBind"
         />
       </div>
@@ -113,20 +116,24 @@ const {
       <div v-else-if="showErrorIcon" v-bind="endBind">
         <Icon
           :icon="errorIcon"
-          :size="(merged.size ?? 'md') as 'xs' | 'sm' | 'md' | 'lg' | 'xl'"
+          :size="merged.size ?? 'md'"
           v-bind="endIconBind"
         />
       </div>
     </label>
 
     <p
-      v-if="!merged.errorless && invalidated && (slots.error || merged.error)"
-      v-bind="errorBind"
-      :id="`${inputId}-error`"
+      v-if="showDescription"
+      v-bind="descriptionBind"
+      :id="`${inputId}-description`"
     >
-      <slot v-if="slots.error" name="error" />
+      <component
+        :is="resolveSlotOrProp(slots, 'description', merged.description)"
+      />
+    </p>
 
-      <template v-else>{{ merged.error }}</template>
+    <p v-if="showError" v-bind="errorBind" :id="`${inputId}-error`">
+      <component :is="resolveSlotOrProp(slots, 'error', merged.error)" />
     </p>
   </div>
 </template>

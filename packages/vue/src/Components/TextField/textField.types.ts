@@ -27,6 +27,11 @@ export interface TextFieldClasses {
   end?: string;
 
   /**
+   * The classes to apply to the helper text below the field.
+   */
+  description?: string;
+
+  /**
    * The classes to apply to the error message.
    */
   error?: string;
@@ -82,6 +87,11 @@ export interface TextFieldPartsProps {
    * Props forwarded to the inline-end adornment wrapper.
    */
   end?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the description element below the field.
+   */
+  description?: HTMLAttributes;
 
   /**
    * Props forwarded to the inline-end `Icon` (`icon` is set by the field).
@@ -152,6 +162,13 @@ export interface TextFieldOwnProps {
    * @default undefined
    */
   corner?: string;
+
+  /**
+   * Helper text below the field (hidden when the field is invalid).
+   *
+   * @default undefined
+   */
+  description?: string;
 
   /**
    * Whether the text field is disabled.
@@ -257,6 +274,11 @@ export interface TextFieldSlots {
    * Slot at the inline end of the input container.
    */
   end?: Slot;
+
+  /**
+   * Helper text below the field (hidden when the field is invalid).
+   */
+  description?: Slot;
 
   /**
    * Custom error message content.
