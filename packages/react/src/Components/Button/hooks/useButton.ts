@@ -6,8 +6,8 @@ import { useMemo } from "react";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
+  defaultSizeProps,
   roundedProps,
-  sizeProps,
   variantProps,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
@@ -74,7 +74,7 @@ export function useButton(
 
   const sizeClassMap = useMemo(() => {
     return mergeBridgeUILayeredClasses(
-      sizeProps,
+      defaultSizeProps,
       bridgeButton?.customProps?.size,
     );
   }, [bridgeButton?.customProps?.size]);

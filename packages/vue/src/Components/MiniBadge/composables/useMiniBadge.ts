@@ -5,11 +5,11 @@ import { computed, useAttrs } from "vue";
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 import {
+  miniSizeProps,
   roundedProps,
   variantProps,
   type BadgeColor,
 } from "@bridge-ui/core/Components/Badge";
-import { sizeProps } from "@bridge-ui/core/Components/MiniBadge";
 
 // ** Local Imports
 import type {
@@ -59,7 +59,7 @@ export function useMiniBadge(
   // Registry maps
   const mergedSizeMap = computed(() => {
     return mergeBridgeUIStringMap({
-      lib: sizeProps,
+      lib: miniSizeProps,
       provider: bridgeMiniBadge.value?.customProps?.size,
     });
   });

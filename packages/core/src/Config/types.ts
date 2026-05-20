@@ -46,8 +46,6 @@ import type {
   LinkUnderline,
 } from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-import type { MiniBadgeSize } from "@core/Components/MiniBadge";
-import type { MiniButtonSize } from "@core/Components/MiniButton";
 import type {
   ModalRounded,
   ModalShadow,
@@ -255,8 +253,8 @@ export interface MenuConfigBase {
 export interface MiniBadgeConfigBase {
   classes: object;
   defaultProps: Partial<{
+    size: keyof BadgeSize;
     color: keyof BadgeColor;
-    size: keyof MiniBadgeSize;
     rounded: keyof BadgeRounded;
     variant: keyof BadgeVariant;
   }>;
@@ -268,8 +266,8 @@ export interface MiniBadgeConfigBase {
 export interface MiniButtonConfigBase {
   classes: object;
   defaultProps: Partial<{
+    size: keyof ButtonSize;
     color: keyof ButtonColor;
-    size: keyof MiniButtonSize;
     rounded: keyof ButtonRounded;
     variant: keyof ButtonVariant;
   }>;

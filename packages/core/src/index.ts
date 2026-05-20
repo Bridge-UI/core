@@ -46,8 +46,6 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-export type { MiniBadgeSize } from "@core/Components/MiniBadge";
-export type { MiniButtonSize } from "@core/Components/MiniButton";
 export type {
   ModalRounded,
   ModalShadow,

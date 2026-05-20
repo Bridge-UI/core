@@ -11,10 +11,10 @@ import type {
 import type {
   ButtonColor,
   ButtonRounded,
+  ButtonSize,
   ButtonVariant,
   MergeHtmlProps,
   MergeProps,
-  MiniButtonSize,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -139,7 +139,7 @@ export interface MiniButtonOwnProps {
    *
    * @default "md"
    */
-  size?: MergeProps<MiniButtonSize, MiniButtonSizeOverrides>;
+  size?: MergeProps<ButtonSize, MiniButtonSizeOverrides>;
 
   /**
    * The variant of the mini button.

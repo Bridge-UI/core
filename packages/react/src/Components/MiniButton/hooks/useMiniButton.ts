@@ -6,12 +6,12 @@ import { useMemo } from "react";
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 import {
+  miniSizeProps,
   roundedProps,
   variantProps,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
 import type { IconSize } from "@bridge-ui/core/Components/Icon";
-import { sizeProps } from "@bridge-ui/core/Components/MiniButton";
 
 // ** Local Imports
 import type {
@@ -74,7 +74,7 @@ export function useMiniButton(
 
   const mergedSizeMap = useMemo(() => {
     return mergeBridgeUIStringMap({
-      lib: sizeProps,
+      lib: miniSizeProps,
       provider: bridgeMiniButton?.customProps?.size,
     });
   }, [bridgeMiniButton?.customProps?.size]);

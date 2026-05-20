@@ -5,10 +5,10 @@ import type { HTMLAttributes, ReactNode } from "react";
 import type {
   BadgeColor,
   BadgeRounded,
+  BadgeSize,
   BadgeVariant,
   MergeHtmlProps,
   MergeProps,
-  MiniBadgeSize,
 } from "@bridge-ui/core";
 
 export interface MiniBadgeSizeOverrides {}
@@ -64,7 +64,7 @@ export interface MiniBadgeOwnProps {
    *
    * @default "sm"
    */
-  size?: MergeProps<MiniBadgeSize, MiniBadgeSizeOverrides>;
+  size?: MergeProps<BadgeSize, MiniBadgeSizeOverrides>;
 
   /**
    * The variant of the badge.

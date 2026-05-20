@@ -5,8 +5,8 @@ import { useMemo } from "react";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
+  defaultSizeProps,
   roundedProps,
-  sizeProps,
   variantProps,
   type BadgeColor,
 } from "@bridge-ui/core/Components/Badge";
@@ -57,7 +57,7 @@ export function useBadge(
   // Registry maps
   const mergedSizeMap = useMemo(() => {
     return mergeBridgeUIStringMap({
-      lib: sizeProps,
+      lib: defaultSizeProps,
       provider: bridgeBadge?.customProps?.size,
     });
   }, [bridgeBadge?.customProps?.size]);

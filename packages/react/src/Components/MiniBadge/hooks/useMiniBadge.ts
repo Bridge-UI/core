@@ -5,11 +5,11 @@ import { useMemo } from "react";
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 import {
+  miniSizeProps,
   roundedProps,
   variantProps,
   type BadgeColor,
 } from "@bridge-ui/core/Components/Badge";
-import { sizeProps } from "@bridge-ui/core/Components/MiniBadge";
 
 // ** Local Imports
 import type {
@@ -57,7 +57,7 @@ export function useMiniBadge(
   // Registry maps
   const mergedSizeMap = useMemo(() => {
     return mergeBridgeUIStringMap({
-      lib: sizeProps,
+      lib: miniSizeProps,
       provider: bridgeMiniBadge?.customProps?.size,
     });
   }, [bridgeMiniBadge?.customProps?.size]);

@@ -6,8 +6,8 @@ import { computed, useAttrs, useSlots } from "vue";
 // ** Core Imports
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
+  defaultSizeProps,
   roundedProps,
-  sizeProps,
   variantProps,
   type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
@@ -77,7 +77,7 @@ export function useButton(
 
   const sizeClassMap = computed(() => {
     return mergeBridgeUILayeredClasses(
-      sizeProps,
+      defaultSizeProps,
       bridgeButton.value?.customProps?.size,
     );
   });
