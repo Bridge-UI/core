@@ -25,6 +25,7 @@ import {
 } from "@/Utils";
 
 const badgeBridgeKeys = [
+  "full",
   "size",
   "color",
   "classes",
@@ -86,13 +87,17 @@ export function useBadge(
 
   const densityKey = (merged.density ?? "default") as keyof typeof densityProps;
 
+  const isMini = densityKey === "mini";
+
   const sizeClass = get(mergedDensityProps, [densityKey, sizeKey]);
 
   const paletteClass = get(mergedVariantProps, [variantKey, colorKey]);
 
   // Root
   const rootClass = cn(
-    "inline-flex w-fit items-center justify-center font-medium whitespace-nowrap",
+    "inline-flex items-center justify-center font-medium whitespace-nowrap",
+    { "w-full": !isMini && merged.full },
+    { "w-fit": !isMini && !merged.full },
     paletteClass.text,
     paletteClass.background,
     paletteClass.border,

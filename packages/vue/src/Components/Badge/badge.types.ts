@@ -55,6 +55,13 @@ export interface BadgeOwnProps {
   density?: MergeProps<BadgeDensity, BadgeDensityOverrides>;
 
   /**
+   * Whether the badge is full width.
+   *
+   * @default false
+   */
+  full?: boolean;
+
+  /**
    * The roundedness of the badge.
    *
    * @default "md"

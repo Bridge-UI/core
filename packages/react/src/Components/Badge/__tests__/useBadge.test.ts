@@ -78,6 +78,20 @@ test("it should shrink-wrap width in flex layouts", () => {
   expect(result.current.rootClass).toContain("w-fit");
 });
 
+test("it should apply w-full when full is true", () => {
+  const { result } = renderUseBadge({ full: true });
+
+  expect(result.current.rootClass).toContain("w-full");
+  expect(result.current.rootClass).not.toContain("w-fit");
+});
+
+test("it should not apply w-full on mini density even when full is true", () => {
+  const { result } = renderUseBadge({ density: "mini", full: true });
+
+  expect(result.current.rootClass).not.toContain("w-fit");
+  expect(result.current.rootClass).not.toContain("w-full");
+});
+
 test("it should apply mini size classes when density is mini", () => {
   const { result } = renderUseBadge({ density: "mini" });
 

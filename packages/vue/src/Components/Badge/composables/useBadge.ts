@@ -25,6 +25,7 @@ import {
 } from "@/Utils";
 
 const badgeBridgeKeys = [
+  "full",
   "size",
   "color",
   "classes",
@@ -96,6 +97,8 @@ export function useBadge(
     return (merged.value.density ?? "default") as keyof typeof densityProps;
   });
 
+  const isMini = computed(() => densityKey.value === "mini");
+
   const sizeClass = computed(() => {
     return get(mergedDensityProps.value, [densityKey.value, sizeKey.value]);
   });
@@ -107,7 +110,9 @@ export function useBadge(
   // Root
   const rootClass = computed(() => {
     return cn(
-      "inline-flex w-fit items-center justify-center font-medium whitespace-nowrap",
+      "inline-flex items-center justify-center font-medium whitespace-nowrap",
+      { "w-full": !isMini.value && merged.value.full },
+      { "w-fit": !isMini.value && !merged.value.full },
       paletteClass.value.text,
       paletteClass.value.background,
       paletteClass.value.border,
