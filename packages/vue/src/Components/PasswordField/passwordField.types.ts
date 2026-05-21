@@ -1,7 +1,7 @@
 // ** Local Imports
 import type {
   TextFieldClasses,
-  TextFieldProps,
+  TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
 
@@ -19,16 +19,20 @@ export interface PasswordFieldClasses extends TextFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldProps extends Omit<
-  TextFieldProps,
-  "type" | "classes"
-> {
+export interface PasswordFieldProps extends TextFieldOwnProps {
   /**
    * The classes to apply to the password field.
    *
    * @default undefined
    */
   classes?: PasswordFieldClasses;
+
+  /**
+   * Bound with `v-model` on the component.
+   *
+   * @default undefined
+   */
+  modelValue?: string | null;
 
   /**
    * Whether the password is visible.

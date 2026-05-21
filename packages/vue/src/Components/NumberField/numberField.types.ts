@@ -1,7 +1,7 @@
 // ** Local Imports
 import type {
   TextFieldClasses,
-  TextFieldProps,
+  TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
 
@@ -24,10 +24,7 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldProps extends Omit<
-  TextFieldProps,
-  "type" | "modelValue" | "classes"
-> {
+export interface NumberFieldProps extends TextFieldOwnProps {
   /**
    * The classes to apply to the number field.
    *
@@ -50,7 +47,7 @@ export interface NumberFieldProps extends Omit<
   min?: number;
 
   /**
-   * The value of the number field.
+   * Bound with `v-model` on the component.
    *
    * @default undefined
    */
