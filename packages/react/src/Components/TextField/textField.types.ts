@@ -199,7 +199,7 @@ export interface TextFieldOwnProps {
   error?: boolean;
 
   /**
-   * Error message below the field. Shown only when set (or via `slots.error`).
+   * Error message below the field. Shown only when set (or via `slots.errorMessage`).
    *
    * @default undefined
    */
@@ -306,7 +306,7 @@ export interface TextFieldSlots {
   /**
    * Custom error message content.
    */
-  error?: ReactNode;
+  errorMessage?: ReactNode;
 
   /**
    * Slot at the inline start of the header row (primary label).

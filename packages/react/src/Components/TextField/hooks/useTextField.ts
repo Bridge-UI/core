@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isString } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
 import { useId, useMemo } from "react";
 
@@ -24,7 +24,6 @@ import {
   derived,
   hasNamedSlot,
   hasSlotOrProp,
-  isPropPresent,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -57,13 +56,7 @@ const errorIcon = CircleAlert;
 
 export function useTextField(
   props: TextFieldProps,
-  libDefaults: Partial<TextFieldOwnProps> = {
-    size: "md",
-    rounded: "md",
-    color: "primary",
-    variant: "outline",
-    withErrorIcon: true,
-  },
+  libDefaults: Partial<TextFieldOwnProps>,
 ) {
   // Setup
   const autoId = useId();
@@ -194,7 +187,7 @@ export function useTextField(
 
   // Visibility
   const showStartText = derived(() => {
-    return isPropPresent(merged.start) && !hasStartSlot;
+    return !hasStartSlot && isString(merged.start) && merged.start.length > 0;
   });
 
   const showStartIcon = derived(() => {
@@ -202,7 +195,7 @@ export function useTextField(
   });
 
   const showEndText = derived(() => {
-    return isPropPresent(merged.end) && !hasEndSlot;
+    return !hasEndSlot && isString(merged.end) && merged.end.length > 0;
   });
 
   const showErrorIcon = derived(() => {
@@ -254,7 +247,7 @@ export function useTextField(
   });
 
   const showError = derived(() => {
-    return hasSlotOrProp(slots, "error", merged.errorMessage);
+    return hasSlotOrProp(slots, "errorMessage", merged.errorMessage);
   });
 
   // Root
@@ -313,7 +306,7 @@ export function useTextField(
 
   const endIconClass = derived(() => {
     return cn(
-      "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
+      "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
       "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated },
       !invalidated && colorPalette?.end,

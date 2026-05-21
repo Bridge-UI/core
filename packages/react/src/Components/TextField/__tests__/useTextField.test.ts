@@ -31,13 +31,6 @@ test("it should merge default color, size, rounded, and variant", () => {
   expect(result.current.merged.variant).toBe("outline");
 });
 
-test("it should use md size and rounded when hook is called without libDefaults", () => {
-  const { result } = renderHook(() => useTextField({}));
-
-  expect(result.current.merged.size).toBe("md");
-  expect(result.current.merged.rounded).toBe("md");
-});
-
 test("it should override color when prop is passed", () => {
   const { result } = renderUseTextField({ color: "error" });
 
@@ -117,7 +110,16 @@ test("it should show start icon when startIcon is set", () => {
 test("it should show error icon when error is true and no end icon", () => {
   const { result } = renderUseTextField({ error: true });
 
+  expect(result.current.showEndText).toBe(false);
   expect(result.current.showErrorIcon).toBe(true);
+});
+
+test("it should not treat error boolean as end suffix text", () => {
+  const { result } = renderUseTextField({ error: true });
+
+  expect(result.current.showEndText).toBe(false);
+  expect(result.current.showErrorIcon).toBe(true);
+  expect(result.current.merged.end).toBeUndefined();
 });
 
 test("it should show error icon instead of end icon when both are set", () => {

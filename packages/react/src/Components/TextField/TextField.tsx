@@ -133,7 +133,7 @@ function TextField(props: TextFieldProps) {
         <p {...errorBind} id={`${inputId}-error`}>
           {resolveSlotOrProp({
             slots,
-            name: "error",
+            name: "errorMessage",
             fallback: merged.errorMessage,
           })}
         </p>

@@ -13,9 +13,11 @@ defineSlots<TextFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<TextFieldOwnProps>();
-
 const model = defineModel<string | null | undefined>();
+
+const props = withDefaults(defineProps<TextFieldOwnProps>(), {
+  withErrorIcon: true,
+});
 
 const {
   slots,
@@ -108,11 +110,11 @@ const {
         <slot name="end" />
       </div>
 
-      <div v-else-if="showEndText" v-bind="endBind">
+      <div v-if="!hasEndSlot && showEndText" v-bind="endBind">
         {{ merged.end }}
       </div>
 
-      <div v-else-if="showErrorIcon" v-bind="endBind">
+      <div v-if="!hasEndSlot && showErrorIcon" v-bind="endBind">
         <Icon
           :icon="errorIcon"
           :size="merged.size ?? 'md'"
@@ -120,7 +122,7 @@ const {
         />
       </div>
 
-      <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">
+      <div v-if="!hasEndSlot && showEndIcon && merged.endIcon" v-bind="endBind">
         <Icon
           :icon="merged.endIcon"
           :size="merged.size ?? 'md'"
@@ -140,7 +142,9 @@ const {
     </p>
 
     <p v-if="showError" v-bind="errorBind" :id="`${inputId}-error`">
-      <component :is="resolveSlotOrProp(slots, 'error', merged.errorMessage)" />
+      <component
+        :is="resolveSlotOrProp(slots, 'errorMessage', merged.errorMessage)"
+      />
     </p>
   </div>
 </template>

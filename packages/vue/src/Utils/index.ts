@@ -1,5 +1,5 @@
 // ** External Imports
-import { pick } from "es-toolkit/compat";
+import { pick, pickBy } from "es-toolkit/compat";
 import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
@@ -95,10 +95,10 @@ export function splitComponentProps<
 
   const rootBind = buildRootBind(props, attrs, [...bridgeKeyList, classKey]);
 
-  const propsForMerge = pick(props, bridgeKeyList) as Pick<
-    P,
-    BridgeKeys[number]
-  >;
+  const propsForMerge = pickBy(
+    pick(props, bridgeKeyList),
+    (value) => value !== undefined,
+  ) as Pick<P, BridgeKeys[number]>;
 
   return { propsForMerge, userClass, rootBind };
 }

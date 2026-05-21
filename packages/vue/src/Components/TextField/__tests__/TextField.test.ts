@@ -4,6 +4,7 @@ import { CircleAlert } from "lucide-vue-next";
 import { expect, test } from "vitest";
 
 // ** Local Imports
+import { Icon } from "@/Components/Icon";
 import { TextField } from "@/Components/TextField";
 
 test("it should render the root element", () => {
@@ -126,12 +127,29 @@ test("it should render end icon when endIcon prop is set", () => {
   expect(wrapper.findAll("svg").length).toBeGreaterThan(0);
 });
 
+test("it should render error icon when error is set", () => {
+  const wrapper = mount(TextField, { props: { error: true } });
+
+  expect(wrapper.findAll("svg").length).toBe(1);
+  expect(wrapper.findComponent(Icon).exists()).toBe(true);
+  expect(wrapper.find(".lucide-circle-alert").exists()).toBe(true);
+});
+
 test("it should render error icon instead of end icon when error is set", () => {
   const wrapper = mount(TextField, {
     props: { endIcon: CircleAlert, error: true },
   });
 
   expect(wrapper.findAll("svg").length).toBe(1);
+  expect(wrapper.find(".lucide-circle-alert").exists()).toBe(true);
+});
+
+test("it should hide error icon when withErrorIcon is false", () => {
+  const wrapper = mount(TextField, {
+    props: { error: true, withErrorIcon: false },
+  });
+
+  expect(wrapper.findAll("svg").length).toBe(0);
 });
 
 test("it should render required asterisk when required is true", () => {

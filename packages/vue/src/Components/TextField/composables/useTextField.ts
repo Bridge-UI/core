@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isString } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-vue-next";
 import { computed, useAttrs, useId, useSlots } from "vue";
 
@@ -22,7 +22,6 @@ import type {
 import {
   hasNamedSlot,
   hasSlotOrProp,
-  isPropPresent,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -55,18 +54,12 @@ const errorIcon = CircleAlert;
 
 export function useTextField(
   props: TextFieldOwnProps,
-  libDefaults: Partial<TextFieldOwnProps> = {
-    size: "md",
-    rounded: "md",
-    color: "primary",
-    variant: "outline",
-    withErrorIcon: true,
-  },
+  libDefaults: Partial<TextFieldOwnProps>,
 ) {
   // Setup
+  const autoId = useId();
   const slots = useSlots();
   const attrs = useAttrs();
-  const autoId = useId();
 
   const { userClass, propsForMerge } = splitComponentProps(props, attrs, {
     bridgeKeys: textFieldBridgeKeys,
@@ -200,7 +193,11 @@ export function useTextField(
   });
 
   const showStartText = computed(() => {
-    return isPropPresent(merged.value.start) && !hasStartSlot.value;
+    return (
+      !hasStartSlot.value &&
+      isString(merged.value.start) &&
+      merged.value.start.length > 0
+    );
   });
 
   const showStartIcon = computed(() => {
@@ -212,7 +209,11 @@ export function useTextField(
   });
 
   const showEndText = computed(() => {
-    return isPropPresent(merged.value.end) && !hasEndSlot.value;
+    return (
+      !hasEndSlot.value &&
+      isString(merged.value.end) &&
+      merged.value.end.length > 0
+    );
   });
 
   const showErrorIcon = computed(() => {
@@ -261,7 +262,7 @@ export function useTextField(
   });
 
   const showError = computed(() => {
-    return hasSlotOrProp(slots, "error", merged.value.errorMessage);
+    return hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage);
   });
 
   // Root
@@ -323,7 +324,7 @@ export function useTextField(
 
   const endIconClass = computed(() => {
     return cn(
-      "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
+      "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
       "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated.value },
       !invalidated.value && colorPalette.value?.end,

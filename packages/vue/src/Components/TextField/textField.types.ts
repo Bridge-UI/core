@@ -199,7 +199,7 @@ export interface TextFieldOwnProps {
   error?: boolean;
 
   /**
-   * Error message below the field. Shown only when set (or via `#error` slot).
+   * Error message below the field. Shown only when set (or via `#errorMessage` slot).
    *
    * @default undefined
    */
@@ -299,7 +299,7 @@ export interface TextFieldSlots {
   /**
    * Custom error message content.
    */
-  error?: Slot;
+  errorMessage?: Slot;
 
   /**
    * Slot at the inline start of the header row (primary label).

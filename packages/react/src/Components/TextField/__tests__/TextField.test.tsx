@@ -139,6 +139,22 @@ test("it should render error icon instead of end icon when error is set", () => 
   expect(container.querySelectorAll("svg").length).toBe(1);
 });
 
+test("it should render error icon when end slot is empty and error is set", () => {
+  const { container } = render(
+    <TextField error aria-label="Field" slots={{ end: null }} />,
+  );
+
+  expect(container.querySelector("svg")).not.toBeNull();
+});
+
+test("it should hide error icon when withErrorIcon is false", () => {
+  const { container } = render(
+    <TextField error withErrorIcon={false} aria-label="Field" />,
+  );
+
+  expect(container.querySelector("svg")).toBeNull();
+});
+
 test("it should render required asterisk when required is true", () => {
   render(<TextField label="Email" required aria-label="Email" />);
 
