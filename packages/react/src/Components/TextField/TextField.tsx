@@ -134,7 +134,7 @@ function TextField(props: TextFieldProps) {
           {resolveSlotOrProp({
             slots,
             name: "error",
-            fallback: merged.error,
+            fallback: merged.errorMessage,
           })}
         </p>
       )}

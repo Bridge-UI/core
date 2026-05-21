@@ -23,8 +23,10 @@ test("it should render description when description prop is provided", () => {
   cy.contains("Helper text").should("be.visible");
 });
 
-test("it should render error message when error prop is provided", () => {
-  cy.mount(TextField, { props: { error: "Required" } });
+test("it should render error message when errorMessage prop is provided", () => {
+  cy.mount(TextField, {
+    props: { error: true, errorMessage: "Required" },
+  });
 
   cy.contains("Required").should("be.visible");
   cy.get("input").should("have.attr", "aria-invalid", "true");

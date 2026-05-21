@@ -44,10 +44,10 @@ const textFieldBridgeKeys = [
   "disabled",
   "readonly",
   "required",
-  "errorless",
   "startIcon",
   "partsProps",
   "description",
+  "errorMessage",
   "withErrorIcon",
 ] as const satisfies readonly (keyof TextFieldOwnProps)[];
 
@@ -164,7 +164,7 @@ export function useTextField(
   });
 
   const invalidated = computed(() => {
-    return Boolean(merged.value.error);
+    return merged.value.error === true;
   });
 
   const focusColorPalette = computed(() => {
@@ -220,7 +220,6 @@ export function useTextField(
       !hasEndSlot.value &&
       invalidated.value &&
       !showEndText.value &&
-      !merged.value.errorless &&
       merged.value.withErrorIcon !== false
     );
   });
@@ -262,11 +261,7 @@ export function useTextField(
   });
 
   const showError = computed(() => {
-    return (
-      !merged.value.errorless &&
-      invalidated.value &&
-      hasSlotOrProp(slots, "error", merged.value.error)
-    );
+    return hasSlotOrProp(slots, "error", merged.value.errorMessage);
   });
 
   // Root

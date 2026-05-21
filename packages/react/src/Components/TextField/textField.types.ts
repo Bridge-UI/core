@@ -192,18 +192,18 @@ export interface TextFieldOwnProps {
   endIcon?: LucideIcon;
 
   /**
-   * The error message to display below the field.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * When `true`, error text and the error icon are not shown.
+   * When `true`, applies invalid styling (border, label, error icon).
    *
    * @default false
    */
-  errorless?: boolean;
+  error?: boolean;
+
+  /**
+   * Error message below the field. Shown only when set (or via `slots.error`).
+   *
+   * @default undefined
+   */
+  errorMessage?: string;
 
   /**
    * The primary label text above the field.

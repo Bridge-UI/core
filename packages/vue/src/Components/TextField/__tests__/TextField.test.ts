@@ -35,7 +35,7 @@ test("it should render description when description prop is provided", () => {
 test("it should hide description when field is invalid", () => {
   const wrapper = mount(TextField, {
     props: {
-      error: "Required",
+      error: true,
       description: "Helper text",
     },
   });
@@ -43,18 +43,18 @@ test("it should hide description when field is invalid", () => {
   expect(wrapper.text()).not.toContain("Helper text");
 });
 
-test("it should render error message when error prop is provided", () => {
-  const wrapper = mount(TextField, { props: { error: "Required" } });
+test("it should render error message when errorMessage prop is provided", () => {
+  const wrapper = mount(TextField, {
+    props: { error: true, errorMessage: "Required" },
+  });
 
   expect(wrapper.text()).toContain("Required");
 });
 
-test("it should hide error message when errorless is true", () => {
-  const wrapper = mount(TextField, {
-    props: { error: "Required", errorless: true },
-  });
+test("it should not render error message when only error is true", () => {
+  const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(wrapper.text()).not.toContain("Required");
+  expect(wrapper.findAll("p")).toHaveLength(0);
 });
 
 test("it should apply disabled attribute on the input when disabled", () => {
@@ -70,7 +70,7 @@ test("it should apply readonly attribute on the input when readonly", () => {
 });
 
 test("it should set aria-invalid on the input when error is set", () => {
-  const wrapper = mount(TextField, { props: { error: "Required" } });
+  const wrapper = mount(TextField, { props: { error: true } });
 
   expect(wrapper.find("input").attributes("aria-invalid")).toBe("true");
 });
@@ -90,7 +90,7 @@ test("it should set aria-describedby to description id when description is shown
 test("it should set aria-describedby to error id when error is shown", () => {
   const wrapper = mount(TextField, {
     attrs: { id: "field-id" },
-    props: { error: "Required" },
+    props: { error: true, errorMessage: "Required" },
   });
 
   const input = wrapper.find("input");
@@ -100,7 +100,7 @@ test("it should set aria-describedby to error id when error is shown", () => {
 });
 
 test("it should set data-invalid on the root when error is set", () => {
-  const wrapper = mount(TextField, { props: { error: "Required" } });
+  const wrapper = mount(TextField, { props: { error: true } });
 
   expect(wrapper.find(".w-full").attributes("data-invalid")).toBe("true");
 });
@@ -128,7 +128,7 @@ test("it should render end icon when endIcon prop is set", () => {
 
 test("it should render error icon instead of end icon when error is set", () => {
   const wrapper = mount(TextField, {
-    props: { endIcon: CircleAlert, error: "Invalid" },
+    props: { endIcon: CircleAlert, error: true },
   });
 
   expect(wrapper.findAll("svg").length).toBe(1);
@@ -144,7 +144,7 @@ test("it should render required asterisk when required is true", () => {
 
 test("it should apply error color on the label when error is set", () => {
   const wrapper = mount(TextField, {
-    props: { label: "Email", error: "Required" },
+    props: { label: "Email", error: true },
   });
 
   const label = wrapper.find('[class*="text-error-600"]');
@@ -153,7 +153,7 @@ test("it should apply error color on the label when error is set", () => {
 });
 
 test("it should apply error styles on the container when error is set", () => {
-  const wrapper = mount(TextField, { props: { error: "Required" } });
+  const wrapper = mount(TextField, { props: { error: true } });
 
   expect(wrapper.find("label").classes()).toContain("ring-error-500");
 });

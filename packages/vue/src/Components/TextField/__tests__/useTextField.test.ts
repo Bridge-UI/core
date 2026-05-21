@@ -80,10 +80,16 @@ test("it should be readonly when readonly prop is true", () => {
   expect(isReadonly.value).toBe(true);
 });
 
-test("it should be invalidated when error prop is set", () => {
-  const { invalidated } = mountUseTextField({ error: "Required" });
+test("it should be invalidated when error prop is true", () => {
+  const { invalidated } = mountUseTextField({ error: true });
 
   expect(invalidated.value).toBe(true);
+});
+
+test("it should not be invalidated when error prop is omitted", () => {
+  const { invalidated } = mountUseTextField();
+
+  expect(invalidated.value).toBe(false);
 });
 
 test("it should show header when label prop is provided", () => {
@@ -106,24 +112,23 @@ test("it should show description when description is set and field is valid", ()
 
 test("it should hide description when field is invalid", () => {
   const { showDescription } = mountUseTextField({
-    error: "Required",
+    error: true,
     description: "Helper text",
   });
 
   expect(showDescription.value).toBe(false);
 });
 
-test("it should show error message when error is set", () => {
-  const { showError } = mountUseTextField({ error: "Required" });
+test("it should show error message when errorMessage is set", () => {
+  const { showError } = mountUseTextField({
+    errorMessage: "Required",
+  });
 
   expect(showError.value).toBe(true);
 });
 
-test("it should hide error message when errorless is true", () => {
-  const { showError } = mountUseTextField({
-    errorless: true,
-    error: "Required",
-  });
+test("it should hide error message when only error is true", () => {
+  const { showError } = mountUseTextField({ error: true });
 
   expect(showError.value).toBe(false);
 });
@@ -143,15 +148,15 @@ test("it should show start icon when startIcon is set", () => {
   expect(showStartIcon.value).toBe(true);
 });
 
-test("it should show error icon when invalid and no end icon", () => {
-  const { showErrorIcon } = mountUseTextField({ error: "Required" });
+test("it should show error icon when error is true and no end icon", () => {
+  const { showErrorIcon } = mountUseTextField({ error: true });
 
   expect(showErrorIcon.value).toBe(true);
 });
 
 test("it should show error icon instead of end icon when both are set", () => {
   const { showErrorIcon, showEndIcon } = mountUseTextField({
-    error: "Required",
+    error: true,
     endIcon: CircleAlert,
   });
 
@@ -159,32 +164,23 @@ test("it should show error icon instead of end icon when both are set", () => {
   expect(showErrorIcon.value).toBe(true);
 });
 
-test("it should hide error icon when errorless is true", () => {
-  const { showErrorIcon } = mountUseTextField({
-    errorless: true,
-    error: "Required",
-  });
-
-  expect(showErrorIcon.value).toBe(false);
-});
-
 test("it should hide error icon when withErrorIcon is false", () => {
   const { showErrorIcon } = mountUseTextField({
-    error: "Required",
+    error: true,
     withErrorIcon: false,
   });
 
   expect(showErrorIcon.value).toBe(false);
 });
 
-test("it should set aria-invalid on input when error is set", () => {
-  const { inputBind } = mountUseTextField({ error: "Required" });
+test("it should set aria-invalid on input when error is true", () => {
+  const { inputBind } = mountUseTextField({ error: true });
 
   expect(inputBind.value["aria-invalid"]).toBe(true);
 });
 
 test("it should keep error focus ring on container when invalidated", () => {
-  const { containerBind } = mountUseTextField({ error: "Required" });
+  const { containerBind } = mountUseTextField({ error: true });
 
   expect(containerBind.value.class).toContain("focus-within:ring-error-600");
   expect(containerBind.value.class).not.toContain(
@@ -200,8 +196,10 @@ test("it should set aria-describedby to description id when description is shown
   );
 });
 
-test("it should set aria-describedby to error id when error is shown", () => {
-  const { inputBind, inputId } = mountUseTextField({ error: "Required" });
+test("it should set aria-describedby to error id when errorMessage is shown", () => {
+  const { inputBind, inputId } = mountUseTextField({
+    errorMessage: "Required",
+  });
 
   expect(inputBind.value["aria-describedby"]).toBe(`${inputId.value}-error`);
 });

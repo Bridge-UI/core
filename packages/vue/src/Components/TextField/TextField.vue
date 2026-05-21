@@ -140,7 +140,7 @@ const {
     </p>
 
     <p v-if="showError" v-bind="errorBind" :id="`${inputId}-error`">
-      <component :is="resolveSlotOrProp(slots, 'error', merged.error)" />
+      <component :is="resolveSlotOrProp(slots, 'error', merged.errorMessage)" />
     </p>
   </div>
 </template>

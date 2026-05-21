@@ -56,8 +56,8 @@ test("it should be readonly when readonly prop is true", () => {
   expect(result.current.isReadonly).toBe(true);
 });
 
-test("it should be invalidated when error prop is set", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+test("it should be invalidated when error prop is true", () => {
+  const { result } = renderUseTextField({ error: true });
 
   expect(result.current.invalidated).toBe(true);
 });
@@ -82,24 +82,21 @@ test("it should show description when description is set and field is valid", ()
 
 test("it should hide description when field is invalid", () => {
   const { result } = renderUseTextField({
-    error: "Required",
+    error: true,
     description: "Helper text",
   });
 
   expect(result.current.showDescription).toBe(false);
 });
 
-test("it should show error message when error is set", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+test("it should show error message when errorMessage is set", () => {
+  const { result } = renderUseTextField({ errorMessage: "Required" });
 
   expect(result.current.showError).toBe(true);
 });
 
-test("it should hide error message when errorless is true", () => {
-  const { result } = renderUseTextField({
-    errorless: true,
-    error: "Required",
-  });
+test("it should hide error message when only error is true", () => {
+  const { result } = renderUseTextField({ error: true });
 
   expect(result.current.showError).toBe(false);
 });
@@ -117,15 +114,15 @@ test("it should show start icon when startIcon is set", () => {
   expect(result.current.showStartIcon).toBe(true);
 });
 
-test("it should show error icon when invalid and no end icon", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+test("it should show error icon when error is true and no end icon", () => {
+  const { result } = renderUseTextField({ error: true });
 
   expect(result.current.showErrorIcon).toBe(true);
 });
 
 test("it should show error icon instead of end icon when both are set", () => {
   const { result } = renderUseTextField({
-    error: "Required",
+    error: true,
     endIcon: CircleAlert,
   });
 
@@ -133,32 +130,23 @@ test("it should show error icon instead of end icon when both are set", () => {
   expect(result.current.showEndIcon).toBe(false);
 });
 
-test("it should hide error icon when errorless is true", () => {
-  const { result } = renderUseTextField({
-    errorless: true,
-    error: "Required",
-  });
-
-  expect(result.current.showErrorIcon).toBe(false);
-});
-
 test("it should hide error icon when withErrorIcon is false", () => {
   const { result } = renderUseTextField({
-    error: "Required",
+    error: true,
     withErrorIcon: false,
   });
 
   expect(result.current.showErrorIcon).toBe(false);
 });
 
-test("it should set aria-invalid on input when error is set", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+test("it should set aria-invalid on input when error is true", () => {
+  const { result } = renderUseTextField({ error: true });
 
   expect(result.current.inputBind["aria-invalid"]).toBe(true);
 });
 
 test("it should keep error focus ring on container when invalidated", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+  const { result } = renderUseTextField({ error: true });
 
   expect(result.current.containerBind.className).toContain(
     "focus-within:ring-error-600",
@@ -176,8 +164,8 @@ test("it should set aria-describedby to description id when description is shown
   );
 });
 
-test("it should set aria-describedby to error id when error is shown", () => {
-  const { result } = renderUseTextField({ error: "Required" });
+test("it should set aria-describedby to error id when errorMessage is shown", () => {
+  const { result } = renderUseTextField({ errorMessage: "Required" });
 
   expect(result.current.inputBind["aria-describedby"]).toBe(
     `${result.current.inputId}-error`,

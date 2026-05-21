@@ -37,23 +37,21 @@ test("it should render description when description prop is provided", () => {
 });
 
 test("it should hide description when field is invalid", () => {
-  render(
-    <TextField error="Required" description="Helper text" aria-label="Field" />,
-  );
+  render(<TextField error description="Helper text" aria-label="Field" />);
 
   expect(screen.queryByText("Helper text")).toBeNull();
 });
 
-test("it should render error message when error prop is provided", () => {
-  render(<TextField error="Required" aria-label="Field" />);
+test("it should render error message when errorMessage prop is provided", () => {
+  render(<TextField error errorMessage="Required" aria-label="Field" />);
 
   expect(screen.getByText("Required")).toBeTruthy();
 });
 
-test("it should hide error message when errorless is true", () => {
-  render(<TextField error="Required" errorless aria-label="Field" />);
+test("it should not render error message when only error is true", () => {
+  render(<TextField error aria-label="Field" />);
 
-  expect(screen.queryByText("Required")).toBeNull();
+  expect(screen.queryByRole("paragraph")).toBeNull();
 });
 
 test("it should apply disabled attribute when disabled", () => {
@@ -69,7 +67,7 @@ test("it should apply readOnly attribute when readonly", () => {
 });
 
 test("it should set aria-invalid on the input when error is set", () => {
-  render(<TextField error="Required" aria-label="Field" />);
+  render(<TextField error aria-label="Field" />);
 
   expect(screen.getByRole("textbox").getAttribute("aria-invalid")).toBe("true");
 });
@@ -84,7 +82,14 @@ test("it should set aria-describedby to description id when description is shown
 });
 
 test("it should set aria-describedby to error id when error is shown", () => {
-  render(<TextField error="Required" id="field-id" aria-label="Field" />);
+  render(
+    <TextField
+      error
+      errorMessage="Required"
+      id="field-id"
+      aria-label="Field"
+    />,
+  );
 
   const input = screen.getByRole("textbox");
 
@@ -93,9 +98,7 @@ test("it should set aria-describedby to error id when error is shown", () => {
 });
 
 test("it should set data-invalid on the root when error is set", () => {
-  const { container } = render(
-    <TextField error="Required" aria-label="Field" />,
-  );
+  const { container } = render(<TextField error aria-label="Field" />);
 
   expect(container.querySelector("[data-invalid='true']")).not.toBeNull();
 });
@@ -123,16 +126,14 @@ test("it should render end icon when endIcon prop is set", () => {
 });
 
 test("it should render error icon when invalid and withErrorIcon is enabled", () => {
-  const { container } = render(
-    <TextField error="Required" aria-label="Field" />,
-  );
+  const { container } = render(<TextField error aria-label="Field" />);
 
   expect(container.querySelector("svg")).not.toBeNull();
 });
 
 test("it should render error icon instead of end icon when error is set", () => {
   const { container } = render(
-    <TextField endIcon={CircleAlert} error="Invalid" aria-label="Field" />,
+    <TextField endIcon={CircleAlert} error aria-label="Field" />,
   );
 
   expect(container.querySelectorAll("svg").length).toBe(1);
@@ -146,18 +147,10 @@ test("it should render required asterisk when required is true", () => {
 
 test("it should apply error color on the label when error is set", () => {
   const { container } = render(
-    <TextField label="Email" error="Required" aria-label="Email" />,
+    <TextField label="Email" error aria-label="Email" />,
   );
 
   expect(container.querySelector(".text-error-600")).not.toBeNull();
-});
-
-test("it should not render error icon when errorless is true", () => {
-  const { container } = render(
-    <TextField error="Required" errorless aria-label="Field" />,
-  );
-
-  expect(container.querySelector("svg")).toBeNull();
 });
 
 test("it should render start slot content", () => {
