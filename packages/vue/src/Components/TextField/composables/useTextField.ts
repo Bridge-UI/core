@@ -317,6 +317,20 @@ export function useTextField(
     );
   });
 
+  const ariaDescribedBy = computed(() => {
+    const ids: string[] = [];
+
+    if (showDescription.value) {
+      ids.push(`${inputId.value}-description`);
+    }
+
+    if (showError.value) {
+      ids.push(`${inputId.value}-error`);
+    }
+
+    return ids.length > 0 ? ids.join(" ") : undefined;
+  });
+
   // Parts
   const partsProps = computed(() => {
     return merged.value.partsProps;
@@ -359,6 +373,7 @@ export function useTextField(
         disabled: isDisabled.value,
         readonly: isReadonly.value,
         "aria-invalid": invalidated.value || undefined,
+        "aria-describedby": ariaDescribedBy.value,
       },
       inputClass.value,
     );
