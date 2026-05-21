@@ -149,72 +149,79 @@ export function useTextField(
   );
 
   // Visibility
-  const showHeader = computed(
-    () =>
+  const showHeader = computed(() => {
+    return (
       hasSlotOrProp(slots, "label", merged.value.label) ||
-      hasSlotOrProp(slots, "corner", merged.value.corner),
-  );
+      hasSlotOrProp(slots, "corner", merged.value.corner)
+    );
+  });
 
-  const showStartIcon = computed(
-    () => merged.value.startIcon != null && !hasStartSlot.value,
-  );
+  const showStartIcon = computed(() => {
+    return merged.value.startIcon != null && !hasStartSlot.value;
+  });
 
-  const showEndIcon = computed(
-    () => merged.value.endIcon != null && !hasEndSlot.value,
-  );
+  const showEndIcon = computed(() => {
+    return merged.value.endIcon != null && !hasEndSlot.value;
+  });
 
-  const showErrorIcon = computed(
-    () =>
-      !merged.value.errorless &&
+  const showErrorIcon = computed(() => {
+    return (
+      !hasEndSlot.value &&
       invalidated.value &&
-      merged.value.withErrorIcon !== false &&
       !showEndIcon.value &&
-      !hasEndSlot.value,
-  );
+      !merged.value.errorless &&
+      merged.value.withErrorIcon !== false
+    );
+  });
 
-  const showDescription = computed(
-    () =>
+  const showDescription = computed(() => {
+    return (
       !invalidated.value &&
-      hasSlotOrProp(slots, "description", merged.value.description),
-  );
+      hasSlotOrProp(slots, "description", merged.value.description)
+    );
+  });
 
-  const showError = computed(
-    () =>
+  const showError = computed(() => {
+    return (
       !merged.value.errorless &&
       invalidated.value &&
-      hasSlotOrProp(slots, "error", merged.value.error),
-  );
+      hasSlotOrProp(slots, "error", merged.value.error)
+    );
+  });
 
   // Root
-  const rootClass = computed(() =>
-    cn(
+  const rootClass = computed(() => {
+    return cn(
       "w-full relative",
       "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60",
       "aria-readonly:pointer-events-none aria-readonly:select-none",
       mergedClasses.value.root,
       userClass,
-    ),
-  );
+    );
+  });
 
   // Header
-  const headerClass = computed(() =>
-    cn("flex mb-1", headerJustify.value, mergedClasses.value.header),
-  );
+  const headerClass = computed(() => {
+    return cn("flex mb-1", headerJustify.value, mergedClasses.value.header);
+  });
 
-  const labelClass = computed(() =>
-    cn(
+  const labelClass = computed(() => {
+    return cn(
       "text-sm font-medium text-gray-700 dark:text-gray-300",
       mergedClasses.value.label,
-    ),
-  );
+    );
+  });
 
-  const cornerClass = computed(() =>
-    cn("text-sm text-gray-500 dark:text-gray-400", mergedClasses.value.corner),
-  );
+  const cornerClass = computed(() => {
+    return cn(
+      "text-sm text-gray-500 dark:text-gray-400",
+      mergedClasses.value.corner,
+    );
+  });
 
   // Container
-  const containerClass = computed(() =>
-    cn(
+  const containerClass = computed(() => {
+    return cn(
       "relative flex justify-between gap-x-2 items-center",
       "transition-all ease-in-out duration-150",
       "outline-0",
@@ -233,11 +240,11 @@ export function useTextField(
           invalidated.value,
       },
       mergedClasses.value.container,
-    ),
-  );
+    );
+  });
 
-  const startClass = computed(() =>
-    cn(
+  const startClass = computed(() => {
+    return cn(
       "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
       "input-focus:text-error-500",
       { "text-error-500": invalidated.value },
@@ -245,11 +252,11 @@ export function useTextField(
       roundedPalette.value?.start,
       colorPalette.value?.start,
       mergedClasses.value.start,
-    ),
-  );
+    );
+  });
 
-  const endClass = computed(() =>
-    cn(
+  const endClass = computed(() => {
+    return cn(
       "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
       "input-focus:text-error-500",
       { "text-error-500": invalidated.value },
@@ -257,8 +264,8 @@ export function useTextField(
       roundedPalette.value?.end,
       colorPalette.value?.end,
       mergedClasses.value.end,
-    ),
-  );
+    );
+  });
 
   const startSlotClass =
     "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
@@ -267,29 +274,29 @@ export function useTextField(
     "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
 
   // Input
-  const inputClass = computed(() =>
-    cn(
+  const inputClass = computed(() => {
+    return cn(
       "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
       "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
       "disabled:cursor-not-allowed",
       mergedClasses.value.input,
-    ),
-  );
+    );
+  });
 
   // Footer
-  const descriptionClass = computed(() =>
-    cn(
+  const descriptionClass = computed(() => {
+    return cn(
       "mt-2 text-sm text-gray-500 dark:text-gray-400",
       mergedClasses.value.description,
-    ),
-  );
+    );
+  });
 
-  const errorClass = computed(() =>
-    cn(
+  const errorClass = computed(() => {
+    return cn(
       "mt-2 text-sm text-error-600 dark:text-error-400",
       mergedClasses.value.error,
-    ),
-  );
+    );
+  });
 
   // Parts
   const partsProps = computed(() => merged.value.partsProps);
@@ -356,32 +363,32 @@ export function useTextField(
   return {
     slots,
     merged,
-    errorIcon,
+    endBind,
     inputId,
+    rootBind,
+    errorBind,
+    errorIcon,
+    inputBind,
+    labelBind,
+    showError,
+    startBind,
+    cornerBind,
+    hasEndSlot,
+    headerBind,
     isDisabled,
     isReadonly,
-    invalidated,
-    hasStartSlot,
-    hasEndSlot,
     showHeader,
-    showStartIcon,
-    showEndIcon,
-    showErrorIcon,
-    showDescription,
-    showError,
-    startSlotClass,
-    endSlotClass,
-    rootBind,
-    headerBind,
-    labelBind,
-    cornerBind,
-    containerBind,
-    startBind,
-    endBind,
-    inputBind,
-    startIconBind,
     endIconBind,
+    invalidated,
+    showEndIcon,
+    endSlotClass,
+    hasStartSlot,
+    containerBind,
+    showErrorIcon,
+    showStartIcon,
+    startIconBind,
+    startSlotClass,
     descriptionBind,
-    errorBind,
+    showDescription,
   };
 }

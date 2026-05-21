@@ -21,33 +21,33 @@ const emit = defineEmits<{
 const {
   slots,
   merged,
+  endBind,
+  inputId,
+  rootBind,
+  errorBind,
   errorIcon,
   inputBind,
   labelBind,
-  rootBind,
-  endBind,
-  errorBind,
-  descriptionBind,
-  showDescription,
   showError,
   startBind,
   cornerBind,
-  headerBind,
-  endIconBind,
-  containerBind,
-  startIconBind,
-  endSlotClass,
-  startSlotClass,
-  showHeader,
-  showEndIcon,
-  showErrorIcon,
-  invalidated,
-  showStartIcon,
-  hasStartSlot,
   hasEndSlot,
-  inputId,
+  headerBind,
   isDisabled,
   isReadonly,
+  showHeader,
+  endIconBind,
+  invalidated,
+  showEndIcon,
+  endSlotClass,
+  hasStartSlot,
+  containerBind,
+  showErrorIcon,
+  showStartIcon,
+  startIconBind,
+  startSlotClass,
+  descriptionBind,
+  showDescription,
 } = useTextField(props, {
   size: "md",
   rounded: "md",
@@ -60,9 +60,9 @@ const {
 <template>
   <div
     v-bind="rootBind"
+    :data-invalid="invalidated || undefined"
     :aria-disabled="isDisabled || undefined"
     :aria-readonly="isReadonly || undefined"
-    :data-invalid="invalidated || undefined"
   >
     <div v-if="showHeader" v-bind="headerBind">
       <label

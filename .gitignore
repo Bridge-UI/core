@@ -1,5 +1,6 @@
 dist
 .fleet
+scripts
 node_modules
 
 # Cypress (component / e2e)
