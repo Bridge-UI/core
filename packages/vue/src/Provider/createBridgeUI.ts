@@ -12,10 +12,12 @@ import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
 export function createBridgeUI(options: BridgeUIOptions = {}): Plugin {
   const plugin: Plugin = {
     install(app: App) {
-      const optionsRef = computed(() => ({
-        global: options.global ?? {},
-        components: options.components ?? {},
-      }));
+      const optionsRef = computed(() => {
+        return {
+          global: options.global ?? {},
+          components: options.components ?? {},
+        };
+      });
 
       const api = createBridgeUIApi(undefined, optionsRef);
 

@@ -97,7 +97,9 @@ export function useBadge(
     return (merged.value.density ?? "default") as keyof typeof densityProps;
   });
 
-  const isMini = computed(() => densityKey.value === "mini");
+  const isMini = computed(() => {
+    return densityKey.value === "mini";
+  });
 
   const sizeClass = computed(() => {
     return get(mergedDensityProps.value, [densityKey.value, sizeKey.value]);

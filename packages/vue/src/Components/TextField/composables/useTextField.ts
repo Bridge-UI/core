@@ -105,15 +105,21 @@ export function useTextField(
   });
 
   // Theme
-  const variantKey = computed(() => merged.value.variant ?? "outline");
+  const variantKey = computed(() => {
+    return merged.value.variant ?? "outline";
+  });
 
-  const colorKey = computed(
-    () => (merged.value.color ?? "primary") as keyof TextFieldColor,
-  );
+  const colorKey = computed(() => {
+    return (merged.value.color ?? "primary") as keyof TextFieldColor;
+  });
 
-  const roundedKey = computed(() => merged.value.rounded ?? "md");
+  const roundedKey = computed(() => {
+    return merged.value.rounded ?? "md";
+  });
 
-  const sizeKey = computed(() => merged.value.size ?? "md");
+  const sizeKey = computed(() => {
+    return merged.value.size ?? "md";
+  });
 
   const variantPalette = computed(() => {
     return get(mergedVariantProps.value, variantKey.value);
@@ -127,26 +133,40 @@ export function useTextField(
     return get(mergedRoundedMap.value, roundedKey.value);
   });
 
-  const sizeClass = computed(() => get(mergedSizeMap.value, sizeKey.value));
+  const sizeClass = computed(() => {
+    return get(mergedSizeMap.value, sizeKey.value);
+  });
 
   // State
-  const inputId = computed(() => (attrs.id as string | undefined) ?? autoId);
+  const inputId = computed(() => {
+    return (attrs.id as string | undefined) ?? autoId;
+  });
 
-  const isDisabled = computed(() => Boolean(merged.value.disabled));
+  const isDisabled = computed(() => {
+    return Boolean(merged.value.disabled);
+  });
 
-  const isReadonly = computed(() => Boolean(merged.value.readonly));
+  const isReadonly = computed(() => {
+    return Boolean(merged.value.readonly);
+  });
 
-  const invalidated = computed(() => Boolean(merged.value.error));
+  const invalidated = computed(() => {
+    return Boolean(merged.value.error);
+  });
 
-  const hasStartSlot = computed(() => hasNamedSlot(slots, "start"));
+  const hasStartSlot = computed(() => {
+    return hasNamedSlot(slots, "start");
+  });
 
-  const hasEndSlot = computed(() => hasNamedSlot(slots, "end"));
+  const hasEndSlot = computed(() => {
+    return hasNamedSlot(slots, "end");
+  });
 
-  const headerJustify = computed(() =>
-    hasSlotOrProp(slots, "label", merged.value.label)
+  const headerJustify = computed(() => {
+    return hasSlotOrProp(slots, "label", merged.value.label)
       ? "justify-between items-end"
-      : "justify-end",
-  );
+      : "justify-end";
+  });
 
   // Visibility
   const showHeader = computed(() => {
@@ -299,38 +319,40 @@ export function useTextField(
   });
 
   // Parts
-  const partsProps = computed(() => merged.value.partsProps);
+  const partsProps = computed(() => {
+    return merged.value.partsProps;
+  });
 
-  const rootBind = computed(() =>
-    mergePartBind(partsProps.value?.root, rootClass.value),
-  );
+  const rootBind = computed(() => {
+    return mergePartBind(partsProps.value?.root, rootClass.value);
+  });
 
-  const headerBind = computed(() =>
-    mergePartBind(partsProps.value?.header, headerClass.value),
-  );
+  const headerBind = computed(() => {
+    return mergePartBind(partsProps.value?.header, headerClass.value);
+  });
 
-  const labelBind = computed(() =>
-    mergePartBind(partsProps.value?.label, labelClass.value),
-  );
+  const labelBind = computed(() => {
+    return mergePartBind(partsProps.value?.label, labelClass.value);
+  });
 
-  const cornerBind = computed(() =>
-    mergePartBind(partsProps.value?.corner, cornerClass.value),
-  );
+  const cornerBind = computed(() => {
+    return mergePartBind(partsProps.value?.corner, cornerClass.value);
+  });
 
-  const containerBind = computed(() =>
-    mergePartBind(partsProps.value?.container, containerClass.value),
-  );
+  const containerBind = computed(() => {
+    return mergePartBind(partsProps.value?.container, containerClass.value);
+  });
 
-  const startBind = computed(() =>
-    mergePartBind(partsProps.value?.start, startClass.value),
-  );
+  const startBind = computed(() => {
+    return mergePartBind(partsProps.value?.start, startClass.value);
+  });
 
-  const endBind = computed(() =>
-    mergePartBind(partsProps.value?.end, endClass.value),
-  );
+  const endBind = computed(() => {
+    return mergePartBind(partsProps.value?.end, endClass.value);
+  });
 
-  const inputBind = computed(() =>
-    mergePartBind(
+  const inputBind = computed(() => {
+    return mergePartBind(
       {
         ...attrs,
         ...partsProps.value?.input,
@@ -341,24 +363,24 @@ export function useTextField(
         value: merged.value.modelValue,
       },
       inputClass.value,
-    ),
-  );
+    );
+  });
 
-  const startIconBind = computed(() =>
-    mergePartBind(partsProps.value?.startIcon, ""),
-  );
+  const startIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.startIcon, "");
+  });
 
-  const endIconBind = computed(() =>
-    mergePartBind(partsProps.value?.endIcon, ""),
-  );
+  const endIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.endIcon, "");
+  });
 
-  const descriptionBind = computed(() =>
-    mergePartBind(partsProps.value?.description, descriptionClass.value),
-  );
+  const descriptionBind = computed(() => {
+    return mergePartBind(partsProps.value?.description, descriptionClass.value);
+  });
 
-  const errorBind = computed(() =>
-    mergePartBind(partsProps.value?.error, errorClass.value),
-  );
+  const errorBind = computed(() => {
+    return mergePartBind(partsProps.value?.error, errorClass.value);
+  });
 
   return {
     slots,

@@ -28,6 +28,7 @@ const {
   isDisabled,
   endIconBind,
   endSlotBind,
+  showDefault,
   showEndIcon,
   showEndSlot,
   showSpinner,
@@ -36,9 +37,8 @@ const {
   showStartSlot,
   startIconBind,
   startSlotBind,
-  showDefaultSlot,
-  showDefault,
   loadingIconBind,
+  showDefaultSlot,
 } = useButton(props, {
   size: "md",
   as: "button",

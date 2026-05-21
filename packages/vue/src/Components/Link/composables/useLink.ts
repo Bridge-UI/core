@@ -142,7 +142,9 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   });
 
   // Parts
-  const partsProps = computed(() => merged.value.partsProps);
+  const partsProps = computed(() => {
+    return merged.value.partsProps;
+  });
 
   const leftIconBind = computed(() => {
     return mergePartBind(

@@ -231,7 +231,9 @@ export function useButton(
   });
 
   // Parts
-  const partsProps = computed(() => merged.value.partsProps);
+  const partsProps = computed(() => {
+    return merged.value.partsProps;
+  });
 
   const iconBind = computed(() => {
     return mergePartBind(
@@ -285,8 +287,8 @@ export function useButton(
     isAnchor,
     isButton,
     rootBind,
-    showText,
     showIcon,
+    showText,
     rootClass,
     isDisabled,
     endIconBind,

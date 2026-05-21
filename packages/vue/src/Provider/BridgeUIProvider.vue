@@ -20,10 +20,12 @@ const parent = inject<BridgeUIContextApi | undefined>(
   undefined,
 );
 
-const optionsRef = computed(() => ({
-  global: props.global ?? {},
-  components: props.components ?? {},
-}));
+const optionsRef = computed(() => {
+  return {
+    global: props.global ?? {},
+    components: props.components ?? {},
+  };
+});
 
 const api = createBridgeUIApi(parent, optionsRef);
 
