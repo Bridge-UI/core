@@ -65,6 +65,13 @@ export type {
 } from "@/Components/Checkbox";
 export { Icon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 export type { IconSizeOverrides } from "@/Components/Icon";
+export { Label, useLabel } from "@/Components/Label";
+export type {
+  LabelClasses,
+  LabelOwnProps,
+  LabelProps,
+  LabelSizeOverrides,
+} from "@/Components/Label";
 export { Link, useLink } from "@/Components/Link";
 export type {
   LinkClasses,

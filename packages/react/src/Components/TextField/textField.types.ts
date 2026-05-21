@@ -228,6 +228,13 @@ export interface TextFieldOwnProps {
   readonly?: boolean;
 
   /**
+   * Shows a red asterisk on the label.
+   *
+   * @default false
+   */
+  required?: boolean;
+
+  /**
    * The roundedness of the text field.
    *
    * @default "md"

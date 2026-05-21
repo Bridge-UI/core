@@ -41,6 +41,7 @@ export type {
   CheckboxSize,
 } from "@core/Components/Checkbox";
 export type { IconSize } from "@core/Components/Icon";
+export type { LabelSize } from "@core/Components/Label";
 export type {
   LinkColor,
   LinkColorItem,

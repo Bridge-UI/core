@@ -45,6 +45,7 @@ const textFieldBridgeKeys = [
   "variant",
   "disabled",
   "readonly",
+  "required",
   "errorless",
   "startIcon",
   "partsProps",
@@ -167,6 +168,14 @@ export function useTextField(
     return Boolean(merged.error);
   });
 
+  const focusColorPalette = derived(() => {
+    if (invalidated) {
+      return get(mergedColorProps, "error");
+    }
+
+    return colorPalette;
+  });
+
   const hasStartSlot = derived(() => {
     return hasNamedSlot(slots, "start");
   });
@@ -176,9 +185,11 @@ export function useTextField(
   });
 
   const headerJustify = derived(() => {
-    return hasSlotOrProp(slots, "label", merged.label)
-      ? "justify-between items-end"
-      : "justify-end";
+    if (hasSlotOrProp(slots, "label", merged.label)) {
+      return "justify-between items-end";
+    }
+
+    return "justify-end";
   });
 
   // Visibility
@@ -194,25 +205,26 @@ export function useTextField(
     return isPropPresent(merged.end) && !hasEndSlot;
   });
 
+  const showErrorIcon = derived(() => {
+    return (
+      !hasEndSlot &&
+      invalidated &&
+      !showEndText &&
+      !merged.errorless &&
+      merged.withErrorIcon !== false
+    );
+  });
+
   const showEndIcon = derived(() => {
-    return merged.endIcon != null && !hasEndSlot && !showEndText;
+    return (
+      merged.endIcon != null && !hasEndSlot && !showEndText && !showErrorIcon
+    );
   });
 
   const showHeader = derived(() => {
     return (
       hasSlotOrProp(slots, "label", merged.label) ||
       hasSlotOrProp(slots, "corner", merged.corner)
-    );
-  });
-
-  const showErrorIcon = derived(() => {
-    return (
-      !hasEndSlot &&
-      invalidated &&
-      !showEndText &&
-      !showEndIcon &&
-      !merged.errorless &&
-      merged.withErrorIcon !== false
     );
   });
 
@@ -230,10 +242,10 @@ export function useTextField(
 
   const containerColorFocus = derived(() => {
     if (isUnderlined) {
-      return colorPalette?.underlined;
+      return focusColorPalette?.underlined;
     }
 
-    return colorPalette?.input;
+    return focusColorPalette?.input;
   });
 
   const showDescription = derived(() => {
@@ -266,13 +278,6 @@ export function useTextField(
     return cn("flex mb-1", headerJustify, mergedClasses.header);
   });
 
-  const labelClass = derived(() => {
-    return cn(
-      "text-sm font-medium text-gray-700 dark:text-gray-300",
-      mergedClasses.label,
-    );
-  });
-
   const cornerClass = derived(() => {
     return cn("text-sm text-gray-500 dark:text-gray-400", mergedClasses.corner);
   });
@@ -293,8 +298,8 @@ export function useTextField(
       (hasStartSlot || hasEndSlot) && sizePalette?.container,
       {
         "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
-        "bg-error-50 ring-error-500 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600": invalidated && !isUnderlined,
-        "border-error-500 dark:border-error-600": invalidated && isUnderlined,
+        "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated && !isUnderlined,
+        "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated && isUnderlined,
       },
       mergedClasses.container,
     );
@@ -305,7 +310,7 @@ export function useTextField(
       "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
       "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated },
-      colorPalette?.start,
+      !invalidated && colorPalette?.start,
       !isUnderlined && roundedPalette?.start,
       mergedClasses.start,
     );
@@ -316,7 +321,7 @@ export function useTextField(
       "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
       "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated },
-      colorPalette?.end,
+      !invalidated && colorPalette?.end,
       !isUnderlined && roundedPalette?.end,
       mergedClasses.end,
     );
@@ -324,14 +329,14 @@ export function useTextField(
 
   const startSlotClass = derived(() => {
     return cn(
-      "group/start wrapper-start-slot shrink-0 flex h-full items-center py-0.5 ps-0.5",
+      "group/start wrapper-start-slot shrink-0 flex items-center self-stretch py-0.5 ps-0.5",
       mergedClasses.start,
     );
   });
 
   const endSlotClass = derived(() => {
     return cn(
-      "group/end wrapper-end-slot shrink-0 flex h-full items-center py-0.5 pe-0.5",
+      "group/end wrapper-end-slot shrink-0 flex items-center self-stretch py-0.5 pe-0.5",
       mergedClasses.end,
     );
   });
@@ -399,7 +404,7 @@ export function useTextField(
   });
 
   const labelBind = derived(() => {
-    return mergePartBind(partsProps?.label, labelClass);
+    return mergePartBind(partsProps?.label, cn(mergedClasses.label));
   });
 
   const startBind = derived(() => {

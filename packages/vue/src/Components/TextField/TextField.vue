@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
+import { Label } from "@/Components/Label";
 import { useTextField } from "@/Components/TextField/composables/useTextField";
 import type {
   TextFieldOwnProps,
@@ -65,13 +66,16 @@ const {
     :aria-readonly="isReadonly || undefined"
   >
     <div v-if="showHeader" v-bind="headerBind">
-      <label
+      <Label
         v-if="hasSlotOrProp(slots, 'label', merged.label)"
         v-bind="labelBind"
         :for="inputId"
+        :size="merged.size"
+        :error="invalidated"
+        :required="merged.required"
       >
         <component :is="resolveSlotOrProp(slots, 'label', merged.label)" />
-      </label>
+      </Label>
 
       <span
         v-if="hasSlotOrProp(slots, 'corner', merged.corner)"
@@ -108,17 +112,17 @@ const {
         {{ merged.end }}
       </div>
 
-      <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">
+      <div v-else-if="showErrorIcon" v-bind="endBind">
         <Icon
-          :icon="merged.endIcon"
+          :icon="errorIcon"
           :size="merged.size ?? 'md'"
           v-bind="endIconBind"
         />
       </div>
 
-      <div v-else-if="showErrorIcon" v-bind="endBind">
+      <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">
         <Icon
-          :icon="errorIcon"
+          :icon="merged.endIcon"
           :size="merged.size ?? 'md'"
           v-bind="endIconBind"
         />

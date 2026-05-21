@@ -1,5 +1,6 @@
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
+import { Label } from "@/Components/Label";
 import { useTextField } from "@/Components/TextField/hooks/useTextField";
 import type { TextFieldProps } from "@/Components/TextField/textField.types";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
@@ -55,13 +56,19 @@ function TextField(props: TextFieldProps) {
       {showHeader && (
         <div {...headerBind}>
           {hasSlotOrProp(slots, "label", merged.label) && (
-            <label {...labelBind} htmlFor={inputId}>
+            <Label
+              {...labelBind}
+              htmlFor={inputId}
+              size={merged.size}
+              error={invalidated}
+              required={merged.required}
+            >
               {resolveSlotOrProp({
                 slots,
                 name: "label",
                 fallback: merged.label,
               })}
-            </label>
+            </Label>
           )}
 
           {hasSlotOrProp(slots, "corner", merged.corner) && (
@@ -99,15 +106,15 @@ function TextField(props: TextFieldProps) {
 
         {!hasEndSlot && showEndText && <div {...endBind}>{merged.end}</div>}
 
-        {!hasEndSlot && showEndIcon && merged.endIcon && (
-          <div {...endBind}>
-            <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
-          </div>
-        )}
-
         {!hasEndSlot && showErrorIcon && (
           <div {...endBind}>
             <Icon icon={errorIcon} size={merged.size} {...endIconBind} />
+          </div>
+        )}
+
+        {!hasEndSlot && showEndIcon && merged.endIcon && (
+          <div {...endBind}>
+            <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
           </div>
         )}
       </label>

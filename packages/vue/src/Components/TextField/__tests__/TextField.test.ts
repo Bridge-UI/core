@@ -126,6 +126,32 @@ test("it should render end icon when endIcon prop is set", () => {
   expect(wrapper.findAll("svg").length).toBeGreaterThan(0);
 });
 
+test("it should render error icon instead of end icon when error is set", () => {
+  const wrapper = mount(TextField, {
+    props: { endIcon: CircleAlert, error: "Invalid" },
+  });
+
+  expect(wrapper.findAll("svg").length).toBe(1);
+});
+
+test("it should render required asterisk when required is true", () => {
+  const wrapper = mount(TextField, {
+    props: { label: "Email", required: true },
+  });
+
+  expect(wrapper.text()).toContain("*");
+});
+
+test("it should apply error color on the label when error is set", () => {
+  const wrapper = mount(TextField, {
+    props: { label: "Email", error: "Required" },
+  });
+
+  const label = wrapper.find('[class*="text-error-600"]');
+
+  expect(label.exists()).toBe(true);
+});
+
 test("it should apply error styles on the container when error is set", () => {
   const wrapper = mount(TextField, { props: { error: "Required" } });
 

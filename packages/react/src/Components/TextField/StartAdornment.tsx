@@ -15,11 +15,7 @@ function StartAdornment({
   return (
     <div
       {...props}
-      className={cn(
-        "flex h-full min-h-0 items-stretch",
-        buttonChildClass,
-        className,
-      )}
+      className={cn("flex items-center", buttonChildClass, className)}
     >
       {children as ReactNode}
     </div>

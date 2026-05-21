@@ -149,6 +149,16 @@ test("it should show error icon when invalid and no end icon", () => {
   expect(showErrorIcon.value).toBe(true);
 });
 
+test("it should show error icon instead of end icon when both are set", () => {
+  const { showErrorIcon, showEndIcon } = mountUseTextField({
+    error: "Required",
+    endIcon: CircleAlert,
+  });
+
+  expect(showEndIcon.value).toBe(false);
+  expect(showErrorIcon.value).toBe(true);
+});
+
 test("it should hide error icon when errorless is true", () => {
   const { showErrorIcon } = mountUseTextField({
     errorless: true,
@@ -171,6 +181,15 @@ test("it should set aria-invalid on input when error is set", () => {
   const { inputBind } = mountUseTextField({ error: "Required" });
 
   expect(inputBind.value["aria-invalid"]).toBe(true);
+});
+
+test("it should keep error focus ring on container when invalidated", () => {
+  const { containerBind } = mountUseTextField({ error: "Required" });
+
+  expect(containerBind.value.class).toContain("focus-within:ring-error-600");
+  expect(containerBind.value.class).not.toContain(
+    "focus-within:ring-primary-600",
+  );
 });
 
 test("it should set aria-describedby to description id when description is shown", () => {

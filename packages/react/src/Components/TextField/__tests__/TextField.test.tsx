@@ -130,6 +130,28 @@ test("it should render error icon when invalid and withErrorIcon is enabled", ()
   expect(container.querySelector("svg")).not.toBeNull();
 });
 
+test("it should render error icon instead of end icon when error is set", () => {
+  const { container } = render(
+    <TextField endIcon={CircleAlert} error="Invalid" aria-label="Field" />,
+  );
+
+  expect(container.querySelectorAll("svg").length).toBe(1);
+});
+
+test("it should render required asterisk when required is true", () => {
+  render(<TextField label="Email" required aria-label="Email" />);
+
+  expect(screen.getByText("*")).toBeTruthy();
+});
+
+test("it should apply error color on the label when error is set", () => {
+  const { container } = render(
+    <TextField label="Email" error="Required" aria-label="Email" />,
+  );
+
+  expect(container.querySelector(".text-error-600")).not.toBeNull();
+});
+
 test("it should not render error icon when errorless is true", () => {
   const { container } = render(
     <TextField error="Required" errorless aria-label="Field" />,

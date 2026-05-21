@@ -14,11 +14,7 @@ const buttonChildClass = "[&_button]:h-full [&_button]:min-h-0 [&_button]:rounde
 </script>
 
 <template>
-  <div
-    :class="
-      cn('flex h-full min-h-0 items-stretch', buttonChildClass, props.class)
-    "
-  >
+  <div :class="cn('flex items-center', buttonChildClass, props.class)">
     <slot />
   </div>
 </template>

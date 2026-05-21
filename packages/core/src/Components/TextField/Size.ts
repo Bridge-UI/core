@@ -6,7 +6,7 @@ export interface TextFieldSizeItem {
   "input": string;
 
   /**
-   * Min-height on the container when start/end slots or icons are present.
+   * Min-height on the container when start/end slots are present.
    */
   "container": string;
 
@@ -28,48 +28,64 @@ export interface TextFieldSizeItem {
 
 // prettier-ignore
 export interface TextFieldSize {
+  "2xs": TextFieldSizeItem;
   "xs": TextFieldSizeItem;
   "sm": TextFieldSizeItem;
   "md": TextFieldSizeItem;
   "lg": TextFieldSizeItem;
   "xl": TextFieldSizeItem;
+  "2xl": TextFieldSizeItem;
 }
 
 // prettier-ignore
 export const sizeProps: TextFieldSize = {
+  "2xs": {
+    "input": "text-2xs",
+    "insetEnd": "pe-1.5",
+    "insetStart": "ps-1.5",
+    "container": "min-h-6",
+    "padding": "px-1.5 py-0.5",
+  },
   "xs": {
+    "input": "text-xs",
+    "insetEnd": "pe-2",
+    "insetStart": "ps-2",
+    "container": "min-h-7",
+    "padding": "px-2 py-0.5",
+  },
+  "sm": {
     "input": "text-xs",
     "insetEnd": "pe-2",
     "insetStart": "ps-2",
     "container": "min-h-8",
     "padding": "px-2 py-1",
   },
-  "sm": {
+  "md": {
     "input": "text-sm",
     "insetEnd": "pe-2.5",
     "insetStart": "ps-2.5",
     "container": "min-h-9",
-    "padding": "px-2.5 py-1.5",
+    "padding": "px-2.5 py-1",
   },
-  "md": {
+  "lg": {
     "input": "text-sm",
     "insetEnd": "pe-3",
     "insetStart": "ps-3",
-    "padding": "px-3 py-2",
     "container": "min-h-10",
+    "padding": "px-3 py-1.5",
   },
-  "lg": {
+  "xl": {
     "input": "text-base",
     "insetEnd": "pe-3.5",
     "insetStart": "ps-3.5",
     "container": "min-h-11",
-    "padding": "px-3.5 py-2.5",
+    "padding": "px-3.5 py-2",
   },
-  "xl": {
+  "2xl": {
     "input": "text-lg",
     "insetEnd": "pe-4",
     "insetStart": "ps-4",
     "container": "min-h-12",
-    "padding": "px-4 py-3",
+    "padding": "px-4 py-2.5",
   },
 };
