@@ -24,6 +24,7 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
+  derived,
   hasNamedSlot,
   hasSlotOrProp,
   mergeBridgeUILayeredClasses,
@@ -108,11 +109,17 @@ export function useAlert(
   }, [bridgeAlert?.customProps?.variant]);
 
   // Theme
-  const colorKey = (merged.color ?? "primary") as keyof AlertColor;
+  const colorKey = derived(() => {
+    return (merged.color ?? "primary") as keyof AlertColor;
+  });
 
-  const variantKey = (merged.variant ?? "flat") as keyof typeof variantProps;
+  const variantKey = derived(() => {
+    return (merged.variant ?? "flat") as keyof typeof variantProps;
+  });
 
-  const palette = get(mergedVariantProps, [variantKey, colorKey]);
+  const palette = derived(() => {
+    return get(mergedVariantProps, [variantKey, colorKey]);
+  });
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
@@ -123,55 +130,75 @@ export function useAlert(
   }, [colorKey, merged.icon]);
 
   // Visibility
-  const hasDefaultBody = Boolean(children);
+  const hasDefaultBody = derived(() => {
+    return Boolean(children);
+  });
 
-  const showIcon = hasNamedSlot(slots, "icon") || resolvedIcon != null;
+  const showIcon = derived(() => {
+    return hasNamedSlot(slots, "icon") || resolvedIcon != null;
+  });
 
-  // prettier-ignore
-  const showTitleRow =
-    !hasNamedSlot(slots, "header") &&
-    (hasSlotOrProp(slots, "title", merged.title) || resolvedIcon != null || hasNamedSlot(slots, "icon"));
+  const showTitleRow = derived(() => {
+    return (
+      !hasNamedSlot(slots, "header") &&
+      (hasSlotOrProp(slots, "title", merged.title) ||
+        resolvedIcon != null ||
+        hasNamedSlot(slots, "icon"))
+    );
+  });
 
   // Root
-  const rootClasses = cn(
-    "w-full flex flex-col p-4",
-    palette.border,
-    palette.background,
-    get(mergedShadowMap, merged.shadow ?? "none"),
-    get(mergedRoundedMap, merged.rounded ?? "none"),
-    get(mergedClasses, "root"),
-    className,
-  );
+  const rootClasses = derived(() => {
+    return cn(
+      "w-full flex flex-col p-4",
+      palette.border,
+      palette.background,
+      get(mergedShadowMap, merged.shadow ?? "none"),
+      get(mergedRoundedMap, merged.rounded ?? "none"),
+      get(mergedClasses, "root"),
+      className,
+    );
+  });
 
   // Parts
-  const partsProps = merged.partsProps;
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
 
-  const showIconSlot = hasNamedSlot(slots, "icon");
+  const showIconSlot = derived(() => {
+    return hasNamedSlot(slots, "icon");
+  });
 
-  const iconBind = mergePartBind(
-    partsProps?.icon,
-    cn("w-5 h-5 shrink-0", palette.iconColor, get(mergedClasses, "icon")),
-  );
+  const iconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.icon,
+      cn("w-5 h-5 shrink-0", palette.iconColor, get(mergedClasses, "icon")),
+    );
+  });
 
-  const titleBind = mergePartBind(
-    partsProps?.title,
-    cn(
-      "text-start text-sm whitespace-normal",
-      hasDefaultBody ? "font-semibold" : "font-normal",
-      palette.text,
-      get(mergedClasses, "title"),
-    ),
-  );
+  const titleBind = derived(() => {
+    return mergePartBind(
+      partsProps?.title,
+      cn(
+        "text-start text-sm whitespace-normal",
+        hasDefaultBody ? "font-semibold" : "font-normal",
+        palette.text,
+        get(mergedClasses, "title"),
+      ),
+    );
+  });
 
-  const bodyBind = mergePartBind(
-    partsProps?.body,
-    cn(
-      "grow text-sm text-start",
-      palette.text,
-      get(mergedPaddingMap, merged.padding ?? "none"),
-      get(mergedClasses, "body"),
-    ),
-  );
+  const bodyBind = derived(() => {
+    return mergePartBind(
+      partsProps?.body,
+      cn(
+        "grow text-sm text-start",
+        palette.text,
+        get(mergedPaddingMap, merged.padding ?? "none"),
+        get(mergedClasses, "body"),
+      ),
+    );
+  });
 
   return {
     slots,

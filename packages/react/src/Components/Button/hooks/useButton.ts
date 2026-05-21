@@ -21,6 +21,7 @@ import type {
   ButtonProps,
 } from "@/Components/Button/button.types";
 import {
+  derived,
   hasNamedSlot,
   mergePartBind,
   splitComponentProps,
@@ -92,113 +93,169 @@ export function useButton(
   }, [bridgeButton?.customProps?.rounded]);
 
   // Theme
-  const densityKey = (merged.density ?? "default") as keyof typeof densityProps;
+  const densityKey = derived(() => {
+    return (merged.density ?? "default") as keyof typeof densityProps;
+  });
 
-  const sizeKey = merged.size ?? "md";
+  const sizeKey = derived(() => {
+    return merged.size ?? "md";
+  });
 
-  const isMini = densityKey === "mini";
+  const isMini = derived(() => {
+    return densityKey === "mini";
+  });
 
-  const colorKey = (merged.color ?? "primary") as keyof ButtonColor;
+  const colorKey = derived(() => {
+    return (merged.color ?? "primary") as keyof ButtonColor;
+  });
 
-  const variantKey = (propsForMerge.variant ??
-    (isMini
-      ? "flat"
-      : (merged.variant ?? "solid"))) as keyof typeof variantProps;
+  const variantKey = derived(() => {
+    return (propsForMerge.variant ??
+      (isMini
+        ? "flat"
+        : (merged.variant ?? "solid"))) as keyof typeof variantProps;
+  });
 
-  const colorItem = get(mergedVariantProps, [variantKey, colorKey]) as
-    | ButtonColorItem
-    | undefined;
+  const colorItem = derived(() => {
+    return get(mergedVariantProps, [variantKey, colorKey]) as
+      | ButtonColorItem
+      | undefined;
+  });
 
-  const colorClasses = cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
+  const colorClasses = derived(() => {
+    return cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
+  });
 
-  const sizeClass = get(mergedDensityProps, [densityKey, sizeKey]);
+  const sizeClass = derived(() => {
+    return get(mergedDensityProps, [densityKey, sizeKey]);
+  });
 
-  const iconSize = sizeKey as keyof IconSize;
+  const iconSize = derived(() => {
+    return sizeKey as keyof IconSize;
+  });
 
   // Element
-  const tag = merged.as ?? "button";
+  const tag = derived(() => {
+    return merged.as ?? "button";
+  });
 
-  const isButton = tag === "button";
+  const isButton = derived(() => {
+    return tag === "button";
+  });
 
-  const isAnchor = tag === "a";
+  const isAnchor = derived(() => {
+    return tag === "a";
+  });
 
-  const isDisabled = merged.disabled || merged.loading;
+  const isDisabled = derived(() => {
+    return merged.disabled || merged.loading;
+  });
 
-  const hasChildren = children != null && children !== false;
+  const hasChildren = derived(() => {
+    return children != null && children !== false;
+  });
 
   // Root
-  const rootClass = cn(
-    "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
-    "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center",
-    "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
-    "transition-all ease-in-out duration-200 focus:ring-2",
-    "disabled:opacity-80 disabled:cursor-not-allowed",
-    { "group hover:shadow-xs": !isMini },
-    { "w-full": !isMini && merged.full },
-    { "w-fit": !isMini && !merged.full },
-    { "shrink-0": isMini },
-    colorClasses,
-    get(roundedClassMap, merged.rounded ?? "md"),
-    sizeClass,
-    mergedClasses.root,
-    className,
-  );
+  const rootClass = derived(() => {
+    return cn(
+      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
+      "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center",
+      "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
+      "transition-all ease-in-out duration-200 focus:ring-2",
+      "disabled:opacity-80 disabled:cursor-not-allowed",
+      { "group hover:shadow-xs": !isMini },
+      { "w-full": !isMini && merged.full },
+      { "w-fit": !isMini && !merged.full },
+      { "shrink-0": isMini },
+      colorClasses,
+      get(roundedClassMap, merged.rounded ?? "md"),
+      sizeClass,
+      mergedClasses.root,
+      className,
+    );
+  });
 
   // Visibility
-  const showSpinner = merged.loading;
+  const showSpinner = derived(() => {
+    return merged.loading;
+  });
 
-  const canShowContent = !merged.loading;
+  const canShowContent = derived(() => {
+    return !merged.loading;
+  });
 
-  const showIcon = canShowContent && Boolean(merged.icon);
+  const showIcon = derived(() => {
+    return canShowContent && Boolean(merged.icon);
+  });
 
-  const showDefault = canShowContent && hasChildren && !merged.icon;
+  const showDefault = derived(() => {
+    return canShowContent && hasChildren && !merged.icon;
+  });
 
-  const showText = canShowContent && !!merged.text;
+  const showText = derived(() => {
+    return canShowContent && !!merged.text;
+  });
 
-  const showEndIcon = canShowContent && !!merged.endIcon;
+  const showEndIcon = derived(() => {
+    return canShowContent && !!merged.endIcon;
+  });
 
-  const showStartIcon = canShowContent && !!merged.startIcon;
+  const showStartIcon = derived(() => {
+    return canShowContent && !!merged.startIcon;
+  });
 
-  const showChildren = canShowContent && hasChildren && !merged.text;
+  const showChildren = derived(() => {
+    return canShowContent && hasChildren && !merged.text;
+  });
 
-  // prettier-ignore
-  const showEndSlot = canShowContent && !merged.endIcon && hasNamedSlot(slots, "end");
+  const showEndSlot = derived(() => {
+    return canShowContent && !merged.endIcon && hasNamedSlot(slots, "end");
+  });
 
-  // prettier-ignore
-  const showStartSlot = canShowContent && !merged.startIcon && hasNamedSlot(slots, "start");
+  const showStartSlot = derived(() => {
+    return canShowContent && !merged.startIcon && hasNamedSlot(slots, "start");
+  });
 
   // Parts
-  const partsProps = merged.partsProps;
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
 
-  const iconBind = mergePartBind(
-    partsProps?.icon,
-    cn("shrink-0", mergedClasses.icon),
-  );
+  const iconBind = derived(() => {
+    return mergePartBind(partsProps?.icon, cn("shrink-0", mergedClasses.icon));
+  });
 
-  const endIconBind = mergePartBind(
-    partsProps?.endIcon,
-    cn("shrink-0", mergedClasses.endIcon),
-  );
+  const endIconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.endIcon,
+      cn("shrink-0", mergedClasses.endIcon),
+    );
+  });
 
-  const startIconBind = mergePartBind(
-    partsProps?.startIcon,
-    cn("shrink-0", mergedClasses.startIcon),
-  );
+  const startIconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.startIcon,
+      cn("shrink-0", mergedClasses.startIcon),
+    );
+  });
 
-  const endSlotBind = mergePartBind(
-    partsProps?.end,
-    "inline-flex shrink-0 items-center",
-  );
+  const endSlotBind = derived(() => {
+    return mergePartBind(partsProps?.end, "inline-flex shrink-0 items-center");
+  });
 
-  const startSlotBind = mergePartBind(
-    partsProps?.start,
-    "inline-flex shrink-0 items-center",
-  );
+  const startSlotBind = derived(() => {
+    return mergePartBind(
+      partsProps?.start,
+      "inline-flex shrink-0 items-center",
+    );
+  });
 
-  const loadingIconBind = mergePartBind(
-    partsProps?.loading,
-    cn("shrink-0 animate-spin", mergedClasses.loading),
-  );
+  const loadingIconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.loading,
+      cn("shrink-0 animate-spin", mergedClasses.loading),
+    );
+  });
 
   return {
     tag,

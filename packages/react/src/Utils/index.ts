@@ -28,6 +28,13 @@ export type UseBridgeUIComponentReturn<
 };
 
 /**
+ * A computed value that re-runs when the parent re-renders.
+ */
+export function derived<T>(getter: () => T): T {
+  return getter();
+}
+
+/**
  * Merges a part's `className` with a computed class string (registry + `classes.*`).
  */
 export function mergePartBind<T extends { className?: string } | undefined>(

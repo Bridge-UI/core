@@ -18,6 +18,7 @@ import type {
   BadgeProps,
 } from "@/Components/Badge/badge.types";
 import {
+  derived,
   mergeBridgeUIStringMap,
   splitComponentProps,
   useBridgeUIComponent,
@@ -79,33 +80,49 @@ export function useBadge(
   }, [bridgeBadge?.customProps?.variant]);
 
   // Theme
-  const sizeKey = merged.size ?? "sm";
+  const sizeKey = derived(() => {
+    return merged.size ?? "sm";
+  });
 
-  const colorKey = (merged.color ?? "primary") as keyof BadgeColor;
+  const colorKey = derived(() => {
+    return (merged.color ?? "primary") as keyof BadgeColor;
+  });
 
-  const variantKey = (merged.variant ?? "flat") as keyof typeof variantProps;
+  const variantKey = derived(() => {
+    return (merged.variant ?? "flat") as keyof typeof variantProps;
+  });
 
-  const densityKey = (merged.density ?? "default") as keyof typeof densityProps;
+  const densityKey = derived(() => {
+    return (merged.density ?? "default") as keyof typeof densityProps;
+  });
 
-  const isMini = densityKey === "mini";
+  const isMini = derived(() => {
+    return densityKey === "mini";
+  });
 
-  const sizeClass = get(mergedDensityProps, [densityKey, sizeKey]);
+  const sizeClass = derived(() => {
+    return get(mergedDensityProps, [densityKey, sizeKey]);
+  });
 
-  const paletteClass = get(mergedVariantProps, [variantKey, colorKey]);
+  const paletteClass = derived(() => {
+    return get(mergedVariantProps, [variantKey, colorKey]);
+  });
 
   // Root
-  const rootClass = cn(
-    "inline-flex items-center justify-center font-medium whitespace-nowrap",
-    { "w-full": !isMini && merged.full },
-    { "w-fit": !isMini && !merged.full },
-    paletteClass.text,
-    paletteClass.background,
-    paletteClass.border,
-    sizeClass,
-    get(mergedRoundedMap, merged.rounded ?? "md"),
-    mergedClasses.root,
-    className,
-  );
+  const rootClass = derived(() => {
+    return cn(
+      "inline-flex items-center justify-center font-medium whitespace-nowrap",
+      { "w-full": !isMini && merged.full },
+      { "w-fit": !isMini && !merged.full },
+      paletteClass.text,
+      paletteClass.background,
+      paletteClass.border,
+      sizeClass,
+      get(mergedRoundedMap, merged.rounded ?? "md"),
+      mergedClasses.root,
+      className,
+    );
+  });
 
   return {
     merged,

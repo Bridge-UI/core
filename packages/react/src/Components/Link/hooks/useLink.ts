@@ -20,6 +20,7 @@ import type {
   LinkProps,
 } from "@/Components/Link/link.types";
 import {
+  derived,
   hasNamedSlot,
   mergeBridgeUIStringMap,
   mergePartBind,
@@ -83,52 +84,78 @@ export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
   }, [bridgeLink?.customProps?.underline]);
 
   // Theme
-  const colorKey = (merged.color ?? "primary") as keyof LinkColor;
+  const isDisabled = derived(() => {
+    return Boolean(merged.disabled);
+  });
 
-  const colorItem = get(mergedColorMap, colorKey);
+  const iconSize = derived(() => {
+    return (merged.size ?? "md") as keyof LinkSize;
+  });
 
-  const iconSize = (merged.size ?? "md") as keyof LinkSize;
+  const colorKey = derived(() => {
+    return (merged.color ?? "primary") as keyof LinkColor;
+  });
 
-  const isDisabled = Boolean(merged.disabled);
+  const colorItem = derived(() => {
+    return get(mergedColorMap, colorKey);
+  });
 
   // Root
-  const rootClass = cn(
-    "inline-flex items-center gap-x-1 font-medium transition-colors duration-200",
-    "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
-    colorItem?.base,
-    colorItem?.hover,
-    get(
-      mergedUnderlineMap,
-      (merged.underline ?? "hover") as keyof LinkUnderline,
-    ),
-    get(mergedSizeMap, merged.size ?? "md"),
-    mergedClasses.root,
-    className,
-  );
+  const rootClass = derived(() => {
+    return cn(
+      "inline-flex items-center gap-x-1 font-medium transition-colors duration-200",
+      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
+      colorItem?.base,
+      colorItem?.hover,
+      get(
+        mergedUnderlineMap,
+        (merged.underline ?? "hover") as keyof LinkUnderline,
+      ),
+      get(mergedSizeMap, merged.size ?? "md"),
+      mergedClasses.root,
+      className,
+    );
+  });
 
   // Visibility
-  const showLeftIcon = Boolean(merged.leftIcon);
+  const showLeftIcon = derived(() => {
+    return Boolean(merged.leftIcon);
+  });
 
-  const showRightIcon = Boolean(merged.rightIcon);
+  const showRightIcon = derived(() => {
+    return Boolean(merged.rightIcon);
+  });
 
-  const showAppend = hasNamedSlot(slots, "append");
+  const showAppend = derived(() => {
+    return hasNamedSlot(slots, "append");
+  });
 
-  const showPrepend = hasNamedSlot(slots, "prepend");
+  const showPrepend = derived(() => {
+    return hasNamedSlot(slots, "prepend");
+  });
 
-  const hasChildren = children != null && children !== false;
+  const hasChildren = derived(() => {
+    return children != null && children !== false;
+  });
 
   // Parts
-  const partsProps = merged.partsProps;
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
 
-  const leftIconBind = mergePartBind(
-    partsProps?.leftIcon,
-    cn("shrink-0", mergedClasses.leftIcon),
-  );
+  const leftIconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.leftIcon,
+      cn("shrink-0", mergedClasses.leftIcon),
+    );
+  });
 
-  const rightIconBind = mergePartBind(
-    partsProps?.rightIcon,
-    cn("shrink-0", mergedClasses.rightIcon),
-  );
+  const rightIconBind = derived(() => {
+    return mergePartBind(
+      partsProps?.rightIcon,
+      cn("shrink-0", mergedClasses.rightIcon),
+    );
+  });
 
   return {
     slots,

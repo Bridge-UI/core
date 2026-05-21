@@ -21,6 +21,7 @@ import type {
   TextFieldProps,
 } from "@/Components/TextField/textField.types";
 import {
+  derived,
   hasNamedSlot,
   hasSlotOrProp,
   mergePartBind,
@@ -104,191 +105,279 @@ export function useTextField(
   }, [bridgeTextField?.customProps?.size]);
 
   // Theme
-  const variantKey = merged.variant ?? "outline";
+  const sizeKey = derived(() => {
+    return merged.size ?? "md";
+  });
 
-  const colorKey = (merged.color ?? "primary") as keyof TextFieldColor;
+  const roundedKey = derived(() => {
+    return merged.rounded ?? "md";
+  });
 
-  const roundedKey = merged.rounded ?? "md";
+  const variantKey = derived(() => {
+    return merged.variant ?? "outline";
+  });
 
-  const sizeKey = merged.size ?? "md";
+  const colorKey = derived(() => {
+    return (merged.color ?? "primary") as keyof TextFieldColor;
+  });
 
-  const variantPalette = get(mergedVariantProps, variantKey);
+  const sizeClass = derived(() => {
+    return get(mergedSizeMap, sizeKey);
+  });
 
-  const colorPalette = get(mergedColorProps, colorKey);
+  const colorPalette = derived(() => {
+    return get(mergedColorProps, colorKey);
+  });
 
-  const roundedPalette = get(mergedRoundedMap, roundedKey);
+  const roundedPalette = derived(() => {
+    return get(mergedRoundedMap, roundedKey);
+  });
 
-  const sizeClass = get(mergedSizeMap, sizeKey);
+  const variantPalette = derived(() => {
+    return get(mergedVariantProps, variantKey);
+  });
 
   // State
-  const inputId = rootHtmlProps.id ?? autoId;
+  const inputId = derived(() => {
+    return rootHtmlProps.id ?? autoId;
+  });
 
-  const isDisabled = Boolean(merged.disabled);
+  const isDisabled = derived(() => {
+    return Boolean(merged.disabled);
+  });
 
-  const isReadonly = Boolean(merged.readonly);
+  const isReadonly = derived(() => {
+    return Boolean(merged.readonly);
+  });
 
-  const invalidated = Boolean(merged.error);
+  const invalidated = derived(() => {
+    return Boolean(merged.error);
+  });
 
-  const hasStartSlot = hasNamedSlot(slots, "start");
+  const hasStartSlot = derived(() => {
+    return hasNamedSlot(slots, "start");
+  });
 
-  const hasEndSlot = hasNamedSlot(slots, "end");
+  const hasEndSlot = derived(() => {
+    return hasNamedSlot(slots, "end");
+  });
 
-  const headerJustify = hasSlotOrProp(slots, "label", merged.label)
-    ? "justify-between items-end"
-    : "justify-end";
+  const headerJustify = derived(() => {
+    return hasSlotOrProp(slots, "label", merged.label)
+      ? "justify-between items-end"
+      : "justify-end";
+  });
 
   // Visibility
-  const showHeader =
-    hasSlotOrProp(slots, "label", merged.label) ||
-    hasSlotOrProp(slots, "corner", merged.corner);
+  const showEndIcon = derived(() => {
+    return merged.endIcon != null && !hasEndSlot;
+  });
 
-  const showStartIcon = merged.startIcon != null && !hasStartSlot;
+  const showStartIcon = derived(() => {
+    return merged.startIcon != null && !hasStartSlot;
+  });
 
-  const showEndIcon = merged.endIcon != null && !hasEndSlot;
+  const showHeader = derived(() => {
+    return (
+      hasSlotOrProp(slots, "label", merged.label) ||
+      hasSlotOrProp(slots, "corner", merged.corner)
+    );
+  });
 
-  const showErrorIcon =
-    !merged.errorless &&
-    invalidated &&
-    merged.withErrorIcon !== false &&
-    !showEndIcon &&
-    !hasEndSlot;
+  const showErrorIcon = derived(() => {
+    return (
+      !hasEndSlot &&
+      invalidated &&
+      !showEndIcon &&
+      !merged.errorless &&
+      merged.withErrorIcon !== false
+    );
+  });
 
-  const showDescription =
-    !invalidated && hasSlotOrProp(slots, "description", merged.description);
+  const showDescription = derived(() => {
+    return (
+      !invalidated && hasSlotOrProp(slots, "description", merged.description)
+    );
+  });
 
-  const showError =
-    !merged.errorless &&
-    invalidated &&
-    hasSlotOrProp(slots, "error", merged.error);
+  const showError = derived(() => {
+    return (
+      invalidated &&
+      !merged.errorless &&
+      hasSlotOrProp(slots, "error", merged.error)
+    );
+  });
 
   // Root
-  const rootClass = cn(
-    "w-full relative",
-    "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60",
-    "aria-readonly:pointer-events-none aria-readonly:select-none",
-    mergedClasses.root,
-    className,
-  );
+  const rootClass = derived(() => {
+    return cn(
+      "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60",
+      "aria-readonly:pointer-events-none aria-readonly:select-none",
+      "w-full relative",
+      mergedClasses.root,
+      className,
+    );
+  });
 
   // Header
-  const headerClass = cn("flex mb-1", headerJustify, mergedClasses.header);
+  const headerClass = derived(() => {
+    return cn("flex mb-1", headerJustify, mergedClasses.header);
+  });
 
-  const labelClass = cn(
-    "text-sm font-medium text-gray-700 dark:text-gray-300",
-    mergedClasses.label,
-  );
+  const labelClass = derived(() => {
+    return cn(
+      "text-sm font-medium text-gray-700 dark:text-gray-300",
+      mergedClasses.label,
+    );
+  });
 
-  const cornerClass = cn(
-    "text-sm text-gray-500 dark:text-gray-400",
-    mergedClasses.corner,
-  );
+  const cornerClass = derived(() => {
+    return cn("text-sm text-gray-500 dark:text-gray-400", mergedClasses.corner);
+  });
 
   // Container
-  const containerClass = cn(
-    "relative flex justify-between gap-x-2 items-center",
-    "transition-all ease-in-out duration-150",
-    "outline-0",
-    variantPalette?.container,
-    variantPalette?.input,
-    roundedPalette?.input,
-    colorPalette?.input,
-    sizeClass,
-    {
-      "ps-3": !hasStartSlot && !showStartIcon,
-      "pe-3": !hasEndSlot && !showEndIcon && !showErrorIcon,
-      "py-2": !hasStartSlot && !hasEndSlot,
-      "h-10": hasStartSlot || hasEndSlot,
-      "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
-      "bg-error-50 ring-error-500 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600":
-        invalidated,
-    },
-    mergedClasses.container,
-  );
+  // prettier-ignore
+  const containerClass = derived(() => {
+    return cn(
+      "relative flex justify-between gap-x-2 items-center",
+      "transition-all ease-in-out duration-150",
+      "outline-0",
+      variantPalette?.container,
+      variantPalette?.input,
+      roundedPalette?.input,
+      colorPalette?.input,
+      sizeClass,
+      {
+        "h-10": hasStartSlot || hasEndSlot,
+        "py-2": !hasStartSlot && !hasEndSlot,
+        "ps-3": !hasStartSlot && !showStartIcon,
+        "pe-3": !hasEndSlot && !showEndIcon && !showErrorIcon,
+        "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
+        "bg-error-50 ring-error-500 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600": invalidated,
+      },
+      mergedClasses.container,
+    );
+  });
 
-  const startClass = cn(
-    "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
-    "input-focus:text-error-500",
-    { "text-error-500": invalidated },
-    variantPalette?.start,
-    roundedPalette?.start,
-    colorPalette?.start,
-    mergedClasses.start,
-  );
+  const startClass = derived(() => {
+    return cn(
+      "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
+      { "text-error-500": invalidated },
+      "input-focus:text-error-500",
+      variantPalette?.start,
+      roundedPalette?.start,
+      colorPalette?.start,
+      mergedClasses.start,
+    );
+  });
 
-  const endClass = cn(
-    "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
-    "input-focus:text-error-500",
-    { "text-error-500": invalidated },
-    variantPalette?.end,
-    roundedPalette?.end,
-    colorPalette?.end,
-    mergedClasses.end,
-  );
+  const endClass = derived(() => {
+    return cn(
+      "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
+      { "text-error-500": invalidated },
+      "input-focus:text-error-500",
+      variantPalette?.end,
+      roundedPalette?.end,
+      colorPalette?.end,
+      mergedClasses.end,
+    );
+  });
 
-  const startSlotClass =
-    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
+  const startSlotClass = derived(() => {
+    return "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
+  });
 
-  const endSlotClass =
-    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+  const endSlotClass = derived(() => {
+    return "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+  });
 
   // Input
-  const inputClass = cn(
-    "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
-    "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
-    "disabled:cursor-not-allowed",
-    mergedClasses.input,
-  );
+  const inputClass = derived(() => {
+    return cn(
+      "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
+      "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
+      "disabled:cursor-not-allowed",
+      mergedClasses.input,
+    );
+  });
 
   // Footer
-  const descriptionClass = cn(
-    "mt-2 text-sm text-gray-500 dark:text-gray-400",
-    mergedClasses.description,
-  );
+  const descriptionClass = derived(() => {
+    return cn(
+      "mt-2 text-sm text-gray-500 dark:text-gray-400",
+      mergedClasses.description,
+    );
+  });
 
-  const errorClass = cn(
-    "mt-2 text-sm text-error-600 dark:text-error-400",
-    mergedClasses.error,
-  );
+  const errorClass = derived(() => {
+    return cn(
+      "mt-2 text-sm text-error-600 dark:text-error-400",
+      mergedClasses.error,
+    );
+  });
 
   // Parts
-  const partsProps = merged.partsProps;
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
 
-  const rootBind = mergePartBind(partsProps?.root, rootClass);
+  const endBind = derived(() => {
+    return mergePartBind(partsProps?.end, endClass);
+  });
 
-  const headerBind = mergePartBind(partsProps?.header, headerClass);
+  const rootBind = derived(() => {
+    return mergePartBind(partsProps?.root, rootClass);
+  });
 
-  const labelBind = mergePartBind(partsProps?.label, labelClass);
+  const labelBind = derived(() => {
+    return mergePartBind(partsProps?.label, labelClass);
+  });
 
-  const cornerBind = mergePartBind(partsProps?.corner, cornerClass);
+  const startBind = derived(() => {
+    return mergePartBind(partsProps?.start, startClass);
+  });
 
-  const containerBind = mergePartBind(partsProps?.container, containerClass);
+  const cornerBind = derived(() => {
+    return mergePartBind(partsProps?.corner, cornerClass);
+  });
 
-  const startBind = mergePartBind(partsProps?.start, startClass);
+  const headerBind = derived(() => {
+    return mergePartBind(partsProps?.header, headerClass);
+  });
 
-  const endBind = mergePartBind(partsProps?.end, endClass);
+  const containerBind = derived(() => {
+    return mergePartBind(partsProps?.container, containerClass);
+  });
 
-  const inputBind = mergePartBind(
-    {
-      ...rootHtmlProps,
-      ...partsProps?.input,
-      id: inputId,
-      disabled: isDisabled,
-      readOnly: isReadonly,
-      "aria-invalid": invalidated || undefined,
-    },
-    inputClass,
-  );
+  const inputBind = derived(() => {
+    return mergePartBind(
+      {
+        ...rootHtmlProps,
+        ...partsProps?.input,
+        id: inputId,
+        disabled: isDisabled,
+        readOnly: isReadonly,
+        "aria-invalid": invalidated || undefined,
+      },
+      inputClass,
+    );
+  });
 
-  const startIconBind = mergePartBind(partsProps?.startIcon, "");
+  const endIconBind = derived(() => {
+    return mergePartBind(partsProps?.endIcon, "");
+  });
 
-  const endIconBind = mergePartBind(partsProps?.endIcon, "");
+  const startIconBind = derived(() => {
+    return mergePartBind(partsProps?.startIcon, "");
+  });
 
-  const descriptionBind = mergePartBind(
-    partsProps?.description,
-    descriptionClass,
-  );
+  const errorBind = derived(() => {
+    return mergePartBind(partsProps?.error, errorClass);
+  });
 
-  const errorBind = mergePartBind(partsProps?.error, errorClass);
+  const descriptionBind = derived(() => {
+    return mergePartBind(partsProps?.description, descriptionClass);
+  });
 
   return {
     slots,
