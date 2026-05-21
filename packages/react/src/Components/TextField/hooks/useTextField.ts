@@ -281,7 +281,7 @@ export function useTextField(
   // prettier-ignore
   const containerClass = derived(() => {
     return cn(
-      "group/field relative flex justify-between gap-x-2 items-center",
+      "group/field relative flex justify-start gap-x-2 items-center",
       "transition-all ease-in-out duration-150",
       "outline-none",
       variantPalette?.container,
