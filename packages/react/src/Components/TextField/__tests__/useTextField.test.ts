@@ -22,11 +22,20 @@ function renderUseTextField(props: TextFieldProps = {}) {
   return renderHook(() => useTextField(props, libDefaults));
 }
 
-test("it should merge default color and variant", () => {
+test("it should merge default color, size, rounded, and variant", () => {
   const { result } = renderUseTextField();
 
+  expect(result.current.merged.size).toBe("md");
+  expect(result.current.merged.rounded).toBe("md");
   expect(result.current.merged.color).toBe("primary");
   expect(result.current.merged.variant).toBe("outline");
+});
+
+test("it should use md size and rounded when hook is called without libDefaults", () => {
+  const { result } = renderHook(() => useTextField({}));
+
+  expect(result.current.merged.size).toBe("md");
+  expect(result.current.merged.rounded).toBe("md");
 });
 
 test("it should override color when prop is passed", () => {
@@ -93,6 +102,13 @@ test("it should hide error message when errorless is true", () => {
   });
 
   expect(result.current.showError).toBe(false);
+});
+
+test("it should show start text when start prop is set", () => {
+  const { result } = renderUseTextField({ start: "https://" });
+
+  expect(result.current.showStartText).toBe(true);
+  expect(result.current.showStartIcon).toBe(false);
 });
 
 test("it should show start icon when startIcon is set", () => {

@@ -24,15 +24,17 @@ function TextField(props: TextFieldProps) {
     isReadonly,
     showHeader,
     endIconBind,
+    endSlotBind,
     invalidated,
     showEndIcon,
-    endSlotClass,
+    showEndText,
     hasStartSlot,
     containerBind,
     showErrorIcon,
     showStartIcon,
+    showStartText,
     startIconBind,
-    startSlotClass,
+    startSlotBind,
     descriptionBind,
     showDescription,
   } = useTextField(props, {
@@ -75,7 +77,11 @@ function TextField(props: TextFieldProps) {
       )}
 
       <label {...containerBind} htmlFor={inputId}>
-        {hasStartSlot && <div className={startSlotClass}>{slots?.start}</div>}
+        {hasStartSlot && <div {...startSlotBind}>{slots?.start}</div>}
+
+        {!hasStartSlot && showStartText && (
+          <div {...startBind}>{merged.start}</div>
+        )}
 
         {!hasStartSlot && showStartIcon && merged.startIcon && (
           <div {...startBind}>
@@ -89,7 +95,9 @@ function TextField(props: TextFieldProps) {
 
         <input {...inputBind} />
 
-        {hasEndSlot && <div className={endSlotClass}>{slots?.end}</div>}
+        {hasEndSlot && <div {...endSlotBind}>{slots?.end}</div>}
+
+        {!hasEndSlot && showEndText && <div {...endBind}>{merged.end}</div>}
 
         {!hasEndSlot && showEndIcon && merged.endIcon && (
           <div {...endBind}>

@@ -303,7 +303,7 @@ export interface TextFieldConfigBase {
     variant: keyof TextFieldVariant;
   }>;
   customProps: Partial<{
-    size: Record<string, string>;
+    size: Partial<TextFieldSize>;
     color: Record<string, TextFieldColorItem>;
     rounded: Record<string, TextFieldRoundedItem>;
     variant: Record<string, TextFieldVariantItem>;

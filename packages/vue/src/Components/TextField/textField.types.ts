@@ -178,6 +178,13 @@ export interface TextFieldOwnProps {
   disabled?: boolean;
 
   /**
+   * Inline-end text inside the field (suffix), e.g. `@mail.com`.
+   *
+   * @default undefined
+   */
+  end?: string;
+
+  /**
    * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
    *
    * @default undefined
@@ -242,6 +249,13 @@ export interface TextFieldOwnProps {
   variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
 
   /**
+   * Inline-start text inside the field (prefix), e.g. `https://`.
+   *
+   * @default undefined
+   */
+  start?: string;
+
+  /**
    * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
    *
    * @default undefined
@@ -264,7 +278,8 @@ export interface TextFieldSlots {
   corner?: Slot;
 
   /**
-   * Slot at the inline end of the input container.
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text.
    */
   end?: Slot;
 
@@ -284,7 +299,8 @@ export interface TextFieldSlots {
   label?: Slot;
 
   /**
-   * Slot at the inline start of the input container.
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text.
    */
   start?: Slot;
 }

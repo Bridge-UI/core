@@ -105,6 +105,14 @@ test("it should set data-invalid on the root when error is set", () => {
   expect(wrapper.find(".w-full").attributes("data-invalid")).toBe("true");
 });
 
+test("it should render start text when start prop is set", () => {
+  const wrapper = mount(TextField, {
+    props: { label: "Website", start: "https://" },
+  });
+
+  expect(wrapper.text()).toContain("https://");
+});
+
 test("it should render start icon when startIcon prop is set", () => {
   const wrapper = mount(TextField, { props: { startIcon: CircleAlert } });
 

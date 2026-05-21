@@ -22,6 +22,7 @@ import type {
 import {
   hasNamedSlot,
   hasSlotOrProp,
+  isPropPresent,
   mergePartBind,
   splitComponentProps,
   useBridgeUIComponent,
@@ -29,10 +30,12 @@ import {
 } from "@/Utils";
 
 const textFieldBridgeKeys = [
+  "end",
   "size",
   "color",
   "error",
   "label",
+  "start",
   "corner",
   "classes",
   "endIcon",
@@ -51,7 +54,13 @@ const errorIcon = CircleAlert;
 
 export function useTextField(
   props: TextFieldOwnProps,
-  libDefaults: Partial<TextFieldOwnProps>,
+  libDefaults: Partial<TextFieldOwnProps> = {
+    size: "md",
+    rounded: "md",
+    color: "primary",
+    variant: "outline",
+    withErrorIcon: true,
+  },
 ) {
   // Setup
   const slots = useSlots();
@@ -132,8 +141,12 @@ export function useTextField(
     return get(mergedRoundedMap.value, roundedKey.value);
   });
 
-  const sizeClass = computed(() => {
+  const sizePalette = computed(() => {
     return get(mergedSizeMap.value, sizeKey.value);
+  });
+
+  const isUnderlined = computed(() => {
+    return variantKey.value === "underlined";
   });
 
   // State
@@ -175,22 +188,57 @@ export function useTextField(
     );
   });
 
+  const showStartText = computed(() => {
+    return isPropPresent(merged.value.start) && !hasStartSlot.value;
+  });
+
   const showStartIcon = computed(() => {
-    return merged.value.startIcon != null && !hasStartSlot.value;
+    return (
+      !hasStartSlot.value &&
+      !showStartText.value &&
+      merged.value.startIcon != null
+    );
+  });
+
+  const showEndText = computed(() => {
+    return isPropPresent(merged.value.end) && !hasEndSlot.value;
   });
 
   const showEndIcon = computed(() => {
-    return merged.value.endIcon != null && !hasEndSlot.value;
+    return (
+      !hasEndSlot.value && !showEndText.value && merged.value.endIcon != null
+    );
   });
 
   const showErrorIcon = computed(() => {
     return (
       !hasEndSlot.value &&
       invalidated.value &&
+      !showEndText.value &&
       !showEndIcon.value &&
       !merged.value.errorless &&
       merged.value.withErrorIcon !== false
     );
+  });
+
+  const containerSpacing = computed(() => {
+    if (!hasStartSlot.value && !hasEndSlot.value) {
+      return sizePalette.value?.padding;
+    }
+
+    return cn(
+      "gap-x-2",
+      !hasStartSlot.value && sizePalette.value?.insetStart,
+      !hasEndSlot.value && sizePalette.value?.insetEnd,
+    );
+  });
+
+  const containerColorFocus = computed(() => {
+    if (isUnderlined.value) {
+      return colorPalette.value?.underlined;
+    }
+
+    return colorPalette.value?.input;
   });
 
   const showDescription = computed(() => {
@@ -211,7 +259,7 @@ export function useTextField(
   // Root
   const rootClass = computed(() => {
     return cn(
-      "w-full relative",
+      "group w-full relative",
       "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60",
       "aria-readonly:pointer-events-none aria-readonly:select-none",
       mergedClasses.value.root,
@@ -239,65 +287,72 @@ export function useTextField(
   });
 
   // Container
+  // prettier-ignore
   const containerClass = computed(() => {
     return cn(
-      "relative flex justify-between gap-x-2 items-center",
+      "group/field relative flex justify-between gap-x-2 items-center",
       "transition-all ease-in-out duration-150",
-      "outline-0",
+      "outline-none",
       variantPalette.value?.container,
       variantPalette.value?.input,
-      roundedPalette.value?.input,
-      colorPalette.value?.input,
-      sizeClass.value,
+      !isUnderlined.value && roundedPalette.value?.input,
+      isUnderlined.value && "rounded-none",
+      containerColorFocus.value,
+      containerSpacing.value,
+      (hasStartSlot.value || hasEndSlot.value) && sizePalette.value?.container,
       {
-        "ps-3": !hasStartSlot.value && !showStartIcon.value,
-        "pe-3": !hasEndSlot.value && !showEndIcon.value && !showErrorIcon.value,
-        "py-2": !hasStartSlot.value && !hasEndSlot.value,
-        "h-10": hasStartSlot.value || hasEndSlot.value,
         "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
-        "bg-error-50 ring-error-500 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600":
-          invalidated.value,
+        "bg-error-50 ring-error-500 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600": invalidated.value && !isUnderlined.value,
+        "border-error-500 dark:border-error-600": invalidated.value && isUnderlined.value,
       },
       mergedClasses.value.container,
     );
   });
 
-  const startClass = computed(() => {
+  const startIconClass = computed(() => {
     return cn(
       "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
-      "input-focus:text-error-500",
+      "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated.value },
-      variantPalette.value?.start,
-      roundedPalette.value?.start,
       colorPalette.value?.start,
+      !isUnderlined.value && roundedPalette.value?.start,
       mergedClasses.value.start,
     );
   });
 
-  const endClass = computed(() => {
+  const endIconClass = computed(() => {
     return cn(
       "text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
-      "input-focus:text-error-500",
+      "group-data-[invalid]:text-error-500",
       { "text-error-500": invalidated.value },
-      variantPalette.value?.end,
-      roundedPalette.value?.end,
       colorPalette.value?.end,
+      !isUnderlined.value && roundedPalette.value?.end,
       mergedClasses.value.end,
     );
   });
 
-  const startSlotClass =
-    "group/start wrapper-start-slot flex h-full py-0.5 ps-0.5";
+  const startSlotClass = computed(() => {
+    return cn(
+      "group/start wrapper-start-slot shrink-0 flex h-full items-center py-0.5 ps-0.5",
+      mergedClasses.value.start,
+    );
+  });
 
-  const endSlotClass =
-    "group/end wrapper-end-slot shrink-0 flex h-full py-0.5 pe-0.5";
+  const endSlotClass = computed(() => {
+    return cn(
+      "group/end wrapper-end-slot shrink-0 flex h-full items-center py-0.5 pe-0.5",
+      mergedClasses.value.end,
+    );
+  });
 
   // Input
   const inputClass = computed(() => {
     return cn(
-      "flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none",
+      "flex-1 min-w-0 bg-transparent border-0 shadow-none",
+      "outline-none ring-0 focus:outline-none focus:ring-0",
       "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
       "disabled:cursor-not-allowed",
+      sizePalette.value?.input,
       mergedClasses.value.input,
     );
   });
@@ -357,11 +412,19 @@ export function useTextField(
   });
 
   const startBind = computed(() => {
-    return mergePartBind(partsProps.value?.start, startClass.value);
+    return mergePartBind(partsProps.value?.start, startIconClass.value);
   });
 
   const endBind = computed(() => {
-    return mergePartBind(partsProps.value?.end, endClass.value);
+    return mergePartBind(partsProps.value?.end, endIconClass.value);
+  });
+
+  const startSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.start, startSlotClass.value);
+  });
+
+  const endSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.end, endSlotClass.value);
   });
 
   const inputBind = computed(() => {
@@ -414,15 +477,17 @@ export function useTextField(
     isReadonly,
     showHeader,
     endIconBind,
+    endSlotBind,
     invalidated,
     showEndIcon,
-    endSlotClass,
+    showEndText,
     hasStartSlot,
     containerBind,
     showErrorIcon,
     showStartIcon,
+    showStartText,
     startIconBind,
-    startSlotClass,
+    startSlotBind,
     descriptionBind,
     showDescription,
   };

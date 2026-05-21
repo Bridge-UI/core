@@ -78,6 +78,7 @@ export type {
   TextFieldRounded,
   TextFieldRoundedItem,
   TextFieldSize,
+  TextFieldSizeItem,
   TextFieldVariant,
   TextFieldVariantItem,
 } from "@core/Components/TextField";

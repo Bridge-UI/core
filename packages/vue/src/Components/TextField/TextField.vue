@@ -35,15 +35,17 @@ const {
   isReadonly,
   showHeader,
   endIconBind,
+  endSlotBind,
   invalidated,
   showEndIcon,
-  endSlotClass,
+  showEndText,
   hasStartSlot,
   containerBind,
   showErrorIcon,
   showStartIcon,
+  showStartText,
   startIconBind,
-  startSlotClass,
+  startSlotBind,
   descriptionBind,
   showDescription,
 } = useTextField(props, {
@@ -80,8 +82,12 @@ const {
     </div>
 
     <label v-bind="containerBind" :for="inputId">
-      <div v-if="hasStartSlot" :class="startSlotClass">
+      <div v-if="hasStartSlot" v-bind="startSlotBind">
         <slot name="start" />
+      </div>
+
+      <div v-else-if="showStartText" v-bind="startBind">
+        {{ merged.start }}
       </div>
 
       <div v-else-if="showStartIcon && merged.startIcon" v-bind="startBind">
@@ -94,8 +100,12 @@ const {
 
       <input v-model="model" v-bind="inputBind" />
 
-      <div v-if="hasEndSlot" :class="endSlotClass">
+      <div v-if="hasEndSlot" v-bind="endSlotBind">
         <slot name="end" />
+      </div>
+
+      <div v-else-if="showEndText" v-bind="endBind">
+        {{ merged.end }}
       </div>
 
       <div v-else-if="showEndIcon && merged.endIcon" v-bind="endBind">

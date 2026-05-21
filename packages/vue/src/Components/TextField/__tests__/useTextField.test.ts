@@ -35,11 +35,31 @@ function mountUseTextField(
   return result;
 }
 
-test("it should merge default color and variant", () => {
+test("it should merge default color, size, rounded, and variant", () => {
   const { merged } = mountUseTextField();
 
+  expect(merged.value.size).toBe("md");
+  expect(merged.value.rounded).toBe("md");
   expect(merged.value.color).toBe("primary");
   expect(merged.value.variant).toBe("outline");
+});
+
+test("it should use md size and rounded when hook is called without libDefaults", () => {
+  let result!: ReturnType<typeof useTextField>;
+
+  const Wrapper = defineComponent({
+    inheritAttrs: false,
+    setup() {
+      result = useTextField({});
+
+      return () => h("div");
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.merged.value.size).toBe("md");
+  expect(result.merged.value.rounded).toBe("md");
 });
 
 test("it should override color when prop is passed", () => {
@@ -106,6 +126,15 @@ test("it should hide error message when errorless is true", () => {
   });
 
   expect(showError.value).toBe(false);
+});
+
+test("it should show start text when start prop is set", () => {
+  const { showStartText, showStartIcon } = mountUseTextField({
+    start: "https://",
+  });
+
+  expect(showStartText.value).toBe(true);
+  expect(showStartIcon.value).toBe(false);
 });
 
 test("it should show start icon when startIcon is set", () => {

@@ -100,6 +100,12 @@ test("it should set data-invalid on the root when error is set", () => {
   expect(container.querySelector("[data-invalid='true']")).not.toBeNull();
 });
 
+test("it should render start text when start prop is set", () => {
+  render(<TextField label="Website" start="https://" aria-label="Website" />);
+
+  expect(screen.getByText("https://")).toBeTruthy();
+});
+
 test("it should render start icon when startIcon prop is set", () => {
   const { container } = render(
     <TextField startIcon={CircleAlert} aria-label="Field" />,

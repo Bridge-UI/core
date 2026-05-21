@@ -10,7 +10,10 @@ export type {
   TextFieldRoundedItem,
 } from "@core/Components/TextField/Rounded";
 export { sizeProps } from "@core/Components/TextField/Size";
-export type { TextFieldSize } from "@core/Components/TextField/Size";
+export type {
+  TextFieldSize,
+  TextFieldSizeItem,
+} from "@core/Components/TextField/Size";
 export { variantProps } from "@core/Components/TextField/Variant";
 export type {
   TextFieldVariant,
