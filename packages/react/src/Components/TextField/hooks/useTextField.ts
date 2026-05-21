@@ -324,14 +324,14 @@ export function useTextField(
 
   const startSlotClass = derived(() => {
     return cn(
-      "group/start wrapper-start-slot shrink-0 flex items-center self-stretch py-0.5 ps-0.5",
+      "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5",
       mergedClasses.start,
     );
   });
 
   const endSlotClass = derived(() => {
     return cn(
-      "group/end wrapper-end-slot shrink-0 flex items-center self-stretch py-0.5 pe-0.5",
+      "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5",
       mergedClasses.end,
     );
   });

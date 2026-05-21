@@ -2,9 +2,6 @@
 import { cn } from "@bridge-ui/core";
 import type { HTMLAttributes, ReactNode } from "react";
 
-// prettier-ignore
-const buttonChildClass = "[&_button]:h-full [&_button]:min-h-0 [&_button]:rounded-s-none [&_button]:rounded-e-none";
-
 export type StartAdornmentProps = HTMLAttributes<HTMLDivElement>;
 
 function StartAdornment({
@@ -15,7 +12,7 @@ function StartAdornment({
   return (
     <div
       {...props}
-      className={cn("flex items-center", buttonChildClass, className)}
+      className={cn("flex h-full min-h-0 w-full items-stretch", className)}
     >
       {children as ReactNode}
     </div>

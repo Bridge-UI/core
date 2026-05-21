@@ -285,8 +285,9 @@ export interface TextFieldSlots {
   corner?: Slot;
 
   /**
-   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
-   * for plain suffix text.
+   * Inline-end slot for custom content (e.g. `EndAdornment` + `Button`). Prefer
+   * the `end` prop for plain suffix text. Size and radius on interactive
+   * children are the consumer's responsibility (see docs).
    */
   end?: Slot;
 
@@ -306,8 +307,9 @@ export interface TextFieldSlots {
   label?: Slot;
 
   /**
-   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
-   * prop for plain prefix text.
+   * Inline-start slot for custom content (e.g. `StartAdornment` + `Button`).
+   * Prefer the `start` prop for plain prefix text. Size and radius on
+   * interactive children are the consumer's responsibility (see docs).
    */
   start?: Slot;
 }

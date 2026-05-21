@@ -334,14 +334,14 @@ export function useTextField(
 
   const startSlotClass = computed(() => {
     return cn(
-      "group/start wrapper-start-slot shrink-0 flex items-center self-stretch py-0.5 ps-0.5",
+      "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5",
       mergedClasses.value.start,
     );
   });
 
   const endSlotClass = computed(() => {
     return cn(
-      "group/end wrapper-end-slot shrink-0 flex items-center self-stretch py-0.5 pe-0.5",
+      "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5",
       mergedClasses.value.end,
     );
   });
