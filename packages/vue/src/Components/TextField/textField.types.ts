@@ -206,13 +206,6 @@ export interface TextFieldOwnProps {
   label?: string;
 
   /**
-   * The value of the text field.
-   *
-   * @default undefined
-   */
-  modelValue?: string;
-
-  /**
    * Extra props for internal parts (`start`, `end`, `input`, etc.).
    * Native `<input>` attributes use fallthrough attrs on the component.
    *
@@ -299,4 +292,11 @@ export interface TextFieldSlots {
 export type TextFieldProps = MergeHtmlProps<
   TextFieldOwnProps,
   InputHTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: string | null;
+};

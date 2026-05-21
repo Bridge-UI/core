@@ -14,9 +14,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<TextFieldOwnProps>();
 
-const emit = defineEmits<{
-  "update:modelValue": [value: string];
-}>();
+const model = defineModel<string | null | undefined>();
 
 const {
   slots,
@@ -94,12 +92,7 @@ const {
         />
       </div>
 
-      <input
-        v-bind="inputBind"
-        @input="
-          emit('update:modelValue', ($event.target as HTMLInputElement).value)
-        "
-      />
+      <input v-model="model" v-bind="inputBind" />
 
       <div v-if="hasEndSlot" :class="endSlotClass">
         <slot name="end" />

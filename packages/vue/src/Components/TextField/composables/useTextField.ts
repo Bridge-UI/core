@@ -29,22 +29,21 @@ import {
 } from "@/Utils";
 
 const textFieldBridgeKeys = [
-  "classes",
-  "color",
-  "corner",
-  "description",
-  "disabled",
-  "endIcon",
-  "error",
-  "errorless",
-  "label",
-  "modelValue",
-  "partsProps",
-  "readonly",
-  "rounded",
   "size",
-  "startIcon",
+  "color",
+  "error",
+  "label",
+  "corner",
+  "classes",
+  "endIcon",
+  "rounded",
   "variant",
+  "disabled",
+  "readonly",
+  "errorless",
+  "startIcon",
+  "partsProps",
+  "description",
   "withErrorIcon",
 ] as const satisfies readonly (keyof TextFieldOwnProps)[];
 
@@ -360,7 +359,6 @@ export function useTextField(
         disabled: isDisabled.value,
         readonly: isReadonly.value,
         "aria-invalid": invalidated.value || undefined,
-        value: merged.value.modelValue,
       },
       inputClass.value,
     );
