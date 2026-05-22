@@ -1,4 +1,5 @@
 // ** External Imports
+import { get, isNil } from "es-toolkit/compat";
 import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
@@ -50,11 +51,13 @@ export function useBridgeUIComponent<
   const bridge = useBridgeUI();
 
   const components = computed(() => {
-    return bridge ? unref(bridge.components) : null;
+    return isNil(bridge) ? null : unref(bridge.components);
   });
 
   const entry = computed((): RegistryEntryFor<K> | undefined => {
-    return components.value?.[componentName] as RegistryEntryFor<K> | undefined;
+    return get(components.value, componentName) as
+      | RegistryEntryFor<K>
+      | undefined;
   });
 
   const merged = computed(() => {
@@ -86,7 +89,7 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
 }) {
   return computed(() => {
     return mergeBridgeUILayeredClasses(
-      entry.value?.classes as Partial<C> | undefined,
+      get(entry.value, "classes") as Partial<C> | undefined,
       props.classes,
     );
   });
@@ -99,17 +102,3 @@ export {
   isPropPresent,
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
-export {
-  createMergePartBind,
-  mergeBridgeUILayeredClasses,
-  mergePropsWithBridgeUIDefaults,
-  splitComponentProps,
-} from "@bridge-ui/core/Utils";
-export type {
-  LibDefaultsShape,
-  MergeHtmlProps,
-  MergeLibDefaults,
-  MergeProps,
-  Overwrite,
-  UnionProps,
-} from "@bridge-ui/core/Utils";

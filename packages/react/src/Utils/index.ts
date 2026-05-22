@@ -1,4 +1,5 @@
 // ** External Imports
+import { get, isNil } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -55,9 +56,11 @@ export function useBridgeUIComponent<
 }): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
-  const components = bridge?.components ?? null;
+  const components = isNil(bridge) ? null : (bridge.components ?? null);
 
-  const entry = components?.[componentName] as RegistryEntryFor<K> | undefined;
+  const entry = get(components, componentName) as
+    | RegistryEntryFor<K>
+    | undefined;
 
   const merged = useMemo(() => {
     return mergePropsWithBridgeUIDefaults({
@@ -88,10 +91,10 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
 }) {
   return useMemo(() => {
     return mergeBridgeUILayeredClasses(
-      entry?.classes as Partial<C> | undefined,
+      get(entry, "classes") as Partial<C> | undefined,
       props.classes,
     );
-  }, [entry?.classes, props.classes]);
+  }, [entry, props.classes]);
 }
 
 // ** Exports
@@ -102,17 +105,3 @@ export {
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 export type { SlotMap } from "@/Utils/slotOrProp";
-export {
-  createMergePartBind,
-  mergeBridgeUILayeredClasses,
-  mergePropsWithBridgeUIDefaults,
-  splitComponentProps,
-} from "@bridge-ui/core/Utils";
-export type {
-  LibDefaultsShape,
-  MergeHtmlProps,
-  MergeLibDefaults,
-  MergeProps,
-  Overwrite,
-  UnionProps,
-} from "@bridge-ui/core/Utils";
