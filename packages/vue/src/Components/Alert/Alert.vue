@@ -11,14 +11,22 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<AlertOwnProps>();
 
-const { slots, merged, bodyBind, iconBind, rootBind, titleBind, resolvedIcon } =
-  useAlert(props, {
-    shadow: "sm",
-    rounded: "sm",
-    variant: "flat",
-    color: "primary",
-    padding: "medium",
-  });
+const {
+  slots,
+  merged,
+  bodyBind,
+  iconBind,
+  rootBind,
+  titleBind,
+  resolvedIcon,
+  hasDefaultBody,
+} = useAlert(props, {
+  shadow: "sm",
+  rounded: "sm",
+  variant: "flat",
+  color: "primary",
+  padding: "medium",
+});
 </script>
 
 <template>
@@ -48,7 +56,7 @@ const { slots, merged, bodyBind, iconBind, rootBind, titleBind, resolvedIcon } =
       <slot v-if="hasNamedSlot(slots, 'action')" name="action" />
     </div>
 
-    <div v-if="hasNamedSlot(slots, 'default')" v-bind="bodyBind">
+    <div v-if="hasDefaultBody" v-bind="bodyBind">
       <slot />
     </div>
 

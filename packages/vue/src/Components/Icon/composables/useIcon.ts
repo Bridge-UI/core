@@ -1,54 +1,71 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  LibDefaultsShape,
+  mergeBridgeUILayeredClasses,
+  MergeLibDefaults,
+  splitComponentProps,
+} from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";
-import { splitComponentProps, useBridgeUIComponent } from "@/Utils";
+import { mergePartBind, useBridgeUIComponent } from "@/Utils";
 
 const iconBridgeKeys = [
   "icon",
   "size",
 ] as const satisfies readonly (keyof IconOwnProps)[];
 
-export function useIcon(
-  props: IconProps,
-  attrs: Record<string, unknown>,
-  libDefaults: Partial<IconOwnProps>,
-) {
-  // Setup
-  const { userClass, propsForMerge, rootBind } = splitComponentProps(
-    props,
-    attrs,
-    { bridgeKeys: iconBridgeKeys },
-  );
+type IconLibDefaults = LibDefaultsShape<IconOwnProps, "size">;
 
-  const { entry: bridgeIcon, merged } = useBridgeUIComponent({
+type IconMerged = MergeLibDefaults<IconOwnProps, IconLibDefaults>;
+
+export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
+  // Setup
+  const attrs = useAttrs();
+
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    IconProps,
+    typeof iconBridgeKeys
+  >({
+    bridgeKeys: iconBridgeKeys,
+    props: { ...attrs, ...props },
+  });
+
+  const { entry: bridgeIcon, merged } = useBridgeUIComponent<
+    IconMerged,
+    "Icon"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Icon",
   });
 
-  // Registry maps
-  const sizeClassMap = computed(() => {
-    return mergeBridgeUILayeredClasses(
+  // Classes
+  const sizeClass = computed(() => {
+    const props = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeIcon.value?.customProps?.size,
     );
+
+    return get(props, merged.value.size);
   });
 
-  // Root
-  const mergedClass = computed(() => {
-    return cn(get(sizeClassMap.value, merged.value.size ?? "md"), userClass);
+  // Binds
+  // prettier-ignore
+  const rootBind = computed(() => {
+    return mergePartBind({}, inheritedAttrs, cn({
+      [sizeClass.value ?? ""]: true,
+    }));
   });
 
   return {
     merged,
     rootBind,
-    mergedClass,
   };
 }

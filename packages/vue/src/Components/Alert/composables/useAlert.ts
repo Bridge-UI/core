@@ -1,4 +1,5 @@
 // ** External Imports
+import { get, isNull } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-vue-next";
 import {
   Bell,
@@ -13,6 +14,7 @@ import { computed, useAttrs, useSlots } from "vue";
 // ** Core Imports
 import {
   cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -28,12 +30,10 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
 import {
-  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-import { get, isNull } from "es-toolkit/compat";
 
 const alertBridgeKeys = [
   "icon",
@@ -95,21 +95,41 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     props: customProps,
   });
 
-  // Registry maps
-  const shadowMap = computed(() => {
-    return get(shadowProps, merged.value.shadow);
+  // Classes
+  const shadowClass = computed(() => {
+    const props = mergeBridgeUILayeredClasses(
+      shadowProps,
+      bridgeAlert.value?.customProps?.shadow,
+    );
+
+    return get(props, merged.value.shadow);
   });
 
-  const paddingMap = computed(() => {
-    return get(paddingProps, merged.value.padding);
+  const paddingClass = computed(() => {
+    const props = mergeBridgeUILayeredClasses(
+      paddingProps,
+      bridgeAlert.value?.customProps?.padding,
+    );
+
+    return get(props, merged.value.padding);
   });
 
-  const roundedMap = computed(() => {
-    return get(roundedProps, merged.value.rounded);
+  const roundedClass = computed(() => {
+    const props = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeAlert.value?.customProps?.rounded,
+    );
+
+    return get(props, merged.value.rounded);
   });
 
-  const colorMap = computed(() => {
-    return get(variantProps, [merged.value.variant, merged.value.color]);
+  const colorClass = computed(() => {
+    const props = mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeAlert.value?.customProps?.variant,
+    );
+
+    return get(props, [merged.value.variant, merged.value.color]);
   });
 
   const resolvedIcon = computed(() => {
@@ -122,40 +142,45 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   // Visibility
   const hasDefaultBody = computed(() => {
-    return hasNamedSlot(slots, "default");
+    const content = slots.default?.();
+
+    return Boolean(content && content.length > 0);
   });
 
   // Binds
+  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.root,
-      inheritedAttrs,
-      cn({
-        "w-full flex flex-col p-4": true,
-        [get(colorMap.value, "border") ?? ""]: true,
-        [get(colorMap.value, "background") ?? ""]: true,
-        [shadowMap.value]: true,
-        [roundedMap.value]: true,
-        [get(mergedClasses.value, "root") ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps.value?.root, inheritedAttrs, cn({
+      // Theme classes
+      [shadowClass.value ?? ""]: true,
+      [roundedClass.value ?? ""]: true,
+      "w-full flex flex-col p-4": true,
+      [get(colorClass.value, "border") ?? ""]: true,
+      [get(colorClass.value, "background") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses.value, "root") ?? ""]: true,
+    }));
   });
 
   // prettier-ignore
   const bodyBind = computed(() => {
     return mergePartBind( partsProps.value?.body, {}, cn({
+      // Theme classes
       "grow text-sm text-start": true,
+      [paddingClass.value ?? ""]: true,
+      [get(colorClass.value, "text") ?? ""]: true,
+      // Custom classes
       [get(mergedClasses.value, "body") ?? ""]: true,
-      [get(colorMap.value, "text") ?? ""]: true,
-      [paddingMap.value]: true,
     }));
   });
 
   // prettier-ignore
   const iconBind = computed(() => {
     return mergePartBind(partsProps.value?.icon, {}, cn({
+      // Theme classes
       "w-5 h-5 shrink-0": true,
-      [get(colorMap.value, "icon") ?? ""]: true,
+      [get(colorClass.value, "icon") ?? ""]: true,
+      // Custom classes
       [get(mergedClasses.value, "icon") ?? ""]: true,
     }));
   });
@@ -163,9 +188,12 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
   // prettier-ignore
   const titleBind = computed(() => {
     return mergePartBind(partsProps.value?.title, {}, cn({
+      // Theme classes
+      "font-normal": !hasDefaultBody.value,
+      "font-semibold": hasDefaultBody.value,
+      [get(colorClass.value, "text") ?? ""]: true,
       "text-start text-sm whitespace-normal": true,
-      [hasDefaultBody.value ? "font-semibold" : "font-normal"]: true,
-      [get(colorMap.value, "text") ?? ""]: true,
+      // Custom classes
       [get(mergedClasses.value, "title") ?? ""]: true,
     }));
   });
@@ -178,5 +206,6 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     rootBind,
     titleBind,
     resolvedIcon,
+    hasDefaultBody,
   };
 }

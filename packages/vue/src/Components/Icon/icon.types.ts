@@ -9,13 +9,6 @@ export interface IconSizeOverrides {}
 
 export interface IconOwnProps {
   /**
-   * Extra classes merged with size classes from the registry.
-   *
-   * @default undefined
-   */
-  class?: string;
-
-  /**
    * Lucide icon component.
    */
   icon: LucideIcon;

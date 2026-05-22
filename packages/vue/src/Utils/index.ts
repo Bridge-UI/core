@@ -100,6 +100,7 @@ export {
   createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  splitComponentProps,
 } from "@bridge-ui/core/Utils";
 export type {
   LibDefaultsShape,
