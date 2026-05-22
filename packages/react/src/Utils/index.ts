@@ -1,9 +1,8 @@
 // ** External Imports
-import { omit, pick } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { createMergePartBind } from "@bridge-ui/core";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
@@ -18,8 +17,8 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
 >;
 
 export type UseBridgeUIComponentReturn<
-  K extends keyof BridgeUIComponentsConfig,
   P extends object,
+  K extends keyof BridgeUIComponentsConfig,
 > = {
   merged: P;
   bridge: ReturnType<typeof useBridgeUI>;
@@ -35,73 +34,25 @@ export function derived<T>(getter: () => T): T {
 }
 
 /**
- * Merges a part's `className` with a computed class string (registry + `classes.*`).
+ * Merges React-specific classes into the `className` attribute.
  */
-export function mergePartBind<T extends { className?: string } | undefined>(
-  part: T,
-  classValue: string,
-): Omit<NonNullable<T>, "className"> & { className: string } {
-  return {
-    ...(part ?? {}),
-    className: cn(classValue, part?.className),
-  } as Omit<NonNullable<T>, "className"> & { className: string };
-}
-
-/**
- * Splits merged component props into Bridge registry props, peeled own props,
- * and native HTML attributes for the root element.
- */
-export function splitComponentProps<
-  P extends object,
-  const PeelKeys extends ReadonlyArray<keyof P>,
-  const BridgeKeys extends ReadonlyArray<keyof P>,
->(
-  props: P,
-  {
-    peel,
-    bridgeKeys,
-  }: {
-    peel: PeelKeys;
-    bridgeKeys: BridgeKeys;
-  },
-): Pick<P, PeelKeys[number]> & {
-  propsForMerge: Pick<P, BridgeKeys[number]>;
-  rootHtmlProps: Omit<P, BridgeKeys[number] | PeelKeys[number]>;
-} {
-  const peelKeyList = [...peel] as (keyof P)[];
-
-  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
-
-  const peeled = pick(props, peelKeyList) as Pick<P, PeelKeys[number]>;
-
-  const propsForMerge = pick(props, bridgeKeyList) as Pick<
-    P,
-    BridgeKeys[number]
-  >;
-
-  const rootHtmlProps = omit(props, [...bridgeKeyList, ...peelKeyList]) as Omit<
-    P,
-    BridgeKeys[number] | PeelKeys[number]
-  >;
-
-  return { ...peeled, propsForMerge, rootHtmlProps };
-}
+export const mergePartBind = createMergePartBind("className");
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.
  */
 export function useBridgeUIComponent<
-  K extends keyof BridgeUIComponentsConfig,
   P extends object,
+  K extends keyof BridgeUIComponentsConfig,
 >({
   props,
   libDefaults,
   componentName,
 }: {
-  props: P;
   componentName: K;
+  props: Partial<P>;
   libDefaults?: Partial<P>;
-}): UseBridgeUIComponentReturn<K, P> {
+}): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
   const components = bridge?.components ?? null;
@@ -152,12 +103,15 @@ export {
 } from "@/Utils/slotOrProp";
 export type { SlotMap } from "@/Utils/slotOrProp";
 export {
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
+  splitComponentProps,
 } from "@bridge-ui/core/Utils";
 export type {
+  LibDefaultsShape,
   MergeHtmlProps,
+  MergeLibDefaults,
   MergeProps,
   Overwrite,
   UnionProps,

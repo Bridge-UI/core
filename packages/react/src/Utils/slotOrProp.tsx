@@ -4,6 +4,9 @@ import type { ReactNode } from "react";
 /** Slots object from component props (typed interfaces are accepted). */
 export type SlotMap = object;
 
+/**
+ * Reads a named slot from the slot map.
+ */
 function readSlot(
   slots: SlotMap | undefined,
   name: string,

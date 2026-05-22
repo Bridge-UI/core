@@ -175,13 +175,15 @@ export { BridgeUIContext, BridgeUIProvider, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextValue, BridgeUIProviderProps } from "@/Provider";
 export {
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
+  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 export type {
+  LibDefaultsShape,
   MergeHtmlProps,
+  MergeLibDefaults,
   MergeProps,
   Overwrite,
   UnionProps,

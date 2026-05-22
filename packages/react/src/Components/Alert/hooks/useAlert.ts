@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNull } from "es-toolkit/compat";
+import { get, isNull, omit } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
@@ -12,7 +12,13 @@ import {
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   paddingProps,
   roundedProps,
@@ -25,12 +31,7 @@ import {
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import {
   derived,
-  hasNamedSlot,
-  hasSlotOrProp,
-  mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePartBind,
-  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -57,147 +58,152 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export function useAlert(
-  props: AlertProps,
-  libDefaults: Partial<AlertOwnProps>,
-) {
-  // Setup
-  const { className, children, slots, propsForMerge, rootHtmlProps } =
-    splitComponentProps(props, {
-      bridgeKeys: alertBridgeKeys,
-      peel: ["className", "children", "slots"],
-    });
+type AlertLibDefaults = LibDefaultsShape<
+  AlertOwnProps,
+  "color" | "shadow" | "padding" | "rounded" | "variant"
+>;
 
-  const { entry: bridgeAlert, merged } = useBridgeUIComponent({
+type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
+
+export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
+  // Setup
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    AlertProps,
+    typeof alertBridgeKeys
+  >({
+    props: props,
+    bridgeKeys: alertBridgeKeys,
+  });
+
+  const { merged, entry: bridgeAlert } = useBridgeUIComponent<
+    AlertMerged,
+    "Alert"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Alert",
+  });
+
+  const slots = derived(() => {
+    return props.slots;
+  });
+
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeAlert,
-    props: propsForMerge,
+    props: customProps,
   });
 
-  // Registry maps
-  const mergedShadowMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: shadowProps,
-      provider: bridgeAlert?.customProps?.shadow,
-    });
-  }, [bridgeAlert?.customProps?.shadow]);
+  // Classes
+  const shadowClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      shadowProps,
+      bridgeAlert?.customProps?.shadow,
+    );
 
-  const mergedPaddingMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: paddingProps,
-      provider: bridgeAlert?.customProps?.padding,
-    });
-  }, [bridgeAlert?.customProps?.padding]);
+    return get(classes, merged.shadow);
+  }, [merged.shadow, bridgeAlert?.customProps?.shadow]);
 
-  const mergedRoundedMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: roundedProps,
-      provider: bridgeAlert?.customProps?.rounded,
-    });
-  }, [bridgeAlert?.customProps?.rounded]);
+  const paddingClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      paddingProps,
+      bridgeAlert?.customProps?.padding,
+    );
 
-  const mergedVariantProps = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
+    return get(classes, merged.padding);
+  }, [merged.padding, bridgeAlert?.customProps?.padding]);
+
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeAlert?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeAlert?.customProps?.rounded]);
+
+  const colorClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeAlert?.customProps?.variant,
-    ) as typeof variantProps;
-  }, [bridgeAlert?.customProps?.variant]);
+    );
 
-  // Theme
-  const colorKey = derived(() => {
-    return (merged.color ?? "primary") as keyof AlertColor;
-  });
-
-  const variantKey = derived(() => {
-    return (merged.variant ?? "flat") as keyof typeof variantProps;
-  });
-
-  const palette = derived(() => {
-    return get(mergedVariantProps, [variantKey, colorKey]);
-  });
+    return get(classes, [merged.variant, merged.color]);
+  }, [merged.variant, merged.color, bridgeAlert?.customProps?.variant]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
       return null;
     }
 
-    return merged.icon ?? get(defaultIcons, colorKey);
-  }, [colorKey, merged.icon]);
+    return merged.icon ?? get(defaultIcons, merged.color);
+  }, [merged.icon, merged.color]);
 
   // Visibility
   const hasDefaultBody = derived(() => {
     return Boolean(children);
   });
 
-  const showIcon = derived(() => {
-    return hasNamedSlot(slots, "icon") || resolvedIcon != null;
+  // Binds
+  // prettier-ignore
+  const rootBind = derived(() => {
+    return mergePartBind(partsProps?.root, rootInheritedAttrs, cn({
+      // Theme classes
+      [shadowClass ?? ""]: true,
+      [roundedClass ?? ""]: true,
+      "w-full flex flex-col p-4": true,
+      [get(colorClass, "border") ?? ""]: true,
+      [get(colorClass, "background") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses, "root") ?? ""]: true,
+    }));
   });
 
-  const showTitleRow = derived(() => {
-    return (
-      !hasNamedSlot(slots, "header") &&
-      (hasSlotOrProp(slots, "title", merged.title) ||
-        resolvedIcon != null ||
-        hasNamedSlot(slots, "icon"))
-    );
-  });
-
-  // Root
-  const rootClasses = derived(() => {
-    return cn(
-      "w-full flex flex-col p-4",
-      palette.border,
-      palette.background,
-      get(mergedShadowMap, merged.shadow ?? "none"),
-      get(mergedRoundedMap, merged.rounded ?? "none"),
-      get(mergedClasses, "root"),
-      className,
-    );
-  });
-
-  // Parts
-  const partsProps = derived(() => {
-    return merged.partsProps;
-  });
-
-  const showIconSlot = derived(() => {
-    return hasNamedSlot(slots, "icon");
-  });
-
-  const iconBind = derived(() => {
-    return mergePartBind(
-      partsProps?.icon,
-      cn("w-5 h-5 shrink-0", palette.iconColor, get(mergedClasses, "icon")),
-    );
-  });
-
-  const titleBind = derived(() => {
-    return mergePartBind(
-      partsProps?.title,
-      cn(
-        "text-start text-sm whitespace-normal",
-        hasDefaultBody ? "font-semibold" : "font-normal",
-        palette.text,
-        get(mergedClasses, "title"),
-      ),
-    );
-  });
-
+  // prettier-ignore
   const bodyBind = derived(() => {
-    return mergePartBind(
-      partsProps?.body,
-      cn(
-        "grow text-sm text-start",
-        palette.text,
-        get(mergedPaddingMap, merged.padding ?? "none"),
-        get(mergedClasses, "body"),
-      ),
-    );
+    return mergePartBind(partsProps?.body, {}, cn({
+      // Theme classes
+      [paddingClass ?? ""]: true,
+      "grow text-sm text-start": true,
+      [get(colorClass, "text") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses, "body") ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const iconBind = derived(() => {
+    return mergePartBind(partsProps?.icon, {}, cn({
+      // Theme classes
+      "w-5 h-5 shrink-0": true,
+      [get(colorClass, "icon") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses, "icon") ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const titleBind = derived(() => {
+    return mergePartBind(partsProps?.title, {}, cn({
+      // Theme classes
+      "font-normal": !hasDefaultBody,
+      "font-semibold": hasDefaultBody,
+      [get(colorClass, "text") ?? ""]: true,
+      "text-start text-sm whitespace-normal": true,
+      // Custom classes
+      [get(mergedClasses, "title") ?? ""]: true,
+    }));
   });
 
   return {
@@ -206,13 +212,9 @@ export function useAlert(
     bodyBind,
     children,
     iconBind,
-    showIcon,
+    rootBind,
     titleBind,
-    rootClasses,
     resolvedIcon,
-    showIconSlot,
-    showTitleRow,
-    rootHtmlProps,
     hasDefaultBody,
   };
 }

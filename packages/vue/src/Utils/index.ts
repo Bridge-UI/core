@@ -27,6 +27,9 @@ export type UseBridgeUIComponentReturn<
   components: ComputedRef<BridgeUIComponentsConfig | null>;
 };
 
+/**
+ * Merges Vue-specific classes into the `class` attribute.
+ */
 export const mergePartBind = createMergePartBind("class");
 
 /**
@@ -40,8 +43,8 @@ export function useBridgeUIComponent<
   libDefaults,
   componentName,
 }: {
-  props: Partial<P>;
   componentName: K;
+  props: Partial<P>;
   libDefaults?: Partial<P>;
 }): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();

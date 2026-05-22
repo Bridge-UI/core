@@ -59,6 +59,11 @@ export interface AlertPartsProps {
    * Props forwarded to the title container.
    */
   title?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the root container.
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
 }
 
 /**
@@ -73,13 +78,6 @@ export interface AlertOwnProps {
    * @default undefined
    */
   children?: ReactNode;
-
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  className?: string;
 
   /**
    * The classes to apply to the alert.
@@ -173,6 +171,11 @@ export interface AlertSlots {
    * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.
    */
   icon?: ReactNode;
+
+  /**
+   * The title of the alert.
+   */
+  title?: ReactNode;
 }
 
 export type AlertProps = MergeHtmlProps<

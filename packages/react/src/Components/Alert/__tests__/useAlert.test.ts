@@ -9,16 +9,18 @@ import {
   type AlertProps,
 } from "@/Components/Alert";
 
-const libDefaults: Partial<AlertOwnProps> = {
+const libDefaults = {
   color: "primary",
   variant: "flat",
   shadow: "none",
   rounded: "none",
   padding: "none",
-};
+} as const satisfies Partial<AlertOwnProps>;
 
 function renderUseAlert(props: AlertProps = {}) {
-  return renderHook(() => useAlert(props, libDefaults));
+  return renderHook(() =>
+    useAlert(props, libDefaults as Parameters<typeof useAlert>[1]),
+  );
 }
 
 test("it should return default color as primary", () => {
@@ -45,26 +47,26 @@ test("it should suppress the icon when icon is null", () => {
   expect(result.current.resolvedIcon).toBeNull();
 });
 
-test("it should compute rootClasses as a non-empty string", () => {
+test("it should compute rootBind className as a non-empty string", () => {
   const { result } = renderUseAlert({
     variant: "flat",
     color: "primary",
   });
 
-  expect(typeof result.current.rootClasses).toBe("string");
-  expect(result.current.rootClasses.length).toBeGreaterThan(0);
+  expect(typeof result.current.rootBind.className).toBe("string");
+  expect(result.current.rootBind.className.length).toBeGreaterThan(0);
 });
 
 test("it should include shadow classes when shadow is set", () => {
   const { result } = renderUseAlert({ shadow: "sm" });
 
-  expect(result.current.rootClasses).toContain("shadow");
+  expect(result.current.rootBind.className).toContain("shadow");
 });
 
 test("it should include rounded classes when rounded is set", () => {
   const { result } = renderUseAlert({ rounded: "md" });
 
-  expect(result.current.rootClasses).toContain("rounded");
+  expect(result.current.rootBind.className).toContain("rounded");
 });
 
 test("it should compute title classes with font-normal when no body", () => {
@@ -83,46 +85,42 @@ test("it should compute title classes with font-semibold when body exists", () =
   expect(result.current.titleBind.className).toContain("font-semibold");
 });
 
-test("it should show title row when title prop is provided", () => {
-  const { result } = renderUseAlert({ title: "Hello" });
-
-  expect(result.current.showTitleRow).toBe(true);
-});
-
-test("it should hide title row when no title, icon, or icon slot", () => {
-  const { result } = renderUseAlert({ icon: null });
-
-  expect(result.current.showTitleRow).toBe(false);
-});
-
 test("it should expose children from props", () => {
   const { result } = renderUseAlert({ children: "Body text" });
 
   expect(result.current.children).toBe("Body text");
 });
 
-test("it should merge className into rootClasses", () => {
+test("it should merge className into rootBind", () => {
   const { result } = renderUseAlert({ className: "custom-alert" });
 
-  expect(result.current.rootClasses).toContain("custom-alert");
+  expect(result.current.rootBind.className).toContain("custom-alert");
 });
 
-test("it should expose rootHtmlProps for additional attributes", () => {
+test("it should expose inherited attrs on rootBind", () => {
   const { result } = renderUseAlert({
     id: "alert-root",
     "data-testid": "alert",
   });
 
-  expect(result.current.rootHtmlProps.id).toBe("alert-root");
-  expect(result.current.rootHtmlProps["data-testid"]).toBe("alert");
+  expect(result.current.rootBind.id).toBe("alert-root");
+  expect(result.current.rootBind["data-testid"]).toBe("alert");
 });
 
-test("it should apply className after classes.root in rootClasses", () => {
+test("it should apply className after classes.root in rootBind", () => {
   const { result } = renderUseAlert({
     className: "p-4",
     classes: { root: "p-2" },
   });
 
-  expect(result.current.rootClasses).toContain("p-4");
-  expect(result.current.rootClasses).not.toContain("p-2");
+  expect(result.current.rootBind.className).toContain("p-4");
+  expect(result.current.rootBind.className).not.toContain("p-2");
+});
+
+test("it should forward partsProps.root onto rootBind", () => {
+  const { result } = renderUseAlert({
+    partsProps: { root: { id: "alert-root-part" } },
+  });
+
+  expect(result.current.rootBind.id).toBe("alert-root-part");
 });
