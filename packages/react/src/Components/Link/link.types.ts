@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
@@ -45,6 +45,11 @@ export interface LinkPartsProps {
    * Props forwarded to the right `Icon` (`icon` is set by the link).
    */
   rightIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the root `<a>`.
+   */
+  root?: HTMLAttributes<HTMLAnchorElement>;
 }
 
 export interface LinkOwnProps {
@@ -54,13 +59,6 @@ export interface LinkOwnProps {
    * @default undefined
    */
   children?: ReactNode;
-
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  className?: string;
 
   /**
    * The classes to apply to the link.

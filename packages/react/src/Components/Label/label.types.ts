@@ -25,13 +25,6 @@ export interface LabelOwnProps {
   children?: ReactNode;
 
   /**
-   * Extra classes merged with `classes.root`.
-   *
-   * @default undefined
-   */
-  className?: string;
-
-  /**
    * The classes to apply to the label.
    *
    * @default undefined

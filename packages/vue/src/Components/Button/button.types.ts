@@ -56,11 +56,6 @@ export interface ButtonClasses {
 
 export interface ButtonPartsProps {
   /**
-   * Props forwarded to the root element.
-   */
-  root?: HTMLAttributes;
-
-  /**
    * Props forwarded to the inline-end slot wrapper.
    */
   end?: HTMLAttributes;
@@ -79,6 +74,11 @@ export interface ButtonPartsProps {
    * Props forwarded to the loading spinner `Icon`.
    */
   loading?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the root element.
+   */
+  root?: HTMLAttributes;
 
   /**
    * Props forwarded to the inline-start slot wrapper.

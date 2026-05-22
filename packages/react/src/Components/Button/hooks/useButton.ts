@@ -1,18 +1,20 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
-import { Loader2 } from "lucide-react";
+import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   densityProps,
   roundedProps,
   variantProps,
-  type ButtonColor,
-  type ButtonColorItem,
 } from "@bridge-ui/core/Components/Button";
-import type { IconSize } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import type {
@@ -22,9 +24,7 @@ import type {
 } from "@/Components/Button/button.types";
 import {
   derived,
-  hasNamedSlot,
   mergePartBind,
-  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -48,90 +48,51 @@ const buttonBridgeKeys = [
   "partsProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
 
-export function useButton(
-  props: ButtonProps,
-  libDefaults: Partial<ButtonOwnProps>,
-) {
-  // Setup
-  const { className, children, slots, propsForMerge, rootHtmlProps } =
-    splitComponentProps(props, {
-      bridgeKeys: buttonBridgeKeys,
-      peel: ["className", "children", "slots"],
-    });
+type ButtonLibDefaults = LibDefaultsShape<
+  ButtonOwnProps,
+  "as" | "color" | "density" | "rounded" | "size" | "variant"
+>;
 
-  const { entry: bridgeButton, merged } = useBridgeUIComponent({
+type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
+
+export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
+  // Setup
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    ButtonProps,
+    typeof buttonBridgeKeys
+  >({
+    props,
+    bridgeKeys: buttonBridgeKeys,
+  });
+
+  const { entry: bridgeButton, merged } = useBridgeUIComponent<
+    ButtonMerged,
+    "Button"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Button",
+  });
+
+  const slots = derived(() => {
+    return props.slots;
+  });
+
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children", "slots"]);
+  });
+
+  const partsProps = derived(() => {
+    return merged.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
     entry: bridgeButton,
-    props: propsForMerge,
-  });
-
-  // Registry maps
-  const mergedVariantProps = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeButton?.customProps?.variant,
-    );
-  }, [bridgeButton?.customProps?.variant]);
-
-  const mergedDensityProps = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      densityProps,
-      bridgeButton?.customProps?.density,
-    );
-  }, [bridgeButton?.customProps?.density]);
-
-  const roundedClassMap = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeButton?.customProps?.rounded,
-    );
-  }, [bridgeButton?.customProps?.rounded]);
-
-  // Theme
-  const densityKey = derived(() => {
-    return (merged.density ?? "default") as keyof typeof densityProps;
-  });
-
-  const sizeKey = derived(() => {
-    return merged.size ?? "md";
-  });
-
-  const isMini = derived(() => {
-    return densityKey === "mini";
-  });
-
-  const colorKey = derived(() => {
-    return (merged.color ?? "primary") as keyof ButtonColor;
-  });
-
-  const variantKey = derived(() => {
-    return (propsForMerge.variant ??
-      (isMini
-        ? "flat"
-        : (merged.variant ?? "solid"))) as keyof typeof variantProps;
-  });
-
-  const colorItem = derived(() => {
-    return get(mergedVariantProps, [variantKey, colorKey]) as
-      | ButtonColorItem
-      | undefined;
-  });
-
-  const colorClasses = derived(() => {
-    return cn(colorItem?.base, colorItem?.hover, colorItem?.focus);
-  });
-
-  const sizeClass = derived(() => {
-    return get(mergedDensityProps, [densityKey, sizeKey]);
-  });
-
-  const iconSize = derived(() => {
-    return sizeKey as keyof IconSize;
+    props: customProps,
   });
 
   // Element
@@ -139,151 +100,176 @@ export function useButton(
     return merged.as ?? "button";
   });
 
+  const isAnchor = derived(() => {
+    return tag === "a";
+  });
+
   const isButton = derived(() => {
     return tag === "button";
   });
 
-  const isAnchor = derived(() => {
-    return tag === "a";
+  const isMini = derived(() => {
+    return merged.density === "mini";
   });
 
   const isDisabled = derived(() => {
     return merged.disabled || merged.loading;
   });
 
-  const hasChildren = derived(() => {
-    return children != null && children !== false;
+  const rootType = derived(() => {
+    return isButton ? ("button" as const) : undefined;
   });
 
-  // Root
-  const rootClass = derived(() => {
-    return cn(
-      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
-      "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center",
-      "focus:ring-offset-background-white dark:focus:ring-offset-background-dark",
-      "transition-all ease-in-out duration-200 focus:ring-2",
-      "disabled:opacity-80 disabled:cursor-not-allowed",
-      { "group hover:shadow-xs": !isMini },
-      { "w-full": !isMini && merged.full },
-      { "w-fit": !isMini && !merged.full },
-      { "shrink-0": isMini },
-      colorClasses,
-      get(roundedClassMap, merged.rounded ?? "md"),
-      sizeClass,
-      mergedClasses.root,
-      className,
+  const rootDisabled = derived(() => {
+    return isButton ? isDisabled : undefined;
+  });
+
+  const rootAriaBusy = derived(() => {
+    return merged.loading ? true : undefined;
+  });
+
+  const rootAriaDisabled = derived(() => {
+    return isDisabled && !isButton ? true : undefined;
+  });
+
+  const rootHref = derived(() => {
+    if (!isAnchor || isDisabled || !merged.href) {
+      return undefined;
+    }
+
+    return merged.href;
+  });
+
+  // Classes
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeButton?.customProps?.rounded,
     );
-  });
 
-  // Visibility
-  const showSpinner = derived(() => {
-    return merged.loading;
-  });
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeButton?.customProps?.rounded]);
 
-  const canShowContent = derived(() => {
-    return !merged.loading;
-  });
-
-  const showIcon = derived(() => {
-    return canShowContent && Boolean(merged.icon);
-  });
-
-  const showDefault = derived(() => {
-    return canShowContent && hasChildren && !merged.icon;
-  });
-
-  const showText = derived(() => {
-    return canShowContent && !!merged.text;
-  });
-
-  const showEndIcon = derived(() => {
-    return canShowContent && !!merged.endIcon;
-  });
-
-  const showStartIcon = derived(() => {
-    return canShowContent && !!merged.startIcon;
-  });
-
-  const showChildren = derived(() => {
-    return canShowContent && hasChildren && !merged.text;
-  });
-
-  const showEndSlot = derived(() => {
-    return canShowContent && !merged.endIcon && hasNamedSlot(slots, "end");
-  });
-
-  const showStartSlot = derived(() => {
-    return canShowContent && !merged.startIcon && hasNamedSlot(slots, "start");
-  });
-
-  // Parts
-  const partsProps = derived(() => {
-    return merged.partsProps;
-  });
-
-  const iconBind = derived(() => {
-    return mergePartBind(partsProps?.icon, cn("shrink-0", mergedClasses.icon));
-  });
-
-  const endIconBind = derived(() => {
-    return mergePartBind(
-      partsProps?.endIcon,
-      cn("shrink-0", mergedClasses.endIcon),
+  const sizeClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      densityProps,
+      bridgeButton?.customProps?.density,
     );
-  });
 
-  const startIconBind = derived(() => {
-    return mergePartBind(
-      partsProps?.startIcon,
-      cn("shrink-0", mergedClasses.startIcon),
+    return get(classes, [merged.density, merged.size]);
+  }, [merged.size, merged.density, bridgeButton?.customProps?.density]);
+
+  const variantKey = useMemo(() => {
+    if (customProps.variant !== undefined) {
+      return customProps.variant;
+    }
+
+    return isMini ? "flat" : merged.variant;
+  }, [isMini, merged.variant, customProps.variant]);
+
+  const colorClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeButton?.customProps?.variant,
     );
-  });
 
+    return get(classes, [variantKey, merged.color]);
+  }, [variantKey, merged.color, bridgeButton?.customProps?.variant]);
+
+  // Binds
+  // prettier-ignore
   const endSlotBind = derived(() => {
-    return mergePartBind(partsProps?.end, "inline-flex shrink-0 items-center");
+    return mergePartBind(partsProps?.end, {}, "inline-flex shrink-0 items-center");
   });
 
+  // prettier-ignore
   const startSlotBind = derived(() => {
-    return mergePartBind(
-      partsProps?.start,
-      "inline-flex shrink-0 items-center",
-    );
+    return mergePartBind(partsProps?.start, {}, "inline-flex shrink-0 items-center");
   });
 
+  // prettier-ignore
+  const iconBind = derived(() => {
+    return mergePartBind(partsProps?.icon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.icon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const endIconBind = derived(() => {
+    return mergePartBind(partsProps?.endIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.endIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startIconBind = derived(() => {
+    return mergePartBind(partsProps?.startIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.startIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
   const loadingIconBind = derived(() => {
+    return mergePartBind(partsProps?.loading, {}, cn({
+      // Theme classes
+      "shrink-0 animate-spin": true,
+      // Custom classes
+      [mergedClasses.loading ?? ""]: true,
+    }));
+  });
+
+  const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.loading,
-      cn("shrink-0 animate-spin", mergedClasses.loading),
+      partsProps?.root,
+      rootInheritedAttrs,
+      cn({
+        // Theme classes
+        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+        "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center": true,
+        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
+        "transition-all ease-in-out duration-200 focus:ring-2": true,
+        "disabled:opacity-80 disabled:cursor-not-allowed": true,
+        [get(colorClasses, "focus") ?? ""]: true,
+        [get(colorClasses, "hover") ?? ""]: true,
+        [get(colorClasses, "base") ?? ""]: true,
+        "w-full": !isMini && merged.full,
+        "w-fit": !isMini && !merged.full,
+        "group hover:shadow-xs": !isMini,
+        [roundedClass ?? ""]: true,
+        [sizeClass ?? ""]: true,
+        "shrink-0": isMini,
+        // Custom classes
+        [mergedClasses.root ?? ""]: true,
+      }),
     );
   });
 
   return {
     tag,
     slots,
-    isMini,
     merged,
     children,
+    isMini,
     iconBind,
-    iconSize,
-    isAnchor,
-    isButton,
-    showIcon,
-    showText,
-    rootClass,
-    isDisabled,
+    rootBind,
+    rootHref,
+    rootType,
     endIconBind,
     endSlotBind,
-    showDefault,
-    showEndIcon,
-    showEndSlot,
-    showSpinner,
-    showChildren,
-    rootHtmlProps,
-    showStartIcon,
-    showStartSlot,
+    rootAriaBusy,
+    rootDisabled,
     startIconBind,
     startSlotBind,
     loadingIconBind,
-    spinnerIcon: Loader2,
+    rootAriaDisabled,
   };
 }

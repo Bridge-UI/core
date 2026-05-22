@@ -10,16 +10,18 @@ import {
   type TextFieldProps,
 } from "@/Components/TextField";
 
-const libDefaults: Partial<TextFieldOwnProps> = {
+const libDefaults = {
   size: "md",
   rounded: "md",
   color: "primary",
   variant: "outline",
   withErrorIcon: true,
-};
+} as const satisfies Partial<TextFieldOwnProps>;
 
 function renderUseTextField(props: TextFieldProps = {}) {
-  return renderHook(() => useTextField(props, libDefaults));
+  return renderHook(() =>
+    useTextField(props, libDefaults as Parameters<typeof useTextField>[1]),
+  );
 }
 
 test("it should merge default color, size, rounded, and variant", () => {
@@ -55,90 +57,66 @@ test("it should be invalidated when error prop is true", () => {
   expect(result.current.invalidated).toBe(true);
 });
 
-test("it should show header when label prop is provided", () => {
+test("it should build header bind when label prop is provided", () => {
   const { result } = renderUseTextField({ label: "Email" });
 
-  expect(result.current.showHeader).toBe(true);
+  expect(result.current.headerBind.className).toContain("flex");
+  expect(result.current.headerBind.className).toContain("justify-between");
 });
 
-test("it should show header when only corner prop is provided", () => {
+test("it should build header bind when only corner prop is provided", () => {
   const { result } = renderUseTextField({ corner: "Optional" });
 
-  expect(result.current.showHeader).toBe(true);
+  expect(result.current.headerBind.className).toContain("flex");
 });
 
-test("it should show description when description is set and field is valid", () => {
-  const { result } = renderUseTextField({ description: "Helper text" });
+test("it should set aria-describedby to description id when description is shown", () => {
+  const { result } = renderUseTextField({ description: "Helper" });
 
-  expect(result.current.showDescription).toBe(true);
+  expect(result.current.inputBind["aria-describedby"]).toBe(
+    `${result.current.inputId}-description`,
+  );
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should omit description from aria-describedby when field is invalid", () => {
   const { result } = renderUseTextField({
     error: true,
     description: "Helper text",
   });
 
-  expect(result.current.showDescription).toBe(false);
+  expect(result.current.inputBind["aria-describedby"]).toBeUndefined();
 });
 
-test("it should show error message when errorMessage is set", () => {
+test("it should set aria-describedby to error id when errorMessage is set", () => {
   const { result } = renderUseTextField({ errorMessage: "Required" });
 
-  expect(result.current.showError).toBe(true);
+  expect(result.current.inputBind["aria-describedby"]).toBe(
+    `${result.current.inputId}-error`,
+  );
 });
 
-test("it should hide error message when only error is true", () => {
-  const { result } = renderUseTextField({ error: true });
-
-  expect(result.current.showError).toBe(false);
-});
-
-test("it should show start text when start prop is set", () => {
+test("it should keep start text in merged when start prop is set", () => {
   const { result } = renderUseTextField({ start: "https://" });
 
-  expect(result.current.showStartText).toBe(true);
-  expect(result.current.showStartIcon).toBe(false);
+  expect(result.current.merged.start).toBe("https://");
 });
 
-test("it should show start icon when startIcon is set", () => {
+test("it should keep startIcon in merged when startIcon is set", () => {
   const { result } = renderUseTextField({ startIcon: CircleAlert });
 
-  expect(result.current.showStartIcon).toBe(true);
+  expect(result.current.merged.startIcon).toStrictEqual(CircleAlert);
 });
 
-test("it should show error icon when error is true and no end icon", () => {
+test("it should apply error end styles when error is true", () => {
   const { result } = renderUseTextField({ error: true });
 
-  expect(result.current.showEndText).toBe(false);
-  expect(result.current.showErrorIcon).toBe(true);
+  expect(result.current.endBind.className).toContain("text-error-500");
 });
 
-test("it should not treat error boolean as end suffix text", () => {
-  const { result } = renderUseTextField({ error: true });
+test("it should keep endIcon in merged when endIcon is set", () => {
+  const { result } = renderUseTextField({ endIcon: CircleAlert });
 
-  expect(result.current.showEndText).toBe(false);
-  expect(result.current.showErrorIcon).toBe(true);
-  expect(result.current.merged.end).toBeUndefined();
-});
-
-test("it should show error icon instead of end icon when both are set", () => {
-  const { result } = renderUseTextField({
-    error: true,
-    endIcon: CircleAlert,
-  });
-
-  expect(result.current.showErrorIcon).toBe(true);
-  expect(result.current.showEndIcon).toBe(false);
-});
-
-test("it should hide error icon when withErrorIcon is false", () => {
-  const { result } = renderUseTextField({
-    error: true,
-    withErrorIcon: false,
-  });
-
-  expect(result.current.showErrorIcon).toBe(false);
+  expect(result.current.merged.endIcon).toStrictEqual(CircleAlert);
 });
 
 test("it should set aria-invalid on input when error is true", () => {
@@ -155,22 +133,6 @@ test("it should keep error focus ring on container when invalidated", () => {
   );
   expect(result.current.containerBind.className).not.toContain(
     "focus-within:ring-primary-600",
-  );
-});
-
-test("it should set aria-describedby to description id when description is shown", () => {
-  const { result } = renderUseTextField({ description: "Helper" });
-
-  expect(result.current.inputBind["aria-describedby"]).toBe(
-    `${result.current.inputId}-description`,
-  );
-});
-
-test("it should set aria-describedby to error id when errorMessage is shown", () => {
-  const { result } = renderUseTextField({ errorMessage: "Required" });
-
-  expect(result.current.inputBind["aria-describedby"]).toBe(
-    `${result.current.inputId}-error`,
   );
 });
 

@@ -136,13 +136,6 @@ export interface TextFieldPartsProps {
 
 export interface TextFieldOwnProps {
   /**
-   * Extra classes merged with the root wrapper (and `classes.root`).
-   *
-   * @default undefined
-   */
-  className?: string;
-
-  /**
    * The classes to apply to the text field.
    *
    * @default undefined

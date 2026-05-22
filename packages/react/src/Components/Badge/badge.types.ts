@@ -34,13 +34,6 @@ export interface BadgeOwnProps {
   children?: ReactNode;
 
   /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  className?: string;
-
-  /**
    * The classes to apply to the badge.
    *
    * @default undefined

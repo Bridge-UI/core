@@ -76,6 +76,11 @@ export interface ButtonPartsProps {
   loading?: Partial<Omit<IconProps, "icon">>;
 
   /**
+   * Props forwarded to the root element.
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
+
+  /**
    * Props forwarded to the inline-start slot wrapper.
    */
   start?: HTMLAttributes<HTMLDivElement>;
@@ -100,13 +105,6 @@ export interface ButtonOwnProps {
    * @default undefined
    */
   children?: ReactNode;
-
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  className?: string;
 
   /**
    * The classes to apply to the button.

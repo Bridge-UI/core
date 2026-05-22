@@ -37,11 +37,6 @@ export interface LinkClasses {
 
 export interface LinkPartsProps {
   /**
-   * Props forwarded to the root `<a>`.
-   */
-  root?: HTMLAttributes;
-
-  /**
    * Props forwarded to the left `Icon` (`icon` is set by the link).
    */
   leftIcon?: Partial<Omit<IconProps, "icon">>;
@@ -50,6 +45,11 @@ export interface LinkPartsProps {
    * Props forwarded to the right `Icon` (`icon` is set by the link).
    */
   rightIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the root `<a>`.
+   */
+  root?: HTMLAttributes;
 }
 
 export interface LinkOwnProps {
