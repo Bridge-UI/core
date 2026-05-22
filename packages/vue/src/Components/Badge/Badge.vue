@@ -7,7 +7,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<BadgeOwnProps>();
 
-const { rootBind, rootClass } = useBadge(props, {
+const { rootBind } = useBadge(props, {
   size: "sm",
   rounded: "md",
   variant: "flat",
@@ -17,7 +17,7 @@ const { rootBind, rootClass } = useBadge(props, {
 </script>
 
 <template>
-  <span :class="rootClass" v-bind="rootBind">
+  <span v-bind="rootBind">
     <slot />
   </span>
 </template>

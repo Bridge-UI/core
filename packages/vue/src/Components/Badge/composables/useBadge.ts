@@ -3,12 +3,17 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   densityProps,
   roundedProps,
   variantProps,
-  type BadgeColor,
 } from "@bridge-ui/core/Components/Badge";
 
 // ** Local Imports
@@ -18,8 +23,7 @@ import type {
   BadgeProps,
 } from "@/Components/Badge/badge.types";
 import {
-  mergeBridgeUIStringMap,
-  splitComponentProps,
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -34,100 +38,92 @@ const badgeBridgeKeys = [
   "variant",
 ] as const satisfies readonly (keyof BadgeOwnProps)[];
 
-export function useBadge(
-  props: BadgeProps,
-  libDefaults: Partial<BadgeOwnProps>,
-) {
+type BadgeLibDefaults = LibDefaultsShape<
+  BadgeOwnProps,
+  "size" | "color" | "density" | "rounded" | "variant"
+>;
+
+type BadgeMerged = MergeLibDefaults<BadgeOwnProps, BadgeLibDefaults>;
+
+export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
   // Setup
   const attrs = useAttrs();
 
-  const { userClass, propsForMerge, rootBind } = splitComponentProps(
-    props,
-    attrs,
-    { bridgeKeys: badgeBridgeKeys },
-  );
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    BadgeProps,
+    typeof badgeBridgeKeys
+  >({
+    bridgeKeys: badgeBridgeKeys,
+    props: { ...attrs, ...props },
+  });
 
-  const { entry: bridgeBadge, merged } = useBridgeUIComponent({
+  const { entry: bridgeBadge, merged } = useBridgeUIComponent<
+    BadgeMerged,
+    "Badge"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Badge",
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: propsForMerge,
+    props: customProps,
   });
 
-  // Registry maps
-  const mergedRoundedMap = computed(() => {
-    return mergeBridgeUIStringMap({
-      lib: roundedProps,
-      provider: bridgeBadge.value?.customProps?.rounded,
-    });
+  // Visibility
+  const isMini = computed(() => {
+    return merged.value.density === "mini";
   });
 
-  const mergedDensityProps = computed(() => {
-    return mergeBridgeUILayeredClasses(
+  // Classes
+  const sizeClass = computed(() => {
+    const layer = mergeBridgeUILayeredClasses(
       densityProps,
       bridgeBadge.value?.customProps?.density,
     );
+
+    return get(layer, [merged.value.density, merged.value.size]);
   });
 
-  const mergedVariantProps = computed(() => {
-    return mergeBridgeUILayeredClasses(
+  const roundedClass = computed(() => {
+    const layer = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeBadge.value?.customProps?.rounded,
+    );
+
+    return get(layer, merged.value.rounded);
+  });
+
+  const colorClass = computed(() => {
+    const layer = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeBadge.value?.customProps?.variant,
-    ) as typeof variantProps;
-  });
-
-  // Theme
-  const sizeKey = computed(() => {
-    return merged.value.size ?? "sm";
-  });
-
-  const colorKey = computed(() => {
-    return (merged.value.color ?? "primary") as keyof BadgeColor;
-  });
-
-  const variantKey = computed(() => {
-    return (merged.value.variant ?? "flat") as keyof typeof variantProps;
-  });
-
-  const densityKey = computed(() => {
-    return (merged.value.density ?? "default") as keyof typeof densityProps;
-  });
-
-  const isMini = computed(() => {
-    return densityKey.value === "mini";
-  });
-
-  const sizeClass = computed(() => {
-    return get(mergedDensityProps.value, [densityKey.value, sizeKey.value]);
-  });
-
-  const paletteClass = computed(() => {
-    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
-  });
-
-  // Root
-  const rootClass = computed(() => {
-    return cn(
-      "inline-flex items-center justify-center font-medium whitespace-nowrap",
-      { "w-full": !isMini.value && merged.value.full },
-      { "w-fit": !isMini.value && !merged.value.full },
-      paletteClass.value.text,
-      paletteClass.value.background,
-      paletteClass.value.border,
-      sizeClass.value,
-      get(mergedRoundedMap.value, merged.value.rounded ?? "md"),
-      mergedClasses.value.root,
-      userClass,
     );
+
+    return get(layer, [merged.value.variant, merged.value.color]);
+  });
+
+  // Binds
+  // prettier-ignore
+  const rootBind = computed(() => {
+    return mergePartBind({}, inheritedAttrs, cn({
+      // Theme classes
+      "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
+      [get(colorClass.value, "background") ?? ""]: true,
+      [get(colorClass.value, "border") ?? ""]: true,
+      "w-full": !isMini.value && merged.value.full,
+      "w-fit": !isMini.value && !merged.value.full,
+      [get(colorClass.value, "text") ?? ""]: true,
+      [roundedClass.value ?? ""]: true,
+      [sizeClass.value ?? ""]: true,
+      // Custom classes
+      [mergedClasses.value.root ?? ""]: true,
+    }));
   });
 
   return {
     merged,
     rootBind,
-    rootClass,
   };
 }

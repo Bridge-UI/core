@@ -27,13 +27,6 @@ export interface BadgeClasses {
 
 export interface BadgeOwnProps {
   /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  class?: string;
-
-  /**
    * The classes to apply to the badge.
    *
    * @default undefined
