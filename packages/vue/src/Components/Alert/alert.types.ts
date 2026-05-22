@@ -59,6 +59,11 @@ export interface AlertPartsProps {
    * Props forwarded to the title container.
    */
   title?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the root container.
+   */
+  root?: HTMLAttributes;
 }
 
 /**
@@ -67,13 +72,6 @@ export interface AlertPartsProps {
  * non-interrupting updates: `role="status"` and `aria-live="polite"`.
  */
 export interface AlertOwnProps {
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  class?: string;
-
   /**
    * The classes to apply to the alert.
    *
@@ -164,6 +162,11 @@ export interface AlertSlots {
    * Custom icon markup. When provided, it replaces the default `Icon` used from the `icon` prop.
    */
   icon?: Slot<undefined>;
+
+  /**
+   * The title of the alert.
+   */
+  title?: Slot<undefined>;
 }
 
 export type AlertProps = MergeHtmlProps<AlertOwnProps, HTMLAttributes>;

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { useSlots } from "vue";
+
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { Label } from "@/Components/Label";
@@ -7,7 +10,12 @@ import type {
   TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import {
+  hasNamedSlot,
+  hasSlotOrProp,
+  isPropPresent,
+  resolveSlotOrProp,
+} from "@/Utils";
 
 defineSlots<TextFieldSlots>();
 
@@ -19,38 +27,29 @@ const props = withDefaults(defineProps<TextFieldOwnProps>(), {
   withErrorIcon: true,
 });
 
+const slots = useSlots();
+
 const {
-  slots,
   merged,
-  endBind,
   inputId,
   rootBind,
   errorBind,
   errorIcon,
   inputBind,
   labelBind,
-  showError,
+  endBind,
   startBind,
   cornerBind,
-  hasEndSlot,
   headerBind,
   isDisabled,
   isReadonly,
-  showHeader,
   endIconBind,
   endSlotBind,
   invalidated,
-  showEndIcon,
-  showEndText,
-  hasStartSlot,
   containerBind,
-  showErrorIcon,
-  showStartIcon,
-  showStartText,
   startIconBind,
   startSlotBind,
   descriptionBind,
-  showDescription,
 } = useTextField(props, {
   size: "md",
   rounded: "md",
@@ -67,7 +66,13 @@ const {
     :aria-disabled="isDisabled || undefined"
     :aria-readonly="isReadonly || undefined"
   >
-    <div v-if="showHeader" v-bind="headerBind">
+    <div
+      v-if="
+        hasSlotOrProp(slots, 'label', merged.label) ||
+        hasSlotOrProp(slots, 'corner', merged.corner)
+      "
+      v-bind="headerBind"
+    >
       <Label
         v-if="hasSlotOrProp(slots, 'label', merged.label)"
         v-bind="labelBind"
@@ -88,51 +93,48 @@ const {
     </div>
 
     <label v-bind="containerBind" :for="inputId">
-      <div v-if="hasStartSlot" v-bind="startSlotBind">
+      <div v-if="hasNamedSlot(slots, 'start')" v-bind="startSlotBind">
         <slot name="start" />
       </div>
 
-      <div v-else-if="showStartText" v-bind="startBind">
+      <div v-else-if="isPropPresent(merged.start)" v-bind="startBind">
         {{ merged.start }}
       </div>
 
-      <div v-else-if="showStartIcon && merged.startIcon" v-bind="startBind">
+      <div v-else-if="merged.startIcon" v-bind="startBind">
         <Icon
           :icon="merged.startIcon"
-          :size="merged.size ?? 'md'"
+          :size="merged.size"
           v-bind="startIconBind"
         />
       </div>
 
       <input v-model="model" v-bind="inputBind" />
 
-      <div v-if="hasEndSlot" v-bind="endSlotBind">
+      <div v-if="hasNamedSlot(slots, 'end')" v-bind="endSlotBind">
         <slot name="end" />
       </div>
 
-      <div v-if="!hasEndSlot && showEndText" v-bind="endBind">
+      <div v-else-if="isPropPresent(merged.end)" v-bind="endBind">
         {{ merged.end }}
       </div>
 
-      <div v-if="!hasEndSlot && showErrorIcon" v-bind="endBind">
-        <Icon
-          :icon="errorIcon"
-          :size="merged.size ?? 'md'"
-          v-bind="endIconBind"
-        />
+      <div
+        v-else-if="invalidated && merged.withErrorIcon !== false"
+        v-bind="endBind"
+      >
+        <Icon :icon="errorIcon" :size="merged.size" v-bind="endIconBind" />
       </div>
 
-      <div v-if="!hasEndSlot && showEndIcon && merged.endIcon" v-bind="endBind">
-        <Icon
-          :icon="merged.endIcon"
-          :size="merged.size ?? 'md'"
-          v-bind="endIconBind"
-        />
+      <div v-else-if="merged.endIcon" v-bind="endBind">
+        <Icon :icon="merged.endIcon" :size="merged.size" v-bind="endIconBind" />
       </div>
     </label>
 
     <p
-      v-if="showDescription"
+      v-if="
+        !invalidated && hasSlotOrProp(slots, 'description', merged.description)
+      "
       v-bind="descriptionBind"
       :id="`${inputId}-description`"
     >
@@ -141,7 +143,11 @@ const {
       />
     </p>
 
-    <p v-if="showError" v-bind="errorBind" :id="`${inputId}-error`">
+    <p
+      v-if="hasSlotOrProp(slots, 'errorMessage', merged.errorMessage)"
+      v-bind="errorBind"
+      :id="`${inputId}-error`"
+    >
       <component
         :is="resolveSlotOrProp(slots, 'errorMessage', merged.errorMessage)"
       />

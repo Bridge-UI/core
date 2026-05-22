@@ -5,15 +5,19 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useTextField, type TextFieldOwnProps } from "@/Components/TextField";
+import {
+  TextField,
+  useTextField,
+  type TextFieldOwnProps,
+} from "@/Components/TextField";
 
-const libDefaults: Partial<TextFieldOwnProps> = {
+const libDefaults = {
   size: "md",
   rounded: "md",
   color: "primary",
   variant: "outline",
   withErrorIcon: true,
-};
+} satisfies Partial<TextFieldOwnProps>;
 
 function mountUseTextField(
   props: TextFieldOwnProps = {},
@@ -74,96 +78,82 @@ test("it should not be invalidated when error prop is omitted", () => {
   expect(invalidated.value).toBe(false);
 });
 
-test("it should show header when label prop is provided", () => {
-  const { showHeader } = mountUseTextField({ label: "Email" });
+test("it should render header when label prop is provided", () => {
+  const wrapper = mount(TextField, { props: { label: "Email" } });
 
-  expect(showHeader.value).toBe(true);
+  expect(wrapper.text()).toContain("Email");
 });
 
-test("it should show header when only corner prop is provided", () => {
-  const { showHeader } = mountUseTextField({ corner: "Optional" });
+test("it should render header when only corner prop is provided", () => {
+  const wrapper = mount(TextField, { props: { corner: "Optional" } });
 
-  expect(showHeader.value).toBe(true);
+  expect(wrapper.text()).toContain("Optional");
 });
 
-test("it should show description when description is set and field is valid", () => {
-  const { showDescription } = mountUseTextField({ description: "Helper text" });
+test("it should render description when description is set and field is valid", () => {
+  const wrapper = mount(TextField, { props: { description: "Helper text" } });
 
-  expect(showDescription.value).toBe(true);
+  expect(wrapper.text()).toContain("Helper text");
 });
 
 test("it should hide description when field is invalid", () => {
-  const { showDescription } = mountUseTextField({
-    error: true,
-    description: "Helper text",
+  const wrapper = mount(TextField, {
+    props: { error: true, description: "Helper text" },
   });
 
-  expect(showDescription.value).toBe(false);
+  expect(wrapper.text()).not.toContain("Helper text");
 });
 
-test("it should show error message when errorMessage is set", () => {
-  const { showError } = mountUseTextField({
-    errorMessage: "Required",
-  });
+test("it should render error message when errorMessage is set", () => {
+  const wrapper = mount(TextField, { props: { errorMessage: "Required" } });
 
-  expect(showError.value).toBe(true);
+  expect(wrapper.text()).toContain("Required");
 });
 
 test("it should hide error message when only error is true", () => {
-  const { showError } = mountUseTextField({ error: true });
+  const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(showError.value).toBe(false);
+  expect(wrapper.find(`[id$="-error"]`).exists()).toBe(false);
 });
 
-test("it should show start text when start prop is set", () => {
-  const { showStartText, showStartIcon } = mountUseTextField({
-    start: "https://",
-  });
+test("it should render start text when start prop is set", () => {
+  const wrapper = mount(TextField, { props: { start: "https://" } });
 
-  expect(showStartText.value).toBe(true);
-  expect(showStartIcon.value).toBe(false);
+  expect(wrapper.text()).toContain("https://");
 });
 
-test("it should show start icon when startIcon is set", () => {
-  const { showStartIcon } = mountUseTextField({ startIcon: CircleAlert });
+test("it should render start icon when startIcon is set", () => {
+  const wrapper = mount(TextField, { props: { startIcon: CircleAlert } });
 
-  expect(showStartIcon.value).toBe(true);
+  expect(wrapper.find("svg").exists()).toBe(true);
 });
 
-test("it should show error icon when error is true and no end icon", () => {
-  const { showErrorIcon, showEndText } = mountUseTextField({ error: true });
+test("it should render error icon when error is true and no end icon", () => {
+  const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(showEndText.value).toBe(false);
-  expect(showErrorIcon.value).toBe(true);
+  expect(wrapper.find("svg").exists()).toBe(true);
 });
 
 test("it should not treat error boolean as end suffix text", () => {
-  const { merged, showEndText, showErrorIcon } = mountUseTextField({
-    error: true,
-  });
+  const { merged } = mountUseTextField({ error: true });
 
-  expect(showEndText.value).toBe(false);
-  expect(showErrorIcon.value).toBe(true);
   expect(merged.value.end).toBeUndefined();
 });
 
-test("it should show error icon instead of end icon when both are set", () => {
-  const { showErrorIcon, showEndIcon } = mountUseTextField({
-    error: true,
-    endIcon: CircleAlert,
+test("it should render error icon instead of end icon when both are set", () => {
+  const wrapper = mount(TextField, {
+    props: { error: true, endIcon: CircleAlert },
   });
 
-  expect(showEndIcon.value).toBe(false);
-  expect(showErrorIcon.value).toBe(true);
+  expect(wrapper.findAll("svg").length).toBe(1);
 });
 
 test("it should hide error icon when withErrorIcon is false", () => {
-  const { showErrorIcon } = mountUseTextField({
-    error: true,
-    withErrorIcon: false,
+  const wrapper = mount(TextField, {
+    props: { error: true, withErrorIcon: false },
   });
 
-  expect(showErrorIcon.value).toBe(false);
+  expect(wrapper.find("svg").exists()).toBe(false);
 });
 
 test("it should set aria-invalid on input when error is true", () => {

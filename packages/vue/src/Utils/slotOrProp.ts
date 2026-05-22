@@ -1,4 +1,5 @@
 // ** External Imports
+import { get, isEmpty, isNil, isString } from "es-toolkit/compat";
 import type { Slot, Slots, VNodeChild } from "vue";
 
 type VueSlots = Slots | Readonly<Slots> | undefined;
@@ -7,12 +8,12 @@ type VueSlots = Slots | Readonly<Slots> | undefined;
  * Whether a prop value is considered present for fallback rendering.
  */
 export function isPropPresent(value: unknown): boolean {
-  if (value == null) {
+  if (isNil(value)) {
     return false;
   }
 
-  if (typeof value === "string") {
-    return value.length > 0;
+  if (isString(value)) {
+    return !isEmpty(value);
   }
 
   return true;
@@ -22,7 +23,7 @@ export function isPropPresent(value: unknown): boolean {
  * Whether a named slot was passed to the component.
  */
 export function hasNamedSlot(slots: VueSlots, name: string): boolean {
-  return slots?.[name] != null;
+  return !isNil(get(slots, name));
 }
 
 /**
@@ -46,9 +47,9 @@ export function resolveSlotOrProp(
   fallback?: string | number | null,
 ): () => VNodeChild | VNodeChild[] {
   return () => {
-    const slotFn = slots?.[name];
+    const slotFn = get(slots, name);
 
-    if (slotFn) {
+    if (!isNil(slotFn)) {
       return slotFn();
     }
 

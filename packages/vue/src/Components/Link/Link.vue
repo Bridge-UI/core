@@ -3,6 +3,7 @@
 import { Icon } from "@/Components/Icon";
 import { useLink } from "@/Components/Link/composables/useLink";
 import type { LinkOwnProps, LinkSlots } from "@/Components/Link/link.types";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<LinkSlots>();
 
@@ -11,18 +12,15 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<LinkOwnProps>();
 
 const {
+  slots,
   merged,
-  iconSize,
+  rootRel,
   rootBind,
-  rootClass,
-  isDisabled,
-  showAppend,
-  showPrepend,
+  rootHref,
+  rootTarget,
   leftIconBind,
-  showLeftIcon,
   rightIconBind,
-  showRightIcon,
-  showDefaultSlot,
+  rootAriaDisabled,
 } = useLink(props, {
   size: "md",
   color: "primary",
@@ -32,31 +30,30 @@ const {
 
 <template>
   <a
+    :rel="rootRel"
+    :href="rootHref"
     v-bind="rootBind"
-    :class="rootClass"
-    :href="isDisabled ? undefined : merged.href"
-    :aria-disabled="isDisabled ? true : undefined"
-    :target="merged.external && !isDisabled ? '_blank' : undefined"
-    :rel="merged.external && !isDisabled ? 'noopener noreferrer' : undefined"
+    :target="rootTarget"
+    :aria-disabled="rootAriaDisabled"
   >
-    <slot v-if="showPrepend" name="prepend" />
+    <slot v-if="hasNamedSlot(slots, 'prepend')" name="prepend" />
 
     <Icon
-      v-if="showLeftIcon && merged.leftIcon"
-      :icon="merged.leftIcon"
-      :size="iconSize"
+      :size="merged.size"
       v-bind="leftIconBind"
+      :icon="merged.leftIcon"
+      v-else-if="merged.leftIcon"
     />
 
-    <slot v-if="showDefaultSlot" />
+    <slot v-if="hasNamedSlot(slots, 'default')" />
+
+    <slot v-if="hasNamedSlot(slots, 'append')" name="append" />
 
     <Icon
-      v-if="showRightIcon && merged.rightIcon"
-      :icon="merged.rightIcon"
-      :size="iconSize"
+      :size="merged.size"
       v-bind="rightIconBind"
+      :icon="merged.rightIcon"
+      v-else-if="merged.rightIcon"
     />
-
-    <slot v-if="showAppend" name="append" />
   </a>
 </template>

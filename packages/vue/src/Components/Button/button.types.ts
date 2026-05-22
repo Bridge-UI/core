@@ -76,6 +76,11 @@ export interface ButtonPartsProps {
   loading?: Partial<Omit<IconProps, "icon">>;
 
   /**
+   * Props forwarded to the root element.
+   */
+  root?: HTMLAttributes;
+
+  /**
    * Props forwarded to the inline-start slot wrapper.
    */
   start?: HTMLAttributes;
@@ -93,13 +98,6 @@ export interface ButtonOwnProps {
    * @default "button"
    */
   as?: "a" | "span" | "button";
-
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  class?: string;
 
   /**
    * The classes to apply to the button.

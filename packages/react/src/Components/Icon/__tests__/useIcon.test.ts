@@ -6,12 +6,14 @@ import { expect, test } from "vitest";
 // ** Local Imports
 import { useIcon, type IconOwnProps, type IconProps } from "@/Components/Icon";
 
-const libDefaults: Partial<IconOwnProps> = {
+const libDefaults = {
   size: "md",
-};
+} as const satisfies Partial<IconOwnProps>;
 
 function renderUseIcon(props: IconProps) {
-  return renderHook(() => useIcon(props, libDefaults));
+  return renderHook(() =>
+    useIcon(props, libDefaults as Parameters<typeof useIcon>[1]),
+  );
 }
 
 test("it should default size to md", () => {
@@ -38,16 +40,16 @@ test("it should merge custom className from props", () => {
     className: "text-primary-500",
   });
 
-  expect(result.current.mergedClass).toContain("text-primary-500");
+  expect(result.current.rootBind.className).toContain("text-primary-500");
 });
 
-test("it should compute mergedClass with size and className", () => {
+test("it should compute rootBind with size and className", () => {
   const { result } = renderUseIcon({
     icon: Info,
     size: "sm",
     className: "text-red-500",
   });
 
-  expect(result.current.mergedClass).toContain("w-3.5");
-  expect(result.current.mergedClass).toContain("text-red-500");
+  expect(result.current.rootBind.className).toContain("w-3.5");
+  expect(result.current.rootBind.className).toContain("text-red-500");
 });

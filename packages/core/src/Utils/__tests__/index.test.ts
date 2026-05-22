@@ -5,8 +5,8 @@ import { expect, test } from "vitest";
 import type { BridgeUIComponentsConfig } from "@core/Config/types";
 import {
   cn,
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
 } from "@core/Utils";
 
@@ -89,40 +89,6 @@ test("it should merge three layers progressively", () => {
   expect(result).toEqual({ a: "1", b: "3", c: "5", d: "6" });
 });
 
-test("it should return lib map when no provider given", () => {
-  const lib = { none: "", sm: "shadow-sm", md: "shadow-md" };
-
-  expect(mergeBridgeUIStringMap({ lib })).toEqual(lib);
-});
-
-test("it should merge provider overrides into lib", () => {
-  const lib = { none: "", sm: "shadow-sm" };
-  const provider = { sm: "shadow-lg" };
-
-  expect(mergeBridgeUIStringMap({ lib, provider })).toEqual({
-    none: "",
-    sm: "shadow-lg",
-  });
-});
-
-test("it should add new keys from provider", () => {
-  const lib = { sm: "shadow-sm" };
-  const provider = { xl: "shadow-xl" };
-
-  expect(mergeBridgeUIStringMap({ lib, provider })).toEqual({
-    sm: "shadow-sm",
-    xl: "shadow-xl",
-  });
-});
-
-test("it should handle undefined provider", () => {
-  const lib = { a: "1" };
-
-  expect(mergeBridgeUIStringMap({ lib, provider: undefined })).toEqual({
-    a: "1",
-  });
-});
-
 test("it should return props as-is when no defaults or registry", () => {
   const props = { color: "info" as const, shadow: "sm" as const };
 
@@ -184,4 +150,41 @@ test("it should handle undefined components gracefully", () => {
   });
 
   expect(result).toEqual({ size: "md" });
+});
+
+test("mergePartBind should merge bridge, inherited, and part", () => {
+  const mergePartBind = createMergePartBind("class");
+
+  expect(
+    mergePartBind(undefined, { "data-test": "x" }, { class: "bridge" }),
+  ).toEqual({
+    class: "bridge",
+    "data-test": "x",
+  });
+
+  expect(
+    mergePartBind(
+      { class: "part", id: "user" },
+      { class: "inherited" },
+      { class: "bridge", id: "pkg" },
+    ),
+  ).toEqual({
+    id: "user",
+    class: "bridge inherited part",
+  });
+});
+
+test("mergePartBind should use className for React", () => {
+  const mergePartBind = createMergePartBind("className");
+
+  expect(
+    mergePartBind(
+      { className: "part" },
+      { className: "inherited", role: "alert" },
+      "bridge",
+    ),
+  ).toEqual({
+    role: "alert",
+    className: "bridge inherited part",
+  });
 });

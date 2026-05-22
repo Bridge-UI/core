@@ -1,97 +1,97 @@
 // ** External Imports
+import { Loader2 } from "lucide-react";
 import { createElement, Fragment } from "react";
 
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button";
 import { useButton } from "@/Components/Button";
 import { Icon } from "@/Components/Icon";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 function Button(props: ButtonProps) {
   const {
     tag,
     slots,
-    isMini,
     merged,
     children,
+    isMini,
     iconBind,
-    iconSize,
-    isAnchor,
-    isButton,
-    showIcon,
-    showText,
-    rootClass,
-    isDisabled,
+    rootBind,
+    rootHref,
+    rootType,
     endIconBind,
     endSlotBind,
-    showDefault,
-    showEndIcon,
-    showEndSlot,
-    showSpinner,
-    spinnerIcon,
-    showChildren,
-    rootHtmlProps,
-    showStartIcon,
-    showStartSlot,
+    rootAriaBusy,
+    rootDisabled,
     startIconBind,
     startSlotBind,
     loadingIconBind,
+    rootAriaDisabled,
   } = useButton(props, {
     size: "md",
     as: "button",
     rounded: "md",
     color: "primary",
     variant: "solid",
+    density: "default",
   });
-
-  const SpinnerIcon = spinnerIcon;
 
   return createElement(
     tag,
     {
-      ...rootHtmlProps,
-      className: rootClass,
-      type: isButton ? "button" : undefined,
-      disabled: isButton ? isDisabled : undefined,
-      "aria-busy": merged.loading ? true : undefined,
-      "aria-disabled": isDisabled && !isButton ? true : undefined,
-      href: isAnchor && !isDisabled && merged.href ? merged.href : undefined,
+      ...rootBind,
+      type: rootType,
+      href: rootHref,
+      disabled: rootDisabled,
+      "aria-busy": rootAriaBusy,
+      "aria-disabled": rootAriaDisabled,
     },
     <Fragment>
-      {showSpinner && (
-        <Icon icon={SpinnerIcon} size={iconSize} {...loadingIconBind} />
+      {merged.loading && (
+        <Icon icon={Loader2} size={merged.size} {...loadingIconBind} />
       )}
 
-      {!showSpinner && isMini && (
+      {!merged.loading && isMini && (
         <Fragment>
-          {showDefault && children}
-
-          {showIcon && merged.icon && (
-            <Icon icon={merged.icon} size={iconSize} {...iconBind} />
+          {children ? (
+            children
+          ) : (
+            <Fragment>
+              {merged.icon && (
+                <Icon icon={merged.icon} size={merged.size} {...iconBind} />
+              )}
+            </Fragment>
           )}
         </Fragment>
       )}
 
-      {!showSpinner && !isMini && (
+      {!merged.loading && !isMini && (
         <Fragment>
-          {showStartIcon && merged.startIcon && (
+          {merged.startIcon ? (
             <Icon
-              size={merged.size}
               icon={merged.startIcon}
+              size={merged.size}
               {...startIconBind}
             />
+          ) : (
+            <Fragment>
+              {hasNamedSlot(slots, "start") && (
+                <div {...startSlotBind}>{slots?.start}</div>
+              )}
+            </Fragment>
           )}
 
-          {showStartSlot && <div {...startSlotBind}>{slots?.start}</div>}
+          {isPropPresent(merged.text) ? merged.text : children}
 
-          {showText && merged.text}
-
-          {showChildren && children}
-
-          {showEndIcon && merged.endIcon && (
-            <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />
+          {merged.endIcon ? (
+            <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
+          ) : (
+            <Fragment>
+              {hasNamedSlot(slots, "end") && (
+                <div {...endSlotBind}>{slots?.end}</div>
+              )}
+            </Fragment>
           )}
-
-          {showEndSlot && <div {...endSlotBind}>{slots?.end}</div>}
         </Fragment>
       )}
     </Fragment>,

@@ -9,15 +9,18 @@ import {
   type BadgeProps,
 } from "@/Components/Badge";
 
-const libDefaults: Partial<BadgeOwnProps> = {
+const libDefaults = {
   size: "sm",
   rounded: "md",
   variant: "flat",
   color: "primary",
-};
+  density: "default",
+} as const satisfies Partial<BadgeOwnProps>;
 
 function renderUseBadge(props: BadgeProps = {}) {
-  return renderHook(() => useBadge(props, libDefaults));
+  return renderHook(() =>
+    useBadge(props, libDefaults as Parameters<typeof useBadge>[1]),
+  );
 }
 
 test("it should merge default color and variant", () => {
@@ -33,17 +36,17 @@ test("it should override color when prop is passed", () => {
   expect(result.current.merged.color).toBe("error");
 });
 
-test("it should compute rootClass as a non-empty string", () => {
+test("it should compute rootBind className as a non-empty string", () => {
   const { result } = renderUseBadge();
 
-  expect(typeof result.current.rootClass).toBe("string");
-  expect(result.current.rootClass.length).toBeGreaterThan(0);
+  expect(typeof result.current.rootBind.className).toBe("string");
+  expect(result.current.rootBind.className.length).toBeGreaterThan(0);
 });
 
-test("it should merge className into rootClass", () => {
+test("it should merge className into rootBind", () => {
   const { result } = renderUseBadge({ className: "custom-badge" });
 
-  expect(result.current.rootClass).toContain("custom-badge");
+  expect(result.current.rootBind.className).toContain("custom-badge");
 });
 
 test("it should expose children from props", () => {
@@ -52,49 +55,49 @@ test("it should expose children from props", () => {
   expect(result.current.children).toBe("New");
 });
 
-test("it should expose rootHtmlProps for additional attributes", () => {
+test("it should expose inherited attrs on rootBind", () => {
   const { result } = renderUseBadge({
     id: "badge-root",
     "data-testid": "badge",
   });
 
-  expect(result.current.rootHtmlProps.id).toBe("badge-root");
-  expect(result.current.rootHtmlProps["data-testid"]).toBe("badge");
+  expect(result.current.rootBind.id).toBe("badge-root");
+  expect(result.current.rootBind["data-testid"]).toBe("badge");
 });
 
-test("it should apply className after classes.root in rootClass", () => {
+test("it should apply className after classes.root in rootBind", () => {
   const { result } = renderUseBadge({
     className: "p-4",
     classes: { root: "p-2" },
   });
 
-  expect(result.current.rootClass).toContain("p-4");
-  expect(result.current.rootClass).not.toContain("p-2");
+  expect(result.current.rootBind.className).toContain("p-4");
+  expect(result.current.rootBind.className).not.toContain("p-2");
 });
 
 test("it should shrink-wrap width in flex layouts", () => {
   const { result } = renderUseBadge();
 
-  expect(result.current.rootClass).toContain("w-fit");
+  expect(result.current.rootBind.className).toContain("w-fit");
 });
 
 test("it should apply w-full when full is true", () => {
   const { result } = renderUseBadge({ full: true });
 
-  expect(result.current.rootClass).toContain("w-full");
-  expect(result.current.rootClass).not.toContain("w-fit");
+  expect(result.current.rootBind.className).toContain("w-full");
+  expect(result.current.rootBind.className).not.toContain("w-fit");
 });
 
 test("it should not apply w-full on mini density even when full is true", () => {
   const { result } = renderUseBadge({ density: "mini", full: true });
 
-  expect(result.current.rootClass).not.toContain("w-fit");
-  expect(result.current.rootClass).not.toContain("w-full");
+  expect(result.current.rootBind.className).not.toContain("w-fit");
+  expect(result.current.rootBind.className).not.toContain("w-full");
 });
 
 test("it should apply mini size classes when density is mini", () => {
   const { result } = renderUseBadge({ density: "mini" });
 
-  expect(result.current.rootClass).toContain("w-6");
-  expect(result.current.rootClass).toContain("h-6");
+  expect(result.current.rootBind.className).toContain("w-6");
+  expect(result.current.rootBind.className).toContain("h-6");
 });

@@ -1,18 +1,22 @@
 // ** External Imports
+import { get, isEmpty, isNil, isString } from "es-toolkit/compat";
 import type { ReactNode } from "react";
 
 /** Slots object from component props (typed interfaces are accepted). */
 export type SlotMap = object;
 
+/**
+ * Reads a named slot from the slot map.
+ */
 function readSlot(
   slots: SlotMap | undefined,
   name: string,
 ): ReactNode | undefined {
-  if (slots == null) {
+  if (isNil(slots)) {
     return undefined;
   }
 
-  return (slots as Record<string, ReactNode | undefined>)[name];
+  return get(slots as Record<string, ReactNode | undefined>, name);
 }
 
 /**
@@ -22,19 +26,19 @@ export function hasNamedSlot(
   slots: SlotMap | undefined,
   name: string,
 ): boolean {
-  return readSlot(slots, name) != null;
+  return !isNil(readSlot(slots, name));
 }
 
 /**
  * Whether a prop value is considered present for fallback rendering.
  */
 export function isPropPresent(value: unknown): value is ReactNode {
-  if (value == null) {
+  if (isNil(value)) {
     return false;
   }
 
-  if (typeof value === "string") {
-    return value.length > 0;
+  if (isString(value)) {
+    return !isEmpty(value);
   }
 
   return true;
@@ -65,7 +69,7 @@ export function resolveSlotOrProp({
 }): ReactNode {
   const slot = readSlot(slots, name);
 
-  if (slot != null) {
+  if (!isNil(slot)) {
     return slot;
   }
 

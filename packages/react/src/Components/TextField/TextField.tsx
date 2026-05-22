@@ -3,7 +3,12 @@ import { Icon } from "@/Components/Icon";
 import { Label } from "@/Components/Label";
 import { useTextField } from "@/Components/TextField/hooks/useTextField";
 import type { TextFieldProps } from "@/Components/TextField/textField.types";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import {
+  hasNamedSlot,
+  hasSlotOrProp,
+  isPropPresent,
+  resolveSlotOrProp,
+} from "@/Utils";
 
 function TextField(props: TextFieldProps) {
   const {
@@ -16,28 +21,18 @@ function TextField(props: TextFieldProps) {
     errorIcon,
     inputBind,
     labelBind,
-    showError,
     startBind,
     cornerBind,
-    hasEndSlot,
     headerBind,
     isDisabled,
     isReadonly,
-    showHeader,
     endIconBind,
     endSlotBind,
     invalidated,
-    showEndIcon,
-    showEndText,
-    hasStartSlot,
     containerBind,
-    showErrorIcon,
-    showStartIcon,
-    showStartText,
     startIconBind,
     startSlotBind,
     descriptionBind,
-    showDescription,
   } = useTextField(props, {
     size: "md",
     rounded: "md",
@@ -53,7 +48,8 @@ function TextField(props: TextFieldProps) {
       aria-readonly={isReadonly || undefined}
       data-invalid={invalidated || undefined}
     >
-      {showHeader && (
+      {(hasSlotOrProp(slots, "label", merged.label) ||
+        hasSlotOrProp(slots, "corner", merged.corner)) && (
         <div {...headerBind}>
           {hasSlotOrProp(slots, "label", merged.label) && (
             <Label
@@ -84,13 +80,15 @@ function TextField(props: TextFieldProps) {
       )}
 
       <label {...containerBind} htmlFor={inputId}>
-        {hasStartSlot && <div {...startSlotBind}>{slots?.start}</div>}
+        {hasNamedSlot(slots, "start") && (
+          <div {...startSlotBind}>{slots?.start}</div>
+        )}
 
-        {!hasStartSlot && showStartText && (
+        {!hasNamedSlot(slots, "start") && isPropPresent(merged.start) && (
           <div {...startBind}>{merged.start}</div>
         )}
 
-        {!hasStartSlot && showStartIcon && merged.startIcon && (
+        {!hasNamedSlot(slots, "start") && merged.startIcon && (
           <div {...startBind}>
             <Icon
               icon={merged.startIcon}
@@ -102,34 +100,41 @@ function TextField(props: TextFieldProps) {
 
         <input {...inputBind} />
 
-        {hasEndSlot && <div {...endSlotBind}>{slots?.end}</div>}
+        {hasNamedSlot(slots, "end") && <div {...endSlotBind}>{slots?.end}</div>}
 
-        {!hasEndSlot && showEndText && <div {...endBind}>{merged.end}</div>}
-
-        {!hasEndSlot && showErrorIcon && (
-          <div {...endBind}>
-            <Icon icon={errorIcon} size={merged.size} {...endIconBind} />
-          </div>
+        {!hasNamedSlot(slots, "end") && isPropPresent(merged.end) && (
+          <div {...endBind}>{merged.end}</div>
         )}
 
-        {!hasEndSlot && showEndIcon && merged.endIcon && (
-          <div {...endBind}>
-            <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
-          </div>
-        )}
+        {!hasNamedSlot(slots, "end") &&
+          invalidated &&
+          merged.withErrorIcon !== false && (
+            <div {...endBind}>
+              <Icon icon={errorIcon} size={merged.size} {...endIconBind} />
+            </div>
+          )}
+
+        {!hasNamedSlot(slots, "end") &&
+          !(invalidated && merged.withErrorIcon !== false) &&
+          merged.endIcon && (
+            <div {...endBind}>
+              <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
+            </div>
+          )}
       </label>
 
-      {showDescription && (
-        <p {...descriptionBind} id={`${inputId}-description`}>
-          {resolveSlotOrProp({
-            slots,
-            name: "description",
-            fallback: merged.description,
-          })}
-        </p>
-      )}
+      {!invalidated &&
+        hasSlotOrProp(slots, "description", merged.description) && (
+          <p {...descriptionBind} id={`${inputId}-description`}>
+            {resolveSlotOrProp({
+              slots,
+              name: "description",
+              fallback: merged.description,
+            })}
+          </p>
+        )}
 
-      {showError && (
+      {hasSlotOrProp(slots, "errorMessage", merged.errorMessage) && (
         <p {...errorBind} id={`${inputId}-error`}>
           {resolveSlotOrProp({
             slots,

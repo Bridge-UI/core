@@ -1,19 +1,18 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { Info } from "lucide-vue-next";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useLink, type LinkOwnProps, type LinkProps } from "@/Components/Link";
+import { useLink, type LinkOwnProps } from "@/Components/Link";
 
-const libDefaults: Partial<LinkOwnProps> = {
+const libDefaults = {
   size: "md",
   color: "primary",
   underline: "hover",
-};
+} satisfies Partial<LinkOwnProps>;
 
-function mountUseLink(props: LinkProps = {}) {
+function mountUseLink(props: Partial<LinkOwnProps> = {}) {
   let result!: ReturnType<typeof useLink>;
 
   const Wrapper = defineComponent({
@@ -36,29 +35,28 @@ test("it should merge default color", () => {
 });
 
 test("it should be disabled when disabled prop is true", () => {
-  const { isDisabled } = mountUseLink({ disabled: true });
+  const { merged, rootHref, rootAriaDisabled } = mountUseLink({
+    href: "/docs",
+    disabled: true,
+  });
 
-  expect(isDisabled.value).toBe(true);
-});
-
-test("it should show left icon when leftIcon is set", () => {
-  const { showLeftIcon } = mountUseLink({ leftIcon: Info });
-
-  expect(showLeftIcon.value).toBe(true);
+  expect(rootHref.value).toBeUndefined();
+  expect(merged.value.disabled).toBe(true);
+  expect(rootAriaDisabled.value).toBe(true);
 });
 
 test("it should apply hover underline classes by default", () => {
-  const { rootClass } = mountUseLink();
+  const { rootBind } = mountUseLink();
 
-  expect(rootClass.value).toContain("no-underline");
-  expect(rootClass.value).toContain("hover:underline");
+  expect(rootBind.value.class).toContain("no-underline");
+  expect(rootBind.value.class).toContain("hover:underline");
 });
 
 test("it should apply none underline when underline is none", () => {
-  const { rootClass } = mountUseLink({ underline: "none" });
+  const { rootBind } = mountUseLink({ underline: "none" });
 
-  expect(rootClass.value).toContain("no-underline");
-  expect(rootClass.value).not.toContain("hover:underline");
+  expect(rootBind.value.class).toContain("no-underline");
+  expect(rootBind.value.class).not.toContain("hover:underline");
 });
 
 test("it should expose rootBind for additional attributes", () => {
@@ -72,12 +70,12 @@ test("it should expose rootBind for additional attributes", () => {
   expect(rootBind.value.id).toBe("docs-link");
 });
 
-test("it should apply class after classes.root in rootClass", () => {
-  const { rootClass } = mountUseLink({
+test("it should apply class after classes.root in root bind", () => {
+  const { rootBind } = mountUseLink({
     class: "p-4",
     classes: { root: "p-2" },
   });
 
-  expect(rootClass.value).toContain("p-4");
-  expect(rootClass.value).not.toContain("p-2");
+  expect(rootBind.value.class).toContain("p-4");
+  expect(rootBind.value.class).not.toContain("p-2");
 });

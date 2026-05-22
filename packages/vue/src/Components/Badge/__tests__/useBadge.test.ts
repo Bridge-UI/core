@@ -4,20 +4,17 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import {
-  useBadge,
-  type BadgeOwnProps,
-  type BadgeProps,
-} from "@/Components/Badge";
+import { useBadge, type BadgeOwnProps } from "@/Components/Badge";
 
-const libDefaults: Partial<BadgeOwnProps> = {
+const libDefaults = {
   size: "sm",
   rounded: "md",
   variant: "flat",
   color: "primary",
-};
+  density: "default",
+} satisfies Partial<BadgeOwnProps>;
 
-function mountUseBadge(props: BadgeProps = {}) {
+function mountUseBadge(props: Partial<BadgeOwnProps> = {}) {
   let result!: ReturnType<typeof useBadge>;
 
   const Wrapper = defineComponent({
@@ -46,16 +43,16 @@ test("it should override color when prop is passed", () => {
   expect(merged.value.color).toBe("error");
 });
 
-test("it should compute rootClass as a non-empty string", () => {
-  const { rootClass } = mountUseBadge();
+test("it should compute root class as a non-empty string", () => {
+  const { rootBind } = mountUseBadge();
 
-  expect(rootClass.value.length).toBeGreaterThan(0);
+  expect(rootBind.value.class.length).toBeGreaterThan(0);
 });
 
-test("it should merge class into rootClass", () => {
-  const { rootClass } = mountUseBadge({ class: "custom-badge" });
+test("it should merge class into root bind", () => {
+  const { rootBind } = mountUseBadge({ class: "custom-badge" });
 
-  expect(rootClass.value).toContain("custom-badge");
+  expect(rootBind.value.class).toContain("custom-badge");
 });
 
 test("it should expose rootBind for additional attributes", () => {
@@ -68,39 +65,39 @@ test("it should expose rootBind for additional attributes", () => {
   expect(rootBind.value["data-testid"]).toBe("badge");
 });
 
-test("it should apply class after classes.root in rootClass", () => {
-  const { rootClass } = mountUseBadge({
+test("it should apply class after classes.root in root bind", () => {
+  const { rootBind } = mountUseBadge({
     class: "p-4",
     classes: { root: "p-2" },
   });
 
-  expect(rootClass.value).toContain("p-4");
-  expect(rootClass.value).not.toContain("p-2");
+  expect(rootBind.value.class).toContain("p-4");
+  expect(rootBind.value.class).not.toContain("p-2");
 });
 
 test("it should shrink-wrap width in flex layouts", () => {
-  const { rootClass } = mountUseBadge();
+  const { rootBind } = mountUseBadge();
 
-  expect(rootClass.value).toContain("w-fit");
+  expect(rootBind.value.class).toContain("w-fit");
 });
 
 test("it should apply w-full when full is true", () => {
-  const { rootClass } = mountUseBadge({ full: true });
+  const { rootBind } = mountUseBadge({ full: true });
 
-  expect(rootClass.value).toContain("w-full");
-  expect(rootClass.value).not.toContain("w-fit");
+  expect(rootBind.value.class).toContain("w-full");
+  expect(rootBind.value.class).not.toContain("w-fit");
 });
 
 test("it should not apply w-full on mini density even when full is true", () => {
-  const { rootClass } = mountUseBadge({ density: "mini", full: true });
+  const { rootBind } = mountUseBadge({ density: "mini", full: true });
 
-  expect(rootClass.value).not.toContain("w-fit");
-  expect(rootClass.value).not.toContain("w-full");
+  expect(rootBind.value.class).not.toContain("w-fit");
+  expect(rootBind.value.class).not.toContain("w-full");
 });
 
 test("it should apply mini size classes when density is mini", () => {
-  const { rootClass } = mountUseBadge({ density: "mini" });
+  const { rootBind } = mountUseBadge({ density: "mini" });
 
-  expect(rootClass.value).toContain("w-6");
-  expect(rootClass.value).toContain("h-6");
+  expect(rootBind.value.class).toContain("w-6");
+  expect(rootBind.value.class).toContain("h-6");
 });

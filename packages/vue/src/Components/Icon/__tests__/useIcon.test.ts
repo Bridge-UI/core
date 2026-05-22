@@ -5,18 +5,18 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useIcon, type IconOwnProps, type IconProps } from "@/Components/Icon";
+import { useIcon, type IconOwnProps } from "@/Components/Icon";
 
-const libDefaults: Partial<IconOwnProps> = {
+const libDefaults = {
   size: "md",
-};
+} satisfies Partial<IconOwnProps>;
 
-function mountUseIcon(props: IconProps) {
+function mountUseIcon(props: Partial<IconOwnProps> = {}) {
   let result!: ReturnType<typeof useIcon>;
 
   const Wrapper = defineComponent({
-    setup(_, { attrs }) {
-      result = useIcon(props, attrs, libDefaults);
+    setup() {
+      result = useIcon(props, libDefaults);
 
       return () => h("div");
     },
@@ -46,21 +46,21 @@ test("it should preserve icon prop in merged", () => {
 });
 
 test("it should merge custom class from props", () => {
-  const { mergedClass } = mountUseIcon({
+  const { rootBind } = mountUseIcon({
     icon: Info,
     class: "text-primary-500",
   });
 
-  expect(mergedClass.value).toContain("text-primary-500");
+  expect(rootBind.value.class).toContain("text-primary-500");
 });
 
-test("it should compute mergedClass with size and class", () => {
-  const { mergedClass } = mountUseIcon({
+test("it should compute root class with size and class", () => {
+  const { rootBind } = mountUseIcon({
     icon: Info,
     size: "sm",
     class: "text-red-500",
   });
 
-  expect(mergedClass.value).toContain("w-3.5");
-  expect(mergedClass.value).toContain("text-red-500");
+  expect(rootBind.value.class).toContain("w-3.5");
+  expect(rootBind.value.class).toContain("text-red-500");
 });

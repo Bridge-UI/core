@@ -3,7 +3,7 @@ import type { BadgeProps } from "@/Components/Badge";
 import { useBadge } from "@/Components/Badge";
 
 function Badge(props: BadgeProps) {
-  const { children, rootClass, rootHtmlProps } = useBadge(props, {
+  const { children, rootBind } = useBadge(props, {
     size: "sm",
     rounded: "md",
     variant: "flat",
@@ -11,11 +11,7 @@ function Badge(props: BadgeProps) {
     density: "default",
   });
 
-  return (
-    <span {...rootHtmlProps} className={rootClass}>
-      {children}
-    </span>
-  );
+  return <span {...rootBind}>{children}</span>;
 }
 
 export default Badge;

@@ -106,6 +106,7 @@ export type {
   CheckboxConfigOverrides,
   Direction,
   IconConfigOverrides,
+  LabelConfigOverrides,
   LinkConfigOverrides,
   MenuConfigOverrides,
   ModalConfigOverrides,
@@ -117,12 +118,17 @@ export type {
 } from "@core/Config";
 export {
   cn,
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
+  splitComponentProps,
 } from "@core/Utils";
 export type {
+  ClassPropKey,
+  LibDefaultsShape,
   MergeHtmlProps,
+  MergeLibDefaults,
+  MergePartBind,
   MergeProps,
   Overwrite,
   UnionProps,

@@ -1,16 +1,19 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   colorProps,
   sizeProps,
   underlineProps,
-  type LinkColor,
-  type LinkSize,
-  type LinkUnderline,
 } from "@bridge-ui/core/Components/Link";
 
 // ** Local Imports
@@ -21,10 +24,7 @@ import type {
 } from "@/Components/Link/link.types";
 import {
   derived,
-  hasNamedSlot,
-  mergeBridgeUIStringMap,
   mergePartBind,
-  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -42,135 +42,152 @@ const linkBridgeKeys = [
   "partsProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
 
-export function useLink(props: LinkProps, libDefaults: Partial<LinkOwnProps>) {
-  // Setup
-  const { className, children, slots, propsForMerge, rootHtmlProps } =
-    splitComponentProps(props, {
-      bridgeKeys: linkBridgeKeys,
-      peel: ["className", "children", "slots"],
-    });
+type LinkLibDefaults = LibDefaultsShape<
+  LinkOwnProps,
+  "color" | "size" | "underline"
+>;
 
-  const { entry: bridgeLink, merged } = useBridgeUIComponent({
+type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;
+
+export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
+  // Setup
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    LinkProps,
+    typeof linkBridgeKeys
+  >({
+    props,
+    bridgeKeys: linkBridgeKeys,
+  });
+
+  const { entry: bridgeLink, merged } = useBridgeUIComponent<
+    LinkMerged,
+    "Link"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Link",
   });
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
-    entry: bridgeLink,
-    props: propsForMerge,
+  const slots = derived(() => {
+    return props.slots;
   });
 
-  // Registry maps
-  const mergedColorMap = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeLink?.customProps?.color,
-    );
-  }, [bridgeLink?.customProps?.color]);
-
-  const mergedSizeMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: sizeProps,
-      provider: bridgeLink?.customProps?.size,
-    });
-  }, [bridgeLink?.customProps?.size]);
-
-  const mergedUnderlineMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: underlineProps,
-      provider: bridgeLink?.customProps?.underline,
-    });
-  }, [bridgeLink?.customProps?.underline]);
-
-  // Theme
-  const isDisabled = derived(() => {
-    return Boolean(merged.disabled);
+  const children = derived(() => {
+    return props.children;
   });
 
-  const iconSize = derived(() => {
-    return (merged.size ?? "md") as keyof LinkSize;
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children", "slots"]);
   });
 
-  const colorKey = derived(() => {
-    return (merged.color ?? "primary") as keyof LinkColor;
-  });
-
-  const colorItem = derived(() => {
-    return get(mergedColorMap, colorKey);
-  });
-
-  // Root
-  const rootClass = derived(() => {
-    return cn(
-      "inline-flex items-center gap-x-1 font-medium transition-colors duration-200",
-      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
-      colorItem?.base,
-      colorItem?.hover,
-      get(
-        mergedUnderlineMap,
-        (merged.underline ?? "hover") as keyof LinkUnderline,
-      ),
-      get(mergedSizeMap, merged.size ?? "md"),
-      mergedClasses.root,
-      className,
-    );
-  });
-
-  // Visibility
-  const showLeftIcon = derived(() => {
-    return Boolean(merged.leftIcon);
-  });
-
-  const showRightIcon = derived(() => {
-    return Boolean(merged.rightIcon);
-  });
-
-  const showAppend = derived(() => {
-    return hasNamedSlot(slots, "append");
-  });
-
-  const showPrepend = derived(() => {
-    return hasNamedSlot(slots, "prepend");
-  });
-
-  const hasChildren = derived(() => {
-    return children != null && children !== false;
-  });
-
-  // Parts
   const partsProps = derived(() => {
     return merged.partsProps;
   });
 
-  const leftIconBind = derived(() => {
-    return mergePartBind(
-      partsProps?.leftIcon,
-      cn("shrink-0", mergedClasses.leftIcon),
-    );
+  const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
+    entry: bridgeLink,
+    props: customProps,
   });
 
-  const rightIconBind = derived(() => {
-    return mergePartBind(
-      partsProps?.rightIcon,
-      cn("shrink-0", mergedClasses.rightIcon),
+  // Elements
+  const rootAriaDisabled = derived(() => {
+    return merged.disabled ? true : undefined;
+  });
+
+  const rootHref = derived(() => {
+    return merged.disabled ? undefined : merged.href;
+  });
+
+  const rootTarget = derived(() => {
+    if (merged.external && !merged.disabled) {
+      return "_blank" as const;
+    }
+
+    return undefined;
+  });
+
+  const rootRel = derived(() => {
+    if (merged.external && !merged.disabled) {
+      return "noopener noreferrer";
+    }
+
+    return undefined;
+  });
+
+  // Classes
+  const sizeClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeLink?.customProps?.size,
     );
+
+    return get(classes, merged.size);
+  }, [merged.size, bridgeLink?.customProps?.size]);
+
+  const underlineClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      underlineProps,
+      bridgeLink?.customProps?.underline,
+    );
+
+    return get(classes, merged.underline);
+  }, [merged.underline, bridgeLink?.customProps?.underline]);
+
+  const colorClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeLink?.customProps?.color,
+    );
+
+    return get(classes, merged.color);
+  }, [merged.color, bridgeLink?.customProps?.color]);
+
+  // Binds
+  // prettier-ignore
+  const leftIconBind = derived(() => {
+    return mergePartBind(partsProps?.leftIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.leftIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const rightIconBind = derived(() => {
+    return mergePartBind(partsProps?.rightIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.rightIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const rootBind = derived(() => {
+    return mergePartBind(partsProps?.root, rootInheritedAttrs, cn({
+      // Theme classes
+      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+      "inline-flex items-center gap-x-1 font-medium transition-colors duration-200": true,
+      [get(colorClass, "hover") ?? ""]: true,
+      [get(colorClass, "base") ?? ""]: true,
+      [underlineClass ?? ""]: true,
+      [sizeClass ?? ""]: true,
+      // Custom classes
+      [mergedClasses.root ?? ""]: true,
+    }));
   });
 
   return {
     slots,
     merged,
+    rootRel,
     children,
-    iconSize,
-    rootClass,
-    isDisabled,
-    showAppend,
-    hasChildren,
-    showPrepend,
+    rootBind,
+    rootHref,
+    rootTarget,
     leftIconBind,
-    showLeftIcon,
     rightIconBind,
-    rootHtmlProps,
-    showRightIcon,
+    rootAriaDisabled,
   };
 }

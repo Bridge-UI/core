@@ -1,14 +1,19 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   densityProps,
   roundedProps,
   variantProps,
-  type BadgeColor,
 } from "@bridge-ui/core/Components/Badge";
 
 // ** Local Imports
@@ -19,8 +24,7 @@ import type {
 } from "@/Components/Badge/badge.types";
 import {
   derived,
-  mergeBridgeUIStringMap,
-  splitComponentProps,
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -35,99 +39,99 @@ const badgeBridgeKeys = [
   "variant",
 ] as const satisfies readonly (keyof BadgeOwnProps)[];
 
-export function useBadge(
-  props: BadgeProps,
-  libDefaults: Partial<BadgeOwnProps>,
-) {
-  // Setup
-  const { className, children, propsForMerge, rootHtmlProps } =
-    splitComponentProps(props, {
-      bridgeKeys: badgeBridgeKeys,
-      peel: ["className", "children"],
-    });
+type BadgeLibDefaults = LibDefaultsShape<
+  BadgeOwnProps,
+  "size" | "color" | "density" | "rounded" | "variant"
+>;
 
-  const { entry: bridgeBadge, merged } = useBridgeUIComponent({
+type BadgeMerged = MergeLibDefaults<BadgeOwnProps, BadgeLibDefaults>;
+
+export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
+  // Setup
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    BadgeProps,
+    typeof badgeBridgeKeys
+  >({
+    props,
+    bridgeKeys: badgeBridgeKeys,
+  });
+
+  const { entry: bridgeBadge, merged } = useBridgeUIComponent<
+    BadgeMerged,
+    "Badge"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Badge",
+  });
+
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: propsForMerge,
+    props: customProps,
   });
 
-  // Registry maps
-  const mergedRoundedMap = useMemo(() => {
-    return mergeBridgeUIStringMap({
-      lib: roundedProps,
-      provider: bridgeBadge?.customProps?.rounded,
-    });
-  }, [bridgeBadge?.customProps?.rounded]);
+  // Element
+  const isMini = derived(() => {
+    return merged.density === "mini";
+  });
 
-  const mergedDensityProps = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
+  // Classes
+  const sizeClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       densityProps,
       bridgeBadge?.customProps?.density,
     );
-  }, [bridgeBadge?.customProps?.density]);
 
-  const mergedVariantProps = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
+    return get(classes, [merged.density, merged.size]);
+  }, [merged.size, merged.density, bridgeBadge?.customProps?.density]);
+
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeBadge?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeBadge?.customProps?.rounded]);
+
+  const colorClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeBadge?.customProps?.variant,
-    ) as typeof variantProps;
-  }, [bridgeBadge?.customProps?.variant]);
-
-  // Theme
-  const sizeKey = derived(() => {
-    return merged.size ?? "sm";
-  });
-
-  const colorKey = derived(() => {
-    return (merged.color ?? "primary") as keyof BadgeColor;
-  });
-
-  const variantKey = derived(() => {
-    return (merged.variant ?? "flat") as keyof typeof variantProps;
-  });
-
-  const densityKey = derived(() => {
-    return (merged.density ?? "default") as keyof typeof densityProps;
-  });
-
-  const isMini = derived(() => {
-    return densityKey === "mini";
-  });
-
-  const sizeClass = derived(() => {
-    return get(mergedDensityProps, [densityKey, sizeKey]);
-  });
-
-  const paletteClass = derived(() => {
-    return get(mergedVariantProps, [variantKey, colorKey]);
-  });
-
-  // Root
-  const rootClass = derived(() => {
-    return cn(
-      "inline-flex items-center justify-center font-medium whitespace-nowrap",
-      { "w-full": !isMini && merged.full },
-      { "w-fit": !isMini && !merged.full },
-      paletteClass.text,
-      paletteClass.background,
-      paletteClass.border,
-      sizeClass,
-      get(mergedRoundedMap, merged.rounded ?? "md"),
-      mergedClasses.root,
-      className,
     );
+
+    return get(classes, [merged.variant, merged.color]);
+  }, [merged.color, merged.variant, bridgeBadge?.customProps?.variant]);
+
+  // Binds
+  // prettier-ignore
+  const rootBind = derived(() => {
+    return mergePartBind({}, rootInheritedAttrs, cn({
+      // These classes
+      "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
+      [get(colorClass, "background") ?? ""]: true,
+      [get(colorClass, "border") ?? ""]: true,
+      [get(colorClass, "text") ?? ""]: true,
+      "w-full": !isMini && merged.full,
+      "w-fit": !isMini && !merged.full,
+      [roundedClass ?? ""]: true,
+      [sizeClass ?? ""]: true,
+      // Custom classes
+      [mergedClasses.root ?? ""]: true,
+    }));
   });
 
   return {
     merged,
     children,
-    rootClass,
-    rootHtmlProps,
+    rootBind,
   };
 }

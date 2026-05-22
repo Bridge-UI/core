@@ -1,24 +1,24 @@
+// ** External Imports
+import { Fragment } from "react";
+
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import type { LinkProps } from "@/Components/Link";
 import { useLink } from "@/Components/Link";
+import { hasNamedSlot } from "@/Utils";
 
 function Link(props: LinkProps) {
   const {
     slots,
     merged,
+    rootRel,
     children,
-    iconSize,
-    rootClass,
-    isDisabled,
-    showAppend,
-    hasChildren,
-    showPrepend,
+    rootBind,
+    rootHref,
+    rootTarget,
     leftIconBind,
-    showLeftIcon,
     rightIconBind,
-    rootHtmlProps,
-    showRightIcon,
+    rootAriaDisabled,
   } = useLink(props, {
     size: "md",
     color: "primary",
@@ -27,26 +27,37 @@ function Link(props: LinkProps) {
 
   return (
     <a
-      {...rootHtmlProps}
-      className={rootClass}
-      href={isDisabled ? undefined : merged.href}
-      aria-disabled={isDisabled ? true : undefined}
-      target={merged.external && !isDisabled ? "_blank" : undefined}
-      rel={merged.external && !isDisabled ? "noopener noreferrer" : undefined}
+      {...rootBind}
+      rel={rootRel}
+      href={rootHref}
+      target={rootTarget}
+      aria-disabled={rootAriaDisabled}
     >
-      {showPrepend && slots?.prepend}
-
-      {showLeftIcon && merged.leftIcon && (
-        <Icon icon={merged.leftIcon} size={iconSize} {...leftIconBind} />
+      {hasNamedSlot(slots, "prepend") ? (
+        slots?.prepend
+      ) : (
+        <Fragment>
+          {merged.leftIcon ? (
+            <Icon icon={merged.leftIcon} size={merged.size} {...leftIconBind} />
+          ) : null}
+        </Fragment>
       )}
 
-      {hasChildren && children}
+      {children}
 
-      {showRightIcon && merged.rightIcon && (
-        <Icon icon={merged.rightIcon} size={iconSize} {...rightIconBind} />
+      {hasNamedSlot(slots, "append") ? (
+        slots?.append
+      ) : (
+        <Fragment>
+          {merged.rightIcon ? (
+            <Icon
+              icon={merged.rightIcon}
+              size={merged.size}
+              {...rightIconBind}
+            />
+          ) : null}
+        </Fragment>
       )}
-
-      {showAppend && slots?.append}
     </a>
   );
 }

@@ -3,13 +3,15 @@ import { useLabel } from "@/Components/Label/hooks/useLabel";
 import type { LabelProps } from "@/Components/Label/label.types";
 
 function Label(props: LabelProps) {
-  const { rootBind, requiredBind, showRequired } = useLabel(props);
+  const { merged, children, rootBind, requiredBind } = useLabel(props, {
+    size: "md",
+  });
 
   return (
     <label {...rootBind}>
-      {props.children}
+      {children}
 
-      {showRequired && <span {...requiredBind}>*</span>}
+      {merged.required && <span {...requiredBind}>*</span>}
     </label>
   );
 }

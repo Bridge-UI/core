@@ -24,6 +24,8 @@ export type {
   Direction,
   IconConfigBase,
   IconConfigOverrides,
+  LabelConfigBase,
+  LabelConfigOverrides,
   LinkConfigBase,
   LinkConfigOverrides,
   MenuConfigBase,

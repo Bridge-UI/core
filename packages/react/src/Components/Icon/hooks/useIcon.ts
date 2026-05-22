@@ -3,50 +3,67 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";
-import { splitComponentProps, useBridgeUIComponent } from "@/Utils";
+import { derived, mergePartBind, useBridgeUIComponent } from "@/Utils";
 
 const iconBridgeKeys = [
   "icon",
   "size",
 ] as const satisfies readonly (keyof IconOwnProps)[];
 
-export function useIcon(props: IconProps, libDefaults: Partial<IconOwnProps>) {
-  // Setup
-  const { className, propsForMerge, rootHtmlProps } = splitComponentProps(
-    props,
-    {
-      peel: ["className"],
-      bridgeKeys: iconBridgeKeys,
-    },
-  );
+type IconLibDefaults = LibDefaultsShape<IconOwnProps, "size">;
 
-  const { entry: bridgeIcon, merged } = useBridgeUIComponent({
+type IconMerged = MergeLibDefaults<IconOwnProps, IconLibDefaults>;
+
+export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
+  // Setup
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    IconProps,
+    typeof iconBridgeKeys
+  >({
+    props,
+    bridgeKeys: iconBridgeKeys,
+  });
+
+  const { entry: bridgeIcon, merged } = useBridgeUIComponent<
+    IconMerged,
+    "Icon"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Icon",
   });
 
-  // Registry maps
-  const sizeClassMap = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
+  // Classes
+  const sizeClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeIcon?.customProps?.size,
     );
-  }, [bridgeIcon?.customProps?.size]);
 
-  // Root
-  const mergedClass = useMemo(() => {
-    return cn(get(sizeClassMap, merged.size ?? "md"), className);
-  }, [className, merged.size, sizeClassMap]);
+    return get(classes, merged.size);
+  }, [bridgeIcon?.customProps?.size, merged.size]);
+
+  // Binds
+  // prettier-ignore
+  const rootBind = derived(() => {
+    return mergePartBind({}, inheritedAttrs, cn({
+      [sizeClass ?? ""]: true,
+    }));
+  });
 
   return {
     merged,
-    mergedClass,
-    rootHtmlProps,
+    rootBind,
   };
 }

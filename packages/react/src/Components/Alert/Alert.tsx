@@ -1,7 +1,11 @@
+// ** External Imports
+import { Fragment } from "react";
+
 // ** Local Imports
 import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
+import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 function Alert(props: AlertProps) {
   const {
@@ -10,13 +14,9 @@ function Alert(props: AlertProps) {
     bodyBind,
     children,
     iconBind,
-    showIcon,
+    rootBind,
     titleBind,
-    rootClasses,
     resolvedIcon,
-    showIconSlot,
-    showTitleRow,
-    rootHtmlProps,
     hasDefaultBody,
   } = useAlert(props, {
     shadow: "sm",
@@ -27,20 +27,29 @@ function Alert(props: AlertProps) {
   });
 
   return (
-    <div {...rootHtmlProps} className={rootClasses}>
+    <div {...rootBind}>
       {slots?.header}
 
-      {showTitleRow && (
+      {!slots?.header && hasSlotOrProp(slots, "title", merged.title) && (
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-x-3">
-            {showIcon &&
-              (showIconSlot
-                ? slots?.icon
-                : resolvedIcon != null && (
-                    <Icon icon={resolvedIcon} {...iconBind} />
-                  ))}
+            {(slots?.icon || resolvedIcon) && (
+              <Fragment>
+                {slots?.icon}
 
-            <div {...titleBind}>{merged.title}</div>
+                {!slots?.icon && resolvedIcon != null && (
+                  <Icon icon={resolvedIcon} {...iconBind} />
+                )}
+              </Fragment>
+            )}
+
+            <div {...titleBind}>
+              {resolveSlotOrProp({
+                slots,
+                name: "title",
+                fallback: merged.title,
+              })}
+            </div>
           </div>
 
           {slots?.action}
