@@ -1,4 +1,23 @@
 /**
+ * The key of the class property in the props object.
+ *
+ * @internal
+ */
+export type ClassPropKey = "class" | "className";
+
+/**
+ * Merges the bridge props with the part props and returns the merged props.
+ * The class property is merged using the `cn` function.
+ *
+ * @internal
+ */
+export type MergePartBind<
+  Bridge extends object,
+  K extends ClassPropKey = ClassPropKey,
+  Part extends object | undefined = undefined,
+> = Bridge & (Part extends undefined ? object : Part) & Record<K, string>;
+
+/**
  * Shallow merge of object types: keys in `Overrides` replace keys in `Base`.
  *
  * @internal

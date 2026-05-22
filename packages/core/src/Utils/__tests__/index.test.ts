@@ -5,6 +5,7 @@ import { expect, test } from "vitest";
 import type { BridgeUIComponentsConfig } from "@core/Config/types";
 import {
   cn,
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
@@ -184,4 +185,39 @@ test("it should handle undefined components gracefully", () => {
   });
 
   expect(result).toEqual({ size: "md" });
+});
+
+test("mergePartBind should merge class and let partProps override", () => {
+  const mergePartBind = createMergePartBind("class");
+
+  expect(
+    mergePartBind(undefined, { class: "bridge", "data-test": "x" }),
+  ).toEqual({
+    class: "bridge",
+    "data-test": "x",
+  });
+
+  expect(
+    mergePartBind(
+      { class: "part", id: "user" },
+      { class: "bridge", id: "pkg" },
+    ),
+  ).toEqual({
+    id: "user",
+    class: "bridge part",
+  });
+});
+
+test("mergePartBind should use className for React", () => {
+  const mergePartBind = createMergePartBind("className");
+
+  expect(
+    mergePartBind(
+      { className: "part" },
+      { className: "bridge", role: "alert" },
+    ),
+  ).toEqual({
+    role: "alert",
+    className: "bridge part",
+  });
 });

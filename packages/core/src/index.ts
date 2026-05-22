@@ -117,12 +117,16 @@ export type {
 } from "@core/Config";
 export {
   cn,
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
+  splitComponentProps,
 } from "@core/Utils";
 export type {
+  ClassPropKey,
   MergeHtmlProps,
+  MergePartBind,
   MergeProps,
   Overwrite,
   UnionProps,
