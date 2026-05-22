@@ -4,11 +4,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import {
-  useAlert,
-  type AlertOwnProps,
-  type AlertProps,
-} from "@/Components/Alert";
+import { useAlert, type AlertOwnProps } from "@/Components/Alert";
 
 const libDefaults: Partial<AlertOwnProps> = {
   color: "primary",
@@ -18,7 +14,7 @@ const libDefaults: Partial<AlertOwnProps> = {
   padding: "none",
 };
 
-function mountUseAlert(props: AlertProps = {}) {
+function mountUseAlert(props: Partial<AlertOwnProps> = {}) {
   let result!: ReturnType<typeof useAlert>;
 
   const Wrapper = defineComponent({

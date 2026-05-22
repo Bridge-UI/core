@@ -5,13 +5,13 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useIcon, type IconOwnProps, type IconProps } from "@/Components/Icon";
+import { useIcon, type IconOwnProps } from "@/Components/Icon";
 
 const libDefaults = {
   size: "md",
 } satisfies Partial<IconOwnProps>;
 
-function mountUseIcon(props: IconProps = {}) {
+function mountUseIcon(props: Partial<IconOwnProps> = {}) {
   let result!: ReturnType<typeof useIcon>;
 
   const Wrapper = defineComponent({

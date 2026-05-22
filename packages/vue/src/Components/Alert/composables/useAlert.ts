@@ -64,7 +64,7 @@ type AlertLibDefaults = LibDefaultsShape<
 
 type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
 
-export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
+export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   // Setup
   const attrs = useAttrs();
   const slots = useSlots();

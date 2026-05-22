@@ -4,11 +4,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import {
-  useBadge,
-  type BadgeOwnProps,
-  type BadgeProps,
-} from "@/Components/Badge";
+import { useBadge, type BadgeOwnProps } from "@/Components/Badge";
 
 const libDefaults = {
   size: "sm",
@@ -18,7 +14,7 @@ const libDefaults = {
   density: "default",
 } satisfies Partial<BadgeOwnProps>;
 
-function mountUseBadge(props: BadgeProps = {}) {
+function mountUseBadge(props: Partial<BadgeOwnProps> = {}) {
   let result!: ReturnType<typeof useBadge>;
 
   const Wrapper = defineComponent({

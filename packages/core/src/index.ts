@@ -106,6 +106,7 @@ export type {
   CheckboxConfigOverrides,
   Direction,
   IconConfigOverrides,
+  LabelConfigOverrides,
   LinkConfigOverrides,
   MenuConfigOverrides,
   ModalConfigOverrides,

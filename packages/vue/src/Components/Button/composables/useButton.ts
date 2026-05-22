@@ -54,7 +54,10 @@ type ButtonLibDefaults = LibDefaultsShape<
 
 type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
 
-export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
+export function useButton(
+  props: ButtonOwnProps,
+  libDefaults: ButtonLibDefaults,
+) {
   // Setup
   const attrs = useAttrs();
 

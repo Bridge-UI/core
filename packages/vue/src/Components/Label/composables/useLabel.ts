@@ -1,59 +1,103 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
-import { sizeProps, type LabelSize } from "@bridge-ui/core/Components/Label";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
+import { sizeProps } from "@bridge-ui/core/Components/Label";
 
 // ** Local Imports
-import type { LabelOwnProps } from "@/Components/Label/label.types";
-import { mergePartBind } from "@/Utils";
+import type {
+  LabelClasses,
+  LabelOwnProps,
+  LabelProps,
+} from "@/Components/Label/label.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 
-export function useLabel(props: LabelOwnProps, attrs: Record<string, unknown>) {
-  const showRequired = computed(() => {
-    return Boolean(props.required);
+const labelBridgeKeys = [
+  "size",
+  "error",
+  "classes",
+  "required",
+] as const satisfies readonly (keyof LabelOwnProps)[];
+
+type LabelLibDefaults = LibDefaultsShape<LabelOwnProps, "size">;
+
+type LabelMerged = MergeLibDefaults<LabelOwnProps, LabelLibDefaults>;
+
+export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
+  // Setup
+  const attrs = useAttrs();
+
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    LabelProps,
+    typeof labelBridgeKeys
+  >({
+    bridgeKeys: labelBridgeKeys,
+    props: { ...attrs, ...props },
   });
 
-  const sizeKey = computed(() => {
-    return (props.size ?? "md") as keyof LabelSize;
+  const { entry: bridgeLabel, merged } = useBridgeUIComponent<
+    LabelMerged,
+    "Label"
+  >({
+    libDefaults,
+    props: customProps,
+    componentName: "Label",
   });
 
-  const rootClass = computed(() => {
-    return cn(
-      "inline-flex items-center gap-x-0.5 font-medium leading-none",
-      { "text-error-600 dark:text-error-400": props.error },
-      { "text-gray-700 dark:text-gray-300": !props.error },
-      get(sizeProps, sizeKey.value),
-      props.classes?.root,
-      props.class,
+  const mergedClasses = useBridgeUIMergedRegistryClasses<LabelClasses>({
+    entry: bridgeLabel,
+    props: customProps,
+  });
+
+  // Classes
+  const sizeClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeLabel.value?.customProps?.size,
     );
+
+    return get(classes, merged.value.size);
   });
 
-  const requiredClass = computed(() => {
-    return cn(
-      "text-error-500 dark:text-error-500 select-none",
-      props.classes?.required,
-    );
-  });
-
-  const rootBind = computed(() => {
-    return mergePartBind(
-      {
-        ...attrs,
-        ...(props.for ? { for: props.for } : {}),
-      },
-      rootClass.value,
-    );
-  });
-
+  // Binds
+  // prettier-ignore
   const requiredBind = computed(() => {
-    return { class: requiredClass.value, "aria-hidden": true as const };
+    return mergePartBind({}, {}, cn({
+      // Theme classes
+      "text-error-500 dark:text-error-500 select-none": true,
+      // Custom classes
+      [mergedClasses.value.required ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const rootBind = computed(() => {
+    return mergePartBind({}, inheritedAttrs, cn({
+      // Theme classes
+      "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+      "text-error-600 dark:text-error-400": merged.value.error,
+      "text-gray-700 dark:text-gray-300": !merged.value.error,
+      [sizeClass.value ?? ""]: true,
+      // Custom classes
+      [mergedClasses.value.root ?? ""]: true,
+    }));
   });
 
   return {
+    merged,
     rootBind,
     requiredBind,
-    showRequired,
   };
 }

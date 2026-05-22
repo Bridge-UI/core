@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { AnchorHTMLAttributes, Slot } from "vue";
+import type { AnchorHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -37,6 +37,11 @@ export interface LinkClasses {
 
 export interface LinkPartsProps {
   /**
+   * Props forwarded to the root `<a>`.
+   */
+  root?: HTMLAttributes;
+
+  /**
    * Props forwarded to the left `Icon` (`icon` is set by the link).
    */
   leftIcon?: Partial<Omit<IconProps, "icon">>;
@@ -48,13 +53,6 @@ export interface LinkPartsProps {
 }
 
 export interface LinkOwnProps {
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  class?: string;
-
   /**
    * The classes to apply to the link.
    *

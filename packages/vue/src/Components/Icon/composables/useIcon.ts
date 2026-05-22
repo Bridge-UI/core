@@ -25,7 +25,7 @@ type IconLibDefaults = LibDefaultsShape<IconOwnProps, "size">;
 
 type IconMerged = MergeLibDefaults<IconOwnProps, IconLibDefaults>;
 
-export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
+export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
   // Setup
   const attrs = useAttrs();
 

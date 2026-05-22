@@ -45,7 +45,7 @@ type BadgeLibDefaults = LibDefaultsShape<
 
 type BadgeMerged = MergeLibDefaults<BadgeOwnProps, BadgeLibDefaults>;
 
-export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
+export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   // Setup
   const attrs = useAttrs();
 

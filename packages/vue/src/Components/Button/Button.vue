@@ -64,7 +64,7 @@ const {
     />
 
     <template v-else-if="isMini">
-      <slot v-if="!merged.icon && hasNamedSlot(slots, 'default')" />
+      <slot v-if="hasNamedSlot(slots, 'default')" />
 
       <Icon
         v-bind="iconBind"

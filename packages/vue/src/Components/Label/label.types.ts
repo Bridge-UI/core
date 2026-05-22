@@ -1,3 +1,6 @@
+// ** External Imports
+import type { HTMLAttributes } from "vue";
+
 // ** Core Imports
 import type { LabelSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
@@ -16,13 +19,6 @@ export interface LabelClasses {
 }
 
 export interface LabelOwnProps {
-  /**
-   * Extra classes merged with `classes.root`.
-   *
-   * @default undefined
-   */
-  class?: string;
-
   /**
    * The classes to apply to the label.
    *
@@ -59,4 +55,4 @@ export interface LabelOwnProps {
   size?: MergeProps<LabelSize, LabelSizeOverrides>;
 }
 
-export type LabelProps = MergeHtmlProps<LabelOwnProps, HTMLLabelElement>;
+export type LabelProps = MergeHtmlProps<LabelOwnProps, HTMLAttributes>;

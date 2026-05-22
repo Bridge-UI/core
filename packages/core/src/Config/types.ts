@@ -41,6 +41,7 @@ import type {
   CheckboxSize,
 } from "@core/Components/Checkbox";
 import type { IconSize } from "@core/Components/Icon";
+import type { LabelSize } from "@core/Components/Label";
 import type {
   LinkColor,
   LinkColorItem,
@@ -103,6 +104,7 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface IconConfigOverrides {}
+export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
@@ -206,6 +208,16 @@ export interface CheckboxConfigBase {
 export interface IconConfigBase {
   defaultProps: Partial<{
     size: keyof IconSize;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
+export interface LabelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof LabelSize;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
@@ -330,6 +342,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
+  Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;

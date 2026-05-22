@@ -5,12 +5,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import {
-  Button,
-  useButton,
-  type ButtonOwnProps,
-  type ButtonProps,
-} from "@/Components/Button";
+import { Button, useButton, type ButtonOwnProps } from "@/Components/Button";
 
 const libDefaults = {
   size: "md",
@@ -20,7 +15,7 @@ const libDefaults = {
   variant: "solid",
 } satisfies Partial<ButtonOwnProps>;
 
-function mountUseButton(props: ButtonProps = {}) {
+function mountUseButton(props: Partial<ButtonOwnProps> = {}) {
   let result!: ReturnType<typeof useButton>;
 
   const Wrapper = defineComponent({
