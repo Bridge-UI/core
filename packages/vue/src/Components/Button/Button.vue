@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// ** External Imports
+import { Loader2 } from "lucide-vue-next";
+import { useSlots } from "vue";
+
 // ** Local Imports
 import type {
   ButtonOwnProps,
@@ -6,6 +10,7 @@ import type {
 } from "@/Components/Button/button.types";
 import { useButton } from "@/Components/Button/composables/useButton";
 import { Icon } from "@/Components/Icon";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ButtonSlots>();
 
@@ -13,94 +18,86 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ButtonOwnProps>();
 
+const slots = useSlots();
+
 const {
   tag,
-  isMini,
   merged,
+  isMini,
   iconBind,
-  iconSize,
-  isAnchor,
-  isButton,
   rootBind,
-  showIcon,
-  showText,
-  rootClass,
-  isDisabled,
+  rootHref,
+  rootType,
   endIconBind,
   endSlotBind,
-  showDefault,
-  showEndIcon,
-  showEndSlot,
-  showSpinner,
-  spinnerIcon,
-  showStartIcon,
-  showStartSlot,
+  rootAriaBusy,
+  rootDisabled,
   startIconBind,
   startSlotBind,
   loadingIconBind,
-  showDefaultSlot,
+  rootAriaDisabled,
 } = useButton(props, {
   size: "md",
   as: "button",
   rounded: "md",
   color: "primary",
   variant: "solid",
+  density: "default",
 });
 </script>
 
 <template>
   <component
     :is="tag"
+    :type="rootType"
+    :href="rootHref"
     v-bind="rootBind"
-    :class="rootClass"
-    :type="isButton ? 'button' : undefined"
-    :disabled="isButton ? isDisabled : undefined"
-    :aria-busy="merged.loading ? true : undefined"
-    :aria-disabled="isDisabled && !isButton ? true : undefined"
-    :href="isAnchor && !isDisabled && merged.href ? merged.href : undefined"
+    :disabled="rootDisabled"
+    :aria-busy="rootAriaBusy"
+    :aria-disabled="rootAriaDisabled"
   >
     <Icon
-      v-if="showSpinner"
-      :icon="spinnerIcon"
-      :size="iconSize"
+      :icon="Loader2"
+      :size="merged.size"
+      v-if="merged.loading"
       v-bind="loadingIconBind"
     />
 
     <template v-else-if="isMini">
-      <slot v-if="showDefault" />
+      <slot v-if="!merged.icon && hasNamedSlot(slots, 'default')" />
 
       <Icon
-        v-else-if="showIcon && merged.icon"
-        :icon="merged.icon"
-        :size="iconSize"
         v-bind="iconBind"
+        :icon="merged.icon"
+        :size="merged.size"
+        v-else-if="merged.icon"
       />
     </template>
 
     <template v-else>
       <Icon
-        v-if="showStartIcon && merged.startIcon"
-        :icon="merged.startIcon"
         :size="merged.size"
         v-bind="startIconBind"
+        v-if="merged.startIcon"
+        :icon="merged.startIcon"
       />
 
-      <div v-else-if="showStartSlot" v-bind="startSlotBind">
+      <div v-else-if="hasNamedSlot(slots, 'start')" v-bind="startSlotBind">
         <slot name="start" />
       </div>
 
-      <template v-if="showText">{{ merged.text }}</template>
+      <template v-if="isPropPresent(merged.text)">{{ merged.text }}</template>
 
-      <slot v-else-if="showDefaultSlot" />
+      <slot v-else-if="hasNamedSlot(slots, 'default')" />
 
       <Icon
-        v-if="showEndIcon && merged.endIcon"
-        :icon="merged.endIcon"
         :size="merged.size"
         v-bind="endIconBind"
+        v-if="merged.endIcon"
+        :icon="merged.endIcon"
       />
 
-      <div v-else-if="showEndSlot" v-bind="endSlotBind">
+      <div v-else-if="hasNamedSlot(slots, 'end')" v-bind="endSlotBind">
         <slot name="end" />
       </div>
     </template>

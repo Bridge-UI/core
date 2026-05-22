@@ -78,30 +78,30 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
 
   // Classes
   const sizeClass = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       densityProps,
       bridgeBadge.value?.customProps?.density,
     );
 
-    return get(layer, [merged.value.density, merged.value.size]);
+    return get(classes, [merged.value.density, merged.value.size]);
   });
 
   const roundedClass = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeBadge.value?.customProps?.rounded,
     );
 
-    return get(layer, merged.value.rounded);
+    return get(classes, merged.value.rounded);
   });
 
   const colorClass = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeBadge.value?.customProps?.variant,
     );
 
-    return get(layer, [merged.value.variant, merged.value.color]);
+    return get(classes, [merged.value.variant, merged.value.color]);
   });
 
   // Binds

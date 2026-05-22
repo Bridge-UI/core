@@ -56,6 +56,11 @@ export interface ButtonClasses {
 
 export interface ButtonPartsProps {
   /**
+   * Props forwarded to the root element.
+   */
+  root?: HTMLAttributes;
+
+  /**
    * Props forwarded to the inline-end slot wrapper.
    */
   end?: HTMLAttributes;
@@ -93,13 +98,6 @@ export interface ButtonOwnProps {
    * @default "button"
    */
   as?: "a" | "span" | "button";
-
-  /**
-   * Extra classes merged with the root element (and `classes.root`).
-   *
-   * @default undefined
-   */
-  class?: string;
 
   /**
    * The classes to apply to the button.

@@ -97,39 +97,39 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   // Classes
   const shadowClass = computed(() => {
-    const props = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       shadowProps,
       bridgeAlert.value?.customProps?.shadow,
     );
 
-    return get(props, merged.value.shadow);
+    return get(classes, merged.value.shadow);
   });
 
   const paddingClass = computed(() => {
-    const props = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       paddingProps,
       bridgeAlert.value?.customProps?.padding,
     );
 
-    return get(props, merged.value.padding);
+    return get(classes, merged.value.padding);
   });
 
   const roundedClass = computed(() => {
-    const props = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeAlert.value?.customProps?.rounded,
     );
 
-    return get(props, merged.value.rounded);
+    return get(classes, merged.value.rounded);
   });
 
   const colorClass = computed(() => {
-    const props = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeAlert.value?.customProps?.variant,
     );
 
-    return get(props, [merged.value.variant, merged.value.color]);
+    return get(classes, [merged.value.variant, merged.value.color]);
   });
 
   const resolvedIcon = computed(() => {

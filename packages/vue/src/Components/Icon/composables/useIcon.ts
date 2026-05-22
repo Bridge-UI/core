@@ -48,12 +48,12 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
 
   // Classes
   const sizeClass = computed(() => {
-    const props = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeIcon.value?.customProps?.size,
     );
 
-    return get(props, merged.value.size);
+    return get(classes, merged.value.size);
   });
 
   // Binds
