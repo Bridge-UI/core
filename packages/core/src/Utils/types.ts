@@ -15,7 +15,11 @@ export type MergePartBind<
   Bridge extends object,
   K extends ClassPropKey = ClassPropKey,
   Part extends object | undefined = undefined,
-> = Bridge & (Part extends undefined ? object : Part) & Record<K, string>;
+  Inherited extends object | undefined = undefined,
+> = Bridge &
+  (Inherited extends undefined ? object : Inherited) &
+  (Part extends undefined ? object : Part) &
+  Record<K, string>;
 
 /**
  * Shallow merge of object types: keys in `Overrides` replace keys in `Base`.
@@ -59,3 +63,14 @@ export type MergeHtmlProps<
   OwnProps extends object,
   HtmlAttributes extends object,
 > = OwnProps & Omit<HtmlAttributes, keyof OwnProps>;
+
+/**
+ * `OwnProps` with keys from `libDefaults` required (pass `typeof` your defaults object).
+ * Required keys keep the prop types from `OwnProps`, not literal types from `libDefaults`.
+ */
+export type MergeLibDefaults<
+  OwnProps extends object,
+  LibDefaults extends Partial<OwnProps>,
+> = Omit<OwnProps, keyof LibDefaults & keyof OwnProps> & {
+  [K in keyof LibDefaults & keyof OwnProps]-?: NonNullable<OwnProps[K]>;
+};

@@ -20,4 +20,7 @@ export type {
   AlertSlots,
   AlertVariantOverrides,
 } from "@/Components/Alert/alert.types";
-export { useAlert } from "@/Components/Alert/composables/useAlert";
+export {
+  alertLibDefaults,
+  useAlert,
+} from "@/Components/Alert/composables/useAlert";

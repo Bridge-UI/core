@@ -17,23 +17,47 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Merges `bridgeProps` (package) with `partProps` (consumer).
- * `partProps` override other keys; the class prop is merged via `cn`.
+ * Converts a string or object to a record of strings.
+ */
+function toBridgeProps<K extends ClassPropKey>(
+  classKey: K,
+  value: object | string | undefined,
+): Record<string, unknown> {
+  if (typeof value === "string") {
+    return { [classKey]: value };
+  }
+
+  return (value ?? {}) as Record<string, unknown>;
+}
+
+/**
+ * Merges `partProps`, `inheritedAttrs`, and `bridgeProps` (package).
+ * Later layers override; `class` / `className` merged via `cn`.
  */
 export function createMergePartBind<const K extends ClassPropKey>(classKey: K) {
   return function mergePartBind<
     Bridge extends object,
     Part extends object | undefined = undefined,
-  >(partProps: Part, bridgeProps: Bridge): MergePartBind<Bridge, K, Part> {
+    Inherited extends object | undefined = undefined,
+  >(
+    partProps: Part,
+    inheritedAttrs: Inherited,
+    bridgeProps: Bridge | string,
+  ): MergePartBind<Bridge, K, Part, Inherited> {
+    const bridge = toBridgeProps(classKey, bridgeProps);
+
+    const bridgeClass = get(bridge, classKey) as string | undefined;
+
     const partClass = get(partProps, classKey) as string | undefined;
 
-    const bridgeClass = get(bridgeProps, classKey) as string | undefined;
+    const inheritedClass = get(inheritedAttrs, classKey) as string | undefined;
 
     return {
-      ...(bridgeProps ?? {}),
+      ...bridge,
+      ...(inheritedAttrs ?? {}),
       ...(partProps ?? {}),
-      [classKey]: cn(bridgeClass, partClass),
-    } as MergePartBind<Bridge, K, Part>;
+      [classKey]: cn(bridgeClass, inheritedClass, partClass),
+    } as MergePartBind<Bridge, K, Part, Inherited>;
   };
 }
 
@@ -44,40 +68,21 @@ export function createMergePartBind<const K extends ClassPropKey>(classKey: K) {
 export function mergeBridgeUILayeredClasses<C extends object>(
   ...layers: Array<Partial<C> | undefined>
 ): Partial<C> {
-  return reduce(
-    layers,
-    (acc, layer) => {
-      if (isNil(layer)) {
-        return acc;
-      }
+  // prettier-ignore
+  return reduce(layers, (acc, layer) => {
+    if (isNil(layer)) {
+      return acc;
+    }
 
-      return toMerged(acc, layer);
-    },
-    {} as Partial<C>,
-  );
-}
-
-/**
- * Merges a string-keyed class map (e.g. shadow sizes) with provider overrides.
- */
-export function mergeBridgeUIStringMap({
-  lib,
-  provider,
-}: {
-  lib: object;
-  provider?: Partial<Record<string, string>>;
-}): Record<string, string> {
-  return toMerged(
-    lib as Record<PropertyKey, string>,
-    (provider ?? {}) as Record<PropertyKey, string>,
-  ) as Record<string, string>;
+    return toMerged(acc, layer);
+  }, {} as Partial<C>);
 }
 
 /**
  * Merges props with Bridge UI defaults and registry defaults.
  */
 export function mergePropsWithBridgeUIDefaults<
-  P extends Record<string, unknown>,
+  P extends object,
   K extends keyof BridgeUIComponentsConfig,
 >({
   props,
@@ -98,10 +103,10 @@ export function mergePropsWithBridgeUIDefaults<
 }
 
 /**
- * Splits merged component props into Bridge registry props, peeled own props,
+ * Splits `props` into Bridge keys (`customProps`) and the rest (`inheritedAttrs`).
  */
 export function splitComponentProps<
-  P extends Record<string, unknown>,
+  P extends object,
   const BridgeKeys extends ReadonlyArray<keyof P>,
 >({
   props,
@@ -124,6 +129,7 @@ export function splitComponentProps<
 export type {
   ClassPropKey,
   MergeHtmlProps,
+  MergeLibDefaults,
   MergePartBind,
   MergeProps,
   Overwrite,

@@ -1,10 +1,9 @@
 // ** External Imports
-import { pick, pickBy } from "es-toolkit/compat";
 import type { ComputedRef } from "vue";
 import { computed, unref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { createMergePartBind } from "@bridge-ui/core";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
@@ -19,8 +18,8 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
 >;
 
 export type UseBridgeUIComponentReturn<
-  K extends keyof BridgeUIComponentsConfig,
   P extends object,
+  K extends keyof BridgeUIComponentsConfig,
 > = {
   merged: ComputedRef<P>;
   bridge: ReturnType<typeof useBridgeUI>;
@@ -28,96 +27,23 @@ export type UseBridgeUIComponentReturn<
   components: ComputedRef<BridgeUIComponentsConfig | null>;
 };
 
-/**
- * Merges non–own-props from `props` with fallthrough `attrs` for the root element.
- * Own prop keys are omitted so they are not duplicated on the DOM node.
- */
-function buildRootBind<P extends object>(
-  props: P,
-  attrs: Record<string, unknown>,
-  omitKeys: readonly (keyof P)[],
-): ComputedRef<Record<string, unknown>> {
-  return computed(() => {
-    const rootHtmlPropsFromProps = { ...props } as Record<string, unknown>;
-
-    for (const key of omitKeys) {
-      delete rootHtmlPropsFromProps[key as string];
-    }
-
-    return { ...rootHtmlPropsFromProps, ...attrs };
-  });
-}
-
-/**
- * Merges a part's `class` with a computed class string (registry + `classes.*`).
- */
-export function mergePartBind<T extends object | undefined>(
-  part: T,
-  classValue: string,
-): Omit<NonNullable<T>, "class"> & { class: string } {
-  const partClass =
-    part && "class" in part ? (part as { class?: unknown }).class : undefined;
-
-  return {
-    ...(part ?? {}),
-    class: cn(
-      classValue,
-      typeof partClass === "string" ? partClass : undefined,
-    ),
-  } as Omit<NonNullable<T>, "class"> & { class: string };
-}
-
-/**
- * Splits merged component props into Bridge registry props, user root class,
- * and a computed `rootBind` for the root element (`props` HTML + fallthrough attrs).
- */
-export function splitComponentProps<
-  P extends object,
-  const BridgeKeys extends ReadonlyArray<keyof P>,
->(
-  props: P,
-  attrs: Record<string, unknown>,
-  {
-    bridgeKeys,
-    classKey = "class" as keyof P,
-  }: {
-    classKey?: keyof P;
-    bridgeKeys: BridgeKeys;
-  },
-): {
-  userClass: string | undefined;
-  rootBind: ComputedRef<Record<string, unknown>>;
-  propsForMerge: Pick<P, BridgeKeys[number]>;
-} {
-  const bridgeKeyList = [...bridgeKeys] as (keyof P)[];
-
-  const userClass = props[classKey] as string | undefined;
-
-  const rootBind = buildRootBind(props, attrs, [...bridgeKeyList, classKey]);
-
-  const propsForMerge = pickBy(
-    pick(props, bridgeKeyList),
-    (value) => value !== undefined,
-  ) as Pick<P, BridgeKeys[number]>;
-
-  return { propsForMerge, userClass, rootBind };
-}
+export const mergePartBind = createMergePartBind("class");
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.
  */
 export function useBridgeUIComponent<
-  K extends keyof BridgeUIComponentsConfig,
   P extends object,
+  K extends keyof BridgeUIComponentsConfig,
 >({
   props,
   libDefaults,
   componentName,
 }: {
-  props: P;
+  props: Partial<P>;
   componentName: K;
   libDefaults?: Partial<P>;
-}): UseBridgeUIComponentReturn<K, P> {
+}): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
   const components = computed(() => {
@@ -134,7 +60,7 @@ export function useBridgeUIComponent<
       libDefaults,
       componentName,
       components: components.value,
-    });
+    }) as P;
   });
 
   return {
@@ -171,12 +97,13 @@ export {
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 export {
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
 export type {
   MergeHtmlProps,
+  MergeLibDefaults,
   MergeProps,
   Overwrite,
   UnionProps,

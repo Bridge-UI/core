@@ -1,5 +1,4 @@
 // ** External Imports
-import { get, isNull } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-vue-next";
 import {
   Bell,
@@ -12,7 +11,11 @@ import {
 import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import {
+  cn,
+  splitComponentProps,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
 import {
   paddingProps,
   roundedProps,
@@ -22,17 +25,22 @@ import {
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
-import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
+import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
 import {
   hasNamedSlot,
-  hasSlotOrProp,
-  mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePartBind,
-  splitComponentProps,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { get, isNull } from "es-toolkit/compat";
+
+export const alertLibDefaults = {
+  shadow: "sm",
+  rounded: "sm",
+  variant: "flat",
+  color: "primary",
+  padding: "medium",
+} as const satisfies Partial<AlertOwnProps>;
 
 const alertBridgeKeys = [
   "icon",
@@ -56,71 +64,56 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-export function useAlert(
-  props: AlertProps,
-  libDefaults: Partial<AlertOwnProps>,
-) {
+type AlertLibDefaults = typeof alertLibDefaults;
+
+type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
+
+export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
   // Setup
-  const slots = useSlots();
   const attrs = useAttrs();
+  const slots = useSlots();
 
-  const { userClass, propsForMerge, rootBind } = splitComponentProps(
-    props,
-    attrs,
-    { bridgeKeys: alertBridgeKeys },
-  );
+  const { customProps, inheritedAttrs } = splitComponentProps<
+    AlertProps,
+    typeof alertBridgeKeys
+  >({
+    bridgeKeys: alertBridgeKeys,
+    props: { ...attrs, ...props },
+  });
 
-  const { entry: bridgeAlert, merged } = useBridgeUIComponent({
+  const { merged, entry: bridgeAlert } = useBridgeUIComponent<
+    AlertMerged,
+    "Alert"
+  >({
     libDefaults,
-    props: propsForMerge,
+    props: customProps,
     componentName: "Alert",
+  });
+
+  const partsProps = computed(() => {
+    return merged.value.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeAlert,
-    props: propsForMerge,
+    props: customProps,
   });
 
   // Registry maps
-  const mergedShadowMap = computed(() => {
-    return mergeBridgeUIStringMap({
-      lib: shadowProps,
-      provider: bridgeAlert.value?.customProps?.shadow,
-    });
+  const shadowMap = computed(() => {
+    return get(shadowProps, merged.value.shadow);
   });
 
-  const mergedPaddingMap = computed(() => {
-    return mergeBridgeUIStringMap({
-      lib: paddingProps,
-      provider: bridgeAlert.value?.customProps?.padding,
-    });
+  const paddingMap = computed(() => {
+    return get(paddingProps, merged.value.padding);
   });
 
-  const mergedRoundedMap = computed(() => {
-    return mergeBridgeUIStringMap({
-      lib: roundedProps,
-      provider: bridgeAlert.value?.customProps?.rounded,
-    });
+  const roundedMap = computed(() => {
+    return get(roundedProps, merged.value.rounded);
   });
 
-  const mergedVariantProps = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeAlert.value?.customProps?.variant,
-    ) as typeof variantProps;
-  });
-
-  // Theme
-  const colorKey = computed(() => {
-    return (merged.value.color ?? "primary") as keyof AlertColor;
-  });
-
-  const variantKey = computed(() => {
-    return (merged.value.variant ?? "flat") as keyof typeof variantProps;
-  });
-
-  const palette = computed(() => {
-    return get(mergedVariantProps.value, [variantKey.value, colorKey.value]);
+  const colorMap = computed(() => {
+    return get(variantProps, [merged.value.variant, merged.value.color]);
   });
 
   const resolvedIcon = computed(() => {
@@ -128,95 +121,57 @@ export function useAlert(
       return null;
     }
 
-    return merged.value.icon ?? get(defaultIcons, colorKey.value);
+    return merged.value.icon ?? get(defaultIcons, merged.value.color);
   });
 
   // Visibility
   const hasDefaultBody = computed(() => {
-    const d = slots.default?.();
-
-    return Boolean(d && d.length > 0);
+    return hasNamedSlot(slots, "default");
   });
 
-  const showIcon = computed(() => {
-    return hasNamedSlot(slots, "icon") || resolvedIcon.value != null;
+  // Binds
+  const rootBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.root,
+      inheritedAttrs,
+      cn({
+        "w-full flex flex-col p-4": true,
+        [get(colorMap.value, "border") ?? ""]: true,
+        [get(colorMap.value, "background") ?? ""]: true,
+        [shadowMap.value]: true,
+        [roundedMap.value]: true,
+        [get(mergedClasses.value, "root") ?? ""]: true,
+      }),
+    );
   });
 
   // prettier-ignore
-  const showTitleRow = computed(() => {
-    return (
-      !showHeaderSlot.value &&
-      (hasSlotOrProp(slots, "title", merged.value.title) || resolvedIcon.value != null || showIconSlot.value)
-    );
-  });
-
-  // Root
-  const rootClasses = computed(() => {
-    return cn(
-      "w-full flex flex-col p-4",
-      palette.value.border,
-      palette.value.background,
-      get(mergedShadowMap.value, merged.value.shadow ?? "none"),
-      get(mergedRoundedMap.value, merged.value.rounded ?? "none"),
-      get(mergedClasses.value, "root"),
-      userClass,
-    );
-  });
-
-  // Parts
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
-  });
-
-  const showIconSlot = computed(() => {
-    return hasNamedSlot(slots, "icon");
-  });
-
-  const showFooterSlot = computed(() => {
-    return hasNamedSlot(slots, "footer");
-  });
-
-  const showActionSlot = computed(() => {
-    return hasNamedSlot(slots, "action");
-  });
-
-  const showHeaderSlot = computed(() => {
-    return hasNamedSlot(slots, "header");
-  });
-
-  const iconBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.icon,
-      cn(
-        "w-5 h-5 shrink-0",
-        palette.value.iconColor,
-        get(mergedClasses.value, "icon"),
-      ),
-    );
-  });
-
-  const titleBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.title,
-      cn(
-        "text-start text-sm whitespace-normal",
-        hasDefaultBody.value ? "font-semibold" : "font-normal",
-        palette.value.text,
-        get(mergedClasses.value, "title"),
-      ),
-    );
-  });
-
   const bodyBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.body,
-      cn(
-        "grow text-sm text-start",
-        palette.value.text,
-        get(mergedPaddingMap.value, merged.value.padding ?? "none"),
-        get(mergedClasses.value, "body"),
-      ),
-    );
+    return mergePartBind( partsProps.value?.body, {}, cn({
+      "grow text-sm text-start": true,
+      [get(mergedClasses.value, "body") ?? ""]: true,
+      [get(colorMap.value, "text") ?? ""]: true,
+      [paddingMap.value]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const iconBind = computed(() => {
+    return mergePartBind(partsProps.value?.icon, {}, cn({
+      "w-5 h-5 shrink-0": true,
+      [get(colorMap.value, "icon") ?? ""]: true,
+      [get(mergedClasses.value, "icon") ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const titleBind = computed(() => {
+    return mergePartBind(partsProps.value?.title, {}, cn({
+      "text-start text-sm whitespace-normal": true,
+      [hasDefaultBody.value ? "font-semibold" : "font-normal"]: true,
+      [get(colorMap.value, "text") ?? ""]: true,
+      [get(mergedClasses.value, "title") ?? ""]: true,
+    }));
   });
 
   return {
@@ -225,15 +180,7 @@ export function useAlert(
     bodyBind,
     iconBind,
     rootBind,
-    showIcon,
     titleBind,
-    rootClasses,
     resolvedIcon,
-    showIconSlot,
-    showTitleRow,
-    hasDefaultBody,
-    showActionSlot,
-    showFooterSlot,
-    showHeaderSlot,
   };
 }

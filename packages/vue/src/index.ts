@@ -178,7 +178,6 @@ export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextApi } from "@/Provider";
 export {
   mergeBridgeUILayeredClasses,
-  mergeBridgeUIStringMap,
   mergePropsWithBridgeUIDefaults,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
