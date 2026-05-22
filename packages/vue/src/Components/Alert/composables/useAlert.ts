@@ -179,7 +179,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     return mergePartBind(partsProps.value?.icon, {}, cn({
       // Theme classes
       "w-5 h-5 shrink-0": true,
-      [get(colorClass.value, "icon") ?? ""]: true,
+      [get(colorClass.value, "iconColor") ?? ""]: true,
       // Custom classes
       [get(mergedClasses.value, "icon") ?? ""]: true,
     }));

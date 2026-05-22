@@ -120,7 +120,7 @@ export function useTextField(
     );
 
     return get(layer, merged.variant);
-  }, [bridgeTextField?.customProps?.variant, merged.variant]);
+  }, [merged.variant, bridgeTextField?.customProps?.variant]);
 
   const colorPalette = useMemo(() => {
     const layer = mergeBridgeUILayeredClasses(
@@ -129,7 +129,7 @@ export function useTextField(
     );
 
     return get(layer, merged.color as keyof TextFieldColor);
-  }, [bridgeTextField?.customProps?.color, merged.color]);
+  }, [merged.color, bridgeTextField?.customProps?.color]);
 
   const roundedPalette = useMemo(() => {
     const layer = mergeBridgeUILayeredClasses(
@@ -138,7 +138,7 @@ export function useTextField(
     );
 
     return get(layer, merged.rounded);
-  }, [bridgeTextField?.customProps?.rounded, merged.rounded]);
+  }, [merged.rounded, bridgeTextField?.customProps?.rounded]);
 
   const sizePalette = useMemo(() => {
     const layer = mergeBridgeUILayeredClasses(
@@ -147,7 +147,7 @@ export function useTextField(
     );
 
     return get(layer, merged.size);
-  }, [bridgeTextField?.customProps?.size, merged.size]);
+  }, [merged.size, bridgeTextField?.customProps?.size]);
 
   const isUnderlined = derived(() => {
     return merged.variant === "underlined";

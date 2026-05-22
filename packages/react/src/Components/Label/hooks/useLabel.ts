@@ -76,7 +76,7 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
     );
 
     return get(classes, merged.size);
-  }, [bridgeLabel?.customProps?.size, merged.size]);
+  }, [merged.size, bridgeLabel?.customProps?.size]);
 
   // Binds
   // prettier-ignore

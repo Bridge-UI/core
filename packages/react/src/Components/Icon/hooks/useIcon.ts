@@ -52,7 +52,7 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
     );
 
     return get(classes, merged.size);
-  }, [bridgeIcon?.customProps?.size, merged.size]);
+  }, [merged.size, bridgeIcon?.customProps?.size]);
 
   // Binds
   // prettier-ignore

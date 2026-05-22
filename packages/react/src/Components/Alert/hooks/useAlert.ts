@@ -140,7 +140,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     );
 
     return get(classes, [merged.variant, merged.color]);
-  }, [merged.variant, merged.color, bridgeAlert?.customProps?.variant]);
+  }, [merged.color, merged.variant, bridgeAlert?.customProps?.variant]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
@@ -187,7 +187,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     return mergePartBind(partsProps?.icon, {}, cn({
       // Theme classes
       "w-5 h-5 shrink-0": true,
-      [get(colorClass, "icon") ?? ""]: true,
+      [get(colorClass, "iconColor") ?? ""]: true,
       // Custom classes
       [get(mergedClasses, "icon") ?? ""]: true,
     }));
