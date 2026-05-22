@@ -1,6 +1,6 @@
 // prettier-ignore
 export interface AlertColorItem {
-  "icon"?: string;
+  "icon"?: unknown;
   "text": string;
   "border"?: string;
   "iconColor": string;

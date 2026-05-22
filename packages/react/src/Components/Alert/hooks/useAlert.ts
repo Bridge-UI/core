@@ -1,14 +1,6 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-react";
-import {
-  Bell,
-  CircleAlert,
-  CircleCheck,
-  CircleX,
-  Info,
-  TriangleAlert,
-} from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -24,11 +16,11 @@ import {
   roundedProps,
   shadowProps,
   variantProps,
-  type AlertColor,
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
+import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
 import {
   derived,
   mergePartBind,
@@ -47,16 +39,6 @@ const alertBridgeKeys = [
   "variant",
   "partsProps",
 ] as const satisfies readonly (keyof AlertOwnProps)[];
-
-const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
-  dark: Info,
-  primary: Bell,
-  error: CircleX,
-  secondary: Info,
-  info: CircleAlert,
-  success: CircleCheck,
-  warning: TriangleAlert,
-};
 
 type AlertLibDefaults = LibDefaultsShape<
   AlertOwnProps,
@@ -147,8 +129,14 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       return null;
     }
 
-    return merged.icon ?? get(defaultIcons, merged.color);
-  }, [merged.icon, merged.color]);
+    if (merged.icon) {
+      return merged.icon;
+    }
+
+    const themeIcon = get(colorClass, "icon") as LucideIcon | undefined;
+
+    return themeIcon ?? get(alertDefaultIcons, merged.color);
+  }, [merged.icon, merged.color, colorClass]);
 
   // Visibility
   const hasDefaultBody = derived(() => {

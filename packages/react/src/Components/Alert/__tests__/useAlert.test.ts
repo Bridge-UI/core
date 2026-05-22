@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { CircleX } from "lucide-react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -38,7 +39,7 @@ test("it should override color when prop is passed", () => {
 test("it should resolve the default icon for a given color", () => {
   const { result } = renderUseAlert({ color: "error" });
 
-  expect(result.current.resolvedIcon).not.toBeNull();
+  expect(result.current.resolvedIcon).toBe(CircleX);
 });
 
 test("it should suppress the icon when icon is null", () => {

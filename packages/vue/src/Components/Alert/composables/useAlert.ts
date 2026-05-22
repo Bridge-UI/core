@@ -1,14 +1,6 @@
 // ** External Imports
 import { get, isNull } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-vue-next";
-import {
-  Bell,
-  CircleAlert,
-  CircleCheck,
-  CircleX,
-  Info,
-  TriangleAlert,
-} from "lucide-vue-next";
 import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
@@ -24,11 +16,11 @@ import {
   roundedProps,
   shadowProps,
   variantProps,
-  type AlertColor,
 } from "@bridge-ui/core/Components/Alert";
 
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
+import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -46,16 +38,6 @@ const alertBridgeKeys = [
   "variant",
   "partsProps",
 ] as const satisfies readonly (keyof AlertOwnProps)[];
-
-const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
-  dark: Info,
-  primary: Bell,
-  error: CircleX,
-  secondary: Info,
-  info: CircleAlert,
-  success: CircleCheck,
-  warning: TriangleAlert,
-};
 
 type AlertLibDefaults = LibDefaultsShape<
   AlertOwnProps,
@@ -137,7 +119,13 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       return null;
     }
 
-    return merged.value.icon ?? get(defaultIcons, merged.value.color);
+    if (merged.value.icon) {
+      return merged.value.icon;
+    }
+
+    const themeIcon = get(colorClass.value, "icon") as LucideIcon | undefined;
+
+    return themeIcon ?? get(alertDefaultIcons, merged.value.color);
   });
 
   // Visibility
