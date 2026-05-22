@@ -1,10 +1,7 @@
 <script setup lang="ts">
 // ** Local Imports
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
-import {
-  alertLibDefaults,
-  useAlert,
-} from "@/Components/Alert/composables/useAlert";
+import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
 import { hasNamedSlot, hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
@@ -15,7 +12,13 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<AlertOwnProps>();
 
 const { slots, merged, bodyBind, iconBind, rootBind, titleBind, resolvedIcon } =
-  useAlert(props, alertLibDefaults);
+  useAlert(props, {
+    shadow: "sm",
+    rounded: "sm",
+    variant: "flat",
+    color: "primary",
+    padding: "medium",
+  });
 </script>
 
 <template>

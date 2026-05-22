@@ -128,6 +128,7 @@ export function splitComponentProps<
 
 export type {
   ClassPropKey,
+  LibDefaultsShape,
   MergeHtmlProps,
   MergeLibDefaults,
   MergePartBind,

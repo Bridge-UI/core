@@ -124,6 +124,7 @@ export {
 } from "@core/Utils";
 export type {
   ClassPropKey,
+  LibDefaultsShape,
   MergeHtmlProps,
   MergeLibDefaults,
   MergePartBind,

@@ -14,6 +14,7 @@ import { computed, useAttrs, useSlots } from "vue";
 import {
   cn,
   splitComponentProps,
+  type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
 import {
@@ -33,14 +34,6 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 import { get, isNull } from "es-toolkit/compat";
-
-export const alertLibDefaults = {
-  shadow: "sm",
-  rounded: "sm",
-  variant: "flat",
-  color: "primary",
-  padding: "medium",
-} as const satisfies Partial<AlertOwnProps>;
 
 const alertBridgeKeys = [
   "icon",
@@ -64,7 +57,10 @@ const defaultIcons: Record<keyof AlertColor, LucideIcon> = {
   warning: TriangleAlert,
 };
 
-type AlertLibDefaults = typeof alertLibDefaults;
+type AlertLibDefaults = LibDefaultsShape<
+  AlertOwnProps,
+  "color" | "shadow" | "padding" | "rounded" | "variant"
+>;
 
 type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
 

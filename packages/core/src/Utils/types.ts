@@ -65,6 +65,16 @@ export type MergeHtmlProps<
 > = OwnProps & Omit<HtmlAttributes, keyof OwnProps>;
 
 /**
+ * Required library defaults for a subset of `OwnProps` (non-null prop types).
+ */
+export type LibDefaultsShape<
+  OwnProps extends object,
+  Keys extends keyof OwnProps,
+> = {
+  [K in Keys]: NonNullable<OwnProps[K]>;
+};
+
+/**
  * `OwnProps` with keys from `libDefaults` required (pass `typeof` your defaults object).
  * Required keys keep the prop types from `OwnProps`, not literal types from `libDefaults`.
  */

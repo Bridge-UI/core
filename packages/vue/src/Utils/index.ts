@@ -102,6 +102,7 @@ export {
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
 export type {
+  LibDefaultsShape,
   MergeHtmlProps,
   MergeLibDefaults,
   MergeProps,
