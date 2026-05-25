@@ -301,10 +301,10 @@ export function useTextField(
     slots,
     merged,
     endBind,
+    inputId,
     errorIcon,
     formField,
     inputBind,
-    inputId,
     startBind,
     isDisabled,
     isReadonly,
@@ -312,8 +312,8 @@ export function useTextField(
     endSlotBind,
     invalidated,
     containerBind,
-    rootBind: formField.rootBind,
     startIconBind,
     startSlotBind,
+    rootBind: formField.rootBind,
   };
 }

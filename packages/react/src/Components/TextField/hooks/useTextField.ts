@@ -312,6 +312,7 @@ export function useTextField(
     slots,
     merged,
     endBind,
+    inputId,
     errorIcon,
     formField,
     inputBind,
@@ -324,5 +325,6 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
+    rootBind: formField.rootBind,
   };
 }
