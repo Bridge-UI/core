@@ -91,16 +91,12 @@ export function useFormField(
     return props.slots;
   });
 
-  const children = derived(() => {
-    return props.children;
-  });
-
   const partsProps = derived(() => {
     return merged.partsProps;
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "children"]);
+    return omit(inheritedAttrs, ["slots"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
@@ -246,7 +242,6 @@ export function useFormField(
   return {
     slots,
     merged,
-    children,
     rootBind,
     controlId,
     errorBind,

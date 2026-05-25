@@ -7,7 +7,7 @@ defineSlots<MenuSlots>();
 
 const props = defineProps<MenuProps>();
 
-const { slots, merged } = useMenu(props, {
+const { slots } = useMenu(props, {
   shadow: "md",
   rounded: "md",
 });

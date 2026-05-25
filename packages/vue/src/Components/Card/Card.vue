@@ -7,7 +7,7 @@ defineSlots<CardSlots>();
 
 const props = defineProps<CardProps>();
 
-const { slots, merged } = useCard(props, {
+const { slots } = useCard(props, {
   shadow: "sm",
   rounded: "sm",
   padding: "medium",
