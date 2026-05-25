@@ -40,7 +40,7 @@ const {
   invalidated,
   requiredBind,
   descriptionBind,
-} = props.field ?? local;
+} = (props.field ?? local) as typeof local;
 </script>
 
 <template>

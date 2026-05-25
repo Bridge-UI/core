@@ -71,7 +71,8 @@ export function useFormField(
   props: MaybeRefOrGetter<Omit<FormFieldOwnProps, "field">>,
   libDefaults: FormFieldLibDefaults,
   options?: UseFormFieldOptions,
-) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
   // Setup
   const autoId = useId();
   const attrs = useAttrs();
@@ -260,5 +261,3 @@ export function useFormField(
     descriptionBind,
   };
 }
-
-export type FormFieldApi = ReturnType<typeof useFormField>;

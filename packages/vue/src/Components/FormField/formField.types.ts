@@ -5,9 +5,6 @@ import type { HTMLAttributes, Slot } from "vue";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 
-// ** Local Imports
-import type { FormFieldApi } from "@/Components/FormField/composables/useFormField";
-
 export interface FormFieldSizeOverrides {}
 
 export interface FormFieldClasses {
@@ -137,7 +134,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  field?: FormFieldApi;
+  field?: unknown;
 
   /**
    * The primary label text above the control.

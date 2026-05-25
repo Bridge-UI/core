@@ -5,9 +5,6 @@ import type { HTMLAttributes, ReactNode } from "react";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 
-// ** Local Imports
-import type { FormFieldApi } from "@/Components/FormField/hooks/useFormField";
-
 export interface FormFieldSizeOverrides {}
 
 export interface FormFieldClasses {
@@ -122,7 +119,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  field?: FormFieldApi;
+  field?: unknown;
 
   /**
    * Associates labels and helper text with a form control. When omitted, an id

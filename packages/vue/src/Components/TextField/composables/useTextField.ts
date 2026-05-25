@@ -70,7 +70,8 @@ type TextFieldMerged = MergeLibDefaults<
 export function useTextField(
   props: TextFieldOwnProps,
   libDefaults: TextFieldLibDefaults,
-) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any {
   // Setup
   const attrs = useAttrs();
   const slots = useSlots();

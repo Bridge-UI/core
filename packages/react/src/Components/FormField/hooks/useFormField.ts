@@ -261,5 +261,3 @@ export function useFormField(
     descriptionBind,
   };
 }
-
-export type FormFieldApi = ReturnType<typeof useFormField>;

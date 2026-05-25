@@ -25,7 +25,7 @@ function FormField(props: FormFieldProps) {
     invalidated,
     requiredBind,
     descriptionBind,
-  } = field ?? local;
+  } = (field ?? local) as typeof local;
 
   return (
     <div
