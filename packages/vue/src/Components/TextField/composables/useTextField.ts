@@ -1,7 +1,7 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-vue-next";
-import { computed, useAttrs, useId, useSlots } from "vue";
+import { computed, provide, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
@@ -16,17 +16,19 @@ import {
   roundedProps,
   sizeProps,
   variantProps,
-  type TextFieldColor,
 } from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
+import { useFormField } from "@/Components/FormField/composables/useFormField";
+import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
+import { formFieldContextKey } from "@/Components/FormField/formFieldContext";
 import type {
   TextFieldClasses,
   TextFieldOwnProps,
+  TextFieldPartsProps,
 } from "@/Components/TextField/textField.types";
 import {
   hasNamedSlot,
-  hasSlotOrProp,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -70,7 +72,6 @@ export function useTextField(
   props: TextFieldOwnProps,
   libDefaults: TextFieldLibDefaults,
 ) {
-  const autoId = useId();
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -95,86 +96,72 @@ export function useTextField(
     componentName: "TextField",
   });
 
-  const partsProps = computed(() => {
+  const formField = useFormField(
+    customProps as FormFieldOwnProps,
+    {
+      size: libDefaults.size,
+    },
+    {
+      controlId: () => inputInheritedAttrs.id as string | undefined,
+    },
+  );
+
+  provide(formFieldContextKey, formField);
+
+  const partsProps = computed((): TextFieldPartsProps | undefined => {
     return merged.value.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextFieldClasses>({
-    entry: bridgeTextField,
     props: customProps,
+    entry: bridgeTextField,
   });
 
-  const variantKey = computed(() => {
-    return merged.value.variant;
-  });
-
-  const colorKey = computed(() => {
-    return merged.value.color as keyof TextFieldColor;
-  });
-
-  const roundedKey = computed(() => {
-    return merged.value.rounded;
-  });
-
-  const sizeKey = computed(() => {
-    return merged.value.size;
-  });
-
-  const variantPalette = computed(() => {
+  // Classes
+  const variantClasses = computed(() => {
     const layer = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeTextField.value?.customProps?.variant,
     );
 
-    return get(layer, variantKey.value);
+    return get(layer, merged.value.variant);
   });
 
-  const colorPalette = computed(() => {
+  const colorClasses = computed(() => {
     const layer = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeTextField.value?.customProps?.color,
     );
 
-    return get(layer, colorKey.value);
+    return get(layer, merged.value.color);
   });
 
-  const roundedPalette = computed(() => {
+  const roundedClasses = computed(() => {
     const layer = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeTextField.value?.customProps?.rounded,
     );
 
-    return get(layer, roundedKey.value);
+    return get(layer, merged.value.rounded);
   });
 
-  const sizePalette = computed(() => {
+  const sizeClasses = computed(() => {
     const layer = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeTextField.value?.customProps?.size,
     );
 
-    return get(layer, sizeKey.value);
+    return get(layer, merged.value.size);
   });
 
   const isUnderlined = computed(() => {
-    return variantKey.value === "underlined";
+    return merged.value.variant === "underlined";
   });
 
-  const inputId = computed(() => {
-    return (inputInheritedAttrs.id as string | undefined) ?? autoId;
-  });
-
-  const isDisabled = computed(() => {
-    return Boolean(merged.value.disabled);
-  });
-
-  const isReadonly = computed(() => {
-    return Boolean(merged.value.readonly);
-  });
-
-  const invalidated = computed(() => {
-    return merged.value.error === true;
-  });
+  const inputId = formField.controlId;
+  const isDisabled = formField.isDisabled;
+  const isReadonly = formField.isReadonly;
+  const invalidated = formField.invalidated;
 
   const focusColorPalette = computed(() => {
     if (invalidated.value) {
@@ -186,29 +173,21 @@ export function useTextField(
       return get(layer, "error");
     }
 
-    return colorPalette.value;
-  });
-
-  const headerJustify = computed(() => {
-    if (hasSlotOrProp(slots, "label", merged.value.label)) {
-      return "justify-between items-end";
-    }
-
-    return "justify-end";
+    return colorClasses.value;
   });
 
   const containerSpacing = computed(() => {
-    const hasStartSlot = hasNamedSlot(slots, "start");
     const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
 
     if (!hasStartSlot && !hasEndSlot) {
-      return sizePalette.value?.padding;
+      return sizeClasses.value?.padding;
     }
 
     return cn(
       "gap-x-2",
-      !hasStartSlot && sizePalette.value?.insetStart,
-      !hasEndSlot && sizePalette.value?.insetEnd,
+      !hasStartSlot && sizeClasses.value?.insetStart,
+      !hasEndSlot && sizeClasses.value?.insetEnd,
     );
   });
 
@@ -220,66 +199,17 @@ export function useTextField(
     return focusColorPalette.value?.input;
   });
 
-  const ariaDescribedBy = computed(() => {
-    const ids: string[] = [];
-
-    if (
-      !invalidated.value &&
-      hasSlotOrProp(slots, "description", merged.value.description)
-    ) {
-      ids.push(`${inputId.value}-description`);
-    }
-
-    if (hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)) {
-      ids.push(`${inputId.value}-error`);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
-  });
-
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      {},
       rootClassAttr !== undefined ? { class: rootClassAttr } : {},
-      cn({
-        "group w-full relative": true,
-        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
-        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
-        [mergedClasses.value.root ?? ""]: true,
-      }),
-    );
-  });
-
-  const headerBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.header,
-      {},
-      cn("flex mb-1", headerJustify.value, mergedClasses.value.header),
-    );
-  });
-
-  const labelBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.label,
-      {},
-      cn(mergedClasses.value.label),
-    );
-  });
-
-  const cornerBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.corner,
-      {},
-      cn(
-        "text-sm text-gray-500 dark:text-gray-400",
-        mergedClasses.value.corner,
-      ),
+      cn(formField.rootBind.value.class),
     );
   });
 
   const containerBind = computed(() => {
-    const hasStartSlot = hasNamedSlot(slots, "start");
     const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
 
     return mergePartBind(
       partsProps.value?.container,
@@ -288,13 +218,13 @@ export function useTextField(
         "group/field relative flex justify-start gap-x-2 items-center",
         "transition-all ease-in-out duration-150",
         "outline-none",
-        variantPalette.value?.container,
-        variantPalette.value?.input,
-        !isUnderlined.value && roundedPalette.value?.input,
+        variantClasses.value?.container,
+        variantClasses.value?.input,
+        !isUnderlined.value && roundedClasses.value?.input,
         isUnderlined.value && "rounded-none",
         containerColorFocus.value,
         containerSpacing.value,
-        (hasStartSlot || hasEndSlot) && sizePalette.value?.container,
+        (hasStartSlot || hasEndSlot) && sizeClasses.value?.container,
         {
           "bg-gray-100 dark:bg-gray-800":
             isDisabled.value && !invalidated.value,
@@ -316,8 +246,8 @@ export function useTextField(
         "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
         "group-data-[invalid]:text-error-500",
         { "text-error-500": invalidated.value },
-        !invalidated.value && colorPalette.value?.start,
-        !isUnderlined.value && roundedPalette.value?.start,
+        !invalidated.value && colorClasses.value?.start,
+        !isUnderlined.value && roundedClasses.value?.start,
         mergedClasses.value.start,
       ),
     );
@@ -331,8 +261,8 @@ export function useTextField(
         "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
         "group-data-[invalid]:text-error-500",
         { "text-error-500": invalidated.value },
-        !invalidated.value && colorPalette.value?.end,
-        !isUnderlined.value && roundedPalette.value?.end,
+        !invalidated.value && colorClasses.value?.end,
+        !isUnderlined.value && roundedClasses.value?.end,
         mergedClasses.value.end,
       ),
     );
@@ -368,7 +298,7 @@ export function useTextField(
         disabled: isDisabled.value,
         readonly: isReadonly.value,
         "aria-invalid": invalidated.value || undefined,
-        "aria-describedby": ariaDescribedBy.value,
+        "aria-describedby": formField.ariaDescribedBy.value,
       },
       inputInheritedAttrs,
       cn(
@@ -376,7 +306,7 @@ export function useTextField(
         "outline-none ring-0 focus:outline-none focus:ring-0",
         "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
         "disabled:cursor-not-allowed",
-        sizePalette.value?.input,
+        sizeClasses.value?.input,
         mergedClasses.value.input,
       ),
     );
@@ -390,40 +320,15 @@ export function useTextField(
     return mergePartBind(partsProps.value?.endIcon, {}, "");
   });
 
-  const descriptionBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.description,
-      {},
-      cn(
-        "mt-2 text-sm text-gray-500 dark:text-gray-400",
-        mergedClasses.value.description,
-      ),
-    );
-  });
-
-  const errorBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.error,
-      {},
-      cn(
-        "mt-2 text-sm text-error-600 dark:text-error-400",
-        mergedClasses.value.error,
-      ),
-    );
-  });
-
   return {
+    slots,
     merged,
+    endBind,
     inputId,
     rootBind,
-    errorBind,
     errorIcon,
     inputBind,
-    labelBind,
-    endBind,
     startBind,
-    cornerBind,
-    headerBind,
     isDisabled,
     isReadonly,
     endIconBind,
@@ -432,6 +337,5 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
-    descriptionBind,
   };
 }

@@ -40,6 +40,7 @@ import type {
   CheckboxRounded,
   CheckboxSize,
 } from "@core/Components/Checkbox";
+import type { FormFieldSize } from "@core/Components/FormField";
 import type { IconSize } from "@core/Components/Icon";
 import type { LabelSize } from "@core/Components/Label";
 import type {
@@ -104,6 +105,7 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface IconConfigOverrides {}
+export interface FormFieldConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
@@ -211,6 +213,16 @@ export interface IconConfigBase {
   }>;
   customProps: Partial<{
     size: Record<string, string>;
+  }>;
+}
+
+export interface FormFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof FormFieldSize;
+  }>;
+  customProps: Partial<{
+    size: Partial<FormFieldSize>;
   }>;
 }
 
@@ -341,6 +353,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
+  FormField: Partial<Overwrite<FormFieldConfigBase, FormFieldConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;

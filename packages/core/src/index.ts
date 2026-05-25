@@ -40,6 +40,10 @@ export type {
   CheckboxRounded,
   CheckboxSize,
 } from "@core/Components/Checkbox";
+export type {
+  FormFieldSize,
+  FormFieldSizeItem,
+} from "@core/Components/FormField";
 export type { IconSize } from "@core/Components/Icon";
 export type { LabelSize } from "@core/Components/Label";
 export type {
@@ -105,6 +109,7 @@ export type {
   CardConfigOverrides,
   CheckboxConfigOverrides,
   Direction,
+  FormFieldConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
   LinkConfigOverrides,
