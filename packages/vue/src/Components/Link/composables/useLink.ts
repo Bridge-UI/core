@@ -79,7 +79,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     props: customProps,
   });
 
-  // Visibility
+  // Elements
   const isDisabled = computed(() => {
     return Boolean(merged.value.disabled);
   });

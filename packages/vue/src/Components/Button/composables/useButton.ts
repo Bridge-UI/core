@@ -87,7 +87,7 @@ export function useButton(
     props: customProps,
   });
 
-  // Visibility
+  // Elements
   const tag = computed(() => {
     return merged.value.as ?? "button";
   });

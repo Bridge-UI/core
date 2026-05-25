@@ -72,6 +72,7 @@ export function useTextField(
   props: TextFieldOwnProps,
   libDefaults: TextFieldLibDefaults,
 ) {
+  // Setup
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -184,11 +185,12 @@ export function useTextField(
       return sizeClasses.value?.padding;
     }
 
-    return cn(
-      "gap-x-2",
-      !hasStartSlot && sizeClasses.value?.insetStart,
-      !hasEndSlot && sizeClasses.value?.insetEnd,
-    );
+    return cn({
+      // Theme classes
+      [sizeClasses.value?.insetStart ?? ""]: !hasStartSlot,
+      [sizeClasses.value?.insetEnd ?? ""]: !hasEndSlot,
+      "gap-x-2": true,
+    });
   });
 
   const containerColorFocus = computed(() => {
@@ -199,125 +201,114 @@ export function useTextField(
     return focusColorPalette.value?.input;
   });
 
-  const rootBind = computed(() => {
-    return mergePartBind(
-      {},
-      rootClassAttr !== undefined ? { class: rootClassAttr } : {},
-      cn(formField.rootBind.value.class),
-    );
-  });
-
-  const containerBind = computed(() => {
-    const hasEndSlot = hasNamedSlot(slots, "end");
-    const hasStartSlot = hasNamedSlot(slots, "start");
-
-    return mergePartBind(
-      partsProps.value?.container,
-      {},
-      cn(
-        "group/field relative flex justify-start gap-x-2 items-center",
-        "transition-all ease-in-out duration-150",
-        "outline-none",
-        variantClasses.value?.container,
-        variantClasses.value?.input,
-        !isUnderlined.value && roundedClasses.value?.input,
-        isUnderlined.value && "rounded-none",
-        containerColorFocus.value,
-        containerSpacing.value,
-        (hasStartSlot || hasEndSlot) && sizeClasses.value?.container,
-        {
-          "bg-gray-100 dark:bg-gray-800":
-            isDisabled.value && !invalidated.value,
-          "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
-            invalidated.value && !isUnderlined.value,
-          "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
-            invalidated.value && isUnderlined.value,
-        },
-        mergedClasses.value.container,
-      ),
-    );
-  });
-
-  const startBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.start,
-      {},
-      cn(
-        "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
-        "group-data-[invalid]:text-error-500",
-        { "text-error-500": invalidated.value },
-        !invalidated.value && colorClasses.value?.start,
-        !isUnderlined.value && roundedClasses.value?.start,
-        mergedClasses.value.start,
-      ),
-    );
-  });
-
-  const endBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.end,
-      {},
-      cn(
-        "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
-        "group-data-[invalid]:text-error-500",
-        { "text-error-500": invalidated.value },
-        !invalidated.value && colorClasses.value?.end,
-        !isUnderlined.value && roundedClasses.value?.end,
-        mergedClasses.value.end,
-      ),
-    );
-  });
-
-  const startSlotBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.start,
-      {},
-      cn(
-        "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5",
-        mergedClasses.value.start,
-      ),
-    );
-  });
-
-  const endSlotBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.end,
-      {},
-      cn(
-        "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5",
-        mergedClasses.value.end,
-      ),
-    );
-  });
-
-  const inputBind = computed(() => {
-    return mergePartBind(
-      {
-        ...partsProps.value?.input,
-        id: inputId.value,
-        disabled: isDisabled.value,
-        readonly: isReadonly.value,
-        "aria-invalid": invalidated.value || undefined,
-        "aria-describedby": formField.ariaDescribedBy.value,
-      },
-      inputInheritedAttrs,
-      cn(
-        "flex-1 min-w-0 bg-transparent border-0 shadow-none",
-        "outline-none ring-0 focus:outline-none focus:ring-0",
-        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
-        "disabled:cursor-not-allowed",
-        sizeClasses.value?.input,
-        mergedClasses.value.input,
-      ),
-    );
+  // Binds
+  const endIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.endIcon, {}, "");
   });
 
   const startIconBind = computed(() => {
     return mergePartBind(partsProps.value?.startIcon, {}, "");
   });
 
-  const endIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.endIcon, {}, "");
+  // prettier-ignore
+  const rootBind = computed(() => {
+    return mergePartBind({}, {
+      class: rootClassAttr,
+    }, cn(formField.rootBind.value.class));
+  });
+
+  // prettier-ignore
+  const endBind = computed(() => {
+    return mergePartBind(partsProps.value?.end, {}, cn({
+      // Theme classes
+      'shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap': true,
+      [roundedClasses.value?.end ?? ""]: !isUnderlined.value,
+      [colorClasses.value?.end ?? ""]: !invalidated.value,
+      'group-data-[invalid]:text-error-500': true,
+      'text-error-500': invalidated.value,
+      // Custom classes
+      [mergedClasses.value.end ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startBind = computed(() => {
+    return mergePartBind(partsProps.value?.start, {}, cn({
+      // Theme classes
+      'text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap': true,
+      [roundedClasses.value?.start ?? ""]: !isUnderlined.value,
+      [colorClasses.value?.start ?? ""]: !invalidated.value,
+      'group-data-[invalid]:text-error-500': true,
+      'text-error-500': invalidated.value,
+      // Custom classes
+      [mergedClasses.value.start ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const endSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.end, {}, cn({
+      // Theme classes
+      'group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5': true,
+      // Custom classes
+      [mergedClasses.value.end ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.start, {}, cn({
+      // Theme classes
+      'group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5': true,
+      // Custom classes
+      [mergedClasses.value.start ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const inputBind = computed(() => {
+    return mergePartBind({
+      ...partsProps.value?.input,
+      id: inputId.value,
+      disabled: isDisabled.value,
+      readonly: isReadonly.value,
+      "aria-invalid": invalidated.value || undefined,
+      "aria-describedby": formField.ariaDescribedBy.value,
+    }, inputInheritedAttrs, cn({
+      // Theme classes
+      'text-gray-900 dark:text-gray-100 placeholder:text-gray-400': true,
+      'outline-none ring-0 focus:outline-none focus:ring-0': true,
+      'flex-1 min-w-0 bg-transparent border-0 shadow-none': true,
+      'disabled:cursor-not-allowed': true,
+      // Custom classes
+      [mergedClasses.value.input ?? ""]: true,
+      [sizeClasses.value?.input ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const containerBind = computed(() => {
+    const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
+
+    return mergePartBind(partsProps.value?.container, {}, cn({
+      // Theme classes
+      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated.value && !isUnderlined.value,
+      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated.value && isUnderlined.value,
+      "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
+      'group/field relative flex justify-start gap-x-2 items-center': true,
+      [sizeClasses.value?.container ?? ""]: (hasStartSlot || hasEndSlot),
+      [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
+      'transition-all ease-in-out duration-150': true,
+      [variantClasses.value?.container ?? ""]: true,
+      [variantClasses.value?.input ?? ""]: true,
+      [containerColorFocus.value ?? ""]: true,
+      [containerSpacing.value ?? ""]: true,
+      'rounded-none': isUnderlined.value,
+      'outline-none': true,
+      // Custom classes
+      [mergedClasses.value.container ?? ""]: true,
+    }));
   });
 
   return {

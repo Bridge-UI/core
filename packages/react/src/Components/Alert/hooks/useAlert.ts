@@ -87,6 +87,11 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     props: customProps,
   });
 
+  // Elements
+  const hasDefaultBody = derived(() => {
+    return Boolean(children);
+  });
+
   // Classes
   const shadowClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -137,11 +142,6 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
     return themeIcon ?? get(alertDefaultIcons, merged.color);
   }, [merged.icon, merged.color, colorClass]);
-
-  // Visibility
-  const hasDefaultBody = derived(() => {
-    return Boolean(children);
-  });
 
   // Binds
   // prettier-ignore

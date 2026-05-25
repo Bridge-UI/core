@@ -78,7 +78,7 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
     props: customProps,
   });
 
-  // Element
+  // Elements
   const isMini = derived(() => {
     return merged.density === "mini";
   });

@@ -95,7 +95,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     props: customProps,
   });
 
-  // Element
+  // Elements
   const tag = derived(() => {
     return merged.as ?? "button";
   });
