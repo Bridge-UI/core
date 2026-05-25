@@ -1,25 +1,40 @@
 // ** External Imports
-import { useSlots } from "vue";
+import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
-// ** Local Imports
-import type { PasswordFieldProps } from "@/Components/PasswordField/passwordField.types";
-import { useBridgeUIComponent } from "@/Utils";
+export type UsePasswordFieldOptions = {
+  visible?: MaybeRefOrGetter<boolean | null | undefined>;
+  onVisibilityChange?: (visible: boolean) => void;
+};
 
-export function usePasswordField(
-  props: PasswordFieldProps,
-  libDefaults: Partial<PasswordFieldProps>,
-) {
-  const slots = useSlots();
+export function usePasswordField(options: UsePasswordFieldOptions = {}) {
+  const internalVisible = ref(false);
 
-  const { entry: bridgePasswordField, merged } = useBridgeUIComponent({
-    props,
-    libDefaults,
-    componentName: "TextField",
+  const visibleProp = computed(() => toValue(options.visible));
+
+  const isControlled = computed(() => {
+    return visibleProp.value !== undefined && visibleProp.value !== null;
   });
 
+  const isVisible = computed(() => {
+    if (isControlled.value) {
+      return Boolean(visibleProp.value);
+    }
+
+    return internalVisible.value;
+  });
+
+  const toggleVisibility = () => {
+    const next = !isVisible.value;
+
+    if (!isControlled.value) {
+      internalVisible.value = next;
+    }
+
+    options.onVisibilityChange?.(next);
+  };
+
   return {
-    slots,
-    merged,
-    bridgePasswordField,
+    isVisible,
+    toggleVisibility,
   };
 }
