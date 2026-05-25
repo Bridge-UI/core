@@ -193,7 +193,6 @@ export function useTextField(
       // Theme classes
       [sizeClasses.value?.insetStart ?? ""]: !hasStartSlot,
       [sizeClasses.value?.insetEnd ?? ""]: !hasEndSlot,
-      "gap-x-2": true,
     });
   });
 
@@ -246,7 +245,7 @@ export function useTextField(
   const endSlotBind = computed(() => {
     return mergePartBind(partsProps.value?.end, {}, cn({
       // Theme classes
-      'group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch pe-0.5 [&>*]:h-full [&>*]:min-h-0': true,
+      'group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 pe-0.5 [&>*]:h-full [&>*]:min-h-0': true,
       // Custom classes
       [mergedClasses.value.end ?? ""]: true,
     }));
@@ -256,7 +255,7 @@ export function useTextField(
   const startSlotBind = computed(() => {
     return mergePartBind(partsProps.value?.start, {}, cn({
       // Theme classes
-      'group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch ps-0.5 [&>*]:h-full [&>*]:min-h-0': true,
+      'group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 ps-0.5 [&>*]:h-full [&>*]:min-h-0': true,
       // Custom classes
       [mergedClasses.value.start ?? ""]: true,
     }));
@@ -273,9 +272,9 @@ export function useTextField(
       "aria-describedby": formField.ariaDescribedBy.value,
     }, inputInheritedAttrs.value, cn({
       // Theme classes
+      'flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none': true,
       'text-gray-900 dark:text-gray-100 placeholder:text-gray-400': true,
       'outline-none ring-0 focus:outline-none focus:ring-0': true,
-      'flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none': true,
       'disabled:cursor-not-allowed': true,
       // Custom classes
       [mergedClasses.value.input ?? ""]: true,
