@@ -285,10 +285,12 @@ test("it should apply resize-y when autosize is disabled", () => {
   expect(screen.getByRole("textbox").classList.contains("resize-y")).toBe(true);
 });
 
-test("it should apply error border classes on the textarea when invalid", () => {
-  render(<Textarea error aria-label="Field" />);
+test("it should apply error ring classes on the container when invalid", () => {
+  const { container } = render(<Textarea error aria-label="Field" />);
 
   expect(
-    screen.getByRole("textbox").classList.contains("border-error-500"),
+    container
+      .querySelector(".group\\/field")
+      ?.classList.contains("ring-error-500"),
   ).toBe(true);
 });

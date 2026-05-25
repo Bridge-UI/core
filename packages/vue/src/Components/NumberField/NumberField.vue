@@ -4,6 +4,11 @@ import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import { computed } from "vue";
 
 // ** Core Imports
+import {
+  fieldStepperButtonClasses,
+  numberFieldStepperWrapperClasses,
+  resolveStepperIconSize,
+} from "@/Components/TextField/fieldAdornment";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -66,6 +71,8 @@ const textFieldProps = computed(() => {
   return rest;
 });
 
+const stepperIconSize = computed(() => resolveStepperIconSize(props.size));
+
 const mergedPartsProps = computed(() => {
   const inputClass = cn(
     "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
@@ -98,22 +105,15 @@ const mergedPartsProps = computed(() => {
     :parts-props="mergedPartsProps"
   >
     <template #end>
-      <div class="flex min-h-0 flex-1 flex-col self-stretch py-0.5 pe-0.5">
+      <div :class="numberFieldStepperWrapperClasses">
         <button
           type="button"
           v-on:click="increment"
           :disabled="props.disabled"
           aria-label="Increment value"
-          :class="
-            cn({
-              'inline-flex flex-1 items-center justify-center text-gray-500 transition-colors': true,
-              'disabled:pointer-events-none disabled:opacity-50': true,
-              'hover:text-gray-700 dark:hover:text-gray-300': true,
-              [props.classes?.increment ?? '']: true,
-            })
-          "
+          :class="cn(fieldStepperButtonClasses, props.classes?.increment)"
         >
-          <Icon :icon="ChevronUp" :size="props.size ?? 'md'" />
+          <Icon :icon="ChevronUp" :size="stepperIconSize" />
         </button>
 
         <button
@@ -121,16 +121,9 @@ const mergedPartsProps = computed(() => {
           v-on:click="decrement"
           :disabled="props.disabled"
           aria-label="Decrement value"
-          :class="
-            cn({
-              'inline-flex flex-1 items-center justify-center text-gray-500 transition-colors': true,
-              'disabled:pointer-events-none disabled:opacity-50': true,
-              'hover:text-gray-700 dark:hover:text-gray-300': true,
-              [props.classes?.decrement ?? '']: true,
-            })
-          "
+          :class="cn(fieldStepperButtonClasses, props.classes?.decrement)"
         >
-          <Icon :icon="ChevronDown" :size="props.size ?? 'md'" />
+          <Icon :icon="ChevronDown" :size="stepperIconSize" />
         </button>
       </div>
     </template>

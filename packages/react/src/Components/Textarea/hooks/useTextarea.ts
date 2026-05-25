@@ -10,11 +10,12 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { sizeProps } from "@bridge-ui/core/Components/Textarea";
 import {
+  colorProps,
   roundedProps,
-  sizeProps,
   variantProps,
-} from "@bridge-ui/core/Components/Textarea";
+} from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/hooks/useFormField";
@@ -116,6 +117,15 @@ export function useTextarea(
     return get(classes, merged.variant);
   }, [merged.variant, bridgeTextarea?.customProps?.variant]);
 
+  const colorClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeTextarea?.customProps?.color,
+    );
+
+    return get(classes, merged.color);
+  }, [merged.color, bridgeTextarea?.customProps?.color]);
+
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
@@ -144,12 +154,26 @@ export function useTextarea(
   const isReadonly = formField.isReadonly;
   const invalidated = formField.invalidated;
 
-  const colorClasses = useMemo(() => {
-    const colorKey =
-      invalidated || merged.error === true ? "error" : merged.color;
+  const focusColorPalette = useMemo(() => {
+    if (merged.error === true) {
+      const classes = mergeBridgeUILayeredClasses(
+        colorProps,
+        bridgeTextarea?.customProps?.color,
+      );
 
-    return get(variantClasses, colorKey);
-  }, [invalidated, merged.color, merged.error, variantClasses]);
+      return get(classes, "error");
+    }
+
+    return colorClasses;
+  }, [colorClasses, merged.error, bridgeTextarea?.customProps?.color]);
+
+  const containerColorFocus = derived(() => {
+    if (isUnderlined) {
+      return focusColorPalette?.underlined;
+    }
+
+    return focusColorPalette?.input;
+  });
 
   const inheritedOnInput = inheritedAttrs.onInput;
 
@@ -200,14 +224,8 @@ export function useTextarea(
       "w-full min-w-0 bg-transparent border-0 shadow-none resize-y": !merged.autosize,
       "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
       "outline-none ring-0 focus:outline-none focus:ring-0": true,
-      [roundedClasses ?? ""]: !isUnderlined,
       "disabled:cursor-not-allowed": true,
-      [colorClasses?.focus ?? ""]: true,
-      [colorClasses?.base ?? ""]: true,
-      "rounded-none": isUnderlined,
-      [sizeClasses ?? ""]: true,
-      // Error classes
-      "border-error-500 focus:border-error-600 dark:border-error-600": invalidated,
+      [sizeClasses?.input ?? ""]: true,
       // Custom classes
       [mergedClasses.input ?? ""]: true,
     }));
@@ -217,11 +235,18 @@ export function useTextarea(
   const containerBind = derived(() => {
     return mergePartBind(partsProps?.container, {}, cn({
       // Theme classes
+      "group/field relative w-full": true,
       "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
       "transition-all ease-in-out duration-150": true,
-      [roundedClasses ?? ""]: !isUnderlined,
-      "group/field relative w-full": true,
+      [roundedClasses?.input ?? ""]: !isUnderlined,
+      [variantClasses?.container ?? ""]: true,
+      [variantClasses?.input ?? ""]: true,
+      [containerColorFocus ?? ""]: true,
       "rounded-none": isUnderlined,
+      "outline-none": true,
+      // Error classes
+      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated && !isUnderlined,
+      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated && isUnderlined,
       // Custom classes
       [mergedClasses.container ?? ""]: true,
     }));

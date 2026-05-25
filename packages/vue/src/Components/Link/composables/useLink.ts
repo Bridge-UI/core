@@ -53,12 +53,11 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const attrs = useAttrs();
   const slots = useSlots();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    LinkProps,
-    typeof linkBridgeKeys
-  >({
-    bridgeKeys: linkBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<LinkProps, typeof linkBridgeKeys>({
+      bridgeKeys: linkBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { entry: bridgeLink, merged } = useBridgeUIComponent<
@@ -66,8 +65,8 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     "Link"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Link",
+    props: () => split.value.customProps,
   });
 
   const partsProps = computed(() => {
@@ -76,7 +75,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
     entry: bridgeLink,
-    props: customProps,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -166,7 +165,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const rootBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,
-      inheritedAttrs,
+      split.value.inheritedAttrs,
       cn({
         // Theme classes
         "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,

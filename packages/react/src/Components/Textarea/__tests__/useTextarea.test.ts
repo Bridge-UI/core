@@ -95,10 +95,10 @@ test("it should set aria-invalid on textarea when error is true", () => {
   expect(result.current.textareaBind["aria-invalid"]).toBe(true);
 });
 
-test("it should apply error border classes on textarea when invalidated", () => {
+test("it should apply error ring classes on container when invalidated", () => {
   const { result } = renderUseTextarea({ error: true });
 
-  expect(result.current.textareaBind.className).toContain("border-error-500");
+  expect(result.current.containerBind.className).toContain("ring-error-500");
 });
 
 test("it should use id from props for textarea id", () => {
@@ -134,8 +134,9 @@ test("it should merge classes.input onto the textarea", () => {
   expect(result.current.textareaBind.className).toContain("placeholder:italic");
 });
 
-test("it should apply disabled background on container when disabled", () => {
-  const { result } = renderUseTextarea({ disabled: true });
+test("it should apply outline variant container classes by default", () => {
+  const { result } = renderUseTextarea();
 
-  expect(result.current.containerBind.className).toContain("bg-gray-100");
+  expect(result.current.containerBind.className).toContain("ring-1");
+  expect(result.current.containerBind.className).toContain("ring-inset");
 });

@@ -67,19 +67,14 @@ import type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
-import type {
-  TextareaColor,
-  TextareaColorItem,
-  TextareaRounded,
-  TextareaSize,
-  TextareaVariant,
-} from "@core/Components/Textarea";
+import type { TextareaSize, TextareaSizeItem } from "@core/Components/Textarea";
 import type {
   TextFieldColor,
   TextFieldColorItem,
   TextFieldRounded,
   TextFieldRoundedItem,
   TextFieldSize,
+  TextFieldSizeItem,
   TextFieldVariant,
   TextFieldVariantItem,
 } from "@core/Components/TextField";
@@ -307,14 +302,15 @@ export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
     size: keyof TextareaSize;
-    color: keyof TextareaColor;
-    rounded: keyof TextareaRounded;
-    variant: keyof TextareaVariant;
+    color: keyof TextFieldColor;
+    rounded: keyof TextFieldRounded;
+    variant: keyof TextFieldVariant;
   }>;
   customProps: Partial<{
-    size: Record<string, string>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, TextareaColorItem>>;
+    size: Record<string, TextareaSizeItem>;
+    color: Record<string, TextFieldColorItem>;
+    rounded: Record<string, TextFieldRoundedItem>;
+    variant: Record<string, TextFieldVariantItem>;
   }>;
 }
 
@@ -327,7 +323,7 @@ export interface TextFieldConfigBase {
     variant: keyof TextFieldVariant;
   }>;
   customProps: Partial<{
-    size: Partial<TextFieldSize>;
+    size: Record<string, TextFieldSizeItem>;
     color: Record<string, TextFieldColorItem>;
     rounded: Record<string, TextFieldRoundedItem>;
     variant: Record<string, TextFieldVariantItem>;

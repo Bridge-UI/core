@@ -4,6 +4,10 @@ import { Eye, EyeOff } from "lucide-vue-next";
 import { computed, toRef } from "vue";
 
 // ** Core Imports
+import {
+  fieldToggleButtonClasses,
+  resolveAdornmentIconSize,
+} from "@/Components/TextField/fieldAdornment";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -33,6 +37,8 @@ const { isVisible, toggleVisibility } = usePasswordField({
 });
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
+
+const toggleIconSize = computed(() => resolveAdornmentIconSize(props.size));
 
 const mergedPartsProps = computed(() => ({
   ...props.partsProps,
@@ -71,16 +77,9 @@ const textFieldProps = computed(() => {
         :disabled="props.disabled"
         v-on:click="toggleVisibility"
         :aria-label="isVisible ? 'Hide password' : 'Show password'"
-        :class="
-          cn({
-            'inline-flex items-center justify-center text-gray-500 transition-colors': true,
-            'hover:text-gray-700 dark:hover:text-gray-300': true,
-            'disabled:pointer-events-none disabled:opacity-50': true,
-            [props.classes?.toggle ?? '']: true,
-          })
-        "
+        :class="cn(fieldToggleButtonClasses, props.classes?.toggle)"
       >
-        <Icon :icon="isVisible ? EyeOff : Eye" :size="props.size ?? 'md'" />
+        <Icon :icon="isVisible ? EyeOff : Eye" :size="toggleIconSize" />
       </button>
     </template>
   </TextField>

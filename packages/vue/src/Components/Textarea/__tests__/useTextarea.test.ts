@@ -112,10 +112,10 @@ test("it should set aria-invalid on textarea when error is true", () => {
   expect(textareaBind.value["aria-invalid"]).toBe(true);
 });
 
-test("it should apply error border classes on textarea when invalidated", () => {
-  const { textareaBind } = mountUseTextarea({ error: true });
+test("it should apply error ring classes on container when invalidated", () => {
+  const { containerBind } = mountUseTextarea({ error: true });
 
-  expect(textareaBind.value.class).toContain("border-error-500");
+  expect(containerBind.value.class).toContain("ring-error-500");
 });
 
 test("it should use id from attrs for textarea id", () => {
@@ -151,10 +151,11 @@ test("it should merge classes.input onto the textarea", () => {
   expect(textareaBind.value.class).toContain("placeholder:italic");
 });
 
-test("it should apply disabled background on container when disabled", () => {
-  const { containerBind } = mountUseTextarea({ disabled: true });
+test("it should apply outline variant container classes by default", () => {
+  const { containerBind } = mountUseTextarea();
 
-  expect(containerBind.value.class).toContain("bg-gray-100");
+  expect(containerBind.value.class).toContain("ring-1");
+  expect(containerBind.value.class).toContain("ring-inset");
 });
 
 test("it should expose the same textarea chrome when mounted as Textarea", () => {

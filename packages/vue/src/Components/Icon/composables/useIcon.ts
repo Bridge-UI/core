@@ -26,15 +26,13 @@ type IconLibDefaults = LibDefaultsShape<IconOwnProps, "size">;
 type IconMerged = MergeLibDefaults<IconOwnProps, IconLibDefaults>;
 
 export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
-  // Setup
   const attrs = useAttrs();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    IconProps,
-    typeof iconBridgeKeys
-  >({
-    bridgeKeys: iconBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<IconProps, typeof iconBridgeKeys>({
+      bridgeKeys: iconBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { entry: bridgeIcon, merged } = useBridgeUIComponent<
@@ -42,11 +40,10 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
     "Icon"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Icon",
+    props: () => split.value.customProps,
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -56,10 +53,9 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
     return get(classes, merged.value.size);
   });
 
-  // Binds
   // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, inheritedAttrs, cn({
+    return mergePartBind({}, split.value.inheritedAttrs, cn({
       [sizeClass.value ?? ""]: true,
     }));
   });

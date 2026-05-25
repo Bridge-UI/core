@@ -5,10 +5,10 @@ import type { HTMLAttributes, TextareaHTMLAttributes } from "vue";
 import type {
   MergeHtmlProps,
   MergeProps,
-  TextareaColor,
-  TextareaRounded,
   TextareaSize,
-  TextareaVariant,
+  TextFieldColor,
+  TextFieldRounded,
+  TextFieldVariant,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -68,7 +68,7 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
    *
    * @default "primary"
    */
-  color?: MergeProps<TextareaColor, TextareaColorOverrides>;
+  color?: MergeProps<TextFieldColor, TextareaColorOverrides>;
 
   /**
    * Props for FormField parts and control parts (`label`, `input`, `container`, …).
@@ -82,10 +82,11 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
    *
    * @default "md"
    */
-  rounded?: MergeProps<TextareaRounded, TextareaRoundedOverrides>;
+  rounded?: MergeProps<TextFieldRounded, TextareaRoundedOverrides>;
 
   /**
-   * The size of the textarea control and form labels or helper text.
+   * The size of the textarea control. Form labels and helper text use the same
+   * `size` key via {@link FormField}.
    *
    * @default "md"
    */
@@ -96,7 +97,7 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
    *
    * @default "outline"
    */
-  variant?: MergeProps<TextareaVariant, TextareaVariantOverrides>;
+  variant?: MergeProps<TextFieldVariant, TextareaVariantOverrides>;
 }
 
 export interface TextareaSlots extends FormFieldSlots {}

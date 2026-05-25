@@ -3,6 +3,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Fragment } from "react";
 
 // ** Core Imports
+import {
+  fieldStepperButtonClasses,
+  numberFieldStepperWrapperClasses,
+  resolveStepperIconSize,
+} from "@/Components/TextField/fieldAdornment";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -59,20 +64,18 @@ function NumberField(props: NumberFieldProps) {
         ...slots,
         end: (
           <Fragment>
-            <div className="flex min-h-0 flex-1 flex-col self-stretch py-0.5 pe-0.5">
+            <div className={numberFieldStepperWrapperClasses}>
               <button
                 type="button"
                 onClick={increment}
                 aria-label="Increment value"
                 disabled={textFieldProps.disabled}
-                className={cn({
-                  "inline-flex flex-1 items-center justify-center text-gray-500 transition-colors": true,
-                  "disabled:pointer-events-none disabled:opacity-50": true,
-                  "hover:text-gray-700 dark:hover:text-gray-300": true,
-                  [classes?.increment ?? ""]: true,
-                })}
+                className={cn(fieldStepperButtonClasses, classes?.increment)}
               >
-                <Icon icon={ChevronUp} size={textFieldProps.size ?? "md"} />
+                <Icon
+                  icon={ChevronUp}
+                  size={resolveStepperIconSize(textFieldProps.size)}
+                />
               </button>
 
               <button
@@ -80,14 +83,12 @@ function NumberField(props: NumberFieldProps) {
                 onClick={decrement}
                 disabled={textFieldProps.disabled}
                 aria-label="Decrement value"
-                className={cn({
-                  "inline-flex flex-1 items-center justify-center text-gray-500 transition-colors": true,
-                  "disabled:pointer-events-none disabled:opacity-50": true,
-                  "hover:text-gray-700 dark:hover:text-gray-300": true,
-                  [classes?.decrement ?? ""]: true,
-                })}
+                className={cn(fieldStepperButtonClasses, classes?.decrement)}
               >
-                <Icon icon={ChevronDown} size={textFieldProps.size ?? "md"} />
+                <Icon
+                  icon={ChevronDown}
+                  size={resolveStepperIconSize(textFieldProps.size)}
+                />
               </button>
             </div>
           </Fragment>

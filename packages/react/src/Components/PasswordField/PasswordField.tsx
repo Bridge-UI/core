@@ -3,6 +3,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { Fragment } from "react";
 
 // ** Core Imports
+import {
+  fieldToggleButtonClasses,
+  resolveAdornmentIconSize,
+} from "@/Components/TextField/fieldAdornment";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -35,16 +39,11 @@ function PasswordField(props: PasswordFieldProps) {
               onClick={toggleVisibility}
               disabled={textFieldProps.disabled}
               aria-label={isVisible ? "Hide password" : "Show password"}
-              className={cn({
-                "inline-flex items-center justify-center text-gray-500 transition-colors": true,
-                "disabled:pointer-events-none disabled:opacity-50": true,
-                "hover:text-gray-700 dark:hover:text-gray-300": true,
-                [classes?.toggle ?? ""]: true,
-              })}
+              className={cn(fieldToggleButtonClasses, classes?.toggle)}
             >
               <Icon
                 icon={isVisible ? EyeOff : Eye}
-                size={textFieldProps.size ?? "md"}
+                size={resolveAdornmentIconSize(textFieldProps.size)}
               />
             </button>
           </Fragment>

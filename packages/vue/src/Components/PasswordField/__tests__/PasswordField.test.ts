@@ -55,10 +55,12 @@ test("it should toggle input type when visibility button is clicked", async () =
     true,
   );
   expect(wrapper.find("input").attributes("type")).toBe("text");
+  expect(wrapper.find("svg").classes()).toContain("lucide-eye-off");
 
   await wrapper.find("button[aria-label='Hide password']").trigger("click");
   await nextTick();
 
+  expect(wrapper.find("svg").classes()).toContain("lucide-eye");
   expect(wrapper.find("input").attributes("type")).toBe("password");
 });
 

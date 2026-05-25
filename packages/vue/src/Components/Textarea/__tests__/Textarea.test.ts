@@ -283,8 +283,8 @@ test("it should apply resize-y when autosize is disabled", () => {
   expect(wrapper.find("textarea").classes()).toContain("resize-y");
 });
 
-test("it should apply error border classes on the textarea when invalid", () => {
+test("it should apply error ring classes on the container when invalid", () => {
   const wrapper = mount(Textarea, { props: { error: true } });
 
-  expect(wrapper.find("textarea").classes()).toContain("border-error-500");
+  expect(wrapper.find(".group\\/field").classes()).toContain("ring-error-500");
 });
