@@ -31,7 +31,7 @@ function TextField(props: TextFieldProps) {
 
   return (
     <FormField field={formField}>
-      <label {...containerBind} htmlFor={inputId}>
+      <div {...containerBind}>
         {hasNamedSlot(slots, "start") && (
           <div {...startSlotBind}>{slots?.start}</div>
         )}
@@ -73,7 +73,7 @@ function TextField(props: TextFieldProps) {
               <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
             </div>
           )}
-      </label>
+      </div>
     </FormField>
   );
 }

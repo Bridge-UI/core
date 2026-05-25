@@ -183,8 +183,9 @@ export function useTextField(
   const containerSpacing = computed(() => {
     const hasEndSlot = hasNamedSlot(slots, "end");
     const hasStartSlot = hasNamedSlot(slots, "start");
+    const hasAdornmentSlot = hasStartSlot || hasEndSlot;
 
-    if (!hasStartSlot && !hasEndSlot) {
+    if (!hasAdornmentSlot) {
       return sizeClasses.value?.padding;
     }
 
@@ -217,7 +218,7 @@ export function useTextField(
   const endBind = computed(() => {
     return mergePartBind(partsProps.value?.end, {}, cn({
       // Theme classes
-      'shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap': true,
+      'shrink-0 self-center text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap': true,
       [roundedClasses.value?.end ?? ""]: !isUnderlined.value,
       [colorClasses.value?.end ?? ""]: !invalidated.value,
       'group-data-[invalid]:text-error-500': true,
@@ -231,7 +232,7 @@ export function useTextField(
   const startBind = computed(() => {
     return mergePartBind(partsProps.value?.start, {}, cn({
       // Theme classes
-      'text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap': true,
+      'shrink-0 self-center text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap': true,
       [roundedClasses.value?.start ?? ""]: !isUnderlined.value,
       [colorClasses.value?.start ?? ""]: !invalidated.value,
       'group-data-[invalid]:text-error-500': true,
@@ -245,7 +246,7 @@ export function useTextField(
   const endSlotBind = computed(() => {
     return mergePartBind(partsProps.value?.end, {}, cn({
       // Theme classes
-      'group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5': true,
+      'group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch pe-0.5 [&>*]:h-full [&>*]:min-h-0': true,
       // Custom classes
       [mergedClasses.value.end ?? ""]: true,
     }));
@@ -255,7 +256,7 @@ export function useTextField(
   const startSlotBind = computed(() => {
     return mergePartBind(partsProps.value?.start, {}, cn({
       // Theme classes
-      'group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5': true,
+      'group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch ps-0.5 [&>*]:h-full [&>*]:min-h-0': true,
       // Custom classes
       [mergedClasses.value.start ?? ""]: true,
     }));
@@ -274,7 +275,7 @@ export function useTextField(
       // Theme classes
       'text-gray-900 dark:text-gray-100 placeholder:text-gray-400': true,
       'outline-none ring-0 focus:outline-none focus:ring-0': true,
-      'flex-1 min-w-0 bg-transparent border-0 shadow-none': true,
+      'flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none': true,
       'disabled:cursor-not-allowed': true,
       // Custom classes
       [mergedClasses.value.input ?? ""]: true,
@@ -284,17 +285,14 @@ export function useTextField(
 
   // prettier-ignore
   const containerBind = computed(() => {
-    const hasEndSlot = hasNamedSlot(slots, "end");
-    const hasStartSlot = hasNamedSlot(slots, "start");
-
     return mergePartBind(partsProps.value?.container, {}, cn({
       // Theme classes
       "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
-      'group/field relative flex justify-start gap-x-2 items-center': true,
-      [sizeClasses.value?.container ?? ""]: (hasStartSlot || hasEndSlot),
+      'group/field relative flex justify-start gap-x-2 items-stretch': true,
       [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
       'transition-all ease-in-out duration-150': true,
       [variantClasses.value?.container ?? ""]: true,
+      [sizeClasses.value?.container ?? ""]: true,
       [variantClasses.value?.input ?? ""]: true,
       [containerColorFocus.value ?? ""]: true,
       [containerSpacing.value ?? ""]: true,

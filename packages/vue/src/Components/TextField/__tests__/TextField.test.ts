@@ -173,7 +173,7 @@ test("it should apply error color on the label when error is set", () => {
 test("it should apply error styles on the container when error is set", () => {
   const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(wrapper.find("label").classes()).toContain("ring-error-500");
+  expect(wrapper.find(".group\\/field").classes()).toContain("ring-error-500");
 });
 
 test("it should render start slot content", () => {

@@ -156,12 +156,7 @@ export type {
   TextareaSlots,
   TextareaVariantOverrides,
 } from "@/Components/Textarea";
-export {
-  EndAdornment,
-  StartAdornment,
-  TextField,
-  useTextField,
-} from "@/Components/TextField";
+export { TextField, useTextField } from "@/Components/TextField";
 export type {
   TextFieldClasses,
   TextFieldColorOverrides,

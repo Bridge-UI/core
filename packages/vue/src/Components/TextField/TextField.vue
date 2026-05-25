@@ -45,7 +45,7 @@ const {
 
 <template>
   <FormField :field="formField">
-    <label v-bind="containerBind" :for="inputId">
+    <div v-bind="containerBind">
       <div v-bind="startSlotBind" v-if="hasNamedSlot(slots, 'start')">
         <slot name="start" />
       </div>
@@ -82,6 +82,6 @@ const {
       <div v-bind="endBind" v-else-if="merged.endIcon">
         <Icon :size="merged.size" v-bind="endIconBind" :icon="merged.endIcon" />
       </div>
-    </label>
+    </div>
   </FormField>
 </template>

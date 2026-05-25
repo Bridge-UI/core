@@ -43,16 +43,16 @@ export interface TextFieldClasses extends FormFieldClasses {
   start?: string;
 
   /**
-   * The classes to apply to the input container (`<label>` wrapper).
+   * The classes to apply to the input container (`<div>` wrapper).
    */
   container?: string;
 }
 
 export interface TextFieldPartsProps extends FormFieldPartsProps {
   /**
-   * Props forwarded to the input container (`<label>`).
+   * Props forwarded to the input container (`<div>`).
    */
-  container?: HTMLAttributes<HTMLLabelElement>;
+  container?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the inline-end adornment wrapper.
@@ -154,16 +154,17 @@ export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
 
 export interface TextFieldSlots extends FormFieldSlots {
   /**
-   * Inline-end slot for custom content (e.g. `EndAdornment` + `Button`). Prefer
-   * the `end` prop for plain suffix text. Size and radius on interactive
-   * children are the consumer's responsibility (see docs).
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text. Interactive children should use `className="h-full
+   * min-h-0 w-full"` (and matching radius) so height aligns with the field.
    */
   end?: ReactNode;
 
   /**
-   * Inline-start slot for custom content (e.g. `StartAdornment` + `Button`).
-   * Prefer the `start` prop for plain prefix text. Size and radius on
-   * interactive children are the consumer's responsibility (see docs).
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text. Interactive children should use
+   * `className="h-full min-h-0 w-full"` (and matching radius) so height aligns
+   * with the field.
    */
   start?: ReactNode;
 }

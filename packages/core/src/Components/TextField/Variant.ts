@@ -1,7 +1,7 @@
 // prettier-ignore
 export interface TextFieldVariantItem {
   /**
-   * Structural classes for the input container (`<label>` wrapper).
+   * Structural classes for the input container (`<div>` wrapper).
    */
   "container": string;
 

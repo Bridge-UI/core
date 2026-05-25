@@ -43,14 +43,14 @@ export interface TextFieldClasses extends FormFieldClasses {
   start?: string;
 
   /**
-   * The classes to apply to the input container (`<label>` wrapper).
+   * The classes to apply to the input container (`<div>` wrapper).
    */
   container?: string;
 }
 
 export interface TextFieldPartsProps extends FormFieldPartsProps {
   /**
-   * Props forwarded to the input container (`<label>`).
+   * Props forwarded to the input container (`<div>`).
    */
   container?: HTMLAttributes;
 
@@ -149,16 +149,16 @@ export interface TextFieldOwnProps extends FormFieldOwnProps {
 
 export interface TextFieldSlots extends FormFieldSlots {
   /**
-   * Inline-end slot for custom content (e.g. `EndAdornment` + `Button`). Prefer
-   * the `end` prop for plain suffix text. Size and radius on interactive
-   * children are the consumer's responsibility (see docs).
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text. Interactive children should fill the slot wrapper
+   * (`h-full min-h-0 w-full` on the control; matching radius is up to you).
    */
   end?: Slot;
 
   /**
-   * Inline-start slot for custom content (e.g. `StartAdornment` + `Button`).
-   * Prefer the `start` prop for plain prefix text. Size and radius on
-   * interactive children are the consumer's responsibility (see docs).
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text. Interactive children should fill the slot
+   * wrapper (`h-full min-h-0 w-full` on the control; matching radius is up to you).
    */
   start?: Slot;
 }
