@@ -8,5 +8,8 @@ export type {
   FormFieldSizeOverrides,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
-export { useFormField } from "@/Components/FormField/hooks/useFormField";
+export {
+  formFieldOwnPropKeys,
+  useFormField,
+} from "@/Components/FormField/hooks/useFormField";
 export type { UseFormFieldOptions } from "@/Components/FormField/hooks/useFormField";

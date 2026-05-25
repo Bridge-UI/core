@@ -80,11 +80,16 @@ export interface TextFieldPartsProps extends FormFieldPartsProps {
   startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
-export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
+export interface TextFieldOwnProps extends Omit<
+  FormFieldOwnProps,
+  "field" | "children"
+> {
   /**
-   * Named slots for the field chrome and inline adornments.
+   * Classes for the field chrome and the control (includes all FormField keys).
+   *
+   * @default undefined
    */
-  slots?: TextFieldSlots;
+  classes?: TextFieldClasses;
 
   /**
    * The color to apply to the text field.
@@ -108,6 +113,13 @@ export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
   endIcon?: LucideIcon;
 
   /**
+   * Props for FormField parts and control parts (`label`, `input`, `container`, …).
+   *
+   * @default undefined
+   */
+  partsProps?: TextFieldPartsProps;
+
+  /**
    * The roundedness of the text field.
    *
    * @default "md"
@@ -123,11 +135,10 @@ export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
   size?: MergeProps<TextFieldSize, TextFieldSizeOverrides>;
 
   /**
-   * The variant of the text field.
-   *
-   * @default "outline"
+   * FormField slots (`label`, `description`, `errorMessage`, …) and inline
+   * adornments (`start`, `end`).
    */
-  variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
+  slots?: TextFieldSlots;
 
   /**
    * Inline-start text inside the field (prefix), e.g. `https://`.
@@ -142,6 +153,13 @@ export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
    * @default undefined
    */
   startIcon?: LucideIcon;
+
+  /**
+   * The variant of the text field.
+   *
+   * @default "outline"
+   */
+  variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
 
   /**
    * When `true` and the field is invalid, shows an error icon at the inline end

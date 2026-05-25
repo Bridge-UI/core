@@ -19,7 +19,6 @@ import {
 } from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
-import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { useFormField } from "@/Components/FormField/hooks/useFormField";
 import type {
   TextFieldClasses,
@@ -41,6 +40,7 @@ const textFieldBridgeKeys = [
   "color",
   "error",
   "label",
+  "slots",
   "start",
   "corner",
   "classes",
@@ -104,12 +104,11 @@ export function useTextField(
   });
 
   const formField = useFormField(
-    customProps as FormFieldOwnProps,
+    customProps,
     {
       size: libDefaults.size,
     },
     {
-      slots: () => slots,
       rootClassName: () => rootClassAttr,
       controlId: () => inputInheritedAttrs.id,
     },
@@ -313,7 +312,6 @@ export function useTextField(
     slots,
     merged,
     endBind,
-    inputId,
     errorIcon,
     formField,
     inputBind,
@@ -326,6 +324,5 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
-    rootBind: formField.rootBind,
   };
 }

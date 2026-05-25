@@ -4,7 +4,7 @@ import { useFormField } from "@/Components/FormField/hooks/useFormField";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 function FormField(props: FormFieldProps) {
-  const { children, field, ...rest } = props;
+  const { field, ...rest } = props;
 
   const local = useFormField(rest, {
     size: "md",
@@ -13,6 +13,7 @@ function FormField(props: FormFieldProps) {
   const {
     slots,
     merged,
+    children,
     rootBind,
     controlId,
     errorBind,

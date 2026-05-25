@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { useId, useMemo } from "react";
 
 // ** Core Imports
@@ -7,7 +7,6 @@ import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
-  type FormFieldSize,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
@@ -26,22 +25,22 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-import type { SlotMap } from "@/Utils/slotOrProp";
 
-const formFieldBridgeKeys = [
+/** Props forwarded from field wrappers (e.g. TextField) into `useFormField`. */
+export const formFieldOwnPropKeys = [
   "size",
   "error",
   "label",
+  "slots",
   "corner",
   "classes",
   "disabled",
   "readonly",
   "required",
-  "partsProps",
   "controlId",
+  "partsProps",
   "description",
   "errorMessage",
-  "slots",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<FormFieldOwnProps, "size">;
@@ -53,11 +52,6 @@ type FormFieldMerged = MergeLibDefaults<
 
 export type UseFormFieldOptions = {
   /**
-   * Slot map from the parent field (e.g. TextField `slots` prop).
-   */
-  slots?: () => SlotMap | undefined;
-
-  /**
    * Control id supplied by the parent field (e.g. TextField `id`).
    */
   controlId?: () => string | undefined;
@@ -66,15 +60,10 @@ export type UseFormFieldOptions = {
    * Extra root `className` from a parent field wrapper (e.g. TextField).
    */
   rootClassName?: () => string | undefined;
-
-  /**
-   * When embedded in another field, use that component's `customProps.size` layer.
-   */
-  getSizeLayer?: () => Partial<FormFieldSize> | undefined;
 };
 
 export function useFormField(
-  props: FormFieldProps,
+  props: Omit<FormFieldProps, "field">,
   libDefaults: FormFieldLibDefaults,
   options?: UseFormFieldOptions,
 ) {
@@ -82,23 +71,12 @@ export function useFormField(
   const autoId = useId();
 
   const { customProps, inheritedAttrs } = splitComponentProps<
-    FormFieldProps,
-    typeof formFieldBridgeKeys
+    Omit<FormFieldProps, "field">,
+    typeof formFieldOwnPropKeys
   >({
-    bridgeKeys: formFieldBridgeKeys,
     props,
+    bridgeKeys: formFieldOwnPropKeys,
   });
-
-  const {
-    children: _children,
-    slots: slotsFromProps,
-    className: rootClassAttr,
-    ...restInheritedAttrs
-  } = inheritedAttrs as {
-    className?: string;
-    slots?: FormFieldOwnProps["slots"];
-    children?: FormFieldProps["children"];
-  } & Record<string, unknown>;
 
   const { entry: bridgeFormField, merged } = useBridgeUIComponent<
     FormFieldMerged,
@@ -110,11 +88,19 @@ export function useFormField(
   });
 
   const slots = derived(() => {
-    return options?.slots?.() ?? slotsFromProps ?? merged.slots;
+    return props.slots;
+  });
+
+  const children = derived(() => {
+    return props.children;
   });
 
   const partsProps = derived(() => {
     return merged.partsProps;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
@@ -168,11 +154,11 @@ export function useFormField(
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      options?.getSizeLayer?.() ?? bridgeFormField?.customProps?.size,
+      bridgeFormField?.customProps?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeFormField?.customProps?.size, options?.getSizeLayer]);
+  }, [merged.size, bridgeFormField?.customProps?.size]);
 
   // Binds
   // prettier-ignore
@@ -245,8 +231,8 @@ export function useFormField(
   // prettier-ignore
   const rootBind = derived(() => {
     return mergePartBind(partsProps?.root, {
-      className: cn(rootClassAttr, options?.rootClassName?.()),
-      ...restInheritedAttrs,
+      className: options?.rootClassName?.(),
+      ...rootInheritedAttrs,
     }, cn({
       // Theme classes
       "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
@@ -260,6 +246,7 @@ export function useFormField(
   return {
     slots,
     merged,
+    children,
     rootBind,
     controlId,
     errorBind,

@@ -10,7 +10,6 @@ function TextField(props: TextFieldProps) {
     slots,
     merged,
     endBind,
-    inputId,
     errorIcon,
     formField,
     inputBind,

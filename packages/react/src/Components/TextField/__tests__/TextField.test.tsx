@@ -255,6 +255,84 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
   expect(root?.classList.contains("p-2")).toBe(false);
 });
 
+test("it should forward FormField classes and partsProps to chrome", () => {
+  render(
+    <TextField
+      label="Email"
+      corner="Optional"
+      aria-label="Email"
+      classes={{
+        label: "custom-label-class",
+        corner: "custom-corner-class",
+      }}
+      partsProps={{
+        label: { "data-testid": "field-label" },
+        corner: { "data-testid": "field-corner" },
+      }}
+    />,
+  );
+
+  expect(
+    screen.getByTestId("field-label").classList.contains("custom-label-class"),
+  ).toBe(true);
+  expect(
+    screen
+      .getByTestId("field-corner")
+      .classList.contains("custom-corner-class"),
+  ).toBe(true);
+});
+
+test("it should merge classes.input onto the control", () => {
+  render(
+    <TextField
+      aria-label="Field"
+      placeholder="Type here"
+      classes={{ input: "placeholder:italic" }}
+    />,
+  );
+
+  expect(
+    screen.getByRole("textbox").classList.contains("placeholder:italic"),
+  ).toBe(true);
+});
+
+test("it should render slots.errorMessage as the error region", () => {
+  render(
+    <TextField
+      error
+      aria-label="Field"
+      slots={{
+        errorMessage: <span data-testid="custom-error">Validation failed</span>,
+      }}
+    />,
+  );
+
+  expect(screen.getByTestId("custom-error")).toBeTruthy();
+});
+
+test("it should update FormField chrome when label and error props change", () => {
+  const { rerender } = render(
+    <TextField label="First" aria-label="Field" description="Helper" />,
+  );
+
+  expect(screen.getByText("First")).toBeTruthy();
+  expect(screen.getByText("Helper")).toBeTruthy();
+
+  rerender(
+    <TextField
+      error
+      label="Second"
+      aria-label="Field"
+      errorMessage="Required"
+    />,
+  );
+
+  expect(screen.queryByText("First")).toBeNull();
+  expect(screen.getByText("Second")).toBeTruthy();
+  expect(screen.queryByText("Helper")).toBeNull();
+  expect(screen.getByText("Required")).toBeTruthy();
+});
+
 test("it should update the input value when changed", () => {
   render(<TextField defaultValue="" aria-label="Email" />);
 
