@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-vue-next";
 import { computed, useAttrs, useSlots } from "vue";
 
@@ -25,6 +25,7 @@ import type {
   TextFieldClasses,
   TextFieldOwnProps,
   TextFieldPartsProps,
+  TextFieldProps,
 } from "@/Components/TextField/textField.types";
 import {
   hasNamedSlot,
@@ -76,16 +77,20 @@ export function useTextField(
   const slots = useSlots();
 
   const { customProps, inheritedAttrs } = splitComponentProps<
-    TextFieldOwnProps,
+    TextFieldProps,
     typeof textFieldBridgeKeys
   >({
+    props: { ...attrs, ...props },
     bridgeKeys: textFieldBridgeKeys,
-    props: { ...attrs, ...props } as TextFieldOwnProps,
   });
 
-  const { class: rootClassAttr, ...inputInheritedAttrs } = inheritedAttrs as {
-    class?: string;
-  } & Record<string, unknown>;
+  const rootClassAttr = computed(() => {
+    return inheritedAttrs.class;
+  });
+
+  const inputInheritedAttrs = computed(() => {
+    return omit(inheritedAttrs, ["class"]);
+  });
 
   const { entry: bridgeTextField, merged } = useBridgeUIComponent<
     TextFieldMerged,
@@ -102,8 +107,8 @@ export function useTextField(
       size: libDefaults.size,
     },
     {
-      rootClassName: () => rootClassAttr,
-      controlId: () => inputInheritedAttrs.id as string | undefined,
+      rootClassName: () => rootClassAttr.value,
+      controlId: () => inputInheritedAttrs.value.id,
     },
   );
 
@@ -265,7 +270,7 @@ export function useTextField(
       readonly: isReadonly.value,
       "aria-invalid": invalidated.value || undefined,
       "aria-describedby": formField.ariaDescribedBy.value,
-    }, inputInheritedAttrs, cn({
+    }, inputInheritedAttrs.value, cn({
       // Theme classes
       'text-gray-900 dark:text-gray-100 placeholder:text-gray-400': true,
       'outline-none ring-0 focus:outline-none focus:ring-0': true,

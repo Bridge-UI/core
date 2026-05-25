@@ -77,7 +77,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["children", "slots"]);
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const partsProps = derived(() => {

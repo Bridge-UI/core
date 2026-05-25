@@ -83,7 +83,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["children", "slots"]);
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const partsProps = derived(() => {

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed, useAttrs, useId, useSlots } from "vue";
+import { ClassValue, computed, useAttrs, useId, useSlots } from "vue";
 
 // ** Core Imports
 import {
@@ -56,7 +56,7 @@ export type UseFormFieldOptions = {
   /**
    * Extra root `class` from a parent field wrapper (e.g. TextField fallthrough).
    */
-  rootClassName?: () => string | undefined;
+  rootClassName?: () => ClassValue | undefined;
 
   /**
    * When the form field is embedded in another component (e.g. TextField), use

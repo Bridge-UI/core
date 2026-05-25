@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
 import { useMemo } from "react";
 
@@ -55,7 +55,6 @@ const textFieldBridgeKeys = [
   "description",
   "errorMessage",
   "withErrorIcon",
-  "slots",
 ] as const satisfies readonly (keyof TextFieldOwnProps)[];
 
 const errorIcon = CircleAlert;
@@ -83,24 +82,25 @@ export function useTextField(
     bridgeKeys: textFieldBridgeKeys,
   });
 
-  const {
-    slots,
-    className: rootClassAttr,
-    ...inputInheritedAttrs
-  } = inheritedAttrs as {
-    className?: string;
-    slots?: TextFieldProps["slots"];
-  } & Record<string, unknown>;
+  const { entry: bridgeTextField, merged } = useBridgeUIComponent<
+    TextFieldMerged,
+    "TextField"
+  >({
+    libDefaults,
+    props: customProps,
+    componentName: "TextField",
+  });
 
-  const { entry: bridgeTextField, merged: textFieldMerged } =
-    useBridgeUIComponent<TextFieldMerged, "TextField">({
-      libDefaults,
-      props: customProps,
-      componentName: "TextField",
-    });
+  const slots = derived(() => {
+    return props.slots;
+  });
 
-  const resolvedSlots = derived(() => {
-    return props.slots ?? slots;
+  const rootClassAttr = derived(() => {
+    return inheritedAttrs.className;
+  });
+
+  const inputInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "className"]);
   });
 
   const formField = useFormField(
@@ -109,14 +109,14 @@ export function useTextField(
       size: libDefaults.size,
     },
     {
-      slots: () => resolvedSlots,
+      slots: () => slots,
       rootClassName: () => rootClassAttr,
-      controlId: () => inputInheritedAttrs.id as string | undefined,
+      controlId: () => inputInheritedAttrs.id,
     },
   );
 
   const partsProps = derived((): TextFieldPartsProps | undefined => {
-    return textFieldMerged.partsProps;
+    return merged.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextFieldClasses>({
@@ -131,8 +131,8 @@ export function useTextField(
       bridgeTextField?.customProps?.variant,
     );
 
-    return get(classes, textFieldMerged.variant);
-  }, [textFieldMerged.variant, bridgeTextField?.customProps?.variant]);
+    return get(classes, merged.variant);
+  }, [merged.variant, bridgeTextField?.customProps?.variant]);
 
   const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -140,8 +140,8 @@ export function useTextField(
       bridgeTextField?.customProps?.color,
     );
 
-    return get(classes, textFieldMerged.color);
-  }, [textFieldMerged.color, bridgeTextField?.customProps?.color]);
+    return get(classes, merged.color);
+  }, [merged.color, bridgeTextField?.customProps?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -149,8 +149,8 @@ export function useTextField(
       bridgeTextField?.customProps?.rounded,
     );
 
-    return get(classes, textFieldMerged.rounded);
-  }, [textFieldMerged.rounded, bridgeTextField?.customProps?.rounded]);
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeTextField?.customProps?.rounded]);
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -158,11 +158,11 @@ export function useTextField(
       bridgeTextField?.customProps?.size,
     );
 
-    return get(classes, textFieldMerged.size);
-  }, [textFieldMerged.size, bridgeTextField?.customProps?.size]);
+    return get(classes, merged.size);
+  }, [merged.size, bridgeTextField?.customProps?.size]);
 
   const isUnderlined = derived(() => {
-    return textFieldMerged.variant === "underlined";
+    return merged.variant === "underlined";
   });
 
   const inputId = formField.controlId;
@@ -171,7 +171,7 @@ export function useTextField(
   const invalidated = formField.invalidated;
 
   const focusColorPalette = useMemo(() => {
-    if (textFieldMerged.error === true) {
+    if (merged.error === true) {
       const classes = mergeBridgeUILayeredClasses(
         colorProps,
         bridgeTextField?.customProps?.color,
@@ -181,15 +181,11 @@ export function useTextField(
     }
 
     return colorClasses;
-  }, [
-    colorClasses,
-    textFieldMerged.error,
-    bridgeTextField?.customProps?.color,
-  ]);
+  }, [colorClasses, merged.error, bridgeTextField?.customProps?.color]);
 
   const containerSpacing = derived(() => {
-    const hasEndSlot = hasNamedSlot(resolvedSlots, "end");
-    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
+    const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
 
     if (!hasStartSlot && !hasEndSlot) {
       return sizeClasses?.padding;
@@ -291,8 +287,8 @@ export function useTextField(
 
   // prettier-ignore
   const containerBind = derived(() => {
-    const hasEndSlot = hasNamedSlot(resolvedSlots, "end");
-    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
+    const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
 
     return mergePartBind(partsProps?.container, {}, cn({
       // Theme classes
@@ -317,6 +313,8 @@ export function useTextField(
   });
 
   return {
+    slots,
+    merged,
     endBind,
     inputId,
     errorIcon,
@@ -331,8 +329,6 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
-    slots: resolvedSlots,
-    merged: textFieldMerged,
     rootBind: formField.rootBind,
   };
 }
