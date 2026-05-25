@@ -160,6 +160,7 @@ export function useTextField(
     return get(classes, merged.size);
   }, [merged.size, bridgeTextField?.customProps?.size]);
 
+  // Elements
   const isUnderlined = derived(() => {
     return merged.variant === "underlined";
   });

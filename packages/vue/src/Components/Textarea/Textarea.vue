@@ -1,38 +1,45 @@
 <script setup lang="ts">
+// ** External Imports
+import { useTemplateRef, watch } from "vue";
+
 // ** Local Imports
-import type { TextareaProps, TextareaSlots } from "@/Components/Textarea";
-import { useTextarea } from "@/Components/Textarea";
+import { FormField } from "@/Components/FormField";
+import { useTextarea } from "@/Components/Textarea/composables/useTextarea";
+import type {
+  TextareaOwnProps,
+  TextareaSlots,
+} from "@/Components/Textarea/textarea.types";
 
 defineSlots<TextareaSlots>();
 
-const props = defineProps<TextareaProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useTextarea(props, {
-  size: "md",
-  rounded: "sm",
-  color: "primary",
-  variant: "outline",
+const model = defineModel<string | null | undefined>();
+
+const props = withDefaults(defineProps<TextareaOwnProps>(), {});
+
+const textareaRef = useTemplateRef<HTMLTextAreaElement>("textarea");
+
+const { formField, textareaBind, containerBind, adjustHeight } = useTextarea(
+  props,
+  {
+    size: "md",
+    rounded: "md",
+    color: "primary",
+    variant: "outline",
+  },
+  textareaRef,
+);
+
+watch(model, () => {
+  adjustHeight(textareaRef.value);
 });
 </script>
 
 <template>
-  <div class="w-full">
-    <slot v-if="slots.label" name="label" />
-
-    <label v-else-if="merged.label">
-      {{ merged.label }}
-    </label>
-
-    <textarea
-      :value="merged.modelValue"
-      :disabled="merged.disabled"
-      :required="merged.required"
-      class="w-full bg-transparent"
-      :placeholder="merged.placeholder"
-    />
-
-    <slot v-if="slots.description" name="description" />
-
-    <slot v-if="slots.error" name="error" />
-  </div>
+  <FormField :field="formField">
+    <div v-bind="containerBind">
+      <textarea ref="textareaRef" v-model="model" v-bind="textareaBind" />
+    </div>
+  </FormField>
 </template>

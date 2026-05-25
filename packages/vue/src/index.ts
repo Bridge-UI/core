@@ -149,10 +149,12 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
-export { Textarea } from "@/Components/Textarea";
+export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,
   TextareaColorOverrides,
+  TextareaOwnProps,
+  TextareaPartsProps,
   TextareaProps,
   TextareaRoundedOverrides,
   TextareaSizeOverrides,
