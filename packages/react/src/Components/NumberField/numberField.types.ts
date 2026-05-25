@@ -26,7 +26,7 @@ export interface NumberFieldClasses extends TextFieldClasses {
 
 export interface NumberFieldProps extends Omit<
   TextFieldProps,
-  "type" | "value" | "onChange" | "classes" | "slots" | "startIcon" | "endIcon"
+  "type" | "value" | "endIcon" | "onChange" | "startIcon"
 > {
   /**
    * The classes to apply to the number field.

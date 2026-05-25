@@ -19,10 +19,7 @@ export interface PasswordFieldClasses extends TextFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldProps extends Omit<
-  TextFieldProps,
-  "type" | "classes" | "slots"
-> {
+export interface PasswordFieldProps extends Omit<TextFieldProps, "type"> {
   /**
    * The classes to apply to the password field.
    *
