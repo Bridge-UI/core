@@ -53,6 +53,11 @@ type FormFieldMerged = MergeLibDefaults<
 
 export type UseFormFieldOptions = {
   /**
+   * Slot map from the parent field (e.g. TextField `slots` prop).
+   */
+  slots?: () => SlotMap | undefined;
+
+  /**
    * Control id supplied by the parent field (e.g. TextField `id`).
    */
   controlId?: () => string | undefined;
@@ -66,11 +71,6 @@ export type UseFormFieldOptions = {
    * When embedded in another field, use that component's `customProps.size` layer.
    */
   getSizeLayer?: () => Partial<FormFieldSize> | undefined;
-
-  /**
-   * Slot map from the parent field (e.g. TextField `slots` prop).
-   */
-  slots?: () => SlotMap | undefined;
 };
 
 export function useFormField(
@@ -78,6 +78,7 @@ export function useFormField(
   libDefaults: FormFieldLibDefaults,
   options?: UseFormFieldOptions,
 ) {
+  // Setup
   const autoId = useId();
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -121,6 +122,7 @@ export function useFormField(
     entry: bridgeFormField,
   });
 
+  // Elements
   const invalidated = derived(() => {
     return merged.error === true;
   });
@@ -162,6 +164,7 @@ export function useFormField(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
+  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -171,94 +174,87 @@ export function useFormField(
     return get(classes, merged.size);
   }, [merged.size, bridgeFormField?.customProps?.size, options?.getSizeLayer]);
 
+  // Binds
+  // prettier-ignore
   const headerBind = derived(() => {
-    return mergePartBind(
-      partsProps?.header,
-      {},
-      cn({
-        flex: true,
-        "mb-1": true,
-        [headerJustify]: true,
-        [mergedClasses.header ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.header, {}, cn({
+      // Theme classes
+      [headerJustify ?? ""]: true,
+      "flex mb-1": true,
+      // Custom classes
+      [mergedClasses.header ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const requiredBind = derived(() => {
-    return mergePartBind(
-      {},
-      {},
-      cn({
-        "text-error-500 dark:text-error-500 select-none": true,
-        [mergedClasses.required ?? ""]: true,
-      }),
-    );
+    return mergePartBind({}, {}, cn({
+      // Theme classes
+      "text-error-500 dark:text-error-500 select-none": true,
+      // Custom classes
+      [mergedClasses.required ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const cornerBind = derived(() => {
-    return mergePartBind(
-      partsProps?.corner,
-      {},
-      cn({
-        "text-gray-500 dark:text-gray-400": true,
-        [sizeClasses?.corner ?? ""]: true,
-        [mergedClasses.corner ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.corner, {}, cn({
+      // Theme classes
+      "text-gray-500 dark:text-gray-400": true,
+      [sizeClasses?.corner ?? ""]: true,
+      // Custom classes
+      [mergedClasses.corner ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const descriptionBind = derived(() => {
-    return mergePartBind(
-      partsProps?.description,
-      {},
-      cn({
-        "mt-2 text-gray-500 dark:text-gray-400": true,
-        [sizeClasses?.description ?? ""]: true,
-        [mergedClasses.description ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.description, {}, cn({
+      // Theme classes
+      "mt-2 text-gray-500 dark:text-gray-400": true,
+      [sizeClasses?.description ?? ""]: true,
+      // Custom classes
+      [mergedClasses.description ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const errorBind = derived(() => {
-    return mergePartBind(
-      partsProps?.error,
-      {},
-      cn({
-        "mt-2 text-error-600 dark:text-error-400": true,
-        [sizeClasses?.error ?? ""]: true,
-        [mergedClasses.error ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.error, {}, cn({
+      // Theme classes
+      "mt-2 text-error-600 dark:text-error-400": true,
+      [sizeClasses?.error ?? ""]: true,
+      // Custom classes
+      [mergedClasses.error ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const labelBind = derived(() => {
-    return mergePartBind(
-      partsProps?.label,
-      {},
-      cn({
-        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-error-600 dark:text-error-400": invalidated,
-        "text-gray-700 dark:text-gray-300": !invalidated,
-        [sizeClasses?.label ?? ""]: true,
-        [mergedClasses.label ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.label, {}, cn({
+      // Theme classes
+      "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+      "text-error-600 dark:text-error-400": invalidated,
+      "text-gray-700 dark:text-gray-300": !invalidated,
+      [sizeClasses?.label ?? ""]: true,
+      // Custom classes
+      [mergedClasses.label ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind(
-      partsProps?.root,
-      {
-        className: cn(rootClassAttr, options?.rootClassName?.()),
-        ...restInheritedAttrs,
-      },
-      cn({
-        "group w-full relative": true,
-        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
-        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
-        [mergedClasses.root ?? ""]: true,
-      }),
-    );
+    return mergePartBind(partsProps?.root, {
+      className: cn(rootClassAttr, options?.rootClassName?.()),
+      ...restInheritedAttrs,
+    }, cn({
+      // Theme classes
+      "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
+      "aria-readonly:pointer-events-none aria-readonly:select-none": true,
+      "group w-full relative": true,
+      // Custom classes
+      [mergedClasses.root ?? ""]: true,
+    }));
   });
 
   return {

@@ -7,12 +7,12 @@ import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 function TextField(props: TextFieldProps) {
   const {
-    field,
     slots,
     merged,
     endBind,
     inputId,
     errorIcon,
+    formField,
     inputBind,
     startBind,
     endIconBind,
@@ -30,7 +30,7 @@ function TextField(props: TextFieldProps) {
   });
 
   return (
-    <FormField field={field}>
+    <FormField field={formField}>
       <label {...containerBind} htmlFor={inputId}>
         {hasNamedSlot(slots, "start") && (
           <div {...startSlotBind}>{slots?.start}</div>

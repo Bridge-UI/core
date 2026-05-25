@@ -74,6 +74,7 @@ export function useTextField(
   props: TextFieldProps,
   libDefaults: TextFieldLibDefaults,
 ) {
+  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     TextFieldProps,
     typeof textFieldBridgeKeys
@@ -119,10 +120,11 @@ export function useTextField(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextFieldClasses>({
-    entry: bridgeTextField,
     props: customProps,
+    entry: bridgeTextField,
   });
 
+  // Classes
   const variantClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -180,9 +182,9 @@ export function useTextField(
 
     return colorClasses;
   }, [
-    bridgeTextField?.customProps?.color,
     colorClasses,
     textFieldMerged.error,
+    bridgeTextField?.customProps?.color,
   ]);
 
   const containerSpacing = derived(() => {
@@ -194,9 +196,10 @@ export function useTextField(
     }
 
     return cn({
-      "gap-x-2": true,
+      // Theme classes
       [sizeClasses?.insetStart ?? ""]: !hasStartSlot,
       [sizeClasses?.insetEnd ?? ""]: !hasEndSlot,
+      "gap-x-2": true,
     });
   });
 
@@ -208,6 +211,7 @@ export function useTextField(
     return focusColorPalette?.input;
   });
 
+  // Binds
   const endIconBind = derived(() => {
     return mergePartBind(partsProps?.endIcon, {}, "");
   });
@@ -216,124 +220,107 @@ export function useTextField(
     return mergePartBind(partsProps?.startIcon, {}, "");
   });
 
-  const rootBind = derived(() => {
-    return mergePartBind(
-      {},
-      rootClassAttr !== undefined ? { className: rootClassAttr } : {},
-      cn(formField.rootBind.className),
-    );
-  });
-
-  const endBind = derived(() => {
-    return mergePartBind(
-      partsProps?.end,
-      {},
-      cn({
-        "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap": true,
-        "group-data-[invalid]:text-error-500": true,
-        "text-error-500": invalidated,
-        [colorClasses?.end ?? ""]: !invalidated,
-        [roundedClasses?.end ?? ""]: !isUnderlined,
-        [mergedClasses.end ?? ""]: true,
-      }),
-    );
-  });
-
-  const startBind = derived(() => {
-    return mergePartBind(
-      partsProps?.start,
-      {},
-      cn({
-        "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap": true,
-        "group-data-[invalid]:text-error-500": true,
-        "text-error-500": invalidated,
-        [colorClasses?.start ?? ""]: !invalidated,
-        [roundedClasses?.start ?? ""]: !isUnderlined,
-        [mergedClasses.start ?? ""]: true,
-      }),
-    );
-  });
-
+  // prettier-ignore
   const endSlotBind = derived(() => {
-    return mergePartBind(
-      partsProps?.end,
-      {},
-      cn({
-        "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5": true,
-        [mergedClasses.end ?? ""]: true,
-      }),
-    );
+    return mergePartBind( partsProps?.end, {}, cn({
+      // Theme classes
+      "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5": true,
+      // Custom classes
+      [mergedClasses.end ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const startSlotBind = derived(() => {
-    return mergePartBind(
-      partsProps?.start,
-      {},
-      cn({
-        "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5": true,
-        [mergedClasses.start ?? ""]: true,
-      }),
-    );
+    return mergePartBind( partsProps?.start, {}, cn({
+      // Theme classes
+      "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5": true,
+      // Custom classes
+      [mergedClasses.start ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
+  const endBind = derived(() => {
+    return mergePartBind( partsProps?.end, {}, cn({
+      // Theme classes
+      "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap": true,
+      "group-data-[invalid]:text-error-500": true,
+      [roundedClasses?.end ?? ""]: !isUnderlined,
+      [colorClasses?.end ?? ""]: !invalidated,
+      "text-error-500": invalidated,
+      // Custom classes
+      [mergedClasses.end ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startBind = derived(() => {
+    return mergePartBind( partsProps?.start, {}, cn({
+      // Theme classes
+      "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap": true,
+      [roundedClasses?.start ?? ""]: !isUnderlined,
+      "group-data-[invalid]:text-error-500": true,
+      [colorClasses?.start ?? ""]: !invalidated,
+      "text-error-500": invalidated,
+      // Custom classes
+      [mergedClasses.start ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
   const inputBind = derived(() => {
-    return mergePartBind(
-      {
-        ...partsProps?.input,
-        id: inputId,
-        disabled: isDisabled,
-        readOnly: isReadonly,
-        "aria-invalid": invalidated || undefined,
-        "aria-describedby": formField.ariaDescribedBy,
-      },
-      inputInheritedAttrs,
-      cn({
-        "flex-1 min-w-0 bg-transparent border-0 shadow-none": true,
-        "outline-none ring-0 focus:outline-none focus:ring-0": true,
-        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
-        "disabled:cursor-not-allowed": true,
-        [sizeClasses?.input ?? ""]: true,
-        [mergedClasses.input ?? ""]: true,
-      }),
-    );
+    return mergePartBind( {
+      ...partsProps?.input,
+      id: inputId,
+      disabled: isDisabled,
+      readOnly: isReadonly,
+      "aria-invalid": invalidated || undefined,
+      "aria-describedby": formField.ariaDescribedBy,
+    }, inputInheritedAttrs, cn({
+      // Theme classes
+      "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+      "outline-none ring-0 focus:outline-none focus:ring-0": true,
+      "flex-1 min-w-0 bg-transparent border-0 shadow-none": true,
+      "disabled:cursor-not-allowed": true,
+      [sizeClasses?.input ?? ""]: true,
+      // Custom classes
+      [mergedClasses.input ?? ""]: true,
+    }));
   });
 
+  // prettier-ignore
   const containerBind = derived(() => {
-    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
     const hasEndSlot = hasNamedSlot(resolvedSlots, "end");
+    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
 
-    return mergePartBind(
-      partsProps?.container,
-      {},
-      cn({
-        "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
-        "group/field relative flex justify-start gap-x-2 items-center": true,
-        "transition-all ease-in-out duration-150": true,
-        "outline-none": true,
-        [variantClasses?.container ?? ""]: true,
-        [variantClasses?.input ?? ""]: true,
-        [roundedClasses?.input ?? ""]: !isUnderlined,
-        [containerColorFocus ?? ""]: true,
-        [containerSpacing ?? ""]: true,
-        [sizeClasses?.container ?? ""]: hasStartSlot || hasEndSlot,
-        "rounded-none": isUnderlined,
-        "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
-          invalidated && !isUnderlined,
-        "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
-          invalidated && isUnderlined,
-        [mergedClasses.container ?? ""]: true,
+    return mergePartBind(partsProps?.container, {}, cn({
+      // Theme classes
+      "group/field relative flex justify-start gap-x-2 items-center": true,
+      "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
+      [sizeClasses?.container ?? ""]: hasStartSlot || hasEndSlot,
+      "transition-all ease-in-out duration-150": true,
+      [roundedClasses?.input ?? ""]: !isUnderlined,
+      [variantClasses?.container ?? ""]: true,
+      [variantClasses?.input ?? ""]: true,
+      [containerColorFocus ?? ""]: true,
+      [containerSpacing ?? ""]: true,
+      "rounded-none": isUnderlined,
+      "outline-none": true,
+      // Error classes
+      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated && !isUnderlined,
+      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated && isUnderlined,
+      // Custom classes
+      [mergedClasses.container ?? ""]: true,
       }),
     );
   });
 
   return {
-    field: formField,
-    slots: resolvedSlots,
-    merged: textFieldMerged,
     endBind,
     inputId,
-    rootBind: formField.rootBind,
     errorIcon,
+    formField,
     inputBind,
     startBind,
     isDisabled,
@@ -344,5 +331,8 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
+    slots: resolvedSlots,
+    merged: textFieldMerged,
+    rootBind: formField.rootBind,
   };
 }
