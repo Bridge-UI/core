@@ -197,8 +197,8 @@ test("it should use id from fallthrough attrs for inputId", () => {
 test("it should merge class into rootBind", () => {
   const { rootBind } = mountUseTextField({ class: "custom-field" });
 
-  expect(rootBind.value.class).toContain("w-full");
-  expect(rootBind.value.class).toContain("custom-field");
+  expect(rootBind.value?.class).toContain("w-full");
+  expect(rootBind.value?.class).toContain("custom-field");
 });
 
 test("it should apply class after classes.root in rootBind", () => {
@@ -207,6 +207,6 @@ test("it should apply class after classes.root in rootBind", () => {
     classes: { root: "p-2" },
   });
 
-  expect(rootBind.value.class).toContain("p-4");
-  expect(rootBind.value.class).not.toContain("p-2");
+  expect(rootBind.value?.class).toContain("p-4");
+  expect(rootBind.value?.class).not.toContain("p-2");
 });

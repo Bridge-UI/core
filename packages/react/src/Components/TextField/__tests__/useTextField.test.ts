@@ -60,14 +60,16 @@ test("it should be invalidated when error prop is true", () => {
 test("it should build header bind when label prop is provided", () => {
   const { result } = renderUseTextField({ label: "Email" });
 
-  expect(result.current.headerBind.className).toContain("flex");
-  expect(result.current.headerBind.className).toContain("justify-between");
+  expect(result.current.field.headerBind.className).toContain("flex");
+  expect(result.current.field.headerBind.className).toContain(
+    "justify-between",
+  );
 });
 
 test("it should build header bind when only corner prop is provided", () => {
   const { result } = renderUseTextField({ corner: "Optional" });
 
-  expect(result.current.headerBind.className).toContain("flex");
+  expect(result.current.field.headerBind.className).toContain("flex");
 });
 
 test("it should set aria-describedby to description id when description is shown", () => {

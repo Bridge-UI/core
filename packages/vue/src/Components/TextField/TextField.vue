@@ -25,6 +25,7 @@ const {
   endBind,
   inputId,
   errorIcon,
+  formField,
   inputBind,
   startBind,
   endIconBind,
@@ -43,7 +44,7 @@ const {
 </script>
 
 <template>
-  <FormField>
+  <FormField :field="formField">
     <label v-bind="containerBind" :for="inputId">
       <div v-bind="startSlotBind" v-if="hasNamedSlot(slots, 'start')">
         <slot name="start" />

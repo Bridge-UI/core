@@ -1,7 +1,7 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-vue-next";
-import { computed, provide, useAttrs, useSlots } from "vue";
+import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
@@ -21,7 +21,6 @@ import {
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
-import { formFieldContextKey } from "@/Components/FormField/formFieldContext";
 import type {
   TextFieldClasses,
   TextFieldOwnProps,
@@ -103,11 +102,10 @@ export function useTextField(
       size: libDefaults.size,
     },
     {
+      rootClassName: () => rootClassAttr,
       controlId: () => inputInheritedAttrs.id as string | undefined,
     },
   );
-
-  provide(formFieldContextKey, formField);
 
   const partsProps = computed((): TextFieldPartsProps | undefined => {
     return merged.value.partsProps;
@@ -120,39 +118,39 @@ export function useTextField(
 
   // Classes
   const variantClasses = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeTextField.value?.customProps?.variant,
     );
 
-    return get(layer, merged.value.variant);
+    return get(classes, merged.value.variant);
   });
 
   const colorClasses = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeTextField.value?.customProps?.color,
     );
 
-    return get(layer, merged.value.color);
+    return get(classes, merged.value.color);
   });
 
   const roundedClasses = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeTextField.value?.customProps?.rounded,
     );
 
-    return get(layer, merged.value.rounded);
+    return get(classes, merged.value.rounded);
   });
 
   const sizeClasses = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeTextField.value?.customProps?.size,
     );
 
-    return get(layer, merged.value.size);
+    return get(classes, merged.value.size);
   });
 
   const isUnderlined = computed(() => {
@@ -166,12 +164,12 @@ export function useTextField(
 
   const focusColorPalette = computed(() => {
     if (invalidated.value) {
-      const layer = mergeBridgeUILayeredClasses(
+      const classes = mergeBridgeUILayeredClasses(
         colorProps,
         bridgeTextField.value?.customProps?.color,
       );
 
-      return get(layer, "error");
+      return get(classes, "error");
     }
 
     return colorClasses.value;
@@ -208,13 +206,6 @@ export function useTextField(
 
   const startIconBind = computed(() => {
     return mergePartBind(partsProps.value?.startIcon, {}, "");
-  });
-
-  // prettier-ignore
-  const rootBind = computed(() => {
-    return mergePartBind({}, {
-      class: rootClassAttr,
-    }, cn(formField.rootBind.value.class));
   });
 
   // prettier-ignore
@@ -293,8 +284,6 @@ export function useTextField(
 
     return mergePartBind(partsProps.value?.container, {}, cn({
       // Theme classes
-      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated.value && !isUnderlined.value,
-      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated.value && isUnderlined.value,
       "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
       'group/field relative flex justify-start gap-x-2 items-center': true,
       [sizeClasses.value?.container ?? ""]: (hasStartSlot || hasEndSlot),
@@ -306,6 +295,9 @@ export function useTextField(
       [containerSpacing.value ?? ""]: true,
       'rounded-none': isUnderlined.value,
       'outline-none': true,
+      // Error Classes
+      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated.value && !isUnderlined.value,
+      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated.value && isUnderlined.value,
       // Custom classes
       [mergedClasses.value.container ?? ""]: true,
     }));
@@ -316,8 +308,8 @@ export function useTextField(
     merged,
     endBind,
     inputId,
-    rootBind,
     errorIcon,
+    formField,
     inputBind,
     startBind,
     isDisabled,
@@ -328,5 +320,6 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
+    rootBind: formField.rootBind,
   };
 }

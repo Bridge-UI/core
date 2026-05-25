@@ -13,6 +13,12 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type {
+  FormFieldClasses,
+  FormFieldOwnProps,
+  FormFieldPartsProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 import type { IconProps } from "@/Components/Icon";
 
 export interface TextFieldSizeOverrides {}
@@ -20,46 +26,16 @@ export interface TextFieldColorOverrides {}
 export interface TextFieldRoundedOverrides {}
 export interface TextFieldVariantOverrides {}
 
-export interface TextFieldClasses {
+export interface TextFieldClasses extends FormFieldClasses {
   /**
    * The classes to apply to the inline-end adornment (icon or slot).
    */
   end?: string;
 
   /**
-   * The classes to apply to the helper text below the field.
-   */
-  description?: string;
-
-  /**
-   * The classes to apply to the error message.
-   */
-  error?: string;
-
-  /**
-   * The classes to apply to the label + corner header row.
-   */
-  header?: string;
-
-  /**
    * The classes to apply to the input element.
    */
   input?: string;
-
-  /**
-   * The classes to apply to the corner label (inline end of the header).
-   */
-  corner?: string;
-
-  /**
-   * The classes to apply to the primary label (inline start of the header).
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root wrapper.
-   */
-  root?: string;
 
   /**
    * The classes to apply to the inline-start adornment (icon or slot).
@@ -72,21 +48,11 @@ export interface TextFieldClasses {
   container?: string;
 }
 
-export interface TextFieldPartsProps {
+export interface TextFieldPartsProps extends FormFieldPartsProps {
   /**
    * Props forwarded to the input container (`<label>`).
    */
   container?: HTMLAttributes<HTMLLabelElement>;
-
-  /**
-   * Props forwarded to the corner label element.
-   */
-  corner?: HTMLAttributes<HTMLSpanElement>;
-
-  /**
-   * Props forwarded to the description element below the field.
-   */
-  description?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
    * Props forwarded to the inline-end adornment wrapper.
@@ -99,29 +65,9 @@ export interface TextFieldPartsProps {
   endIcon?: Partial<Omit<IconProps, "icon">>;
 
   /**
-   * Props forwarded to the error message element.
-   */
-  error?: HTMLAttributes<HTMLParagraphElement>;
-
-  /**
-   * Props forwarded to the label + corner header row.
-   */
-  header?: HTMLAttributes<HTMLDivElement>;
-
-  /**
    * Props forwarded to the `<input>`.
    */
   input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
-
-  /**
-   * Props forwarded to the primary label element.
-   */
-  label?: HTMLAttributes<HTMLLabelElement>;
-
-  /**
-   * Props forwarded to the root wrapper.
-   */
-  root?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the inline-start adornment wrapper.
@@ -134,13 +80,11 @@ export interface TextFieldPartsProps {
   startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
-export interface TextFieldOwnProps {
+export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "slots"> {
   /**
-   * The classes to apply to the text field.
-   *
-   * @default undefined
+   * Named slots for the field chrome and inline adornments.
    */
-  classes?: TextFieldClasses;
+  slots?: TextFieldSlots;
 
   /**
    * The color to apply to the text field.
@@ -148,27 +92,6 @@ export interface TextFieldOwnProps {
    * @default "primary"
    */
   color?: MergeProps<TextFieldColor, TextFieldColorOverrides>;
-
-  /**
-   * Secondary label text at the inline end of the header row.
-   *
-   * @default undefined
-   */
-  corner?: string;
-
-  /**
-   * Helper text below the field (hidden when the field is invalid).
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the text field is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
 
   /**
    * Inline-end text inside the field (suffix), e.g. `@mail.com`.
@@ -185,49 +108,6 @@ export interface TextFieldOwnProps {
   endIcon?: LucideIcon;
 
   /**
-   * When `true`, applies invalid styling (border, label, error icon).
-   *
-   * @default false
-   */
-  error?: boolean;
-
-  /**
-   * Error message below the field. Shown only when set (or via `slots.errorMessage`).
-   *
-   * @default undefined
-   */
-  errorMessage?: string;
-
-  /**
-   * The primary label text above the field.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Extra props for internal parts (`start`, `end`, `input`, etc.).
-   * Native `<input>` attributes stay on the component top level.
-   *
-   * @default undefined
-   */
-  partsProps?: TextFieldPartsProps;
-
-  /**
-   * Whether the text field is read-only.
-   *
-   * @default false
-   */
-  readonly?: boolean;
-
-  /**
-   * Shows a red asterisk on the label.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
    * The roundedness of the text field.
    *
    * @default "md"
@@ -235,18 +115,19 @@ export interface TextFieldOwnProps {
   rounded?: MergeProps<TextFieldRounded, TextFieldRoundedOverrides>;
 
   /**
-   * The size of the text field.
+   * The size of the text field control (input, container, and icons). Form
+   * labels and helper text use the same `size` key via {@link FormField}.
    *
    * @default "md"
    */
   size?: MergeProps<TextFieldSize, TextFieldSizeOverrides>;
 
   /**
-   * The slots to apply to the text field.
+   * The variant of the text field.
    *
-   * @default undefined
+   * @default "outline"
    */
-  slots?: TextFieldSlots;
+  variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
 
   /**
    * Inline-start text inside the field (prefix), e.g. `https://`.
@@ -263,13 +144,6 @@ export interface TextFieldOwnProps {
   startIcon?: LucideIcon;
 
   /**
-   * The variant of the text field.
-   *
-   * @default "outline"
-   */
-  variant?: MergeProps<TextFieldVariant, TextFieldVariantOverrides>;
-
-  /**
    * When `true` and the field is invalid, shows an error icon at the inline end
    * when no `endIcon` or `end` slot is present.
    *
@@ -278,33 +152,13 @@ export interface TextFieldOwnProps {
   withErrorIcon?: boolean;
 }
 
-export interface TextFieldSlots {
-  /**
-   * Slot at the inline end of the header row (secondary label).
-   */
-  corner?: ReactNode;
-
+export interface TextFieldSlots extends FormFieldSlots {
   /**
    * Inline-end slot for custom content (e.g. `EndAdornment` + `Button`). Prefer
    * the `end` prop for plain suffix text. Size and radius on interactive
    * children are the consumer's responsibility (see docs).
    */
   end?: ReactNode;
-
-  /**
-   * Helper text below the field (hidden when the field is invalid).
-   */
-  description?: ReactNode;
-
-  /**
-   * Custom error message content.
-   */
-  errorMessage?: ReactNode;
-
-  /**
-   * Slot at the inline start of the header row (primary label).
-   */
-  label?: ReactNode;
 
   /**
    * Inline-start slot for custom content (e.g. `StartAdornment` + `Button`).

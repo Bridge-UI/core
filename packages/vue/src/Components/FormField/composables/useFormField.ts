@@ -54,6 +54,11 @@ export type UseFormFieldOptions = {
   controlId?: () => string | undefined;
 
   /**
+   * Extra root `class` from a parent field wrapper (e.g. TextField fallthrough).
+   */
+  rootClassName?: () => string | undefined;
+
+  /**
    * When the form field is embedded in another component (e.g. TextField), use
    * that component's `customProps.size` layer so a single theme override applies.
    */
@@ -144,12 +149,12 @@ export function useFormField(
 
   // Classes
   const sizeClasses = computed(() => {
-    const layer = mergeBridgeUILayeredClasses(
+    const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       options?.getSizeLayer?.() ?? bridgeFormField.value?.customProps?.size,
     );
 
-    return get(layer, merged.value.size);
+    return get(classes, merged.value.size);
   });
 
   // Binds
@@ -223,7 +228,7 @@ export function useFormField(
   // prettier-ignore
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, {
-      class: rootClassAttr,
+      class: cn(rootClassAttr, options?.rootClassName?.()),
       ...restInheritedAttrs,
     }, cn({
       // Theme classes
@@ -251,3 +256,5 @@ export function useFormField(
     descriptionBind,
   };
 }
+
+export type FormFieldApi = ReturnType<typeof useFormField>;

@@ -1,12 +1,12 @@
 // ** External Imports
-import type { HTMLAttributes, Slot } from "vue";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 
 // ** Local Imports
-import type { FormFieldApi } from "@/Components/FormField/composables/useFormField";
+import type { FormFieldApi } from "@/Components/FormField/hooks/useFormField";
 
 export interface FormFieldSizeOverrides {}
 
@@ -51,32 +51,54 @@ export interface FormFieldPartsProps {
   /**
    * Props forwarded to the corner label element.
    */
-  corner?: HTMLAttributes;
+  corner?: HTMLAttributes<HTMLSpanElement>;
 
   /**
    * Props forwarded to the description element below the control.
    */
-  description?: HTMLAttributes;
+  description?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
    * Props forwarded to the error message element.
    */
-  error?: HTMLAttributes;
+  error?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
    * Props forwarded to the label + corner header row.
    */
-  header?: HTMLAttributes;
+  header?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the primary label element.
    */
-  label?: HTMLAttributes;
+  label?: HTMLAttributes<HTMLLabelElement>;
 
   /**
    * Props forwarded to the root wrapper.
    */
-  root?: HTMLAttributes;
+  root?: HTMLAttributes<HTMLDivElement>;
+}
+
+export interface FormFieldSlots {
+  /**
+   * Slot at the inline end of the header row (secondary label).
+   */
+  corner?: ReactNode;
+
+  /**
+   * Helper text below the control (hidden when the field is invalid).
+   */
+  description?: ReactNode;
+
+  /**
+   * Custom error message content.
+   */
+  errorMessage?: ReactNode;
+
+  /**
+   * Slot at the inline start of the header row (primary label).
+   */
+  label?: ReactNode;
 }
 
 export interface FormFieldOwnProps {
@@ -86,6 +108,13 @@ export interface FormFieldOwnProps {
    * @default undefined
    */
   classes?: FormFieldClasses;
+
+  /**
+   * The form control (input, textarea, select trigger, etc.).
+   *
+   * @default undefined
+   */
+  children?: ReactNode;
 
   /**
    * Pre-composed field API from a parent (e.g. TextField). When set, internal
@@ -132,8 +161,8 @@ export interface FormFieldOwnProps {
   error?: boolean;
 
   /**
-   * Error message below the control. Shown only when set (or via `#errorMessage`
-   * slot).
+   * Error message below the control. Shown only when set (or via
+   * `slots.errorMessage`).
    *
    * @default undefined
    */
@@ -168,38 +197,21 @@ export interface FormFieldOwnProps {
   required?: boolean;
 
   /**
-   * Typography scale for label, corner, description, and error message.
+   * The size of the form field typography (label, corner, description, error).
    *
    * @default "md"
    */
   size?: MergeProps<FormFieldSize, FormFieldSizeOverrides>;
+
+  /**
+   * Named slot content passed as props (e.g. from field wrappers).
+   *
+   * @default undefined
+   */
+  slots?: FormFieldSlots;
 }
 
-export interface FormFieldSlots {
-  /**
-   * Slot at the inline end of the header row (secondary label).
-   */
-  corner?: Slot;
-
-  /**
-   * Helper text below the control (hidden when the field is invalid).
-   */
-  description?: Slot;
-
-  /**
-   * The form control (input, textarea, select trigger, etc.).
-   */
-  default?: Slot;
-
-  /**
-   * Custom error message content.
-   */
-  errorMessage?: Slot;
-
-  /**
-   * Slot at the inline start of the header row (primary label).
-   */
-  label?: Slot;
-}
-
-export type FormFieldProps = MergeHtmlProps<FormFieldOwnProps, HTMLAttributes>;
+export type FormFieldProps = MergeHtmlProps<
+  FormFieldOwnProps,
+  HTMLAttributes<HTMLDivElement>
+>;
