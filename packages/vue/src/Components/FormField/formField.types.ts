@@ -88,14 +88,6 @@ export interface FormFieldOwnProps {
   classes?: FormFieldClasses;
 
   /**
-   * Pre-composed field API from a parent (e.g. TextField). When set, internal
-   * `useFormField` is skipped.
-   *
-   * @default undefined
-   */
-  field?: FormFieldApi;
-
-  /**
    * Associates labels and helper text with a form control. When omitted, an id
    * is generated automatically.
    *
@@ -138,6 +130,14 @@ export interface FormFieldOwnProps {
    * @default undefined
    */
   errorMessage?: string;
+
+  /**
+   * Pre-composed field API from a parent (e.g. TextField). When set, internal
+   * `useFormField` is skipped.
+   *
+   * @default undefined
+   */
+  field?: FormFieldApi;
 
   /**
    * The primary label text above the control.

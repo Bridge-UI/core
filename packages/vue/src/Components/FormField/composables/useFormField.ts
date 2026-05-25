@@ -1,16 +1,23 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { ClassValue, computed, useAttrs, useId, useSlots } from "vue";
+import {
+  type ClassValue,
+  computed,
+  type MaybeRefOrGetter,
+  toValue,
+  useAttrs,
+  useId,
+  useSlots,
+} from "vue";
 
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
   type LibDefaultsShape,
+  mergeBridgeUILayeredClasses,
   type MergeLibDefaults,
+  splitComponentProps,
 } from "@bridge-ui/core";
-import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 import { sizeProps } from "@bridge-ui/core/Components/FormField";
 
 // ** Local Imports
@@ -25,7 +32,8 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const formFieldBridgeKeys = [
+/** Props forwarded from field wrappers (e.g. TextField) into `useFormField`. */
+export const formFieldOwnPropKeys = [
   "size",
   "error",
   "label",
@@ -57,16 +65,10 @@ export type UseFormFieldOptions = {
    * Extra root `class` from a parent field wrapper (e.g. TextField fallthrough).
    */
   rootClassName?: () => ClassValue | undefined;
-
-  /**
-   * When the form field is embedded in another component (e.g. TextField), use
-   * that component's `customProps.size` layer so a single theme override applies.
-   */
-  getSizeLayer?: () => Partial<FormFieldSize> | undefined;
 };
 
 export function useFormField(
-  props: FormFieldOwnProps,
+  props: MaybeRefOrGetter<Omit<FormFieldOwnProps, "field">>,
   libDefaults: FormFieldLibDefaults,
   options?: UseFormFieldOptions,
 ) {
@@ -75,17 +77,19 @@ export function useFormField(
   const attrs = useAttrs();
   const slots = useSlots();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    FormFieldOwnProps,
-    typeof formFieldBridgeKeys
-  >({
-    bridgeKeys: formFieldBridgeKeys,
-    props: { ...attrs, ...props },
-  });
+  const split = computed(() =>
+    splitComponentProps<
+      Omit<FormFieldOwnProps, "field">,
+      typeof formFieldOwnPropKeys
+    >({
+      bridgeKeys: formFieldOwnPropKeys,
+      props: { ...attrs, ...toValue(props) },
+    }),
+  );
 
-  const { class: rootClassAttr, ...restInheritedAttrs } = inheritedAttrs as {
-    class?: string;
-  } & Record<string, unknown>;
+  const customProps = computed(() => split.value.customProps);
+
+  const rootInheritedAttrs = computed(() => split.value.inheritedAttrs);
 
   const { entry: bridgeFormField, merged } = useBridgeUIComponent<
     FormFieldMerged,
@@ -151,7 +155,7 @@ export function useFormField(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      options?.getSizeLayer?.() ?? bridgeFormField.value?.customProps?.size,
+      bridgeFormField.value?.customProps?.size,
     );
 
     return get(classes, merged.value.size);
@@ -228,8 +232,8 @@ export function useFormField(
   // prettier-ignore
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, {
-      class: cn(rootClassAttr, options?.rootClassName?.()),
-      ...restInheritedAttrs,
+      class: options?.rootClassName?.(),
+      ...rootInheritedAttrs,
     }, cn({
       // Theme classes
       "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,

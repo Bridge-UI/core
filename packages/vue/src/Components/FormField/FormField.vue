@@ -1,9 +1,8 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, toValue } from "vue";
+import { computed } from "vue";
 
 // ** Local Imports
-import type { FormFieldApi } from "@/Components/FormField/composables/useFormField";
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type {
   FormFieldOwnProps,
@@ -17,65 +16,31 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<FormFieldOwnProps>(), {});
 
-const local = useFormField(props, {
+const formFieldProps = computed(() => {
+  const { field: _field, ...rest } = props;
+
+  return rest;
+});
+
+const local = useFormField(formFieldProps, {
   size: "md",
 });
 
-const activeApi = (): FormFieldApi => {
-  return props.field ?? local;
-};
-
-const slots = computed(() => {
-  return activeApi().slots;
-});
-
-const merged = computed(() => {
-  return activeApi().merged.value;
-});
-
-const rootBind = computed(() => {
-  return toValue(activeApi().rootBind);
-});
-
-const controlId = computed(() => {
-  return toValue(activeApi().controlId);
-});
-
-const errorBind = computed(() => {
-  return toValue(activeApi().errorBind);
-});
-
-const labelBind = computed(() => {
-  return toValue(activeApi().labelBind);
-});
-
-const cornerBind = computed(() => {
-  return toValue(activeApi().cornerBind);
-});
-
-const headerBind = computed(() => {
-  return toValue(activeApi().headerBind);
-});
-
-const isDisabled = computed(() => {
-  return toValue(activeApi().isDisabled);
-});
-
-const isReadonly = computed(() => {
-  return toValue(activeApi().isReadonly);
-});
-
-const invalidated = computed(() => {
-  return toValue(activeApi().invalidated);
-});
-
-const requiredBind = computed(() => {
-  return toValue(activeApi().requiredBind);
-});
-
-const descriptionBind = computed(() => {
-  return toValue(activeApi().descriptionBind);
-});
+const {
+  slots,
+  merged,
+  rootBind,
+  controlId,
+  errorBind,
+  labelBind,
+  cornerBind,
+  headerBind,
+  isDisabled,
+  isReadonly,
+  invalidated,
+  requiredBind,
+  descriptionBind,
+} = props.field ?? local;
 </script>
 
 <template>

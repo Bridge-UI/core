@@ -20,7 +20,6 @@ import {
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
-import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import type {
   TextFieldClasses,
   TextFieldOwnProps,
@@ -76,20 +75,11 @@ export function useTextField(
   const attrs = useAttrs();
   const slots = useSlots();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    TextFieldProps,
-    typeof textFieldBridgeKeys
-  >({
-    props: { ...attrs, ...props },
-    bridgeKeys: textFieldBridgeKeys,
-  });
-
-  const rootClassAttr = computed(() => {
-    return inheritedAttrs.class;
-  });
-
-  const inputInheritedAttrs = computed(() => {
-    return omit(inheritedAttrs, ["class"]);
+  const split = computed(() => {
+    return splitComponentProps<TextFieldProps, typeof textFieldBridgeKeys>({
+      props: { ...attrs, ...props },
+      bridgeKeys: textFieldBridgeKeys,
+    });
   });
 
   const { entry: bridgeTextField, merged } = useBridgeUIComponent<
@@ -97,28 +87,29 @@ export function useTextField(
     "TextField"
   >({
     libDefaults,
-    props: customProps,
     componentName: "TextField",
+    props: () => split.value.customProps,
   });
 
-  const formField = useFormField(
-    customProps as FormFieldOwnProps,
-    {
-      size: libDefaults.size,
-    },
-    {
-      rootClassName: () => rootClassAttr.value,
-      controlId: () => inputInheritedAttrs.value.id,
-    },
-  );
+  const inputInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["class"]);
+  });
+
+  // prettier-ignore
+  const formField = useFormField(() => {
+    return split.value.customProps;
+  }, { size: libDefaults.size }, {
+    rootClassName: () => split.value.inheritedAttrs.class,
+    controlId: () => inputInheritedAttrs.value.id as string | undefined,
+  });
 
   const partsProps = computed((): TextFieldPartsProps | undefined => {
     return merged.value.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextFieldClasses>({
-    props: customProps,
     entry: bridgeTextField,
+    props: () => split.value.customProps,
   });
 
   // Classes
@@ -309,10 +300,10 @@ export function useTextField(
     slots,
     merged,
     endBind,
-    inputId,
     errorIcon,
     formField,
     inputBind,
+    inputId,
     startBind,
     isDisabled,
     isReadonly,
@@ -320,8 +311,8 @@ export function useTextField(
     endSlotBind,
     invalidated,
     containerBind,
+    rootBind: formField.rootBind,
     startIconBind,
     startSlotBind,
-    rootBind: formField.rootBind,
   };
 }

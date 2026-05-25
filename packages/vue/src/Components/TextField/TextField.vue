@@ -23,7 +23,6 @@ const {
   slots,
   merged,
   endBind,
-  inputId,
   errorIcon,
   formField,
   inputBind,
