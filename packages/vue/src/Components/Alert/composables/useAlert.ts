@@ -77,6 +77,13 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     props: customProps,
   });
 
+  // Elements
+  const hasDefaultBody = computed(() => {
+    const content = slots.default?.();
+
+    return Boolean(content && content.length > 0);
+  });
+
   // Classes
   const shadowClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -126,13 +133,6 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     const themeIcon = get(colorClass.value, "icon") as LucideIcon | undefined;
 
     return themeIcon ?? get(alertDefaultIcons, merged.value.color);
-  });
-
-  // Visibility
-  const hasDefaultBody = computed(() => {
-    const content = slots.default?.();
-
-    return Boolean(content && content.length > 0);
   });
 
   // Binds

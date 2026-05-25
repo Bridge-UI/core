@@ -82,12 +82,12 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return props.children;
   });
 
-  const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["children", "slots"]);
-  });
-
   const partsProps = derived(() => {
     return merged.partsProps;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
@@ -95,7 +95,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     props: customProps,
   });
 
-  // Element
+  // Elements
   const tag = derived(() => {
     return merged.as ?? "button";
   });

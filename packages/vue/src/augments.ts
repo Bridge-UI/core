@@ -5,6 +5,7 @@ import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
+import type { FormFieldClasses, FormFieldProps } from "@/Components/FormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
@@ -51,6 +52,11 @@ declare module "@bridge-ui/core" {
   interface CheckboxConfigOverrides {
     classes: CheckboxClasses;
     defaultProps: Partial<Pick<CheckboxProps, "size" | "color" | "rounded">>;
+  }
+
+  interface FormFieldConfigOverrides {
+    classes: FormFieldClasses;
+    defaultProps: Partial<Pick<FormFieldProps, "size">>;
   }
 
   interface IconConfigOverrides {

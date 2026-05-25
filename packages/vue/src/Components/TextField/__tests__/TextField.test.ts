@@ -173,7 +173,7 @@ test("it should apply error color on the label when error is set", () => {
 test("it should apply error styles on the container when error is set", () => {
   const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(wrapper.find("label").classes()).toContain("ring-error-500");
+  expect(wrapper.find(".group\\/field").classes()).toContain("ring-error-500");
 });
 
 test("it should render start slot content", () => {
@@ -264,6 +264,76 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
 
   expect(root.classes()).toContain("p-4");
   expect(root.classes()).not.toContain("p-2");
+});
+
+test("it should forward FormField classes and partsProps to chrome", () => {
+  const wrapper = mount(TextField, {
+    props: {
+      label: "Email",
+      corner: "Optional",
+      classes: {
+        label: "custom-label-class",
+        corner: "custom-corner-class",
+      },
+      partsProps: {
+        label: { "data-testid": "field-label" },
+        corner: { "data-testid": "field-corner" },
+      },
+    },
+  });
+
+  expect(wrapper.find('[data-testid="field-label"]').classes()).toContain(
+    "custom-label-class",
+  );
+  expect(wrapper.find('[data-testid="field-corner"]').classes()).toContain(
+    "custom-corner-class",
+  );
+});
+
+test("it should merge classes.input onto the control", () => {
+  const wrapper = mount(TextField, {
+    props: {
+      placeholder: "Type here",
+      classes: { input: "placeholder:italic" },
+    },
+  });
+
+  expect(wrapper.find("input").classes()).toContain("placeholder:italic");
+});
+
+test("it should render #errorMessage slot as the error region", () => {
+  const wrapper = mount(TextField, {
+    props: { error: true },
+    slots: {
+      errorMessage: () => "Validation failed",
+    },
+  });
+
+  expect(wrapper.text()).toContain("Validation failed");
+});
+
+test("it should update FormField chrome when label and error props change", async () => {
+  const wrapper = mount(TextField, {
+    props: {
+      label: "First",
+      description: "Helper",
+    },
+  });
+
+  expect(wrapper.text()).toContain("First");
+  expect(wrapper.text()).toContain("Helper");
+
+  await wrapper.setProps({
+    error: true,
+    label: "Second",
+    description: undefined,
+    errorMessage: "Required",
+  });
+
+  expect(wrapper.text()).toContain("Second");
+  expect(wrapper.text()).toContain("Required");
+  expect(wrapper.text()).not.toContain("First");
+  expect(wrapper.text()).not.toContain("Helper");
 });
 
 test("it should update modelValue when input changes", async () => {

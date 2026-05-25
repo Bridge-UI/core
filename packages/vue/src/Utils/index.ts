@@ -1,7 +1,12 @@
 // ** External Imports
 import { get, isNil } from "es-toolkit/compat";
-import type { ComputedRef } from "vue";
-import { computed, unref } from "vue";
+import {
+  computed,
+  type ComputedRef,
+  type MaybeRefOrGetter,
+  toValue,
+  unref,
+} from "vue";
 
 // ** Core Imports
 import { createMergePartBind } from "@bridge-ui/core";
@@ -45,8 +50,8 @@ export function useBridgeUIComponent<
   componentName,
 }: {
   componentName: K;
-  props: Partial<P>;
   libDefaults?: Partial<P>;
+  props: MaybeRefOrGetter<Partial<P>>;
 }): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
@@ -62,9 +67,9 @@ export function useBridgeUIComponent<
 
   const merged = computed(() => {
     return mergePropsWithBridgeUIDefaults({
-      props,
       libDefaults,
       componentName,
+      props: toValue(props) as P,
       components: components.value,
     }) as P;
   });
@@ -84,13 +89,13 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
 }: {
-  props: { classes?: Partial<C> };
+  props: MaybeRefOrGetter<{ classes?: Partial<C> }>;
   entry: ComputedRef<{ classes?: object } | undefined>;
 }) {
   return computed(() => {
     return mergeBridgeUILayeredClasses(
       get(entry.value, "classes") as Partial<C> | undefined,
-      props.classes,
+      toValue(props).classes,
     );
   });
 }

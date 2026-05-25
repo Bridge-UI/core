@@ -1,7 +1,7 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 
 // ** Core Imports
 import {
@@ -16,19 +16,19 @@ import {
   roundedProps,
   sizeProps,
   variantProps,
-  type TextFieldColor,
 } from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
+import { useFormField } from "@/Components/FormField/hooks/useFormField";
 import type {
   TextFieldClasses,
   TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldProps,
 } from "@/Components/TextField/textField.types";
 import {
   derived,
   hasNamedSlot,
-  hasSlotOrProp,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -40,6 +40,7 @@ const textFieldBridgeKeys = [
   "color",
   "error",
   "label",
+  "slots",
   "start",
   "corner",
   "classes",
@@ -72,8 +73,7 @@ export function useTextField(
   props: TextFieldProps,
   libDefaults: TextFieldLibDefaults,
 ) {
-  const autoId = useId();
-
+  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     TextFieldProps,
     typeof textFieldBridgeKeys
@@ -81,15 +81,6 @@ export function useTextField(
     props,
     bridgeKeys: textFieldBridgeKeys,
   });
-
-  const {
-    className: rootClassAttr,
-    slots,
-    ...inputInheritedAttrs
-  } = inheritedAttrs as {
-    className?: string;
-    slots?: TextFieldProps["slots"];
-  } & Record<string, unknown>;
 
   const { entry: bridgeTextField, merged } = useBridgeUIComponent<
     TextFieldMerged,
@@ -100,109 +91,111 @@ export function useTextField(
     componentName: "TextField",
   });
 
-  const resolvedSlots = derived(() => {
-    return props.slots ?? slots;
+  const slots = derived(() => {
+    return props.slots;
   });
 
-  const partsProps = derived(() => {
+  const rootClassAttr = derived(() => {
+    return inheritedAttrs.className;
+  });
+
+  const inputInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "className"]);
+  });
+
+  const formField = useFormField(
+    customProps,
+    {
+      size: libDefaults.size,
+    },
+    {
+      rootClassName: () => rootClassAttr,
+      controlId: () => inputInheritedAttrs.id,
+    },
+  );
+
+  const partsProps = derived((): TextFieldPartsProps | undefined => {
     return merged.partsProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextFieldClasses>({
-    entry: bridgeTextField,
     props: customProps,
+    entry: bridgeTextField,
   });
 
-  const variantPalette = useMemo(() => {
-    const layer = mergeBridgeUILayeredClasses(
+  // Classes
+  const variantClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       variantProps,
       bridgeTextField?.customProps?.variant,
     );
 
-    return get(layer, merged.variant);
+    return get(classes, merged.variant);
   }, [merged.variant, bridgeTextField?.customProps?.variant]);
 
-  const colorPalette = useMemo(() => {
-    const layer = mergeBridgeUILayeredClasses(
+  const colorClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeTextField?.customProps?.color,
     );
 
-    return get(layer, merged.color as keyof TextFieldColor);
+    return get(classes, merged.color);
   }, [merged.color, bridgeTextField?.customProps?.color]);
 
-  const roundedPalette = useMemo(() => {
-    const layer = mergeBridgeUILayeredClasses(
+  const roundedClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeTextField?.customProps?.rounded,
     );
 
-    return get(layer, merged.rounded);
+    return get(classes, merged.rounded);
   }, [merged.rounded, bridgeTextField?.customProps?.rounded]);
 
-  const sizePalette = useMemo(() => {
-    const layer = mergeBridgeUILayeredClasses(
+  const sizeClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeTextField?.customProps?.size,
     );
 
-    return get(layer, merged.size);
+    return get(classes, merged.size);
   }, [merged.size, bridgeTextField?.customProps?.size]);
 
   const isUnderlined = derived(() => {
     return merged.variant === "underlined";
   });
 
-  const inputId = derived(() => {
-    return (inputInheritedAttrs.id as string | undefined) ?? autoId;
-  });
-
-  const isDisabled = derived(() => {
-    return Boolean(merged.disabled);
-  });
-
-  const isReadonly = derived(() => {
-    return Boolean(merged.readonly);
-  });
-
-  const invalidated = derived(() => {
-    return merged.error === true;
-  });
+  const inputId = formField.controlId;
+  const isDisabled = formField.isDisabled;
+  const isReadonly = formField.isReadonly;
+  const invalidated = formField.invalidated;
 
   const focusColorPalette = useMemo(() => {
     if (merged.error === true) {
-      const layer = mergeBridgeUILayeredClasses(
+      const classes = mergeBridgeUILayeredClasses(
         colorProps,
         bridgeTextField?.customProps?.color,
       );
 
-      return get(layer, "error");
+      return get(classes, "error");
     }
 
-    return colorPalette;
-  }, [bridgeTextField?.customProps?.color, colorPalette, merged.error]);
-
-  const headerJustify = derived(() => {
-    if (hasSlotOrProp(resolvedSlots, "label", merged.label)) {
-      return "justify-between items-end";
-    }
-
-    return "justify-end";
-  });
+    return colorClasses;
+  }, [colorClasses, merged.error, bridgeTextField?.customProps?.color]);
 
   const containerSpacing = derived(() => {
-    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
-    const hasEndSlot = hasNamedSlot(resolvedSlots, "end");
+    const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
+    const hasAdornmentSlot = hasStartSlot || hasEndSlot;
 
-    if (!hasStartSlot && !hasEndSlot) {
-      return sizePalette?.padding;
+    if (!hasAdornmentSlot) {
+      return sizeClasses?.padding;
     }
 
-    return cn(
-      "gap-x-2",
-      !hasStartSlot && sizePalette?.insetStart,
-      !hasEndSlot && sizePalette?.insetEnd,
-    );
+    return cn({
+      // Theme classes
+      [sizeClasses?.insetStart ?? ""]: !hasStartSlot,
+      [sizeClasses?.insetEnd ?? ""]: !hasEndSlot,
+    });
   });
 
   const containerColorFocus = derived(() => {
@@ -213,202 +206,117 @@ export function useTextField(
     return focusColorPalette?.input;
   });
 
-  const ariaDescribedBy = derived(() => {
-    const ids: string[] = [];
-
-    if (
-      !invalidated &&
-      hasSlotOrProp(resolvedSlots, "description", merged.description)
-    ) {
-      ids.push(`${inputId}-description`);
-    }
-
-    if (hasSlotOrProp(resolvedSlots, "errorMessage", merged.errorMessage)) {
-      ids.push(`${inputId}-error`);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
-  });
-
-  const rootBind = derived(() => {
-    return mergePartBind(
-      partsProps?.root,
-      rootClassAttr !== undefined ? { className: rootClassAttr } : {},
-      cn({
-        "group w-full relative": true,
-        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
-        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
-        [mergedClasses.root ?? ""]: true,
-      }),
-    );
-  });
-
-  const headerBind = derived(() => {
-    return mergePartBind(
-      partsProps?.header,
-      {},
-      cn("flex mb-1", headerJustify, mergedClasses.header),
-    );
-  });
-
-  const labelBind = derived(() => {
-    return mergePartBind(partsProps?.label, {}, cn(mergedClasses.label));
-  });
-
-  const cornerBind = derived(() => {
-    return mergePartBind(
-      partsProps?.corner,
-      {},
-      cn("text-sm text-gray-500 dark:text-gray-400", mergedClasses.corner),
-    );
-  });
-
-  const containerBind = derived(() => {
-    const hasStartSlot = hasNamedSlot(resolvedSlots, "start");
-    const hasEndSlot = hasNamedSlot(resolvedSlots, "end");
-
-    return mergePartBind(
-      partsProps?.container,
-      {},
-      cn(
-        "group/field relative flex justify-start gap-x-2 items-center",
-        "transition-all ease-in-out duration-150",
-        "outline-none",
-        variantPalette?.container,
-        variantPalette?.input,
-        !isUnderlined && roundedPalette?.input,
-        isUnderlined && "rounded-none",
-        containerColorFocus,
-        containerSpacing,
-        (hasStartSlot || hasEndSlot) && sizePalette?.container,
-        {
-          "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
-          "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
-            invalidated && !isUnderlined,
-          "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
-            invalidated && isUnderlined,
-        },
-        mergedClasses.container,
-      ),
-    );
-  });
-
-  const startBind = derived(() => {
-    return mergePartBind(
-      partsProps?.start,
-      {},
-      cn(
-        "text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap",
-        "group-data-[invalid]:text-error-500",
-        { "text-error-500": invalidated },
-        !invalidated && colorPalette?.start,
-        !isUnderlined && roundedPalette?.start,
-        mergedClasses.start,
-      ),
-    );
-  });
-
-  const endBind = derived(() => {
-    return mergePartBind(
-      partsProps?.end,
-      {},
-      cn(
-        "shrink-0 text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap",
-        "group-data-[invalid]:text-error-500",
-        { "text-error-500": invalidated },
-        !invalidated && colorPalette?.end,
-        !isUnderlined && roundedPalette?.end,
-        mergedClasses.end,
-      ),
-    );
-  });
-
-  const startSlotBind = derived(() => {
-    return mergePartBind(
-      partsProps?.start,
-      {},
-      cn(
-        "group/start wrapper-start-slot shrink-0 flex self-stretch items-stretch py-0.5 ps-0.5",
-        mergedClasses.start,
-      ),
-    );
-  });
-
-  const endSlotBind = derived(() => {
-    return mergePartBind(
-      partsProps?.end,
-      {},
-      cn(
-        "group/end wrapper-end-slot shrink-0 flex self-stretch items-stretch py-0.5 pe-0.5",
-        mergedClasses.end,
-      ),
-    );
-  });
-
-  const inputBind = derived(() => {
-    return mergePartBind(
-      {
-        ...partsProps?.input,
-        id: inputId,
-        disabled: isDisabled,
-        readOnly: isReadonly,
-        "aria-invalid": invalidated || undefined,
-        "aria-describedby": ariaDescribedBy,
-      },
-      inputInheritedAttrs,
-      cn(
-        "flex-1 min-w-0 bg-transparent border-0 shadow-none",
-        "outline-none ring-0 focus:outline-none focus:ring-0",
-        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400",
-        "disabled:cursor-not-allowed",
-        sizePalette?.input,
-        mergedClasses.input,
-      ),
-    );
+  // Binds
+  const endIconBind = derived(() => {
+    return mergePartBind(partsProps?.endIcon, {}, "");
   });
 
   const startIconBind = derived(() => {
     return mergePartBind(partsProps?.startIcon, {}, "");
   });
 
-  const endIconBind = derived(() => {
-    return mergePartBind(partsProps?.endIcon, {}, "");
+  // prettier-ignore
+  const endSlotBind = derived(() => {
+    return mergePartBind( partsProps?.end, {}, cn({
+      // Theme classes
+      "group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 pe-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+      // Custom classes
+      [mergedClasses.end ?? ""]: true,
+    }));
   });
 
-  const descriptionBind = derived(() => {
-    return mergePartBind(
-      partsProps?.description,
-      {},
-      cn(
-        "mt-2 text-sm text-gray-500 dark:text-gray-400",
-        mergedClasses.description,
-      ),
-    );
+  // prettier-ignore
+  const startSlotBind = derived(() => {
+    return mergePartBind( partsProps?.start, {}, cn({
+      // Theme classes
+      "group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 ps-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+      // Custom classes
+      [mergedClasses.start ?? ""]: true,
+    }));
   });
 
-  const errorBind = derived(() => {
-    return mergePartBind(
-      partsProps?.error,
-      {},
-      cn(
-        "mt-2 text-sm text-error-600 dark:text-error-400",
-        mergedClasses.error,
-      ),
+  // prettier-ignore
+  const endBind = derived(() => {
+    return mergePartBind( partsProps?.end, {}, cn({
+      // Theme classes
+      "shrink-0 self-center text-gray-500 pointer-events-none select-none flex items-center whitespace-nowrap": true,
+      "group-data-[invalid]:text-error-500": true,
+      [roundedClasses?.end ?? ""]: !isUnderlined,
+      [colorClasses?.end ?? ""]: !invalidated,
+      "text-error-500": invalidated,
+      // Custom classes
+      [mergedClasses.end ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startBind = derived(() => {
+    return mergePartBind( partsProps?.start, {}, cn({
+      // Theme classes
+      "shrink-0 self-center text-gray-400 pointer-events-none select-none flex items-center whitespace-nowrap": true,
+      [roundedClasses?.start ?? ""]: !isUnderlined,
+      "group-data-[invalid]:text-error-500": true,
+      [colorClasses?.start ?? ""]: !invalidated,
+      "text-error-500": invalidated,
+      // Custom classes
+      [mergedClasses.start ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const inputBind = derived(() => {
+    return mergePartBind( {
+      ...partsProps?.input,
+      id: inputId,
+      disabled: isDisabled,
+      readOnly: isReadonly,
+      "aria-invalid": invalidated || undefined,
+      "aria-describedby": formField.ariaDescribedBy,
+    }, inputInheritedAttrs, cn({
+      // Theme classes
+      "flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none": true,
+      "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+      "outline-none ring-0 focus:outline-none focus:ring-0": true,
+      "disabled:cursor-not-allowed": true,
+      [sizeClasses?.input ?? ""]: true,
+      // Custom classes
+      [mergedClasses.input ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const containerBind = derived(() => {
+    return mergePartBind(partsProps?.container, {}, cn({
+      // Theme classes
+      "group/field relative flex justify-start gap-x-2 items-stretch": true,
+      "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
+      "transition-all ease-in-out duration-150": true,
+      [roundedClasses?.input ?? ""]: !isUnderlined,
+      [variantClasses?.container ?? ""]: true,
+      [sizeClasses?.container ?? ""]: true,
+      [variantClasses?.input ?? ""]: true,
+      [containerColorFocus ?? ""]: true,
+      [containerSpacing ?? ""]: true,
+      "rounded-none": isUnderlined,
+      "outline-none": true,
+      // Error classes
+      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated && !isUnderlined,
+      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated && isUnderlined,
+      // Custom classes
+      [mergedClasses.container ?? ""]: true,
+      }),
     );
   });
 
   return {
+    slots,
     merged,
-    inputId,
-    rootBind,
-    errorBind,
-    errorIcon,
-    inputBind,
-    labelBind,
     endBind,
+    inputId,
+    errorIcon,
+    formField,
+    inputBind,
     startBind,
-    cornerBind,
-    headerBind,
     isDisabled,
     isReadonly,
     endIconBind,
@@ -417,7 +325,6 @@ export function useTextField(
     containerBind,
     startIconBind,
     startSlotBind,
-    descriptionBind,
-    slots: resolvedSlots,
+    rootBind: formField.rootBind,
   };
 }

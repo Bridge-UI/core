@@ -22,6 +22,8 @@ export type {
   CheckboxConfigBase,
   CheckboxConfigOverrides,
   Direction,
+  FormFieldConfigBase,
+  FormFieldConfigOverrides,
   IconConfigBase,
   IconConfigOverrides,
   LabelConfigBase,
