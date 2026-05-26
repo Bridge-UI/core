@@ -32,6 +32,7 @@ import {
 } from "@/Utils";
 
 const textareaBridgeKeys = [
+  "size",
   "color",
   "error",
   "label",

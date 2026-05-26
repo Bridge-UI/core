@@ -37,6 +37,19 @@ test("it should override color when prop is passed", () => {
   expect(result.current.merged.color).toBe("error");
 });
 
+test("it should override size when prop is passed", () => {
+  const { result } = renderUseTextarea({ size: "2xl" });
+
+  expect(result.current.merged.size).toBe("2xl");
+  expect(result.current.textareaBind.className).toContain("text-lg");
+});
+
+test("it should apply size typography classes on textarea bind", () => {
+  const { result } = renderUseTextarea({ size: "2xs" });
+
+  expect(result.current.textareaBind.className).toContain("text-2xs");
+});
+
 test("it should be disabled when disabled prop is true", () => {
   const { result } = renderUseTextarea({ disabled: true });
 
