@@ -61,12 +61,11 @@ export function useButton(
   // Setup
   const attrs = useAttrs();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    ButtonProps,
-    typeof buttonBridgeKeys
-  >({
-    bridgeKeys: buttonBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<ButtonProps, typeof buttonBridgeKeys>({
+      bridgeKeys: buttonBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { entry: bridgeButton, merged } = useBridgeUIComponent<
@@ -74,8 +73,8 @@ export function useButton(
     "Button"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Button",
+    props: () => split.value.customProps,
   });
 
   const partsProps = computed(() => {
@@ -84,7 +83,7 @@ export function useButton(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
     entry: bridgeButton,
-    props: customProps,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -152,8 +151,8 @@ export function useButton(
   });
 
   const variantKey = computed(() => {
-    if (customProps.variant !== undefined) {
-      return customProps.variant;
+    if (split.value.customProps.variant !== undefined) {
+      return split.value.customProps.variant;
     }
 
     return isMini.value ? "flat" : merged.value.variant;
@@ -221,7 +220,7 @@ export function useButton(
 
   // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, inheritedAttrs, cn({
+    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
       // Theme classes
       'aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none': true,
       "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center": true,

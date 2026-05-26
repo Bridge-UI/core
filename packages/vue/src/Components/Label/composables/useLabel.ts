@@ -39,12 +39,11 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
   // Setup
   const attrs = useAttrs();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    LabelProps,
-    typeof labelBridgeKeys
-  >({
-    bridgeKeys: labelBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<LabelProps, typeof labelBridgeKeys>({
+      bridgeKeys: labelBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { entry: bridgeLabel, merged } = useBridgeUIComponent<
@@ -52,13 +51,13 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
     "Label"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Label",
+    props: () => split.value.customProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LabelClasses>({
     entry: bridgeLabel,
-    props: customProps,
+    props: () => split.value.customProps,
   });
 
   // Classes
@@ -84,7 +83,7 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
 
   // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, inheritedAttrs, cn({
+    return mergePartBind({}, split.value.inheritedAttrs, cn({
       // Theme classes
       "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
       "text-error-600 dark:text-error-400": merged.value.error,

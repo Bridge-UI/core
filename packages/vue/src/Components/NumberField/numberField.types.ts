@@ -24,7 +24,10 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldProps extends TextFieldOwnProps {
+export interface NumberFieldProps extends Omit<
+  TextFieldOwnProps,
+  "startIcon" | "endIcon"
+> {
   /**
    * The classes to apply to the number field.
    *
@@ -51,7 +54,7 @@ export interface NumberFieldProps extends TextFieldOwnProps {
    *
    * @default undefined
    */
-  modelValue?: number;
+  modelValue?: number | null;
 
   /**
    * The step increment value.

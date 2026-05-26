@@ -3,6 +3,8 @@ export { useTextarea } from "@/Components/Textarea/composables/useTextarea";
 export type {
   TextareaClasses,
   TextareaColorOverrides,
+  TextareaOwnProps,
+  TextareaPartsProps,
   TextareaProps,
   TextareaRoundedOverrides,
   TextareaSizeOverrides,

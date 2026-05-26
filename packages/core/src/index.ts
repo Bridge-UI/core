@@ -70,13 +70,7 @@ export type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
-export type {
-  TextareaColor,
-  TextareaColorItem,
-  TextareaRounded,
-  TextareaSize,
-  TextareaVariant,
-} from "@core/Components/Textarea";
+export type { TextareaSize, TextareaSizeItem } from "@core/Components/Textarea";
 export type {
   TextFieldColor,
   TextFieldColorItem,

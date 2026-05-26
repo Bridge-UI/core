@@ -24,6 +24,9 @@ export default defineConfig(
         extraFileExtensions: [".vue"],
       },
     },
+    rules: {
+      "no-undef": "off",
+    },
   },
   {
     files: ["packages/react/**/*.{tsx,jsx}"],

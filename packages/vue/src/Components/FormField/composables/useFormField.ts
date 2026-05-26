@@ -78,15 +78,15 @@ export function useFormField(
   const attrs = useAttrs();
   const slots = useSlots();
 
-  const split = computed(() =>
-    splitComponentProps<
+  const split = computed(() => {
+    return splitComponentProps<
       Omit<FormFieldOwnProps, "field">,
       typeof formFieldOwnPropKeys
     >({
       bridgeKeys: formFieldOwnPropKeys,
       props: { ...attrs, ...toValue(props) },
-    }),
-  );
+    });
+  });
 
   const customProps = computed(() => split.value.customProps);
 

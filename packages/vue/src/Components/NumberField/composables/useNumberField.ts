@@ -1,25 +1,64 @@
 // ** External Imports
-import { useSlots } from "vue";
+import { computed, type Ref } from "vue";
 
-// ** Local Imports
-import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
-import { useBridgeUIComponent } from "@/Utils";
+export type UseNumberFieldOptions = {
+  min?: number;
+  max?: number;
+  step?: number;
+};
 
 export function useNumberField(
-  props: NumberFieldProps,
-  libDefaults: Partial<NumberFieldProps>,
+  model: Ref<number | null | undefined>,
+  options: UseNumberFieldOptions,
 ) {
-  const slots = useSlots();
+  const step = options.step ?? 1;
 
-  const { entry: bridgeNumberField, merged } = useBridgeUIComponent({
-    props,
-    libDefaults,
-    componentName: "TextField",
+  const currentValue = computed(() => model.value ?? undefined);
+
+  const inputValue = computed(() => {
+    if (currentValue.value === undefined) {
+      return undefined;
+    }
+
+    return String(currentValue.value);
   });
 
+  const setValue = (next: number) => {
+    model.value = next;
+  };
+
+  const increment = (): boolean => {
+    const base = currentValue.value ?? options.min ?? 0;
+
+    const next = base + step;
+
+    if (options.max !== undefined && next > options.max) {
+      return false;
+    }
+
+    setValue(next);
+
+    return true;
+  };
+
+  const decrement = (): boolean => {
+    const base = currentValue.value ?? options.min ?? 0;
+
+    const next = base - step;
+
+    if (options.min !== undefined && next < options.min) {
+      return false;
+    }
+
+    setValue(next);
+
+    return true;
+  };
+
   return {
-    slots,
-    merged,
-    bridgeNumberField,
+    decrement,
+    increment,
+    inputValue,
+    currentValue,
   };
 }

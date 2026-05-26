@@ -49,12 +49,11 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   // Setup
   const attrs = useAttrs();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    BadgeProps,
-    typeof badgeBridgeKeys
-  >({
-    bridgeKeys: badgeBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<BadgeProps, typeof badgeBridgeKeys>({
+      bridgeKeys: badgeBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { entry: bridgeBadge, merged } = useBridgeUIComponent<
@@ -62,13 +61,13 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
     "Badge"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Badge",
+    props: () => split.value.customProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: customProps,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -107,7 +106,7 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   // Binds
   // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, inheritedAttrs, cn({
+    return mergePartBind({}, split.value.inheritedAttrs, cn({
       // Theme classes
       "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
       [get(colorClass.value, "background") ?? ""]: true,

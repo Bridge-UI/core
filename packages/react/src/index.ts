@@ -107,7 +107,7 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";
-export { NumberField } from "@/Components/NumberField";
+export { NumberField, useNumberField } from "@/Components/NumberField";
 export type {
   NumberFieldClasses,
   NumberFieldColorOverrides,
@@ -117,7 +117,7 @@ export type {
   NumberFieldSlots,
   NumberFieldVariantOverrides,
 } from "@/Components/NumberField";
-export { PasswordField } from "@/Components/PasswordField";
+export { PasswordField, usePasswordField } from "@/Components/PasswordField";
 export type {
   PasswordFieldClasses,
   PasswordFieldColorOverrides,
@@ -146,10 +146,12 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
-export { Textarea } from "@/Components/Textarea";
+export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,
   TextareaColorOverrides,
+  TextareaOwnProps,
+  TextareaPartsProps,
   TextareaProps,
   TextareaRoundedOverrides,
   TextareaSizeOverrides,

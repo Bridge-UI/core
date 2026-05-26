@@ -1,7 +1,8 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { Info } from "lucide-vue-next";
+import { Eye, EyeOff, Info } from "lucide-vue-next";
 import { expect, test } from "vitest";
+import { nextTick } from "vue";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -84,4 +85,17 @@ test("it should apply lg size classes", () => {
 
   expect(svg.classes()).toContain("w-5");
   expect(svg.classes()).toContain("h-5");
+});
+
+test("it should swap the rendered icon when the icon prop changes", async () => {
+  const wrapper = mount(Icon, { props: { icon: Eye } });
+
+  expect(wrapper.find("svg").classes()).toContain("lucide-eye");
+  expect(wrapper.find("svg").classes()).not.toContain("lucide-eye-off");
+
+  await wrapper.setProps({ icon: EyeOff });
+  await nextTick();
+
+  expect(wrapper.find("svg").classes()).toContain("lucide-eye-off");
+  expect(wrapper.find("svg").classes()).not.toContain("lucide-eye");
 });

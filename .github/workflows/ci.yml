@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+concurrency:
+  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+      - run: npm ci
+      - run: npm run lint
+
+  format:
+    name: Prettier
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+      - run: npm ci
+      - run: npm run format:check
+
+  # type-check:
+  #   name: TypeScript
+  #   runs-on: ubuntu-latest
+  #   if: github.event.pull_request.draft == false
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         cache: npm
+  #         node-version: 22
+  #     - run: npm ci
+  #     - run: npm run type-check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+
+  # test:
+  #   name: Unit tests (${{ matrix.package }})
+  #   runs-on: ubuntu-latest
+  #   if: github.event.pull_request.draft == false
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       package: [vue, core, react]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         cache: npm
+  #         node-version: 22
+  #     - run: npm ci
+  #     - run: npm run test:${{ matrix.package }}
+
+  # cypress:
+  #   runs-on: ubuntu-latest
+  #   name: Cypress (${{ matrix.package }})
+  #   if: github.event.pull_request.draft == false
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       package: [vue, react]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         cache: npm
+  #         node-version: 22
+  #     - run: npm ci
+  #     - name: Component tests
+  #       uses: cypress-io/github-action@v6
+  #       with:
+  #         install: false
+  #         project: packages/${{ matrix.package }}
+  #         command: npm run test:cy:${{ matrix.package }}

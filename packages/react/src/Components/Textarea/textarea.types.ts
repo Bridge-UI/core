@@ -1,57 +1,66 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { HTMLAttributes, TextareaHTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
+  MergeHtmlProps,
   MergeProps,
-  TextareaColor,
-  TextareaRounded,
   TextareaSize,
-  TextareaVariant,
+  TextFieldColor,
+  TextFieldRounded,
+  TextFieldVariant,
 } from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  FormFieldClasses,
+  FormFieldOwnProps,
+  FormFieldPartsProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 
 export interface TextareaSizeOverrides {}
 export interface TextareaColorOverrides {}
 export interface TextareaRoundedOverrides {}
 export interface TextareaVariantOverrides {}
 
-export interface TextareaClasses {
+export interface TextareaClasses extends FormFieldClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the textarea container.
    */
-  description?: string;
+  container?: string;
 
   /**
-   * The classes to apply to the error message.
-   */
-  error?: string;
-
-  /**
-   * The classes to apply to the textarea.
+   * The classes to apply to the textarea element.
    */
   input?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
 }
 
-export interface TextareaProps {
+export interface TextareaPartsProps extends FormFieldPartsProps {
   /**
-   * Whether the textarea automatically resizes.
+   * Props forwarded to the textarea container (`<div>`).
+   */
+  container?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the `<textarea>`.
+   */
+  input?: Partial<TextareaHTMLAttributes<HTMLTextAreaElement>>;
+}
+
+export interface TextareaOwnProps extends Omit<
+  FormFieldOwnProps,
+  "field" | "children"
+> {
+  /**
+   * Whether the textarea automatically resizes with its content.
    *
    * @default false
    */
   autosize?: boolean;
 
   /**
-   * The classes to apply to the textarea.
+   * Classes for the field chrome and the control (includes all FormField keys).
    *
    * @default undefined
    */
@@ -62,113 +71,41 @@ export interface TextareaProps {
    *
    * @default "primary"
    */
-  color?: MergeProps<TextareaColor, TextareaColorOverrides>;
+  color?: MergeProps<TextFieldColor, TextareaColorOverrides>;
 
   /**
-   * The description text below the label.
+   * Props for FormField parts and control parts (`label`, `input`, `container`, …).
    *
    * @default undefined
    */
-  description?: string;
-
-  /**
-   * Whether the textarea is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * The label text for the textarea.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Callback when the value changes.
-   *
-   * @default undefined
-   */
-  onChange?: (value: string) => void;
-
-  /**
-   * The placeholder text.
-   *
-   * @default undefined
-   */
-  placeholder?: string;
-
-  /**
-   * Whether the textarea is required.
-   *
-   * @default false
-   */
-  required?: boolean;
+  partsProps?: TextareaPartsProps;
 
   /**
    * The roundedness of the textarea.
    *
    * @default "md"
    */
-  rounded?: MergeProps<TextareaRounded, TextareaRoundedOverrides>;
+  rounded?: MergeProps<TextFieldRounded, TextareaRoundedOverrides>;
 
   /**
-   * The number of visible text rows.
-   *
-   * @default undefined
-   */
-  rows?: number;
-
-  /**
-   * The size of the textarea.
+   * The size of the textarea control. Form labels and helper text use the same
+   * `size` key via {@link FormField}.
    *
    * @default "md"
    */
   size?: MergeProps<TextareaSize, TextareaSizeOverrides>;
 
   /**
-   * The slots to apply to the textarea.
-   *
-   * @default undefined
-   */
-  slots?: TextareaSlots;
-
-  /**
-   * The value of the textarea.
-   *
-   * @default undefined
-   */
-  value?: string;
-
-  /**
    * The variant of the textarea.
    *
    * @default "outline"
    */
-  variant?: MergeProps<TextareaVariant, TextareaVariantOverrides>;
+  variant?: MergeProps<TextFieldVariant, TextareaVariantOverrides>;
 }
 
-export interface TextareaSlots {
-  /**
-   * The slot for the description.
-   */
-  description?: ReactNode;
+export interface TextareaSlots extends FormFieldSlots {}
 
-  /**
-   * The slot for the error message.
-   */
-  error?: ReactNode;
-
-  /**
-   * The slot for the label.
-   */
-  label?: ReactNode;
-}
+export type TextareaProps = MergeHtmlProps<
+  TextareaOwnProps,
+  TextareaHTMLAttributes<HTMLTextAreaElement>
+>;

@@ -51,12 +51,11 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   const attrs = useAttrs();
   const slots = useSlots();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    AlertProps,
-    typeof alertBridgeKeys
-  >({
-    bridgeKeys: alertBridgeKeys,
-    props: { ...attrs, ...props },
+  const split = computed(() => {
+    return splitComponentProps<AlertProps, typeof alertBridgeKeys>({
+      bridgeKeys: alertBridgeKeys,
+      props: { ...attrs, ...props },
+    });
   });
 
   const { merged, entry: bridgeAlert } = useBridgeUIComponent<
@@ -64,8 +63,8 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     "Alert"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Alert",
+    props: () => split.value.customProps,
   });
 
   const partsProps = computed(() => {
@@ -74,7 +73,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeAlert,
-    props: customProps,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -138,7 +137,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   // Binds
   // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, inheritedAttrs, cn({
+    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
       // Theme classes
       [shadowClass.value ?? ""]: true,
       [roundedClass.value ?? ""]: true,

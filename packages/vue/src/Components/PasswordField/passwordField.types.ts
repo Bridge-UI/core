@@ -19,7 +19,7 @@ export interface PasswordFieldClasses extends TextFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldProps extends TextFieldOwnProps {
+export interface PasswordFieldProps extends Omit<TextFieldOwnProps, "type"> {
   /**
    * The classes to apply to the password field.
    *
@@ -35,11 +35,18 @@ export interface PasswordFieldProps extends TextFieldOwnProps {
   modelValue?: string | null;
 
   /**
-   * Whether the password is visible.
+   * Callback when the visibility changes.
    *
-   * @default false
+   * @default undefined
    */
-  visible?: boolean;
+  onVisibilityChange?: (visible: boolean) => void;
+
+  /**
+   * Whether the password is visible. Use `null` (default) for uncontrolled mode.
+   *
+   * @default null
+   */
+  visible?: boolean | null;
 }
 
 export interface PasswordFieldSlots extends TextFieldSlots {}

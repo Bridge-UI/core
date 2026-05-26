@@ -150,6 +150,7 @@ export function useTextField(
     return get(classes, merged.value.size);
   });
 
+  // Elements
   const isUnderlined = computed(() => {
     return merged.value.variant === "underlined";
   });
