@@ -1,6 +1,6 @@
 // ** External Imports
 import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 // ** Local Imports
 import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
@@ -23,8 +23,13 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
   const currentValue = value ?? internalValue;
 
+  const currentValueRef = useRef(currentValue);
+  currentValueRef.current = currentValue;
+
   const setValue = useCallback(
     (next: number) => {
+      currentValueRef.current = next;
+
       if (value === undefined) {
         setInternalValue(next);
       }
@@ -57,29 +62,33 @@ export function useNumberField(options: UseNumberFieldOptions) {
     [value, setValue],
   );
 
-  const increment = useCallback(() => {
-    const base = currentValue ?? min ?? 0;
+  const increment = useCallback((): boolean => {
+    const base = currentValueRef.current ?? min ?? 0;
 
     const next = base + step;
 
     if (max !== undefined && next > max) {
-      return;
+      return false;
     }
 
     setValue(next);
-  }, [max, min, step, setValue, currentValue]);
 
-  const decrement = useCallback(() => {
-    const base = currentValue ?? min ?? 0;
+    return true;
+  }, [max, min, step, setValue]);
+
+  const decrement = useCallback((): boolean => {
+    const base = currentValueRef.current ?? min ?? 0;
 
     const next = base - step;
 
     if (min !== undefined && next < min) {
-      return;
+      return false;
     }
 
     setValue(next);
-  }, [min, step, setValue, currentValue]);
+
+    return true;
+  }, [min, step, setValue]);
 
   const inputValue =
     currentValue === undefined ? undefined : String(currentValue);

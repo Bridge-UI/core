@@ -27,28 +27,32 @@ export function useNumberField(
     model.value = next;
   };
 
-  const increment = () => {
+  const increment = (): boolean => {
     const base = currentValue.value ?? options.min ?? 0;
 
     const next = base + step;
 
     if (options.max !== undefined && next > options.max) {
-      return;
+      return false;
     }
 
     setValue(next);
+
+    return true;
   };
 
-  const decrement = () => {
+  const decrement = (): boolean => {
     const base = currentValue.value ?? options.min ?? 0;
 
     const next = base - step;
 
     if (options.min !== undefined && next < options.min) {
-      return;
+      return false;
     }
 
     setValue(next);
+
+    return true;
   };
 
   return {

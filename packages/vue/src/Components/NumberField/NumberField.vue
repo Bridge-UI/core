@@ -16,7 +16,7 @@ import type {
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
 import { TextField } from "@/Components/TextField";
-import { useTextFieldEndAdornment } from "@/Utils";
+import { useHoldRepeat, useTextFieldEndAdornment } from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
@@ -33,6 +33,20 @@ const { increment, decrement } = useNumberField(model, {
   max: props.max,
   step: props.step,
 });
+
+const incrementHold = useHoldRepeat(
+  () => increment(),
+  () => ({
+    disabled: props.disabled,
+  }),
+);
+
+const decrementHold = useHoldRepeat(
+  () => decrement(),
+  () => ({
+    disabled: props.disabled,
+  }),
+);
 
 const { endAdornmentShellClass, endAdornmentButtonClass } =
   useTextFieldEndAdornment(
@@ -141,9 +155,12 @@ const stringModel = computed({
       >
         <button
           type="button"
-          v-on:click="increment"
           :disabled="props.disabled"
           aria-label="Increment value"
+          v-on:click="incrementHold.onPressClick"
+          v-on:pointerup="incrementHold.onPressPointerUp"
+          v-on:pointerdown="incrementHold.onPressPointerDown"
+          v-on:lostpointercapture="incrementHold.onPressLostPointerCapture"
           :class="
             cn({
               'min-h-0 min-w-8 flex-1': true,
@@ -157,9 +174,12 @@ const stringModel = computed({
 
         <button
           type="button"
-          v-on:click="decrement"
           :disabled="props.disabled"
           aria-label="Decrement value"
+          v-on:click="decrementHold.onPressClick"
+          v-on:pointerup="decrementHold.onPressPointerUp"
+          v-on:pointerdown="decrementHold.onPressPointerDown"
+          v-on:lostpointercapture="decrementHold.onPressLostPointerCapture"
           :class="
             cn({
               'min-h-0 min-w-8 flex-1': true,

@@ -113,4 +113,9 @@ export {
   isPropPresent,
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
+export { useHoldRepeat } from "@/Utils/useHoldRepeat";
+export type {
+  HoldRepeatAction,
+  UseHoldRepeatOptions,
+} from "@/Utils/useHoldRepeat";
 export { useTextFieldEndAdornment } from "@/Utils/useTextFieldEndAdornment";

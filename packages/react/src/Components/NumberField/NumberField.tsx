@@ -13,7 +13,7 @@ import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/hooks/useNumberField";
 import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
 import { TextField } from "@/Components/TextField";
-import { useTextFieldEndAdornment } from "@/Utils";
+import { useHoldRepeat, useTextFieldEndAdornment } from "@/Utils";
 
 // prettier-ignore
 function resolveStepperIconSize(fieldSize?: keyof TextFieldSize) {
@@ -53,6 +53,14 @@ function NumberField(props: NumberFieldProps) {
     value,
     onChange,
     defaultValue,
+  });
+
+  const incrementHold = useHoldRepeat(increment, {
+    disabled: textFieldProps.disabled,
+  });
+
+  const decrementHold = useHoldRepeat(decrement, {
+    disabled: textFieldProps.disabled,
   });
 
   const { endAdornmentShellClass, endAdornmentButtonClass } =
@@ -107,7 +115,7 @@ function NumberField(props: NumberFieldProps) {
             >
               <button
                 type="button"
-                onClick={increment}
+                {...incrementHold.handlers}
                 aria-label="Increment value"
                 disabled={textFieldProps.disabled}
                 className={cn({
@@ -124,9 +132,9 @@ function NumberField(props: NumberFieldProps) {
 
               <button
                 type="button"
-                onClick={decrement}
-                disabled={textFieldProps.disabled}
+                {...decrementHold.handlers}
                 aria-label="Decrement value"
+                disabled={textFieldProps.disabled}
                 className={cn({
                   "min-h-0 min-w-8 flex-1": true,
                   [endAdornmentButtonClass]: true,

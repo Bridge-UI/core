@@ -1,9 +1,13 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { NumberField } from "@/Components/NumberField";
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 test("it should render the root element", () => {
   const wrapper = mount(NumberField, {
@@ -142,4 +146,60 @@ test("it should merge classes.increment and classes.decrement onto buttons", () 
 
   expect(wrapper.find("button.custom-increment").exists()).toBe(true);
   expect(wrapper.find("button.custom-decrement").exists()).toBe(true);
+});
+
+test("it should repeat increment while increment button is held", async () => {
+  vi.useFakeTimers();
+
+  const wrapper = mount(NumberField, {
+    attrs: { "aria-label": "Amount" },
+    props: {
+      step: 1,
+      modelValue: 0,
+      "onUpdate:modelValue": (value: number | null | undefined) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  const button = wrapper.find("button[aria-label='Increment value']");
+
+  await button.trigger("pointerdown", { button: 0, pointerId: 1 });
+  expect(wrapper.props("modelValue")).toBe(1);
+
+  await vi.advanceTimersByTimeAsync(400);
+  await vi.advanceTimersByTimeAsync(75);
+  expect(wrapper.props("modelValue")).toBe(2);
+
+  await vi.advanceTimersByTimeAsync(75);
+  expect(wrapper.props("modelValue")).toBe(3);
+
+  await button.trigger("pointerup", { button: 0, pointerId: 1 });
+});
+
+test("it should stop repeating increment at max", async () => {
+  vi.useFakeTimers();
+
+  const wrapper = mount(NumberField, {
+    attrs: { "aria-label": "Amount" },
+    props: {
+      min: 0,
+      max: 2,
+      step: 1,
+      modelValue: 1,
+      "onUpdate:modelValue": (value: number | null | undefined) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  const button = wrapper.find("button[aria-label='Increment value']");
+
+  await button.trigger("pointerdown", { button: 0, pointerId: 1 });
+  expect(wrapper.props("modelValue")).toBe(2);
+
+  await vi.advanceTimersByTimeAsync(500);
+  expect(wrapper.props("modelValue")).toBe(2);
+
+  await button.trigger("pointerup", { button: 0, pointerId: 1 });
 });

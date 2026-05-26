@@ -1,0 +1,107 @@
+// ** External Imports
+import { onBeforeUnmount, toValue, type MaybeRefOrGetter } from "vue";
+
+export type HoldRepeatAction = () => boolean | void;
+
+export type UseHoldRepeatOptions = {
+  disabled?: boolean;
+  intervalMs?: number;
+  initialDelayMs?: number;
+};
+
+const DEFAULT_INTERVAL_MS = 75;
+const DEFAULT_INITIAL_DELAY_MS = 400;
+
+export function useHoldRepeat(
+  action: HoldRepeatAction,
+  options?: MaybeRefOrGetter<UseHoldRepeatOptions>,
+) {
+  let skipClick = false;
+
+  let delayTimer: ReturnType<typeof setTimeout> | undefined;
+  let intervalTimer: ReturnType<typeof setInterval> | undefined;
+
+  const stop = () => {
+    if (delayTimer !== undefined) {
+      clearTimeout(delayTimer);
+      delayTimer = undefined;
+    }
+
+    if (intervalTimer !== undefined) {
+      clearInterval(intervalTimer);
+      intervalTimer = undefined;
+    }
+  };
+
+  const run = () => {
+    const result = action();
+
+    if (result === false) {
+      stop();
+    }
+  };
+
+  const start = () => {
+    stop();
+    run();
+
+    const { initialDelayMs, intervalMs } = toValue(options) ?? {};
+
+    delayTimer = setTimeout(() => {
+      intervalTimer = setInterval(run, intervalMs ?? DEFAULT_INTERVAL_MS);
+    }, initialDelayMs ?? DEFAULT_INITIAL_DELAY_MS);
+  };
+
+  onBeforeUnmount(stop);
+
+  const onPressClick = () => {
+    if (skipClick) {
+      skipClick = false;
+
+      return;
+    }
+
+    if (toValue(options)?.disabled) {
+      return;
+    }
+
+    run();
+  };
+
+  const onPressPointerDown = (event: PointerEvent) => {
+    if (toValue(options)?.disabled) {
+      return;
+    }
+
+    if (event.button !== 0) {
+      return;
+    }
+
+    skipClick = true;
+    (event.currentTarget as HTMLButtonElement).setPointerCapture(
+      event.pointerId,
+    );
+    start();
+  };
+
+  const onPressPointerUp = (event: PointerEvent) => {
+    const target = event.currentTarget as HTMLButtonElement;
+
+    if (target.hasPointerCapture(event.pointerId)) {
+      target.releasePointerCapture(event.pointerId);
+    }
+
+    stop();
+  };
+
+  const onPressLostPointerCapture = () => {
+    stop();
+  };
+
+  return {
+    onPressClick,
+    onPressPointerUp,
+    onPressPointerDown,
+    onPressLostPointerCapture,
+  };
+}

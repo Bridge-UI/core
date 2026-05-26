@@ -1,5 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 afterEach(() => {
@@ -183,4 +184,85 @@ test("it should apply variant classes from TextField", () => {
   );
 
   expect(container.querySelector(".group\\/field")).not.toBeNull();
+});
+
+test("it should repeat increment while increment button is held", () => {
+  vi.useFakeTimers();
+
+  const onChange = vi.fn();
+
+  function ControlledNumberField() {
+    const [value, setValue] = useState(0);
+
+    return (
+      <NumberField
+        step={1}
+        value={value}
+        aria-label="Amount"
+        onChange={(next) => {
+          setValue(next);
+          onChange(next);
+        }}
+      />
+    );
+  }
+
+  render(<ControlledNumberField />);
+
+  const button = screen.getByRole("button", { name: "Increment value" });
+
+  fireEvent.pointerDown(button, { button: 0, pointerId: 1 });
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenLastCalledWith(1);
+
+  vi.advanceTimersByTime(400);
+  vi.advanceTimersByTime(75);
+  expect(onChange).toHaveBeenCalledTimes(2);
+  expect(onChange).toHaveBeenLastCalledWith(2);
+
+  vi.advanceTimersByTime(75);
+  expect(onChange).toHaveBeenCalledTimes(3);
+  expect(onChange).toHaveBeenLastCalledWith(3);
+
+  fireEvent.pointerUp(button, { button: 0, pointerId: 1 });
+
+  vi.useRealTimers();
+});
+
+test("it should stop repeating increment at max", () => {
+  vi.useFakeTimers();
+
+  const onChange = vi.fn();
+
+  function ControlledNumberField() {
+    const [value, setValue] = useState(1);
+
+    return (
+      <NumberField
+        min={0}
+        max={2}
+        step={1}
+        value={value}
+        aria-label="Amount"
+        onChange={(next) => {
+          setValue(next);
+          onChange(next);
+        }}
+      />
+    );
+  }
+
+  render(<ControlledNumberField />);
+
+  const button = screen.getByRole("button", { name: "Increment value" });
+
+  fireEvent.pointerDown(button, { button: 0, pointerId: 1 });
+  expect(onChange).toHaveBeenLastCalledWith(2);
+
+  vi.advanceTimersByTime(500);
+  expect(onChange).toHaveBeenCalledTimes(1);
+
+  fireEvent.pointerUp(button, { button: 0, pointerId: 1 });
+
+  vi.useRealTimers();
 });
