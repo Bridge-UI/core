@@ -13,6 +13,7 @@ import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/hooks/useNumberField";
 import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
 import { TextField } from "@/Components/TextField";
+import { useTextFieldEndAdornment } from "@/Utils";
 
 // prettier-ignore
 function resolveStepperIconSize(fieldSize?: keyof TextFieldSize) {
@@ -31,9 +32,13 @@ function NumberField(props: NumberFieldProps) {
   const {
     min,
     max,
+    color,
+    error,
     slots,
     value,
     classes,
+    rounded,
+    variant,
     onChange,
     step = 1,
     partsProps,
@@ -50,6 +55,21 @@ function NumberField(props: NumberFieldProps) {
     defaultValue,
   });
 
+  const { endAdornmentShellClass, endAdornmentButtonClass } =
+    useTextFieldEndAdornment(
+      {
+        color,
+        error,
+        rounded,
+        variant,
+      },
+      {
+        rounded: "md",
+        color: "primary",
+        variant: "outline",
+      },
+    );
+
   return (
     <TextField
       {...textFieldProps}
@@ -57,7 +77,11 @@ function NumberField(props: NumberFieldProps) {
       max={max}
       step={step}
       type="number"
+      color={color}
+      error={error}
       classes={classes}
+      rounded={rounded}
+      variant={variant}
       value={inputValue}
       withErrorIcon={false}
       onChange={handleChange}
@@ -75,19 +99,20 @@ function NumberField(props: NumberFieldProps) {
         ...slots,
         end: (
           <Fragment>
-            <div className="flex h-full min-h-0 w-full min-w-9 flex-col gap-px overflow-hidden">
+            <div
+              className={cn({
+                [endAdornmentShellClass]: true,
+                "flex min-w-9 flex-col gap-px overflow-hidden": true,
+              })}
+            >
               <button
                 type="button"
                 onClick={increment}
                 aria-label="Increment value"
                 disabled={textFieldProps.disabled}
                 className={cn({
-                  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40": true,
-                  "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50": true,
-                  "dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600": true,
-                  "inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
-                  "cursor-pointer rounded-sm text-gray-500 transition-colors": true,
-                  "hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200": true,
+                  "min-h-0 min-w-8 flex-1": true,
+                  [endAdornmentButtonClass]: true,
                   [classes?.increment ?? ""]: true,
                 })}
               >
@@ -103,12 +128,8 @@ function NumberField(props: NumberFieldProps) {
                 disabled={textFieldProps.disabled}
                 aria-label="Decrement value"
                 className={cn({
-                  "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40": true,
-                  "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50": true,
-                  "dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600": true,
-                  "inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
-                  "cursor-pointer rounded-sm text-gray-500 transition-colors": true,
-                  "hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200": true,
+                  "min-h-0 min-w-8 flex-1": true,
+                  [endAdornmentButtonClass]: true,
                   [classes?.decrement ?? ""]: true,
                 })}
               >

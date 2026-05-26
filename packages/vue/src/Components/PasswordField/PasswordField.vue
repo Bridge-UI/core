@@ -16,6 +16,7 @@ import type {
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
 import { TextField } from "@/Components/TextField";
+import { useTextFieldEndAdornment } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
 
@@ -36,20 +37,19 @@ const { isVisible, toggleVisibility } = usePasswordField({
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
 
-// prettier-ignore
-const toggleIconSize = computed(() => {
-  const fieldSize = props.size ?? "md";
-
-  return get({
-    "2xs": "xs",
-    "xs": "xs",
-    "sm": "sm",
-    "md": "md",
-    "lg": "md",
-    "xl": "lg",
-    "2xl": "lg",
-  }, fieldSize) as keyof IconSize;
-});
+const { endAdornmentClass } = useTextFieldEndAdornment(
+  () => ({
+    color: props.color,
+    error: props.error,
+    rounded: props.rounded,
+    variant: props.variant,
+  }),
+  {
+    rounded: "md",
+    color: "primary",
+    variant: "outline",
+  },
+);
 
 const mergedPartsProps = computed(() => ({
   ...props.partsProps,
@@ -68,6 +68,21 @@ const textFieldProps = computed(() => {
   } = props;
 
   return rest;
+});
+
+// prettier-ignore
+const toggleIconSize = computed(() => {
+  const fieldSize = props.size ?? "md";
+
+  return get({
+    "2xs": "xs",
+    "xs": "xs",
+    "sm": "sm",
+    "md": "md",
+    "lg": "md",
+    "xl": "lg",
+    "2xl": "lg",
+  }, fieldSize) as keyof IconSize;
 });
 </script>
 
@@ -88,17 +103,7 @@ const textFieldProps = computed(() => {
         :disabled="props.disabled"
         v-on:click="toggleVisibility"
         :aria-label="isVisible ? 'Hide password' : 'Show password'"
-        :class="
-          cn({
-            'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40': true,
-            'inline-flex h-full min-h-0 shrink-0 items-center justify-center self-stretch px-2.5': true,
-            'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50': true,
-            'dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600': true,
-            'cursor-pointer rounded-sm text-gray-500 transition-colors': true,
-            'hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200': true,
-            [props.classes?.toggle ?? '']: true,
-          })
-        "
+        :class="cn(endAdornmentClass, 'px-2.5', props.classes?.toggle)"
       >
         <Icon :icon="isVisible ? EyeOff : Eye" :size="toggleIconSize" />
       </button>

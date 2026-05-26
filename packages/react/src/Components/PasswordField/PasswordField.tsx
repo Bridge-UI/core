@@ -13,6 +13,7 @@ import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/hooks/usePasswordField";
 import type { PasswordFieldProps } from "@/Components/PasswordField/passwordField.types";
 import { TextField } from "@/Components/TextField";
+import { useTextFieldEndAdornment } from "@/Utils";
 
 // prettier-ignore
 function resolveToggleIconSize(fieldSize?: keyof TextFieldSize) {
@@ -28,18 +29,45 @@ function resolveToggleIconSize(fieldSize?: keyof TextFieldSize) {
 }
 
 function PasswordField(props: PasswordFieldProps) {
-  // prettier-ignore
-  const { slots, classes, visible, onVisibilityChange, ...textFieldProps } = props;
+  const {
+    color,
+    error,
+    slots,
+    classes,
+    rounded,
+    variant,
+    visible,
+    onVisibilityChange,
+    ...textFieldProps
+  } = props;
 
   const { isVisible, toggleVisibility } = usePasswordField({
     visible,
     onVisibilityChange,
   });
 
+  const { endAdornmentClass } = useTextFieldEndAdornment(
+    {
+      color,
+      error,
+      rounded,
+      variant,
+    },
+    {
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+    },
+  );
+
   return (
     <TextField
       {...textFieldProps}
+      color={color}
+      error={error}
       classes={classes}
+      rounded={rounded}
+      variant={variant}
       withErrorIcon={false}
       type={isVisible ? "text" : "password"}
       slots={{
@@ -51,15 +79,7 @@ function PasswordField(props: PasswordFieldProps) {
               onClick={toggleVisibility}
               disabled={textFieldProps.disabled}
               aria-label={isVisible ? "Hide password" : "Show password"}
-              className={cn({
-                "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40": true,
-                "inline-flex h-full min-h-0 shrink-0 items-center justify-center self-stretch px-2.5": true,
-                "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50": true,
-                "dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600": true,
-                "cursor-pointer rounded-sm text-gray-500 transition-colors": true,
-                "hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200": true,
-                [classes?.toggle ?? ""]: true,
-              })}
+              className={cn(endAdornmentClass, "px-2.5", classes?.toggle)}
             >
               <Icon
                 icon={isVisible ? EyeOff : Eye}

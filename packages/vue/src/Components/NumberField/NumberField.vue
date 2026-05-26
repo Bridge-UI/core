@@ -16,6 +16,7 @@ import type {
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
 import { TextField } from "@/Components/TextField";
+import { useTextFieldEndAdornment } from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
@@ -33,28 +34,20 @@ const { increment, decrement } = useNumberField(model, {
   step: props.step,
 });
 
-const stringModel = computed({
-  get: () => {
-    if (model.value === undefined || model.value === null) {
-      return undefined;
-    }
-
-    return String(model.value);
-  },
-  set: (raw: string | null | undefined) => {
-    if (raw === "" || raw === undefined || raw === null) {
-      model.value = undefined;
-
-      return;
-    }
-
-    const parsed = Number(raw);
-
-    if (!Number.isNaN(parsed)) {
-      model.value = parsed;
-    }
-  },
-});
+const { endAdornmentShellClass, endAdornmentButtonClass } =
+  useTextFieldEndAdornment(
+    () => ({
+      color: props.color,
+      error: props.error,
+      rounded: props.rounded,
+      variant: props.variant,
+    }),
+    {
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+    },
+  );
 
 const textFieldProps = computed(() => {
   const {
@@ -97,6 +90,29 @@ const mergedPartsProps = computed(() => {
     },
   };
 });
+
+const stringModel = computed({
+  get: () => {
+    if (model.value === undefined || model.value === null) {
+      return undefined;
+    }
+
+    return String(model.value);
+  },
+  set: (raw: string | null | undefined) => {
+    if (raw === "" || raw === undefined || raw === null) {
+      model.value = undefined;
+
+      return;
+    }
+
+    const parsed = Number(raw);
+
+    if (!Number.isNaN(parsed)) {
+      model.value = parsed;
+    }
+  },
+});
 </script>
 
 <template>
@@ -116,7 +132,12 @@ const mergedPartsProps = computed(() => {
   >
     <template #end>
       <div
-        class="flex h-full min-h-0 w-full min-w-9 flex-col gap-px overflow-hidden"
+        :class="
+          cn({
+            [endAdornmentShellClass]: true,
+            'flex min-w-9 flex-col gap-px overflow-hidden': true,
+          })
+        "
       >
         <button
           type="button"
@@ -125,12 +146,8 @@ const mergedPartsProps = computed(() => {
           aria-label="Increment value"
           :class="
             cn({
-              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40': true,
-              'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50': true,
-              'dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600': true,
-              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
-              'cursor-pointer rounded-sm text-gray-500 transition-colors': true,
-              'hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200': true,
+              'min-h-0 min-w-8 flex-1': true,
+              [endAdornmentButtonClass]: true,
               [props.classes?.increment ?? '']: true,
             })
           "
@@ -145,12 +162,8 @@ const mergedPartsProps = computed(() => {
           aria-label="Decrement value"
           :class="
             cn({
-              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40': true,
-              'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50': true,
-              'dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600': true,
-              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
-              'cursor-pointer rounded-sm text-gray-500 transition-colors': true,
-              'hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200': true,
+              'min-h-0 min-w-8 flex-1': true,
+              [endAdornmentButtonClass]: true,
               [props.classes?.decrement ?? '']: true,
             })
           "
