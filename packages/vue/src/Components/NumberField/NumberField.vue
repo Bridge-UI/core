@@ -1,15 +1,12 @@
 <script setup lang="ts">
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import { computed } from "vue";
 
 // ** Core Imports
-import {
-  fieldStepperButtonClasses,
-  numberFieldStepperWrapperClasses,
-  resolveStepperIconSize,
-} from "@/Components/TextField/fieldAdornment";
 import { cn } from "@bridge-ui/core";
+import type { IconSize } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -71,7 +68,20 @@ const textFieldProps = computed(() => {
   return rest;
 });
 
-const stepperIconSize = computed(() => resolveStepperIconSize(props.size));
+// prettier-ignore
+const stepperIconSize = computed(() => {
+  const fieldSize = props.size ?? "md";
+
+  return get({
+    "2xs": "xs",
+    "xs": "xs",
+    "sm": "sm",
+    "md": "md",
+    "lg": "md",
+    "xl": "lg",
+    "2xl": "lg",
+  }, fieldSize) as keyof IconSize;
+});
 
 const mergedPartsProps = computed(() => {
   const inputClass = cn(
@@ -105,13 +115,25 @@ const mergedPartsProps = computed(() => {
     :parts-props="mergedPartsProps"
   >
     <template #end>
-      <div :class="numberFieldStepperWrapperClasses">
+      <div
+        class="flex h-full min-h-0 w-full min-w-9 flex-col gap-px overflow-hidden"
+      >
         <button
           type="button"
           v-on:click="increment"
           :disabled="props.disabled"
           aria-label="Increment value"
-          :class="cn(fieldStepperButtonClasses, props.classes?.increment)"
+          :class="
+            cn({
+              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40': true,
+              'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50': true,
+              'dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600': true,
+              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
+              'cursor-pointer rounded-sm text-gray-500 transition-colors': true,
+              'hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200': true,
+              [props.classes?.increment ?? '']: true,
+            })
+          "
         >
           <Icon :icon="ChevronUp" :size="stepperIconSize" />
         </button>
@@ -121,7 +143,17 @@ const mergedPartsProps = computed(() => {
           v-on:click="decrement"
           :disabled="props.disabled"
           aria-label="Decrement value"
-          :class="cn(fieldStepperButtonClasses, props.classes?.decrement)"
+          :class="
+            cn({
+              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40': true,
+              'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50': true,
+              'dark:hover:bg-gray-700/50 dark:hover:text-gray-300 dark:active:bg-gray-600': true,
+              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
+              'cursor-pointer rounded-sm text-gray-500 transition-colors': true,
+              'hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200': true,
+              [props.classes?.decrement ?? '']: true,
+            })
+          "
         >
           <Icon :icon="ChevronDown" :size="stepperIconSize" />
         </button>
