@@ -50,9 +50,9 @@ export function resolveEndAdornmentShellClasses(
 
   return cn({
     "shrink-0 flex h-full min-h-0 self-stretch text-gray-500": true,
-    [roundedClasses?.end ?? ""]: !isUnderlined,
-    [colorClasses?.end ?? ""]: !options.invalidated,
     "group-data-[invalid]:text-error-500": !options.invalidated,
+    [colorClasses?.end ?? ""]: !options.invalidated,
+    [roundedClasses?.end ?? ""]: !isUnderlined,
     "text-error-500": options.invalidated,
   });
 }
@@ -62,10 +62,10 @@ export function resolveEndAdornmentShellClasses(
  */
 export function resolveEndAdornmentButtonClasses() {
   return cn({
-    "inline-flex items-center justify-center text-inherit": true,
     "cursor-pointer transition-colors": true,
-    "hover:bg-gray-100 hover:text-gray-700 active:bg-gray-200": true,
+    "hover:bg-gray-100 active:bg-gray-200": true,
     "dark:hover:bg-gray-700/50 dark:active:bg-gray-600": true,
+    "inline-flex items-center justify-center text-inherit": true,
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50": true,
     "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary-500/40": true,
   });
