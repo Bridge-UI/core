@@ -3,6 +3,7 @@ import { get } from "es-toolkit/compat";
 import {
   type ClassValue,
   computed,
+  HTMLAttributes,
   type MaybeRefOrGetter,
   toValue,
   useAttrs,
@@ -34,18 +35,25 @@ import {
 
 /** Props forwarded from field wrappers (e.g. TextField) into `useFormField`. */
 export const formFieldOwnPropKeys = [
+  "end",
   "size",
+  "color",
   "error",
   "label",
+  "start",
   "corner",
   "classes",
+  "endIcon",
+  "rounded",
+  "variant",
   "disabled",
   "readonly",
   "required",
+  "startIcon",
   "partsProps",
-  "controlId",
   "description",
   "errorMessage",
+  "withErrorIcon",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<FormFieldOwnProps, "size">;
@@ -65,6 +73,11 @@ export type UseFormFieldOptions = {
    * Extra root `class` from a parent field wrapper (e.g. TextField fallthrough).
    */
   rootClassName?: () => ClassValue | undefined;
+
+  /**
+   * Extra input `attributes` from a parent field wrapper (e.g. TextField fallthrough).
+   */
+  inputAttributes?: () => HTMLAttributes | undefined;
 };
 
 export function useFormField(

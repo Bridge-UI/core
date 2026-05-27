@@ -1,35 +1,21 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
-import { computed, onMounted, useAttrs, useSlots, watch, type Ref } from "vue";
+import { omit } from "es-toolkit/compat";
+import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
 import {
-  cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Textarea";
-import {
-  colorProps,
-  roundedProps,
-  variantProps,
-} from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type {
-  TextareaClasses,
   TextareaOwnProps,
-  TextareaPartsProps,
   TextareaProps,
 } from "@/Components/Textarea/textarea.types";
-import {
-  mergePartBind,
-  useBridgeUIComponent,
-  useBridgeUIMergedRegistryClasses,
-} from "@/Utils";
+import { useBridgeUIComponent } from "@/Utils";
 
 const textareaBridgeKeys = [
   "size",
@@ -60,11 +46,9 @@ export function useTextarea(
   props: TextareaOwnProps,
   libDefaults: TextareaLibDefaults,
   textareaRef: Ref<HTMLTextAreaElement | null>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any {
+) {
   // Setup
   const attrs = useAttrs();
-  const slots = useSlots();
 
   const split = computed(() => {
     return splitComponentProps<TextareaProps, typeof textareaBridgeKeys>({
@@ -92,82 +76,6 @@ export function useTextarea(
   }, { size: libDefaults.size }, {
     rootClassName: () => split.value.inheritedAttrs.class,
     controlId: () => textareaInheritedAttrs.value.id as string | undefined,
-  });
-
-  const partsProps = computed((): TextareaPartsProps | undefined => {
-    return merged.value.partsProps;
-  });
-
-  const mergedClasses = useBridgeUIMergedRegistryClasses<TextareaClasses>({
-    entry: bridgeTextarea,
-    props: () => split.value.customProps,
-  });
-
-  // Classes
-  const variantClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeTextarea.value?.customProps?.variant,
-    );
-
-    return get(classes, merged.value.variant);
-  });
-
-  const colorClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeTextarea.value?.customProps?.color,
-    );
-
-    return get(classes, merged.value.color);
-  });
-
-  const roundedClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeTextarea.value?.customProps?.rounded,
-    );
-
-    return get(classes, merged.value.rounded);
-  });
-
-  const sizeClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeTextarea.value?.customProps?.size,
-    );
-
-    return get(classes, merged.value.size);
-  });
-
-  // Elements
-  const isUnderlined = computed(() => {
-    return merged.value.variant === "underlined";
-  });
-
-  const isDisabled = formField.isDisabled;
-  const isReadonly = formField.isReadonly;
-  const invalidated = formField.invalidated;
-
-  const focusColorPalette = computed(() => {
-    if (merged.value.error === true) {
-      const classes = mergeBridgeUILayeredClasses(
-        colorProps,
-        bridgeTextarea.value?.customProps?.color,
-      );
-
-      return get(classes, "error");
-    }
-
-    return colorClasses.value;
-  });
-
-  const containerColorFocus = computed(() => {
-    if (isUnderlined.value) {
-      return focusColorPalette.value?.underlined;
-    }
-
-    return focusColorPalette.value?.input;
   });
 
   const inheritedOnInput = computed(() => {
@@ -203,60 +111,9 @@ export function useTextarea(
     adjustHeight(textareaRef.value);
   });
 
-  // prettier-ignore
-  const textareaBind = computed(() => {
-    return mergePartBind({
-      ...partsProps.value?.input,
-      disabled: isDisabled.value,
-      readonly: isReadonly.value,
-      id: formField.controlId.value,
-      "aria-invalid": invalidated.value || undefined,
-      "aria-describedby": formField.ariaDescribedBy.value,
-      onInput: merged.value.autosize ? handleAutosize : inheritedOnInput.value,
-    }, textareaInheritedAttrs.value, cn({
-      // Theme classes
-      "w-full min-w-0 bg-transparent border-0 shadow-none resize-none overflow-hidden": merged.value.autosize,
-      "w-full min-w-0 bg-transparent border-0 shadow-none resize-y": !merged.value.autosize,
-      "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
-      "outline-none ring-0 focus:outline-none focus:ring-0": true,
-      "disabled:cursor-not-allowed": true,
-      [sizeClasses.value?.input ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.input ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const containerBind = computed(() => {
-    return mergePartBind(partsProps.value?.container, {}, cn({
-      // Theme classes
-      "group/field relative w-full": true,
-      "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
-      "transition-all ease-in-out duration-150": true,
-      [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
-      [variantClasses.value?.container ?? ""]: true,
-      [variantClasses.value?.input ?? ""]: true,
-      [containerColorFocus.value ?? ""]: true,
-      "rounded-none": isUnderlined.value,
-      "outline-none": true,
-      // Error classes
-      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated.value && !isUnderlined.value,
-      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated.value && isUnderlined.value,
-      // Custom classes
-      [mergedClasses.value.container ?? ""]: true,
-    }));
-  });
-
   return {
-    slots,
-    merged,
     formField,
-    isDisabled,
-    isReadonly,
-    invalidated,
     adjustHeight,
-    textareaBind,
-    containerBind,
-    rootBind: formField.rootBind,
+    inputBind: formField.inputBind,
   };
 }

@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<TextareaOwnProps>(), {});
 
 const textareaRef = useTemplateRef<HTMLTextAreaElement>("textarea");
 
-const { formField, textareaBind, containerBind, adjustHeight } = useTextarea(
+const { formField, inputBind, adjustHeight } = useTextarea(
   props,
   {
     size: "md",
@@ -38,8 +38,6 @@ watch(model, () => {
 
 <template>
   <FormField :field="formField">
-    <div v-bind="containerBind">
-      <textarea ref="textareaRef" v-model="model" v-bind="textareaBind" />
-    </div>
+    <textarea ref="textareaRef" v-model="model" v-bind="inputBind" />
   </FormField>
 </template>
