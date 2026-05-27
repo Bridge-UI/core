@@ -1,5 +1,5 @@
 // prettier-ignore
-export interface TextFieldVariantItem {
+export interface FormFieldVariantItem {
   /**
    * Structural classes for the input container (`<div>` wrapper).
    */
@@ -22,14 +22,16 @@ export interface TextFieldVariantItem {
 }
 
 // prettier-ignore
-export interface TextFieldVariant {
-  "filled": TextFieldVariantItem;
-  "outline": TextFieldVariantItem;
-  "underlined": TextFieldVariantItem;
+export interface FormFieldVariant {
+  "filled": FormFieldVariantItem;
+  "outline": FormFieldVariantItem;
+  "underlined": FormFieldVariantItem;
+  "stacked": FormFieldVariantItem;
+  "notched": FormFieldVariantItem;
 }
 
 // prettier-ignore
-export const variantProps: TextFieldVariant = {
+export const variantProps: FormFieldVariant = {
   "outline": {
     "container": "bg-white dark:bg-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus-within:ring-2",
   },
@@ -38,5 +40,11 @@ export const variantProps: TextFieldVariant = {
   },
   "underlined": {
     "container": "rounded-none bg-transparent shadow-none ring-0 border-0 border-b-2 border-gray-300 dark:border-gray-600 focus-within:ring-0",
+  },
+  "stacked": {
+    "container": "",
+  },
+  "notched": {
+    "container": "",
   },
 };

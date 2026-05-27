@@ -3,7 +3,7 @@ import { omit } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { splitComponentProps, type LibDefaultsShape } from "@bridge-ui/core";
+import { splitComponentProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import {
@@ -15,15 +15,7 @@ import type {
   TextFieldProps,
 } from "@/Components/TextField/textField.types";
 
-type TextFieldLibDefaults = LibDefaultsShape<
-  TextFieldOwnProps,
-  "color" | "rounded" | "size" | "variant" | "withErrorIcon"
->;
-
-export function useTextField(
-  props: TextFieldOwnProps,
-  libDefaults: TextFieldLibDefaults,
-) {
+export function useTextField(props: TextFieldOwnProps) {
   // Setup
   const attrs = useAttrs();
 
@@ -41,7 +33,12 @@ export function useTextField(
   // prettier-ignore
   const formField = useFormField(() => {
     return split.value.customProps;
-  }, libDefaults, {
+  }, {
+    size: "md",
+    rounded: "md",
+    color: "primary",
+    variant: "outline",
+  }, {
     controlId: () => inputInheritedAttrs.value.id,
     inputAttributes: () => inputInheritedAttrs.value,
     rootClassName: () => split.value.inheritedAttrs.class,

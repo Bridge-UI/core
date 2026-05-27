@@ -14,7 +14,6 @@ import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
-import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
@@ -56,7 +55,18 @@ declare module "@bridge-ui/core" {
 
   interface FormFieldConfigOverrides {
     classes: FormFieldClasses;
-    defaultProps: Partial<Pick<FormFieldProps, "size">>;
+    defaultProps: Partial<
+      Pick<
+        FormFieldProps,
+        "size" | "color" | "rounded" | "variant" | "withErrorIcon"
+      >
+    >;
+    customProps: Partial<{
+      size: Record<string, import("@bridge-ui/core").FormFieldSizeItem>;
+      color: Record<string, import("@bridge-ui/core").FormFieldColorItem>;
+      rounded: Record<string, import("@bridge-ui/core").FormFieldRoundedItem>;
+      variant: Record<string, import("@bridge-ui/core").FormFieldVariantItem>;
+    }>;
   }
 
   interface IconConfigOverrides {
@@ -99,16 +109,6 @@ declare module "@bridge-ui/core" {
     classes: TextareaClasses;
     defaultProps: Partial<
       Pick<TextareaProps, "size" | "color" | "rounded" | "variant">
-    >;
-  }
-
-  interface TextFieldConfigOverrides {
-    classes: TextFieldClasses;
-    defaultProps: Partial<
-      Pick<
-        TextFieldProps,
-        "size" | "color" | "rounded" | "variant" | "withErrorIcon"
-      >
     >;
   }
 

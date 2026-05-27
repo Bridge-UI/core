@@ -6,18 +6,18 @@ import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core";
 import {
   colorProps,
   roundedProps,
-  type TextFieldColor,
-  type TextFieldRounded,
-  type TextFieldVariant,
-} from "@bridge-ui/core/Components/TextField";
+  type FormFieldColor,
+  type FormFieldRounded,
+  type FormFieldVariant,
+} from "@bridge-ui/core/Components/FormField";
 
 export type ResolveEndAdornmentClassesOptions = {
-  color: keyof TextFieldColor;
-  rounded: keyof TextFieldRounded;
-  variant: keyof TextFieldVariant;
+  color: keyof FormFieldColor;
+  rounded: keyof FormFieldRounded;
+  variant: keyof FormFieldVariant;
   invalidated: boolean;
-  bridgeColor?: Partial<TextFieldColor>;
-  bridgeRounded?: Partial<TextFieldRounded>;
+  bridgeColor?: Partial<FormFieldColor>;
+  bridgeRounded?: Partial<FormFieldRounded>;
 };
 
 /**

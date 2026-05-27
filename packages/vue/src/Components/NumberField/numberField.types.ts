@@ -6,11 +6,11 @@ import type {
 } from "@/Components/TextField/textField.types";
 
 export type {
-  TextFieldColorOverrides as NumberFieldColorOverrides,
-  TextFieldRoundedOverrides as NumberFieldRoundedOverrides,
-  TextFieldSizeOverrides as NumberFieldSizeOverrides,
-  TextFieldVariantOverrides as NumberFieldVariantOverrides,
-} from "@/Components/TextField/textField.types";
+  FormFieldColorOverrides as NumberFieldColorOverrides,
+  FormFieldRoundedOverrides as NumberFieldRoundedOverrides,
+  FormFieldSizeOverrides as NumberFieldSizeOverrides,
+  FormFieldVariantOverrides as NumberFieldVariantOverrides,
+} from "@/Components/FormField/formField.types";
 
 export interface NumberFieldClasses extends TextFieldClasses {
   /**

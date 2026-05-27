@@ -17,13 +17,7 @@ const props = withDefaults(defineProps<TextFieldOwnProps>(), {
   withErrorIcon: true,
 });
 
-const { formField, inputBind } = useTextField(props, {
-  size: "md",
-  rounded: "md",
-  color: "primary",
-  variant: "outline",
-  withErrorIcon: true,
-});
+const { formField, inputBind } = useTextField(props);
 </script>
 
 <template>

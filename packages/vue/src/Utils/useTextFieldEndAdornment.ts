@@ -30,16 +30,16 @@ function buildEndAdornmentOptions(
   merged: EndAdornmentProps,
   libDefaults: EndAdornmentLibDefaults,
   invalidated: boolean,
-  bridgeTextField: {
+  bridgeFormField: {
     value?: { customProps?: { color?: object; rounded?: object } };
   },
 ) {
   return {
     invalidated,
     color: merged.color ?? libDefaults.color ?? "primary",
-    bridgeColor: bridgeTextField.value?.customProps?.color,
+    bridgeColor: bridgeFormField.value?.customProps?.color,
     rounded: merged.rounded ?? libDefaults.rounded ?? "md",
-    bridgeRounded: bridgeTextField.value?.customProps?.rounded,
+    bridgeRounded: bridgeFormField.value?.customProps?.rounded,
     variant: merged.variant ?? libDefaults.variant ?? "outline",
   };
 }
@@ -51,12 +51,12 @@ export function useTextFieldEndAdornment(
   props: MaybeRefOrGetter<EndAdornmentProps>,
   libDefaults: EndAdornmentLibDefaults,
 ) {
-  const { entry: bridgeTextField, merged } = useBridgeUIComponent<
+  const { entry: bridgeFormField, merged } = useBridgeUIComponent<
     EndAdornmentProps,
-    "TextField"
+    "FormField"
   >({
     libDefaults,
-    componentName: "TextField",
+    componentName: "FormField",
     props: () => toValue(props),
   });
 
@@ -69,7 +69,7 @@ export function useTextFieldEndAdornment(
       merged.value,
       libDefaults,
       invalidated.value,
-      bridgeTextField,
+      bridgeFormField,
     );
   });
 

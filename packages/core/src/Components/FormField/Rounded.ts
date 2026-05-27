@@ -1,26 +1,26 @@
 // prettier-ignore
-export interface TextFieldRoundedItem {
+export interface FormFieldRoundedItem {
   "end": string;
   "input": string;
   "start": string;
 }
 
 // prettier-ignore
-export interface TextFieldRounded {
-  "none": TextFieldRoundedItem;
-  "xs": TextFieldRoundedItem;
-  "sm": TextFieldRoundedItem;
-  "md": TextFieldRoundedItem;
-  "lg": TextFieldRoundedItem;
-  "xl": TextFieldRoundedItem;
-  "2xl": TextFieldRoundedItem;
-  "3xl": TextFieldRoundedItem;
-  "4xl": TextFieldRoundedItem;
-  "full": TextFieldRoundedItem;
+export interface FormFieldRounded {
+  "none": FormFieldRoundedItem;
+  "xs": FormFieldRoundedItem;
+  "sm": FormFieldRoundedItem;
+  "md": FormFieldRoundedItem;
+  "lg": FormFieldRoundedItem;
+  "xl": FormFieldRoundedItem;
+  "2xl": FormFieldRoundedItem;
+  "3xl": FormFieldRoundedItem;
+  "4xl": FormFieldRoundedItem;
+  "full": FormFieldRoundedItem;
 }
 
 // prettier-ignore
-export const roundedProps: TextFieldRounded = {
+export const roundedProps: FormFieldRounded = {
   "none": {
     "end": "rounded-none",
     "input": "rounded-none",

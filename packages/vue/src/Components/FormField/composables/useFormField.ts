@@ -56,7 +56,10 @@ export const formFieldOwnPropKeys = [
   "withErrorIcon",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
-type FormFieldLibDefaults = LibDefaultsShape<FormFieldOwnProps, "size">;
+type FormFieldLibDefaults = LibDefaultsShape<
+  FormFieldOwnProps,
+  "color" | "rounded" | "size" | "variant" | "withErrorIcon"
+>;
 
 type FormFieldMerged = MergeLibDefaults<
   FormFieldOwnProps,
@@ -274,3 +277,5 @@ export function useFormField(
     descriptionBind,
   };
 }
+
+export type UseFormFieldReturn = ReturnType<typeof useFormField>;

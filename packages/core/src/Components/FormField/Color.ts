@@ -1,5 +1,5 @@
 // prettier-ignore
-export interface TextFieldColorItem {
+export interface FormFieldColorItem {
   "end": string;
   "input": string;
   "start": string;
@@ -7,18 +7,18 @@ export interface TextFieldColorItem {
 }
 
 // prettier-ignore
-export interface TextFieldColor {
-  "dark": TextFieldColorItem;
-  "primary": TextFieldColorItem;
-  "secondary": TextFieldColorItem;
-  "success": TextFieldColorItem;
-  "error": TextFieldColorItem;
-  "warning": TextFieldColorItem;
-  "info": TextFieldColorItem;
+export interface FormFieldColor {
+  "dark": FormFieldColorItem;
+  "primary": FormFieldColorItem;
+  "secondary": FormFieldColorItem;
+  "success": FormFieldColorItem;
+  "error": FormFieldColorItem;
+  "warning": FormFieldColorItem;
+  "info": FormFieldColorItem;
 }
 
 // prettier-ignore
-export const colorProps: TextFieldColor = {
+export const colorProps: FormFieldColor = {
   "dark": {
     "end": "group-focus-within:text-dark-500",
     "start": "group-focus-within:text-dark-500",

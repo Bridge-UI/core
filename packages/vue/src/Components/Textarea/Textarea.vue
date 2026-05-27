@@ -16,20 +16,14 @@ defineOptions({ inheritAttrs: false });
 
 const model = defineModel<string | null | undefined>();
 
-const props = withDefaults(defineProps<TextareaOwnProps>(), {});
+const props = withDefaults(defineProps<TextareaOwnProps>(), {
+  autosize: false,
+  withErrorIcon: true,
+});
 
 const textareaRef = useTemplateRef<HTMLTextAreaElement>("textarea");
 
-const { formField, inputBind, adjustHeight } = useTextarea(
-  props,
-  {
-    size: "md",
-    rounded: "md",
-    color: "primary",
-    variant: "outline",
-  },
-  textareaRef,
-);
+const { formField, inputBind, adjustHeight } = useTextarea(props, textareaRef);
 
 watch(model, () => {
   adjustHeight(textareaRef.value);

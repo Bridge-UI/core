@@ -41,8 +41,14 @@ export type {
   CheckboxSize,
 } from "@core/Components/Checkbox";
 export type {
+  FormFieldColor,
+  FormFieldColorItem,
+  FormFieldRounded,
+  FormFieldRoundedItem,
   FormFieldSize,
   FormFieldSizeItem,
+  FormFieldVariant,
+  FormFieldVariantItem,
 } from "@core/Components/FormField";
 export type { IconSize } from "@core/Components/Icon";
 export type { LabelSize } from "@core/Components/Label";
@@ -71,16 +77,6 @@ export type {
   SelectVariant,
 } from "@core/Components/Select";
 export type { TextareaSize, TextareaSizeItem } from "@core/Components/Textarea";
-export type {
-  TextFieldColor,
-  TextFieldColorItem,
-  TextFieldRounded,
-  TextFieldRoundedItem,
-  TextFieldSize,
-  TextFieldSizeItem,
-  TextFieldVariant,
-  TextFieldVariantItem,
-} from "@core/Components/TextField";
 export type {
   ToggleColor,
   ToggleColorItem,
@@ -111,7 +107,6 @@ export type {
   ModalConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
-  TextFieldConfigOverrides,
   TextareaConfigOverrides,
   ToggleConfigOverrides,
 } from "@core/Config";

@@ -6,11 +6,11 @@ import type {
 } from "@/Components/TextField/textField.types";
 
 export type {
-  TextFieldColorOverrides as PasswordFieldColorOverrides,
-  TextFieldRoundedOverrides as PasswordFieldRoundedOverrides,
-  TextFieldSizeOverrides as PasswordFieldSizeOverrides,
-  TextFieldVariantOverrides as PasswordFieldVariantOverrides,
-} from "@/Components/TextField/textField.types";
+  FormFieldColorOverrides as PasswordFieldColorOverrides,
+  FormFieldRoundedOverrides as PasswordFieldRoundedOverrides,
+  FormFieldSizeOverrides as PasswordFieldSizeOverrides,
+  FormFieldVariantOverrides as PasswordFieldVariantOverrides,
+} from "@/Components/FormField/formField.types";
 
 export interface PasswordFieldClasses extends TextFieldClasses {
   /**

@@ -40,7 +40,16 @@ import type {
   CheckboxRounded,
   CheckboxSize,
 } from "@core/Components/Checkbox";
-import type { FormFieldSize } from "@core/Components/FormField";
+import type {
+  FormFieldColor,
+  FormFieldColorItem,
+  FormFieldRounded,
+  FormFieldRoundedItem,
+  FormFieldSize,
+  FormFieldSizeItem,
+  FormFieldVariant,
+  FormFieldVariantItem,
+} from "@core/Components/FormField";
 import type { IconSize } from "@core/Components/Icon";
 import type { LabelSize } from "@core/Components/Label";
 import type {
@@ -67,17 +76,6 @@ import type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
-import type { TextareaSize, TextareaSizeItem } from "@core/Components/Textarea";
-import type {
-  TextFieldColor,
-  TextFieldColorItem,
-  TextFieldRounded,
-  TextFieldRoundedItem,
-  TextFieldSize,
-  TextFieldSizeItem,
-  TextFieldVariant,
-  TextFieldVariantItem,
-} from "@core/Components/TextField";
 import type {
   ToggleColor,
   ToggleColorItem,
@@ -108,7 +106,6 @@ export interface ModalConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface TextareaConfigOverrides {}
-export interface TextFieldConfigOverrides {}
 export interface ToggleConfigOverrides {}
 
 export interface AlertConfigBase {
@@ -215,9 +212,16 @@ export interface FormFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     size: keyof FormFieldSize;
+    color: keyof FormFieldColor;
+    rounded: keyof FormFieldRounded;
+    variant: keyof FormFieldVariant;
+    withErrorIcon: boolean;
   }>;
   customProps: Partial<{
-    size: Partial<FormFieldSize>;
+    size: Record<string, FormFieldSizeItem>;
+    color: Record<string, FormFieldColorItem>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -298,38 +302,6 @@ export interface SelectConfigBase {
   }>;
 }
 
-export interface TextareaConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof TextareaSize;
-    color: keyof TextFieldColor;
-    rounded: keyof TextFieldRounded;
-    variant: keyof TextFieldVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, TextareaSizeItem>;
-    color: Record<string, TextFieldColorItem>;
-    rounded: Record<string, TextFieldRoundedItem>;
-    variant: Record<string, TextFieldVariantItem>;
-  }>;
-}
-
-export interface TextFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    size: keyof TextFieldSize;
-    color: keyof TextFieldColor;
-    rounded: keyof TextFieldRounded;
-    variant: keyof TextFieldVariant;
-  }>;
-  customProps: Partial<{
-    size: Record<string, TextFieldSizeItem>;
-    color: Record<string, TextFieldColorItem>;
-    rounded: Record<string, TextFieldRoundedItem>;
-    variant: Record<string, TextFieldVariantItem>;
-  }>;
-}
-
 export interface ToggleConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -357,8 +329,6 @@ export type BridgeUIComponentsConfig = Partial<{
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
-  Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
-  TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;
 

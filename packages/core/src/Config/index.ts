@@ -38,8 +38,6 @@ export type {
   RadioConfigOverrides,
   SelectConfigBase,
   SelectConfigOverrides,
-  TextFieldConfigBase,
-  TextFieldConfigOverrides,
   TextareaConfigBase,
   TextareaConfigOverrides,
   ToggleConfigBase,
