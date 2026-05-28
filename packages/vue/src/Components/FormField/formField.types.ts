@@ -204,6 +204,13 @@ export interface FormFieldOwnProps {
   error?: boolean;
 
   /**
+   * Icon used when `withErrorIcon` is enabled and the field is invalid.
+   *
+   * @default CircleAlert
+   */
+  errorIcon?: LucideIcon;
+
+  /**
    * Error message below the control. Shown only when set (or via `#errorMessage`
    * slot).
    *

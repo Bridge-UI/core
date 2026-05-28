@@ -9,6 +9,7 @@ export function useTextField(props: TextFieldOwnProps) {
     rounded: "md",
     color: "primary",
     variant: "outline",
+    withErrorIcon: true,
   });
 
   return {

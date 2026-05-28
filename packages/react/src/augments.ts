@@ -57,7 +57,7 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<
       Pick<
         FormFieldProps,
-        "size" | "color" | "rounded" | "variant" | "withErrorIcon"
+        "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
       >
     >;
   }

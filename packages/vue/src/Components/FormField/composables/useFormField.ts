@@ -1,4 +1,5 @@
 // ** External Imports
+import { CircleAlert } from "lucide-vue-next";
 import {
   computed,
   type MaybeRefOrGetter,
@@ -34,6 +35,7 @@ export const formFieldBridgeKeys = [
   "disabled",
   "readonly",
   "required",
+  "errorIcon",
   "startIcon",
   "partsProps",
   "description",
@@ -43,7 +45,7 @@ export const formFieldBridgeKeys = [
 
 type FormFieldLibDefaults = LibDefaultsShape<
   FormFieldOwnProps,
-  "color" | "rounded" | "size" | "variant" | "withErrorIcon"
+  "color" | "rounded" | "size" | "variant" | "errorIcon" | "withErrorIcon"
 >;
 
 type FormFieldMerged = MergeLibDefaults<
@@ -109,6 +111,10 @@ export function useFormField(
     return merged.value.variant ?? "outline";
   });
 
+  const errorIcon = computed(() => {
+    return merged.value.errorIcon ?? CircleAlert;
+  });
+
   // const headerJustify = computed(() => {
   //   if (hasSlotOrProp(slots, "label", merged.value.label)) {
   //     return "justify-between items-end";
@@ -145,19 +151,11 @@ export function useFormField(
   // });
 
   // Binds
-  const headerBind = computed(() => {
+  const endBind = computed(() => {
     return {};
   });
 
-  const requiredBind = computed(() => {
-    return {};
-  });
-
-  const cornerBind = computed(() => {
-    return {};
-  });
-
-  const descriptionBind = computed(() => {
+  const rootBind = computed(() => {
     return {};
   });
 
@@ -169,29 +167,73 @@ export function useFormField(
     return {};
   });
 
-  const rootBind = computed(() => {
+  const inputBind = computed(() => {
     return {};
   });
 
-  const inputBind = computed(() => {
+  const startBind = computed(() => {
+    return {};
+  });
+
+  const cornerBind = computed(() => {
+    return {};
+  });
+
+  const headerBind = computed(() => {
+    return {};
+  });
+
+  const endIconBind = computed(() => {
+    return {};
+  });
+
+  const endSlotBind = computed(() => {
+    return {};
+  });
+
+  const requiredBind = computed(() => {
+    return {};
+  });
+
+  const containerBind = computed(() => {
+    return {};
+  });
+
+  const startIconBind = computed(() => {
+    return {};
+  });
+
+  const startSlotBind = computed(() => {
+    return {};
+  });
+
+  const descriptionBind = computed(() => {
     return {};
   });
 
   return {
     slots,
     merged,
+    endBind,
     rootBind,
     controlId,
     errorBind,
+    errorIcon,
     labelBind,
     inputBind,
+    startBind,
     cornerBind,
     headerBind,
     isDisabled,
     isReadonly,
     variantKey,
+    endIconBind,
+    endSlotBind,
     invalidated,
     requiredBind,
+    containerBind,
+    startIconBind,
+    startSlotBind,
     ariaDescribedBy,
     descriptionBind,
   };

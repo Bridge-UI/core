@@ -1,4 +1,3 @@
-// ** External Imports
 import { get } from "es-toolkit/compat";
 import { createElement } from "react";
 
@@ -10,7 +9,6 @@ import StackedFormField from "@/Components/FormField/StackedFormField";
 import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField";
 import type { FormFieldProps } from "@/Components/FormField/formField.types";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
-import { derived } from "@/Utils";
 
 const shells = {
   filled: FilledFormField,
@@ -20,16 +18,16 @@ const shells = {
   underlined: UnderlinedFormField,
 };
 
-function FormField(
-  props: Required<Pick<FormFieldProps, "field" | "children">>,
-) {
+type FormFieldComponentProps = Required<
+  Pick<FormFieldProps, "field" | "children">
+>;
+
+function FormField(props: FormFieldComponentProps) {
   const api = props.field as UseFormFieldReturn;
 
-  const Shell = derived(() => {
-    const variant = api?.variantKey ?? "outline";
+  const variant = api?.variantKey ?? "outline";
 
-    return get(shells, variant, OutlinedFormField);
-  });
+  const Shell = get(shells, variant, OutlinedFormField);
 
   return createElement(Shell, { api }, props.children);
 }

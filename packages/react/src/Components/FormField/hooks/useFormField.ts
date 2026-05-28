@@ -1,4 +1,5 @@
 // ** External Imports
+import { CircleAlert } from "lucide-react";
 import { useId } from "react";
 
 // ** Core Imports
@@ -30,6 +31,7 @@ export const formFieldBridgeKeys = [
   "disabled",
   "readonly",
   "required",
+  "errorIcon",
   "startIcon",
   "partsProps",
   "description",
@@ -39,7 +41,7 @@ export const formFieldBridgeKeys = [
 
 type FormFieldLibDefaults = LibDefaultsShape<
   FormFieldOwnProps,
-  "color" | "rounded" | "size" | "variant" | "withErrorIcon"
+  "color" | "rounded" | "size" | "variant" | "errorIcon" | "withErrorIcon"
 >;
 
 type FormFieldMerged = MergeLibDefaults<
@@ -48,14 +50,14 @@ type FormFieldMerged = MergeLibDefaults<
 >;
 
 export function useFormField(
-  props: FormFieldProps,
+  props: Omit<FormFieldProps, "field">,
   libDefaults: FormFieldLibDefaults,
 ) {
   // Setup
   const autoId = useId();
 
   const { customProps } = splitComponentProps<
-    FormFieldProps,
+    Omit<FormFieldProps, "field">,
     typeof formFieldBridgeKeys
   >({
     props,
@@ -93,6 +95,10 @@ export function useFormField(
     return merged.variant ?? "outline";
   });
 
+  const errorIcon = derived(() => {
+    return merged.errorIcon ?? CircleAlert;
+  });
+
   const ariaDescribedBy = derived(() => {
     const ids: string[] = [];
 
@@ -111,19 +117,11 @@ export function useFormField(
   });
 
   // Binds
-  const headerBind = derived(() => {
+  const endBind = derived(() => {
     return {};
   });
 
-  const requiredBind = derived(() => {
-    return {};
-  });
-
-  const cornerBind = derived(() => {
-    return {};
-  });
-
-  const descriptionBind = derived(() => {
+  const rootBind = derived(() => {
     return {};
   });
 
@@ -135,29 +133,73 @@ export function useFormField(
     return {};
   });
 
-  const rootBind = derived(() => {
+  const inputBind = derived(() => {
     return {};
   });
 
-  const inputBind = derived(() => {
+  const startBind = derived(() => {
+    return {};
+  });
+
+  const cornerBind = derived(() => {
+    return {};
+  });
+
+  const headerBind = derived(() => {
+    return {};
+  });
+
+  const endIconBind = derived(() => {
+    return {};
+  });
+
+  const endSlotBind = derived(() => {
+    return {};
+  });
+
+  const requiredBind = derived(() => {
+    return {};
+  });
+
+  const containerBind = derived(() => {
+    return {};
+  });
+
+  const startIconBind = derived(() => {
+    return {};
+  });
+
+  const startSlotBind = derived(() => {
+    return {};
+  });
+
+  const descriptionBind = derived(() => {
     return {};
   });
 
   return {
     slots,
     merged,
+    endBind,
     rootBind,
     controlId,
     errorBind,
+    errorIcon,
     labelBind,
     inputBind,
+    startBind,
     cornerBind,
     headerBind,
     isDisabled,
     isReadonly,
     variantKey,
+    endIconBind,
+    endSlotBind,
     invalidated,
     requiredBind,
+    containerBind,
+    startIconBind,
+    startSlotBind,
     ariaDescribedBy,
     descriptionBind,
   };
