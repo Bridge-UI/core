@@ -232,8 +232,16 @@ export interface ButtonSlots {
   start?: ReactNode;
 }
 
-// prettier-ignore
 export type ButtonProps =
-  | MergeHtmlProps<ButtonOwnProps & { as: "span" }, HTMLAttributes<HTMLSpanElement>>
-  | MergeHtmlProps<ButtonOwnProps & { as: "a" }, AnchorHTMLAttributes<HTMLAnchorElement>>
-  | MergeHtmlProps<ButtonOwnProps & { as?: "button" }, ButtonHTMLAttributes<HTMLButtonElement>>;
+  | MergeHtmlProps<
+      ButtonOwnProps & { as: "span" },
+      HTMLAttributes<HTMLSpanElement>
+    >
+  | MergeHtmlProps<
+      ButtonOwnProps & { as: "a" },
+      AnchorHTMLAttributes<HTMLAnchorElement>
+    >
+  | MergeHtmlProps<
+      ButtonOwnProps & { as?: "button" },
+      ButtonHTMLAttributes<HTMLButtonElement>
+    >;

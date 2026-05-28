@@ -223,7 +223,6 @@ export interface ButtonSlots {
   start?: Slot<undefined>;
 }
 
-// prettier-ignore
 export type ButtonProps =
   | MergeHtmlProps<ButtonOwnProps & { as: "span" }, HTMLAttributes>
   | MergeHtmlProps<ButtonOwnProps & { as: "a" }, AnchorHTMLAttributes>

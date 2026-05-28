@@ -68,14 +68,17 @@ export function createMergePartBind<const K extends ClassPropKey>(classKey: K) {
 export function mergeBridgeUILayeredClasses<C extends object>(
   ...layers: Array<Partial<C> | undefined>
 ): Partial<C> {
-  // prettier-ignore
-  return reduce(layers, (acc, layer) => {
-    if (isNil(layer)) {
-      return acc;
-    }
+  return reduce(
+    layers,
+    (acc, layer) => {
+      if (isNil(layer)) {
+        return acc;
+      }
 
-    return toMerged(acc, layer);
-  }, {} as Partial<C>);
+      return toMerged(acc, layer);
+    },
+    {} as Partial<C>,
+  );
 }
 
 /**

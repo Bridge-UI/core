@@ -104,21 +104,22 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   });
 
   // Binds
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, split.value.inheritedAttrs, cn({
-      // Theme classes
-      "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
-      [get(colorClass.value, "background") ?? ""]: true,
-      [get(colorClass.value, "border") ?? ""]: true,
-      "w-full": !isMini.value && merged.value.full,
-      "w-fit": !isMini.value && !merged.value.full,
-      [get(colorClass.value, "text") ?? ""]: true,
-      [roundedClass.value ?? ""]: true,
-      [sizeClass.value ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      split.value.inheritedAttrs,
+      cn({
+        "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
+        "w-full": !isMini.value && merged.value.full,
+        "w-fit": !isMini.value && !merged.value.full,
+        [sizeClass.value ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        [get(colorClass.value, "background") ?? ""]: true,
+        [get(colorClass.value, "border") ?? ""]: true,
+        [get(colorClass.value, "text") ?? ""]: true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
   });
 
   return {

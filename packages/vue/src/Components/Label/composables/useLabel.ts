@@ -71,27 +71,29 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
   });
 
   // Binds
-  // prettier-ignore
   const requiredBind = computed(() => {
-    return mergePartBind({}, {}, cn({
-      // Theme classes
-      "text-error-500 dark:text-error-500 select-none": true,
-      // Custom classes
-      [mergedClasses.value.required ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-error-500 dark:text-error-500 select-none": true,
+        [mergedClasses.value.required ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, split.value.inheritedAttrs, cn({
-      // Theme classes
-      "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-      "text-error-600 dark:text-error-400": merged.value.error,
-      "text-gray-700 dark:text-gray-300": !merged.value.error,
-      [sizeClass.value ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      split.value.inheritedAttrs,
+      cn({
+        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+        "text-error-600 dark:text-error-400": merged.value.error,
+        "text-gray-700 dark:text-gray-300": !merged.value.error,
+        [sizeClass.value ?? ""]: true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
   });
 
   return {

@@ -135,54 +135,58 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   });
 
   // Binds
-  // prettier-ignore
   const bodyBind = computed(() => {
-    return mergePartBind( partsProps.value?.body, {}, cn({
-      // Theme classes
-      "grow text-sm text-start": true,
-      [paddingClass.value ?? ""]: true,
-      [get(colorClass.value, "text") ?? ""]: true,
-      // Custom classes
-      [get(mergedClasses.value, "body") ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.body,
+      {},
+      cn({
+        "grow text-sm text-start": true,
+        [paddingClass.value ?? ""]: true,
+        [get(colorClass.value, "text") ?? ""]: true,
+        [get(mergedClasses.value, "body") ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const iconBind = computed(() => {
-    return mergePartBind(partsProps.value?.icon, {}, cn({
-      // Theme classes
-      "w-5 h-5 shrink-0": true,
-      [get(colorClass.value, "iconColor") ?? ""]: true,
-      // Custom classes
-      [get(mergedClasses.value, "icon") ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.icon,
+      {},
+      cn({
+        "w-5 h-5 shrink-0": true,
+        [get(colorClass.value, "iconColor") ?? ""]: true,
+        [get(mergedClasses.value, "icon") ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
-      // Theme classes
-      [shadowClass.value ?? ""]: true,
-      [roundedClass.value ?? ""]: true,
-      "w-full flex flex-col p-4": true,
-      [get(colorClass.value, "border") ?? ""]: true,
-      [get(colorClass.value, "background") ?? ""]: true,
-      // Custom classes
-      [get(mergedClasses.value, "root") ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.root,
+      split.value.inheritedAttrs,
+      cn({
+        "w-full flex flex-col p-4": true,
+        [shadowClass.value ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        [get(colorClass.value, "border") ?? ""]: true,
+        [get(colorClass.value, "background") ?? ""]: true,
+        [get(mergedClasses.value, "root") ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const titleBind = computed(() => {
-    return mergePartBind(partsProps.value?.title, {}, cn({
-      // Theme classes
-      "font-normal": !hasDefaultBody.value,
-      "font-semibold": hasDefaultBody.value,
-      [get(colorClass.value, "text") ?? ""]: true,
-      "text-start text-sm whitespace-normal": true,
-      // Custom classes
-      [get(mergedClasses.value, "title") ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.title,
+      {},
+      cn({
+        "text-start text-sm whitespace-normal": true,
+        "font-normal": !hasDefaultBody.value,
+        "font-semibold": hasDefaultBody.value,
+        [get(colorClass.value, "text") ?? ""]: true,
+        [get(mergedClasses.value, "title") ?? ""]: true,
+      }),
+    );
   });
 
   return {

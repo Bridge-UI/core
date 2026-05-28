@@ -112,21 +112,22 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
   }, [merged.rounded, bridgeBadge?.customProps?.rounded]);
 
   // Binds
-  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind({}, rootInheritedAttrs, cn({
-      // Theme classes
-      "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
-      [get(colorClass, "background") ?? ""]: true,
-      [get(colorClass, "border") ?? ""]: true,
-      [get(colorClass, "text") ?? ""]: true,
-      "w-full": !isMini && merged.full,
-      "w-fit": !isMini && !merged.full,
-      [roundedClass ?? ""]: true,
-      [sizeClass ?? ""]: true,
-      // Custom classes
-      [mergedClasses.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      rootInheritedAttrs,
+      cn({
+        "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
+        "w-full": !isMini && merged.full,
+        "w-fit": !isMini && !merged.full,
+        [sizeClass ?? ""]: true,
+        [roundedClass ?? ""]: true,
+        [get(colorClass, "background") ?? ""]: true,
+        [get(colorClass, "border") ?? ""]: true,
+        [get(colorClass, "text") ?? ""]: true,
+        [mergedClasses.root ?? ""]: true,
+      }),
+    );
   });
 
   return {

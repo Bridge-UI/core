@@ -55,11 +55,14 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
   }, [merged.size, bridgeIcon?.customProps?.size]);
 
   // Binds
-  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind({}, inheritedAttrs, cn({
-      [sizeClass ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      inheritedAttrs,
+      cn({
+        [sizeClass ?? ""]: true,
+      }),
+    );
   });
 
   return {

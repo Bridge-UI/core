@@ -177,81 +177,90 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   }, [merged.rounded, bridgeButton?.customProps?.rounded]);
 
   // Binds
-  // prettier-ignore
   const iconBind = derived(() => {
-    return mergePartBind(partsProps?.icon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.icon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.icon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.icon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rootBind = derived(() => {
     return mergePartBind(
       partsProps?.root,
       rootInheritedAttrs,
       cn({
-        // Theme classes
-        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
-        "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center": true,
-        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
-        "transition-all ease-in-out duration-200 focus:ring-2": true,
-        "disabled:opacity-80 disabled:cursor-not-allowed": true,
-        [get(colorClasses, "focus") ?? ""]: true,
-        [get(colorClasses, "hover") ?? ""]: true,
-        [get(colorClasses, "base") ?? ""]: true,
+        "inline-flex items-center justify-center": true,
+        "cursor-pointer outline-none outline-hidden": true,
+        "shrink-0": isMini,
+        [sizeClass ?? ""]: true,
+        [roundedClass ?? ""]: true,
         "w-full": !isMini && merged.full,
         "w-fit": !isMini && !merged.full,
         "group hover:shadow-xs": !isMini,
-        [roundedClass ?? ""]: true,
-        [sizeClass ?? ""]: true,
-        "shrink-0": isMini,
-        // Custom classes
+        [get(colorClasses, "base") ?? ""]: true,
+        [get(colorClasses, "hover") ?? ""]: true,
+        [get(colorClasses, "focus") ?? ""]: true,
+        "transition-all ease-in-out duration-200": true,
+        "focus:ring-2": true,
+        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
+        "disabled:opacity-80 disabled:cursor-not-allowed": true,
+        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
   });
 
-  // prettier-ignore
   const endIconBind = derived(() => {
-    return mergePartBind(partsProps?.endIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.endIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.endIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.endIcon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const endSlotBind = derived(() => {
-    return mergePartBind(partsProps?.end, {}, "inline-flex shrink-0 items-center");
+    return mergePartBind(
+      partsProps?.end,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
   });
 
-  // prettier-ignore
   const startIconBind = derived(() => {
-    return mergePartBind(partsProps?.startIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.startIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.startIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.startIcon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const startSlotBind = derived(() => {
-    return mergePartBind(partsProps?.start, {}, "inline-flex shrink-0 items-center");
+    return mergePartBind(
+      partsProps?.start,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
   });
 
-  // prettier-ignore
   const loadingIconBind = derived(() => {
-    return mergePartBind(partsProps?.loading, {}, cn({
-      // Theme classes
-      "shrink-0 animate-spin": true,
-      // Custom classes
-      [mergedClasses.loading ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.loading,
+      {},
+      cn({
+        "shrink-0 animate-spin": true,
+        [mergedClasses.loading ?? ""]: true,
+      }),
+    );
   });
 
   return {

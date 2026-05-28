@@ -168,77 +168,90 @@ export function useButton(
   });
 
   // Binds
-  // prettier-ignore
   const iconBind = computed(() => {
-    return mergePartBind(partsProps.value?.icon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.value.icon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.icon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.value.icon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
-      // Theme classes
-      'aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none': true,
-      "cursor-pointer outline-none outline-hidden inline-flex items-center justify-center": true,
-      "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
-      "transition-all ease-in-out duration-200 focus:ring-2": true,
-      "disabled:opacity-80 disabled:cursor-not-allowed": true,
-      [get(colorClasses.value, 'focus') ?? ""]: true,
-      [get(colorClasses.value, 'hover') ?? ""]: true,
-      [get(colorClasses.value, 'base') ?? ""]: true,
-      "w-full": !isMini.value && merged.value.full,
-      "w-fit": !isMini.value && !merged.value.full,
-      "group hover:shadow-xs": !isMini.value,
-      [roundedClass.value ?? ""]: true,
-      [sizeClass.value ?? ""]: true,
-      "shrink-0": isMini.value,
-      // Custom classes
-      [mergedClasses.value.root ?? ""]: true
-    }));
+    return mergePartBind(
+      partsProps.value?.root,
+      split.value.inheritedAttrs,
+      cn({
+        "inline-flex items-center justify-center": true,
+        "cursor-pointer outline-none outline-hidden": true,
+        "shrink-0": isMini.value,
+        [sizeClass.value ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        "w-full": !isMini.value && merged.value.full,
+        "w-fit": !isMini.value && !merged.value.full,
+        "group hover:shadow-xs": !isMini.value,
+        [get(colorClasses.value, "base") ?? ""]: true,
+        [get(colorClasses.value, "hover") ?? ""]: true,
+        [get(colorClasses.value, "focus") ?? ""]: true,
+        "transition-all ease-in-out duration-200": true,
+        "focus:ring-2": true,
+        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
+        "disabled:opacity-80 disabled:cursor-not-allowed": true,
+        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const endIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.endIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.value.endIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.endIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.value.endIcon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const endSlotBind = computed(() => {
-    return mergePartBind(partsProps.value?.end, {}, "inline-flex shrink-0 items-center");
+    return mergePartBind(
+      partsProps.value?.end,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
   });
 
-  // prettier-ignore
   const startIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.startIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.value.startIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.startIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.value.startIcon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const startSlotBind = computed(() => {
-    return mergePartBind(partsProps.value?.start, {}, "inline-flex shrink-0 items-center");
+    return mergePartBind(
+      partsProps.value?.start,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
   });
 
-  // prettier-ignore
   const loadingIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.loading, {}, cn({
-      // Theme classes
-      "shrink-0 animate-spin": true,
-      // Custom classes
-      [mergedClasses.value.loading ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps.value?.loading,
+      {},
+      cn({
+        "shrink-0 animate-spin": true,
+        [mergedClasses.value.loading ?? ""]: true,
+      }),
+    );
   });
 
   return {

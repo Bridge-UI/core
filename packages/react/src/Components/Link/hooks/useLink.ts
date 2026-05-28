@@ -143,39 +143,43 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   }, [merged.underline, bridgeLink?.customProps?.underline]);
 
   // Binds
-  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind(partsProps?.root, rootInheritedAttrs, cn({
-      // Theme classes
-      "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
-      "inline-flex items-center gap-x-1 font-medium transition-colors duration-200": true,
-      [get(colorClass, "hover") ?? ""]: true,
-      [get(colorClass, "base") ?? ""]: true,
-      [underlineClass ?? ""]: true,
-      [sizeClass ?? ""]: true,
-      // Custom classes
-      [mergedClasses.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.root,
+      rootInheritedAttrs,
+      cn({
+        "inline-flex items-center gap-x-1 font-medium": true,
+        "transition-colors duration-200": true,
+        [sizeClass ?? ""]: true,
+        [underlineClass ?? ""]: true,
+        [get(colorClass, "base") ?? ""]: true,
+        [get(colorClass, "hover") ?? ""]: true,
+        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+        [mergedClasses.root ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const leftIconBind = derived(() => {
-    return mergePartBind(partsProps?.leftIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.leftIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.leftIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.leftIcon ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rightIconBind = derived(() => {
-    return mergePartBind(partsProps?.rightIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.rightIcon ?? ""]: true,
-    }));
+    return mergePartBind(
+      partsProps?.rightIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [mergedClasses.rightIcon ?? ""]: true,
+      }),
+    );
   });
 
   return {

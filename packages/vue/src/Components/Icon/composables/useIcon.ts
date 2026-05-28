@@ -56,11 +56,14 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
   });
 
   // Binds
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind({}, split.value.inheritedAttrs, cn({
-      [sizeClass.value ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      split.value.inheritedAttrs,
+      cn({
+        [sizeClass.value ?? ""]: true,
+      }),
+    );
   });
 
   return {
