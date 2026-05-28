@@ -17,6 +17,25 @@ const { api } = toRefs(props);
 
 <template>
   <div>
-    {{ JSON.stringify(api) }}
+    {{
+      JSON.stringify({
+        slots: api.slots,
+        merged: api.merged.value,
+        rootBind: api.rootBind.value,
+        controlId: api.controlId.value,
+        errorBind: api.errorBind.value,
+        labelBind: api.labelBind.value,
+        inputBind: api.inputBind.value,
+        cornerBind: api.cornerBind.value,
+        headerBind: api.headerBind.value,
+        isDisabled: api.isDisabled.value,
+        isReadonly: api.isReadonly.value,
+        variantKey: api.variantKey.value,
+        invalidated: api.invalidated.value,
+        requiredBind: api.requiredBind.value,
+        ariaDescribedBy: api.ariaDescribedBy.value,
+        descriptionBind: api.descriptionBind.value,
+      })
+    }}
   </div>
 </template>
