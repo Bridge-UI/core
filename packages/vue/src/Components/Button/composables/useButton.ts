@@ -132,15 +132,6 @@ export function useButton(
   });
 
   // Classes
-  const roundedClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeButton.value?.customProps?.rounded,
-    );
-
-    return get(classes, merged.value.rounded);
-  });
-
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
@@ -167,17 +158,16 @@ export function useButton(
     return get(classes, [variantKey.value, merged.value.color]);
   });
 
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeButton.value?.customProps?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
+  });
+
   // Binds
-  // prettier-ignore
-  const endSlotBind = computed(() => {
-    return mergePartBind(partsProps.value?.end, {}, "inline-flex shrink-0 items-center");
-  });
-
-  // prettier-ignore
-  const startSlotBind = computed(() => {
-    return mergePartBind(partsProps.value?.start, {}, "inline-flex shrink-0 items-center");
-  });
-
   // prettier-ignore
   const iconBind = computed(() => {
     return mergePartBind(partsProps.value?.icon, {}, cn({
@@ -185,36 +175,6 @@ export function useButton(
       "shrink-0": true,
       // Custom classes
       [mergedClasses.value.icon ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const endIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.endIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.value.endIcon ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const startIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.startIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.value.startIcon ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const loadingIconBind = computed(() => {
-    return mergePartBind(partsProps.value?.loading, {}, cn({
-      // Theme classes
-      "shrink-0 animate-spin": true,
-      // Custom classes
-      [mergedClasses.value.loading ?? ""]: true,
     }));
   });
 
@@ -238,6 +198,46 @@ export function useButton(
       "shrink-0": isMini.value,
       // Custom classes
       [mergedClasses.value.root ?? ""]: true
+    }));
+  });
+
+  // prettier-ignore
+  const endIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.endIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.value.endIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const endSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.end, {}, "inline-flex shrink-0 items-center");
+  });
+
+  // prettier-ignore
+  const startIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.startIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.value.startIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startSlotBind = computed(() => {
+    return mergePartBind(partsProps.value?.start, {}, "inline-flex shrink-0 items-center");
+  });
+
+  // prettier-ignore
+  const loadingIconBind = computed(() => {
+    return mergePartBind(partsProps.value?.loading, {}, cn({
+      // Theme classes
+      "shrink-0 animate-spin": true,
+      // Custom classes
+      [mergedClasses.value.loading ?? ""]: true,
     }));
   });
 

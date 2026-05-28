@@ -64,7 +64,10 @@ export function useFormField(
     bridgeKeys: formFieldBridgeKeys,
   });
 
-  const { merged } = useBridgeUIComponent<FormFieldMerged, "FormField">({
+  const { entry: bridgeFormField, merged } = useBridgeUIComponent<
+    FormFieldMerged,
+    "FormField"
+  >({
     libDefaults,
     props: customProps,
     componentName: "FormField",
@@ -129,11 +132,11 @@ export function useFormField(
     return {};
   });
 
-  const labelBind = derived(() => {
+  const inputBind = derived(() => {
     return {};
   });
 
-  const inputBind = derived(() => {
+  const labelBind = derived(() => {
     return {};
   });
 
@@ -185,8 +188,8 @@ export function useFormField(
     controlId,
     errorBind,
     errorIcon,
-    labelBind,
     inputBind,
+    labelBind,
     startBind,
     cornerBind,
     headerBind,

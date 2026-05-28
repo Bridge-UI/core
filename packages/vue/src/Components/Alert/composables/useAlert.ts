@@ -84,6 +84,15 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   });
 
   // Classes
+  const colorClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeAlert.value?.customProps?.variant,
+    );
+
+    return get(classes, [merged.value.variant, merged.value.color]);
+  });
+
   const shadowClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
@@ -111,15 +120,6 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     return get(classes, merged.value.rounded);
   });
 
-  const colorClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeAlert.value?.customProps?.variant,
-    );
-
-    return get(classes, [merged.value.variant, merged.value.color]);
-  });
-
   const resolvedIcon = computed(() => {
     if (isNull(merged.value.icon)) {
       return null;
@@ -135,20 +135,6 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   });
 
   // Binds
-  // prettier-ignore
-  const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
-      // Theme classes
-      [shadowClass.value ?? ""]: true,
-      [roundedClass.value ?? ""]: true,
-      "w-full flex flex-col p-4": true,
-      [get(colorClass.value, "border") ?? ""]: true,
-      [get(colorClass.value, "background") ?? ""]: true,
-      // Custom classes
-      [get(mergedClasses.value, "root") ?? ""]: true,
-    }));
-  });
-
   // prettier-ignore
   const bodyBind = computed(() => {
     return mergePartBind( partsProps.value?.body, {}, cn({
@@ -169,6 +155,20 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       [get(colorClass.value, "iconColor") ?? ""]: true,
       // Custom classes
       [get(mergedClasses.value, "icon") ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const rootBind = computed(() => {
+    return mergePartBind(partsProps.value?.root, split.value.inheritedAttrs, cn({
+      // Theme classes
+      [shadowClass.value ?? ""]: true,
+      [roundedClass.value ?? ""]: true,
+      "w-full flex flex-col p-4": true,
+      [get(colorClass.value, "border") ?? ""]: true,
+      [get(colorClass.value, "background") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses.value, "root") ?? ""]: true,
     }));
   });
 

@@ -93,6 +93,15 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
   });
 
   // Classes
+  const colorClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeAlert?.customProps?.variant,
+    );
+
+    return get(classes, [merged.variant, merged.color]);
+  }, [merged.color, merged.variant, bridgeAlert?.customProps?.variant]);
+
   const shadowClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
@@ -120,15 +129,6 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     return get(classes, merged.rounded);
   }, [merged.rounded, bridgeAlert?.customProps?.rounded]);
 
-  const colorClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeAlert?.customProps?.variant,
-    );
-
-    return get(classes, [merged.variant, merged.color]);
-  }, [merged.color, merged.variant, bridgeAlert?.customProps?.variant]);
-
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
       return null;
@@ -144,20 +144,6 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
   }, [merged.icon, merged.color, colorClass]);
 
   // Binds
-  // prettier-ignore
-  const rootBind = derived(() => {
-    return mergePartBind(partsProps?.root, rootInheritedAttrs, cn({
-      // Theme classes
-      [shadowClass ?? ""]: true,
-      [roundedClass ?? ""]: true,
-      "w-full flex flex-col p-4": true,
-      [get(colorClass, "border") ?? ""]: true,
-      [get(colorClass, "background") ?? ""]: true,
-      // Custom classes
-      [get(mergedClasses, "root") ?? ""]: true,
-    }));
-  });
-
   // prettier-ignore
   const bodyBind = derived(() => {
     return mergePartBind(partsProps?.body, {}, cn({
@@ -178,6 +164,20 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       [get(colorClass, "iconColor") ?? ""]: true,
       // Custom classes
       [get(mergedClasses, "icon") ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const rootBind = derived(() => {
+    return mergePartBind(partsProps?.root, rootInheritedAttrs, cn({
+      // Theme classes
+      [shadowClass ?? ""]: true,
+      [roundedClass ?? ""]: true,
+      "w-full flex flex-col p-4": true,
+      [get(colorClass, "border") ?? ""]: true,
+      [get(colorClass, "background") ?? ""]: true,
+      // Custom classes
+      [get(mergedClasses, "root") ?? ""]: true,
     }));
   });
 

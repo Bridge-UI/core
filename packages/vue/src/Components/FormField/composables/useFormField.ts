@@ -163,11 +163,11 @@ export function useFormField(
     return {};
   });
 
-  const labelBind = computed(() => {
+  const inputBind = computed(() => {
     return {};
   });
 
-  const inputBind = computed(() => {
+  const labelBind = computed(() => {
     return {};
   });
 
@@ -219,8 +219,8 @@ export function useFormField(
     controlId,
     errorBind,
     errorIcon,
-    labelBind,
     inputBind,
+    labelBind,
     startBind,
     cornerBind,
     headerBind,

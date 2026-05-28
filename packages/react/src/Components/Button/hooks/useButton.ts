@@ -141,15 +141,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   // Classes
-  const roundedClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeButton?.customProps?.rounded,
-    );
-
-    return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeButton?.customProps?.rounded]);
-
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
@@ -176,17 +167,16 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return get(classes, [variantKey, merged.color]);
   }, [variantKey, merged.color, bridgeButton?.customProps?.variant]);
 
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeButton?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeButton?.customProps?.rounded]);
+
   // Binds
-  // prettier-ignore
-  const endSlotBind = derived(() => {
-    return mergePartBind(partsProps?.end, {}, "inline-flex shrink-0 items-center");
-  });
-
-  // prettier-ignore
-  const startSlotBind = derived(() => {
-    return mergePartBind(partsProps?.start, {}, "inline-flex shrink-0 items-center");
-  });
-
   // prettier-ignore
   const iconBind = derived(() => {
     return mergePartBind(partsProps?.icon, {}, cn({
@@ -198,35 +188,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   // prettier-ignore
-  const endIconBind = derived(() => {
-    return mergePartBind(partsProps?.endIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.endIcon ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const startIconBind = derived(() => {
-    return mergePartBind(partsProps?.startIcon, {}, cn({
-      // Theme classes
-      "shrink-0": true,
-      // Custom classes
-      [mergedClasses.startIcon ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const loadingIconBind = derived(() => {
-    return mergePartBind(partsProps?.loading, {}, cn({
-      // Theme classes
-      "shrink-0 animate-spin": true,
-      // Custom classes
-      [mergedClasses.loading ?? ""]: true,
-    }));
-  });
-
   const rootBind = derived(() => {
     return mergePartBind(
       partsProps?.root,
@@ -253,12 +214,52 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     );
   });
 
+  // prettier-ignore
+  const endIconBind = derived(() => {
+    return mergePartBind(partsProps?.endIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.endIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const endSlotBind = derived(() => {
+    return mergePartBind(partsProps?.end, {}, "inline-flex shrink-0 items-center");
+  });
+
+  // prettier-ignore
+  const startIconBind = derived(() => {
+    return mergePartBind(partsProps?.startIcon, {}, cn({
+      // Theme classes
+      "shrink-0": true,
+      // Custom classes
+      [mergedClasses.startIcon ?? ""]: true,
+    }));
+  });
+
+  // prettier-ignore
+  const startSlotBind = derived(() => {
+    return mergePartBind(partsProps?.start, {}, "inline-flex shrink-0 items-center");
+  });
+
+  // prettier-ignore
+  const loadingIconBind = derived(() => {
+    return mergePartBind(partsProps?.loading, {}, cn({
+      // Theme classes
+      "shrink-0 animate-spin": true,
+      // Custom classes
+      [mergedClasses.loading ?? ""]: true,
+    }));
+  });
+
   return {
     tag,
     slots,
+    isMini,
     merged,
     children,
-    isMini,
     iconBind,
     rootBind,
     rootHref,
