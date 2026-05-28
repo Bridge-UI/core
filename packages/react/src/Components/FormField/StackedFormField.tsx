@@ -23,75 +23,76 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
       aria-disabled={api.isDisabled || undefined}
       aria-readonly={api.isReadonly || undefined}
     >
-      {(hasSlotOrProp(api.slots, "label", api.merged.label) ||
-        hasSlotOrProp(api.slots, "corner", api.merged.corner)) && (
-        <div {...api.headerBind}>
-          {hasSlotOrProp(api.slots, "label", api.merged.label) && (
-            <label htmlFor={api.controlId} {...api.labelBind}>
-              {resolveSlotOrProp({
-                name: "label",
-                slots: api.slots,
-                fallback: api.merged.label,
-              })}
-
-              {api.merged.required && <span {...api.requiredBind}>*</span>}
-            </label>
-          )}
-
-          {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
-            <span {...api.cornerBind}>
-              {resolveSlotOrProp({
-                name: "corner",
-                slots: api.slots,
-                fallback: api.merged.corner,
-              })}
-            </span>
-          )}
-        </div>
-      )}
-
       <div {...api.containerBind}>
-        {hasNamedSlot(api.slots, "start") ? (
-          <div {...api.startSlotBind}>{api.slots?.start}</div>
-        ) : isPropPresent(api.merged.start) ? (
-          <div {...api.startBind}>{api.merged.start}</div>
-        ) : (
-          api.merged.startIcon && (
-            <div {...api.startBind}>
-              <Icon
-                {...api.startIconBind}
-                size={api.merged.size}
-                icon={api.merged.startIcon}
-              />
-            </div>
-          )
+        {api.hasInsetLabelRow && (
+          <div {...api.insetLabelRowBind}>
+            {hasSlotOrProp(api.slots, "label", api.merged.label) && (
+              <label htmlFor={api.controlId} {...api.labelBind}>
+                {resolveSlotOrProp({
+                  name: "label",
+                  slots: api.slots,
+                  fallback: api.merged.label,
+                })}
+
+                {api.merged.required && <span {...api.requiredBind}>*</span>}
+              </label>
+            )}
+
+            {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
+              <span {...api.cornerBind}>
+                {resolveSlotOrProp({
+                  name: "corner",
+                  slots: api.slots,
+                  fallback: api.merged.corner,
+                })}
+              </span>
+            )}
+          </div>
         )}
 
-        {children}
+        <div className="flex min-h-0 w-full flex-1 items-stretch gap-x-2">
+          {hasNamedSlot(api.slots, "start") ? (
+            <div {...api.startSlotBind}>{api.slots?.start}</div>
+          ) : isPropPresent(api.merged.start) ? (
+            <div {...api.startBind}>{api.merged.start}</div>
+          ) : (
+            api.merged.startIcon && (
+              <div {...api.startBind}>
+                <Icon
+                  {...api.startIconBind}
+                  size={api.merged.size}
+                  icon={api.merged.startIcon}
+                />
+              </div>
+            )
+          )}
 
-        {hasNamedSlot(api.slots, "end") ? (
-          <div {...api.endSlotBind}>{api.slots?.end}</div>
-        ) : isPropPresent(api.merged.end) ? (
-          <div {...api.endBind}>{api.merged.end}</div>
-        ) : api.invalidated && api.merged.withErrorIcon !== false ? (
-          <div {...api.endBind}>
-            <Icon
-              {...api.endIconBind}
-              icon={api.errorIcon}
-              size={api.merged.size}
-            />
-          </div>
-        ) : (
-          api.merged.endIcon && (
+          {children}
+
+          {hasNamedSlot(api.slots, "end") ? (
+            <div {...api.endSlotBind}>{api.slots?.end}</div>
+          ) : isPropPresent(api.merged.end) ? (
+            <div {...api.endBind}>{api.merged.end}</div>
+          ) : api.invalidated && api.merged.withErrorIcon !== false ? (
             <div {...api.endBind}>
               <Icon
                 {...api.endIconBind}
+                icon={api.errorIcon}
                 size={api.merged.size}
-                icon={api.merged.endIcon}
               />
             </div>
-          )
-        )}
+          ) : (
+            api.merged.endIcon && (
+              <div {...api.endBind}>
+                <Icon
+                  {...api.endIconBind}
+                  size={api.merged.size}
+                  icon={api.merged.endIcon}
+                />
+              </div>
+            )
+          )}
+        </div>
       </div>
 
       {!api.invalidated &&

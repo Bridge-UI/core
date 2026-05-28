@@ -1,6 +1,7 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
+import type { InputHTMLAttributes } from "react";
 import { useId, useMemo } from "react";
 
 // ** Core Imports
@@ -28,6 +29,7 @@ import {
   derived,
   hasNamedSlot,
   hasSlotOrProp,
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -92,16 +94,16 @@ export function useFormField(
     return props.slots;
   });
 
-  const children = derived(() => {
-    return props.children;
-  });
-
   const partsProps = derived(() => {
     return merged.partsProps;
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "children", "className"]);
+    return omit(inheritedAttrs, [
+      "slots",
+      "children",
+      "className",
+    ]) as InputHTMLAttributes<HTMLInputElement>;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
@@ -122,10 +124,6 @@ export function useFormField(
     return Boolean(merged.readonly);
   });
 
-  const controlId = derived(() => {
-    return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
-  });
-
   const variantKey = derived(() => {
     return merged.variant ?? "outline";
   });
@@ -134,8 +132,28 @@ export function useFormField(
     return merged.errorIcon ?? CircleAlert;
   });
 
+  const isNotched = derived(() => {
+    return variantKey === "notched";
+  });
+
+  const isStacked = derived(() => {
+    return variantKey === "stacked";
+  });
+
   const isUnderlined = derived(() => {
     return variantKey === "underlined";
+  });
+
+  const controlId = derived(() => {
+    return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
+  });
+
+  const hasInsetLabelRow = derived(() => {
+    return (
+      (isNotched || isStacked) &&
+      (hasSlotOrProp(slots, "label", merged.label) ||
+        hasSlotOrProp(slots, "corner", merged.corner))
+    );
   });
 
   const headerJustify = derived(() => {
@@ -237,63 +255,223 @@ export function useFormField(
 
   // Binds
   const endBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.end,
+      {},
+      cn({
+        "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
+        "text-gray-500": !invalidated,
+        [roundedClasses?.end ?? ""]: !isUnderlined,
+        [colorClasses?.end ?? ""]: !invalidated,
+        "group-data-[invalid]:text-error-500": true,
+        "text-error-500": invalidated,
+        [mergedClasses.end ?? ""]: true,
+      }),
+    );
   });
 
   const rootBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.root,
+      {
+        className: cn(inheritedAttrs.className),
+        ...omit(inheritedAttrs, ["className", "slots", "children"]),
+      },
+      cn({
+        "group w-full relative": true,
+        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
+        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
+        [mergedClasses.root ?? ""]: true,
+      }),
+    );
   });
 
   const errorBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.errorMessage,
+      {},
+      cn({
+        "mt-2 text-error-600 dark:text-error-400": true,
+        [sizeClasses?.text ?? ""]: true,
+        [mergedClasses.errorMessage ?? ""]: true,
+      }),
+    );
   });
 
   const inputBind = derived(() => {
-    return {};
+    return mergePartBind(
+      {
+        ...partsProps?.input,
+        id: controlId,
+        disabled: isDisabled,
+        readOnly: isReadonly,
+        "aria-invalid": invalidated || undefined,
+        "aria-describedby": ariaDescribedBy,
+      },
+      inputInheritedAttrs,
+      cn({
+        "flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none": true,
+        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+        "outline-none ring-0 focus:outline-none focus:ring-0": true,
+        "disabled:cursor-not-allowed": true,
+        [sizeClasses?.input ?? ""]: true,
+        [mergedClasses.input ?? ""]: true,
+      }),
+    );
   });
 
   const labelBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.label,
+      {},
+      cn({
+        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+        "text-error-600 dark:text-error-400": invalidated && !isNotched,
+        "text-gray-700 dark:text-gray-300": !invalidated && !isNotched,
+        [sizeClasses?.text ?? ""]: true,
+        [variantClasses?.label ?? ""]: isNotched,
+        [mergedClasses.label ?? ""]: true,
+      }),
+    );
   });
 
   const startBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.start,
+      {},
+      cn({
+        "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
+        "text-gray-400": !invalidated,
+        [roundedClasses?.start ?? ""]: !isUnderlined,
+        [colorClasses?.start ?? ""]: !invalidated,
+        "group-data-[invalid]:text-error-500": true,
+        "text-error-500": invalidated,
+        [mergedClasses.start ?? ""]: true,
+      }),
+    );
   });
 
   const cornerBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.corner,
+      {},
+      cn({
+        "text-gray-500 dark:text-gray-400": !isNotched,
+        [sizeClasses?.text ?? ""]: true,
+        [variantClasses?.corner ?? ""]: isNotched,
+        [mergedClasses.corner ?? ""]: true,
+      }),
+    );
   });
 
   const headerBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.header,
+      {},
+      cn({
+        flex: true,
+        "mb-1": true,
+        [headerJustify]: true,
+        [mergedClasses.header ?? ""]: true,
+      }),
+    );
   });
 
   const endIconBind = derived(() => {
-    return {};
+    return mergePartBind(partsProps?.endIcon, {}, "");
   });
 
   const endSlotBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.end,
+      {},
+      cn({
+        "group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 pe-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        [mergedClasses.end ?? ""]: true,
+      }),
+    );
   });
 
   const requiredBind = derived(() => {
-    return {};
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-error-500 dark:text-error-500 select-none": true,
+        [mergedClasses.required ?? ""]: true,
+      }),
+    );
   });
 
   const containerBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.container,
+      {},
+      cn({
+        "group/field relative flex flex-col items-stretch": isStacked,
+        "group/field relative flex justify-start gap-x-2 items-stretch":
+          !isStacked,
+        "transition-all ease-in-out duration-150 outline-none": true,
+        "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
+        [sizeClasses?.container ?? ""]: true,
+        [variantClasses?.container ?? ""]: true,
+        [roundedClasses?.input ?? ""]: !isUnderlined,
+        [containerSpacing ?? ""]: true,
+        [containerColorFocus ?? ""]: true,
+        "rounded-none": isUnderlined,
+        "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
+          invalidated && !isUnderlined,
+        "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
+          invalidated && isUnderlined,
+        [mergedClasses.container ?? ""]: true,
+      }),
+    );
   });
 
   const startIconBind = derived(() => {
-    return {};
+    return mergePartBind(partsProps?.startIcon, {}, "");
   });
 
   const startSlotBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.start,
+      {},
+      cn({
+        "group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 ps-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        [mergedClasses.start ?? ""]: true,
+      }),
+    );
   });
 
   const descriptionBind = derived(() => {
-    return {};
+    return mergePartBind(
+      partsProps?.description,
+      {},
+      cn({
+        "mt-2 text-gray-500 dark:text-gray-400": true,
+        [sizeClasses?.text ?? ""]: true,
+        [mergedClasses.description ?? ""]: true,
+      }),
+    );
+  });
+
+  const insetLabelRowBind = derived(() => {
+    const hasLabel = hasSlotOrProp(slots, "label", merged.label);
+
+    return mergePartBind(
+      partsProps?.header,
+      {},
+      cn({
+        flex: true,
+        "w-full shrink-0": true,
+        "justify-between": hasLabel,
+        "justify-end": !hasLabel,
+        "items-center": isNotched,
+        "items-end": isStacked,
+        [variantClasses?.labelRow ?? ""]: hasInsetLabelRow,
+        [mergedClasses.header ?? ""]: true,
+      }),
+    );
   });
 
   return {
@@ -305,6 +483,8 @@ export function useFormField(
     errorBind,
     errorIcon,
     inputBind,
+    isNotched,
+    isStacked,
     labelBind,
     startBind,
     cornerBind,
@@ -321,6 +501,8 @@ export function useFormField(
     startSlotBind,
     ariaDescribedBy,
     descriptionBind,
+    hasInsetLabelRow,
+    insetLabelRowBind,
   };
 }
 

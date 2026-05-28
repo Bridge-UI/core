@@ -113,11 +113,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-2xs",
-      "container": "h-6",
-      "padding": "px-1.5",
       "insetEnd": "pe-1.5",
       "insetStart": "ps-1.5",
-      "input": "text-2xs px-0.5 py-0 h-full min-h-0 leading-tight",
+      "padding": "px-1.5 pt-1",
+      "container": "min-h-[2.75rem] h-auto",
+      "input": "text-2xs px-0.5 pb-1 pt-0 h-5 min-h-0 leading-tight",
     },
     "underlined": {
       "text": "text-2xs",
@@ -155,11 +155,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-xs",
-      "padding": "px-2",
-      "container": "h-7",
       "insetEnd": "pe-2",
       "insetStart": "ps-2",
-      "input": "text-xs px-0.5 py-0 h-full min-h-0 leading-tight",
+      "padding": "px-2 pt-1",
+      "container": "min-h-12 h-auto",
+      "input": "text-xs px-0.5 pb-1 pt-0 h-6 min-h-0 leading-tight",
     },
     "underlined": {
       "text": "text-xs",
@@ -197,11 +197,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-xs",
-      "padding": "px-2",
-      "container": "h-8",
       "insetEnd": "pe-2",
       "insetStart": "ps-2",
-      "input": "text-xs px-1 py-0 h-full min-h-0 leading-normal",
+      "padding": "px-2 pt-1",
+      "container": "min-h-[3.125rem] h-auto",
+      "input": "text-xs px-1 pb-1 pt-0 h-7 min-h-0 leading-normal",
     },
     "underlined": {
       "text": "text-xs",
@@ -239,11 +239,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-sm",
-      "container": "h-9",
-      "padding": "px-2.5",
       "insetEnd": "pe-2.5",
       "insetStart": "ps-2.5",
-      "input": "text-sm px-1 py-0 h-full min-h-0 leading-normal",
+      "padding": "px-2.5 pt-1",
+      "container": "min-h-[3.25rem] h-auto",
+      "input": "text-sm px-1 pb-1.5 pt-0 h-8 min-h-0 leading-normal",
     },
     "underlined": {
       "text": "text-sm",
@@ -281,11 +281,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-sm",
-      "padding": "px-3",
       "insetEnd": "pe-3",
-      "container": "h-10",
       "insetStart": "ps-3",
-      "input": "text-sm px-1.5 py-0 h-full min-h-0 leading-normal",
+      "padding": "px-3 pt-1",
+      "container": "min-h-14 h-auto",
+      "input": "text-sm px-1.5 pb-1.5 pt-0 h-9 min-h-0 leading-normal",
     },
     "underlined": {
       "text": "text-sm",
@@ -323,11 +323,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-base",
-      "container": "h-11",
-      "padding": "px-3.5",
       "insetEnd": "pe-3.5",
       "insetStart": "ps-3.5",
-      "input": "text-base px-2 py-0 h-full min-h-0 leading-normal",
+      "padding": "px-3.5 pt-1.5",
+      "container": "min-h-[3.75rem] h-auto",
+      "input": "text-base px-2 pb-2 pt-0 h-9 min-h-0 leading-normal",
     },
     "underlined": {
       "text": "text-base",
@@ -365,11 +365,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-lg",
-      "padding": "px-4",
       "insetEnd": "pe-4",
-      "container": "h-12",
       "insetStart": "ps-4",
-      "input": "text-lg px-2.5 py-0 h-full min-h-0 leading-normal",
+      "padding": "px-4 pt-1.5",
+      "container": "min-h-16 h-auto",
+      "input": "text-lg px-2.5 pb-2 pt-0 h-10 min-h-0 leading-normal",
     },
     "underlined": {
       "text": "text-lg",

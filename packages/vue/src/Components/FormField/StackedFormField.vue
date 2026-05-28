@@ -21,92 +21,102 @@ defineProps<{
     :aria-disabled="api.isDisabled.value || undefined"
     :aria-readonly="api.isReadonly.value || undefined"
   >
-    <div
-      v-bind="api.headerBind.value"
-      v-if="
-        hasSlotOrProp(api.slots, 'label', api.merged.value.label) ||
-        hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)
-      "
-    >
-      <label
-        :for="api.controlId.value"
-        v-bind="api.labelBind.value"
-        v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
-      >
-        <component
-          :is="resolveSlotOrProp(api.slots, 'label', api.merged.value.label)"
-        />
-
-        <span v-if="api.merged.value.required" v-bind="api.requiredBind.value"
-          >*</span
-        >
-      </label>
-
-      <span
-        v-bind="api.cornerBind.value"
-        v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
-      >
-        <component
-          :is="resolveSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
-        />
-      </span>
-    </div>
-
     <div v-bind="api.containerBind.value">
       <div
-        v-bind="api.startSlotBind.value"
-        v-if="hasNamedSlot(api.slots, 'start')"
+        v-bind="api.insetLabelRowBind.value"
+        v-if="api.hasInsetLabelRow.value"
       >
-        <slot name="start" />
+        <label
+          :for="api.controlId.value"
+          v-bind="api.labelBind.value"
+          v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
+        >
+          <component
+            :is="resolveSlotOrProp(api.slots, 'label', api.merged.value.label)"
+          />
+
+          <span
+            v-if="api.merged.value.required"
+            v-bind="api.requiredBind.value"
+          >
+            *
+          </span>
+        </label>
+
+        <span
+          v-bind="api.cornerBind.value"
+          v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
+        >
+          <component
+            :is="
+              resolveSlotOrProp(api.slots, 'corner', api.merged.value.corner)
+            "
+          />
+        </span>
       </div>
 
-      <div
-        v-bind="api.startBind.value"
-        v-else-if="isPropPresent(api.merged.value.start)"
-      >
-        {{ api.merged.value.start }}
-      </div>
+      <div class="flex min-h-0 w-full flex-1 items-stretch gap-x-2">
+        <div
+          v-bind="api.startSlotBind.value"
+          v-if="hasNamedSlot(api.slots, 'start')"
+        >
+          <slot name="start" />
+        </div>
 
-      <div v-bind="api.startBind.value" v-else-if="api.merged.value.startIcon">
-        <Icon
-          :size="api.merged.value.size"
-          v-bind="api.startIconBind.value"
-          :icon="api.merged.value.startIcon"
-        />
-      </div>
+        <div
+          v-bind="api.startBind.value"
+          v-else-if="isPropPresent(api.merged.value.start)"
+        >
+          {{ api.merged.value.start }}
+        </div>
 
-      <slot />
+        <div
+          v-bind="api.startBind.value"
+          v-else-if="api.merged.value.startIcon"
+        >
+          <Icon
+            :size="api.merged.value.size"
+            v-bind="api.startIconBind.value"
+            :icon="api.merged.value.startIcon"
+          />
+        </div>
 
-      <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <slot name="end" />
-      </div>
+        <slot />
 
-      <div
-        v-bind="api.endBind.value"
-        v-else-if="isPropPresent(api.merged.value.end)"
-      >
-        {{ api.merged.value.end }}
-      </div>
+        <div
+          v-bind="api.endSlotBind.value"
+          v-if="hasNamedSlot(api.slots, 'end')"
+        >
+          <slot name="end" />
+        </div>
 
-      <div
-        v-bind="api.endBind.value"
-        v-else-if="
-          api.invalidated.value && api.merged.value.withErrorIcon !== false
-        "
-      >
-        <Icon
-          :icon="api.errorIcon.value"
-          :size="api.merged.value.size"
-          v-bind="api.endIconBind.value"
-        />
-      </div>
+        <div
+          v-bind="api.endBind.value"
+          v-else-if="isPropPresent(api.merged.value.end)"
+        >
+          {{ api.merged.value.end }}
+        </div>
 
-      <div v-bind="api.endBind.value" v-else-if="api.merged.value.endIcon">
-        <Icon
-          :size="api.merged.value.size"
-          v-bind="api.endIconBind.value"
-          :icon="api.merged.value.endIcon"
-        />
+        <div
+          v-bind="api.endBind.value"
+          v-else-if="
+            api.invalidated.value && api.merged.value.withErrorIcon !== false
+          "
+        >
+          <Icon
+            :icon="api.errorIcon.value"
+            :size="api.merged.value.size"
+            v-bind="api.endIconBind.value"
+          />
+        </div>
+
+        <div v-bind="api.endBind.value" v-else-if="api.merged.value.endIcon">
+          <Icon
+            :size="api.merged.value.size"
+            v-bind="api.endIconBind.value"
+            :icon="api.merged.value.endIcon"
+          />
+        </div>
       </div>
     </div>
 

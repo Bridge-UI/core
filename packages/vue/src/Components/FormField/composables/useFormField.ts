@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-vue-next";
 import {
   computed,
@@ -33,6 +33,7 @@ import type {
 import {
   hasNamedSlot,
   hasSlotOrProp,
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -119,12 +120,6 @@ export function useFormField(
     return Boolean(merged.value.readonly);
   });
 
-  const controlId = computed(() => {
-    const inheritedId = (split.value.inheritedAttrs as HTMLAttributes).id;
-
-    return merged.value.controlId ?? inheritedId ?? autoId;
-  });
-
   const variantKey = computed(() => {
     return merged.value.variant ?? "outline";
   });
@@ -133,8 +128,30 @@ export function useFormField(
     return merged.value.errorIcon ?? CircleAlert;
   });
 
+  const isNotched = computed(() => {
+    return variantKey.value === "notched";
+  });
+
+  const isStacked = computed(() => {
+    return variantKey.value === "stacked";
+  });
+
   const isUnderlined = computed(() => {
     return variantKey.value === "underlined";
+  });
+
+  const controlId = computed(() => {
+    const inheritedId = (split.value.inheritedAttrs as HTMLAttributes).id;
+
+    return merged.value.controlId ?? inheritedId ?? autoId;
+  });
+
+  const hasInsetLabelRow = computed(() => {
+    return (
+      (isNotched.value || isStacked.value) &&
+      (hasSlotOrProp(slots, "label", merged.value.label) ||
+        hasSlotOrProp(slots, "corner", merged.value.corner))
+    );
   });
 
   const headerJustify = computed(() => {
@@ -236,63 +253,227 @@ export function useFormField(
 
   // Binds
   const endBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.end,
+      {},
+      cn({
+        "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
+        "text-gray-500": !invalidated.value,
+        [roundedClasses.value?.end ?? ""]: !isUnderlined.value,
+        [colorClasses.value?.end ?? ""]: !invalidated.value,
+        "group-data-[invalid]:text-error-500": true,
+        "text-error-500": invalidated.value,
+        [mergedClasses.value.end ?? ""]: true,
+      }),
+    );
   });
 
   const rootBind = computed(() => {
-    return {};
+    const inherited = split.value.inheritedAttrs as HTMLAttributes;
+
+    return mergePartBind(
+      partsProps.value?.root,
+      {
+        class: cn(inherited.class),
+        ...omit(inherited, ["class"]),
+      },
+      cn({
+        "group w-full relative": true,
+        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
+        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
   });
 
   const errorBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.errorMessage,
+      {},
+      cn({
+        "mt-2 text-error-600 dark:text-error-400": true,
+        [sizeClasses.value?.text ?? ""]: true,
+        [mergedClasses.value.errorMessage ?? ""]: true,
+      }),
+    );
   });
 
   const inputBind = computed(() => {
-    return {};
+    return mergePartBind(
+      {
+        ...partsProps.value?.input,
+        id: controlId.value,
+        disabled: isDisabled.value,
+        readonly: isReadonly.value,
+        "aria-invalid": invalidated.value || undefined,
+        "aria-describedby": ariaDescribedBy.value,
+      },
+      omit(split.value.inheritedAttrs, ["class"]),
+      cn({
+        "flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none": true,
+        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+        "outline-none ring-0 focus:outline-none focus:ring-0": true,
+        "disabled:cursor-not-allowed": true,
+        [sizeClasses.value?.input ?? ""]: true,
+        [mergedClasses.value.input ?? ""]: true,
+      }),
+    );
   });
 
   const labelBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.label,
+      {},
+      cn({
+        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+        "text-error-600 dark:text-error-400":
+          invalidated.value && !isNotched.value,
+        "text-gray-700 dark:text-gray-300":
+          !invalidated.value && !isNotched.value,
+        [sizeClasses.value?.text ?? ""]: true,
+        [variantClasses.value?.label ?? ""]: isNotched.value,
+        [mergedClasses.value.label ?? ""]: true,
+      }),
+    );
   });
 
   const startBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.start,
+      {},
+      cn({
+        "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
+        "text-gray-400": !invalidated.value,
+        [roundedClasses.value?.start ?? ""]: !isUnderlined.value,
+        [colorClasses.value?.start ?? ""]: !invalidated.value,
+        "group-data-[invalid]:text-error-500": true,
+        "text-error-500": invalidated.value,
+        [mergedClasses.value.start ?? ""]: true,
+      }),
+    );
   });
 
   const cornerBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.corner,
+      {},
+      cn({
+        "text-gray-500 dark:text-gray-400": !isNotched.value,
+        [sizeClasses.value?.text ?? ""]: true,
+        [variantClasses.value?.corner ?? ""]: isNotched.value,
+        [mergedClasses.value.corner ?? ""]: true,
+      }),
+    );
+  });
+
+  const insetLabelRowBind = computed(() => {
+    const hasLabel = hasSlotOrProp(slots, "label", merged.value.label);
+
+    return mergePartBind(
+      partsProps.value?.header,
+      {},
+      cn({
+        flex: true,
+        "w-full shrink-0": true,
+        "justify-between": hasLabel,
+        "justify-end": !hasLabel,
+        "items-center": isNotched.value,
+        "items-end": isStacked.value,
+        [variantClasses.value?.labelRow ?? ""]: hasInsetLabelRow.value,
+        [mergedClasses.value.header ?? ""]: true,
+      }),
+    );
   });
 
   const headerBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.header,
+      {},
+      cn({
+        flex: true,
+        "mb-1": true,
+        [headerJustify.value]: true,
+        [mergedClasses.value.header ?? ""]: true,
+      }),
+    );
   });
 
   const endIconBind = computed(() => {
-    return {};
+    return mergePartBind(partsProps.value?.endIcon, {}, "");
   });
 
   const endSlotBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.end,
+      {},
+      cn({
+        "group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 pe-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        [mergedClasses.value.end ?? ""]: true,
+      }),
+    );
   });
 
   const requiredBind = computed(() => {
-    return {};
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-error-500 dark:text-error-500 select-none": true,
+        [mergedClasses.value.required ?? ""]: true,
+      }),
+    );
   });
 
   const containerBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.container,
+      {},
+      cn({
+        "group/field relative flex flex-col items-stretch": isStacked.value,
+        "group/field relative flex justify-start gap-x-2 items-stretch":
+          !isStacked.value,
+        "transition-all ease-in-out duration-150 outline-none": true,
+        "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
+        [sizeClasses.value?.container ?? ""]: true,
+        [variantClasses.value?.container ?? ""]: true,
+        [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
+        [containerSpacing.value ?? ""]: true,
+        [containerColorFocus.value ?? ""]: true,
+        "rounded-none": isUnderlined.value,
+        "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
+          invalidated.value && !isUnderlined.value,
+        "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
+          invalidated.value && isUnderlined.value,
+        [mergedClasses.value.container ?? ""]: true,
+      }),
+    );
   });
 
   const startIconBind = computed(() => {
-    return {};
+    return mergePartBind(partsProps.value?.startIcon, {}, "");
   });
 
   const startSlotBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.start,
+      {},
+      cn({
+        "group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 ps-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        [mergedClasses.value.start ?? ""]: true,
+      }),
+    );
   });
 
   const descriptionBind = computed(() => {
-    return {};
+    return mergePartBind(
+      partsProps.value?.description,
+      {},
+      cn({
+        "mt-2 text-gray-500 dark:text-gray-400": true,
+        [sizeClasses.value?.text ?? ""]: true,
+        [mergedClasses.value.description ?? ""]: true,
+      }),
+    );
   });
 
   return {
@@ -304,6 +485,8 @@ export function useFormField(
     errorBind,
     errorIcon,
     inputBind,
+    isNotched,
+    isStacked,
     labelBind,
     startBind,
     cornerBind,
@@ -320,6 +503,8 @@ export function useFormField(
     startSlotBind,
     ariaDescribedBy,
     descriptionBind,
+    hasInsetLabelRow,
+    insetLabelRowBind,
   };
 }
 
