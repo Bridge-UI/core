@@ -33,6 +33,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
 export const formFieldBridgeKeys = [
   "end",
   "size",
@@ -231,9 +232,40 @@ export function useFormField(
     return colorClasses;
   }, [invalidated, colorClasses, bridgeFormField?.customProps?.color]);
 
+  const containerColorFocus = derived(() => {
+    if (isUnderlined) {
+      return focusColorPalette?.underlined;
+    }
+
+    return focusColorPalette?.input;
+  });
+
+  const stackedBodySpacing = derived(() => {
+    if (!isStacked) {
+      return undefined;
+    }
+
+    if (!hasNamedSlot(slots, "start") && !hasNamedSlot(slots, "end")) {
+      return undefined;
+    }
+
+    return cn({
+      [sizeClasses?.insetStart ?? ""]: true,
+      [sizeClasses?.insetEnd ?? ""]: true,
+    });
+  });
+
   const containerSpacing = derived(() => {
     const hasEndSlot = hasNamedSlot(slots, "end");
     const hasStartSlot = hasNamedSlot(slots, "start");
+
+    if (isStacked) {
+      if (!hasStartSlot && !hasEndSlot) {
+        return sizeClasses?.padding;
+      }
+
+      return undefined;
+    }
 
     if (!hasStartSlot && !hasEndSlot) {
       return sizeClasses?.padding;
@@ -245,14 +277,6 @@ export function useFormField(
     });
   });
 
-  const containerColorFocus = derived(() => {
-    if (isUnderlined) {
-      return focusColorPalette?.underlined;
-    }
-
-    return focusColorPalette?.input;
-  });
-
   // Binds
   const endBind = derived(() => {
     return mergePartBind(
@@ -261,7 +285,7 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-gray-500": !invalidated,
-        [roundedClasses?.end ?? ""]: !isUnderlined,
+        [roundedClasses?.end ?? ""]: !isUnderlined && !isStacked,
         [colorClasses?.end ?? ""]: !invalidated,
         "group-data-[invalid]:text-error-500": true,
         "text-error-500": invalidated,
@@ -310,7 +334,8 @@ export function useFormField(
       },
       inputInheritedAttrs,
       cn({
-        "flex-1 min-h-0 min-w-0 h-full bg-transparent border-0 shadow-none": true,
+        "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
+        "h-full": !isStacked,
         "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
         "outline-none ring-0 focus:outline-none focus:ring-0": true,
         "disabled:cursor-not-allowed": true,
@@ -342,7 +367,7 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-gray-400": !invalidated,
-        [roundedClasses?.start ?? ""]: !isUnderlined,
+        [roundedClasses?.start ?? ""]: !isUnderlined && !isStacked,
         [colorClasses?.start ?? ""]: !invalidated,
         "group-data-[invalid]:text-error-500": true,
         "text-error-500": invalidated,
@@ -378,7 +403,14 @@ export function useFormField(
   });
 
   const endIconBind = derived(() => {
-    return mergePartBind(partsProps?.endIcon, {}, "");
+    return mergePartBind(
+      partsProps?.endIcon,
+      {},
+      cn({
+        "inline-flex shrink-0 items-center justify-center self-center":
+          isStacked,
+      }),
+    );
   });
 
   const endSlotBind = derived(() => {
@@ -386,7 +418,9 @@ export function useFormField(
       partsProps?.end,
       {},
       cn({
-        "group/end wrapper-end-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 pe-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
+        "h-full min-h-0 py-0.5 pe-0.5": !isStacked,
+        "[&>*]:w-full": isStacked,
         [mergedClasses.end ?? ""]: true,
       }),
     );
@@ -403,12 +437,37 @@ export function useFormField(
     );
   });
 
+  const stackedBodyBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "flex min-h-0 min-w-0 flex-1 flex-col": true,
+        [stackedBodySpacing ?? ""]: true,
+      }),
+    );
+  });
+
+  const stackedInputRowBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "flex w-full min-w-0 flex-1 items-center gap-x-2": true,
+        [sizeClasses?.controlRow ?? ""]: true,
+      }),
+    );
+  });
+
   const containerBind = derived(() => {
     return mergePartBind(
       partsProps?.container,
-      {},
+      {
+        "data-bridge-rounded": merged.rounded ?? "md",
+      },
       cn({
-        "group/field relative flex flex-col items-stretch": isStacked,
+        "group/field relative flex flex-row items-stretch overflow-hidden":
+          isStacked,
         "group/field relative flex justify-start gap-x-2 items-stretch":
           !isStacked,
         "transition-all ease-in-out duration-150 outline-none": true,
@@ -429,7 +488,14 @@ export function useFormField(
   });
 
   const startIconBind = derived(() => {
-    return mergePartBind(partsProps?.startIcon, {}, "");
+    return mergePartBind(
+      partsProps?.startIcon,
+      {},
+      cn({
+        "inline-flex shrink-0 items-center justify-center self-center":
+          isStacked,
+      }),
+    );
   });
 
   const startSlotBind = derived(() => {
@@ -437,7 +503,9 @@ export function useFormField(
       partsProps?.start,
       {},
       cn({
-        "group/start wrapper-start-slot shrink-0 flex h-full min-h-0 w-auto items-stretch self-stretch py-0.5 ps-0.5 [&>*]:h-full [&>*]:min-h-0": true,
+        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
+        "h-full min-h-0 py-0.5 ps-0.5": !isStacked,
+        "[&>*]:w-full": isStacked,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -503,6 +571,8 @@ export function useFormField(
     descriptionBind,
     hasInsetLabelRow,
     insetLabelRowBind,
+    stackedBodyBind,
+    stackedInputRowBind,
   };
 }
 

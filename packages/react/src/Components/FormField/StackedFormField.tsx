@@ -24,39 +24,43 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
       aria-readonly={api.isReadonly || undefined}
     >
       <div {...api.containerBind}>
-        {api.hasInsetLabelRow && (
-          <div {...api.insetLabelRowBind}>
-            {hasSlotOrProp(api.slots, "label", api.merged.label) && (
-              <label htmlFor={api.controlId} {...api.labelBind}>
-                {resolveSlotOrProp({
-                  name: "label",
-                  slots: api.slots,
-                  fallback: api.merged.label,
-                })}
-
-                {api.merged.required && <span {...api.requiredBind}>*</span>}
-              </label>
-            )}
-
-            {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
-              <span {...api.cornerBind}>
-                {resolveSlotOrProp({
-                  name: "corner",
-                  slots: api.slots,
-                  fallback: api.merged.corner,
-                })}
-              </span>
-            )}
-          </div>
+        {hasNamedSlot(api.slots, "start") && (
+          <div {...api.startSlotBind}>{api.slots?.start}</div>
         )}
 
-        <div className="flex min-h-0 w-full flex-1 items-stretch gap-x-2">
-          {hasNamedSlot(api.slots, "start") ? (
-            <div {...api.startSlotBind}>{api.slots?.start}</div>
-          ) : isPropPresent(api.merged.start) ? (
-            <div {...api.startBind}>{api.merged.start}</div>
-          ) : (
-            api.merged.startIcon && (
+        <div {...api.stackedBodyBind}>
+          {api.hasInsetLabelRow && (
+            <div {...api.insetLabelRowBind}>
+              {hasSlotOrProp(api.slots, "label", api.merged.label) && (
+                <label htmlFor={api.controlId} {...api.labelBind}>
+                  {resolveSlotOrProp({
+                    name: "label",
+                    slots: api.slots,
+                    fallback: api.merged.label,
+                  })}
+
+                  {api.merged.required && <span {...api.requiredBind}>*</span>}
+                </label>
+              )}
+
+              {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
+                <span {...api.cornerBind}>
+                  {resolveSlotOrProp({
+                    name: "corner",
+                    slots: api.slots,
+                    fallback: api.merged.corner,
+                  })}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div {...api.stackedInputRowBind}>
+            {isPropPresent(api.merged.start) && (
+              <div {...api.startBind}>{api.merged.start}</div>
+            )}
+
+            {!isPropPresent(api.merged.start) && api.merged.startIcon && (
               <div {...api.startBind}>
                 <Icon
                   {...api.startIconBind}
@@ -64,25 +68,25 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
                   icon={api.merged.startIcon}
                 />
               </div>
-            )
-          )}
+            )}
 
-          {children}
+            {children}
 
-          {hasNamedSlot(api.slots, "end") ? (
-            <div {...api.endSlotBind}>{api.slots?.end}</div>
-          ) : isPropPresent(api.merged.end) ? (
-            <div {...api.endBind}>{api.merged.end}</div>
-          ) : api.invalidated && api.merged.withErrorIcon !== false ? (
-            <div {...api.endBind}>
-              <Icon
-                {...api.endIconBind}
-                icon={api.errorIcon}
-                size={api.merged.size}
-              />
-            </div>
-          ) : (
-            api.merged.endIcon && (
+            {isPropPresent(api.merged.end) && (
+              <div {...api.endBind}>{api.merged.end}</div>
+            )}
+
+            {api.invalidated &&
+            !isPropPresent(api.merged.end) &&
+            api.merged.withErrorIcon !== false ? (
+              <div {...api.endBind}>
+                <Icon
+                  {...api.endIconBind}
+                  icon={api.errorIcon}
+                  size={api.merged.size}
+                />
+              </div>
+            ) : !isPropPresent(api.merged.end) && api.merged.endIcon ? (
               <div {...api.endBind}>
                 <Icon
                   {...api.endIconBind}
@@ -90,9 +94,13 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
                   icon={api.merged.endIcon}
                 />
               </div>
-            )
-          )}
+            ) : null}
+          </div>
         </div>
+
+        {hasNamedSlot(api.slots, "end") && (
+          <div {...api.endSlotBind}>{api.slots?.end}</div>
+        )}
       </div>
 
       {!api.invalidated &&

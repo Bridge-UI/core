@@ -96,3 +96,95 @@
   --color-info-900: var(--color-blue-900);
   --color-info-950: var(--color-blue-950);
 }
+
+/**
+ * FormField slot adornments (`bridge-start-adornment` / `bridge-end-adornment`).
+ * Parent `.group/field` sets `data-bridge-rounded` from FormField `rounded`.
+ * Suffix `!` overrides Button/Badge `rounded-*` from the utilities layer.
+ */
+@layer components {
+  .bridge-end-adornment,
+  .bridge-start-adornment {
+    @apply h-full min-h-0 rounded-none!;
+  }
+
+  [data-bridge-rounded="none"] .bridge-start-adornment {
+    @apply rounded-s-none! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xs"] .bridge-start-adornment {
+    @apply rounded-s-xs! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="sm"] .bridge-start-adornment {
+    @apply rounded-s-sm! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="md"] .bridge-start-adornment {
+    @apply rounded-s-md! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="lg"] .bridge-start-adornment {
+    @apply rounded-s-lg! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xl"] .bridge-start-adornment {
+    @apply rounded-s-xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="2xl"] .bridge-start-adornment {
+    @apply rounded-s-2xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="3xl"] .bridge-start-adornment {
+    @apply rounded-s-3xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="4xl"] .bridge-start-adornment {
+    @apply rounded-s-4xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="full"] .bridge-start-adornment {
+    @apply rounded-s-full! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="none"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xs"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xs!;
+  }
+
+  [data-bridge-rounded="sm"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-sm!;
+  }
+
+  [data-bridge-rounded="md"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-md!;
+  }
+
+  [data-bridge-rounded="lg"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-lg!;
+  }
+
+  [data-bridge-rounded="xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xl!;
+  }
+
+  [data-bridge-rounded="2xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-2xl!;
+  }
+
+  [data-bridge-rounded="3xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-3xl!;
+  }
+
+  [data-bridge-rounded="4xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-4xl!;
+  }
+
+  [data-bridge-rounded="full"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-full!;
+  }
+}
