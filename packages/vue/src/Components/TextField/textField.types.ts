@@ -12,10 +12,13 @@ import type {
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 
-export type TextFieldClasses = FormFieldClasses;
-export type TextFieldPartsProps = FormFieldPartsProps;
-export type TextFieldOwnProps = FormFieldOwnProps;
-export type TextFieldSlots = FormFieldSlots;
+export interface TextFieldClasses extends FormFieldClasses {}
+
+export interface TextFieldPartsProps extends FormFieldPartsProps {}
+
+export interface TextFieldOwnProps extends Omit<FormFieldOwnProps, "field"> {}
+
+export interface TextFieldSlots extends FormFieldSlots {}
 
 export type TextFieldProps = MergeHtmlProps<
   TextFieldOwnProps,

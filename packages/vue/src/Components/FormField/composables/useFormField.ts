@@ -1,9 +1,6 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
 import {
-  type ClassValue,
   computed,
-  HTMLAttributes,
   type MaybeRefOrGetter,
   toValue,
   useAttrs,
@@ -13,28 +10,16 @@ import {
 
 // ** Core Imports
 import {
-  cn,
   type LibDefaultsShape,
-  mergeBridgeUILayeredClasses,
   type MergeLibDefaults,
   splitComponentProps,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/FormField";
 
 // ** Local Imports
-import type {
-  FormFieldClasses,
-  FormFieldOwnProps,
-} from "@/Components/FormField/formField.types";
-import {
-  hasSlotOrProp,
-  mergePartBind,
-  useBridgeUIComponent,
-  useBridgeUIMergedRegistryClasses,
-} from "@/Utils";
+import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
+import { hasSlotOrProp, useBridgeUIComponent } from "@/Utils";
 
-/** Props forwarded from field wrappers (e.g. TextField) into `useFormField`. */
-export const formFieldOwnPropKeys = [
+export const formFieldBridgeKeys = [
   "end",
   "size",
   "color",
@@ -66,29 +51,10 @@ type FormFieldMerged = MergeLibDefaults<
   FormFieldLibDefaults
 >;
 
-export type UseFormFieldOptions = {
-  /**
-   * Control id supplied by the parent field (e.g. TextField fallthrough `id`).
-   */
-  controlId?: () => string | undefined;
-
-  /**
-   * Extra root `class` from a parent field wrapper (e.g. TextField fallthrough).
-   */
-  rootClassName?: () => ClassValue | undefined;
-
-  /**
-   * Extra input `attributes` from a parent field wrapper (e.g. TextField fallthrough).
-   */
-  inputAttributes?: () => HTMLAttributes | undefined;
-};
-
 export function useFormField(
   props: MaybeRefOrGetter<Omit<FormFieldOwnProps, "field">>,
   libDefaults: FormFieldLibDefaults,
-  options?: UseFormFieldOptions,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any {
+) {
   // Setup
   const autoId = useId();
   const attrs = useAttrs();
@@ -97,34 +63,30 @@ export function useFormField(
   const split = computed(() => {
     return splitComponentProps<
       Omit<FormFieldOwnProps, "field">,
-      typeof formFieldOwnPropKeys
+      typeof formFieldBridgeKeys
     >({
-      bridgeKeys: formFieldOwnPropKeys,
+      bridgeKeys: formFieldBridgeKeys,
       props: { ...attrs, ...toValue(props) },
     });
   });
-
-  const customProps = computed(() => split.value.customProps);
-
-  const rootInheritedAttrs = computed(() => split.value.inheritedAttrs);
 
   const { entry: bridgeFormField, merged } = useBridgeUIComponent<
     FormFieldMerged,
     "FormField"
   >({
     libDefaults,
-    props: customProps,
     componentName: "FormField",
+    props: () => split.value.customProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
-  });
+  // const partsProps = computed(() => {
+  //   return merged.value.partsProps;
+  // });
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
-    props: customProps,
-    entry: bridgeFormField,
-  });
+  // const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
+  //   entry: bridgeFormField,
+  //   props: () => split.value.customProps,
+  // });
 
   // Elements
   const invalidated = computed(() => {
@@ -140,16 +102,20 @@ export function useFormField(
   });
 
   const controlId = computed(() => {
-    return options?.controlId?.() ?? merged.value.controlId ?? autoId;
+    return merged.value.controlId ?? autoId;
   });
 
-  const headerJustify = computed(() => {
-    if (hasSlotOrProp(slots, "label", merged.value.label)) {
-      return "justify-between items-end";
-    }
-
-    return "justify-end";
+  const variantKey = computed(() => {
+    return merged.value.variant ?? "outline";
   });
+
+  // const headerJustify = computed(() => {
+  //   if (hasSlotOrProp(slots, "label", merged.value.label)) {
+  //     return "justify-between items-end";
+  //   }
+
+  //   return "justify-end";
+  // });
 
   const ariaDescribedBy = computed(() => {
     const ids: string[] = [];
@@ -169,95 +135,46 @@ export function useFormField(
   });
 
   // Classes
-  const sizeClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeFormField.value?.customProps?.size,
-    );
+  // const sizeClasses = computed(() => {
+  //   const classes = mergeBridgeUILayeredClasses(
+  //     sizeProps,
+  //     bridgeFormField.value?.customProps?.size,
+  //   );
 
-    return get(classes, merged.value.size);
-  });
+  //   return get(classes, merged.value.size);
+  // });
 
   // Binds
-  // prettier-ignore
   const headerBind = computed(() => {
-    return mergePartBind(partsProps.value?.header, {}, cn({
-      // Theme classes
-      [headerJustify.value]: true,
-      'flex mb-1': true,
-      // Custom classes
-      [mergedClasses.value.header ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const requiredBind = computed(() => {
-    return mergePartBind({}, {}, cn({
-      // Theme classes
-      'text-error-500 dark:text-error-500 select-none': true,
-      // Custom classes
-      [mergedClasses.value.required ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const cornerBind = computed(() => {
-    return mergePartBind(partsProps.value?.corner, {}, cn({
-      // Theme classes
-      'text-gray-500 dark:text-gray-400': true,
-      [sizeClasses.value?.corner ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.corner ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const descriptionBind = computed(() => {
-    return mergePartBind(partsProps.value?.description, {}, cn({
-      // Theme classes
-      'mt-2 text-gray-500 dark:text-gray-400': true,
-      [sizeClasses.value?.description ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.description ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const errorBind = computed(() => {
-    return mergePartBind(partsProps.value?.error, {}, cn({
-      // Theme classes
-      'mt-2 text-error-600 dark:text-error-400': true,
-      [sizeClasses.value?.error ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.error ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const labelBind = computed(() => {
-    return mergePartBind(partsProps.value?.label, {}, cn({
-      // Theme classes
-      'inline-flex items-center gap-x-0.5 font-medium leading-none': true,
-      'text-error-600 dark:text-error-400': invalidated.value,
-      'text-gray-700 dark:text-gray-300': !invalidated.value,
-      [sizeClasses.value?.label ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.label ?? ""]: true,
-    }));
+    return {};
   });
 
-  // prettier-ignore
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, {
-      class: options?.rootClassName?.(),
-      ...rootInheritedAttrs,
-    }, cn({
-      // Theme classes
-      "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
-      "aria-readonly:pointer-events-none aria-readonly:select-none": true,
-      [mergedClasses.value.root ?? ""]: true,
-      "group w-full relative": true,
-    }));
+    return {};
+  });
+
+  const inputBind = computed(() => {
+    return {};
   });
 
   return {
@@ -267,10 +184,12 @@ export function useFormField(
     controlId,
     errorBind,
     labelBind,
+    inputBind,
     cornerBind,
     headerBind,
     isDisabled,
     isReadonly,
+    variantKey,
     invalidated,
     requiredBind,
     ariaDescribedBy,

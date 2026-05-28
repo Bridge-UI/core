@@ -110,26 +110,6 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";
-export { NumberField, useNumberField } from "@/Components/NumberField";
-export type {
-  NumberFieldClasses,
-  NumberFieldColorOverrides,
-  NumberFieldProps,
-  NumberFieldRoundedOverrides,
-  NumberFieldSizeOverrides,
-  NumberFieldSlots,
-  NumberFieldVariantOverrides,
-} from "@/Components/NumberField";
-export { PasswordField, usePasswordField } from "@/Components/PasswordField";
-export type {
-  PasswordFieldClasses,
-  PasswordFieldColorOverrides,
-  PasswordFieldProps,
-  PasswordFieldRoundedOverrides,
-  PasswordFieldSizeOverrides,
-  PasswordFieldSlots,
-  PasswordFieldVariantOverrides,
-} from "@/Components/PasswordField";
 export { Radio } from "@/Components/Radio";
 export type {
   RadioClasses,
@@ -149,18 +129,6 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
-export { Textarea, useTextarea } from "@/Components/Textarea";
-export type {
-  TextareaClasses,
-  TextareaColorOverrides,
-  TextareaOwnProps,
-  TextareaPartsProps,
-  TextareaProps,
-  TextareaRoundedOverrides,
-  TextareaSizeOverrides,
-  TextareaSlots,
-  TextareaVariantOverrides,
-} from "@/Components/Textarea";
 export { TextField, useTextField } from "@/Components/TextField";
 export type {
   TextFieldClasses,

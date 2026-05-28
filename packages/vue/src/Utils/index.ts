@@ -102,12 +102,6 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
 
 // ** Exports
 export {
-  resolveEndAdornmentButtonClasses,
-  resolveEndAdornmentClasses,
-  resolveEndAdornmentShellClasses,
-} from "@/Utils/resolveEndAdornmentClasses";
-export type { ResolveEndAdornmentClassesOptions } from "@/Utils/resolveEndAdornmentClasses";
-export {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
@@ -118,4 +112,3 @@ export type {
   HoldRepeatAction,
   UseHoldRepeatOptions,
 } from "@/Utils/useHoldRepeat";
-export { useTextFieldEndAdornment } from "@/Utils/useTextFieldEndAdornment";

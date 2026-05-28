@@ -211,11 +211,11 @@ export interface IconConfigBase {
 export interface FormFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
+    withErrorIcon: boolean;
     size: keyof FormFieldSize;
     color: keyof FormFieldColor;
     rounded: keyof FormFieldRounded;
     variant: keyof FormFieldVariant;
-    withErrorIcon: boolean;
   }>;
   customProps: Partial<{
     size: Record<string, FormFieldSizeItem>;
@@ -302,6 +302,12 @@ export interface SelectConfigBase {
   }>;
 }
 
+export interface TextareaConfigBase {
+  defaultProps: Partial<{
+    autosize: boolean;
+  }>;
+}
+
 export interface ToggleConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -329,6 +335,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
+  Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;
 

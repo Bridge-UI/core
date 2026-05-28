@@ -13,7 +13,6 @@ import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
-import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
@@ -102,13 +101,6 @@ declare module "@bridge-ui/core" {
     classes: SelectClasses;
     defaultProps: Partial<
       Pick<SelectProps, "size" | "color" | "rounded" | "variant">
-    >;
-  }
-
-  interface TextareaConfigOverrides {
-    classes: TextareaClasses;
-    defaultProps: Partial<
-      Pick<TextareaProps, "size" | "color" | "rounded" | "variant">
     >;
   }
 

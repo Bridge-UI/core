@@ -38,7 +38,7 @@ export interface FormFieldClasses {
   /**
    * Classes merged onto the error message below the control.
    */
-  error?: string;
+  errorMessage?: string;
 
   /**
    * Classes merged onto the label + corner header row.
@@ -105,7 +105,7 @@ export interface FormFieldPartsProps {
   /**
    * Props forwarded to the error message element.
    */
-  error?: HTMLAttributes;
+  errorMessage?: HTMLAttributes;
 
   /**
    * Props forwarded to the label + corner header row.
