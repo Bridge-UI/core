@@ -1,10 +1,15 @@
+// ** External Imports
+import { useAttrs } from "vue";
+
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 
 export function useTextField(props: TextFieldOwnProps) {
   // Setup
-  const formField = useFormField(() => props, {
+  const attrs = useAttrs();
+
+  const formField = useFormField(() => ({ ...attrs, ...props }), {
     size: "md",
     rounded: "md",
     color: "primary",

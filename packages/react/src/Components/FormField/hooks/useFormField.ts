@@ -1,21 +1,36 @@
 // ** External Imports
+import { get, omit } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
-import { useId } from "react";
+import { useId, useMemo } from "react";
 
 // ** Core Imports
 import {
+  cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import {
+  colorProps,
+  roundedProps,
+  sizeProps,
+  variantProps,
+} from "@bridge-ui/core/Components/FormField";
 
 // ** Local Imports
 import type {
+  FormFieldClasses,
   FormFieldOwnProps,
   FormFieldProps,
 } from "@/Components/FormField/formField.types";
-import { derived, hasSlotOrProp, useBridgeUIComponent } from "@/Utils";
-
+import {
+  derived,
+  hasNamedSlot,
+  hasSlotOrProp,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 export const formFieldBridgeKeys = [
   "end",
   "size",
@@ -56,7 +71,7 @@ export function useFormField(
   // Setup
   const autoId = useId();
 
-  const { customProps } = splitComponentProps<
+  const { customProps, inheritedAttrs } = splitComponentProps<
     Omit<FormFieldProps, "field">,
     typeof formFieldBridgeKeys
   >({
@@ -73,11 +88,28 @@ export function useFormField(
     componentName: "FormField",
   });
 
-  // Elements
   const slots = derived(() => {
     return props.slots;
   });
 
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const partsProps = derived(() => {
+    return merged.partsProps;
+  });
+
+  const inputInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "children", "className"]);
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
+    props: customProps,
+    entry: bridgeFormField,
+  });
+
+  // Elements
   const invalidated = derived(() => {
     return merged.error === true;
   });
@@ -91,7 +123,7 @@ export function useFormField(
   });
 
   const controlId = derived(() => {
-    return merged.controlId ?? autoId;
+    return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
   });
 
   const variantKey = derived(() => {
@@ -100,6 +132,18 @@ export function useFormField(
 
   const errorIcon = derived(() => {
     return merged.errorIcon ?? CircleAlert;
+  });
+
+  const isUnderlined = derived(() => {
+    return variantKey === "underlined";
+  });
+
+  const headerJustify = derived(() => {
+    if (hasSlotOrProp(slots, "label", merged.label)) {
+      return "justify-between items-end";
+    }
+
+    return "justify-end";
   });
 
   const ariaDescribedBy = derived(() => {
@@ -117,6 +161,78 @@ export function useFormField(
     }
 
     return ids.length > 0 ? ids.join(" ") : undefined;
+  });
+
+  // Classes
+  const sizeClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeFormField?.customProps?.size,
+    );
+
+    return get(classes, [merged.size, merged.variant ?? "outline"]);
+  }, [merged.size, merged.variant, bridgeFormField?.customProps?.size]);
+
+  const colorClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeFormField?.customProps?.color,
+    );
+
+    return get(classes, merged.color);
+  }, [merged.color, bridgeFormField?.customProps?.color]);
+
+  const roundedClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeFormField?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeFormField?.customProps?.rounded]);
+
+  const variantClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeFormField?.customProps?.variant,
+    );
+
+    return get(classes, merged.variant ?? "outline");
+  }, [merged.variant, bridgeFormField?.customProps?.variant]);
+
+  const focusColorPalette = useMemo(() => {
+    if (invalidated) {
+      const classes = mergeBridgeUILayeredClasses(
+        colorProps,
+        bridgeFormField?.customProps?.color,
+      );
+
+      return get(classes, "error");
+    }
+
+    return colorClasses;
+  }, [invalidated, colorClasses, bridgeFormField?.customProps?.color]);
+
+  const containerSpacing = derived(() => {
+    const hasEndSlot = hasNamedSlot(slots, "end");
+    const hasStartSlot = hasNamedSlot(slots, "start");
+
+    if (!hasStartSlot && !hasEndSlot) {
+      return sizeClasses?.padding;
+    }
+
+    return cn({
+      [sizeClasses?.insetStart ?? ""]: !hasStartSlot,
+      [sizeClasses?.insetEnd ?? ""]: !hasEndSlot,
+    });
+  });
+
+  const containerColorFocus = derived(() => {
+    if (isUnderlined) {
+      return focusColorPalette?.underlined;
+    }
+
+    return focusColorPalette?.input;
   });
 
   // Binds

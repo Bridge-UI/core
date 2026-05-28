@@ -23,7 +23,7 @@ type FormFieldComponentProps = Required<
 >;
 
 function FormField(props: FormFieldComponentProps) {
-  const api = props.field as UseFormFieldReturn;
+  const api: UseFormFieldReturn = props.field;
 
   const variant = api?.variantKey ?? "outline";
 

@@ -12,6 +12,7 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 // ** Local Imports
+import type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import type { IconProps } from "@/Components/Icon";
 
 export interface FormFieldSizeOverrides {}
@@ -219,12 +220,12 @@ export interface FormFieldOwnProps {
   errorMessage?: string;
 
   /**
-   * Pre-composed field API from a parent composable (e.g. `useTextField`). When
-   * set, internal `useFormField` is skipped.
+   * Pre-composed field API from a parent composable (e.g. `useTextField`). Used
+   * by `<FormField :field="…" />`; not set on field wrappers such as TextField.
    *
    * @default undefined
    */
-  field?: unknown;
+  field?: UseFormFieldReturn;
 
   /**
    * The primary label text above the control.

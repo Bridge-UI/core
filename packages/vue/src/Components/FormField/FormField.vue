@@ -21,8 +21,8 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<Required<Pick<FormFieldOwnProps, "field">>>();
 
-const api = computed(() => {
-  return props.field as UseFormFieldReturn;
+const api = computed((): UseFormFieldReturn => {
+  return props.field;
 });
 
 const shells: Record<string, Component> = {
