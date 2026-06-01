@@ -87,7 +87,7 @@ function NumberField(props: NumberFieldProps) {
                 aria-label="Increment value"
                 disabled={textFieldProps.disabled}
                 className={cn(
-                  "inline-flex min-h-0 min-w-8 flex-1 items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800",
+                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
                   mergedClasses.increment,
                 )}
               >
@@ -103,7 +103,7 @@ function NumberField(props: NumberFieldProps) {
                 aria-label="Decrement value"
                 disabled={textFieldProps.disabled}
                 className={cn(
-                  "inline-flex min-h-0 min-w-8 flex-1 items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800",
+                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
                   mergedClasses.decrement,
                 )}
               >

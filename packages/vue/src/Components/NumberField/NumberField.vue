@@ -131,7 +131,7 @@ const stringModel = computed({
           v-on:lostpointercapture="incrementHold.onPressLostPointerCapture"
           :class="
             cn(
-              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800',
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
               mergedClasses.increment,
             )
           "
@@ -149,7 +149,7 @@ const stringModel = computed({
           v-on:lostpointercapture="decrementHold.onPressLostPointerCapture"
           :class="
             cn(
-              'inline-flex min-h-0 min-w-8 flex-1 items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800',
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
               mergedClasses.decrement,
             )
           "

@@ -52,7 +52,7 @@ function PasswordField(props: PasswordFieldProps) {
               disabled={textFieldProps.disabled}
               aria-label={isVisible ? "Hide password" : "Show password"}
               className={cn(
-                "bridge-end-adornment inline-flex h-full items-center justify-center px-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800",
+                "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5",
                 mergedClasses.toggle,
               )}
             >
