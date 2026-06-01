@@ -126,3 +126,34 @@ test("it should apply stacked insets on stackedBody when end slot is present", (
   expect(result.current.containerBind.className).not.toMatch(/\bpx-/);
   expect(result.current.stackedBodyBind.className).toContain("ps-2.5");
 });
+
+test("it should be readonly when readonly prop is true", () => {
+  const { result } = renderUseFormField({ readonly: true });
+
+  expect(result.current.isReadonly).toBe(true);
+  expect(result.current.inputBind.readOnly).toBe(true);
+});
+
+test("it should expose variantKey for filled variant", () => {
+  const { result } = renderUseFormField({ variant: "filled" });
+
+  expect(result.current.variantKey).toBe("filled");
+});
+
+test("it should expose variantKey for notched variant", () => {
+  const { result } = renderUseFormField({ variant: "notched" });
+
+  expect(result.current.variantKey).toBe("notched");
+});
+
+test("it should expose variantKey for underlined variant", () => {
+  const { result } = renderUseFormField({ variant: "underlined" });
+
+  expect(result.current.variantKey).toBe("underlined");
+});
+
+test("it should not set aria-describedby when error is true without errorMessage", () => {
+  const { result } = renderUseFormField({ error: true });
+
+  expect(result.current.inputBind["aria-describedby"]).toBeUndefined();
+});

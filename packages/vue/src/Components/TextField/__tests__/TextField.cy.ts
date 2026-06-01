@@ -73,7 +73,7 @@ test("it should forward fallthrough attrs to the input", () => {
     },
   });
 
-  cy.get("#field-from-attrs")
+  cy.get("input#field-from-attrs")
     .should("exist")
     .and("have.attr", "placeholder", "Enter email");
 });
