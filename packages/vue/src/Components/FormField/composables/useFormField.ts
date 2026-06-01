@@ -285,10 +285,6 @@ export function useFormField(
       return undefined;
     }
 
-    if (!hasNamedSlot(slots, "start") && !hasNamedSlot(slots, "end")) {
-      return undefined;
-    }
-
     return cn({
       [sizeClasses.value?.insetTop ?? ""]: true,
       [sizeClasses.value?.insetStart ?? ""]: true,
@@ -301,10 +297,6 @@ export function useFormField(
     const hasStartSlot = hasNamedSlot(slots, "start");
 
     if (isStacked.value) {
-      if (!hasStartSlot && !hasEndSlot) {
-        return sizeClasses.value?.padding;
-      }
-
       return undefined;
     }
 
@@ -489,9 +481,8 @@ export function useFormField(
       {},
       cn({
         "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "self-stretch min-h-0 overflow-hidden py-0.5 pe-0.5": isStacked.value,
         "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked.value,
-        "min-h-0 overflow-hidden": isStacked.value,
-        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked.value,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
@@ -579,9 +570,8 @@ export function useFormField(
       {},
       cn({
         "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "self-stretch min-h-0 overflow-hidden py-0.5 ps-0.5": isStacked.value,
         "h-full min-h-0 overflow-hidden py-0.5 ps-0.5": !isStacked.value,
-        "min-h-0 overflow-hidden": isStacked.value,
-        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked.value,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );

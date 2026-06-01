@@ -127,3 +127,38 @@ test("it should use id from fallthrough attrs for controlId", () => {
   expect(controlId.value).toBe("custom-field");
   expect(inputBind.value.id).toBe("custom-field");
 });
+
+test("it should apply stacked insets on stackedBody instead of container padding", () => {
+  const { stackedBodyBind, containerBind } = mountUseFormField({
+    label: "Quantity",
+    variant: "stacked",
+  });
+
+  expect(containerBind.value.class).not.toMatch(/\bpx-/);
+  expect(stackedBodyBind.value.class).toContain("ps-2.5");
+  expect(stackedBodyBind.value.class).toContain("pe-2.5");
+});
+
+test("it should apply stacked insets on stackedBody when end slot is present", () => {
+  let result!: ReturnType<typeof useFormField>;
+
+  const Wrapper = defineComponent({
+    setup(_, { slots }) {
+      result = useFormField(
+        () => ({ variant: "stacked", label: "Quantity" }),
+        libDefaults,
+      );
+
+      return () => h("div", slots);
+    },
+  });
+
+  mount(Wrapper, {
+    slots: {
+      end: () => h("div", { class: "bridge-end-adornment" }),
+    },
+  });
+
+  expect(result.containerBind.value.class).not.toMatch(/\bpx-/);
+  expect(result.stackedBodyBind.value.class).toContain("ps-2.5");
+});

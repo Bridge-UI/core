@@ -102,3 +102,27 @@ test("it should use id prop for controlId", () => {
   expect(result.current.controlId).toBe("custom-field");
   expect(result.current.inputBind.id).toBe("custom-field");
 });
+
+test("it should apply stacked insets on stackedBody instead of container padding", () => {
+  const { result } = renderUseFormField({
+    label: "Quantity",
+    variant: "stacked",
+  });
+
+  expect(result.current.containerBind.className).not.toMatch(/\bpx-/);
+  expect(result.current.stackedBodyBind.className).toContain("ps-2.5");
+  expect(result.current.stackedBodyBind.className).toContain("pe-2.5");
+});
+
+test("it should apply stacked insets on stackedBody when end slot is present", () => {
+  const { result } = renderUseFormField({
+    variant: "stacked",
+    label: "Quantity",
+    slots: {
+      end: () => null,
+    },
+  });
+
+  expect(result.current.containerBind.className).not.toMatch(/\bpx-/);
+  expect(result.current.stackedBodyBind.className).toContain("ps-2.5");
+});
