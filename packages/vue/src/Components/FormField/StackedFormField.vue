@@ -143,11 +143,11 @@ defineProps<{
     <p
       v-bind="api.errorBind.value"
       :id="`${api.controlId.value}-error`"
-      v-if="
-        hasSlotOrProp(api.slots, 'errorMessage', api.merged.value.errorMessage)
-      "
+      v-if="!api.merged.value.withoutErrorMessage"
+      :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <component
+        v-if="api.showErrorMessageContent.value"
         :is="
           resolveSlotOrProp(
             api.slots,

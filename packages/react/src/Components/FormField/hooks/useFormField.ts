@@ -55,6 +55,7 @@ export const formFieldBridgeKeys = [
   "description",
   "errorMessage",
   "withErrorIcon",
+  "withoutErrorMessage",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<
@@ -149,6 +150,16 @@ export function useFormField(
     return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
   });
 
+  const reservesErrorMessageSpace = derived(() => {
+    return !merged.withoutErrorMessage;
+  });
+
+  const showErrorMessageContent = derived(() => {
+    return (
+      invalidated && hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
+    );
+  });
+
   const hasInsetLabelRow = derived(() => {
     return (
       (isNotched || isStacked) &&
@@ -175,7 +186,11 @@ export function useFormField(
       ids.push(`${controlId}-description`);
     }
 
-    if (hasSlotOrProp(slots, "errorMessage", merged.errorMessage)) {
+    if (
+      invalidated &&
+      !merged.withoutErrorMessage &&
+      hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
+    ) {
       ids.push(`${controlId}-error`);
     }
 
@@ -250,6 +265,7 @@ export function useFormField(
     }
 
     return cn({
+      [sizeClasses?.insetTop ?? ""]: true,
       [sizeClasses?.insetStart ?? ""]: true,
       [sizeClasses?.insetEnd ?? ""]: true,
     });
@@ -316,6 +332,7 @@ export function useFormField(
       {},
       cn({
         "mt-2 text-error-600 dark:text-error-400": true,
+        "min-h-[1lh]": reservesErrorMessageSpace,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),
@@ -418,9 +435,10 @@ export function useFormField(
       partsProps?.end,
       {},
       cn({
-        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
-        "h-full min-h-0 py-0.5 pe-0.5": !isStacked,
-        "[&>*]:w-full": isStacked,
+        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked,
+        "min-h-0 overflow-hidden": isStacked,
+        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked,
         [mergedClasses.end ?? ""]: true,
       }),
     );
@@ -503,9 +521,10 @@ export function useFormField(
       partsProps?.start,
       {},
       cn({
-        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
-        "h-full min-h-0 py-0.5 ps-0.5": !isStacked,
-        "[&>*]:w-full": isStacked,
+        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "h-full min-h-0 overflow-hidden py-0.5 ps-0.5": !isStacked,
+        "min-h-0 overflow-hidden": isStacked,
+        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -569,10 +588,12 @@ export function useFormField(
     startSlotBind,
     ariaDescribedBy,
     descriptionBind,
+    stackedBodyBind,
     hasInsetLabelRow,
     insetLabelRowBind,
-    stackedBodyBind,
     stackedInputRowBind,
+    showErrorMessageContent,
+    reservesErrorMessageSpace,
   };
 }
 

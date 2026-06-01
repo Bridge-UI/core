@@ -59,6 +59,7 @@ export const formFieldBridgeKeys = [
   "description",
   "errorMessage",
   "withErrorIcon",
+  "withoutErrorMessage",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<
@@ -140,10 +141,21 @@ export function useFormField(
     return variantKey.value === "underlined";
   });
 
+  const reservesErrorMessageSpace = computed(() => {
+    return !merged.value.withoutErrorMessage;
+  });
+
   const controlId = computed(() => {
     const inheritedId = (split.value.inheritedAttrs as HTMLAttributes).id;
 
     return merged.value.controlId ?? inheritedId ?? autoId;
+  });
+
+  const showErrorMessageContent = computed(() => {
+    return (
+      invalidated.value &&
+      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
+    );
   });
 
   const hasInsetLabelRow = computed(() => {
@@ -172,7 +184,11 @@ export function useFormField(
       ids.push(`${controlId.value}-description`);
     }
 
-    if (hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)) {
+    if (
+      invalidated.value &&
+      !merged.value.withoutErrorMessage &&
+      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
+    ) {
       ids.push(`${controlId.value}-error`);
     }
 
@@ -247,6 +263,7 @@ export function useFormField(
     }
 
     return cn({
+      [sizeClasses.value?.insetTop ?? ""]: true,
       [sizeClasses.value?.insetStart ?? ""]: true,
       [sizeClasses.value?.insetEnd ?? ""]: true,
     });
@@ -316,6 +333,7 @@ export function useFormField(
       {},
       cn({
         "mt-2 text-error-600 dark:text-error-400": true,
+        "min-h-[1lh]": reservesErrorMessageSpace.value,
         [sizeClasses.value?.text ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),
@@ -440,9 +458,10 @@ export function useFormField(
       partsProps.value?.end,
       {},
       cn({
-        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
-        "h-full min-h-0 py-0.5 pe-0.5": !isStacked.value,
-        "[&>*]:w-full": isStacked.value,
+        "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked.value,
+        "min-h-0 overflow-hidden": isStacked.value,
+        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked.value,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
@@ -525,9 +544,10 @@ export function useFormField(
       partsProps.value?.start,
       {},
       cn({
-        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:h-full [&>*]:min-h-0": true,
-        "h-full min-h-0 py-0.5 ps-0.5": !isStacked.value,
-        "[&>*]:w-full": isStacked.value,
+        "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
+        "h-full min-h-0 overflow-hidden py-0.5 ps-0.5": !isStacked.value,
+        "min-h-0 overflow-hidden": isStacked.value,
+        "[&>*]:h-full [&>*]:max-h-full [&>*]:w-full": isStacked.value,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -576,6 +596,8 @@ export function useFormField(
     hasInsetLabelRow,
     insetLabelRowBind,
     stackedInputRowBind,
+    showErrorMessageContent,
+    reservesErrorMessageSpace,
   };
 }
 

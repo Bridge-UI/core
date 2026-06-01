@@ -31,6 +31,11 @@ export interface FormFieldSizeItem {
   "insetEnd": string;
 
   /**
+   * Block-start padding on the stacked body when side slots are present.
+   */
+  "insetTop"?: string;
+
+  /**
    * Min height for the stacked control row (label + input adornments).
    */
   "controlRow"?: string;
@@ -118,11 +123,12 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-2xs",
+      "insetTop": "pt-1",
       "insetEnd": "pe-1.5",
       "insetStart": "ps-1.5",
-      "padding": "px-1.5 pt-1",
-      "container": "min-h-[2.75rem] h-auto",
       "controlRow": "min-h-5",
+      "padding": "px-1.5 pt-1",
+      "container": "h-[2.75rem]",
       "input": "text-2xs px-0.5 py-0 h-auto min-h-0 leading-tight self-center",
     },
     "underlined": {
@@ -161,10 +167,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-xs",
+      "insetTop": "pt-1",
       "insetEnd": "pe-2",
+      "container": "h-12",
       "insetStart": "ps-2",
       "padding": "px-2 pt-1",
-      "container": "min-h-12 h-auto",
       "controlRow": "min-h-6",
       "input": "text-xs px-0.5 py-0 h-auto min-h-0 leading-tight self-center",
     },
@@ -204,11 +211,12 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-xs",
+      "insetTop": "pt-1",
       "insetEnd": "pe-2",
       "insetStart": "ps-2",
       "padding": "px-2 pt-1",
-      "container": "min-h-[3.125rem] h-auto",
       "controlRow": "min-h-7",
+      "container": "h-[3.125rem]",
       "input": "text-xs px-1 py-0 h-auto min-h-0 leading-normal self-center",
     },
     "underlined": {
@@ -247,11 +255,12 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-sm",
+      "insetTop": "pt-1",
       "insetEnd": "pe-2.5",
       "insetStart": "ps-2.5",
-      "padding": "px-2.5 pt-1",
-      "container": "min-h-[3.25rem] h-auto",
       "controlRow": "min-h-8",
+      "padding": "px-2.5 pt-1",
+      "container": "h-[3.25rem]",
       "input": "text-sm px-1 py-0 h-auto min-h-0 leading-normal self-center",
     },
     "underlined": {
@@ -290,10 +299,11 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-sm",
+      "insetTop": "pt-1",
       "insetEnd": "pe-3",
+      "container": "h-14",
       "insetStart": "ps-3",
       "padding": "px-3 pt-1",
-      "container": "min-h-14 h-auto",
       "controlRow": "min-h-9",
       "input": "text-sm px-1.5 py-0 h-auto min-h-0 leading-normal self-center",
     },
@@ -333,11 +343,12 @@ export const sizeProps: FormFieldSize = {
     },
     "stacked": {
       "text": "text-base",
+      "insetTop": "pt-1.5",
       "insetEnd": "pe-3.5",
       "insetStart": "ps-3.5",
-      "padding": "px-3.5 pt-1.5",
-      "container": "min-h-[3.75rem] h-auto",
       "controlRow": "min-h-9",
+      "padding": "px-3.5 pt-1.5",
+      "container": "h-[3.75rem]",
       "input": "text-base px-2 py-0 h-auto min-h-0 leading-normal self-center",
     },
     "underlined": {
@@ -377,9 +388,10 @@ export const sizeProps: FormFieldSize = {
     "stacked": {
       "text": "text-lg",
       "insetEnd": "pe-4",
+      "container": "h-16",
+      "insetTop": "pt-1.5",
       "insetStart": "ps-4",
       "padding": "px-4 pt-1.5",
-      "container": "min-h-16 h-auto",
       "controlRow": "min-h-10",
       "input": "text-lg px-2.5 py-0 h-auto min-h-0 leading-normal self-center",
     },

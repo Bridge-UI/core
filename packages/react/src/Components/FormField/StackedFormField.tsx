@@ -114,13 +114,18 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
           </p>
         )}
 
-      {hasSlotOrProp(api.slots, "errorMessage", api.merged.errorMessage) && (
-        <p id={`${api.controlId}-error`} {...api.errorBind}>
-          {resolveSlotOrProp({
-            slots: api.slots,
-            name: "errorMessage",
-            fallback: api.merged.errorMessage,
-          })}
+      {!api.merged.withoutErrorMessage && (
+        <p
+          {...api.errorBind}
+          id={`${api.controlId}-error`}
+          aria-hidden={api.showErrorMessageContent ? undefined : true}
+        >
+          {api.showErrorMessageContent &&
+            resolveSlotOrProp({
+              slots: api.slots,
+              name: "errorMessage",
+              fallback: api.merged.errorMessage,
+            })}
         </p>
       )}
     </div>

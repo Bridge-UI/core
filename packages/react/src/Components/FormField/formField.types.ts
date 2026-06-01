@@ -349,6 +349,13 @@ export interface FormFieldOwnProps {
    * @default true
    */
   withErrorIcon?: boolean;
+
+  /**
+   * When `true`, does not reserve space below the control for error messages.
+   *
+   * @default false
+   */
+  withoutErrorMessage?: boolean;
 }
 
 export type FormFieldProps = MergeHtmlProps<
