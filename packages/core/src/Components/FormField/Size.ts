@@ -16,7 +16,7 @@ export interface FormFieldSizeItem {
   "padding": string;
 
   /**
-   * Typography and block padding for a native `<textarea>` or other multiline / growing control.
+   * Typography and block padding for a native `<textarea>`.
    */
   "textarea": string;
 

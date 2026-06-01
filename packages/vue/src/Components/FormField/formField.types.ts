@@ -163,14 +163,6 @@ export interface FormFieldOwnProps {
   controlId?: string;
 
   /**
-   * When `true` and the field composable uses `control: "input"`, the control keeps TextField
-   * sizing but wraps text onto new lines instead of staying on a single line.
-   *
-   * @default false
-   */
-  multiline?: boolean;
-
-  /**
    * Secondary label text at the inline end of the header row.
    *
    * @default undefined

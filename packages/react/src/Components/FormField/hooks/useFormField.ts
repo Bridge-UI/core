@@ -59,7 +59,6 @@ export const formFieldBridgeKeys = [
   "readonly",
   "required",
   "errorIcon",
-  "multiline",
   "startIcon",
   "partsProps",
   "description",
@@ -163,10 +162,6 @@ export function useFormField(
 
   const isTextareaControl = derived(() => {
     return control === "textarea";
-  });
-
-  const isMultilineInput = derived(() => {
-    return control === "input" && Boolean(merged.multiline);
   });
 
   const controlId = derived(() => {
@@ -377,7 +372,6 @@ export function useFormField(
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl && !isStacked,
         "max-h-none": isTextareaControl,
-        "whitespace-pre-wrap break-words": isMultilineInput,
         "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
         "outline-none ring-0 focus:outline-none focus:ring-0": true,
         "disabled:cursor-not-allowed": true,
