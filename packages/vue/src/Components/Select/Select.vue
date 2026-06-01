@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { SelectProps, SelectSlots } from "@/Components/Select";
 import { useSelect } from "@/Components/Select";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<SelectSlots>();
 
@@ -17,7 +18,10 @@ const { slots, merged } = useSelect(props, {
 
 <template>
   <div class="w-full">
-    <slot v-if="slots.label" name="label" />
+    <component
+      v-if="hasNamedSlot(slots, 'label')"
+      :is="resolveNamedSlot(slots, 'label')"
+    />
 
     <label v-else-if="merged.label">
       {{ merged.label }}
@@ -42,8 +46,8 @@ const { slots, merged } = useSelect(props, {
       </div>
     </div>
 
-    <slot v-if="slots.description" name="description" />
+    <component :is="resolveNamedSlot(slots, 'description')" />
 
-    <slot v-if="slots.error" name="error" />
+    <component :is="resolveNamedSlot(slots, 'error')" />
   </div>
 </template>

@@ -45,7 +45,7 @@ export const variantProps: FormFieldVariant = {
     "container": "bg-white dark:bg-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus-within:ring-2",
   },
   "stacked": {
-    "labelRow": "flex w-full shrink-0 gap-x-2 px-0.5 pt-1",
+    "labelRow": "flex w-full shrink-0 gap-x-2 px-2 pt-1.5 pb-0.5",
     "container": "bg-gray-100 dark:bg-gray-800 ring-1 ring-inset ring-gray-200 dark:ring-gray-600 focus-within:ring-2",
   },
   "underlined": {

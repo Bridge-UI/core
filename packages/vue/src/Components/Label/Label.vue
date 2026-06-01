@@ -1,7 +1,13 @@
 <script setup lang="ts">
+// ** External Imports
+import { useSlots } from "vue";
+
 // ** Local Imports
 import { useLabel } from "@/Components/Label/composables/useLabel";
 import type { LabelOwnProps } from "@/Components/Label/label.types";
+import { resolveNamedSlot } from "@/Utils";
+
+const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
@@ -14,7 +20,7 @@ const { merged, rootBind, requiredBind } = useLabel(props, {
 
 <template>
   <label v-bind="rootBind">
-    <slot />
+    <component :is="resolveNamedSlot(slots, 'default')" />
 
     <span v-if="merged.required" v-bind="requiredBind">*</span>
   </label>

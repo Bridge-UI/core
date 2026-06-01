@@ -471,7 +471,7 @@ export function useFormField(
       {},
       {},
       cn({
-        "flex w-full min-w-0 flex-1 items-center gap-x-2": true,
+        "flex w-full min-w-0 flex-1 items-stretch gap-x-2": true,
         [sizeClasses?.controlRow ?? ""]: true,
       }),
     );

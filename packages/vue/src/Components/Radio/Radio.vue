@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { RadioProps, RadioSlots } from "@/Components/Radio";
 import { useRadio } from "@/Components/Radio";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<RadioSlots>();
 
@@ -15,7 +16,10 @@ const { slots, merged } = useRadio(props, {
 
 <template>
   <div class="w-full">
-    <slot v-if="slots.label" name="label" />
+    <component
+      v-if="hasNamedSlot(slots, 'label')"
+      :is="resolveNamedSlot(slots, 'label')"
+    />
 
     <label v-else-if="merged.label" class="flex items-center gap-2">
       <input
@@ -42,6 +46,6 @@ const { slots, merged } = useRadio(props, {
       :checked="merged.modelValue === merged.value"
     />
 
-    <slot v-if="slots.description" name="description" />
+    <component :is="resolveNamedSlot(slots, 'description')" />
   </div>
 </template>

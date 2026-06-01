@@ -38,6 +38,26 @@ export function hasSlotOrProp(
 }
 
 /**
+ * Render function for `<component :is="resolveNamedSlot(slots, name)" />`.
+ * Returns `null` when the slot is absent, so a separate `v-if="hasNamedSlot(...)"` is
+ * only needed for `v-if` / `v-else-if` layout chains—not to guard rendering.
+ */
+export function resolveNamedSlot(
+  slots: VueSlots,
+  name: string,
+): () => VNodeChild | VNodeChild[] {
+  return () => {
+    const slotFn = get(slots, name) as Slot | undefined;
+
+    if (isNil(slotFn)) {
+      return null;
+    }
+
+    return slotFn();
+  };
+}
+
+/**
  * Render function for `<component :is="resolveSlotOrProp(slots, name, fallback)" />`.
  * Renders the named slot when present; otherwise the fallback prop.
  */

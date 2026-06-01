@@ -6,6 +6,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
+  resolveNamedSlot,
   resolveSlotOrProp,
 } from "@/Utils";
 
@@ -57,7 +58,7 @@ defineProps<{
         v-bind="api.startSlotBind.value"
         v-if="hasNamedSlot(api.slots, 'start')"
       >
-        <slot name="start" />
+        <component :is="resolveNamedSlot(api.slots, 'start')" />
       </div>
 
       <div
@@ -78,7 +79,7 @@ defineProps<{
       <slot />
 
       <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <slot name="end" />
+        <component :is="resolveNamedSlot(api.slots, 'end')" />
       </div>
 
       <div

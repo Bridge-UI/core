@@ -112,13 +112,20 @@ export function useTextarea(
   };
 
   const textareaBind = computed(() => {
+    const notched = formField.isNotched.value;
+    const stacked = formField.isStacked.value;
+
     return mergePartBind(
       formField.inputBind.value,
       autosize.value ? { onInput: handleAutosize } : {},
       cn({
+        "block !h-auto min-h-20 max-h-none w-full min-w-0 flex-none": true,
         "resize-none overflow-hidden": autosize.value,
         "resize-y": !autosize.value,
         [textareaSizeClass.value ?? ""]: true,
+        "pt-5": notched,
+        "pb-2": notched,
+        "py-1": stacked && !notched,
       }),
     );
   });

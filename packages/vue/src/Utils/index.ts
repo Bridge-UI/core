@@ -124,6 +124,7 @@ export {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
+  resolveNamedSlot,
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 export { useHoldRepeat } from "@/Utils/useHoldRepeat";

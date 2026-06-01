@@ -128,6 +128,9 @@ export function useTextarea(props: TextareaProps) {
 
   const textareaBind = derived(
     (): TextareaHTMLAttributes<HTMLTextAreaElement> => {
+      const notched = formField.isNotched;
+      const stacked = formField.isStacked;
+
       return mergePartBind(
         formField.inputBind,
         {
@@ -135,9 +138,13 @@ export function useTextarea(props: TextareaProps) {
           ...(autosize ? { onInput: handleAutosize } : {}),
         },
         cn({
+          "block !h-auto min-h-20 max-h-none w-full min-w-0 flex-none": true,
           "resize-none overflow-hidden": autosize,
           "resize-y": !autosize,
           [textareaSizeClass ?? ""]: true,
+          "pt-5": notched,
+          "pb-2": notched,
+          "py-1": stacked && !notched,
         }),
       ) as TextareaHTMLAttributes<HTMLTextAreaElement>;
     },

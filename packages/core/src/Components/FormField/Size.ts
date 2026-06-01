@@ -129,7 +129,7 @@ export const sizeProps: FormFieldSize = {
       "controlRow": "min-h-5",
       "padding": "px-1.5 pt-1",
       "container": "h-[2.75rem]",
-      "input": "text-2xs px-0.5 py-0 h-auto min-h-0 leading-tight self-center",
+      "input": "text-2xs px-0.5 h-auto min-h-0 w-full py-1 leading-tight self-stretch",
     },
     "underlined": {
       "text": "text-2xs",
@@ -173,7 +173,7 @@ export const sizeProps: FormFieldSize = {
       "insetStart": "ps-2",
       "padding": "px-2 pt-1",
       "controlRow": "min-h-6",
-      "input": "text-xs px-0.5 py-0 h-auto min-h-0 leading-tight self-center",
+      "input": "text-xs px-0.5 h-auto min-h-0 w-full py-1 leading-tight self-stretch",
     },
     "underlined": {
       "text": "text-xs",
@@ -217,7 +217,7 @@ export const sizeProps: FormFieldSize = {
       "padding": "px-2 pt-1",
       "controlRow": "min-h-7",
       "container": "h-[3.125rem]",
-      "input": "text-xs px-1 py-0 h-auto min-h-0 leading-normal self-center",
+      "input": "text-xs px-1 h-auto min-h-0 w-full py-1 leading-normal self-stretch",
     },
     "underlined": {
       "text": "text-xs",
@@ -261,7 +261,7 @@ export const sizeProps: FormFieldSize = {
       "controlRow": "min-h-8",
       "padding": "px-2.5 pt-1",
       "container": "h-[3.25rem]",
-      "input": "text-sm px-1 py-0 h-auto min-h-0 leading-normal self-center",
+      "input": "text-sm px-1 h-auto min-h-0 w-full py-1 leading-normal self-stretch",
     },
     "underlined": {
       "text": "text-sm",
@@ -305,7 +305,7 @@ export const sizeProps: FormFieldSize = {
       "insetStart": "ps-3",
       "padding": "px-3 pt-1",
       "controlRow": "min-h-9",
-      "input": "text-sm px-1.5 py-0 h-auto min-h-0 leading-normal self-center",
+      "input": "text-sm px-1.5 h-auto min-h-0 w-full py-1 leading-normal self-stretch",
     },
     "underlined": {
       "text": "text-sm",
@@ -349,7 +349,7 @@ export const sizeProps: FormFieldSize = {
       "controlRow": "min-h-9",
       "padding": "px-3.5 pt-1.5",
       "container": "h-[3.75rem]",
-      "input": "text-base px-2 py-0 h-auto min-h-0 leading-normal self-center",
+      "input": "text-base px-2 h-auto min-h-0 w-full py-1 leading-normal self-stretch",
     },
     "underlined": {
       "text": "text-base",
@@ -393,7 +393,7 @@ export const sizeProps: FormFieldSize = {
       "insetStart": "ps-4",
       "padding": "px-4 pt-1.5",
       "controlRow": "min-h-10",
-      "input": "text-lg px-2.5 py-0 h-auto min-h-0 leading-normal self-center",
+      "input": "text-lg px-2.5 h-auto min-h-0 w-full py-1 leading-normal self-stretch",
     },
     "underlined": {
       "text": "text-lg",

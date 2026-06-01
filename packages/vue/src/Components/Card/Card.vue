@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { CardProps, CardSlots } from "@/Components/Card";
 import { useCard } from "@/Components/Card";
+import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<CardSlots>();
 
@@ -16,12 +17,12 @@ const { slots } = useCard(props, {
 
 <template>
   <div class="flex w-full flex-col">
-    <slot v-if="slots.header" name="header" />
+    <component :is="resolveNamedSlot(slots, 'header')" />
 
     <div class="grow">
-      <slot />
+      <component :is="resolveNamedSlot(slots, 'default')" />
     </div>
 
-    <slot v-if="slots.footer" name="footer" />
+    <component :is="resolveNamedSlot(slots, 'footer')" />
   </div>
 </template>
