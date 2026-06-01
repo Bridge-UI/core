@@ -151,8 +151,8 @@ export interface BadgeConfigBase {
     variant: keyof BadgeVariant;
   }>;
   customProps: Partial<{
-    density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
+    density: Record<string, Record<string, string>>;
     variant: Record<string, Record<string, BadgeColorItem>>;
   }>;
 }
@@ -167,8 +167,8 @@ export interface ButtonConfigBase {
     variant: keyof ButtonVariant;
   }>;
   customProps: Partial<{
-    density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
+    density: Record<string, Record<string, string>>;
     variant: Record<string, Record<string, ButtonColorItem>>;
   }>;
 }
@@ -176,14 +176,14 @@ export interface ButtonConfigBase {
 export interface CardConfigBase {
   classes: object;
   defaultProps: Partial<{
-    rounded: keyof CardRounded;
     shadow: keyof CardShadow;
     padding: keyof CardPadding;
+    rounded: keyof CardRounded;
   }>;
   customProps: Partial<{
-    rounded: Record<string, string>;
     shadow: Record<string, string>;
     padding: Record<string, string>;
+    rounded: Record<string, string>;
   }>;
 }
 
@@ -246,20 +246,20 @@ export interface LinkConfigBase {
   }>;
   customProps: Partial<{
     size: Record<string, string>;
-    color: Record<string, LinkColorItem>;
     underline: Record<string, string>;
+    color: Record<string, LinkColorItem>;
   }>;
 }
 
 export interface MenuConfigBase {
   classes: object;
   defaultProps: Partial<{
-    rounded: keyof MenuRounded;
     shadow: keyof MenuShadow;
+    rounded: keyof MenuRounded;
   }>;
   customProps: Partial<{
-    rounded: Record<string, string>;
     shadow: Record<string, string>;
+    rounded: Record<string, string>;
   }>;
 }
 
@@ -267,13 +267,13 @@ export interface ModalConfigBase {
   classes: object;
   defaultProps: Partial<{
     size: keyof ModalSize;
-    rounded: keyof ModalRounded;
     shadow: keyof ModalShadow;
+    rounded: keyof ModalRounded;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
-    rounded: Record<string, string>;
     shadow: Record<string, string>;
+    rounded: Record<string, string>;
   }>;
 }
 
@@ -315,6 +315,7 @@ export interface PasswordFieldConfigBase {
 export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
+    resize: string;
     autosize: boolean;
   }>;
 }

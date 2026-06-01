@@ -104,7 +104,7 @@
  */
 @layer components {
   .bridge-field-adornment-button {
-    @apply cursor-pointer select-none transition-colors duration-150 ease-in-out;
+    @apply cursor-pointer transition-colors duration-150 ease-in-out select-none;
     @apply text-gray-500 hover:bg-gray-100 hover:text-gray-700;
     @apply active:bg-gray-200 active:text-gray-900;
     @apply focus-visible:bg-gray-100 focus-visible:text-gray-700 focus-visible:outline-none;

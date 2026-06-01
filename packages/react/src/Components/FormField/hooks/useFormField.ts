@@ -34,6 +34,15 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
+export type FormFieldOptions = {
+  /**
+   * Native control rendered by the field composable (`<input>` vs `<textarea>`).
+   *
+   * @default "input"
+   */
+  control?: () => string | undefined;
+};
+
 export const formFieldBridgeKeys = [
   "end",
   "size",
@@ -50,6 +59,7 @@ export const formFieldBridgeKeys = [
   "readonly",
   "required",
   "errorIcon",
+  "multiline",
   "startIcon",
   "partsProps",
   "description",
@@ -71,6 +81,7 @@ type FormFieldMerged = MergeLibDefaults<
 export function useFormField(
   props: Omit<FormFieldProps, "field">,
   libDefaults: FormFieldLibDefaults,
+  options: FormFieldOptions = {},
 ) {
   // Setup
   const autoId = useId();
@@ -98,6 +109,10 @@ export function useFormField(
 
   const partsProps = derived(() => {
     return merged.partsProps;
+  });
+
+  const control = derived(() => {
+    return options.control?.() ?? "input";
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -144,6 +159,14 @@ export function useFormField(
 
   const isUnderlined = derived(() => {
     return variantKey === "underlined";
+  });
+
+  const isTextareaControl = derived(() => {
+    return control === "textarea";
+  });
+
+  const isMultilineInput = derived(() => {
+    return control === "input" && Boolean(merged.multiline);
   });
 
   const controlId = derived(() => {
@@ -352,11 +375,14 @@ export function useFormField(
       inputInheritedAttrs,
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
-        "h-full": !isStacked,
+        "h-full": !isTextareaControl && !isStacked,
+        "max-h-none": isTextareaControl,
+        "whitespace-pre-wrap break-words": isMultilineInput,
         "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
         "outline-none ring-0 focus:outline-none focus:ring-0": true,
         "disabled:cursor-not-allowed": true,
-        [sizeClasses?.input ?? ""]: true,
+        [sizeClasses?.input ?? ""]: !isTextareaControl,
+        [sizeClasses?.textarea ?? ""]: isTextareaControl,
         [mergedClasses.input ?? ""]: true,
       }),
     );
@@ -490,7 +516,8 @@ export function useFormField(
           !isStacked,
         "transition-all ease-in-out duration-150 outline-none": true,
         "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
-        [sizeClasses?.container ?? ""]: true,
+        [sizeClasses?.container ?? ""]: !isTextareaControl,
+        [sizeClasses?.containerTextarea ?? ""]: isTextareaControl,
         [variantClasses?.container ?? ""]: true,
         [roundedClasses?.input ?? ""]: !isUnderlined,
         [containerSpacing ?? ""]: true,
@@ -564,6 +591,7 @@ export function useFormField(
   return {
     slots,
     merged,
+    control,
     endBind,
     rootBind,
     controlId,

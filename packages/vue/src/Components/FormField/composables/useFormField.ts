@@ -38,6 +38,15 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
+export type FormFieldOptions = {
+  /**
+   * Native control rendered by the field composable (`<input>` vs `<textarea>`).
+   *
+   * @default "input"
+   */
+  control?: () => string | undefined;
+};
+
 export const formFieldBridgeKeys = [
   "end",
   "size",
@@ -54,6 +63,7 @@ export const formFieldBridgeKeys = [
   "readonly",
   "required",
   "errorIcon",
+  "multiline",
   "startIcon",
   "partsProps",
   "description",
@@ -75,6 +85,7 @@ type FormFieldMerged = MergeLibDefaults<
 export function useFormField(
   props: MaybeRefOrGetter<Omit<FormFieldOwnProps, "field">>,
   libDefaults: FormFieldLibDefaults,
+  options: FormFieldOptions = {},
 ) {
   // Setup
   const autoId = useId();
@@ -101,6 +112,10 @@ export function useFormField(
 
   const partsProps = computed(() => {
     return merged.value.partsProps;
+  });
+
+  const control = computed(() => {
+    return options.control?.() ?? "input";
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
@@ -139,6 +154,14 @@ export function useFormField(
 
   const isUnderlined = computed(() => {
     return variantKey.value === "underlined";
+  });
+
+  const isTextareaControl = computed(() => {
+    return control.value === "textarea";
+  });
+
+  const isMultilineInput = computed(() => {
+    return control.value === "input" && Boolean(merged.value.multiline);
   });
 
   const reservesErrorMessageSpace = computed(() => {
@@ -353,11 +376,14 @@ export function useFormField(
       omit(split.value.inheritedAttrs, ["class"]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
-        "h-full": !isStacked.value,
+        "h-full": !isTextareaControl.value && !isStacked.value,
+        "max-h-none": isTextareaControl.value,
+        "whitespace-pre-wrap break-words": isMultilineInput.value,
         "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
         "outline-none ring-0 focus:outline-none focus:ring-0": true,
         "disabled:cursor-not-allowed": true,
-        [sizeClasses.value?.input ?? ""]: true,
+        [sizeClasses.value?.input ?? ""]: !isTextareaControl.value,
+        [sizeClasses.value?.textarea ?? ""]: isTextareaControl.value,
         [mergedClasses.value.input ?? ""]: true,
       }),
     );
@@ -513,7 +539,8 @@ export function useFormField(
           !isStacked.value,
         "transition-all ease-in-out duration-150 outline-none": true,
         "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
-        [sizeClasses.value?.container ?? ""]: true,
+        [sizeClasses.value?.container ?? ""]: !isTextareaControl.value,
+        [sizeClasses.value?.containerTextarea ?? ""]: isTextareaControl.value,
         [variantClasses.value?.container ?? ""]: true,
         [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
         [containerSpacing.value ?? ""]: true,
@@ -568,6 +595,7 @@ export function useFormField(
   return {
     slots,
     merged,
+    control,
     endBind,
     rootBind,
     controlId,

@@ -15,4 +15,7 @@ export {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
-export type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
+export type {
+  FormFieldOptions,
+  UseFormFieldReturn,
+} from "@/Components/FormField/hooks/useFormField";

@@ -23,6 +23,13 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default false
    */
   autosize?: boolean;
+
+  /**
+   * Native resize handle (`resize` CSS). Ignored when `autosize` is `true`.
+   *
+   * @default "none"
+   */
+  resize?: "both" | "none" | "vertical" | "horizontal";
 }
 
 export interface TextareaSlots extends FormFieldSlots {}

@@ -1,21 +1,20 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { omit } from "es-toolkit/compat";
 import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps as textareaSizeProps } from "@bridge-ui/core/Components/Textarea";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type {
   TextareaClasses,
   TextareaOwnProps,
+  TextareaProps,
 } from "@/Components/Textarea/textarea.types";
 import {
   mergePartBind,
@@ -23,9 +22,22 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-type TextareaRegistryProps = Pick<TextareaOwnProps, "autosize" | "classes">;
+const resizeClassMap = {
+  none: "resize-none",
+  vertical: "resize-y",
+  horizontal: "resize-x",
+  both: "resize",
+} as const satisfies Record<NonNullable<TextareaProps["resize"]>, string>;
 
-type TextareaLibDefaults = LibDefaultsShape<TextareaRegistryProps, "autosize">;
+type TextareaRegistryProps = Pick<
+  TextareaOwnProps,
+  "resize" | "classes" | "autosize"
+>;
+
+type TextareaLibDefaults = LibDefaultsShape<
+  TextareaRegistryProps,
+  "resize" | "autosize"
+>;
 
 type TextareaMerged = MergeLibDefaults<
   TextareaRegistryProps,
@@ -40,6 +52,7 @@ export function useTextarea(
 
   const registryProps = computed((): TextareaRegistryProps => {
     return {
+      resize: props.resize,
       classes: props.classes,
       autosize: props.autosize,
     };
@@ -50,6 +63,7 @@ export function useTextarea(
       componentName: "Textarea",
       props: () => registryProps.value,
       libDefaults: {
+        resize: "none",
         autosize: false,
       },
     });
@@ -63,18 +77,19 @@ export function useTextarea(
     return Boolean(textareaMerged.value.autosize);
   });
 
+  const resize = computed((): TextareaProps["resize"] => {
+    if (autosize.value) {
+      return "none";
+    }
+
+    return textareaMerged.value.resize ?? "none";
+  });
+
   const formField = useFormField(
     () => ({
       ...attrs,
-      ...omit(props, "autosize"),
+      ...omit(props, ["autosize", "resize"]),
       classes: mergedClasses.value,
-      partsProps: {
-        ...props.partsProps,
-        container: {
-          ...props.partsProps?.container,
-          class: cn("min-h-20 h-auto", props.partsProps?.container?.class),
-        },
-      },
     }),
     {
       size: "md",
@@ -83,13 +98,8 @@ export function useTextarea(
       variant: "outline",
       withErrorIcon: true,
     },
+    { control: () => "textarea" },
   );
-
-  const textareaSizeClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(textareaSizeProps, undefined);
-
-    return get(classes, formField.merged.value.size ?? "md")?.input;
-  });
 
   const inheritedOnInput = computed(() => {
     return (attrs as Record<string, unknown>).onInput as
@@ -112,20 +122,13 @@ export function useTextarea(
   };
 
   const textareaBind = computed(() => {
-    const notched = formField.isNotched.value;
-    const stacked = formField.isStacked.value;
-
     return mergePartBind(
       formField.inputBind.value,
       autosize.value ? { onInput: handleAutosize } : {},
       cn({
-        "block !h-auto min-h-20 max-h-none w-full min-w-0 flex-none": true,
-        "resize-none overflow-hidden": autosize.value,
-        "resize-y": !autosize.value,
-        [textareaSizeClass.value ?? ""]: true,
-        "pt-5": notched,
-        "pb-2": notched,
-        "py-1": stacked && !notched,
+        "min-w-0 flex-none": true,
+        "overflow-hidden": autosize.value,
+        [resizeClassMap[resize.value ?? "none"]]: true,
       }),
     );
   });

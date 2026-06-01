@@ -117,7 +117,7 @@ declare module "@bridge-ui/core" {
 
   interface TextareaConfigOverrides {
     classes: TextareaClasses;
-    defaultProps: Partial<Pick<TextareaProps, "autosize">>;
+    defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
   }
 
   interface ToggleConfigOverrides {

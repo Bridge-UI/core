@@ -1,5 +1,4 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
 import {
   useCallback,
   useMemo,
@@ -10,11 +9,9 @@ import {
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps as textareaSizeProps } from "@bridge-ui/core/Components/Textarea";
 
 // ** Local Imports
 import type { FormFieldProps } from "@/Components/FormField/formField.types";
@@ -30,9 +27,22 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-type TextareaRegistryProps = Pick<TextareaProps, "autosize" | "classes">;
+const resizeClassMap = {
+  both: "resize",
+  none: "resize-none",
+  vertical: "resize-y",
+  horizontal: "resize-x",
+} as const satisfies Record<NonNullable<TextareaProps["resize"]>, string>;
 
-type TextareaLibDefaults = LibDefaultsShape<TextareaRegistryProps, "autosize">;
+type TextareaRegistryProps = Pick<
+  TextareaProps,
+  "resize" | "classes" | "autosize"
+>;
+
+type TextareaLibDefaults = LibDefaultsShape<
+  TextareaRegistryProps,
+  "resize" | "autosize"
+>;
 
 type TextareaMerged = MergeLibDefaults<
   TextareaRegistryProps,
@@ -40,20 +50,28 @@ type TextareaMerged = MergeLibDefaults<
 >;
 
 export function useTextarea(props: TextareaProps) {
-  const { autosize: autosizeProp, onInput, classes, ...rest } = props;
+  const {
+    autosize: autosizeProp,
+    resize: resizeProp,
+    onInput,
+    classes,
+    ...rest
+  } = props;
 
   const registryProps = useMemo((): TextareaRegistryProps => {
     return {
       classes,
+      resize: resizeProp,
       autosize: autosizeProp,
     };
-  }, [autosizeProp, classes]);
+  }, [autosizeProp, classes, resizeProp]);
 
   const { entry: bridgeTextarea, merged: textareaMerged } =
     useBridgeUIComponent<TextareaMerged, "Textarea">({
-      componentName: "Textarea",
       props: registryProps,
+      componentName: "Textarea",
       libDefaults: {
+        resize: "none",
         autosize: false,
       },
     });
@@ -65,20 +83,18 @@ export function useTextarea(props: TextareaProps) {
 
   const autosize = textareaMerged.autosize ?? false;
 
+  const resize = derived((): TextareaProps["resize"] => {
+    if (autosize) {
+      return "none";
+    }
+
+    return textareaMerged.resize ?? "none";
+  });
+
   const formField = useFormField(
     {
       ...(rest as Omit<FormFieldProps, "field">),
       classes: mergedClasses,
-      partsProps: {
-        ...rest.partsProps,
-        container: {
-          ...rest.partsProps?.container,
-          className: cn(
-            "min-h-20 h-auto",
-            rest.partsProps?.container?.className,
-          ),
-        },
-      },
     },
     {
       size: "md",
@@ -87,16 +103,8 @@ export function useTextarea(props: TextareaProps) {
       variant: "outline",
       withErrorIcon: true,
     },
+    { control: () => "textarea" },
   );
-
-  const textareaSizeClass = useMemo(() => {
-    const sizeClasses = mergeBridgeUILayeredClasses(
-      textareaSizeProps,
-      undefined,
-    );
-
-    return get(sizeClasses, formField.merged.size ?? "md")?.input;
-  }, [formField.merged.size]);
 
   const adjustHeight = useCallback(
     (element: HTMLTextAreaElement | null) => {
@@ -128,9 +136,6 @@ export function useTextarea(props: TextareaProps) {
 
   const textareaBind = derived(
     (): TextareaHTMLAttributes<HTMLTextAreaElement> => {
-      const notched = formField.isNotched;
-      const stacked = formField.isStacked;
-
       return mergePartBind(
         formField.inputBind,
         {
@@ -138,13 +143,9 @@ export function useTextarea(props: TextareaProps) {
           ...(autosize ? { onInput: handleAutosize } : {}),
         },
         cn({
-          "block !h-auto min-h-20 max-h-none w-full min-w-0 flex-none": true,
-          "resize-none overflow-hidden": autosize,
-          "resize-y": !autosize,
-          [textareaSizeClass ?? ""]: true,
-          "pt-5": notched,
-          "pb-2": notched,
-          "py-1": stacked && !notched,
+          "min-w-0 flex-none": true,
+          "overflow-hidden": autosize,
+          [resizeClassMap[resize ?? "none"]]: true,
         }),
       ) as TextareaHTMLAttributes<HTMLTextAreaElement>;
     },

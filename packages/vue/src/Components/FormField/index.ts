@@ -1,6 +1,9 @@
 // ** Exports
 export { useFormField } from "@/Components/FormField/composables/useFormField";
-export type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
+export type {
+  FormFieldOptions,
+  UseFormFieldReturn,
+} from "@/Components/FormField/composables/useFormField";
 export type {
   FormFieldClasses,
   FormFieldColorOverrides,
