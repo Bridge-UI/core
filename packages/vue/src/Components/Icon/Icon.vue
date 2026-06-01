@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { IconOwnProps } from "@/Components/Icon";
-import { useIcon } from "@/Components/Icon";
+import { useIcon } from "@/Components/Icon/composables/useIcon";
+import type { IconOwnProps } from "@/Components/Icon/icon.types";
 
 defineOptions({ inheritAttrs: false });
 

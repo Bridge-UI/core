@@ -14,6 +14,7 @@ export default defineConfig({
       framework: "vue",
       viteConfig: {
         plugins: [vue(), tailwindcss()],
+        cacheDir: resolve(__dirname, ".cache/vite-cypress"),
         resolve: {
           alias: { "@": resolve(__dirname, "src") },
         },
