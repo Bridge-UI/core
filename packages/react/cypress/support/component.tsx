@@ -1,6 +1,6 @@
 import { mount } from "cypress/react";
 
-import "@/theme.css";
+import "./component.css";
 
 declare global {
   const test: Mocha.TestFunction;

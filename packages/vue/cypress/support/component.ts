@@ -1,6 +1,6 @@
 import { mount } from "cypress/vue";
 
-import "@/theme.css";
+import "./component.css";
 
 declare global {
   const test: Mocha.TestFunction;

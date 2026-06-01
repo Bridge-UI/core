@@ -3,6 +3,9 @@ dist
 scripts
 node_modules
 
+# Vite cache for Cypress component tests
+**/.cache/vite-cypress/
+
 # Cypress (component / e2e)
 **/cypress/videos/
 **/cypress/downloads/

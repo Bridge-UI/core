@@ -13,7 +13,9 @@ const libDefaults = {
 } as const;
 
 const FieldHarness = defineComponent({
+  inheritAttrs: false,
   props: {
+    end: String,
     id: String,
     label: String,
     error: Boolean,
@@ -23,8 +25,8 @@ const FieldHarness = defineComponent({
     description: String,
     errorMessage: String,
   },
-  setup(props) {
-    const field = useFormField(() => props, libDefaults);
+  setup(props, { attrs }) {
+    const field = useFormField(() => ({ ...attrs, ...props }), libDefaults);
 
     return () =>
       h(FormField, { field }, () => h("input", field.inputBind.value));
@@ -93,14 +95,10 @@ test("it should set data-invalid on the root when error is set", () => {
   cy.get(".w-full").should("have.attr", "data-invalid", "true");
 });
 
-test("it should render end slot content", () => {
-  cy.mount(FieldHarness, {
-    slots: {
-      end: () => h("span", { "data-cy": "end-slot" }, "€"),
-    },
-  });
+test("it should render end adornment when end prop is set", () => {
+  cy.mount(FieldHarness, { props: { end: "€" } });
 
-  cy.get("[data-cy=end-slot]").should("be.visible");
+  cy.contains("€").should("be.visible");
 });
 
 test("it should render filled variant shell", () => {
