@@ -110,6 +110,22 @@ export type {
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";
+export { NumberField, useNumberField } from "@/Components/NumberField";
+export type {
+  NumberFieldClasses,
+  NumberFieldOwnProps,
+  NumberFieldPartsProps,
+  NumberFieldProps,
+  NumberFieldSlots,
+} from "@/Components/NumberField";
+export { PasswordField, usePasswordField } from "@/Components/PasswordField";
+export type {
+  PasswordFieldClasses,
+  PasswordFieldOwnProps,
+  PasswordFieldPartsProps,
+  PasswordFieldProps,
+  PasswordFieldSlots,
+} from "@/Components/PasswordField";
 export { Radio } from "@/Components/Radio";
 export type {
   RadioClasses,
@@ -129,6 +145,14 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
+export { Textarea, useTextarea } from "@/Components/Textarea";
+export type {
+  TextareaClasses,
+  TextareaOwnProps,
+  TextareaPartsProps,
+  TextareaProps,
+  TextareaSlots,
+} from "@/Components/Textarea";
 export { TextField, useTextField } from "@/Components/TextField";
 export type {
   TextFieldClasses,

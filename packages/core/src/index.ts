@@ -105,6 +105,8 @@ export type {
   LinkConfigOverrides,
   MenuConfigOverrides,
   ModalConfigOverrides,
+  NumberFieldConfigOverrides,
+  PasswordFieldConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
   TextareaConfigOverrides,

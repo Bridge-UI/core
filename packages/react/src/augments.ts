@@ -11,8 +11,11 @@ import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
+import type { NumberFieldClasses } from "@/Components/NumberField";
+import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
@@ -96,6 +99,19 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<
       Pick<SelectProps, "size" | "color" | "rounded" | "variant">
     >;
+  }
+
+  interface NumberFieldConfigOverrides {
+    classes: NumberFieldClasses;
+  }
+
+  interface PasswordFieldConfigOverrides {
+    classes: PasswordFieldClasses;
+  }
+
+  interface TextareaConfigOverrides {
+    classes: TextareaClasses;
+    defaultProps: Partial<Pick<TextareaProps, "autosize">>;
   }
 
   interface ToggleConfigOverrides {

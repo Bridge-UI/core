@@ -4,6 +4,8 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import { createMergePartBind } from "@bridge-ui/core";
+import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
+import type { IconSize } from "@bridge-ui/core/Components/Icon";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,
@@ -95,6 +97,23 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
       props.classes,
     );
   }, [entry, props.classes]);
+}
+
+export function resolveFieldAdornmentIconSize(
+  fieldSize?: keyof FormFieldSize,
+): keyof IconSize {
+  return get(
+    {
+      "2xs": "xs",
+      xs: "xs",
+      sm: "sm",
+      md: "md",
+      lg: "md",
+      xl: "lg",
+      "2xl": "lg",
+    },
+    fieldSize ?? "md",
+  ) as keyof IconSize;
 }
 
 // ** Exports

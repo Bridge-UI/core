@@ -105,6 +105,8 @@ export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
+export interface NumberFieldConfigOverrides {}
+export interface PasswordFieldConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface ToggleConfigOverrides {}
 
@@ -302,7 +304,16 @@ export interface SelectConfigBase {
   }>;
 }
 
+export interface NumberFieldConfigBase {
+  classes: object;
+}
+
+export interface PasswordFieldConfigBase {
+  classes: object;
+}
+
 export interface TextareaConfigBase {
+  classes: object;
   defaultProps: Partial<{
     autosize: boolean;
   }>;
@@ -335,6 +346,12 @@ export type BridgeUIComponentsConfig = Partial<{
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
+  NumberField: Partial<
+    Overwrite<NumberFieldConfigBase, NumberFieldConfigOverrides>
+  >;
+  PasswordField: Partial<
+    Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
+  >;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;
