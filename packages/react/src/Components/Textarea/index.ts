@@ -5,5 +5,6 @@ export type {
   TextareaOwnProps,
   TextareaPartsProps,
   TextareaProps,
+  TextareaResizeOverrides,
   TextareaSlots,
 } from "@/Components/Textarea/textarea.types";

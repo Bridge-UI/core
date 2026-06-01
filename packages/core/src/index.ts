@@ -76,6 +76,7 @@ export type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
+export type { TextareaResize } from "@core/Components/Textarea";
 export type {
   ToggleColor,
   ToggleColorItem,

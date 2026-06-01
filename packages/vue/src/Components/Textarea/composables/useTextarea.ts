@@ -1,14 +1,16 @@
 // ** External Imports
-import { omit } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  mergeBridgeUILayeredClasses,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { resizeProps } from "@bridge-ui/core/Components/Textarea";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
@@ -22,13 +24,6 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-
-const resizeClassMap = {
-  none: "resize-none",
-  vertical: "resize-y",
-  horizontal: "resize-x",
-  both: "resize",
-} as const satisfies Record<NonNullable<TextareaProps["resize"]>, string>;
 
 type TextareaRegistryProps = Pick<
   TextareaOwnProps,
@@ -123,6 +118,15 @@ export function useTextarea(
     return textareaMerged.value.resize ?? "none";
   });
 
+  const resizeClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      resizeProps,
+      bridgeTextarea.value?.customProps?.resize,
+    );
+
+    return get(classes, resize.value ?? "none");
+  });
+
   const inheritedOnInput = computed(() => {
     return (attrs as Record<string, unknown>).onInput as
       | ((event: Event) => void)
@@ -153,7 +157,7 @@ export function useTextarea(
         "flex-1 min-w-0": likeInput.value,
         "overflow-hidden": autosize.value,
         "min-w-0 flex-none": !likeInput.value,
-        [resizeClassMap[resize.value ?? "none"]]: true,
+        [resizeClass.value ?? ""]: true,
       }),
     );
   });

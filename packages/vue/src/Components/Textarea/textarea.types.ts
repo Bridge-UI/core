@@ -2,7 +2,11 @@
 import type { TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  MergeProps,
+  TextareaResize,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
@@ -11,6 +15,8 @@ import type {
   FormFieldPartsProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+
+export interface TextareaResizeOverrides {}
 
 export interface TextareaClasses extends FormFieldClasses {}
 
@@ -37,7 +43,7 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
    *
    * @default "none"
    */
-  resize?: "both" | "none" | "vertical" | "horizontal";
+  resize?: MergeProps<TextareaResize, TextareaResizeOverrides>;
 }
 
 export interface TextareaSlots extends FormFieldSlots {}

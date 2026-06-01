@@ -76,6 +76,7 @@ import type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
+import type { TextareaResize } from "@core/Components/Textarea";
 import type {
   ToggleColor,
   ToggleColorItem,
@@ -315,8 +316,11 @@ export interface PasswordFieldConfigBase {
 export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
-    resize: string;
     autosize: boolean;
+    resize: keyof TextareaResize;
+  }>;
+  customProps: Partial<{
+    resize: Record<string, string>;
   }>;
 }
 

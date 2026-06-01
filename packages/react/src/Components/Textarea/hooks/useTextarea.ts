@@ -1,4 +1,5 @@
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import {
   useCallback,
   useMemo,
@@ -10,9 +11,11 @@ import {
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  mergeBridgeUILayeredClasses,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { resizeProps } from "@bridge-ui/core/Components/Textarea";
 
 // ** Local Imports
 import type { FormFieldProps } from "@/Components/FormField/formField.types";
@@ -27,13 +30,6 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
-
-const resizeClassMap = {
-  both: "resize",
-  none: "resize-none",
-  vertical: "resize-y",
-  horizontal: "resize-x",
-} as const satisfies Record<NonNullable<TextareaProps["resize"]>, string>;
 
 type TextareaRegistryProps = Pick<
   TextareaProps,
@@ -110,6 +106,15 @@ export function useTextarea(props: TextareaProps) {
     return textareaMerged.resize ?? "none";
   });
 
+  const resizeClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      resizeProps,
+      bridgeTextarea?.customProps?.resize,
+    );
+
+    return get(classes, resize ?? "none");
+  }, [resize, bridgeTextarea?.customProps?.resize]);
+
   const formField = useFormField(
     {
       ...(rest as Omit<FormFieldProps, "field">),
@@ -168,7 +173,7 @@ export function useTextarea(props: TextareaProps) {
           "flex-1 min-w-0": likeInput,
           "overflow-hidden": autosize,
           "min-w-0 flex-none": !likeInput,
-          [resizeClassMap[resize ?? "none"]]: true,
+          [resizeClass ?? ""]: true,
         }),
       ) as TextareaHTMLAttributes<HTMLTextAreaElement>;
     },
