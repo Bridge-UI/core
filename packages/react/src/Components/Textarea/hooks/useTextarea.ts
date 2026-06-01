@@ -8,6 +8,7 @@ import {
 
 // ** Core Imports
 import {
+  adjustAutosizeTextareaHeight,
   cn,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -51,12 +52,16 @@ type TextareaMerged = MergeLibDefaults<
 
 export function useTextarea(props: TextareaProps) {
   const {
-    autosize: autosizeProp,
-    resize: resizeProp,
-    onInput,
     classes,
+    onInput,
+    rows: rowsProp,
+    resize: resizeProp,
+    autosize: autosizeProp,
+    likeInput: likeInputProp,
     ...rest
   } = props;
+
+  const likeInput = Boolean(likeInputProp);
 
   const registryProps = useMemo((): TextareaRegistryProps => {
     return {
@@ -64,7 +69,7 @@ export function useTextarea(props: TextareaProps) {
       resize: resizeProp,
       autosize: autosizeProp,
     };
-  }, [autosizeProp, classes, resizeProp]);
+  }, [classes, resizeProp, autosizeProp]);
 
   const { entry: bridgeTextarea, merged: textareaMerged } =
     useBridgeUIComponent<TextareaMerged, "Textarea">({
@@ -81,7 +86,21 @@ export function useTextarea(props: TextareaProps) {
     entry: bridgeTextarea,
   });
 
-  const autosize = textareaMerged.autosize ?? false;
+  const autosize = derived((): boolean => {
+    if (likeInput) {
+      return autosizeProp ?? true;
+    }
+
+    return textareaMerged.autosize ?? false;
+  });
+
+  const rows = derived((): TextareaProps["rows"] => {
+    if (likeInput) {
+      return rowsProp ?? 1;
+    }
+
+    return rowsProp;
+  });
 
   const resize = derived((): TextareaProps["resize"] => {
     if (autosize) {
@@ -103,7 +122,10 @@ export function useTextarea(props: TextareaProps) {
       variant: "outline",
       withErrorIcon: true,
     },
-    { control: () => "textarea" },
+    {
+      control: () => "textarea",
+      likeInput: () => likeInput,
+    },
   );
 
   const adjustHeight = useCallback(
@@ -112,8 +134,7 @@ export function useTextarea(props: TextareaProps) {
         return;
       }
 
-      element.style.height = "auto";
-      element.style.height = `${element.scrollHeight}px`;
+      adjustAutosizeTextareaHeight(element);
     },
     [autosize],
   );
@@ -140,11 +161,13 @@ export function useTextarea(props: TextareaProps) {
         formField.inputBind,
         {
           ref: textareaRef,
+          ...(rows !== undefined ? { rows } : {}),
           ...(autosize ? { onInput: handleAutosize } : {}),
         },
         cn({
-          "min-w-0 flex-none": true,
+          "flex-1 min-w-0": likeInput,
           "overflow-hidden": autosize,
+          "min-w-0 flex-none": !likeInput,
           [resizeClassMap[resize ?? "none"]]: true,
         }),
       ) as TextareaHTMLAttributes<HTMLTextAreaElement>;

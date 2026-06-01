@@ -20,9 +20,17 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * Whether the textarea automatically resizes with its content.
    *
-   * @default false
+   * Defaults to `true` when `likeInput` is set; otherwise `false`.
    */
   autosize?: boolean;
+
+  /**
+   * Use compact TextField-like sizing instead of the default multiline textarea profile.
+   * Enables `autosize` and `rows={1}` by default; both can be overridden explicitly.
+   *
+   * @default false
+   */
+  likeInput?: boolean;
 
   /**
    * Native resize handle (`resize` CSS). Ignored when `autosize` is `true`.

@@ -112,6 +112,7 @@ export type {
   ToggleConfigOverrides,
 } from "@core/Config";
 export {
+  adjustAutosizeTextareaHeight,
   cn,
   createMergePartBind,
   mergeBridgeUILayeredClasses,

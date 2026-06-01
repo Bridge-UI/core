@@ -45,6 +45,11 @@ export type FormFieldOptions = {
    * @default "input"
    */
   control?: () => string | undefined;
+
+  /**
+   * When the control is a `<textarea>`, use compact TextField-like sizing tokens.
+   */
+  likeInput?: () => boolean | undefined;
 };
 
 export const formFieldBridgeKeys = [
@@ -157,6 +162,10 @@ export function useFormField(
 
   const isTextareaControl = computed(() => {
     return control.value === "textarea";
+  });
+
+  const isTextareaLikeInput = computed(() => {
+    return isTextareaControl.value && Boolean(options.likeInput?.());
   });
 
   const reservesErrorMessageSpace = computed(() => {
@@ -378,6 +387,7 @@ export function useFormField(
         "disabled:cursor-not-allowed": true,
         [sizeClasses.value?.input ?? ""]: !isTextareaControl.value,
         [sizeClasses.value?.textarea ?? ""]: isTextareaControl.value,
+        [sizeClasses.value?.textareaLikeInput ?? ""]: isTextareaLikeInput.value,
         [mergedClasses.value.input ?? ""]: true,
       }),
     );
@@ -534,7 +544,10 @@ export function useFormField(
         "transition-all ease-in-out duration-150 outline-none": true,
         "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
         [sizeClasses.value?.container ?? ""]: !isTextareaControl.value,
-        [sizeClasses.value?.containerTextarea ?? ""]: isTextareaControl.value,
+        [sizeClasses.value?.containerTextareaLikeInput ?? ""]:
+          isTextareaLikeInput.value,
+        [sizeClasses.value?.containerTextarea ?? ""]:
+          isTextareaControl.value && !isTextareaLikeInput.value,
         [variantClasses.value?.container ?? ""]: true,
         [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
         [containerSpacing.value ?? ""]: true,

@@ -17,7 +17,6 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<string | null | undefined>();
 
 const props = withDefaults(defineProps<TextareaOwnProps>(), {
-  autosize: false,
   withErrorIcon: true,
 });
 
