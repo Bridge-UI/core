@@ -22,8 +22,8 @@ function Switcher({ field, children }: SwitcherComponentProps) {
         {hasSlotOrProp(api.slots, "leftLabel", api.merged.leftLabel) && (
           <Label {...api.leftLabelProps}>
             {resolveSlotOrProp({
-              name: "leftLabel",
               slots: api.slots,
+              name: "leftLabel",
               fallback: api.merged.leftLabel,
             })}
           </Label>
@@ -46,8 +46,8 @@ function Switcher({ field, children }: SwitcherComponentProps) {
         hasSlotOrProp(api.slots, "description", api.merged.description) && (
           <p {...api.descriptionBind}>
             {resolveSlotOrProp({
-              name: "description",
               slots: api.slots,
+              name: "description",
               fallback: api.merged.description,
             })}
           </p>
@@ -60,8 +60,8 @@ function Switcher({ field, children }: SwitcherComponentProps) {
         >
           {api.showErrorMessageContent &&
             resolveSlotOrProp({
-              name: "errorMessage",
               slots: api.slots,
+              name: "errorMessage",
               fallback: api.merged.errorMessage,
             })}
         </p>

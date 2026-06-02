@@ -4,7 +4,7 @@ import { useToggle } from "@/Components/Toggle/hooks/useToggle";
 import type { ToggleProps } from "@/Components/Toggle/toggle.types";
 
 function Toggle(props: ToggleProps) {
-  const { switcher, inputBind, thumbBind, trackBind, fieldBind } = useToggle(
+  const { switcher, fieldBind, inputBind, thumbBind, trackBind } = useToggle(
     props,
     {
       size: "sm",

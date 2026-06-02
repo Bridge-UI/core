@@ -8,13 +8,13 @@ import { Switcher } from "@/Components/Switcher";
 
 function Checkbox(props: CheckboxProps) {
   const {
-    switcher,
     checked,
-    inputBind,
     iconBind,
-    controlBind,
-    fieldBind,
+    switcher,
     CheckIcon,
+    fieldBind,
+    inputBind,
+    controlBind,
   } = useCheckbox(props, {
     size: "sm",
     color: "primary",

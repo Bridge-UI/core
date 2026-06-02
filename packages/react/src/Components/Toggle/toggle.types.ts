@@ -54,8 +54,6 @@ export interface TogglePartsProps extends SwitcherPartsProps {
   track?: InputHTMLAttributes<HTMLSpanElement>;
 }
 
-export interface ToggleSlots extends SwitcherSlots {}
-
 export interface ToggleOwnProps extends Omit<
   SwitcherOwnProps,
   "field" | "children" | "classes" | "partsProps" | "slots"
@@ -103,6 +101,8 @@ export interface ToggleOwnProps extends Omit<
    */
   slots?: ToggleSlots;
 }
+
+export interface ToggleSlots extends SwitcherSlots {}
 
 export type ToggleProps = MergeHtmlProps<
   ToggleOwnProps,

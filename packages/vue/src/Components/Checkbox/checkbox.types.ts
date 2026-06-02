@@ -22,29 +22,94 @@ export interface CheckboxColorOverrides {}
 export interface CheckboxRoundedOverrides {}
 
 export interface CheckboxClasses extends SwitcherClasses {
+  /**
+   * The classes to apply to the custom control box.
+   */
   control?: string;
+
+  /**
+   * The classes to apply to the check icon.
+   */
   icon?: string;
+
+  /**
+   * The classes to apply to the native input (visually hidden).
+   */
   input?: string;
 }
 
 export interface CheckboxPartsProps extends SwitcherPartsProps {
+  /**
+   * Props forwarded to the custom control box.
+   */
   control?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the check icon wrapper.
+   */
   icon?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the native input.
+   */
   input?: Partial<InputHTMLAttributes>;
 }
-
-export interface CheckboxSlots extends SwitcherSlots {}
 
 export interface CheckboxOwnProps extends Omit<
   SwitcherOwnProps,
   "field" | "classes" | "partsProps"
 > {
+  /**
+   * Classes for the switcher chrome and the checkbox control.
+   *
+   * @default undefined
+   */
   classes?: CheckboxClasses;
+
+  /**
+   * The color to apply to the checkbox.
+   *
+   * @default "primary"
+   */
   color?: MergeProps<CheckboxColor, CheckboxColorOverrides>;
+
+  /**
+   * Whether the checkbox is in an indeterminate state.
+   *
+   * @default false
+   */
   indeterminate?: boolean;
+
+  /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
   partsProps?: CheckboxPartsProps;
+
+  /**
+   * The roundedness of the checkbox control.
+   *
+   * @default "sm"
+   */
   rounded?: MergeProps<CheckboxRounded, CheckboxRoundedOverrides>;
+
+  /**
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
+   *
+   * @default "sm"
+   */
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
+
+  /**
+   * Chrome slots (`label`, `description`, `errorMessage`, …).
+   *
+   * @default undefined
+   */
+  slots?: CheckboxSlots;
 }
+
+export interface CheckboxSlots extends SwitcherSlots {}
 
 export type CheckboxProps = CheckboxOwnProps;

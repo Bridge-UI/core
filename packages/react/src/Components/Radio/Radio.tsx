@@ -4,7 +4,7 @@ import type { RadioProps } from "@/Components/Radio/radio.types";
 import { Switcher } from "@/Components/Switcher";
 
 function Radio(props: RadioProps) {
-  const { switcher, inputBind, dotBind, controlBind, fieldBind } = useRadio(
+  const { dotBind, switcher, fieldBind, inputBind, controlBind } = useRadio(
     props,
     {
       size: "sm",

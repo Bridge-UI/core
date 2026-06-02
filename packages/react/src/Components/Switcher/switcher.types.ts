@@ -74,33 +74,6 @@ export interface SwitcherPartsProps {
   root?: HTMLAttributes<HTMLDivElement>;
 }
 
-export interface SwitcherSlots {
-  /**
-   * Helper text below the control row (hidden when invalid).
-   */
-  description?: ReactNode;
-
-  /**
-   * The form control (checkbox, radio, toggle, …).
-   */
-  default?: ReactNode;
-
-  /**
-   * Custom error message content.
-   */
-  errorMessage?: ReactNode;
-
-  /**
-   * Inline-end label next to the control.
-   */
-  label?: ReactNode;
-
-  /**
-   * Inline-start label before the control.
-   */
-  leftLabel?: ReactNode;
-}
-
 export interface SwitcherOwnProps {
   /**
    * The form control rendered inside the switcher row.
@@ -230,6 +203,33 @@ export interface SwitcherOwnProps {
    * @default false
    */
   withoutErrorMessage?: boolean;
+}
+
+export interface SwitcherSlots {
+  /**
+   * Helper text below the control row (hidden when invalid).
+   */
+  description?: ReactNode;
+
+  /**
+   * The form control (checkbox, radio, toggle, …).
+   */
+  default?: ReactNode;
+
+  /**
+   * Custom error message content.
+   */
+  errorMessage?: ReactNode;
+
+  /**
+   * Inline-end label next to the control.
+   */
+  label?: ReactNode;
+
+  /**
+   * Inline-start label before the control.
+   */
+  leftLabel?: ReactNode;
 }
 
 export type SwitcherProps = MergeHtmlProps<

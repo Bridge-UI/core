@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { computed } from "vue";
+
 // ** Local Imports
 import { Label } from "@/Components/Label";
 import type { UseSwitcherReturn } from "@/Components/Switcher/composables/useSwitcher";
@@ -10,7 +13,9 @@ const props = defineProps<{
   field: UseSwitcherReturn;
 }>();
 
-const api = props.field;
+const api = computed((): UseSwitcherReturn => {
+  return props.field;
+});
 </script>
 
 <template>
@@ -22,8 +27,8 @@ const api = props.field;
   >
     <div v-bind="api.rowBind">
       <Label
-        v-if="hasSlotOrProp(api.slots, 'leftLabel', api.merged.value.leftLabel)"
         v-bind="api.leftLabelProps"
+        v-if="hasSlotOrProp(api.slots, 'leftLabel', api.merged.value.leftLabel)"
       >
         <component
           :is="
@@ -39,8 +44,8 @@ const api = props.field;
       <slot />
 
       <Label
-        v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
         v-bind="api.labelProps"
+        v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
       >
         <component
           :is="resolveSlotOrProp(api.slots, 'label', api.merged.value.label)"
@@ -49,11 +54,11 @@ const api = props.field;
     </div>
 
     <p
+      v-bind="api.descriptionBind"
       v-if="
         !api.invalidated.value &&
         hasSlotOrProp(api.slots, 'description', api.merged.value.description)
       "
-      v-bind="api.descriptionBind"
     >
       <component
         :is="
@@ -67,9 +72,9 @@ const api = props.field;
     </p>
 
     <p
-      v-if="!api.merged.value.errorless && api.reservesErrorMessageSpace.value"
       v-bind="api.errorMessageBind"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
+      v-if="!api.merged.value.errorless && api.reservesErrorMessageSpace.value"
     >
       <template v-if="api.showErrorMessageContent.value">
         <component

@@ -10,17 +10,19 @@ import type {
   ToggleSlots,
 } from "@/Components/Toggle/toggle.types";
 
+const attrs = useAttrs();
+
 defineSlots<ToggleSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const model = defineModel<boolean>({ default: false });
-
 const props = defineProps<ToggleOwnProps>();
 
-const attrs = useAttrs();
+const model = defineModel<boolean>({ default: false });
 
-const checked = computed(() => model.value);
+const checked = computed(() => {
+  return model.value;
+});
 
 const { switcher, inputBind, thumbBind, trackBind, fieldBind } = useToggle(
   () => ({ ...attrs, ...props }),
@@ -41,7 +43,7 @@ function onChange(event: Event) {
 <template>
   <Switcher :field="switcher">
     <label v-bind="fieldBind">
-      <input v-bind="inputBind" :checked="model" @change="onChange" />
+      <input v-bind="inputBind" :checked="model" v-on:change="onChange" />
 
       <span v-bind="trackBind" />
 

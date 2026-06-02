@@ -54,8 +54,6 @@ export interface RadioPartsProps extends SwitcherPartsProps {
   input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
 }
 
-export interface RadioSlots extends SwitcherSlots {}
-
 export interface RadioOwnProps extends Omit<
   SwitcherOwnProps,
   "field" | "children" | "classes" | "partsProps" | "slots"
@@ -110,6 +108,8 @@ export interface RadioOwnProps extends Omit<
    */
   value?: string | number;
 }
+
+export interface RadioSlots extends SwitcherSlots {}
 
 export type RadioProps = MergeHtmlProps<
   RadioOwnProps,

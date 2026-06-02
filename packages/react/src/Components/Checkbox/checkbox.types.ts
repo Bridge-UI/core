@@ -56,8 +56,6 @@ export interface CheckboxPartsProps extends SwitcherPartsProps {
   input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
 }
 
-export interface CheckboxSlots extends SwitcherSlots {}
-
 export interface CheckboxOwnProps extends Omit<
   SwitcherOwnProps,
   "field" | "children" | "classes" | "partsProps" | "slots"
@@ -119,6 +117,8 @@ export interface CheckboxOwnProps extends Omit<
    */
   slots?: CheckboxSlots;
 }
+
+export interface CheckboxSlots extends SwitcherSlots {}
 
 export type CheckboxProps = MergeHtmlProps<
   CheckboxOwnProps,

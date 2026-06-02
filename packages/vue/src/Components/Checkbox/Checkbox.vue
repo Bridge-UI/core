@@ -14,33 +14,35 @@ import type {
 import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
 import { Switcher } from "@/Components/Switcher";
 
+const attrs = useAttrs();
+
 defineSlots<CheckboxSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const model = defineModel<boolean>({ default: false });
-
 const props = defineProps<CheckboxOwnProps>();
 
-const attrs = useAttrs();
+const model = defineModel<boolean>({ default: false });
 
-const checked = computed(() => model.value);
+const checked = computed(() => {
+  return model.value;
+});
 
 const {
-  switcher,
-  inputRef,
-  isChecked,
-  inputBind,
-  iconBind,
-  controlBind,
-  fieldBind,
   merged,
+  iconBind,
+  inputRef,
+  switcher,
+  fieldBind,
+  inputBind,
+  isChecked,
+  controlBind,
 } = useCheckbox(
   () => ({ ...attrs, ...props }),
   {
     size: "sm",
-    color: "primary",
     rounded: "sm",
+    color: "primary",
   },
   checked,
 );
@@ -57,15 +59,15 @@ function onChange(event: Event) {
     <span v-bind="fieldBind">
       <input
         ref="inputRef"
-        v-bind="inputBind"
         :checked="model"
-        @change="onChange"
+        v-bind="inputBind"
+        v-on:change="onChange"
       />
 
       <span v-bind="controlBind">
         <Check
-          v-if="isChecked && !merged.indeterminate"
           :stroke-width="3"
+          v-if="isChecked && !merged.indeterminate"
           :class="cn('h-[65%] w-[65%]', iconBind.class)"
         />
 

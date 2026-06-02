@@ -7,26 +7,28 @@ import { useRadio } from "@/Components/Radio/composables/useRadio";
 import type { RadioOwnProps, RadioSlots } from "@/Components/Radio/radio.types";
 import { Switcher } from "@/Components/Switcher";
 
+const attrs = useAttrs();
+
 defineSlots<RadioSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const model = defineModel<string | number>();
-
 const props = defineProps<RadioOwnProps>();
 
-const attrs = useAttrs();
+const model = defineModel<string | number>();
 
-const modelRef = computed(() => model.value);
+const modelRef = computed(() => {
+  return model.value;
+});
 
 const {
-  switcher,
-  isChecked,
-  inputBind,
-  dotBind,
-  controlBind,
-  fieldBind,
   merged,
+  dotBind,
+  switcher,
+  fieldBind,
+  inputBind,
+  isChecked,
+  controlBind,
 } = useRadio(
   () => ({ ...attrs, ...props }),
   {
@@ -46,7 +48,7 @@ function onChange() {
 <template>
   <Switcher :field="switcher">
     <span v-bind="fieldBind">
-      <input v-bind="inputBind" :checked="isChecked" @change="onChange" />
+      <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 
       <span v-bind="controlBind">
         <span v-bind="dotBind" />
