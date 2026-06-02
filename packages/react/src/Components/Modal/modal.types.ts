@@ -1,58 +1,62 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  MergeProps,
-  ModalRounded,
-  ModalShadow,
-  ModalSize,
-} from "@bridge-ui/core";
+import type { MergeHtmlProps, MergeProps, ModalSize } from "@bridge-ui/core";
 
 export interface ModalSizeOverrides {}
-export interface ModalShadowOverrides {}
-export interface ModalRoundedOverrides {}
 
 export interface ModalClasses {
-  /**
-   * The classes to apply to the body.
-   */
-  body?: string;
-
-  /**
-   * The classes to apply to the close button.
-   */
-  close?: string;
-
-  /**
-   * The classes to apply to the content.
-   */
-  content?: string;
-
-  /**
-   * The classes to apply to the footer.
-   */
-  footer?: string;
-
-  /**
-   * The classes to apply to the header.
-   */
-  header?: string;
-
   /**
    * The classes to apply to the overlay.
    */
   overlay?: string;
 
   /**
-   * The classes to apply to the root.
+   * The classes to apply to the dialog panel (max-width wrapper).
+   */
+  panel?: string;
+
+  /**
+   * The classes to apply to the root portal container.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the centering wrapper.
+   */
+  wrapper?: string;
 }
 
-export interface ModalProps {
+export interface ModalPartsProps {
   /**
-   * The children to render.
+   * Props forwarded to the overlay.
+   */
+  overlay?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the dialog panel.
+   */
+  panel?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the root portal container.
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the centering wrapper.
+   */
+  wrapper?: HTMLAttributes<HTMLDivElement>;
+}
+
+/**
+ * Modal shell (overlay, portal, backdrop). Put `Card` or any content as `children`.
+ * Control visibility with `show` and `onShowChange`.
+ */
+export interface ModalOwnProps {
+  /**
+   * The children to render inside the dialog panel.
    *
    * @default undefined
    */
@@ -80,61 +84,57 @@ export interface ModalProps {
   closeOnOverlay?: boolean;
 
   /**
-   * Callback when the modal is closed.
+   * Called when the modal requests to close (overlay, escape).
+   * Sugar for `onShowChange(false)`.
    *
    * @default undefined
    */
   onClose?: () => void;
 
   /**
-   * Whether the modal is open.
+   * Called when `show` should change (controlled state).
+   *
+   * @default undefined
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
+   * Props forwarded to each modal part.
+   *
+   * @default undefined
+   */
+  partsProps?: ModalPartsProps;
+
+  /**
+   * When true, escape and overlay clicks do not close the modal.
    *
    * @default false
    */
-  open?: boolean;
+  persistent?: boolean;
 
   /**
-   * The roundedness of the modal.
+   * Whether the modal is visible.
    *
-   * @default "md"
+   * @default false
    */
-  rounded?: MergeProps<ModalRounded, ModalRoundedOverrides>;
+  show?: boolean;
 
   /**
-   * The shadow to apply to the modal.
-   *
-   * @default "lg"
-   */
-  shadow?: MergeProps<ModalShadow, ModalShadowOverrides>;
-
-  /**
-   * The size of the modal.
+   * The max width of the dialog panel.
    *
    * @default "md"
    */
   size?: MergeProps<ModalSize, ModalSizeOverrides>;
 
   /**
-   * The slots to apply to the modal.
+   * Where to portal the modal. Pass `false` to render in place.
    *
-   * @default undefined
+   * @default "body"
    */
-  slots?: ModalSlots;
+  teleportTo?: string | false;
 }
 
-export interface ModalSlots {
-  /**
-   * The slot for the close button.
-   */
-  close?: ReactNode;
-
-  /**
-   * The slot for the footer.
-   */
-  footer?: ReactNode;
-
-  /**
-   * The slot for the header.
-   */
-  header?: ReactNode;
-}
+export type ModalProps = MergeHtmlProps<
+  ModalOwnProps,
+  HTMLAttributes<HTMLDivElement>
+>;

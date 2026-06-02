@@ -124,8 +124,10 @@ export {
   adjustAutosizeTextareaHeight,
   cn,
   createMergePartBind,
+  isModalBackdropClick,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  resolveModalPortalElement,
   splitComponentProps,
 } from "@core/Utils";
 export type {

@@ -63,11 +63,7 @@ import type {
   LinkUnderline,
 } from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-import type {
-  ModalRounded,
-  ModalShadow,
-  ModalSize,
-} from "@core/Components/Modal";
+import type { ModalSize } from "@core/Components/Modal";
 import type {
   RadioColor,
   RadioColorItem,
@@ -277,13 +273,10 @@ export interface ModalConfigBase {
   classes: object;
   defaultProps: Partial<{
     size: keyof ModalSize;
-    shadow: keyof ModalShadow;
-    rounded: keyof ModalRounded;
+    teleportTo: string | false;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
-    shadow: Record<string, string>;
-    rounded: Record<string, string>;
   }>;
 }
 

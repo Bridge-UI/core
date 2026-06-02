@@ -106,14 +106,13 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu";
-export { Modal } from "@/Components/Modal";
+export { Modal, useModal } from "@/Components/Modal";
 export type {
   ModalClasses,
+  ModalOwnProps,
+  ModalPartsProps,
   ModalProps,
-  ModalRoundedOverrides,
-  ModalShadowOverrides,
   ModalSizeOverrides,
-  ModalSlots,
 } from "@/Components/Modal";
 export { NumberField, useNumberField } from "@/Components/NumberField";
 export type {

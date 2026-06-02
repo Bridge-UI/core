@@ -140,6 +140,10 @@ export function splitComponentProps<
   };
 }
 
+export {
+  isModalBackdropClick,
+  resolveModalPortalElement,
+} from "@core/Utils/portal";
 export type {
   ClassPropKey,
   LibDefaultsShape,
