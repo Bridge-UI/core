@@ -7,7 +7,7 @@ function Toggle(props: ToggleProps) {
   const { switcher, fieldBind, inputBind, thumbBind, trackBind } = useToggle(
     props,
     {
-      size: "sm",
+      size: "md",
       rounded: "full",
       color: "primary",
     },

@@ -32,7 +32,7 @@ const {
 } = useRadio(
   () => ({ ...attrs, ...props }),
   {
-    size: "sm",
+    size: "md",
     rounded: "full",
     color: "primary",
   },

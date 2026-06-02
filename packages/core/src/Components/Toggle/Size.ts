@@ -36,17 +36,17 @@ export const sizeProps: ToggleSize = {
   "md": {
     "track": "h-5 w-9",
     "thumb": "h-3.5 w-3.5",
-    "thumbCheckedTranslate": "translate-x-3.5",
+    "thumbCheckedTranslate": "translate-x-4.5",
   },
   "lg": {
     "thumb": "h-4 w-4",
     "track": "h-6 w-10",
-    "thumbCheckedTranslate": "translate-x-4",
+    "thumbCheckedTranslate": "translate-x-5",
   },
   "xl": {
     "thumb": "h-4 w-4",
     "track": "h-7 w-12",
-    "thumbCheckedTranslate": "translate-x-5.5",
+    "thumbCheckedTranslate": "translate-x-7",
   },
   "2xl": {
     "thumb": "h-5 w-5",

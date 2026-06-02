@@ -40,7 +40,7 @@ const {
 } = useCheckbox(
   () => ({ ...attrs, ...props }),
   {
-    size: "sm",
+    size: "md",
     rounded: "sm",
     color: "primary",
   },

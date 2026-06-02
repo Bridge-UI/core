@@ -91,7 +91,7 @@ export interface ToggleOwnProps extends Omit<
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 

@@ -58,7 +58,7 @@ export interface CheckboxPartsProps extends SwitcherPartsProps {
 
 export interface CheckboxOwnProps extends Omit<
   SwitcherOwnProps,
-  "field" | "children" | "classes" | "partsProps" | "slots"
+  "field" | "slots" | "classes" | "children" | "partsProps"
 > {
   /**
    * Whether the checkbox is checked.
@@ -106,7 +106,7 @@ export interface CheckboxOwnProps extends Omit<
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
 

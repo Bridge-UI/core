@@ -7,7 +7,7 @@ function Radio(props: RadioProps) {
   const { dotBind, switcher, fieldBind, inputBind, controlBind } = useRadio(
     props,
     {
-      size: "sm",
+      size: "md",
       rounded: "full",
       color: "primary",
     },

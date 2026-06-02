@@ -58,7 +58,7 @@ export interface TogglePartsProps extends SwitcherPartsProps {
 
 export interface ToggleOwnProps extends Omit<
   SwitcherOwnProps,
-  "field" | "children" | "classes" | "partsProps" | "slots"
+  "field" | "slots" | "classes" | "children" | "partsProps"
 > {
   /**
    * Whether the toggle is on.
@@ -99,7 +99,7 @@ export interface ToggleOwnProps extends Omit<
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 

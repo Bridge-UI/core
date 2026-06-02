@@ -27,7 +27,7 @@ const checked = computed(() => {
 const { switcher, fieldBind, inputBind, thumbBind, trackBind } = useToggle(
   () => ({ ...attrs, ...props }),
   {
-    size: "sm",
+    size: "md",
     rounded: "full",
     color: "primary",
   },
