@@ -56,7 +56,6 @@ export function useRadio(
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
     error: false,
     withoutErrorMessage: false,
-    withValidationColors: true,
     size: libDefaults.size ?? "sm",
   });
 
@@ -90,16 +89,8 @@ export function useRadio(
     return toValue(modelValue) === merged.value.value;
   });
 
-  const invalidated = computed(() => {
-    return switcher.invalidated.value;
-  });
-
-  const withValidationColors = computed(() => {
-    return switcher.withValidationColors.value;
-  });
-
   const colorKey = computed(() => {
-    if (withValidationColors.value && invalidated.value) {
+    if (switcher.invalidated.value) {
       return "error";
     }
 
@@ -196,12 +187,12 @@ export function useRadio(
   });
 
   return {
-    switcher,
-    isChecked,
-    inputBind,
-    dotBind,
-    controlBind,
-    fieldBind,
     merged,
+    dotBind,
+    switcher,
+    fieldBind,
+    inputBind,
+    isChecked,
+    controlBind,
   };
 }

@@ -57,7 +57,6 @@ export function useCheckbox(
   const switcher = useSwitcher(props, {
     error: false,
     withoutErrorMessage: false,
-    withValidationColors: true,
     size: libDefaults.size ?? "sm",
   });
 
@@ -115,16 +114,8 @@ export function useCheckbox(
     return uncontrolledChecked;
   });
 
-  const invalidated = derived(() => {
-    return switcher.invalidated;
-  });
-
-  const withValidationColors = derived(() => {
-    return switcher.withValidationColors;
-  });
-
   const colorKey = derived(() => {
-    if (withValidationColors && invalidated) {
+    if (switcher.invalidated) {
       return "error";
     }
 
@@ -236,12 +227,12 @@ export function useCheckbox(
   });
 
   return {
-    switcher,
     checked,
-    inputBind,
     iconBind,
-    controlBind,
+    switcher,
     fieldBind,
+    inputBind,
+    controlBind,
     CheckIcon: Check,
   };
 }

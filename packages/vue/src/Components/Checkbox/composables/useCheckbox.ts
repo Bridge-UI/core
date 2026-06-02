@@ -63,7 +63,6 @@ export function useCheckbox(
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
     error: false,
     withoutErrorMessage: false,
-    withValidationColors: true,
     size: libDefaults.size ?? "sm",
   });
 
@@ -97,16 +96,8 @@ export function useCheckbox(
     return Boolean(toValue(checked));
   });
 
-  const invalidated = computed(() => {
-    return switcher.invalidated.value;
-  });
-
-  const withValidationColors = computed(() => {
-    return switcher.withValidationColors.value;
-  });
-
   const colorKey = computed(() => {
-    if (withValidationColors.value && invalidated.value) {
+    if (switcher.invalidated.value) {
       return "error";
     }
 
@@ -204,13 +195,13 @@ export function useCheckbox(
   });
 
   return {
-    switcher,
-    inputRef,
-    isChecked,
-    inputBind,
-    iconBind,
-    controlBind,
-    fieldBind,
     merged,
+    iconBind,
+    inputRef,
+    switcher,
+    fieldBind,
+    inputBind,
+    isChecked,
+    controlBind,
   };
 }

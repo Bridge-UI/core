@@ -54,7 +54,6 @@ export function useToggle(
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
     error: false,
     withoutErrorMessage: false,
-    withValidationColors: true,
     size: libDefaults.size ?? "sm",
   });
 
@@ -88,16 +87,8 @@ export function useToggle(
     return Boolean(toValue(checked));
   });
 
-  const invalidated = computed(() => {
-    return switcher.invalidated.value;
-  });
-
-  const withValidationColors = computed(() => {
-    return switcher.withValidationColors.value;
-  });
-
   const colorKey = computed(() => {
-    if (withValidationColors.value && invalidated.value) {
+    if (switcher.invalidated.value) {
       return "error";
     }
 
@@ -193,10 +184,10 @@ export function useToggle(
 
   return {
     switcher,
-    isChecked,
+    fieldBind,
     inputBind,
+    isChecked,
     thumbBind,
     trackBind,
-    fieldBind,
   };
 }

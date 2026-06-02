@@ -111,10 +111,7 @@ declare module "@bridge-ui/core" {
   interface SwitcherConfigOverrides {
     classes: SwitcherClasses;
     defaultProps: Partial<
-      Pick<
-        SwitcherProps,
-        "size" | "error" | "withoutErrorMessage" | "withValidationColors"
-      >
+      Pick<SwitcherProps, "size" | "error" | "withoutErrorMessage">
     >;
   }
 

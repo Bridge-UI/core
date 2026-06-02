@@ -204,13 +204,6 @@ export interface SwitcherOwnProps {
    * @default false
    */
   withoutErrorMessage?: boolean;
-
-  /**
-   * When `true`, applies validation color tokens on labels when invalid.
-   *
-   * @default true
-   */
-  withValidationColors?: boolean;
 }
 
 export interface SwitcherSlots {

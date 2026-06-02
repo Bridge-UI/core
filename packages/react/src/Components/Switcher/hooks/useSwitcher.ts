@@ -42,12 +42,11 @@ export const switcherBridgeKeys = [
   "description",
   "errorMessage",
   "withoutErrorMessage",
-  "withValidationColors",
 ] as const satisfies readonly (keyof SwitcherOwnProps)[];
 
 type SwitcherLibDefaults = LibDefaultsShape<
   SwitcherOwnProps,
-  "size" | "error" | "withoutErrorMessage" | "withValidationColors"
+  "size" | "error" | "withoutErrorMessage"
 >;
 
 type SwitcherMerged = MergeLibDefaults<SwitcherOwnProps, SwitcherLibDefaults>;
@@ -106,12 +105,8 @@ export function useSwitcher(
     return Boolean(merged.readonly);
   });
 
-  const withValidationColors = derived(() => {
-    return merged.withValidationColors !== false;
-  });
-
   const labelError = derived(() => {
-    return withValidationColors && invalidated;
+    return invalidated;
   });
 
   const controlId = derived(() => {
@@ -281,7 +276,6 @@ export function useSwitcher(
     ariaDescribedBy,
     descriptionBind,
     errorMessageBind,
-    withValidationColors,
     showErrorMessageContent,
     reservesErrorMessageSpace,
   };
