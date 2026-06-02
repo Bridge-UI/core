@@ -48,7 +48,9 @@ declare module "@bridge-ui/core" {
 
   interface CardConfigOverrides {
     classes: CardClasses;
-    defaultProps: Partial<Pick<CardProps, "rounded" | "shadow" | "padding">>;
+    defaultProps: Partial<
+      Pick<CardProps, "shadow" | "padding" | "rounded" | "variant">
+    >;
   }
 
   interface CheckboxConfigOverrides {

@@ -45,14 +45,17 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
-export { Card } from "@/Components/Card";
+export { Card, useCard } from "@/Components/Card";
 export type {
   CardClasses,
+  CardOwnProps,
   CardPaddingOverrides,
+  CardPartsProps,
   CardProps,
   CardRoundedOverrides,
   CardShadowOverrides,
   CardSlots,
+  CardVariantOverrides,
 } from "@/Components/Card";
 export { Checkbox, useCheckbox } from "@/Components/Checkbox";
 export type {
