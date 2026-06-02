@@ -17,8 +17,8 @@ function Checkbox(props: CheckboxProps) {
     controlBind,
   } = useCheckbox(props, {
     size: "sm",
-    color: "primary",
     rounded: "sm",
+    color: "primary",
   });
 
   return (

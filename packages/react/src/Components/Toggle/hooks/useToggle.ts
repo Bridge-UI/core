@@ -11,7 +11,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, sizeProps } from "@bridge-ui/core/Components/Toggle";
+import {
+  colorProps,
+  roundedProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Toggle";
 
 // ** Local Imports
 import { useSwitcher } from "@/Components/Switcher";
@@ -32,19 +36,24 @@ const toggleBridgeKeys = [
   "color",
   "classes",
   "checked",
+  "rounded",
   "partsProps",
 ] as const satisfies readonly (keyof ToggleOwnProps)[];
 
-type ToggleLibDefaults = LibDefaultsShape<ToggleOwnProps, "size" | "color">;
+type ToggleLibDefaults = LibDefaultsShape<
+  ToggleOwnProps,
+  "size" | "color" | "rounded"
+>;
 
 type ToggleMerged = MergeLibDefaults<ToggleOwnProps, ToggleLibDefaults>;
 
 export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
+  // Setup
   const switcher = useSwitcher(props, {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -82,6 +91,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     entry: bridgeToggle,
   });
 
+  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(inheritedAttrs.defaultChecked);
   });
@@ -114,6 +124,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     return merged.color;
   });
 
+  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -132,6 +143,16 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     return get(classes, colorKey);
   }, [colorKey, bridgeToggle?.customProps?.color]);
 
+  const roundedClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeToggle?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded ?? "full");
+  }, [merged.rounded, bridgeToggle?.customProps?.rounded]);
+
+  // Handlers
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {
       setUncontrolledChecked(event.target.checked);
@@ -140,6 +161,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     inputInheritedAttrs.onChange?.(event);
   };
 
+  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {
@@ -163,8 +185,9 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
       partsProps?.track,
       { "aria-hidden": true },
       cn({
-        "block cursor-pointer rounded-full transition ease-in-out duration-100": true,
+        "block cursor-pointer transition ease-in-out duration-100": true,
         [sizeClasses?.track ?? ""]: true,
+        [roundedClasses ?? ""]: true,
         [colorClasses?.track ?? ""]: !checked,
         [colorClasses?.trackChecked ?? ""]: checked,
         [mergedClasses.track ?? ""]: true,
@@ -192,7 +215,8 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
       {},
       cn({
         "relative inline-flex shrink-0 select-none": true,
-        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2 rounded-full": true,
+        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2": true,
+        [roundedClasses ?? ""]: true,
         [colorClasses?.focus ?? ""]: true,
       }),
     );

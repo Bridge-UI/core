@@ -2,7 +2,12 @@
 import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { MergeProps, RadioColor, RadioSize } from "@bridge-ui/core";
+import type {
+  MergeProps,
+  RadioColor,
+  RadioRounded,
+  RadioSize,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
@@ -14,6 +19,7 @@ import type {
 
 export interface RadioSizeOverrides {}
 export interface RadioColorOverrides {}
+export interface RadioRoundedOverrides {}
 
 export interface RadioClasses extends SwitcherClasses {
   /**
@@ -80,6 +86,13 @@ export interface RadioOwnProps extends Omit<
    * @default undefined
    */
   partsProps?: RadioPartsProps;
+
+  /**
+   * The roundedness of the radio control.
+   *
+   * @default "full"
+   */
+  rounded?: MergeProps<RadioRounded, RadioRoundedOverrides>;
 
   /**
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as

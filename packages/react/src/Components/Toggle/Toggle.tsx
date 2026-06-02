@@ -8,6 +8,7 @@ function Toggle(props: ToggleProps) {
     props,
     {
       size: "sm",
+      rounded: "full",
       color: "primary",
     },
   );

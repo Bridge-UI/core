@@ -11,7 +11,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, sizeProps } from "@bridge-ui/core/Components/Radio";
+import {
+  colorProps,
+  roundedProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Radio";
 
 // ** Local Imports
 import type {
@@ -33,19 +37,24 @@ const radioBridgeKeys = [
   "value",
   "classes",
   "checked",
+  "rounded",
   "partsProps",
 ] as const satisfies readonly (keyof RadioOwnProps)[];
 
-type RadioLibDefaults = LibDefaultsShape<RadioOwnProps, "size" | "color">;
+type RadioLibDefaults = LibDefaultsShape<
+  RadioOwnProps,
+  "size" | "color" | "rounded"
+>;
 
 type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
+  // Setup
   const switcher = useSwitcher(props, {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -83,6 +92,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     entry: bridgeRadio,
   });
 
+  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(inheritedAttrs.defaultChecked);
   });
@@ -115,6 +125,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return merged.color;
   });
 
+  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -133,6 +144,16 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return get(classes, colorKey);
   }, [colorKey, bridgeRadio?.customProps?.color]);
 
+  const roundedClasses = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeRadio?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded ?? "full");
+  }, [merged.rounded, bridgeRadio?.customProps?.rounded]);
+
+  // Handlers
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {
       setUncontrolledChecked(event.target.checked);
@@ -141,6 +162,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     inputInheritedAttrs.onChange?.(event);
   };
 
+  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {
@@ -164,9 +186,10 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
       partsProps?.control,
       { "aria-hidden": true },
       cn({
-        "inline-flex shrink-0 items-center justify-center rounded-full border shadow-sm transition ease-in-out duration-100": true,
+        "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
         "pointer-events-none": true,
         [sizeClasses ?? ""]: true,
+        [roundedClasses ?? ""]: true,
         [colorClasses?.base ?? ""]: !checked,
         [colorClasses?.checked ?? ""]: checked,
         [mergedClasses.control ?? ""]: true,
@@ -194,7 +217,8 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
       {},
       cn({
         "relative inline-flex shrink-0 items-center": true,
-        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2 rounded-full": true,
+        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2": true,
+        [roundedClasses ?? ""]: true,
         [colorClasses?.focus ?? ""]: true,
       }),
     );

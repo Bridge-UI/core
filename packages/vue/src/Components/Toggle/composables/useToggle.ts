@@ -10,7 +10,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, sizeProps } from "@bridge-ui/core/Components/Toggle";
+import {
+  colorProps,
+  roundedProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Toggle";
 
 // ** Local Imports
 import { useSwitcher } from "@/Components/Switcher";
@@ -28,10 +32,14 @@ const toggleBridgeKeys = [
   "size",
   "color",
   "classes",
+  "rounded",
   "partsProps",
 ] as const satisfies readonly (keyof ToggleOwnProps)[];
 
-type ToggleLibDefaults = LibDefaultsShape<ToggleOwnProps, "size" | "color">;
+type ToggleLibDefaults = LibDefaultsShape<
+  ToggleOwnProps,
+  "size" | "color" | "rounded"
+>;
 
 type ToggleMerged = MergeLibDefaults<ToggleOwnProps, ToggleLibDefaults>;
 
@@ -40,13 +48,14 @@ export function useToggle(
   libDefaults: ToggleLibDefaults,
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
+  // Setup
   const attrs = useAttrs();
 
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const split = computed(() => {
@@ -74,6 +83,7 @@ export function useToggle(
     props: () => split.value.customProps,
   });
 
+  // Elements
   const isChecked = computed(() => {
     return Boolean(toValue(checked));
   });
@@ -94,6 +104,7 @@ export function useToggle(
     return merged.value.color;
   });
 
+  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -112,6 +123,16 @@ export function useToggle(
     return get(classes, colorKey.value);
   });
 
+  const roundedClasses = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeToggle.value?.customProps?.rounded,
+    );
+
+    return get(classes, merged.value.rounded ?? "full");
+  });
+
+  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {
@@ -133,8 +154,9 @@ export function useToggle(
       partsProps.value?.track,
       { "aria-hidden": true },
       cn({
-        "block cursor-pointer rounded-full transition ease-in-out duration-100": true,
+        "block cursor-pointer transition ease-in-out duration-100": true,
         [sizeClasses.value?.track ?? ""]: true,
+        [roundedClasses.value ?? ""]: true,
         [colorClasses.value?.track ?? ""]: !isChecked.value,
         [colorClasses.value?.trackChecked ?? ""]: isChecked.value,
         [mergedClasses.value.track ?? ""]: true,
@@ -162,7 +184,8 @@ export function useToggle(
       {},
       cn({
         "relative inline-flex shrink-0 select-none": true,
-        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2 rounded-full": true,
+        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2": true,
+        [roundedClasses.value ?? ""]: true,
         [colorClasses.value?.focus ?? ""]: true,
       }),
     );

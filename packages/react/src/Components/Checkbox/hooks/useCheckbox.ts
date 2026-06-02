@@ -36,10 +36,10 @@ const checkboxBridgeKeys = [
   "size",
   "color",
   "classes",
-  "rounded",
   "checked",
-  "indeterminate",
+  "rounded",
   "partsProps",
+  "indeterminate",
 ] as const satisfies readonly (keyof CheckboxOwnProps)[];
 
 type CheckboxLibDefaults = LibDefaultsShape<
@@ -53,11 +53,12 @@ export function useCheckbox(
   props: CheckboxProps,
   libDefaults: CheckboxLibDefaults,
 ) {
+  // Setup
   const switcher = useSwitcher(props, {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -97,6 +98,7 @@ export function useCheckbox(
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(inheritedAttrs.defaultChecked);
   });
@@ -129,6 +131,7 @@ export function useCheckbox(
     return merged.color;
   });
 
+  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -153,9 +156,10 @@ export function useCheckbox(
       bridgeCheckbox?.customProps?.rounded,
     );
 
-    return get(classes, merged.rounded);
+    return get(classes, merged.rounded ?? "sm");
   }, [merged.rounded, bridgeCheckbox?.customProps?.rounded]);
 
+  // Handlers
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.indeterminate = Boolean(merged.indeterminate);
@@ -170,6 +174,7 @@ export function useCheckbox(
     inputInheritedAttrs.onChange?.(event);
   };
 
+  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {

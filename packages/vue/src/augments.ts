@@ -98,7 +98,7 @@ declare module "@bridge-ui/core" {
 
   interface RadioConfigOverrides {
     classes: RadioClasses;
-    defaultProps: Partial<Pick<RadioProps, "size" | "color">>;
+    defaultProps: Partial<Pick<RadioProps, "size" | "color" | "rounded">>;
   }
 
   interface SelectConfigOverrides {
@@ -136,6 +136,6 @@ declare module "@bridge-ui/core" {
 
   interface ToggleConfigOverrides {
     classes: ToggleClasses;
-    defaultProps: Partial<Pick<ToggleProps, "size" | "color">>;
+    defaultProps: Partial<Pick<ToggleProps, "size" | "color" | "rounded">>;
   }
 }

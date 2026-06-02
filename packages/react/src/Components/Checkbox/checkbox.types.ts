@@ -122,5 +122,5 @@ export interface CheckboxSlots extends SwitcherSlots {}
 
 export type CheckboxProps = MergeHtmlProps<
   CheckboxOwnProps,
-  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color">
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color" | "rounded">
 >;

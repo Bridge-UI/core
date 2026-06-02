@@ -67,6 +67,7 @@ export type {
 export type {
   RadioColor,
   RadioColorItem,
+  RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
 export type {
@@ -80,6 +81,7 @@ export type { TextareaResize } from "@core/Components/Textarea";
 export type {
   ToggleColor,
   ToggleColorItem,
+  ToggleRounded,
   ToggleSize,
   ToggleSizeItem,
 } from "@core/Components/Toggle";

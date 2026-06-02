@@ -33,6 +33,7 @@ const {
   () => ({ ...attrs, ...props }),
   {
     size: "sm",
+    rounded: "full",
     color: "primary",
   },
   modelRef,

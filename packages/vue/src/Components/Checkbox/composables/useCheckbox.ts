@@ -40,8 +40,8 @@ const checkboxBridgeKeys = [
   "color",
   "classes",
   "rounded",
-  "indeterminate",
   "partsProps",
+  "indeterminate",
 ] as const satisfies readonly (keyof CheckboxOwnProps)[];
 
 type CheckboxLibDefaults = LibDefaultsShape<
@@ -56,14 +56,15 @@ export function useCheckbox(
   libDefaults: CheckboxLibDefaults,
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
+  // Setup
   const attrs = useAttrs();
   const inputRef = ref<HTMLInputElement | null>(null);
 
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const split = computed(() => {
@@ -91,6 +92,7 @@ export function useCheckbox(
     props: () => split.value.customProps,
   });
 
+  // Elements
   const isChecked = computed(() => {
     return Boolean(toValue(checked));
   });
@@ -111,6 +113,7 @@ export function useCheckbox(
     return merged.value.color;
   });
 
+  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -135,15 +138,17 @@ export function useCheckbox(
       bridgeCheckbox.value?.customProps?.rounded,
     );
 
-    return get(classes, merged.value.rounded);
+    return get(classes, merged.value.rounded ?? "sm");
   });
 
+  // Handlers
   watchEffect(() => {
     if (inputRef.value) {
       inputRef.value.indeterminate = Boolean(merged.value.indeterminate);
     }
   });
 
+  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {

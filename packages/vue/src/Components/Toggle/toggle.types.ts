@@ -2,7 +2,12 @@
 import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { MergeProps, ToggleColor, ToggleSize } from "@bridge-ui/core";
+import type {
+  MergeProps,
+  ToggleColor,
+  ToggleRounded,
+  ToggleSize,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
@@ -14,6 +19,7 @@ import type {
 
 export interface ToggleSizeOverrides {}
 export interface ToggleColorOverrides {}
+export interface ToggleRoundedOverrides {}
 
 export interface ToggleClasses extends SwitcherClasses {
   /**
@@ -73,6 +79,13 @@ export interface ToggleOwnProps extends Omit<
    * @default undefined
    */
   partsProps?: TogglePartsProps;
+
+  /**
+   * The roundedness of the toggle track.
+   *
+   * @default "full"
+   */
+  rounded?: MergeProps<ToggleRounded, ToggleRoundedOverrides>;
 
   /**
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as

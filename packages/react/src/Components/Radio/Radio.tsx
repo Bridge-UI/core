@@ -8,6 +8,7 @@ function Radio(props: RadioProps) {
     props,
     {
       size: "sm",
+      rounded: "full",
       color: "primary",
     },
   );

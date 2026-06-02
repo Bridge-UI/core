@@ -6,6 +6,7 @@ export type {
   ToggleOwnProps,
   TogglePartsProps,
   ToggleProps,
+  ToggleRoundedOverrides,
   ToggleSizeOverrides,
   ToggleSlots,
 } from "@/Components/Toggle/toggle.types";

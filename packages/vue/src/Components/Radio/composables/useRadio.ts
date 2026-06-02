@@ -10,7 +10,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, sizeProps } from "@bridge-ui/core/Components/Radio";
+import {
+  colorProps,
+  roundedProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Radio";
 
 // ** Local Imports
 import type {
@@ -25,15 +29,19 @@ import {
 } from "@/Utils";
 
 const radioBridgeKeys = [
+  "name",
   "size",
   "color",
   "value",
-  "name",
   "classes",
+  "rounded",
   "partsProps",
 ] as const satisfies readonly (keyof RadioOwnProps)[];
 
-type RadioLibDefaults = LibDefaultsShape<RadioOwnProps, "size" | "color">;
+type RadioLibDefaults = LibDefaultsShape<
+  RadioOwnProps,
+  "size" | "color" | "rounded"
+>;
 
 type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 
@@ -42,13 +50,14 @@ export function useRadio(
   libDefaults: RadioLibDefaults,
   modelValue: MaybeRefOrGetter<string | number | undefined>,
 ) {
+  // Setup
   const attrs = useAttrs();
 
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
-    size: libDefaults.size ?? "sm",
-    withValidationColors: true,
     errorless: false,
     withoutErrorMessage: false,
+    withValidationColors: true,
+    size: libDefaults.size ?? "sm",
   });
 
   const split = computed(() => {
@@ -76,6 +85,7 @@ export function useRadio(
     props: () => split.value.customProps,
   });
 
+  // Elements
   const isChecked = computed(() => {
     return toValue(modelValue) === merged.value.value;
   });
@@ -96,6 +106,7 @@ export function useRadio(
     return merged.value.color;
   });
 
+  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -114,6 +125,16 @@ export function useRadio(
     return get(classes, colorKey.value);
   });
 
+  const roundedClasses = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeRadio.value?.customProps?.rounded,
+    );
+
+    return get(classes, merged.value.rounded ?? "full");
+  });
+
+  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {
@@ -136,9 +157,10 @@ export function useRadio(
       partsProps.value?.control,
       { "aria-hidden": true },
       cn({
-        "inline-flex shrink-0 items-center justify-center rounded-full border shadow-sm transition ease-in-out duration-100": true,
+        "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
         "pointer-events-none": true,
         [sizeClasses.value ?? ""]: true,
+        [roundedClasses.value ?? ""]: true,
         [colorClasses.value?.base ?? ""]: !isChecked.value,
         [colorClasses.value?.checked ?? ""]: isChecked.value,
         [mergedClasses.value.control ?? ""]: true,
@@ -166,7 +188,8 @@ export function useRadio(
       {},
       cn({
         "relative inline-flex shrink-0 items-center": true,
-        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2 rounded-full": true,
+        "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2": true,
+        [roundedClasses.value ?? ""]: true,
         [colorClasses.value?.focus ?? ""]: true,
       }),
     );

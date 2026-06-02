@@ -6,6 +6,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   RadioColor,
+  RadioRounded,
   RadioSize,
 } from "@bridge-ui/core";
 
@@ -19,6 +20,7 @@ import type {
 
 export interface RadioSizeOverrides {}
 export interface RadioColorOverrides {}
+export interface RadioRoundedOverrides {}
 
 export interface RadioClasses extends SwitcherClasses {
   /**
@@ -87,6 +89,13 @@ export interface RadioOwnProps extends Omit<
   partsProps?: RadioPartsProps;
 
   /**
+   * The roundedness of the radio control.
+   *
+   * @default "full"
+   */
+  rounded?: MergeProps<RadioRounded, RadioRoundedOverrides>;
+
+  /**
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
@@ -113,5 +122,5 @@ export interface RadioSlots extends SwitcherSlots {}
 
 export type RadioProps = MergeHtmlProps<
   RadioOwnProps,
-  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color">
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color" | "rounded">
 >;

@@ -67,6 +67,7 @@ import type {
 import type {
   RadioColor,
   RadioColorItem,
+  RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
 import type {
@@ -80,6 +81,7 @@ import type { TextareaResize } from "@core/Components/Textarea";
 import type {
   ToggleColor,
   ToggleColorItem,
+  ToggleRounded,
   ToggleSize,
 } from "@core/Components/Toggle";
 import type { Overwrite } from "@core/Utils/types";
@@ -284,9 +286,11 @@ export interface RadioConfigBase {
   defaultProps: Partial<{
     size: keyof RadioSize;
     color: keyof RadioColor;
+    rounded: keyof RadioRounded;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
+    rounded: Record<string, string>;
     color: Record<string, RadioColorItem>;
   }>;
 }
@@ -343,9 +347,11 @@ export interface ToggleConfigBase {
   defaultProps: Partial<{
     size: keyof ToggleSize;
     color: keyof ToggleColor;
+    rounded: keyof ToggleRounded;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
+    rounded: Record<string, string>;
     color: Record<string, ToggleColorItem>;
   }>;
 }

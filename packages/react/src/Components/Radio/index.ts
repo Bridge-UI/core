@@ -7,6 +7,7 @@ export type {
   RadioOwnProps,
   RadioPartsProps,
   RadioProps,
+  RadioRoundedOverrides,
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio/radio.types";

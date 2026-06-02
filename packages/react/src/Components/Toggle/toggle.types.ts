@@ -6,6 +6,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   ToggleColor,
+  ToggleRounded,
   ToggleSize,
 } from "@bridge-ui/core";
 
@@ -19,6 +20,7 @@ import type {
 
 export interface ToggleSizeOverrides {}
 export interface ToggleColorOverrides {}
+export interface ToggleRoundedOverrides {}
 
 export interface ToggleClasses extends SwitcherClasses {
   /**
@@ -87,6 +89,13 @@ export interface ToggleOwnProps extends Omit<
   partsProps?: TogglePartsProps;
 
   /**
+   * The roundedness of the toggle track.
+   *
+   * @default "full"
+   */
+  rounded?: MergeProps<ToggleRounded, ToggleRoundedOverrides>;
+
+  /**
    * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
@@ -106,5 +115,5 @@ export interface ToggleSlots extends SwitcherSlots {}
 
 export type ToggleProps = MergeHtmlProps<
   ToggleOwnProps,
-  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color">
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color" | "rounded">
 >;

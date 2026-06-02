@@ -135,6 +135,7 @@ export type {
   RadioOwnProps,
   RadioPartsProps,
   RadioProps,
+  RadioRoundedOverrides,
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio";
@@ -182,6 +183,7 @@ export type {
   ToggleOwnProps,
   TogglePartsProps,
   ToggleProps,
+  ToggleRoundedOverrides,
   ToggleSizeOverrides,
   ToggleSlots,
 } from "@/Components/Toggle";
