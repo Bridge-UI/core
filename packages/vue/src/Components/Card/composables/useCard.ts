@@ -141,7 +141,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
       {},
       cn({
         grow: true,
-        [paddingClass.value ?? ""]: true,
+        [get(paddingClass.value, "body") ?? ""]: true,
         [get(variantClass.value, "text") ?? ""]: true,
         [get(mergedClasses.value, "body") ?? ""]: true,
       }),
@@ -153,8 +153,8 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
       partsProps.value?.footer,
       {},
       cn({
-        "px-4 py-4 sm:px-6": true,
         "border-t": showDividers.value,
+        [get(paddingClass.value, "footer") ?? ""]: true,
         [get(variantClass.value, "border") ?? ""]: showDividers.value,
         [get(variantClass.value, "footer") ?? ""]: true,
         [get(roundedClass.value, "footer") ?? ""]: true,
@@ -168,8 +168,9 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
       partsProps.value?.header,
       {},
       cn({
-        "flex items-center justify-between px-4 py-2.5": true,
+        "flex items-center justify-between": true,
         "border-b": showDividers.value,
+        [get(paddingClass.value, "header") ?? ""]: true,
         [get(variantClass.value, "border") ?? ""]: showDividers.value,
         [get(roundedClass.value, "header") ?? ""]: true,
         [get(mergedClasses.value, "header") ?? ""]: true,

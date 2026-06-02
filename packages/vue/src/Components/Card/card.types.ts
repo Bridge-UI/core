@@ -93,7 +93,7 @@ export interface CardOwnProps {
   variant?: MergeProps<CardVariant, CardVariantOverrides>;
 
   /**
-   * The padding to apply to the card body.
+   * Padding for header, body, and footer (horizontal alignment is shared).
    *
    * @default "medium"
    */

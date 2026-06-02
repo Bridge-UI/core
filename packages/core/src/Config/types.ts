@@ -31,6 +31,7 @@ import type {
 } from "@core/Components/Button";
 import type {
   CardPadding,
+  CardPaddingItem,
   CardRounded,
   CardRoundedItem,
   CardShadow,
@@ -190,7 +191,7 @@ export interface CardConfigBase {
   }>;
   customProps: Partial<{
     shadow: Record<string, string>;
-    padding: Record<string, string>;
+    padding: Record<string, CardPaddingItem>;
     rounded: Record<string, CardRoundedItem>;
     variant: Record<string, CardVariantItem>;
   }>;

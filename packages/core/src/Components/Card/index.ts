@@ -1,6 +1,9 @@
 // ** Exports
 export { paddingProps } from "@core/Components/Card/Padding";
-export type { CardPadding } from "@core/Components/Card/Padding";
+export type {
+  CardPadding,
+  CardPaddingItem,
+} from "@core/Components/Card/Padding";
 export { roundedProps } from "@core/Components/Card/Rounded";
 export type {
   CardRounded,

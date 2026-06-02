@@ -31,6 +31,7 @@ export type {
 } from "@core/Components/Button";
 export type {
   CardPadding,
+  CardPaddingItem,
   CardRounded,
   CardRoundedItem,
   CardShadow,
