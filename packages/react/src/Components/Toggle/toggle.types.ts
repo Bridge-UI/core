@@ -1,30 +1,33 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes } from "react";
 
 // ** Core Imports
-import type { MergeProps, ToggleColor, ToggleSize } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  MergeProps,
+  ToggleColor,
+  ToggleSize,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
 
 export interface ToggleSizeOverrides {}
 export interface ToggleColorOverrides {}
 
-export interface ToggleClasses {
+export interface ToggleClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the native input (visually hidden).
    */
-  description?: string;
+  input?: string;
 
   /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the thumb.
+   * The classes to apply to the sliding thumb.
    */
   thumb?: string;
 
@@ -34,16 +37,38 @@ export interface ToggleClasses {
   track?: string;
 }
 
-export interface ToggleProps {
+export interface TogglePartsProps extends SwitcherPartsProps {
+  /**
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
+
+  /**
+   * Props forwarded to the thumb element.
+   */
+  thumb?: InputHTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the track element.
+   */
+  track?: InputHTMLAttributes<HTMLSpanElement>;
+}
+
+export interface ToggleSlots extends SwitcherSlots {}
+
+export interface ToggleOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "children" | "classes" | "partsProps" | "slots"
+> {
   /**
    * Whether the toggle is on.
    *
-   * @default false
+   * @default undefined
    */
   checked?: boolean;
 
   /**
-   * The classes to apply to the toggle.
+   * Classes for the switcher chrome and the toggle control.
    *
    * @default undefined
    */
@@ -57,63 +82,29 @@ export interface ToggleProps {
   color?: MergeProps<ToggleColor, ToggleColorOverrides>;
 
   /**
-   * The description text below the label.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  description?: string;
+  partsProps?: TogglePartsProps;
 
   /**
-   * Whether the toggle is disabled.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The label text for the toggle.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Callback when the toggle state changes.
-   *
-   * @default undefined
-   */
-  onChange?: (checked: boolean) => void;
-
-  /**
-   * Whether the toggle is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The size of the toggle.
-   *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 
   /**
-   * The slots to apply to the toggle.
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
   slots?: ToggleSlots;
 }
 
-export interface ToggleSlots {
-  /**
-   * The slot for the description.
-   */
-  description?: ReactNode;
-
-  /**
-   * The slot for the label.
-   */
-  label?: ReactNode;
-}
+export type ToggleProps = MergeHtmlProps<
+  ToggleOwnProps,
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color">
+>;

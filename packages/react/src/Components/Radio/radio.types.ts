@@ -1,49 +1,74 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes } from "react";
 
 // ** Core Imports
-import type { MergeProps, RadioColor, RadioSize } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  MergeProps,
+  RadioColor,
+  RadioSize,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
 
 export interface RadioSizeOverrides {}
 export interface RadioColorOverrides {}
 
-export interface RadioClasses {
+export interface RadioClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the custom control circle.
    */
-  description?: string;
+  control?: string;
 
   /**
-   * The classes to apply to the error message.
+   * The classes to apply to the inner dot when checked.
    */
-  error?: string;
+  dot?: string;
 
   /**
-   * The classes to apply to the input.
+   * The classes to apply to the native input (visually hidden).
    */
   input?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
 }
 
-export interface RadioProps {
+export interface RadioPartsProps extends SwitcherPartsProps {
+  /**
+   * Props forwarded to the custom control circle.
+   */
+  control?: InputHTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the inner dot.
+   */
+  dot?: InputHTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
+}
+
+export interface RadioSlots extends SwitcherSlots {}
+
+export interface RadioOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "children" | "classes" | "partsProps" | "slots"
+> {
   /**
    * Whether the radio is checked.
    *
-   * @default false
+   * @default undefined
    */
   checked?: boolean;
 
   /**
-   * The classes to apply to the radio.
+   * Classes for the switcher chrome and the radio control.
    *
    * @default undefined
    */
@@ -57,56 +82,22 @@ export interface RadioProps {
   color?: MergeProps<RadioColor, RadioColorOverrides>;
 
   /**
-   * The description text below the label.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  description?: string;
+  partsProps?: RadioPartsProps;
 
   /**
-   * Whether the radio is disabled.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * The label text for the radio.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Callback when the selection changes.
-   *
-   * @default undefined
-   */
-  onChange?: (value: string | number) => void;
-
-  /**
-   * Whether the radio is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The size of the radio.
-   *
-   * @default "md"
+   * @default "sm"
    */
   size?: MergeProps<RadioSize, RadioSizeOverrides>;
 
   /**
-   * The slots to apply to the radio.
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
@@ -120,19 +111,7 @@ export interface RadioProps {
   value?: string | number;
 }
 
-export interface RadioSlots {
-  /**
-   * The slot for the description.
-   */
-  description?: ReactNode;
-
-  /**
-   * The slot for the error message.
-   */
-  error?: ReactNode;
-
-  /**
-   * The slot for the label.
-   */
-  label?: ReactNode;
-}
+export type RadioProps = MergeHtmlProps<
+  RadioOwnProps,
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color">
+>;

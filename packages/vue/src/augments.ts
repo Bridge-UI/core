@@ -15,6 +15,7 @@ import type { NumberFieldClasses } from "@/Components/NumberField";
 import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type { SwitcherClasses, SwitcherProps } from "@/Components/Switcher";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
@@ -104,6 +105,16 @@ declare module "@bridge-ui/core" {
     classes: SelectClasses;
     defaultProps: Partial<
       Pick<SelectProps, "size" | "color" | "rounded" | "variant">
+    >;
+  }
+
+  interface SwitcherConfigOverrides {
+    classes: SwitcherClasses;
+    defaultProps: Partial<
+      Pick<
+        SwitcherProps,
+        "size" | "withValidationColors" | "errorless" | "withoutErrorMessage"
+      >
     >;
   }
 

@@ -1,105 +1,42 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type { MergeProps, ToggleColor, ToggleSize } from "@bridge-ui/core";
 
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
+
 export interface ToggleSizeOverrides {}
 export interface ToggleColorOverrides {}
 
-export interface ToggleClasses {
-  /**
-   * The classes to apply to the description.
-   */
-  description?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the thumb.
-   */
+export interface ToggleClasses extends SwitcherClasses {
+  input?: string;
   thumb?: string;
-
-  /**
-   * The classes to apply to the track.
-   */
   track?: string;
 }
 
-export interface ToggleProps {
-  /**
-   * The classes to apply to the toggle.
-   *
-   * @default undefined
-   */
+export interface TogglePartsProps extends SwitcherPartsProps {
+  input?: Partial<InputHTMLAttributes>;
+  thumb?: InputHTMLAttributes;
+  track?: InputHTMLAttributes;
+}
+
+export interface ToggleSlots extends SwitcherSlots {}
+
+export interface ToggleOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "classes" | "partsProps"
+> {
   classes?: ToggleClasses;
-
-  /**
-   * The color to apply to the toggle.
-   *
-   * @default "primary"
-   */
   color?: MergeProps<ToggleColor, ToggleColorOverrides>;
-
-  /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the toggle is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The label text for the toggle.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Whether the toggle is on.
-   *
-   * @default false
-   */
-  modelValue?: boolean;
-
-  /**
-   * Whether the toggle is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The size of the toggle.
-   *
-   * @default "sm"
-   */
+  partsProps?: TogglePartsProps;
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 }
 
-export interface ToggleSlots {
-  /**
-   * Custom description content.
-   */
-  description?: Slot<undefined>;
-
-  /**
-   * Custom label content.
-   */
-  label?: Slot<undefined>;
-}
+export type ToggleProps = ToggleOwnProps;

@@ -5,4 +5,4 @@ export type {
   ToggleColorItem,
 } from "@core/Components/Toggle/Color";
 export { sizeProps } from "@core/Components/Toggle/Size";
-export type { ToggleSize } from "@core/Components/Toggle/Size";
+export type { ToggleSize, ToggleSizeItem } from "@core/Components/Toggle/Size";

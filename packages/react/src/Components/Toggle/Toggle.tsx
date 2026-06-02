@@ -1,10 +1,28 @@
 // ** Local Imports
+import { Switcher } from "@/Components/Switcher";
+import { useToggle } from "@/Components/Toggle/hooks/useToggle";
 import type { ToggleProps } from "@/Components/Toggle/toggle.types";
 
 function Toggle(props: ToggleProps) {
-  void props;
+  const { switcher, inputBind, thumbBind, trackBind, fieldBind } = useToggle(
+    props,
+    {
+      size: "sm",
+      color: "primary",
+    },
+  );
 
-  return <div>Toggle</div>;
+  return (
+    <Switcher field={switcher}>
+      <label htmlFor={switcher.controlId} {...fieldBind}>
+        <input {...inputBind} />
+
+        <span {...trackBind} />
+
+        <span {...thumbBind} />
+      </label>
+    </Switcher>
+  );
 }
 
 export default Toggle;

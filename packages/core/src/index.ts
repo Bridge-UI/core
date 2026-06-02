@@ -81,6 +81,7 @@ export type {
   ToggleColor,
   ToggleColorItem,
   ToggleSize,
+  ToggleSizeItem,
 } from "@core/Components/Toggle";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
@@ -109,6 +110,7 @@ export type {
   PasswordFieldConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
+  SwitcherConfigOverrides,
   TextareaConfigOverrides,
   ToggleConfigOverrides,
 } from "@core/Config";

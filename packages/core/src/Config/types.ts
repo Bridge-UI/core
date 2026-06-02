@@ -108,6 +108,7 @@ export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
+export interface SwitcherConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface ToggleConfigOverrides {}
 
@@ -313,6 +314,19 @@ export interface PasswordFieldConfigBase {
   classes: object;
 }
 
+export interface SwitcherConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    errorless: boolean;
+    size: keyof LabelSize;
+    withoutErrorMessage: boolean;
+    withValidationColors: boolean;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
 export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -357,6 +371,7 @@ export type BridgeUIComponentsConfig = Partial<{
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;
+  Switcher: Partial<Overwrite<SwitcherConfigBase, SwitcherConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;

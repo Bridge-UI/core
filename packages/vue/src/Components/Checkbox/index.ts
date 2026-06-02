@@ -2,6 +2,8 @@
 export type {
   CheckboxClasses,
   CheckboxColorOverrides,
+  CheckboxOwnProps,
+  CheckboxPartsProps,
   CheckboxProps,
   CheckboxRoundedOverrides,
   CheckboxSizeOverrides,

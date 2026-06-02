@@ -1,51 +1,56 @@
 <script setup lang="ts">
+// ** External Imports
+import { computed, useAttrs } from "vue";
+
 // ** Local Imports
-import type { RadioProps, RadioSlots } from "@/Components/Radio";
-import { useRadio } from "@/Components/Radio";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { useRadio } from "@/Components/Radio/composables/useRadio";
+import type { RadioOwnProps, RadioSlots } from "@/Components/Radio/radio.types";
+import { Switcher } from "@/Components/Switcher";
 
 defineSlots<RadioSlots>();
 
-const props = defineProps<RadioProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useRadio(props, {
-  size: "sm",
-  color: "primary",
-});
+const model = defineModel<string | number>();
+
+const props = defineProps<RadioOwnProps>();
+
+const attrs = useAttrs();
+
+const modelRef = computed(() => model.value);
+
+const {
+  switcher,
+  isChecked,
+  inputBind,
+  dotBind,
+  controlBind,
+  fieldBind,
+  merged,
+} = useRadio(
+  () => ({ ...attrs, ...props }),
+  {
+    size: "sm",
+    color: "primary",
+  },
+  modelRef,
+);
+
+function onChange() {
+  if (merged.value.value !== undefined) {
+    model.value = merged.value.value;
+  }
+}
 </script>
 
 <template>
-  <div class="w-full">
-    <component
-      v-if="hasNamedSlot(slots, 'label')"
-      :is="resolveNamedSlot(slots, 'label')"
-    />
+  <Switcher :field="switcher">
+    <span v-bind="fieldBind">
+      <input v-bind="inputBind" :checked="isChecked" @change="onChange" />
 
-    <label v-else-if="merged.label" class="flex items-center gap-2">
-      <input
-        type="radio"
-        class="form-radio"
-        :name="merged.name"
-        :value="merged.value"
-        :disabled="merged.disabled"
-        :required="merged.required"
-        :checked="merged.modelValue === merged.value"
-      />
-
-      <span>{{ merged.label }}</span>
-    </label>
-
-    <input
-      v-else
-      type="radio"
-      class="form-radio"
-      :name="merged.name"
-      :value="merged.value"
-      :disabled="merged.disabled"
-      :required="merged.required"
-      :checked="merged.modelValue === merged.value"
-    />
-
-    <component :is="resolveNamedSlot(slots, 'description')" />
-  </div>
+      <span v-bind="controlBind">
+        <span v-bind="dotBind" />
+      </span>
+    </span>
+  </Switcher>
 </template>

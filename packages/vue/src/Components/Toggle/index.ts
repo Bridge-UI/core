@@ -3,6 +3,8 @@ export { useToggle } from "@/Components/Toggle/composables/useToggle";
 export type {
   ToggleClasses,
   ToggleColorOverrides,
+  ToggleOwnProps,
+  TogglePartsProps,
   ToggleProps,
   ToggleSizeOverrides,
   ToggleSlots,
