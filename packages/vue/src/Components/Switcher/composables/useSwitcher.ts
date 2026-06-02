@@ -21,7 +21,6 @@ import {
 import { sizeProps as labelSizeProps } from "@bridge-ui/core/Components/Label";
 
 // ** Local Imports
-import type { LabelOwnProps } from "@/Components/Label/label.types";
 import type {
   SwitcherClasses,
   SwitcherOwnProps,
@@ -35,25 +34,25 @@ import {
 
 export const switcherBridgeKeys = [
   "size",
-  "label",
   "error",
   "classes",
-  "errorless",
-  "leftLabel",
   "disabled",
+  "endLabel",
   "readonly",
   "required",
   "controlId",
+  "mainLabel",
   "partsProps",
+  "startLabel",
   "description",
   "errorMessage",
-  "withValidationColors",
   "withoutErrorMessage",
+  "withValidationColors",
 ] as const satisfies readonly (keyof SwitcherOwnProps)[];
 
 type SwitcherLibDefaults = LibDefaultsShape<
   SwitcherOwnProps,
-  "size" | "withValidationColors" | "errorless" | "withoutErrorMessage"
+  "size" | "error" | "withoutErrorMessage" | "withValidationColors"
 >;
 
 type SwitcherMerged = MergeLibDefaults<SwitcherOwnProps, SwitcherLibDefaults>;
@@ -119,7 +118,7 @@ export function useSwitcher(
   });
 
   const reservesErrorMessageSpace = computed(() => {
-    return !merged.value.withoutErrorMessage && !merged.value.errorless;
+    return !merged.value.withoutErrorMessage;
   });
 
   const showErrorMessageContent = computed(() => {
@@ -184,30 +183,46 @@ export function useSwitcher(
     );
   });
 
-  const labelProps = computed(() => {
-    return {
-      size: merged.value.size,
-      for: controlId.value,
-      error: labelError.value,
-      required: merged.value.required,
-      classes: {
-        root: cn("cursor-pointer", mergedClasses.value.label),
-      },
-      ...partsProps.value?.label,
-    } satisfies Partial<LabelOwnProps>;
+  const startLabelBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.startLabel,
+      { for: controlId.value },
+      cn({
+        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
+        [textSizeClass.value ?? ""]: true,
+        "text-gray-700 dark:text-gray-300": !labelError.value,
+        "text-error-600 dark:text-error-400": labelError.value,
+        [mergedClasses.value.startLabel ?? ""]: true,
+      }),
+    );
   });
 
-  const leftLabelProps = computed(() => {
-    return {
-      size: merged.value.size,
-      for: controlId.value,
-      error: labelError.value,
-      required: merged.value.required,
-      classes: {
-        root: cn("cursor-pointer", mergedClasses.value.leftLabel),
-      },
-      ...partsProps.value?.leftLabel,
-    } satisfies Partial<LabelOwnProps>;
+  const mainLabelBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.mainLabel,
+      { for: controlId.value },
+      cn({
+        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
+        [textSizeClass.value ?? ""]: true,
+        "text-gray-700 dark:text-gray-300": !labelError.value,
+        "text-error-600 dark:text-error-400": labelError.value,
+        [mergedClasses.value.mainLabel ?? ""]: true,
+      }),
+    );
+  });
+
+  const endLabelBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.endLabel,
+      {},
+      cn({
+        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
+        [textSizeClass.value ?? ""]: true,
+        "text-gray-700 dark:text-gray-300": !labelError.value,
+        "text-error-600 dark:text-error-400": labelError.value,
+        [mergedClasses.value.endLabel ?? ""]: true,
+      }),
+    );
   });
 
   const descriptionBind = computed(() => {
@@ -252,12 +267,13 @@ export function useSwitcher(
     rowBind,
     rootBind,
     controlId,
-    labelProps,
-    controlBind,
-    invalidated,
     isDisabled,
     isReadonly,
-    leftLabelProps,
+    controlBind,
+    invalidated,
+    endLabelBind,
+    mainLabelBind,
+    startLabelBind,
     descriptionBind,
     errorMessageBind,
     withValidationColors,

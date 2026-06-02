@@ -56,14 +56,14 @@ export interface AlertPartsProps {
   icon?: Partial<Omit<IconProps, "icon">>;
 
   /**
-   * Props forwarded to the title container.
-   */
-  title?: HTMLAttributes;
-
-  /**
    * Props forwarded to the root container.
    */
   root?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the title container.
+   */
+  title?: HTMLAttributes;
 }
 
 /**

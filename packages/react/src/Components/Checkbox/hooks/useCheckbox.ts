@@ -55,7 +55,7 @@ export function useCheckbox(
 ) {
   // Setup
   const switcher = useSwitcher(props, {
-    errorless: false,
+    error: false,
     withoutErrorMessage: false,
     withValidationColors: true,
     size: libDefaults.size ?? "sm",

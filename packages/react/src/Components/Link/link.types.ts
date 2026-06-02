@@ -25,14 +25,14 @@ export interface LinkClasses {
   leftIcon?: string;
 
   /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
    * The classes to apply to the right icon.
    */
   rightIcon?: string;
+
+  /**
+   * The classes to apply to the root.
+   */
+  root?: string;
 }
 
 export interface LinkPartsProps {

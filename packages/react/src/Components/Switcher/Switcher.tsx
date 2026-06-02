@@ -1,5 +1,4 @@
 // ** Local Imports
-import { Label } from "@/Components/Label";
 import type { UseSwitcherReturn } from "@/Components/Switcher/hooks/useSwitcher";
 import type { SwitcherProps } from "@/Components/Switcher/switcher.types";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
@@ -19,26 +18,33 @@ function Switcher({ field, children }: SwitcherComponentProps) {
       aria-readonly={api.isReadonly || undefined}
     >
       <div {...api.rowBind}>
-        {hasSlotOrProp(api.slots, "leftLabel", api.merged.leftLabel) && (
-          <Label {...api.leftLabelProps}>
+        {hasSlotOrProp(api.slots, "startLabel", api.merged.startLabel) && (
+          <label {...api.startLabelBind}>
             {resolveSlotOrProp({
               slots: api.slots,
-              name: "leftLabel",
-              fallback: api.merged.leftLabel,
+              name: "startLabel",
+              fallback: api.merged.startLabel,
             })}
-          </Label>
+          </label>
         )}
 
         {children}
 
-        {hasSlotOrProp(api.slots, "label", api.merged.label) && (
-          <Label {...api.labelProps}>
-            {resolveSlotOrProp({
-              name: "label",
-              slots: api.slots,
-              fallback: api.merged.label,
-            })}
-          </Label>
+        {(hasSlotOrProp(api.slots, "endLabel", api.merged.endLabel) ||
+          hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel)) && (
+          <label {...api.mainLabelBind}>
+            {hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel)
+              ? resolveSlotOrProp({
+                  name: "mainLabel",
+                  slots: api.slots,
+                  fallback: api.merged.mainLabel,
+                })
+              : resolveSlotOrProp({
+                  name: "endLabel",
+                  slots: api.slots,
+                  fallback: api.merged.endLabel,
+                })}
+          </label>
         )}
       </div>
 
@@ -53,7 +59,7 @@ function Switcher({ field, children }: SwitcherComponentProps) {
           </p>
         )}
 
-      {!api.merged.errorless && api.reservesErrorMessageSpace && (
+      {api.reservesErrorMessageSpace && (
         <p
           {...api.errorMessageBind}
           aria-hidden={api.showErrorMessageContent ? undefined : true}

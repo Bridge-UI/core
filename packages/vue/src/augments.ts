@@ -113,7 +113,7 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<
       Pick<
         SwitcherProps,
-        "size" | "withValidationColors" | "errorless" | "withoutErrorMessage"
+        "size" | "error" | "withoutErrorMessage" | "withValidationColors"
       >
     >;
   }

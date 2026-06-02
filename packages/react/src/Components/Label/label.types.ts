@@ -6,14 +6,14 @@ export interface LabelSizeOverrides {}
 
 export interface LabelClasses {
   /**
-   * Classes merged onto the `<label>` element.
-   */
-  root?: string;
-
-  /**
    * Classes merged onto the required asterisk.
    */
   required?: string;
+
+  /**
+   * Classes merged onto the `<label>` element.
+   */
+  root?: string;
 }
 
 export interface LabelOwnProps {

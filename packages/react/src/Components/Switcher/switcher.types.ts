@@ -4,8 +4,6 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type { LabelSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
-// ** Local Imports
-import type { LabelProps } from "@/Components/Label/label.types";
 import type { UseSwitcherReturn } from "@/Components/Switcher/hooks/useSwitcher";
 
 export interface SwitcherSizeOverrides {}
@@ -17,19 +15,24 @@ export interface SwitcherClasses {
   description?: string;
 
   /**
+   * Classes merged onto the inline-end label.
+   */
+  endLabel?: string;
+
+  /**
    * Classes merged onto the error message below the control row.
    */
   errorMessage?: string;
 
   /**
-   * Classes merged onto the inline-end label.
+   * Classes merged onto the main inline label next to the control.
    */
-  label?: string;
+  mainLabel?: string;
 
   /**
-   * Classes merged onto the inline-start label.
+   * Classes merged onto the root wrapper.
    */
-  leftLabel?: string;
+  root?: string;
 
   /**
    * Classes merged onto the control row (`label` + control).
@@ -37,9 +40,9 @@ export interface SwitcherClasses {
   row?: string;
 
   /**
-   * Classes merged onto the root wrapper.
+   * Classes merged onto the inline-start label.
    */
-  root?: string;
+  startLabel?: string;
 }
 
 export interface SwitcherPartsProps {
@@ -49,19 +52,24 @@ export interface SwitcherPartsProps {
   description?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
+   * Props forwarded to the inline-end label wrapper inside `mainLabel`.
+   */
+  endLabel?: HTMLAttributes<HTMLSpanElement>;
+
+  /**
    * Props forwarded to the error message element.
    */
   errorMessage?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
-   * Props forwarded to the inline-end `Label`.
+   * Props forwarded to the main inline label element.
    */
-  label?: Partial<Omit<LabelProps, "children">>;
+  mainLabel?: HTMLAttributes<HTMLLabelElement>;
 
   /**
-   * Props forwarded to the inline-start `Label`.
+   * Props forwarded to the root wrapper.
    */
-  leftLabel?: Partial<Omit<LabelProps, "children">>;
+  root?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the control row.
@@ -69,9 +77,9 @@ export interface SwitcherPartsProps {
   row?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the root wrapper.
+   * Props forwarded to the inline-start label element.
    */
-  root?: HTMLAttributes<HTMLDivElement>;
+  startLabel?: HTMLAttributes<HTMLLabelElement>;
 }
 
 export interface SwitcherOwnProps {
@@ -112,11 +120,11 @@ export interface SwitcherOwnProps {
   disabled?: boolean;
 
   /**
-   * When `true`, never renders the error message region.
+   * Inline-end label text after the main label.
    *
-   * @default false
+   * @default undefined
    */
-  errorless?: boolean;
+  endLabel?: string;
 
   /**
    * When `true`, applies invalid styling on labels and hides description.
@@ -141,21 +149,14 @@ export interface SwitcherOwnProps {
   field?: UseSwitcherReturn;
 
   /**
-   * Inline-end label text next to the control.
+   * Main label text next to the control.
    *
    * @default undefined
    */
-  label?: string;
+  mainLabel?: string;
 
   /**
-   * Inline-start label text before the control.
-   *
-   * @default undefined
-   */
-  leftLabel?: string;
-
-  /**
-   * Extra props for internal parts (`row`, `label`, `description`, …).
+   * Extra props for internal parts (`row`, `mainLabel`, `description`, …).
    *
    * @default undefined
    */
@@ -184,18 +185,18 @@ export interface SwitcherOwnProps {
   size?: MergeProps<LabelSize, SwitcherSizeOverrides>;
 
   /**
-   * Chrome slots (`label`, `description`, `errorMessage`, …) and the control.
+   * Chrome slots (`mainLabel`, `description`, `errorMessage`, …) and the control.
    *
    * @default undefined
    */
   slots?: SwitcherSlots;
 
   /**
-   * When `true`, applies validation color tokens on labels when invalid.
+   * Inline-start label text before the control.
    *
-   * @default true
+   * @default undefined
    */
-  withValidationColors?: boolean;
+  startLabel?: string;
 
   /**
    * When `true`, does not reserve space below the row for error messages.
@@ -203,6 +204,13 @@ export interface SwitcherOwnProps {
    * @default false
    */
   withoutErrorMessage?: boolean;
+
+  /**
+   * When `true`, applies validation color tokens on labels when invalid.
+   *
+   * @default true
+   */
+  withValidationColors?: boolean;
 }
 
 export interface SwitcherSlots {
@@ -222,14 +230,19 @@ export interface SwitcherSlots {
   errorMessage?: ReactNode;
 
   /**
-   * Inline-end label next to the control.
+   * Main label next to the control.
    */
-  label?: ReactNode;
+  mainLabel?: ReactNode;
 
   /**
    * Inline-start label before the control.
    */
-  leftLabel?: ReactNode;
+  startLabel?: ReactNode;
+
+  /**
+   * Inline-end label after the main label.
+   */
+  endLabel?: ReactNode;
 }
 
 export type SwitcherProps = MergeHtmlProps<

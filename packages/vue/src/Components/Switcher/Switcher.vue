@@ -3,7 +3,6 @@
 import { computed } from "vue";
 
 // ** Local Imports
-import { Label } from "@/Components/Label";
 import type { UseSwitcherReturn } from "@/Components/Switcher/composables/useSwitcher";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
@@ -26,31 +25,48 @@ const api = computed((): UseSwitcherReturn => {
     :aria-readonly="api.isReadonly.value || undefined"
   >
     <div v-bind="api.rowBind">
-      <Label
-        v-bind="api.leftLabelProps"
-        v-if="hasSlotOrProp(api.slots, 'leftLabel', api.merged.value.leftLabel)"
+      <label
+        v-bind="api.startLabelBind"
+        v-if="
+          hasSlotOrProp(api.slots, 'startLabel', api.merged.value.startLabel)
+        "
       >
         <component
           :is="
             resolveSlotOrProp(
               api.slots,
-              'leftLabel',
-              api.merged.value.leftLabel,
+              'startLabel',
+              api.merged.value.startLabel,
             )
           "
         />
-      </Label>
+      </label>
 
       <slot />
 
-      <Label
-        v-bind="api.labelProps"
-        v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
+      <label
+        v-bind="api.mainLabelBind"
+        v-if="
+          hasSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel) ||
+          hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)
+        "
       >
         <component
-          :is="resolveSlotOrProp(api.slots, 'label', api.merged.value.label)"
+          :is="
+            hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)
+              ? resolveSlotOrProp(
+                  api.slots,
+                  'mainLabel',
+                  api.merged.value.mainLabel,
+                )
+              : resolveSlotOrProp(
+                  api.slots,
+                  'endLabel',
+                  api.merged.value.endLabel,
+                )
+          "
         />
-      </Label>
+      </label>
     </div>
 
     <p
@@ -73,8 +89,8 @@ const api = computed((): UseSwitcherReturn => {
 
     <p
       v-bind="api.errorMessageBind"
+      v-if="api.reservesErrorMessageSpace.value"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
-      v-if="!api.merged.value.errorless && api.reservesErrorMessageSpace.value"
     >
       <template v-if="api.showErrorMessageContent.value">
         <component

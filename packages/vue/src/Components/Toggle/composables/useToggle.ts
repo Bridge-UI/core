@@ -52,7 +52,7 @@ export function useToggle(
   const attrs = useAttrs();
 
   const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
-    errorless: false,
+    error: false,
     withoutErrorMessage: false,
     withValidationColors: true,
     size: libDefaults.size ?? "sm",

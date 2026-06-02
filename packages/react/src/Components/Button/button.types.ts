@@ -61,14 +61,14 @@ export interface ButtonPartsProps {
   end?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the icon `Icon` (`icon` is set by the button).
-   */
-  icon?: Partial<Omit<IconProps, "icon">>;
-
-  /**
    * Props forwarded to the end `Icon` (`icon` is set by the button).
    */
   endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the icon `Icon` (`icon` is set by the button).
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
 
   /**
    * Props forwarded to the loading spinner `Icon`.
@@ -121,18 +121,18 @@ export interface ButtonOwnProps {
   color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
-   * Whether the button is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
    * The density of the button.
    *
    * @default "default"
    */
   density?: MergeProps<ButtonDensity, ButtonDensityOverrides>;
+
+  /**
+   * Whether the button is disabled.
+   *
+   * @default false
+   */
+  disabled?: boolean;
 
   /**
    * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
@@ -192,13 +192,6 @@ export interface ButtonOwnProps {
   size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
 
   /**
-   * Label text when `children` is not provided.
-   *
-   * @default undefined
-   */
-  text?: string;
-
-  /**
    * The slots to apply to the button.
    *
    * @default undefined
@@ -211,6 +204,13 @@ export interface ButtonOwnProps {
    * @default undefined
    */
   startIcon?: LucideIcon;
+
+  /**
+   * Label text when `children` is not provided.
+   *
+   * @default undefined
+   */
+  text?: string;
 
   /**
    * The variant of the button.

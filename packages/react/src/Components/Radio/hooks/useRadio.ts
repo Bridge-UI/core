@@ -51,7 +51,7 @@ type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   // Setup
   const switcher = useSwitcher(props, {
-    errorless: false,
+    error: false,
     withoutErrorMessage: false,
     withValidationColors: true,
     size: libDefaults.size ?? "sm",
