@@ -54,6 +54,16 @@ test("it should render main label when mainLabel prop is provided", () => {
   cy.contains("Email notifications").should("be.visible");
 });
 
+test("it should link label to inherited input id when id is provided", () => {
+  cy.mount(SwitcherHarness, {
+    attrs: { id: "notify-id" },
+    props: { mainLabel: "Email notifications" },
+  });
+
+  cy.get('input[id="notify-id"]').should("exist");
+  cy.get('label[for="notify-id"]').should("exist");
+});
+
 test("it should render description when description prop is provided", () => {
   cy.mount(SwitcherHarness, { props: { description: "Helper text" } });
 

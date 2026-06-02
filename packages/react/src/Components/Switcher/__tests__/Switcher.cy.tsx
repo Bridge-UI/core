@@ -8,6 +8,7 @@ const libDefaults = {
 } as const;
 
 function SwitcherHarness({
+  id,
   error,
   disabled,
   readonly,
@@ -16,6 +17,7 @@ function SwitcherHarness({
   description,
   errorMessage,
 }: {
+  id?: string;
   error?: boolean;
   disabled?: boolean;
   readonly?: boolean;
@@ -26,6 +28,7 @@ function SwitcherHarness({
 }) {
   const field = useSwitcher(
     {
+      id,
       error,
       disabled,
       readonly,
@@ -58,6 +61,13 @@ test("it should render main label when mainLabel prop is provided", () => {
 
   cy.contains("Email notifications").should("be.visible");
   cy.get('label[for="notify"]').should("exist");
+});
+
+test("it should link label to inherited input id when id is provided", () => {
+  cy.mount(<SwitcherHarness mainLabel="Email notifications" id="notify-id" />);
+
+  cy.get('input[id="notify-id"]').should("exist");
+  cy.get('label[for="notify-id"]').should("exist");
 });
 
 test("it should render description when description prop is provided", () => {

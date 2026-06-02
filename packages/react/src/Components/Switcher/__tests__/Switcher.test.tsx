@@ -42,6 +42,12 @@ test("it should render main label when mainLabel prop is provided", () => {
   expect(screen.getByText("Email notifications")).toBeTruthy();
 });
 
+test("it should link label to inherited input id when id is provided", () => {
+  render(<SwitcherHarness id="switcher-id" mainLabel="Email notifications" />);
+
+  expect(screen.getByLabelText("Email notifications").id).toBe("switcher-id");
+});
+
 test("it should render start and end labels when provided", () => {
   render(
     <SwitcherHarness endLabel="End" mainLabel="Main" startLabel="Start" />,

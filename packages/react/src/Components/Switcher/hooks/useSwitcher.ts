@@ -109,7 +109,7 @@ export function useSwitcher(
   });
 
   const controlId = derived(() => {
-    return merged.controlId ?? autoId;
+    return merged.controlId ?? inheritedAttrs.id ?? autoId;
   });
 
   const reservesErrorMessageSpace = derived(() => {

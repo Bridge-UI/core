@@ -6,6 +6,7 @@ import {
   useAttrs,
   useId,
   useSlots,
+  type HTMLAttributes,
   type InputHTMLAttributes,
   type MaybeRefOrGetter,
 } from "vue";
@@ -110,7 +111,9 @@ export function useSwitcher(
   });
 
   const controlId = computed(() => {
-    return merged.value.controlId ?? autoId;
+    const inheritedId = (split.value.inheritedAttrs as HTMLAttributes).id;
+
+    return merged.value.controlId ?? inheritedId ?? autoId;
   });
 
   const reservesErrorMessageSpace = computed(() => {

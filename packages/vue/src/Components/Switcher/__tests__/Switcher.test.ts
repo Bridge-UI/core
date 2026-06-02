@@ -53,6 +53,19 @@ test("it should render main label when mainLabel prop is provided", () => {
   expect(wrapper.text()).toContain("Email notifications");
 });
 
+test("it should link label to inherited input id when id is provided", () => {
+  const wrapper = mountSwitcher(
+    { mainLabel: "Email notifications" },
+    { id: "switcher-id" },
+  );
+
+  const input = wrapper.find("input");
+  const label = wrapper.find('label[for="switcher-id"]');
+
+  expect(label.exists()).toBe(true);
+  expect(input.attributes("id")).toBe("switcher-id");
+});
+
 test("it should render start and end labels when provided", () => {
   const wrapper = mountSwitcher({
     endLabel: "End",

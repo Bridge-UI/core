@@ -41,6 +41,12 @@ test("it should expose control id from controlId prop", () => {
   expect(result.current.controlId).toBe("custom-id");
 });
 
+test("it should fallback controlId to inherited id when controlId is not provided", () => {
+  const { result } = renderUseSwitcher({ id: "inherited-id" });
+
+  expect(result.current.controlId).toBe("inherited-id");
+});
+
 test("it should forward disabled and readonly on controlBind", () => {
   const { result } = renderUseSwitcher({ disabled: true, readonly: true });
 
