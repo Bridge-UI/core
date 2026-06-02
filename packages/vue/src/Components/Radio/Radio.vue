@@ -48,12 +48,12 @@ function onChange() {
 
 <template>
   <Switcher :field="switcher">
-    <span v-bind="fieldBind">
+    <label v-bind="fieldBind" :for="switcher.controlId.value">
       <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 
       <span v-bind="controlBind">
         <span v-bind="dotBind" />
       </span>
-    </span>
+    </label>
   </Switcher>
 </template>

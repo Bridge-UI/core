@@ -96,7 +96,7 @@ export interface ToggleOwnProps extends Omit<
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 
   /**
-   * Chrome slots (`label`, `description`, `errorMessage`, …).
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
    *
    * @default undefined
    */

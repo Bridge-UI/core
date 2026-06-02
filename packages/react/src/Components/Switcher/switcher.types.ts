@@ -35,7 +35,7 @@ export interface SwitcherClasses {
   root?: string;
 
   /**
-   * Classes merged onto the control row (`label` + control).
+   * Classes merged onto the control row.
    */
   row?: string;
 
@@ -52,9 +52,9 @@ export interface SwitcherPartsProps {
   description?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
-   * Props forwarded to the inline-end label wrapper inside `mainLabel`.
+   * Props forwarded to the inline-end label element.
    */
-  endLabel?: HTMLAttributes<HTMLSpanElement>;
+  endLabel?: HTMLAttributes<HTMLLabelElement>;
 
   /**
    * Props forwarded to the error message element.
@@ -170,7 +170,7 @@ export interface SwitcherOwnProps {
   readonly?: boolean;
 
   /**
-   * Shows a red asterisk on labels.
+   * Sets the native `required` attribute on the control.
    *
    * @default false
    */

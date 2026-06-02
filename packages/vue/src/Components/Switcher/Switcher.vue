@@ -46,24 +46,26 @@ const api = computed((): UseSwitcherReturn => {
 
       <label
         v-bind="api.mainLabelBind"
-        v-if="
-          hasSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel) ||
-          hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)
-        "
+        v-if="hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)"
       >
         <component
           :is="
-            hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)
-              ? resolveSlotOrProp(
-                  api.slots,
-                  'mainLabel',
-                  api.merged.value.mainLabel,
-                )
-              : resolveSlotOrProp(
-                  api.slots,
-                  'endLabel',
-                  api.merged.value.endLabel,
-                )
+            resolveSlotOrProp(
+              api.slots,
+              'mainLabel',
+              api.merged.value.mainLabel,
+            )
+          "
+        />
+      </label>
+
+      <label
+        v-bind="api.endLabelBind"
+        v-if="hasSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel)"
+      >
+        <component
+          :is="
+            resolveSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel)
           "
         />
       </label>
@@ -89,7 +91,7 @@ const api = computed((): UseSwitcherReturn => {
 
     <p
       v-bind="api.errorMessageBind"
-      v-if="api.reservesErrorMessageSpace.value"
+      v-if="!api.merged.value.withoutErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <template v-if="api.showErrorMessageContent.value">

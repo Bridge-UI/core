@@ -15,13 +15,13 @@ function Radio(props: RadioProps) {
 
   return (
     <Switcher field={switcher}>
-      <span {...fieldBind}>
+      <label htmlFor={switcher.controlId} {...fieldBind}>
         <input {...inputBind} />
 
         <span {...controlBind}>
           <span {...dotBind} />
         </span>
-      </span>
+      </label>
     </Switcher>
   );
 }

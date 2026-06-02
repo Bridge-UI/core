@@ -30,20 +30,23 @@ function Switcher({ field, children }: SwitcherComponentProps) {
 
         {children}
 
-        {(hasSlotOrProp(api.slots, "endLabel", api.merged.endLabel) ||
-          hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel)) && (
+        {hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel) && (
           <label {...api.mainLabelBind}>
-            {hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel)
-              ? resolveSlotOrProp({
-                  name: "mainLabel",
-                  slots: api.slots,
-                  fallback: api.merged.mainLabel,
-                })
-              : resolveSlotOrProp({
-                  name: "endLabel",
-                  slots: api.slots,
-                  fallback: api.merged.endLabel,
-                })}
+            {resolveSlotOrProp({
+              slots: api.slots,
+              name: "mainLabel",
+              fallback: api.merged.mainLabel,
+            })}
+          </label>
+        )}
+
+        {hasSlotOrProp(api.slots, "endLabel", api.merged.endLabel) && (
+          <label {...api.endLabelBind}>
+            {resolveSlotOrProp({
+              name: "endLabel",
+              slots: api.slots,
+              fallback: api.merged.endLabel,
+            })}
           </label>
         )}
       </div>
@@ -59,7 +62,7 @@ function Switcher({ field, children }: SwitcherComponentProps) {
           </p>
         )}
 
-      {api.reservesErrorMessageSpace && (
+      {!api.merged.withoutErrorMessage && (
         <p
           {...api.errorMessageBind}
           aria-hidden={api.showErrorMessageContent ? undefined : true}

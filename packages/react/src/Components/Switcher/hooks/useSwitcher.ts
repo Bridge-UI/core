@@ -1,12 +1,11 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
-import { useId, useMemo } from "react";
+import { useId } from "react";
 
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -145,14 +144,9 @@ export function useSwitcher(
   });
 
   // Classes
-  const textSizeClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      labelSizeProps,
-      bridgeSwitcher?.customProps?.size,
-    );
-
-    return get(classes, merged.size);
-  }, [merged.size, bridgeSwitcher?.customProps?.size]);
+  const textSizeClass = derived(() => {
+    return get(labelSizeProps, merged.size ?? "md");
+  });
 
   // Binds
   const rootBind = derived(() => {
@@ -213,7 +207,7 @@ export function useSwitcher(
   const endLabelBind = derived(() => {
     return mergePartBind(
       partsProps?.endLabel,
-      {},
+      { htmlFor: controlId },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass ?? ""]: true,

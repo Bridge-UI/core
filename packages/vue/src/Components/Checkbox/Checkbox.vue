@@ -56,7 +56,7 @@ function onChange(event: Event) {
 
 <template>
   <Switcher :field="switcher">
-    <span v-bind="fieldBind">
+    <label v-bind="fieldBind" :for="switcher.controlId.value">
       <input
         ref="inputRef"
         :checked="model"
@@ -76,6 +76,6 @@ function onChange(event: Event) {
           class="block h-0.5 w-[55%] rounded-full bg-white"
         />
       </span>
-    </span>
+    </label>
   </Switcher>
 </template>

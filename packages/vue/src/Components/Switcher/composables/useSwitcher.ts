@@ -13,7 +13,6 @@ import {
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -145,12 +144,7 @@ export function useSwitcher(
   });
 
   const textSizeClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      labelSizeProps,
-      bridgeSwitcher.value?.customProps?.size,
-    );
-
-    return get(classes, merged.value.size);
+    return get(labelSizeProps, merged.value.size ?? "md");
   });
 
   const rootBind = computed(() => {
@@ -209,7 +203,7 @@ export function useSwitcher(
   const endLabelBind = computed(() => {
     return mergePartBind(
       partsProps.value?.endLabel,
-      {},
+      { for: controlId.value },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass.value ?? ""]: true,

@@ -23,7 +23,7 @@ function Checkbox(props: CheckboxProps) {
 
   return (
     <Switcher field={switcher}>
-      <span {...fieldBind}>
+      <label htmlFor={switcher.controlId} {...fieldBind}>
         <input {...inputBind} />
 
         <span {...controlBind}>
@@ -38,7 +38,7 @@ function Checkbox(props: CheckboxProps) {
             <span className="block h-0.5 w-[55%] rounded-full bg-white" />
           )}
         </span>
-      </span>
+      </label>
     </Switcher>
   );
 }

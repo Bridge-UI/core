@@ -103,7 +103,7 @@ export interface CheckboxOwnProps extends Omit<
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
 
   /**
-   * Chrome slots (`label`, `description`, `errorMessage`, …).
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
    *
    * @default undefined
    */

@@ -103,7 +103,7 @@ export interface RadioOwnProps extends Omit<
   size?: MergeProps<RadioSize, RadioSizeOverrides>;
 
   /**
-   * Chrome slots (`label`, `description`, `errorMessage`, …).
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
    *
    * @default undefined
    */
