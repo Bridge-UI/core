@@ -1,55 +1,54 @@
 <script setup lang="ts">
+// ** External Imports
+import { computed, useAttrs } from "vue";
+
 // ** Local Imports
-import type { ToggleProps, ToggleSlots } from "@/Components/Toggle";
-import { useToggle } from "@/Components/Toggle";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { Switcher } from "@/Components/Switcher";
+import { useToggle } from "@/Components/Toggle/composables/useToggle";
+import type {
+  ToggleOwnProps,
+  ToggleSlots,
+} from "@/Components/Toggle/toggle.types";
+
+const attrs = useAttrs();
 
 defineSlots<ToggleSlots>();
 
-const props = defineProps<ToggleProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useToggle(props, {
-  size: "sm",
-  color: "primary",
+const props = defineProps<ToggleOwnProps>();
+
+const model = defineModel<boolean>({ default: false });
+
+const checked = computed(() => {
+  return model.value;
 });
+
+const { switcher, fieldBind, inputBind, thumbBind, trackBind } = useToggle(
+  () => ({ ...attrs, ...props }),
+  {
+    size: "md",
+    rounded: "full",
+    color: "primary",
+  },
+  checked,
+);
+
+function onChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+
+  model.value = target.checked;
+}
 </script>
 
 <template>
-  <div class="w-full">
-    <component
-      v-if="hasNamedSlot(slots, 'label')"
-      :is="resolveNamedSlot(slots, 'label')"
-    />
+  <Switcher :field="switcher">
+    <label v-bind="fieldBind">
+      <input v-bind="inputBind" :checked="model" v-on:change="onChange" />
 
-    <label
-      v-else-if="merged.label"
-      class="relative flex select-none items-center"
-    >
-      <input
-        type="checkbox"
-        :disabled="merged.disabled"
-        :required="merged.required"
-        :checked="merged.modelValue"
-        class="peer absolute inset-y-0 my-auto appearance-none border-0"
-      />
+      <span v-bind="trackBind" />
 
-      <div class="block cursor-pointer" />
-
-      <span class="ml-2">{{ merged.label }}</span>
+      <span v-bind="thumbBind" />
     </label>
-
-    <label v-else class="relative inline-flex select-none items-center">
-      <input
-        type="checkbox"
-        :disabled="merged.disabled"
-        :required="merged.required"
-        :checked="merged.modelValue"
-        class="peer absolute appearance-none border-0"
-      />
-
-      <div class="block cursor-pointer" />
-    </label>
-
-    <component :is="resolveNamedSlot(slots, 'description')" />
-  </div>
+  </Switcher>
 </template>

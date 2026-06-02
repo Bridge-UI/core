@@ -67,6 +67,7 @@ export type {
 export type {
   RadioColor,
   RadioColorItem,
+  RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
 export type {
@@ -80,7 +81,9 @@ export type { TextareaResize } from "@core/Components/Textarea";
 export type {
   ToggleColor,
   ToggleColorItem,
+  ToggleRounded,
   ToggleSize,
+  ToggleSizeItem,
 } from "@core/Components/Toggle";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
@@ -109,6 +112,7 @@ export type {
   PasswordFieldConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
+  SwitcherConfigOverrides,
   TextareaConfigOverrides,
   ToggleConfigOverrides,
 } from "@core/Config";

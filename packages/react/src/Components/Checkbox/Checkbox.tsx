@@ -1,10 +1,46 @@
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
+
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
+import { useCheckbox } from "@/Components/Checkbox/hooks/useCheckbox";
+import { Switcher } from "@/Components/Switcher";
 
 function Checkbox(props: CheckboxProps) {
-  void props;
+  const {
+    checked,
+    iconBind,
+    switcher,
+    CheckIcon,
+    fieldBind,
+    inputBind,
+    controlBind,
+  } = useCheckbox(props, {
+    size: "md",
+    rounded: "sm",
+    color: "primary",
+  });
 
-  return <div>Checkbox</div>;
+  return (
+    <Switcher field={switcher}>
+      <label htmlFor={switcher.controlId} {...fieldBind}>
+        <input {...inputBind} />
+
+        <span {...controlBind}>
+          {checked && !props.indeterminate && (
+            <CheckIcon
+              strokeWidth={3}
+              className={cn("h-[65%] w-[65%]", iconBind.className)}
+            />
+          )}
+
+          {props.indeterminate && (
+            <span className="block h-0.5 w-[55%] rounded-full bg-white" />
+          )}
+        </span>
+      </label>
+    </Switcher>
+  );
 }
 
 export default Checkbox;

@@ -1,9 +1,9 @@
 // prettier-ignore
 export interface ToggleColorItem {
+  "focus": string;
+  "thumb": string;
   "track": string;
   "trackChecked": string;
-  "thumb": string;
-  "focus": string;
 }
 
 // prettier-ignore
@@ -20,45 +20,45 @@ export interface ToggleColor {
 // prettier-ignore
 export const colorProps: ToggleColor = {
   "dark": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-dark-600",
     "thumb": "bg-white",
     "focus": "ring-dark-500/30",
+    "trackChecked": "bg-dark-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "primary": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-primary-600",
     "thumb": "bg-white",
     "focus": "ring-primary-500/30",
+    "trackChecked": "bg-primary-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "secondary": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-secondary-600",
     "thumb": "bg-white",
     "focus": "ring-secondary-500/30",
+    "trackChecked": "bg-secondary-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "success": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-success-600",
     "thumb": "bg-white",
     "focus": "ring-success-500/30",
+    "trackChecked": "bg-success-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "error": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-error-600",
     "thumb": "bg-white",
     "focus": "ring-error-500/30",
+    "trackChecked": "bg-error-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "warning": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-warning-600",
     "thumb": "bg-white",
     "focus": "ring-warning-500/30",
+    "trackChecked": "bg-warning-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
   "info": {
-    "track": "bg-gray-200 dark:bg-gray-700",
-    "trackChecked": "bg-info-600",
     "thumb": "bg-white",
     "focus": "ring-info-500/30",
+    "trackChecked": "bg-info-600",
+    "track": "bg-gray-200 dark:bg-gray-700",
   },
 };

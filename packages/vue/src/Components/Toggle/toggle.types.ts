@@ -1,30 +1,34 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { MergeProps, ToggleColor, ToggleSize } from "@bridge-ui/core";
+import type {
+  MergeProps,
+  ToggleColor,
+  ToggleRounded,
+  ToggleSize,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
 
 export interface ToggleSizeOverrides {}
 export interface ToggleColorOverrides {}
+export interface ToggleRoundedOverrides {}
 
-export interface ToggleClasses {
+export interface ToggleClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the native input (visually hidden).
    */
-  description?: string;
+  input?: string;
 
   /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the thumb.
+   * The classes to apply to the sliding thumb.
    */
   thumb?: string;
 
@@ -34,9 +38,29 @@ export interface ToggleClasses {
   track?: string;
 }
 
-export interface ToggleProps {
+export interface TogglePartsProps extends SwitcherPartsProps {
   /**
-   * The classes to apply to the toggle.
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes>;
+
+  /**
+   * Props forwarded to the thumb element.
+   */
+  thumb?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the track element.
+   */
+  track?: InputHTMLAttributes;
+}
+
+export interface ToggleOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "classes" | "partsProps"
+> {
+  /**
+   * Classes for the switcher chrome and the toggle control.
    *
    * @default undefined
    */
@@ -50,56 +74,35 @@ export interface ToggleProps {
   color?: MergeProps<ToggleColor, ToggleColorOverrides>;
 
   /**
-   * The description text below the label.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  description?: string;
+  partsProps?: TogglePartsProps;
 
   /**
-   * Whether the toggle is disabled.
+   * The roundedness of the toggle track.
    *
-   * @default false
+   * @default "full"
    */
-  disabled?: boolean;
+  rounded?: MergeProps<ToggleRounded, ToggleRoundedOverrides>;
 
   /**
-   * The label text for the toggle.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * Whether the toggle is on.
-   *
-   * @default false
-   */
-  modelValue?: boolean;
-
-  /**
-   * Whether the toggle is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The size of the toggle.
-   *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
-}
-
-export interface ToggleSlots {
-  /**
-   * Custom description content.
-   */
-  description?: Slot<undefined>;
 
   /**
-   * Custom label content.
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   *
+   * @default undefined
    */
-  label?: Slot<undefined>;
+  slots?: ToggleSlots;
 }
+
+export interface ToggleSlots extends SwitcherSlots {}
+
+export type ToggleProps = ToggleOwnProps;

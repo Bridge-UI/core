@@ -1,5 +1,5 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
@@ -9,40 +9,58 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
+
 export interface CheckboxSizeOverrides {}
 export interface CheckboxColorOverrides {}
 export interface CheckboxRoundedOverrides {}
 
-export interface CheckboxClasses {
+export interface CheckboxClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the custom control box.
    */
-  description?: string;
+  control?: string;
 
   /**
-   * The classes to apply to the error message.
+   * The classes to apply to the check icon.
    */
-  error?: string;
+  icon?: string;
 
   /**
-   * The classes to apply to the input.
+   * The classes to apply to the native input (visually hidden).
    */
   input?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
 }
 
-export interface CheckboxProps {
+export interface CheckboxPartsProps extends SwitcherPartsProps {
   /**
-   * The classes to apply to the checkbox.
+   * Props forwarded to the custom control box.
+   */
+  control?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the check icon wrapper.
+   */
+  icon?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes>;
+}
+
+export interface CheckboxOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "classes" | "partsProps"
+> {
+  /**
+   * Classes for the switcher chrome and the checkbox control.
    *
    * @default undefined
    */
@@ -56,27 +74,6 @@ export interface CheckboxProps {
   color?: MergeProps<CheckboxColor, CheckboxColorOverrides>;
 
   /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the checkbox is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
    * Whether the checkbox is in an indeterminate state.
    *
    * @default false
@@ -84,54 +81,35 @@ export interface CheckboxProps {
   indeterminate?: boolean;
 
   /**
-   * The label text for the checkbox.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  label?: string;
+  partsProps?: CheckboxPartsProps;
 
   /**
-   * Whether the checkbox is checked.
-   *
-   * @default false
-   */
-  modelValue?: boolean;
-
-  /**
-   * Whether the checkbox is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The roundedness of the checkbox.
+   * The roundedness of the checkbox control.
    *
    * @default "sm"
    */
   rounded?: MergeProps<CheckboxRounded, CheckboxRoundedOverrides>;
 
   /**
-   * The size of the checkbox.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
+
+  /**
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   *
+   * @default undefined
+   */
+  slots?: CheckboxSlots;
 }
 
-export interface CheckboxSlots {
-  /**
-   * Custom description content.
-   */
-  description?: Slot<undefined>;
+export interface CheckboxSlots extends SwitcherSlots {}
 
-  /**
-   * Custom error message content.
-   */
-  error?: Slot<undefined>;
-
-  /**
-   * Custom label content.
-   */
-  label?: Slot<undefined>;
-}
+export type CheckboxProps = CheckboxOwnProps;

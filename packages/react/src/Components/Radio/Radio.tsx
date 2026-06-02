@@ -1,10 +1,29 @@
 // ** Local Imports
+import { useRadio } from "@/Components/Radio/hooks/useRadio";
 import type { RadioProps } from "@/Components/Radio/radio.types";
+import { Switcher } from "@/Components/Switcher";
 
 function Radio(props: RadioProps) {
-  void props;
+  const { dotBind, switcher, fieldBind, inputBind, controlBind } = useRadio(
+    props,
+    {
+      size: "md",
+      rounded: "full",
+      color: "primary",
+    },
+  );
 
-  return <div>Radio</div>;
+  return (
+    <Switcher field={switcher}>
+      <label htmlFor={switcher.controlId} {...fieldBind}>
+        <input {...inputBind} />
+
+        <span {...controlBind}>
+          <span {...dotBind} />
+        </span>
+      </label>
+    </Switcher>
+  );
 }
 
 export default Radio;

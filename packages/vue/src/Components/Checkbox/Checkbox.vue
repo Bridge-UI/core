@@ -1,50 +1,81 @@
 <script setup lang="ts">
+// ** External Imports
+import { Check } from "lucide-vue-next";
+import { computed, useAttrs } from "vue";
+
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
+
 // ** Local Imports
-import type { CheckboxProps, CheckboxSlots } from "@/Components/Checkbox";
-import { useCheckbox } from "@/Components/Checkbox";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import type {
+  CheckboxOwnProps,
+  CheckboxSlots,
+} from "@/Components/Checkbox/checkbox.types";
+import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
+import { Switcher } from "@/Components/Switcher";
+
+const attrs = useAttrs();
 
 defineSlots<CheckboxSlots>();
 
-const props = defineProps<CheckboxProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots, merged } = useCheckbox(props, {
-  size: "sm",
-  rounded: "sm",
-  color: "primary",
+const props = defineProps<CheckboxOwnProps>();
+
+const model = defineModel<boolean>({ default: false });
+
+const checked = computed(() => {
+  return model.value;
 });
+
+const {
+  merged,
+  iconBind,
+  inputRef,
+  switcher,
+  fieldBind,
+  inputBind,
+  isChecked,
+  controlBind,
+} = useCheckbox(
+  () => ({ ...attrs, ...props }),
+  {
+    size: "md",
+    rounded: "sm",
+    color: "primary",
+  },
+  checked,
+);
+
+function onChange(event: Event) {
+  const target = event.target as HTMLInputElement;
+
+  model.value = target.checked;
+}
 </script>
 
 <template>
-  <div class="w-full">
-    <component
-      v-if="hasNamedSlot(slots, 'label')"
-      :is="resolveNamedSlot(slots, 'label')"
-    />
-
-    <label v-else-if="merged.label" class="flex items-center gap-2">
+  <Switcher :field="switcher">
+    <label v-bind="fieldBind" :for="switcher.controlId.value">
       <input
-        type="checkbox"
-        class="form-checkbox"
-        :disabled="merged.disabled"
-        :required="merged.required"
-        :checked="merged.modelValue"
+        ref="inputRef"
+        :checked="model"
+        v-bind="inputBind"
+        v-on:change="onChange"
       />
 
-      <span>{{ merged.label }}</span>
+      <span v-bind="controlBind">
+        <Check
+          :stroke-width="3"
+          v-if="isChecked && !merged.indeterminate"
+          :class="cn('h-[65%] w-[65%]', iconBind.class)"
+        />
+
+        <span
+          v-else-if="merged.indeterminate"
+          class="block h-0.5 w-[55%] rounded-full bg-white"
+        />
+      </span>
     </label>
-
-    <input
-      v-else
-      type="checkbox"
-      class="form-checkbox"
-      :disabled="merged.disabled"
-      :required="merged.required"
-      :checked="merged.modelValue"
-    />
-
-    <component :is="resolveNamedSlot(slots, 'description')" />
-
-    <component :is="resolveNamedSlot(slots, 'error')" />
-  </div>
+  </Switcher>
 </template>

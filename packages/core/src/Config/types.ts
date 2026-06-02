@@ -67,6 +67,7 @@ import type {
 import type {
   RadioColor,
   RadioColorItem,
+  RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
 import type {
@@ -80,6 +81,7 @@ import type { TextareaResize } from "@core/Components/Textarea";
 import type {
   ToggleColor,
   ToggleColorItem,
+  ToggleRounded,
   ToggleSize,
 } from "@core/Components/Toggle";
 import type { Overwrite } from "@core/Utils/types";
@@ -108,6 +110,7 @@ export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
+export interface SwitcherConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface ToggleConfigOverrides {}
 
@@ -283,9 +286,11 @@ export interface RadioConfigBase {
   defaultProps: Partial<{
     size: keyof RadioSize;
     color: keyof RadioColor;
+    rounded: keyof RadioRounded;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
+    rounded: Record<string, string>;
     color: Record<string, RadioColorItem>;
   }>;
 }
@@ -313,6 +318,19 @@ export interface PasswordFieldConfigBase {
   classes: object;
 }
 
+export interface SwitcherConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    errorless: boolean;
+    size: keyof LabelSize;
+    withoutErrorMessage: boolean;
+    withValidationColors: boolean;
+  }>;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+}
+
 export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -329,9 +347,11 @@ export interface ToggleConfigBase {
   defaultProps: Partial<{
     size: keyof ToggleSize;
     color: keyof ToggleColor;
+    rounded: keyof ToggleRounded;
   }>;
   customProps: Partial<{
     size: Record<string, string>;
+    rounded: Record<string, string>;
     color: Record<string, ToggleColorItem>;
   }>;
 }
@@ -357,6 +377,7 @@ export type BridgeUIComponentsConfig = Partial<{
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;
+  Switcher: Partial<Overwrite<SwitcherConfigBase, SwitcherConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;

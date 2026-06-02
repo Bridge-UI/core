@@ -1,42 +1,66 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { MergeProps, RadioColor, RadioSize } from "@bridge-ui/core";
+import type {
+  MergeProps,
+  RadioColor,
+  RadioRounded,
+  RadioSize,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
 
 export interface RadioSizeOverrides {}
 export interface RadioColorOverrides {}
+export interface RadioRoundedOverrides {}
 
-export interface RadioClasses {
+export interface RadioClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the custom control circle.
    */
-  description?: string;
+  control?: string;
 
   /**
-   * The classes to apply to the error message.
+   * The classes to apply to the inner dot when checked.
    */
-  error?: string;
+  dot?: string;
 
   /**
-   * The classes to apply to the input.
+   * The classes to apply to the native input (visually hidden).
    */
   input?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
 }
 
-export interface RadioProps {
+export interface RadioPartsProps extends SwitcherPartsProps {
   /**
-   * The classes to apply to the radio.
+   * Props forwarded to the custom control circle.
+   */
+  control?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the inner dot.
+   */
+  dot?: InputHTMLAttributes;
+
+  /**
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes>;
+}
+
+export interface RadioOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "classes" | "partsProps"
+> {
+  /**
+   * Classes for the switcher chrome and the radio control.
    *
    * @default undefined
    */
@@ -50,34 +74,6 @@ export interface RadioProps {
   color?: MergeProps<RadioColor, RadioColorOverrides>;
 
   /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the radio is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * The label text for the radio.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
    * The `name` attribute shared by radios in the same group.
    *
    * @default undefined
@@ -85,25 +81,33 @@ export interface RadioProps {
   name?: string;
 
   /**
-   * The currently selected value in the radio group.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  modelValue?: string | number;
+  partsProps?: RadioPartsProps;
 
   /**
-   * Whether the radio is required.
+   * The roundedness of the radio control.
    *
-   * @default false
+   * @default "full"
    */
-  required?: boolean;
+  rounded?: MergeProps<RadioRounded, RadioRoundedOverrides>;
 
   /**
-   * The size of the radio.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
-   * @default "sm"
+   * @default "md"
    */
   size?: MergeProps<RadioSize, RadioSizeOverrides>;
+
+  /**
+   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   *
+   * @default undefined
+   */
+  slots?: RadioSlots;
 
   /**
    * The value of this radio option.
@@ -113,19 +117,6 @@ export interface RadioProps {
   value?: string | number;
 }
 
-export interface RadioSlots {
-  /**
-   * Custom description content.
-   */
-  description?: Slot<undefined>;
+export interface RadioSlots extends SwitcherSlots {}
 
-  /**
-   * Custom error message content.
-   */
-  error?: Slot<undefined>;
-
-  /**
-   * Custom label content.
-   */
-  label?: Slot<undefined>;
-}
+export type RadioProps = RadioOwnProps;

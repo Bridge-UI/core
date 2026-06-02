@@ -1,55 +1,74 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
   CheckboxColor,
   CheckboxRounded,
   CheckboxSize,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
+
+// ** Local Imports
+import type {
+  SwitcherClasses,
+  SwitcherOwnProps,
+  SwitcherPartsProps,
+  SwitcherSlots,
+} from "@/Components/Switcher/switcher.types";
 
 export interface CheckboxSizeOverrides {}
 export interface CheckboxColorOverrides {}
 export interface CheckboxRoundedOverrides {}
 
-export interface CheckboxClasses {
+export interface CheckboxClasses extends SwitcherClasses {
   /**
-   * The classes to apply to the description.
+   * The classes to apply to the custom control box.
    */
-  description?: string;
+  control?: string;
 
   /**
-   * The classes to apply to the error message.
+   * The classes to apply to the check icon.
    */
-  error?: string;
+  icon?: string;
 
   /**
-   * The classes to apply to the input.
+   * The classes to apply to the native input (visually hidden).
    */
   input?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
 }
 
-export interface CheckboxProps {
+export interface CheckboxPartsProps extends SwitcherPartsProps {
+  /**
+   * Props forwarded to the custom control box.
+   */
+  control?: InputHTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the check icon wrapper.
+   */
+  icon?: InputHTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the native input.
+   */
+  input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
+}
+
+export interface CheckboxOwnProps extends Omit<
+  SwitcherOwnProps,
+  "field" | "slots" | "classes" | "children" | "partsProps"
+> {
   /**
    * Whether the checkbox is checked.
    *
-   * @default false
+   * @default undefined
    */
   checked?: boolean;
 
   /**
-   * The classes to apply to the checkbox.
+   * Classes for the switcher chrome and the checkbox control.
    *
    * @default undefined
    */
@@ -63,27 +82,6 @@ export interface CheckboxProps {
   color?: MergeProps<CheckboxColor, CheckboxColorOverrides>;
 
   /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the checkbox is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
    * Whether the checkbox is in an indeterminate state.
    *
    * @default false
@@ -91,61 +89,38 @@ export interface CheckboxProps {
   indeterminate?: boolean;
 
   /**
-   * The label text for the checkbox.
+   * Extra props for internal parts.
    *
    * @default undefined
    */
-  label?: string;
+  partsProps?: CheckboxPartsProps;
 
   /**
-   * Callback when the checked state changes.
-   *
-   * @default undefined
-   */
-  onChange?: (checked: boolean) => void;
-
-  /**
-   * Whether the checkbox is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The roundedness of the checkbox.
+   * The roundedness of the checkbox control.
    *
    * @default "sm"
    */
   rounded?: MergeProps<CheckboxRounded, CheckboxRoundedOverrides>;
 
   /**
-   * The size of the checkbox.
+   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * `FormField`).
    *
    * @default "md"
    */
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
 
   /**
-   * The slots to apply to the checkbox.
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
   slots?: CheckboxSlots;
 }
 
-export interface CheckboxSlots {
-  /**
-   * The slot for the description.
-   */
-  description?: ReactNode;
+export interface CheckboxSlots extends SwitcherSlots {}
 
-  /**
-   * The slot for the error message.
-   */
-  error?: ReactNode;
-
-  /**
-   * The slot for the label.
-   */
-  label?: ReactNode;
-}
+export type CheckboxProps = MergeHtmlProps<
+  CheckboxOwnProps,
+  Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "color" | "rounded">
+>;

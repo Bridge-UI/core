@@ -36,11 +36,6 @@ export interface NumberFieldOwnProps extends Omit<
   classes?: NumberFieldClasses;
 
   /**
-   * Emits the numeric value when it changes.
-   */
-  onChange?: (value: number) => void;
-
-  /**
    * The maximum value.
    */
   max?: number;
@@ -49,6 +44,11 @@ export interface NumberFieldOwnProps extends Omit<
    * The minimum value.
    */
   min?: number;
+
+  /**
+   * Emits the numeric value when it changes.
+   */
+  onChange?: (value: number) => void;
 
   /**
    * The step increment value.

@@ -22,19 +22,24 @@ export interface FormFieldVariantOverrides {}
 
 export interface FormFieldClasses {
   /**
+   * The classes to apply to the input container (`<div>` wrapper).
+   */
+  container?: string;
+
+  /**
    * Classes merged onto the corner label in the header row.
    */
   corner?: string;
 
   /**
-   * The classes to apply to the inline-end adornment (icon or slot).
-   */
-  end?: string;
-
-  /**
    * Classes merged onto the helper text below the control.
    */
   description?: string;
+
+  /**
+   * The classes to apply to the inline-end adornment (icon or slot).
+   */
+  end?: string;
 
   /**
    * Classes merged onto the error message below the control.
@@ -70,23 +75,18 @@ export interface FormFieldClasses {
    * The classes to apply to the inline-start adornment (icon or slot).
    */
   start?: string;
-
-  /**
-   * The classes to apply to the input container (`<div>` wrapper).
-   */
-  container?: string;
 }
 
 export interface FormFieldPartsProps {
   /**
-   * Props forwarded to the corner label element.
-   */
-  corner?: HTMLAttributes;
-
-  /**
    * Props forwarded to the input container (`<div>`).
    */
   container?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the corner label element.
+   */
+  corner?: HTMLAttributes;
 
   /**
    * Props forwarded to the helper text below the control.
