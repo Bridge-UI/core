@@ -1,27 +1,74 @@
 // prettier-ignore
+export interface CardRoundedItem {
+  "root": string;
+  "header": string;
+  "footer": string;
+}
+
+// prettier-ignore
 export interface CardRounded {
-  "none": string;
-  "xs": string;
-  "sm": string;
-  "md": string;
-  "lg": string;
-  "xl": string;
-  "2xl": string;
-  "3xl": string;
-  "4xl": string;
-  "full": string;
+  "none": CardRoundedItem;
+  "xs": CardRoundedItem;
+  "sm": CardRoundedItem;
+  "md": CardRoundedItem;
+  "lg": CardRoundedItem;
+  "xl": CardRoundedItem;
+  "2xl": CardRoundedItem;
+  "3xl": CardRoundedItem;
+  "4xl": CardRoundedItem;
+  "full": CardRoundedItem;
 }
 
 // prettier-ignore
 export const roundedProps: CardRounded = {
-  "none": "rounded-none",
-  "xs": "rounded-xs",
-  "sm": "rounded-sm",
-  "md": "rounded-md",
-  "lg": "rounded-lg",
-  "xl": "rounded-xl",
-  "2xl": "rounded-2xl",
-  "3xl": "rounded-3xl",
-  "4xl": "rounded-4xl",
-  "full": "rounded-full",
+  "none": {
+    "root": "rounded-none",
+    "header": "rounded-t-none",
+    "footer": "rounded-b-none",
+  },
+  "xs": {
+    "root": "rounded-xs",
+    "header": "rounded-t-xs",
+    "footer": "rounded-b-xs",
+  },
+  "sm": {
+    "root": "rounded-sm",
+    "header": "rounded-t-sm",
+    "footer": "rounded-b-sm",
+  },
+  "md": {
+    "root": "rounded-md",
+    "header": "rounded-t-md",
+    "footer": "rounded-b-md",
+  },
+  "lg": {
+    "root": "rounded-lg",
+    "header": "rounded-t-lg",
+    "footer": "rounded-b-lg",
+  },
+  "xl": {
+    "root": "rounded-xl",
+    "header": "rounded-t-xl",
+    "footer": "rounded-b-xl",
+  },
+  "2xl": {
+    "root": "rounded-2xl",
+    "header": "rounded-t-2xl",
+    "footer": "rounded-b-2xl",
+  },
+  "3xl": {
+    "root": "rounded-3xl",
+    "header": "rounded-t-3xl",
+    "footer": "rounded-b-3xl",
+  },
+  "4xl": {
+    "root": "rounded-4xl",
+    "header": "rounded-t-4xl",
+    "footer": "rounded-b-4xl",
+  },
+  "full": {
+    "root": "rounded-full",
+    "header": "rounded-t-full",
+    "footer": "rounded-b-full",
+  },
 };

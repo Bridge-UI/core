@@ -32,7 +32,10 @@ export type {
 export type {
   CardPadding,
   CardRounded,
+  CardRoundedItem,
   CardShadow,
+  CardVariant,
+  CardVariantItem,
 } from "@core/Components/Card";
 export type {
   CheckboxColor,
