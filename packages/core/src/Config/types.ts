@@ -31,8 +31,12 @@ import type {
 } from "@core/Components/Button";
 import type {
   CardPadding,
+  CardPaddingItem,
   CardRounded,
+  CardRoundedItem,
   CardShadow,
+  CardVariant,
+  CardVariantItem,
 } from "@core/Components/Card";
 import type {
   CheckboxColor,
@@ -183,11 +187,13 @@ export interface CardConfigBase {
     shadow: keyof CardShadow;
     padding: keyof CardPadding;
     rounded: keyof CardRounded;
+    variant: keyof CardVariant;
   }>;
   customProps: Partial<{
     shadow: Record<string, string>;
-    padding: Record<string, string>;
-    rounded: Record<string, string>;
+    padding: Record<string, CardPaddingItem>;
+    rounded: Record<string, CardRoundedItem>;
+    variant: Record<string, CardVariantItem>;
   }>;
 }
 

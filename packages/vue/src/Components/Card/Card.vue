@@ -1,28 +1,62 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { CardProps, CardSlots } from "@/Components/Card";
-import { useCard } from "@/Components/Card";
-import { resolveNamedSlot } from "@/Utils";
+import type { CardOwnProps, CardSlots } from "@/Components/Card/card.types";
+import { useCard } from "@/Components/Card/composables/useCard";
+import {
+  hasNamedSlot,
+  hasSlotOrProp,
+  resolveNamedSlot,
+  resolveSlotOrProp,
+} from "@/Utils";
 
 defineSlots<CardSlots>();
 
-const props = defineProps<CardProps>();
+defineOptions({ inheritAttrs: false });
 
-const { slots } = useCard(props, {
+const props = defineProps<CardOwnProps>();
+
+const {
+  slots,
+  merged,
+  bodyBind,
+  rootBind,
+  hasFooter,
+  titleBind,
+  footerBind,
+  headerBind,
+  hasDefaultBody,
+} = useCard(props, {
   shadow: "sm",
   rounded: "sm",
   padding: "medium",
+  variant: "elevated",
 });
 </script>
 
 <template>
-  <div class="flex w-full flex-col">
-    <component :is="resolveNamedSlot(slots, 'header')" />
+  <div v-bind="rootBind">
+    <component
+      v-if="hasNamedSlot(slots, 'header')"
+      :is="resolveNamedSlot(slots, 'header')"
+    />
 
-    <div class="grow">
+    <div
+      v-bind="headerBind"
+      v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
+    >
+      <div v-bind="titleBind">
+        <component :is="resolveSlotOrProp(slots, 'title', merged.title)" />
+      </div>
+
+      <component :is="resolveNamedSlot(slots, 'action')" />
+    </div>
+
+    <div v-if="hasDefaultBody" v-bind="bodyBind">
       <component :is="resolveNamedSlot(slots, 'default')" />
     </div>
 
-    <component :is="resolveNamedSlot(slots, 'footer')" />
+    <div v-if="hasFooter" v-bind="footerBind">
+      <component :is="resolveNamedSlot(slots, 'footer')" />
+    </div>
   </div>
 </template>
