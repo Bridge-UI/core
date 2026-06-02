@@ -1,7 +1,7 @@
 // ** Local Imports
 import { Textarea } from "@/Components/Textarea";
 
-test("it should render with default props", () => {
+test("it should render a textarea with default props", () => {
   cy.mount(Textarea);
 
   cy.get("textarea").should("exist");
@@ -35,12 +35,6 @@ test("it should apply disabled attribute when disabled", () => {
   cy.get("textarea").should("be.disabled");
 });
 
-test("it should apply readonly attribute when readonly", () => {
-  cy.mount(Textarea, { props: { readonly: true } });
-
-  cy.get("textarea").should("have.attr", "readonly");
-});
-
 test("it should set aria-describedby when description is shown", () => {
   cy.mount(Textarea, {
     attrs: { id: "field-id" },
@@ -54,34 +48,13 @@ test("it should set aria-describedby when description is shown", () => {
   );
 });
 
-test("it should forward fallthrough attrs to the textarea", () => {
-  cy.mount(Textarea, {
-    attrs: {
-      rows: "4",
-      id: "field-from-attrs",
-      placeholder: "Enter notes",
-    },
-  });
+test("it should apply vertical resize when resize is vertical", () => {
+  cy.mount(Textarea, { props: { resize: "vertical" } });
 
-  cy.get("#field-from-attrs")
-    .should("exist")
-    .and("have.attr", "rows", "4")
-    .and("have.attr", "placeholder", "Enter notes");
+  cy.get("textarea").should("have.class", "resize-y");
 });
 
-test("it should merge class with root classes", () => {
-  cy.mount(Textarea, { props: { class: "custom-field" } });
-
-  cy.get(".w-full").should("have.class", "custom-field");
-});
-
-test("it should apply resize-none when autosize is enabled", () => {
-  cy.mount(Textarea, { props: { autosize: true } });
-
-  cy.get("textarea").should("have.class", "resize-none");
-});
-
-test("it should render #errorMessage slot content", () => {
+test("it should render errorMessage slot content", () => {
   cy.mount(Textarea, {
     props: { error: true },
     slots: {

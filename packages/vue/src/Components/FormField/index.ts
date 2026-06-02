@@ -1,15 +1,18 @@
 // ** Exports
-export {
-  formFieldOwnPropKeys,
-  useFormField,
+export { useFormField } from "@/Components/FormField/composables/useFormField";
+export type {
+  FormFieldOptions,
+  UseFormFieldReturn,
 } from "@/Components/FormField/composables/useFormField";
-export type { UseFormFieldOptions } from "@/Components/FormField/composables/useFormField";
 export type {
   FormFieldClasses,
+  FormFieldColorOverrides,
   FormFieldOwnProps,
   FormFieldPartsProps,
   FormFieldProps,
+  FormFieldRoundedOverrides,
   FormFieldSizeOverrides,
   FormFieldSlots,
+  FormFieldVariantOverrides,
 } from "@/Components/FormField/formField.types";
 export { default as FormField } from "@/Components/FormField/FormField.vue";

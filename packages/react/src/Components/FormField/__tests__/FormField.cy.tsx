@@ -1,61 +1,117 @@
 // ** Local Imports
-import { FormField } from "@/Components/FormField";
+import { FormField, useFormField } from "@/Components/FormField";
+
+const libDefaults = {
+  size: "md",
+  rounded: "md",
+  color: "primary",
+  variant: "outline",
+  withErrorIcon: true,
+} as const;
+
+function FieldHarness({
+  id,
+  error,
+  label,
+  variant,
+  disabled,
+  readonly,
+  description,
+  errorMessage,
+}: {
+  id?: string;
+  label?: string;
+  error?: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  description?: string;
+  errorMessage?: string;
+  variant?: "outline" | "filled" | "stacked" | "notched" | "underlined";
+}) {
+  const field = useFormField(
+    {
+      id,
+      error,
+      label,
+      variant,
+      disabled,
+      readonly,
+      description,
+      errorMessage,
+    },
+    libDefaults,
+  );
+
+  return (
+    <FormField field={field}>
+      <input {...field.inputBind} aria-label="Field" />
+    </FormField>
+  );
+}
 
 test("it should render with default props", () => {
-  cy.mount(
-    <FormField>
-      <input aria-label="Field" />
-    </FormField>,
-  );
+  cy.mount(<FieldHarness />);
 
   cy.get("input").should("exist");
   cy.get(".w-full").should("exist");
 });
 
-test("it should render label from prop", () => {
-  cy.mount(
-    <FormField label="Email" controlId="email-field">
-      <input id="email-field" />
-    </FormField>,
-  );
+test("it should render a label when label prop is provided", () => {
+  cy.mount(<FieldHarness label="Email" id="email-field" />);
 
   cy.contains("Email").should("be.visible");
   cy.get('label[for="email-field"]').should("exist");
 });
 
-test("it should apply error color when error is true", () => {
-  cy.mount(<FormField label="Email" error />);
-
-  cy.get("label").should("have.class", "text-error-600");
-});
-
-test("it should render required asterisk when required is true", () => {
-  cy.mount(<FormField label="Email" required />);
-
-  cy.get("label").should("contain.text", "*");
-  cy.get("label span").should("have.class", "text-error-500");
-});
-
 test("it should render description when description prop is provided", () => {
-  cy.mount(<FormField description="Helper text" />);
+  cy.mount(<FieldHarness description="Helper text" />);
 
   cy.contains("Helper text").should("be.visible");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {
-  cy.mount(<FormField errorMessage="Required" />);
+  cy.mount(<FieldHarness error errorMessage="Required" />);
 
   cy.contains("Required").should("be.visible");
+  cy.get("input").should("have.attr", "aria-invalid", "true");
 });
 
-test("it should apply size typography on corner", () => {
-  cy.mount(<FormField corner="Optional" size="lg" />);
+test("it should apply disabled attribute when disabled", () => {
+  cy.mount(<FieldHarness disabled />);
 
-  cy.get("span").should("have.class", "text-sm");
+  cy.get("input").should("be.disabled");
 });
 
-test("it should merge custom className", () => {
-  cy.mount(<FormField className="custom-field" label="Email" />);
+test("it should apply readonly attribute when readonly", () => {
+  cy.mount(<FieldHarness readonly />);
 
-  cy.get(".custom-field").should("exist");
+  cy.get("input").should("have.attr", "readonly");
+});
+
+test("it should set aria-describedby when description is shown", () => {
+  cy.mount(<FieldHarness description="Helper" id="field-id" />);
+
+  cy.get("input").should(
+    "have.attr",
+    "aria-describedby",
+    "field-id-description",
+  );
+});
+
+test("it should set data-invalid on the root when error is set", () => {
+  cy.mount(<FieldHarness error />);
+
+  cy.get(".w-full").should("have.attr", "data-invalid", "true");
+});
+
+test("it should render filled variant shell", () => {
+  cy.mount(<FieldHarness variant="filled" label="Email" />);
+
+  cy.get(".bg-gray-100").should("exist");
+});
+
+test("it should render stacked variant shell", () => {
+  cy.mount(<FieldHarness variant="stacked" label="Quantity" />);
+
+  cy.get(".flex.min-h-0.min-w-0.flex-1.flex-col").should("exist");
 });

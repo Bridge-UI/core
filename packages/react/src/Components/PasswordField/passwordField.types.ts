@@ -1,15 +1,15 @@
+// ** External Imports
+import type { InputHTMLAttributes } from "react";
+
+// ** Core Imports
+import type { MergeHtmlProps } from "@bridge-ui/core";
+
 // ** Local Imports
 import type {
   TextFieldClasses,
-  TextFieldProps,
+  TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldSlots,
-} from "@/Components/TextField/textField.types";
-
-export type {
-  TextFieldColorOverrides as PasswordFieldColorOverrides,
-  TextFieldRoundedOverrides as PasswordFieldRoundedOverrides,
-  TextFieldSizeOverrides as PasswordFieldSizeOverrides,
-  TextFieldVariantOverrides as PasswordFieldVariantOverrides,
 } from "@/Components/TextField/textField.types";
 
 export interface PasswordFieldClasses extends TextFieldClasses {
@@ -19,34 +19,34 @@ export interface PasswordFieldClasses extends TextFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldProps extends Omit<TextFieldProps, "type"> {
+export interface PasswordFieldPartsProps extends TextFieldPartsProps {}
+
+export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
   /**
    * The classes to apply to the password field.
-   *
-   * @default undefined
    */
   classes?: PasswordFieldClasses;
 
   /**
    * Callback when the visibility changes.
-   *
-   * @default undefined
    */
   onVisibilityChange?: (visible: boolean) => void;
 
   /**
-   * The slots to apply to the password field.
-   *
-   * @default undefined
+   * Whether the password is visible. Omit for uncontrolled mode.
    */
-  slots?: PasswordFieldSlots;
-
-  /**
-   * Whether the password is visible.
-   *
-   * @default false
-   */
-  visible?: boolean;
+  visible?: boolean | null;
 }
 
 export interface PasswordFieldSlots extends TextFieldSlots {}
+
+export type PasswordFieldProps = MergeHtmlProps<
+  PasswordFieldOwnProps,
+  InputHTMLAttributes<HTMLInputElement>
+> & {
+  /**
+   * Bound value (Bridge naming; use with controlled updates via native `onChange`
+   * or your form library).
+   */
+  modelValue?: string | null;
+};

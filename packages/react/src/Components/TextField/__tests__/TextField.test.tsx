@@ -48,10 +48,13 @@ test("it should render error message when errorMessage prop is provided", () => 
   expect(screen.getByText("Required")).toBeTruthy();
 });
 
-test("it should not render error message when only error is true", () => {
-  render(<TextField error aria-label="Field" />);
+test("it should hide error message content when only error is true", () => {
+  const { container } = render(<TextField error aria-label="Field" />);
 
-  expect(screen.queryByRole("paragraph")).toBeNull();
+  const errorRegion = container.querySelector('[id$="-error"]');
+
+  expect(errorRegion).not.toBeNull();
+  expect(errorRegion?.getAttribute("aria-hidden")).toBe("true");
 });
 
 test("it should apply disabled attribute when disabled", () => {
@@ -85,9 +88,9 @@ test("it should set aria-describedby to error id when error is shown", () => {
   render(
     <TextField
       error
-      errorMessage="Required"
       id="field-id"
       aria-label="Field"
+      errorMessage="Required"
     />,
   );
 
@@ -203,15 +206,10 @@ test("it should merge className with root classes", () => {
 
 test("it should forward additional attributes to the input", () => {
   render(
-    <TextField
-      id="field-id"
-      aria-label="Email"
-      placeholder="Enter email"
-      data-testid="text-field-input"
-    />,
+    <TextField id="field-id" aria-label="Email" placeholder="Enter email" />,
   );
 
-  const input = screen.getByTestId("text-field-input");
+  const input = screen.getByRole("textbox");
 
   expect(input.id).toBe("field-id");
   expect(input.getAttribute("placeholder")).toBe("Enter email");

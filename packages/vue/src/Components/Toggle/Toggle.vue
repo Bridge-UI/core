@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { ToggleProps, ToggleSlots } from "@/Components/Toggle";
 import { useToggle } from "@/Components/Toggle";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<ToggleSlots>();
 
@@ -15,7 +16,10 @@ const { slots, merged } = useToggle(props, {
 
 <template>
   <div class="w-full">
-    <slot v-if="slots.label" name="label" />
+    <component
+      v-if="hasNamedSlot(slots, 'label')"
+      :is="resolveNamedSlot(slots, 'label')"
+    />
 
     <label
       v-else-if="merged.label"
@@ -46,6 +50,6 @@ const { slots, merged } = useToggle(props, {
       <div class="block cursor-pointer" />
     </label>
 
-    <slot v-if="slots.description" name="description" />
+    <component :is="resolveNamedSlot(slots, 'description')" />
   </div>
 </template>

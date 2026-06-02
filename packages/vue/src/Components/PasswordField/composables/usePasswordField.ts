@@ -1,4 +1,3 @@
-// ** External Imports
 import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
 export type UsePasswordFieldOptions = {

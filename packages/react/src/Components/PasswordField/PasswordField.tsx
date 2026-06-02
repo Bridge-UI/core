@@ -1,32 +1,16 @@
-// ** External Imports
-import { get } from "es-toolkit/compat";
 import { Eye, EyeOff } from "lucide-react";
 import { Fragment } from "react";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
-import type { IconSize } from "@bridge-ui/core/Components/Icon";
-import type { TextFieldSize } from "@bridge-ui/core/Components/TextField";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/hooks/usePasswordField";
+import { usePasswordFieldClasses } from "@/Components/PasswordField/hooks/usePasswordFieldClasses";
 import type { PasswordFieldProps } from "@/Components/PasswordField/passwordField.types";
 import { TextField } from "@/Components/TextField";
-import { useTextFieldEndAdornment } from "@/Utils";
-
-// prettier-ignore
-function resolveToggleIconSize(fieldSize?: keyof TextFieldSize) {
-  return get({
-    "2xs": "xs",
-    "xs": "xs",
-    "sm": "sm",
-    "md": "md",
-    "lg": "md",
-    "xl": "lg",
-    "2xl": "lg",
-  }, fieldSize ?? "md") as keyof IconSize;
-}
+import { resolveFieldAdornmentIconSize } from "@/Utils";
 
 function PasswordField(props: PasswordFieldProps) {
   const {
@@ -41,34 +25,22 @@ function PasswordField(props: PasswordFieldProps) {
     ...textFieldProps
   } = props;
 
+  const mergedClasses = usePasswordFieldClasses({ classes });
+
   const { isVisible, toggleVisibility } = usePasswordField({
     visible,
     onVisibilityChange,
   });
-
-  const { endAdornmentClass } = useTextFieldEndAdornment(
-    {
-      color,
-      error,
-      rounded,
-      variant,
-    },
-    {
-      rounded: "md",
-      color: "primary",
-      variant: "outline",
-    },
-  );
 
   return (
     <TextField
       {...textFieldProps}
       color={color}
       error={error}
-      classes={classes}
       rounded={rounded}
       variant={variant}
       withErrorIcon={false}
+      classes={mergedClasses}
       type={isVisible ? "text" : "password"}
       slots={{
         ...slots,
@@ -79,11 +51,14 @@ function PasswordField(props: PasswordFieldProps) {
               onClick={toggleVisibility}
               disabled={textFieldProps.disabled}
               aria-label={isVisible ? "Hide password" : "Show password"}
-              className={cn(endAdornmentClass, "px-2.5", classes?.toggle)}
+              className={cn(
+                "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5",
+                mergedClasses.toggle,
+              )}
             >
               <Icon
                 icon={isVisible ? EyeOff : Eye}
-                size={resolveToggleIconSize(textFieldProps.size)}
+                size={resolveFieldAdornmentIconSize(textFieldProps.size)}
               />
             </button>
           </Fragment>

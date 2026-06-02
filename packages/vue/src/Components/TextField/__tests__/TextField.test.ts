@@ -55,7 +55,7 @@ test("it should render error message when errorMessage prop is provided", () => 
 test("it should not render error message when only error is true", () => {
   const wrapper = mount(TextField, { props: { error: true } });
 
-  expect(wrapper.findAll("p")).toHaveLength(0);
+  expect(wrapper.find(`[id$="-error"]`).attributes("aria-hidden")).toBe("true");
 });
 
 test("it should apply disabled attribute on the input when disabled", () => {

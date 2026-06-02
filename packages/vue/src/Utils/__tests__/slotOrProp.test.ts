@@ -8,6 +8,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
+  resolveNamedSlot,
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 
@@ -31,6 +32,22 @@ test("hasSlotOrProp is true when slot or prop is present", () => {
   expect(hasSlotOrProp({}, "label", "Name")).toBe(true);
 
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
+});
+
+test("resolveNamedSlot returns the stable slot function reference", () => {
+  const slotFn = () => h("span", "From slot");
+
+  expect(resolveNamedSlot({}, "label")).toBeUndefined();
+
+  expect(resolveNamedSlot({ label: slotFn }, "label")).toBe(slotFn);
+});
+
+test("resolveSlotOrProp returns the stable slot function when present", () => {
+  const slotFn = () => h("span", "From slot");
+
+  expect(
+    resolveSlotOrProp({ description: slotFn }, "description", "From prop"),
+  ).toBe(slotFn);
 });
 
 test("resolveSlotOrProp renders fallback when slot is absent", () => {

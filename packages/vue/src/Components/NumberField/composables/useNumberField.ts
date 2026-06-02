@@ -1,4 +1,3 @@
-// ** External Imports
 import { computed, type Ref } from "vue";
 
 export type UseNumberFieldOptions = {

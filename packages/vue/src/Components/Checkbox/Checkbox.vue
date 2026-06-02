@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { CheckboxProps, CheckboxSlots } from "@/Components/Checkbox";
 import { useCheckbox } from "@/Components/Checkbox";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<CheckboxSlots>();
 
@@ -16,7 +17,10 @@ const { slots, merged } = useCheckbox(props, {
 
 <template>
   <div class="w-full">
-    <slot v-if="slots.label" name="label" />
+    <component
+      v-if="hasNamedSlot(slots, 'label')"
+      :is="resolveNamedSlot(slots, 'label')"
+    />
 
     <label v-else-if="merged.label" class="flex items-center gap-2">
       <input
@@ -39,8 +43,8 @@ const { slots, merged } = useCheckbox(props, {
       :checked="merged.modelValue"
     />
 
-    <slot v-if="slots.description" name="description" />
+    <component :is="resolveNamedSlot(slots, 'description')" />
 
-    <slot v-if="slots.error" name="error" />
+    <component :is="resolveNamedSlot(slots, 'error')" />
   </div>
 </template>

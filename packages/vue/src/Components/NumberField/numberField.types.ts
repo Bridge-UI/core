@@ -1,15 +1,15 @@
+// ** External Imports
+import type { InputHTMLAttributes } from "vue";
+
+// ** Core Imports
+import type { MergeHtmlProps } from "@bridge-ui/core";
+
 // ** Local Imports
 import type {
   TextFieldClasses,
   TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldSlots,
-} from "@/Components/TextField/textField.types";
-
-export type {
-  TextFieldColorOverrides as NumberFieldColorOverrides,
-  TextFieldRoundedOverrides as NumberFieldRoundedOverrides,
-  TextFieldSizeOverrides as NumberFieldSizeOverrides,
-  TextFieldVariantOverrides as NumberFieldVariantOverrides,
 } from "@/Components/TextField/textField.types";
 
 export interface NumberFieldClasses extends TextFieldClasses {
@@ -24,37 +24,26 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldProps extends Omit<
+export interface NumberFieldPartsProps extends TextFieldPartsProps {}
+
+export interface NumberFieldOwnProps extends Omit<
   TextFieldOwnProps,
   "startIcon" | "endIcon"
 > {
   /**
    * The classes to apply to the number field.
-   *
-   * @default undefined
    */
   classes?: NumberFieldClasses;
 
   /**
    * The maximum value.
-   *
-   * @default undefined
    */
   max?: number;
 
   /**
    * The minimum value.
-   *
-   * @default undefined
    */
   min?: number;
-
-  /**
-   * Bound with `v-model` on the component.
-   *
-   * @default undefined
-   */
-  modelValue?: number | null;
 
   /**
    * The step increment value.
@@ -65,3 +54,13 @@ export interface NumberFieldProps extends Omit<
 }
 
 export interface NumberFieldSlots extends TextFieldSlots {}
+
+export type NumberFieldProps = MergeHtmlProps<
+  NumberFieldOwnProps,
+  InputHTMLAttributes
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   */
+  modelValue?: number | null;
+};

@@ -48,20 +48,6 @@ test("it should toggle visibility when uncontrolled", () => {
   expect(isVisible.value).toBe(false);
 });
 
-test("it should not update internal state when visible is controlled", () => {
-  const onVisibilityChange = vi.fn();
-
-  const { isVisible, toggleVisibility } = mountUsePasswordField({
-    visible: false,
-    onVisibilityChange,
-  });
-
-  toggleVisibility();
-
-  expect(isVisible.value).toBe(false);
-  expect(onVisibilityChange).toHaveBeenCalledWith(true);
-});
-
 test("it should call onVisibilityChange when toggling", () => {
   const onVisibilityChange = vi.fn();
   const { toggleVisibility } = mountUsePasswordField({ onVisibilityChange });

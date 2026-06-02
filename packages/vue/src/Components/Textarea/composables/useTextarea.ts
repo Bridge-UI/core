@@ -1,28 +1,22 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, onMounted, useAttrs, useSlots, watch, type Ref } from "vue";
+import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
 import {
+  adjustAutosizeTextareaHeight,
   cn,
   mergeBridgeUILayeredClasses,
-  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Textarea";
-import {
-  colorProps,
-  roundedProps,
-  variantProps,
-} from "@bridge-ui/core/Components/TextField";
+import { resizeProps } from "@bridge-ui/core/Components/Textarea";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type {
   TextareaClasses,
   TextareaOwnProps,
-  TextareaPartsProps,
   TextareaProps,
 } from "@/Components/Textarea/textarea.types";
 import {
@@ -31,232 +25,164 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const textareaBridgeKeys = [
-  "size",
-  "color",
-  "error",
-  "label",
-  "corner",
-  "classes",
-  "rounded",
-  "variant",
-  "autosize",
-  "disabled",
-  "readonly",
-  "required",
-  "partsProps",
-  "description",
-  "errorMessage",
-] as const satisfies readonly (keyof TextareaOwnProps)[];
-
-type TextareaLibDefaults = LibDefaultsShape<
+type TextareaRegistryProps = Pick<
   TextareaOwnProps,
-  "color" | "rounded" | "size" | "variant"
+  "resize" | "classes" | "autosize"
 >;
 
-type TextareaMerged = MergeLibDefaults<TextareaOwnProps, TextareaLibDefaults>;
+type TextareaLibDefaults = LibDefaultsShape<
+  TextareaRegistryProps,
+  "resize" | "autosize"
+>;
+
+type TextareaMerged = MergeLibDefaults<
+  TextareaRegistryProps,
+  TextareaLibDefaults
+>;
 
 export function useTextarea(
   props: TextareaOwnProps,
-  libDefaults: TextareaLibDefaults,
   textareaRef: Ref<HTMLTextAreaElement | null>,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any {
-  // Setup
+) {
   const attrs = useAttrs();
-  const slots = useSlots();
 
-  const split = computed(() => {
-    return splitComponentProps<TextareaProps, typeof textareaBridgeKeys>({
-      props: { ...attrs, ...props },
-      bridgeKeys: textareaBridgeKeys,
+  const registryProps = computed((): TextareaRegistryProps => {
+    return {
+      resize: props.resize,
+      classes: props.classes,
+      autosize: props.autosize,
+    };
+  });
+
+  const { entry: bridgeTextarea, merged: textareaMerged } =
+    useBridgeUIComponent<TextareaMerged, "Textarea">({
+      componentName: "Textarea",
+      props: () => registryProps.value,
+      libDefaults: {
+        resize: "none",
+        autosize: false,
+      },
     });
-  });
-
-  const { entry: bridgeTextarea, merged } = useBridgeUIComponent<
-    TextareaMerged,
-    "Textarea"
-  >({
-    libDefaults,
-    componentName: "Textarea",
-    props: () => split.value.customProps,
-  });
-
-  const textareaInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onInput", "class"]);
-  });
-
-  // prettier-ignore
-  const formField = useFormField(() => {
-    return split.value.customProps;
-  }, { size: libDefaults.size }, {
-    rootClassName: () => split.value.inheritedAttrs.class,
-    controlId: () => textareaInheritedAttrs.value.id as string | undefined,
-  });
-
-  const partsProps = computed((): TextareaPartsProps | undefined => {
-    return merged.value.partsProps;
-  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TextareaClasses>({
     entry: bridgeTextarea,
-    props: () => split.value.customProps,
+    props: () => registryProps.value,
   });
 
-  // Classes
-  const variantClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      variantProps,
-      bridgeTextarea.value?.customProps?.variant,
-    );
-
-    return get(classes, merged.value.variant);
+  const likeInput = computed(() => {
+    return Boolean(props.likeInput);
   });
 
-  const colorClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeTextarea.value?.customProps?.color,
-    );
-
-    return get(classes, merged.value.color);
-  });
-
-  const roundedClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeTextarea.value?.customProps?.rounded,
-    );
-
-    return get(classes, merged.value.rounded);
-  });
-
-  const sizeClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeTextarea.value?.customProps?.size,
-    );
-
-    return get(classes, merged.value.size);
-  });
-
-  // Elements
-  const isUnderlined = computed(() => {
-    return merged.value.variant === "underlined";
-  });
-
-  const isDisabled = formField.isDisabled;
-  const isReadonly = formField.isReadonly;
-  const invalidated = formField.invalidated;
-
-  const focusColorPalette = computed(() => {
-    if (merged.value.error === true) {
-      const classes = mergeBridgeUILayeredClasses(
-        colorProps,
-        bridgeTextarea.value?.customProps?.color,
-      );
-
-      return get(classes, "error");
+  const autosize = computed(() => {
+    if (likeInput.value) {
+      return props.autosize ?? true;
     }
 
-    return colorClasses.value;
+    return Boolean(textareaMerged.value.autosize);
   });
 
-  const containerColorFocus = computed(() => {
-    if (isUnderlined.value) {
-      return focusColorPalette.value?.underlined;
+  const rows = computed(() => {
+    const rowsAttr = (attrs as { rows?: number | string }).rows;
+
+    if (likeInput.value) {
+      return rowsAttr ?? 1;
     }
 
-    return focusColorPalette.value?.input;
+    return rowsAttr;
+  });
+
+  const formField = useFormField(
+    () => ({
+      ...omit(attrs, ["rows"]),
+      ...omit(props, ["autosize", "resize", "likeInput"]),
+      classes: mergedClasses.value,
+    }),
+    {
+      size: "md",
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+      withErrorIcon: true,
+    },
+    {
+      control: () => "textarea",
+      likeInput: () => likeInput.value,
+    },
+  );
+
+  const resize = computed((): TextareaProps["resize"] => {
+    if (autosize.value) {
+      return "none";
+    }
+
+    return textareaMerged.value.resize ?? "none";
+  });
+
+  const resizeClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      resizeProps,
+      bridgeTextarea.value?.customProps?.resize,
+    );
+
+    return get(classes, resize.value ?? "none");
   });
 
   const inheritedOnInput = computed(() => {
-    return split.value.inheritedAttrs.onInput as
+    return (attrs as Record<string, unknown>).onInput as
       | ((event: Event) => void)
       | undefined;
   });
 
   const adjustHeight = (element: HTMLTextAreaElement | null) => {
-    if (!element || !merged.value.autosize) {
+    if (!element || !autosize.value) {
       return;
     }
 
-    element.style.height = "auto";
-    element.style.height = `${element.scrollHeight}px`;
+    adjustAutosizeTextareaHeight(element);
   };
 
   const handleAutosize = (event: Event) => {
     adjustHeight(event.target as HTMLTextAreaElement);
-
     inheritedOnInput.value?.(event);
   };
 
-  // prettier-ignore
-  watch(() => [
-    textareaRef.value,
-    merged.value.autosize,
-  ] as const, () => {
-    adjustHeight(textareaRef.value);
-  }, { immediate: true });
+  const textareaBind = computed(() => {
+    return mergePartBind(
+      formField.inputBind.value,
+      {
+        ...(autosize.value ? { onInput: handleAutosize } : {}),
+        ...(rows.value !== undefined ? { rows: rows.value } : {}),
+      },
+      cn({
+        "flex-1 min-w-0": likeInput.value,
+        "overflow-hidden": autosize.value,
+        "min-w-0 flex-none": !likeInput.value,
+        [resizeClass.value ?? ""]: true,
+      }),
+    );
+  });
+
+  watch(
+    () =>
+      [
+        autosize.value,
+        likeInput.value,
+        textareaRef.value,
+        formField.isStacked.value,
+      ] as const,
+    () => {
+      adjustHeight(textareaRef.value);
+    },
+    { immediate: true },
+  );
 
   onMounted(() => {
     adjustHeight(textareaRef.value);
   });
 
-  // prettier-ignore
-  const textareaBind = computed(() => {
-    return mergePartBind({
-      ...partsProps.value?.input,
-      disabled: isDisabled.value,
-      readonly: isReadonly.value,
-      id: formField.controlId.value,
-      "aria-invalid": invalidated.value || undefined,
-      "aria-describedby": formField.ariaDescribedBy.value,
-      onInput: merged.value.autosize ? handleAutosize : inheritedOnInput.value,
-    }, textareaInheritedAttrs.value, cn({
-      // Theme classes
-      "w-full min-w-0 bg-transparent border-0 shadow-none resize-none overflow-hidden": merged.value.autosize,
-      "w-full min-w-0 bg-transparent border-0 shadow-none resize-y": !merged.value.autosize,
-      "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
-      "outline-none ring-0 focus:outline-none focus:ring-0": true,
-      "disabled:cursor-not-allowed": true,
-      [sizeClasses.value?.input ?? ""]: true,
-      // Custom classes
-      [mergedClasses.value.input ?? ""]: true,
-    }));
-  });
-
-  // prettier-ignore
-  const containerBind = computed(() => {
-    return mergePartBind(partsProps.value?.container, {}, cn({
-      // Theme classes
-      "group/field relative w-full": true,
-      "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
-      "transition-all ease-in-out duration-150": true,
-      [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
-      [variantClasses.value?.container ?? ""]: true,
-      [variantClasses.value?.input ?? ""]: true,
-      [containerColorFocus.value ?? ""]: true,
-      "rounded-none": isUnderlined.value,
-      "outline-none": true,
-      // Error classes
-      "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600": invalidated.value && !isUnderlined.value,
-      "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600": invalidated.value && isUnderlined.value,
-      // Custom classes
-      [mergedClasses.value.container ?? ""]: true,
-    }));
-  });
-
   return {
-    slots,
-    merged,
     formField,
-    isDisabled,
-    isReadonly,
-    invalidated,
     adjustHeight,
     textareaBind,
-    containerBind,
-    rootBind: formField.rootBind,
   };
 }

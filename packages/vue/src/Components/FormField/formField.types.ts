@@ -1,17 +1,35 @@
 // ** External Imports
-import type { HTMLAttributes, Slot } from "vue";
+import type { LucideIcon } from "lucide-vue-next";
+import type { HTMLAttributes, InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core";
-import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
+import type {
+  FormFieldColor,
+  FormFieldRounded,
+  FormFieldSize,
+  FormFieldVariant,
+  MergeHtmlProps,
+  MergeProps,
+} from "@bridge-ui/core";
+// ** Local Imports
+import type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
+import type { IconProps } from "@/Components/Icon";
 
 export interface FormFieldSizeOverrides {}
+export interface FormFieldColorOverrides {}
+export interface FormFieldRoundedOverrides {}
+export interface FormFieldVariantOverrides {}
 
 export interface FormFieldClasses {
   /**
    * Classes merged onto the corner label in the header row.
    */
   corner?: string;
+
+  /**
+   * The classes to apply to the inline-end adornment (icon or slot).
+   */
+  end?: string;
 
   /**
    * Classes merged onto the helper text below the control.
@@ -21,12 +39,17 @@ export interface FormFieldClasses {
   /**
    * Classes merged onto the error message below the control.
    */
-  error?: string;
+  errorMessage?: string;
 
   /**
    * Classes merged onto the label + corner header row.
    */
   header?: string;
+
+  /**
+   * The classes to apply to the input element.
+   */
+  input?: string;
 
   /**
    * Classes merged onto the primary label in the header row.
@@ -42,6 +65,16 @@ export interface FormFieldClasses {
    * Classes merged onto the root wrapper.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the inline-start adornment (icon or slot).
+   */
+  start?: string;
+
+  /**
+   * The classes to apply to the input container (`<div>` wrapper).
+   */
+  container?: string;
 }
 
 export interface FormFieldPartsProps {
@@ -51,19 +84,39 @@ export interface FormFieldPartsProps {
   corner?: HTMLAttributes;
 
   /**
-   * Props forwarded to the description element below the control.
+   * Props forwarded to the input container (`<div>`).
+   */
+  container?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the helper text below the control.
    */
   description?: HTMLAttributes;
 
   /**
+   * Props forwarded to the inline-end adornment wrapper.
+   */
+  end?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-end `Icon` (`icon` is set by the field).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
    * Props forwarded to the error message element.
    */
-  error?: HTMLAttributes;
+  errorMessage?: HTMLAttributes;
 
   /**
    * Props forwarded to the label + corner header row.
    */
   header?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the `<input>`.
+   */
+  input?: Partial<InputHTMLAttributes>;
 
   /**
    * Props forwarded to the primary label element.
@@ -74,15 +127,32 @@ export interface FormFieldPartsProps {
    * Props forwarded to the root wrapper.
    */
   root?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-start adornment wrapper.
+   */
+  start?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the field).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
 export interface FormFieldOwnProps {
   /**
-   * The classes to apply to the form field.
+   * Classes for the field chrome and the control (includes label, container, adornments).
    *
    * @default undefined
    */
   classes?: FormFieldClasses;
+
+  /**
+   * The color to apply to the field control.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<FormFieldColor, FormFieldColorOverrides>;
 
   /**
    * Associates labels and helper text with a form control. When omitted, an id
@@ -114,11 +184,32 @@ export interface FormFieldOwnProps {
   disabled?: boolean;
 
   /**
+   * Inline-end text inside the field (suffix), e.g. `@mail.com`.
+   *
+   * @default undefined
+   */
+  end?: string;
+
+  /**
+   * Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * When `true`, applies invalid styling on the label and hides description.
    *
    * @default false
    */
   error?: boolean;
+
+  /**
+   * Icon used when `withErrorIcon` is enabled and the field is invalid.
+   *
+   * @default CircleAlert
+   */
+  errorIcon?: LucideIcon;
 
   /**
    * Error message below the control. Shown only when set (or via `#errorMessage`
@@ -129,12 +220,12 @@ export interface FormFieldOwnProps {
   errorMessage?: string;
 
   /**
-   * Pre-composed field API from a parent (e.g. TextField). When set, internal
-   * `useFormField` is skipped.
+   * Pre-composed field API from a parent composable (e.g. `useTextField`). Used
+   * by `<FormField :field="…" />`; not set on field wrappers such as TextField.
    *
    * @default undefined
    */
-  field?: unknown;
+  field?: UseFormFieldReturn;
 
   /**
    * The primary label text above the control.
@@ -144,7 +235,7 @@ export interface FormFieldOwnProps {
   label?: string;
 
   /**
-   * Extra props for internal parts (`header`, `label`, `description`, etc.).
+   * Extra props for internal parts (`header`, `label`, `input`, `container`, …).
    *
    * @default undefined
    */
@@ -165,11 +256,61 @@ export interface FormFieldOwnProps {
   required?: boolean;
 
   /**
-   * Typography scale for label, corner, description, and error message.
+   * The roundedness of the field control.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<FormFieldRounded, FormFieldRoundedOverrides>;
+
+  /**
+   * Typography scale for label, corner, description, and error message, and
+   * control sizing (input, container, icons).
    *
    * @default "md"
    */
   size?: MergeProps<FormFieldSize, FormFieldSizeOverrides>;
+
+  /**
+   * Chrome slots (`label`, `description`, `errorMessage`, …) via `#slot` or prop;
+   * inline adornments use `#start` / `#end`.
+   */
+  slots?: FormFieldSlots;
+
+  /**
+   * Inline-start text inside the field (prefix), e.g. `https://`.
+   *
+   * @default undefined
+   */
+  start?: string;
+
+  /**
+   * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
+
+  /**
+   * The visual variant of the field shell and control.
+   *
+   * @default "outline"
+   */
+  variant?: MergeProps<FormFieldVariant, FormFieldVariantOverrides>;
+
+  /**
+   * When `true` and the field is invalid, shows an error icon at the inline end
+   * when no `endIcon` or `end` slot is present.
+   *
+   * @default true
+   */
+  withErrorIcon?: boolean;
+
+  /**
+   * When `true`, does not reserve space below the control for error messages.
+   *
+   * @default false
+   */
+  withoutErrorMessage?: boolean;
 }
 
 export interface FormFieldSlots {
@@ -189,6 +330,12 @@ export interface FormFieldSlots {
   default?: Slot;
 
   /**
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text.
+   */
+  end?: Slot;
+
+  /**
    * Custom error message content.
    */
   errorMessage?: Slot;
@@ -197,6 +344,12 @@ export interface FormFieldSlots {
    * Slot at the inline start of the header row (primary label).
    */
   label?: Slot;
+
+  /**
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text.
+   */
+  start?: Slot;
 }
 
 export type FormFieldProps = MergeHtmlProps<FormFieldOwnProps, HTMLAttributes>;

@@ -1,4 +1,3 @@
-// ** External Imports
 import type { ChangeEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
@@ -7,21 +6,17 @@ import type { NumberFieldProps } from "@/Components/NumberField/numberField.type
 
 type UseNumberFieldOptions = Pick<
   NumberFieldProps,
-  "value" | "onChange" | "min" | "max" | "step" | "defaultValue"
+  "modelValue" | "onChange" | "min" | "max" | "step"
 >;
 
 export function useNumberField(options: UseNumberFieldOptions) {
-  const { min, max, value, onChange, step = 1, defaultValue } = options;
+  const { min, max, modelValue, onChange, step = 1 } = options;
 
-  const [internalValue, setInternalValue] = useState<number | undefined>(() => {
-    if (defaultValue === undefined) {
-      return undefined;
-    }
+  const [internalValue, setInternalValue] = useState<number | undefined>(
+    undefined,
+  );
 
-    return Number(defaultValue);
-  });
-
-  const currentValue = value ?? internalValue;
+  const currentValue = modelValue ?? internalValue;
 
   const currentValueRef = useRef(currentValue);
   currentValueRef.current = currentValue;
@@ -30,13 +25,13 @@ export function useNumberField(options: UseNumberFieldOptions) {
     (next: number) => {
       currentValueRef.current = next;
 
-      if (value === undefined) {
+      if (modelValue === undefined) {
         setInternalValue(next);
       }
 
       onChange?.(next);
     },
-    [value, onChange],
+    [modelValue, onChange],
   );
 
   const handleChange = useCallback(
@@ -44,7 +39,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
       const raw = event.target.value;
 
       if (raw === "") {
-        if (value === undefined) {
+        if (modelValue === undefined) {
           setInternalValue(undefined);
         }
 
@@ -59,7 +54,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
       setValue(parsed);
     },
-    [value, setValue],
+    [modelValue, setValue],
   );
 
   const increment = useCallback((): boolean => {

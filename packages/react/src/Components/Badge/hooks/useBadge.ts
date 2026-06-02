@@ -93,15 +93,6 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
     return get(classes, [merged.density, merged.size]);
   }, [merged.size, merged.density, bridgeBadge?.customProps?.density]);
 
-  const roundedClass = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      roundedProps,
-      bridgeBadge?.customProps?.rounded,
-    );
-
-    return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeBadge?.customProps?.rounded]);
-
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -111,22 +102,32 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
     return get(classes, [merged.variant, merged.color]);
   }, [merged.color, merged.variant, bridgeBadge?.customProps?.variant]);
 
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeBadge?.customProps?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeBadge?.customProps?.rounded]);
+
   // Binds
-  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind({}, rootInheritedAttrs, cn({
-      // These classes
-      "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
-      [get(colorClass, "background") ?? ""]: true,
-      [get(colorClass, "border") ?? ""]: true,
-      [get(colorClass, "text") ?? ""]: true,
-      "w-full": !isMini && merged.full,
-      "w-fit": !isMini && !merged.full,
-      [roundedClass ?? ""]: true,
-      [sizeClass ?? ""]: true,
-      // Custom classes
-      [mergedClasses.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      rootInheritedAttrs,
+      cn({
+        "inline-flex items-center justify-center font-medium whitespace-nowrap": true,
+        "w-full": !isMini && merged.full,
+        "w-fit": !isMini && !merged.full,
+        [sizeClass ?? ""]: true,
+        [roundedClass ?? ""]: true,
+        [get(colorClass, "background") ?? ""]: true,
+        [get(colorClass, "border") ?? ""]: true,
+        [get(colorClass, "text") ?? ""]: true,
+        [mergedClasses.root ?? ""]: true,
+      }),
+    );
   });
 
   return {

@@ -16,18 +16,14 @@ defineOptions({ inheritAttrs: false });
 
 const model = defineModel<string | null | undefined>();
 
-const props = withDefaults(defineProps<TextareaOwnProps>(), {});
+const props = withDefaults(defineProps<TextareaOwnProps>(), {
+  withErrorIcon: true,
+});
 
 const textareaRef = useTemplateRef<HTMLTextAreaElement>("textarea");
 
-const { formField, textareaBind, containerBind, adjustHeight } = useTextarea(
+const { formField, textareaBind, adjustHeight } = useTextarea(
   props,
-  {
-    size: "md",
-    rounded: "md",
-    color: "primary",
-    variant: "outline",
-  },
   textareaRef,
 );
 
@@ -38,8 +34,6 @@ watch(model, () => {
 
 <template>
   <FormField :field="formField">
-    <div v-bind="containerBind">
-      <textarea ref="textareaRef" v-model="model" v-bind="textareaBind" />
-    </div>
+    <textarea ref="textarea" v-model="model" v-bind="textareaBind" />
   </FormField>
 </template>

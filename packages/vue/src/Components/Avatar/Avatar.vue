@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { AvatarProps, AvatarSlots } from "@/Components/Avatar";
 import { useAvatar } from "@/Components/Avatar";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<AvatarSlots>();
 
@@ -16,7 +17,10 @@ const { slots, merged } = useAvatar(props, {
 
 <template>
   <div class="inline-flex shrink-0 items-center justify-center overflow-hidden">
-    <slot v-if="slots.default" />
+    <component
+      v-if="hasNamedSlot(slots, 'default')"
+      :is="resolveNamedSlot(slots, 'default')"
+    />
 
     <img
       :alt="merged.alt"
@@ -25,7 +29,10 @@ const { slots, merged } = useAvatar(props, {
       class="h-full w-full object-cover object-center"
     />
 
-    <slot v-else-if="slots.fallback" name="fallback" />
+    <component
+      v-else-if="hasNamedSlot(slots, 'fallback')"
+      :is="resolveNamedSlot(slots, 'fallback')"
+    />
 
     <span v-else-if="merged.fallback">
       {{ merged.fallback }}

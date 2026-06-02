@@ -5,15 +5,17 @@ import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
+import type { FormFieldClasses, FormFieldProps } from "@/Components/FormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
+import type { NumberFieldClasses } from "@/Components/NumberField";
+import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
-import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
@@ -53,6 +55,16 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<Pick<CheckboxProps, "size" | "color" | "rounded">>;
   }
 
+  interface FormFieldConfigOverrides {
+    classes: FormFieldClasses;
+    defaultProps: Partial<
+      Pick<
+        FormFieldProps,
+        "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
+      >
+    >;
+  }
+
   interface IconConfigOverrides {
     defaultProps: Partial<Pick<IconProps, "size">>;
   }
@@ -89,21 +101,20 @@ declare module "@bridge-ui/core" {
     >;
   }
 
-  interface TextareaConfigOverrides {
-    classes: TextareaClasses;
-    defaultProps: Partial<
-      Pick<TextareaProps, "size" | "color" | "rounded" | "variant">
-    >;
+  interface NumberFieldConfigOverrides {
+    classes: NumberFieldClasses;
   }
 
-  interface TextFieldConfigOverrides {
-    classes: TextFieldClasses;
-    defaultProps: Partial<
-      Pick<
-        TextFieldProps,
-        "size" | "color" | "rounded" | "variant" | "withErrorIcon"
-      >
-    >;
+  interface PasswordFieldConfigOverrides {
+    classes: PasswordFieldClasses;
+  }
+
+  interface TextareaConfigOverrides {
+    classes: TextareaClasses;
+    defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
+    customProps: Partial<{
+      resize: Record<string, string>;
+    }>;
   }
 
   interface ToggleConfigOverrides {

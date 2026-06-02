@@ -117,15 +117,6 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     return get(classes, merged.value.size);
   });
 
-  const underlineClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      underlineProps,
-      bridgeLink.value?.customProps?.underline,
-    );
-
-    return get(classes, merged.value.underline);
-  });
-
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
@@ -135,15 +126,39 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     return get(classes, merged.value.color);
   });
 
+  const underlineClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      underlineProps,
+      bridgeLink.value?.customProps?.underline,
+    );
+
+    return get(classes, merged.value.underline);
+  });
+
   // Binds
+  const rootBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.root,
+      split.value.inheritedAttrs,
+      cn({
+        "inline-flex items-center gap-x-1 font-medium": true,
+        "transition-colors duration-200": true,
+        [sizeClass.value ?? ""]: true,
+        [underlineClass.value ?? ""]: true,
+        [get(colorClass.value, "base") ?? ""]: true,
+        [get(colorClass.value, "hover") ?? ""]: true,
+        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
+  });
+
   const leftIconBind = computed(() => {
     return mergePartBind(
       partsProps.value?.leftIcon,
       {},
       cn({
-        // Theme classes
         "shrink-0": true,
-        // Custom classes
         [mergedClasses.value.leftIcon ?? ""]: true,
       }),
     );
@@ -154,28 +169,8 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
       partsProps.value?.rightIcon,
       {},
       cn({
-        // Theme classes
         "shrink-0": true,
-        // Custom classes
         [mergedClasses.value.rightIcon ?? ""]: true,
-      }),
-    );
-  });
-
-  const rootBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.root,
-      split.value.inheritedAttrs,
-      cn({
-        // Theme classes
-        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
-        "inline-flex items-center gap-x-1 font-medium transition-colors duration-200": true,
-        [get(colorClass.value, "hover") ?? ""]: true,
-        [get(colorClass.value, "base") ?? ""]: true,
-        [underlineClass.value ?? ""]: true,
-        [sizeClass.value ?? ""]: true,
-        // Custom classes
-        [mergedClasses.value.root ?? ""]: true,
       }),
     );
   });

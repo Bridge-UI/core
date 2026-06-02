@@ -1,22 +1,21 @@
 <script setup lang="ts">
 // ** External Imports
-import { get } from "es-toolkit/compat";
 import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import { computed } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
-import type { IconSize } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/composables/useNumberField";
+import { useNumberFieldClasses } from "@/Components/NumberField/composables/useNumberFieldClasses";
 import type {
-  NumberFieldProps,
+  NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
 import { TextField } from "@/Components/TextField";
-import { useHoldRepeat, useTextFieldEndAdornment } from "@/Utils";
+import { resolveFieldAdornmentIconSize, useHoldRepeat } from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
@@ -24,9 +23,11 @@ defineOptions({ inheritAttrs: false });
 
 const model = defineModel<number | null | undefined>();
 
-const props = withDefaults(defineProps<NumberFieldProps>(), {
+const props = withDefaults(defineProps<NumberFieldOwnProps>(), {
   step: 1,
 });
+
+const mergedClasses = useNumberFieldClasses(props);
 
 const { increment, decrement } = useNumberField(model, {
   min: props.min,
@@ -48,46 +49,14 @@ const decrementHold = useHoldRepeat(
   }),
 );
 
-const { endAdornmentShellClass, endAdornmentButtonClass } =
-  useTextFieldEndAdornment(
-    () => ({
-      color: props.color,
-      error: props.error,
-      rounded: props.rounded,
-      variant: props.variant,
-    }),
-    {
-      rounded: "md",
-      color: "primary",
-      variant: "outline",
-    },
-  );
-
 const textFieldProps = computed(() => {
-  const {
-    min: _min,
-    max: _max,
-    step: _step,
-    modelValue: _modelValue,
-    ...rest
-  } = props;
+  const { min: _min, max: _max, step: _step, ...rest } = props;
 
   return rest;
 });
 
-// prettier-ignore
 const stepperIconSize = computed(() => {
-  const fieldSize = props.size ?? "md";
-
-  return get({
-    "2xs": "xs",
-    "xs": "xs",
-    "sm": "sm",
-    "md": "md",
-    "lg": "md",
-    "xl": "lg",
-    "2xl": "lg",
-  }, fieldSize) as keyof IconSize;
+  return resolveFieldAdornmentIconSize(props.size);
 });
 
 const mergedPartsProps = computed(() => {
@@ -140,17 +109,16 @@ const stringModel = computed({
     :min="props.min"
     :max="props.max"
     :step="props.step"
-    :classes="props.classes"
+    :classes="mergedClasses"
     :with-error-icon="false"
     :parts-props="mergedPartsProps"
   >
     <template #end>
       <div
         :class="
-          cn({
-            [endAdornmentShellClass]: true,
-            'flex min-w-9 flex-col gap-px overflow-hidden': true,
-          })
+          cn(
+            'bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden',
+          )
         "
       >
         <button
@@ -162,11 +130,10 @@ const stringModel = computed({
           v-on:pointerdown="incrementHold.onPressPointerDown"
           v-on:lostpointercapture="incrementHold.onPressLostPointerCapture"
           :class="
-            cn({
-              'min-h-0 min-w-8 flex-1': true,
-              [endAdornmentButtonClass]: true,
-              [props.classes?.increment ?? '']: true,
-            })
+            cn(
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
+              mergedClasses.increment,
+            )
           "
         >
           <Icon :icon="ChevronUp" :size="stepperIconSize" />
@@ -181,11 +148,10 @@ const stringModel = computed({
           v-on:pointerdown="decrementHold.onPressPointerDown"
           v-on:lostpointercapture="decrementHold.onPressLostPointerCapture"
           :class="
-            cn({
-              'min-h-0 min-w-8 flex-1': true,
-              [endAdornmentButtonClass]: true,
-              [props.classes?.decrement ?? '']: true,
-            })
+            cn(
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
+              mergedClasses.decrement,
+            )
           "
         >
           <Icon :icon="ChevronDown" :size="stepperIconSize" />

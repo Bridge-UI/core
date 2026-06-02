@@ -10,13 +10,6 @@ import type { BridgeUIComponentsConfig } from "@core/Config/types";
 import type { ClassPropKey, MergePartBind } from "@core/Utils/types";
 
 /**
- * Merges class values into a single string of class names.
- */
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-/**
  * Converts a string or object to a record of strings.
  */
 function toBridgeProps<K extends ClassPropKey>(
@@ -28,6 +21,24 @@ function toBridgeProps<K extends ClassPropKey>(
   }
 
   return (value ?? {}) as Record<string, unknown>;
+}
+
+/**
+ * Resizes an autosize `<textarea>` to fit its content (`scrollHeight`).
+ */
+export function adjustAutosizeTextareaHeight(
+  element: HTMLTextAreaElement,
+): void {
+  element.style.height = "auto";
+  element.style.lineHeight = "";
+  element.style.height = `${element.scrollHeight}px`;
+}
+
+/**
+ * Merges class values into a single string of class names.
+ */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
 /**
@@ -68,14 +79,17 @@ export function createMergePartBind<const K extends ClassPropKey>(classKey: K) {
 export function mergeBridgeUILayeredClasses<C extends object>(
   ...layers: Array<Partial<C> | undefined>
 ): Partial<C> {
-  // prettier-ignore
-  return reduce(layers, (acc, layer) => {
-    if (isNil(layer)) {
-      return acc;
-    }
+  return reduce(
+    layers,
+    (acc, layer) => {
+      if (isNil(layer)) {
+        return acc;
+      }
 
-    return toMerged(acc, layer);
-  }, {} as Partial<C>);
+      return toMerged(acc, layer);
+    },
+    {} as Partial<C>,
+  );
 }
 
 /**

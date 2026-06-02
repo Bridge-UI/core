@@ -1,14 +1,11 @@
 // ** External Imports
-import type { HTMLAttributes, TextareaHTMLAttributes } from "vue";
+import type { TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
   MergeHtmlProps,
   MergeProps,
-  TextareaSize,
-  TextFieldColor,
-  TextFieldRounded,
-  TextFieldVariant,
+  TextareaResize,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -19,85 +16,34 @@ import type {
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 
-export interface TextareaSizeOverrides {}
-export interface TextareaColorOverrides {}
-export interface TextareaRoundedOverrides {}
-export interface TextareaVariantOverrides {}
+export interface TextareaResizeOverrides {}
 
-export interface TextareaClasses extends FormFieldClasses {
-  /**
-   * The classes to apply to the textarea container.
-   */
-  container?: string;
+export interface TextareaClasses extends FormFieldClasses {}
 
-  /**
-   * The classes to apply to the textarea element.
-   */
-  input?: string;
-}
-
-export interface TextareaPartsProps extends FormFieldPartsProps {
-  /**
-   * Props forwarded to the textarea container (`<div>`).
-   */
-  container?: HTMLAttributes;
-
-  /**
-   * Props forwarded to the `<textarea>`.
-   */
-  input?: Partial<TextareaHTMLAttributes>;
-}
+export interface TextareaPartsProps extends FormFieldPartsProps {}
 
 export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * Whether the textarea automatically resizes with its content.
    *
-   * @default false
+   * Defaults to `true` when `likeInput` is set; otherwise `false`.
    */
   autosize?: boolean;
 
   /**
-   * Classes for the field chrome and the control (includes all FormField keys).
+   * Use compact TextField-like sizing instead of the default multiline textarea profile.
+   * Enables `autosize` and `rows={1}` by default; both can be overridden explicitly.
    *
-   * @default undefined
+   * @default false
    */
-  classes?: TextareaClasses;
+  likeInput?: boolean;
 
   /**
-   * The color to apply to the textarea.
+   * Native resize handle (`resize` CSS). Ignored when `autosize` is `true`.
    *
-   * @default "primary"
+   * @default "none"
    */
-  color?: MergeProps<TextFieldColor, TextareaColorOverrides>;
-
-  /**
-   * Props for FormField parts and control parts (`label`, `input`, `container`, …).
-   *
-   * @default undefined
-   */
-  partsProps?: TextareaPartsProps;
-
-  /**
-   * The roundedness of the textarea.
-   *
-   * @default "md"
-   */
-  rounded?: MergeProps<TextFieldRounded, TextareaRoundedOverrides>;
-
-  /**
-   * The size of the textarea control. Form labels and helper text use the same
-   * `size` key via {@link FormField}.
-   *
-   * @default "md"
-   */
-  size?: MergeProps<TextareaSize, TextareaSizeOverrides>;
-
-  /**
-   * The variant of the textarea.
-   *
-   * @default "outline"
-   */
-  variant?: MergeProps<TextFieldVariant, TextareaVariantOverrides>;
+  resize?: MergeProps<TextareaResize, TextareaResizeOverrides>;
 }
 
 export interface TextareaSlots extends FormFieldSlots {}
@@ -105,4 +51,9 @@ export interface TextareaSlots extends FormFieldSlots {}
 export type TextareaProps = MergeHtmlProps<
   TextareaOwnProps,
   TextareaHTMLAttributes
->;
+> & {
+  /**
+   * Bound with `v-model` on the component.
+   */
+  modelValue?: string | null;
+};

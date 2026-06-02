@@ -1,12 +1,10 @@
-// ** Exports
 export { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
+export type { UsePasswordFieldOptions } from "@/Components/PasswordField/composables/usePasswordField";
 export type {
   PasswordFieldClasses,
-  PasswordFieldColorOverrides,
+  PasswordFieldOwnProps,
+  PasswordFieldPartsProps,
   PasswordFieldProps,
-  PasswordFieldRoundedOverrides,
-  PasswordFieldSizeOverrides,
   PasswordFieldSlots,
-  PasswordFieldVariantOverrides,
 } from "@/Components/PasswordField/passwordField.types";
 export { default as PasswordField } from "@/Components/PasswordField/PasswordField.vue";

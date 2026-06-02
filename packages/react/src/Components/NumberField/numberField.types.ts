@@ -1,15 +1,15 @@
+// ** External Imports
+import type { InputHTMLAttributes } from "react";
+
+// ** Core Imports
+import type { MergeHtmlProps } from "@bridge-ui/core";
+
 // ** Local Imports
 import type {
   TextFieldClasses,
-  TextFieldProps,
+  TextFieldOwnProps,
+  TextFieldPartsProps,
   TextFieldSlots,
-} from "@/Components/TextField/textField.types";
-
-export type {
-  TextFieldColorOverrides as NumberFieldColorOverrides,
-  TextFieldRoundedOverrides as NumberFieldRoundedOverrides,
-  TextFieldSizeOverrides as NumberFieldSizeOverrides,
-  TextFieldVariantOverrides as NumberFieldVariantOverrides,
 } from "@/Components/TextField/textField.types";
 
 export interface NumberFieldClasses extends TextFieldClasses {
@@ -24,44 +24,31 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldProps extends Omit<
-  TextFieldProps,
-  "type" | "value" | "endIcon" | "onChange" | "startIcon"
+export interface NumberFieldPartsProps extends TextFieldPartsProps {}
+
+export interface NumberFieldOwnProps extends Omit<
+  TextFieldOwnProps,
+  "startIcon" | "endIcon"
 > {
   /**
    * The classes to apply to the number field.
-   *
-   * @default undefined
    */
   classes?: NumberFieldClasses;
 
   /**
+   * Emits the numeric value when it changes.
+   */
+  onChange?: (value: number) => void;
+
+  /**
    * The maximum value.
-   *
-   * @default undefined
    */
   max?: number;
 
   /**
    * The minimum value.
-   *
-   * @default undefined
    */
   min?: number;
-
-  /**
-   * Callback when the value changes.
-   *
-   * @default undefined
-   */
-  onChange?: (value: number) => void;
-
-  /**
-   * The slots to apply to the number field.
-   *
-   * @default undefined
-   */
-  slots?: NumberFieldSlots;
 
   /**
    * The step increment value.
@@ -69,13 +56,19 @@ export interface NumberFieldProps extends Omit<
    * @default 1
    */
   step?: number;
-
-  /**
-   * The value of the number field.
-   *
-   * @default undefined
-   */
-  value?: number;
 }
 
 export interface NumberFieldSlots extends TextFieldSlots {}
+
+export type NumberFieldProps = MergeHtmlProps<
+  NumberFieldOwnProps,
+  Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    "onChange" | "value" | "defaultValue"
+  >
+> & {
+  /**
+   * Bound numeric value (Bridge naming).
+   */
+  modelValue?: number | null;
+};

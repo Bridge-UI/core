@@ -1,89 +1,35 @@
+import { get } from "es-toolkit/compat";
+import { createElement } from "react";
+
 // ** Local Imports
+import FilledFormField from "@/Components/FormField/FilledFormField";
+import NotchedFormField from "@/Components/FormField/NotchedFormField";
+import OutlinedFormField from "@/Components/FormField/OutlinedFormField";
+import StackedFormField from "@/Components/FormField/StackedFormField";
+import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField";
 import type { FormFieldProps } from "@/Components/FormField/formField.types";
-import { useFormField } from "@/Components/FormField/hooks/useFormField";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 
-function FormField(props: FormFieldProps) {
-  const { field, children, ...rest } = props;
+const shells = {
+  filled: FilledFormField,
+  notched: NotchedFormField,
+  stacked: StackedFormField,
+  outline: OutlinedFormField,
+  underlined: UnderlinedFormField,
+};
 
-  const local = useFormField(rest, {
-    size: "md",
-  });
+type FormFieldComponentProps = Required<
+  Pick<FormFieldProps, "field" | "children">
+>;
 
-  const {
-    slots,
-    merged,
-    rootBind,
-    controlId,
-    errorBind,
-    labelBind,
-    cornerBind,
-    headerBind,
-    isDisabled,
-    isReadonly,
-    invalidated,
-    requiredBind,
-    descriptionBind,
-  } = (field ?? local) as typeof local;
+function FormField(props: FormFieldComponentProps) {
+  const api: UseFormFieldReturn = props.field;
 
-  return (
-    <div
-      {...rootBind}
-      data-invalid={invalidated || undefined}
-      aria-disabled={isDisabled || undefined}
-      aria-readonly={isReadonly || undefined}
-    >
-      {(hasSlotOrProp(slots, "label", merged.label) ||
-        hasSlotOrProp(slots, "corner", merged.corner)) && (
-        <div {...headerBind}>
-          {hasSlotOrProp(slots, "label", merged.label) && (
-            <label {...labelBind} htmlFor={controlId}>
-              {resolveSlotOrProp({
-                slots,
-                name: "label",
-                fallback: merged.label,
-              })}
+  const variant = api?.variantKey ?? "outline";
 
-              {merged.required && <span {...requiredBind}>*</span>}
-            </label>
-          )}
+  const Shell = get(shells, variant, OutlinedFormField);
 
-          {hasSlotOrProp(slots, "corner", merged.corner) && (
-            <span {...cornerBind}>
-              {resolveSlotOrProp({
-                slots,
-                name: "corner",
-                fallback: merged.corner,
-              })}
-            </span>
-          )}
-        </div>
-      )}
-
-      {children}
-
-      {!invalidated &&
-        hasSlotOrProp(slots, "description", merged.description) && (
-          <p {...descriptionBind} id={`${controlId}-description`}>
-            {resolveSlotOrProp({
-              slots,
-              name: "description",
-              fallback: merged.description,
-            })}
-          </p>
-        )}
-
-      {hasSlotOrProp(slots, "errorMessage", merged.errorMessage) && (
-        <p {...errorBind} id={`${controlId}-error`}>
-          {resolveSlotOrProp({
-            slots,
-            name: "errorMessage",
-            fallback: merged.errorMessage,
-          })}
-        </p>
-      )}
-    </div>
-  );
+  return createElement(Shell, { api }, props.children);
 }
 
 export default FormField;

@@ -1,6 +1,3 @@
 // ** Exports
-export { sizeProps } from "@core/Components/Textarea/Size";
-export type {
-  TextareaSize,
-  TextareaSizeItem,
-} from "@core/Components/Textarea/Size";
+export { resizeProps } from "@core/Components/Textarea/Resize";
+export type { TextareaResize } from "@core/Components/Textarea/Resize";

@@ -79,27 +79,29 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
   }, [merged.size, bridgeLabel?.customProps?.size]);
 
   // Binds
-  // prettier-ignore
   const requiredBind = derived(() => {
-    return mergePartBind({}, {}, cn({
-      // Theme classes
-      "text-error-500 dark:text-error-500 select-none": true,
-      // Custom classes
-      [mergedClasses.required ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-error-500 dark:text-error-500 select-none": true,
+        [mergedClasses.required ?? ""]: true,
+      }),
+    );
   });
 
-  // prettier-ignore
   const rootBind = derived(() => {
-    return mergePartBind({}, rootInheritedAttrs, cn({
-      // Theme classes
-      "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-      "text-error-600 dark:text-error-400": merged.error,
-      "text-gray-700 dark:text-gray-300": !merged.error,
-      [sizeClass ?? ""]: true,
-      // Custom classes
-      [mergedClasses.root ?? ""]: true,
-    }));
+    return mergePartBind(
+      {},
+      rootInheritedAttrs,
+      cn({
+        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
+        "text-error-600 dark:text-error-400": merged.error,
+        "text-gray-700 dark:text-gray-300": !merged.error,
+        [sizeClass ?? ""]: true,
+        [mergedClasses.root ?? ""]: true,
+      }),
+    );
   });
 
   return {

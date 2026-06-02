@@ -1,102 +1,47 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed } from "vue";
+import { get } from "es-toolkit/compat";
+import { type Component, computed } from "vue";
 
 // ** Local Imports
-import { useFormField } from "@/Components/FormField/composables/useFormField";
+import FilledFormField from "@/Components/FormField/FilledFormField.vue";
+import NotchedFormField from "@/Components/FormField/NotchedFormField.vue";
+import OutlinedFormField from "@/Components/FormField/OutlinedFormField.vue";
+import StackedFormField from "@/Components/FormField/StackedFormField.vue";
+import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField.vue";
+import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 defineSlots<FormFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = withDefaults(defineProps<FormFieldOwnProps>(), {});
+const props = defineProps<Required<Pick<FormFieldOwnProps, "field">>>();
 
-const formFieldProps = computed(() => {
-  const { field: _field, ...rest } = props;
-
-  return rest;
+const api = computed((): UseFormFieldReturn => {
+  return props.field;
 });
 
-const local = useFormField(formFieldProps, {
-  size: "md",
-});
+const shells: Record<string, Component> = {
+  filled: FilledFormField,
+  notched: NotchedFormField,
+  stacked: StackedFormField,
+  outline: OutlinedFormField,
+  underlined: UnderlinedFormField,
+};
 
-const {
-  slots,
-  merged,
-  rootBind,
-  controlId,
-  errorBind,
-  labelBind,
-  cornerBind,
-  headerBind,
-  isDisabled,
-  isReadonly,
-  invalidated,
-  requiredBind,
-  descriptionBind,
-} = (props.field ?? local) as typeof local;
+const shell = computed(() => {
+  const variant = api.value.variantKey.value;
+
+  return get(shells, variant, OutlinedFormField);
+});
 </script>
 
 <template>
-  <div
-    v-bind="rootBind"
-    :data-invalid="invalidated || undefined"
-    :aria-disabled="isDisabled || undefined"
-    :aria-readonly="isReadonly || undefined"
-  >
-    <div
-      v-bind="headerBind"
-      v-if="
-        hasSlotOrProp(slots, 'label', merged.label) ||
-        hasSlotOrProp(slots, 'corner', merged.corner)
-      "
-    >
-      <label
-        :for="controlId"
-        v-bind="labelBind"
-        v-if="hasSlotOrProp(slots, 'label', merged.label)"
-      >
-        <component :is="resolveSlotOrProp(slots, 'label', merged.label)" />
-
-        <span v-if="merged.required" v-bind="requiredBind">*</span>
-      </label>
-
-      <span
-        v-bind="cornerBind"
-        v-if="hasSlotOrProp(slots, 'corner', merged.corner)"
-      >
-        <component :is="resolveSlotOrProp(slots, 'corner', merged.corner)" />
-      </span>
-    </div>
-
+  <component :is="shell" :api="api">
     <slot />
-
-    <p
-      v-bind="descriptionBind"
-      :id="`${controlId}-description`"
-      v-if="
-        !invalidated && hasSlotOrProp(slots, 'description', merged.description)
-      "
-    >
-      <component
-        :is="resolveSlotOrProp(slots, 'description', merged.description)"
-      />
-    </p>
-
-    <p
-      v-bind="errorBind"
-      :id="`${controlId}-error`"
-      v-if="hasSlotOrProp(slots, 'errorMessage', merged.errorMessage)"
-    >
-      <component
-        :is="resolveSlotOrProp(slots, 'errorMessage', merged.errorMessage)"
-      />
-    </p>
-  </div>
+  </component>
 </template>

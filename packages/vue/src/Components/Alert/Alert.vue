@@ -3,7 +3,12 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import { hasNamedSlot, hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import {
+  hasNamedSlot,
+  hasSlotOrProp,
+  resolveNamedSlot,
+  resolveSlotOrProp,
+} from "@/Utils";
 
 defineSlots<AlertSlots>();
 
@@ -31,7 +36,10 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <slot v-if="hasNamedSlot(slots, 'header')" name="header" />
+    <component
+      v-if="hasNamedSlot(slots, 'header')"
+      :is="resolveNamedSlot(slots, 'header')"
+    />
 
     <div
       class="flex justify-between items-start"
@@ -39,7 +47,10 @@ const {
     >
       <div class="flex items-start gap-x-3">
         <template v-if="hasNamedSlot(slots, 'icon') || resolvedIcon">
-          <slot v-if="hasNamedSlot(slots, 'icon')" name="icon" />
+          <component
+            v-if="hasNamedSlot(slots, 'icon')"
+            :is="resolveNamedSlot(slots, 'icon')"
+          />
 
           <Icon
             v-bind="iconBind"
@@ -53,13 +64,13 @@ const {
         </div>
       </div>
 
-      <slot v-if="hasNamedSlot(slots, 'action')" name="action" />
+      <component :is="resolveNamedSlot(slots, 'action')" />
     </div>
 
     <div v-if="hasDefaultBody" v-bind="bodyBind">
-      <slot />
+      <component :is="resolveNamedSlot(slots, 'default')" />
     </div>
 
-    <slot v-if="hasNamedSlot(slots, 'footer')" name="footer" />
+    <component :is="resolveNamedSlot(slots, 'footer')" />
   </div>
 </template>

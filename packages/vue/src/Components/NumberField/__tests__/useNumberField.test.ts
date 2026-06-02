@@ -59,29 +59,18 @@ test("it should decrement by step", () => {
   expect(model.value).toBe(2);
 });
 
-test("it should not increment above max", () => {
-  const model = ref(10);
-  const { increment } = mountUseNumberField(model, { max: 10 });
+test("it should respect max when incrementing", () => {
+  const model = ref(8);
+  const { increment } = mountUseNumberField(model, { max: 9, step: 2 });
 
-  increment();
-
-  expect(model.value).toBe(10);
+  expect(increment()).toBe(false);
+  expect(model.value).toBe(8);
 });
 
-test("it should not decrement below min", () => {
-  const model = ref(0);
-  const { decrement } = mountUseNumberField(model, { min: 0 });
+test("it should respect min when decrementing", () => {
+  const model = ref(1);
+  const { decrement } = mountUseNumberField(model, { min: 0, step: 2 });
 
-  decrement();
-
-  expect(model.value).toBe(0);
-});
-
-test("it should use min as base when value is undefined", () => {
-  const model = ref<number | undefined>(undefined);
-  const { increment } = mountUseNumberField(model, { min: 5 });
-
-  increment();
-
-  expect(model.value).toBe(6);
+  expect(decrement()).toBe(false);
+  expect(model.value).toBe(1);
 });

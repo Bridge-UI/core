@@ -1,17 +1,36 @@
 // ** External Imports
-import type { HTMLAttributes, ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
+import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core";
-import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
+import type {
+  FormFieldColor,
+  FormFieldRounded,
+  FormFieldSize,
+  FormFieldVariant,
+  MergeHtmlProps,
+  MergeProps,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
+import type { IconProps } from "@/Components/Icon";
 
 export interface FormFieldSizeOverrides {}
+export interface FormFieldColorOverrides {}
+export interface FormFieldRoundedOverrides {}
+export interface FormFieldVariantOverrides {}
 
 export interface FormFieldClasses {
   /**
    * Classes merged onto the corner label in the header row.
    */
   corner?: string;
+
+  /**
+   * The classes to apply to the inline-end adornment (icon or slot).
+   */
+  end?: string;
 
   /**
    * Classes merged onto the helper text below the control.
@@ -21,12 +40,17 @@ export interface FormFieldClasses {
   /**
    * Classes merged onto the error message below the control.
    */
-  error?: string;
+  errorMessage?: string;
 
   /**
    * Classes merged onto the label + corner header row.
    */
   header?: string;
+
+  /**
+   * The classes to apply to the input element.
+   */
+  input?: string;
 
   /**
    * Classes merged onto the primary label in the header row.
@@ -42,6 +66,16 @@ export interface FormFieldClasses {
    * Classes merged onto the root wrapper.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the inline-start adornment (icon or slot).
+   */
+  start?: string;
+
+  /**
+   * The classes to apply to the input container (`<div>` wrapper).
+   */
+  container?: string;
 }
 
 export interface FormFieldPartsProps {
@@ -51,19 +85,39 @@ export interface FormFieldPartsProps {
   corner?: HTMLAttributes<HTMLSpanElement>;
 
   /**
-   * Props forwarded to the description element below the control.
+   * Props forwarded to the input container (`<div>`).
+   */
+  container?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the helper text below the control.
    */
   description?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
+   * Props forwarded to the inline-end adornment wrapper.
+   */
+  end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-end `Icon` (`icon` is set by the field).
+   */
+  endIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
    * Props forwarded to the error message element.
    */
-  error?: HTMLAttributes<HTMLParagraphElement>;
+  errorMessage?: HTMLAttributes<HTMLParagraphElement>;
 
   /**
    * Props forwarded to the label + corner header row.
    */
   header?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the `<input>`.
+   */
+  input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
 
   /**
    * Props forwarded to the primary label element.
@@ -74,6 +128,16 @@ export interface FormFieldPartsProps {
    * Props forwarded to the root wrapper.
    */
   root?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start adornment wrapper.
+   */
+  start?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the inline-start `Icon` (`icon` is set by the field).
+   */
+  startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
 export interface FormFieldSlots {
@@ -88,6 +152,17 @@ export interface FormFieldSlots {
   description?: ReactNode;
 
   /**
+   * The form control (input, textarea, select trigger, etc.).
+   */
+  default?: ReactNode;
+
+  /**
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text.
+   */
+  end?: ReactNode;
+
+  /**
    * Custom error message content.
    */
   errorMessage?: ReactNode;
@@ -96,16 +171,15 @@ export interface FormFieldSlots {
    * Slot at the inline start of the header row (primary label).
    */
   label?: ReactNode;
+
+  /**
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text.
+   */
+  start?: ReactNode;
 }
 
 export interface FormFieldOwnProps {
-  /**
-   * The classes to apply to the form field.
-   *
-   * @default undefined
-   */
-  classes?: FormFieldClasses;
-
   /**
    * The form control (input, textarea, select trigger, etc.).
    *
@@ -114,12 +188,18 @@ export interface FormFieldOwnProps {
   children?: ReactNode;
 
   /**
-   * Pre-composed field API from a parent (e.g. TextField). When set, internal
-   * `useFormField` is skipped.
+   * Classes for the field chrome and the control (includes label, container, adornments).
    *
    * @default undefined
    */
-  field?: unknown;
+  classes?: FormFieldClasses;
+
+  /**
+   * The color to apply to the field control.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<FormFieldColor, FormFieldColorOverrides>;
 
   /**
    * Associates labels and helper text with a form control. When omitted, an id
@@ -151,6 +231,20 @@ export interface FormFieldOwnProps {
   disabled?: boolean;
 
   /**
+   * Inline-end text inside the field (suffix), e.g. `@mail.com`.
+   *
+   * @default undefined
+   */
+  end?: string;
+
+  /**
+   * Icon at the inline end.
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * When `true`, applies invalid styling on the label and hides description.
    *
    * @default false
@@ -158,12 +252,26 @@ export interface FormFieldOwnProps {
   error?: boolean;
 
   /**
-   * Error message below the control. Shown only when set (or via
-   * `slots.errorMessage`).
+   * Icon used when `withErrorIcon` is enabled and the field is invalid.
+   *
+   * @default CircleAlert
+   */
+  errorIcon?: LucideIcon;
+
+  /**
+   * Error message below the control. Shown only when set (or via `errorMessage` slot).
    *
    * @default undefined
    */
   errorMessage?: string;
+
+  /**
+   * Pre-composed field API from a parent composable (e.g. `useTextField`). Used
+   * by `<FormField field={…} />`; not set on field wrappers such as TextField.
+   *
+   * @default undefined
+   */
+  field?: UseFormFieldReturn;
 
   /**
    * The primary label text above the control.
@@ -173,7 +281,7 @@ export interface FormFieldOwnProps {
   label?: string;
 
   /**
-   * Extra props for internal parts (`header`, `label`, `description`, etc.).
+   * Extra props for internal parts (`header`, `label`, `input`, `container`, …).
    *
    * @default undefined
    */
@@ -194,18 +302,60 @@ export interface FormFieldOwnProps {
   required?: boolean;
 
   /**
-   * The size of the form field typography (label, corner, description, error).
+   * The roundedness of the field control.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<FormFieldRounded, FormFieldRoundedOverrides>;
+
+  /**
+   * Typography scale for label, corner, description, error and control sizing.
    *
    * @default "md"
    */
   size?: MergeProps<FormFieldSize, FormFieldSizeOverrides>;
 
   /**
-   * Named slot content passed as props (e.g. from field wrappers).
+   * Chrome slots (`label`, `description`, `errorMessage`, …) and adornment slots.
    *
    * @default undefined
    */
   slots?: FormFieldSlots;
+
+  /**
+   * Inline-start text inside the field (prefix), e.g. `https://`.
+   *
+   * @default undefined
+   */
+  start?: string;
+
+  /**
+   * Icon at the inline start.
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
+
+  /**
+   * The visual variant of the field shell and control.
+   *
+   * @default "outline"
+   */
+  variant?: MergeProps<FormFieldVariant, FormFieldVariantOverrides>;
+
+  /**
+   * When `true` and the field is invalid, shows an error icon at the inline end.
+   *
+   * @default true
+   */
+  withErrorIcon?: boolean;
+
+  /**
+   * When `true`, does not reserve space below the control for error messages.
+   *
+   * @default false
+   */
+  withoutErrorMessage?: boolean;
 }
 
 export type FormFieldProps = MergeHtmlProps<

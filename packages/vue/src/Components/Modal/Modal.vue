@@ -2,6 +2,7 @@
 // ** Local Imports
 import type { ModalProps, ModalSlots } from "@/Components/Modal";
 import { useModal } from "@/Components/Modal";
+import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<ModalSlots>();
 
@@ -26,13 +27,13 @@ const { slots, merged } = useModal(props, {
         class="flex min-h-full w-full items-end justify-center p-4 sm:items-center"
       >
         <div class="relative w-full max-w-lg">
-          <slot v-if="slots.header" name="header" />
+          <component :is="resolveNamedSlot(slots, 'header')" />
 
-          <slot />
+          <component :is="resolveNamedSlot(slots, 'default')" />
 
-          <slot v-if="slots.footer" name="footer" />
+          <component :is="resolveNamedSlot(slots, 'footer')" />
 
-          <slot v-if="slots.close" name="close" />
+          <component :is="resolveNamedSlot(slots, 'close')" />
         </div>
       </div>
     </div>

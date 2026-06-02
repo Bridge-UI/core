@@ -1,22 +1,21 @@
 <script setup lang="ts">
 // ** External Imports
-import { get } from "es-toolkit/compat";
 import { Eye, EyeOff } from "lucide-vue-next";
 import { computed, toRef } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
-import type { IconSize } from "@bridge-ui/core/Components/Icon";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
+import { usePasswordFieldClasses } from "@/Components/PasswordField/composables/usePasswordFieldClasses";
 import type {
-  PasswordFieldProps,
+  PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
 import { TextField } from "@/Components/TextField";
-import { useTextFieldEndAdornment } from "@/Utils";
+import { resolveFieldAdornmentIconSize } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
 
@@ -24,11 +23,13 @@ defineOptions({ inheritAttrs: false });
 
 const model = defineModel<string | null | undefined>();
 
-const props = withDefaults(defineProps<PasswordFieldProps>(), {
+const props = withDefaults(defineProps<PasswordFieldOwnProps>(), {
   visible: null,
 });
 
 const visible = toRef(props, "visible");
+
+const mergedClasses = usePasswordFieldClasses(props);
 
 const { isVisible, toggleVisibility } = usePasswordField({
   visible,
@@ -36,20 +37,6 @@ const { isVisible, toggleVisibility } = usePasswordField({
 });
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
-
-const { endAdornmentClass } = useTextFieldEndAdornment(
-  () => ({
-    color: props.color,
-    error: props.error,
-    rounded: props.rounded,
-    variant: props.variant,
-  }),
-  {
-    rounded: "md",
-    color: "primary",
-    variant: "outline",
-  },
-);
 
 const mergedPartsProps = computed(() => ({
   ...props.partsProps,
@@ -62,7 +49,6 @@ const mergedPartsProps = computed(() => ({
 const textFieldProps = computed(() => {
   const {
     visible: _visible,
-    modelValue: _modelValue,
     onVisibilityChange: _onVisibilityChange,
     ...rest
   } = props;
@@ -70,19 +56,8 @@ const textFieldProps = computed(() => {
   return rest;
 });
 
-// prettier-ignore
 const toggleIconSize = computed(() => {
-  const fieldSize = props.size ?? "md";
-
-  return get({
-    "2xs": "xs",
-    "xs": "xs",
-    "sm": "sm",
-    "md": "md",
-    "lg": "md",
-    "xl": "lg",
-    "2xl": "lg",
-  }, fieldSize) as keyof IconSize;
+  return resolveFieldAdornmentIconSize(props.size);
 });
 </script>
 
@@ -93,7 +68,7 @@ const toggleIconSize = computed(() => {
       ...textFieldProps,
       ...$attrs,
     }"
-    :classes="props.classes"
+    :classes="mergedClasses"
     :with-error-icon="false"
     :parts-props="mergedPartsProps"
   >
@@ -103,7 +78,12 @@ const toggleIconSize = computed(() => {
         :disabled="props.disabled"
         v-on:click="toggleVisibility"
         :aria-label="isVisible ? 'Hide password' : 'Show password'"
-        :class="cn(endAdornmentClass, 'px-2.5', props.classes?.toggle)"
+        :class="
+          cn(
+            'bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5',
+            mergedClasses.toggle,
+          )
+        "
       >
         <Icon :icon="isVisible ? EyeOff : Eye" :size="toggleIconSize" />
       </button>
