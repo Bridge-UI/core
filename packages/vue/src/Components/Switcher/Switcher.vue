@@ -19,14 +19,14 @@ const api = computed((): UseSwitcherReturn => {
 
 <template>
   <div
-    v-bind="api.rootBind"
+    v-bind="api.rootBind.value"
     :data-invalid="api.invalidated.value || undefined"
     :aria-disabled="api.isDisabled.value || undefined"
     :aria-readonly="api.isReadonly.value || undefined"
   >
-    <div v-bind="api.rowBind">
+    <div v-bind="api.rowBind.value">
       <label
-        v-bind="api.startLabelBind"
+        v-bind="api.startLabelBind.value"
         v-if="
           hasSlotOrProp(api.slots, 'startLabel', api.merged.value.startLabel)
         "
@@ -45,7 +45,7 @@ const api = computed((): UseSwitcherReturn => {
       <slot />
 
       <label
-        v-bind="api.mainLabelBind"
+        v-bind="api.mainLabelBind.value"
         v-if="hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)"
       >
         <component
@@ -60,7 +60,7 @@ const api = computed((): UseSwitcherReturn => {
       </label>
 
       <label
-        v-bind="api.endLabelBind"
+        v-bind="api.endLabelBind.value"
         v-if="hasSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel)"
       >
         <component
@@ -72,7 +72,7 @@ const api = computed((): UseSwitcherReturn => {
     </div>
 
     <p
-      v-bind="api.descriptionBind"
+      v-bind="api.descriptionBind.value"
       v-if="
         !api.invalidated.value &&
         hasSlotOrProp(api.slots, 'description', api.merged.value.description)
@@ -90,7 +90,7 @@ const api = computed((): UseSwitcherReturn => {
     </p>
 
     <p
-      v-bind="api.errorMessageBind"
+      v-bind="api.errorMessageBind.value"
       v-if="!api.merged.value.withoutErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >

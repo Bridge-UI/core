@@ -10,16 +10,15 @@ import OutlinedFormField from "@/Components/FormField/OutlinedFormField.vue";
 import StackedFormField from "@/Components/FormField/StackedFormField.vue";
 import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
-import type {
-  FormFieldOwnProps,
-  FormFieldSlots,
-} from "@/Components/FormField/formField.types";
+import type { FormFieldSlots } from "@/Components/FormField/formField.types";
 
 defineSlots<FormFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<Required<Pick<FormFieldOwnProps, "field">>>();
+const props = defineProps<{
+  field: UseFormFieldReturn;
+}>();
 
 const api = computed((): UseFormFieldReturn => {
   return props.field;
