@@ -60,7 +60,7 @@ export interface ModalPartsProps {
 
 /**
  * Modal shell (overlay, portal, backdrop). Put `Card` or any content in the default slot.
- * Visibility is controlled with `v-model:show` (not listed here — use the model binding).
+ * Visibility is controlled with `v-model` (not listed here — `defineModel` handles it).
  */
 export interface ModalOwnProps {
   /**

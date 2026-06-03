@@ -9,13 +9,13 @@ import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<ModalSlots>();
 
+const slots = useSlots();
+
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<ModalOwnProps>();
 
-const show = defineModel<boolean>("show", { default: false });
-
-const slots = useSlots();
+const model = defineModel<boolean>({ default: false });
 
 const {
   merged,
@@ -36,7 +36,7 @@ const {
     closeOnOverlay: true,
   },
   {
-    show,
+    show: model,
   },
 );
 
@@ -55,14 +55,14 @@ const teleportTarget = computed(() => {
 
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="show" v-bind="rootBind">
+    <div v-if="model" v-bind="rootBind">
       <div
         aria-hidden="true"
         v-bind="overlayBind"
         v-on:click="handleOverlayClick"
       />
 
-      <div v-bind="wrapperBind" @click="handleWrapperClick">
+      <div v-bind="wrapperBind" v-on:click="handleWrapperClick">
         <div v-bind="panelBind">
           <component :is="resolveNamedSlot(slots, 'default')" />
         </div>

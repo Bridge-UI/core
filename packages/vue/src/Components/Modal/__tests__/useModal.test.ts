@@ -7,27 +7,22 @@ import { defineComponent, h, ref } from "vue";
 import { useModal, type ModalOwnProps } from "@/Components/Modal";
 
 const libDefaults: Partial<ModalOwnProps> = {
-  align: "center",
-  blur: "none",
   size: "md",
+  blur: "none",
+  align: "center",
   teleportTo: "body",
   closeOnEscape: true,
   closeOnOverlay: true,
 };
 
-function mountUseModal(
-  props: Partial<ModalOwnProps> = {},
-  options: Parameters<typeof useModal>[2] = {},
-) {
+function mountUseModal(props: Partial<ModalOwnProps> = {}, show = ref(true)) {
   let result!: ReturnType<typeof useModal>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = useModal(
-        props,
-        libDefaults as Parameters<typeof useModal>[1],
-        options,
-      );
+      result = useModal(props, libDefaults as Parameters<typeof useModal>[1], {
+        show,
+      });
 
       return () => h("div");
     },
@@ -35,24 +30,25 @@ function mountUseModal(
 
   mount(Wrapper);
 
-  return result;
+  return { result, show };
 }
 
 test("it should return default size as md", () => {
-  const result = mountUseModal();
+  const { result } = mountUseModal();
 
   expect(result.merged.value.size).toBe("md");
 });
 
 test("it should include max width class on wrapper bind", () => {
-  const result = mountUseModal({ size: "sm" });
+  const { result } = mountUseModal({ size: "sm" });
 
   expect(result.wrapperBind.value.class).toContain("sm:max-w-sm");
 });
 
 test("it should set show to false when overlay is clicked", () => {
   const show = ref(true);
-  const result = mountUseModal({}, { show });
+
+  const { result } = mountUseModal({}, show);
 
   result.handleOverlayClick();
 
@@ -61,7 +57,8 @@ test("it should set show to false when overlay is clicked", () => {
 
 test("it should not close when persistent", () => {
   const show = ref(true);
-  const result = mountUseModal({ persistent: true }, { show });
+
+  const { result } = mountUseModal({ persistent: true }, show);
 
   result.handleOverlayClick();
 
@@ -71,7 +68,7 @@ test("it should not close when persistent", () => {
 test("it should close on escape keydown", () => {
   const show = ref(true);
 
-  mountUseModal({}, { show });
+  mountUseModal({}, show);
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 

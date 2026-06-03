@@ -10,9 +10,9 @@ import {
 } from "@/Components/Modal";
 
 const libDefaults = {
-  align: "center",
-  blur: "none",
   size: "md",
+  blur: "none",
+  align: "center",
   teleportTo: "body",
   closeOnEscape: true,
   closeOnOverlay: true,
@@ -41,6 +41,7 @@ test("it should include max width class on wrapper bind", () => {
 
 test("it should call onShowChange when overlay is clicked", () => {
   const onShowChange = vi.fn();
+
   const { result } = renderUseModal({}, { show: true, onShowChange });
 
   result.current.handleOverlayClick();
@@ -50,6 +51,7 @@ test("it should call onShowChange when overlay is clicked", () => {
 
 test("it should not call onShowChange when persistent", () => {
   const onShowChange = vi.fn();
+
   const { result } = renderUseModal(
     { persistent: true },
     { show: true, onShowChange },

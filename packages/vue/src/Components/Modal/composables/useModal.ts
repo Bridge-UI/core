@@ -54,21 +54,22 @@ type ModalMerged = MergeLibDefaults<ModalOwnProps, ModalLibDefaults>;
 
 export type ModalOptions = {
   /**
-   * Modal visibility (`defineModel('show')` or a ref/getter).
+   * Whether the modal is visible (`defineModel()` / `v-model`).
    *
    * @default false
    */
   show?: Ref<boolean>;
 
   /**
-   * Called when visibility should change (optional; `v-model:show` usually handles this).
-   */
-  onShowChange?: (show: boolean) => void;
-
-  /**
    * Called when the modal requests to close.
+   * Sugar for `onShowChange(false)`.
    */
   onClose?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
+  onShowChange?: (show: boolean) => void;
 };
 
 export function useModal(
@@ -79,7 +80,7 @@ export function useModal(
   // Setup
   const { onClose, onShowChange } = options;
 
-  const showValue = computed(() => {
+  const show = computed(() => {
     return toValue(options.show ?? false);
   });
 
@@ -230,7 +231,7 @@ export function useModal(
   }
 
   function handleEscape(event: KeyboardEvent) {
-    if (event.key !== "Escape" || !showValue.value) {
+    if (event.key !== "Escape" || !show.value) {
       return;
     }
 
@@ -260,7 +261,7 @@ export function useModal(
   }
 
   watch(
-    showValue,
+    show,
     (isShown) => {
       if (isShown) {
         lockBodyScroll();

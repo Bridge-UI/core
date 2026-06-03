@@ -53,15 +53,15 @@ export type ModalOptions = {
   show?: boolean;
 
   /**
-   * Called when `show` should change (controlled state).
-   */
-  onShowChange?: (show: boolean) => void;
-
-  /**
    * Called when the modal requests to close.
    * Sugar for `onShowChange(false)`.
    */
   onClose?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
+  onShowChange?: (show: boolean) => void;
 };
 
 export function useModal(

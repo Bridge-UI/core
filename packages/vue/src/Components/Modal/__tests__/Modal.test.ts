@@ -19,8 +19,8 @@ function mountModal(options: Parameters<typeof mount<typeof Modal>>[1] = {}) {
     ...options,
     props: {
       ...(options.props ?? {}),
-      "onUpdate:show": (value: boolean) => {
-        wrapper.setProps({ show: value });
+      "onUpdate:modelValue": (value: boolean) => {
+        wrapper.setProps({ modelValue: value });
       },
     },
   });
@@ -28,15 +28,15 @@ function mountModal(options: Parameters<typeof mount<typeof Modal>>[1] = {}) {
   return wrapper;
 }
 
-test("it should not render in the document when show is false", () => {
-  mountModal({ props: { show: false } });
+test("it should not render in the document when modelValue is false", () => {
+  mountModal({ props: { modelValue: false } });
 
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });
 
-test("it should teleport to body when show is true", () => {
+test("it should teleport to body when modelValue is true", () => {
   mountModal({
-    props: { show: true },
+    props: { modelValue: true },
     slots: { default: "Modal body" },
   });
 
@@ -46,10 +46,10 @@ test("it should teleport to body when show is true", () => {
   expect(document.body.textContent).toContain("Modal body");
 });
 
-test("it should support controlled show without closing when persistent", async () => {
+test("it should support controlled modelValue without closing when persistent", async () => {
   const wrapper = mountModal({
     props: {
-      show: true,
+      modelValue: true,
       persistent: true,
     },
     slots: { default: "Persistent" },
@@ -59,12 +59,12 @@ test("it should support controlled show without closing when persistent", async 
 
   await overlay?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
-  expect(wrapper.emitted("update:show")).toBeUndefined();
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 });
 
 test("it should not close when clicking inside the panel", async () => {
   const wrapper = mountModal({
-    props: { show: true },
+    props: { modelValue: true },
     slots: { default: '<button type="button">Inner</button>' },
   });
 
@@ -74,13 +74,13 @@ test("it should not close when clicking inside the panel", async () => {
 
   await inner?.click();
 
-  expect(wrapper.emitted("update:show")).toBeUndefined();
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 });
 
 test("it should apply size classes on the wrapper from sm breakpoint", () => {
   mountModal({
-    props: { show: true, size: "lg" },
     slots: { default: "Sized" },
+    props: { modelValue: true, size: "lg" },
   });
 
   const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
@@ -90,8 +90,8 @@ test("it should apply size classes on the wrapper from sm breakpoint", () => {
 
 test("it should apply blur classes on the overlay", () => {
   mountModal({
-    props: { show: true, blur: "md" },
     slots: { default: "Blur" },
+    props: { modelValue: true, blur: "md" },
   });
 
   const overlay = document.body.querySelector(".bg-black\\/50");
@@ -101,8 +101,8 @@ test("it should apply blur classes on the overlay", () => {
 
 test("it should apply align classes on the wrapper", () => {
   mountModal({
-    props: { show: true, align: "start" },
     slots: { default: "Align" },
+    props: { modelValue: true, align: "start" },
   });
 
   const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
@@ -112,7 +112,7 @@ test("it should apply align classes on the wrapper", () => {
 
 test("it should render a Card inside the default slot", () => {
   mountModal({
-    props: { show: true },
+    props: { modelValue: true },
     slots: {
       default: {
         components: { Card },
@@ -121,6 +121,6 @@ test("it should render a Card inside the default slot", () => {
     },
   });
 
-  expect(document.body.textContent).toContain("In modal");
   expect(document.body.textContent).toContain("Body");
+  expect(document.body.textContent).toContain("In modal");
 });
