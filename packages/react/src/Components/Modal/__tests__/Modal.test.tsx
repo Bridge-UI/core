@@ -1,15 +1,60 @@
 // ** External Imports
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
+import {
+  MODAL_STACK_BASE_Z_INDEX,
+  resetModalStackForTests,
+} from "@bridge-ui/core";
 
 afterEach(() => {
   cleanup();
+  resetModalStackForTests();
+  document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
+
+function NestedModals({
+  onOuterChange,
+  onInnerChange,
+}: {
+  onOuterChange?: (show: boolean) => void;
+  onInnerChange?: (show: boolean) => void;
+}) {
+  const [outerOpen, setOuterOpen] = useState(true);
+  const [innerOpen, setInnerOpen] = useState(true);
+
+  return (
+    <Modal
+      show={outerOpen}
+      onShowChange={(show) => {
+        setOuterOpen(show);
+        onOuterChange?.(show);
+      }}
+    >
+      <Modal
+        show={innerOpen}
+        onShowChange={(show) => {
+          setInnerOpen(show);
+          onInnerChange?.(show);
+        }}
+      >
+        Inner
+      </Modal>
+    </Modal>
+  );
+}
 
 test("it should not render when show is false", () => {
   render(<Modal show={false}>Hidden</Modal>);
@@ -137,4 +182,105 @@ test("it should render a Card as children", () => {
 
   expect(document.body.textContent).toContain("In modal");
   expect(document.body.textContent).toContain("Body");
+});
+
+test("it should render nested modals with separate dialog layers", () => {
+  render(<NestedModals />);
+
+  expect(screen.getAllByRole("dialog")).toHaveLength(2);
+});
+
+test("it should close only the topmost sibling modals on escape", () => {
+  const onOuterChange = vi.fn();
+  const onInnerChange = vi.fn();
+
+  function SiblingModals() {
+    const [outerOpen, setOuterOpen] = useState(true);
+    const [innerOpen, setInnerOpen] = useState(true);
+
+    return (
+      <>
+        <Modal
+          show={outerOpen}
+          onShowChange={(show) => {
+            setOuterOpen(show);
+            onOuterChange(show);
+          }}
+        >
+          Outer
+        </Modal>
+        <Modal
+          show={innerOpen}
+          onShowChange={(show) => {
+            setInnerOpen(show);
+            onInnerChange(show);
+          }}
+        >
+          Inner
+        </Modal>
+      </>
+    );
+  }
+
+  render(<SiblingModals />);
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  expect(onInnerChange).toHaveBeenCalledWith(false);
+  expect(onOuterChange).not.toHaveBeenCalled();
+});
+
+test("it should close only the topmost nested modal on escape", () => {
+  const onOuterChange = vi.fn();
+  const onInnerChange = vi.fn();
+
+  render(
+    <NestedModals
+      onOuterChange={onOuterChange}
+      onInnerChange={onInnerChange}
+    />,
+  );
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  expect(onInnerChange).toHaveBeenCalledWith(false);
+  expect(onOuterChange).not.toHaveBeenCalled();
+});
+
+test("it should keep body scroll locked when an inner modal closes", () => {
+  const onInnerChange = vi.fn();
+
+  render(<NestedModals onInnerChange={onInnerChange} />);
+
+  expect(document.body.style.overflow).toBe("hidden");
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  expect(onInnerChange).toHaveBeenCalledWith(false);
+  expect(document.body.style.overflow).toBe("hidden");
+});
+
+test("it should assign incremental z-index to nested modals", async () => {
+  render(<NestedModals />);
+
+  await waitFor(() => {
+    const zIndexes = [
+      ...document.body.querySelectorAll<HTMLElement>(
+        ".fixed.inset-0.overflow-y-auto",
+      ),
+    ]
+      .map((root) => Number(root.style.zIndex))
+      .sort((left, right) => left - right);
+
+    expect(zIndexes).toEqual([
+      MODAL_STACK_BASE_Z_INDEX,
+      MODAL_STACK_BASE_Z_INDEX + 1,
+    ]);
+  });
 });

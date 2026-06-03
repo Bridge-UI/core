@@ -1,6 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
-import { expect, test, vi } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
@@ -8,6 +8,12 @@ import {
   type ModalOwnProps,
   type ModalProps,
 } from "@/Components/Modal";
+import { resetModalStackForTests } from "@bridge-ui/core";
+
+afterEach(() => {
+  resetModalStackForTests();
+  document.body.style.overflow = "";
+});
 
 const libDefaults = {
   size: "md",
@@ -45,6 +51,16 @@ test("it should call onShowChange when overlay is clicked", () => {
   const { result } = renderUseModal({}, { show: true, onShowChange });
 
   result.current.handleOverlayClick();
+
+  expect(onShowChange).toHaveBeenCalledWith(false);
+});
+
+test("it should call onShowChange on escape keydown", () => {
+  const onShowChange = vi.fn();
+
+  renderUseModal({}, { show: true, onShowChange });
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
   expect(onShowChange).toHaveBeenCalledWith(false);
 });

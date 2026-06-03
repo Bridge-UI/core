@@ -1,10 +1,16 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useModal, type ModalOwnProps } from "@/Components/Modal";
+import { resetModalStackForTests } from "@bridge-ui/core";
+
+afterEach(() => {
+  resetModalStackForTests();
+  document.body.style.overflow = "";
+});
 
 const libDefaults: Partial<ModalOwnProps> = {
   size: "md",

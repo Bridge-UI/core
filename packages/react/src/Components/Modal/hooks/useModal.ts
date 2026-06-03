@@ -1,14 +1,24 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { useEffect, useMemo, type MouseEvent } from "react";
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 
 // ** Core Imports
 import {
+  acquireModalStackOrder,
   cn,
   mergeBridgeUILayeredClasses,
+  MODAL_STACK_BASE_Z_INDEX,
+  pushModalStack,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
+  type ModalStackHandle,
 } from "@bridge-ui/core";
 import {
   alignProps,
@@ -72,6 +82,12 @@ export function useModal(
   // Setup
   const { onClose, onShowChange, show = false } = options;
 
+  const stackOrderRef = useRef<number | null>(null);
+
+  const stackHandleRef = useRef<ModalStackHandle | null>(null);
+
+  const [stackZIndex, setStackZIndex] = useState(MODAL_STACK_BASE_Z_INDEX);
+
   const { customProps, inheritedAttrs } = splitComponentProps<
     ModalProps,
     typeof modalBridgeKeys
@@ -103,6 +119,14 @@ export function useModal(
     props: customProps,
   });
 
+  if (show && stackOrderRef.current === null) {
+    stackOrderRef.current = acquireModalStackOrder();
+  }
+
+  if (!show && stackOrderRef.current !== null) {
+    stackOrderRef.current = null;
+  }
+
   // Classes
   const alignClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -132,14 +156,15 @@ export function useModal(
   }, [merged.size, bridgeModal?.customProps?.size]);
 
   // Binds
-  const rootBind = mergePartBind(
-    partsProps?.root,
-    rootInheritedAttrs,
-    cn({
-      "fixed inset-0 z-50 overflow-y-auto": true,
+  const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
+    className: cn({
+      "fixed inset-0 overflow-y-auto": true,
       [get(mergedClasses, "root") ?? ""]: true,
     }),
-  );
+    style: {
+      zIndex: stackZIndex,
+    },
+  });
 
   const overlayBind = mergePartBind(
     partsProps?.overlay,
@@ -207,46 +232,36 @@ export function useModal(
     handleOverlayClick();
   }
 
-  useEffect(() => {
-    if (typeof document === "undefined") {
+  useLayoutEffect(() => {
+    if (!show || stackOrderRef.current === null) {
+      stackHandleRef.current?.release();
+      stackHandleRef.current = null;
+      setStackZIndex(MODAL_STACK_BASE_Z_INDEX);
+
       return;
     }
 
-    if (show) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [show]);
-
-  useEffect(() => {
-    if (!show) {
-      return;
-    }
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key !== "Escape") {
-        return;
-      }
-
+    function handleEscape() {
       if (merged.closeOnEscape === false || merged.persistent) {
         return;
       }
 
-      event.preventDefault();
       setShow(false);
     }
 
-    window.addEventListener("keydown", handleEscape);
+    const handle = pushModalStack({
+      order: stackOrderRef.current,
+      onEscape: handleEscape,
+    });
+
+    stackHandleRef.current = handle;
+    setStackZIndex(handle.zIndex);
 
     return () => {
-      window.removeEventListener("keydown", handleEscape);
+      handle.release();
+      stackHandleRef.current = null;
     };
-  }, [show, merged.persistent, merged.closeOnEscape]);
+  }, [show, merged.closeOnEscape, merged.persistent]);
 
   return {
     merged,

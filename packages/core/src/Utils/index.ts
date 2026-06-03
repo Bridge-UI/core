@@ -141,6 +141,14 @@ export function splitComponentProps<
 }
 
 export {
+  acquireModalStackOrder,
+  isModalStackTop,
+  MODAL_STACK_BASE_Z_INDEX,
+  pushModalStack,
+  resetModalStackForTests,
+  type ModalStackHandle,
+} from "@core/Utils/modal";
+export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@core/Utils/portal";

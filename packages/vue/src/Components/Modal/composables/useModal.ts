@@ -3,6 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
+  ref,
   toValue,
   useAttrs,
   watch,
@@ -11,11 +12,15 @@ import {
 
 // ** Core Imports
 import {
+  acquireModalStackOrder,
   cn,
   mergeBridgeUILayeredClasses,
+  MODAL_STACK_BASE_Z_INDEX,
+  pushModalStack,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
+  type ModalStackHandle,
 } from "@bridge-ui/core";
 import {
   alignProps,
@@ -78,6 +83,12 @@ export function useModal(
 ) {
   // Setup
   const attrs = useAttrs();
+
+  let stackOrder: number | null = null;
+
+  let stackHandle: ModalStackHandle | null = null;
+
+  const stackZIndex = ref(MODAL_STACK_BASE_Z_INDEX);
 
   const show = computed(() => {
     return toValue(options.show ?? false);
@@ -158,14 +169,15 @@ export function useModal(
 
   // Binds
   const rootBind = computed(() => {
-    return mergePartBind(
-      partsProps.value?.root,
-      rootInheritedAttrs.value,
-      cn({
-        "fixed inset-0 z-50 overflow-y-auto": true,
+    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+      class: cn({
+        "fixed inset-0 overflow-y-auto": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-    );
+      style: {
+        zIndex: stackZIndex.value,
+      },
+    });
   });
 
   const overlayBind = computed(() => {
@@ -236,54 +248,37 @@ export function useModal(
     handleOverlayClick();
   }
 
-  function handleEscape(event: KeyboardEvent) {
-    if (event.key !== "Escape") {
-      return;
-    }
-
+  function handleEscape() {
     if (merged.value.closeOnEscape === false || !canClose.value) {
       return;
     }
 
-    event.preventDefault();
-
     requestClose();
-  }
-
-  function lockBodyScroll() {
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    document.body.style.overflow = "hidden";
-  }
-
-  function unlockBodyScroll() {
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    document.body.style.overflow = "";
   }
 
   watch(
     show,
     (isShown) => {
       if (isShown) {
-        lockBodyScroll();
-        window.addEventListener("keydown", handleEscape);
+        stackOrder = acquireModalStackOrder();
+        stackHandle = pushModalStack({
+          order: stackOrder,
+          onEscape: handleEscape,
+        });
+        stackZIndex.value = stackHandle.zIndex;
       } else {
-        unlockBodyScroll();
-        window.removeEventListener("keydown", handleEscape);
+        stackHandle?.release();
+        stackHandle = null;
+        stackOrder = null;
+        stackZIndex.value = MODAL_STACK_BASE_Z_INDEX;
       }
     },
     { immediate: true },
   );
 
   onBeforeUnmount(() => {
-    window.removeEventListener("keydown", handleEscape);
-
-    unlockBodyScroll();
+    stackHandle?.release();
+    stackHandle = null;
   });
 
   return {

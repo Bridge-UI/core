@@ -1,0 +1,86 @@
+// ** External Imports
+import { h } from "vue";
+
+// ** Local Imports
+import { Card } from "@/Components/Card";
+import { Modal } from "@/Components/Modal";
+
+test("it should not render dialog when modelValue is false", () => {
+  cy.mount(Modal, { props: { modelValue: false } });
+
+  cy.get('[role="dialog"]').should("not.exist");
+});
+
+test("it should render dialog when modelValue is true", () => {
+  cy.mount(Modal, {
+    props: { modelValue: true },
+    slots: { default: () => "Modal body" },
+  });
+
+  cy.get('[role="dialog"]').should("be.visible");
+  cy.contains("Modal body").should("be.visible");
+});
+
+test("it should emit update:modelValue when the backdrop is clicked", () => {
+  cy.mount(Modal, {
+    props: {
+      modelValue: true,
+      "onUpdate:modelValue": cy.stub().as("onUpdate"),
+    },
+    slots: { default: () => "Content" },
+  });
+
+  cy.get('[aria-hidden="true"]').click({ force: true });
+
+  cy.get("@onUpdate").should("have.been.calledWith", false);
+});
+
+test("it should emit update:modelValue on escape", () => {
+  cy.mount(Modal, {
+    props: {
+      modelValue: true,
+      "onUpdate:modelValue": cy.stub().as("onUpdate"),
+    },
+    slots: { default: () => "Content" },
+  });
+
+  cy.get("body").type("{esc}");
+
+  cy.get("@onUpdate").should("have.been.calledWith", false);
+});
+
+test("it should not emit update:modelValue when persistent", () => {
+  cy.mount(Modal, {
+    props: {
+      modelValue: true,
+      persistent: true,
+      "onUpdate:modelValue": cy.stub().as("onUpdate"),
+    },
+    slots: { default: () => "Persistent" },
+  });
+
+  cy.get('[aria-hidden="true"]').click({ force: true });
+
+  cy.get("@onUpdate").should("not.have.been.called");
+});
+
+test("it should apply size classes on the wrapper", () => {
+  cy.mount(Modal, {
+    slots: { default: () => "Sized" },
+    props: { modelValue: true, size: "lg" },
+  });
+
+  cy.get(".mx-auto.flex.min-h-full").should("have.class", "sm:max-w-lg");
+});
+
+test("it should render a Card inside the default slot", () => {
+  cy.mount(Modal, {
+    props: { modelValue: true },
+    slots: {
+      default: () => h(Card, { title: "In modal" }, () => "Body"),
+    },
+  });
+
+  cy.contains("Body").should("be.visible");
+  cy.contains("In modal").should("be.visible");
+});

@@ -37,14 +37,33 @@ function ModalShell({
   );
 }
 
-function Modal(props: ModalProps) {
-  const { onClose, children, show = false, onShowChange, ...ownProps } = props;
-
-  const modalState = useModal({ ...ownProps, children }, modalLibDefaults, {
-    show,
-    onClose,
-    onShowChange,
-  });
+function Modal({
+  onClose,
+  children,
+  onShowChange,
+  show = false,
+  persistent = false,
+  teleportTo = "body",
+  closeOnEscape = true,
+  closeOnOverlay = true,
+  ...ownProps
+}: ModalProps) {
+  const modalState = useModal(
+    {
+      ...ownProps,
+      children,
+      persistent,
+      teleportTo,
+      closeOnEscape,
+      closeOnOverlay,
+    },
+    modalLibDefaults,
+    {
+      show,
+      onClose,
+      onShowChange,
+    },
+  );
 
   if (!show) {
     return null;

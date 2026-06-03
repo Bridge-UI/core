@@ -117,12 +117,17 @@ export type {
   ToggleConfigOverrides,
 } from "@core/Config";
 export {
+  MODAL_STACK_BASE_Z_INDEX,
+  acquireModalStackOrder,
   adjustAutosizeTextareaHeight,
   cn,
   createMergePartBind,
   isModalBackdropClick,
+  isModalStackTop,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  pushModalStack,
+  resetModalStackForTests,
   resolveModalPortalElement,
   splitComponentProps,
 } from "@core/Utils";
@@ -133,6 +138,7 @@ export type {
   MergeLibDefaults,
   MergePartBind,
   MergeProps,
+  ModalStackHandle,
   Overwrite,
   UnionProps,
 } from "@core/Utils";

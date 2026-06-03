@@ -1,10 +1,12 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
+import { resetModalStackForTests } from "@bridge-ui/core";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -12,6 +14,7 @@ afterEach(async () => {
   }
 
   await flushPromises();
+  resetModalStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
@@ -202,4 +205,171 @@ test("it should not close on overlay when closeOnOverlay is false", async () => 
   await overlay?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 
   expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+});
+
+test("it should render nested modals with separate dialog layers", () => {
+  const App = defineComponent({
+    setup() {
+      const outer = ref(true);
+      const inner = ref(true);
+
+      return () =>
+        h(
+          Modal,
+          {
+            modelValue: outer.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              outer.value = value;
+            },
+          },
+          () =>
+            h(
+              Modal,
+              {
+                modelValue: inner.value,
+                "onUpdate:modelValue": (value: boolean) => {
+                  inner.value = value;
+                },
+              },
+              () => h("div", "Inner"),
+            ),
+        );
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+});
+
+test("it should close only the topmost nested modal on escape", async () => {
+  const outer = ref(true);
+  const inner = ref(true);
+
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(
+          Modal,
+          {
+            modelValue: outer.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              outer.value = value;
+            },
+          },
+          () =>
+            h(
+              Modal,
+              {
+                modelValue: inner.value,
+                "onUpdate:modelValue": (value: boolean) => {
+                  inner.value = value;
+                },
+              },
+              () => h("div", "Inner"),
+            ),
+        );
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+  expect(inner.value).toBe(false);
+  expect(outer.value).toBe(true);
+});
+
+test("it should keep body scroll locked when an inner modal closes", async () => {
+  const outer = ref(true);
+  const inner = ref(true);
+
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(
+          Modal,
+          {
+            modelValue: outer.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              outer.value = value;
+            },
+          },
+          () =>
+            h(
+              Modal,
+              {
+                modelValue: inner.value,
+                "onUpdate:modelValue": (value: boolean) => {
+                  inner.value = value;
+                },
+              },
+              () => h("div", "Inner"),
+            ),
+        );
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  expect(document.body.style.overflow).toBe("hidden");
+
+  inner.value = false;
+
+  await flushPromises();
+
+  expect(outer.value).toBe(true);
+  expect(document.body.style.overflow).toBe("hidden");
+});
+
+test("it should assign incremental z-index to nested modals", () => {
+  const App = defineComponent({
+    setup() {
+      const outer = ref(true);
+      const inner = ref(true);
+
+      return () =>
+        h(
+          Modal,
+          {
+            modelValue: outer.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              outer.value = value;
+            },
+          },
+          () =>
+            h(
+              Modal,
+              {
+                modelValue: inner.value,
+                "onUpdate:modelValue": (value: boolean) => {
+                  inner.value = value;
+                },
+              },
+              () => h("div", "Inner"),
+            ),
+        );
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  const roots = [
+    ...document.body.querySelectorAll<HTMLElement>(
+      ".fixed.inset-0.overflow-y-auto",
+    ),
+  ];
+
+  expect(roots).toHaveLength(2);
+  expect(Number(roots[0]?.style.zIndex)).toBeLessThan(
+    Number(roots[1]?.style.zIndex),
+  );
 });
