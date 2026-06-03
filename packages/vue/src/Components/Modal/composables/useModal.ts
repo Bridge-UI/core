@@ -1,9 +1,8 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
-  onMounted,
   toValue,
   useAttrs,
   watch,
@@ -78,7 +77,7 @@ export function useModal(
   options: ModalOptions = {},
 ) {
   // Setup
-  const { onClose, onShowChange } = options;
+  const attrs = useAttrs();
 
   const show = computed(() => {
     return toValue(options.show ?? false);
@@ -89,13 +88,12 @@ export function useModal(
       options.show.value = next;
     }
 
-    onShowChange?.(next);
+    options.onShowChange?.(next);
 
     if (!next) {
-      onClose?.();
+      options.onClose?.();
     }
   }
-  const attrs = useAttrs();
 
   const split = computed(() => {
     return splitComponentProps<ModalProps, typeof modalBridgeKeys>({
@@ -154,11 +152,15 @@ export function useModal(
     return !merged.value.persistent;
   });
 
+  const rootInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["onClose", "onShowChange"]);
+  });
+
   // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,
-      split.value.inheritedAttrs,
+      rootInheritedAttrs.value,
       cn({
         "fixed inset-0 z-50 overflow-y-auto": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
@@ -169,7 +171,9 @@ export function useModal(
   const overlayBind = computed(() => {
     return mergePartBind(
       partsProps.value?.overlay,
-      {},
+      {
+        onClick: handleOverlayClick,
+      },
       cn({
         "fixed inset-0 bg-black/50 transition-opacity": true,
         [blurClass.value ?? ""]: true,
@@ -181,7 +185,9 @@ export function useModal(
   const wrapperBind = computed(() => {
     return mergePartBind(
       partsProps.value?.wrapper,
-      {},
+      {
+        onClick: handleWrapperClick,
+      },
       cn({
         "mx-auto flex min-h-full w-full transform items-end justify-center p-4": true,
         [alignClass.value ?? ""]: true,
@@ -231,7 +237,7 @@ export function useModal(
   }
 
   function handleEscape(event: KeyboardEvent) {
-    if (event.key !== "Escape" || !show.value) {
+    if (event.key !== "Escape") {
       return;
     }
 
@@ -265,16 +271,14 @@ export function useModal(
     (isShown) => {
       if (isShown) {
         lockBodyScroll();
+        window.addEventListener("keydown", handleEscape);
       } else {
         unlockBodyScroll();
+        window.removeEventListener("keydown", handleEscape);
       }
     },
     { immediate: true },
   );
-
-  onMounted(() => {
-    window.addEventListener("keydown", handleEscape);
-  });
 
   onBeforeUnmount(() => {
     window.removeEventListener("keydown", handleEscape);

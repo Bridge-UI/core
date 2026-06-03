@@ -45,6 +45,13 @@ test("it should include max width class on wrapper bind", () => {
   expect(result.wrapperBind.value.class).toContain("sm:max-w-sm");
 });
 
+test("it should default closeOnOverlay and closeOnEscape to true", () => {
+  const { result } = mountUseModal();
+
+  expect(result.merged.value.closeOnEscape).toBe(true);
+  expect(result.merged.value.closeOnOverlay).toBe(true);
+});
+
 test("it should set show to false when overlay is clicked", () => {
   const show = ref(true);
 

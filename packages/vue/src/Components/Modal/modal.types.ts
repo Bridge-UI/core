@@ -99,6 +99,21 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
+   * Called when the modal requests to close (overlay, escape).
+   * Sugar for `onShowChange(false)`.
+   *
+   * @default undefined
+   */
+  onClose?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   *
+   * @default undefined
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
    * Props forwarded to each modal part.
    *
    * @default undefined

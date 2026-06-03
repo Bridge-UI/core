@@ -13,19 +13,16 @@ const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ModalOwnProps>();
+const props = withDefaults(defineProps<ModalOwnProps>(), {
+  persistent: false,
+  teleportTo: "body",
+  closeOnEscape: true,
+  closeOnOverlay: true,
+});
 
 const model = defineModel<boolean>({ default: false });
 
-const {
-  merged,
-  rootBind,
-  panelBind,
-  overlayBind,
-  wrapperBind,
-  handleOverlayClick,
-  handleWrapperClick,
-} = useModal(
+const { merged, rootBind, panelBind, overlayBind, wrapperBind } = useModal(
   props,
   {
     size: "md",
@@ -37,6 +34,8 @@ const {
   },
   {
     show: model,
+    onClose: () => props.onClose?.(),
+    onShowChange: (show) => props.onShowChange?.(show),
   },
 );
 
@@ -56,13 +55,9 @@ const teleportTarget = computed(() => {
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="model" v-bind="rootBind">
-      <div
-        aria-hidden="true"
-        v-bind="overlayBind"
-        v-on:click="handleOverlayClick"
-      />
+      <div aria-hidden="true" v-bind="overlayBind" />
 
-      <div v-bind="wrapperBind" v-on:click="handleWrapperClick">
+      <div v-bind="wrapperBind">
         <div v-bind="panelBind">
           <component :is="resolveNamedSlot(slots, 'default')" />
         </div>
