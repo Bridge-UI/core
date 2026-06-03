@@ -95,7 +95,9 @@ declare module "@bridge-ui/core" {
 
   interface ModalConfigOverrides {
     classes: ModalClasses;
-    defaultProps: Partial<Pick<ModalProps, "size" | "teleportTo">>;
+    defaultProps: Partial<
+      Pick<ModalProps, "blur" | "size" | "align" | "teleportTo">
+    >;
   }
 
   interface RadioConfigOverrides {

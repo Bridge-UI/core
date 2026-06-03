@@ -18,7 +18,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Modal";
+import {
+  alignProps,
+  blurProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Modal";
 import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -30,18 +34,20 @@ import {
 } from "@/Utils";
 
 const modalBridgeKeys = [
-  "classes",
+  "blur",
   "size",
+  "align",
+  "classes",
+  "partsProps",
   "persistent",
   "teleportTo",
-  "partsProps",
   "closeOnEscape",
   "closeOnOverlay",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
   ModalOwnProps,
-  "size" | "teleportTo" | "closeOnEscape" | "closeOnOverlay"
+  "blur" | "size" | "align" | "teleportTo" | "closeOnEscape" | "closeOnOverlay"
 >;
 
 type ModalMerged = MergeLibDefaults<ModalOwnProps, ModalLibDefaults>;
@@ -70,7 +76,8 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  const { onShowChange, onClose } = options;
+  // Setup
+  const { onClose, onShowChange } = options;
 
   const showValue = computed(() => {
     return toValue(options.show ?? false);
@@ -114,6 +121,25 @@ export function useModal(
     props: () => split.value.customProps,
   });
 
+  // Classes
+  const alignClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      alignProps,
+      bridgeModal.value?.customProps?.align,
+    );
+
+    return get(classes, merged.value.align);
+  });
+
+  const blurClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      blurProps,
+      bridgeModal.value?.customProps?.blur,
+    );
+
+    return get(classes, merged.value.blur);
+  });
+
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -127,6 +153,7 @@ export function useModal(
     return !merged.value.persistent;
   });
 
+  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,
@@ -144,6 +171,7 @@ export function useModal(
       {},
       cn({
         "fixed inset-0 bg-black/50 transition-opacity": true,
+        [blurClass.value ?? ""]: true,
         [get(mergedClasses.value, "overlay") ?? ""]: true,
       }),
     );
@@ -154,7 +182,9 @@ export function useModal(
       partsProps.value?.wrapper,
       {},
       cn({
-        "flex min-h-full w-full items-end justify-center p-4 sm:items-center": true,
+        "mx-auto flex min-h-full w-full transform items-end justify-center p-4": true,
+        [alignClass.value ?? ""]: true,
+        [sizeClass.value ?? ""]: true,
         [get(mergedClasses.value, "wrapper") ?? ""]: true,
       }),
     );
@@ -169,12 +199,12 @@ export function useModal(
       },
       cn({
         "relative w-full": true,
-        [sizeClass.value ?? ""]: true,
         [get(mergedClasses.value, "panel") ?? ""]: true,
       }),
     );
   });
 
+  // Handlers
   function requestClose() {
     if (!canClose.value) {
       return;
@@ -209,6 +239,7 @@ export function useModal(
     }
 
     event.preventDefault();
+
     requestClose();
   }
 
@@ -246,6 +277,7 @@ export function useModal(
 
   onBeforeUnmount(() => {
     window.removeEventListener("keydown", handleEscape);
+
     unlockBodyScroll();
   });
 

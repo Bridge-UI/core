@@ -2,9 +2,17 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { MergeHtmlProps, MergeProps, ModalSize } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  MergeProps,
+  ModalAlign,
+  ModalBlur,
+  ModalSize,
+} from "@bridge-ui/core";
 
+export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
+export interface ModalAlignOverrides {}
 
 export interface ModalClasses {
   /**
@@ -56,6 +64,20 @@ export interface ModalPartsProps {
  */
 export interface ModalOwnProps {
   /**
+   * Vertical alignment of the panel from the `sm` breakpoint up (mobile uses bottom sheet).
+   *
+   * @default "center"
+   */
+  align?: MergeProps<ModalAlign, ModalAlignOverrides>;
+
+  /**
+   * Backdrop blur on the overlay.
+   *
+   * @default "none"
+   */
+  blur?: MergeProps<ModalBlur, ModalBlurOverrides>;
+
+  /**
    * The classes to apply to the modal.
    *
    * @default undefined
@@ -91,7 +113,7 @@ export interface ModalOwnProps {
   persistent?: boolean;
 
   /**
-   * The max width of the dialog panel.
+   * Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).
    *
    * @default "md"
    */

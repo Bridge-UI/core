@@ -10,6 +10,8 @@ import type { ModalProps } from "@/Components/Modal/modal.types";
 
 const modalLibDefaults = {
   size: "md",
+  blur: "none",
+  align: "center",
   teleportTo: "body",
   closeOnEscape: true,
   closeOnOverlay: true,

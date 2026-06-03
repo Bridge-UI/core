@@ -10,7 +10,11 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Modal";
+import {
+  alignProps,
+  blurProps,
+  sizeProps,
+} from "@bridge-ui/core/Components/Modal";
 import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -22,18 +26,20 @@ import {
 } from "@/Utils";
 
 const modalBridgeKeys = [
-  "classes",
+  "blur",
   "size",
+  "align",
+  "classes",
+  "partsProps",
   "persistent",
   "teleportTo",
-  "partsProps",
   "closeOnEscape",
   "closeOnOverlay",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
   ModalOwnProps,
-  "size" | "teleportTo" | "closeOnEscape" | "closeOnOverlay"
+  "blur" | "size" | "align" | "teleportTo" | "closeOnEscape" | "closeOnOverlay"
 >;
 
 type ModalMerged = MergeLibDefaults<ModalOwnProps, ModalLibDefaults>;
@@ -63,7 +69,9 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  const { show = false, onShowChange, onClose } = options;
+  // Setup
+  const { onClose, onShowChange, show = false } = options;
+
   const { customProps, inheritedAttrs } = splitComponentProps<
     ModalProps,
     typeof modalBridgeKeys
@@ -84,9 +92,9 @@ export function useModal(
   const partsProps = merged.partsProps;
 
   const rootInheritedAttrs = omit(inheritedAttrs, [
-    "children",
     "show",
     "onClose",
+    "children",
     "onShowChange",
   ]);
 
@@ -94,6 +102,25 @@ export function useModal(
     entry: bridgeModal,
     props: customProps,
   });
+
+  // Classes
+  const alignClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      alignProps,
+      bridgeModal?.customProps?.align,
+    );
+
+    return get(classes, merged.align);
+  }, [merged.align, bridgeModal?.customProps?.align]);
+
+  const blurClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      blurProps,
+      bridgeModal?.customProps?.blur,
+    );
+
+    return get(classes, merged.blur);
+  }, [merged.blur, bridgeModal?.customProps?.blur]);
 
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -104,6 +131,7 @@ export function useModal(
     return get(classes, merged.size);
   }, [merged.size, bridgeModal?.customProps?.size]);
 
+  // Binds
   const rootBind = mergePartBind(
     partsProps?.root,
     rootInheritedAttrs,
@@ -118,6 +146,7 @@ export function useModal(
     {},
     cn({
       "fixed inset-0 bg-black/50 transition-opacity": true,
+      [blurClass ?? ""]: true,
       [get(mergedClasses, "overlay") ?? ""]: true,
     }),
   );
@@ -126,7 +155,9 @@ export function useModal(
     partsProps?.wrapper,
     {},
     cn({
-      "flex min-h-full w-full items-end justify-center p-4 sm:items-center": true,
+      "mx-auto flex min-h-full w-full transform items-end justify-center p-4": true,
+      [alignClass ?? ""]: true,
+      [sizeClass ?? ""]: true,
       [get(mergedClasses, "wrapper") ?? ""]: true,
     }),
   );
@@ -139,11 +170,11 @@ export function useModal(
     },
     cn({
       "relative w-full": true,
-      [sizeClass ?? ""]: true,
       [get(mergedClasses, "panel") ?? ""]: true,
     }),
   );
 
+  // Handlers
   function setShow(next: boolean) {
     onShowChange?.(next);
 
@@ -215,7 +246,7 @@ export function useModal(
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [show, merged.closeOnEscape, merged.persistent]);
+  }, [show, merged.persistent, merged.closeOnEscape]);
 
   return {
     merged,

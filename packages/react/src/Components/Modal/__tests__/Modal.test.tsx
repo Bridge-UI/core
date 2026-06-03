@@ -92,14 +92,40 @@ test("it should not call onShowChange when clicking inside the panel", () => {
   expect(onShowChange).not.toHaveBeenCalled();
 });
 
-test("it should apply size classes to the panel", () => {
+test("it should apply size classes on the wrapper from sm breakpoint", () => {
   render(
     <Modal show size="lg">
       Sized
     </Modal>,
   );
 
-  expect(screen.getByRole("dialog").className).toContain("max-w-lg");
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:max-w-lg");
+});
+
+test("it should apply blur classes on the overlay", () => {
+  render(
+    <Modal show blur="md">
+      Blur
+    </Modal>,
+  );
+
+  const overlay = document.body.querySelector(".bg-black\\/50");
+
+  expect(overlay?.className).toContain("backdrop-blur-md");
+});
+
+test("it should apply align classes on the wrapper", () => {
+  render(
+    <Modal show align="start">
+      Align
+    </Modal>,
+  );
+
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:items-start");
 });
 
 test("it should render a Card as children", () => {

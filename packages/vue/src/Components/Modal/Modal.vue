@@ -29,6 +29,8 @@ const {
   props,
   {
     size: "md",
+    blur: "none",
+    align: "center",
     teleportTo: "body",
     closeOnEscape: true,
     closeOnOverlay: true,

@@ -77,15 +77,37 @@ test("it should not close when clicking inside the panel", async () => {
   expect(wrapper.emitted("update:show")).toBeUndefined();
 });
 
-test("it should apply size classes to the panel", () => {
+test("it should apply size classes on the wrapper from sm breakpoint", () => {
   mountModal({
     props: { show: true, size: "lg" },
     slots: { default: "Sized" },
   });
 
-  const dialog = document.body.querySelector('[role="dialog"]');
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
 
-  expect(dialog?.className).toContain("max-w-lg");
+  expect(wrapper?.className).toContain("sm:max-w-lg");
+});
+
+test("it should apply blur classes on the overlay", () => {
+  mountModal({
+    props: { show: true, blur: "md" },
+    slots: { default: "Blur" },
+  });
+
+  const overlay = document.body.querySelector(".bg-black\\/50");
+
+  expect(overlay?.className).toContain("backdrop-blur-md");
+});
+
+test("it should apply align classes on the wrapper", () => {
+  mountModal({
+    props: { show: true, align: "start" },
+    slots: { default: "Align" },
+  });
+
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:items-start");
 });
 
 test("it should render a Card inside the default slot", () => {

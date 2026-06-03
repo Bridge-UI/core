@@ -111,6 +111,8 @@ export type {
 } from "@/Components/Menu";
 export { Modal, useModal } from "@/Components/Modal";
 export type {
+  ModalAlignOverrides,
+  ModalBlurOverrides,
   ModalClasses,
   ModalOwnProps,
   ModalPartsProps,

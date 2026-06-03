@@ -2,9 +2,17 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps, MergeProps, ModalSize } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  MergeProps,
+  ModalAlign,
+  ModalBlur,
+  ModalSize,
+} from "@bridge-ui/core";
 
+export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
+export interface ModalAlignOverrides {}
 
 export interface ModalClasses {
   /**
@@ -55,6 +63,20 @@ export interface ModalPartsProps {
  * Control visibility with `show` and `onShowChange`.
  */
 export interface ModalOwnProps {
+  /**
+   * Vertical alignment of the panel from the `sm` breakpoint up (mobile uses bottom sheet).
+   *
+   * @default "center"
+   */
+  align?: MergeProps<ModalAlign, ModalAlignOverrides>;
+
+  /**
+   * Backdrop blur on the overlay.
+   *
+   * @default "none"
+   */
+  blur?: MergeProps<ModalBlur, ModalBlurOverrides>;
+
   /**
    * The children to render inside the dialog panel.
    *
@@ -120,7 +142,7 @@ export interface ModalOwnProps {
   show?: boolean;
 
   /**
-   * The max width of the dialog panel.
+   * Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).
    *
    * @default "md"
    */

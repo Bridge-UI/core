@@ -63,11 +63,7 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-export type {
-  ModalRounded,
-  ModalShadow,
-  ModalSize,
-} from "@core/Components/Modal";
+export type { ModalAlign, ModalBlur, ModalSize } from "@core/Components/Modal";
 export type {
   RadioColor,
   RadioColorItem,

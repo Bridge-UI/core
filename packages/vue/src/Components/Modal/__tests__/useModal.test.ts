@@ -7,6 +7,8 @@ import { defineComponent, h, ref } from "vue";
 import { useModal, type ModalOwnProps } from "@/Components/Modal";
 
 const libDefaults: Partial<ModalOwnProps> = {
+  align: "center",
+  blur: "none",
   size: "md",
   teleportTo: "body",
   closeOnEscape: true,
@@ -42,10 +44,10 @@ test("it should return default size as md", () => {
   expect(result.merged.value.size).toBe("md");
 });
 
-test("it should include max width class on panel bind", () => {
+test("it should include max width class on wrapper bind", () => {
   const result = mountUseModal({ size: "sm" });
 
-  expect(result.panelBind.value.class).toContain("max-w-sm");
+  expect(result.wrapperBind.value.class).toContain("sm:max-w-sm");
 });
 
 test("it should set show to false when overlay is clicked", () => {
