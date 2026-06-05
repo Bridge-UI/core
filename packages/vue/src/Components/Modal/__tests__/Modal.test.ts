@@ -25,9 +25,7 @@ afterEach(async () => {
 const mountedWrappers: Array<ReturnType<typeof mount<typeof Modal>>> = [];
 
 function mountModal(options: Parameters<typeof mount<typeof Modal>>[1] = {}) {
-  let wrapper!: ReturnType<typeof mount<typeof Modal>>;
-
-  wrapper = mount(Modal, {
+  const wrapper = mount(Modal, {
     attachTo: document.body,
     ...options,
     props: {

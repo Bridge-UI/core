@@ -25,29 +25,44 @@ function Content({ label = "Imperative" }: { label?: string }) {
   return <p className="bridge-modal-body">{label}</p>;
 }
 
-function OpenOnMount() {
+function RunOnMount({
+  onMount,
+}: {
+  onMount: (modal: ReturnType<typeof useBridgeModal>) => void;
+}) {
   const modal = useBridgeModal();
 
   useEffect(() => {
-    modal.open({ component: Content, modal: { transition: "none" } });
+    onMount(modal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- imperative setup once on mount
   }, []);
 
   return null;
 }
 
+function OpenOnMount() {
+  return (
+    <RunOnMount
+      onMount={(modal) => {
+        modal.open({ component: Content, modal: { transition: "none" } });
+      }}
+    />
+  );
+}
+
 function OpenAndCloseOnMount() {
-  const modal = useBridgeModal();
+  return (
+    <RunOnMount
+      onMount={(modal) => {
+        const id = modal.open({
+          component: Content,
+          modal: { transition: "none" },
+        });
 
-  useEffect(() => {
-    const id = modal.open({
-      component: Content,
-      modal: { transition: "none" },
-    });
-
-    modal.close(id);
-  }, []);
-
-  return null;
+        modal.close(id);
+      }}
+    />
+  );
 }
 
 function OpenWithRef({
@@ -146,28 +161,23 @@ test("closeTop should close only the topmost imperative modal", async () => {
   let outerId = "";
   let innerId = "";
 
-  function OpenTwo() {
-    api = useBridgeModal();
-
-    useEffect(() => {
-      outerId = api.open({
-        component: Content,
-        modal: { transition: "none" },
-        props: { label: "Outer" },
-      });
-      innerId = api.open({
-        component: Content,
-        modal: { transition: "none" },
-        props: { label: "Inner" },
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenTwo />
+      <RunOnMount
+        onMount={(modal) => {
+          api = modal;
+          outerId = modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            props: { label: "Outer" },
+          });
+          innerId = modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            props: { label: "Inner" },
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -194,24 +204,19 @@ test("onClose should run before onClosed when close is called", async () => {
   let api!: ReturnType<typeof useBridgeModal>;
   let id = "";
 
-  function OpenWithCallbacks() {
-    api = useBridgeModal();
-
-    useEffect(() => {
-      id = api.open({
-        component: Content,
-        modal: { transition: "none" },
-        onClose,
-        onClosed,
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenWithCallbacks />
+      <RunOnMount
+        onMount={(modal) => {
+          api = modal;
+          id = modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            onClose,
+            onClosed,
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -237,24 +242,18 @@ test("onClose should run before onClosed when escape is pressed", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
 
-  function OpenWithCallbacks() {
-    const modal = useBridgeModal();
-
-    useEffect(() => {
-      modal.open({
-        component: Content,
-        modal: { transition: "none" },
-        onClose,
-        onClosed,
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenWithCallbacks />
+      <RunOnMount
+        onMount={(modal) => {
+          modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            onClose,
+            onClosed,
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -277,27 +276,19 @@ test("onClose should run before onClosed when escape is pressed", async () => {
 });
 
 test("update should patch props on an open modal", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
-  let id = "";
-
-  function OpenAndUpdate() {
-    api = useBridgeModal();
-
-    useEffect(() => {
-      id = api.open({
-        component: Content,
-        modal: { transition: "none" },
-        props: { label: "Before" },
-      });
-      api.update(id, { props: { label: "After" } });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenAndUpdate />
+      <RunOnMount
+        onMount={(modal) => {
+          const openedId = modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            props: { label: "Before" },
+          });
+
+          modal.update(openedId, { props: { label: "After" } });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -309,26 +300,18 @@ test("update should patch props on an open modal", async () => {
 });
 
 test("update should patch modal shell options on an open modal", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
-  let id = "";
-
-  function OpenAndUpdateModal() {
-    api = useBridgeModal();
-
-    useEffect(() => {
-      id = api.open({
-        component: Content,
-        modal: { transition: "none", size: "sm" },
-      });
-      api.update(id, { modal: { size: "lg" } });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenAndUpdateModal />
+      <RunOnMount
+        onMount={(modal) => {
+          const openedId = modal.open({
+            component: Content,
+            modal: { transition: "none", size: "sm" },
+          });
+
+          modal.update(openedId, { modal: { size: "lg" } });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -342,23 +325,17 @@ test("update should patch modal shell options on an open modal", async () => {
 test("open with persistent modal should ignore escape", async () => {
   const onClose = vi.fn();
 
-  function OpenPersistent() {
-    const modal = useBridgeModal();
-
-    useEffect(() => {
-      modal.open({
-        onClose,
-        component: Content,
-        modal: { transition: "none", persistent: true },
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenPersistent />
+      <RunOnMount
+        onMount={(modal) => {
+          modal.open({
+            onClose,
+            component: Content,
+            modal: { transition: "none", persistent: true },
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -375,28 +352,22 @@ test("open with persistent modal should ignore escape", async () => {
 });
 
 test("stacked imperative modals should use incremental z-index", async () => {
-  function OpenTwo() {
-    const modal = useBridgeModal();
-
-    useEffect(() => {
-      modal.open({
-        component: Content,
-        props: { label: "Outer" },
-        modal: { transition: "none" },
-      });
-      modal.open({
-        component: Content,
-        props: { label: "Inner" },
-        modal: { transition: "none" },
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenTwo />
+      <RunOnMount
+        onMount={(modal) => {
+          modal.open({
+            component: Content,
+            props: { label: "Outer" },
+            modal: { transition: "none" },
+          });
+          modal.open({
+            component: Content,
+            props: { label: "Inner" },
+            modal: { transition: "none" },
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -422,24 +393,19 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
   let api!: ReturnType<typeof useBridgeModal>;
   let id = "";
 
-  function OpenWithCallbacks() {
-    api = useBridgeModal();
-
-    useEffect(() => {
-      id = api.open({
-        component: Content,
-        modal: { transition: "none" },
-        onClose,
-        onClosed,
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenWithCallbacks />
+      <RunOnMount
+        onMount={(modal) => {
+          api = modal;
+          id = modal.open({
+            component: Content,
+            modal: { transition: "none" },
+            onClose,
+            onClosed,
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 
@@ -466,28 +432,22 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
 test("modal shell options must not override host-controlled props", async () => {
   const onClose = vi.fn();
 
-  function OpenWithHostOverrides() {
-    const modal = useBridgeModal();
-
-    useEffect(() => {
-      modal.open({
-        onClose,
-        component: Content,
-        modal: {
-          show: false,
-          transition: "none",
-          onClose: vi.fn(),
-          onShowChange: vi.fn(),
-        },
-      });
-    }, []);
-
-    return null;
-  }
-
   render(
     <BridgeUIProvider>
-      <OpenWithHostOverrides />
+      <RunOnMount
+        onMount={(modal) => {
+          modal.open({
+            onClose,
+            component: Content,
+            modal: {
+              show: false,
+              transition: "none",
+              onClose: vi.fn(),
+              onShowChange: vi.fn(),
+            },
+          });
+        }}
+      />
     </BridgeUIProvider>,
   );
 

@@ -7,7 +7,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -202,26 +202,22 @@ test("it should not call onClose when show is set to false by the parent", () =>
   const onClose = vi.fn();
   const onShowChange = vi.fn();
 
-  function ControlledModal() {
-    const [open, setOpen] = useState(true);
+  const { rerender } = render(
+    <Modal show transition="none" onClose={onClose} onShowChange={onShowChange}>
+      Content
+    </Modal>,
+  );
 
-    useEffect(() => {
-      setOpen(false);
-    }, []);
-
-    return (
-      <Modal
-        show={open}
-        transition="none"
-        onClose={onClose}
-        onShowChange={onShowChange}
-      >
-        Content
-      </Modal>
-    );
-  }
-
-  render(<ControlledModal />);
+  rerender(
+    <Modal
+      show={false}
+      transition="none"
+      onClose={onClose}
+      onShowChange={onShowChange}
+    >
+      Content
+    </Modal>,
+  );
 
   expect(onClose).not.toHaveBeenCalled();
   expect(onShowChange).toHaveBeenCalledWith(false);
@@ -345,9 +341,9 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
   const onInnerChange = vi.fn();
 
   function ThreeModals() {
+    const [outerOpen] = useState(true);
+    const [middleOpen] = useState(true);
     const [innerOpen, setInnerOpen] = useState(true);
-    const [outerOpen, setOuterOpen] = useState(true);
-    const [middleOpen, setMiddleOpen] = useState(true);
 
     return (
       <>
