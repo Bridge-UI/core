@@ -284,6 +284,8 @@ export function useModal(
 
     if (show.value) {
       setShow(false);
+    } else {
+      options.onShowChange?.(false);
     }
 
     rendered.value = false;

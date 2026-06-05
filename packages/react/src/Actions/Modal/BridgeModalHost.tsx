@@ -40,7 +40,6 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
             key={entry.id}
             show={entry.show}
             stackId={entry.id}
-            onClose={entry.onClose}
             onShowChange={(show) => handleShowChange(entry, api, show)}
             {...entry.modal}
           >

@@ -213,6 +213,8 @@ export function useModal(
 
     if (show) {
       setShow(false);
+    } else {
+      onShowChange?.(false);
     }
 
     setRendered(false);
