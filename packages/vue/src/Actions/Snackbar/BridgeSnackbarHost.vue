@@ -6,7 +6,6 @@ import { computed, inject, provide } from "vue";
 // ** Core Imports
 import {
   cn,
-  getSnackbarStackClass,
   mergeBridgeUILayeredClasses,
   snackbarPositionProps,
 } from "@bridge-ui/core";
@@ -81,7 +80,9 @@ const teleportTarget = computed(() => {
 });
 
 const stackClass = computed(() => {
-  return getSnackbarStackClass(resolvedPosition.value);
+  return resolvedPosition.value.startsWith("top")
+    ? "flex-col"
+    : "flex-col-reverse";
 });
 </script>
 

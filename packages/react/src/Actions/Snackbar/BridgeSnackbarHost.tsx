@@ -11,7 +11,6 @@ import { createPortal } from "react-dom";
 // ** Core Imports
 import {
   cn,
-  getSnackbarStackClass,
   mergeBridgeUILayeredClasses,
   resolveModalPortalElement,
   snackbarPositionProps,
@@ -92,6 +91,10 @@ export function BridgeSnackbarHost({
     return get(classes, resolvedPosition);
   }, [resolvedPosition, snackbarEntry?.customProps?.position]);
 
+  const stackDirectionClass = resolvedPosition.startsWith("top")
+    ? "flex-col"
+    : "flex-col-reverse";
+
   const stack = (
     <div
       data-snackbar-host
@@ -103,7 +106,7 @@ export function BridgeSnackbarHost({
       <div
         className={cn(
           "flex w-full max-w-sm gap-y-2 pointer-events-auto",
-          getSnackbarStackClass(resolvedPosition),
+          stackDirectionClass,
         )}
       >
         {api.entries.map((entry) => {

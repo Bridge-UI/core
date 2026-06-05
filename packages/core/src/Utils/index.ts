@@ -163,7 +163,6 @@ export {
   resolveModalPortalElement,
 } from "@core/Utils/portal";
 export {
-  getSnackbarStackClass,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
 } from "@core/Utils/snackbar";
