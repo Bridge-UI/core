@@ -10,6 +10,7 @@ export type {
   BridgeSnackbarShellProps,
   BridgeSnackbarUpdateOptions,
   SnackbarAction,
+  SnackbarActionColor,
   SnackbarActionLayout,
   SnackbarActions,
 } from "@/Actions/Snackbar/bridgeSnackbar.types";

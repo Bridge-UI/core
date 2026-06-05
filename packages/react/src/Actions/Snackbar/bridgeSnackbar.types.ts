@@ -62,13 +62,15 @@ export type SnackbarActionLayout =
   | "right-accept"
   | "right-reject";
 
+export type SnackbarActionColor = keyof SnackbarColor;
+
 export type BridgeSnackbarActionProps = {
   action: SnackbarAction;
   hasAccept?: boolean;
   hasReject?: boolean;
   layout: SnackbarActionLayout;
   role: "accept" | "reject";
-  snackbarColor: keyof SnackbarColor;
+  snackbarColor: SnackbarActionColor;
 };
 
 export type SnackbarActionControlProps = BridgeSnackbarActionProps & {
