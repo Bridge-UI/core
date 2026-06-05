@@ -138,7 +138,83 @@ test("accept action should use the snackbar color, not primary", async () => {
   expect(action?.className).not.toContain("text-primary-600");
 });
 
-test("imperative snackbars should stack with increasing z-index", async () => {
+test("top-center should grow downward with newest below oldest", async () => {
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useBridgeSnackbar();
+
+      snackbar.open({
+        title: "Older",
+        duration: false,
+        transition: "none",
+      });
+      snackbar.open({
+        title: "Newer",
+        duration: false,
+        transition: "none",
+      });
+    },
+  });
+
+  mount(BridgeSnackbarHost, {
+    attachTo: document.body,
+    props: { position: "top-center" },
+    slots: { default: () => h(Consumer) },
+  });
+
+  await flushPromises();
+  await nextTick();
+
+  const host = document.body.querySelector("[data-snackbar-host]");
+  const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
+
+  expect(host?.className).toContain("items-start");
+  expect(panels?.length).toBe(2);
+  expect(panels?.[0]?.textContent).toContain("Older");
+  expect(panels?.[1]?.textContent).toContain("Newer");
+  expect(host?.querySelector(".flex-col")).toBeTruthy();
+  expect(host?.querySelector(".flex-col-reverse")).toBeFalsy();
+});
+
+test("bottom-center should stack upward from the viewport edge", async () => {
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useBridgeSnackbar();
+
+      snackbar.open({
+        title: "Older",
+        duration: false,
+        transition: "none",
+      });
+      snackbar.open({
+        title: "Newer",
+        duration: false,
+        transition: "none",
+      });
+    },
+  });
+
+  mount(BridgeSnackbarHost, {
+    attachTo: document.body,
+    props: { position: "bottom-center" },
+    slots: { default: () => h(Consumer) },
+  });
+
+  await flushPromises();
+  await nextTick();
+
+  const host = document.body.querySelector("[data-snackbar-host]");
+  const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
+
+  expect(host?.className).toContain("items-end");
+  expect(panels?.length).toBe(2);
+  expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
+  expect(host?.querySelector(".flex-col")).toBeFalsy();
+  expect(panels?.[0]?.textContent).toContain("Older");
+  expect(panels?.[1]?.textContent).toContain("Newer");
+});
+
+test("imperative snackbars should stack in a single notification column", async () => {
   const Consumer = defineComponent({
     setup() {
       const snackbar = useBridgeSnackbar();
@@ -160,14 +236,14 @@ test("imperative snackbars should stack with increasing z-index", async () => {
   await flushPromises();
   await nextTick();
 
-  const layers = document.body.querySelectorAll("[data-snackbar-layer]");
+  const host = document.body.querySelector("[data-snackbar-host]");
+  const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-  expect(layers.length).toBe(2);
-
-  const firstZ = Number((layers[0] as HTMLElement).style.zIndex);
-  const secondZ = Number((layers[1] as HTMLElement).style.zIndex);
-
-  expect(secondZ).toBeGreaterThan(firstZ);
+  expect(host).toBeTruthy();
+  expect(panels?.length).toBe(2);
+  expect(document.body.querySelectorAll("[data-snackbar-layer]").length).toBe(
+    0,
+  );
 });
 
 test("host snackbar defaults should merge into open options", async () => {

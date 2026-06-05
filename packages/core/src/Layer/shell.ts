@@ -19,11 +19,11 @@ export function mergeLayerShellProps<T extends LayerShellShape>(
   }
 
   if (!host) {
-    return { ...entry };
+    return (entry ? { ...entry } : {}) as Partial<T>;
   }
 
   if (!entry) {
-    return { ...host };
+    return { ...host } as Partial<T>;
   }
 
   const merged = toMerged(host, entry) as Partial<T>;
@@ -37,8 +37,8 @@ export function mergeLayerShellProps<T extends LayerShellShape>(
 
   if (host.partsProps || entry.partsProps) {
     merged.partsProps = toMerged(
-      host.partsProps,
-      entry.partsProps,
+      host.partsProps ?? {},
+      entry.partsProps ?? {},
     ) as T["partsProps"];
   }
 

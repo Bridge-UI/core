@@ -4,7 +4,18 @@ import {
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core";
-import { useContext, useEffect, type ReactNode } from "react";
+import { get } from "es-toolkit/compat";
+import { useContext, useEffect, useMemo, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+
+// ** Core Imports
+import {
+  cn,
+  getSnackbarStackClass,
+  mergeBridgeUILayeredClasses,
+  resolveModalPortalElement,
+  snackbarPositionProps,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
@@ -12,9 +23,22 @@ import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar
 import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
+import { useBridgeUI } from "@/Provider/useBridgeUI";
 
 export type BridgeSnackbarHostProps = {
   children?: ReactNode;
+  /**
+   * Notification stack position on the viewport.
+   *
+   * @default "bottom-center"
+   */
+  position?: keyof typeof snackbarPositionProps;
+  /**
+   * Portal target for the notification stack. `false` renders inline.
+   *
+   * @default "body"
+   */
+  teleportTo?: string | false;
   /**
    * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
    * Per-call `open()` options override these.
@@ -38,12 +62,15 @@ const NESTED_HOST_WARNING =
 
 export function BridgeSnackbarHost({
   children,
-  snackbar,
+  position,
+  teleportTo = "body",
+  snackbar: hostSnackbar,
   max,
   timeout,
 }: BridgeSnackbarHostProps) {
   const parentApi = useContext(BridgeSnackbarContext);
   const api = useBridgeSnackbarController({ max, timeout });
+  const bridge = useBridgeUI();
 
   useEffect(() => {
     if (parentApi && process.env.NODE_ENV !== "production") {
@@ -51,39 +78,80 @@ export function BridgeSnackbarHost({
     }
   }, [parentApi]);
 
+  const snackbarEntry = bridge?.components?.Snackbar;
+
+  const resolvedPosition =
+    position ?? snackbarEntry?.defaultProps?.position ?? "bottom-center";
+
+  const positionClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarPositionProps,
+      snackbarEntry?.customProps?.position,
+    );
+
+    return get(classes, resolvedPosition);
+  }, [resolvedPosition, snackbarEntry?.customProps?.position]);
+
+  const stack = (
+    <div
+      data-snackbar-host
+      className={cn(
+        "fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4",
+        positionClass,
+      )}
+    >
+      <div
+        className={cn(
+          "flex w-full max-w-sm gap-y-2 pointer-events-auto",
+          getSnackbarStackClass(resolvedPosition),
+        )}
+      >
+        {api.entries.map((entry) => {
+          const entryId = entry.id;
+          const { actions, rightButtons, ...entrySnackbar } = entry.props;
+
+          const snackbarProps = mergeLayerShellProps(
+            hostSnackbar,
+            entrySnackbar,
+          );
+
+          return (
+            <Snackbar
+              key={entryId}
+              {...snackbarProps}
+              show={entry.show}
+              stackId={entryId}
+              teleportTo={false}
+              slots={resolveBridgeSnackbarSlots(
+                {
+                  actions,
+                  rightButtons,
+                  dense: snackbarProps.dense,
+                  color: snackbarProps.color,
+                },
+                () => api.close(entryId),
+              )}
+              onClose={() => invokeLayerDismiss(api.entries, entryId)}
+              onShowChange={(show) => {
+                api.syncShow(entryId, show);
+                completeLayerHide(api.entries, entryId, show, api.removeEntry);
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const portalElement =
+    teleportTo === false || typeof document === "undefined"
+      ? null
+      : resolveModalPortalElement(teleportTo);
+
   return (
     <BridgeSnackbarContext.Provider value={api}>
       {children}
-
-      {api.entries.map((entry) => {
-        const entryId = entry.id;
-        const { actions, rightButtons, ...entrySnackbar } = entry.props;
-
-        const snackbarProps = mergeLayerShellProps(snackbar, entrySnackbar);
-
-        return (
-          <Snackbar
-            key={entryId}
-            {...snackbarProps}
-            show={entry.show}
-            stackId={entryId}
-            slots={resolveBridgeSnackbarSlots(
-              {
-                actions,
-                rightButtons,
-                dense: snackbarProps.dense,
-                color: snackbarProps.color,
-              },
-              () => api.close(entryId),
-            )}
-            onClose={() => invokeLayerDismiss(api.entries, entryId)}
-            onShowChange={(show) => {
-              api.syncShow(entryId, show);
-              completeLayerHide(api.entries, entryId, show, api.removeEntry);
-            }}
-          />
-        );
-      })}
+      {portalElement ? createPortal(stack, portalElement) : stack}
     </BridgeSnackbarContext.Provider>
   );
 }

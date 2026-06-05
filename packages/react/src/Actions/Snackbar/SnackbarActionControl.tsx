@@ -2,7 +2,7 @@
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, type ButtonColor } from "@bridge-ui/core";
+import { cn, type ButtonColor, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
@@ -57,15 +57,18 @@ export function SnackbarActionControl({
   hasAccept,
   onRun,
 }: SnackbarActionControlProps) {
-  const color = role === "accept" ? snackbarColor : "secondary";
+  const buttonColor = role === "accept" ? snackbarColor : "secondary";
+  const linkColor = buttonColor as keyof LinkColor;
 
   if (action.link) {
+    const { onClick: linkOnClick, ...linkProps } = action.link;
+
     return (
       <Link
         size="sm"
         underline="hover"
-        color={color}
-        {...action.link}
+        color={linkColor}
+        {...linkProps}
         classes={{
           ...action.link.classes,
           root: cn(
@@ -76,7 +79,7 @@ export function SnackbarActionControl({
         }}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault();
-          action.link?.onClick?.(event);
+          linkOnClick?.(event);
           onRun();
         }}
       >
@@ -88,7 +91,7 @@ export function SnackbarActionControl({
   return (
     <Button
       size="sm"
-      color={color}
+      color={buttonColor}
       variant={action.solid ? "outline" : "flat"}
       {...action.button}
       classes={{

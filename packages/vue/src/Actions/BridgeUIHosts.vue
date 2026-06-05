@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** Core Imports
+import type { SnackbarPosition } from "@bridge-ui/core";
+
 // ** Local Imports
 import { BridgeDialogHost } from "@/Actions/Dialog";
 import type { BridgeDialogShellProps } from "@/Actions/Dialog/bridgeDialog.types";
@@ -10,6 +13,8 @@ import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar
 withDefaults(
   defineProps<{
     snackbar?: {
+      teleportTo?: string | false;
+      position?: keyof SnackbarPosition;
       snackbar?: BridgeSnackbarShellProps;
       max?: number;
       timeout?: number | false;

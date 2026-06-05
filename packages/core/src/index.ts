@@ -161,6 +161,7 @@ export {
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
+  getSnackbarStackClass,
   getSnackbarTransitionClass,
   hasModalTransition,
   hasSnackbarTransition,

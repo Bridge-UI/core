@@ -3,7 +3,7 @@ import type { LayerId, SnackbarColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button/button.types";
-import type { LinkOwnProps } from "@/Components/Link/link.types";
+import type { LinkProps } from "@/Components/Link/link.types";
 import type { SnackbarOwnProps } from "@/Components/Snackbar/snackbar.types";
 
 export interface SnackbarAction {
@@ -30,7 +30,7 @@ export interface SnackbarAction {
   /**
    * When set, renders a `Link` instead of a `Button`.
    */
-  link?: Partial<Omit<LinkOwnProps, "children">>;
+  link?: Partial<Omit<LinkProps, "children">>;
 
   /**
    * Called when the action is clicked.

@@ -144,7 +144,73 @@ test("accept action should use the snackbar color, not primary", async () => {
   });
 });
 
-test("imperative snackbars should stack with increasing z-index", async () => {
+test("top-center should grow downward with newest below oldest", async () => {
+  render(
+    <BridgeSnackbarHost position="top-center">
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Older",
+            transition: "none",
+            duration: false,
+          });
+          snackbar.open({
+            title: "Newer",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    const host = document.body.querySelector("[data-snackbar-host]");
+    const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
+
+    expect(host?.className).toContain("items-start");
+    expect(panels?.length).toBe(2);
+    expect(panels?.[0]?.textContent).toContain("Older");
+    expect(panels?.[1]?.textContent).toContain("Newer");
+    expect(host?.querySelector(".flex-col")).toBeTruthy();
+    expect(host?.querySelector(".flex-col-reverse")).toBeFalsy();
+  });
+});
+
+test("bottom-center should stack upward from the viewport edge", async () => {
+  render(
+    <BridgeSnackbarHost position="bottom-center">
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Older",
+            transition: "none",
+            duration: false,
+          });
+          snackbar.open({
+            title: "Newer",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    const host = document.body.querySelector("[data-snackbar-host]");
+    const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
+
+    expect(host?.className).toContain("items-end");
+    expect(panels?.length).toBe(2);
+    expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
+    expect(host?.querySelector(".flex-col")).toBeFalsy();
+    expect(panels?.[0]?.textContent).toContain("Older");
+    expect(panels?.[1]?.textContent).toContain("Newer");
+  });
+});
+
+test("imperative snackbars should stack in a single notification column", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -165,14 +231,14 @@ test("imperative snackbars should stack with increasing z-index", async () => {
   );
 
   await waitFor(() => {
-    const layers = document.body.querySelectorAll("[data-snackbar-layer]");
+    const host = document.body.querySelector("[data-snackbar-host]");
+    const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-    expect(layers.length).toBe(2);
-
-    const firstZ = Number((layers[0] as HTMLElement).style.zIndex);
-    const secondZ = Number((layers[1] as HTMLElement).style.zIndex);
-
-    expect(secondZ).toBeGreaterThan(firstZ);
+    expect(host).toBeTruthy();
+    expect(panels?.length).toBe(2);
+    expect(document.body.querySelectorAll("[data-snackbar-layer]").length).toBe(
+      0,
+    );
   });
 });
 

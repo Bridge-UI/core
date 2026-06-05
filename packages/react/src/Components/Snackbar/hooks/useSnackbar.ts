@@ -435,11 +435,11 @@ export function useSnackbar(
     {},
     {
       "data-snackbar-layer": true,
-      className: cn({
-        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
-        [positionClass]: true,
-        [get(mergedClasses, "portal") ?? ""]: true,
-      }),
+      className: cn(
+        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4",
+        positionClass,
+        get(mergedClasses, "portal") ?? "",
+      ),
       style: {
         zIndex: stackZIndex,
       },
