@@ -1,9 +1,9 @@
 // ** External Imports
+import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
 import { createElement, useContext, useEffect, type ReactNode } from "react";
 
 // ** Local Imports
 import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
-import type { BridgeModalEntry } from "@/Actions/Modal/bridgeModal.types";
 import { useBridgeModalController } from "@/Actions/Modal/createBridgeModalController";
 import { Modal } from "@/Components/Modal";
 
@@ -13,41 +13,6 @@ export type BridgeModalHostProps = {
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
-
-function findEntry(
-  entries: BridgeModalEntry[],
-  id: string,
-): BridgeModalEntry | undefined {
-  return entries.find((entry) => entry.id === id);
-}
-
-function handleDismiss(
-  id: string,
-  api: ReturnType<typeof useBridgeModalController>,
-) {
-  const entry = findEntry(api.entries, id);
-
-  if (!entry?.show) {
-    return;
-  }
-
-  entry.onClose?.();
-}
-
-function handleShowChange(
-  id: string,
-  api: ReturnType<typeof useBridgeModalController>,
-  show: boolean,
-) {
-  if (show) {
-    return;
-  }
-
-  const entry = findEntry(api.entries, id);
-
-  api.removeEntry(id);
-  entry?.onClosed?.();
-}
 
 export function BridgeModalHost({ children }: BridgeModalHostProps) {
   const parentApi = useContext(BridgeModalContext);
@@ -73,10 +38,10 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
             {...entry.modal}
             show={entry.show}
             stackId={entryId}
-            onClose={() => handleDismiss(entryId, api)}
+            onClose={() => invokeLayerDismiss(api.entries, entryId)}
             onShowChange={(show) => {
               api.syncShow(entryId, show);
-              handleShowChange(entryId, api, show);
+              completeLayerHide(api.entries, entryId, show, api.removeEntry);
             }}
           >
             {createElement(Component, entry.props ?? {})}

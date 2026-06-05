@@ -1,11 +1,12 @@
 // ** External Imports
+import type { LayerId } from "@bridge-ui/core";
 import type { Component, Ref } from "vue";
 
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
 export type BridgeModalEntry = {
-  id: string;
+  id: LayerId;
   show: boolean;
   component: Component;
   onClose?: () => void;
@@ -29,15 +30,15 @@ export type BridgeModalUpdateOptions = {
 
 export type BridgeModalController = {
   closeTop: () => void;
-  close: (id: string) => void;
-  isOpen: (id: string) => boolean;
+  close: (id: LayerId) => void;
+  isOpen: (id: LayerId) => boolean;
   entries: Ref<BridgeModalEntry[]>;
-  removeEntry: (id: string) => void;
-  syncShow: (id: string, show: boolean) => void;
-  update: (id: string, options: BridgeModalUpdateOptions) => void;
+  removeEntry: (id: LayerId) => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  update: (id: LayerId, options: BridgeModalUpdateOptions) => void;
   open: <TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
-  ) => string;
+  ) => LayerId;
 };
 
 export type BridgeModalApi = Omit<

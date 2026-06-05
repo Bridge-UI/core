@@ -11,6 +11,7 @@ import {
   isLayerMounted,
   removeLayer,
   updateLayer,
+  type LayerId,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -22,7 +23,7 @@ import type {
 } from "@/Actions/Modal/bridgeModal.types";
 
 function toEntry<TProps>(
-  id: string,
+  id: LayerId,
   options: BridgeModalOpenOptions<TProps>,
 ): BridgeModalEntry {
   return createOpenLayerEntry<BridgeModalEntry>(id, {
@@ -42,7 +43,7 @@ export function useBridgeModalController(): BridgeModalController {
   entriesRef.current = entries;
 
   const open = useCallback(
-    <TProps>(options: BridgeModalOpenOptions<TProps>): string => {
+    <TProps>(options: BridgeModalOpenOptions<TProps>): LayerId => {
       const id = createLayerId();
 
       setEntries((current) => [...current, toEntry(id, options)]);
@@ -52,7 +53,7 @@ export function useBridgeModalController(): BridgeModalController {
     [],
   );
 
-  const close = useCallback((id: string) => {
+  const close = useCallback((id: LayerId) => {
     setEntries((current) => closeLayer(current, id));
   }, []);
 
@@ -60,22 +61,22 @@ export function useBridgeModalController(): BridgeModalController {
     setEntries((current) => closeTopLayer(current));
   }, []);
 
-  const isOpen = useCallback((id: string) => {
+  const isOpen = useCallback((id: LayerId) => {
     return isLayerMounted(entriesRef.current, id);
   }, []);
 
-  const removeEntry = useCallback((id: string) => {
+  const removeEntry = useCallback((id: LayerId) => {
     setEntries((current) => removeLayer(current, id));
   }, []);
 
   const update = useCallback(
-    (id: string, options: BridgeModalUpdateOptions) => {
+    (id: LayerId, options: BridgeModalUpdateOptions) => {
       setEntries((current) => updateLayer(current, id, options));
     },
     [],
   );
 
-  const syncShow = useCallback((id: string, show: boolean) => {
+  const syncShow = useCallback((id: LayerId, show: boolean) => {
     setEntries((current) => {
       const entry = current.find((item) => item.id === id);
 

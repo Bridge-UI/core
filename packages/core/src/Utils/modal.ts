@@ -7,11 +7,12 @@ import {
   transitionProps,
   type ModalTransition,
 } from "@core/Components/Modal/Transition";
+import type { LayerId } from "@core/Layer/registry";
+
+export type { LayerId };
 
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
 export const LAYER_STACK_BASE_Z_INDEX = 50;
-
-export type LayerId = string;
 
 type LayerStackEntry = {
   id: LayerId;

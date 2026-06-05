@@ -6,7 +6,10 @@ import { defineComponent, h, ref } from "vue";
 // ** Local Imports
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import {
+  LAYER_STACK_BASE_Z_INDEX,
+  resetLayerStackForTests,
+} from "@bridge-ui/core";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -393,4 +396,78 @@ test("it should assign incremental z-index to nested modals", () => {
   expect(Number(roots[0]?.style.zIndex)).toBeLessThan(
     Number(roots[1]?.style.zIndex),
   );
+});
+
+test("it should refresh z-index when a sibling modal unmounts", async () => {
+  const outer = ref(true);
+  const middle = ref(true);
+  const inner = ref(true);
+
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h("div", [
+          h(
+            Modal,
+            {
+              modelValue: outer.value,
+              transition: "none",
+              "onUpdate:modelValue": (value: boolean) => {
+                outer.value = value;
+              },
+            },
+            () => "Outer",
+          ),
+          h(
+            Modal,
+            {
+              modelValue: middle.value,
+              transition: "none",
+              "onUpdate:modelValue": (value: boolean) => {
+                middle.value = value;
+              },
+            },
+            () => "Middle",
+          ),
+          h(
+            Modal,
+            {
+              modelValue: inner.value,
+              transition: "none",
+              "onUpdate:modelValue": (value: boolean) => {
+                inner.value = value;
+              },
+            },
+            () => "Inner",
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  await flushPromises();
+
+  expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(3);
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+  await flushPromises();
+
+  expect(inner.value).toBe(false);
+
+  const zIndexes = [
+    ...document.body.querySelectorAll<HTMLElement>(
+      ".fixed.inset-0.overflow-y-auto",
+    ),
+  ]
+    .map((root) => Number(root.style.zIndex))
+    .sort((left, right) => left - right);
+
+  expect(zIndexes).toEqual([
+    LAYER_STACK_BASE_Z_INDEX,
+    LAYER_STACK_BASE_Z_INDEX + 1,
+  ]);
 });

@@ -108,7 +108,7 @@ export function useModal(
 
   const rendered = ref(false);
 
-  const modalStackId = ref("");
+  const layerStackId = ref("");
 
   let leaveTransitionEndsPending = 0;
 
@@ -420,7 +420,7 @@ export function useModal(
   );
 
   function syncZIndex() {
-    const snapshot = getLayerStackEntry(modalStackId.value);
+    const snapshot = getLayerStackEntry(layerStackId.value);
 
     if (snapshot) {
       stackZIndex.value = snapshot.zIndex;
@@ -439,7 +439,7 @@ export function useModal(
           onEscape: handleEscape,
         });
 
-        modalStackId.value = stackHandle.id;
+        layerStackId.value = stackHandle.id;
         stackZIndex.value = stackHandle.zIndex;
         syncZIndex();
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
@@ -449,7 +449,7 @@ export function useModal(
         stackHandle?.release();
         stackHandle = null;
         stackOrder = null;
-        modalStackId.value = "";
+        layerStackId.value = "";
         stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
       }
     },
@@ -470,7 +470,7 @@ export function useModal(
     panelBind,
     overlayBind,
     wrapperBind,
-    modalStackId,
+    layerStackId,
     handleOverlayClick,
     handleWrapperClick,
   };

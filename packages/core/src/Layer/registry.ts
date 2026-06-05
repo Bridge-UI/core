@@ -2,11 +2,13 @@
 import { remove } from "es-toolkit/array";
 import { findLast } from "es-toolkit/compat";
 
+export type LayerId = string;
+
 /**
  * Base shape for imperative layers hosted by Bridge UI (Modal, Dialog, Snackbar, …).
  */
 export type LayerRegistryEntry = {
-  id: string;
+  id: LayerId;
   show: boolean;
   onClose?: () => void;
   onClosed?: () => void;
@@ -17,7 +19,7 @@ export type LayerRegistryEntry = {
  */
 export function hideLayer<T extends LayerRegistryEntry>(
   entries: T[],
-  id: string,
+  id: LayerId,
 ): T[] {
   const index = entries.findIndex((entry) => entry.id === id);
 
@@ -36,7 +38,7 @@ export function hideLayer<T extends LayerRegistryEntry>(
  * Creates a newly opened registry entry (`show: true`).
  */
 export function createOpenLayerEntry<T extends LayerRegistryEntry>(
-  id: string,
+  id: LayerId,
   fields: Omit<T, "id" | "show">,
 ): T {
   return { id, show: true, ...fields } as T;
@@ -51,7 +53,7 @@ export function createOpenLayerEntry<T extends LayerRegistryEntry>(
  */
 export function closeLayer<T extends LayerRegistryEntry>(
   entries: T[],
-  id: string,
+  id: LayerId,
 ): T[] {
   const entry = entries.find((item) => item.id === id);
 
@@ -82,7 +84,7 @@ export function closeTopLayer<T extends LayerRegistryEntry>(entries: T[]): T[] {
  */
 export function removeLayer<T extends LayerRegistryEntry>(
   entries: T[],
-  id: string,
+  id: LayerId,
 ): T[] {
   const next = [...entries];
 
@@ -96,7 +98,7 @@ export function removeLayer<T extends LayerRegistryEntry>(
  */
 export function isLayerMounted<T extends LayerRegistryEntry>(
   entries: T[],
-  id: string,
+  id: LayerId,
 ): boolean {
   return entries.some((entry) => entry.id === id);
 }
@@ -115,7 +117,7 @@ export function getLayerCount<T extends LayerRegistryEntry>(
  */
 export function updateLayer<T extends LayerRegistryEntry>(
   entries: T[],
-  id: string,
+  id: LayerId,
   patch: Partial<Omit<T, "id">>,
 ): T[] {
   const index = entries.findIndex((entry) => entry.id === id);

@@ -105,7 +105,7 @@ export function useModal(
   // Setup
   const { onClose, onShowChange, show = false, stackId } = options;
 
-  const modalStackIdRef = useRef("");
+  const layerStackIdRef = useRef("");
 
   const [rendered, setRendered] = useState(false);
 
@@ -350,7 +350,7 @@ export function useModal(
     });
 
     stackHandleRef.current = handle;
-    modalStackIdRef.current = handle.id;
+    layerStackIdRef.current = handle.id;
     setStackZIndex((previous) => {
       return previous === handle.zIndex ? previous : handle.zIndex;
     });
@@ -358,7 +358,7 @@ export function useModal(
     return () => {
       handle.release();
       stackHandleRef.current = null;
-      modalStackIdRef.current = "";
+      layerStackIdRef.current = "";
     };
   }, [show, stackId, rendered, merged.persistent, merged.closeOnEscape]);
 
@@ -368,7 +368,7 @@ export function useModal(
     }
 
     function syncZIndex() {
-      const snapshot = getLayerStackEntry(modalStackIdRef.current);
+      const snapshot = getLayerStackEntry(layerStackIdRef.current);
 
       if (!snapshot) {
         return;

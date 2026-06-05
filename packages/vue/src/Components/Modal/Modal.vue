@@ -35,7 +35,7 @@ const {
   panelBind,
   overlayBind,
   wrapperBind,
-  modalStackId,
+  layerStackId,
 } = useModal(
   props,
   {
@@ -56,7 +56,7 @@ const {
 );
 
 defineExpose({
-  stackId: computed(() => props.stackId ?? modalStackId.value),
+  stackId: computed(() => props.stackId ?? layerStackId.value),
 });
 
 const teleportDisabled = computed(() => {

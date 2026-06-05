@@ -11,6 +11,7 @@ import {
   isLayerMounted,
   removeLayer,
   updateLayer,
+  type LayerId,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -22,7 +23,7 @@ import type {
 } from "@/Actions/Modal/bridgeModal.types";
 
 function toEntry(
-  id: string,
+  id: LayerId,
   options: BridgeModalOpenOptions,
 ): BridgeModalEntry {
   return createOpenLayerEntry<BridgeModalEntry>(id, {
@@ -39,7 +40,7 @@ export function createBridgeModalApi(): BridgeModalController {
 
   function open<TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
-  ): string {
+  ): LayerId {
     const id = createLayerId();
 
     const entry: BridgeModalEntry = toEntry(
@@ -52,7 +53,7 @@ export function createBridgeModalApi(): BridgeModalController {
     return id;
   }
 
-  function close(id: string) {
+  function close(id: LayerId) {
     entries.value = closeLayer(entries.value, id);
   }
 
@@ -60,19 +61,19 @@ export function createBridgeModalApi(): BridgeModalController {
     entries.value = closeTopLayer(entries.value);
   }
 
-  function isOpen(id: string) {
+  function isOpen(id: LayerId) {
     return isLayerMounted(entries.value, id);
   }
 
-  function removeEntry(id: string) {
+  function removeEntry(id: LayerId) {
     entries.value = removeLayer(entries.value, id);
   }
 
-  function update(id: string, options: BridgeModalUpdateOptions) {
+  function update(id: LayerId, options: BridgeModalUpdateOptions) {
     entries.value = updateLayer(entries.value, id, options);
   }
 
-  function syncShow(id: string, show: boolean) {
+  function syncShow(id: LayerId, show: boolean) {
     const entry = entries.value.find((item) => item.id === id);
 
     if (!entry || entry.show === show) {

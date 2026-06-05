@@ -21,6 +21,21 @@ test("it should render dialog when modelValue is true", () => {
   cy.contains("Modal body").should("be.visible");
 });
 
+test("it should emit close when the backdrop is clicked", () => {
+  cy.mount(Modal, {
+    props: {
+      modelValue: true,
+      transition: "none",
+      onClose: cy.stub().as("onClose"),
+    },
+    slots: { default: () => "Content" },
+  });
+
+  cy.get('[aria-hidden="true"]').click({ force: true });
+
+  cy.get("@onClose").should("have.been.calledOnce");
+});
+
 test("it should emit update:modelValue when the backdrop is clicked", () => {
   cy.mount(Modal, {
     props: {

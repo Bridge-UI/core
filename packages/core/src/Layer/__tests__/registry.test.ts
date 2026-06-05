@@ -12,7 +12,7 @@ import {
   removeLayer,
   updateLayer,
   type LayerRegistryEntry,
-} from "@core/Utils/layerRegistry";
+} from "@core/Layer/registry";
 
 type TestEntry = LayerRegistryEntry & { label: string };
 
