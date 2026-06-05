@@ -3,6 +3,7 @@ import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  MergeHtmlProps,
   MergeProps,
   ToggleColor,
   ToggleRounded,
@@ -55,10 +56,24 @@ export interface TogglePartsProps extends SwitcherPartsProps {
   track?: InputHTMLAttributes;
 }
 
+export interface ToggleEmits {
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: boolean];
+}
+
 export interface ToggleOwnProps extends Omit<
   SwitcherOwnProps,
-  "field" | "classes" | "partsProps"
+  "field" | "slots" | "classes" | "partsProps"
 > {
+  /**
+   * Whether the toggle is on.
+   *
+   * @default undefined
+   */
+  checked?: boolean;
+
   /**
    * Classes for the switcher chrome and the toggle control.
    *
@@ -96,7 +111,7 @@ export interface ToggleOwnProps extends Omit<
   size?: MergeProps<ToggleSize, ToggleSizeOverrides>;
 
   /**
-   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
@@ -105,4 +120,12 @@ export interface ToggleOwnProps extends Omit<
 
 export interface ToggleSlots extends SwitcherSlots {}
 
-export type ToggleProps = ToggleOwnProps;
+export type ToggleProps = MergeHtmlProps<
+  ToggleOwnProps,
+  Omit<InputHTMLAttributes, "size" | "color" | "rounded">
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   */
+  modelValue?: boolean;
+};

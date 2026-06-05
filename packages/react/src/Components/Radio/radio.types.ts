@@ -82,6 +82,13 @@ export interface RadioOwnProps extends Omit<
   color?: MergeProps<RadioColor, RadioColorOverrides>;
 
   /**
+   * The `name` attribute shared by radios in the same group.
+   *
+   * @default undefined
+   */
+  name?: string;
+
+  /**
    * Extra props for internal parts.
    *
    * @default undefined

@@ -3,6 +3,7 @@ import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  MergeHtmlProps,
   MergeProps,
   RadioColor,
   RadioRounded,
@@ -55,10 +56,24 @@ export interface RadioPartsProps extends SwitcherPartsProps {
   input?: Partial<InputHTMLAttributes>;
 }
 
+export interface RadioEmits {
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: string | number];
+}
+
 export interface RadioOwnProps extends Omit<
   SwitcherOwnProps,
-  "field" | "classes" | "partsProps"
+  "field" | "slots" | "classes" | "partsProps"
 > {
+  /**
+   * Whether the radio is checked.
+   *
+   * @default undefined
+   */
+  checked?: boolean;
+
   /**
    * Classes for the switcher chrome and the radio control.
    *
@@ -103,7 +118,7 @@ export interface RadioOwnProps extends Omit<
   size?: MergeProps<RadioSize, RadioSizeOverrides>;
 
   /**
-   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
@@ -119,4 +134,12 @@ export interface RadioOwnProps extends Omit<
 
 export interface RadioSlots extends SwitcherSlots {}
 
-export type RadioProps = RadioOwnProps;
+export type RadioProps = MergeHtmlProps<
+  RadioOwnProps,
+  Omit<InputHTMLAttributes, "size" | "color" | "rounded">
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   */
+  modelValue?: string | number;
+};

@@ -3,6 +3,7 @@ export { useSelect } from "@/Components/Select/composables/useSelect";
 export type {
   SelectClasses,
   SelectColorOverrides,
+  SelectEmits,
   SelectOption,
   SelectProps,
   SelectRoundedOverrides,
