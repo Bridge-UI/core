@@ -1,10 +1,14 @@
 // ** Exports
 export { useModal } from "@/Components/Modal/composables/useModal";
+export type { ModalOptions } from "@/Components/Modal/composables/useModal";
 export type {
+  ModalAlignOverrides,
+  ModalBlurOverrides,
   ModalClasses,
+  ModalEmits,
+  ModalOwnProps,
+  ModalPartsProps,
   ModalProps,
-  ModalRoundedOverrides,
-  ModalShadowOverrides,
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal/modal.types";

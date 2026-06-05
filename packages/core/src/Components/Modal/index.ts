@@ -1,7 +1,12 @@
 // ** Exports
-export { roundedProps } from "@core/Components/Modal/Rounded";
-export type { ModalRounded } from "@core/Components/Modal/Rounded";
-export { shadowProps } from "@core/Components/Modal/Shadow";
-export type { ModalShadow } from "@core/Components/Modal/Shadow";
+export { alignProps } from "@core/Components/Modal/Align";
+export type { ModalAlign } from "@core/Components/Modal/Align";
+export { blurProps } from "@core/Components/Modal/Blur";
+export type { ModalBlur } from "@core/Components/Modal/Blur";
 export { sizeProps } from "@core/Components/Modal/Size";
 export type { ModalSize } from "@core/Components/Modal/Size";
+export { transitionProps } from "@core/Components/Modal/Transition";
+export type {
+  ModalTransition,
+  ModalTransitionLayer,
+} from "@core/Components/Modal/Transition";

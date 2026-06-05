@@ -6,6 +6,7 @@ import { computed, inject, provide } from "vue";
 import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
 
 // ** Local Imports
+import { BridgeModalHost } from "@/Actions/Modal";
 import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
@@ -33,5 +34,7 @@ provide(BRIDGE_UI_INJECTION_KEY, api);
 </script>
 
 <template>
-  <slot />
+  <BridgeModalHost>
+    <slot />
+  </BridgeModalHost>
 </template>

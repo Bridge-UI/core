@@ -140,6 +140,28 @@ export function splitComponentProps<
   };
 }
 
+export {
+  acquireLayerStackOrder,
+  countModalTransitionLayers,
+  createLayerId,
+  getLayerStackEntry,
+  getLayerStackSnapshot,
+  getModalOverlayTransitionClass,
+  getModalPanelTransitionClass,
+  hasModalTransition,
+  isLayerStackTop,
+  LAYER_STACK_BASE_Z_INDEX,
+  pushLayerStack,
+  resetLayerStackForTests,
+  resolveEffectiveModalTransition,
+  subscribeLayerStack,
+  type LayerStackHandle,
+  type LayerStackSnapshotEntry,
+} from "@core/Utils/modal";
+export {
+  isModalBackdropClick,
+  resolveModalPortalElement,
+} from "@core/Utils/portal";
 export type {
   ClassPropKey,
   LibDefaultsShape,

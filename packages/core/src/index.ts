@@ -63,10 +63,13 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
+export { transitionProps } from "@core/Components/Modal";
 export type {
-  ModalRounded,
-  ModalShadow,
+  ModalAlign,
+  ModalBlur,
   ModalSize,
+  ModalTransition,
+  ModalTransitionLayer,
 } from "@core/Components/Modal";
 export type {
   RadioColor,
@@ -121,15 +124,47 @@ export type {
   ToggleConfigOverrides,
 } from "@core/Config";
 export {
+  closeLayer,
+  closeTopLayer,
+  completeLayerHide,
+  createOpenLayerEntry,
+  findLayerEntry,
+  getLayerCount,
+  hideLayer,
+  invokeLayerDismiss,
+  isLayerMounted,
+  removeLayer,
+  updateLayer,
+} from "@core/Layer";
+export type { LayerId, LayerRegistryEntry } from "@core/Layer";
+export {
+  LAYER_STACK_BASE_Z_INDEX,
+  acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
   cn,
+  countModalTransitionLayers,
+  createLayerId,
   createMergePartBind,
+  getLayerStackEntry,
+  getLayerStackSnapshot,
+  getModalOverlayTransitionClass,
+  getModalPanelTransitionClass,
+  hasModalTransition,
+  isLayerStackTop,
+  isModalBackdropClick,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  pushLayerStack,
+  resetLayerStackForTests,
+  resolveEffectiveModalTransition,
+  resolveModalPortalElement,
   splitComponentProps,
+  subscribeLayerStack,
 } from "@core/Utils";
 export type {
   ClassPropKey,
+  LayerStackHandle,
+  LayerStackSnapshotEntry,
   LibDefaultsShape,
   MergeHtmlProps,
   MergeLibDefaults,

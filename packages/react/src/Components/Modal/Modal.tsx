@@ -1,10 +1,91 @@
+// ** External Imports
+import { createPortal } from "react-dom";
+
+// ** Core Imports
+import { resolveModalPortalElement } from "@bridge-ui/core/Utils";
+
 // ** Local Imports
+import { useModal } from "@/Components/Modal/hooks/useModal";
 import type { ModalProps } from "@/Components/Modal/modal.types";
 
-function Modal(props: ModalProps) {
-  void props;
+const modalLibDefaults = {
+  size: "md",
+  blur: "none",
+  teleportTo: "body",
+  transition: "fade",
+  closeOnEscape: true,
+  closeOnOverlay: true,
+  align: "middle-center",
+} as const;
 
-  return <div>Modal</div>;
+function ModalShell({
+  children,
+  rootBind,
+  panelBind,
+  overlayBind,
+  wrapperBind,
+  handleOverlayClick,
+  handleWrapperClick,
+}: ReturnType<typeof useModal> & { children: ModalProps["children"] }) {
+  return (
+    <div {...rootBind}>
+      <div {...overlayBind} aria-hidden="true" onClick={handleOverlayClick} />
+
+      <div {...wrapperBind} onClick={handleWrapperClick}>
+        <div {...panelBind}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function Modal({
+  onClose,
+  stackId,
+  children,
+  onShowChange,
+  show = false,
+  persistent = false,
+  teleportTo = "body",
+  closeOnEscape = true,
+  closeOnOverlay = true,
+  ...ownProps
+}: ModalProps) {
+  const modalState = useModal(
+    {
+      ...ownProps,
+      stackId,
+      children,
+      persistent,
+      teleportTo,
+      closeOnEscape,
+      closeOnOverlay,
+    },
+    modalLibDefaults,
+    {
+      show,
+      onClose,
+      stackId,
+      onShowChange,
+    },
+  );
+
+  if (!modalState.rendered) {
+    return null;
+  }
+
+  const shell = <ModalShell {...modalState}>{children}</ModalShell>;
+
+  const portalElement = resolveModalPortalElement(modalState.merged.teleportTo);
+
+  if (portalElement === null) {
+    return shell;
+  }
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(shell, portalElement);
 }
 
 export default Modal;

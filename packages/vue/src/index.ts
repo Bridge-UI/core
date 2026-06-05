@@ -2,6 +2,13 @@
 import "@/augments";
 
 // ** Exports
+export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
+export type {
+  BridgeModalApi,
+  BridgeModalEntry,
+  BridgeModalOpenOptions,
+  BridgeModalUpdateOptions,
+} from "@/Actions/Modal";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
@@ -109,12 +116,15 @@ export type {
   MenuShadowOverrides,
   MenuSlots,
 } from "@/Components/Menu";
-export { Modal } from "@/Components/Modal";
+export { Modal, useModal } from "@/Components/Modal";
 export type {
+  ModalAlignOverrides,
+  ModalBlurOverrides,
   ModalClasses,
+  ModalEmits,
+  ModalOwnProps,
+  ModalPartsProps,
   ModalProps,
-  ModalRoundedOverrides,
-  ModalShadowOverrides,
   ModalSizeOverrides,
   ModalSlots,
 } from "@/Components/Modal";

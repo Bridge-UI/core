@@ -5,15 +5,27 @@ export interface ModalSize {
   "md": string;
   "lg": string;
   "xl": string;
+  "2xl": string;
+  "3xl": string;
+  "4xl": string;
+  "5xl": string;
+  "6xl": string;
+  "7xl": string;
   "full": string;
 }
 
 // prettier-ignore
 export const sizeProps: ModalSize = {
-  "xs": "max-w-xs",
-  "sm": "max-w-sm",
-  "md": "max-w-md",
-  "lg": "max-w-lg",
-  "xl": "max-w-xl",
-  "full": "max-w-full",
+  "xs": "sm:max-w-xs",
+  "sm": "sm:max-w-sm",
+  "md": "sm:max-w-md",
+  "lg": "sm:max-w-lg",
+  "xl": "sm:max-w-xl",
+  "2xl": "sm:max-w-2xl",
+  "3xl": "sm:max-w-3xl",
+  "4xl": "sm:max-w-4xl",
+  "5xl": "sm:max-w-5xl",
+  "6xl": "sm:max-w-6xl",
+  "7xl": "sm:max-w-7xl",
+  "full": "sm:max-w-full",
 };

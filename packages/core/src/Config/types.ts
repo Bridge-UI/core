@@ -64,9 +64,11 @@ import type {
 } from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type {
-  ModalRounded,
-  ModalShadow,
+  ModalAlign,
+  ModalBlur,
   ModalSize,
+  ModalTransition,
+  ModalTransitionLayer,
 } from "@core/Components/Modal";
 import type {
   RadioColor,
@@ -276,14 +278,17 @@ export interface MenuConfigBase {
 export interface ModalConfigBase {
   classes: object;
   defaultProps: Partial<{
+    blur: keyof ModalBlur;
     size: keyof ModalSize;
-    shadow: keyof ModalShadow;
-    rounded: keyof ModalRounded;
+    align: keyof ModalAlign;
+    teleportTo: string | false;
+    transition: keyof ModalTransition;
   }>;
   customProps: Partial<{
+    blur: Record<string, string>;
     size: Record<string, string>;
-    shadow: Record<string, string>;
-    rounded: Record<string, string>;
+    align: Record<string, string>;
+    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
   }>;
 }
 

@@ -1,56 +1,93 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  MergeHtmlProps,
   MergeProps,
-  ModalRounded,
-  ModalShadow,
+  ModalAlign,
+  ModalBlur,
   ModalSize,
+  ModalTransition,
 } from "@bridge-ui/core";
 
+export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
-export interface ModalRoundedOverrides {}
-export interface ModalShadowOverrides {}
+export interface ModalAlignOverrides {}
+export interface ModalTransitionOverrides {}
 
 export interface ModalClasses {
-  /**
-   * The classes to apply to the body.
-   */
-  body?: string;
-
-  /**
-   * The classes to apply to the close button.
-   */
-  close?: string;
-
-  /**
-   * The classes to apply to the content.
-   */
-  content?: string;
-
-  /**
-   * The classes to apply to the footer.
-   */
-  footer?: string;
-
-  /**
-   * The classes to apply to the header.
-   */
-  header?: string;
-
   /**
    * The classes to apply to the overlay.
    */
   overlay?: string;
 
   /**
-   * The classes to apply to the root.
+   * The classes to apply to the dialog panel (max-width wrapper).
+   */
+  panel?: string;
+
+  /**
+   * The classes to apply to the root portal container.
    */
   root?: string;
+
+  /**
+   * The classes to apply to the centering wrapper.
+   */
+  wrapper?: string;
 }
 
-export interface ModalProps {
+export interface ModalEmits {
+  /**
+   * Emitted when the user dismisses the modal (overlay or Escape).
+   * Not emitted when the parent sets `v-model` to `false` directly.
+   */
+  close: [];
+}
+
+export interface ModalPartsProps {
+  /**
+   * Props forwarded to the overlay.
+   */
+  overlay?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the dialog panel.
+   */
+  panel?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the root portal container.
+   */
+  root?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the centering wrapper.
+   */
+  wrapper?: HTMLAttributes;
+}
+
+/**
+ * Modal shell (overlay, portal, backdrop). Put `Card` or any content in the default slot.
+ * Visibility is controlled with `v-model` (not listed here — `defineModel` handles it).
+ */
+export interface ModalOwnProps {
+  /**
+   * Panel position from the `sm` breakpoint up (`{row}-{column}` grid).
+   * Mobile always uses bottom sheet (`bottom-center`).
+   *
+   * @default "middle-center"
+   */
+  align?: MergeProps<ModalAlign, ModalAlignOverrides>;
+
+  /**
+   * Backdrop blur on the overlay.
+   *
+   * @default "none"
+   */
+  blur?: MergeProps<ModalBlur, ModalBlurOverrides>;
+
   /**
    * The classes to apply to the modal.
    *
@@ -73,52 +110,60 @@ export interface ModalProps {
   closeOnOverlay?: boolean;
 
   /**
-   * Whether the modal is open.
+   * Called when `show` should change (controlled state).
+   *
+   * @default undefined
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
+   * Props forwarded to each modal part.
+   *
+   * @default undefined
+   */
+  partsProps?: ModalPartsProps;
+
+  /**
+   * When true, escape and overlay clicks do not close the modal.
    *
    * @default false
    */
-  modelValue?: boolean;
+  persistent?: boolean;
 
   /**
-   * The roundedness of the modal.
-   *
-   * @default "md"
-   */
-  rounded?: MergeProps<ModalRounded, ModalRoundedOverrides>;
-
-  /**
-   * The shadow to apply to the modal.
-   *
-   * @default "lg"
-   */
-  shadow?: MergeProps<ModalShadow, ModalShadowOverrides>;
-
-  /**
-   * The size of the modal.
+   * Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).
    *
    * @default "md"
    */
   size?: MergeProps<ModalSize, ModalSizeOverrides>;
+
+  /**
+   * Stack id assigned when the modal opens. Set by BridgeModalHost; do not set in app code.
+   *
+   * @internal
+   */
+  stackId?: string;
+
+  /**
+   * Where to teleport the modal. Pass `false` to render in place.
+   *
+   * @default "body"
+   */
+  teleportTo?: string | false;
+
+  /**
+   * Enter/leave animation for overlay and panel.
+   *
+   * @default "fade"
+   */
+  transition?: MergeProps<ModalTransition, ModalTransitionOverrides>;
 }
+
+export type ModalProps = MergeHtmlProps<ModalOwnProps, HTMLAttributes>;
 
 export interface ModalSlots {
   /**
-   * Custom close button content.
-   */
-  close?: Slot<undefined>;
-
-  /**
-   * The main content of the modal.
+   * Modal content (e.g. a `Card` component).
    */
   default?: Slot<undefined>;
-
-  /**
-   * The footer content of the modal.
-   */
-  footer?: Slot<undefined>;
-
-  /**
-   * The header content of the modal.
-   */
-  header?: Slot<undefined>;
 }
