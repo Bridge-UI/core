@@ -8,10 +8,35 @@ import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 import vueParser from "vue-eslint-parser";
 
-const alphabeticalTypeSorting = {
-  order: "asc" as const,
-  type: "alphabetical" as const,
-};
+const typeSorting = [
+  "error",
+  {
+    order: "asc" as const,
+    type: "alphabetical" as const,
+  }
+];
+
+const unusedVars = [
+  "error",
+  {
+    argsIgnorePattern: "^_",
+    varsIgnorePattern: "^_",
+  },
+];
+
+const objectSorting = [
+  "error",
+  {
+    type: "unsorted" as const,
+    useConfigurationIf: {
+      callingFunctionNamePattern: "^cn$",
+    },
+  },
+  {
+    order: "asc" as const,
+    type: "line-length" as const,
+  },
+];
 
 export default defineConfig(
   {
@@ -54,13 +79,11 @@ export default defineConfig(
     },
     rules: {
       "vue/multi-word-component-names": "off",
+      "perfectionist/sort-objects": objectSorting,
+      "perfectionist/sort-interfaces": typeSorting,
+      "perfectionist/sort-object-types": typeSorting,
+      "@typescript-eslint/no-unused-vars": unusedVars,
       "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
-      "perfectionist/sort-interfaces": ["error", alphabeticalTypeSorting],
-      "perfectionist/sort-object-types": ["error", alphabeticalTypeSorting],
     },
   },
   eslintConfigPrettier,
