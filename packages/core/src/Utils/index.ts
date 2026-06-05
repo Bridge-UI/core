@@ -162,6 +162,10 @@ export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@core/Utils/portal";
+export {
+  getSnackbarTransitionClass,
+  hasSnackbarTransition,
+} from "@core/Utils/snackbar";
 export type {
   ClassPropKey,
   LibDefaultsShape,

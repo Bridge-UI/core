@@ -1,0 +1,41 @@
+// ** External Imports
+import { getLayerCount } from "@bridge-ui/core";
+import { useContext, useMemo, useRef } from "react";
+
+// ** Local Imports
+import type { BridgeSnackbarApi } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
+
+export class BridgeSnackbarHostMissingError extends Error {
+  constructor() {
+    super(
+      "useBridgeSnackbar() requires <BridgeUIProvider /> (or <BridgeSnackbarHost />) in the app tree.",
+    );
+    this.name = "BridgeSnackbarHostMissingError";
+  }
+}
+
+export function useBridgeSnackbar(): BridgeSnackbarApi {
+  const api = useContext(BridgeSnackbarContext);
+
+  const apiRef = useRef(api);
+
+  apiRef.current = api;
+
+  if (!api) {
+    throw new BridgeSnackbarHostMissingError();
+  }
+
+  return useMemo((): BridgeSnackbarApi => {
+    return {
+      open: (...args) => apiRef.current!.open(...args),
+      close: (id) => apiRef.current!.close(id),
+      closeAll: () => apiRef.current!.closeAll(),
+      isOpen: (id) => apiRef.current?.isOpen(id) ?? false,
+      update: (id, options) => apiRef.current!.update(id, options),
+      get count() {
+        return getLayerCount(apiRef.current?.entries ?? []);
+      },
+    };
+  }, []);
+}

@@ -83,6 +83,12 @@ import type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
+import type {
+  SnackbarColor,
+  SnackbarColorItem,
+  SnackbarPosition,
+  SnackbarTransition,
+} from "@core/Components/Snackbar";
 import type { TextareaResize } from "@core/Components/Textarea";
 import type {
   ToggleColor,
@@ -112,6 +118,7 @@ export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
+export interface SnackbarConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
@@ -292,6 +299,24 @@ export interface ModalConfigBase {
   }>;
 }
 
+export interface SnackbarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof SnackbarColor;
+    position: keyof SnackbarPosition;
+    teleportTo: string | false;
+    transition: keyof SnackbarTransition;
+    duration: number | false;
+    closeButton: boolean;
+    progressbar: boolean;
+  }>;
+  customProps: Partial<{
+    color: Record<string, SnackbarColorItem>;
+    position: Record<string, string>;
+    transition: Record<string, string>;
+  }>;
+}
+
 export interface RadioConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -380,6 +405,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
+  Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   NumberField: Partial<

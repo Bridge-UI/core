@@ -9,6 +9,16 @@ export type {
   BridgeModalOpenOptions,
   BridgeModalUpdateOptions,
 } from "@/Actions/Modal";
+export { BridgeSnackbarHost, useBridgeSnackbar } from "@/Actions/Snackbar";
+export type {
+  BridgeSnackbarApi,
+  BridgeSnackbarContentProps,
+  BridgeSnackbarEntry,
+  BridgeSnackbarOpenOptions,
+  BridgeSnackbarUpdateOptions,
+  SnackbarAction,
+  SnackbarActions,
+} from "@/Actions/Snackbar";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
@@ -166,6 +176,17 @@ export type {
   SelectSlots,
   SelectVariantOverrides,
 } from "@/Components/Select";
+export { Snackbar, useSnackbar } from "@/Components/Snackbar";
+export type {
+  SnackbarClasses,
+  SnackbarColorOverrides,
+  SnackbarEmits,
+  SnackbarOwnProps,
+  SnackbarPartsProps,
+  SnackbarProps,
+  SnackbarSlots,
+  SnackbarTransitionOverrides,
+} from "@/Components/Snackbar";
 export { Switcher, useSwitcher } from "@/Components/Switcher";
 export type {
   SwitcherClasses,
