@@ -11,10 +11,10 @@ import {
 /** Base `z-index` for the first modal layer. Each nested modal adds 1. */
 export const MODAL_STACK_BASE_Z_INDEX = 50;
 
-export type ModalStackId = string;
+export type LayerId = string;
 
 type ModalStackEntry = {
-  id: ModalStackId;
+  id: LayerId;
   order: number;
   onEscape?: () => void;
 };
@@ -28,7 +28,7 @@ let savedBodyOverflow = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
 export type ModalStackHandle = {
-  id: ModalStackId;
+  id: LayerId;
   order: number;
   level: number;
   zIndex: number;
@@ -36,7 +36,7 @@ export type ModalStackHandle = {
 };
 
 export type ModalStackSnapshotEntry = {
-  id: ModalStackId;
+  id: LayerId;
   order: number;
   zIndex: number;
 };
@@ -112,7 +112,7 @@ function lockBodyScroll() {
 /**
  * Rank of an entry among open modals sorted by `order` (used for `level` / `zIndex`).
  */
-function getModalStackOrderRank(id: ModalStackId): number {
+function getModalStackOrderRank(id: LayerId): number {
   const sorted = [...stack].sort((left, right) => left.order - right.order);
 
   const rank = sorted.findIndex((entry) => entry.id === id);
@@ -172,7 +172,7 @@ export function countModalTransitionLayers(
  * Creates a layer id via `crypto.randomUUID()` when available.
  * When `assigned` is provided (e.g. BridgeModalHost), that value is used as-is.
  */
-export function createLayerId(assigned?: ModalStackId): ModalStackId {
+export function createLayerId(assigned?: LayerId): LayerId {
   if (assigned !== undefined && assigned !== "") {
     return assigned;
   }
@@ -205,7 +205,7 @@ export function getModalPanelTransitionClass(
  * Looks up a stack entry by id.
  */
 export function getModalStackEntry(
-  id: ModalStackId,
+  id: LayerId,
 ): ModalStackSnapshotEntry | undefined {
   const entry = stack.find((item) => item.id === id);
 
@@ -232,7 +232,7 @@ export function hasModalTransition(
 /**
  * Whether the given handle is the topmost modal on the stack.
  */
-export function isModalStackTop(id: ModalStackId): boolean {
+export function isModalStackTop(id: LayerId): boolean {
   const top = getTopStackEntry();
 
   return top?.id === id;
@@ -245,7 +245,7 @@ export function isModalStackTop(id: ModalStackId): boolean {
  */
 export function pushModalStack(
   options: {
-    id?: ModalStackId;
+    id?: LayerId;
     order?: number;
     onEscape?: () => void;
   } = {},

@@ -33,6 +33,7 @@ export type BridgeModalController = {
   isOpen: (id: string) => boolean;
   entries: Ref<BridgeModalEntry[]>;
   removeEntry: (id: string) => void;
+  syncShow: (id: string, show: boolean) => void;
   update: (id: string, options: BridgeModalUpdateOptions) => void;
   open: <TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
@@ -41,7 +42,7 @@ export type BridgeModalController = {
 
 export type BridgeModalApi = Omit<
   BridgeModalController,
-  "entries" | "removeEntry"
+  "entries" | "syncShow" | "removeEntry"
 > & {
   stackSize: number;
 };

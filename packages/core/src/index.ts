@@ -155,6 +155,7 @@ export {
 } from "@core/Utils";
 export type {
   ClassPropKey,
+  LayerId,
   LayerRegistryEntry,
   LibDefaultsShape,
   MergeHtmlProps,
@@ -162,7 +163,6 @@ export type {
   MergePartBind,
   MergeProps,
   ModalStackHandle,
-  ModalStackId,
   ModalStackSnapshotEntry,
   Overwrite,
   UnionProps,

@@ -55,10 +55,11 @@ function handleShowChange(id: string, show: boolean) {
   <Modal
     :key="entry.id"
     v-bind="entry.modal"
-    v-model="entry.show"
     :stack-id="entry.id"
+    :model-value="entry.show"
     v-for="entry in modalEntries"
     v-on:close="handleDismiss(entry.id)"
+    v-on:update:model-value="api.syncShow(entry.id, $event)"
     :on-show-change="(show) => handleShowChange(entry.id, show)"
   >
     <component :is="entry.component" v-bind="entry.props" />

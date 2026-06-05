@@ -17,7 +17,7 @@ test("it should render dialog when show is true", () => {
 
 test("it should call onShowChange when the backdrop is clicked", () => {
   cy.mount(
-    <Modal show onShowChange={cy.stub().as("onShowChange")}>
+    <Modal show transition="none" onShowChange={cy.stub().as("onShowChange")}>
       Content
     </Modal>,
   );
@@ -29,7 +29,7 @@ test("it should call onShowChange when the backdrop is clicked", () => {
 
 test("it should call onShowChange on escape", () => {
   cy.mount(
-    <Modal show onShowChange={cy.stub().as("onShowChange")}>
+    <Modal show transition="none" onShowChange={cy.stub().as("onShowChange")}>
       Content
     </Modal>,
   );
@@ -39,9 +39,23 @@ test("it should call onShowChange on escape", () => {
   cy.get("@onShowChange").should("have.been.calledWith", false);
 });
 
+test("it should apply fade transition classes by default", () => {
+  cy.mount(<Modal show>Animated</Modal>);
+
+  cy.get('[data-modal-part="overlay"]').should(
+    "have.class",
+    "data-[state=open]:opacity-100",
+  );
+});
+
 test("it should not call onShowChange when persistent", () => {
   cy.mount(
-    <Modal show persistent onShowChange={cy.stub().as("onShowChange")}>
+    <Modal
+      show
+      persistent
+      transition="none"
+      onShowChange={cy.stub().as("onShowChange")}
+    >
       Persistent
     </Modal>,
   );

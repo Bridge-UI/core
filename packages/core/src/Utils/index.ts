@@ -164,8 +164,8 @@ export {
   pushModalStack,
   resetModalStackForTests,
   resolveEffectiveModalTransition,
+  type LayerId,
   type ModalStackHandle,
-  type ModalStackId,
   type ModalStackSnapshotEntry,
 } from "@core/Utils/modal";
 export {

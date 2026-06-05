@@ -6,6 +6,7 @@ import {
   closeLayer,
   closeTopLayer,
   createLayerId,
+  hideLayer,
   isLayerMounted,
   removeLayer,
   updateLayer,
@@ -72,6 +73,18 @@ export function createBridgeModalApi(): BridgeModalController {
     entries.value = updateLayer(entries.value, id, options);
   }
 
+  function syncShow(id: string, show: boolean) {
+    const entry = entries.value.find((item) => item.id === id);
+
+    if (!entry || entry.show === show) {
+      return;
+    }
+
+    entries.value = show
+      ? updateLayer(entries.value, id, { show: true })
+      : hideLayer(entries.value, id);
+  }
+
   return {
     open,
     close,
@@ -79,6 +92,7 @@ export function createBridgeModalApi(): BridgeModalController {
     update,
     entries,
     closeTop,
+    syncShow,
     removeEntry,
   };
 }
