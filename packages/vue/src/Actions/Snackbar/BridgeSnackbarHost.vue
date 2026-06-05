@@ -22,11 +22,11 @@ const NESTED_HOST_WARNING =
 
 const props = withDefaults(
   defineProps<{
-    position?: keyof typeof snackbarPositionProps;
-    teleportTo?: string | false;
-    snackbar?: BridgeSnackbarShellProps;
     max?: number;
     timeout?: number | false;
+    teleportTo?: string | false;
+    snackbar?: BridgeSnackbarShellProps;
+    position?: keyof typeof snackbarPositionProps;
   }>(),
   {
     teleportTo: "body",
@@ -80,9 +80,11 @@ const teleportTarget = computed(() => {
 });
 
 const stackClass = computed(() => {
-  return resolvedPosition.value.startsWith("top")
-    ? "flex-col"
-    : "flex-col-reverse";
+  if (resolvedPosition.value.startsWith("top")) {
+    return "flex-col";
+  }
+
+  return "flex-col-reverse";
 });
 </script>
 
@@ -93,23 +95,26 @@ const stackClass = computed(() => {
     <div
       data-snackbar-host
       :class="
-        cn(
-          'fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4',
-          positionClass,
-        )
+        cn({
+          'fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4': true,
+          [positionClass ?? '']: true,
+        })
       "
     >
       <div
         :class="
-          cn('flex w-full max-w-sm gap-y-2 pointer-events-auto', stackClass)
+          cn({
+            'flex w-full max-w-sm gap-y-2 pointer-events-auto': true,
+            [stackClass]: true,
+          })
         "
       >
         <BridgeSnackbarItem
-          :key="entry.id"
-          v-for="entry in snackbarEntries"
           :api="api"
           :entry="entry"
+          :key="entry.id"
           :host-snackbar="props.snackbar"
+          v-for="entry in snackbarEntries"
         />
       </div>
     </div>

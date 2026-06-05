@@ -52,12 +52,12 @@ const snackbarBridgeKeys = [
   "dense",
   "title",
   "classes",
+  "stackId",
   "duration",
   "position",
-  "stackId",
+  "partsProps",
   "teleportTo",
   "transition",
-  "partsProps",
   "description",
   "closeButton",
   "progressbar",
@@ -66,12 +66,12 @@ const snackbarBridgeKeys = [
 type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
-  | "transition"
   | "duration"
+  | "position"
+  | "teleportTo"
+  | "transition"
   | "closeButton"
   | "progressbar"
-  | "teleportTo"
-  | "position"
 >;
 
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
@@ -88,25 +88,26 @@ export function useSnackbar(
   libDefaults: SnackbarLibDefaults,
   options: SnackbarOptions = {},
 ) {
+  // Setup
   const attrs = useAttrs();
 
   const rendered = ref(false);
 
-  const transitionState = ref<"open" | "closed">("closed");
-
-  const timerPaused = ref(false);
-
-  const progressActive = ref(false);
-
-  const timerRef = ref<ReturnType<typeof setTimeout> | null>(null);
+  const layerStackId = ref("");
 
   const remainingMsRef = ref(0);
 
+  const timerPaused = ref(false);
+
   const timerStartedAtRef = ref(0);
 
-  const layerStackId = ref("");
+  const progressActive = ref(false);
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
+
+  const transitionState = ref<"open" | "closed">("closed");
+
+  const timerRef = ref<ReturnType<typeof setTimeout> | null>(null);
 
   let stackOrder: number | null = null;
 
@@ -142,6 +143,7 @@ export function useSnackbar(
     props: customProps,
   });
 
+  // Elements
   const show = computed(() => {
     if (options.show !== undefined) {
       return toValue(options.show);
@@ -193,10 +195,10 @@ export function useSnackbar(
 
   const showProgress = computed(() => {
     return (
-      durationMs.value > 0 &&
-      merged.value.progressbar !== false &&
       show.value &&
-      rendered.value
+      rendered.value &&
+      durationMs.value > 0 &&
+      merged.value.progressbar !== false
     );
   });
 
@@ -215,6 +217,7 @@ export function useSnackbar(
     return get(classes, merged.value.position ?? "bottom-center");
   });
 
+  // Handlers
   function clearDismissTimer() {
     if (timerRef.value) {
       clearTimeout(timerRef.value);
@@ -432,6 +435,7 @@ export function useSnackbar(
     stackHandle = null;
   });
 
+  // Binds
   const portalBind = computed(() => {
     return mergePartBind(
       partsProps.value?.portal,
@@ -531,15 +535,15 @@ export function useSnackbar(
 
   return {
     merged,
+    iconBind,
     rendered,
+    panelBind,
+    titleBind,
     isPortaled,
     portalBind,
-    panelBind,
-    iconBind,
-    titleBind,
-    descriptionBind,
     progressBind,
-    resolvedIcon,
     requestClose,
+    resolvedIcon,
+    descriptionBind,
   };
 }

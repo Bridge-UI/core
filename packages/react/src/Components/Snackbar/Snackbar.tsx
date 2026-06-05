@@ -12,36 +12,39 @@ import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 const snackbarLibDefaults = {
-  color: "primary",
   duration: 5000,
-  position: "bottom-center",
-  transition: "slide",
+  color: "primary",
   closeButton: true,
   progressbar: true,
   teleportTo: "body",
+  transition: "slide",
+  position: "bottom-center",
 } as const;
 
 function SnackbarPanel({
   show,
-  merged,
   slots,
+  merged,
   children,
-  panelBind,
   iconBind,
+  panelBind,
   titleBind,
   progressBind,
   resolvedIcon,
   descriptionBind,
   requestClose,
 }: ReturnType<typeof useSnackbar> & { show: boolean }) {
-  const hasIcon = Boolean(slots?.icon || resolvedIcon || merged.img);
+  const hasRight = Boolean(slots?.right);
+
   const hasTitle = hasSlotOrProp(slots, "title", merged.title);
+
+  const hasIcon = Boolean(slots?.icon || resolvedIcon || merged.img);
+
   const hasDescription = hasSlotOrProp(
     slots,
     "description",
     merged.description,
   );
-  const hasRight = Boolean(slots?.right);
 
   return (
     <div
@@ -131,8 +134,8 @@ function SnackbarPanel({
               <button
                 type="button"
                 aria-label="Close"
-                className="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
                 onClick={requestClose}
+                className="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -147,10 +150,10 @@ function SnackbarPanel({
 }
 
 function Snackbar({
-  show = false,
   onClose,
-  onShowChange,
   stackId,
+  onShowChange,
+  show = false,
   ...ownProps
 }: SnackbarProps) {
   const snackbarState = useSnackbar(

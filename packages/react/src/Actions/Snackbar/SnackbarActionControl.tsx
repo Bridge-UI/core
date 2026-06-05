@@ -16,13 +16,13 @@ type SnackbarActionLayout =
   | "right-reject";
 
 type SnackbarActionControlProps = {
+  onRun: () => void;
+  hasReject?: boolean;
+  hasAccept?: boolean;
   action: SnackbarAction;
   role: "accept" | "reject";
   layout: SnackbarActionLayout;
   snackbarColor: keyof ButtonColor;
-  hasReject?: boolean;
-  hasAccept?: boolean;
-  onRun: () => void;
 };
 
 function layoutClasses(
@@ -49,15 +49,16 @@ function layoutClasses(
 }
 
 export function SnackbarActionControl({
-  action,
   role,
+  onRun,
+  action,
   layout,
-  snackbarColor,
   hasReject,
   hasAccept,
-  onRun,
+  snackbarColor,
 }: SnackbarActionControlProps) {
   const buttonColor = role === "accept" ? snackbarColor : "secondary";
+
   const linkColor = buttonColor as keyof LinkColor;
 
   if (action.link) {

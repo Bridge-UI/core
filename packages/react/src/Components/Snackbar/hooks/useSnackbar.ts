@@ -52,12 +52,12 @@ const snackbarBridgeKeys = [
   "title",
   "slots",
   "classes",
+  "stackId",
   "duration",
   "position",
-  "stackId",
+  "partsProps",
   "teleportTo",
   "transition",
-  "partsProps",
   "description",
   "closeButton",
   "progressbar",
@@ -66,12 +66,12 @@ const snackbarBridgeKeys = [
 type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
-  | "transition"
   | "duration"
+  | "position"
+  | "teleportTo"
+  | "transition"
   | "closeButton"
   | "progressbar"
-  | "teleportTo"
-  | "position"
 >;
 
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
@@ -105,31 +105,31 @@ export function useSnackbar(
   libDefaults: SnackbarLibDefaults,
   options: SnackbarOptions = {},
 ) {
-  const { onClose, onShowChange, show = false, stackId } = options;
+  // Setup
+  const { onClose, stackId, onShowChange, show = false } = options;
 
+  const remainingMsRef = useRef(0);
+
+  const layerStackIdRef = useRef("");
+
+  const timerStartedAtRef = useRef(0);
   const [rendered, setRendered] = useState(false);
 
-  const [transitionState, setTransitionState] = useState<"open" | "closed">(
-    "closed",
-  );
+  const stackOrderRef = useRef<number | null>(null);
 
   const [timerPaused, setTimerPaused] = useState(false);
 
   const [progressActive, setProgressActive] = useState(false);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const remainingMsRef = useRef(0);
-
-  const timerStartedAtRef = useRef(0);
-
-  const layerStackIdRef = useRef("");
-
-  const stackOrderRef = useRef<number | null>(null);
-
   const stackHandleRef = useRef<LayerStackHandle | null>(null);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
+
+  const [transitionState, setTransitionState] = useState<"open" | "closed">(
+    "closed",
+  );
 
   const { customProps, inheritedAttrs } = splitComponentProps<
     SnackbarProps,
@@ -162,15 +162,20 @@ export function useSnackbar(
     props: customProps,
   });
 
+  // Elements
   const effectiveTransition = useMemo((): keyof SnackbarTransition => {
     const value = merged.transition ?? "none";
 
     return value in snackbarTransitionProps ? value : "none";
   }, [merged.transition]);
 
-  const transitionEnabled = hasSnackbarTransition(effectiveTransition);
+  const transitionEnabled = derived(() => {
+    return hasSnackbarTransition(effectiveTransition);
+  });
 
-  const panelTransitionClass = getSnackbarTransitionClass(effectiveTransition);
+  const panelTransitionClass = derived(() => {
+    return getSnackbarTransitionClass(effectiveTransition);
+  });
 
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -195,9 +200,13 @@ export function useSnackbar(
     return themeIcon ?? get(snackbarDefaultIcons, merged.color);
   }, [merged.icon, merged.color, colorClass]);
 
-  const durationMs = merged.duration === false ? 0 : (merged.duration ?? 0);
+  const durationMs = derived(() => {
+    return merged.duration === false ? 0 : (merged.duration ?? 0);
+  });
 
-  const isPortaled = merged.teleportTo !== false;
+  const isPortaled = derived(() => {
+    return merged.teleportTo !== false;
+  });
 
   if (show && stackOrderRef.current === null && isPortaled) {
     stackOrderRef.current = acquireLayerStackOrder();
@@ -220,9 +229,11 @@ export function useSnackbar(
     return get(classes, merged.position ?? "bottom-center");
   }, [isPortaled, merged.position, bridgeSnackbar?.customProps?.position]);
 
-  const showProgress =
-    durationMs > 0 && merged.progressbar !== false && show && rendered;
+  const showProgress = derived(() => {
+    return durationMs > 0 && merged.progressbar !== false && show && rendered;
+  });
 
+  // Handlers
   function clearDismissTimer() {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -430,6 +441,7 @@ export function useSnackbar(
     return subscribeLayerStack(syncZIndex);
   }, [rendered, isPortaled]);
 
+  // Binds
   const portalBind = mergePartBind(
     partsProps?.portal,
     {},
@@ -518,18 +530,18 @@ export function useSnackbar(
 
   return {
     merged,
-    rendered,
-    isPortaled,
     stackId,
-    portalBind,
-    panelBind,
+    rendered,
     iconBind,
+    panelBind,
     titleBind,
-    descriptionBind,
+    isPortaled,
+    portalBind,
     progressBind,
+    requestClose,
     resolvedIcon,
+    descriptionBind,
     slots: derived(() => props.slots),
     children: derived(() => props.children),
-    requestClose,
   };
 }

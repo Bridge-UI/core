@@ -12,34 +12,34 @@ import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar
 
 withDefaults(
   defineProps<{
-    snackbar?: {
-      teleportTo?: string | false;
-      position?: keyof SnackbarPosition;
-      snackbar?: BridgeSnackbarShellProps;
-      max?: number;
-      timeout?: number | false;
+    modal?: {
+      modal?: BridgeModalShellProps;
     };
     dialog?: {
       modal?: BridgeDialogShellProps;
     };
-    modal?: {
-      modal?: BridgeModalShellProps;
+    snackbar?: {
+      max?: number;
+      timeout?: number | false;
+      teleportTo?: string | false;
+      position?: keyof SnackbarPosition;
+      snackbar?: BridgeSnackbarShellProps;
     };
   }>(),
   {
-    snackbar: () => ({}),
-    dialog: () => ({}),
     modal: () => ({}),
+    dialog: () => ({}),
+    snackbar: () => ({}),
   },
 );
 </script>
 
 <template>
-  <BridgeSnackbarHost v-bind="snackbar">
+  <BridgeModalHost v-bind="modal">
     <BridgeDialogHost v-bind="dialog">
-      <BridgeModalHost v-bind="modal">
+      <BridgeSnackbarHost v-bind="snackbar">
         <slot />
-      </BridgeModalHost>
+      </BridgeSnackbarHost>
     </BridgeDialogHost>
-  </BridgeSnackbarHost>
+  </BridgeModalHost>
 </template>

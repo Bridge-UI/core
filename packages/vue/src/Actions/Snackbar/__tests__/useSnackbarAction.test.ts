@@ -119,8 +119,8 @@ test("accept action should use the snackbar color, not primary", async () => {
 
       snackbar.open({
         title: "Saved",
-        color: "success",
         duration: false,
+        color: "success",
         transition: "none",
         actions: { accept: { label: "Undo" } },
       });
@@ -252,9 +252,9 @@ test("host snackbar defaults should merge into open options", async () => {
       const snackbar = useSnackbarAction();
 
       snackbar.open({
-        title: "Dense default",
         duration: false,
         transition: "none",
+        title: "Dense default",
       });
     },
   });
@@ -288,8 +288,8 @@ test("host timeout should auto-dismiss snackbars", async () => {
   });
 
   mount(BridgeSnackbarHost, {
-    attachTo: document.body,
     props: { timeout: 50 },
+    attachTo: document.body,
     slots: { default: () => h(Consumer) },
   });
 
@@ -309,16 +309,16 @@ test("open duration should override host timeout", async () => {
       const snackbar = useSnackbarAction();
 
       snackbar.open({
-        title: "Persistent",
-        transition: "none",
         duration: false,
+        transition: "none",
+        title: "Persistent",
       });
     },
   });
 
   mount(BridgeSnackbarHost, {
-    attachTo: document.body,
     props: { timeout: 50 },
+    attachTo: document.body,
     slots: { default: () => h(Consumer) },
   });
 
@@ -354,8 +354,8 @@ test("max should close the oldest snackbar when the limit is exceeded", async ()
   });
 
   mount(BridgeSnackbarHost, {
-    attachTo: document.body,
     props: { max: 2 },
+    attachTo: document.body,
     slots: { default: () => h(Consumer) },
   });
 

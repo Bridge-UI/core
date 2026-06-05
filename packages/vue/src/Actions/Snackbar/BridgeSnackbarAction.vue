@@ -18,12 +18,12 @@ type SnackbarActionLayout =
   | "right-reject";
 
 const props = defineProps<{
+  hasReject?: boolean;
+  hasAccept?: boolean;
   action: SnackbarAction;
   role: "accept" | "reject";
   layout: SnackbarActionLayout;
   snackbarColor: keyof SnackbarColor;
-  hasReject?: boolean;
-  hasAccept?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -54,13 +54,12 @@ const layoutClass = computed(() => {
 });
 
 const rootClass = computed(() => {
-  return cn(
-    layoutClass.value,
-    props.action.className,
-    props.layout === "right-accept" || props.layout === "right-reject"
-      ? "w-full"
-      : undefined,
-  );
+  return cn({
+    [layoutClass.value]: true,
+    [props.action.className ?? ""]: true,
+    "w-full":
+      props.layout === "right-accept" || props.layout === "right-reject",
+  });
 });
 
 function onRun() {
@@ -76,16 +75,16 @@ function onLinkClick(event: MouseEvent) {
 
 <template>
   <Link
-    v-if="action.link"
     size="sm"
-    underline="hover"
     :color="color"
+    underline="hover"
+    v-if="action.link"
     v-bind="action.link"
+    v-on:click="onLinkClick"
     :classes="{
       ...action.link.classes,
       root: cn(rootClass, action.link.classes?.root),
     }"
-    v-on:click="onLinkClick"
   >
     {{ action.label }}
   </Link>
@@ -94,13 +93,13 @@ function onLinkClick(event: MouseEvent) {
     v-else
     size="sm"
     :color="color"
-    :variant="action.solid ? 'outline' : 'flat'"
+    v-on:click="onRun"
     v-bind="action.button"
+    :variant="action.solid ? 'outline' : 'flat'"
     :classes="{
       ...action.button?.classes,
       root: cn(rootClass, action.button?.classes?.root),
     }"
-    v-on:click="onRun"
   >
     {{ action.label }}
   </Button>

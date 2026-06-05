@@ -158,13 +158,13 @@ test("closeTop should close only the topmost imperative modal", async () => {
       onMounted(() => {
         outerId = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Outer" },
+          modal: { transition: "none" },
         });
         innerId = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Inner" },
+          modal: { transition: "none" },
         });
       });
 
@@ -199,10 +199,10 @@ test("onClose should run before onClosed when close is called", async () => {
 
       onMounted(() => {
         id = bridgeModal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 
@@ -234,10 +234,10 @@ test("onClose should run before onClosed when escape is pressed", async () => {
 
       onMounted(() => {
         modal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 
@@ -270,8 +270,8 @@ test("update should patch props on an open modal", async () => {
       onMounted(() => {
         id = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Before" },
+          modal: { transition: "none" },
         });
         bridgeModal.update(id, { props: { label: "After" } });
       });
@@ -398,10 +398,10 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
 
       onMounted(() => {
         id = bridgeModal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 

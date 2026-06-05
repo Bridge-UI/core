@@ -29,10 +29,10 @@ export function useSnackbarAction(): BridgeSnackbarApi {
 
   return useMemo((): BridgeSnackbarApi => {
     return {
-      open: (...args) => apiRef.current!.open(...args),
       close: (id) => apiRef.current!.close(id),
       closeTop: () => apiRef.current!.closeTop(),
       closeAll: () => apiRef.current!.closeAll(),
+      open: (...args) => apiRef.current!.open(...args),
       isOpen: (id) => apiRef.current?.isOpen(id) ?? false,
       update: (id, options) => apiRef.current!.update(id, options),
       get stackSize() {

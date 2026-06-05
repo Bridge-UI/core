@@ -23,6 +23,7 @@ import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnac
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
 import { useBridgeUI } from "@/Provider/useBridgeUI";
+import { derived } from "@/Utils";
 
 export type BridgeSnackbarHostProps = {
   children?: ReactNode;
@@ -60,15 +61,17 @@ const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useSnackbarAction() will target the nearest host only. Remove the extra host.";
 
 export function BridgeSnackbarHost({
+  max,
+  timeout,
   children,
   position,
   teleportTo = "body",
   snackbar: hostSnackbar,
-  max,
-  timeout,
 }: BridgeSnackbarHostProps) {
   const parentApi = useContext(BridgeSnackbarContext);
+
   const api = useBridgeSnackbarController({ max, timeout });
+
   const bridge = useBridgeUI();
 
   useEffect(() => {
@@ -79,8 +82,9 @@ export function BridgeSnackbarHost({
 
   const snackbarEntry = bridge?.components?.Snackbar;
 
-  const resolvedPosition =
-    position ?? snackbarEntry?.defaultProps?.position ?? "bottom-center";
+  const resolvedPosition = derived(() => {
+    return position ?? snackbarEntry?.defaultProps?.position ?? "bottom-center";
+  });
 
   const positionClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -91,9 +95,9 @@ export function BridgeSnackbarHost({
     return get(classes, resolvedPosition);
   }, [resolvedPosition, snackbarEntry?.customProps?.position]);
 
-  const stackDirectionClass = resolvedPosition.startsWith("top")
-    ? "flex-col"
-    : "flex-col-reverse";
+  const stackDirectionClass = derived(() => {
+    return resolvedPosition.startsWith("top") ? "flex-col" : "flex-col-reverse";
+  });
 
   const stack = (
     <div
@@ -129,8 +133,8 @@ export function BridgeSnackbarHost({
                 {
                   actions,
                   rightButtons,
-                  dense: snackbarProps.dense,
                   color: snackbarProps.color,
+                  dense: snackbarProps.dense,
                 },
                 () => api.close(entryId),
               )}
@@ -146,10 +150,13 @@ export function BridgeSnackbarHost({
     </div>
   );
 
-  const portalElement =
-    teleportTo === false || typeof document === "undefined"
-      ? null
-      : resolveModalPortalElement(teleportTo);
+  const portalElement = derived(() => {
+    if (teleportTo === false || typeof document === "undefined") {
+      return null;
+    }
+
+    return resolveModalPortalElement(teleportTo);
+  });
 
   return (
     <BridgeSnackbarContext.Provider value={api}>

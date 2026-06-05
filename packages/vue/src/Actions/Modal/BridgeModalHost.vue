@@ -42,12 +42,12 @@ provide(BRIDGE_MODAL_INJECTION_KEY, api);
 
   <Modal
     :key="entry.id"
-    v-bind="mergeLayerShellProps(props.modal, entry.modal)"
     :stack-id="entry.id"
     :model-value="entry.show"
     v-for="entry in modalEntries"
-    v-on:close="invokeLayerDismiss(api.entries.value, entry.id)"
+    v-bind="mergeLayerShellProps(props.modal, entry.modal)"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
+    v-on:close="invokeLayerDismiss(api.entries.value, entry.id)"
     :on-show-change="
       (show) =>
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)

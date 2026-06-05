@@ -35,9 +35,9 @@ export function resolveBridgeSnackbarSlots(
           >
             <SnackbarActionControl
               role="accept"
+              layout="right-accept"
               action={actions.accept}
               snackbarColor={snackbarColor}
-              layout="right-accept"
               hasReject={Boolean(actions.reject)}
               onRun={() => {
                 actions.accept?.onClick?.();
@@ -51,9 +51,9 @@ export function resolveBridgeSnackbarSlots(
           <div className="flex flex-1 h-0">
             <SnackbarActionControl
               role="reject"
+              layout="right-reject"
               action={actions.reject}
               snackbarColor={snackbarColor}
-              layout="right-reject"
               hasAccept={Boolean(actions.accept)}
               onRun={() => {
                 actions.reject?.onClick?.();
@@ -72,9 +72,9 @@ export function resolveBridgeSnackbarSlots(
     slots.trailing = (
       <SnackbarActionControl
         role="accept"
+        layout="trailing"
         action={actions.accept}
         snackbarColor={snackbarColor}
-        layout="trailing"
         onRun={() => {
           actions.accept?.onClick?.();
           close();
@@ -89,9 +89,9 @@ export function resolveBridgeSnackbarSlots(
         {actions.accept?.label && (
           <SnackbarActionControl
             role="accept"
+            layout="inline"
             action={actions.accept}
             snackbarColor={snackbarColor}
-            layout="inline"
             onRun={() => {
               actions.accept?.onClick?.();
               close();
@@ -102,9 +102,9 @@ export function resolveBridgeSnackbarSlots(
         {actions.reject?.label && (
           <SnackbarActionControl
             role="reject"
+            layout="inline"
             action={actions.reject}
             snackbarColor={snackbarColor}
-            layout="inline"
             onRun={() => {
               actions.reject?.onClick?.();
               close();

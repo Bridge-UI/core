@@ -1,5 +1,6 @@
 // ** External Imports
 import { fireEvent, render, screen } from "@testing-library/react";
+import { Fragment } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -19,9 +20,9 @@ test("it should render title and description when show is true", () => {
     <Snackbar
       show
       title="Hello"
-      description="World"
-      transition="none"
       duration={false}
+      transition="none"
+      description="World"
     />,
   );
 
@@ -36,8 +37,8 @@ test("it should call onShowChange when close button is clicked", () => {
     <Snackbar
       show
       title="Close me"
-      transition="none"
       duration={false}
+      transition="none"
       onShowChange={onShowChange}
     />,
   );
@@ -49,10 +50,10 @@ test("it should call onShowChange when close button is clicked", () => {
 
 test("standalone snackbars should stack with increasing z-index", () => {
   render(
-    <>
+    <Fragment>
       <Snackbar show title="One" transition="none" duration={false} />
       <Snackbar show title="Two" transition="none" duration={false} />
-    </>,
+    </Fragment>,
   );
 
   const layers = document.body.querySelectorAll("[data-snackbar-layer]");
