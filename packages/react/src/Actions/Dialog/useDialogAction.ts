@@ -9,6 +9,7 @@ import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
 export class BridgeDialogHostMissingError extends Error {
   constructor() {
     super("useDialogAction() requires <BridgeDialogHost /> in the app tree.");
+
     this.name = "BridgeDialogHostMissingError";
   }
 }

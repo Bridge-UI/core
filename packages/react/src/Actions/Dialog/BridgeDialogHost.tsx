@@ -28,6 +28,7 @@ const NESTED_HOST_WARNING =
 
 export function BridgeDialogHost({ children, modal }: BridgeDialogHostProps) {
   const parentApi = useContext(BridgeDialogContext);
+
   const api = useBridgeDialogController();
 
   useEffect(() => {
@@ -42,39 +43,44 @@ export function BridgeDialogHost({ children, modal }: BridgeDialogHostProps) {
 
       {api.entries.map((entry) => {
         const entryId = entry.id;
+
         const {
-          title,
-          description,
-          actions,
-          color = "primary",
           card,
+          title,
+          actions,
+          description,
+          color = "primary",
         } = entry.props;
 
-        const dismissFromModal = () => invokeLayerDismiss(api.entries, entryId);
+        const dismissFromAction = () => {
+          return api.close(entryId);
+        };
 
-        const dismissFromAction = () => api.close(entryId);
+        const dismissFromModal = () => {
+          return invokeLayerDismiss(api.entries, entryId);
+        };
 
         return (
           <Modal
             key={entryId}
-            {...mergeLayerShellProps(modal, entry.modal)}
             show={entry.show}
             stackId={entryId}
             onClose={dismissFromModal}
+            {...mergeLayerShellProps(modal, entry.modal)}
             onShowChange={(show) => {
               api.syncShow(entryId, show);
               completeLayerHide(api.entries, entryId, show, api.removeEntry);
             }}
           >
             <Card
-              title={title}
               {...card}
+              title={title}
               slots={{
-                footer: resolveBridgeDialogFooter(
-                  actions,
-                  color,
-                  dismissFromAction,
-                ),
+                footer: resolveBridgeDialogFooter({
+                  actions: actions,
+                  acceptColor: color,
+                  dismiss: dismissFromAction,
+                }),
               }}
             >
               {description && (

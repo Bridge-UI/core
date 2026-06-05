@@ -38,16 +38,16 @@ function onLinkClick(event: MouseEvent) {
 
 <template>
   <Link
-    v-if="action.link"
     size="sm"
-    underline="hover"
     :color="color"
+    underline="hover"
+    v-if="action.link"
     v-bind="action.link"
+    v-on:click="onLinkClick"
     :classes="{
       ...action.link.classes,
       root: cn(action.className, action.link.classes?.root),
     }"
-    v-on:click="onLinkClick"
   >
     {{ action.label }}
   </Link>
@@ -56,13 +56,13 @@ function onLinkClick(event: MouseEvent) {
     v-else
     size="sm"
     :color="color"
-    :variant="action.solid ? 'outline' : 'flat'"
+    v-on:click="onRun"
     v-bind="action.button"
+    :variant="action.solid ? 'outline' : 'flat'"
     :classes="{
       ...action.button?.classes,
       root: cn(action.className, action.button?.classes?.root),
     }"
-    v-on:click="onRun"
   >
     {{ action.label }}
   </Button>

@@ -9,6 +9,7 @@ import { BRIDGE_DIALOG_INJECTION_KEY } from "@/Actions/Dialog/bridgeDialogInject
 export class BridgeDialogHostMissingError extends Error {
   constructor() {
     super("useDialogAction() requires <BridgeDialogHost /> in the app tree.");
+
     this.name = "BridgeDialogHostMissingError";
   }
 }

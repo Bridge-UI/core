@@ -11,6 +11,7 @@ export class BridgeSnackbarHostMissingError extends Error {
     super(
       "useSnackbarAction() requires <BridgeSnackbarHost /> in the app tree.",
     );
+
     this.name = "BridgeSnackbarHostMissingError";
   }
 }

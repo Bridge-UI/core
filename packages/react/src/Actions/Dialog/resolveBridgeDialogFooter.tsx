@@ -1,16 +1,15 @@
 // ** External Imports
-import type { ButtonColor } from "@bridge-ui/core";
 import type { ReactNode } from "react";
 
 // ** Local Imports
-import type { DialogActions } from "@/Actions/Dialog/bridgeDialog.types";
+import type { ResolveBridgeDialogFooterOptions } from "@/Actions/Dialog/bridgeDialog.types";
 import { SnackbarActionControl } from "@/Actions/Snackbar/SnackbarActionControl";
 
-export function resolveBridgeDialogFooter(
-  actions: DialogActions | undefined,
-  acceptColor: keyof ButtonColor,
-  dismiss: () => void,
-): ReactNode | undefined {
+export function resolveBridgeDialogFooter({
+  acceptColor,
+  actions,
+  dismiss,
+}: ResolveBridgeDialogFooterOptions): ReactNode | undefined {
   if (!actions?.accept && !actions?.reject) {
     return undefined;
   }

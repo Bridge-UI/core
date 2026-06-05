@@ -9,7 +9,7 @@ import {
 import { computed } from "vue";
 
 // ** Local Imports
-import BridgeDialogAction from "@/Actions/Dialog/BridgeDialogAction.vue";
+import ResolveBridgeDialogFooter from "@/Actions/Dialog/ResolveBridgeDialogFooter.vue";
 import type {
   BridgeDialogController,
   BridgeDialogEntry,
@@ -36,16 +36,9 @@ const dismissFromModal = () => {
   invokeLayerDismiss(props.api.entries.value, props.entry.id);
 };
 
-function runAction(handler?: () => void) {
-  handler?.();
+const dismissFromAction = () => {
   props.api.close(props.entry.id);
-}
-
-const hasFooter = computed(() => {
-  return Boolean(
-    props.entry.props.actions?.accept || props.entry.props.actions?.reject,
-  );
-});
+};
 </script>
 
 <template>
@@ -68,24 +61,15 @@ const hasFooter = computed(() => {
         {{ entry.props.description }}
       </p>
 
-      <template v-if="hasFooter" #footer>
-        <div class="flex justify-end gap-2">
-          <BridgeDialogAction
-            v-if="entry.props.actions?.reject?.label"
-            role="reject"
-            :action="entry.props.actions.reject"
-            :accept-color="acceptColor"
-            v-on:run="runAction(entry.props.actions?.reject?.onClick)"
-          />
-
-          <BridgeDialogAction
-            v-if="entry.props.actions?.accept?.label"
-            role="accept"
-            :action="entry.props.actions.accept"
-            :accept-color="acceptColor"
-            v-on:run="runAction(entry.props.actions?.accept?.onClick)"
-          />
-        </div>
+      <template
+        #footer
+        v-if="entry.props.actions?.accept || entry.props.actions?.reject"
+      >
+        <ResolveBridgeDialogFooter
+          :accept-color="acceptColor"
+          :dismiss="dismissFromAction"
+          :actions="entry.props.actions"
+        />
       </template>
     </Card>
   </Modal>

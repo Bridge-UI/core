@@ -51,6 +51,12 @@ export interface DialogActions {
   reject?: DialogAction;
 }
 
+export type ResolveBridgeDialogFooterOptions = {
+  actions?: DialogActions;
+  acceptColor: keyof ButtonColor;
+  dismiss: () => void;
+};
+
 export type BridgeDialogShellProps = Partial<
   Omit<ModalOwnProps, "show" | "stackId">
 >;
@@ -87,16 +93,16 @@ export type BridgeDialogContentProps = {
 export type BridgeDialogEntry = {
   id: LayerId;
   show: boolean;
-  onClose?: () => void;
-  onClosed?: () => void;
   modal?: Partial<ModalOwnProps>;
   props: BridgeDialogContentProps;
+  onClose?: () => void;
+  onClosed?: () => void;
 };
 
 export type BridgeDialogOpenOptions = BridgeDialogContentProps & {
+  modal?: BridgeDialogShellProps;
   onClose?: () => void;
   onClosed?: () => void;
-  modal?: BridgeDialogShellProps;
 };
 
 export type BridgeDialogUpdateOptions = {
@@ -105,14 +111,14 @@ export type BridgeDialogUpdateOptions = {
 };
 
 export type BridgeDialogController = {
-  closeTop: () => void;
   entries: BridgeDialogEntry[];
+  open: (options: BridgeDialogOpenOptions) => LayerId;
   close: (id: LayerId) => void;
   isOpen: (id: LayerId) => boolean;
-  removeEntry: (id: LayerId) => void;
-  syncShow: (id: LayerId, show: boolean) => void;
-  open: (options: BridgeDialogOpenOptions) => LayerId;
   update: (id: LayerId, options: BridgeDialogUpdateOptions) => void;
+  closeTop: () => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  removeEntry: (id: LayerId) => void;
 };
 
 export type BridgeDialogApi = Omit<

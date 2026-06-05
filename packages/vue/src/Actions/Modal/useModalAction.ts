@@ -9,6 +9,7 @@ import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjection
 export class BridgeModalHostMissingError extends Error {
   constructor() {
     super("useModalAction() requires <BridgeModalHost /> in the app tree.");
+
     this.name = "BridgeModalHostMissingError";
   }
 }
