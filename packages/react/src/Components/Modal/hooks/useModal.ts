@@ -415,9 +415,9 @@ export function useModal(
     partsProps?.wrapper,
     {},
     cn({
-      "mx-auto flex min-h-full w-full transform items-end justify-center p-4": true,
+      "flex min-h-full w-full transform p-4": true,
+      "items-end justify-center": true,
       [alignClass ?? ""]: true,
-      [sizeClass ?? ""]: true,
       [get(mergedClasses, "wrapper") ?? ""]: true,
     }),
   );
@@ -433,6 +433,7 @@ export function useModal(
       "data-state": transitionState,
       className: cn({
         "relative w-full": true,
+        [sizeClass ?? ""]: true,
         [panelTransitionClass]: transitionEnabled,
         [get(mergedClasses, "panel") ?? ""]: true,
       }),

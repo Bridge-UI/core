@@ -46,10 +46,10 @@ test("it should return default size as md", () => {
   expect(result.merged.value.size).toBe("md");
 });
 
-test("it should include max width class on wrapper bind", () => {
+test("it should include max width class on panel bind", () => {
   const { result } = mountUseModal({ size: "sm" });
 
-  expect(result.wrapperBind.value.class).toContain("sm:max-w-sm");
+  expect(result.panelBind.value.class).toContain("sm:max-w-sm");
 });
 
 test("it should default closeOnOverlay and closeOnEscape to true", () => {

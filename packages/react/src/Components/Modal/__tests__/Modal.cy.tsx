@@ -84,7 +84,7 @@ test("it should apply size classes on the wrapper", () => {
     </Modal>,
   );
 
-  cy.get(".mx-auto.flex.min-h-full").should("have.class", "sm:max-w-lg");
+  cy.get('[role="dialog"]').should("have.class", "sm:max-w-lg");
 });
 
 test("it should render a Card as children", () => {

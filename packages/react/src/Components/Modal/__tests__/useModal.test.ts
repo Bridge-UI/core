@@ -40,10 +40,10 @@ test("it should return default size as md", () => {
   expect(result.current.merged.size).toBe("md");
 });
 
-test("it should include max width class on wrapper bind", () => {
+test("it should include max width class on panel bind", () => {
   const { result } = renderUseModal({ size: "sm" });
 
-  expect(result.current.wrapperBind.className).toContain("sm:max-w-sm");
+  expect(result.current.panelBind.className).toContain("sm:max-w-sm");
 });
 
 test("it should call onShowChange when overlay is clicked", () => {

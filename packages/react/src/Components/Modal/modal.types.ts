@@ -23,7 +23,7 @@ export interface ModalClasses {
   overlay?: string;
 
   /**
-   * The classes to apply to the dialog panel (max-width wrapper).
+   * The classes to apply to the dialog panel.
    */
   panel?: string;
 

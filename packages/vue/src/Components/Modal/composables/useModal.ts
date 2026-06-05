@@ -254,9 +254,9 @@ export function useModal(
         onClick: handleWrapperClick,
       },
       cn({
-        "mx-auto flex min-h-full w-full transform items-end justify-center p-4": true,
+        "flex min-h-full w-full transform p-4": true,
+        "items-end justify-center": true,
         [alignClass.value ?? ""]: true,
-        [sizeClass.value ?? ""]: true,
         [get(mergedClasses.value, "wrapper") ?? ""]: true,
       }),
     );
@@ -274,6 +274,7 @@ export function useModal(
         "data-state": transitionState.value,
         class: cn({
           "relative w-full": true,
+          [sizeClass.value ?? ""]: true,
           [panelTransitionClass.value]: transitionEnabled.value,
           [get(mergedClasses.value, "panel") ?? ""]: true,
         }),

@@ -139,16 +139,16 @@ test("it should not call onShowChange when clicking inside the panel", () => {
   expect(onShowChange).not.toHaveBeenCalled();
 });
 
-test("it should apply size classes on the wrapper from sm breakpoint", () => {
+test("it should apply size classes on the panel from sm breakpoint", () => {
   render(
     <Modal show size="lg">
       Sized
     </Modal>,
   );
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const panel = document.body.querySelector('[role="dialog"]');
 
-  expect(wrapper?.className).toContain("sm:max-w-lg");
+  expect(panel?.className).toContain("sm:max-w-lg");
 });
 
 test("it should apply blur classes on the overlay", () => {
@@ -170,7 +170,7 @@ test("it should apply align classes on the wrapper", () => {
     </Modal>,
   );
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
   expect(wrapper?.className).toContain("sm:items-start");
   expect(wrapper?.className).toContain("sm:justify-start");
@@ -183,7 +183,7 @@ test("it should apply middle-end align classes on the wrapper", () => {
     </Modal>,
   );
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
   expect(wrapper?.className).toContain("sm:justify-end");
   expect(wrapper?.className).toContain("sm:items-center");

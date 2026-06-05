@@ -316,9 +316,9 @@ test("update should patch modal shell options on an open modal", async () => {
   );
 
   await waitFor(() => {
-    const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+    const panel = document.body.querySelector('[role="dialog"]');
 
-    expect(wrapper?.className).toContain("sm:max-w-lg");
+    expect(panel?.className).toContain("sm:max-w-lg");
   });
 });
 

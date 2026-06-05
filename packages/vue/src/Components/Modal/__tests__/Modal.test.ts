@@ -90,15 +90,15 @@ test("it should not close when clicking inside the panel", async () => {
   expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 });
 
-test("it should apply size classes on the wrapper from sm breakpoint", () => {
+test("it should apply size classes on the panel from sm breakpoint", () => {
   mountModal({
     slots: { default: "Sized" },
     props: { modelValue: true, size: "lg" },
   });
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const panel = document.body.querySelector('[role="dialog"]');
 
-  expect(wrapper?.className).toContain("sm:max-w-lg");
+  expect(panel?.className).toContain("sm:max-w-lg");
 });
 
 test("it should apply blur classes on the overlay", () => {
@@ -118,7 +118,7 @@ test("it should apply align classes on the wrapper", () => {
     props: { modelValue: true, align: "top-start" },
   });
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
   expect(wrapper?.className).toContain("sm:items-start");
   expect(wrapper?.className).toContain("sm:justify-start");
@@ -130,7 +130,7 @@ test("it should apply middle-end align classes on the wrapper", () => {
     props: { modelValue: true, align: "middle-end" },
   });
 
-  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
   expect(wrapper?.className).toContain("sm:justify-end");
   expect(wrapper?.className).toContain("sm:items-center");
@@ -169,7 +169,7 @@ test("it should close on wrapper backdrop click", async () => {
     slots: { default: "<div>content</div>" },
   });
 
-  const el = document.body.querySelector(".mx-auto.flex.min-h-full");
+  const el = document.body.querySelector(".flex.min-h-full.w-full");
 
   const event = new MouseEvent("click", { bubbles: true });
 
