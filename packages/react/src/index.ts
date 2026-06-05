@@ -4,6 +4,18 @@ import "@/augments";
 // ** Exports
 export { BridgeUIHosts } from "@/Actions";
 export type { BridgeUIHostsProps } from "@/Actions";
+export { BridgeDialogHost, useBridgeDialog } from "@/Actions/Dialog";
+export type {
+  BridgeDialogApi,
+  BridgeDialogContentProps,
+  BridgeDialogEntry,
+  BridgeDialogHostProps,
+  BridgeDialogOpenOptions,
+  BridgeDialogShellProps,
+  BridgeDialogUpdateOptions,
+  DialogAction,
+  DialogActions,
+} from "@/Actions/Dialog";
 export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
 export type {
   BridgeModalApi,

@@ -1,5 +1,5 @@
 // ** External Imports
-import type { SnackbarColor } from "@bridge-ui/core";
+import type { ButtonColor, SnackbarColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { BridgeSnackbarContentProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
@@ -19,7 +19,7 @@ export function resolveBridgeSnackbarSlots(
     return undefined;
   }
 
-  const snackbarColor = color as keyof SnackbarColor;
+  const snackbarColor = color as keyof ButtonColor & keyof SnackbarColor;
   const slots: SnackbarSlots = {};
 
   if (rightButtons) {

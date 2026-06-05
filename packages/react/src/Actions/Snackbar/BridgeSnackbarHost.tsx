@@ -95,7 +95,10 @@ export function BridgeSnackbarHost({
             entrySnackbar,
           );
 
-          const dismiss = () => invokeLayerDismiss(api.entries, entry.id);
+          const dismissFromSnackbar = () =>
+            invokeLayerDismiss(api.entries, entry.id);
+
+          const dismissFromAction = () => api.close(entry.id);
 
           return (
             <Snackbar
@@ -111,9 +114,9 @@ export function BridgeSnackbarHost({
                   dense: snackbarProps.dense,
                   color: snackbarProps.color,
                 },
-                dismiss,
+                dismissFromAction,
               )}
-              onClose={dismiss}
+              onClose={dismissFromSnackbar}
               onShowChange={(show) => {
                 api.syncShow(entry.id, show);
                 completeLayerHide(api.entries, entry.id, show, api.removeEntry);

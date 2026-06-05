@@ -1,6 +1,16 @@
 // ** Exports
 export { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
 export type { BridgeUIHostsProps } from "@/Actions/BridgeUIHosts";
+export { BridgeDialogHost, useBridgeDialog } from "@/Actions/Dialog";
+export type {
+  BridgeDialogApi,
+  BridgeDialogEntry,
+  BridgeDialogHostProps,
+  BridgeDialogOpenOptions,
+  BridgeDialogShellProps,
+  DialogAction,
+  DialogActions,
+} from "@/Actions/Dialog";
 export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
 export type {
   BridgeModalApi,

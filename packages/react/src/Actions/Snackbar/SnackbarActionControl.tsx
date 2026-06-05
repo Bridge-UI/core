@@ -2,7 +2,7 @@
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, type SnackbarColor } from "@bridge-ui/core";
+import { cn, type ButtonColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
@@ -19,7 +19,7 @@ type SnackbarActionControlProps = {
   action: SnackbarAction;
   role: "accept" | "reject";
   layout: SnackbarActionLayout;
-  snackbarColor: keyof SnackbarColor;
+  snackbarColor: keyof ButtonColor;
   hasReject?: boolean;
   hasAccept?: boolean;
   onRun: () => void;

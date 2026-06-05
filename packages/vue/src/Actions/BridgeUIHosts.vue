@@ -3,6 +3,8 @@
 import type { SnackbarPosition } from "@bridge-ui/core";
 
 // ** Local Imports
+import { BridgeDialogHost } from "@/Actions/Dialog";
+import type { BridgeDialogShellProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { BridgeModalHost } from "@/Actions/Modal";
 import type { BridgeModalShellProps } from "@/Actions/Modal/bridgeModal.types";
 import { BridgeSnackbarHost } from "@/Actions/Snackbar";
@@ -15,12 +17,16 @@ withDefaults(
       position?: keyof SnackbarPosition;
       snackbar?: BridgeSnackbarShellProps;
     };
+    dialog?: {
+      modal?: BridgeDialogShellProps;
+    };
     modal?: {
       modal?: BridgeModalShellProps;
     };
   }>(),
   {
     snackbar: () => ({}),
+    dialog: () => ({}),
     modal: () => ({}),
   },
 );
@@ -28,8 +34,10 @@ withDefaults(
 
 <template>
   <BridgeSnackbarHost v-bind="snackbar">
-    <BridgeModalHost v-bind="modal">
-      <slot />
-    </BridgeModalHost>
+    <BridgeDialogHost v-bind="dialog">
+      <BridgeModalHost v-bind="modal">
+        <slot />
+      </BridgeModalHost>
+    </BridgeDialogHost>
   </BridgeSnackbarHost>
 </template>

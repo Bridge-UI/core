@@ -2,6 +2,7 @@
 import type { ReactNode } from "react";
 
 // ** Local Imports
+import { BridgeDialogHost, type BridgeDialogHostProps } from "@/Actions/Dialog";
 import { BridgeModalHost, type BridgeModalHostProps } from "@/Actions/Modal";
 import {
   BridgeSnackbarHost,
@@ -15,23 +16,30 @@ export type BridgeUIHostsProps = {
    */
   snackbar?: Omit<BridgeSnackbarHostProps, "children">;
   /**
+   * Props forwarded to {@link BridgeDialogHost}.
+   */
+  dialog?: Omit<BridgeDialogHostProps, "children">;
+  /**
    * Props forwarded to {@link BridgeModalHost}.
    */
   modal?: Omit<BridgeModalHostProps, "children">;
 };
 
 /**
- * Convenience wrapper that mounts {@link BridgeSnackbarHost} and {@link BridgeModalHost}.
- * Use when the app needs both `useBridgeSnackbar()` and `useBridgeModal()`.
+ * Convenience wrapper that mounts snackbar, dialog, and modal hosts.
+ * Use when the app needs `useBridgeSnackbar()`, `useBridgeDialog()`, and/or `useBridgeModal()`.
  */
 export function BridgeUIHosts({
   children,
   snackbar,
+  dialog,
   modal,
 }: BridgeUIHostsProps) {
   return (
     <BridgeSnackbarHost {...snackbar}>
-      <BridgeModalHost {...modal}>{children}</BridgeModalHost>
+      <BridgeDialogHost {...dialog}>
+        <BridgeModalHost {...modal}>{children}</BridgeModalHost>
+      </BridgeDialogHost>
     </BridgeSnackbarHost>
   );
 }

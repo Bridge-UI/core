@@ -1,6 +1,20 @@
 // ** Exports
 export { default as BridgeUIHosts } from "@/Actions/BridgeUIHosts.vue";
 export {
+  BridgeDialogHost,
+  BridgeDialogHostMissingError,
+  useBridgeDialog,
+} from "@/Actions/Dialog";
+export type {
+  BridgeDialogApi,
+  BridgeDialogEntry,
+  BridgeDialogOpenOptions,
+  BridgeDialogShellProps,
+  BridgeDialogUpdateOptions,
+  DialogAction,
+  DialogActions,
+} from "@/Actions/Dialog";
+export {
   BridgeModalHost,
   BridgeModalHostMissingError,
   useBridgeModal,

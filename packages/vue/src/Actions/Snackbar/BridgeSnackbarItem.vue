@@ -33,13 +33,13 @@ const snackbarColor = computed(() => {
   return (snackbarProps.value.color ?? "primary") as keyof SnackbarColor;
 });
 
-const dismiss = () => {
+const dismissFromSnackbar = () => {
   invokeLayerDismiss(props.api.entries.value, props.entry.id);
 };
 
 function runAction(handler?: () => void) {
   handler?.();
-  dismiss();
+  props.api.close(props.entry.id);
 }
 
 const hasRight = computed(() => {
@@ -65,7 +65,7 @@ const hasTrailing = computed(() => {
     :stack-id="entry.id"
     :model-value="entry.show"
     :teleport-to="false"
-    v-on:close="dismiss"
+    v-on:close="dismissFromSnackbar"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
     :on-show-change="
       (show) =>
