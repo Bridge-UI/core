@@ -7,7 +7,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -174,6 +174,57 @@ test("it should apply align classes on the wrapper", () => {
 
   expect(wrapper?.className).toContain("sm:items-start");
   expect(wrapper?.className).toContain("sm:justify-start");
+});
+
+test("it should apply middle-end align classes on the wrapper", () => {
+  render(
+    <Modal show align="middle-end">
+      Align
+    </Modal>,
+  );
+
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:justify-end");
+  expect(wrapper?.className).toContain("sm:items-center");
+});
+
+test("it should apply fade transition classes by default", () => {
+  render(<Modal show>Animated</Modal>);
+
+  const overlay = document.body.querySelector('[data-modal-part="overlay"]');
+
+  expect(overlay?.className).toContain("duration-300");
+  expect(overlay?.className).toContain("data-[state=open]:opacity-100");
+});
+
+test("it should not call onClose when show is set to false by the parent", () => {
+  const onClose = vi.fn();
+  const onShowChange = vi.fn();
+
+  function ControlledModal() {
+    const [open, setOpen] = useState(true);
+
+    useEffect(() => {
+      setOpen(false);
+    }, []);
+
+    return (
+      <Modal
+        show={open}
+        transition="none"
+        onClose={onClose}
+        onShowChange={onShowChange}
+      >
+        Content
+      </Modal>
+    );
+  }
+
+  render(<ControlledModal />);
+
+  expect(onClose).not.toHaveBeenCalled();
+  expect(onShowChange).toHaveBeenCalledWith(false);
 });
 
 test("it should render a Card as children", () => {

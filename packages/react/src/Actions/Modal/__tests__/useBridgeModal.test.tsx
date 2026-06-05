@@ -6,7 +6,10 @@ import { afterEach, expect, test, vi } from "vitest";
 // ** Local Imports
 import { BridgeModalHostMissingError, useBridgeModal } from "@/Actions/Modal";
 import { BridgeUIProvider } from "@/Provider";
-import { resetModalStackForTests } from "@bridge-ui/core";
+import {
+  MODAL_STACK_BASE_Z_INDEX,
+  resetModalStackForTests,
+} from "@bridge-ui/core";
 
 afterEach(() => {
   resetModalStackForTests();
@@ -298,5 +301,113 @@ test("update should patch props on an open modal", async () => {
     expect(document.body.querySelector(".bridge-modal-body")?.textContent).toBe(
       "After",
     );
+  });
+});
+
+test("update should patch modal shell options on an open modal", async () => {
+  let api!: ReturnType<typeof useBridgeModal>;
+  let id = "";
+
+  function OpenAndUpdateModal() {
+    api = useBridgeModal();
+
+    useEffect(() => {
+      id = api.open({
+        component: Content,
+        modal: { transition: "none", size: "sm" },
+      });
+      api.update(id, { modal: { size: "lg" } });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenAndUpdateModal />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+    expect(wrapper?.className).toContain("sm:max-w-lg");
+  });
+});
+
+test("open with persistent modal should ignore escape", async () => {
+  const onClose = vi.fn();
+
+  function OpenPersistent() {
+    const modal = useBridgeModal();
+
+    useEffect(() => {
+      modal.open({
+        onClose,
+        component: Content,
+        modal: { transition: "none", persistent: true },
+      });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenPersistent />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  expect(onClose).not.toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("stacked imperative modals should use incremental z-index", async () => {
+  function OpenTwo() {
+    const modal = useBridgeModal();
+
+    useEffect(() => {
+      modal.open({
+        component: Content,
+        props: { label: "Outer" },
+        modal: { transition: "none" },
+      });
+      modal.open({
+        component: Content,
+        props: { label: "Inner" },
+        modal: { transition: "none" },
+      });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenTwo />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    const zIndexes = [
+      ...document.body.querySelectorAll<HTMLElement>(
+        ".fixed.inset-0.overflow-y-auto",
+      ),
+    ]
+      .map((root) => Number(root.style.zIndex))
+      .sort((left, right) => left - right);
+
+    expect(zIndexes).toEqual([
+      MODAL_STACK_BASE_Z_INDEX,
+      MODAL_STACK_BASE_Z_INDEX + 1,
+    ]);
   });
 });

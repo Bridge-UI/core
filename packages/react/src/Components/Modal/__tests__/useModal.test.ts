@@ -69,6 +69,24 @@ test("it should call onShowChange on escape keydown", () => {
   expect(onShowChange).toHaveBeenCalledWith(false);
 });
 
+test("it should disable fade transition when prefers-reduced-motion is set", () => {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn().mockImplementation((query: string) => ({
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      matches: query.includes("reduce"),
+    })),
+  );
+
+  const { result } = renderUseModal({ transition: "fade" });
+
+  expect(result.current.overlayBind.className).not.toContain("duration-300");
+
+  vi.unstubAllGlobals();
+});
+
 test("it should not call onShowChange when persistent", () => {
   const onShowChange = vi.fn();
 

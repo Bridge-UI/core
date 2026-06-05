@@ -153,7 +153,7 @@ export {
 export {
   acquireModalStackOrder,
   countModalTransitionLayers,
-  createModalStackId,
+  createLayerId,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   getModalStackEntry,

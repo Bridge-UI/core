@@ -25,6 +25,7 @@ test("it should emit update:modelValue when the backdrop is clicked", () => {
   cy.mount(Modal, {
     props: {
       modelValue: true,
+      transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
     slots: { default: () => "Content" },
@@ -39,6 +40,7 @@ test("it should emit update:modelValue on escape", () => {
   cy.mount(Modal, {
     props: {
       modelValue: true,
+      transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
     slots: { default: () => "Content" },
@@ -49,11 +51,24 @@ test("it should emit update:modelValue on escape", () => {
   cy.get("@onUpdate").should("have.been.calledWith", false);
 });
 
+test("it should apply fade transition classes by default", () => {
+  cy.mount(Modal, {
+    props: { modelValue: true },
+    slots: { default: () => "Animated" },
+  });
+
+  cy.get('[data-modal-part="overlay"]').should(
+    "have.class",
+    "data-[state=open]:opacity-100",
+  );
+});
+
 test("it should not emit update:modelValue when persistent", () => {
   cy.mount(Modal, {
     props: {
       modelValue: true,
       persistent: true,
+      transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
     slots: { default: () => "Persistent" },

@@ -169,10 +169,10 @@ export function countModalTransitionLayers(
 }
 
 /**
- * Creates a modal stack id via `crypto.randomUUID()` when available.
+ * Creates a layer id via `crypto.randomUUID()` when available.
  * When `assigned` is provided (e.g. BridgeModalHost), that value is used as-is.
  */
-export function createModalStackId(assigned?: ModalStackId): ModalStackId {
+export function createLayerId(assigned?: ModalStackId): ModalStackId {
   if (assigned !== undefined && assigned !== "") {
     return assigned;
   }
@@ -186,7 +186,7 @@ export function createModalStackId(assigned?: ModalStackId): ModalStackId {
 
   fallbackIdCounter += 1;
 
-  return `modal-${fallbackIdCounter}`;
+  return `layer-${fallbackIdCounter}`;
 }
 
 export function getModalOverlayTransitionClass(
@@ -250,7 +250,7 @@ export function pushModalStack(
     onEscape?: () => void;
   } = {},
 ): ModalStackHandle {
-  const id = createModalStackId(options.id);
+  const id = createLayerId(options.id);
   const order = options.order ?? acquireModalStackOrder();
 
   stack.push({

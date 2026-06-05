@@ -14,8 +14,20 @@ export type BridgeModalHostProps = {
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
 
-function handleDismiss(entry: BridgeModalEntry) {
-  if (!entry.show) {
+function findEntry(
+  entries: BridgeModalEntry[],
+  id: string,
+): BridgeModalEntry | undefined {
+  return entries.find((entry) => entry.id === id);
+}
+
+function handleDismiss(
+  id: string,
+  api: ReturnType<typeof useBridgeModalController>,
+) {
+  const entry = findEntry(api.entries, id);
+
+  if (!entry?.show) {
     return;
   }
 
@@ -23,7 +35,7 @@ function handleDismiss(entry: BridgeModalEntry) {
 }
 
 function handleShowChange(
-  entry: BridgeModalEntry,
+  id: string,
   api: ReturnType<typeof useBridgeModalController>,
   show: boolean,
 ) {
@@ -31,13 +43,14 @@ function handleShowChange(
     return;
   }
 
-  api.removeEntry(entry.id);
-  entry.onClosed?.();
+  const entry = findEntry(api.entries, id);
+
+  api.removeEntry(id);
+  entry?.onClosed?.();
 }
 
 export function BridgeModalHost({ children }: BridgeModalHostProps) {
   const parentApi = useContext(BridgeModalContext);
-
   const api = useBridgeModalController();
 
   useEffect(() => {
@@ -52,14 +65,15 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
 
       {api.entries.map((entry) => {
         const Component = entry.component;
+        const entryId = entry.id;
 
         return (
           <Modal
-            key={entry.id}
+            key={entryId}
             show={entry.show}
-            stackId={entry.id}
-            onClose={() => handleDismiss(entry)}
-            onShowChange={(show) => handleShowChange(entry, api, show)}
+            stackId={entryId}
+            onClose={() => handleDismiss(entryId, api)}
+            onShowChange={(show) => handleShowChange(entryId, api, show)}
             {...entry.modal}
           >
             {createElement(Component, entry.props ?? {})}

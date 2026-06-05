@@ -40,8 +40,8 @@ export interface ModalClasses {
 
 export interface ModalEmits {
   /**
-   * Emitted when the modal requests to close (overlay, escape).
-   * Sugar for `update:modelValue` with `false`.
+   * Emitted when the user dismisses the modal (overlay or Escape).
+   * Not emitted when the parent sets `v-model` to `false` directly.
    */
   close: [];
 }

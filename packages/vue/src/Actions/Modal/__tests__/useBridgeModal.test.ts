@@ -8,7 +8,10 @@ import { defineComponent, h, onMounted } from "vue";
 // ** Local Imports
 import { BridgeModalHostMissingError, useBridgeModal } from "@/Actions/Modal";
 import { BridgeUIProvider } from "@/Provider";
-import { resetModalStackForTests } from "@bridge-ui/core";
+import {
+  MODAL_STACK_BASE_Z_INDEX,
+  resetModalStackForTests,
+} from "@bridge-ui/core";
 
 afterEach(async () => {
   await flushPromises();
@@ -281,4 +284,101 @@ test("update should patch props on an open modal", async () => {
   expect(document.body.querySelector(".bridge-modal-body")?.textContent).toBe(
     "After",
   );
+});
+
+test("update should patch modal shell options on an open modal", async () => {
+  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let id = "";
+
+  const Consumer = defineComponent({
+    setup() {
+      bridgeModal = useBridgeModal();
+
+      onMounted(() => {
+        id = bridgeModal.open({
+          component: Content,
+          modal: { transition: "none", size: "sm" },
+        });
+        bridgeModal.update(id, { modal: { size: "lg" } });
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mountWithProvider(Consumer);
+
+  await flushPromises();
+
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:max-w-lg");
+});
+
+test("open with persistent modal should ignore escape", async () => {
+  const onClose = vi.fn();
+
+  const Consumer = defineComponent({
+    setup() {
+      const modal = useBridgeModal();
+
+      onMounted(() => {
+        modal.open({
+          onClose,
+          component: Content,
+          modal: { transition: "none", persistent: true },
+        });
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mountWithProvider(Consumer);
+
+  await flushPromises();
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  await flushPromises();
+
+  expect(onClose).not.toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("stacked imperative modals should use incremental z-index", async () => {
+  const Consumer = defineComponent({
+    setup() {
+      const modal = useBridgeModal();
+
+      onMounted(() => {
+        modal.open({
+          component: Content,
+          modal: { transition: "none" },
+        });
+        modal.open({
+          component: Content,
+          modal: { transition: "none" },
+        });
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mountWithProvider(Consumer);
+
+  await flushPromises();
+
+  const zIndexes = [
+    ...document.body.querySelectorAll<HTMLElement>(
+      ".fixed.inset-0.overflow-y-auto",
+    ),
+  ]
+    .map((root) => Number(root.style.zIndex))
+    .sort((left, right) => left - right);
+
+  expect(zIndexes).toEqual([
+    MODAL_STACK_BASE_Z_INDEX,
+    MODAL_STACK_BASE_Z_INDEX + 1,
+  ]);
 });

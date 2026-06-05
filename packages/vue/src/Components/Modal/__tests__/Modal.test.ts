@@ -123,6 +123,18 @@ test("it should apply align classes on the wrapper", () => {
   expect(wrapper?.className).toContain("sm:justify-start");
 });
 
+test("it should apply middle-end align classes on the wrapper", () => {
+  mountModal({
+    slots: { default: "Align" },
+    props: { modelValue: true, align: "middle-end" },
+  });
+
+  const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
+
+  expect(wrapper?.className).toContain("sm:justify-end");
+  expect(wrapper?.className).toContain("sm:items-center");
+});
+
 test("it should render a Card inside the default slot", () => {
   mountModal({
     props: { modelValue: true },

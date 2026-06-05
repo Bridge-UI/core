@@ -23,21 +23,29 @@ const modalEntries = computed(() => api.entries.value);
 
 provide(BRIDGE_MODAL_INJECTION_KEY, api);
 
-function handleDismiss(entry: BridgeModalEntry) {
-  if (!entry.show) {
+function findEntry(id: string): BridgeModalEntry | undefined {
+  return api.entries.value.find((entry) => entry.id === id);
+}
+
+function handleDismiss(id: string) {
+  const entry = findEntry(id);
+
+  if (!entry?.show) {
     return;
   }
 
   entry.onClose?.();
 }
 
-function handleShowChange(entry: BridgeModalEntry, show: boolean) {
+function handleShowChange(id: string, show: boolean) {
   if (show) {
     return;
   }
 
-  api.removeEntry(entry.id);
-  entry.onClosed?.();
+  const entry = findEntry(id);
+
+  api.removeEntry(id);
+  entry?.onClosed?.();
 }
 </script>
 
@@ -50,8 +58,8 @@ function handleShowChange(entry: BridgeModalEntry, show: boolean) {
     v-model="entry.show"
     :stack-id="entry.id"
     v-for="entry in modalEntries"
-    v-on:close="handleDismiss(entry)"
-    :on-show-change="(show) => handleShowChange(entry, show)"
+    v-on:close="handleDismiss(entry.id)"
+    :on-show-change="(show) => handleShowChange(entry.id, show)"
   >
     <component :is="entry.component" v-bind="entry.props" />
   </Modal>

@@ -39,13 +39,13 @@ export function closeLayer<T extends LayerRegistryEntry>(
   entries: T[],
   id: string,
 ): T[] {
-  const index = entries.findIndex((entry) => entry.id === id);
+  const entry = entries.find((item) => item.id === id);
 
-  if (index === -1 || !entries[index]?.show) {
+  if (!entry?.show) {
     return entries;
   }
 
-  entries[index].onClose?.();
+  entry.onClose?.();
 
   return hideLayer(entries, id);
 }

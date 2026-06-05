@@ -1,4 +1,5 @@
 // ** External Imports
+import { getLayerCount } from "@bridge-ui/core";
 import { useContext, useMemo, useRef } from "react";
 
 // ** Local Imports
@@ -33,7 +34,7 @@ export function useBridgeModal(): BridgeModalApi {
       isOpen: (id) => apiRef.current?.isOpen(id) ?? false,
       update: (id, options) => apiRef.current!.update(id, options),
       get stackSize() {
-        return apiRef.current?.entries.length ?? 0;
+        return getLayerCount(apiRef.current?.entries ?? []);
       },
     };
   }, []);

@@ -109,8 +109,9 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
-   * Called when the modal requests to close (overlay, escape).
-   * Sugar for `onShowChange(false)`.
+   * Called when the user dismisses the modal (overlay click or Escape).
+   * Not fired when the parent sets `show={false}` directly — use `onShowChange` for that.
+   * Sugar for `onShowChange(false)` on user dismiss.
    *
    * @default undefined
    */

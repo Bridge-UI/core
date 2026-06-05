@@ -5,7 +5,7 @@ import { markRaw, shallowRef } from "vue";
 import {
   closeLayer,
   closeTopLayer,
-  createModalStackId,
+  createLayerId,
   isLayerMounted,
   removeLayer,
   updateLayer,
@@ -40,7 +40,7 @@ export function createBridgeModalApi(): BridgeModalController {
   function open<TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
   ): string {
-    const id = createModalStackId();
+    const id = createLayerId();
 
     const entry: BridgeModalEntry = toEntry(
       id,

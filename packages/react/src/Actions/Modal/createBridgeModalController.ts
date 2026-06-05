@@ -5,7 +5,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import {
   closeLayer,
   closeTopLayer,
-  createModalStackId,
+  createLayerId,
   isLayerMounted,
   removeLayer,
   updateLayer,
@@ -43,7 +43,7 @@ export function useBridgeModalController(): BridgeModalController {
 
   const open = useCallback(
     <TProps>(options: BridgeModalOpenOptions<TProps>): string => {
-      const id = createModalStackId();
+      const id = createLayerId();
 
       setEntries((current) => [...current, toEntry(id, options)]);
 

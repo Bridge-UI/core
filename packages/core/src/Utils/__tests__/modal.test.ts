@@ -5,7 +5,7 @@ import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
-  createModalStackId,
+  createLayerId,
   getModalStackEntry,
   getModalStackSnapshot,
   isModalStackTop,
@@ -76,17 +76,17 @@ test("pushModalStack should use string ids", () => {
   expect(handle.id.length).toBeGreaterThan(0);
 });
 
-test("createModalStackId should generate unique ids", () => {
-  const first = createModalStackId();
-  const second = createModalStackId();
+test("createLayerId should generate unique ids", () => {
+  const first = createLayerId();
+  const second = createLayerId();
 
   expect(typeof first).toBe("string");
   expect(first.length).toBeGreaterThan(0);
   expect(second).not.toBe(first);
 });
 
-test("createModalStackId should use assigned id when provided", () => {
-  expect(createModalStackId("host-assigned-id")).toBe("host-assigned-id");
+test("createLayerId should use assigned id when provided", () => {
+  expect(createLayerId("host-assigned-id")).toBe("host-assigned-id");
 });
 
 test("pushModalStack should use pre-assigned id", () => {

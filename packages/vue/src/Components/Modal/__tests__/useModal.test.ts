@@ -1,6 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
@@ -76,6 +76,24 @@ test("it should apply fade transition classes on overlay when transition is fade
   expect(result.overlayBind.value.class).toContain(
     "data-[state=open]:opacity-100",
   );
+});
+
+test("it should disable fade transition when prefers-reduced-motion is set", () => {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn().mockImplementation((query: string) => ({
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      matches: query.includes("reduce"),
+    })),
+  );
+
+  const { result } = mountUseModal({ transition: "fade" });
+
+  expect(result.overlayBind.value.class).not.toContain("duration-300");
+
+  vi.unstubAllGlobals();
 });
 
 test("it should not close when persistent", () => {

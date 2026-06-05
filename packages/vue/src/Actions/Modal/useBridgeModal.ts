@@ -1,4 +1,5 @@
 // ** External Imports
+import { getLayerCount } from "@bridge-ui/core";
 import { computed, inject } from "vue";
 
 // ** Local Imports
@@ -22,7 +23,7 @@ export function useBridgeModal(): BridgeModalApi {
   }
 
   const stackSize = computed(() => {
-    return api.entries.value.length;
+    return getLayerCount(api.entries.value);
   });
 
   return {
