@@ -110,13 +110,26 @@ function lockBodyScroll() {
 }
 
 /**
+ * Rank of an entry among open modals sorted by `order` (used for `level` / `zIndex`).
+ */
+function getModalStackOrderRank(id: ModalStackId): number {
+  const sorted = [...stack].sort((left, right) => left.order - right.order);
+
+  const rank = sorted.findIndex((entry) => entry.id === id);
+
+  return rank < 0 ? 0 : rank;
+}
+
+/**
  * Maps a stack entry to a public snapshot shape.
  */
 function toStackSnapshotEntry(entry: ModalStackEntry): ModalStackSnapshotEntry {
+  const rank = getModalStackOrderRank(entry.id);
+
   return {
     id: entry.id,
     order: entry.order,
-    zIndex: MODAL_STACK_BASE_Z_INDEX + entry.order - 1,
+    zIndex: MODAL_STACK_BASE_Z_INDEX + rank,
   };
 }
 
@@ -238,7 +251,6 @@ export function pushModalStack(
   } = {},
 ): ModalStackHandle {
   const id = createModalStackId(options.id);
-  const level = stack.length;
   const order = options.order ?? acquireModalStackOrder();
 
   stack.push({
@@ -247,6 +259,8 @@ export function pushModalStack(
     onEscape: options.onEscape,
   });
 
+  const level = getModalStackOrderRank(id);
+
   lockBodyScroll();
   attachEscapeListener();
 
@@ -254,7 +268,7 @@ export function pushModalStack(
     id,
     order,
     level,
-    zIndex: MODAL_STACK_BASE_Z_INDEX + order - 1,
+    zIndex: MODAL_STACK_BASE_Z_INDEX + level,
     release: () => {
       remove(stack, (entry) => entry.id === id);
 

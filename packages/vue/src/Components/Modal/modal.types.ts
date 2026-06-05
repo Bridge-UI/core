@@ -74,9 +74,10 @@ export interface ModalPartsProps {
  */
 export interface ModalOwnProps {
   /**
-   * Vertical alignment of the panel from the `sm` breakpoint up (mobile uses bottom sheet).
+   * Panel position from the `sm` breakpoint up (`{row}-{column}` grid).
+   * Mobile always uses bottom sheet (`bottom-center`).
    *
-   * @default "center"
+   * @default "middle-center"
    */
   align?: MergeProps<ModalAlign, ModalAlignOverrides>;
 
@@ -153,7 +154,7 @@ export interface ModalOwnProps {
   /**
    * Enter/leave animation for overlay and panel.
    *
-   * @default "none"
+   * @default "fade"
    */
   transition?: MergeProps<ModalTransition, ModalTransitionOverrides>;
 }

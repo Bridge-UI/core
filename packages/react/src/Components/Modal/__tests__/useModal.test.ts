@@ -18,11 +18,11 @@ afterEach(() => {
 const libDefaults = {
   size: "md",
   blur: "none",
-  align: "center",
   teleportTo: "body",
-  transition: "none",
+  transition: "fade",
   closeOnEscape: true,
   closeOnOverlay: true,
+  align: "middle-center",
 } as const satisfies Partial<ModalOwnProps>;
 
 function renderUseModal(
@@ -49,7 +49,10 @@ test("it should include max width class on wrapper bind", () => {
 test("it should call onShowChange when overlay is clicked", () => {
   const onShowChange = vi.fn();
 
-  const { result } = renderUseModal({}, { show: true, onShowChange });
+  const { result } = renderUseModal(
+    { transition: "none" },
+    { show: true, onShowChange },
+  );
 
   result.current.handleOverlayClick();
 
@@ -59,7 +62,7 @@ test("it should call onShowChange when overlay is clicked", () => {
 test("it should call onShowChange on escape keydown", () => {
   const onShowChange = vi.fn();
 
-  renderUseModal({}, { show: true, onShowChange });
+  renderUseModal({ transition: "none" }, { show: true, onShowChange });
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 

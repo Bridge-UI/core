@@ -1,5 +1,5 @@
 // ** External Imports
-import { createElement, type ReactNode } from "react";
+import { createElement, useContext, useEffect, type ReactNode } from "react";
 
 // ** Local Imports
 import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
@@ -11,6 +11,17 @@ export type BridgeModalHostProps = {
   children?: ReactNode;
 };
 
+const NESTED_HOST_WARNING =
+  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+
+function handleDismiss(entry: BridgeModalEntry) {
+  if (!entry.show) {
+    return;
+  }
+
+  entry.onClose?.();
+}
+
 function handleShowChange(
   entry: BridgeModalEntry,
   api: ReturnType<typeof useBridgeModalController>,
@@ -20,13 +31,20 @@ function handleShowChange(
     return;
   }
 
-  entry.onClose?.();
   api.removeEntry(entry.id);
   entry.onClosed?.();
 }
 
 export function BridgeModalHost({ children }: BridgeModalHostProps) {
+  const parentApi = useContext(BridgeModalContext);
+
   const api = useBridgeModalController();
+
+  useEffect(() => {
+    if (parentApi && process.env.NODE_ENV !== "production") {
+      console.warn(NESTED_HOST_WARNING);
+    }
+  }, [parentApi]);
 
   return (
     <BridgeModalContext.Provider value={api}>
@@ -40,6 +58,7 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
             key={entry.id}
             show={entry.show}
             stackId={entry.id}
+            onClose={() => handleDismiss(entry)}
             onShowChange={(show) => handleShowChange(entry, api, show)}
             {...entry.modal}
           >

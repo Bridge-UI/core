@@ -7,6 +7,7 @@ export type {
   BridgeModalApi,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalUpdateOptions,
 } from "@/Actions/Modal";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {

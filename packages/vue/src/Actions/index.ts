@@ -2,7 +2,6 @@
 export {
   BridgeModalHost,
   BridgeModalHostMissingError,
-  createBridgeModalApi,
   useBridgeModal,
 } from "@/Actions/Modal";
 export type {
@@ -10,4 +9,5 @@ export type {
   BridgeModalController,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalUpdateOptions,
 } from "@/Actions/Modal";

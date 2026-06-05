@@ -11,11 +11,11 @@ import type { ModalProps } from "@/Components/Modal/modal.types";
 const modalLibDefaults = {
   size: "md",
   blur: "none",
-  align: "center",
   teleportTo: "body",
-  transition: "none",
+  transition: "fade",
   closeOnEscape: true,
   closeOnOverlay: true,
+  align: "middle-center",
 } as const;
 
 function ModalShell({

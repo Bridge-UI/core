@@ -15,9 +15,9 @@ afterEach(() => {
 const libDefaults: Partial<ModalOwnProps> = {
   size: "md",
   blur: "none",
-  align: "center",
+  align: "middle-center",
   teleportTo: "body",
-  transition: "none",
+  transition: "fade",
   closeOnEscape: true,
   closeOnOverlay: true,
 };
@@ -62,7 +62,7 @@ test("it should default closeOnOverlay and closeOnEscape to true", () => {
 test("it should set show to false when overlay is clicked", () => {
   const show = ref(true);
 
-  const { result } = mountUseModal({}, show);
+  const { result } = mountUseModal({ transition: "none" }, show);
 
   result.handleOverlayClick();
 
@@ -91,7 +91,7 @@ test("it should not close when persistent", () => {
 test("it should close on escape keydown", () => {
   const show = ref(true);
 
-  mountUseModal({}, show);
+  mountUseModal({ transition: "none" }, show);
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots, watch } from "vue";
+import { computed, useSlots } from "vue";
 
 // ** Local Imports
 import { useModal } from "@/Components/Modal/composables/useModal";
@@ -28,8 +28,6 @@ const props = withDefaults(defineProps<ModalOwnProps>(), {
 
 const model = defineModel<boolean>({ default: false });
 
-const stackIdModel = defineModel<string | undefined>("stackId");
-
 const {
   merged,
   rendered,
@@ -43,11 +41,11 @@ const {
   {
     size: "md",
     blur: "none",
-    align: "center",
     teleportTo: "body",
-    transition: "none",
+    transition: "fade",
     closeOnEscape: true,
     closeOnOverlay: true,
+    align: "middle-center",
   },
   {
     show: model,
@@ -57,14 +55,8 @@ const {
   },
 );
 
-watch(modalStackId, (id) => {
-  if (id) {
-    stackIdModel.value = id;
-  }
-});
-
 defineExpose({
-  stackId: modalStackId,
+  stackId: computed(() => props.stackId ?? modalStackId.value),
 });
 
 const teleportDisabled = computed(() => {

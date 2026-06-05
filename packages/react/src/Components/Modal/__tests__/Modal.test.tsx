@@ -38,6 +38,7 @@ function NestedModals({
   return (
     <Modal
       show={outerOpen}
+      transition="none"
       onShowChange={(show) => {
         setOuterOpen(show);
         onOuterChange?.(show);
@@ -45,6 +46,7 @@ function NestedModals({
     >
       <Modal
         show={innerOpen}
+        transition="none"
         onShowChange={(show) => {
           setInnerOpen(show);
           onInnerChange?.(show);
@@ -73,7 +75,7 @@ test("it should call onShowChange when the backdrop is clicked", () => {
   const onShowChange = vi.fn();
 
   render(
-    <Modal show onShowChange={onShowChange}>
+    <Modal show transition="none" onShowChange={onShowChange}>
       Content
     </Modal>,
   );
@@ -91,7 +93,7 @@ test("it should call onClose when the backdrop is clicked", () => {
   const onClose = vi.fn();
 
   render(
-    <Modal show onClose={onClose}>
+    <Modal show transition="none" onClose={onClose}>
       Content
     </Modal>,
   );
@@ -163,7 +165,7 @@ test("it should apply blur classes on the overlay", () => {
 
 test("it should apply align classes on the wrapper", () => {
   render(
-    <Modal show align="start">
+    <Modal show align="top-start">
       Align
     </Modal>,
   );
@@ -171,6 +173,7 @@ test("it should apply align classes on the wrapper", () => {
   const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
 
   expect(wrapper?.className).toContain("sm:items-start");
+  expect(wrapper?.className).toContain("sm:justify-start");
 });
 
 test("it should render a Card as children", () => {
@@ -202,6 +205,7 @@ test("it should close only the topmost sibling modals on escape", () => {
       <>
         <Modal
           show={outerOpen}
+          transition="none"
           onShowChange={(show) => {
             setOuterOpen(show);
             onOuterChange(show);
@@ -211,6 +215,7 @@ test("it should close only the topmost sibling modals on escape", () => {
         </Modal>
         <Modal
           show={innerOpen}
+          transition="none"
           onShowChange={(show) => {
             setInnerOpen(show);
             onInnerChange(show);

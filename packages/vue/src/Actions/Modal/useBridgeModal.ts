@@ -22,14 +22,14 @@ export function useBridgeModal(): BridgeModalApi {
   }
 
   const stackSize = computed(() => {
-    return api.entries.value.filter((entry) => entry.show).length;
+    return api.entries.value.length;
   });
 
   return {
     open: api.open,
     close: api.close,
     isOpen: api.isOpen,
-    entries: api.entries,
+    update: api.update,
     closeTop: api.closeTop,
     get stackSize() {
       return stackSize.value;

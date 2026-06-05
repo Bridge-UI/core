@@ -22,13 +22,18 @@ export type BridgeModalOpenOptions<TProps = Record<string, unknown>> = {
   component: ComponentType<TProps>;
 };
 
+export type BridgeModalUpdateOptions = {
+  modal?: Partial<ModalOwnProps>;
+  props?: Record<string, unknown>;
+};
+
 export type BridgeModalController = {
   closeTop: () => void;
-  getStackSize: () => number;
   entries: BridgeModalEntry[];
   close: (id: string) => void;
   isOpen: (id: string) => boolean;
   removeEntry: (id: string) => void;
+  update: (id: string, options: BridgeModalUpdateOptions) => void;
   open: <TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
   ) => string;
@@ -36,7 +41,7 @@ export type BridgeModalController = {
 
 export type BridgeModalApi = Omit<
   BridgeModalController,
-  "entries" | "removeEntry" | "getStackSize"
+  "entries" | "removeEntry"
 > & {
   stackSize: number;
 };

@@ -121,3 +121,16 @@ test("getModalStackSnapshot should list open modals", () => {
   inner.release();
   outer.release();
 });
+
+test("getModalStackEntry should rank z-index by order not push order", () => {
+  const later = pushModalStack({ order: 2 });
+  const earlier = pushModalStack({ order: 1 });
+
+  expect(getModalStackEntry(later.id)?.zIndex).toBe(
+    MODAL_STACK_BASE_Z_INDEX + 1,
+  );
+  expect(getModalStackEntry(earlier.id)?.zIndex).toBe(MODAL_STACK_BASE_Z_INDEX);
+
+  later.release();
+  earlier.release();
+});

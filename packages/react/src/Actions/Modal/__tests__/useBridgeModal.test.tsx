@@ -1,7 +1,7 @@
 // ** External Imports
-import { render, waitFor } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import { BridgeModalHostMissingError, useBridgeModal } from "@/Actions/Modal";
@@ -14,15 +14,15 @@ afterEach(() => {
   document.body.style.overflow = "";
 });
 
-function Content() {
-  return <p className="bridge-modal-body">Imperative</p>;
+function Content({ label = "Imperative" }: { label?: string }) {
+  return <p className="bridge-modal-body">{label}</p>;
 }
 
 function OpenOnMount() {
   const modal = useBridgeModal();
 
   useEffect(() => {
-    modal.open({ component: Content });
+    modal.open({ component: Content, modal: { transition: "none" } });
   }, []);
 
   return null;
@@ -32,7 +32,10 @@ function OpenAndCloseOnMount() {
   const modal = useBridgeModal();
 
   useEffect(() => {
-    const id = modal.open({ component: Content });
+    const id = modal.open({
+      component: Content,
+      modal: { transition: "none" },
+    });
 
     modal.close(id);
   }, []);
@@ -48,7 +51,10 @@ function OpenWithRef({
   const modal = useBridgeModal();
 
   useEffect(() => {
-    const id = modal.open({ component: Content });
+    const id = modal.open({
+      component: Content,
+      modal: { transition: "none" },
+    });
 
     onOpen(modal, id);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount
@@ -93,7 +99,7 @@ test("close should unmount imperative modal", async () => {
   });
 });
 
-test("isOpen and stackSize should reflect registry state", async () => {
+test("isOpen and stackSize should reflect mounted entries", async () => {
   let api!: ReturnType<typeof useBridgeModal>;
   let id = "";
 
@@ -115,4 +121,182 @@ test("isOpen and stackSize should reflect registry state", async () => {
   expect(typeof id).toBe("string");
   expect(api.isOpen(id)).toBe(true);
   expect(api.stackSize).toBe(1);
+
+  act(() => {
+    api.close(id);
+  });
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+  });
+
+  expect(api.isOpen(id)).toBe(false);
+  expect(api.stackSize).toBe(0);
+});
+
+test("closeTop should close only the topmost imperative modal", async () => {
+  let api!: ReturnType<typeof useBridgeModal>;
+  let outerId = "";
+  let innerId = "";
+
+  function OpenTwo() {
+    api = useBridgeModal();
+
+    useEffect(() => {
+      outerId = api.open({
+        component: Content,
+        modal: { transition: "none" },
+        props: { label: "Outer" },
+      });
+      innerId = api.open({
+        component: Content,
+        modal: { transition: "none" },
+        props: { label: "Inner" },
+      });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenTwo />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+  });
+
+  act(() => {
+    api.closeTop();
+  });
+
+  await waitFor(() => {
+    expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(1);
+  });
+
+  expect(api.isOpen(innerId)).toBe(false);
+  expect(api.isOpen(outerId)).toBe(true);
+  expect(api.stackSize).toBe(1);
+});
+
+test("onClose should run before onClosed when close is called", async () => {
+  const onClose = vi.fn();
+  const onClosed = vi.fn();
+  let api!: ReturnType<typeof useBridgeModal>;
+  let id = "";
+
+  function OpenWithCallbacks() {
+    api = useBridgeModal();
+
+    useEffect(() => {
+      id = api.open({
+        component: Content,
+        modal: { transition: "none" },
+        onClose,
+        onClosed,
+      });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenWithCallbacks />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+
+  act(() => {
+    api.close(id);
+  });
+
+  expect(onClose).toHaveBeenCalledOnce();
+  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
+    onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+  );
+
+  await waitFor(() => {
+    expect(onClosed).toHaveBeenCalledOnce();
+  });
+});
+
+test("onClose should run before onClosed when escape is pressed", async () => {
+  const onClose = vi.fn();
+  const onClosed = vi.fn();
+
+  function OpenWithCallbacks() {
+    const modal = useBridgeModal();
+
+    useEffect(() => {
+      modal.open({
+        component: Content,
+        modal: { transition: "none" },
+        onClose,
+        onClosed,
+      });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenWithCallbacks />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  expect(onClose).toHaveBeenCalledOnce();
+  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
+    onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+  );
+
+  await waitFor(() => {
+    expect(onClosed).toHaveBeenCalledOnce();
+  });
+});
+
+test("update should patch props on an open modal", async () => {
+  let api!: ReturnType<typeof useBridgeModal>;
+  let id = "";
+
+  function OpenAndUpdate() {
+    api = useBridgeModal();
+
+    useEffect(() => {
+      id = api.open({
+        component: Content,
+        modal: { transition: "none" },
+        props: { label: "Before" },
+      });
+      api.update(id, { props: { label: "After" } });
+    }, []);
+
+    return null;
+  }
+
+  render(
+    <BridgeUIProvider>
+      <OpenAndUpdate />
+    </BridgeUIProvider>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelector(".bridge-modal-body")?.textContent).toBe(
+      "After",
+    );
+  });
 });

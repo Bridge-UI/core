@@ -114,12 +114,13 @@ test("it should apply blur classes on the overlay", () => {
 test("it should apply align classes on the wrapper", () => {
   mountModal({
     slots: { default: "Align" },
-    props: { modelValue: true, align: "start" },
+    props: { modelValue: true, align: "top-start" },
   });
 
   const wrapper = document.body.querySelector(".mx-auto.flex.min-h-full");
 
   expect(wrapper?.className).toContain("sm:items-start");
+  expect(wrapper?.className).toContain("sm:justify-start");
 });
 
 test("it should render a Card inside the default slot", () => {
@@ -138,7 +139,9 @@ test("it should render a Card inside the default slot", () => {
 });
 
 test("it should close on overlay click", async () => {
-  const wrapper = mountModal({ props: { modelValue: true } });
+  const wrapper = mountModal({
+    props: { modelValue: true, transition: "none" },
+  });
 
   const overlay = document.body.querySelector(".bg-black\\/50");
 
@@ -149,7 +152,7 @@ test("it should close on overlay click", async () => {
 
 test("it should close on wrapper backdrop click", async () => {
   const wrapper = mountModal({
-    props: { modelValue: true },
+    props: { modelValue: true, transition: "none" },
     slots: { default: "<div>content</div>" },
   });
 
@@ -166,7 +169,9 @@ test("it should close on wrapper backdrop click", async () => {
 });
 
 test("it should close on escape key", async () => {
-  const wrapper = mountModal({ props: { modelValue: true } });
+  const wrapper = mountModal({
+    props: { modelValue: true, transition: "none" },
+  });
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
@@ -174,7 +179,9 @@ test("it should close on escape key", async () => {
 });
 
 test("it should emit close when closing", async () => {
-  const wrapper = mountModal({ props: { modelValue: true } });
+  const wrapper = mountModal({
+    props: { modelValue: true, transition: "none" },
+  });
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
@@ -214,6 +221,7 @@ test("it should render nested modals with separate dialog layers", () => {
           Modal,
           {
             modelValue: outer.value,
+            transition: "none",
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -223,6 +231,7 @@ test("it should render nested modals with separate dialog layers", () => {
               Modal,
               {
                 modelValue: inner.value,
+                transition: "none",
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },
@@ -251,6 +260,7 @@ test("it should close only the topmost nested modal on escape", async () => {
           Modal,
           {
             modelValue: outer.value,
+            transition: "none",
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -260,6 +270,7 @@ test("it should close only the topmost nested modal on escape", async () => {
               Modal,
               {
                 modelValue: inner.value,
+                transition: "none",
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },
@@ -291,6 +302,7 @@ test("it should keep body scroll locked when an inner modal closes", async () =>
           Modal,
           {
             modelValue: outer.value,
+            transition: "none",
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -300,6 +312,7 @@ test("it should keep body scroll locked when an inner modal closes", async () =>
               Modal,
               {
                 modelValue: inner.value,
+                transition: "none",
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },

@@ -1,69 +1,37 @@
 // ** External Imports
-import { remove } from "es-toolkit/array";
-import { findLast, some } from "es-toolkit/compat";
-import { shallowRef } from "vue";
+import { markRaw, shallowRef } from "vue";
 
 // ** Core Imports
-import { createModalStackId } from "@bridge-ui/core";
+import {
+  closeLayer,
+  closeTopLayer,
+  createModalStackId,
+  isLayerMounted,
+  removeLayer,
+  updateLayer,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
   BridgeModalController,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalUpdateOptions,
 } from "@/Actions/Modal/bridgeModal.types";
 
-function toEntry<TProps>(
+function toEntry(
   id: string,
-  options: BridgeModalOpenOptions<TProps>,
+  options: BridgeModalOpenOptions,
 ): BridgeModalEntry {
   return {
     id,
     show: true,
     modal: options.modal,
+    props: options.props,
     onClose: options.onClose,
     onClosed: options.onClosed,
-    component: options.component,
-    props: options.props as Record<string, unknown> | undefined,
+    component: markRaw(options.component),
   };
-}
-
-function hideEntry(
-  entries: BridgeModalEntry[],
-  id: string,
-): BridgeModalEntry[] {
-  const index = entries.findIndex((entry) => entry.id === id);
-
-  if (index === -1 || !entries[index]?.show) {
-    return entries;
-  }
-
-  const next = [...entries];
-
-  next[index] = { ...next[index], show: false };
-
-  return next;
-}
-
-function hideTop(entries: BridgeModalEntry[]): BridgeModalEntry[] {
-  const top = findLast(entries, (entry) => entry.show);
-
-  if (!top) {
-    return entries;
-  }
-
-  return hideEntry(entries, top.id);
-}
-
-function removeEntryFromList(
-  entries: BridgeModalEntry[],
-  id: string,
-): BridgeModalEntry[] {
-  const next = [...entries];
-
-  remove(next, (entry) => entry.id === id);
-
-  return next;
 }
 
 export function createBridgeModalApi(): BridgeModalController {
@@ -74,31 +42,41 @@ export function createBridgeModalApi(): BridgeModalController {
   ): string {
     const id = createModalStackId();
 
-    entries.value = [...entries.value, toEntry(id, options)];
+    const entry: BridgeModalEntry = toEntry(
+      id,
+      options as BridgeModalOpenOptions,
+    );
+
+    entries.value = [...entries.value, entry];
 
     return id;
   }
 
   function close(id: string) {
-    entries.value = hideEntry(entries.value, id);
+    entries.value = closeLayer(entries.value, id);
   }
 
   function closeTop() {
-    entries.value = hideTop(entries.value);
+    entries.value = closeTopLayer(entries.value);
   }
 
   function isOpen(id: string) {
-    return some(entries.value, (entry) => entry.id === id && entry.show);
+    return isLayerMounted(entries.value, id);
   }
 
   function removeEntry(id: string) {
-    entries.value = removeEntryFromList(entries.value, id);
+    entries.value = removeLayer(entries.value, id);
+  }
+
+  function update(id: string, options: BridgeModalUpdateOptions) {
+    entries.value = updateLayer(entries.value, id, options);
   }
 
   return {
     open,
     close,
     isOpen,
+    update,
     entries,
     closeTop,
     removeEntry,

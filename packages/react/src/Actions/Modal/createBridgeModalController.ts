@@ -1,16 +1,22 @@
 // ** External Imports
-import { remove } from "es-toolkit/array";
-import { findLast, some } from "es-toolkit/compat";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
-import { createModalStackId } from "@bridge-ui/core";
+import {
+  closeLayer,
+  closeTopLayer,
+  createModalStackId,
+  isLayerMounted,
+  removeLayer,
+  updateLayer,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
   BridgeModalController,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalUpdateOptions,
 } from "@/Actions/Modal/bridgeModal.types";
 
 function toEntry<TProps>(
@@ -26,44 +32,6 @@ function toEntry<TProps>(
     props: options.props as Record<string, unknown> | undefined,
     component: options.component as BridgeModalEntry["component"],
   };
-}
-
-function hideEntry(
-  entries: BridgeModalEntry[],
-  id: string,
-): BridgeModalEntry[] {
-  const index = entries.findIndex((entry) => entry.id === id);
-
-  if (index === -1 || !entries[index]?.show) {
-    return entries;
-  }
-
-  const next = [...entries];
-
-  next[index] = { ...next[index], show: false };
-
-  return next;
-}
-
-function hideTop(entries: BridgeModalEntry[]): BridgeModalEntry[] {
-  const top = findLast(entries, (entry) => entry.show);
-
-  if (!top) {
-    return entries;
-  }
-
-  return hideEntry(entries, top.id);
-}
-
-function removeEntryFromList(
-  entries: BridgeModalEntry[],
-  id: string,
-): BridgeModalEntry[] {
-  const next = [...entries];
-
-  remove(next, (entry) => entry.id === id);
-
-  return next;
 }
 
 export function useBridgeModalController(): BridgeModalController {
@@ -85,34 +53,37 @@ export function useBridgeModalController(): BridgeModalController {
   );
 
   const close = useCallback((id: string) => {
-    setEntries((current) => hideEntry(current, id));
+    setEntries((current) => closeLayer(current, id));
   }, []);
 
   const closeTop = useCallback(() => {
-    setEntries((current) => hideTop(current));
+    setEntries((current) => closeTopLayer(current));
   }, []);
 
   const isOpen = useCallback((id: string) => {
-    return some(entriesRef.current, (entry) => entry.id === id && entry.show);
+    return isLayerMounted(entriesRef.current, id);
   }, []);
 
   const removeEntry = useCallback((id: string) => {
-    setEntries((current) => removeEntryFromList(current, id));
+    setEntries((current) => removeLayer(current, id));
   }, []);
 
-  const getStackSize = useCallback(() => {
-    return entriesRef.current.filter((entry) => entry.show).length;
-  }, []);
+  const update = useCallback(
+    (id: string, options: BridgeModalUpdateOptions) => {
+      setEntries((current) => updateLayer(current, id, options));
+    },
+    [],
+  );
 
   return useMemo(() => {
     return {
-      entries,
       open,
       close,
-      closeTop,
       isOpen,
+      update,
+      entries,
+      closeTop,
       removeEntry,
-      getStackSize,
     };
-  }, [open, close, closeTop, isOpen, removeEntry, getStackSize, entries]);
+  }, [open, close, isOpen, update, entries, closeTop, removeEntry]);
 }

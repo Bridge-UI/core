@@ -123,15 +123,15 @@ export function useModal(
   });
 
   function setShow(next: boolean) {
+    if (!next) {
+      options.onClose?.();
+    }
+
     if (options.show) {
       options.show.value = next;
     }
 
     options.onShowChange?.(next);
-
-    if (!next) {
-      options.onClose?.();
-    }
   }
 
   const split = computed(() => {
@@ -386,7 +386,11 @@ export function useModal(
   }
 
   function handleEscape() {
-    if (merged.value.closeOnEscape === false || !canClose.value) {
+    if (
+      !show.value ||
+      merged.value.closeOnEscape === false ||
+      !canClose.value
+    ) {
       return;
     }
 

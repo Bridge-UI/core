@@ -141,6 +141,16 @@ export function splitComponentProps<
 }
 
 export {
+  closeLayer,
+  closeTopLayer,
+  getLayerCount,
+  hideLayer,
+  isLayerMounted,
+  removeLayer,
+  updateLayer,
+  type LayerRegistryEntry,
+} from "@core/Utils/layerRegistry";
+export {
   acquireModalStackOrder,
   countModalTransitionLayers,
   createModalStackId,

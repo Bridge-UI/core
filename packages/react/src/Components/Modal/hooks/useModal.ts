@@ -48,13 +48,13 @@ const modalBridgeKeys = [
   "size",
   "align",
   "classes",
+  "stackId",
   "partsProps",
   "persistent",
   "teleportTo",
   "transition",
   "closeOnEscape",
   "closeOnOverlay",
-  "stackId",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
@@ -200,11 +200,11 @@ export function useModal(
 
   // Handlers
   function setShow(next: boolean) {
-    onShowChange?.(next);
-
     if (!next) {
       onClose?.();
     }
+
+    onShowChange?.(next);
   }
 
   function finishLeave() {
@@ -334,7 +334,7 @@ export function useModal(
     }
 
     function handleEscape() {
-      if (merged.closeOnEscape === false || merged.persistent) {
+      if (!show || merged.closeOnEscape === false || merged.persistent) {
         return;
       }
 
@@ -358,7 +358,7 @@ export function useModal(
       stackHandleRef.current = null;
       modalStackIdRef.current = "";
     };
-  }, [stackId, rendered, merged.persistent, merged.closeOnEscape]);
+  }, [show, stackId, rendered, merged.persistent, merged.closeOnEscape]);
 
   // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
@@ -424,6 +424,5 @@ export function useModal(
     wrapperBind,
     handleOverlayClick,
     handleWrapperClick,
-    modalStackId: modalStackIdRef.current,
   };
 }
