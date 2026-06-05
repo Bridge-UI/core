@@ -16,12 +16,12 @@ type SnackbarActionLayout =
   | "right-reject";
 
 type SnackbarActionControlProps = {
-  onRun: () => void;
-  hasReject?: boolean;
-  hasAccept?: boolean;
   action: SnackbarAction;
-  role: "accept" | "reject";
+  hasAccept?: boolean;
+  hasReject?: boolean;
   layout: SnackbarActionLayout;
+  onRun: () => void;
+  role: "accept" | "reject";
   snackbarColor: keyof ButtonColor;
 };
 

@@ -23,10 +23,10 @@ const NESTED_HOST_WARNING =
 const props = withDefaults(
   defineProps<{
     max?: number;
-    timeout?: number | false;
-    teleportTo?: string | false;
-    snackbar?: BridgeSnackbarShellProps;
     position?: keyof typeof snackbarPositionProps;
+    snackbar?: BridgeSnackbarShellProps;
+    teleportTo?: string | false;
+    timeout?: number | false;
   }>(),
   {
     teleportTo: "body",

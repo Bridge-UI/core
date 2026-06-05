@@ -77,10 +77,10 @@ type SnackbarLibDefaults = LibDefaultsShape<
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
 
 export type SnackbarOptions = {
-  show?: Ref<boolean> | boolean;
-  stackId?: string;
   onClose?: () => void;
   onShowChange?: (show: boolean) => void;
+  show?: Ref<boolean> | boolean;
+  stackId?: string;
 };
 
 export function useSnackbar(

@@ -5,16 +5,16 @@ import { createContext, type ReactNode } from "react";
 import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
 
 export interface BridgeUIContextValue {
-  global: BridgeUIGlobal;
   components: BridgeUIComponentsConfig;
-  setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
+  global: BridgeUIGlobal;
   setComponents: (patch: BridgeUIComponentsConfig) => void;
+  setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
 }
 
 export const BridgeUIContext = createContext<BridgeUIContextValue | null>(null);
 
 export interface BridgeUIProviderProps {
   children: ReactNode;
-  global?: Partial<BridgeUIGlobal>;
   components?: BridgeUIComponentsConfig;
+  global?: Partial<BridgeUIGlobal>;
 }

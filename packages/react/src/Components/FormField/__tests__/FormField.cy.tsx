@@ -19,13 +19,13 @@ function FieldHarness({
   description,
   errorMessage,
 }: {
+  description?: string;
+  disabled?: boolean;
+  error?: boolean;
+  errorMessage?: string;
   id?: string;
   label?: string;
-  error?: boolean;
-  disabled?: boolean;
   readonly?: boolean;
-  description?: string;
-  errorMessage?: string;
   variant?: "outline" | "filled" | "stacked" | "notched" | "underlined";
 }) {
   const field = useFormField(

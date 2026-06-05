@@ -22,9 +22,9 @@ export interface SnackbarClasses {
   actions?: string;
   description?: string;
   icon?: string;
+  portal?: string;
   progress?: string;
   right?: string;
-  portal?: string;
   root?: string;
   title?: string;
 }
@@ -34,12 +34,12 @@ export interface SnackbarEmits {
 }
 
 export interface SnackbarPartsProps {
+  description?: HTMLAttributes;
   icon?: Partial<Omit<IconProps, "icon">>;
   portal?: HTMLAttributes;
+  progress?: HTMLAttributes;
   root?: HTMLAttributes;
   title?: HTMLAttributes;
-  description?: HTMLAttributes;
-  progress?: HTMLAttributes;
 }
 
 export interface SnackbarOwnProps {
@@ -51,14 +51,14 @@ export interface SnackbarOwnProps {
   duration?: number | false;
   icon?: LucideIcon | null;
   img?: string;
+  onShowChange?: (show: boolean) => void;
   partsProps?: SnackbarPartsProps;
-  progressbar?: boolean;
   position?: MergeProps<SnackbarPosition, SnackbarPositionOverrides>;
+  progressbar?: boolean;
   stackId?: string;
   teleportTo?: string | false;
   title?: string;
   transition?: MergeProps<SnackbarTransition, SnackbarTransitionOverrides>;
-  onShowChange?: (show: boolean) => void;
 }
 
 export interface SnackbarSlots {

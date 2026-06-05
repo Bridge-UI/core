@@ -199,6 +199,11 @@ export interface SwitcherSlots {
   description?: Slot;
 
   /**
+   * Inline-end label after the main label.
+   */
+  endLabel?: Slot;
+
+  /**
    * Custom error message content.
    */
   errorMessage?: Slot;
@@ -212,11 +217,6 @@ export interface SwitcherSlots {
    * Inline-start label before the control.
    */
   startLabel?: Slot;
-
-  /**
-   * Inline-end label after the main label.
-   */
-  endLabel?: Slot;
 }
 
 export type SwitcherProps = MergeHtmlProps<SwitcherOwnProps, HTMLAttributes>;

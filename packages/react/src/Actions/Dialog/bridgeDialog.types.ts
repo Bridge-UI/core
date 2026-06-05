@@ -52,8 +52,8 @@ export interface DialogActions {
 }
 
 export type ResolveBridgeDialogFooterOptions = {
-  actions?: DialogActions;
   acceptColor: keyof ButtonColor;
+  actions?: DialogActions;
   dismiss: () => void;
 };
 
@@ -92,11 +92,11 @@ export type BridgeDialogContentProps = {
 
 export type BridgeDialogEntry = {
   id: LayerId;
-  show: boolean;
   modal?: Partial<ModalOwnProps>;
-  props: BridgeDialogContentProps;
   onClose?: () => void;
   onClosed?: () => void;
+  props: BridgeDialogContentProps;
+  show: boolean;
 };
 
 export type BridgeDialogOpenOptions = BridgeDialogContentProps & {
@@ -111,14 +111,14 @@ export type BridgeDialogUpdateOptions = {
 };
 
 export type BridgeDialogController = {
-  entries: BridgeDialogEntry[];
-  open: (options: BridgeDialogOpenOptions) => LayerId;
   close: (id: LayerId) => void;
-  isOpen: (id: LayerId) => boolean;
-  update: (id: LayerId, options: BridgeDialogUpdateOptions) => void;
   closeTop: () => void;
-  syncShow: (id: LayerId, show: boolean) => void;
+  entries: BridgeDialogEntry[];
+  isOpen: (id: LayerId) => boolean;
+  open: (options: BridgeDialogOpenOptions) => LayerId;
   removeEntry: (id: LayerId) => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  update: (id: LayerId, options: BridgeDialogUpdateOptions) => void;
 };
 
 export type BridgeDialogApi = Omit<

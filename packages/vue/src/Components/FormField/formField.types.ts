@@ -320,14 +320,14 @@ export interface FormFieldSlots {
   corner?: Slot;
 
   /**
-   * Helper text below the control (hidden when the field is invalid).
-   */
-  description?: Slot;
-
-  /**
    * The form control (input, textarea, select trigger, etc.).
    */
   default?: Slot;
+
+  /**
+   * Helper text below the control (hidden when the field is invalid).
+   */
+  description?: Slot;
 
   /**
    * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop

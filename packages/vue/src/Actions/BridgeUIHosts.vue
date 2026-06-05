@@ -12,18 +12,18 @@ import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar
 
 withDefaults(
   defineProps<{
-    modal?: {
-      modal?: BridgeModalShellProps;
-    };
     dialog?: {
       modal?: BridgeDialogShellProps;
     };
+    modal?: {
+      modal?: BridgeModalShellProps;
+    };
     snackbar?: {
       max?: number;
-      timeout?: number | false;
-      teleportTo?: string | false;
       position?: keyof SnackbarPosition;
       snackbar?: BridgeSnackbarShellProps;
+      teleportTo?: string | false;
+      timeout?: number | false;
     };
   }>(),
   {

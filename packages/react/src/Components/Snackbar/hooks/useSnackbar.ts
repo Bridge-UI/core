@@ -78,6 +78,16 @@ type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
 
 export type SnackbarOptions = {
   /**
+   * Called when the snackbar requests to close.
+   */
+  onClose?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
    * Whether the snackbar is visible.
    *
    * @default false
@@ -88,16 +98,6 @@ export type SnackbarOptions = {
    * Pre-assigned stack id (BridgeSnackbarHost).
    */
   stackId?: string;
-
-  /**
-   * Called when the snackbar requests to close.
-   */
-  onClose?: () => void;
-
-  /**
-   * Called when `show` should change (controlled state).
-   */
-  onShowChange?: (show: boolean) => void;
 };
 
 export function useSnackbar(

@@ -35,6 +35,11 @@ export interface SnackbarClasses {
   icon?: string;
 
   /**
+   * The classes to apply to the fixed portal layer (standalone snackbar only).
+   */
+  portal?: string;
+
+  /**
    * The classes to apply to the progress bar.
    */
   progress?: string;
@@ -43,11 +48,6 @@ export interface SnackbarClasses {
    * The classes to apply to the right actions slot wrapper.
    */
   right?: string;
-
-  /**
-   * The classes to apply to the fixed portal layer (standalone snackbar only).
-   */
-  portal?: string;
 
   /**
    * The classes to apply to the root panel.
@@ -62,6 +62,11 @@ export interface SnackbarClasses {
 
 export interface SnackbarPartsProps {
   /**
+   * Props forwarded to the description element.
+   */
+  description?: HTMLAttributes<HTMLParagraphElement>;
+
+  /**
    * Props forwarded to the default `Icon` (`icon` is set by the snackbar).
    */
   icon?: Partial<Omit<IconProps, "icon">>;
@@ -72,6 +77,11 @@ export interface SnackbarPartsProps {
   portal?: HTMLAttributes<HTMLDivElement>;
 
   /**
+   * Props forwarded to the progress bar track.
+   */
+  progress?: HTMLAttributes<HTMLDivElement>;
+
+  /**
    * Props forwarded to the root panel.
    */
   root?: HTMLAttributes<HTMLDivElement>;
@@ -80,16 +90,6 @@ export interface SnackbarPartsProps {
    * Props forwarded to the title element.
    */
   title?: HTMLAttributes<HTMLParagraphElement>;
-
-  /**
-   * Props forwarded to the description element.
-   */
-  description?: HTMLAttributes<HTMLParagraphElement>;
-
-  /**
-   * Props forwarded to the progress bar track.
-   */
-  progress?: HTMLAttributes<HTMLDivElement>;
 }
 
 /**
@@ -156,6 +156,13 @@ export interface SnackbarOwnProps {
   partsProps?: SnackbarPartsProps;
 
   /**
+   * Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`.
+   *
+   * @default "bottom-center"
+   */
+  position?: MergeProps<SnackbarPosition, SnackbarPositionOverrides>;
+
+  /**
    * Whether to show the countdown progress bar when `duration` is set.
    *
    * @default true
@@ -166,13 +173,6 @@ export interface SnackbarOwnProps {
    * The slots to apply to the snackbar.
    */
   slots?: SnackbarSlots;
-
-  /**
-   * Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`.
-   *
-   * @default "bottom-center"
-   */
-  position?: MergeProps<SnackbarPosition, SnackbarPositionOverrides>;
 
   /**
    * Pre-assigned stack id (BridgeSnackbarHost).
@@ -236,13 +236,6 @@ export type SnackbarProps = MergeHtmlProps<
   HTMLAttributes<HTMLDivElement>
 > & {
   /**
-   * Whether the snackbar is visible.
-   *
-   * @default false
-   */
-  show?: boolean;
-
-  /**
    * Called when the snackbar requests to close.
    */
   onClose?: () => void;
@@ -251,4 +244,11 @@ export type SnackbarProps = MergeHtmlProps<
    * Called when `show` should change (controlled state).
    */
   onShowChange?: (show: boolean) => void;
+
+  /**
+   * Whether the snackbar is visible.
+   *
+   * @default false
+   */
+  show?: boolean;
 };

@@ -17,14 +17,14 @@ function SwitcherHarness({
   description,
   errorMessage,
 }: {
-  id?: string;
-  error?: boolean;
-  disabled?: boolean;
-  readonly?: boolean;
-  mainLabel?: string;
   controlId?: string;
   description?: string;
+  disabled?: boolean;
+  error?: boolean;
   errorMessage?: string;
+  id?: string;
+  mainLabel?: string;
+  readonly?: boolean;
 }) {
   const field = useSwitcher(
     {

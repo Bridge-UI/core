@@ -13,14 +13,14 @@ export type BridgeUIHostsProps = {
   children?: ReactNode;
 
   /**
-   * Props forwarded to {@link BridgeModalHost}.
-   */
-  modal?: Omit<BridgeModalHostProps, "children">;
-
-  /**
    * Props forwarded to {@link BridgeDialogHost}.
    */
   dialog?: Omit<BridgeDialogHostProps, "children">;
+
+  /**
+   * Props forwarded to {@link BridgeModalHost}.
+   */
+  modal?: Omit<BridgeModalHostProps, "children">;
 
   /**
    * Props forwarded to {@link BridgeSnackbarHost}.

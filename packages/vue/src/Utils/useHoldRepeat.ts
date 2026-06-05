@@ -5,8 +5,8 @@ export type HoldRepeatAction = () => boolean | void;
 
 export type UseHoldRepeatOptions = {
   disabled?: boolean;
-  intervalMs?: number;
   initialDelayMs?: number;
+  intervalMs?: number;
 };
 
 const DEFAULT_INTERVAL_MS = 75;

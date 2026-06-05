@@ -70,10 +70,10 @@ export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
 
 export type BridgeSnackbarEntry = {
   id: LayerId;
-  show: boolean;
-  props: BridgeSnackbarContentProps;
   onClose?: () => void;
   onClosed?: () => void;
+  props: BridgeSnackbarContentProps;
+  show: boolean;
 };
 
 export type BridgeSnackbarOpenOptions = BridgeSnackbarContentProps & {
@@ -86,15 +86,15 @@ export type BridgeSnackbarUpdateOptions = {
 };
 
 export type BridgeSnackbarController = {
-  entries: BridgeSnackbarEntry[];
-  open: (options: BridgeSnackbarOpenOptions) => LayerId;
   close: (id: LayerId) => void;
-  update: (id: LayerId, options: BridgeSnackbarUpdateOptions) => void;
-  isOpen: (id: LayerId) => boolean;
   closeAll: () => void;
   closeTop: () => void;
-  syncShow: (id: LayerId, show: boolean) => void;
+  entries: BridgeSnackbarEntry[];
+  isOpen: (id: LayerId) => boolean;
+  open: (options: BridgeSnackbarOpenOptions) => LayerId;
   removeEntry: (id: LayerId) => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  update: (id: LayerId, options: BridgeSnackbarUpdateOptions) => void;
 };
 
 export type BridgeSnackbarApi = Omit<

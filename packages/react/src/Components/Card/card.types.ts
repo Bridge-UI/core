@@ -93,13 +93,6 @@ export interface CardOwnProps {
   classes?: CardClasses;
 
   /**
-   * Visual style of the card.
-   *
-   * @default "elevated"
-   */
-  variant?: MergeProps<CardVariant, CardVariantOverrides>;
-
-  /**
    * Padding for header, body, and footer (horizontal alignment is shared).
    *
    * @default "medium"
@@ -141,6 +134,13 @@ export interface CardOwnProps {
    * @default undefined
    */
   title?: string;
+
+  /**
+   * Visual style of the card.
+   *
+   * @default "elevated"
+   */
+  variant?: MergeProps<CardVariant, CardVariantOverrides>;
 }
 
 export interface CardSlots {

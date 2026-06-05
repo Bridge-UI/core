@@ -23,10 +23,10 @@ export type UseBridgeUIComponentReturn<
   P extends object,
   K extends keyof BridgeUIComponentsConfig,
 > = {
-  merged: P;
   bridge: ReturnType<typeof useBridgeUI>;
-  entry: RegistryEntryFor<K> | undefined;
   components: BridgeUIComponentsConfig | null;
+  entry: RegistryEntryFor<K> | undefined;
+  merged: P;
 };
 
 /**
@@ -53,8 +53,8 @@ export function useBridgeUIComponent<
   componentName,
 }: {
   componentName: K;
-  props: Partial<P>;
   libDefaults?: Partial<P>;
+  props: Partial<P>;
 }): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
@@ -88,8 +88,8 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
 }: {
-  props: { classes?: Partial<C> };
   entry?: { classes?: object };
+  props: { classes?: Partial<C> };
 }) {
   return useMemo(() => {
     return mergeBridgeUILayeredClasses(

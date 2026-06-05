@@ -29,8 +29,8 @@ function NestedModals({
   onOuterChange,
   onInnerChange,
 }: {
-  onOuterChange?: (show: boolean) => void;
   onInnerChange?: (show: boolean) => void;
+  onOuterChange?: (show: boolean) => void;
 }) {
   const [outerOpen, setOuterOpen] = useState(true);
   const [innerOpen, setInnerOpen] = useState(true);

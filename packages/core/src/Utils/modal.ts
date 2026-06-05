@@ -16,9 +16,9 @@ export const LAYER_STACK_BASE_Z_INDEX = 50;
 
 type LayerStackEntry = {
   id: LayerId;
-  order: number;
   lockScroll?: boolean;
   onEscape?: () => void;
+  order: number;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -33,10 +33,10 @@ let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
 export type LayerStackHandle = {
   id: LayerId;
-  order: number;
   level: number;
-  zIndex: number;
+  order: number;
   release: () => void;
+  zIndex: number;
 };
 
 export type LayerStackSnapshotEntry = {
@@ -266,9 +266,9 @@ export function isLayerStackTop(id: LayerId): boolean {
 export function pushLayerStack(
   options: {
     id?: LayerId;
-    order?: number;
     lockScroll?: boolean;
     onEscape?: () => void;
+    order?: number;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);

@@ -12,9 +12,9 @@ import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
 
 const props = defineProps<{
+  acceptColor: keyof ButtonColor;
   action: DialogAction;
   role: "accept" | "reject";
-  acceptColor: keyof ButtonColor;
 }>();
 
 const emit = defineEmits<{

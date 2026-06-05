@@ -18,11 +18,11 @@ type SnackbarActionLayout =
   | "right-reject";
 
 const props = defineProps<{
-  hasReject?: boolean;
-  hasAccept?: boolean;
   action: SnackbarAction;
-  role: "accept" | "reject";
+  hasAccept?: boolean;
+  hasReject?: boolean;
   layout: SnackbarActionLayout;
+  role: "accept" | "reject";
   snackbarColor: keyof SnackbarColor;
 }>();
 

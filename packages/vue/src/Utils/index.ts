@@ -29,10 +29,10 @@ export type UseBridgeUIComponentReturn<
   P extends object,
   K extends keyof BridgeUIComponentsConfig,
 > = {
-  merged: ComputedRef<P>;
   bridge: ReturnType<typeof useBridgeUI>;
-  entry: ComputedRef<RegistryEntryFor<K> | undefined>;
   components: ComputedRef<BridgeUIComponentsConfig | null>;
+  entry: ComputedRef<RegistryEntryFor<K> | undefined>;
+  merged: ComputedRef<P>;
 };
 
 /**
@@ -91,8 +91,8 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
 }: {
-  props: MaybeRefOrGetter<{ classes?: Partial<C> }>;
   entry: ComputedRef<{ classes?: object } | undefined>;
+  props: MaybeRefOrGetter<{ classes?: Partial<C> }>;
 }) {
   return computed(() => {
     return mergeBridgeUILayeredClasses(

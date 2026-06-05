@@ -63,9 +63,9 @@ export function resolveSlotOrProp({
   name,
   fallback,
 }: {
-  slots?: SlotMap;
-  name: string;
   fallback?: ReactNode;
+  name: string;
+  slots?: SlotMap;
 }): ReactNode {
   const slot = readSlot(slots, name);
 
