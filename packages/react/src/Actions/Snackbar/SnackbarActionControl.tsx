@@ -1,4 +1,5 @@
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import type { MouseEvent } from "react";
 
 // ** Core Imports
@@ -30,22 +31,20 @@ function layoutClasses(
   hasReject?: boolean,
   hasAccept?: boolean,
 ): string {
-  switch (layout) {
-    case "trailing":
-      return "mr-4 shrink-0";
-    case "right-accept":
-      return cn(
-        "w-full rounded-none rounded-tr-lg",
-        !hasReject && "rounded-br-lg",
-      );
-    case "right-reject":
-      return cn(
-        "w-full rounded-none rounded-br-lg",
-        !hasAccept && "rounded-tr-lg",
-      );
-    default:
-      return "";
-  }
+  // prettier-ignore
+  const rootClass = {
+    "trailing": "mr-4 shrink-0",
+    "right-accept": cn({
+      'w-full rounded-none rounded-tr-lg': true,
+      'rounded-br-lg': !hasReject,
+    }),
+    "right-reject": cn({
+      'w-full rounded-none rounded-br-lg': true,
+      'rounded-tr-lg': !hasAccept,
+    }),
+  };
+
+  return get(rootClass, layout, "");
 }
 
 export function SnackbarActionControl({

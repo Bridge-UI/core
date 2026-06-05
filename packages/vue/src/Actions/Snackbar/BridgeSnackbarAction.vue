@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
@@ -21,22 +22,20 @@ const color = computed(() => {
 });
 
 const layoutClass = computed(() => {
-  switch (props.layout) {
-    case "trailing":
-      return "mr-4 shrink-0";
-    case "right-accept":
-      return cn(
-        "w-full rounded-none rounded-tr-lg",
-        !props.hasReject && "rounded-br-lg",
-      );
-    case "right-reject":
-      return cn(
-        "w-full rounded-none rounded-br-lg",
-        !props.hasAccept && "rounded-tr-lg",
-      );
-    default:
-      return "";
-  }
+  // prettier-ignore
+  const rootClass = {
+    "trailing": "mr-4 shrink-0",
+    "right-accept": cn({
+      'w-full rounded-none rounded-tr-lg': true,
+      'rounded-br-lg': !props.hasReject,
+    }),
+    "right-reject": cn({
+      'w-full rounded-none rounded-br-lg': true,
+      'rounded-tr-lg': !props.hasAccept,
+    }),
+  };
+
+  return get(rootClass, props.layout, "");
 });
 
 const rootClass = computed(() => {
