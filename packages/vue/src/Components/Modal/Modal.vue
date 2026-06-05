@@ -4,12 +4,18 @@ import { computed, useSlots } from "vue";
 
 // ** Local Imports
 import { useModal } from "@/Components/Modal/composables/useModal";
-import type { ModalOwnProps, ModalSlots } from "@/Components/Modal/modal.types";
+import type {
+  ModalEmits,
+  ModalOwnProps,
+  ModalSlots,
+} from "@/Components/Modal/modal.types";
 import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<ModalSlots>();
 
 const slots = useSlots();
+
+const emit = defineEmits<ModalEmits>();
 
 defineOptions({ inheritAttrs: false });
 
@@ -36,7 +42,7 @@ const { merged, rendered, rootBind, panelBind, overlayBind, wrapperBind } =
     },
     {
       show: model,
-      onClose: () => props.onClose?.(),
+      onClose: () => emit("close"),
       onShowChange: (show) => props.onShowChange?.(show),
     },
   );

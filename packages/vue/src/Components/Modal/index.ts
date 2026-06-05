@@ -5,6 +5,7 @@ export type {
   ModalAlignOverrides,
   ModalBlurOverrides,
   ModalClasses,
+  ModalEmits,
   ModalOwnProps,
   ModalPartsProps,
   ModalProps,

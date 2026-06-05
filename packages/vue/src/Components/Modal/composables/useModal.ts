@@ -202,7 +202,7 @@ export function useModal(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onClose", "onShowChange"]);
+    return omit(split.value.inheritedAttrs, ["onShowChange"]);
   });
 
   // Binds

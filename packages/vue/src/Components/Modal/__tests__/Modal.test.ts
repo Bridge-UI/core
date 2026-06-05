@@ -1,6 +1,6 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
@@ -173,16 +173,12 @@ test("it should close on escape key", async () => {
   expect(wrapper.emitted("update:modelValue")).toEqual([[false]]);
 });
 
-test("it should call onClose when closing", async () => {
-  const onClose = vi.fn();
-
-  mountModal({
-    props: { modelValue: true, onClose },
-  });
+test("it should emit close when closing", async () => {
+  const wrapper = mountModal({ props: { modelValue: true } });
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
-  expect(onClose).toHaveBeenCalledOnce();
+  expect(wrapper.emitted("close")).toHaveLength(1);
 });
 
 test("it should not close on escape when closeOnEscape is false", async () => {

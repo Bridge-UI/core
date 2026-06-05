@@ -38,6 +38,14 @@ export interface ModalClasses {
   wrapper?: string;
 }
 
+export interface ModalEmits {
+  /**
+   * Emitted when the modal requests to close (overlay, escape).
+   * Sugar for `update:modelValue` with `false`.
+   */
+  close: [];
+}
+
 export interface ModalPartsProps {
   /**
    * Props forwarded to the overlay.
@@ -99,14 +107,6 @@ export interface ModalOwnProps {
    * @default true
    */
   closeOnOverlay?: boolean;
-
-  /**
-   * Called when the modal requests to close (overlay, escape).
-   * Sugar for `onShowChange(false)`.
-   *
-   * @default undefined
-   */
-  onClose?: () => void;
 
   /**
    * Called when `show` should change (controlled state).
