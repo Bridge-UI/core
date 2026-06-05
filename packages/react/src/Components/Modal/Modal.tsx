@@ -13,6 +13,7 @@ const modalLibDefaults = {
   blur: "none",
   align: "center",
   teleportTo: "body",
+  transition: "none",
   closeOnEscape: true,
   closeOnOverlay: true,
 } as const;
@@ -65,7 +66,7 @@ function Modal({
     },
   );
 
-  if (!show) {
+  if (!modalState.rendered) {
     return null;
   }
 

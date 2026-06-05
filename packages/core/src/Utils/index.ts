@@ -142,11 +142,21 @@ export function splitComponentProps<
 
 export {
   acquireModalStackOrder,
+  countModalTransitionLayers,
+  createModalStackId,
+  getModalOverlayTransitionClass,
+  getModalPanelTransitionClass,
+  getModalStackEntry,
+  getModalStackSnapshot,
+  hasModalTransition,
   isModalStackTop,
   MODAL_STACK_BASE_Z_INDEX,
   pushModalStack,
   resetModalStackForTests,
+  resolveEffectiveModalTransition,
   type ModalStackHandle,
+  type ModalStackId,
+  type ModalStackSnapshotEntry,
 } from "@core/Utils/modal";
 export {
   isModalBackdropClick,

@@ -63,7 +63,14 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-export type { ModalAlign, ModalBlur, ModalSize } from "@core/Components/Modal";
+export { transitionProps } from "@core/Components/Modal";
+export type {
+  ModalAlign,
+  ModalBlur,
+  ModalSize,
+  ModalTransition,
+  ModalTransitionLayer,
+} from "@core/Components/Modal";
 export type {
   RadioColor,
   RadioColorItem,
@@ -121,13 +128,21 @@ export {
   acquireModalStackOrder,
   adjustAutosizeTextareaHeight,
   cn,
+  countModalTransitionLayers,
   createMergePartBind,
+  createModalStackId,
+  getModalOverlayTransitionClass,
+  getModalPanelTransitionClass,
+  getModalStackEntry,
+  getModalStackSnapshot,
+  hasModalTransition,
   isModalBackdropClick,
   isModalStackTop,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
   pushModalStack,
   resetModalStackForTests,
+  resolveEffectiveModalTransition,
   resolveModalPortalElement,
   splitComponentProps,
 } from "@core/Utils";
@@ -139,6 +154,8 @@ export type {
   MergePartBind,
   MergeProps,
   ModalStackHandle,
+  ModalStackId,
+  ModalStackSnapshotEntry,
   Overwrite,
   UnionProps,
 } from "@core/Utils";

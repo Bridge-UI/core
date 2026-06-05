@@ -20,6 +20,7 @@ const libDefaults = {
   blur: "none",
   align: "center",
   teleportTo: "body",
+  transition: "none",
   closeOnEscape: true,
   closeOnOverlay: true,
 } as const satisfies Partial<ModalOwnProps>;

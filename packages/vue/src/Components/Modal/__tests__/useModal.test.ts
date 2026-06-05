@@ -17,6 +17,7 @@ const libDefaults: Partial<ModalOwnProps> = {
   blur: "none",
   align: "center",
   teleportTo: "body",
+  transition: "none",
   closeOnEscape: true,
   closeOnOverlay: true,
 };
@@ -66,6 +67,15 @@ test("it should set show to false when overlay is clicked", () => {
   result.handleOverlayClick();
 
   expect(show.value).toBe(false);
+});
+
+test("it should apply fade transition classes on overlay when transition is fade", () => {
+  const { result } = mountUseModal({ transition: "fade" });
+
+  expect(result.overlayBind.value["data-state"]).toBeDefined();
+  expect(result.overlayBind.value.class).toContain(
+    "data-[state=open]:opacity-100",
+  );
 });
 
 test("it should not close when persistent", () => {

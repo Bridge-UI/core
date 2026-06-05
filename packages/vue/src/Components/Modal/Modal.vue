@@ -22,22 +22,24 @@ const props = withDefaults(defineProps<ModalOwnProps>(), {
 
 const model = defineModel<boolean>({ default: false });
 
-const { merged, rootBind, panelBind, overlayBind, wrapperBind } = useModal(
-  props,
-  {
-    size: "md",
-    blur: "none",
-    align: "center",
-    teleportTo: "body",
-    closeOnEscape: true,
-    closeOnOverlay: true,
-  },
-  {
-    show: model,
-    onClose: () => props.onClose?.(),
-    onShowChange: (show) => props.onShowChange?.(show),
-  },
-);
+const { merged, rendered, rootBind, panelBind, overlayBind, wrapperBind } =
+  useModal(
+    props,
+    {
+      size: "md",
+      blur: "none",
+      align: "center",
+      teleportTo: "body",
+      transition: "none",
+      closeOnEscape: true,
+      closeOnOverlay: true,
+    },
+    {
+      show: model,
+      onClose: () => props.onClose?.(),
+      onShowChange: (show) => props.onShowChange?.(show),
+    },
+  );
 
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
@@ -54,7 +56,7 @@ const teleportTarget = computed(() => {
 
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="model" v-bind="rootBind">
+    <div v-if="rendered" v-bind="rootBind">
       <div aria-hidden="true" v-bind="overlayBind" />
 
       <div v-bind="wrapperBind">

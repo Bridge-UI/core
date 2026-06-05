@@ -63,7 +63,13 @@ import type {
   LinkUnderline,
 } from "@core/Components/Link";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-import type { ModalAlign, ModalBlur, ModalSize } from "@core/Components/Modal";
+import type {
+  ModalAlign,
+  ModalBlur,
+  ModalSize,
+  ModalTransition,
+  ModalTransitionLayer,
+} from "@core/Components/Modal";
 import type {
   RadioColor,
   RadioColorItem,
@@ -276,11 +282,13 @@ export interface ModalConfigBase {
     size: keyof ModalSize;
     align: keyof ModalAlign;
     teleportTo: string | false;
+    transition: keyof ModalTransition;
   }>;
   customProps: Partial<{
     blur: Record<string, string>;
     size: Record<string, string>;
     align: Record<string, string>;
+    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
   }>;
 }
 

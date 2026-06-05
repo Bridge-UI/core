@@ -8,11 +8,13 @@ import type {
   ModalAlign,
   ModalBlur,
   ModalSize,
+  ModalTransition,
 } from "@bridge-ui/core";
 
 export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
 export interface ModalAlignOverrides {}
+export interface ModalTransitionOverrides {}
 
 export interface ModalClasses {
   /**
@@ -140,6 +142,13 @@ export interface ModalOwnProps {
    * @default "body"
    */
   teleportTo?: string | false;
+
+  /**
+   * Enter/leave animation for overlay and panel.
+   *
+   * @default "none"
+   */
+  transition?: MergeProps<ModalTransition, ModalTransitionOverrides>;
 }
 
 export type ModalProps = MergeHtmlProps<ModalOwnProps, HTMLAttributes>;

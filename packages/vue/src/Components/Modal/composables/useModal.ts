@@ -2,6 +2,7 @@
 import { get, omit } from "es-toolkit/compat";
 import {
   computed,
+  nextTick,
   onBeforeUnmount,
   ref,
   toValue,
@@ -14,13 +15,19 @@ import {
 import {
   acquireModalStackOrder,
   cn,
+  countModalTransitionLayers,
+  getModalOverlayTransitionClass,
+  getModalPanelTransitionClass,
+  hasModalTransition,
   mergeBridgeUILayeredClasses,
   MODAL_STACK_BASE_Z_INDEX,
   pushModalStack,
+  resolveEffectiveModalTransition,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
   type ModalStackHandle,
+  type ModalTransition,
 } from "@bridge-ui/core";
 import {
   alignProps,
@@ -45,13 +52,20 @@ const modalBridgeKeys = [
   "partsProps",
   "persistent",
   "teleportTo",
+  "transition",
   "closeOnEscape",
   "closeOnOverlay",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
   ModalOwnProps,
-  "blur" | "size" | "align" | "teleportTo" | "closeOnEscape" | "closeOnOverlay"
+  | "blur"
+  | "size"
+  | "align"
+  | "teleportTo"
+  | "transition"
+  | "closeOnEscape"
+  | "closeOnOverlay"
 >;
 
 type ModalMerged = MergeLibDefaults<ModalOwnProps, ModalLibDefaults>;
@@ -84,11 +98,19 @@ export function useModal(
   // Setup
   const attrs = useAttrs();
 
+  const rendered = ref(false);
+
+  const modalStackId = ref("");
+
+  let leaveTransitionEndsPending = 0;
+
   let stackOrder: number | null = null;
 
   let stackHandle: ModalStackHandle | null = null;
 
   const stackZIndex = ref(MODAL_STACK_BASE_Z_INDEX);
+
+  const transitionState = ref<"open" | "closed">("closed");
 
   const show = computed(() => {
     return toValue(options.show ?? false);
@@ -131,6 +153,14 @@ export function useModal(
     props: () => split.value.customProps,
   });
 
+  const effectiveTransition = computed((): keyof ModalTransition => {
+    return resolveEffectiveModalTransition(merged.value.transition ?? "none");
+  });
+
+  const transitionEnabled = computed(() => {
+    return hasModalTransition(effectiveTransition.value);
+  });
+
   // Classes
   const alignClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -159,6 +189,14 @@ export function useModal(
     return get(classes, merged.value.size);
   });
 
+  const overlayTransitionClass = computed(() => {
+    return getModalOverlayTransitionClass(effectiveTransition.value);
+  });
+
+  const panelTransitionClass = computed(() => {
+    return getModalPanelTransitionClass(effectiveTransition.value);
+  });
+
   const canClose = computed(() => {
     return !merged.value.persistent;
   });
@@ -177,6 +215,7 @@ export function useModal(
       style: {
         zIndex: stackZIndex.value,
       },
+      onTransitionend: handleShellTransitionEnd,
     });
   });
 
@@ -186,11 +225,16 @@ export function useModal(
       {
         onClick: handleOverlayClick,
       },
-      cn({
-        "fixed inset-0 bg-black/50 transition-opacity": true,
-        [blurClass.value ?? ""]: true,
-        [get(mergedClasses.value, "overlay") ?? ""]: true,
-      }),
+      {
+        "data-modal-part": "overlay",
+        "data-state": transitionState.value,
+        class: cn({
+          "fixed inset-0 bg-black/50": true,
+          [blurClass.value ?? ""]: true,
+          [overlayTransitionClass.value]: transitionEnabled.value,
+          [get(mergedClasses.value, "overlay") ?? ""]: true,
+        }),
+      },
     );
   });
 
@@ -216,12 +260,87 @@ export function useModal(
         role: "dialog",
         "aria-modal": true,
       },
-      cn({
-        "relative w-full": true,
-        [get(mergedClasses.value, "panel") ?? ""]: true,
-      }),
+      {
+        "data-modal-part": "panel",
+        "data-state": transitionState.value,
+        class: cn({
+          "relative w-full": true,
+          [panelTransitionClass.value]: transitionEnabled.value,
+          [get(mergedClasses.value, "panel") ?? ""]: true,
+        }),
+      },
     );
   });
+
+  // Handlers
+  function finishLeave() {
+    leaveTransitionEndsPending = 0;
+
+    if (show.value) {
+      setShow(false);
+    }
+
+    rendered.value = false;
+    transitionState.value = "closed";
+  }
+
+  function startLeave() {
+    if (!transitionEnabled.value) {
+      finishLeave();
+
+      return;
+    }
+
+    transitionState.value = "closed";
+    leaveTransitionEndsPending = countModalTransitionLayers(
+      effectiveTransition.value,
+    );
+
+    if (leaveTransitionEndsPending === 0) {
+      finishLeave();
+    }
+  }
+
+  function scheduleOpen() {
+    if (!transitionEnabled.value) {
+      transitionState.value = "open";
+
+      return;
+    }
+
+    transitionState.value = "closed";
+
+    void nextTick(() => {
+      requestAnimationFrame(() => {
+        transitionState.value = "open";
+      });
+    });
+  }
+
+  function handleShellTransitionEnd(event: TransitionEvent) {
+    if (!rendered.value || transitionState.value !== "closed") {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+
+    if (
+      target?.dataset.modalPart !== "overlay" &&
+      target?.dataset.modalPart !== "panel"
+    ) {
+      return;
+    }
+
+    if (event.propertyName === "none" || event.elapsedTime === 0) {
+      return;
+    }
+
+    leaveTransitionEndsPending -= 1;
+
+    if (leaveTransitionEndsPending <= 0) {
+      finishLeave();
+    }
+  }
 
   // Handlers
   function requestClose() {
@@ -229,7 +348,17 @@ export function useModal(
       return;
     }
 
-    setShow(false);
+    if (!transitionEnabled.value) {
+      setShow(false);
+
+      return;
+    }
+
+    if (!rendered.value) {
+      return;
+    }
+
+    startLeave();
   }
 
   function handleOverlayClick() {
@@ -260,16 +389,39 @@ export function useModal(
     show,
     (isShown) => {
       if (isShown) {
+        rendered.value = true;
+        scheduleOpen();
+
+        return;
+      }
+
+      if (!rendered.value) {
+        return;
+      }
+
+      startLeave();
+    },
+    { immediate: true },
+  );
+
+  watch(
+    rendered,
+    (isRendered) => {
+      if (isRendered) {
         stackOrder = acquireModalStackOrder();
+
         stackHandle = pushModalStack({
           order: stackOrder,
           onEscape: handleEscape,
         });
+
+        modalStackId.value = stackHandle.id;
         stackZIndex.value = stackHandle.zIndex;
       } else {
         stackHandle?.release();
         stackHandle = null;
         stackOrder = null;
+        modalStackId.value = "";
         stackZIndex.value = MODAL_STACK_BASE_Z_INDEX;
       }
     },
@@ -283,10 +435,12 @@ export function useModal(
 
   return {
     merged,
+    rendered,
     rootBind,
     panelBind,
     overlayBind,
     wrapperBind,
+    modalStackId,
     handleOverlayClick,
     handleWrapperClick,
   };

@@ -1,8 +1,20 @@
+// ** External Imports
+import { maxBy, remove } from "es-toolkit/array";
+import { get } from "es-toolkit/compat";
+
+// ** Local Imports
+import {
+  transitionProps,
+  type ModalTransition,
+} from "@core/Components/Modal/Transition";
+
 /** Base `z-index` for the first modal layer. Each nested modal adds 1. */
 export const MODAL_STACK_BASE_Z_INDEX = 50;
 
+export type ModalStackId = string;
+
 type ModalStackEntry = {
-  id: symbol;
+  id: ModalStackId;
   order: number;
   onEscape?: () => void;
 };
@@ -11,88 +23,23 @@ const stack: ModalStackEntry[] = [];
 
 let nextStackOrder = 0;
 let scrollLockCount = 0;
+let fallbackIdCounter = 0;
 let savedBodyOverflow = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
 export type ModalStackHandle = {
-  id: symbol;
+  id: ModalStackId;
   order: number;
   level: number;
   zIndex: number;
   release: () => void;
 };
 
-/**
- * Assigns a monotonic open order (parent render runs before child).
- */
-export function acquireModalStackOrder(): number {
-  nextStackOrder += 1;
-
-  return nextStackOrder;
-}
-
-/**
- * Gets the topmost modal stack entry.
- */
-function getTopStackEntry(): ModalStackEntry | undefined {
-  if (stack.length === 0) {
-    return undefined;
-  }
-
-  return stack.reduce((top, entry) => {
-    return entry.order > top.order ? entry : top;
-  });
-}
-
-/**
- * Locks the body scroll.
- */
-function lockBodyScroll() {
-  if (typeof document === "undefined") {
-    return;
-  }
-
-  scrollLockCount += 1;
-
-  if (scrollLockCount === 1) {
-    savedBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-  }
-}
-
-/**
- * Unlocks the body scroll.
- */
-function unlockBodyScroll() {
-  if (typeof document === "undefined") {
-    return;
-  }
-
-  scrollLockCount = Math.max(0, scrollLockCount - 1);
-
-  if (scrollLockCount === 0) {
-    document.body.style.overflow = savedBodyOverflow;
-  }
-}
-
-/**
- * Handles the global escape key.
- */
-function handleGlobalEscape(event: KeyboardEvent) {
-  if (event.key !== "Escape") {
-    return;
-  }
-
-  const top = getTopStackEntry();
-
-  if (!top?.onEscape) {
-    return;
-  }
-
-  event.preventDefault();
-
-  top.onEscape();
-}
+export type ModalStackSnapshotEntry = {
+  id: ModalStackId;
+  order: number;
+  zIndex: number;
+};
 
 /**
  * Attaches the escape listener.
@@ -121,6 +68,159 @@ function detachEscapeListener() {
 }
 
 /**
+ * Gets the topmost modal stack entry.
+ */
+function getTopStackEntry(): ModalStackEntry | undefined {
+  return maxBy(stack, (entry) => entry.order);
+}
+
+/**
+ * Handles the global escape key.
+ */
+function handleGlobalEscape(event: KeyboardEvent) {
+  if (event.key !== "Escape") {
+    return;
+  }
+
+  const top = getTopStackEntry();
+
+  if (!top?.onEscape) {
+    return;
+  }
+
+  event.preventDefault();
+
+  top.onEscape();
+}
+
+/**
+ * Locks the body scroll.
+ */
+function lockBodyScroll() {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  scrollLockCount += 1;
+
+  if (scrollLockCount === 1) {
+    savedBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+  }
+}
+
+/**
+ * Maps a stack entry to a public snapshot shape.
+ */
+function toStackSnapshotEntry(entry: ModalStackEntry): ModalStackSnapshotEntry {
+  return {
+    id: entry.id,
+    order: entry.order,
+    zIndex: MODAL_STACK_BASE_Z_INDEX + entry.order - 1,
+  };
+}
+
+/**
+ * Unlocks the body scroll.
+ */
+function unlockBodyScroll() {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  scrollLockCount = Math.max(0, scrollLockCount - 1);
+
+  if (scrollLockCount === 0) {
+    document.body.style.overflow = savedBodyOverflow;
+  }
+}
+
+/**
+ * Assigns a monotonic open order (parent render runs before child).
+ */
+export function acquireModalStackOrder(): number {
+  nextStackOrder += 1;
+
+  return nextStackOrder;
+}
+
+/** How many layers fire `transitionend` on leave (overlay + panel when animated). */
+export function countModalTransitionLayers(
+  transition: keyof ModalTransition,
+): number {
+  if (!hasModalTransition(transition)) {
+    return 0;
+  }
+
+  return 2;
+}
+
+/**
+ * Creates a modal stack id via `crypto.randomUUID()` when available.
+ */
+export function createModalStackId(): ModalStackId {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+
+  fallbackIdCounter += 1;
+
+  return `modal-${fallbackIdCounter}`;
+}
+
+export function getModalOverlayTransitionClass(
+  transition: keyof ModalTransition,
+): string {
+  return get(transitionProps, [transition, "overlay"], "");
+}
+
+export function getModalPanelTransitionClass(
+  transition: keyof ModalTransition,
+): string {
+  return get(transitionProps, [transition, "panel"], "");
+}
+
+/**
+ * Looks up a stack entry by id.
+ */
+export function getModalStackEntry(
+  id: ModalStackId,
+): ModalStackSnapshotEntry | undefined {
+  const entry = stack.find((item) => item.id === id);
+
+  if (!entry) {
+    return undefined;
+  }
+
+  return toStackSnapshotEntry(entry);
+}
+
+/**
+ * Returns a read-only snapshot of open modals (for imperative APIs / debugging).
+ */
+export function getModalStackSnapshot(): readonly ModalStackSnapshotEntry[] {
+  return stack.map(toStackSnapshotEntry);
+}
+
+export function hasModalTransition(
+  transition: keyof ModalTransition | undefined,
+): boolean {
+  return transition !== undefined && transition !== "none";
+}
+
+/**
+ * Whether the given handle is the topmost modal on the stack.
+ */
+export function isModalStackTop(id: ModalStackId): boolean {
+  const top = getTopStackEntry();
+
+  return top?.id === id;
+}
+
+/**
  * Registers a modal on the global stack (scroll lock + escape routing).
  * Pass `order` from {@link acquireModalStackOrder} during render so parent/child
  * stacking matches visual order. Call `release()` when the modal closes.
@@ -131,9 +231,9 @@ export function pushModalStack(
     onEscape?: () => void;
   } = {},
 ): ModalStackHandle {
-  const id = Symbol("bridge-ui-modal-stack");
-  const order = options.order ?? acquireModalStackOrder();
+  const id = createModalStackId();
   const level = stack.length;
+  const order = options.order ?? acquireModalStackOrder();
 
   stack.push({
     id,
@@ -150,11 +250,7 @@ export function pushModalStack(
     level,
     zIndex: MODAL_STACK_BASE_Z_INDEX + order - 1,
     release: () => {
-      const index = stack.findIndex((entry) => entry.id === id);
-
-      if (index !== -1) {
-        stack.splice(index, 1);
-      }
+      remove(stack, (entry) => entry.id === id);
 
       unlockBodyScroll();
 
@@ -166,21 +262,13 @@ export function pushModalStack(
 }
 
 /**
- * Whether the given handle is the topmost modal on the stack.
- */
-export function isModalStackTop(id: symbol): boolean {
-  const top = getTopStackEntry();
-
-  return top?.id === id;
-}
-
-/**
  * Resets stack state. For tests only.
  */
 export function resetModalStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
+  fallbackIdCounter = 0;
   savedBodyOverflow = "";
 
   if (typeof document !== "undefined") {
@@ -188,4 +276,29 @@ export function resetModalStackForTests() {
   }
 
   detachEscapeListener();
+}
+
+/**
+ * Respects `prefers-reduced-motion` in the browser; returns `none` when reduced motion is preferred.
+ */
+export function resolveEffectiveModalTransition(
+  transition: keyof ModalTransition,
+): keyof ModalTransition {
+  if (transition === "none") {
+    return "none";
+  }
+
+  if (typeof window === "undefined") {
+    return transition;
+  }
+
+  try {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return "none";
+    }
+  } catch {
+    // ignore matchMedia errors (older environments)
+  }
+
+  return transition;
 }

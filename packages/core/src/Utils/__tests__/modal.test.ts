@@ -5,8 +5,11 @@ import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
-  MODAL_STACK_BASE_Z_INDEX,
+  createModalStackId,
+  getModalStackEntry,
+  getModalStackSnapshot,
   isModalStackTop,
+  MODAL_STACK_BASE_Z_INDEX,
   pushModalStack,
   resetModalStackForTests,
 } from "@core/Utils/modal";
@@ -64,4 +67,44 @@ test("isModalStackTop should reflect highest open order", () => {
   inner.release();
 
   expect(isModalStackTop(outer.id)).toBe(true);
+});
+
+test("pushModalStack should use string ids", () => {
+  const handle = pushModalStack();
+
+  expect(typeof handle.id).toBe("string");
+  expect(handle.id.length).toBeGreaterThan(0);
+});
+
+test("createModalStackId should generate unique ids", () => {
+  const first = createModalStackId();
+  const second = createModalStackId();
+
+  expect(typeof first).toBe("string");
+  expect(first.length).toBeGreaterThan(0);
+  expect(second).not.toBe(first);
+});
+
+test("getModalStackSnapshot should list open modals", () => {
+  const outer = pushModalStack({ order: 1 });
+  const inner = pushModalStack({ order: 2 });
+
+  expect(getModalStackSnapshot()).toEqual([
+    {
+      id: outer.id,
+      order: 1,
+      zIndex: MODAL_STACK_BASE_Z_INDEX,
+    },
+    {
+      id: inner.id,
+      order: 2,
+      zIndex: MODAL_STACK_BASE_Z_INDEX + 1,
+    },
+  ]);
+
+  expect(getModalStackEntry(outer.id)?.id).toBe(outer.id);
+  expect(getModalStackEntry(inner.id)?.id).toBe(inner.id);
+
+  inner.release();
+  outer.release();
 });
