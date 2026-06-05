@@ -1,30 +1,16 @@
 <script setup lang="ts">
 // ** External Imports
-import type { SnackbarColor } from "@bridge-ui/core";
 import { computed } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { BridgeSnackbarActionProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
 
-type SnackbarActionLayout =
-  | "inline"
-  | "trailing"
-  | "right-accept"
-  | "right-reject";
-
-const props = defineProps<{
-  action: SnackbarAction;
-  hasAccept?: boolean;
-  hasReject?: boolean;
-  layout: SnackbarActionLayout;
-  role: "accept" | "reject";
-  snackbarColor: keyof SnackbarColor;
-}>();
+const props = defineProps<BridgeSnackbarActionProps>();
 
 const emit = defineEmits<{
   run: [];

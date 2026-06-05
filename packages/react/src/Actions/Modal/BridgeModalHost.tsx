@@ -13,7 +13,11 @@ import { useBridgeModalController } from "@/Actions/Modal/createBridgeModalContr
 import { Modal } from "@/Components/Modal";
 
 export type BridgeModalHostProps = {
+  /**
+   * The children to apply to the host.
+   */
   children?: ReactNode;
+
   /**
    * Default shell options merged into every modal opened via `useModalAction()`.
    * Per-call `open({ modal })` overrides these.

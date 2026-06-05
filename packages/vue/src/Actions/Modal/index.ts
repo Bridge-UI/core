@@ -3,6 +3,7 @@ export type {
   BridgeModalApi,
   BridgeModalController,
   BridgeModalEntry,
+  BridgeModalHostProps,
   BridgeModalOpenOptions,
   BridgeModalShellProps,
   BridgeModalUpdateOptions,

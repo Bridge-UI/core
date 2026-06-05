@@ -8,18 +8,12 @@ import {
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
-import type { BridgeModalShellProps } from "@/Actions/Modal/bridgeModal.types";
+import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
 import { createBridgeModalApi } from "@/Actions/Modal/createBridgeModalApi";
 import { Modal } from "@/Components/Modal";
 
-const props = defineProps<{
-  /**
-   * Default shell options merged into every modal opened via `useModalAction()`.
-   * Per-call `open({ modal })` overrides these.
-   */
-  modal?: BridgeModalShellProps;
-}>();
+const props = defineProps<BridgeModalHostProps>();
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";

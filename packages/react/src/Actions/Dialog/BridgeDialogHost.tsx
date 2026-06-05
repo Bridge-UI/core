@@ -15,7 +15,11 @@ import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
 
 export type BridgeDialogHostProps = {
+  /**
+   * The children to apply to the host.
+   */
   children?: ReactNode;
+
   /**
    * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
    * Per-call `open({ modal })` overrides these.

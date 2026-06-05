@@ -11,7 +11,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbarInjectionKey";
 import BridgeSnackbarItem from "@/Actions/Snackbar/BridgeSnackbarItem.vue";
 import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbarApi";
@@ -20,18 +20,9 @@ import { useBridgeUI } from "@/Provider/useBridgeUI";
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useSnackbarAction() will target the nearest host only. Remove the extra host.";
 
-const props = withDefaults(
-  defineProps<{
-    max?: number;
-    position?: keyof typeof snackbarPositionProps;
-    snackbar?: BridgeSnackbarShellProps;
-    teleportTo?: string | false;
-    timeout?: number | false;
-  }>(),
-  {
-    teleportTo: "body",
-  },
-);
+const props = withDefaults(defineProps<BridgeSnackbarHostProps>(), {
+  teleportTo: "body",
+});
 
 const parentApi = inject(BRIDGE_SNACKBAR_INJECTION_KEY, null);
 

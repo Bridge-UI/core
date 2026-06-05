@@ -1,5 +1,6 @@
 // ** External Imports
-import type { LayerId } from "@bridge-ui/core";
+import type { LayerId, SnackbarColor } from "@bridge-ui/core";
+import { snackbarPositionProps } from "@bridge-ui/core";
 import type { Ref } from "vue";
 
 // ** Local Imports
@@ -54,6 +55,60 @@ export interface SnackbarActions {
 export type BridgeSnackbarShellProps = Partial<
   Omit<SnackbarOwnProps, "stackId">
 >;
+
+export type SnackbarActionLayout =
+  | "inline"
+  | "trailing"
+  | "right-accept"
+  | "right-reject";
+
+export type BridgeSnackbarActionProps = {
+  action: SnackbarAction;
+  hasAccept?: boolean;
+  hasReject?: boolean;
+  layout: SnackbarActionLayout;
+  role: "accept" | "reject";
+  snackbarColor: keyof SnackbarColor;
+};
+
+export type BridgeSnackbarHostProps = {
+  /**
+   * Maximum open snackbars. When exceeded, the oldest closes before opening the new one.
+   */
+  max?: number;
+
+  /**
+   * Notification stack position on the viewport.
+   *
+   * @default "bottom-center"
+   */
+  position?: keyof typeof snackbarPositionProps;
+
+  /**
+   * Default shell options merged into every snackbar opened via `useSnackbarAction()`.
+   * Per-call `open()` options override these.
+   */
+  snackbar?: BridgeSnackbarShellProps;
+
+  /**
+   * Portal target for the notification stack. `false` renders inline.
+   *
+   * @default "body"
+   */
+  teleportTo?: string | false;
+
+  /**
+   * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
+   * Per-call `open({ duration })` overrides this.
+   */
+  timeout?: number | false;
+};
+
+export type BridgeSnackbarItemProps = {
+  api: BridgeSnackbarController;
+  entry: BridgeSnackbarEntry;
+  hostSnackbar?: BridgeSnackbarShellProps;
+};
 
 export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
   /**

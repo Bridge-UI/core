@@ -10,6 +10,9 @@ import {
 } from "@/Actions/Snackbar";
 
 export type BridgeUIHostsProps = {
+  /**
+   * The children to apply to the hosts.
+   */
   children?: ReactNode;
 
   /**

@@ -26,28 +26,36 @@ import { useBridgeUI } from "@/Provider/useBridgeUI";
 import { derived } from "@/Utils";
 
 export type BridgeSnackbarHostProps = {
+  /**
+   * The children to apply to the host.
+   */
   children?: ReactNode;
+
   /**
    * Maximum open snackbars. When exceeded, the oldest closes before opening the new one.
    */
   max?: number;
+
   /**
    * Notification stack position on the viewport.
    *
    * @default "bottom-center"
    */
   position?: keyof typeof snackbarPositionProps;
+
   /**
    * Default shell options merged into every snackbar opened via `useSnackbarAction()`.
    * Per-call `open()` options override these.
    */
   snackbar?: BridgeSnackbarShellProps;
+
   /**
    * Portal target for the notification stack. `false` renders inline.
    *
    * @default "body"
    */
   teleportTo?: string | false;
+
   /**
    * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
    * Per-call `open({ duration })` overrides this.

@@ -58,6 +58,37 @@ export type ResolveBridgeDialogFooterOptions = {
   dismiss: () => void;
 };
 
+export type BridgeDialogActionProps = {
+  /**
+   * Color for the accept action. Reject always uses `secondary`.
+   */
+  acceptColor: keyof ButtonColor;
+
+  /**
+   * Footer action configuration (label, button/link, handlers).
+   */
+  action: DialogAction;
+
+  /**
+   * Whether this control renders the primary or secondary footer action.
+   */
+  role: "accept" | "reject";
+};
+
+export type BridgeDialogHostProps = {
+  /**
+   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeDialogShellProps;
+};
+
+export type BridgeDialogItemProps = {
+  api: BridgeDialogController;
+  entry: BridgeDialogEntry;
+  hostModal?: BridgeDialogShellProps;
+};
+
 export type BridgeDialogShellProps = Partial<Omit<ModalOwnProps, "stackId">>;
 
 export type BridgeDialogContentProps = {

@@ -1,4 +1,5 @@
 // ** Exports
+export type { BridgeUIHostsProps } from "@/Actions/bridgeUIHosts.types";
 export { default as BridgeUIHosts } from "@/Actions/BridgeUIHosts.vue";
 export {
   BridgeDialogHost,
@@ -6,8 +7,10 @@ export {
   useDialogAction,
 } from "@/Actions/Dialog";
 export type {
+  BridgeDialogActionProps,
   BridgeDialogApi,
   BridgeDialogEntry,
+  BridgeDialogHostProps,
   BridgeDialogOpenOptions,
   BridgeDialogShellProps,
   BridgeDialogUpdateOptions,
@@ -23,6 +26,7 @@ export type {
   BridgeModalApi,
   BridgeModalController,
   BridgeModalEntry,
+  BridgeModalHostProps,
   BridgeModalOpenOptions,
   BridgeModalShellProps,
   BridgeModalUpdateOptions,
@@ -33,8 +37,10 @@ export {
   useSnackbarAction,
 } from "@/Actions/Snackbar";
 export type {
+  BridgeSnackbarActionProps,
   BridgeSnackbarApi,
   BridgeSnackbarEntry,
+  BridgeSnackbarHostProps,
   BridgeSnackbarOpenOptions,
   BridgeSnackbarShellProps,
   BridgeSnackbarUpdateOptions,

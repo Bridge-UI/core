@@ -7,6 +7,14 @@ import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
 export type BridgeModalShellProps = Partial<Omit<ModalOwnProps, "stackId">>;
 
+export type BridgeModalHostProps = {
+  /**
+   * Default shell options merged into every modal opened via `useModalAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeModalShellProps;
+};
+
 export type BridgeModalEntry = {
   component: Component;
   id: LayerId;
