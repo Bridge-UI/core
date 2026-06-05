@@ -1,12 +1,25 @@
 <script setup lang="ts">
 // ** External Imports
-import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core";
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
+import type { BridgeModalShellProps } from "@/Actions/Modal/bridgeModal.types";
 import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
 import { createBridgeModalApi } from "@/Actions/Modal/createBridgeModalApi";
 import { Modal } from "@/Components/Modal";
+
+const props = defineProps<{
+  /**
+   * Default shell options merged into every modal opened via `useBridgeModal()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeModalShellProps;
+}>();
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host.";
@@ -29,7 +42,7 @@ provide(BRIDGE_MODAL_INJECTION_KEY, api);
 
   <Modal
     :key="entry.id"
-    v-bind="entry.modal"
+    v-bind="mergeLayerShellProps(props.modal, entry.modal)"
     :stack-id="entry.id"
     :model-value="entry.show"
     v-for="entry in modalEntries"

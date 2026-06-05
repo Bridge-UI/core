@@ -165,7 +165,7 @@ const teleportTarget = computed(() => {
               type="button"
               aria-label="Close"
               class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
-              @click="requestClose"
+              v-on:click="requestClose"
             >
               <X class="w-5 h-5" />
             </button>

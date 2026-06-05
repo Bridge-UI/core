@@ -4,6 +4,7 @@ export type {
   BridgeModalController,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalShellProps,
   BridgeModalUpdateOptions,
 } from "@/Actions/Modal/bridgeModal.types";
 /** @internal */

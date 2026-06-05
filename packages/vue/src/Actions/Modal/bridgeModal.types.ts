@@ -5,6 +5,8 @@ import type { Component, Ref } from "vue";
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
+export type BridgeModalShellProps = Partial<Omit<ModalOwnProps, "stackId">>;
+
 export type BridgeModalEntry = {
   id: LayerId;
   show: boolean;

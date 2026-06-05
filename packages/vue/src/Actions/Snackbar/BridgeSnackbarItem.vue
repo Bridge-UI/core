@@ -1,21 +1,37 @@
 <script setup lang="ts">
 // ** External Imports
-import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+  type SnackbarColor,
+} from "@bridge-ui/core";
 import { computed } from "vue";
 
 // ** Local Imports
+import BridgeSnackbarAction from "@/Actions/Snackbar/BridgeSnackbarAction.vue";
 import type {
   BridgeSnackbarController,
   BridgeSnackbarEntry,
+  BridgeSnackbarShellProps,
 } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Snackbar } from "@/Components/Snackbar";
 
 const props = defineProps<{
   api: BridgeSnackbarController;
   entry: BridgeSnackbarEntry;
+  hostSnackbar?: BridgeSnackbarShellProps;
 }>();
 
-const { actions, rightButtons, ...snackbarProps } = props.entry.props;
+const { actions, rightButtons, ...entrySnackbar } = props.entry.props;
+
+const snackbarProps = computed(() => {
+  return mergeLayerShellProps(props.hostSnackbar, entrySnackbar);
+});
+
+const snackbarColor = computed(() => {
+  return (snackbarProps.value.color ?? "primary") as keyof SnackbarColor;
+});
 
 const dismiss = () => {
   invokeLayerDismiss(props.api.entries.value, props.entry.id);
@@ -32,14 +48,14 @@ const hasRight = computed(() => {
 
 const hasInlineActions = computed(() => {
   return (
-    !snackbarProps.dense &&
+    !snackbarProps.value.dense &&
     !rightButtons &&
     Boolean(actions?.accept || actions?.reject)
   );
 });
 
 const hasTrailing = computed(() => {
-  return Boolean(snackbarProps.dense && actions?.accept?.label);
+  return Boolean(snackbarProps.value.dense && actions?.accept?.label);
 });
 </script>
 
@@ -57,51 +73,33 @@ const hasTrailing = computed(() => {
     "
   >
     <template v-if="hasInlineActions" #actions>
-      <button
+      <BridgeSnackbarAction
         v-if="actions?.accept?.label"
-        type="button"
-        class="cursor-pointer text-sm font-medium rounded-md focus:outline-hidden"
-        :class="[
-          !actions?.accept?.class &&
-            'text-primary-600 hover:text-primary-500 dark:text-primary-400',
-          actions?.accept?.class,
-          actions?.accept?.solid && 'px-3 py-2 border shadow-xs',
-        ]"
-        @click="runAction(actions?.accept?.onClick)"
-      >
-        {{ actions.accept.label }}
-      </button>
+        role="accept"
+        :action="actions.accept"
+        :snackbar-color="snackbarColor"
+        layout="inline"
+        v-on:run="runAction(actions?.accept?.onClick)"
+      />
 
-      <button
+      <BridgeSnackbarAction
         v-if="actions?.reject?.label"
-        type="button"
-        class="cursor-pointer text-sm font-medium rounded-md focus:outline-hidden"
-        :class="[
-          !actions?.reject?.class &&
-            'text-dark-700 hover:text-dark-500 dark:text-dark-400',
-          actions?.reject?.class,
-          actions?.reject?.solid &&
-            'px-3 py-2 border border-dark-300 shadow-xs',
-        ]"
-        @click="runAction(actions?.reject?.onClick)"
-      >
-        {{ actions.reject.label }}
-      </button>
+        role="reject"
+        :action="actions.reject"
+        :snackbar-color="snackbarColor"
+        layout="inline"
+        v-on:run="runAction(actions?.reject?.onClick)"
+      />
     </template>
 
     <template v-if="hasTrailing" #trailing>
-      <button
-        type="button"
-        class="cursor-pointer mr-4 text-sm font-medium rounded-md shrink-0 focus:outline-hidden"
-        :class="[
-          !actions?.accept?.class &&
-            'text-primary-600 hover:text-primary-500 dark:text-primary-400',
-          actions?.accept?.class,
-        ]"
-        @click="runAction(actions?.accept?.onClick)"
-      >
-        {{ actions?.accept?.label }}
-      </button>
+      <BridgeSnackbarAction
+        role="accept"
+        :action="actions!.accept!"
+        :snackbar-color="snackbarColor"
+        layout="trailing"
+        v-on:run="runAction(actions?.accept?.onClick)"
+      />
     </template>
 
     <template v-if="hasRight" #right>
@@ -113,35 +111,25 @@ const hasTrailing = computed(() => {
             'border-b border-dark-200 dark:border-dark-700': actions?.reject,
           }"
         >
-          <button
-            type="button"
-            class="cursor-pointer flex items-center justify-center w-full px-4 py-3 text-sm font-medium rounded-none rounded-tr-lg focus:outline-hidden"
-            :class="[
-              !actions?.accept?.class &&
-                'text-primary-600 hover:text-primary-500 hover:bg-dark-50 dark:hover:bg-dark-700',
-              actions?.accept?.class,
-              !actions?.reject && 'rounded-br-lg',
-            ]"
-            @click="runAction(actions?.accept?.onClick)"
-          >
-            {{ actions.accept.label }}
-          </button>
+          <BridgeSnackbarAction
+            role="accept"
+            :action="actions.accept"
+            :snackbar-color="snackbarColor"
+            layout="right-accept"
+            :has-reject="Boolean(actions?.reject)"
+            v-on:run="runAction(actions?.accept?.onClick)"
+          />
         </div>
 
         <div v-if="actions?.reject?.label" class="flex flex-1 h-0">
-          <button
-            type="button"
-            class="cursor-pointer flex items-center justify-center w-full px-4 py-3 text-sm font-medium rounded-none rounded-br-lg focus:outline-hidden"
-            :class="[
-              !actions?.reject?.class &&
-                'text-dark-700 hover:text-dark-500 dark:text-dark-400 hover:bg-dark-50 dark:hover:bg-dark-700',
-              actions?.reject?.class,
-              !actions?.accept && 'rounded-tr-lg',
-            ]"
-            @click="runAction(actions?.reject?.onClick)"
-          >
-            {{ actions.reject.label }}
-          </button>
+          <BridgeSnackbarAction
+            role="reject"
+            :action="actions.reject"
+            :snackbar-color="snackbarColor"
+            layout="right-reject"
+            :has-accept="Boolean(actions?.accept)"
+            v-on:run="runAction(actions?.reject?.onClick)"
+          />
         </div>
       </div>
     </template>

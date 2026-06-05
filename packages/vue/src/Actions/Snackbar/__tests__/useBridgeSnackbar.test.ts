@@ -105,3 +105,58 @@ test("closeAll should dismiss every snackbar", async () => {
   expect(document.body.textContent).not.toContain("One");
   expect(document.body.textContent).not.toContain("Two");
 });
+
+test("accept action should use the snackbar color, not primary", async () => {
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useBridgeSnackbar();
+
+      snackbar.open({
+        title: "Saved",
+        color: "success",
+        duration: false,
+        transition: "none",
+        actions: { accept: { label: "Undo" } },
+      });
+    },
+  });
+
+  mountWithSnackbarHost(Consumer);
+  await flushPromises();
+  await nextTick();
+
+  const action = document.body.querySelector("button");
+
+  expect(action).toBeTruthy();
+  expect(action?.className).toContain("text-success-600");
+  expect(action?.className).not.toContain("text-primary-600");
+});
+
+test("host snackbar defaults should merge into open options", async () => {
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useBridgeSnackbar();
+
+      snackbar.open({
+        title: "Dense default",
+        duration: false,
+        transition: "none",
+      });
+    },
+  });
+
+  mount(BridgeSnackbarHost, {
+    attachTo: document.body,
+    props: {
+      snackbar: { dense: true, classes: { root: "host-shell" } },
+    },
+    slots: { default: () => h(Consumer) },
+  });
+
+  await flushPromises();
+  await nextTick();
+
+  const snackbar = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  expect(snackbar?.className).toContain("host-shell");
+});

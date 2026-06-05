@@ -10,6 +10,7 @@ export type {
   BridgeModalController,
   BridgeModalEntry,
   BridgeModalOpenOptions,
+  BridgeModalShellProps,
   BridgeModalUpdateOptions,
 } from "@/Actions/Modal";
 export {
@@ -21,5 +22,8 @@ export type {
   BridgeSnackbarApi,
   BridgeSnackbarEntry,
   BridgeSnackbarOpenOptions,
+  BridgeSnackbarShellProps,
   BridgeSnackbarUpdateOptions,
+  SnackbarAction,
+  SnackbarActions,
 } from "@/Actions/Snackbar";

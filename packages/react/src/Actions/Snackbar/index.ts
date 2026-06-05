@@ -4,6 +4,7 @@ export type {
   BridgeSnackbarContentProps,
   BridgeSnackbarEntry,
   BridgeSnackbarOpenOptions,
+  BridgeSnackbarShellProps,
   BridgeSnackbarUpdateOptions,
   SnackbarAction,
   SnackbarActions,

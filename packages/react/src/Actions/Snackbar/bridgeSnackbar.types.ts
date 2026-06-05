@@ -1,7 +1,9 @@
 // ** External Imports
-import type { LayerId } from "@bridge-ui/core";
+import type { LayerId, SnackbarColor } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { ButtonOwnProps } from "@/Components/Button/button.types";
+import type { LinkOwnProps } from "@/Components/Link/link.types";
 import type { SnackbarOwnProps } from "@/Components/Snackbar/snackbar.types";
 
 export interface SnackbarAction {
@@ -11,7 +13,7 @@ export interface SnackbarAction {
   label: string;
 
   /**
-   * Extra Tailwind classes for the action button.
+   * Extra Tailwind classes for the action control (`classes.root`).
    */
   className?: string;
 
@@ -21,6 +23,16 @@ export interface SnackbarAction {
   solid?: boolean;
 
   /**
+   * Props merged into the default `Button` (ignored when `link` is set).
+   */
+  button?: Partial<Omit<ButtonOwnProps, "children">>;
+
+  /**
+   * When set, renders a `Link` instead of a `Button`.
+   */
+  link?: Partial<Omit<LinkOwnProps, "children">>;
+
+  /**
    * Called when the action is clicked.
    */
   onClick?: () => void;
@@ -28,20 +40,21 @@ export interface SnackbarAction {
 
 export interface SnackbarActions {
   /**
-   * Primary action (e.g. Undo, Confirm).
+   * Primary action (e.g. Undo, Confirm). Uses the snackbar `color` by default.
    */
   accept?: SnackbarAction;
 
   /**
-   * Secondary action (e.g. Dismiss, Cancel).
+   * Secondary action (e.g. Dismiss, Cancel). Uses `secondary` by default.
    */
   reject?: SnackbarAction;
 }
 
-export type BridgeSnackbarContentProps = Omit<
-  SnackbarOwnProps,
-  "stackId" | "slots" | "teleportTo"
-> & {
+export type BridgeSnackbarShellProps = Partial<
+  Omit<SnackbarOwnProps, "show" | "stackId" | "slots" | "teleportTo">
+>;
+
+export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
   /**
    * Preset inline or trailing actions (mapped to slots by the host).
    */
@@ -89,3 +102,5 @@ export type BridgeSnackbarApi = Omit<
 > & {
   count: number;
 };
+
+export type SnackbarActionColor = keyof SnackbarColor;

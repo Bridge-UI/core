@@ -144,6 +144,7 @@ export {
   hideLayer,
   invokeLayerDismiss,
   isLayerMounted,
+  mergeLayerShellProps,
   removeLayer,
   updateLayer,
 } from "@core/Layer";

@@ -15,3 +15,4 @@ export {
   type LayerId,
   type LayerRegistryEntry,
 } from "@core/Layer/registry";
+export { mergeLayerShellProps } from "@core/Layer/shell";

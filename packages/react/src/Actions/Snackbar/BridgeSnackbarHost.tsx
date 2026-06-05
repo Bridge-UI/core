@@ -1,5 +1,9 @@
 // ** External Imports
-import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core";
 import { get } from "es-toolkit/compat";
 import { useContext, useEffect, useMemo, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -14,6 +18,7 @@ import {
 
 // ** Local Imports
 import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
+import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
@@ -33,6 +38,11 @@ export type BridgeSnackbarHostProps = {
    * @default "body"
    */
   teleportTo?: string | false;
+  /**
+   * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
+   * Per-call `open()` options override these.
+   */
+  snackbar?: BridgeSnackbarShellProps;
 };
 
 const NESTED_HOST_WARNING =
@@ -42,6 +52,7 @@ export function BridgeSnackbarHost({
   children,
   position,
   teleportTo = "body",
+  snackbar: hostSnackbar,
 }: BridgeSnackbarHostProps) {
   const parentApi = useContext(BridgeSnackbarContext);
   const api = useBridgeSnackbarController();
@@ -77,7 +88,12 @@ export function BridgeSnackbarHost({
     >
       <div className="flex flex-col-reverse w-full max-w-sm gap-y-2 pointer-events-auto">
         {api.entries.map((entry) => {
-          const { actions, rightButtons, ...snackbarProps } = entry.props;
+          const { actions, rightButtons, ...entrySnackbar } = entry.props;
+
+          const snackbarProps = mergeLayerShellProps(
+            hostSnackbar,
+            entrySnackbar,
+          );
 
           const dismiss = () => invokeLayerDismiss(api.entries, entry.id);
 
@@ -89,7 +105,12 @@ export function BridgeSnackbarHost({
               teleportTo={false}
               {...snackbarProps}
               slots={resolveBridgeSnackbarSlots(
-                { actions, rightButtons, dense: snackbarProps.dense },
+                {
+                  actions,
+                  rightButtons,
+                  dense: snackbarProps.dense,
+                  color: snackbarProps.color,
+                },
                 dismiss,
               )}
               onClose={dismiss}

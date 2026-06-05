@@ -7,6 +7,7 @@ export type {
   BridgeModalEntry,
   BridgeModalHostProps,
   BridgeModalOpenOptions,
+  BridgeModalShellProps,
 } from "@/Actions/Modal";
 export { BridgeSnackbarHost, useBridgeSnackbar } from "@/Actions/Snackbar";
 export type {
@@ -14,6 +15,7 @@ export type {
   BridgeSnackbarEntry,
   BridgeSnackbarHostProps,
   BridgeSnackbarOpenOptions,
+  BridgeSnackbarShellProps,
   SnackbarAction,
   SnackbarActions,
 } from "@/Actions/Snackbar";

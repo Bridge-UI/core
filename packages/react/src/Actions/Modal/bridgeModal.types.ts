@@ -5,6 +5,10 @@ import type { ComponentType } from "react";
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
+export type BridgeModalShellProps = Partial<
+  Omit<ModalOwnProps, "show" | "stackId">
+>;
+
 export type BridgeModalEntry = {
   id: LayerId;
   show: boolean;

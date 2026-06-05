@@ -11,6 +11,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbarInjectionKey";
 import BridgeSnackbarItem from "@/Actions/Snackbar/BridgeSnackbarItem.vue";
 import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbarApi";
@@ -23,6 +24,11 @@ const props = withDefaults(
   defineProps<{
     position?: keyof typeof snackbarPositionProps;
     teleportTo?: string | false;
+    /**
+     * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
+     * Per-call `open()` options override these.
+     */
+    snackbar?: BridgeSnackbarShellProps;
   }>(),
   {
     teleportTo: "body",
@@ -93,6 +99,7 @@ const teleportTarget = computed(() => {
           v-for="entry in snackbarEntries"
           :api="api"
           :entry="entry"
+          :host-snackbar="props.snackbar"
         />
       </div>
     </div>

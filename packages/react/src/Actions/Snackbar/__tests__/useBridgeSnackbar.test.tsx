@@ -111,3 +111,55 @@ test("closeAll should dismiss every snackbar", async () => {
     expect(document.body.textContent).not.toContain("Two");
   });
 });
+
+test("accept action should use the snackbar color, not primary", async () => {
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Saved",
+            color: "success",
+            transition: "none",
+            duration: false,
+            actions: { accept: { label: "Undo" } },
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    const action = document.body.querySelector("button");
+
+    expect(action).toBeTruthy();
+    expect(action?.className).toContain("text-success-600");
+    expect(action?.className).not.toContain("text-primary-600");
+  });
+});
+
+test("host snackbar defaults should merge into open options", async () => {
+  render(
+    <BridgeSnackbarHost
+      snackbar={{ dense: true, classes: { root: "host-shell" } }}
+    >
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Dense default",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    const snackbar = document.body.querySelector(
+      '[data-snackbar-part="panel"]',
+    );
+
+    expect(snackbar?.className).toContain("host-shell");
+  });
+});
