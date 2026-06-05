@@ -49,8 +49,8 @@ test("open should render title and description", async () => {
         onMount={(dialog) => {
           dialog.open({
             title: "Delete item?",
-            description: "This cannot be undone.",
             modal: { transition: "none" },
+            description: "This cannot be undone.",
           });
         }}
       />

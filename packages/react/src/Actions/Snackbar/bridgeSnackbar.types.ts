@@ -8,9 +8,9 @@ import type { SnackbarOwnProps } from "@/Components/Snackbar/snackbar.types";
 
 export interface SnackbarAction {
   /**
-   * Button label.
+   * Props merged into the default `Button` (ignored when `link` is set).
    */
-  label: string;
+  button?: Partial<Omit<ButtonOwnProps, "children">>;
 
   /**
    * Extra Tailwind classes for the action control (`classes.root`).
@@ -18,14 +18,9 @@ export interface SnackbarAction {
   className?: string;
 
   /**
-   * Whether the action renders as a solid bordered button.
+   * Button label.
    */
-  solid?: boolean;
-
-  /**
-   * Props merged into the default `Button` (ignored when `link` is set).
-   */
-  button?: Partial<Omit<ButtonOwnProps, "children">>;
+  label: string;
 
   /**
    * When set, renders a `Link` instead of a `Button`.
@@ -36,6 +31,11 @@ export interface SnackbarAction {
    * Called when the action is clicked.
    */
   onClick?: () => void;
+
+  /**
+   * Whether the action renders as a solid bordered button.
+   */
+  solid?: boolean;
 }
 
 export interface SnackbarActions {

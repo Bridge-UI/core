@@ -267,13 +267,8 @@ export function pushLayerStack(
   options: {
     id?: LayerId;
     order?: number;
-    onEscape?: () => void;
-    /**
-     * Locks `document.body` overflow while this layer is open.
-     *
-     * @default true
-     */
     lockScroll?: boolean;
+    onEscape?: () => void;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);

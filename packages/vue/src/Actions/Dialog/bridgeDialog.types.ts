@@ -3,34 +3,67 @@ import type { ButtonColor, LayerId } from "@bridge-ui/core";
 import type { Ref } from "vue";
 
 // ** Local Imports
-import type {
-  SnackbarAction,
-  SnackbarActions,
-} from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import type { CardOwnProps } from "@/Components/Card/card.types";
+import type { LinkProps } from "@/Components/Link/link.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
-export type DialogAction = SnackbarAction;
+export interface DialogAction {
+  /**
+   * Props merged into the default `Button` (ignored when `link` is set).
+   */
+  button?: Partial<Omit<ButtonOwnProps, "children">>;
 
-export type DialogActions = SnackbarActions;
+  /**
+   * Extra Tailwind classes merged into the action root (`classes.root`).
+   */
+  className?: string;
+
+  /**
+   * Footer button or link label.
+   */
+  label: string;
+
+  /**
+   * When set, renders a `Link` instead of a `Button`.
+   */
+  link?: Partial<Omit<LinkProps, "children">>;
+
+  /**
+   * Called when the action is activated, before the dialog dismisses.
+   */
+  onClick?: () => void;
+
+  /**
+   * When `true`, renders the button with the `outline` variant instead of `flat`.
+   */
+  solid?: boolean;
+}
+
+export interface DialogActions {
+  /**
+   * Primary footer action (e.g. Confirm, Save). Uses the dialog `color` by default.
+   */
+  accept?: DialogAction;
+
+  /**
+   * Secondary footer action (e.g. Cancel, Dismiss). Uses `secondary` by default.
+   */
+  reject?: DialogAction;
+}
 
 export type BridgeDialogShellProps = Partial<Omit<ModalOwnProps, "stackId">>;
 
 export type BridgeDialogContentProps = {
   /**
-   * Dialog title (rendered in the Card header).
-   */
-  title: string;
-
-  /**
-   * Optional body text below the title.
-   */
-  description?: string;
-
-  /**
    * Footer actions (accept = primary, reject = secondary by default).
    */
   actions?: DialogActions;
+
+  /**
+   * Extra Card shell options (padding, variant, classes, etc.).
+   */
+  card?: Partial<Omit<CardOwnProps, "children" | "slots" | "title">>;
 
   /**
    * Color for the accept action button.
@@ -40,9 +73,14 @@ export type BridgeDialogContentProps = {
   color?: keyof ButtonColor;
 
   /**
-   * Extra Card shell options (padding, variant, classes, etc.).
+   * Optional body text below the title.
    */
-  card?: Partial<Omit<CardOwnProps, "children" | "slots" | "title">>;
+  description?: string;
+
+  /**
+   * Dialog title (rendered in the Card header).
+   */
+  title: string;
 };
 
 export type BridgeDialogEntry = {
