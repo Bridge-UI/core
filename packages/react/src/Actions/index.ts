@@ -1,4 +1,6 @@
 // ** Exports
+export { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
+export type { BridgeUIHostsProps } from "@/Actions/BridgeUIHosts";
 export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
 export type {
   BridgeModalApi,

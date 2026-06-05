@@ -9,7 +9,7 @@ import { createBridgeModalApi } from "@/Actions/Modal/createBridgeModalApi";
 import { Modal } from "@/Components/Modal";
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host.";
 
 const parentApi = inject(BRIDGE_MODAL_INJECTION_KEY, null);
 

@@ -11,7 +11,6 @@ import {
   BridgeModalHostMissingError,
   useBridgeModal,
 } from "@/Actions/Modal";
-import { BridgeUIProvider } from "@/Provider";
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
@@ -36,16 +35,16 @@ const Content = defineComponent({
   },
 });
 
-function mountWithProvider(consumer: ReturnType<typeof defineComponent>) {
+function mountWithModalHost(consumer: ReturnType<typeof defineComponent>) {
   const Root = defineComponent({
-    components: { BridgeUIProvider, Consumer: consumer },
-    template: "<BridgeUIProvider><Consumer /></BridgeUIProvider>",
+    components: { BridgeModalHost, Consumer: consumer },
+    template: "<BridgeModalHost><Consumer /></BridgeModalHost>",
   });
 
   return mount(Root, { attachTo: document.body });
 }
 
-test("useBridgeModal should throw when BridgeUIProvider is missing", () => {
+test("useBridgeModal should throw when BridgeModalHost is missing", () => {
   const Consumer = defineComponent({
     setup() {
       expect(() => useBridgeModal()).toThrow(BridgeModalHostMissingError);
@@ -72,7 +71,7 @@ test("open should return an id and render modal content", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -104,7 +103,7 @@ test("close should unmount imperative modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -130,7 +129,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -173,7 +172,7 @@ test("closeTop should close only the topmost imperative modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -211,7 +210,7 @@ test("onClose should run before onClosed when close is called", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -246,7 +245,7 @@ test("onClose should run before onClosed when escape is pressed", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -281,7 +280,7 @@ test("update should patch props on an open modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -310,7 +309,7 @@ test("update should patch modal shell options on an open modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -338,7 +337,7 @@ test("open with persistent modal should ignore escape", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -369,7 +368,7 @@ test("stacked imperative modals should use incremental z-index", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -410,7 +409,7 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -449,7 +448,7 @@ test("modal shell options must not override host-controlled props", async () => 
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -465,9 +464,9 @@ test("nested BridgeModalHost should warn in development", async () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   const Root = defineComponent({
-    components: { BridgeUIProvider, BridgeModalHost },
+    components: { BridgeModalHost },
     template:
-      "<BridgeUIProvider><BridgeModalHost><span>nested</span></BridgeModalHost></BridgeUIProvider>",
+      "<BridgeModalHost><BridgeModalHost><span>nested</span></BridgeModalHost></BridgeModalHost>",
   });
 
   mount(Root);
@@ -475,7 +474,7 @@ test("nested BridgeModalHost should warn in development", async () => {
   await flushPromises();
 
   expect(warn).toHaveBeenCalledWith(
-    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.",
+    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host.",
   );
 
   warn.mockRestore();

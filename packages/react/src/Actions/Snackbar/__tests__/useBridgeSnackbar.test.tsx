@@ -9,8 +9,6 @@ import {
   BridgeSnackbarHostMissingError,
   useBridgeSnackbar,
 } from "@/Actions/Snackbar";
-import { BridgeUIProvider } from "@/Provider";
-
 afterEach(() => {
   document.body.innerHTML = "";
 });
@@ -30,7 +28,7 @@ function RunOnMount({
   return null;
 }
 
-test("useBridgeSnackbar should throw when BridgeUIProvider is missing", () => {
+test("useBridgeSnackbar should throw when BridgeSnackbarHost is missing", () => {
   function BadConsumer() {
     useBridgeSnackbar();
 
@@ -42,7 +40,7 @@ test("useBridgeSnackbar should throw when BridgeUIProvider is missing", () => {
 
 test("open should return an id and render snackbar content", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeSnackbarHost>
       <RunOnMount
         onMount={(snackbar) => {
           snackbar.open({
@@ -53,7 +51,7 @@ test("open should return an id and render snackbar content", async () => {
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeSnackbarHost>,
   );
 
   await waitFor(() => {
@@ -86,7 +84,7 @@ test("close should dismiss a snackbar", async () => {
 
 test("closeAll should dismiss every snackbar", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeSnackbarHost>
       <RunOnMount
         onMount={(snackbar) => {
           snackbar.open({
@@ -105,7 +103,7 @@ test("closeAll should dismiss every snackbar", async () => {
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeSnackbarHost>,
   );
 
   await waitFor(() => {

@@ -9,20 +9,18 @@ import {
   BridgeSnackbarHostMissingError,
   useBridgeSnackbar,
 } from "@/Actions/Snackbar";
-import { BridgeUIProvider } from "@/Provider";
-
 afterEach(() => {
   document.body.innerHTML = "";
 });
 
-function mountWithProvider(child: ReturnType<typeof defineComponent>) {
-  return mount(BridgeUIProvider, {
-    slots: { default: () => h(child) },
+function mountWithSnackbarHost(child: ReturnType<typeof defineComponent>) {
+  return mount(BridgeSnackbarHost, {
     attachTo: document.body,
+    slots: { default: () => h(child) },
   });
 }
 
-test("useBridgeSnackbar should throw when BridgeUIProvider is missing", () => {
+test("useBridgeSnackbar should throw when BridgeSnackbarHost is missing", () => {
   const BadConsumer = defineComponent({
     setup() {
       useBridgeSnackbar();
@@ -39,14 +37,14 @@ test("open should return an id and render snackbar content", async () => {
 
       snackbar.open({
         title: "Saved",
-        description: "Changes stored",
-        transition: "none",
         duration: false,
+        transition: "none",
+        description: "Changes stored",
       });
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithSnackbarHost(Consumer);
   await flushPromises();
   await nextTick();
 
@@ -60,9 +58,9 @@ test("close should dismiss a snackbar", async () => {
       const snackbar = useBridgeSnackbar();
 
       const id = snackbar.open({
-        title: "Dismiss me",
-        transition: "none",
         duration: false,
+        transition: "none",
+        title: "Dismiss me",
       });
 
       snackbar.close(id);
@@ -70,8 +68,8 @@ test("close should dismiss a snackbar", async () => {
   });
 
   mount(BridgeSnackbarHost, {
-    slots: { default: () => h(Consumer) },
     attachTo: document.body,
+    slots: { default: () => h(Consumer) },
   });
 
   await flushPromises();
@@ -87,20 +85,20 @@ test("closeAll should dismiss every snackbar", async () => {
 
       snackbar.open({
         title: "One",
-        transition: "none",
         duration: false,
+        transition: "none",
       });
       snackbar.open({
         title: "Two",
-        transition: "none",
         duration: false,
+        transition: "none",
       });
 
       snackbar.closeAll();
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithSnackbarHost(Consumer);
   await flushPromises();
   await nextTick();
 

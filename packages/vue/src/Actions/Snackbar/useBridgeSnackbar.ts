@@ -9,7 +9,7 @@ import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbar
 export class BridgeSnackbarHostMissingError extends Error {
   constructor() {
     super(
-      "useBridgeSnackbar() requires <BridgeUIProvider /> (or <BridgeSnackbarHost />) in the app tree.",
+      "useBridgeSnackbar() requires <BridgeSnackbarHost /> in the app tree.",
     );
     this.name = "BridgeSnackbarHostMissingError";
   }

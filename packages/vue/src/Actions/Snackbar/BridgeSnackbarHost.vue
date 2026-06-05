@@ -17,7 +17,7 @@ import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbar
 import { useBridgeUI } from "@/Provider/useBridgeUI";
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host.";
 
 const props = withDefaults(
   defineProps<{

@@ -1,4 +1,5 @@
 // ** Exports
+export { default as BridgeUIHosts } from "@/Actions/BridgeUIHosts.vue";
 export {
   BridgeModalHost,
   BridgeModalHostMissingError,

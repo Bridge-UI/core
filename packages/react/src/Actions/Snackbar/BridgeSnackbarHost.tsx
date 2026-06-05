@@ -36,7 +36,7 @@ export type BridgeSnackbarHostProps = {
 };
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host.";
 
 export function BridgeSnackbarHost({
   children,

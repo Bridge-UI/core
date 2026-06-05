@@ -2,6 +2,8 @@
 import "@/augments";
 
 // ** Exports
+export { BridgeUIHosts } from "@/Actions";
+export type { BridgeUIHostsProps } from "@/Actions";
 export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
 export type {
   BridgeModalApi,

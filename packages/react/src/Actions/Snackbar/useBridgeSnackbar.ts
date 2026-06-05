@@ -9,7 +9,7 @@ import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext"
 export class BridgeSnackbarHostMissingError extends Error {
   constructor() {
     super(
-      "useBridgeSnackbar() requires <BridgeUIProvider /> (or <BridgeSnackbarHost />) in the app tree.",
+      "useBridgeSnackbar() requires <BridgeSnackbarHost /> in the app tree.",
     );
     this.name = "BridgeSnackbarHostMissingError";
   }
