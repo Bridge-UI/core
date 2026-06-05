@@ -151,6 +151,13 @@ export interface ModalOwnProps {
   size?: MergeProps<ModalSize, ModalSizeOverrides>;
 
   /**
+   * Stack id assigned when the modal opens. Set by BridgeModalHost; do not set in app code.
+   *
+   * @internal
+   */
+  stackId?: string;
+
+  /**
    * Where to portal the modal. Pass `false` to render in place.
    *
    * @default "body"

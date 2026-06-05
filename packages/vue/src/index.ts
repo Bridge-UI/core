@@ -2,6 +2,12 @@
 import "@/augments";
 
 // ** Exports
+export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
+export type {
+  BridgeModalApi,
+  BridgeModalEntry,
+  BridgeModalOpenOptions,
+} from "@/Actions/Modal";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
@@ -114,6 +120,7 @@ export type {
   ModalAlignOverrides,
   ModalBlurOverrides,
   ModalClasses,
+  ModalEmits,
   ModalOwnProps,
   ModalPartsProps,
   ModalProps,

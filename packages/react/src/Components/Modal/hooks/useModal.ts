@@ -54,6 +54,7 @@ const modalBridgeKeys = [
   "transition",
   "closeOnEscape",
   "closeOnOverlay",
+  "stackId",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
@@ -78,6 +79,11 @@ export type ModalOptions = {
   show?: boolean;
 
   /**
+   * Pre-assigned stack id (BridgeModalHost). When omitted, the stack generates a UUID.
+   */
+  stackId?: string;
+
+  /**
    * Called when the modal requests to close.
    * Sugar for `onShowChange(false)`.
    */
@@ -95,7 +101,7 @@ export function useModal(
   options: ModalOptions = {},
 ) {
   // Setup
-  const { onClose, onShowChange, show = false } = options;
+  const { onClose, onShowChange, show = false, stackId } = options;
 
   const modalStackIdRef = useRef("");
 
@@ -334,26 +340,23 @@ export function useModal(
     }
 
     const handle = pushModalStack({
+      id: stackId,
       order: stackOrderRef.current,
       onEscape: handleEscape,
     });
 
     stackHandleRef.current = handle;
     modalStackIdRef.current = handle.id;
-    setStackZIndex(handle.zIndex);
+    setStackZIndex((previous) => {
+      return previous === handle.zIndex ? previous : handle.zIndex;
+    });
 
     return () => {
       handle.release();
       stackHandleRef.current = null;
       modalStackIdRef.current = "";
     };
-  }, [
-    rendered,
-    merged.persistent,
-    merged.transition,
-    effectiveTransition,
-    merged.closeOnEscape,
-  ]);
+  }, [stackId, rendered, merged.persistent, merged.closeOnEscape]);
 
   // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {

@@ -85,6 +85,19 @@ test("createModalStackId should generate unique ids", () => {
   expect(second).not.toBe(first);
 });
 
+test("createModalStackId should use assigned id when provided", () => {
+  expect(createModalStackId("host-assigned-id")).toBe("host-assigned-id");
+});
+
+test("pushModalStack should use pre-assigned id", () => {
+  const handle = pushModalStack({ id: "fixed-stack-id" });
+
+  expect(handle.id).toBe("fixed-stack-id");
+  expect(getModalStackEntry("fixed-stack-id")?.id).toBe("fixed-stack-id");
+
+  handle.release();
+});
+
 test("getModalStackSnapshot should list open modals", () => {
   const outer = pushModalStack({ order: 1 });
   const inner = pushModalStack({ order: 2 });

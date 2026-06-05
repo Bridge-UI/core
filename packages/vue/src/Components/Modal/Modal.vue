@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots } from "vue";
+import { computed, useSlots, watch } from "vue";
 
 // ** Local Imports
 import { useModal } from "@/Components/Modal/composables/useModal";
@@ -28,24 +28,44 @@ const props = withDefaults(defineProps<ModalOwnProps>(), {
 
 const model = defineModel<boolean>({ default: false });
 
-const { merged, rendered, rootBind, panelBind, overlayBind, wrapperBind } =
-  useModal(
-    props,
-    {
-      size: "md",
-      blur: "none",
-      align: "center",
-      teleportTo: "body",
-      transition: "none",
-      closeOnEscape: true,
-      closeOnOverlay: true,
-    },
-    {
-      show: model,
-      onClose: () => emit("close"),
-      onShowChange: (show) => props.onShowChange?.(show),
-    },
-  );
+const stackIdModel = defineModel<string | undefined>("stackId");
+
+const {
+  merged,
+  rendered,
+  rootBind,
+  panelBind,
+  overlayBind,
+  wrapperBind,
+  modalStackId,
+} = useModal(
+  props,
+  {
+    size: "md",
+    blur: "none",
+    align: "center",
+    teleportTo: "body",
+    transition: "none",
+    closeOnEscape: true,
+    closeOnOverlay: true,
+  },
+  {
+    show: model,
+    stackId: props.stackId,
+    onClose: () => emit("close"),
+    onShowChange: (show) => props.onShowChange?.(show),
+  },
+);
+
+watch(modalStackId, (id) => {
+  if (id) {
+    stackIdModel.value = id;
+  }
+});
+
+defineExpose({
+  stackId: modalStackId,
+});
 
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;

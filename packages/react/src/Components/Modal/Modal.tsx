@@ -40,6 +40,7 @@ function ModalShell({
 
 function Modal({
   onClose,
+  stackId,
   children,
   onShowChange,
   show = false,
@@ -52,6 +53,7 @@ function Modal({
   const modalState = useModal(
     {
       ...ownProps,
+      stackId,
       children,
       persistent,
       teleportTo,
@@ -62,6 +64,7 @@ function Modal({
     {
       show,
       onClose,
+      stackId,
       onShowChange,
     },
   );

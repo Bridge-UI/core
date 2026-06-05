@@ -12,6 +12,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import { BridgeModalHost } from "@/Actions/Modal";
 import {
   BridgeUIContext,
   type BridgeUIContextValue,
@@ -87,7 +88,7 @@ export function BridgeUIProvider({
 
   return (
     <BridgeUIContext.Provider value={value}>
-      {children}
+      <BridgeModalHost>{children}</BridgeModalHost>
     </BridgeUIContext.Provider>
   );
 }

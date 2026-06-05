@@ -1,0 +1,38 @@
+// ** External Imports
+import { computed, inject } from "vue";
+
+// ** Local Imports
+import type { BridgeModalApi } from "@/Actions/Modal/bridgeModal.types";
+import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
+
+export class BridgeModalHostMissingError extends Error {
+  constructor() {
+    super(
+      "useBridgeModal() requires <BridgeUIProvider /> (or <BridgeModalHost />) in the app tree.",
+    );
+    this.name = "BridgeModalHostMissingError";
+  }
+}
+
+export function useBridgeModal(): BridgeModalApi {
+  const api = inject(BRIDGE_MODAL_INJECTION_KEY);
+
+  if (!api) {
+    throw new BridgeModalHostMissingError();
+  }
+
+  const stackSize = computed(() => {
+    return api.entries.value.filter((entry) => entry.show).length;
+  });
+
+  return {
+    open: api.open,
+    close: api.close,
+    isOpen: api.isOpen,
+    entries: api.entries,
+    closeTop: api.closeTop,
+    get stackSize() {
+      return stackSize.value;
+    },
+  };
+}

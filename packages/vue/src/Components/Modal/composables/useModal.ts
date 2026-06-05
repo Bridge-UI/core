@@ -49,6 +49,7 @@ const modalBridgeKeys = [
   "size",
   "align",
   "classes",
+  "stackId",
   "partsProps",
   "persistent",
   "teleportTo",
@@ -77,6 +78,11 @@ export type ModalOptions = {
    * @default false
    */
   show?: Ref<boolean>;
+
+  /**
+   * Pre-assigned stack id (BridgeModalHost). When omitted, the stack generates a UUID.
+   */
+  stackId?: string;
 
   /**
    * Called when the modal requests to close.
@@ -412,6 +418,7 @@ export function useModal(
 
         stackHandle = pushModalStack({
           order: stackOrder,
+          id: options.stackId,
           onEscape: handleEscape,
         });
 
