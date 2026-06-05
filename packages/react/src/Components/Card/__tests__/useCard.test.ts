@@ -38,13 +38,13 @@ test("it should compute rootBind className as a non-empty string", () => {
 });
 
 test("it should include shadow classes for elevated variant when shadow is set", () => {
-  const { result } = renderUseCard({ variant: "elevated", shadow: "sm" });
+  const { result } = renderUseCard({ shadow: "sm", variant: "elevated" });
 
   expect(result.current.rootBind.className).toContain("shadow");
 });
 
 test("it should omit shadow classes for non-elevated variants", () => {
-  const { result } = renderUseCard({ variant: "flat", shadow: "sm" });
+  const { result } = renderUseCard({ shadow: "sm", variant: "flat" });
 
   expect(result.current.rootBind.className).not.toContain("shadow-sm");
 });

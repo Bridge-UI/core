@@ -48,7 +48,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   cy.mount(Radio, {
-    props: { value: "a", mainLabel: "Option A", disabled: true },
+    props: { value: "a", disabled: true, mainLabel: "Option A" },
   });
 
   cy.get('input[type="radio"]').should("be.disabled");

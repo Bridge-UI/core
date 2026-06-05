@@ -59,7 +59,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
     bridgeKeys: linkBridgeKeys,
   });
 
-  const { entry: bridgeLink, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeLink } = useBridgeUIComponent<
     LinkMerged,
     "Link"
   >({

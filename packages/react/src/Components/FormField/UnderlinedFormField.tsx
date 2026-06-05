@@ -29,9 +29,9 @@ function UnderlinedFormField({ api, children }: UnderlinedFormFieldProps) {
           {hasSlotOrProp(api.slots, "label", api.merged.label) && (
             <label htmlFor={api.controlId} {...api.labelBind}>
               {resolveSlotOrProp({
+                name: "label",
                 slots: api.slots,
                 fallback: api.merged.label,
-                name: "label",
               })}
 
               {api.merged.required && <span {...api.requiredBind}>*</span>}

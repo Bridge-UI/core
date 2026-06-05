@@ -51,9 +51,9 @@ test("open should return an id and render snackbar content", async () => {
         onMount={(snackbar) => {
           snackbar.open({
             title: "Saved",
-            description: "Changes stored",
-            transition: "none",
             duration: false,
+            transition: "none",
+            description: "Changes stored",
           });
         }}
       />
@@ -72,9 +72,9 @@ test("close should dismiss a snackbar", async () => {
       <RunOnMount
         onMount={(snackbar) => {
           const id = snackbar.open({
-            title: "Dismiss me",
-            transition: "none",
             duration: false,
+            transition: "none",
+            title: "Dismiss me",
           });
 
           snackbar.close(id);
@@ -95,13 +95,13 @@ test("closeAll should dismiss every snackbar", async () => {
         onMount={(snackbar) => {
           snackbar.open({
             title: "One",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Two",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
 
           act(() => {
@@ -125,9 +125,9 @@ test("accept action should use the snackbar color, not primary", async () => {
         onMount={(snackbar) => {
           snackbar.open({
             title: "Saved",
+            duration: false,
             color: "success",
             transition: "none",
-            duration: false,
             actions: { accept: { label: "Undo" } },
           });
         }}
@@ -151,13 +151,13 @@ test("top-center should grow downward with newest below oldest", async () => {
         onMount={(snackbar) => {
           snackbar.open({
             title: "Older",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Newer",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
         }}
       />
@@ -184,13 +184,13 @@ test("bottom-center should stack upward from the viewport edge", async () => {
         onMount={(snackbar) => {
           snackbar.open({
             title: "Older",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Newer",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
         }}
       />
@@ -217,13 +217,13 @@ test("imperative snackbars should stack in a single notification column", async 
         onMount={(snackbar) => {
           snackbar.open({
             title: "One",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Two",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
         }}
       />
@@ -250,9 +250,9 @@ test("host snackbar defaults should merge into open options", async () => {
       <RunOnMount
         onMount={(snackbar) => {
           snackbar.open({
-            title: "Dense default",
-            transition: "none",
             duration: false,
+            transition: "none",
+            title: "Dense default",
           });
         }}
       />
@@ -300,9 +300,9 @@ test("open duration should override host timeout", async () => {
       <RunOnMount
         onMount={(snackbar) => {
           snackbar.open({
-            title: "Persistent",
-            transition: "none",
             duration: false,
+            transition: "none",
+            title: "Persistent",
           });
         }}
       />
@@ -325,18 +325,18 @@ test("max should close the oldest snackbar when the limit is exceeded", async ()
         onMount={(snackbar) => {
           snackbar.open({
             title: "One",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Two",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
           snackbar.open({
             title: "Three",
-            transition: "none",
             duration: false,
+            transition: "none",
           });
         }}
       />

@@ -13,7 +13,7 @@ const typeSorting = [
   {
     order: "asc" as const,
     type: "alphabetical" as const,
-  }
+  },
 ];
 
 const unusedVars = [

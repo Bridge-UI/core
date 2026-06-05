@@ -9,8 +9,8 @@ import {
 // prettier-ignore
 export interface BadgeVariant {
   "flat": BadgeColor;
-  "solid": BadgeColor;
   "outline": BadgeColor;
+  "solid": BadgeColor;
 }
 
 // prettier-ignore

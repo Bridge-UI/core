@@ -107,12 +107,12 @@ export function resolveFieldAdornmentIconSize(
 ): keyof IconSize {
   return get(
     {
-      "2xs": "xs",
       xs: "xs",
       sm: "sm",
       md: "md",
       lg: "md",
       xl: "lg",
+      "2xs": "xs",
       "2xl": "lg",
     },
     fieldSize ?? "md",

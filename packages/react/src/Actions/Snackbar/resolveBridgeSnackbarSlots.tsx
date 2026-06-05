@@ -13,7 +13,7 @@ export function resolveBridgeSnackbarSlots(
   >,
   close: () => void,
 ): SnackbarSlots | undefined {
-  const { actions, rightButtons, dense, color = "primary" } = props;
+  const { dense, actions, rightButtons, color = "primary" } = props;
 
   if (!actions?.accept && !actions?.reject) {
     return undefined;

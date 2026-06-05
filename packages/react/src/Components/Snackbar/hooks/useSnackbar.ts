@@ -158,8 +158,8 @@ export function useSnackbar(
   ]);
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    entry: bridgeSnackbar,
     props: customProps,
+    entry: bridgeSnackbar,
   });
 
   // Elements
@@ -400,8 +400,8 @@ export function useSnackbar(
 
     const handle = pushLayerStack({
       id: stackId,
-      order: stackOrderRef.current ?? undefined,
       lockScroll: false,
+      order: stackOrderRef.current ?? undefined,
       onEscape: () => {
         requestClose();
       },
@@ -447,14 +447,14 @@ export function useSnackbar(
     {},
     {
       "data-snackbar-layer": true,
+      style: {
+        zIndex: stackZIndex,
+      },
       className: cn(
         "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4",
         positionClass,
         get(mergedClasses, "portal") ?? "",
       ),
-      style: {
-        zIndex: stackZIndex,
-      },
     },
   );
 
@@ -462,13 +462,13 @@ export function useSnackbar(
     partsProps?.root,
     {
       ...rootInheritedAttrs,
-      role: rootInheritedAttrs.role ?? "status",
-      "aria-live": rootInheritedAttrs["aria-live"] ?? "polite",
       "data-snackbar-part": "panel",
       "data-state": transitionState,
-      onTransitionEnd: handlePanelTransitionEnd,
       onMouseEnter: pauseDismissTimer,
       onMouseLeave: resumeDismissTimer,
+      role: rootInheritedAttrs.role ?? "status",
+      onTransitionEnd: handlePanelTransitionEnd,
+      "aria-live": rootInheritedAttrs["aria-live"] ?? "polite",
     },
     cn({
       "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,

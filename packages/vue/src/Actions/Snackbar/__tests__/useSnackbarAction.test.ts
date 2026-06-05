@@ -261,10 +261,10 @@ test("host snackbar defaults should merge into open options", async () => {
 
   mount(BridgeSnackbarHost, {
     attachTo: document.body,
+    slots: { default: () => h(Consumer) },
     props: {
       snackbar: { dense: true, classes: { root: "host-shell" } },
     },
-    slots: { default: () => h(Consumer) },
   });
 
   await flushPromises();

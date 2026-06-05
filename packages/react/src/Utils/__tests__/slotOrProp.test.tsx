@@ -34,9 +34,9 @@ test("hasSlotOrProp is true when slot or prop is present", () => {
 test("resolveSlotOrProp prefers slot over fallback", () => {
   expect(
     resolveSlotOrProp({
-      slots: { description: <span>Slot</span> },
-      name: "description",
       fallback: "Prop",
+      name: "description",
+      slots: { description: <span>Slot</span> },
     }),
   ).toEqual(<span>Slot</span>);
 });
@@ -51,5 +51,5 @@ test("resolveSlotOrProp uses fallback when slot is absent", () => {
 });
 
 test("resolveSlotOrProp returns null when both are absent", () => {
-  expect(resolveSlotOrProp({ name: "description", fallback: "" })).toBeNull();
+  expect(resolveSlotOrProp({ fallback: "", name: "description" })).toBeNull();
 });

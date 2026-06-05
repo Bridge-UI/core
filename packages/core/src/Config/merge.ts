@@ -40,8 +40,8 @@ export function mergeBridgeUIComponents({
  * Resolves the bridge UI options.
  */
 export function resolveBridgeUIOptions(options: BridgeUIOptions = {}): {
-  global: BridgeUIGlobal;
   components: BridgeUIComponentsConfig;
+  global: BridgeUIGlobal;
 } {
   return {
     components: mergeBridgeUIComponents({

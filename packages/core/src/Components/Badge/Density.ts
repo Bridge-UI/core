@@ -4,8 +4,8 @@ import { defaultSizeProps, miniSizeProps } from "@core/Components/Badge/Size";
 
 // prettier-ignore
 export interface BadgeDensity {
-  "mini": BadgeSize;
   "default": BadgeSize;
+  "mini": BadgeSize;
 }
 
 // prettier-ignore

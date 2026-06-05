@@ -73,7 +73,7 @@ export function useCheckbox(
     });
   });
 
-  const { entry: bridgeCheckbox, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeCheckbox } = useBridgeUIComponent<
     CheckboxMerged,
     "Checkbox"
   >({

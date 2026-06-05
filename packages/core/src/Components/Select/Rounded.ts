@@ -1,20 +1,19 @@
 // prettier-ignore
 export interface SelectRounded {
-  "none": string;
-  "xs": string;
-  "sm": string;
-  "md": string;
-  "lg": string;
-  "xl": string;
   "2xl": string;
   "3xl": string;
   "4xl": string;
   "full": string;
+  "lg": string;
+  "md": string;
+  "none": string;
+  "sm": string;
+  "xl": string;
+  "xs": string;
 }
 
 // prettier-ignore
 export const roundedProps: SelectRounded = {
-  "none": "rounded-none",
   "xs": "rounded-xs",
   "sm": "rounded-sm",
   "md": "rounded-md",
@@ -23,5 +22,6 @@ export const roundedProps: SelectRounded = {
   "2xl": "rounded-2xl",
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
+  "none": "rounded-none",
   "full": "rounded-full",
 };

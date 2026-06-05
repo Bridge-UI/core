@@ -1,9 +1,9 @@
 // prettier-ignore
 export interface TextareaResize {
   "both": string;
+  "horizontal": string;
   "none": string;
   "vertical": string;
-  "horizontal": string;
 }
 
 // prettier-ignore

@@ -26,7 +26,7 @@ test("it should apply aria-disabled when disabled", () => {
 test("it should open in a new tab when external is true", () => {
   cy.mount(Link, {
     slots: { default: () => "External" },
-    props: { href: "https://example.com", external: true },
+    props: { external: true, href: "https://example.com" },
   });
 
   cy.get("a")

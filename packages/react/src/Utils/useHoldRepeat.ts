@@ -51,7 +51,7 @@ export function useHoldRepeat(
     stop();
     run();
 
-    const { initialDelayMs, intervalMs } = optionsRef.current ?? {};
+    const { intervalMs, initialDelayMs } = optionsRef.current ?? {};
 
     delayTimerRef.current = setTimeout(() => {
       intervalTimerRef.current = setInterval(

@@ -87,7 +87,7 @@ test("it should set aria-describedby on controlBind when description is provided
 });
 
 test("it should set label for attribute to control id", () => {
-  const { mainLabelBind, controlId } = mountUseSwitcher(
+  const { controlId, mainLabelBind } = mountUseSwitcher(
     { mainLabel: "Label" },
     { controlId: "switcher-id" },
   );

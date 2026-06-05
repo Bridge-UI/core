@@ -22,7 +22,7 @@ test("it should reflect controlled value", () => {
 test("it should increment by step", () => {
   const onChange = vi.fn();
   const { result } = renderHook(() =>
-    useNumberField({ modelValue: 2, onChange, step: 2 }),
+    useNumberField({ step: 2, onChange, modelValue: 2 }),
   );
 
   act(() => {
@@ -35,7 +35,7 @@ test("it should increment by step", () => {
 test("it should respect max when incrementing", () => {
   const onChange = vi.fn();
   const { result } = renderHook(() =>
-    useNumberField({ modelValue: 8, max: 9, step: 2, onChange }),
+    useNumberField({ max: 9, step: 2, onChange, modelValue: 8 }),
   );
 
   let didIncrement = false;

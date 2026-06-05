@@ -4,8 +4,8 @@ import { defaultSizeProps, miniSizeProps } from "@core/Components/Button/Size";
 
 // prettier-ignore
 export interface ButtonDensity {
-  "mini": ButtonSize;
   "default": ButtonSize;
+  "mini": ButtonSize;
 }
 
 // prettier-ignore

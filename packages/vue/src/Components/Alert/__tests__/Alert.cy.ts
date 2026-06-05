@@ -29,19 +29,19 @@ test("it should render the default icon for error color", () => {
 });
 
 test("it should not render an icon when icon is null", () => {
-  cy.mount(Alert, { props: { title: "No icon", icon: null } });
+  cy.mount(Alert, { props: { icon: null, title: "No icon" } });
 
   cy.get("svg").should("not.exist");
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  cy.mount(Alert, { props: { title: "Rounded", rounded: "lg" } });
+  cy.mount(Alert, { props: { rounded: "lg", title: "Rounded" } });
 
   cy.contains("Rounded").closest(".w-full").should("have.class", "rounded-lg");
 });
 
 test("it should apply shadow classes when shadow prop is set", () => {
-  cy.mount(Alert, { props: { title: "Shadow", shadow: "md" } });
+  cy.mount(Alert, { props: { shadow: "md", title: "Shadow" } });
 
   cy.contains("Shadow").closest(".w-full").should("have.class", "shadow-md");
 });

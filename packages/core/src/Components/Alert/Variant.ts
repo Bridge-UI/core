@@ -9,8 +9,8 @@ import {
 // prettier-ignore
 export interface AlertVariant {
   "flat": AlertColor;
-  "solid": AlertColor;
   "outline": AlertColor;
+  "solid": AlertColor;
 }
 
 // prettier-ignore

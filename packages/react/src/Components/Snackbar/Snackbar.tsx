@@ -31,8 +31,8 @@ function SnackbarPanel({
   titleBind,
   progressBind,
   resolvedIcon,
-  descriptionBind,
   requestClose,
+  descriptionBind,
 }: ReturnType<typeof useSnackbar> & { show: boolean }) {
   const hasRight = Boolean(slots?.right);
 
@@ -157,7 +157,7 @@ function Snackbar({
   ...ownProps
 }: SnackbarProps) {
   const snackbarState = useSnackbar(
-    { ...ownProps, show, onClose, onShowChange, stackId },
+    { ...ownProps, show, onClose, stackId, onShowChange },
     snackbarLibDefaults,
     { show, onClose, stackId, onShowChange },
   );

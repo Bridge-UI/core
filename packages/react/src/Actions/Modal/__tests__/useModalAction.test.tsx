@@ -167,13 +167,13 @@ test("closeTop should close only the topmost imperative modal", async () => {
           api = modal;
           outerId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Outer" },
+            modal: { transition: "none" },
           });
           innerId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Inner" },
+            modal: { transition: "none" },
           });
         }}
       />
@@ -209,10 +209,10 @@ test("onClose should run before onClosed when close is called", async () => {
         onMount={(modal) => {
           api = modal;
           id = modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
@@ -246,10 +246,10 @@ test("onClose should run before onClosed when escape is pressed", async () => {
       <RunOnMount
         onMount={(modal) => {
           modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
@@ -281,8 +281,8 @@ test("update should patch props on an open modal", async () => {
         onMount={(modal) => {
           const openedId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Before" },
+            modal: { transition: "none" },
           });
 
           modal.update(openedId, { props: { label: "After" } });
@@ -305,7 +305,7 @@ test("update should patch modal shell options on an open modal", async () => {
         onMount={(modal) => {
           const openedId = modal.open({
             component: Content,
-            modal: { transition: "none", size: "sm" },
+            modal: { size: "sm", transition: "none" },
           });
 
           modal.update(openedId, { modal: { size: "lg" } });
@@ -331,7 +331,7 @@ test("open with persistent modal should ignore escape", async () => {
           modal.open({
             onClose,
             component: Content,
-            modal: { transition: "none", persistent: true },
+            modal: { persistent: true, transition: "none" },
           });
         }}
       />
@@ -398,10 +398,10 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
         onMount={(modal) => {
           api = modal;
           id = modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
@@ -440,8 +440,8 @@ test("modal shell options must not override host-controlled props", async () => 
             component: Content,
             modal: {
               show: false,
-              transition: "none",
               onClose: vi.fn(),
+              transition: "none",
               onShowChange: vi.fn(),
             },
           });

@@ -217,14 +217,14 @@ export function useModal(
   // Binds
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+      onTransitionend: handleShellTransitionEnd,
+      style: {
+        zIndex: stackZIndex.value,
+      },
       class: cn({
         "fixed inset-0 overflow-y-auto": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-      style: {
-        zIndex: stackZIndex.value,
-      },
-      onTransitionend: handleShellTransitionEnd,
     });
   });
 

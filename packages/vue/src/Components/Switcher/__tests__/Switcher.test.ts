@@ -192,13 +192,13 @@ test("it should render main label from slot", () => {
           Switcher,
           { field },
           {
+            mainLabel: slots.mainLabel,
             default: () =>
               h("input", {
                 ...field.controlBind.value,
                 type: "checkbox",
                 "aria-label": "Control",
               }),
-            mainLabel: slots.mainLabel,
           },
         );
     },

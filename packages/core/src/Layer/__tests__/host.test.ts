@@ -22,7 +22,7 @@ test("findLayerEntry should return the matching entry", () => {
 
 test("invokeLayerDismiss should call onClose only when visible", () => {
   const onClose = vi.fn();
-  const entries: TestEntry[] = [{ id: "a", show: false, label: "A", onClose }];
+  const entries: TestEntry[] = [{ id: "a", onClose, label: "A", show: false }];
 
   invokeLayerDismiss(entries, "a");
 
@@ -32,7 +32,7 @@ test("invokeLayerDismiss should call onClose only when visible", () => {
 test("completeLayerHide should remove the entry and call onClosed", () => {
   const onClosed = vi.fn();
   const removeEntry = vi.fn();
-  const entries: TestEntry[] = [{ id: "a", show: false, label: "A", onClosed }];
+  const entries: TestEntry[] = [{ id: "a", onClosed, label: "A", show: false }];
 
   completeLayerHide(entries, "a", false, removeEntry);
 

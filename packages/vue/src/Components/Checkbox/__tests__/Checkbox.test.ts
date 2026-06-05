@@ -46,7 +46,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled on the input when disabled", () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept", disabled: true },
+    props: { disabled: true, mainLabel: "Accept" },
   });
 
   expect(
@@ -56,7 +56,7 @@ test("it should apply disabled on the input when disabled", () => {
 
 test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept", error: true },
+    props: { error: true, mainLabel: "Accept" },
   });
 
   expect(
@@ -66,7 +66,7 @@ test("it should set aria-invalid when error is set", () => {
 
 test("it should emit update:modelValue when toggled", async () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept", modelValue: false },
+    props: { modelValue: false, mainLabel: "Accept" },
   });
 
   await wrapper.find('input[type="checkbox"]').setValue(true);
@@ -76,7 +76,7 @@ test("it should emit update:modelValue when toggled", async () => {
 
 test("it should reflect checked state from modelValue", () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept", modelValue: true },
+    props: { modelValue: true, mainLabel: "Accept" },
   });
 
   expect(
@@ -87,7 +87,7 @@ test("it should reflect checked state from modelValue", () => {
 
 test("it should set indeterminate on the native input when indeterminate is true", async () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Select all", indeterminate: true, modelValue: false },
+    props: { modelValue: false, indeterminate: true, mainLabel: "Select all" },
   });
 
   await wrapper.vm.$nextTick();

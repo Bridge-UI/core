@@ -36,7 +36,7 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
     });
   });
 
-  const { entry: bridgeIcon, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeIcon } = useBridgeUIComponent<
     IconMerged,
     "Icon"
   >({

@@ -60,7 +60,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     });
   });
 
-  const { entry: bridgeLink, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeLink } = useBridgeUIComponent<
     LinkMerged,
     "Link"
   >({

@@ -1,7 +1,7 @@
 // prettier-ignore
 export interface SnackbarTransition {
-  "none": string;
   "fade": string;
+  "none": string;
   "slide": string;
 }
 

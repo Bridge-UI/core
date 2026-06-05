@@ -26,7 +26,7 @@ export type BridgeDialogHostProps = {
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeDialogHost /> detected. useDialogAction() will target the nearest host only. Remove the extra host.";
 
-export function BridgeDialogHost({ children, modal }: BridgeDialogHostProps) {
+export function BridgeDialogHost({ modal, children }: BridgeDialogHostProps) {
   const parentApi = useContext(BridgeDialogContext);
 
   const api = useBridgeDialogController();

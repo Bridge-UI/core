@@ -24,7 +24,7 @@ export type BridgeModalHostProps = {
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";
 
-export function BridgeModalHost({ children, modal }: BridgeModalHostProps) {
+export function BridgeModalHost({ modal, children }: BridgeModalHostProps) {
   const parentApi = useContext(BridgeModalContext);
   const api = useBridgeModalController();
 

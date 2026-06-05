@@ -56,7 +56,7 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
     });
   });
 
-  const { entry: bridgeBadge, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeBadge } = useBridgeUIComponent<
     BadgeMerged,
     "Badge"
   >({

@@ -278,8 +278,8 @@ export function pushLayerStack(
   stack.push({
     id,
     order,
-    onEscape: options.onEscape,
     lockScroll,
+    onEscape: options.onEscape,
   });
 
   const level = getLayerStackOrderRank(id);

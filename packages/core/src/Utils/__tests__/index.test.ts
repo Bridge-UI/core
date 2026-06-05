@@ -52,11 +52,11 @@ test("it should return the single layer when only one is provided", () => {
 
 test("it should merge multiple layers with later overriding earlier", () => {
   const result = mergeBridgeUILayeredClasses(
-    { root: "bg-red-500", icon: "text-sm" },
+    { icon: "text-sm", root: "bg-red-500" },
     { root: "bg-blue-500" },
   );
 
-  expect(result).toEqual({ root: "bg-blue-500", icon: "text-sm" });
+  expect(result).toEqual({ icon: "text-sm", root: "bg-blue-500" });
 });
 
 test("it should skip undefined layers", () => {
@@ -66,7 +66,7 @@ test("it should skip undefined layers", () => {
     { icon: "text-sm" },
   );
 
-  expect(result).toEqual({ root: "bg-red-500", icon: "text-sm" });
+  expect(result).toEqual({ icon: "text-sm", root: "bg-red-500" });
 });
 
 test("it should skip null layers", () => {
@@ -90,7 +90,7 @@ test("it should merge three layers progressively", () => {
 });
 
 test("it should return props as-is when no defaults or registry", () => {
-  const props = { color: "info" as const, shadow: "sm" as const };
+  const props = { shadow: "sm" as const, color: "info" as const };
 
   const result = mergePropsWithBridgeUIDefaults({
     props,
@@ -109,7 +109,7 @@ test("it should apply libDefaults when props are missing keys", () => {
     libDefaults: { shadow: "md" as never },
   });
 
-  expect(result).toEqual({ color: "error", shadow: "md" });
+  expect(result).toEqual({ shadow: "md", color: "error" });
 });
 
 test("it should let registry defaultProps override libDefaults", () => {
@@ -164,9 +164,9 @@ test("mergePartBind should merge bridge, inherited, and part", () => {
 
   expect(
     mergePartBind(
-      { class: "part", id: "user" },
+      { id: "user", class: "part" },
       { class: "inherited" },
-      { class: "bridge", id: "pkg" },
+      { id: "pkg", class: "bridge" },
     ),
   ).toEqual({
     id: "user",
@@ -180,7 +180,7 @@ test("mergePartBind should use className for React", () => {
   expect(
     mergePartBind(
       { className: "part" },
-      { className: "inherited", role: "alert" },
+      { role: "alert", className: "inherited" },
       "bridge",
     ),
   ).toEqual({

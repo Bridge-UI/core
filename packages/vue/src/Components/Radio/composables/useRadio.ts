@@ -66,7 +66,7 @@ export function useRadio(
     });
   });
 
-  const { entry: bridgeRadio, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeRadio } = useBridgeUIComponent<
     RadioMerged,
     "Radio"
   >({

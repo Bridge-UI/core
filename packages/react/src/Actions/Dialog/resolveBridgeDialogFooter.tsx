@@ -6,9 +6,9 @@ import type { ResolveBridgeDialogFooterOptions } from "@/Actions/Dialog/bridgeDi
 import { SnackbarActionControl } from "@/Actions/Snackbar/SnackbarActionControl";
 
 export function resolveBridgeDialogFooter({
-  acceptColor,
   actions,
   dismiss,
+  acceptColor,
 }: ResolveBridgeDialogFooterOptions): ReactNode | undefined {
   if (!actions?.accept && !actions?.reject) {
     return undefined;

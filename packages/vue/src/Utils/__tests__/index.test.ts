@@ -24,14 +24,14 @@ test("it should return entry classes when props has none", () => {
 
   scope.run(() => {
     const entry = computed(() => ({
-      classes: { root: "bg-red-500", icon: "text-sm" },
+      classes: { icon: "text-sm", root: "bg-red-500" },
     }));
 
     const result = useBridgeUIMergedRegistryClasses({ entry, props: {} });
 
     expect(result.value).toEqual({
-      root: "bg-red-500",
       icon: "text-sm",
+      root: "bg-red-500",
     });
   });
 
@@ -59,14 +59,14 @@ test("it should merge entry and props classes with props winning", () => {
 
   scope.run(() => {
     const entry = computed(() => ({
-      classes: { root: "bg-red-500", icon: "text-sm" },
+      classes: { icon: "text-sm", root: "bg-red-500" },
     }));
 
     const props = { classes: { root: "bg-blue-500" } };
 
     const result = useBridgeUIMergedRegistryClasses({ entry, props });
 
-    expect(result.value).toEqual({ root: "bg-blue-500", icon: "text-sm" });
+    expect(result.value).toEqual({ icon: "text-sm", root: "bg-blue-500" });
   });
 
   scope.stop();

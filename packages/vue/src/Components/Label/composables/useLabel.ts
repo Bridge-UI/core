@@ -46,7 +46,7 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
     });
   });
 
-  const { entry: bridgeLabel, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeLabel } = useBridgeUIComponent<
     LabelMerged,
     "Label"
   >({

@@ -7,25 +7,20 @@ export interface FormFieldRoundedItem {
 
 // prettier-ignore
 export interface FormFieldRounded {
-  "none": FormFieldRoundedItem;
-  "xs": FormFieldRoundedItem;
-  "sm": FormFieldRoundedItem;
-  "md": FormFieldRoundedItem;
-  "lg": FormFieldRoundedItem;
-  "xl": FormFieldRoundedItem;
   "2xl": FormFieldRoundedItem;
   "3xl": FormFieldRoundedItem;
   "4xl": FormFieldRoundedItem;
   "full": FormFieldRoundedItem;
+  "lg": FormFieldRoundedItem;
+  "md": FormFieldRoundedItem;
+  "none": FormFieldRoundedItem;
+  "sm": FormFieldRoundedItem;
+  "xl": FormFieldRoundedItem;
+  "xs": FormFieldRoundedItem;
 }
 
 // prettier-ignore
 export const roundedProps: FormFieldRounded = {
-  "none": {
-    "end": "rounded-none",
-    "input": "rounded-none",
-    "start": "rounded-none",
-  },
   "xs": {
     "end": "rounded-e-xs",
     "input": "rounded-xs",
@@ -50,6 +45,11 @@ export const roundedProps: FormFieldRounded = {
     "end": "rounded-e-xl",
     "input": "rounded-xl",
     "start": "rounded-s-xl",
+  },
+  "none": {
+    "end": "rounded-none",
+    "input": "rounded-none",
+    "start": "rounded-none",
   },
   "2xl": {
     "end": "rounded-e-2xl",

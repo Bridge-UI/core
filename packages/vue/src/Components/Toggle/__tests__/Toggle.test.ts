@@ -25,7 +25,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 
 test("it should emit update:modelValue when toggled", async () => {
   const wrapper = mount(Toggle, {
-    props: { mainLabel: "Notifications", modelValue: false },
+    props: { modelValue: false, mainLabel: "Notifications" },
   });
 
   await wrapper.find('input[role="switch"]').setValue(true);
@@ -35,7 +35,7 @@ test("it should emit update:modelValue when toggled", async () => {
 
 test("it should reflect checked state from modelValue", () => {
   const wrapper = mount(Toggle, {
-    props: { mainLabel: "Notifications", modelValue: true },
+    props: { modelValue: true, mainLabel: "Notifications" },
   });
 
   expect(
@@ -45,7 +45,7 @@ test("it should reflect checked state from modelValue", () => {
 
 test("it should apply disabled on the input when disabled", () => {
   const wrapper = mount(Toggle, {
-    props: { mainLabel: "Notifications", disabled: true },
+    props: { disabled: true, mainLabel: "Notifications" },
   });
 
   expect(
@@ -55,7 +55,7 @@ test("it should apply disabled on the input when disabled", () => {
 
 test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Toggle, {
-    props: { mainLabel: "Notifications", error: true },
+    props: { error: true, mainLabel: "Notifications" },
   });
 
   expect(wrapper.find('input[role="switch"]').attributes("aria-invalid")).toBe(

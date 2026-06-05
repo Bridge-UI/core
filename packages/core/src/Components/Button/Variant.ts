@@ -11,8 +11,8 @@ import {
 export interface ButtonVariant {
   "flat": ButtonColor;
   "light": ButtonColor;
-  "solid": ButtonColor;
   "outline": ButtonColor;
+  "solid": ButtonColor;
 }
 
 // prettier-ignore

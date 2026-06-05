@@ -45,7 +45,7 @@ export function useHoldRepeat(
     stop();
     run();
 
-    const { initialDelayMs, intervalMs } = toValue(options) ?? {};
+    const { intervalMs, initialDelayMs } = toValue(options) ?? {};
 
     delayTimer = setTimeout(() => {
       intervalTimer = setInterval(run, intervalMs ?? DEFAULT_INTERVAL_MS);

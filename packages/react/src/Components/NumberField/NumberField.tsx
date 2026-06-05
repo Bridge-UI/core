@@ -31,7 +31,7 @@ function NumberField(props: NumberFieldProps) {
 
   const mergedClasses = useNumberFieldClasses({ classes });
 
-  const { increment, decrement, handleChange, inputValue } = useNumberField({
+  const { increment, decrement, inputValue, handleChange } = useNumberField({
     min,
     max,
     step,

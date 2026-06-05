@@ -10,7 +10,7 @@ type UseNumberFieldOptions = Pick<
 >;
 
 export function useNumberField(options: UseNumberFieldOptions) {
-  const { min, max, modelValue, onChange, step = 1 } = options;
+  const { min, max, onChange, step = 1, modelValue } = options;
 
   const [internalValue, setInternalValue] = useState<number | undefined>(
     undefined,
