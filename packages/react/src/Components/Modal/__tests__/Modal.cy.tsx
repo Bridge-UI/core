@@ -15,6 +15,18 @@ test("it should render dialog when show is true", () => {
   cy.contains("Modal body").should("be.visible");
 });
 
+test("it should call onClose when the backdrop is clicked", () => {
+  cy.mount(
+    <Modal show transition="none" onClose={cy.stub().as("onClose")}>
+      Content
+    </Modal>,
+  );
+
+  cy.get('[aria-hidden="true"]').click({ force: true });
+
+  cy.get("@onClose").should("have.been.calledOnce");
+});
+
 test("it should call onShowChange when the backdrop is clicked", () => {
   cy.mount(
     <Modal show transition="none" onShowChange={cy.stub().as("onShowChange")}>

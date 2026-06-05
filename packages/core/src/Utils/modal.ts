@@ -8,18 +8,20 @@ import {
   type ModalTransition,
 } from "@core/Components/Modal/Transition";
 
-/** Base `z-index` for the first modal layer. Each nested modal adds 1. */
-export const MODAL_STACK_BASE_Z_INDEX = 50;
+/** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
+export const LAYER_STACK_BASE_Z_INDEX = 50;
 
 export type LayerId = string;
 
-type ModalStackEntry = {
+type LayerStackEntry = {
   id: LayerId;
   order: number;
   onEscape?: () => void;
 };
 
-const stack: ModalStackEntry[] = [];
+const stack: LayerStackEntry[] = [];
+
+const stackListeners = new Set<() => void>();
 
 let nextStackOrder = 0;
 let scrollLockCount = 0;
@@ -27,7 +29,7 @@ let fallbackIdCounter = 0;
 let savedBodyOverflow = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
-export type ModalStackHandle = {
+export type LayerStackHandle = {
   id: LayerId;
   order: number;
   level: number;
@@ -35,11 +37,27 @@ export type ModalStackHandle = {
   release: () => void;
 };
 
-export type ModalStackSnapshotEntry = {
+export type LayerStackSnapshotEntry = {
   id: LayerId;
   order: number;
   zIndex: number;
 };
+
+function notifyLayerStackListeners() {
+  stackListeners.forEach((listener) => listener());
+}
+
+/**
+ * Subscribes to global layer-stack changes (push / release). Use to refresh live
+ * `zIndex` when a sibling layer closes and rank shifts.
+ */
+export function subscribeLayerStack(listener: () => void): () => void {
+  stackListeners.add(listener);
+
+  return () => {
+    stackListeners.delete(listener);
+  };
+}
 
 /**
  * Attaches the escape listener.
@@ -68,9 +86,9 @@ function detachEscapeListener() {
 }
 
 /**
- * Gets the topmost modal stack entry.
+ * Gets the topmost layer stack entry.
  */
-function getTopStackEntry(): ModalStackEntry | undefined {
+function getTopStackEntry(): LayerStackEntry | undefined {
   return maxBy(stack, (entry) => entry.order);
 }
 
@@ -110,9 +128,9 @@ function lockBodyScroll() {
 }
 
 /**
- * Rank of an entry among open modals sorted by `order` (used for `level` / `zIndex`).
+ * Rank of an entry among open layers sorted by `order` (used for `level` / `zIndex`).
  */
-function getModalStackOrderRank(id: LayerId): number {
+function getLayerStackOrderRank(id: LayerId): number {
   const sorted = [...stack].sort((left, right) => left.order - right.order);
 
   const rank = sorted.findIndex((entry) => entry.id === id);
@@ -123,13 +141,13 @@ function getModalStackOrderRank(id: LayerId): number {
 /**
  * Maps a stack entry to a public snapshot shape.
  */
-function toStackSnapshotEntry(entry: ModalStackEntry): ModalStackSnapshotEntry {
-  const rank = getModalStackOrderRank(entry.id);
+function toStackSnapshotEntry(entry: LayerStackEntry): LayerStackSnapshotEntry {
+  const rank = getLayerStackOrderRank(entry.id);
 
   return {
     id: entry.id,
     order: entry.order,
-    zIndex: MODAL_STACK_BASE_Z_INDEX + rank,
+    zIndex: LAYER_STACK_BASE_Z_INDEX + rank,
   };
 }
 
@@ -151,7 +169,7 @@ function unlockBodyScroll() {
 /**
  * Assigns a monotonic open order (parent render runs before child).
  */
-export function acquireModalStackOrder(): number {
+export function acquireLayerStackOrder(): number {
   nextStackOrder += 1;
 
   return nextStackOrder;
@@ -202,11 +220,11 @@ export function getModalPanelTransitionClass(
 }
 
 /**
- * Looks up a stack entry by id.
+ * Looks up a stack entry by id (live `zIndex` rank).
  */
-export function getModalStackEntry(
+export function getLayerStackEntry(
   id: LayerId,
-): ModalStackSnapshotEntry | undefined {
+): LayerStackSnapshotEntry | undefined {
   const entry = stack.find((item) => item.id === id);
 
   if (!entry) {
@@ -217,9 +235,9 @@ export function getModalStackEntry(
 }
 
 /**
- * Returns a read-only snapshot of open modals (for imperative APIs / debugging).
+ * Returns a read-only snapshot of open layers (for imperative APIs / debugging).
  */
-export function getModalStackSnapshot(): readonly ModalStackSnapshotEntry[] {
+export function getLayerStackSnapshot(): readonly LayerStackSnapshotEntry[] {
   return stack.map(toStackSnapshotEntry);
 }
 
@@ -230,28 +248,28 @@ export function hasModalTransition(
 }
 
 /**
- * Whether the given handle is the topmost modal on the stack.
+ * Whether the given handle is the topmost layer on the stack.
  */
-export function isModalStackTop(id: LayerId): boolean {
+export function isLayerStackTop(id: LayerId): boolean {
   const top = getTopStackEntry();
 
   return top?.id === id;
 }
 
 /**
- * Registers a modal on the global stack (scroll lock + escape routing).
- * Pass `order` from {@link acquireModalStackOrder} during render so parent/child
- * stacking matches visual order. Call `release()` when the modal closes.
+ * Registers a layer on the global stack (scroll lock + escape routing).
+ * Pass `order` from {@link acquireLayerStackOrder} during render so parent/child
+ * stacking matches visual order. Call `release()` when the layer closes.
  */
-export function pushModalStack(
+export function pushLayerStack(
   options: {
     id?: LayerId;
     order?: number;
     onEscape?: () => void;
   } = {},
-): ModalStackHandle {
+): LayerStackHandle {
   const id = createLayerId(options.id);
-  const order = options.order ?? acquireModalStackOrder();
+  const order = options.order ?? acquireLayerStackOrder();
 
   stack.push({
     id,
@@ -259,16 +277,17 @@ export function pushModalStack(
     onEscape: options.onEscape,
   });
 
-  const level = getModalStackOrderRank(id);
+  const level = getLayerStackOrderRank(id);
 
   lockBodyScroll();
   attachEscapeListener();
+  notifyLayerStackListeners();
 
   return {
     id,
     order,
     level,
-    zIndex: MODAL_STACK_BASE_Z_INDEX + level,
+    zIndex: LAYER_STACK_BASE_Z_INDEX + level,
     release: () => {
       remove(stack, (entry) => entry.id === id);
 
@@ -277,6 +296,8 @@ export function pushModalStack(
       if (stack.length === 0) {
         detachEscapeListener();
       }
+
+      notifyLayerStackListeners();
     },
   };
 }
@@ -284,7 +305,7 @@ export function pushModalStack(
 /**
  * Resets stack state. For tests only.
  */
-export function resetModalStackForTests() {
+export function resetLayerStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
@@ -296,6 +317,7 @@ export function resetModalStackForTests() {
   }
 
   detachEscapeListener();
+  notifyLayerStackListeners();
 }
 
 /**

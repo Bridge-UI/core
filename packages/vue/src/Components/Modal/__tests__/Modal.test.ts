@@ -6,7 +6,7 @@ import { defineComponent, h, ref } from "vue";
 // ** Local Imports
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
-import { resetModalStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -14,7 +14,7 @@ afterEach(async () => {
   }
 
   await flushPromises();
-  resetModalStackForTests();
+  resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });

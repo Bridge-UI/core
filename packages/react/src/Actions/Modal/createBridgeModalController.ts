@@ -6,6 +6,8 @@ import {
   closeLayer,
   closeTopLayer,
   createLayerId,
+  createOpenLayerEntry,
+  hideLayer,
   isLayerMounted,
   removeLayer,
   updateLayer,
@@ -23,15 +25,13 @@ function toEntry<TProps>(
   id: string,
   options: BridgeModalOpenOptions<TProps>,
 ): BridgeModalEntry {
-  return {
-    id,
-    show: true,
+  return createOpenLayerEntry<BridgeModalEntry>(id, {
     modal: options.modal,
     onClose: options.onClose,
     onClosed: options.onClosed,
     props: options.props as Record<string, unknown> | undefined,
     component: options.component as BridgeModalEntry["component"],
-  };
+  });
 }
 
 export function useBridgeModalController(): BridgeModalController {
@@ -75,6 +75,20 @@ export function useBridgeModalController(): BridgeModalController {
     [],
   );
 
+  const syncShow = useCallback((id: string, show: boolean) => {
+    setEntries((current) => {
+      const entry = current.find((item) => item.id === id);
+
+      if (!entry || entry.show === show) {
+        return current;
+      }
+
+      return show
+        ? updateLayer(current, id, { show: true })
+        : hideLayer(current, id);
+    });
+  }, []);
+
   return useMemo(() => {
     return {
       open,
@@ -83,7 +97,8 @@ export function useBridgeModalController(): BridgeModalController {
       update,
       entries,
       closeTop,
+      syncShow,
       removeEntry,
     };
-  }, [open, close, isOpen, update, entries, closeTop, removeEntry]);
+  }, [open, close, isOpen, update, entries, closeTop, syncShow, removeEntry]);
 }

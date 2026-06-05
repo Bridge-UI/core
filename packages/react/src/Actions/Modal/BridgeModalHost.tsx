@@ -70,11 +70,14 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
         return (
           <Modal
             key={entryId}
+            {...entry.modal}
             show={entry.show}
             stackId={entryId}
             onClose={() => handleDismiss(entryId, api)}
-            onShowChange={(show) => handleShowChange(entryId, api, show)}
-            {...entry.modal}
+            onShowChange={(show) => {
+              api.syncShow(entryId, show);
+              handleShowChange(entryId, api, show);
+            }}
           >
             {createElement(Component, entry.props ?? {})}
           </Modal>

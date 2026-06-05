@@ -5,10 +5,10 @@ import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useModal, type ModalOwnProps } from "@/Components/Modal";
-import { resetModalStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
-  resetModalStackForTests();
+  resetLayerStackForTests();
   document.body.style.overflow = "";
 });
 

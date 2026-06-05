@@ -6,34 +6,35 @@ import { afterEach, expect, test, vi } from "vitest";
 // ** Local Imports
 import {
   createLayerId,
-  getModalStackEntry,
-  getModalStackSnapshot,
-  isModalStackTop,
-  MODAL_STACK_BASE_Z_INDEX,
-  pushModalStack,
-  resetModalStackForTests,
+  getLayerStackEntry,
+  getLayerStackSnapshot,
+  isLayerStackTop,
+  LAYER_STACK_BASE_Z_INDEX,
+  pushLayerStack,
+  resetLayerStackForTests,
+  subscribeLayerStack,
 } from "@core/Utils/modal";
 
 afterEach(() => {
-  resetModalStackForTests();
+  resetLayerStackForTests();
 });
 
-test("pushModalStack should increment z-index per level", () => {
-  const outer = pushModalStack();
-  const inner = pushModalStack();
+test("pushLayerStack should increment z-index per level", () => {
+  const outer = pushLayerStack();
+  const inner = pushLayerStack();
 
   expect(outer.level).toBe(0);
   expect(inner.level).toBe(1);
-  expect(outer.zIndex).toBe(MODAL_STACK_BASE_Z_INDEX);
-  expect(inner.zIndex).toBe(MODAL_STACK_BASE_Z_INDEX + 1);
+  expect(outer.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX);
+  expect(inner.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX + 1);
 });
 
-test("pushModalStack should ref-count body scroll lock", () => {
-  const outer = pushModalStack();
+test("pushLayerStack should ref-count body scroll lock", () => {
+  const outer = pushLayerStack();
 
   expect(document.body.style.overflow).toBe("hidden");
 
-  const inner = pushModalStack();
+  const inner = pushLayerStack();
 
   inner.release();
 
@@ -48,8 +49,8 @@ test("escape should invoke only the topmost modal handler", () => {
   const outerEscape = vi.fn();
   const innerEscape = vi.fn();
 
-  pushModalStack({ order: 1, onEscape: outerEscape });
-  pushModalStack({ order: 2, onEscape: innerEscape });
+  pushLayerStack({ order: 1, onEscape: outerEscape });
+  pushLayerStack({ order: 2, onEscape: innerEscape });
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
@@ -57,20 +58,20 @@ test("escape should invoke only the topmost modal handler", () => {
   expect(outerEscape).not.toHaveBeenCalled();
 });
 
-test("isModalStackTop should reflect highest open order", () => {
-  const outer = pushModalStack({ order: 1 });
-  const inner = pushModalStack({ order: 2 });
+test("isLayerStackTop should reflect highest open order", () => {
+  const outer = pushLayerStack({ order: 1 });
+  const inner = pushLayerStack({ order: 2 });
 
-  expect(isModalStackTop(outer.id)).toBe(false);
-  expect(isModalStackTop(inner.id)).toBe(true);
+  expect(isLayerStackTop(outer.id)).toBe(false);
+  expect(isLayerStackTop(inner.id)).toBe(true);
 
   inner.release();
 
-  expect(isModalStackTop(outer.id)).toBe(true);
+  expect(isLayerStackTop(outer.id)).toBe(true);
 });
 
-test("pushModalStack should use string ids", () => {
-  const handle = pushModalStack();
+test("pushLayerStack should use string ids", () => {
+  const handle = pushLayerStack();
 
   expect(typeof handle.id).toBe("string");
   expect(handle.id.length).toBeGreaterThan(0);
@@ -89,48 +90,83 @@ test("createLayerId should use assigned id when provided", () => {
   expect(createLayerId("host-assigned-id")).toBe("host-assigned-id");
 });
 
-test("pushModalStack should use pre-assigned id", () => {
-  const handle = pushModalStack({ id: "fixed-stack-id" });
+test("pushLayerStack should use pre-assigned id", () => {
+  const handle = pushLayerStack({ id: "fixed-stack-id" });
 
   expect(handle.id).toBe("fixed-stack-id");
-  expect(getModalStackEntry("fixed-stack-id")?.id).toBe("fixed-stack-id");
+  expect(getLayerStackEntry("fixed-stack-id")?.id).toBe("fixed-stack-id");
 
   handle.release();
 });
 
-test("getModalStackSnapshot should list open modals", () => {
-  const outer = pushModalStack({ order: 1 });
-  const inner = pushModalStack({ order: 2 });
+test("getLayerStackSnapshot should list open modals", () => {
+  const outer = pushLayerStack({ order: 1 });
+  const inner = pushLayerStack({ order: 2 });
 
-  expect(getModalStackSnapshot()).toEqual([
+  expect(getLayerStackSnapshot()).toEqual([
     {
       id: outer.id,
       order: 1,
-      zIndex: MODAL_STACK_BASE_Z_INDEX,
+      zIndex: LAYER_STACK_BASE_Z_INDEX,
     },
     {
       id: inner.id,
       order: 2,
-      zIndex: MODAL_STACK_BASE_Z_INDEX + 1,
+      zIndex: LAYER_STACK_BASE_Z_INDEX + 1,
     },
   ]);
 
-  expect(getModalStackEntry(outer.id)?.id).toBe(outer.id);
-  expect(getModalStackEntry(inner.id)?.id).toBe(inner.id);
+  expect(getLayerStackEntry(outer.id)?.id).toBe(outer.id);
+  expect(getLayerStackEntry(inner.id)?.id).toBe(inner.id);
 
   inner.release();
   outer.release();
 });
 
-test("getModalStackEntry should rank z-index by order not push order", () => {
-  const later = pushModalStack({ order: 2 });
-  const earlier = pushModalStack({ order: 1 });
+test("subscribeLayerStack should notify on push and release", () => {
+  const listener = vi.fn();
 
-  expect(getModalStackEntry(later.id)?.zIndex).toBe(
-    MODAL_STACK_BASE_Z_INDEX + 1,
+  const unsubscribe = subscribeLayerStack(listener);
+
+  const handle = pushLayerStack();
+
+  expect(listener).toHaveBeenCalledTimes(1);
+
+  handle.release();
+
+  expect(listener).toHaveBeenCalledTimes(2);
+
+  unsubscribe();
+});
+
+test("getLayerStackEntry should rank z-index by order not push order", () => {
+  const later = pushLayerStack({ order: 2 });
+  const earlier = pushLayerStack({ order: 1 });
+
+  expect(getLayerStackEntry(later.id)?.zIndex).toBe(
+    LAYER_STACK_BASE_Z_INDEX + 1,
   );
-  expect(getModalStackEntry(earlier.id)?.zIndex).toBe(MODAL_STACK_BASE_Z_INDEX);
+  expect(getLayerStackEntry(earlier.id)?.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX);
 
   later.release();
   earlier.release();
+});
+
+test("getLayerStackEntry should return live z-index after sibling releases", () => {
+  const outer = pushLayerStack({ order: 1 });
+  const middle = pushLayerStack({ order: 2 });
+  const inner = pushLayerStack({ order: 3 });
+
+  expect(getLayerStackEntry(inner.id)?.zIndex).toBe(
+    LAYER_STACK_BASE_Z_INDEX + 2,
+  );
+
+  middle.release();
+
+  expect(getLayerStackEntry(inner.id)?.zIndex).toBe(
+    LAYER_STACK_BASE_Z_INDEX + 1,
+  );
+
+  inner.release();
+  outer.release();
 });

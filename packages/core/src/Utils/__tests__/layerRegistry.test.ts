@@ -5,6 +5,7 @@ import { expect, test, vi } from "vitest";
 import {
   closeLayer,
   closeTopLayer,
+  createOpenLayerEntry,
   getLayerCount,
   hideLayer,
   isLayerMounted,
@@ -18,6 +19,12 @@ type TestEntry = LayerRegistryEntry & { label: string };
 function createEntry(id: string, label: string, show = true): TestEntry {
   return { id, show, label };
 }
+
+test("createOpenLayerEntry should create a visible entry", () => {
+  const entry = createOpenLayerEntry<TestEntry>("a", { label: "A" });
+
+  expect(entry).toEqual({ id: "a", show: true, label: "A" });
+});
 
 test("closeLayer should invoke onClose before hiding", () => {
   const onClose = vi.fn();

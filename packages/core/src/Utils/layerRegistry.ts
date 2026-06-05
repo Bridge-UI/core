@@ -33,7 +33,21 @@ export function hideLayer<T extends LayerRegistryEntry>(
 }
 
 /**
+ * Creates a newly opened registry entry (`show: true`).
+ */
+export function createOpenLayerEntry<T extends LayerRegistryEntry>(
+  id: string,
+  fields: Omit<T, "id" | "show">,
+): T {
+  return { id, show: true, ...fields } as T;
+}
+
+/**
  * Invokes `onClose` and hides the entry (imperative dismiss).
+ *
+ * `onClose` runs on the entry from the input array before returning the next
+ * immutable snapshot. Synchronous callbacks that close other layers are supported,
+ * but the caller must apply the returned array for state to update.
  */
 export function closeLayer<T extends LayerRegistryEntry>(
   entries: T[],

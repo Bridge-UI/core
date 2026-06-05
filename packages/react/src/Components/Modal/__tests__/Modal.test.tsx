@@ -14,13 +14,13 @@ import { afterEach, expect, test, vi } from "vitest";
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
 import {
-  MODAL_STACK_BASE_Z_INDEX,
-  resetModalStackForTests,
+  LAYER_STACK_BASE_Z_INDEX,
+  resetLayerStackForTests,
 } from "@bridge-ui/core";
 
 afterEach(() => {
   cleanup();
-  resetModalStackForTests();
+  resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
@@ -335,8 +335,68 @@ test("it should assign incremental z-index to nested modals", async () => {
       .sort((left, right) => left - right);
 
     expect(zIndexes).toEqual([
-      MODAL_STACK_BASE_Z_INDEX,
-      MODAL_STACK_BASE_Z_INDEX + 1,
+      LAYER_STACK_BASE_Z_INDEX,
+      LAYER_STACK_BASE_Z_INDEX + 1,
+    ]);
+  });
+});
+
+test("it should refresh z-index when a sibling modal unmounts", async () => {
+  const onInnerChange = vi.fn();
+
+  function ThreeModals() {
+    const [innerOpen, setInnerOpen] = useState(true);
+    const [outerOpen, setOuterOpen] = useState(true);
+    const [middleOpen, setMiddleOpen] = useState(true);
+
+    return (
+      <>
+        <Modal show={outerOpen} transition="none">
+          Outer
+        </Modal>
+        <Modal show={middleOpen} transition="none">
+          Middle
+        </Modal>
+        <Modal
+          show={innerOpen}
+          transition="none"
+          onShowChange={(show) => {
+            setInnerOpen(show);
+            onInnerChange(show);
+          }}
+        >
+          Inner
+        </Modal>
+      </>
+    );
+  }
+
+  render(<ThreeModals />);
+
+  await waitFor(() => {
+    expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(3);
+  });
+
+  act(() => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
+
+  await waitFor(() => {
+    expect(onInnerChange).toHaveBeenCalledWith(false);
+  });
+
+  await waitFor(() => {
+    const zIndexes = [
+      ...document.body.querySelectorAll<HTMLElement>(
+        ".fixed.inset-0.overflow-y-auto",
+      ),
+    ]
+      .map((root) => Number(root.style.zIndex))
+      .sort((left, right) => left - right);
+
+    expect(zIndexes).toEqual([
+      LAYER_STACK_BASE_Z_INDEX,
+      LAYER_STACK_BASE_Z_INDEX + 1,
     ]);
   });
 });

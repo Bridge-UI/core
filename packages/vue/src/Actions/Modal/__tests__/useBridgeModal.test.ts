@@ -6,16 +6,20 @@ import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, onMounted } from "vue";
 
 // ** Local Imports
-import { BridgeModalHostMissingError, useBridgeModal } from "@/Actions/Modal";
+import {
+  BridgeModalHost,
+  BridgeModalHostMissingError,
+  useBridgeModal,
+} from "@/Actions/Modal";
 import { BridgeUIProvider } from "@/Provider";
 import {
-  MODAL_STACK_BASE_Z_INDEX,
-  resetModalStackForTests,
+  LAYER_STACK_BASE_Z_INDEX,
+  resetLayerStackForTests,
 } from "@bridge-ui/core";
 
 afterEach(async () => {
   await flushPromises();
-  resetModalStackForTests();
+  resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
@@ -378,7 +382,101 @@ test("stacked imperative modals should use incremental z-index", async () => {
     .sort((left, right) => left - right);
 
   expect(zIndexes).toEqual([
-    MODAL_STACK_BASE_Z_INDEX,
-    MODAL_STACK_BASE_Z_INDEX + 1,
+    LAYER_STACK_BASE_Z_INDEX,
+    LAYER_STACK_BASE_Z_INDEX + 1,
   ]);
+});
+
+test("onClose should run before onClosed when the overlay is clicked", async () => {
+  const onClose = vi.fn();
+  const onClosed = vi.fn();
+  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let id = "";
+
+  const Consumer = defineComponent({
+    setup() {
+      bridgeModal = useBridgeModal();
+
+      onMounted(() => {
+        id = bridgeModal.open({
+          component: Content,
+          modal: { transition: "none" },
+          onClose,
+          onClosed,
+        });
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mountWithProvider(Consumer);
+
+  await flushPromises();
+
+  document.body.querySelector<HTMLElement>('[aria-hidden="true"]')?.click();
+
+  await flushPromises();
+
+  expect(onClose).toHaveBeenCalledOnce();
+  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
+    onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+  );
+  expect(onClosed).toHaveBeenCalledOnce();
+  expect(bridgeModal.isOpen(id)).toBe(false);
+});
+
+test("modal shell options must not override host-controlled props", async () => {
+  const onClose = vi.fn();
+
+  const Consumer = defineComponent({
+    setup() {
+      const modal = useBridgeModal();
+
+      onMounted(() => {
+        modal.open({
+          onClose,
+          component: Content,
+          modal: {
+            show: false,
+            transition: "none",
+            onShowChange: vi.fn(),
+          },
+        });
+      });
+
+      return () => h("div");
+    },
+  });
+
+  mountWithProvider(Consumer);
+
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  await flushPromises();
+
+  expect(onClose).toHaveBeenCalledOnce();
+});
+
+test("nested BridgeModalHost should warn in development", async () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+  const Root = defineComponent({
+    components: { BridgeUIProvider, BridgeModalHost },
+    template:
+      "<BridgeUIProvider><BridgeModalHost><span>nested</span></BridgeModalHost></BridgeUIProvider>",
+  });
+
+  mount(Root);
+
+  await flushPromises();
+
+  expect(warn).toHaveBeenCalledWith(
+    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.",
+  );
+
+  warn.mockRestore();
 });

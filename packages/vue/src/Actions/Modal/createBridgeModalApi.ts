@@ -6,6 +6,7 @@ import {
   closeLayer,
   closeTopLayer,
   createLayerId,
+  createOpenLayerEntry,
   hideLayer,
   isLayerMounted,
   removeLayer,
@@ -24,15 +25,13 @@ function toEntry(
   id: string,
   options: BridgeModalOpenOptions,
 ): BridgeModalEntry {
-  return {
-    id,
-    show: true,
+  return createOpenLayerEntry<BridgeModalEntry>(id, {
     modal: options.modal,
     props: options.props,
     onClose: options.onClose,
     onClosed: options.onClosed,
     component: markRaw(options.component),
-  };
+  });
 }
 
 export function createBridgeModalApi(): BridgeModalController {

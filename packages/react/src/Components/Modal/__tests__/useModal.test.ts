@@ -8,10 +8,10 @@ import {
   type ModalOwnProps,
   type ModalProps,
 } from "@/Components/Modal";
-import { resetModalStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
-  resetModalStackForTests();
+  resetLayerStackForTests();
   document.body.style.overflow = "";
 });
 

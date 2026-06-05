@@ -13,20 +13,22 @@ import {
 
 // ** Core Imports
 import {
-  acquireModalStackOrder,
+  acquireLayerStackOrder,
   cn,
   countModalTransitionLayers,
+  getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   hasModalTransition,
+  LAYER_STACK_BASE_Z_INDEX,
   mergeBridgeUILayeredClasses,
-  MODAL_STACK_BASE_Z_INDEX,
-  pushModalStack,
+  pushLayerStack,
   resolveEffectiveModalTransition,
   splitComponentProps,
+  subscribeLayerStack,
+  type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type ModalStackHandle,
   type ModalTransition,
 } from "@bridge-ui/core";
 import {
@@ -112,9 +114,10 @@ export function useModal(
 
   let stackOrder: number | null = null;
 
-  let stackHandle: ModalStackHandle | null = null;
+  let stackHandle: LayerStackHandle | null = null;
+  let unsubscribeLayerStack: (() => void) | null = null;
 
-  const stackZIndex = ref(MODAL_STACK_BASE_Z_INDEX);
+  const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
   const transitionState = ref<"open" | "closed">("closed");
 
@@ -416,13 +419,21 @@ export function useModal(
     { immediate: true },
   );
 
+  function syncZIndex() {
+    const snapshot = getLayerStackEntry(modalStackId.value);
+
+    if (snapshot) {
+      stackZIndex.value = snapshot.zIndex;
+    }
+  }
+
   watch(
     rendered,
     (isRendered) => {
       if (isRendered) {
-        stackOrder = acquireModalStackOrder();
+        stackOrder = acquireLayerStackOrder();
 
-        stackHandle = pushModalStack({
+        stackHandle = pushLayerStack({
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
@@ -430,18 +441,24 @@ export function useModal(
 
         modalStackId.value = stackHandle.id;
         stackZIndex.value = stackHandle.zIndex;
+        syncZIndex();
+        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
       } else {
+        unsubscribeLayerStack?.();
+        unsubscribeLayerStack = null;
         stackHandle?.release();
         stackHandle = null;
         stackOrder = null;
         modalStackId.value = "";
-        stackZIndex.value = MODAL_STACK_BASE_Z_INDEX;
+        stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
       }
     },
     { immediate: true },
   );
 
   onBeforeUnmount(() => {
+    unsubscribeLayerStack?.();
+    unsubscribeLayerStack = null;
     stackHandle?.release();
     stackHandle = null;
   });

@@ -12,20 +12,22 @@ import {
 
 // ** Core Imports
 import {
-  acquireModalStackOrder,
+  acquireLayerStackOrder,
   cn,
   countModalTransitionLayers,
+  getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   hasModalTransition,
+  LAYER_STACK_BASE_Z_INDEX,
   mergeBridgeUILayeredClasses,
-  MODAL_STACK_BASE_Z_INDEX,
-  pushModalStack,
+  pushLayerStack,
   resolveEffectiveModalTransition,
   splitComponentProps,
+  subscribeLayerStack,
+  type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type ModalStackHandle,
   type ModalTransition,
 } from "@bridge-ui/core";
 import {
@@ -111,9 +113,9 @@ export function useModal(
 
   const stackOrderRef = useRef<number | null>(null);
 
-  const stackHandleRef = useRef<ModalStackHandle | null>(null);
+  const stackHandleRef = useRef<LayerStackHandle | null>(null);
 
-  const [stackZIndex, setStackZIndex] = useState(MODAL_STACK_BASE_Z_INDEX);
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
     "closed",
@@ -157,7 +159,7 @@ export function useModal(
   const transitionEnabled = hasModalTransition(effectiveTransition);
 
   if (show && stackOrderRef.current === null) {
-    stackOrderRef.current = acquireModalStackOrder();
+    stackOrderRef.current = acquireLayerStackOrder();
   }
 
   if (!show && !rendered && stackOrderRef.current !== null) {
@@ -328,7 +330,7 @@ export function useModal(
     if (!rendered || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
-      setStackZIndex(MODAL_STACK_BASE_Z_INDEX);
+      setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
 
       return;
     }
@@ -341,7 +343,7 @@ export function useModal(
       requestClose();
     }
 
-    const handle = pushModalStack({
+    const handle = pushLayerStack({
       id: stackId,
       order: stackOrderRef.current,
       onEscape: handleEscape,
@@ -359,6 +361,28 @@ export function useModal(
       modalStackIdRef.current = "";
     };
   }, [show, stackId, rendered, merged.persistent, merged.closeOnEscape]);
+
+  useEffect(() => {
+    if (!rendered) {
+      return;
+    }
+
+    function syncZIndex() {
+      const snapshot = getLayerStackEntry(modalStackIdRef.current);
+
+      if (!snapshot) {
+        return;
+      }
+
+      setStackZIndex((previous) => {
+        return previous === snapshot.zIndex ? previous : snapshot.zIndex;
+      });
+    }
+
+    syncZIndex();
+
+    return subscribeLayerStack(syncZIndex);
+  }, [rendered]);
 
   // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
