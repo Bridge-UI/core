@@ -1,39 +1,33 @@
 <script setup lang="ts">
 // ** External Imports
-import { get } from "es-toolkit/compat";
-import { computed, inject, provide } from "vue";
-
-// ** Core Imports
-import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  snackbarPositionProps,
-} from "@bridge-ui/core";
+import { inject, provide } from "vue";
 
 // ** Local Imports
 import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbarInjectionKey";
 import BridgeSnackbarItem from "@/Actions/Snackbar/BridgeSnackbarItem.vue";
 import { createBridgeSnackbarApi } from "@/Actions/Snackbar/createBridgeSnackbarApi";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host.";
 
-const props = withDefaults(
-  defineProps<{
-    position?: keyof typeof snackbarPositionProps;
-    teleportTo?: string | false;
-    /**
-     * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
-     * Per-call `open()` options override these.
-     */
-    snackbar?: BridgeSnackbarShellProps;
-  }>(),
-  {
-    teleportTo: "body",
-  },
-);
+const props = defineProps<{
+  /**
+   * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
+   * Per-call `open()` options override these.
+   */
+  snackbar?: BridgeSnackbarShellProps;
+  /**
+   * Maximum open snackbars. When exceeded, the oldest closes before opening the new one.
+   */
+  max?: number;
+  /**
+   * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
+   *
+   * @default 5000
+   */
+  timeout?: number | false;
+}>();
 
 const parentApi = inject(BRIDGE_SNACKBAR_INJECTION_KEY, null);
 
@@ -41,67 +35,22 @@ if (parentApi && process.env.NODE_ENV !== "production") {
   console.warn(NESTED_HOST_WARNING);
 }
 
-const api = createBridgeSnackbarApi();
-const bridge = useBridgeUI();
+const api = createBridgeSnackbarApi({
+  max: props.max,
+  timeout: props.timeout,
+});
 
 provide(BRIDGE_SNACKBAR_INJECTION_KEY, api);
-
-const snackbarEntries = computed(() => api.entries.value);
-
-const snackbarEntry = computed(() => bridge?.components.value.Snackbar);
-
-const resolvedPosition = computed(() => {
-  return (
-    props.position ??
-    snackbarEntry.value?.defaultProps?.position ??
-    "bottom-center"
-  );
-});
-
-const positionClass = computed(() => {
-  const classes = mergeBridgeUILayeredClasses(
-    snackbarPositionProps,
-    snackbarEntry.value?.customProps?.position,
-  );
-
-  return get(classes, resolvedPosition.value);
-});
-
-const teleportDisabled = computed(() => props.teleportTo === false);
-
-const teleportTarget = computed(() => {
-  if (props.teleportTo === false) {
-    return "body";
-  }
-
-  return props.teleportTo;
-});
 </script>
 
 <template>
   <slot />
 
-  <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div
-      data-snackbar-host
-      :class="
-        cn(
-          'fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4',
-          positionClass,
-        )
-      "
-    >
-      <div
-        class="flex flex-col-reverse w-full max-w-sm gap-y-2 pointer-events-auto"
-      >
-        <BridgeSnackbarItem
-          :key="entry.id"
-          v-for="entry in snackbarEntries"
-          :api="api"
-          :entry="entry"
-          :host-snackbar="props.snackbar"
-        />
-      </div>
-    </div>
-  </Teleport>
+  <BridgeSnackbarItem
+    :key="entry.id"
+    v-for="entry in api.entries.value"
+    :api="api"
+    :entry="entry"
+    :host-snackbar="props.snackbar"
+  />
 </template>

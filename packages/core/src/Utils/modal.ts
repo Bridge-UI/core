@@ -18,6 +18,7 @@ type LayerStackEntry = {
   id: LayerId;
   order: number;
   onEscape?: () => void;
+  lockScroll?: boolean;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -267,20 +268,31 @@ export function pushLayerStack(
     id?: LayerId;
     order?: number;
     onEscape?: () => void;
+    /**
+     * Locks `document.body` overflow while this layer is open.
+     *
+     * @default true
+     */
+    lockScroll?: boolean;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);
   const order = options.order ?? acquireLayerStackOrder();
+  const lockScroll = options.lockScroll !== false;
 
   stack.push({
     id,
     order,
     onEscape: options.onEscape,
+    lockScroll,
   });
 
   const level = getLayerStackOrderRank(id);
 
-  lockBodyScroll();
+  if (lockScroll) {
+    lockBodyScroll();
+  }
+
   attachEscapeListener();
   notifyLayerStackListeners();
 
@@ -290,9 +302,13 @@ export function pushLayerStack(
     level,
     zIndex: LAYER_STACK_BASE_Z_INDEX + level,
     release: () => {
-      remove(stack, (entry) => entry.id === id);
+      const entry = stack.find((item) => item.id === id);
 
-      unlockBodyScroll();
+      remove(stack, (item) => item.id === id);
+
+      if (entry?.lockScroll !== false) {
+        unlockBodyScroll();
+      }
 
       if (stack.length === 0) {
         detachEscapeListener();

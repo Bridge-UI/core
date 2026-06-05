@@ -64,7 +64,6 @@ const hasTrailing = computed(() => {
     v-bind="snackbarProps"
     :stack-id="entry.id"
     :model-value="entry.show"
-    :teleport-to="false"
     v-on:close="dismissFromSnackbar"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
     :on-show-change="

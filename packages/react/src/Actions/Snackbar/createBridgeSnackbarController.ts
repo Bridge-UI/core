@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 // ** Core Imports
 import {
   closeLayer,
+  closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
   hideLayer,
@@ -34,23 +35,85 @@ function toEntry(
   });
 }
 
-export function useBridgeSnackbarController(): BridgeSnackbarController {
+export type BridgeSnackbarControllerOptions = {
+  /**
+   * Maximum number of visible snackbars. When exceeded, the oldest closes before opening the new one.
+   */
+  max?: number;
+  /**
+   * Default auto-dismiss delay (ms) for `open()`. `false` keeps snackbars open until dismissed.
+   * Per-call `duration` overrides this.
+   *
+   * @default 5000
+   */
+  timeout?: number | false;
+};
+
+function resolveOpenOptions(
+  openOptions: BridgeSnackbarOpenOptions,
+  timeout: number | false | undefined,
+): BridgeSnackbarOpenOptions {
+  if (openOptions.duration !== undefined) {
+    return openOptions;
+  }
+
+  if (timeout === undefined) {
+    return openOptions;
+  }
+
+  return { ...openOptions, duration: timeout };
+}
+
+function trimToMax<T extends { id: LayerId; show: boolean }>(
+  entries: T[],
+  max: number,
+): T[] {
+  let next = entries;
+  let visible = next.filter((entry) => entry.show);
+
+  while (visible.length >= max) {
+    next = closeLayer(next, visible[0]!.id);
+    visible = next.filter((entry) => entry.show);
+  }
+
+  return next;
+}
+
+export function useBridgeSnackbarController(
+  options: BridgeSnackbarControllerOptions = {},
+): BridgeSnackbarController {
+  const { max, timeout = 5000 } = options;
   const [entries, setEntries] = useState<BridgeSnackbarEntry[]>([]);
 
   const entriesRef = useRef(entries);
 
   entriesRef.current = entries;
 
-  const open = useCallback((options: BridgeSnackbarOpenOptions): LayerId => {
-    const id = createLayerId();
+  const open = useCallback(
+    (openOptions: BridgeSnackbarOpenOptions): LayerId => {
+      const id = createLayerId();
 
-    setEntries((current) => [...current, toEntry(id, options)]);
+      setEntries((current) => {
+        let next = current;
 
-    return id;
-  }, []);
+        if (max != null && max > 0) {
+          next = trimToMax(next, max);
+        }
+
+        return [...next, toEntry(id, resolveOpenOptions(openOptions, timeout))];
+      });
+
+      return id;
+    },
+    [max, timeout],
+  );
 
   const close = useCallback((id: LayerId) => {
     setEntries((current) => closeLayer(current, id));
+  }, []);
+
+  const closeTop = useCallback(() => {
+    setEntries((current) => closeTopLayer(current));
   }, []);
 
   const closeAll = useCallback(() => {
@@ -113,9 +176,20 @@ export function useBridgeSnackbarController(): BridgeSnackbarController {
       isOpen,
       update,
       entries,
+      closeTop,
       closeAll,
       syncShow,
       removeEntry,
     };
-  }, [open, close, isOpen, update, entries, closeAll, syncShow, removeEntry]);
+  }, [
+    open,
+    close,
+    isOpen,
+    update,
+    entries,
+    closeTop,
+    closeAll,
+    syncShow,
+    removeEntry,
+  ]);
 }

@@ -52,7 +52,7 @@ export interface SnackbarActions {
 }
 
 export type BridgeSnackbarShellProps = Partial<
-  Omit<SnackbarOwnProps, "stackId" | "teleportTo">
+  Omit<SnackbarOwnProps, "stackId">
 >;
 
 export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
@@ -90,6 +90,7 @@ export type BridgeSnackbarController = {
   entries: Ref<BridgeSnackbarEntry[]>;
   open: (options: BridgeSnackbarOpenOptions) => LayerId;
   close: (id: LayerId) => void;
+  closeTop: () => void;
   closeAll: () => void;
   isOpen: (id: LayerId) => boolean;
   removeEntry: (id: LayerId) => void;
@@ -101,5 +102,5 @@ export type BridgeSnackbarApi = Omit<
   BridgeSnackbarController,
   "entries" | "syncShow" | "removeEntry"
 > & {
-  count: number;
+  stackSize: number;
 };

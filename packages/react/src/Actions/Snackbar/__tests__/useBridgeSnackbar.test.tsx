@@ -1,7 +1,10 @@
 // ** External Imports
 import { act, render, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 // ** Local Imports
 import {
@@ -10,7 +13,10 @@ import {
   useBridgeSnackbar,
 } from "@/Actions/Snackbar";
 afterEach(() => {
+  vi.useRealTimers();
+  resetLayerStackForTests();
   document.body.innerHTML = "";
+  document.body.style.overflow = "";
 });
 
 function RunOnMount({
@@ -138,6 +144,38 @@ test("accept action should use the snackbar color, not primary", async () => {
   });
 });
 
+test("imperative snackbars should stack with increasing z-index", async () => {
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "One",
+            transition: "none",
+            duration: false,
+          });
+          snackbar.open({
+            title: "Two",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    const layers = document.body.querySelectorAll("[data-snackbar-layer]");
+
+    expect(layers.length).toBe(2);
+
+    const firstZ = Number((layers[0] as HTMLElement).style.zIndex);
+    const secondZ = Number((layers[1] as HTMLElement).style.zIndex);
+
+    expect(secondZ).toBeGreaterThan(firstZ);
+  });
+});
+
 test("host snackbar defaults should merge into open options", async () => {
   render(
     <BridgeSnackbarHost
@@ -161,5 +199,87 @@ test("host snackbar defaults should merge into open options", async () => {
     );
 
     expect(snackbar?.className).toContain("host-shell");
+  });
+});
+
+test("host timeout should auto-dismiss snackbars", async () => {
+  render(
+    <BridgeSnackbarHost timeout={50}>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Timed out",
+            transition: "none",
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Timed out");
+  });
+
+  await waitFor(
+    () => {
+      expect(document.body.textContent).not.toContain("Timed out");
+    },
+    { timeout: 500 },
+  );
+});
+
+test("open duration should override host timeout", async () => {
+  render(
+    <BridgeSnackbarHost timeout={50}>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Persistent",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Persistent");
+  });
+
+  await new Promise((resolve) => setTimeout(resolve, 150));
+
+  expect(document.body.textContent).toContain("Persistent");
+});
+
+test("max should close the oldest snackbar when the limit is exceeded", async () => {
+  render(
+    <BridgeSnackbarHost max={2}>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "One",
+            transition: "none",
+            duration: false,
+          });
+          snackbar.open({
+            title: "Two",
+            transition: "none",
+            duration: false,
+          });
+          snackbar.open({
+            title: "Three",
+            transition: "none",
+            duration: false,
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).not.toContain("One");
+    expect(document.body.textContent).toContain("Two");
+    expect(document.body.textContent).toContain("Three");
   });
 });

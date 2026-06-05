@@ -26,6 +26,7 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<SnackbarOwnProps>(), {
   closeButton: true,
   progressbar: true,
+  position: "bottom-center",
   teleportTo: "body",
 });
 
@@ -34,7 +35,9 @@ const model = defineModel<boolean>({ default: false });
 const {
   merged,
   rendered,
-  rootBind,
+  isPortaled,
+  portalBind,
+  panelBind,
   iconBind,
   titleBind,
   progressBind,
@@ -46,6 +49,7 @@ const {
   {
     color: "primary",
     duration: 5000,
+    position: "bottom-center",
     transition: "slide",
     closeButton: true,
     progressbar: true,
@@ -88,10 +92,101 @@ const teleportTarget = computed(() => {
 
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
+    <div v-if="rendered && isPortaled" v-bind="portalBind">
+      <div class="w-full max-w-sm pointer-events-auto">
+        <div
+          v-bind="panelBind"
+          :class="cn(panelBind.class, { flex: hasRight })"
+        >
+          <div
+            v-if="
+              model && merged.duration !== false && merged.progressbar !== false
+            "
+            v-bind="progressBind"
+          />
+
+          <div
+            :class="{
+              'pl-4': merged.dense,
+              'p-4': !hasRight,
+              'w-0 flex-1 flex items-center p-4': hasRight,
+            }"
+          >
+            <div
+              :class="{
+                'flex items-start': !hasRight,
+                'w-full flex': hasRight,
+              }"
+            >
+              <div
+                v-if="hasIcon"
+                class="shrink-0"
+                :class="{
+                  'w-6': Boolean(resolvedIcon || slots.icon),
+                  'pt-0.5': Boolean(merged.img),
+                }"
+              >
+                <slot name="icon" />
+
+                <img
+                  v-if="!slots.icon && merged.img"
+                  :src="merged.img"
+                  alt=""
+                  class="w-10 h-10 rounded-full"
+                />
+
+                <Icon
+                  v-if="!slots.icon && !merged.img && resolvedIcon"
+                  :icon="resolvedIcon"
+                  v-bind="iconBind"
+                />
+              </div>
+
+              <div class="w-0 flex-1 pt-0.5" :class="{ 'ml-3': hasIcon }">
+                <p v-if="hasTitle" v-bind="titleBind">
+                  <slot name="title">{{ merged.title }}</slot>
+                </p>
+
+                <p v-if="hasDescription" v-bind="descriptionBind">
+                  <slot name="description">{{ merged.description }}</slot>
+                </p>
+
+                <slot />
+
+                <div
+                  v-if="slots.actions"
+                  class="flex mt-3 gap-x-3"
+                  :class="merged.classes?.actions"
+                >
+                  <slot name="actions" />
+                </div>
+              </div>
+
+              <div class="flex ml-4 shrink-0">
+                <slot name="trailing" />
+
+                <button
+                  v-if="merged.closeButton !== false"
+                  type="button"
+                  aria-label="Close"
+                  class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
+                  v-on:click="requestClose"
+                >
+                  <X class="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <slot name="right" />
+        </div>
+      </div>
+    </div>
+
     <div
-      v-if="rendered"
-      v-bind="rootBind"
-      :class="cn(rootBind.class, { flex: hasRight })"
+      v-else-if="rendered"
+      v-bind="panelBind"
+      :class="cn(panelBind.class, { flex: hasRight })"
     >
       <div
         v-if="

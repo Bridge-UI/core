@@ -7,6 +7,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   SnackbarColor,
+  SnackbarPosition,
   SnackbarTransition,
 } from "@bridge-ui/core";
 
@@ -14,6 +15,7 @@ import type {
 import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
+export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
 export interface SnackbarClasses {
@@ -22,6 +24,7 @@ export interface SnackbarClasses {
   icon?: string;
   progress?: string;
   right?: string;
+  portal?: string;
   root?: string;
   title?: string;
 }
@@ -32,6 +35,7 @@ export interface SnackbarEmits {
 
 export interface SnackbarPartsProps {
   icon?: Partial<Omit<IconProps, "icon">>;
+  portal?: HTMLAttributes;
   root?: HTMLAttributes;
   title?: HTMLAttributes;
   description?: HTMLAttributes;
@@ -49,6 +53,7 @@ export interface SnackbarOwnProps {
   img?: string;
   partsProps?: SnackbarPartsProps;
   progressbar?: boolean;
+  position?: MergeProps<SnackbarPosition, SnackbarPositionOverrides>;
   stackId?: string;
   teleportTo?: string | false;
   title?: string;

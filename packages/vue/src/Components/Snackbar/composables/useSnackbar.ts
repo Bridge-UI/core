@@ -14,13 +14,20 @@ import {
 
 // ** Core Imports
 import {
+  acquireLayerStackOrder,
   cn,
+  getLayerStackEntry,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  LAYER_STACK_BASE_Z_INDEX,
   mergeBridgeUILayeredClasses,
+  pushLayerStack,
   snackbarColorProps,
+  snackbarPositionProps,
   snackbarTransitionProps,
   splitComponentProps,
+  subscribeLayerStack,
+  type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
   type SnackbarTransition,
@@ -46,6 +53,7 @@ const snackbarBridgeKeys = [
   "title",
   "classes",
   "duration",
+  "position",
   "stackId",
   "teleportTo",
   "transition",
@@ -63,6 +71,7 @@ type SnackbarLibDefaults = LibDefaultsShape<
   | "closeButton"
   | "progressbar"
   | "teleportTo"
+  | "position"
 >;
 
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
@@ -94,6 +103,16 @@ export function useSnackbar(
   const remainingMsRef = ref(0);
 
   const timerStartedAtRef = ref(0);
+
+  const layerStackId = ref("");
+
+  const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
+
+  let stackOrder: number | null = null;
+
+  let stackHandle: LayerStackHandle | null = null;
+
+  let unsubscribeLayerStack: (() => void) | null = null;
 
   const { customProps, inheritedAttrs } = splitComponentProps<
     SnackbarProps,
@@ -179,6 +198,21 @@ export function useSnackbar(
       show.value &&
       rendered.value
     );
+  });
+
+  const isPortaled = computed(() => merged.value.teleportTo !== false);
+
+  const positionClass = computed(() => {
+    if (!isPortaled.value) {
+      return "";
+    }
+
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarPositionProps,
+      bridgeSnackbar.value?.customProps?.position,
+    );
+
+    return get(classes, merged.value.position ?? "bottom-center");
   });
 
   function clearDismissTimer() {
@@ -346,9 +380,76 @@ export function useSnackbar(
     { immediate: true },
   );
 
-  onBeforeUnmount(clearDismissTimer);
+  function syncZIndex() {
+    const snapshot = getLayerStackEntry(layerStackId.value);
 
-  const rootBind = computed(() => {
+    if (snapshot) {
+      stackZIndex.value = snapshot.zIndex;
+    }
+  }
+
+  watch(
+    [rendered, isPortaled],
+    ([isRendered, portaled]) => {
+      if (!portaled) {
+        return;
+      }
+
+      if (isRendered) {
+        stackOrder = acquireLayerStackOrder();
+
+        stackHandle = pushLayerStack({
+          order: stackOrder,
+          id: options.stackId,
+          lockScroll: false,
+          onEscape: () => {
+            requestClose();
+          },
+        });
+
+        layerStackId.value = stackHandle.id;
+        stackZIndex.value = stackHandle.zIndex;
+        syncZIndex();
+        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
+      } else {
+        unsubscribeLayerStack?.();
+        unsubscribeLayerStack = null;
+        stackHandle?.release();
+        stackHandle = null;
+        stackOrder = null;
+        layerStackId.value = "";
+        stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
+      }
+    },
+    { immediate: true },
+  );
+
+  onBeforeUnmount(() => {
+    clearDismissTimer();
+    unsubscribeLayerStack?.();
+    unsubscribeLayerStack = null;
+    stackHandle?.release();
+    stackHandle = null;
+  });
+
+  const portalBind = computed(() => {
+    return mergePartBind(
+      partsProps.value?.portal,
+      {
+        "data-snackbar-layer": true,
+        style: {
+          zIndex: stackZIndex.value,
+        },
+      },
+      cn({
+        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
+        [positionClass.value]: true,
+        [get(mergedClasses.value, "portal") ?? ""]: true,
+      }),
+    );
+  });
+
+  const panelBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,
       {
@@ -431,7 +532,9 @@ export function useSnackbar(
   return {
     merged,
     rendered,
-    rootBind,
+    isPortaled,
+    portalBind,
+    panelBind,
     iconBind,
     titleBind,
     descriptionBind,

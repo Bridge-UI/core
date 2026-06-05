@@ -29,6 +29,14 @@ test("pushLayerStack should increment z-index per level", () => {
   expect(inner.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX + 1);
 });
 
+test("pushLayerStack should skip scroll lock when lockScroll is false", () => {
+  const handle = pushLayerStack({ lockScroll: false });
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+
+  handle.release();
+});
+
 test("pushLayerStack should ref-count body scroll lock", () => {
   const outer = pushLayerStack();
 

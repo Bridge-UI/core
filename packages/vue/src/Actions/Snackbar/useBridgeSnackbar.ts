@@ -22,7 +22,7 @@ export function useBridgeSnackbar(): BridgeSnackbarApi {
     throw new BridgeSnackbarHostMissingError();
   }
 
-  const count = computed(() => {
+  const stackSize = computed(() => {
     return getLayerCount(api.entries.value);
   });
 
@@ -31,9 +31,10 @@ export function useBridgeSnackbar(): BridgeSnackbarApi {
     close: api.close,
     isOpen: api.isOpen,
     update: api.update,
+    closeTop: api.closeTop,
     closeAll: api.closeAll,
-    get count() {
-      return count.value;
+    get stackSize() {
+      return stackSize.value;
     },
   };
 }

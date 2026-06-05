@@ -14,18 +14,19 @@ import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 const snackbarLibDefaults = {
   color: "primary",
   duration: 5000,
+  position: "bottom-center",
   transition: "slide",
   closeButton: true,
   progressbar: true,
   teleportTo: "body",
 } as const;
 
-function SnackbarShell({
+function SnackbarPanel({
   show,
   merged,
   slots,
   children,
-  rootBind,
+  panelBind,
   iconBind,
   titleBind,
   progressBind,
@@ -44,8 +45,8 @@ function SnackbarShell({
 
   return (
     <div
-      {...rootBind}
-      className={cn(rootBind.className, {
+      {...panelBind}
+      className={cn(panelBind.className, {
         flex: hasRight,
       })}
     >
@@ -162,13 +163,19 @@ function Snackbar({
     return null;
   }
 
-  const shell = <SnackbarShell {...snackbarState} show={show} />;
+  const panel = <SnackbarPanel {...snackbarState} show={show} />;
+
+  if (!snackbarState.isPortaled) {
+    return panel;
+  }
+
+  const shell = (
+    <div {...snackbarState.portalBind}>
+      <div className="w-full max-w-sm pointer-events-auto">{panel}</div>
+    </div>
+  );
 
   const { teleportTo } = snackbarState.merged;
-
-  if (teleportTo === false) {
-    return shell;
-  }
 
   if (typeof document === "undefined") {
     return null;

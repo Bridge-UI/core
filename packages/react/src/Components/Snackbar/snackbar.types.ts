@@ -7,6 +7,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   SnackbarColor,
+  SnackbarPosition,
   SnackbarTransition,
 } from "@bridge-ui/core";
 
@@ -14,6 +15,7 @@ import type {
 import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
+export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
 export interface SnackbarClasses {
@@ -43,6 +45,11 @@ export interface SnackbarClasses {
   right?: string;
 
   /**
+   * The classes to apply to the fixed portal layer (standalone snackbar only).
+   */
+  portal?: string;
+
+  /**
    * The classes to apply to the root panel.
    */
   root?: string;
@@ -58,6 +65,11 @@ export interface SnackbarPartsProps {
    * Props forwarded to the default `Icon` (`icon` is set by the snackbar).
    */
   icon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the fixed portal layer (standalone snackbar only).
+   */
+  portal?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the root panel.
@@ -156,12 +168,19 @@ export interface SnackbarOwnProps {
   slots?: SnackbarSlots;
 
   /**
+   * Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`.
+   *
+   * @default "bottom-center"
+   */
+  position?: MergeProps<SnackbarPosition, SnackbarPositionOverrides>;
+
+  /**
    * Pre-assigned stack id (BridgeSnackbarHost).
    */
   stackId?: string;
 
   /**
-   * Portal target. `false` renders inline (used by BridgeSnackbarHost).
+   * Portal target. `false` renders inline without layer stack.
    *
    * @default "body"
    */

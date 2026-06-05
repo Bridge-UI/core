@@ -3,6 +3,7 @@ import { get, isNull, omit } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-react";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -11,13 +12,20 @@ import {
 
 // ** Core Imports
 import {
+  acquireLayerStackOrder,
   cn,
+  getLayerStackEntry,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  LAYER_STACK_BASE_Z_INDEX,
   mergeBridgeUILayeredClasses,
+  pushLayerStack,
   snackbarColorProps,
+  snackbarPositionProps,
   snackbarTransitionProps,
   splitComponentProps,
+  subscribeLayerStack,
+  type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
   type SnackbarTransition,
@@ -45,6 +53,7 @@ const snackbarBridgeKeys = [
   "slots",
   "classes",
   "duration",
+  "position",
   "stackId",
   "teleportTo",
   "transition",
@@ -62,6 +71,7 @@ type SnackbarLibDefaults = LibDefaultsShape<
   | "closeButton"
   | "progressbar"
   | "teleportTo"
+  | "position"
 >;
 
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
@@ -112,6 +122,14 @@ export function useSnackbar(
   const remainingMsRef = useRef(0);
 
   const timerStartedAtRef = useRef(0);
+
+  const layerStackIdRef = useRef("");
+
+  const stackOrderRef = useRef<number | null>(null);
+
+  const stackHandleRef = useRef<LayerStackHandle | null>(null);
+
+  const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const { customProps, inheritedAttrs } = splitComponentProps<
     SnackbarProps,
@@ -178,6 +196,29 @@ export function useSnackbar(
   }, [merged.icon, merged.color, colorClass]);
 
   const durationMs = merged.duration === false ? 0 : (merged.duration ?? 0);
+
+  const isPortaled = merged.teleportTo !== false;
+
+  if (show && stackOrderRef.current === null && isPortaled) {
+    stackOrderRef.current = acquireLayerStackOrder();
+  }
+
+  if (!show && !rendered && stackOrderRef.current !== null) {
+    stackOrderRef.current = null;
+  }
+
+  const positionClass = useMemo(() => {
+    if (!isPortaled) {
+      return "";
+    }
+
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarPositionProps,
+      bridgeSnackbar?.customProps?.position,
+    );
+
+    return get(classes, merged.position ?? "bottom-center");
+  }, [isPortaled, merged.position, bridgeSnackbar?.customProps?.position]);
 
   const showProgress =
     durationMs > 0 && merged.progressbar !== false && show && rendered;
@@ -341,7 +382,71 @@ export function useSnackbar(
     };
   }, [showProgress, durationMs]);
 
-  const rootBind = mergePartBind(
+  useLayoutEffect(() => {
+    if (!isPortaled || !rendered) {
+      return;
+    }
+
+    const handle = pushLayerStack({
+      id: stackId,
+      order: stackOrderRef.current ?? undefined,
+      lockScroll: false,
+      onEscape: () => {
+        requestClose();
+      },
+    });
+
+    stackHandleRef.current = handle;
+    layerStackIdRef.current = handle.id;
+    setStackZIndex(handle.zIndex);
+
+    return () => {
+      handle.release();
+      stackHandleRef.current = null;
+      layerStackIdRef.current = "";
+      setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
+    };
+  }, [rendered, isPortaled, stackId]);
+
+  useEffect(() => {
+    if (!rendered || !isPortaled) {
+      return;
+    }
+
+    function syncZIndex() {
+      const snapshot = getLayerStackEntry(layerStackIdRef.current);
+
+      if (!snapshot) {
+        return;
+      }
+
+      setStackZIndex((previous) => {
+        return previous === snapshot.zIndex ? previous : snapshot.zIndex;
+      });
+    }
+
+    syncZIndex();
+
+    return subscribeLayerStack(syncZIndex);
+  }, [rendered, isPortaled]);
+
+  const portalBind = mergePartBind(
+    partsProps?.portal,
+    {},
+    {
+      "data-snackbar-layer": true,
+      className: cn({
+        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
+        [positionClass]: true,
+        [get(mergedClasses, "portal") ?? ""]: true,
+      }),
+      style: {
+        zIndex: stackZIndex,
+      },
+    },
+  );
+
+  const panelBind = mergePartBind(
     partsProps?.root,
     {
       ...rootInheritedAttrs,
@@ -414,8 +519,10 @@ export function useSnackbar(
   return {
     merged,
     rendered,
+    isPortaled,
     stackId,
-    rootBind,
+    portalBind,
+    panelBind,
     iconBind,
     titleBind,
     descriptionBind,

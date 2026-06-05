@@ -4,6 +4,7 @@ import { shallowRef } from "vue";
 // ** Core Imports
 import {
   closeLayer,
+  closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
   hideLayer,
@@ -34,19 +35,79 @@ function toEntry(
   });
 }
 
-export function createBridgeSnackbarApi(): BridgeSnackbarController {
+export type BridgeSnackbarApiOptions = {
+  /**
+   * Maximum number of visible snackbars. When exceeded, the oldest closes before opening the new one.
+   */
+  max?: number;
+  /**
+   * Default auto-dismiss delay (ms) for `open()`. `false` keeps snackbars open until dismissed.
+   *
+   * @default 5000
+   */
+  timeout?: number | false;
+};
+
+function resolveOpenOptions(
+  openOptions: BridgeSnackbarOpenOptions,
+  timeout: number | false | undefined,
+): BridgeSnackbarOpenOptions {
+  if (openOptions.duration !== undefined) {
+    return openOptions;
+  }
+
+  if (timeout === undefined) {
+    return openOptions;
+  }
+
+  return { ...openOptions, duration: timeout };
+}
+
+function trimToMax<T extends { id: LayerId; show: boolean }>(
+  entries: T[],
+  max: number,
+): T[] {
+  let next = entries;
+  let visible = next.filter((entry) => entry.show);
+
+  while (visible.length >= max) {
+    next = closeLayer(next, visible[0]!.id);
+    visible = next.filter((entry) => entry.show);
+  }
+
+  return next;
+}
+
+export function createBridgeSnackbarApi(
+  options: BridgeSnackbarApiOptions = {},
+): BridgeSnackbarController {
+  const { max, timeout = 5000 } = options;
+
   const entries = shallowRef<BridgeSnackbarEntry[]>([]);
 
-  function open(options: BridgeSnackbarOpenOptions): LayerId {
+  function open(openOptions: BridgeSnackbarOpenOptions): LayerId {
     const id = createLayerId();
 
-    entries.value = [...entries.value, toEntry(id, options)];
+    let next = entries.value;
+
+    if (max != null && max > 0) {
+      next = trimToMax(next, max);
+    }
+
+    entries.value = [
+      ...next,
+      toEntry(id, resolveOpenOptions(openOptions, timeout)),
+    ];
 
     return id;
   }
 
   function close(id: LayerId) {
     entries.value = closeLayer(entries.value, id);
+  }
+
+  function closeTop() {
+    entries.value = closeTopLayer(entries.value);
   }
 
   function closeAll() {
@@ -101,6 +162,7 @@ export function createBridgeSnackbarApi(): BridgeSnackbarController {
     isOpen,
     update,
     entries,
+    closeTop,
     closeAll,
     syncShow,
     removeEntry,
