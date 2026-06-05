@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LayerId } from "@bridge-ui/core";
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
@@ -8,6 +8,19 @@ import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 export type BridgeModalShellProps = Partial<
   Omit<ModalOwnProps, "show" | "stackId">
 >;
+
+export type BridgeModalHostProps = {
+  /**
+   * The children to apply to the host.
+   */
+  children?: ReactNode;
+
+  /**
+   * Default shell options merged into every modal opened via `useModalAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeModalShellProps;
+};
 
 export type BridgeModalEntry = {
   component: ComponentType<Record<string, unknown>>;

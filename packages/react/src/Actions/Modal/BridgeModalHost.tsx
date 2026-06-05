@@ -4,26 +4,13 @@ import {
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core";
-import { createElement, useContext, useEffect, type ReactNode } from "react";
+import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports
 import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
-import type { BridgeModalShellProps } from "@/Actions/Modal/bridgeModal.types";
+import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import { useBridgeModalController } from "@/Actions/Modal/createBridgeModalController";
 import { Modal } from "@/Components/Modal";
-
-export type BridgeModalHostProps = {
-  /**
-   * The children to apply to the host.
-   */
-  children?: ReactNode;
-
-  /**
-   * Default shell options merged into every modal opened via `useModalAction()`.
-   * Per-call `open({ modal })` overrides these.
-   */
-  modal?: BridgeModalShellProps;
-};
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";

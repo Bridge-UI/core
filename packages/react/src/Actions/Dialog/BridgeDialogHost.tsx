@@ -4,28 +4,15 @@ import {
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core";
-import { useContext, useEffect, type ReactNode } from "react";
+import { useContext, useEffect } from "react";
 
 // ** Local Imports
 import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
-import type { BridgeDialogShellProps } from "@/Actions/Dialog/bridgeDialog.types";
+import type { BridgeDialogHostProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { useBridgeDialogController } from "@/Actions/Dialog/createBridgeDialogController";
 import { resolveBridgeDialogFooter } from "@/Actions/Dialog/resolveBridgeDialogFooter";
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
-
-export type BridgeDialogHostProps = {
-  /**
-   * The children to apply to the host.
-   */
-  children?: ReactNode;
-
-  /**
-   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
-   * Per-call `open({ modal })` overrides these.
-   */
-  modal?: BridgeDialogShellProps;
-};
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeDialogHost /> detected. useDialogAction() will target the nearest host only. Remove the extra host.";

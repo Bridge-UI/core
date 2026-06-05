@@ -1,5 +1,7 @@
 // ** External Imports
 import type { LayerId, SnackbarColor } from "@bridge-ui/core";
+import { snackbarPositionProps } from "@bridge-ui/core";
+import type { ReactNode } from "react";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button/button.types";
@@ -54,6 +56,69 @@ export type BridgeSnackbarShellProps = Partial<
   Omit<SnackbarOwnProps, "show" | "stackId" | "slots">
 >;
 
+export type SnackbarActionLayout =
+  | "inline"
+  | "trailing"
+  | "right-accept"
+  | "right-reject";
+
+export type BridgeSnackbarActionProps = {
+  action: SnackbarAction;
+  hasAccept?: boolean;
+  hasReject?: boolean;
+  layout: SnackbarActionLayout;
+  role: "accept" | "reject";
+  snackbarColor: keyof SnackbarColor;
+};
+
+export type SnackbarActionControlProps = BridgeSnackbarActionProps & {
+  onRun: () => void;
+};
+
+export type BridgeSnackbarHostProps = {
+  /**
+   * The children to apply to the host.
+   */
+  children?: ReactNode;
+
+  /**
+   * Maximum open snackbars. When exceeded, the oldest closes before opening the new one.
+   */
+  max?: number;
+
+  /**
+   * Notification stack position on the viewport.
+   *
+   * @default "bottom-center"
+   */
+  position?: keyof typeof snackbarPositionProps;
+
+  /**
+   * Default shell options merged into every snackbar opened via `useSnackbarAction()`.
+   * Per-call `open()` options override these.
+   */
+  snackbar?: BridgeSnackbarShellProps;
+
+  /**
+   * Portal target for the notification stack. `false` renders inline.
+   *
+   * @default "body"
+   */
+  teleportTo?: string | false;
+
+  /**
+   * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
+   * Per-call `open({ duration })` overrides this.
+   */
+  timeout?: number | false;
+};
+
+export type BridgeSnackbarItemProps = {
+  api: BridgeSnackbarController;
+  entry: BridgeSnackbarEntry;
+  hostSnackbar?: BridgeSnackbarShellProps;
+};
+
 export type BridgeSnackbarContentProps = BridgeSnackbarShellProps & {
   /**
    * Preset inline or trailing actions (mapped to slots by the host).
@@ -103,5 +168,3 @@ export type BridgeSnackbarApi = Omit<
 > & {
   stackSize: number;
 };
-
-export type SnackbarActionColor = keyof SnackbarColor;

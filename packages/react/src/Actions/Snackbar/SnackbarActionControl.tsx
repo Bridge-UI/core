@@ -3,28 +3,15 @@ import { get } from "es-toolkit/compat";
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, type ButtonColor, type LinkColor } from "@bridge-ui/core";
+import { cn, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type {
+  SnackbarActionControlProps,
+  SnackbarActionLayout,
+} from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
-
-type SnackbarActionLayout =
-  | "inline"
-  | "trailing"
-  | "right-accept"
-  | "right-reject";
-
-type SnackbarActionControlProps = {
-  action: SnackbarAction;
-  hasAccept?: boolean;
-  hasReject?: boolean;
-  layout: SnackbarActionLayout;
-  onRun: () => void;
-  role: "accept" | "reject";
-  snackbarColor: keyof ButtonColor;
-};
 
 function layoutClasses(
   layout: SnackbarActionLayout,

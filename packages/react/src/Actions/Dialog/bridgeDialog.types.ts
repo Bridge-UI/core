@@ -1,5 +1,6 @@
 // ** External Imports
 import type { ButtonColor, LayerId } from "@bridge-ui/core";
+import type { ReactNode } from "react";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button/button.types";
@@ -55,6 +56,42 @@ export type ResolveBridgeDialogFooterOptions = {
   acceptColor: keyof ButtonColor;
   actions?: DialogActions;
   dismiss: () => void;
+};
+
+export type BridgeDialogActionProps = {
+  /**
+   * Color for the accept action. Reject always uses `secondary`.
+   */
+  acceptColor: keyof ButtonColor;
+
+  /**
+   * Footer action configuration (label, button/link, handlers).
+   */
+  action: DialogAction;
+
+  /**
+   * Whether this control renders the primary or secondary footer action.
+   */
+  role: "accept" | "reject";
+};
+
+export type BridgeDialogHostProps = {
+  /**
+   * The children to apply to the host.
+   */
+  children?: ReactNode;
+
+  /**
+   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeDialogShellProps;
+};
+
+export type BridgeDialogItemProps = {
+  api: BridgeDialogController;
+  entry: BridgeDialogEntry;
+  hostModal?: BridgeDialogShellProps;
 };
 
 export type BridgeDialogShellProps = Partial<
