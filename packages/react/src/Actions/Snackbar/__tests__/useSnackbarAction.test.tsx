@@ -10,7 +10,7 @@ import { resetLayerStackForTests } from "@bridge-ui/core";
 import {
   BridgeSnackbarHost,
   BridgeSnackbarHostMissingError,
-  useBridgeSnackbar,
+  useSnackbarAction,
 } from "@/Actions/Snackbar";
 afterEach(() => {
   vi.useRealTimers();
@@ -22,9 +22,9 @@ afterEach(() => {
 function RunOnMount({
   onMount,
 }: {
-  onMount: (snackbar: ReturnType<typeof useBridgeSnackbar>) => void;
+  onMount: (snackbar: ReturnType<typeof useSnackbarAction>) => void;
 }) {
-  const snackbar = useBridgeSnackbar();
+  const snackbar = useSnackbarAction();
 
   useEffect(() => {
     onMount(snackbar);
@@ -34,9 +34,9 @@ function RunOnMount({
   return null;
 }
 
-test("useBridgeSnackbar should throw when BridgeSnackbarHost is missing", () => {
+test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => {
   function BadConsumer() {
-    useBridgeSnackbar();
+    useSnackbarAction();
 
     return null;
   }

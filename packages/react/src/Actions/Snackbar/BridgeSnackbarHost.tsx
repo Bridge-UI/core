@@ -39,7 +39,7 @@ export type BridgeSnackbarHostProps = {
    */
   teleportTo?: string | false;
   /**
-   * Default shell options merged into every snackbar opened via `useBridgeSnackbar()`.
+   * Default shell options merged into every snackbar opened via `useSnackbarAction()`.
    * Per-call `open()` options override these.
    */
   snackbar?: BridgeSnackbarShellProps;
@@ -57,7 +57,7 @@ export type BridgeSnackbarHostProps = {
 };
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useBridgeSnackbar() will target the nearest host only. Remove the extra host.";
+  "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useSnackbarAction() will target the nearest host only. Remove the extra host.";
 
 export function BridgeSnackbarHost({
   children,

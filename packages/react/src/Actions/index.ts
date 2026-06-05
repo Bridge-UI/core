@@ -1,7 +1,7 @@
 // ** Exports
 export { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
 export type { BridgeUIHostsProps } from "@/Actions/BridgeUIHosts";
-export { BridgeDialogHost, useBridgeDialog } from "@/Actions/Dialog";
+export { BridgeDialogHost, useDialogAction } from "@/Actions/Dialog";
 export type {
   BridgeDialogApi,
   BridgeDialogEntry,
@@ -11,7 +11,7 @@ export type {
   DialogAction,
   DialogActions,
 } from "@/Actions/Dialog";
-export { BridgeModalHost, useBridgeModal } from "@/Actions/Modal";
+export { BridgeModalHost, useModalAction } from "@/Actions/Modal";
 export type {
   BridgeModalApi,
   BridgeModalEntry,
@@ -19,7 +19,7 @@ export type {
   BridgeModalOpenOptions,
   BridgeModalShellProps,
 } from "@/Actions/Modal";
-export { BridgeSnackbarHost, useBridgeSnackbar } from "@/Actions/Snackbar";
+export { BridgeSnackbarHost, useSnackbarAction } from "@/Actions/Snackbar";
 export type {
   BridgeSnackbarApi,
   BridgeSnackbarEntry,

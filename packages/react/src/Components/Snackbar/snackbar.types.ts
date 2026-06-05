@@ -94,7 +94,7 @@ export interface SnackbarPartsProps {
 
 /**
  * Toast / notification panel. Sets `role="status"` and `aria-live="polite"` by default.
- * Use `slots.actions` and `slots.right` for custom actions; imperative presets live in `useBridgeSnackbar`.
+ * Use `slots.actions` and `slots.right` for custom actions; imperative presets live in `useSnackbarAction`.
  */
 export interface SnackbarOwnProps {
   /**

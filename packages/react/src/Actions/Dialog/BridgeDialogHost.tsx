@@ -17,14 +17,14 @@ import { Modal } from "@/Components/Modal";
 export type BridgeDialogHostProps = {
   children?: ReactNode;
   /**
-   * Default Modal shell options merged into every dialog opened via `useBridgeDialog()`.
+   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
    * Per-call `open({ modal })` overrides these.
    */
   modal?: BridgeDialogShellProps;
 };
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeDialogHost /> detected. useBridgeDialog() will target the nearest host only. Remove the extra host.";
+  "[Bridge UI] Nested <BridgeDialogHost /> detected. useDialogAction() will target the nearest host only. Remove the extra host.";
 
 export function BridgeDialogHost({ children, modal }: BridgeDialogHostProps) {
   const parentApi = useContext(BridgeDialogContext);

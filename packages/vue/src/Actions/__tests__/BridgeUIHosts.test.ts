@@ -5,8 +5,8 @@ import { defineComponent, h, nextTick } from "vue";
 
 // ** Local Imports
 import BridgeUIHosts from "@/Actions/BridgeUIHosts.vue";
-import { useBridgeModal } from "@/Actions/Modal";
-import { useBridgeSnackbar } from "@/Actions/Snackbar";
+import { useModalAction } from "@/Actions/Modal";
+import { useSnackbarAction } from "@/Actions/Snackbar";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
@@ -23,8 +23,8 @@ const Content = defineComponent({
 test("BridgeUIHosts should mount modal and snackbar imperatives", async () => {
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
-      const snackbar = useBridgeSnackbar();
+      const modal = useModalAction();
+      const snackbar = useSnackbarAction();
 
       modal.open({ component: Content, modal: { transition: "none" } });
 

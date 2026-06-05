@@ -7,7 +7,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import {
   BridgeModalHost,
   BridgeModalHostMissingError,
-  useBridgeModal,
+  useModalAction,
 } from "@/Actions/Modal";
 import {
   LAYER_STACK_BASE_Z_INDEX,
@@ -27,9 +27,9 @@ function Content({ label = "Imperative" }: { label?: string }) {
 function RunOnMount({
   onMount,
 }: {
-  onMount: (modal: ReturnType<typeof useBridgeModal>) => void;
+  onMount: (modal: ReturnType<typeof useModalAction>) => void;
 }) {
-  const modal = useBridgeModal();
+  const modal = useModalAction();
 
   useEffect(() => {
     onMount(modal);
@@ -67,9 +67,9 @@ function OpenAndCloseOnMount() {
 function OpenWithRef({
   onOpen,
 }: {
-  onOpen: (api: ReturnType<typeof useBridgeModal>, id: string) => void;
+  onOpen: (api: ReturnType<typeof useModalAction>, id: string) => void;
 }) {
-  const modal = useBridgeModal();
+  const modal = useModalAction();
 
   useEffect(() => {
     const id = modal.open({
@@ -84,9 +84,9 @@ function OpenWithRef({
   return null;
 }
 
-test("useBridgeModal should throw when BridgeModalHost is missing", () => {
+test("useModalAction should throw when BridgeModalHost is missing", () => {
   function BadConsumer() {
-    useBridgeModal();
+    useModalAction();
 
     return null;
   }
@@ -121,7 +121,7 @@ test("close should unmount imperative modal", async () => {
 });
 
 test("isOpen and stackSize should reflect mounted entries", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
@@ -156,7 +156,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
 });
 
 test("closeTop should close only the topmost imperative modal", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let outerId = "";
   let innerId = "";
 
@@ -200,7 +200,7 @@ test("closeTop should close only the topmost imperative modal", async () => {
 test("onClose should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
@@ -389,7 +389,7 @@ test("stacked imperative modals should use incremental z-index", async () => {
 test("onClose should run before onClosed when the overlay is clicked", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
@@ -473,7 +473,7 @@ test("nested BridgeModalHost should warn in development", () => {
   );
 
   expect(warn).toHaveBeenCalledWith(
-    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host.",
+    "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.",
   );
 
   warn.mockRestore();

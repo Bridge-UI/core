@@ -3,7 +3,7 @@ export { default as BridgeUIHosts } from "@/Actions/BridgeUIHosts.vue";
 export {
   BridgeDialogHost,
   BridgeDialogHostMissingError,
-  useBridgeDialog,
+  useDialogAction,
 } from "@/Actions/Dialog";
 export type {
   BridgeDialogApi,
@@ -17,7 +17,7 @@ export type {
 export {
   BridgeModalHost,
   BridgeModalHostMissingError,
-  useBridgeModal,
+  useModalAction,
 } from "@/Actions/Modal";
 export type {
   BridgeModalApi,
@@ -30,7 +30,7 @@ export type {
 export {
   BridgeSnackbarHost,
   BridgeSnackbarHostMissingError,
-  useBridgeSnackbar,
+  useSnackbarAction,
 } from "@/Actions/Snackbar";
 export type {
   BridgeSnackbarApi,

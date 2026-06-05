@@ -13,5 +13,5 @@ export { BridgeSnackbarHost } from "@/Actions/Snackbar/BridgeSnackbarHost";
 export type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/BridgeSnackbarHost";
 export {
   BridgeSnackbarHostMissingError,
-  useBridgeSnackbar,
-} from "@/Actions/Snackbar/useBridgeSnackbar";
+  useSnackbarAction,
+} from "@/Actions/Snackbar/useSnackbarAction";

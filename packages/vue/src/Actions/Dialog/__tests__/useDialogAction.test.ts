@@ -7,7 +7,7 @@ import { defineComponent, h, nextTick } from "vue";
 import {
   BridgeDialogHost,
   BridgeDialogHostMissingError,
-  useBridgeDialog,
+  useDialogAction,
 } from "@/Actions/Dialog";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
@@ -24,10 +24,10 @@ function mountWithDialogHost(child: ReturnType<typeof defineComponent>) {
   });
 }
 
-test("useBridgeDialog should throw when BridgeDialogHost is missing", () => {
+test("useDialogAction should throw when BridgeDialogHost is missing", () => {
   const BadConsumer = defineComponent({
     setup() {
-      useBridgeDialog();
+      useDialogAction();
     },
   });
 
@@ -37,12 +37,12 @@ test("useBridgeDialog should throw when BridgeDialogHost is missing", () => {
 test("open should render title and description", async () => {
   const Consumer = defineComponent({
     setup() {
-      const dialog = useBridgeDialog();
+      const dialog = useDialogAction();
 
       dialog.open({
         title: "Delete item?",
-        description: "This cannot be undone.",
         modal: { transition: "none" },
+        description: "This cannot be undone.",
       });
     },
   });
@@ -60,7 +60,7 @@ test("actions should render footer buttons and dismiss on accept", async () => {
 
   const Consumer = defineComponent({
     setup() {
-      const dialog = useBridgeDialog();
+      const dialog = useDialogAction();
 
       dialog.open({
         title: "Confirm",
@@ -98,7 +98,7 @@ test("actions should render footer buttons and dismiss on accept", async () => {
 test("close should dismiss a dialog", async () => {
   const Consumer = defineComponent({
     setup() {
-      const dialog = useBridgeDialog();
+      const dialog = useDialogAction();
 
       const id = dialog.open({
         title: "Dismiss me",
@@ -119,7 +119,7 @@ test("close should dismiss a dialog", async () => {
 test("host modal defaults should merge into open options", async () => {
   const Consumer = defineComponent({
     setup() {
-      const dialog = useBridgeDialog();
+      const dialog = useDialogAction();
 
       dialog.open({
         title: "Small dialog",
@@ -129,8 +129,8 @@ test("host modal defaults should merge into open options", async () => {
 
   mount(BridgeDialogHost, {
     attachTo: document.body,
-    props: { modal: { size: "sm", transition: "none" } },
     slots: { default: () => h(Consumer) },
+    props: { modal: { size: "sm", transition: "none" } },
   });
 
   await flushPromises();

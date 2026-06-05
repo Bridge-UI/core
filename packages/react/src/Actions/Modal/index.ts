@@ -13,5 +13,5 @@ export { BridgeModalHost } from "@/Actions/Modal/BridgeModalHost";
 export type { BridgeModalHostProps } from "@/Actions/Modal/BridgeModalHost";
 export {
   BridgeModalHostMissingError,
-  useBridgeModal,
-} from "@/Actions/Modal/useBridgeModal";
+  useModalAction,
+} from "@/Actions/Modal/useModalAction";

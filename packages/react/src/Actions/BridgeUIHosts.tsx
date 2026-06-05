@@ -27,7 +27,7 @@ export type BridgeUIHostsProps = {
 
 /**
  * Convenience wrapper that mounts snackbar, dialog, and modal hosts.
- * Use when the app needs `useBridgeSnackbar()`, `useBridgeDialog()`, and/or `useBridgeModal()`.
+ * Use when the app needs `useSnackbarAction()`, `useDialogAction()`, and/or `useModalAction()`.
  */
 export function BridgeUIHosts({
   children,

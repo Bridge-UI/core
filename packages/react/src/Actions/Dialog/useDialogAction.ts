@@ -8,12 +8,12 @@ import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
 
 export class BridgeDialogHostMissingError extends Error {
   constructor() {
-    super("useBridgeDialog() requires <BridgeDialogHost /> in the app tree.");
+    super("useDialogAction() requires <BridgeDialogHost /> in the app tree.");
     this.name = "BridgeDialogHostMissingError";
   }
 }
 
-export function useBridgeDialog(): BridgeDialogApi {
+export function useDialogAction(): BridgeDialogApi {
   const api = useContext(BridgeDialogContext);
 
   const apiRef = useRef(api);

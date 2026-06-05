@@ -9,13 +9,13 @@ import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbar
 export class BridgeSnackbarHostMissingError extends Error {
   constructor() {
     super(
-      "useBridgeSnackbar() requires <BridgeSnackbarHost /> in the app tree.",
+      "useSnackbarAction() requires <BridgeSnackbarHost /> in the app tree.",
     );
     this.name = "BridgeSnackbarHostMissingError";
   }
 }
 
-export function useBridgeSnackbar(): BridgeSnackbarApi {
+export function useSnackbarAction(): BridgeSnackbarApi {
   const api = inject(BRIDGE_SNACKBAR_INJECTION_KEY);
 
   if (!api) {

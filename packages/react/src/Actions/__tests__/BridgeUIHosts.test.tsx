@@ -5,8 +5,8 @@ import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
-import { useBridgeModal } from "@/Actions/Modal";
-import { useBridgeSnackbar } from "@/Actions/Snackbar";
+import { useModalAction } from "@/Actions/Modal";
+import { useSnackbarAction } from "@/Actions/Snackbar";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
@@ -19,8 +19,8 @@ function Content() {
 }
 
 function OpenBothOnMount() {
-  const modal = useBridgeModal();
-  const snackbar = useBridgeSnackbar();
+  const modal = useModalAction();
+  const snackbar = useSnackbarAction();
 
   useEffect(() => {
     modal.open({ component: Content, modal: { transition: "none" } });

@@ -7,7 +7,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import {
   BridgeDialogHost,
   BridgeDialogHostMissingError,
-  useBridgeDialog,
+  useDialogAction,
 } from "@/Actions/Dialog";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
@@ -20,9 +20,9 @@ afterEach(() => {
 function RunOnMount({
   onMount,
 }: {
-  onMount: (dialog: ReturnType<typeof useBridgeDialog>) => void;
+  onMount: (dialog: ReturnType<typeof useDialogAction>) => void;
 }) {
-  const dialog = useBridgeDialog();
+  const dialog = useDialogAction();
 
   useEffect(() => {
     onMount(dialog);
@@ -32,9 +32,9 @@ function RunOnMount({
   return null;
 }
 
-test("useBridgeDialog should throw when BridgeDialogHost is missing", () => {
+test("useDialogAction should throw when BridgeDialogHost is missing", () => {
   function BadConsumer() {
-    useBridgeDialog();
+    useDialogAction();
 
     return null;
   }

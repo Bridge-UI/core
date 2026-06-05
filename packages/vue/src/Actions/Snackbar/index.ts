@@ -12,5 +12,5 @@ export type {
 export { default as BridgeSnackbarHost } from "@/Actions/Snackbar/BridgeSnackbarHost.vue";
 export {
   BridgeSnackbarHostMissingError,
-  useBridgeSnackbar,
-} from "@/Actions/Snackbar/useBridgeSnackbar";
+  useSnackbarAction,
+} from "@/Actions/Snackbar/useSnackbarAction";

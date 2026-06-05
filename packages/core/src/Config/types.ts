@@ -302,18 +302,18 @@ export interface ModalConfigBase {
 export interface SnackbarConfigBase {
   classes: object;
   defaultProps: Partial<{
-    color: keyof SnackbarColor;
-    position: keyof SnackbarPosition;
-    teleportTo: string | false;
-    transition: keyof SnackbarTransition;
-    duration: number | false;
     closeButton: boolean;
     progressbar: boolean;
+    duration: number | false;
+    color: keyof SnackbarColor;
+    teleportTo: string | false;
+    position: keyof SnackbarPosition;
+    transition: keyof SnackbarTransition;
   }>;
   customProps: Partial<{
-    color: Record<string, SnackbarColorItem>;
     position: Record<string, string>;
     transition: Record<string, string>;
+    color: Record<string, SnackbarColorItem>;
   }>;
 }
 

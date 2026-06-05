@@ -17,8 +17,8 @@ export const LAYER_STACK_BASE_Z_INDEX = 50;
 type LayerStackEntry = {
   id: LayerId;
   order: number;
-  onEscape?: () => void;
   lockScroll?: boolean;
+  onEscape?: () => void;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -277,8 +277,8 @@ export function pushLayerStack(
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);
-  const order = options.order ?? acquireLayerStackOrder();
   const lockScroll = options.lockScroll !== false;
+  const order = options.order ?? acquireLayerStackOrder();
 
   stack.push({
     id,

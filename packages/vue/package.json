@@ -17,6 +17,10 @@
       "import": "./dist/Provider/index.js",
       "types": "./dist/Provider/index.d.ts"
     },
+    "./Actions": {
+      "import": "./dist/Actions/index.js",
+      "types": "./dist/Actions/index.d.ts"
+    },
     "./Components/*": {
       "import": "./dist/Components/*/index.js",
       "types": "./dist/Components/*/index.d.ts"

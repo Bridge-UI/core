@@ -12,5 +12,5 @@ export type {
 export { default as BridgeDialogHost } from "@/Actions/Dialog/BridgeDialogHost.vue";
 export {
   BridgeDialogHostMissingError,
-  useBridgeDialog,
-} from "@/Actions/Dialog/useBridgeDialog";
+  useDialogAction,
+} from "@/Actions/Dialog/useDialogAction";

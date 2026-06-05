@@ -15,14 +15,14 @@ import { Modal } from "@/Components/Modal";
 
 const props = defineProps<{
   /**
-   * Default shell options merged into every modal opened via `useBridgeModal()`.
+   * Default shell options merged into every modal opened via `useModalAction()`.
    * Per-call `open({ modal })` overrides these.
    */
   modal?: BridgeModalShellProps;
 }>();
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host.";
+  "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";
 
 const parentApi = inject(BRIDGE_MODAL_INJECTION_KEY, null);
 

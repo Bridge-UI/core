@@ -9,11 +9,11 @@ import BridgeDialogItem from "@/Actions/Dialog/BridgeDialogItem.vue";
 import { createBridgeDialogApi } from "@/Actions/Dialog/createBridgeDialogApi";
 
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeDialogHost /> detected. useBridgeDialog() will target the nearest host only. Remove the extra host.";
+  "[Bridge UI] Nested <BridgeDialogHost /> detected. useDialogAction() will target the nearest host only. Remove the extra host.";
 
 const props = defineProps<{
   /**
-   * Default Modal shell options merged into every dialog opened via `useBridgeDialog()`.
+   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
    * Per-call `open({ modal })` overrides these.
    */
   modal?: BridgeDialogShellProps;

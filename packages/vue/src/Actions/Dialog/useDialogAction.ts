@@ -8,12 +8,12 @@ import { BRIDGE_DIALOG_INJECTION_KEY } from "@/Actions/Dialog/bridgeDialogInject
 
 export class BridgeDialogHostMissingError extends Error {
   constructor() {
-    super("useBridgeDialog() requires <BridgeDialogHost /> in the app tree.");
+    super("useDialogAction() requires <BridgeDialogHost /> in the app tree.");
     this.name = "BridgeDialogHostMissingError";
   }
 }
 
-export function useBridgeDialog(): BridgeDialogApi {
+export function useDialogAction(): BridgeDialogApi {
   const api = inject(BRIDGE_DIALOG_INJECTION_KEY);
 
   if (!api) {

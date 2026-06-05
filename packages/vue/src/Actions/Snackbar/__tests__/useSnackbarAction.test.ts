@@ -10,7 +10,7 @@ import { resetLayerStackForTests } from "@bridge-ui/core";
 import {
   BridgeSnackbarHost,
   BridgeSnackbarHostMissingError,
-  useBridgeSnackbar,
+  useSnackbarAction,
 } from "@/Actions/Snackbar";
 afterEach(() => {
   vi.useRealTimers();
@@ -26,10 +26,10 @@ function mountWithSnackbarHost(child: ReturnType<typeof defineComponent>) {
   });
 }
 
-test("useBridgeSnackbar should throw when BridgeSnackbarHost is missing", () => {
+test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => {
   const BadConsumer = defineComponent({
     setup() {
-      useBridgeSnackbar();
+      useSnackbarAction();
     },
   });
 
@@ -39,7 +39,7 @@ test("useBridgeSnackbar should throw when BridgeSnackbarHost is missing", () => 
 test("open should return an id and render snackbar content", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Saved",
@@ -61,7 +61,7 @@ test("open should return an id and render snackbar content", async () => {
 test("close should dismiss a snackbar", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       const id = snackbar.open({
         duration: false,
@@ -87,7 +87,7 @@ test("close should dismiss a snackbar", async () => {
 test("closeAll should dismiss every snackbar", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "One",
@@ -115,7 +115,7 @@ test("closeAll should dismiss every snackbar", async () => {
 test("accept action should use the snackbar color, not primary", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Saved",
@@ -141,7 +141,7 @@ test("accept action should use the snackbar color, not primary", async () => {
 test("top-center should grow downward with newest below oldest", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Older",
@@ -179,7 +179,7 @@ test("top-center should grow downward with newest below oldest", async () => {
 test("bottom-center should stack upward from the viewport edge", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Older",
@@ -217,7 +217,7 @@ test("bottom-center should stack upward from the viewport edge", async () => {
 test("imperative snackbars should stack in a single notification column", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "One",
@@ -249,7 +249,7 @@ test("imperative snackbars should stack in a single notification column", async 
 test("host snackbar defaults should merge into open options", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Dense default",
@@ -278,7 +278,7 @@ test("host snackbar defaults should merge into open options", async () => {
 test("host timeout should auto-dismiss snackbars", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Timed out",
@@ -306,7 +306,7 @@ test("host timeout should auto-dismiss snackbars", async () => {
 test("open duration should override host timeout", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "Persistent",
@@ -333,7 +333,7 @@ test("open duration should override host timeout", async () => {
 test("max should close the oldest snackbar when the limit is exceeded", async () => {
   const Consumer = defineComponent({
     setup() {
-      const snackbar = useBridgeSnackbar();
+      const snackbar = useSnackbarAction();
 
       snackbar.open({
         title: "One",
