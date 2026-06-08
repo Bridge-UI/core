@@ -67,6 +67,7 @@ export { transitionProps } from "@core/Components/Modal";
 export type {
   ModalAlign,
   ModalBlur,
+  ModalScroll,
   ModalSize,
   ModalTransition,
   ModalTransitionLayer,
@@ -160,7 +161,11 @@ export {
   adjustAutosizeTextareaHeight,
   cn,
   countModalTransitionLayers,
+  createFocusTrap,
+  createFocusable,
   createMergePartBind,
+  createPositionable,
+  getFocusableElements,
   getLayerStackEntry,
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,
@@ -183,6 +188,9 @@ export {
 } from "@core/Utils";
 export type {
   ClassPropKey,
+  FocusTrap,
+  FocusTrapOptions,
+  FocusableHandle,
   LayerStackHandle,
   LayerStackSnapshotEntry,
   LibDefaultsShape,
@@ -191,5 +199,9 @@ export type {
   MergePartBind,
   MergeProps,
   Overwrite,
+  PositionHandle,
+  PositionOptions,
+  PositionPlacement,
+  PositionStrategy,
   UnionProps,
 } from "@core/Utils";

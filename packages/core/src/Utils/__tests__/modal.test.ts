@@ -54,6 +54,66 @@ test("it should ref-count body scroll lock", () => {
   expect(document.body.style.overflow).toBe("");
 });
 
+test("it should compensate body padding when a scrollbar is present", () => {
+  const innerWidthSpy = vi
+    .spyOn(window, "innerWidth", "get")
+    .mockReturnValue(1024);
+  const clientWidthSpy = vi
+    .spyOn(document.documentElement, "clientWidth", "get")
+    .mockReturnValue(1007);
+
+  document.body.style.paddingRight = "8px";
+
+  const handle = pushLayerStack();
+
+  expect(document.body.style.overflow).toBe("hidden");
+  expect(document.body.style.paddingRight).toBe("25px");
+
+  handle.release();
+
+  expect(document.body.style.overflow).toBe("");
+  expect(document.body.style.paddingRight).toBe("8px");
+
+  innerWidthSpy.mockRestore();
+  clientWidthSpy.mockRestore();
+});
+
+test("it should not add body padding when no scrollbar is shown", () => {
+  const innerWidthSpy = vi
+    .spyOn(window, "innerWidth", "get")
+    .mockReturnValue(1024);
+  const clientWidthSpy = vi
+    .spyOn(document.documentElement, "clientWidth", "get")
+    .mockReturnValue(1024);
+
+  const handle = pushLayerStack();
+
+  expect(document.body.style.overflow).toBe("hidden");
+  expect(document.body.style.paddingRight).toBe("");
+
+  handle.release();
+
+  innerWidthSpy.mockRestore();
+  clientWidthSpy.mockRestore();
+});
+
+test("it should release scroll lock before the layer leaves the stack", () => {
+  const handle = pushLayerStack();
+
+  expect(document.body.style.overflow).toBe("hidden");
+  expect(getLayerStackSnapshot()).toHaveLength(1);
+
+  handle.releaseScrollLock();
+
+  expect(document.body.style.overflow).toBe("");
+  expect(getLayerStackSnapshot()).toHaveLength(1);
+
+  handle.release();
+
+  expect(document.body.style.overflow).toBe("");
+  expect(getLayerStackSnapshot()).toHaveLength(0);
+});
+
 test("it should invoke only the topmost modal handler", () => {
   const outerEscape = vi.fn();
   const innerEscape = vi.fn();

@@ -150,6 +150,14 @@ export function splitComponentProps<
 
 export { hasDocument, hasWindow } from "@core/Utils/env";
 export {
+  createFocusable,
+  createFocusTrap,
+  getFocusableElements,
+  type FocusableHandle,
+  type FocusTrap,
+  type FocusTrapOptions,
+} from "@core/Utils/focus";
+export {
   acquireLayerStackOrder,
   countModalTransitionLayers,
   createLayerId,
@@ -171,6 +179,13 @@ export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@core/Utils/portal";
+export {
+  createPositionable,
+  type PositionHandle,
+  type PositionOptions,
+  type PositionPlacement,
+  type PositionStrategy,
+} from "@core/Utils/position";
 export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
