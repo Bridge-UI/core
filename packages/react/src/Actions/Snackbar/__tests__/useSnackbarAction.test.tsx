@@ -1,5 +1,6 @@
 // ** External Imports
 import { act, render, waitFor } from "@testing-library/react";
+import { isString } from "es-toolkit/compat";
 import { useEffect } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
@@ -316,6 +317,171 @@ test("open duration should override host timeout", async () => {
   await new Promise((resolve) => setTimeout(resolve, 150));
 
   expect(document.body.textContent).toContain("Persistent");
+});
+
+test("isOpen and stackSize should reflect mounted entries", async () => {
+  let api!: ReturnType<typeof useSnackbarAction>;
+  let id = "";
+
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          api = snackbar;
+          id = snackbar.open({
+            duration: false,
+            title: "Tracked",
+            transition: "none",
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Tracked");
+  });
+
+  expect(isString(id)).toBe(true);
+  expect(api.isOpen(id)).toBe(true);
+  expect(api.stackSize).toBe(1);
+
+  act(() => {
+    api.close(id);
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).not.toContain("Tracked");
+  });
+
+  expect(api.isOpen(id)).toBe(false);
+  expect(api.stackSize).toBe(0);
+});
+
+test("closeTop should close only the topmost snackbar", async () => {
+  let api!: ReturnType<typeof useSnackbarAction>;
+  let firstId = "";
+  let secondId = "";
+
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          api = snackbar;
+          firstId = snackbar.open({
+            title: "First",
+            duration: false,
+            transition: "none",
+          });
+          secondId = snackbar.open({
+            title: "Second",
+            duration: false,
+            transition: "none",
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("First");
+    expect(document.body.textContent).toContain("Second");
+  });
+
+  act(() => {
+    api.closeTop();
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).not.toContain("Second");
+    expect(document.body.textContent).toContain("First");
+  });
+
+  expect(api.isOpen(secondId)).toBe(false);
+  expect(api.isOpen(firstId)).toBe(true);
+  expect(api.stackSize).toBe(1);
+});
+
+test("onClose should run before onClosed when close is called", async () => {
+  const onClose = vi.fn();
+  const onClosed = vi.fn();
+  let api!: ReturnType<typeof useSnackbarAction>;
+  let id = "";
+
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          api = snackbar;
+          id = snackbar.open({
+            onClose,
+            onClosed,
+            duration: false,
+            title: "Lifecycle",
+            transition: "none",
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Lifecycle");
+  });
+
+  act(() => {
+    api.close(id);
+  });
+
+  expect(onClose).toHaveBeenCalledOnce();
+  expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
+    onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+  );
+
+  await waitFor(() => {
+    expect(onClosed).toHaveBeenCalledOnce();
+  });
+});
+
+test("update should patch props on an open snackbar", async () => {
+  render(
+    <BridgeSnackbarHost>
+      <RunOnMount
+        onMount={(snackbar) => {
+          const openedId = snackbar.open({
+            title: "Before",
+            duration: false,
+            transition: "none",
+          });
+
+          snackbar.update(openedId, { props: { title: "After" } });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("After");
+    expect(document.body.textContent).not.toContain("Before");
+  });
+});
+
+test("nested BridgeSnackbarHost should warn in development", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+  render(
+    <BridgeSnackbarHost>
+      <BridgeSnackbarHost>
+        <span>nested</span>
+      </BridgeSnackbarHost>
+    </BridgeSnackbarHost>,
+  );
+
+  expect(warn).toHaveBeenCalledWith(
+    "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useSnackbarAction() will target the nearest host only. Remove the extra host.",
+  );
+
+  warn.mockRestore();
 });
 
 test("max should close the oldest snackbar when the limit is exceeded", async () => {

@@ -1,16 +1,19 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { shallowRef } from "vue";
 
 // ** Core Imports
 import {
+  closeAllLayers,
   closeLayer,
   closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
-  hideLayer,
   isLayerMounted,
   removeLayer,
-  updateLayer,
+  syncLayerShow,
+  trimLayersToMax,
+  updateLayerMerged,
   type LayerId,
 } from "@bridge-ui/core";
 
@@ -52,30 +55,15 @@ function resolveOpenOptions(
   openOptions: BridgeSnackbarOpenOptions,
   timeout: number | false | undefined,
 ): BridgeSnackbarOpenOptions {
-  if (openOptions.duration !== undefined) {
+  if (!isNil(openOptions.duration)) {
     return openOptions;
   }
 
-  if (timeout === undefined) {
+  if (isNil(timeout)) {
     return openOptions;
   }
 
   return { ...openOptions, duration: timeout };
-}
-
-function trimToMax<T extends { id: LayerId; show: boolean }>(
-  entries: T[],
-  max: number,
-): T[] {
-  let next = entries;
-  let visible = next.filter((entry) => entry.show);
-
-  while (visible.length >= max) {
-    next = closeLayer(next, visible[0]!.id);
-    visible = next.filter((entry) => entry.show);
-  }
-
-  return next;
 }
 
 export function createBridgeSnackbarApi(
@@ -91,7 +79,7 @@ export function createBridgeSnackbarApi(
     let next = entries.value;
 
     if (max != null && max > 0) {
-      next = trimToMax(next, max);
+      next = trimLayersToMax(next, max);
     }
 
     entries.value = [
@@ -111,15 +99,7 @@ export function createBridgeSnackbarApi(
   }
 
   function closeAll() {
-    let next = entries.value;
-
-    for (const entry of entries.value) {
-      if (entry.show) {
-        next = closeLayer(next, entry.id);
-      }
-    }
-
-    entries.value = next;
+    entries.value = closeAllLayers(entries.value);
   }
 
   function isOpen(id: LayerId) {
@@ -131,29 +111,11 @@ export function createBridgeSnackbarApi(
   }
 
   function update(id: LayerId, options: BridgeSnackbarUpdateOptions) {
-    const entry = entries.value.find((item) => item.id === id);
-
-    if (!entry || !options.props) {
-      entries.value = updateLayer(entries.value, id, options);
-
-      return;
-    }
-
-    entries.value = updateLayer(entries.value, id, {
-      props: { ...entry.props, ...options.props },
-    });
+    entries.value = updateLayerMerged(entries.value, id, options, ["props"]);
   }
 
   function syncShow(id: LayerId, show: boolean) {
-    const entry = entries.value.find((item) => item.id === id);
-
-    if (!entry || entry.show === show) {
-      return;
-    }
-
-    entries.value = show
-      ? updateLayer(entries.value, id, { show: true })
-      : hideLayer(entries.value, id);
+    entries.value = syncLayerShow(entries.value, id, show);
   }
 
   return {

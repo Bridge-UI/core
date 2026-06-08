@@ -7,10 +7,10 @@ import {
   closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
-  hideLayer,
   isLayerMounted,
   removeLayer,
-  updateLayer,
+  syncLayerShow,
+  updateLayerMerged,
   type LayerId,
 } from "@bridge-ui/core";
 
@@ -69,41 +69,15 @@ export function useBridgeDialogController(): BridgeDialogController {
 
   const update = useCallback(
     (id: LayerId, options: BridgeDialogUpdateOptions) => {
-      setEntries((current) => {
-        const entry = current.find((item) => item.id === id);
-
-        if (!entry) {
-          return current;
-        }
-
-        const patch: Partial<BridgeDialogEntry> = {};
-
-        if (options.props) {
-          patch.props = { ...entry.props, ...options.props };
-        }
-
-        if (options.modal) {
-          patch.modal = { ...entry.modal, ...options.modal };
-        }
-
-        return updateLayer(current, id, patch);
-      });
+      setEntries((current) =>
+        updateLayerMerged(current, id, options, ["props", "modal"]),
+      );
     },
     [],
   );
 
   const syncShow = useCallback((id: LayerId, show: boolean) => {
-    setEntries((current) => {
-      const entry = current.find((item) => item.id === id);
-
-      if (!entry || entry.show === show) {
-        return current;
-      }
-
-      return show
-        ? updateLayer(current, id, { show: true })
-        : hideLayer(current, id);
-    });
+    setEntries((current) => syncLayerShow(current, id, show));
   }, []);
 
   return useMemo(() => {

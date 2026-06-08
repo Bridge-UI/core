@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
@@ -151,7 +151,7 @@ export function useTextarea(
       formField.inputBind.value,
       {
         ...(autosize.value ? { onInput: handleAutosize } : {}),
-        ...(rows.value !== undefined ? { rows: rows.value } : {}),
+        ...(!isNil(rows.value) ? { rows: rows.value } : {}),
       },
       cn({
         "flex-1 min-w-0": likeInput.value,

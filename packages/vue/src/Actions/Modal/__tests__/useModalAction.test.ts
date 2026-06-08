@@ -2,6 +2,7 @@
 
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
+import { isString } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, onMounted } from "vue";
 
@@ -133,7 +134,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
 
   await flushPromises();
 
-  expect(typeof id).toBe("string");
+  expect(isString(id)).toBe(true);
   expect(id.length).toBeGreaterThan(0);
   expect(bridgeModal.isOpen(id)).toBe(true);
   expect(bridgeModal.stackSize).toBe(1);

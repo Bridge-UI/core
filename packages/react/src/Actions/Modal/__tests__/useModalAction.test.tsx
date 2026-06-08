@@ -1,5 +1,6 @@
 // ** External Imports
 import { act, render, waitFor } from "@testing-library/react";
+import { isString } from "es-toolkit/compat";
 import { useEffect } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
@@ -139,7 +140,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
     expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
   });
 
-  expect(typeof id).toBe("string");
+  expect(isString(id)).toBe(true);
   expect(api.isOpen(id)).toBe(true);
   expect(api.stackSize).toBe(1);
 

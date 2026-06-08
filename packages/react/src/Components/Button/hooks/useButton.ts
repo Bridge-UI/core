@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -151,7 +151,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   }, [merged.size, merged.density, bridgeButton?.customProps?.density]);
 
   const variantKey = useMemo(() => {
-    if (customProps.variant !== undefined) {
+    if (!isNil(customProps.variant)) {
       return customProps.variant;
     }
 

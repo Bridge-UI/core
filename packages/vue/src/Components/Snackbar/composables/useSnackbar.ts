@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNull, omit } from "es-toolkit/compat";
+import { get, isNil, isNull, isObject, omit } from "es-toolkit/compat";
 import type { LucideIcon } from "lucide-vue-next";
 import {
   computed,
@@ -145,7 +145,7 @@ export function useSnackbar(
 
   // Elements
   const show = computed(() => {
-    if (options.show !== undefined) {
+    if (!isNil(options.show)) {
       return toValue(options.show);
     }
 
@@ -228,6 +228,10 @@ export function useSnackbar(
   function setShow(next: boolean) {
     if (!next) {
       options.onClose?.();
+    }
+
+    if (isObject(options.show) && "value" in options.show) {
+      options.show.value = next;
     }
 
     options.onShowChange?.(next);

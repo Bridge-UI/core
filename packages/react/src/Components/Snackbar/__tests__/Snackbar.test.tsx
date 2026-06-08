@@ -15,6 +15,80 @@ afterEach(() => {
 // ** Local Imports
 import { Snackbar } from "@/Components/Snackbar";
 
+test("it should not render when show is false", () => {
+  render(<Snackbar show={false} title="Hidden" duration={false} />);
+
+  expect(
+    document.body.querySelector('[data-snackbar-part="panel"]'),
+  ).toBeNull();
+});
+
+test("it should render in a portal when show is true", () => {
+  render(
+    <Snackbar show title="Toast" duration={false} transition="none">
+      Body
+    </Snackbar>,
+  );
+
+  expect(screen.getByRole("status")).toBeTruthy();
+  expect(document.body.textContent).toContain("Toast");
+  expect(document.body.textContent).toContain("Body");
+  expect(document.body.querySelector("[data-snackbar-layer]")).not.toBeNull();
+});
+
+test("it should call onClose when close button is clicked", () => {
+  const onClose = vi.fn();
+
+  render(
+    <Snackbar
+      show
+      title="Close me"
+      duration={false}
+      transition="none"
+      onClose={onClose}
+    />,
+  );
+
+  fireEvent.click(screen.getByLabelText("Close"));
+
+  expect(onClose).toHaveBeenCalledOnce();
+});
+
+test("it should call onShowChange on escape keydown", () => {
+  const onShowChange = vi.fn();
+
+  render(
+    <Snackbar
+      show
+      title="Dismiss"
+      duration={false}
+      transition="none"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+  expect(onShowChange).toHaveBeenCalledWith(false);
+});
+
+test("it should apply top-center position classes on the portal layer", () => {
+  render(
+    <Snackbar
+      show
+      title="Top"
+      position="top-center"
+      duration={false}
+      transition="none"
+    />,
+  );
+
+  const layer = document.body.querySelector("[data-snackbar-layer]");
+
+  expect(layer?.className).toContain("items-start");
+  expect(layer?.className).toContain("justify-center");
+});
+
 test("it should render title and description when show is true", () => {
   render(
     <Snackbar

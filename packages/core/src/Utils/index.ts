@@ -1,7 +1,15 @@
 // ** External Imports
 import type { ClassValue } from "clsx";
 import clsx from "clsx";
-import { compact, get, isNil, omit, pick, reduce } from "es-toolkit/compat";
+import {
+  compact,
+  get,
+  isNil,
+  isString,
+  omit,
+  pick,
+  reduce,
+} from "es-toolkit/compat";
 import { toMerged } from "es-toolkit/object";
 import { twMerge } from "tailwind-merge";
 
@@ -16,7 +24,7 @@ function toBridgeProps<K extends ClassPropKey>(
   classKey: K,
   value: object | string | undefined,
 ): Record<string, unknown> {
-  if (typeof value === "string") {
+  if (isString(value)) {
     return { [classKey]: value };
   }
 
@@ -140,6 +148,7 @@ export function splitComponentProps<
   };
 }
 
+export { hasDocument, hasWindow } from "@core/Utils/env";
 export {
   acquireLayerStackOrder,
   countModalTransitionLayers,

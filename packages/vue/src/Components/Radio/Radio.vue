@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Local Imports
@@ -40,7 +41,7 @@ const {
 );
 
 function onChange() {
-  if (merged.value.value !== undefined) {
+  if (!isNil(merged.value.value)) {
     model.value = merged.value.value;
   }
 }

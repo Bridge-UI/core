@@ -1,3 +1,4 @@
+import { isNil } from "es-toolkit/compat";
 import type { ChangeEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
@@ -62,7 +63,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
     const next = base + step;
 
-    if (max !== undefined && next > max) {
+    if (!isNil(max) && next > max) {
       return false;
     }
 
@@ -76,7 +77,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
     const next = base - step;
 
-    if (min !== undefined && next < min) {
+    if (!isNil(min) && next < min) {
       return false;
     }
 
@@ -85,8 +86,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
     return true;
   }, [min, step, setValue]);
 
-  const inputValue =
-    currentValue === undefined ? undefined : String(currentValue);
+  const inputValue = isNil(currentValue) ? undefined : String(currentValue);
 
   return {
     decrement,

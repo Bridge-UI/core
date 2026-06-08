@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 // ** External Imports
+import { isString } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -81,7 +82,7 @@ test("isLayerStackTop should reflect highest open order", () => {
 test("pushLayerStack should use string ids", () => {
   const handle = pushLayerStack();
 
-  expect(typeof handle.id).toBe("string");
+  expect(isString(handle.id)).toBe(true);
   expect(handle.id.length).toBeGreaterThan(0);
 });
 
@@ -89,7 +90,7 @@ test("createLayerId should generate unique ids", () => {
   const first = createLayerId();
   const second = createLayerId();
 
-  expect(typeof first).toBe("string");
+  expect(isString(first)).toBe(true);
   expect(first.length).toBeGreaterThan(0);
   expect(second).not.toBe(first);
 });

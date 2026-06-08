@@ -1,3 +1,4 @@
+import { isNil } from "es-toolkit/compat";
 import { useCallback, useMemo, useState } from "react";
 
 export type UsePasswordFieldOptions = {
@@ -8,8 +9,7 @@ export type UsePasswordFieldOptions = {
 export function usePasswordField(options: UsePasswordFieldOptions = {}) {
   const [internalVisible, setInternalVisible] = useState(false);
 
-  const isControlled =
-    options.visible !== undefined && options.visible !== null;
+  const isControlled = !isNil(options.visible);
 
   const isVisible = useMemo(() => {
     if (isControlled) {

@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 // ** Core Imports
 import {
   cn,
+  hasDocument,
   mergeBridgeUILayeredClasses,
   resolveModalPortalElement,
   snackbarPositionProps,
@@ -119,7 +120,7 @@ export function BridgeSnackbarHost({
   );
 
   const portalElement = derived(() => {
-    if (teleportTo === false || typeof document === "undefined") {
+    if (teleportTo === false || !hasDocument()) {
       return null;
     }
 

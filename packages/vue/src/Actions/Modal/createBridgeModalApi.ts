@@ -7,9 +7,9 @@ import {
   closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
-  hideLayer,
   isLayerMounted,
   removeLayer,
+  syncLayerShow,
   updateLayer,
   type LayerId,
 } from "@bridge-ui/core";
@@ -74,15 +74,7 @@ export function createBridgeModalApi(): BridgeModalController {
   }
 
   function syncShow(id: LayerId, show: boolean) {
-    const entry = entries.value.find((item) => item.id === id);
-
-    if (!entry || entry.show === show) {
-      return;
-    }
-
-    entries.value = show
-      ? updateLayer(entries.value, id, { show: true })
-      : hideLayer(entries.value, id);
+    entries.value = syncLayerShow(entries.value, id, show);
   }
 
   return {

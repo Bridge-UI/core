@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { Check } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -103,7 +103,7 @@ export function useCheckbox(
   });
 
   const isControlled = derived(() => {
-    return customProps.checked !== undefined;
+    return !isNil(customProps.checked);
   });
 
   const checked = derived(() => {

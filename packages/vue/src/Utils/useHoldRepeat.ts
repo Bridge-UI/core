@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { onBeforeUnmount, toValue, type MaybeRefOrGetter } from "vue";
 
 export type HoldRepeatAction = () => boolean | void;
@@ -22,12 +23,12 @@ export function useHoldRepeat(
   let intervalTimer: ReturnType<typeof setInterval> | undefined;
 
   const stop = () => {
-    if (delayTimer !== undefined) {
+    if (!isNil(delayTimer)) {
       clearTimeout(delayTimer);
       delayTimer = undefined;
     }
 
-    if (intervalTimer !== undefined) {
+    if (!isNil(intervalTimer)) {
       clearInterval(intervalTimer);
       intervalTimer = undefined;
     }

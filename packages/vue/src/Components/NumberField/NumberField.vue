@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import { computed } from "vue";
 
@@ -76,14 +77,14 @@ const mergedPartsProps = computed(() => {
 
 const stringModel = computed({
   get: () => {
-    if (model.value === undefined || model.value === null) {
+    if (isNil(model.value)) {
       return undefined;
     }
 
     return String(model.value);
   },
   set: (raw: string | null | undefined) => {
-    if (raw === "" || raw === undefined || raw === null) {
+    if (raw === "" || isNil(raw)) {
       model.value = undefined;
 
       return;

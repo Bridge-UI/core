@@ -7,7 +7,7 @@ import {
   findLayerEntry,
   invokeLayerDismiss,
 } from "@core/Layer/host";
-import type { LayerRegistryEntry } from "@core/Layer/registry";
+import type { LayerRegistryEntry } from "@core/Layer/types";
 
 type TestEntry = LayerRegistryEntry & { label: string };
 

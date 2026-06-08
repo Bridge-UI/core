@@ -135,9 +135,11 @@ export type {
   ToggleConfigOverrides,
 } from "@core/Config";
 export {
+  closeAllLayers,
   closeLayer,
   closeTopLayer,
   completeLayerHide,
+  createLayerId,
   createOpenLayerEntry,
   findLayerEntry,
   getLayerCount,
@@ -146,24 +148,28 @@ export {
   isLayerMounted,
   mergeLayerShellProps,
   removeLayer,
+  syncLayerShow,
+  trimLayersToMax,
   updateLayer,
+  updateLayerMerged,
 } from "@core/Layer";
-export type { LayerId, LayerRegistryEntry } from "@core/Layer";
+export type { LayerId } from "@core/Layer";
 export {
   LAYER_STACK_BASE_Z_INDEX,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
   cn,
   countModalTransitionLayers,
-  createLayerId,
   createMergePartBind,
   getLayerStackEntry,
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   getSnackbarTransitionClass,
+  hasDocument,
   hasModalTransition,
   hasSnackbarTransition,
+  hasWindow,
   isLayerStackTop,
   isModalBackdropClick,
   mergeBridgeUILayeredClasses,

@@ -5,6 +5,7 @@ import { defineComponent, h, nextTick } from "vue";
 
 // ** Local Imports
 import BridgeUIHosts from "@/Actions/BridgeUIHosts.vue";
+import { useDialogAction } from "@/Actions/Dialog";
 import { useModalAction } from "@/Actions/Modal";
 import { useSnackbarAction } from "@/Actions/Snackbar";
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -20,13 +21,20 @@ const Content = defineComponent({
   },
 });
 
-test("BridgeUIHosts should mount modal and snackbar imperatives", async () => {
+test("BridgeUIHosts should mount modal, dialog, and snackbar imperatives", async () => {
   const Consumer = defineComponent({
     setup() {
       const modal = useModalAction();
+      const dialog = useDialogAction();
       const snackbar = useSnackbarAction();
 
       modal.open({ component: Content, modal: { transition: "none" } });
+
+      dialog.open({
+        title: "Confirm",
+        description: "Are you sure?",
+        modal: { transition: "none" },
+      });
 
       snackbar.open({
         title: "Toast",
@@ -45,5 +53,7 @@ test("BridgeUIHosts should mount modal and snackbar imperatives", async () => {
   await nextTick();
 
   expect(document.body.textContent).toContain("Modal");
+  expect(document.body.textContent).toContain("Confirm");
+  expect(document.body.textContent).toContain("Are you sure?");
   expect(document.body.textContent).toContain("Toast");
 });

@@ -1,5 +1,5 @@
 // ** Local Imports
-import type { LayerId, LayerRegistryEntry } from "@core/Layer/registry";
+import type { LayerId, LayerRegistryEntry } from "@core/Layer/types";
 
 /**
  * Looks up a registry entry by id (read-only).

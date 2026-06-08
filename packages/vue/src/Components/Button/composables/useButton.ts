@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
@@ -142,7 +142,7 @@ export function useButton(
   });
 
   const variantKey = computed(() => {
-    if (split.value.customProps.variant !== undefined) {
+    if (!isNil(split.value.customProps.variant)) {
       return split.value.customProps.variant;
     }
 

@@ -1,14 +1,20 @@
 // ** External Imports
 import { maxBy, remove } from "es-toolkit/array";
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import {
   transitionProps,
   type ModalTransition,
 } from "@core/Components/Modal/Transition";
-import type { LayerId } from "@core/Layer/registry";
+import {
+  createLayerId,
+  resetLayerIdCounterForTests,
+} from "@core/Layer/registry";
+import type { LayerId } from "@core/Layer/types";
+import { hasDocument, hasWindow } from "@core/Utils/env";
 
+export { createLayerId };
 export type { LayerId };
 
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
@@ -27,7 +33,6 @@ const stackListeners = new Set<() => void>();
 
 let nextStackOrder = 0;
 let scrollLockCount = 0;
-let fallbackIdCounter = 0;
 let savedBodyOverflow = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
@@ -65,7 +70,7 @@ export function subscribeLayerStack(listener: () => void): () => void {
  * Attaches the escape listener.
  */
 function attachEscapeListener() {
-  if (escapeListener || typeof window === "undefined") {
+  if (escapeListener || !hasWindow()) {
     return;
   }
 
@@ -78,7 +83,7 @@ function attachEscapeListener() {
  * Detaches the escape listener.
  */
 function detachEscapeListener() {
-  if (!escapeListener || typeof window === "undefined") {
+  if (!escapeListener || !hasWindow()) {
     return;
   }
 
@@ -117,7 +122,7 @@ function handleGlobalEscape(event: KeyboardEvent) {
  * Locks the body scroll.
  */
 function lockBodyScroll() {
-  if (typeof document === "undefined") {
+  if (!hasDocument()) {
     return;
   }
 
@@ -157,7 +162,7 @@ function toStackSnapshotEntry(entry: LayerStackEntry): LayerStackSnapshotEntry {
  * Unlocks the body scroll.
  */
 function unlockBodyScroll() {
-  if (typeof document === "undefined") {
+  if (!hasDocument()) {
     return;
   }
 
@@ -186,27 +191,6 @@ export function countModalTransitionLayers(
   }
 
   return 2;
-}
-
-/**
- * Creates a layer id via `crypto.randomUUID()` when available.
- * When `assigned` is provided (e.g. BridgeModalHost), that value is used as-is.
- */
-export function createLayerId(assigned?: LayerId): LayerId {
-  if (assigned !== undefined && assigned !== "") {
-    return assigned;
-  }
-
-  if (
-    typeof crypto !== "undefined" &&
-    typeof crypto.randomUUID === "function"
-  ) {
-    return crypto.randomUUID();
-  }
-
-  fallbackIdCounter += 1;
-
-  return `layer-${fallbackIdCounter}`;
 }
 
 export function getModalOverlayTransitionClass(
@@ -246,7 +230,7 @@ export function getLayerStackSnapshot(): readonly LayerStackSnapshotEntry[] {
 export function hasModalTransition(
   transition: keyof ModalTransition | undefined,
 ): boolean {
-  return transition !== undefined && transition !== "none";
+  return !isNil(transition) && transition !== "none";
 }
 
 /**
@@ -321,10 +305,10 @@ export function resetLayerStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
-  fallbackIdCounter = 0;
+  resetLayerIdCounterForTests();
   savedBodyOverflow = "";
 
-  if (typeof document !== "undefined") {
+  if (hasDocument()) {
     document.body.style.overflow = "";
   }
 
@@ -342,7 +326,7 @@ export function resolveEffectiveModalTransition(
     return "none";
   }
 
-  if (typeof window === "undefined") {
+  if (!hasWindow()) {
     return transition;
   }
 

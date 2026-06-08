@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { cn, resolveModalPortalElement } from "@bridge-ui/core";
+import { cn, hasDocument, resolveModalPortalElement } from "@bridge-ui/core";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -180,7 +180,7 @@ function Snackbar({
 
   const { teleportTo } = snackbarState.merged;
 
-  if (typeof document === "undefined") {
+  if (!hasDocument()) {
     return null;
   }
 

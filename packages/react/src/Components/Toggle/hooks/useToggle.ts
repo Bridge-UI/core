@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import type { ChangeEvent } from "react";
 import { useMemo, useState } from "react";
 
@@ -96,7 +96,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
   });
 
   const isControlled = derived(() => {
-    return customProps.checked !== undefined;
+    return !isNil(customProps.checked);
   });
 
   const checked = derived(() => {

@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { resolveModalPortalElement } from "@bridge-ui/core/Utils";
+import { hasDocument, resolveModalPortalElement } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useModal } from "@/Components/Modal/hooks/useModal";
@@ -81,7 +81,7 @@ function Modal({
     return shell;
   }
 
-  if (typeof document === "undefined") {
+  if (!hasDocument()) {
     return null;
   }
 

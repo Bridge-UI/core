@@ -1,3 +1,4 @@
+import { isNil } from "es-toolkit/compat";
 import { computed, type Ref } from "vue";
 
 export type UseNumberFieldOptions = {
@@ -15,7 +16,7 @@ export function useNumberField(
   const currentValue = computed(() => model.value ?? undefined);
 
   const inputValue = computed(() => {
-    if (currentValue.value === undefined) {
+    if (isNil(currentValue.value)) {
       return undefined;
     }
 
@@ -31,7 +32,7 @@ export function useNumberField(
 
     const next = base + step;
 
-    if (options.max !== undefined && next > options.max) {
+    if (!isNil(options.max) && next > options.max) {
       return false;
     }
 
@@ -45,7 +46,7 @@ export function useNumberField(
 
     const next = base - step;
 
-    if (options.min !== undefined && next < options.min) {
+    if (!isNil(options.min) && next < options.min) {
       return false;
     }
 

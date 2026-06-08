@@ -1,3 +1,6 @@
+// ** External Imports
+import { isNil } from "es-toolkit/compat";
+
 // ** Local Imports
 import {
   transitionProps,
@@ -13,5 +16,5 @@ export function getSnackbarTransitionClass(
 export function hasSnackbarTransition(
   transition: keyof SnackbarTransition | undefined,
 ): boolean {
-  return transition !== undefined && transition !== "none";
+  return !isNil(transition) && transition !== "none";
 }

@@ -1,3 +1,4 @@
+import { isNil } from "es-toolkit/compat";
 import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
 export type UsePasswordFieldOptions = {
@@ -11,7 +12,7 @@ export function usePasswordField(options: UsePasswordFieldOptions = {}) {
   const visibleProp = computed(() => toValue(options.visible));
 
   const isControlled = computed(() => {
-    return visibleProp.value !== undefined && visibleProp.value !== null;
+    return !isNil(visibleProp.value);
   });
 
   const isVisible = computed(() => {

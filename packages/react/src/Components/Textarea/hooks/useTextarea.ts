@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import {
   useCallback,
   useMemo,
@@ -166,7 +166,7 @@ export function useTextarea(props: TextareaProps) {
         formField.inputBind,
         {
           ref: textareaRef,
-          ...(rows !== undefined ? { rows } : {}),
+          ...(!isNil(rows) ? { rows } : {}),
           ...(autosize ? { onInput: handleAutosize } : {}),
         },
         cn({

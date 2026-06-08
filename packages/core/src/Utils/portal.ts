@@ -1,3 +1,5 @@
+import { hasDocument } from "@core/Utils/env";
+
 /**
  * Resolves where a portal should mount.
  * Returns `null` when rendering in place (`teleportTo={false}`).
@@ -9,7 +11,7 @@ export function resolveModalPortalElement(
     return null;
   }
 
-  if (typeof document === "undefined") {
+  if (!hasDocument()) {
     return null;
   }
 

@@ -5,6 +5,7 @@ import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
+import { useDialogAction } from "@/Actions/Dialog";
 import { useModalAction } from "@/Actions/Modal";
 import { useSnackbarAction } from "@/Actions/Snackbar";
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -18,12 +19,19 @@ function Content() {
   return <p className="bridge-modal-body">Modal</p>;
 }
 
-function OpenBothOnMount() {
+function OpenAllOnMount() {
   const modal = useModalAction();
+  const dialog = useDialogAction();
   const snackbar = useSnackbarAction();
 
   useEffect(() => {
     modal.open({ component: Content, modal: { transition: "none" } });
+
+    dialog.open({
+      title: "Confirm",
+      description: "Are you sure?",
+      modal: { transition: "none" },
+    });
 
     snackbar.open({
       title: "Toast",
@@ -36,15 +44,17 @@ function OpenBothOnMount() {
   return null;
 }
 
-test("BridgeUIHosts should mount modal and snackbar imperatives", async () => {
+test("BridgeUIHosts should mount modal, dialog, and snackbar imperatives", async () => {
   render(
     <BridgeUIHosts>
-      <OpenBothOnMount />
+      <OpenAllOnMount />
     </BridgeUIHosts>,
   );
 
   await waitFor(() => {
     expect(document.body.textContent).toContain("Modal");
+    expect(document.body.textContent).toContain("Confirm");
+    expect(document.body.textContent).toContain("Are you sure?");
     expect(document.body.textContent).toContain("Toast");
   });
 });

@@ -1,16 +1,19 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
+  closeAllLayers,
   closeLayer,
   closeTopLayer,
   createLayerId,
   createOpenLayerEntry,
-  hideLayer,
   isLayerMounted,
   removeLayer,
-  updateLayer,
+  syncLayerShow,
+  trimLayersToMax,
+  updateLayerMerged,
   type LayerId,
 } from "@bridge-ui/core";
 
@@ -53,30 +56,15 @@ function resolveOpenOptions(
   openOptions: BridgeSnackbarOpenOptions,
   timeout: number | false | undefined,
 ): BridgeSnackbarOpenOptions {
-  if (openOptions.duration !== undefined) {
+  if (!isNil(openOptions.duration)) {
     return openOptions;
   }
 
-  if (timeout === undefined) {
+  if (isNil(timeout)) {
     return openOptions;
   }
 
   return { ...openOptions, duration: timeout };
-}
-
-function trimToMax<T extends { id: LayerId; show: boolean }>(
-  entries: T[],
-  max: number,
-): T[] {
-  let next = entries;
-  let visible = next.filter((entry) => entry.show);
-
-  while (visible.length >= max) {
-    next = closeLayer(next, visible[0]!.id);
-    visible = next.filter((entry) => entry.show);
-  }
-
-  return next;
 }
 
 export function useBridgeSnackbarController(
@@ -97,7 +85,7 @@ export function useBridgeSnackbarController(
         let next = current;
 
         if (max != null && max > 0) {
-          next = trimToMax(next, max);
+          next = trimLayersToMax(next, max);
         }
 
         return [...next, toEntry(id, resolveOpenOptions(openOptions, timeout))];
@@ -117,17 +105,7 @@ export function useBridgeSnackbarController(
   }, []);
 
   const closeAll = useCallback(() => {
-    setEntries((current) => {
-      let next = current;
-
-      for (const entry of current) {
-        if (entry.show) {
-          next = closeLayer(next, entry.id);
-        }
-      }
-
-      return next;
-    });
+    setEntries((current) => closeAllLayers(current));
   }, []);
 
   const isOpen = useCallback((id: LayerId) => {
@@ -140,33 +118,15 @@ export function useBridgeSnackbarController(
 
   const update = useCallback(
     (id: LayerId, options: BridgeSnackbarUpdateOptions) => {
-      setEntries((current) => {
-        const entry = current.find((item) => item.id === id);
-
-        if (!entry || !options.props) {
-          return updateLayer(current, id, options);
-        }
-
-        return updateLayer(current, id, {
-          props: { ...entry.props, ...options.props },
-        });
-      });
+      setEntries((current) =>
+        updateLayerMerged(current, id, options, ["props"]),
+      );
     },
     [],
   );
 
   const syncShow = useCallback((id: LayerId, show: boolean) => {
-    setEntries((current) => {
-      const entry = current.find((item) => item.id === id);
-
-      if (!entry || entry.show === show) {
-        return current;
-      }
-
-      return show
-        ? updateLayer(current, id, { show: true })
-        : hideLayer(current, id);
-    });
+    setEntries((current) => syncLayerShow(current, id, show));
   }, []);
 
   return useMemo(() => {

@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import type { MouseEventHandler, PointerEventHandler } from "react";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -28,12 +29,12 @@ export function useHoldRepeat(
   const intervalTimerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   const stop = useCallback(() => {
-    if (delayTimerRef.current !== undefined) {
+    if (!isNil(delayTimerRef.current)) {
       clearTimeout(delayTimerRef.current);
       delayTimerRef.current = undefined;
     }
 
-    if (intervalTimerRef.current !== undefined) {
+    if (!isNil(intervalTimerRef.current)) {
       clearInterval(intervalTimerRef.current);
       intervalTimerRef.current = undefined;
     }
