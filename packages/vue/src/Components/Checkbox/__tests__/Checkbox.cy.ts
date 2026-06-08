@@ -47,7 +47,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   cy.mount(Checkbox, {
-    props: { mainLabel: "Accept", disabled: true },
+    props: { disabled: true, mainLabel: "Accept" },
   });
 
   cy.get('input[type="checkbox"]').should("be.disabled");
@@ -55,7 +55,7 @@ test("it should apply disabled attribute when disabled", () => {
 
 test("it should reflect checked state from modelValue", () => {
   cy.mount(Checkbox, {
-    props: { mainLabel: "Accept", modelValue: true },
+    props: { modelValue: true, mainLabel: "Accept" },
   });
 
   cy.get('input[type="checkbox"]').should("be.checked");

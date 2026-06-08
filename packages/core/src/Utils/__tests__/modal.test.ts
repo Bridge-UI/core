@@ -113,13 +113,13 @@ test("getLayerStackSnapshot should list open modals", () => {
 
   expect(getLayerStackSnapshot()).toEqual([
     {
-      id: outer.id,
       order: 1,
+      id: outer.id,
       zIndex: LAYER_STACK_BASE_Z_INDEX,
     },
     {
-      id: inner.id,
       order: 2,
+      id: inner.id,
       zIndex: LAYER_STACK_BASE_Z_INDEX + 1,
     },
   ]);

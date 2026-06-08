@@ -8,7 +8,7 @@ import { useBridgeUIComponent } from "@/Utils";
 export function useMenu(props: MenuProps, libDefaults: Partial<MenuProps>) {
   const slots = useSlots();
 
-  const { entry: bridgeMenu, merged } = useBridgeUIComponent({
+  const { merged, entry: bridgeMenu } = useBridgeUIComponent({
     props,
     libDefaults,
     componentName: "Menu",

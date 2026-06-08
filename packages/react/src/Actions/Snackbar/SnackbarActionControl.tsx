@@ -1,51 +1,36 @@
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, type ButtonColor, type LinkColor } from "@bridge-ui/core";
+import { cn, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type {
+  SnackbarActionControlProps,
+  SnackbarActionLayout,
+} from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
-
-type SnackbarActionLayout =
-  | "inline"
-  | "trailing"
-  | "right-accept"
-  | "right-reject";
-
-type SnackbarActionControlProps = {
-  onRun: () => void;
-  hasReject?: boolean;
-  hasAccept?: boolean;
-  action: SnackbarAction;
-  role: "accept" | "reject";
-  layout: SnackbarActionLayout;
-  snackbarColor: keyof ButtonColor;
-};
 
 function layoutClasses(
   layout: SnackbarActionLayout,
   hasReject?: boolean,
   hasAccept?: boolean,
 ): string {
-  switch (layout) {
-    case "trailing":
-      return "mr-4 shrink-0";
-    case "right-accept":
-      return cn(
-        "w-full rounded-none rounded-tr-lg",
-        !hasReject && "rounded-br-lg",
-      );
-    case "right-reject":
-      return cn(
-        "w-full rounded-none rounded-br-lg",
-        !hasAccept && "rounded-tr-lg",
-      );
-    default:
-      return "";
-  }
+  const rootClass = {
+    trailing: "mr-4 shrink-0",
+    "right-accept": cn({
+      "w-full rounded-none rounded-tr-lg": true,
+      "rounded-br-lg": !hasReject,
+    }),
+    "right-reject": cn({
+      "w-full rounded-none rounded-br-lg": true,
+      "rounded-tr-lg": !hasAccept,
+    }),
+  };
+
+  return get(rootClass, layout, "");
 }
 
 export function SnackbarActionControl({

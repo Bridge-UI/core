@@ -150,7 +150,7 @@ export interface SelectProps {
   /**
    * The roundedness of the select.
    *
-   * @default "sm"
+   * @default "md"
    */
   rounded?: MergeProps<SelectRounded, SelectRoundedOverrides>;
 
@@ -174,6 +174,18 @@ export interface SelectProps {
    * @default "outline"
    */
   variant?: MergeProps<SelectVariant, SelectVariantOverrides>;
+}
+
+export interface SelectEmits {
+  /**
+   * Emitted when the selection changes.
+   */
+  change: [value: string | number | (string | number)[]];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: string | number | (string | number)[]];
 }
 
 export interface SelectSlots {

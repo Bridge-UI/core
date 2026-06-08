@@ -105,7 +105,7 @@ export function useFormField(
     });
   });
 
-  const { entry: bridgeFormField, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeFormField } = useBridgeUIComponent<
     FormFieldMerged,
     "FormField"
   >({
@@ -366,8 +366,8 @@ export function useFormField(
         id: controlId.value,
         disabled: isDisabled.value,
         readonly: isReadonly.value,
-        "aria-invalid": invalidated.value || undefined,
         "aria-describedby": ariaDescribedBy.value,
+        "aria-invalid": invalidated.value || undefined,
       },
       omit(split.value.inheritedAttrs, ["class"]),
       cn({

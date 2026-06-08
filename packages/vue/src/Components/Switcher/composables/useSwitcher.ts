@@ -75,7 +75,7 @@ export function useSwitcher(
     });
   });
 
-  const { entry: bridgeSwitcher, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeSwitcher } = useBridgeUIComponent<
     SwitcherMerged,
     "Switcher"
   >({
@@ -251,9 +251,9 @@ export function useSwitcher(
       id: controlId.value,
       disabled: isDisabled.value,
       readonly: isReadonly.value,
+      "aria-describedby": ariaDescribedBy.value,
       required: merged.value.required || undefined,
       "aria-invalid": invalidated.value || undefined,
-      "aria-describedby": ariaDescribedBy.value,
     } satisfies Partial<InputHTMLAttributes>;
   });
 

@@ -1,8 +1,11 @@
 // ** Exports
 export type {
+  BridgeDialogActionProps,
   BridgeDialogApi,
   BridgeDialogContentProps,
   BridgeDialogEntry,
+  BridgeDialogHostProps,
+  BridgeDialogItemProps,
   BridgeDialogOpenOptions,
   BridgeDialogShellProps,
   BridgeDialogUpdateOptions,

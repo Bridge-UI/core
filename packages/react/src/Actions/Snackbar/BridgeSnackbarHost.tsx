@@ -5,7 +5,7 @@ import {
   mergeLayerShellProps,
 } from "@bridge-ui/core";
 import { get } from "es-toolkit/compat";
-import { useContext, useEffect, useMemo, type ReactNode } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
@@ -18,44 +18,12 @@ import {
 
 // ** Local Imports
 import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
-import type { BridgeSnackbarShellProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
 import { useBridgeUI } from "@/Provider/useBridgeUI";
 import { derived } from "@/Utils";
-
-export type BridgeSnackbarHostProps = {
-  children?: ReactNode;
-  /**
-   * Notification stack position on the viewport.
-   *
-   * @default "bottom-center"
-   */
-  position?: keyof typeof snackbarPositionProps;
-  /**
-   * Portal target for the notification stack. `false` renders inline.
-   *
-   * @default "body"
-   */
-  teleportTo?: string | false;
-  /**
-   * Default shell options merged into every snackbar opened via `useSnackbarAction()`.
-   * Per-call `open()` options override these.
-   */
-  snackbar?: BridgeSnackbarShellProps;
-  /**
-   * Maximum open snackbars. When exceeded, the oldest closes before opening the new one.
-   */
-  max?: number;
-  /**
-   * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
-   * Per-call `open({ duration })` overrides this.
-   *
-   * @default 5000
-   */
-  timeout?: number | false;
-};
 
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeSnackbarHost /> detected. useSnackbarAction() will target the nearest host only. Remove the extra host.";

@@ -14,9 +14,15 @@ const libDefaults = {
 
 const FieldHarness = defineComponent({
   inheritAttrs: false,
+  setup(props, { attrs }) {
+    const field = useFormField(() => ({ ...attrs, ...props }), libDefaults);
+
+    return () =>
+      h(FormField, { field }, () => h("input", field.inputBind.value));
+  },
   props: {
-    end: String,
     id: String,
+    end: String,
     label: String,
     error: Boolean,
     variant: String,
@@ -24,12 +30,6 @@ const FieldHarness = defineComponent({
     readonly: Boolean,
     description: String,
     errorMessage: String,
-  },
-  setup(props, { attrs }) {
-    const field = useFormField(() => ({ ...attrs, ...props }), libDefaults);
-
-    return () =>
-      h(FormField, { field }, () => h("input", field.inputBind.value));
   },
 });
 
@@ -103,7 +103,7 @@ test("it should render end adornment when end prop is set", () => {
 
 test("it should render filled variant shell", () => {
   cy.mount(FieldHarness, {
-    props: { variant: "filled", label: "Email" },
+    props: { label: "Email", variant: "filled" },
   });
 
   cy.get(".bg-gray-100").should("exist");
@@ -111,7 +111,7 @@ test("it should render filled variant shell", () => {
 
 test("it should render stacked variant shell", () => {
   cy.mount(FieldHarness, {
-    props: { variant: "stacked", label: "Quantity" },
+    props: { label: "Quantity", variant: "stacked" },
   });
 
   cy.get(".flex.min-h-0.min-w-0.flex-1.flex-col").should("exist");

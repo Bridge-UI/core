@@ -64,7 +64,7 @@ export function useToggle(
     });
   });
 
-  const { entry: bridgeToggle, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeToggle } = useBridgeUIComponent<
     ToggleMerged,
     "Toggle"
   >({
@@ -129,8 +129,8 @@ export function useToggle(
       {
         ...partsProps.value?.input,
         ...switcher.controlBind.value,
-        type: "checkbox",
         role: "switch",
+        type: "checkbox",
       },
       omit(split.value.inheritedAttrs, ["class"]),
       cn({

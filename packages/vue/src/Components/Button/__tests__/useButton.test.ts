@@ -158,8 +158,8 @@ test("it should not include full width class when density is mini", () => {
 
 test("it should render start icon when startIcon is set and not loading", () => {
   const wrapper = mount(Button, {
-    props: { startIcon: CircleAlert },
     slots: { default: "Label" },
+    props: { startIcon: CircleAlert },
   });
 
   expect(wrapper.find("button svg").exists()).toBe(true);
@@ -167,8 +167,8 @@ test("it should render start icon when startIcon is set and not loading", () => 
 
 test("it should hide start icon when loading", () => {
   const wrapper = mount(Button, {
-    props: { loading: true, startIcon: CircleAlert },
     slots: { default: "Label" },
+    props: { loading: true, startIcon: CircleAlert },
   });
 
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
@@ -193,8 +193,8 @@ test("it should prefer text prop over default slot", () => {
 
 test("it should show default slot instead of icon when mini and slot is provided", () => {
   const wrapper = mount(Button, {
-    props: { density: "mini" },
     slots: { default: "AB" },
+    props: { density: "mini" },
   });
 
   expect(wrapper.text()).toContain("AB");

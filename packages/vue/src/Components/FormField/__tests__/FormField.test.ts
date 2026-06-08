@@ -367,17 +367,17 @@ test("it should render errorMessage slot as the error region", () => {
 test("it should update chrome when label and error props change", async () => {
   const wrapper = mount(
     defineComponent({
-      props: {
-        label: { type: String, required: true },
-        error: { type: Boolean, default: false },
-        description: { type: String, default: undefined },
-        errorMessage: { type: String, default: undefined },
-      },
       setup(props) {
         const field = useFormField(() => props, libDefaults);
 
         return () =>
           h(FormField, { field }, () => h("input", field.inputBind.value));
+      },
+      props: {
+        label: { type: String, required: true },
+        error: { type: Boolean, default: false },
+        description: { type: String, default: undefined },
+        errorMessage: { type: String, default: undefined },
       },
     }),
     {

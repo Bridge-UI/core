@@ -89,7 +89,7 @@ test("it should apply w-full when full is true", () => {
 });
 
 test("it should not apply w-full on mini density even when full is true", () => {
-  const { result } = renderUseBadge({ density: "mini", full: true });
+  const { result } = renderUseBadge({ full: true, density: "mini" });
 
   expect(result.current.rootBind.className).not.toContain("w-fit");
   expect(result.current.rootBind.className).not.toContain("w-full");

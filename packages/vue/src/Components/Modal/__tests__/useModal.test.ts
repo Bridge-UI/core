@@ -15,11 +15,11 @@ afterEach(() => {
 const libDefaults: Partial<ModalOwnProps> = {
   size: "md",
   blur: "none",
-  align: "middle-center",
   teleportTo: "body",
   transition: "fade",
   closeOnEscape: true,
   closeOnOverlay: true,
+  align: "middle-center",
 };
 
 function mountUseModal(props: Partial<ModalOwnProps> = {}, show = ref(true)) {
@@ -37,7 +37,7 @@ function mountUseModal(props: Partial<ModalOwnProps> = {}, show = ref(true)) {
 
   mount(Wrapper);
 
-  return { result, show };
+  return { show, result };
 }
 
 test("it should return default size as md", () => {

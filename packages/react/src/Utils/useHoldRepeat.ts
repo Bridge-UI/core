@@ -6,8 +6,8 @@ export type HoldRepeatAction = () => boolean | void;
 
 export type UseHoldRepeatOptions = {
   disabled?: boolean;
-  intervalMs?: number;
   initialDelayMs?: number;
+  intervalMs?: number;
 };
 
 const DEFAULT_INTERVAL_MS = 75;
@@ -51,7 +51,7 @@ export function useHoldRepeat(
     stop();
     run();
 
-    const { initialDelayMs, intervalMs } = optionsRef.current ?? {};
+    const { intervalMs, initialDelayMs } = optionsRef.current ?? {};
 
     delayTimerRef.current = setTimeout(() => {
       intervalTimerRef.current = setInterval(

@@ -77,10 +77,10 @@ type SnackbarLibDefaults = LibDefaultsShape<
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
 
 export type SnackbarOptions = {
-  show?: Ref<boolean> | boolean;
-  stackId?: string;
   onClose?: () => void;
   onShowChange?: (show: boolean) => void;
+  show?: Ref<boolean> | boolean;
+  stackId?: string;
 };
 
 export function useSnackbar(
@@ -139,8 +139,8 @@ export function useSnackbar(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    entry: bridgeSnackbar,
     props: customProps,
+    entry: bridgeSnackbar,
   });
 
   // Elements
@@ -403,8 +403,8 @@ export function useSnackbar(
 
         stackHandle = pushLayerStack({
           order: stackOrder,
-          id: options.stackId,
           lockScroll: false,
+          id: options.stackId,
           onEscape: () => {
             requestClose();
           },
@@ -458,13 +458,13 @@ export function useSnackbar(
       partsProps.value?.root,
       {
         ...rootInheritedAttrs.value,
-        role: rootInheritedAttrs.value.role ?? "status",
-        "aria-live": rootInheritedAttrs.value["aria-live"] ?? "polite",
         "data-snackbar-part": "panel",
-        "data-state": transitionState.value,
-        onTransitionend: handlePanelTransitionEnd,
         onMouseenter: pauseDismissTimer,
         onMouseleave: resumeDismissTimer,
+        "data-state": transitionState.value,
+        onTransitionend: handlePanelTransitionEnd,
+        role: rootInheritedAttrs.value.role ?? "status",
+        "aria-live": rootInheritedAttrs.value["aria-live"] ?? "polite",
       },
       cn({
         "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,

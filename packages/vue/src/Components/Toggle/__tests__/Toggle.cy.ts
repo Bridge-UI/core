@@ -47,7 +47,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   cy.mount(Toggle, {
-    props: { mainLabel: "Notifications", disabled: true },
+    props: { disabled: true, mainLabel: "Notifications" },
   });
 
   cy.get('input[role="switch"]').should("be.disabled");
@@ -55,7 +55,7 @@ test("it should apply disabled attribute when disabled", () => {
 
 test("it should reflect checked state from modelValue", () => {
   cy.mount(Toggle, {
-    props: { mainLabel: "Notifications", modelValue: true },
+    props: { modelValue: true, mainLabel: "Notifications" },
   });
 
   cy.get('input[role="switch"]').should("be.checked");

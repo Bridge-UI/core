@@ -49,13 +49,13 @@ test("it should compute root class as a non-empty string", () => {
 });
 
 test("it should include shadow classes for elevated variant when shadow is set", () => {
-  const { rootBind } = mountUseCard({ variant: "elevated", shadow: "sm" });
+  const { rootBind } = mountUseCard({ shadow: "sm", variant: "elevated" });
 
   expect(rootBind.value.class).toContain("shadow");
 });
 
 test("it should omit shadow classes for non-elevated variants", () => {
-  const { rootBind } = mountUseCard({ variant: "flat", shadow: "sm" });
+  const { rootBind } = mountUseCard({ shadow: "sm", variant: "flat" });
 
   expect(rootBind.value.class).not.toContain("shadow-sm");
 });

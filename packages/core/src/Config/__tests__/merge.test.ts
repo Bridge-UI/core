@@ -79,8 +79,8 @@ test("it should return defaults when called with no options", () => {
   const result = resolveBridgeUIOptions();
 
   expect(result).toEqual({
-    global: BRIDGE_UI_DEFAULT_GLOBAL,
     components: {},
+    global: BRIDGE_UI_DEFAULT_GLOBAL,
   });
 });
 

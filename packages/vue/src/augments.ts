@@ -60,18 +60,18 @@ declare module "@bridge-ui/core" {
 
   interface FormFieldConfigOverrides {
     classes: FormFieldClasses;
+    customProps: Partial<{
+      color: Record<string, import("@bridge-ui/core").FormFieldColorItem>;
+      rounded: Record<string, import("@bridge-ui/core").FormFieldRoundedItem>;
+      size: Record<string, import("@bridge-ui/core").FormFieldSizeItem>;
+      variant: Record<string, import("@bridge-ui/core").FormFieldVariantItem>;
+    }>;
     defaultProps: Partial<
       Pick<
         FormFieldProps,
         "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
       >
     >;
-    customProps: Partial<{
-      size: Record<string, import("@bridge-ui/core").FormFieldSizeItem>;
-      color: Record<string, import("@bridge-ui/core").FormFieldColorItem>;
-      rounded: Record<string, import("@bridge-ui/core").FormFieldRoundedItem>;
-      variant: Record<string, import("@bridge-ui/core").FormFieldVariantItem>;
-    }>;
   }
 
   interface IconConfigOverrides {
@@ -129,10 +129,10 @@ declare module "@bridge-ui/core" {
 
   interface TextareaConfigOverrides {
     classes: TextareaClasses;
-    defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
     customProps: Partial<{
       resize: Record<string, string>;
     }>;
+    defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
   }
 
   interface ToggleConfigOverrides {

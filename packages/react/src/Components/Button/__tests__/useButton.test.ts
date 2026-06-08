@@ -163,8 +163,8 @@ test("it should honor explicit variant when density is mini", () => {
 
 test("it should not include full width class when density is mini", () => {
   const { result } = renderUseButton({
-    density: "mini",
     full: true,
+    density: "mini",
     icon: CircleAlert,
   });
 

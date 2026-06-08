@@ -178,6 +178,13 @@ export interface SwitcherOwnProps {
   size?: MergeProps<LabelSize, SwitcherSizeOverrides>;
 
   /**
+   * Chrome slots (`mainLabel`, `description`, `errorMessage`, …) and the control.
+   *
+   * @default undefined
+   */
+  slots?: SwitcherSlots;
+
+  /**
    * Inline-start label text before the control.
    *
    * @default undefined
@@ -194,9 +201,19 @@ export interface SwitcherOwnProps {
 
 export interface SwitcherSlots {
   /**
+   * The form control (checkbox, radio, toggle, …).
+   */
+  default?: Slot;
+
+  /**
    * Helper text below the control row (hidden when invalid).
    */
   description?: Slot;
+
+  /**
+   * Inline-end label after the main label.
+   */
+  endLabel?: Slot;
 
   /**
    * Custom error message content.
@@ -212,11 +229,6 @@ export interface SwitcherSlots {
    * Inline-start label before the control.
    */
   startLabel?: Slot;
-
-  /**
-   * Inline-end label after the main label.
-   */
-  endLabel?: Slot;
 }
 
 export type SwitcherProps = MergeHtmlProps<SwitcherOwnProps, HTMLAttributes>;

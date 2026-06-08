@@ -47,7 +47,7 @@ test("it should render with default props", () => {
 test("it should render main label when mainLabel prop is provided", () => {
   cy.mount(SwitcherHarness, {
     attrs: { controlId: "notify" },
-    props: { mainLabel: "Email notifications", controlId: "notify" },
+    props: { controlId: "notify", mainLabel: "Email notifications" },
   });
 
   cy.get('label[for="notify"]').should("exist");

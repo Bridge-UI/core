@@ -49,7 +49,7 @@ export interface AvatarProps {
   /**
    * The color to apply to the avatar fallback.
    *
-   * @default "secondary"
+   * @default "primary"
    */
   color?: MergeProps<AvatarColor, AvatarColorOverrides>;
 

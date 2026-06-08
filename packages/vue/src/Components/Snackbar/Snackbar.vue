@@ -26,8 +26,8 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<SnackbarOwnProps>(), {
   closeButton: true,
   progressbar: true,
-  position: "bottom-center",
   teleportTo: "body",
+  position: "bottom-center",
 });
 
 const model = defineModel<boolean>({ default: false });
@@ -35,25 +35,25 @@ const model = defineModel<boolean>({ default: false });
 const {
   merged,
   rendered,
+  iconBind,
+  panelBind,
+  titleBind,
   isPortaled,
   portalBind,
-  panelBind,
-  iconBind,
-  titleBind,
   progressBind,
   resolvedIcon,
-  descriptionBind,
   requestClose,
+  descriptionBind,
 } = useSnackbar(
   props,
   {
-    color: "primary",
     duration: 5000,
-    position: "bottom-center",
-    transition: "slide",
+    color: "primary",
     closeButton: true,
     progressbar: true,
     teleportTo: "body",
+    transition: "slide",
+    position: "bottom-center",
   },
   {
     show: model,

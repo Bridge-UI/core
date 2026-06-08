@@ -11,8 +11,8 @@ import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
 
 const props = defineProps<{
-  global?: Partial<BridgeUIGlobal>;
   components?: BridgeUIComponentsConfig;
+  global?: Partial<BridgeUIGlobal>;
 }>();
 
 const parent = inject<BridgeUIContextApi | undefined>(

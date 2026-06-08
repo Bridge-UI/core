@@ -147,14 +147,14 @@ export interface FormFieldSlots {
   corner?: ReactNode;
 
   /**
-   * Helper text below the control (hidden when the field is invalid).
-   */
-  description?: ReactNode;
-
-  /**
    * The form control (input, textarea, select trigger, etc.).
    */
   default?: ReactNode;
+
+  /**
+   * Helper text below the control (hidden when the field is invalid).
+   */
+  description?: ReactNode;
 
   /**
    * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop

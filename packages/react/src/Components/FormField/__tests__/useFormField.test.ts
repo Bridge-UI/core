@@ -116,8 +116,8 @@ test("it should apply stacked insets on stackedBody instead of container padding
 
 test("it should apply stacked insets on stackedBody when end slot is present", () => {
   const { result } = renderUseFormField({
-    variant: "stacked",
     label: "Quantity",
+    variant: "stacked",
     slots: {
       end: () => null,
     },

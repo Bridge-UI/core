@@ -59,13 +59,13 @@ export function hasSlotOrProp(
  * Renders the named slot when present; otherwise the fallback prop.
  */
 export function resolveSlotOrProp({
-  slots,
   name,
+  slots,
   fallback,
 }: {
-  slots?: SlotMap;
-  name: string;
   fallback?: ReactNode;
+  name: string;
+  slots?: SlotMap;
 }): ReactNode {
   const slot = readSlot(slots, name);
 

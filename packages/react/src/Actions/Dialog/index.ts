@@ -1,8 +1,11 @@
 // ** Exports
 export type {
+  BridgeDialogActionProps,
   BridgeDialogApi,
   BridgeDialogContentProps,
   BridgeDialogEntry,
+  BridgeDialogHostProps,
+  BridgeDialogItemProps,
   BridgeDialogOpenOptions,
   BridgeDialogShellProps,
   BridgeDialogUpdateOptions,
@@ -12,7 +15,6 @@ export type {
 /** @internal */
 export { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
 export { BridgeDialogHost } from "@/Actions/Dialog/BridgeDialogHost";
-export type { BridgeDialogHostProps } from "@/Actions/Dialog/BridgeDialogHost";
 export {
   BridgeDialogHostMissingError,
   useDialogAction,

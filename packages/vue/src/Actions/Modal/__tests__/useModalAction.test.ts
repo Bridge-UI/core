@@ -46,10 +46,10 @@ function mountWithModalHost(consumer: ReturnType<typeof defineComponent>) {
 
 test("useModalAction should throw when BridgeModalHost is missing", () => {
   const Consumer = defineComponent({
+    template: "<div />",
     setup() {
       expect(() => useModalAction()).toThrow(BridgeModalHostMissingError);
     },
-    template: "<div />",
   });
 
   mount(Consumer);
@@ -300,7 +300,7 @@ test("update should patch modal shell options on an open modal", async () => {
       onMounted(() => {
         id = bridgeModal.open({
           component: Content,
-          modal: { transition: "none", size: "sm" },
+          modal: { size: "sm", transition: "none" },
         });
         bridgeModal.update(id, { modal: { size: "lg" } });
       });
@@ -329,7 +329,7 @@ test("open with persistent modal should ignore escape", async () => {
         modal.open({
           onClose,
           component: Content,
-          modal: { transition: "none", persistent: true },
+          modal: { persistent: true, transition: "none" },
         });
       });
 

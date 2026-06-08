@@ -1,11 +1,42 @@
 // ** External Imports
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
+import perfectionist from "eslint-plugin-perfectionist";
 import reactHooks from "eslint-plugin-react-hooks";
 import pluginVue from "eslint-plugin-vue";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 import vueParser from "vue-eslint-parser";
+
+const typeSorting = [
+  "error",
+  {
+    order: "asc" as const,
+    type: "alphabetical" as const,
+  },
+];
+
+const unusedVars = [
+  "error",
+  {
+    argsIgnorePattern: "^_",
+    varsIgnorePattern: "^_",
+  },
+];
+
+const objectSorting = [
+  "error",
+  {
+    type: "unsorted" as const,
+    useConfigurationIf: {
+      callingFunctionNamePattern: "^cn$",
+    },
+  },
+  {
+    order: "asc" as const,
+    type: "line-length" as const,
+  },
+];
 
 export default defineConfig(
   {
@@ -43,13 +74,16 @@ export default defineConfig(
     },
   },
   {
+    plugins: {
+      perfectionist,
+    },
     rules: {
       "vue/multi-word-component-names": "off",
+      "perfectionist/sort-objects": objectSorting,
+      "perfectionist/sort-interfaces": typeSorting,
+      "perfectionist/sort-object-types": typeSorting,
+      "@typescript-eslint/no-unused-vars": unusedVars,
       "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
     },
   },
   eslintConfigPrettier,

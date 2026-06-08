@@ -28,7 +28,7 @@ test("createOpenLayerEntry should create a visible entry", () => {
 
 test("closeLayer should invoke onClose before hiding", () => {
   const onClose = vi.fn();
-  const entries: TestEntry[] = [{ id: "a", show: true, label: "A", onClose }];
+  const entries: TestEntry[] = [{ id: "a", onClose, show: true, label: "A" }];
 
   const next = closeLayer(entries, "a");
 
@@ -41,8 +41,8 @@ test("closeTopLayer should close only the topmost visible entry", () => {
   const innerClose = vi.fn();
 
   const entries: TestEntry[] = [
-    { id: "outer", show: true, label: "outer", onClose: outerClose },
-    { id: "inner", show: true, label: "inner", onClose: innerClose },
+    { show: true, id: "outer", label: "outer", onClose: outerClose },
+    { show: true, id: "inner", label: "inner", onClose: innerClose },
   ];
 
   const next = closeTopLayer(entries);

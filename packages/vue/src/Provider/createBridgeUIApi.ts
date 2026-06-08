@@ -17,8 +17,8 @@ import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";
 export function createBridgeUIApi(
   parent: BridgeUIContextApi | undefined,
   optionsRef: ComputedRef<{
-    global: Partial<BridgeUIGlobal>;
     components: BridgeUIComponentsConfig;
+    global: Partial<BridgeUIGlobal>;
   }>,
 ): BridgeUIContextApi {
   const globalPatch = shallowRef<Partial<BridgeUIGlobal>>({});
@@ -59,10 +59,10 @@ export function createBridgeUIApi(
 
   function setComponents(patch: BridgeUIComponentsConfig) {
     componentsPatch.value = mergeBridgeUIComponents({
-      base: componentsPatch.value,
       partials: [patch],
+      base: componentsPatch.value,
     });
   }
 
-  return { global, components, setGlobal, setComponents };
+  return { global, setGlobal, components, setComponents };
 }

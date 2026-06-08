@@ -11,11 +11,11 @@ import {
 } from "@/Components/Alert";
 
 const libDefaults = {
-  color: "primary",
-  variant: "flat",
   shadow: "none",
+  variant: "flat",
   rounded: "none",
   padding: "none",
+  color: "primary",
 } as const satisfies Partial<AlertOwnProps>;
 
 function renderUseAlert(props: AlertProps = {}) {

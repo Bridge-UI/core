@@ -33,9 +33,7 @@ export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
   onVisibilityChange?: (visible: boolean) => void;
 
   /**
-   * Whether the password is visible. Use `null` (default) for uncontrolled mode.
-   *
-   * @default null
+   * Whether the password is visible. Omit for uncontrolled mode.
    */
   visible?: boolean | null;
 }

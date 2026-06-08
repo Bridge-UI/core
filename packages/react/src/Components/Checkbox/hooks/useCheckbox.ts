@@ -68,7 +68,7 @@ export function useCheckbox(
     bridgeKeys: checkboxBridgeKeys,
   });
 
-  const { entry: bridgeCheckbox, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeCheckbox } = useBridgeUIComponent<
     CheckboxMerged,
     "Checkbox"
   >({
@@ -171,9 +171,9 @@ export function useCheckbox(
       {
         ...partsProps?.input,
         ...switcher.controlBind,
-        type: "checkbox",
-        ref: inputRef,
         checked,
+        ref: inputRef,
+        type: "checkbox",
         onChange: handleChange,
       },
       inputInheritedAttrs,

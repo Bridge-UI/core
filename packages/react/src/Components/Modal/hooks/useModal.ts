@@ -74,6 +74,17 @@ type ModalMerged = MergeLibDefaults<ModalOwnProps, ModalLibDefaults>;
 
 export type ModalOptions = {
   /**
+   * Called when the modal requests to close.
+   * Sugar for `onShowChange(false)`.
+   */
+  onClose?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
    * Whether the modal is visible.
    *
    * @default false
@@ -84,17 +95,6 @@ export type ModalOptions = {
    * Pre-assigned stack id (BridgeModalHost). When omitted, the stack generates a UUID.
    */
   stackId?: string;
-
-  /**
-   * Called when the modal requests to close.
-   * Sugar for `onShowChange(false)`.
-   */
-  onClose?: () => void;
-
-  /**
-   * Called when `show` should change (controlled state).
-   */
-  onShowChange?: (show: boolean) => void;
 };
 
 export function useModal(
@@ -103,7 +103,7 @@ export function useModal(
   options: ModalOptions = {},
 ) {
   // Setup
-  const { onClose, onShowChange, show = false, stackId } = options;
+  const { onClose, stackId, onShowChange, show = false } = options;
 
   const layerStackIdRef = useRef("");
 
@@ -345,8 +345,8 @@ export function useModal(
 
     const handle = pushLayerStack({
       id: stackId,
-      order: stackOrderRef.current,
       onEscape: handleEscape,
+      order: stackOrderRef.current,
     });
 
     stackHandleRef.current = handle;
@@ -386,14 +386,14 @@ export function useModal(
 
   // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
-    className: cn({
-      "fixed inset-0 overflow-y-auto": true,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
     style: {
       zIndex: stackZIndex,
     },
     onTransitionEnd: handleShellTransitionEnd,
+    className: cn({
+      "fixed inset-0 overflow-y-auto": true,
+      [get(mergedClasses, "root") ?? ""]: true,
+    }),
   });
 
   const overlayBind = mergePartBind(

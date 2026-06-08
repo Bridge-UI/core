@@ -5,8 +5,8 @@ import type { ComputedRef } from "vue";
 import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
 
 export interface BridgeUIContextApi {
-  global: ComputedRef<BridgeUIGlobal>;
   components: ComputedRef<BridgeUIComponentsConfig>;
-  setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
+  global: ComputedRef<BridgeUIGlobal>;
   setComponents: (patch: BridgeUIComponentsConfig) => void;
+  setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
 }

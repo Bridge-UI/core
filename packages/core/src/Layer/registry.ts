@@ -9,9 +9,9 @@ export type LayerId = string;
  */
 export type LayerRegistryEntry = {
   id: LayerId;
-  show: boolean;
   onClose?: () => void;
   onClosed?: () => void;
+  show: boolean;
 };
 
 /**

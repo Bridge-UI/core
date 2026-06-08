@@ -6,14 +6,12 @@ import {
   solidProps,
 } from "@core/Components/Alert/Color";
 
-// prettier-ignore
 export interface AlertVariant {
   "flat": AlertColor;
-  "solid": AlertColor;
   "outline": AlertColor;
+  "solid": AlertColor;
 }
 
-// prettier-ignore
 export const variantProps: AlertVariant = {
   "flat": flatProps,
   "solid": solidProps,

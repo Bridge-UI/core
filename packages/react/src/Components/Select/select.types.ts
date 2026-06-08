@@ -16,8 +16,19 @@ export interface SelectRoundedOverrides {}
 export interface SelectVariantOverrides {}
 
 export interface SelectOption {
+  /**
+   * Whether the option is disabled.
+   */
   disabled?: boolean;
+
+  /**
+   * The label of the option.
+   */
   label: string;
+
+  /**
+   * The value of the option.
+   */
   value: string | number;
 }
 

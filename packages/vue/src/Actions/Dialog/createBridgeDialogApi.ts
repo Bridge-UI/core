@@ -26,7 +26,7 @@ function toEntry(
   id: LayerId,
   options: BridgeDialogOpenOptions,
 ): BridgeDialogEntry {
-  const { onClose, onClosed, modal, ...props } = options;
+  const { modal, onClose, onClosed, ...props } = options;
 
   return createOpenLayerEntry<BridgeDialogEntry>(id, {
     modal,

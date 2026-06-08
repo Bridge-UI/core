@@ -10,18 +10,10 @@ import { computed } from "vue";
 
 // ** Local Imports
 import BridgeSnackbarAction from "@/Actions/Snackbar/BridgeSnackbarAction.vue";
-import type {
-  BridgeSnackbarController,
-  BridgeSnackbarEntry,
-  BridgeSnackbarShellProps,
-} from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { BridgeSnackbarItemProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Snackbar } from "@/Components/Snackbar";
 
-const props = defineProps<{
-  api: BridgeSnackbarController;
-  entry: BridgeSnackbarEntry;
-  hostSnackbar?: BridgeSnackbarShellProps;
-}>();
+const props = defineProps<BridgeSnackbarItemProps>();
 
 const { actions, rightButtons, ...entrySnackbar } = props.entry.props;
 

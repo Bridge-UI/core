@@ -208,14 +208,19 @@ export interface SwitcherOwnProps {
 
 export interface SwitcherSlots {
   /**
+   * The form control (checkbox, radio, toggle, …).
+   */
+  default?: ReactNode;
+
+  /**
    * Helper text below the control row (hidden when invalid).
    */
   description?: ReactNode;
 
   /**
-   * The form control (checkbox, radio, toggle, …).
+   * Inline-end label after the main label.
    */
-  default?: ReactNode;
+  endLabel?: ReactNode;
 
   /**
    * Custom error message content.
@@ -231,11 +236,6 @@ export interface SwitcherSlots {
    * Inline-start label before the control.
    */
   startLabel?: ReactNode;
-
-  /**
-   * Inline-end label after the main label.
-   */
-  endLabel?: ReactNode;
 }
 
 export type SwitcherProps = MergeHtmlProps<

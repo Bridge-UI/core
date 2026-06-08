@@ -1,21 +1,16 @@
 <script setup lang="ts">
 // ** External Imports
-import type { ButtonColor } from "@bridge-ui/core";
 import { computed } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { DialogAction } from "@/Actions/Dialog/bridgeDialog.types";
+import type { BridgeDialogActionProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
 
-const props = defineProps<{
-  action: DialogAction;
-  role: "accept" | "reject";
-  acceptColor: keyof ButtonColor;
-}>();
+const props = defineProps<BridgeDialogActionProps>();
 
 const emit = defineEmits<{
   run: [];

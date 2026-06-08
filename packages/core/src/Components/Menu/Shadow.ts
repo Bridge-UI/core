@@ -1,25 +1,23 @@
-// prettier-ignore
 export interface MenuShadow {
-  "none": string;
-  "2xs": string;
-  "xs": string;
-  "sm": string;
-  "md": string;
-  "lg": string;
-  "xl": string;
   "2xl": string;
+  "2xs": string;
   "inner": string;
+  "lg": string;
+  "md": string;
+  "none": string;
+  "sm": string;
+  "xl": string;
+  "xs": string;
 }
 
-// prettier-ignore
 export const shadowProps: MenuShadow = {
-  "none": "shadow-none",
-  "2xs": "shadow-2xs",
   "xs": "shadow-xs",
   "sm": "shadow-sm",
   "md": "shadow-md",
   "lg": "shadow-lg",
   "xl": "shadow-xl",
+  "2xs": "shadow-2xs",
   "2xl": "shadow-2xl",
+  "none": "shadow-none",
   "inner": "inset-shadow-sm",
 };

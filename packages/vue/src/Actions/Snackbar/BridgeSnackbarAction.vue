@@ -1,30 +1,17 @@
 <script setup lang="ts">
 // ** External Imports
-import type { SnackbarColor } from "@bridge-ui/core";
+import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { SnackbarAction } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import type { BridgeSnackbarActionProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
 
-type SnackbarActionLayout =
-  | "inline"
-  | "trailing"
-  | "right-accept"
-  | "right-reject";
-
-const props = defineProps<{
-  hasReject?: boolean;
-  hasAccept?: boolean;
-  action: SnackbarAction;
-  role: "accept" | "reject";
-  layout: SnackbarActionLayout;
-  snackbarColor: keyof SnackbarColor;
-}>();
+const props = defineProps<BridgeSnackbarActionProps>();
 
 const emit = defineEmits<{
   run: [];
@@ -35,22 +22,19 @@ const color = computed(() => {
 });
 
 const layoutClass = computed(() => {
-  switch (props.layout) {
-    case "trailing":
-      return "mr-4 shrink-0";
-    case "right-accept":
-      return cn(
-        "w-full rounded-none rounded-tr-lg",
-        !props.hasReject && "rounded-br-lg",
-      );
-    case "right-reject":
-      return cn(
-        "w-full rounded-none rounded-br-lg",
-        !props.hasAccept && "rounded-tr-lg",
-      );
-    default:
-      return "";
-  }
+  const rootClass = {
+    trailing: "mr-4 shrink-0",
+    "right-accept": cn({
+      "w-full rounded-none rounded-tr-lg": true,
+      "rounded-br-lg": !props.hasReject,
+    }),
+    "right-reject": cn({
+      "w-full rounded-none rounded-br-lg": true,
+      "rounded-tr-lg": !props.hasAccept,
+    }),
+  };
+
+  return get(rootClass, props.layout, "");
 });
 
 const rootClass = computed(() => {

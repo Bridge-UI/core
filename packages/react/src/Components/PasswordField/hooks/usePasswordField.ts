@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 
 export type UsePasswordFieldOptions = {
-  visible?: boolean | null;
   onVisibilityChange?: (visible: boolean) => void;
+  visible?: boolean | null;
 };
 
 export function usePasswordField(options: UsePasswordFieldOptions = {}) {

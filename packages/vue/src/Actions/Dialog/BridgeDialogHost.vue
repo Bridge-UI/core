@@ -3,7 +3,7 @@
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
-import type { BridgeDialogShellProps } from "@/Actions/Dialog/bridgeDialog.types";
+import type { BridgeDialogHostProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { BRIDGE_DIALOG_INJECTION_KEY } from "@/Actions/Dialog/bridgeDialogInjectionKey";
 import BridgeDialogItem from "@/Actions/Dialog/BridgeDialogItem.vue";
 import { createBridgeDialogApi } from "@/Actions/Dialog/createBridgeDialogApi";
@@ -11,13 +11,7 @@ import { createBridgeDialogApi } from "@/Actions/Dialog/createBridgeDialogApi";
 const NESTED_HOST_WARNING =
   "[Bridge UI] Nested <BridgeDialogHost /> detected. useDialogAction() will target the nearest host only. Remove the extra host.";
 
-const props = defineProps<{
-  /**
-   * Default Modal shell options merged into every dialog opened via `useDialogAction()`.
-   * Per-call `open({ modal })` overrides these.
-   */
-  modal?: BridgeDialogShellProps;
-}>();
+const props = defineProps<BridgeDialogHostProps>();
 
 const parentApi = inject(BRIDGE_DIALOG_INJECTION_KEY, null);
 

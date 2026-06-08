@@ -10,19 +10,11 @@ import { computed } from "vue";
 
 // ** Local Imports
 import ResolveBridgeDialogFooter from "@/Actions/Dialog/ResolveBridgeDialogFooter.vue";
-import type {
-  BridgeDialogController,
-  BridgeDialogEntry,
-  BridgeDialogShellProps,
-} from "@/Actions/Dialog/bridgeDialog.types";
+import type { BridgeDialogItemProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { Card } from "@/Components/Card";
 import { Modal } from "@/Components/Modal";
 
-const props = defineProps<{
-  api: BridgeDialogController;
-  entry: BridgeDialogEntry;
-  hostModal?: BridgeDialogShellProps;
-}>();
+const props = defineProps<BridgeDialogItemProps>();
 
 const acceptColor = computed(() => {
   return (props.entry.props.color ?? "primary") as keyof ButtonColor;

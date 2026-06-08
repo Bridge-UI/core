@@ -129,7 +129,7 @@ test("it should use id from fallthrough attrs for controlId", () => {
 });
 
 test("it should apply stacked insets on stackedBody instead of container padding", () => {
-  const { stackedBodyBind, containerBind } = mountUseFormField({
+  const { containerBind, stackedBodyBind } = mountUseFormField({
     label: "Quantity",
     variant: "stacked",
   });
@@ -145,7 +145,7 @@ test("it should apply stacked insets on stackedBody when end slot is present", (
   const Wrapper = defineComponent({
     setup(_, { slots }) {
       result = useFormField(
-        () => ({ variant: "stacked", label: "Quantity" }),
+        () => ({ label: "Quantity", variant: "stacked" }),
         libDefaults,
       );
 
@@ -164,7 +164,7 @@ test("it should apply stacked insets on stackedBody when end slot is present", (
 });
 
 test("it should be readonly when readonly prop is true", () => {
-  const { isReadonly, inputBind } = mountUseFormField({ readonly: true });
+  const { inputBind, isReadonly } = mountUseFormField({ readonly: true });
 
   expect(isReadonly.value).toBe(true);
   expect(inputBind.value.readonly).toBe(true);

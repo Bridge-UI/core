@@ -89,7 +89,7 @@ test("it should apply w-full when full is true", () => {
 });
 
 test("it should not apply w-full on mini density even when full is true", () => {
-  const { rootBind } = mountUseBadge({ density: "mini", full: true });
+  const { rootBind } = mountUseBadge({ full: true, density: "mini" });
 
   expect(rootBind.value.class).not.toContain("w-fit");
   expect(rootBind.value.class).not.toContain("w-full");

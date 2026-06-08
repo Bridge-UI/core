@@ -60,7 +60,7 @@ test("it should apply none underline when underline is none", () => {
 });
 
 test("it should expose rootBind for additional attributes", () => {
-  const { rootBind, merged } = mountUseLink({
+  const { merged, rootBind } = mountUseLink({
     href: "/docs",
     id: "docs-link",
     "data-testid": "link",
