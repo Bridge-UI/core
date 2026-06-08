@@ -189,6 +189,7 @@ export {
 export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  usesTrailingSnackbarActions,
 } from "@core/Utils/snackbar";
 export type {
   ClassPropKey,

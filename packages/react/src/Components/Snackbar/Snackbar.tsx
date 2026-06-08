@@ -1,5 +1,6 @@
 // ** External Imports
 import { X } from "lucide-react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
@@ -14,6 +15,7 @@ import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 const snackbarLibDefaults = {
   duration: 5000,
   color: "primary",
+  padding: "medium",
   closeButton: true,
   progressbar: true,
   teleportTo: "body",
@@ -22,13 +24,14 @@ const snackbarLibDefaults = {
 } as const;
 
 function SnackbarPanel({
-  show,
   slots,
   merged,
   children,
   iconBind,
   panelBind,
   titleBind,
+  contentBind,
+  showProgress,
   progressBind,
   resolvedIcon,
   requestClose,
@@ -53,17 +56,9 @@ function SnackbarPanel({
         flex: hasRight,
       })}
     >
-      {show && merged.duration !== false && merged.progressbar !== false && (
-        <div {...progressBind} />
-      )}
+      {showProgress && <div {...progressBind} />}
 
-      <div
-        className={cn({
-          "pl-4": merged.dense,
-          "p-4": !hasRight,
-          "w-0 flex-1 flex items-center p-4": hasRight,
-        })}
-      >
+      <div {...contentBind(hasRight)}>
         <div
           className={cn({
             "flex items-start": !hasRight,
@@ -156,17 +151,52 @@ function Snackbar({
   show = false,
   ...ownProps
 }: SnackbarProps) {
+  const isControlled = onShowChange != null;
+
+  const [prevShow, setPrevShow] = useState(show);
+
+  const [dismissed, setDismissed] = useState(false);
+
+  if (!isControlled && show !== prevShow) {
+    setPrevShow(show);
+
+    if (show) {
+      setDismissed(false);
+    }
+  }
+
+  const resolvedShow = isControlled ? show : show && !dismissed;
+
+  const handleShowChange = (next: boolean) => {
+    if (!isControlled && !next) {
+      setDismissed(true);
+    }
+
+    onShowChange?.(next);
+  };
+
   const snackbarState = useSnackbar(
-    { ...ownProps, show, onClose, stackId, onShowChange },
+    {
+      ...ownProps,
+      onClose,
+      stackId,
+      show: resolvedShow,
+      onShowChange: handleShowChange,
+    },
     snackbarLibDefaults,
-    { show, onClose, stackId, onShowChange },
+    {
+      onClose,
+      stackId,
+      show: resolvedShow,
+      onShowChange: handleShowChange,
+    },
   );
 
   if (!snackbarState.rendered) {
     return null;
   }
 
-  const panel = <SnackbarPanel {...snackbarState} show={show} />;
+  const panel = <SnackbarPanel {...snackbarState} show={resolvedShow} />;
 
   if (!snackbarState.isPortaled) {
     return panel;

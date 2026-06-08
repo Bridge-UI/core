@@ -15,6 +15,7 @@ import type { NumberFieldClasses } from "@/Components/NumberField";
 import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
 import type { SwitcherClasses, SwitcherProps } from "@/Components/Switcher";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
@@ -97,6 +98,23 @@ declare module "@bridge-ui/core" {
     classes: ModalClasses;
     defaultProps: Partial<
       Pick<ModalProps, "blur" | "size" | "align" | "teleportTo" | "transition">
+    >;
+  }
+
+  interface SnackbarConfigOverrides {
+    classes: SnackbarClasses;
+    defaultProps: Partial<
+      Pick<
+        SnackbarProps,
+        | "color"
+        | "padding"
+        | "duration"
+        | "position"
+        | "teleportTo"
+        | "transition"
+        | "closeButton"
+        | "progressbar"
+      >
     >;
   }
 

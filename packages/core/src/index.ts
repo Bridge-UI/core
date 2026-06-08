@@ -87,12 +87,15 @@ export type {
 } from "@core/Components/Select";
 export {
   colorProps as snackbarColorProps,
+  paddingProps as snackbarPaddingProps,
   positionProps as snackbarPositionProps,
   transitionProps as snackbarTransitionProps,
 } from "@core/Components/Snackbar";
 export type {
   SnackbarColor,
   SnackbarColorItem,
+  SnackbarPadding,
+  SnackbarPaddingItem,
   SnackbarPosition,
   SnackbarTransition,
 } from "@core/Components/Snackbar";
@@ -185,6 +188,7 @@ export {
   resolveModalPortalElement,
   splitComponentProps,
   subscribeLayerStack,
+  usesTrailingSnackbarActions,
 } from "@core/Utils";
 export type {
   ClassPropKey,

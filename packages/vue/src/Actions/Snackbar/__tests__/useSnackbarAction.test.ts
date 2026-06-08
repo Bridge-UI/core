@@ -251,7 +251,7 @@ test("it should merge into open options", async () => {
     attachTo: document.body,
     slots: { default: () => h(Consumer) },
     props: {
-      snackbar: { dense: true, classes: { root: "host-shell" } },
+      snackbar: { padding: "small", classes: { root: "host-shell" } },
     },
   });
 

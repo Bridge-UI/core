@@ -86,6 +86,8 @@ import type {
 import type {
   SnackbarColor,
   SnackbarColorItem,
+  SnackbarPadding,
+  SnackbarPaddingItem,
   SnackbarPosition,
   SnackbarTransition,
 } from "@core/Components/Snackbar";
@@ -303,6 +305,7 @@ export interface SnackbarConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, SnackbarColorItem>;
+    padding: Record<string, SnackbarPaddingItem>;
     position: Record<string, string>;
     transition: Record<string, string>;
   }>;
@@ -310,6 +313,7 @@ export interface SnackbarConfigBase {
     closeButton: boolean;
     color: keyof SnackbarColor;
     duration: number | false;
+    padding: keyof SnackbarPadding;
     position: keyof SnackbarPosition;
     progressbar: boolean;
     teleportTo: string | false;

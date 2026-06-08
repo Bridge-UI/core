@@ -254,7 +254,7 @@ test("it should stack in a single notification column", async () => {
 test("it should merge into open options", async () => {
   render(
     <BridgeSnackbarHost
-      snackbar={{ dense: true, classes: { root: "host-shell" } }}
+      snackbar={{ padding: "small", classes: { root: "host-shell" } }}
     >
       <RunOnMount
         onMount={(snackbar) => {

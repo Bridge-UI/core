@@ -40,6 +40,8 @@ const {
   titleBind,
   isPortaled,
   portalBind,
+  contentBind,
+  showProgress,
   progressBind,
   resolvedIcon,
   requestClose,
@@ -49,6 +51,7 @@ const {
   {
     duration: 5000,
     color: "primary",
+    padding: "medium",
     closeButton: true,
     progressbar: true,
     teleportTo: "body",
@@ -98,20 +101,9 @@ const teleportTarget = computed(() => {
           v-bind="panelBind"
           :class="cn(panelBind.class, { flex: hasRight })"
         >
-          <div
-            v-if="
-              model && merged.duration !== false && merged.progressbar !== false
-            "
-            v-bind="progressBind"
-          />
+          <div v-if="showProgress" v-bind="progressBind" />
 
-          <div
-            :class="{
-              'pl-4': merged.dense,
-              'p-4': !hasRight,
-              'w-0 flex-1 flex items-center p-4': hasRight,
-            }"
-          >
+          <div v-bind="contentBind(hasRight)">
             <div
               :class="{
                 'flex items-start': !hasRight,
@@ -129,16 +121,16 @@ const teleportTarget = computed(() => {
                 <slot name="icon" />
 
                 <img
-                  v-if="!slots.icon && merged.img"
-                  :src="merged.img"
                   alt=""
+                  :src="merged.img"
                   class="w-10 h-10 rounded-full"
+                  v-if="!slots.icon && merged.img"
                 />
 
                 <Icon
-                  v-if="!slots.icon && !merged.img && resolvedIcon"
-                  :icon="resolvedIcon"
                   v-bind="iconBind"
+                  :icon="resolvedIcon"
+                  v-if="!slots.icon && !merged.img && resolvedIcon"
                 />
               </div>
 
@@ -166,11 +158,11 @@ const teleportTarget = computed(() => {
                 <slot name="trailing" />
 
                 <button
-                  v-if="merged.closeButton !== false"
                   type="button"
                   aria-label="Close"
-                  class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
                   v-on:click="requestClose"
+                  v-if="merged.closeButton !== false"
+                  class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
                 >
                   <X class="w-5 h-5" />
                 </button>
@@ -184,24 +176,13 @@ const teleportTarget = computed(() => {
     </div>
 
     <div
-      v-else-if="rendered"
       v-bind="panelBind"
+      v-else-if="rendered"
       :class="cn(panelBind.class, { flex: hasRight })"
     >
-      <div
-        v-if="
-          model && merged.duration !== false && merged.progressbar !== false
-        "
-        v-bind="progressBind"
-      />
+      <div v-if="showProgress" v-bind="progressBind" />
 
-      <div
-        :class="{
-          'pl-4': merged.dense,
-          'p-4': !hasRight,
-          'w-0 flex-1 flex items-center p-4': hasRight,
-        }"
-      >
+      <div v-bind="contentBind(hasRight)">
         <div
           :class="{
             'flex items-start': !hasRight,
@@ -219,16 +200,16 @@ const teleportTarget = computed(() => {
             <slot name="icon" />
 
             <img
-              v-if="!slots.icon && merged.img"
-              :src="merged.img"
               alt=""
+              :src="merged.img"
               class="w-10 h-10 rounded-full"
+              v-if="!slots.icon && merged.img"
             />
 
             <Icon
-              v-if="!slots.icon && !merged.img && resolvedIcon"
-              :icon="resolvedIcon"
               v-bind="iconBind"
+              :icon="resolvedIcon"
+              v-if="!slots.icon && !merged.img && resolvedIcon"
             />
           </div>
 
@@ -256,11 +237,11 @@ const teleportTarget = computed(() => {
             <slot name="trailing" />
 
             <button
-              v-if="merged.closeButton !== false"
               type="button"
               aria-label="Close"
-              class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
               v-on:click="requestClose"
+              v-if="merged.closeButton !== false"
+              class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
             >
               <X class="w-5 h-5" />
             </button>

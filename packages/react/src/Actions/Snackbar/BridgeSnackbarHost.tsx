@@ -103,7 +103,7 @@ export function BridgeSnackbarHost({
                   actions,
                   rightButtons,
                   color: snackbarProps.color,
-                  dense: snackbarProps.dense,
+                  padding: snackbarProps.padding,
                 },
                 () => api.close(entryId),
               )}

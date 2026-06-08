@@ -1,3 +1,6 @@
+// ** Core Imports
+import { usesTrailingSnackbarActions } from "@bridge-ui/core";
+
 // ** Local Imports
 import type {
   BridgeSnackbarContentProps,
@@ -9,11 +12,18 @@ import type { SnackbarSlots } from "@/Components/Snackbar/snackbar.types";
 export function resolveBridgeSnackbarSlots(
   props: Pick<
     BridgeSnackbarContentProps,
-    "actions" | "rightButtons" | "dense" | "color"
+    "actions" | "rightButtons" | "padding" | "color"
   >,
   close: () => void,
 ): SnackbarSlots | undefined {
-  const { dense, actions, rightButtons, color = "primary" } = props;
+  const {
+    actions,
+    rightButtons,
+    color = "primary",
+    padding = "medium",
+  } = props;
+
+  const trailingActions = usesTrailingSnackbarActions(padding);
 
   if (!actions?.accept && !actions?.reject) {
     return undefined;
@@ -68,7 +78,7 @@ export function resolveBridgeSnackbarSlots(
     return slots;
   }
 
-  if (dense && actions.accept?.label) {
+  if (trailingActions && actions.accept?.label) {
     slots.trailing = (
       <SnackbarActionControl
         role="accept"
@@ -83,7 +93,7 @@ export function resolveBridgeSnackbarSlots(
     );
   }
 
-  if (!dense && (actions.accept || actions.reject)) {
+  if (!trailingActions && (actions.accept || actions.reject)) {
     slots.actions = (
       <>
         {actions.accept?.label && (
