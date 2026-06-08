@@ -62,7 +62,11 @@ test("it should call onShowChange on escape", () => {
     />,
   );
 
-  cy.get("body").type("{esc}");
+  cy.get('[role="status"]').should("be.visible");
+
+  cy.window().then((win) => {
+    win.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  });
 
   cy.get("@onShowChange").should("have.been.calledWith", false);
 });

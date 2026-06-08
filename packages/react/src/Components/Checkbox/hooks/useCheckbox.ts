@@ -24,7 +24,7 @@ import type {
   CheckboxOwnProps,
   CheckboxProps,
 } from "@/Components/Checkbox/checkbox.types";
-import { useSwitcher } from "@/Components/Switcher";
+import { useSwitcher } from "@/Components/Switcher/hooks/useSwitcher";
 import {
   derived,
   mergePartBind,
@@ -82,12 +82,7 @@ export function useCheckbox(
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, [
-      "slots",
-      "children",
-      "className",
-      "defaultChecked",
-    ]);
+    return omit(switcher.inputInheritedAttrs, ["defaultChecked"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CheckboxClasses>({

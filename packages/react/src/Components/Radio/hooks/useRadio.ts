@@ -23,7 +23,7 @@ import type {
   RadioOwnProps,
   RadioProps,
 } from "@/Components/Radio/radio.types";
-import { useSwitcher } from "@/Components/Switcher";
+import { useSwitcher } from "@/Components/Switcher/hooks/useSwitcher";
 import {
   derived,
   mergePartBind,
@@ -78,12 +78,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, [
-      "slots",
-      "children",
-      "className",
-      "defaultChecked",
-    ]);
+    return omit(switcher.inputInheritedAttrs, ["defaultChecked"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<RadioClasses>({

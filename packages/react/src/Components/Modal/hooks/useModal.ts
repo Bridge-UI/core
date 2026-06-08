@@ -107,7 +107,7 @@ export function useModal(
 
   const layerStackIdRef = useRef("");
 
-  const [rendered, setRendered] = useState(false);
+  const [rendered, setRendered] = useState(show);
 
   const leaveTransitionEndsPendingRef = useRef(0);
 
@@ -311,7 +311,7 @@ export function useModal(
     handleOverlayClick();
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (show) {
       setRendered(true);
       scheduleOpen();

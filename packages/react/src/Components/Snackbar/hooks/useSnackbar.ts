@@ -113,7 +113,7 @@ export function useSnackbar(
   const layerStackIdRef = useRef("");
 
   const timerStartedAtRef = useRef(0);
-  const [rendered, setRendered] = useState(false);
+  const [rendered, setRendered] = useState(show);
 
   const stackOrderRef = useRef<number | null>(null);
 
@@ -347,7 +347,7 @@ export function useSnackbar(
     finishLeave();
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (show) {
       setRendered(true);
       scheduleOpen();

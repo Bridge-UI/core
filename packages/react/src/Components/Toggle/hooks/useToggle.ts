@@ -18,7 +18,7 @@ import {
 } from "@bridge-ui/core/Components/Toggle";
 
 // ** Local Imports
-import { useSwitcher } from "@/Components/Switcher";
+import { useSwitcher } from "@/Components/Switcher/hooks/useSwitcher";
 import type {
   ToggleClasses,
   ToggleOwnProps,
@@ -77,12 +77,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, [
-      "slots",
-      "children",
-      "className",
-      "defaultChecked",
-    ]);
+    return omit(switcher.inputInheritedAttrs, ["defaultChecked"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ToggleClasses>({

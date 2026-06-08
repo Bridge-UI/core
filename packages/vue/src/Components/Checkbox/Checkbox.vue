@@ -59,8 +59,8 @@ function onChange(event: Event) {
     <label v-bind="fieldBind" :for="switcher.controlId.value">
       <input
         ref="inputRef"
-        :checked="model"
         v-bind="inputBind"
+        :checked="isChecked"
         v-on:change="onChange"
       />
 

@@ -42,7 +42,12 @@ function SwitcherHarness({
 
   return (
     <Switcher field={field}>
-      <input {...field.controlBind} type="checkbox" aria-label="Control" />
+      <input
+        {...field.inputInheritedAttrs}
+        {...field.controlBind}
+        type="checkbox"
+        aria-label="Control"
+      />
     </Switcher>
   );
 }

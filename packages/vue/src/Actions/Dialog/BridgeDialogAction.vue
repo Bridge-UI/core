@@ -3,7 +3,7 @@
 import { computed } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { BridgeDialogActionProps } from "@/Actions/Dialog/bridgeDialog.types";
@@ -16,15 +16,29 @@ const emit = defineEmits<{
   run: [];
 }>();
 
-const color = computed(() => {
+const buttonColor = computed(() => {
   return props.role === "accept" ? props.acceptColor : "secondary";
+});
+
+const linkColor = computed(() => {
+  return buttonColor.value as keyof LinkColor;
+});
+
+const linkProps = computed(() => {
+  if (!props.action.link) {
+    return {};
+  }
+
+  const { onClick: _onClick, ...rest } = props.action.link;
+
+  return rest;
 });
 
 function onRun() {
   emit("run");
 }
 
-function onLinkClick(event: MouseEvent) {
+function onLinkClick(event: PointerEvent) {
   event.preventDefault();
   props.action.link?.onClick?.(event);
   onRun();
@@ -34,10 +48,10 @@ function onLinkClick(event: MouseEvent) {
 <template>
   <Link
     size="sm"
-    :color="color"
     underline="hover"
+    :color="linkColor"
     v-if="action.link"
-    v-bind="action.link"
+    v-bind="linkProps"
     v-on:click="onLinkClick"
     :classes="{
       ...action.link.classes,
@@ -50,8 +64,8 @@ function onLinkClick(event: MouseEvent) {
   <Button
     v-else
     size="sm"
-    :color="color"
     v-on:click="onRun"
+    :color="buttonColor"
     v-bind="action.button"
     :variant="action.solid ? 'outline' : 'flat'"
     :classes="{

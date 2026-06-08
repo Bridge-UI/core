@@ -24,7 +24,12 @@ function SwitcherHarness(props: Omit<SwitcherOwnProps, "field"> = {}) {
 
   return (
     <Switcher field={field}>
-      <input {...field.controlBind} type="checkbox" aria-label="Control" />
+      <input
+        type="checkbox"
+        aria-label="Control"
+        {...field.controlBind}
+        {...field.inputInheritedAttrs}
+      />
     </Switcher>
   );
 }

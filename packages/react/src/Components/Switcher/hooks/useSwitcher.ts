@@ -82,8 +82,12 @@ export function useSwitcher(
     return merged.partsProps;
   });
 
-  const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "children", "className"]);
+  const inputInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, [
+      "slots",
+      "children",
+      "className",
+    ]) as InputHTMLAttributes<HTMLInputElement>;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<SwitcherClasses>({
@@ -109,7 +113,7 @@ export function useSwitcher(
   });
 
   const controlId = derived(() => {
-    return merged.controlId ?? inheritedAttrs.id ?? autoId;
+    return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
   });
 
   const reservesErrorMessageSpace = derived(() => {
@@ -154,7 +158,6 @@ export function useSwitcher(
       partsProps?.root,
       {
         className: cn(inheritedAttrs.className),
-        ...rootInheritedAttrs,
       },
       cn({
         "group/switcher relative w-full": true,
@@ -270,6 +273,7 @@ export function useSwitcher(
     ariaDescribedBy,
     descriptionBind,
     errorMessageBind,
+    inputInheritedAttrs,
     showErrorMessageContent,
     reservesErrorMessageSpace,
   };
