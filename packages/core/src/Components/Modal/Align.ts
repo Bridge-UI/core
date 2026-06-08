@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ModalAlign {
   "bottom-center": string;
   "bottom-end": string;
@@ -11,7 +10,6 @@ export interface ModalAlign {
   "top-start": string;
 }
 
-// prettier-ignore
 export const alignProps: ModalAlign = {
   "top-end": "sm:items-start sm:justify-end",
   "bottom-end": "sm:items-end sm:justify-end",

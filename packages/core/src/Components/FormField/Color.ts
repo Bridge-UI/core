@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface FormFieldColorItem {
   "end": string;
   "input": string;
@@ -6,7 +5,6 @@ export interface FormFieldColorItem {
   "underlined"?: string;
 }
 
-// prettier-ignore
 export interface FormFieldColor {
   "dark": FormFieldColorItem;
   "error": FormFieldColorItem;
@@ -17,7 +15,6 @@ export interface FormFieldColor {
   "warning": FormFieldColorItem;
 }
 
-// prettier-ignore
 export const colorProps: FormFieldColor = {
   "dark": {
     "input": "focus-within:ring-dark-600",

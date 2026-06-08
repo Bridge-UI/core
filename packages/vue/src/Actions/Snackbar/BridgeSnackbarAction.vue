@@ -22,16 +22,15 @@ const color = computed(() => {
 });
 
 const layoutClass = computed(() => {
-  // prettier-ignore
   const rootClass = {
-    "trailing": "mr-4 shrink-0",
+    trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      'w-full rounded-none rounded-tr-lg': true,
-      'rounded-br-lg': !props.hasReject,
+      "w-full rounded-none rounded-tr-lg": true,
+      "rounded-br-lg": !props.hasReject,
     }),
     "right-reject": cn({
-      'w-full rounded-none rounded-br-lg': true,
-      'rounded-tr-lg': !props.hasAccept,
+      "w-full rounded-none rounded-br-lg": true,
+      "rounded-tr-lg": !props.hasAccept,
     }),
   };
 

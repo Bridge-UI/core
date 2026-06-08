@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AvatarRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface AvatarRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: AvatarRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

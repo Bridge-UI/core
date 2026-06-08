@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface CardPaddingItem {
   "body": string;
   "footer": string;
   "header": string;
 }
 
-// prettier-ignore
 export interface CardPadding {
   "large": CardPaddingItem;
   "medium": CardPaddingItem;
@@ -13,7 +11,6 @@ export interface CardPadding {
   "small": CardPaddingItem;
 }
 
-// prettier-ignore
 export const paddingProps: CardPadding = {
   "none": {
     "body": "p-0",

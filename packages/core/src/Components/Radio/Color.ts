@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface RadioColorItem {
   "base": string;
   "checked": string;
   "focus": string;
 }
 
-// prettier-ignore
 export interface RadioColor {
   "dark": RadioColorItem;
   "error": RadioColorItem;
@@ -16,7 +14,6 @@ export interface RadioColor {
   "warning": RadioColorItem;
 }
 
-// prettier-ignore
 export const colorProps: RadioColor = {
   "dark": {
     "focus": "ring-dark-500/30",

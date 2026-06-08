@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface ToggleSizeItem {
   "thumb": string;
   "thumbCheckedTranslate": string;
   "track": string;
 }
 
-// prettier-ignore
 export interface ToggleSize {
   "2xl": ToggleSizeItem;
   "2xs": ToggleSizeItem;
@@ -16,7 +14,6 @@ export interface ToggleSize {
   "xs": ToggleSizeItem;
 }
 
-// prettier-ignore
 export const sizeProps: ToggleSize = {
   "xs": {
     "track": "h-4 w-7",

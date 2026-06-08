@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface LabelSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface LabelSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: LabelSize = {
   "xs": "text-xs",
   "sm": "text-xs",

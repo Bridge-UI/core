@@ -6,14 +6,12 @@ import {
   solidProps,
 } from "@core/Components/Badge/Color";
 
-// prettier-ignore
 export interface BadgeVariant {
   "flat": BadgeColor;
   "outline": BadgeColor;
   "solid": BadgeColor;
 }
 
-// prettier-ignore
 export const variantProps: BadgeVariant = {
   "flat": flatProps,
   "solid": solidProps,

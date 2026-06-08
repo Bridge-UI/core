@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AvatarSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface AvatarSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: AvatarSize = {
   "xs": "w-8 h-8 text-xs",
   "sm": "w-9 h-9 text-sm",

@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface CardRoundedItem {
   "footer": string;
   "header": string;
   "root": string;
 }
 
-// prettier-ignore
 export interface CardRounded {
   "2xl": CardRoundedItem;
   "3xl": CardRoundedItem;
@@ -19,7 +17,6 @@ export interface CardRounded {
   "xs": CardRoundedItem;
 }
 
-// prettier-ignore
 export const roundedProps: CardRounded = {
   "xs": {
     "root": "rounded-xs",

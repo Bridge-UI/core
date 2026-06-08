@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface BadgeRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface BadgeRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: BadgeRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

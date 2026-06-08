@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface FormFieldRoundedItem {
   "end": string;
   "input": string;
   "start": string;
 }
 
-// prettier-ignore
 export interface FormFieldRounded {
   "2xl": FormFieldRoundedItem;
   "3xl": FormFieldRoundedItem;
@@ -19,7 +17,6 @@ export interface FormFieldRounded {
   "xs": FormFieldRoundedItem;
 }
 
-// prettier-ignore
 export const roundedProps: FormFieldRounded = {
   "xs": {
     "end": "rounded-e-xs",

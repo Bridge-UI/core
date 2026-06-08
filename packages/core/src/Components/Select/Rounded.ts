@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface SelectRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface SelectRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: SelectRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

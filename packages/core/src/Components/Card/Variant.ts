@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface CardVariantItem {
   "border": string;
   "footer": string;
@@ -6,7 +5,6 @@ export interface CardVariantItem {
   "text": string;
 }
 
-// prettier-ignore
 export interface CardVariant {
   "elevated": CardVariantItem;
   "flat": CardVariantItem;
@@ -16,7 +14,6 @@ export interface CardVariant {
   "tonal": CardVariantItem;
 }
 
-// prettier-ignore
 export const variantProps: CardVariant = {
   "flat": {
     "border": "",
@@ -52,6 +49,7 @@ export const variantProps: CardVariant = {
     "footer": "bg-transparent",
     "border": "border-transparent",
     "text": "text-dark-700 dark:text-dark-400",
-    "root": "bg-transparent opacity-60 transition-opacity hover:bg-dark-50 hover:opacity-100 dark:hover:bg-dark-800/50",
+    "root":
+      "bg-transparent opacity-60 transition-opacity hover:bg-dark-50 hover:opacity-100 dark:hover:bg-dark-800/50",
   },
 };

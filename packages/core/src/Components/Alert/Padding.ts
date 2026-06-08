@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AlertPadding {
   "large": string;
   "medium": string;
@@ -6,7 +5,6 @@ export interface AlertPadding {
   "small": string;
 }
 
-// prettier-ignore
 export const paddingProps: AlertPadding = {
   "none": "ms-2",
   "small": "ps-1 mt-1 ms-3",

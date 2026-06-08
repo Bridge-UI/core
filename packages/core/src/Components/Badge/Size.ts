@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface BadgeSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface BadgeSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const miniSizeProps: BadgeSize = {
   "sm": "text-xs px-1 py-0 w-6 h-6",
   "xs": "text-2xs px-1 py-0 w-5 h-5",
@@ -20,7 +18,6 @@ export const miniSizeProps: BadgeSize = {
   "2xl": "text-base px-3 py-1 w-10 h-10",
 };
 
-// prettier-ignore
 export const defaultSizeProps: BadgeSize = {
   "lg": "text-sm px-3 py-1",
   "2xl": "text-lg px-4 py-2",

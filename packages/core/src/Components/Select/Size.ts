@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface SelectSize {
   "lg": string;
   "md": string;
@@ -7,7 +6,6 @@ export interface SelectSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: SelectSize = {
   "xs": "text-xs px-2 py-1",
   "md": "text-sm px-3 py-2",

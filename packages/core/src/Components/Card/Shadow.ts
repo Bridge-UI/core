@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface CardShadow {
   "2xl": string;
   "2xs": string;
@@ -11,7 +10,6 @@ export interface CardShadow {
   "xs": string;
 }
 
-// prettier-ignore
 export const shadowProps: CardShadow = {
   "xs": "shadow-xs",
   "sm": "shadow-sm",

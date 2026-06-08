@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface LinkSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface LinkSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: LinkSize = {
   "xs": "text-xs",
   "sm": "text-sm",

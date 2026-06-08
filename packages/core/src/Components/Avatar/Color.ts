@@ -1,10 +1,8 @@
-// prettier-ignore
 export interface AvatarColorItem {
   "background": string;
   "text": string;
 }
 
-// prettier-ignore
 export interface AvatarColor {
   "dark": AvatarColorItem;
   "error": AvatarColorItem;
@@ -15,7 +13,6 @@ export interface AvatarColor {
   "warning": AvatarColorItem;
 }
 
-// prettier-ignore
 export const colorProps: AvatarColor = {
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",

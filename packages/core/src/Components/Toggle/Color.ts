@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ToggleColorItem {
   "focus": string;
   "thumb": string;
@@ -6,7 +5,6 @@ export interface ToggleColorItem {
   "trackChecked": string;
 }
 
-// prettier-ignore
 export interface ToggleColor {
   "dark": ToggleColorItem;
   "error": ToggleColorItem;
@@ -17,7 +15,6 @@ export interface ToggleColor {
   "warning": ToggleColorItem;
 }
 
-// prettier-ignore
 export const colorProps: ToggleColor = {
   "dark": {
     "thumb": "bg-white",

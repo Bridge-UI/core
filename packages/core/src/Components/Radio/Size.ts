@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface RadioSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface RadioSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: RadioSize = {
   "xs": "w-3 h-3",
   "sm": "w-4 h-4",

@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AlertRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface AlertRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: AlertRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

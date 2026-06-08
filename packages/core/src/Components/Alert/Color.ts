@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AlertColorItem {
   "background": string;
   "border"?: string;
@@ -7,7 +6,6 @@ export interface AlertColorItem {
   "text": string;
 }
 
-// prettier-ignore
 export interface AlertColor {
   "dark": AlertColorItem;
   "error": AlertColorItem;
@@ -18,7 +16,6 @@ export interface AlertColor {
   "warning": AlertColorItem;
 }
 
-// prettier-ignore
 export const flatProps: AlertColor = {
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
@@ -57,7 +54,6 @@ export const flatProps: AlertColor = {
   },
 };
 
-// prettier-ignore
 export const solidProps: AlertColor = {
   "dark": {
     "text": "text-white dark:text-black",
@@ -96,7 +92,6 @@ export const solidProps: AlertColor = {
   },
 };
 
-// prettier-ignore
 export const outlineProps: AlertColor = {
   "dark": {
     "background": "bg-transparent",

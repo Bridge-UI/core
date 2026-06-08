@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ModalSize {
   "2xl": string;
   "3xl": string;
@@ -14,7 +13,6 @@ export interface ModalSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: ModalSize = {
   "xs": "sm:max-w-xs",
   "sm": "sm:max-w-sm",

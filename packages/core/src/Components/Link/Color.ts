@@ -1,10 +1,8 @@
-// prettier-ignore
 export interface LinkColorItem {
   "base": string;
   "hover": string;
 }
 
-// prettier-ignore
 export interface LinkColor {
   "dark": LinkColorItem;
   "error": LinkColorItem;
@@ -15,7 +13,6 @@ export interface LinkColor {
   "warning": LinkColorItem;
 }
 
-// prettier-ignore
 export const colorProps: LinkColor = {
   "dark": {
     "base": "text-dark-600 dark:text-dark-400",

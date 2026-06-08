@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface RadioRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface RadioRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: RadioRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

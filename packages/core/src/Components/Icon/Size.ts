@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface IconSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface IconSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const sizeProps: IconSize = {
   "xs": "w-3 h-3",
   "md": "w-4 h-4",

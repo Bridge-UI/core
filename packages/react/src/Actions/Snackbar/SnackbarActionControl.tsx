@@ -18,16 +18,15 @@ function layoutClasses(
   hasReject?: boolean,
   hasAccept?: boolean,
 ): string {
-  // prettier-ignore
   const rootClass = {
-    "trailing": "mr-4 shrink-0",
+    trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      'w-full rounded-none rounded-tr-lg': true,
-      'rounded-br-lg': !hasReject,
+      "w-full rounded-none rounded-tr-lg": true,
+      "rounded-br-lg": !hasReject,
     }),
     "right-reject": cn({
-      'w-full rounded-none rounded-br-lg': true,
-      'rounded-tr-lg': !hasAccept,
+      "w-full rounded-none rounded-br-lg": true,
+      "rounded-tr-lg": !hasAccept,
     }),
   };
 

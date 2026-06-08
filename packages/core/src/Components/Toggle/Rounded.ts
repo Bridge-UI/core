@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ToggleRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface ToggleRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: ToggleRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

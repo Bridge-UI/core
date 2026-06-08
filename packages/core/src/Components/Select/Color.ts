@@ -1,10 +1,8 @@
-// prettier-ignore
 export interface SelectColorItem {
   "base": string;
   "focus": string;
 }
 
-// prettier-ignore
 export interface SelectColor {
   "dark": SelectColorItem;
   "error": SelectColorItem;
@@ -15,7 +13,6 @@ export interface SelectColor {
   "warning": SelectColorItem;
 }
 
-// prettier-ignore
 export const outlineProps: SelectColor = {
   "dark": {
     "base": "border-gray-300 dark:border-gray-600",
@@ -47,7 +44,6 @@ export const outlineProps: SelectColor = {
   },
 };
 
-// prettier-ignore
 export const filledProps: SelectColor = {
   "dark": {
     "base": "bg-gray-100 dark:bg-gray-800 border-transparent",
@@ -75,11 +71,11 @@ export const filledProps: SelectColor = {
   },
   "secondary": {
     "base": "bg-gray-100 dark:bg-gray-800 border-transparent",
-    "focus": "focus:bg-white dark:focus:bg-gray-900 focus:ring-secondary-500/30",
+    "focus":
+      "focus:bg-white dark:focus:bg-gray-900 focus:ring-secondary-500/30",
   },
 };
 
-// prettier-ignore
 export const underlinedProps: SelectColor = {
   "dark": {
     "focus": "focus:border-dark-500",

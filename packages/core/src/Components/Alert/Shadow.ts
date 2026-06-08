@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface AlertShadow {
   "2xl": string;
   "2xs": string;
@@ -11,7 +10,6 @@ export interface AlertShadow {
   "xs": string;
 }
 
-// prettier-ignore
 export const shadowProps: AlertShadow = {
   "xs": "shadow-xs",
   "sm": "shadow-sm",

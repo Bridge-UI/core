@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ButtonSize {
   "2xl": string;
   "2xs": string;
@@ -9,7 +8,6 @@ export interface ButtonSize {
   "xs": string;
 }
 
-// prettier-ignore
 export const miniSizeProps: ButtonSize = {
   "sm": "text-xs w-6 h-6",
   "md": "text-xs w-7 h-7",
@@ -20,7 +18,6 @@ export const miniSizeProps: ButtonSize = {
   "2xl": "text-base w-10 h-10",
 };
 
-// prettier-ignore
 export const defaultSizeProps: ButtonSize = {
   "md": "gap-x-2 text-sm px-4 py-2",
   "2xl": "gap-x-3 text-lg px-7 py-4",

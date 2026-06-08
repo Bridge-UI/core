@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface MenuShadow {
   "2xl": string;
   "2xs": string;
@@ -11,7 +10,6 @@ export interface MenuShadow {
   "xs": string;
 }
 
-// prettier-ignore
 export const shadowProps: MenuShadow = {
   "xs": "shadow-xs",
   "sm": "shadow-sm",

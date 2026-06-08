@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface BadgeColorItem {
   "background": string;
   "border"?: string;
   "text": string;
 }
 
-// prettier-ignore
 export interface BadgeColor {
   "dark": BadgeColorItem;
   "error": BadgeColorItem;
@@ -16,7 +14,6 @@ export interface BadgeColor {
   "warning": BadgeColorItem;
 }
 
-// prettier-ignore
 export const flatProps: BadgeColor = {
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
@@ -48,7 +45,6 @@ export const flatProps: BadgeColor = {
   },
 };
 
-// prettier-ignore
 export const solidProps: BadgeColor = {
   "dark": {
     "text": "text-white",
@@ -80,7 +76,6 @@ export const solidProps: BadgeColor = {
   },
 };
 
-// prettier-ignore
 export const outlineProps: BadgeColor = {
   "dark": {
     "background": "bg-transparent",

@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface ModalBlur {
   "2xl": string;
   "3xl": string;
@@ -10,7 +9,6 @@ export interface ModalBlur {
   "xs": string;
 }
 
-// prettier-ignore
 export const blurProps: ModalBlur = {
   "xs": "backdrop-blur-xs",
   "sm": "backdrop-blur-sm",

@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface CheckboxRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface CheckboxRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: CheckboxRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface SnackbarPosition {
   "bottom-center": string;
   "bottom-end": string;
@@ -8,7 +7,6 @@ export interface SnackbarPosition {
   "top-start": string;
 }
 
-// prettier-ignore
 export const positionProps: SnackbarPosition = {
   "top-end": "items-start justify-end",
   "bottom-end": "items-end justify-end",

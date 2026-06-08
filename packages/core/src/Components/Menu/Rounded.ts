@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface MenuRounded {
   "2xl": string;
   "3xl": string;
@@ -12,7 +11,6 @@ export interface MenuRounded {
   "xs": string;
 }
 
-// prettier-ignore
 export const roundedProps: MenuRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",

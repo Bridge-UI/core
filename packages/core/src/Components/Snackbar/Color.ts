@@ -1,10 +1,8 @@
-// prettier-ignore
 export interface SnackbarColorItem {
   "icon"?: unknown;
   "iconColor": string;
 }
 
-// prettier-ignore
 export interface SnackbarColor {
   "dark": SnackbarColorItem;
   "error": SnackbarColorItem;
@@ -15,7 +13,6 @@ export interface SnackbarColor {
   "warning": SnackbarColorItem;
 }
 
-// prettier-ignore
 export const colorProps: SnackbarColor = {
   "dark": {
     "iconColor": "text-dark-800 dark:text-dark-200",

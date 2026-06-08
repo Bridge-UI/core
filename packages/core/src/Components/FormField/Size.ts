@@ -1,4 +1,3 @@
-// prettier-ignore
 export interface FormFieldSizeItem {
   /**
    * Fixed height on the input container (`<div>`), plain or with slots.
@@ -62,7 +61,6 @@ export interface FormFieldSizeItem {
   "textareaLikeInput": string;
 }
 
-// prettier-ignore
 export interface FormFieldSize {
   "2xl": {
     "filled": FormFieldSizeItem;
@@ -115,7 +113,6 @@ export interface FormFieldSize {
   };
 }
 
-// prettier-ignore
 export const sizeProps: FormFieldSize = {
   "xs": {
     "filled": {
@@ -128,7 +125,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-7 h-auto",
       "textareaLikeInput": "py-[calc((1.75rem-1lh)/2)]",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "outline": {
       "text": "text-xs",
@@ -140,7 +138,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-7 h-auto",
       "textareaLikeInput": "py-[calc((1.75rem-1lh)/2)]",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "notched": {
       "text": "text-xs",
@@ -152,7 +151,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-7 h-auto",
       "textareaLikeInput": "py-[calc((1.75rem-1lh)/2)]",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-xs min-h-0 leading-tight pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-tight pt-3 pb-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-xs",
@@ -164,7 +164,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-7 h-auto",
       "textareaLikeInput": "py-[calc((1.75rem-1lh)/2)]",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "stacked": {
       "text": "text-xs",
@@ -178,7 +179,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-20 h-auto",
       "containerTextareaLikeInput": "min-h-12 h-auto",
       "input": "px-0 text-xs h-auto min-h-0 w-full py-0 leading-tight",
-      "textarea": "px-0 block text-xs h-auto min-h-0 w-full py-1.5 leading-tight self-stretch",
+      "textarea":
+        "px-0 block text-xs h-auto min-h-0 w-full py-1.5 leading-tight self-stretch",
     },
   },
   "2xl": {
@@ -192,7 +194,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-12 h-auto",
       "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
       "text": "text-lg",
@@ -204,7 +207,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-12 h-auto",
       "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-lg",
@@ -216,7 +220,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-12 h-auto",
       "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
       "text": "text-lg",
@@ -228,7 +233,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-12 h-auto",
       "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-lg min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
       "text": "text-lg",
@@ -242,7 +248,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-36 h-auto",
       "containerTextareaLikeInput": "min-h-16 h-auto",
       "input": "px-0 text-lg h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea": "px-0 block text-lg h-auto min-h-0 w-full py-2 leading-normal self-stretch",
+      "textarea":
+        "px-0 block text-lg h-auto min-h-0 w-full py-2 leading-normal self-stretch",
     },
   },
   "lg": {
@@ -256,7 +263,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-10 h-auto",
       "textareaLikeInput": "py-[calc((2.5rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
       "text": "text-sm",
@@ -268,7 +276,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-10 h-auto",
       "textareaLikeInput": "py-[calc((2.5rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-sm",
@@ -280,7 +289,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-10 h-auto",
       "textareaLikeInput": "py-[calc((2.5rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
       "text": "text-sm",
@@ -292,7 +302,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-10 h-auto",
       "textareaLikeInput": "py-[calc((2.5rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
       "text": "text-sm",
@@ -306,7 +317,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-28 h-auto",
       "containerTextareaLikeInput": "min-h-14 h-auto",
       "input": "px-0 text-sm h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea": "px-0 block text-sm h-auto min-h-0 w-full py-2 leading-normal self-stretch",
+      "textarea":
+        "px-0 block text-sm h-auto min-h-0 w-full py-2 leading-normal self-stretch",
     },
   },
   "sm": {
@@ -320,7 +332,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((2rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-8 h-auto",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "outline": {
       "text": "text-xs",
@@ -332,7 +345,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((2rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-8 h-auto",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "notched": {
       "text": "text-xs",
@@ -344,7 +358,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((2rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-8 h-auto",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-xs min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-xs",
@@ -356,7 +371,8 @@ export const sizeProps: FormFieldSize = {
       "textareaLikeInput": "py-[calc((2rem-1lh)/2)]",
       "containerTextareaLikeInput": "min-h-8 h-auto",
       "input": "px-0 text-xs py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "stacked": {
       "text": "text-xs",
@@ -370,7 +386,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-24 h-auto",
       "containerTextareaLikeInput": "min-h-[3.125rem] h-auto",
       "input": "px-0 text-xs h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea": "px-0 block text-xs h-auto min-h-0 w-full py-1.5 leading-normal self-stretch",
+      "textarea":
+        "px-0 block text-xs h-auto min-h-0 w-full py-1.5 leading-normal self-stretch",
     },
   },
   "md": {
@@ -384,7 +401,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-9 h-auto",
       "textareaLikeInput": "py-[calc((2.25rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
       "text": "text-sm",
@@ -396,7 +414,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-9 h-auto",
       "textareaLikeInput": "py-[calc((2.25rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-sm",
@@ -408,7 +427,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-9 h-auto",
       "textareaLikeInput": "py-[calc((2.25rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
       "text": "text-sm",
@@ -420,7 +440,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-9 h-auto",
       "textareaLikeInput": "py-[calc((2.25rem-1lh)/2)]",
       "input": "px-0 text-sm py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
       "text": "text-sm",
@@ -434,7 +455,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-24 h-auto",
       "containerTextareaLikeInput": "min-h-[3.25rem] h-auto",
       "input": "px-0 text-sm h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea": "px-0 block text-sm h-auto min-h-0 w-full py-2 leading-normal self-stretch",
+      "textarea":
+        "px-0 block text-sm h-auto min-h-0 w-full py-2 leading-normal self-stretch",
     },
   },
   "2xs": {
@@ -448,7 +470,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-6 h-auto",
       "textareaLikeInput": "py-[calc((1.5rem-1lh)/2)]",
       "input": "px-0 text-2xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "outline": {
       "text": "text-2xs",
@@ -460,7 +483,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-6 h-auto",
       "textareaLikeInput": "py-[calc((1.5rem-1lh)/2)]",
       "input": "px-0 text-2xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "notched": {
       "text": "text-2xs",
@@ -472,7 +496,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-6 h-auto",
       "textareaLikeInput": "py-[calc((1.5rem-1lh)/2)]",
       "input": "px-0 text-2xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-2xs min-h-0 leading-tight pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-2xs min-h-0 leading-tight pt-3 pb-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-2xs",
@@ -484,7 +509,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-6 h-auto",
       "textareaLikeInput": "py-[calc((1.5rem-1lh)/2)]",
       "input": "px-0 text-2xs py-0 h-full min-h-0 leading-tight",
-      "textarea": "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
+      "textarea":
+        "px-0 block text-2xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "stacked": {
       "text": "text-2xs",
@@ -498,7 +524,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-20 h-auto",
       "containerTextareaLikeInput": "min-h-[2.75rem] h-auto",
       "input": "px-0 text-2xs h-auto min-h-0 w-full py-0 leading-tight",
-      "textarea": "px-0 block text-2xs h-auto min-h-0 w-full py-1.5 leading-tight self-stretch",
+      "textarea":
+        "px-0 block text-2xs h-auto min-h-0 w-full py-1.5 leading-tight self-stretch",
     },
   },
   "xl": {
@@ -512,7 +539,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-11 h-auto",
       "textareaLikeInput": "py-[calc((2.75rem-1lh)/2)]",
       "input": "px-0 text-base py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
       "text": "text-base",
@@ -524,7 +552,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-11 h-auto",
       "textareaLikeInput": "py-[calc((2.75rem-1lh)/2)]",
       "input": "px-0 text-base py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
       "text": "text-base",
@@ -536,7 +565,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-11 h-auto",
       "textareaLikeInput": "py-[calc((2.75rem-1lh)/2)]",
       "input": "px-0 text-base py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
       "text": "text-base",
@@ -548,7 +578,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextareaLikeInput": "min-h-11 h-auto",
       "textareaLikeInput": "py-[calc((2.75rem-1lh)/2)]",
       "input": "px-0 text-base py-0 h-full min-h-0 leading-normal",
-      "textarea": "px-0 block text-base min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+      "textarea":
+        "px-0 block text-base min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
       "text": "text-base",
@@ -562,7 +593,8 @@ export const sizeProps: FormFieldSize = {
       "containerTextarea": "min-h-32 h-auto",
       "containerTextareaLikeInput": "min-h-[3.75rem] h-auto",
       "input": "px-0 text-base h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea": "px-0 block text-base h-auto min-h-0 w-full py-2 leading-normal self-stretch",
+      "textarea":
+        "px-0 block text-base h-auto min-h-0 w-full py-2 leading-normal self-stretch",
     },
   },
 };

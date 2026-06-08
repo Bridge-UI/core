@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface CheckboxColorItem {
   "base": string;
   "checked": string;
   "focus": string;
 }
 
-// prettier-ignore
 export interface CheckboxColor {
   "dark": CheckboxColorItem;
   "error": CheckboxColorItem;
@@ -16,7 +14,6 @@ export interface CheckboxColor {
   "warning": CheckboxColorItem;
 }
 
-// prettier-ignore
 export const colorProps: CheckboxColor = {
   "dark": {
     "focus": "ring-dark-500/30",
