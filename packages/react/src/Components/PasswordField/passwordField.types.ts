@@ -43,10 +43,4 @@ export interface PasswordFieldSlots extends TextFieldSlots {}
 export type PasswordFieldProps = MergeHtmlProps<
   PasswordFieldOwnProps,
   InputHTMLAttributes<HTMLInputElement>
-> & {
-  /**
-   * Bound value (Bridge naming; use with controlled updates via native `onChange`
-   * or your form library).
-   */
-  modelValue?: string | null;
-};
+>;

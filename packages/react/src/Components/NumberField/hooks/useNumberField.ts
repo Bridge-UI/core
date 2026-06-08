@@ -1,4 +1,5 @@
-import { isNil } from "es-toolkit/compat";
+// ** External Imports
+import { isEmpty, isNaN, isNil, isNumber, isString } from "es-toolkit/compat";
 import type { ChangeEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
@@ -7,17 +8,38 @@ import type { NumberFieldProps } from "@/Components/NumberField/numberField.type
 
 type UseNumberFieldOptions = Pick<
   NumberFieldProps,
-  "modelValue" | "onChange" | "min" | "max" | "step"
+  "max" | "min" | "step" | "value" | "onChange" | "defaultValue"
 >;
 
+function toNumericValue(
+  raw: NumberFieldProps["value"] | NumberFieldProps["defaultValue"],
+): number | undefined {
+  if (isNil(raw) || isEmpty(raw)) {
+    return undefined;
+  }
+
+  if (isNumber(raw)) {
+    return isNaN(raw) ? undefined : raw;
+  }
+
+  if (isString(raw)) {
+    const parsed = Number(raw);
+
+    return isNaN(parsed) ? undefined : parsed;
+  }
+
+  return undefined;
+}
+
 export function useNumberField(options: UseNumberFieldOptions) {
-  const { min, max, onChange, step = 1, modelValue } = options;
+  const { min, max, value, onChange, step = 1, defaultValue } = options;
 
-  const [internalValue, setInternalValue] = useState<number | undefined>(
-    undefined,
-  );
+  const [internalValue, setInternalValue] = useState<number | undefined>(() => {
+    return toNumericValue(defaultValue);
+  });
 
-  const currentValue = modelValue ?? internalValue;
+  const controlledValue = toNumericValue(value);
+  const currentValue = controlledValue ?? internalValue;
 
   const currentValueRef = useRef(currentValue);
   currentValueRef.current = currentValue;
@@ -26,13 +48,13 @@ export function useNumberField(options: UseNumberFieldOptions) {
     (next: number) => {
       currentValueRef.current = next;
 
-      if (modelValue === undefined) {
+      if (isNil(controlledValue)) {
         setInternalValue(next);
       }
 
       onChange?.(next);
     },
-    [modelValue, onChange],
+    [onChange, controlledValue],
   );
 
   const handleChange = useCallback(
@@ -40,7 +62,7 @@ export function useNumberField(options: UseNumberFieldOptions) {
       const raw = event.target.value;
 
       if (raw === "") {
-        if (modelValue === undefined) {
+        if (isNil(controlledValue)) {
           setInternalValue(undefined);
         }
 
@@ -49,13 +71,13 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
       const parsed = Number(raw);
 
-      if (Number.isNaN(parsed)) {
+      if (isNaN(parsed)) {
         return;
       }
 
       setValue(parsed);
     },
-    [modelValue, setValue],
+    [setValue, controlledValue],
   );
 
   const increment = useCallback((): boolean => {

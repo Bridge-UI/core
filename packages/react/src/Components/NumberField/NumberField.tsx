@@ -19,13 +19,14 @@ function NumberField(props: NumberFieldProps) {
     color,
     error,
     slots,
+    value,
     classes,
     rounded,
     variant,
     onChange,
     step = 1,
-    modelValue,
     partsProps,
+    defaultValue,
     ...textFieldProps
   } = props;
 
@@ -35,8 +36,9 @@ function NumberField(props: NumberFieldProps) {
     min,
     max,
     step,
+    value,
     onChange,
-    modelValue,
+    defaultValue,
   });
 
   const incrementHold = useHoldRepeat(increment, {

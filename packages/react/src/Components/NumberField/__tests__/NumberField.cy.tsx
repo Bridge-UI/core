@@ -12,9 +12,7 @@ test("it should render a number input with stepper buttons", () => {
 test("it should increment value when increment button is clicked", () => {
   const onChange = cy.stub().as("onChange");
 
-  cy.mount(
-    <NumberField modelValue={1} onChange={onChange} aria-label="Amount" />,
-  );
+  cy.mount(<NumberField value={1} onChange={onChange} aria-label="Amount" />);
 
   cy.get('button[aria-label="Increment value"]').click();
   cy.get("@onChange").should("have.been.calledWith", 2);
@@ -35,13 +33,7 @@ test("it should disable stepper buttons when disabled", () => {
 
 test("it should forward min, max, and step attributes", () => {
   cy.mount(
-    <NumberField
-      min={0}
-      max={10}
-      step={2}
-      modelValue={4}
-      aria-label="Amount"
-    />,
+    <NumberField min={0} max={10} step={2} value={4} aria-label="Amount" />,
   );
 
   cy.get("input")

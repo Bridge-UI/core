@@ -22,7 +22,7 @@ test("it should render visibility toggle button", () => {
 });
 
 test("it should reveal password when toggle is clicked", () => {
-  const { container } = render(<PasswordField modelValue="secret" />);
+  const { container } = render(<PasswordField value="secret" />);
 
   fireEvent.click(screen.getByRole("button", { name: "Show password" }));
 

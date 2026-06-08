@@ -13,7 +13,7 @@ test("it should return undefined inputValue when no value is set", () => {
 });
 
 test("it should reflect controlled value", () => {
-  const { result } = renderHook(() => useNumberField({ modelValue: 5 }));
+  const { result } = renderHook(() => useNumberField({ value: 5 }));
 
   expect(result.current.inputValue).toBe("5");
   expect(result.current.currentValue).toBe(5);
@@ -22,7 +22,7 @@ test("it should reflect controlled value", () => {
 test("it should increment by step", () => {
   const onChange = vi.fn();
   const { result } = renderHook(() =>
-    useNumberField({ step: 2, onChange, modelValue: 2 }),
+    useNumberField({ step: 2, onChange, value: 2 }),
   );
 
   act(() => {
@@ -35,7 +35,7 @@ test("it should increment by step", () => {
 test("it should respect max when incrementing", () => {
   const onChange = vi.fn();
   const { result } = renderHook(() =>
-    useNumberField({ max: 9, step: 2, onChange, modelValue: 8 }),
+    useNumberField({ max: 9, step: 2, onChange, value: 8 }),
   );
 
   let didIncrement = false;

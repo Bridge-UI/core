@@ -25,7 +25,7 @@ test("it should render increment and decrement buttons", () => {
 test("it should increment value when increment button is clicked", () => {
   const onChange = vi.fn();
 
-  render(<NumberField modelValue={2} step={2} onChange={onChange} />);
+  render(<NumberField step={2} value={2} onChange={onChange} />);
 
   fireEvent.click(screen.getByRole("button", { name: "Increment value" }));
 
@@ -35,7 +35,7 @@ test("it should increment value when increment button is clicked", () => {
 test("it should decrement value when decrement button is clicked", () => {
   const onChange = vi.fn();
 
-  render(<NumberField modelValue={4} step={2} onChange={onChange} />);
+  render(<NumberField step={2} value={4} onChange={onChange} />);
 
   fireEvent.click(screen.getByRole("button", { name: "Decrement value" }));
 

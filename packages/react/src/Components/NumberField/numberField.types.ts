@@ -62,13 +62,5 @@ export interface NumberFieldSlots extends TextFieldSlots {}
 
 export type NumberFieldProps = MergeHtmlProps<
   NumberFieldOwnProps,
-  Omit<
-    InputHTMLAttributes<HTMLInputElement>,
-    "onChange" | "value" | "defaultValue"
-  >
-> & {
-  /**
-   * Bound numeric value (Bridge naming).
-   */
-  modelValue?: number | null;
-};
+  Omit<InputHTMLAttributes<HTMLInputElement>, "onChange">
+>;
