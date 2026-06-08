@@ -20,27 +20,36 @@ const emit = defineEmits<ModalEmits>();
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ModalOwnProps>(), {
+  scroll: "body",
   persistent: false,
+  keepMounted: false,
   teleportTo: "body",
+  hideBackdrop: false,
   closeOnEscape: true,
   closeOnOverlay: true,
+  disableAutoFocus: false,
+  disableScrollLock: false,
+  disableEnforceFocus: false,
+  disableRestoreFocus: false,
 });
 
 const model = defineModel<boolean>({ default: false });
 
 const {
   merged,
-  rendered,
+  mounted,
   rootBind,
   panelBind,
   overlayBind,
   wrapperBind,
+  setPanelRef,
   layerStackId,
 } = useModal(
   props,
   {
     size: "md",
     blur: "none",
+    scroll: "body",
     teleportTo: "body",
     transition: "fade",
     closeOnEscape: true,
@@ -70,15 +79,19 @@ const teleportTarget = computed(() => {
 
   return merged.value.teleportTo;
 });
+
+const showBackdrop = computed(() => {
+  return props.hideBackdrop !== true && merged.value.hideBackdrop !== true;
+});
 </script>
 
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="rendered" v-bind="rootBind">
-      <div aria-hidden="true" v-bind="overlayBind" />
+    <div v-if="mounted" v-bind="rootBind">
+      <div v-if="showBackdrop" aria-hidden="true" v-bind="overlayBind" />
 
       <div v-bind="wrapperBind">
-        <div v-bind="panelBind">
+        <div :ref="setPanelRef" v-bind="panelBind">
           <component :is="resolveNamedSlot(slots, 'default')" />
         </div>
       </div>
