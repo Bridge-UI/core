@@ -36,9 +36,9 @@ export function BridgeModalHost({ modal, children }: BridgeModalHostProps) {
         return (
           <Modal
             key={entryId}
-            {...mergeLayerShellProps(modal, entry.modal)}
             show={entry.show}
             stackId={entryId}
+            {...mergeLayerShellProps(modal, entry.modal)}
             onClose={() => invokeLayerDismiss(api.entries, entryId)}
             onShowChange={(show) => {
               api.syncShow(entryId, show);

@@ -25,7 +25,7 @@ export type BridgeModalHostProps = {
 export type BridgeModalEntry = {
   component: ComponentType<Record<string, unknown>>;
   id: LayerId;
-  modal?: Partial<ModalOwnProps>;
+  modal?: BridgeModalShellProps;
   onClose?: () => void;
   onClosed?: () => void;
   props?: Record<string, unknown>;
@@ -34,14 +34,14 @@ export type BridgeModalEntry = {
 
 export type BridgeModalOpenOptions<TProps = Record<string, unknown>> = {
   component: ComponentType<TProps>;
-  modal?: Partial<ModalOwnProps>;
+  modal?: BridgeModalShellProps;
   onClose?: () => void;
   onClosed?: () => void;
   props?: TProps;
 };
 
 export type BridgeModalUpdateOptions = {
-  modal?: Partial<ModalOwnProps>;
+  modal?: BridgeModalShellProps;
   props?: Record<string, unknown>;
 };
 

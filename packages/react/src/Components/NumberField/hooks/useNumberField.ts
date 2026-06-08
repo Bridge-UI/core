@@ -14,7 +14,7 @@ type UseNumberFieldOptions = Pick<
 function toNumericValue(
   raw: NumberFieldProps["value"] | NumberFieldProps["defaultValue"],
 ): number | undefined {
-  if (isNil(raw) || isEmpty(raw)) {
+  if (isNil(raw)) {
     return undefined;
   }
 
@@ -23,6 +23,10 @@ function toNumericValue(
   }
 
   if (isString(raw)) {
+    if (isEmpty(raw)) {
+      return undefined;
+    }
+
     const parsed = Number(raw);
 
     return isNaN(parsed) ? undefined : parsed;

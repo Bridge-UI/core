@@ -129,7 +129,7 @@ export type BridgeDialogContentProps = {
 
 export type BridgeDialogEntry = {
   id: LayerId;
-  modal?: Partial<ModalOwnProps>;
+  modal?: BridgeDialogShellProps;
   onClose?: () => void;
   onClosed?: () => void;
   props: BridgeDialogContentProps;
@@ -143,7 +143,7 @@ export type BridgeDialogOpenOptions = BridgeDialogContentProps & {
 };
 
 export type BridgeDialogUpdateOptions = {
-  modal?: Partial<ModalOwnProps>;
+  modal?: BridgeDialogShellProps;
   props?: Partial<BridgeDialogContentProps>;
 };
 

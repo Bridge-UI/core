@@ -440,7 +440,6 @@ test("modal shell options must not override host-controlled props", async () => 
             onClose,
             component: Content,
             modal: {
-              show: false,
               onClose: vi.fn(),
               transition: "none",
               onShowChange: vi.fn(),

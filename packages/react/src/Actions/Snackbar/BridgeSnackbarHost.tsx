@@ -94,9 +94,9 @@ export function BridgeSnackbarHost({
           return (
             <Snackbar
               key={entryId}
-              {...snackbarProps}
               show={entry.show}
               stackId={entryId}
+              {...snackbarProps}
               teleportTo={false}
               slots={resolveBridgeSnackbarSlots(
                 {
