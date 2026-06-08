@@ -15,7 +15,7 @@ export class BridgeDialogHostMissingError extends Error {
 }
 
 export function useDialogAction(): BridgeDialogApi {
-  const api = inject(BRIDGE_DIALOG_INJECTION_KEY);
+  const api = inject(BRIDGE_DIALOG_INJECTION_KEY, null);
 
   if (!api) {
     throw new BridgeDialogHostMissingError();

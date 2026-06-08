@@ -15,7 +15,7 @@ export class BridgeModalHostMissingError extends Error {
 }
 
 export function useModalAction(): BridgeModalApi {
-  const api = inject(BRIDGE_MODAL_INJECTION_KEY);
+  const api = inject(BRIDGE_MODAL_INJECTION_KEY, null);
 
   if (!api) {
     throw new BridgeModalHostMissingError();

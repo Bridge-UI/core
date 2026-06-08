@@ -3,13 +3,16 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, nextTick } from "vue";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
+
 // ** Local Imports
 import {
   BridgeDialogHost,
   BridgeDialogHostMissingError,
   useDialogAction,
 } from "@/Actions/Dialog";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { defineHeadlessComponent } from "@/Utils";
 
 afterEach(() => {
   resetLayerStackForTests();
@@ -26,25 +29,24 @@ function mountWithDialogHost(child: ReturnType<typeof defineComponent>) {
 
 test("useDialogAction should throw when BridgeDialogHost is missing", () => {
   const BadConsumer = defineComponent({
+    template: "<div />",
     setup() {
-      useDialogAction();
+      expect(() => useDialogAction()).toThrow(BridgeDialogHostMissingError);
     },
   });
 
-  expect(() => mount(BadConsumer)).toThrow(BridgeDialogHostMissingError);
+  mount(BadConsumer);
 });
 
 test("open should render title and description", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const dialog = useDialogAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const dialog = useDialogAction();
 
-      dialog.open({
-        title: "Delete item?",
-        modal: { transition: "none" },
-        description: "This cannot be undone.",
-      });
-    },
+    dialog.open({
+      title: "Delete item?",
+      modal: { transition: "none" },
+      description: "This cannot be undone.",
+    });
   });
 
   mountWithDialogHost(Consumer);
@@ -58,19 +60,17 @@ test("open should render title and description", async () => {
 test("actions should render footer buttons and dismiss on accept", async () => {
   const onAccept = vi.fn();
 
-  const Consumer = defineComponent({
-    setup() {
-      const dialog = useDialogAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const dialog = useDialogAction();
 
-      dialog.open({
-        title: "Confirm",
-        modal: { transition: "none" },
-        actions: {
-          reject: { label: "Cancel" },
-          accept: { label: "Delete", onClick: onAccept },
-        },
-      });
-    },
+    dialog.open({
+      title: "Confirm",
+      modal: { transition: "none" },
+      actions: {
+        reject: { label: "Cancel" },
+        accept: { label: "Delete", onClick: onAccept },
+      },
+    });
   });
 
   mountWithDialogHost(Consumer);
@@ -96,17 +96,15 @@ test("actions should render footer buttons and dismiss on accept", async () => {
 });
 
 test("close should dismiss a dialog", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const dialog = useDialogAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const dialog = useDialogAction();
 
-      const id = dialog.open({
-        title: "Dismiss me",
-        modal: { transition: "none" },
-      });
+    const id = dialog.open({
+      title: "Dismiss me",
+      modal: { transition: "none" },
+    });
 
-      dialog.close(id);
-    },
+    dialog.close(id);
   });
 
   mountWithDialogHost(Consumer);
@@ -117,14 +115,12 @@ test("close should dismiss a dialog", async () => {
 });
 
 test("host modal defaults should merge into open options", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const dialog = useDialogAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const dialog = useDialogAction();
 
-      dialog.open({
-        title: "Small dialog",
-      });
-    },
+    dialog.open({
+      title: "Small dialog",
+    });
   });
 
   mount(BridgeDialogHost, {

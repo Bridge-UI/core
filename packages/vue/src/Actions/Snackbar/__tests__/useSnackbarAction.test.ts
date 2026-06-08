@@ -13,6 +13,8 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
+import { defineHeadlessComponent } from "@/Utils";
+
 afterEach(() => {
   vi.useRealTimers();
   resetLayerStackForTests();
@@ -29,26 +31,25 @@ function mountWithSnackbarHost(child: ReturnType<typeof defineComponent>) {
 
 test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => {
   const BadConsumer = defineComponent({
+    template: "<div />",
     setup() {
-      useSnackbarAction();
+      expect(() => useSnackbarAction()).toThrow(BridgeSnackbarHostMissingError);
     },
   });
 
-  expect(() => mount(BadConsumer)).toThrow(BridgeSnackbarHostMissingError);
+  mount(BadConsumer);
 });
 
 test("open should return an id and render snackbar content", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "Saved",
-        duration: false,
-        transition: "none",
-        description: "Changes stored",
-      });
-    },
+    snackbar.open({
+      title: "Saved",
+      duration: false,
+      transition: "none",
+      description: "Changes stored",
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -60,18 +61,16 @@ test("open should return an id and render snackbar content", async () => {
 });
 
 test("close should dismiss a snackbar", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      const id = snackbar.open({
-        duration: false,
-        transition: "none",
-        title: "Dismiss me",
-      });
+    const id = snackbar.open({
+      duration: false,
+      transition: "none",
+      title: "Dismiss me",
+    });
 
-      snackbar.close(id);
-    },
+    snackbar.close(id);
   });
 
   mount(BridgeSnackbarHost, {
@@ -86,23 +85,21 @@ test("close should dismiss a snackbar", async () => {
 });
 
 test("closeAll should dismiss every snackbar", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "One",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Two",
-        duration: false,
-        transition: "none",
-      });
+    snackbar.open({
+      title: "One",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Two",
+      duration: false,
+      transition: "none",
+    });
 
-      snackbar.closeAll();
-    },
+    snackbar.closeAll();
   });
 
   mountWithSnackbarHost(Consumer);
@@ -114,18 +111,16 @@ test("closeAll should dismiss every snackbar", async () => {
 });
 
 test("accept action should use the snackbar color, not primary", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "Saved",
-        duration: false,
-        color: "success",
-        transition: "none",
-        actions: { accept: { label: "Undo" } },
-      });
-    },
+    snackbar.open({
+      title: "Saved",
+      duration: false,
+      color: "success",
+      transition: "none",
+      actions: { accept: { label: "Undo" } },
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -140,21 +135,19 @@ test("accept action should use the snackbar color, not primary", async () => {
 });
 
 test("top-center should grow downward with newest below oldest", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "Older",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Newer",
-        duration: false,
-        transition: "none",
-      });
-    },
+    snackbar.open({
+      title: "Older",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Newer",
+      duration: false,
+      transition: "none",
+    });
   });
 
   mount(BridgeSnackbarHost, {
@@ -178,21 +171,19 @@ test("top-center should grow downward with newest below oldest", async () => {
 });
 
 test("bottom-center should stack upward from the viewport edge", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "Older",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Newer",
-        duration: false,
-        transition: "none",
-      });
-    },
+    snackbar.open({
+      title: "Older",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Newer",
+      duration: false,
+      transition: "none",
+    });
   });
 
   mount(BridgeSnackbarHost, {
@@ -216,21 +207,19 @@ test("bottom-center should stack upward from the viewport edge", async () => {
 });
 
 test("imperative snackbars should stack in a single notification column", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "One",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Two",
-        duration: false,
-        transition: "none",
-      });
-    },
+    snackbar.open({
+      title: "One",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Two",
+      duration: false,
+      transition: "none",
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -248,16 +237,14 @@ test("imperative snackbars should stack in a single notification column", async 
 });
 
 test("host snackbar defaults should merge into open options", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        duration: false,
-        transition: "none",
-        title: "Dense default",
-      });
-    },
+    snackbar.open({
+      duration: false,
+      transition: "none",
+      title: "Dense default",
+    });
   });
 
   mount(BridgeSnackbarHost, {
@@ -277,15 +264,13 @@ test("host snackbar defaults should merge into open options", async () => {
 });
 
 test("host timeout should auto-dismiss snackbars", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "Timed out",
-        transition: "none",
-      });
-    },
+    snackbar.open({
+      title: "Timed out",
+      transition: "none",
+    });
   });
 
   mount(BridgeSnackbarHost, {
@@ -305,16 +290,14 @@ test("host timeout should auto-dismiss snackbars", async () => {
 });
 
 test("open duration should override host timeout", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        duration: false,
-        transition: "none",
-        title: "Persistent",
-      });
-    },
+    snackbar.open({
+      duration: false,
+      transition: "none",
+      title: "Persistent",
+    });
   });
 
   mount(BridgeSnackbarHost, {
@@ -335,15 +318,13 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
   let bridgeSnackbar!: ReturnType<typeof useSnackbarAction>;
   let id = "";
 
-  const Consumer = defineComponent({
-    setup() {
-      bridgeSnackbar = useSnackbarAction();
-      id = bridgeSnackbar.open({
-        duration: false,
-        title: "Tracked",
-        transition: "none",
-      });
-    },
+  const Consumer = defineHeadlessComponent(() => {
+    bridgeSnackbar = useSnackbarAction();
+    id = bridgeSnackbar.open({
+      duration: false,
+      title: "Tracked",
+      transition: "none",
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -367,20 +348,18 @@ test("closeTop should close only the topmost snackbar", async () => {
   let firstId = "";
   let secondId = "";
 
-  const Consumer = defineComponent({
-    setup() {
-      bridgeSnackbar = useSnackbarAction();
-      firstId = bridgeSnackbar.open({
-        title: "First",
-        duration: false,
-        transition: "none",
-      });
-      secondId = bridgeSnackbar.open({
-        title: "Second",
-        duration: false,
-        transition: "none",
-      });
-    },
+  const Consumer = defineHeadlessComponent(() => {
+    bridgeSnackbar = useSnackbarAction();
+    firstId = bridgeSnackbar.open({
+      title: "First",
+      duration: false,
+      transition: "none",
+    });
+    secondId = bridgeSnackbar.open({
+      title: "Second",
+      duration: false,
+      transition: "none",
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -404,17 +383,15 @@ test("onClose should run before onClosed when close is called", async () => {
   let bridgeSnackbar!: ReturnType<typeof useSnackbarAction>;
   let id = "";
 
-  const Consumer = defineComponent({
-    setup() {
-      bridgeSnackbar = useSnackbarAction();
-      id = bridgeSnackbar.open({
-        onClose,
-        onClosed,
-        duration: false,
-        title: "Lifecycle",
-        transition: "none",
-      });
-    },
+  const Consumer = defineHeadlessComponent(() => {
+    bridgeSnackbar = useSnackbarAction();
+    id = bridgeSnackbar.open({
+      onClose,
+      onClosed,
+      duration: false,
+      title: "Lifecycle",
+      transition: "none",
+    });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -435,17 +412,15 @@ test("onClose should run before onClosed when close is called", async () => {
 });
 
 test("update should patch props on an open snackbar", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
-      const openedId = snackbar.open({
-        title: "Before",
-        duration: false,
-        transition: "none",
-      });
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
+    const openedId = snackbar.open({
+      title: "Before",
+      duration: false,
+      transition: "none",
+    });
 
-      snackbar.update(openedId, { props: { title: "After" } });
-    },
+    snackbar.update(openedId, { props: { title: "After" } });
   });
 
   mountWithSnackbarHost(Consumer);
@@ -476,26 +451,24 @@ test("nested BridgeSnackbarHost should warn in development", () => {
 });
 
 test("max should close the oldest snackbar when the limit is exceeded", async () => {
-  const Consumer = defineComponent({
-    setup() {
-      const snackbar = useSnackbarAction();
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
 
-      snackbar.open({
-        title: "One",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Two",
-        duration: false,
-        transition: "none",
-      });
-      snackbar.open({
-        title: "Three",
-        duration: false,
-        transition: "none",
-      });
-    },
+    snackbar.open({
+      title: "One",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Two",
+      duration: false,
+      transition: "none",
+    });
+    snackbar.open({
+      title: "Three",
+      duration: false,
+      transition: "none",
+    });
   });
 
   mount(BridgeSnackbarHost, {

@@ -40,7 +40,8 @@ const checkboxBridgeKeys = [
   "rounded",
   "partsProps",
   "indeterminate",
-] as const satisfies readonly (keyof CheckboxOwnProps)[];
+  "defaultChecked",
+] as const satisfies readonly (keyof CheckboxProps)[];
 
 type CheckboxLibDefaults = LibDefaultsShape<
   CheckboxOwnProps,
@@ -60,7 +61,7 @@ export function useCheckbox(
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { customProps } = splitComponentProps<
     CheckboxProps,
     typeof checkboxBridgeKeys
   >({
@@ -82,7 +83,13 @@ export function useCheckbox(
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(switcher.inputInheritedAttrs, ["defaultChecked"]);
+    return omit(switcher.inputInheritedAttrs, [
+      "color",
+      "checked",
+      "rounded",
+      "indeterminate",
+      "defaultChecked",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CheckboxClasses>({
@@ -94,7 +101,7 @@ export function useCheckbox(
 
   // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(inheritedAttrs.defaultChecked);
+    return Boolean(customProps.defaultChecked);
   });
 
   const isControlled = derived(() => {

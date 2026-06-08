@@ -38,7 +38,8 @@ const toggleBridgeKeys = [
   "checked",
   "rounded",
   "partsProps",
-] as const satisfies readonly (keyof ToggleOwnProps)[];
+  "defaultChecked",
+] as const satisfies readonly (keyof ToggleProps)[];
 
 type ToggleLibDefaults = LibDefaultsShape<
   ToggleOwnProps,
@@ -55,7 +56,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { customProps } = splitComponentProps<
     ToggleProps,
     typeof toggleBridgeKeys
   >({
@@ -77,7 +78,12 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(switcher.inputInheritedAttrs, ["defaultChecked"]);
+    return omit(switcher.inputInheritedAttrs, [
+      "color",
+      "checked",
+      "rounded",
+      "defaultChecked",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ToggleClasses>({
@@ -87,7 +93,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
 
   // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(inheritedAttrs.defaultChecked);
+    return Boolean(customProps.defaultChecked);
   });
 
   const isControlled = derived(() => {

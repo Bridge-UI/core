@@ -2,10 +2,11 @@
 import { get, isNil } from "es-toolkit/compat";
 import {
   computed,
-  type ComputedRef,
-  type MaybeRefOrGetter,
+  defineComponent,
   toValue,
   unref,
+  type ComputedRef,
+  type MaybeRefOrGetter,
 } from "vue";
 
 // ** Core Imports
@@ -34,6 +35,20 @@ export type UseBridgeUIComponentReturn<
   entry: ComputedRef<RegistryEntryFor<K> | undefined>;
   merged: ComputedRef<P>;
 };
+
+/**
+ * Defines a renderless component for unit tests (avoids Vue "missing template" warnings).
+ */
+export function defineHeadlessComponent(setup: () => void) {
+  return defineComponent({
+    name: "HeadlessTestComponent",
+    setup() {
+      setup();
+
+      return () => null;
+    },
+  });
+}
 
 /**
  * Merges Vue-specific classes into the `class` attribute.

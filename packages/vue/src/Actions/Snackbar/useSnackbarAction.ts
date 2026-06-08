@@ -17,7 +17,7 @@ export class BridgeSnackbarHostMissingError extends Error {
 }
 
 export function useSnackbarAction(): BridgeSnackbarApi {
-  const api = inject(BRIDGE_SNACKBAR_INJECTION_KEY);
+  const api = inject(BRIDGE_SNACKBAR_INJECTION_KEY, null);
 
   if (!api) {
     throw new BridgeSnackbarHostMissingError();

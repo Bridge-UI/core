@@ -17,10 +17,12 @@ function PasswordField(props: PasswordFieldProps) {
     color,
     error,
     slots,
+    value,
     classes,
     rounded,
     variant,
     visible,
+    modelValue,
     onVisibilityChange,
     ...textFieldProps
   } = props;
@@ -35,6 +37,7 @@ function PasswordField(props: PasswordFieldProps) {
   return (
     <TextField
       {...textFieldProps}
+      value={modelValue ?? value}
       color={color}
       error={error}
       rounded={rounded}

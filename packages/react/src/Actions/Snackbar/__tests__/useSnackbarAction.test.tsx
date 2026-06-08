@@ -28,7 +28,7 @@ function RunOnMount({
   const snackbar = useSnackbarAction();
 
   useEffect(() => {
-    onMount(snackbar);
+    void Promise.resolve(onMount(snackbar));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- imperative setup once on mount
   }, []);
 
@@ -90,10 +90,13 @@ test("close should dismiss a snackbar", async () => {
 });
 
 test("closeAll should dismiss every snackbar", async () => {
+  let api!: ReturnType<typeof useSnackbarAction>;
+
   render(
     <BridgeSnackbarHost>
       <RunOnMount
         onMount={(snackbar) => {
+          api = snackbar;
           snackbar.open({
             title: "One",
             duration: false,
@@ -104,14 +107,19 @@ test("closeAll should dismiss every snackbar", async () => {
             duration: false,
             transition: "none",
           });
-
-          act(() => {
-            snackbar.closeAll();
-          });
         }}
       />
     </BridgeSnackbarHost>,
   );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("One");
+    expect(document.body.textContent).toContain("Two");
+  });
+
+  await act(async () => {
+    api.closeAll();
+  });
 
   await waitFor(() => {
     expect(document.body.textContent).not.toContain("One");
