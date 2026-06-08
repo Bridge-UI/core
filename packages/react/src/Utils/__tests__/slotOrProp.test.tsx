@@ -9,7 +9,7 @@ import {
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 
-test("isPropPresent treats empty string as absent", () => {
+test("it should treat empty string as absent in isPropPresent", () => {
   expect(isPropPresent("")).toBe(false);
 
   expect(isPropPresent("x")).toBe(true);
@@ -17,13 +17,13 @@ test("isPropPresent treats empty string as absent", () => {
   expect(isPropPresent(null)).toBe(false);
 });
 
-test("hasNamedSlot detects slot content", () => {
+test("it should detect slot content in hasNamedSlot", () => {
   expect(hasNamedSlot(undefined, "label")).toBe(false);
 
   expect(hasNamedSlot({ label: <span /> }, "label")).toBe(true);
 });
 
-test("hasSlotOrProp is true when slot or prop is present", () => {
+test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp(undefined, "label", "")).toBe(false);
 
   expect(hasSlotOrProp(undefined, "label", "Name")).toBe(true);
@@ -31,7 +31,7 @@ test("hasSlotOrProp is true when slot or prop is present", () => {
   expect(hasSlotOrProp({ label: <span /> }, "label", "")).toBe(true);
 });
 
-test("resolveSlotOrProp prefers slot over fallback", () => {
+test("it should prefer slot over fallback in resolveSlotOrProp", () => {
   expect(
     resolveSlotOrProp({
       fallback: "Prop",
@@ -41,7 +41,7 @@ test("resolveSlotOrProp prefers slot over fallback", () => {
   ).toEqual(<span>Slot</span>);
 });
 
-test("resolveSlotOrProp uses fallback when slot is absent", () => {
+test("it should use fallback when slot is absent in resolveSlotOrProp", () => {
   expect(
     resolveSlotOrProp({
       name: "description",
@@ -50,6 +50,6 @@ test("resolveSlotOrProp uses fallback when slot is absent", () => {
   ).toBe("Inform your full name");
 });
 
-test("resolveSlotOrProp returns null when both are absent", () => {
+test("it should return null when both slot and fallback are absent", () => {
   expect(resolveSlotOrProp({ fallback: "", name: "description" })).toBeNull();
 });

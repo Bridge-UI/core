@@ -29,7 +29,7 @@ function mountWithSnackbarHost(child: ReturnType<typeof defineComponent>) {
   });
 }
 
-test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => {
+test("it should throw when BridgeSnackbarHost is missing", () => {
   const BadConsumer = defineComponent({
     template: "<div />",
     setup() {
@@ -40,7 +40,7 @@ test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => 
   mount(BadConsumer);
 });
 
-test("open should return an id and render snackbar content", async () => {
+test("it should return an id and render snackbar content", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -60,7 +60,7 @@ test("open should return an id and render snackbar content", async () => {
   expect(document.body.textContent).toContain("Changes stored");
 });
 
-test("close should dismiss a snackbar", async () => {
+test("it should dismiss a snackbar", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -84,7 +84,7 @@ test("close should dismiss a snackbar", async () => {
   expect(document.body.textContent).not.toContain("Dismiss me");
 });
 
-test("closeAll should dismiss every snackbar", async () => {
+test("it should dismiss every snackbar", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -110,7 +110,7 @@ test("closeAll should dismiss every snackbar", async () => {
   expect(document.body.textContent).not.toContain("Two");
 });
 
-test("accept action should use the snackbar color, not primary", async () => {
+test("it should use the snackbar color, not primary", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -134,7 +134,7 @@ test("accept action should use the snackbar color, not primary", async () => {
   expect(action?.className).not.toContain("text-primary-600");
 });
 
-test("top-center should grow downward with newest below oldest", async () => {
+test("it should grow downward with newest below oldest", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -170,7 +170,7 @@ test("top-center should grow downward with newest below oldest", async () => {
   expect(host?.querySelector(".flex-col-reverse")).toBeFalsy();
 });
 
-test("bottom-center should stack upward from the viewport edge", async () => {
+test("it should stack upward from the viewport edge", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -206,7 +206,7 @@ test("bottom-center should stack upward from the viewport edge", async () => {
   expect(panels?.[1]?.textContent).toContain("Newer");
 });
 
-test("imperative snackbars should stack in a single notification column", async () => {
+test("it should stack in a single notification column", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -236,7 +236,7 @@ test("imperative snackbars should stack in a single notification column", async 
   );
 });
 
-test("host snackbar defaults should merge into open options", async () => {
+test("it should merge into open options", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -263,7 +263,7 @@ test("host snackbar defaults should merge into open options", async () => {
   expect(snackbar?.className).toContain("host-shell");
 });
 
-test("host timeout should auto-dismiss snackbars", async () => {
+test("it should auto-dismiss snackbars", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -289,7 +289,7 @@ test("host timeout should auto-dismiss snackbars", async () => {
   });
 });
 
-test("open duration should override host timeout", async () => {
+test("it should override host timeout", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 
@@ -314,7 +314,7 @@ test("open duration should override host timeout", async () => {
   expect(document.body.textContent).toContain("Persistent");
 });
 
-test("isOpen and stackSize should reflect mounted entries", async () => {
+test("it should reflect mounted entries", async () => {
   let bridgeSnackbar!: ReturnType<typeof useSnackbarAction>;
   let id = "";
 
@@ -343,7 +343,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
   expect(bridgeSnackbar.stackSize).toBe(0);
 });
 
-test("closeTop should close only the topmost snackbar", async () => {
+test("it should close only the topmost snackbar", async () => {
   let bridgeSnackbar!: ReturnType<typeof useSnackbarAction>;
   let firstId = "";
   let secondId = "";
@@ -377,7 +377,7 @@ test("closeTop should close only the topmost snackbar", async () => {
   expect(bridgeSnackbar.stackSize).toBe(1);
 });
 
-test("onClose should run before onClosed when close is called", async () => {
+test("it should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
   let bridgeSnackbar!: ReturnType<typeof useSnackbarAction>;
@@ -411,7 +411,7 @@ test("onClose should run before onClosed when close is called", async () => {
   });
 });
 
-test("update should patch props on an open snackbar", async () => {
+test("it should patch props on an open snackbar", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
     const openedId = snackbar.open({
@@ -431,7 +431,7 @@ test("update should patch props on an open snackbar", async () => {
   expect(document.body.textContent).not.toContain("Before");
 });
 
-test("nested BridgeSnackbarHost should warn in development", () => {
+test("it should warn in development", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   mount(BridgeSnackbarHost, {
@@ -450,7 +450,7 @@ test("nested BridgeSnackbarHost should warn in development", () => {
   warn.mockRestore();
 });
 
-test("max should close the oldest snackbar when the limit is exceeded", async () => {
+test("it should close the oldest snackbar when the limit is exceeded", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const snackbar = useSnackbarAction();
 

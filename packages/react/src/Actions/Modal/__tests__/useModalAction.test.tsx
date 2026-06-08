@@ -85,7 +85,7 @@ function OpenWithRef({
   return null;
 }
 
-test("useModalAction should throw when BridgeModalHost is missing", () => {
+test("it should throw when BridgeModalHost is missing", () => {
   function BadConsumer() {
     useModalAction();
 
@@ -95,7 +95,7 @@ test("useModalAction should throw when BridgeModalHost is missing", () => {
   expect(() => render(<BadConsumer />)).toThrow(BridgeModalHostMissingError);
 });
 
-test("open should return an id and render modal content", async () => {
+test("it should return an id and render modal content", async () => {
   render(
     <BridgeModalHost>
       <OpenOnMount />
@@ -109,7 +109,7 @@ test("open should return an id and render modal content", async () => {
   });
 });
 
-test("close should unmount imperative modal", async () => {
+test("it should unmount imperative modal", async () => {
   render(
     <BridgeModalHost>
       <OpenAndCloseOnMount />
@@ -121,7 +121,7 @@ test("close should unmount imperative modal", async () => {
   });
 });
 
-test("isOpen and stackSize should reflect mounted entries", async () => {
+test("it should reflect mounted entries", async () => {
   let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
@@ -156,7 +156,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
   expect(api.stackSize).toBe(0);
 });
 
-test("closeTop should close only the topmost imperative modal", async () => {
+test("it should close only the topmost imperative modal", async () => {
   let api!: ReturnType<typeof useModalAction>;
   let outerId = "";
   let innerId = "";
@@ -198,7 +198,7 @@ test("closeTop should close only the topmost imperative modal", async () => {
   expect(api.stackSize).toBe(1);
 });
 
-test("onClose should run before onClosed when close is called", async () => {
+test("it should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
   let api!: ReturnType<typeof useModalAction>;
@@ -238,7 +238,7 @@ test("onClose should run before onClosed when close is called", async () => {
   });
 });
 
-test("onClose should run before onClosed when escape is pressed", async () => {
+test("it should run before onClosed when escape is pressed", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
 
@@ -275,7 +275,7 @@ test("onClose should run before onClosed when escape is pressed", async () => {
   });
 });
 
-test("update should patch props on an open modal", async () => {
+test("it should patch props on an open modal", async () => {
   render(
     <BridgeModalHost>
       <RunOnMount
@@ -299,7 +299,7 @@ test("update should patch props on an open modal", async () => {
   });
 });
 
-test("update should patch modal shell options on an open modal", async () => {
+test("it should patch modal shell options on an open modal", async () => {
   render(
     <BridgeModalHost>
       <RunOnMount
@@ -322,7 +322,7 @@ test("update should patch modal shell options on an open modal", async () => {
   });
 });
 
-test("open with persistent modal should ignore escape", async () => {
+test("it should ignore escape", async () => {
   const onClose = vi.fn();
 
   render(
@@ -351,7 +351,7 @@ test("open with persistent modal should ignore escape", async () => {
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
 });
 
-test("stacked imperative modals should use incremental z-index", async () => {
+test("it should use incremental z-index", async () => {
   render(
     <BridgeModalHost>
       <RunOnMount
@@ -387,7 +387,7 @@ test("stacked imperative modals should use incremental z-index", async () => {
   });
 });
 
-test("onClose should run before onClosed when the overlay is clicked", async () => {
+test("it should run before onClosed when the overlay is clicked", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
   let api!: ReturnType<typeof useModalAction>;
@@ -429,7 +429,7 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
   expect(api.isOpen(id)).toBe(false);
 });
 
-test("modal shell options must not override host-controlled props", async () => {
+test("it should not override host-controlled props with modal shell options", async () => {
   const onClose = vi.fn();
 
   render(
@@ -461,7 +461,7 @@ test("modal shell options must not override host-controlled props", async () => 
   expect(onClose).toHaveBeenCalledOnce();
 });
 
-test("nested BridgeModalHost should warn in development", () => {
+test("it should warn in development", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   render(

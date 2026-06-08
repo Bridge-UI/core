@@ -32,7 +32,7 @@ function RunOnMount({
   return null;
 }
 
-test("useDialogAction should throw when BridgeDialogHost is missing", () => {
+test("it should throw when BridgeDialogHost is missing", () => {
   function BadConsumer() {
     useDialogAction();
 
@@ -42,7 +42,7 @@ test("useDialogAction should throw when BridgeDialogHost is missing", () => {
   expect(() => render(<BadConsumer />)).toThrow(BridgeDialogHostMissingError);
 });
 
-test("open should render title and description", async () => {
+test("it should render title and description", async () => {
   render(
     <BridgeDialogHost>
       <RunOnMount
@@ -63,7 +63,7 @@ test("open should render title and description", async () => {
   });
 });
 
-test("actions should render footer buttons and dismiss on accept", async () => {
+test("it should render footer buttons and dismiss on accept", async () => {
   const onAccept = vi.fn();
 
   render(
@@ -101,7 +101,7 @@ test("actions should render footer buttons and dismiss on accept", async () => {
   });
 });
 
-test("close should dismiss a dialog", async () => {
+test("it should dismiss a dialog", async () => {
   render(
     <BridgeDialogHost>
       <RunOnMount
@@ -122,7 +122,7 @@ test("close should dismiss a dialog", async () => {
   });
 });
 
-test("host modal defaults should merge into open options", async () => {
+test("it should merge into open options", async () => {
   render(
     <BridgeDialogHost modal={{ size: "sm", transition: "none" }}>
       <RunOnMount

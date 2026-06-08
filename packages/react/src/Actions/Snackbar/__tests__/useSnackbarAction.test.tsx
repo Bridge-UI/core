@@ -35,7 +35,7 @@ function RunOnMount({
   return null;
 }
 
-test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => {
+test("it should throw when BridgeSnackbarHost is missing", () => {
   function BadConsumer() {
     useSnackbarAction();
 
@@ -45,7 +45,7 @@ test("useSnackbarAction should throw when BridgeSnackbarHost is missing", () => 
   expect(() => render(<BadConsumer />)).toThrow(BridgeSnackbarHostMissingError);
 });
 
-test("open should return an id and render snackbar content", async () => {
+test("it should return an id and render snackbar content", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -67,7 +67,7 @@ test("open should return an id and render snackbar content", async () => {
   });
 });
 
-test("close should dismiss a snackbar", async () => {
+test("it should dismiss a snackbar", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -89,7 +89,7 @@ test("close should dismiss a snackbar", async () => {
   });
 });
 
-test("closeAll should dismiss every snackbar", async () => {
+test("it should dismiss every snackbar", async () => {
   let api!: ReturnType<typeof useSnackbarAction>;
 
   render(
@@ -127,7 +127,7 @@ test("closeAll should dismiss every snackbar", async () => {
   });
 });
 
-test("accept action should use the snackbar color, not primary", async () => {
+test("it should use the snackbar color, not primary", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -153,7 +153,7 @@ test("accept action should use the snackbar color, not primary", async () => {
   });
 });
 
-test("top-center should grow downward with newest below oldest", async () => {
+test("it should grow downward with newest below oldest", async () => {
   render(
     <BridgeSnackbarHost position="top-center">
       <RunOnMount
@@ -186,7 +186,7 @@ test("top-center should grow downward with newest below oldest", async () => {
   });
 });
 
-test("bottom-center should stack upward from the viewport edge", async () => {
+test("it should stack upward from the viewport edge", async () => {
   render(
     <BridgeSnackbarHost position="bottom-center">
       <RunOnMount
@@ -219,7 +219,7 @@ test("bottom-center should stack upward from the viewport edge", async () => {
   });
 });
 
-test("imperative snackbars should stack in a single notification column", async () => {
+test("it should stack in a single notification column", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -251,7 +251,7 @@ test("imperative snackbars should stack in a single notification column", async 
   });
 });
 
-test("host snackbar defaults should merge into open options", async () => {
+test("it should merge into open options", async () => {
   render(
     <BridgeSnackbarHost
       snackbar={{ dense: true, classes: { root: "host-shell" } }}
@@ -277,7 +277,7 @@ test("host snackbar defaults should merge into open options", async () => {
   });
 });
 
-test("host timeout should auto-dismiss snackbars", async () => {
+test("it should auto-dismiss snackbars", async () => {
   render(
     <BridgeSnackbarHost timeout={50}>
       <RunOnMount
@@ -303,7 +303,7 @@ test("host timeout should auto-dismiss snackbars", async () => {
   );
 });
 
-test("open duration should override host timeout", async () => {
+test("it should override host timeout", async () => {
   render(
     <BridgeSnackbarHost timeout={50}>
       <RunOnMount
@@ -327,7 +327,7 @@ test("open duration should override host timeout", async () => {
   expect(document.body.textContent).toContain("Persistent");
 });
 
-test("isOpen and stackSize should reflect mounted entries", async () => {
+test("it should reflect mounted entries", async () => {
   let api!: ReturnType<typeof useSnackbarAction>;
   let id = "";
 
@@ -366,7 +366,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
   expect(api.stackSize).toBe(0);
 });
 
-test("closeTop should close only the topmost snackbar", async () => {
+test("it should close only the topmost snackbar", async () => {
   let api!: ReturnType<typeof useSnackbarAction>;
   let firstId = "";
   let secondId = "";
@@ -410,7 +410,7 @@ test("closeTop should close only the topmost snackbar", async () => {
   expect(api.stackSize).toBe(1);
 });
 
-test("onClose should run before onClosed when close is called", async () => {
+test("it should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
   let api!: ReturnType<typeof useSnackbarAction>;
@@ -451,7 +451,7 @@ test("onClose should run before onClosed when close is called", async () => {
   });
 });
 
-test("update should patch props on an open snackbar", async () => {
+test("it should patch props on an open snackbar", async () => {
   render(
     <BridgeSnackbarHost>
       <RunOnMount
@@ -474,7 +474,7 @@ test("update should patch props on an open snackbar", async () => {
   });
 });
 
-test("nested BridgeSnackbarHost should warn in development", () => {
+test("it should warn in development", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   render(
@@ -492,7 +492,7 @@ test("nested BridgeSnackbarHost should warn in development", () => {
   warn.mockRestore();
 });
 
-test("max should close the oldest snackbar when the limit is exceeded", async () => {
+test("it should close the oldest snackbar when the limit is exceeded", async () => {
   render(
     <BridgeSnackbarHost max={2}>
       <RunOnMount

@@ -13,15 +13,15 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
-test("resolveModalPortalElement should return body by default", () => {
+test("it should return body by default", () => {
   expect(resolveModalPortalElement(undefined)).toBe(document.body);
 });
 
-test("resolveModalPortalElement should return null when teleport is disabled", () => {
+test("it should return null when teleport is disabled", () => {
   expect(resolveModalPortalElement(false)).toBeNull();
 });
 
-test("isModalBackdropClick should match click.self semantics", () => {
+test("it should match click.self semantics", () => {
   const backdrop = document.createElement("div");
   const panel = document.createElement("div");
 

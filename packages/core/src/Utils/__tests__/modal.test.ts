@@ -20,7 +20,7 @@ afterEach(() => {
   resetLayerStackForTests();
 });
 
-test("pushLayerStack should increment z-index per level", () => {
+test("it should increment z-index per level", () => {
   const outer = pushLayerStack();
   const inner = pushLayerStack();
 
@@ -30,7 +30,7 @@ test("pushLayerStack should increment z-index per level", () => {
   expect(inner.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX + 1);
 });
 
-test("pushLayerStack should skip scroll lock when lockScroll is false", () => {
+test("it should skip scroll lock when lockScroll is false", () => {
   const handle = pushLayerStack({ lockScroll: false });
 
   expect(document.body.style.overflow).not.toBe("hidden");
@@ -38,7 +38,7 @@ test("pushLayerStack should skip scroll lock when lockScroll is false", () => {
   handle.release();
 });
 
-test("pushLayerStack should ref-count body scroll lock", () => {
+test("it should ref-count body scroll lock", () => {
   const outer = pushLayerStack();
 
   expect(document.body.style.overflow).toBe("hidden");
@@ -54,7 +54,7 @@ test("pushLayerStack should ref-count body scroll lock", () => {
   expect(document.body.style.overflow).toBe("");
 });
 
-test("escape should invoke only the topmost modal handler", () => {
+test("it should invoke only the topmost modal handler", () => {
   const outerEscape = vi.fn();
   const innerEscape = vi.fn();
 
@@ -67,7 +67,7 @@ test("escape should invoke only the topmost modal handler", () => {
   expect(outerEscape).not.toHaveBeenCalled();
 });
 
-test("isLayerStackTop should reflect highest open order", () => {
+test("it should reflect highest open order", () => {
   const outer = pushLayerStack({ order: 1 });
   const inner = pushLayerStack({ order: 2 });
 
@@ -79,14 +79,14 @@ test("isLayerStackTop should reflect highest open order", () => {
   expect(isLayerStackTop(outer.id)).toBe(true);
 });
 
-test("pushLayerStack should use string ids", () => {
+test("it should use string ids", () => {
   const handle = pushLayerStack();
 
   expect(isString(handle.id)).toBe(true);
   expect(handle.id.length).toBeGreaterThan(0);
 });
 
-test("createLayerId should generate unique ids", () => {
+test("it should generate unique ids", () => {
   const first = createLayerId();
   const second = createLayerId();
 
@@ -95,11 +95,11 @@ test("createLayerId should generate unique ids", () => {
   expect(second).not.toBe(first);
 });
 
-test("createLayerId should use assigned id when provided", () => {
+test("it should use assigned id when provided", () => {
   expect(createLayerId("host-assigned-id")).toBe("host-assigned-id");
 });
 
-test("pushLayerStack should use pre-assigned id", () => {
+test("it should use pre-assigned id", () => {
   const handle = pushLayerStack({ id: "fixed-stack-id" });
 
   expect(handle.id).toBe("fixed-stack-id");
@@ -108,7 +108,7 @@ test("pushLayerStack should use pre-assigned id", () => {
   handle.release();
 });
 
-test("getLayerStackSnapshot should list open modals", () => {
+test("it should list open modals", () => {
   const outer = pushLayerStack({ order: 1 });
   const inner = pushLayerStack({ order: 2 });
 
@@ -132,7 +132,7 @@ test("getLayerStackSnapshot should list open modals", () => {
   outer.release();
 });
 
-test("subscribeLayerStack should notify on push and release", () => {
+test("it should notify on push and release", () => {
   const listener = vi.fn();
 
   const unsubscribe = subscribeLayerStack(listener);
@@ -148,7 +148,7 @@ test("subscribeLayerStack should notify on push and release", () => {
   unsubscribe();
 });
 
-test("getLayerStackEntry should rank z-index by order not push order", () => {
+test("it should rank z-index by order not push order", () => {
   const later = pushLayerStack({ order: 2 });
   const earlier = pushLayerStack({ order: 1 });
 
@@ -161,7 +161,7 @@ test("getLayerStackEntry should rank z-index by order not push order", () => {
   earlier.release();
 });
 
-test("getLayerStackEntry should return live z-index after sibling releases", () => {
+test("it should return live z-index after sibling releases", () => {
   const outer = pushLayerStack({ order: 1 });
   const middle = pushLayerStack({ order: 2 });
   const inner = pushLayerStack({ order: 3 });

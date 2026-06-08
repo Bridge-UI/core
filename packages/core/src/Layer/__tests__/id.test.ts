@@ -8,7 +8,7 @@ import {
   resetLayerIdCounterForTests,
 } from "@core/Layer/registry";
 
-test("createLayerId should generate unique ids", () => {
+test("it should generate unique ids", () => {
   resetLayerIdCounterForTests();
 
   const first = createLayerId();
@@ -19,6 +19,6 @@ test("createLayerId should generate unique ids", () => {
   expect(second).not.toBe(first);
 });
 
-test("createLayerId should use assigned id when provided", () => {
+test("it should use assigned id when provided", () => {
   expect(createLayerId("host-assigned-id")).toBe("host-assigned-id");
 });

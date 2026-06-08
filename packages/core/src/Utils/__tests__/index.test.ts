@@ -152,7 +152,7 @@ test("it should handle undefined components gracefully", () => {
   expect(result).toEqual({ size: "md" });
 });
 
-test("mergePartBind should merge bridge, inherited, and part", () => {
+test("it should merge bridge, inherited, and part", () => {
   const mergePartBind = createMergePartBind("class");
 
   expect(
@@ -174,7 +174,7 @@ test("mergePartBind should merge bridge, inherited, and part", () => {
   });
 });
 
-test("mergePartBind should use className for React", () => {
+test("it should use className for React", () => {
   const mergePartBind = createMergePartBind("className");
 
   expect(

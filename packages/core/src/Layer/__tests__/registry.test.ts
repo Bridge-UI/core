@@ -24,13 +24,13 @@ function createEntry(id: string, label: string, show = true): TestEntry {
   return { id, show, label };
 }
 
-test("createOpenLayerEntry should create a visible entry", () => {
+test("it should create a visible entry", () => {
   const entry = createOpenLayerEntry<TestEntry>("a", { label: "A" });
 
   expect(entry).toEqual({ id: "a", show: true, label: "A" });
 });
 
-test("closeLayer should invoke onClose before hiding", () => {
+test("it should invoke onClose before hiding", () => {
   const onClose = vi.fn();
   const entries: TestEntry[] = [{ id: "a", onClose, show: true, label: "A" }];
 
@@ -40,7 +40,7 @@ test("closeLayer should invoke onClose before hiding", () => {
   expect(next[0]?.show).toBe(false);
 });
 
-test("closeTopLayer should close only the topmost visible entry", () => {
+test("it should close only the topmost visible entry", () => {
   const outerClose = vi.fn();
   const innerClose = vi.fn();
 
@@ -57,14 +57,14 @@ test("closeTopLayer should close only the topmost visible entry", () => {
   expect(next.find((entry) => entry.id === "outer")?.show).toBe(true);
 });
 
-test("isLayerMounted should stay true while animating out", () => {
+test("it should stay true while animating out", () => {
   const entries: TestEntry[] = [createEntry("a", "A", false)];
 
   expect(isLayerMounted(entries, "a")).toBe(true);
   expect(getLayerCount(entries)).toBe(1);
 });
 
-test("updateLayer should patch an existing entry", () => {
+test("it should patch an existing entry", () => {
   const entries: TestEntry[] = [createEntry("a", "before")];
 
   const next = updateLayer(entries, "a", {
@@ -74,19 +74,19 @@ test("updateLayer should patch an existing entry", () => {
   expect(next[0]?.label).toBe("after");
 });
 
-test("hideLayer should be idempotent", () => {
+test("it should be idempotent", () => {
   const entries: TestEntry[] = [createEntry("a", "A", false)];
 
   expect(hideLayer(entries, "a")).toBe(entries);
 });
 
-test("removeLayer should drop the entry", () => {
+test("it should drop the entry", () => {
   const entries: TestEntry[] = [createEntry("a", "A")];
 
   expect(removeLayer(entries, "a")).toEqual([]);
 });
 
-test("syncLayerShow should toggle show without redundant updates", () => {
+test("it should toggle show without redundant updates", () => {
   const entries: TestEntry[] = [createEntry("a", "A", true)];
 
   expect(syncLayerShow(entries, "a", true)).toBe(entries);
@@ -94,7 +94,7 @@ test("syncLayerShow should toggle show without redundant updates", () => {
   expect(syncLayerShow(entries, "a", true)[0]?.show).toBe(true);
 });
 
-test("closeAllLayers should dismiss every visible entry", () => {
+test("it should dismiss every visible entry", () => {
   const firstClose = vi.fn();
   const secondClose = vi.fn();
 
@@ -111,7 +111,7 @@ test("closeAllLayers should dismiss every visible entry", () => {
   expect(next.every((entry) => !entry.show)).toBe(true);
 });
 
-test("trimLayersToMax should close oldest visible entries first", () => {
+test("it should close oldest visible entries first", () => {
   const firstClose = vi.fn();
   const secondClose = vi.fn();
 
@@ -129,7 +129,7 @@ test("trimLayersToMax should close oldest visible entries first", () => {
   expect(next.find((entry) => entry.id === "b")?.show).toBe(true);
 });
 
-test("updateLayerMerged should shallow-merge configured keys", () => {
+test("it should shallow-merge configured keys", () => {
   type NestedEntry = LayerRegistryEntry & {
     modal?: { size?: string; title?: string };
     props: { description?: string; title: string };

@@ -122,7 +122,7 @@ test("it should call onShowChange when close button is clicked", () => {
   expect(onShowChange).toHaveBeenCalledWith(false);
 });
 
-test("standalone snackbars should stack with increasing z-index", () => {
+test("it should stack with increasing z-index", () => {
   render(
     <Fragment>
       <Snackbar show title="One" transition="none" duration={false} />
@@ -140,7 +140,7 @@ test("standalone snackbars should stack with increasing z-index", () => {
   expect(secondZ).toBeGreaterThan(firstZ);
 });
 
-test("standalone snackbar should not lock body scroll", () => {
+test("it should not lock body scroll", () => {
   render(<Snackbar show title="Toast" transition="none" duration={false} />);
 
   expect(document.body.style.overflow).not.toBe("hidden");

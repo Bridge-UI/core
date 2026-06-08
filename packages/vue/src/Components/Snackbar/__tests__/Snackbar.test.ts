@@ -152,7 +152,7 @@ test("it should apply top-center position classes on the portal layer", async ()
   expect(layer?.className).toContain("justify-center");
 });
 
-test("standalone snackbars should stack with increasing z-index", async () => {
+test("it should stack with increasing z-index", async () => {
   mountSnackbar({
     props: {
       title: "One",
@@ -179,7 +179,7 @@ test("standalone snackbars should stack with increasing z-index", async () => {
   expect(secondZ).toBeGreaterThan(firstZ);
 });
 
-test("standalone snackbar should not lock body scroll", async () => {
+test("it should not lock body scroll", async () => {
   mountSnackbar({
     props: {
       title: "Toast",

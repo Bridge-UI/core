@@ -27,7 +27,7 @@ function mountWithDialogHost(child: ReturnType<typeof defineComponent>) {
   });
 }
 
-test("useDialogAction should throw when BridgeDialogHost is missing", () => {
+test("it should throw when BridgeDialogHost is missing", () => {
   const BadConsumer = defineComponent({
     template: "<div />",
     setup() {
@@ -38,7 +38,7 @@ test("useDialogAction should throw when BridgeDialogHost is missing", () => {
   mount(BadConsumer);
 });
 
-test("open should render title and description", async () => {
+test("it should render title and description", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const dialog = useDialogAction();
 
@@ -57,7 +57,7 @@ test("open should render title and description", async () => {
   expect(document.body.textContent).toContain("This cannot be undone.");
 });
 
-test("actions should render footer buttons and dismiss on accept", async () => {
+test("it should render footer buttons and dismiss on accept", async () => {
   const onAccept = vi.fn();
 
   const Consumer = defineHeadlessComponent(() => {
@@ -95,7 +95,7 @@ test("actions should render footer buttons and dismiss on accept", async () => {
   });
 });
 
-test("close should dismiss a dialog", async () => {
+test("it should dismiss a dialog", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const dialog = useDialogAction();
 
@@ -114,7 +114,7 @@ test("close should dismiss a dialog", async () => {
   expect(document.body.textContent).not.toContain("Dismiss me");
 });
 
-test("host modal defaults should merge into open options", async () => {
+test("it should merge into open options", async () => {
   const Consumer = defineHeadlessComponent(() => {
     const dialog = useDialogAction();
 

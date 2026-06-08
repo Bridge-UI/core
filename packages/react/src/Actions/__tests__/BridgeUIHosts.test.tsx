@@ -44,7 +44,7 @@ function OpenAllOnMount() {
   return null;
 }
 
-test("BridgeUIHosts should mount modal, dialog, and snackbar imperatives", async () => {
+test("it should mount modal, dialog, and snackbar imperatives", async () => {
   render(
     <BridgeUIHosts>
       <OpenAllOnMount />

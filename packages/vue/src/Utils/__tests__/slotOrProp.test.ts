@@ -12,7 +12,7 @@ import {
   resolveSlotOrProp,
 } from "@/Utils/slotOrProp";
 
-test("isPropPresent treats empty string as absent", () => {
+test("it should treat empty string as absent in isPropPresent", () => {
   expect(isPropPresent("")).toBe(false);
 
   expect(isPropPresent("x")).toBe(true);
@@ -20,13 +20,13 @@ test("isPropPresent treats empty string as absent", () => {
   expect(isPropPresent(null)).toBe(false);
 });
 
-test("hasNamedSlot detects slot functions", () => {
+test("it should detect slot functions in hasNamedSlot", () => {
   expect(hasNamedSlot({}, "label")).toBe(false);
 
   expect(hasNamedSlot({ label: () => "x" }, "label")).toBe(true);
 });
 
-test("hasSlotOrProp is true when slot or prop is present", () => {
+test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp({}, "label", "")).toBe(false);
 
   expect(hasSlotOrProp({}, "label", "Name")).toBe(true);
@@ -34,7 +34,7 @@ test("hasSlotOrProp is true when slot or prop is present", () => {
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
 });
 
-test("resolveNamedSlot returns the stable slot function reference", () => {
+test("it should return the stable slot function reference from resolveNamedSlot", () => {
   const slotFn = () => h("span", "From slot");
 
   expect(resolveNamedSlot({}, "label")).toBeUndefined();
@@ -42,7 +42,7 @@ test("resolveNamedSlot returns the stable slot function reference", () => {
   expect(resolveNamedSlot({ label: slotFn }, "label")).toBe(slotFn);
 });
 
-test("resolveSlotOrProp returns the stable slot function when present", () => {
+test("it should return the stable slot function when present from resolveSlotOrProp", () => {
   const slotFn = () => h("span", "From slot");
 
   expect(
@@ -50,7 +50,7 @@ test("resolveSlotOrProp returns the stable slot function when present", () => {
   ).toBe(slotFn);
 });
 
-test("resolveSlotOrProp renders fallback when slot is absent", () => {
+test("it should render fallback when slot is absent from resolveSlotOrProp", () => {
   const Comp = defineComponent({
     setup() {
       return () =>
@@ -61,7 +61,7 @@ test("resolveSlotOrProp renders fallback when slot is absent", () => {
   expect(mount(Comp).text()).toBe("Inform your full name");
 });
 
-test("resolveSlotOrProp prefers slot over fallback", () => {
+test("it should prefer slot over fallback in resolveSlotOrProp", () => {
   const Comp = defineComponent({
     setup() {
       return () =>
@@ -80,7 +80,7 @@ test("resolveSlotOrProp prefers slot over fallback", () => {
   expect(mount(Comp).text()).toBe("From slot");
 });
 
-test("resolveSlotOrProp renders nothing when both are absent", () => {
+test("it should render nothing when both slot and fallback are absent", () => {
   const Comp = defineComponent({
     setup() {
       return () => h(resolveSlotOrProp({}, "description", ""));

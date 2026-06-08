@@ -5,7 +5,7 @@ import { expect, test } from "vitest";
 // ** Local Imports
 import { derived, useBridgeUIMergedRegistryClasses } from "@/Utils";
 
-test("derived runs the getter and returns its value", () => {
+test("it should run the getter and return its value from derived", () => {
   let runs = 0;
 
   const value = derived(() => {
@@ -18,7 +18,7 @@ test("derived runs the getter and returns its value", () => {
   expect(value).toBe("ok");
 });
 
-test("derived recalculates when called again", () => {
+test("it should recalculate when called again from derived", () => {
   let count = 0;
 
   const first = derived(() => {
