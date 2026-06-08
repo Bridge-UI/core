@@ -65,7 +65,7 @@ export function useSwitcher(
     bridgeKeys: switcherBridgeKeys,
   });
 
-  const { entry: bridgeSwitcher, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeSwitcher } = useBridgeUIComponent<
     SwitcherMerged,
     "Switcher"
   >({
@@ -248,9 +248,9 @@ export function useSwitcher(
       id: controlId,
       disabled: isDisabled,
       readOnly: isReadonly,
+      "aria-describedby": ariaDescribedBy,
       required: merged.required || undefined,
       "aria-invalid": invalidated || undefined,
-      "aria-describedby": ariaDescribedBy,
     } satisfies Partial<InputHTMLAttributes<HTMLInputElement>>;
   });
 

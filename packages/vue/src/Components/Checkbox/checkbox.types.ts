@@ -6,6 +6,7 @@ import type {
   CheckboxColor,
   CheckboxRounded,
   CheckboxSize,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -55,10 +56,24 @@ export interface CheckboxPartsProps extends SwitcherPartsProps {
   input?: Partial<InputHTMLAttributes>;
 }
 
+export interface CheckboxEmits {
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: boolean];
+}
+
 export interface CheckboxOwnProps extends Omit<
   SwitcherOwnProps,
-  "field" | "classes" | "partsProps"
+  "field" | "slots" | "classes" | "partsProps"
 > {
+  /**
+   * Whether the checkbox is checked.
+   *
+   * @default undefined
+   */
+  checked?: boolean;
+
   /**
    * Classes for the switcher chrome and the checkbox control.
    *
@@ -103,7 +118,7 @@ export interface CheckboxOwnProps extends Omit<
   size?: MergeProps<CheckboxSize, CheckboxSizeOverrides>;
 
   /**
-   * Chrome slots (`startLabel`, `mainLabel`, `endLabel`, `description`, `errorMessage`, …).
+   * Chrome slots and the control slot.
    *
    * @default undefined
    */
@@ -112,4 +127,12 @@ export interface CheckboxOwnProps extends Omit<
 
 export interface CheckboxSlots extends SwitcherSlots {}
 
-export type CheckboxProps = CheckboxOwnProps;
+export type CheckboxProps = MergeHtmlProps<
+  CheckboxOwnProps,
+  Omit<InputHTMLAttributes, "size" | "color" | "rounded">
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   */
+  modelValue?: boolean;
+};

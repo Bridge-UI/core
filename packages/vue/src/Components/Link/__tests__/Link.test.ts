@@ -34,7 +34,7 @@ test("it should apply aria-disabled when disabled", () => {
 test("it should open in a new tab when external is true", () => {
   const wrapper = mount(Link, {
     slots: { default: "External" },
-    props: { href: "https://example.com", external: true },
+    props: { external: true, href: "https://example.com" },
   });
 
   const anchor = wrapper.find("a");

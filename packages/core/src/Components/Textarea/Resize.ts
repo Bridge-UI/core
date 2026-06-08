@@ -1,12 +1,10 @@
-// prettier-ignore
 export interface TextareaResize {
   "both": string;
+  "horizontal": string;
   "none": string;
   "vertical": string;
-  "horizontal": string;
 }
 
-// prettier-ignore
 export const resizeProps: TextareaResize = {
   "both": "resize",
   "none": "resize-none",

@@ -8,14 +8,13 @@ import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjection
 
 export class BridgeModalHostMissingError extends Error {
   constructor() {
-    super(
-      "useBridgeModal() requires <BridgeUIProvider /> (or <BridgeModalHost />) in the app tree.",
-    );
+    super("useModalAction() requires <BridgeModalHost /> in the app tree.");
+
     this.name = "BridgeModalHostMissingError";
   }
 }
 
-export function useBridgeModal(): BridgeModalApi {
+export function useModalAction(): BridgeModalApi {
   const api = inject(BRIDGE_MODAL_INJECTION_KEY);
 
   if (!api) {

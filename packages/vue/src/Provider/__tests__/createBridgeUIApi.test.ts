@@ -33,8 +33,8 @@ test("it should merge options into global defaults", () => {
 
   scope.run(() => {
     const optionsRef = computed(() => ({
-      global: { theme: "dark" },
       components: {},
+      global: { theme: "dark" },
     }));
 
     const api = createBridgeUIApi(undefined, optionsRef);
@@ -71,8 +71,8 @@ test("it should inherit from parent and merge child options", () => {
     parentApi.setGlobal({ theme: "dark" });
 
     const childOptions = computed(() => ({
-      global: { locale: "pt-BR" },
       components: {},
+      global: { locale: "pt-BR" },
     }));
 
     const childApi = createBridgeUIApi(parentApi, childOptions);

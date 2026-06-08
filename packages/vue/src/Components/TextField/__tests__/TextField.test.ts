@@ -137,7 +137,7 @@ test("it should render error icon when error is set", () => {
 
 test("it should render error icon instead of end icon when error is set", () => {
   const wrapper = mount(TextField, {
-    props: { endIcon: CircleAlert, error: true },
+    props: { error: true, endIcon: CircleAlert },
   });
 
   expect(wrapper.findAll("svg").length).toBe(1);
@@ -162,7 +162,7 @@ test("it should render required asterisk when required is true", () => {
 
 test("it should apply error color on the label when error is set", () => {
   const wrapper = mount(TextField, {
-    props: { label: "Email", error: true },
+    props: { error: true, label: "Email" },
   });
 
   const label = wrapper.find('[class*="text-error-600"]');

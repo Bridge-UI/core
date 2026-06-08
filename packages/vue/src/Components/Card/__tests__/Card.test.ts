@@ -27,14 +27,14 @@ test("it should render body content via default slot", () => {
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  const wrapper = mount(Card, { props: { title: "Rounded", rounded: "lg" } });
+  const wrapper = mount(Card, { props: { rounded: "lg", title: "Rounded" } });
 
   expect(wrapper.find(".flex.w-full").classes()).toContain("rounded-lg");
 });
 
 test("it should apply shadow classes for elevated variant", () => {
   const wrapper = mount(Card, {
-    props: { title: "Shadow", variant: "elevated", shadow: "md" },
+    props: { shadow: "md", title: "Shadow", variant: "elevated" },
   });
 
   expect(wrapper.find(".flex.w-full").classes()).toContain("shadow-md");
@@ -42,7 +42,7 @@ test("it should apply shadow classes for elevated variant", () => {
 
 test("it should not apply shadow for flat variant", () => {
   const wrapper = mount(Card, {
-    props: { title: "Flat", variant: "flat", shadow: "md" },
+    props: { shadow: "md", title: "Flat", variant: "flat" },
   });
 
   const rootClasses = wrapper.find(".flex.w-full").classes().join(" ");
@@ -89,7 +89,7 @@ test("it should render header slot content", () => {
 
 test("it should merge class with root classes", () => {
   const wrapper = mount(Card, {
-    props: { title: "Custom class", class: "custom-card" },
+    props: { class: "custom-card", title: "Custom class" },
   });
 
   expect(wrapper.find(".flex.w-full").classes()).toContain("custom-card");
@@ -127,6 +127,7 @@ test("it should forward fallthrough attrs to the root element", () => {
 
 test("it should forward partsProps to title and body containers", () => {
   const wrapper = mount(Card, {
+    slots: { default: "Body text" },
     props: {
       title: "Title",
       partsProps: {
@@ -134,7 +135,6 @@ test("it should forward partsProps to title and body containers", () => {
         title: { id: "card-title" },
       },
     },
-    slots: { default: "Body text" },
   });
 
   expect(wrapper.find("#card-body").exists()).toBe(true);
@@ -143,11 +143,11 @@ test("it should forward partsProps to title and body containers", () => {
 
 test("it should forward partsProps to footer container", () => {
   const wrapper = mount(Card, {
+    slots: { footer: "Footer" },
     props: {
       title: "Title",
       partsProps: { footer: { id: "card-footer" } },
     },
-    slots: { footer: "Footer" },
   });
 
   expect(wrapper.find("#card-footer").exists()).toBe(true);
@@ -170,7 +170,7 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
 
 test("it should omit header border when borderless is true", () => {
   const wrapper = mount(Card, {
-    props: { title: "Borderless", borderless: true },
+    props: { borderless: true, title: "Borderless" },
   });
 
   expect(wrapper.find(".border-b").exists()).toBe(false);

@@ -1,8 +1,8 @@
 import { computed, ref, toValue, type MaybeRefOrGetter } from "vue";
 
 export type UsePasswordFieldOptions = {
-  visible?: MaybeRefOrGetter<boolean | null | undefined>;
   onVisibilityChange?: (visible: boolean) => void;
+  visible?: MaybeRefOrGetter<boolean | null | undefined>;
 };
 
 export function usePasswordField(options: UsePasswordFieldOptions = {}) {

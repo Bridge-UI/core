@@ -23,12 +23,12 @@ test("it should render dialog when modelValue is true", () => {
 
 test("it should emit close when the backdrop is clicked", () => {
   cy.mount(Modal, {
+    slots: { default: () => "Content" },
     props: {
       modelValue: true,
       transition: "none",
       onClose: cy.stub().as("onClose"),
     },
-    slots: { default: () => "Content" },
   });
 
   cy.get('[aria-hidden="true"]').click({ force: true });
@@ -38,12 +38,12 @@ test("it should emit close when the backdrop is clicked", () => {
 
 test("it should emit update:modelValue when the backdrop is clicked", () => {
   cy.mount(Modal, {
+    slots: { default: () => "Content" },
     props: {
       modelValue: true,
       transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
-    slots: { default: () => "Content" },
   });
 
   cy.get('[aria-hidden="true"]').click({ force: true });
@@ -53,12 +53,12 @@ test("it should emit update:modelValue when the backdrop is clicked", () => {
 
 test("it should emit update:modelValue on escape", () => {
   cy.mount(Modal, {
+    slots: { default: () => "Content" },
     props: {
       modelValue: true,
       transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
-    slots: { default: () => "Content" },
   });
 
   cy.get("body").type("{esc}");
@@ -80,13 +80,13 @@ test("it should apply fade transition classes by default", () => {
 
 test("it should not emit update:modelValue when persistent", () => {
   cy.mount(Modal, {
+    slots: { default: () => "Persistent" },
     props: {
       modelValue: true,
       persistent: true,
       transition: "none",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
-    slots: { default: () => "Persistent" },
   });
 
   cy.get('[aria-hidden="true"]').click({ force: true });
@@ -97,7 +97,7 @@ test("it should not emit update:modelValue when persistent", () => {
 test("it should apply size classes on the wrapper", () => {
   cy.mount(Modal, {
     slots: { default: () => "Sized" },
-    props: { modelValue: true, size: "lg" },
+    props: { size: "lg", modelValue: true },
   });
 
   cy.get('[role="dialog"]').should("have.class", "sm:max-w-lg");

@@ -64,7 +64,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     bridgeKeys: radioBridgeKeys,
   });
 
-  const { entry: bridgeRadio, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeRadio } = useBridgeUIComponent<
     RadioMerged,
     "Radio"
   >({
@@ -159,8 +159,8 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
       {
         ...partsProps?.input,
         ...switcher.controlBind,
-        type: "radio",
         checked,
+        type: "radio",
         value: merged.value,
         onChange: handleChange,
       },

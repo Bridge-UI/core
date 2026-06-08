@@ -39,7 +39,7 @@ test("derived recalculates when called again", () => {
 
 test("it should return empty object when entry and props have no classes", () => {
   const { result } = renderHook(() =>
-    useBridgeUIMergedRegistryClasses({ entry: undefined, props: {} }),
+    useBridgeUIMergedRegistryClasses({ props: {}, entry: undefined }),
   );
 
   expect(result.current).toEqual({});
@@ -48,14 +48,14 @@ test("it should return empty object when entry and props have no classes", () =>
 test("it should return entry classes when props has none", () => {
   const { result } = renderHook(() =>
     useBridgeUIMergedRegistryClasses({
-      entry: { classes: { root: "bg-red-500", icon: "text-sm" } },
       props: {},
+      entry: { classes: { icon: "text-sm", root: "bg-red-500" } },
     }),
   );
 
   expect(result.current).toEqual({
-    root: "bg-red-500",
     icon: "text-sm",
+    root: "bg-red-500",
   });
 });
 
@@ -73,10 +73,10 @@ test("it should return props classes when entry has none", () => {
 test("it should merge entry and props classes with props winning", () => {
   const { result } = renderHook(() =>
     useBridgeUIMergedRegistryClasses({
-      entry: { classes: { root: "bg-red-500", icon: "text-sm" } },
       props: { classes: { root: "bg-blue-500" } },
+      entry: { classes: { icon: "text-sm", root: "bg-red-500" } },
     }),
   );
 
-  expect(result.current).toEqual({ root: "bg-blue-500", icon: "text-sm" });
+  expect(result.current).toEqual({ icon: "text-sm", root: "bg-blue-500" });
 });

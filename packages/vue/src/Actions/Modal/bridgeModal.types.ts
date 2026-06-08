@@ -5,22 +5,32 @@ import type { Component, Ref } from "vue";
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
+export type BridgeModalShellProps = Partial<Omit<ModalOwnProps, "stackId">>;
+
+export type BridgeModalHostProps = {
+  /**
+   * Default shell options merged into every modal opened via `useModalAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeModalShellProps;
+};
+
 export type BridgeModalEntry = {
-  id: LayerId;
-  show: boolean;
   component: Component;
+  id: LayerId;
+  modal?: Partial<ModalOwnProps>;
   onClose?: () => void;
   onClosed?: () => void;
-  modal?: Partial<ModalOwnProps>;
   props?: Record<string, unknown>;
+  show: boolean;
 };
 
 export type BridgeModalOpenOptions<TProps = Record<string, unknown>> = {
-  props?: TProps;
   component: Component;
+  modal?: Partial<ModalOwnProps>;
   onClose?: () => void;
   onClosed?: () => void;
-  modal?: Partial<ModalOwnProps>;
+  props?: TProps;
 };
 
 export type BridgeModalUpdateOptions = {
@@ -29,16 +39,16 @@ export type BridgeModalUpdateOptions = {
 };
 
 export type BridgeModalController = {
-  closeTop: () => void;
   close: (id: LayerId) => void;
-  isOpen: (id: LayerId) => boolean;
+  closeTop: () => void;
   entries: Ref<BridgeModalEntry[]>;
-  removeEntry: (id: LayerId) => void;
-  syncShow: (id: LayerId, show: boolean) => void;
-  update: (id: LayerId, options: BridgeModalUpdateOptions) => void;
+  isOpen: (id: LayerId) => boolean;
   open: <TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
   ) => LayerId;
+  removeEntry: (id: LayerId) => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  update: (id: LayerId, options: BridgeModalUpdateOptions) => void;
 };
 
 export type BridgeModalApi = Omit<

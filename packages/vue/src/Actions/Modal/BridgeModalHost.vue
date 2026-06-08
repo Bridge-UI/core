@@ -1,15 +1,22 @@
 <script setup lang="ts">
 // ** External Imports
-import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core";
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
+import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
 import { createBridgeModalApi } from "@/Actions/Modal/createBridgeModalApi";
 import { Modal } from "@/Components/Modal";
 
+const props = defineProps<BridgeModalHostProps>();
+
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+  "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";
 
 const parentApi = inject(BRIDGE_MODAL_INJECTION_KEY, null);
 
@@ -29,12 +36,12 @@ provide(BRIDGE_MODAL_INJECTION_KEY, api);
 
   <Modal
     :key="entry.id"
-    v-bind="entry.modal"
     :stack-id="entry.id"
     :model-value="entry.show"
     v-for="entry in modalEntries"
-    v-on:close="invokeLayerDismiss(api.entries.value, entry.id)"
+    v-bind="mergeLayerShellProps(props.modal, entry.modal)"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
+    v-on:close="invokeLayerDismiss(api.entries.value, entry.id)"
     :on-show-change="
       (show) =>
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)

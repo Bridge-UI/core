@@ -6,14 +6,13 @@ import { computed, inject, provide } from "vue";
 import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
 
 // ** Local Imports
-import { BridgeModalHost } from "@/Actions/Modal";
 import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
 
 const props = defineProps<{
-  global?: Partial<BridgeUIGlobal>;
   components?: BridgeUIComponentsConfig;
+  global?: Partial<BridgeUIGlobal>;
 }>();
 
 const parent = inject<BridgeUIContextApi | undefined>(
@@ -34,7 +33,5 @@ provide(BRIDGE_UI_INJECTION_KEY, api);
 </script>
 
 <template>
-  <BridgeModalHost>
-    <slot />
-  </BridgeModalHost>
+  <slot />
 </template>

@@ -1,26 +1,43 @@
 // ** External Imports
 import type { LayerId } from "@bridge-ui/core";
-import type { ComponentType } from "react";
+import type { ComponentType, ReactNode } from "react";
 
 // ** Local Imports
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
+export type BridgeModalShellProps = Partial<
+  Omit<ModalOwnProps, "show" | "stackId">
+>;
+
+export type BridgeModalHostProps = {
+  /**
+   * The children to apply to the host.
+   */
+  children?: ReactNode;
+
+  /**
+   * Default shell options merged into every modal opened via `useModalAction()`.
+   * Per-call `open({ modal })` overrides these.
+   */
+  modal?: BridgeModalShellProps;
+};
+
 export type BridgeModalEntry = {
+  component: ComponentType<Record<string, unknown>>;
   id: LayerId;
-  show: boolean;
+  modal?: Partial<ModalOwnProps>;
   onClose?: () => void;
   onClosed?: () => void;
-  modal?: Partial<ModalOwnProps>;
   props?: Record<string, unknown>;
-  component: ComponentType<Record<string, unknown>>;
+  show: boolean;
 };
 
 export type BridgeModalOpenOptions<TProps = Record<string, unknown>> = {
-  props?: TProps;
+  component: ComponentType<TProps>;
+  modal?: Partial<ModalOwnProps>;
   onClose?: () => void;
   onClosed?: () => void;
-  modal?: Partial<ModalOwnProps>;
-  component: ComponentType<TProps>;
+  props?: TProps;
 };
 
 export type BridgeModalUpdateOptions = {
@@ -29,16 +46,16 @@ export type BridgeModalUpdateOptions = {
 };
 
 export type BridgeModalController = {
+  close: (id: LayerId) => void;
   closeTop: () => void;
   entries: BridgeModalEntry[];
-  close: (id: LayerId) => void;
   isOpen: (id: LayerId) => boolean;
-  removeEntry: (id: LayerId) => void;
-  syncShow: (id: LayerId, show: boolean) => void;
-  update: (id: LayerId, options: BridgeModalUpdateOptions) => void;
   open: <TProps = Record<string, unknown>>(
     options: BridgeModalOpenOptions<TProps>,
   ) => LayerId;
+  removeEntry: (id: LayerId) => void;
+  syncShow: (id: LayerId, show: boolean) => void;
+  update: (id: LayerId, options: BridgeModalUpdateOptions) => void;
 };
 
 export type BridgeModalApi = Omit<

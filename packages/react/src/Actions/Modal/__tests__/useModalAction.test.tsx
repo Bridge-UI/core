@@ -7,9 +7,8 @@ import { afterEach, expect, test, vi } from "vitest";
 import {
   BridgeModalHost,
   BridgeModalHostMissingError,
-  useBridgeModal,
+  useModalAction,
 } from "@/Actions/Modal";
-import { BridgeUIProvider } from "@/Provider";
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
@@ -28,9 +27,9 @@ function Content({ label = "Imperative" }: { label?: string }) {
 function RunOnMount({
   onMount,
 }: {
-  onMount: (modal: ReturnType<typeof useBridgeModal>) => void;
+  onMount: (modal: ReturnType<typeof useModalAction>) => void;
 }) {
-  const modal = useBridgeModal();
+  const modal = useModalAction();
 
   useEffect(() => {
     onMount(modal);
@@ -68,9 +67,9 @@ function OpenAndCloseOnMount() {
 function OpenWithRef({
   onOpen,
 }: {
-  onOpen: (api: ReturnType<typeof useBridgeModal>, id: string) => void;
+  onOpen: (api: ReturnType<typeof useModalAction>, id: string) => void;
 }) {
-  const modal = useBridgeModal();
+  const modal = useModalAction();
 
   useEffect(() => {
     const id = modal.open({
@@ -85,9 +84,9 @@ function OpenWithRef({
   return null;
 }
 
-test("useBridgeModal should throw when BridgeUIProvider is missing", () => {
+test("useModalAction should throw when BridgeModalHost is missing", () => {
   function BadConsumer() {
-    useBridgeModal();
+    useModalAction();
 
     return null;
   }
@@ -97,9 +96,9 @@ test("useBridgeModal should throw when BridgeUIProvider is missing", () => {
 
 test("open should return an id and render modal content", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <OpenOnMount />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -111,9 +110,9 @@ test("open should return an id and render modal content", async () => {
 
 test("close should unmount imperative modal", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <OpenAndCloseOnMount />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -122,18 +121,18 @@ test("close should unmount imperative modal", async () => {
 });
 
 test("isOpen and stackSize should reflect mounted entries", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <OpenWithRef
         onOpen={(modal, openedId) => {
           api = modal;
           id = openedId;
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -157,28 +156,28 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
 });
 
 test("closeTop should close only the topmost imperative modal", async () => {
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let outerId = "";
   let innerId = "";
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           api = modal;
           outerId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Outer" },
+            modal: { transition: "none" },
           });
           innerId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Inner" },
+            modal: { transition: "none" },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -201,23 +200,23 @@ test("closeTop should close only the topmost imperative modal", async () => {
 test("onClose should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           api = modal;
           id = modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -243,18 +242,18 @@ test("onClose should run before onClosed when escape is pressed", async () => {
   const onClosed = vi.fn();
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -277,19 +276,19 @@ test("onClose should run before onClosed when escape is pressed", async () => {
 
 test("update should patch props on an open modal", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           const openedId = modal.open({
             component: Content,
-            modal: { transition: "none" },
             props: { label: "Before" },
+            modal: { transition: "none" },
           });
 
           modal.update(openedId, { props: { label: "After" } });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -301,18 +300,18 @@ test("update should patch props on an open modal", async () => {
 
 test("update should patch modal shell options on an open modal", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           const openedId = modal.open({
             component: Content,
-            modal: { transition: "none", size: "sm" },
+            modal: { size: "sm", transition: "none" },
           });
 
           modal.update(openedId, { modal: { size: "lg" } });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -326,17 +325,17 @@ test("open with persistent modal should ignore escape", async () => {
   const onClose = vi.fn();
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           modal.open({
             onClose,
             component: Content,
-            modal: { transition: "none", persistent: true },
+            modal: { persistent: true, transition: "none" },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -353,7 +352,7 @@ test("open with persistent modal should ignore escape", async () => {
 
 test("stacked imperative modals should use incremental z-index", async () => {
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           modal.open({
@@ -368,7 +367,7 @@ test("stacked imperative modals should use incremental z-index", async () => {
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -390,23 +389,23 @@ test("stacked imperative modals should use incremental z-index", async () => {
 test("onClose should run before onClosed when the overlay is clicked", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let api!: ReturnType<typeof useBridgeModal>;
+  let api!: ReturnType<typeof useModalAction>;
   let id = "";
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           api = modal;
           id = modal.open({
-            component: Content,
-            modal: { transition: "none" },
             onClose,
             onClosed,
+            component: Content,
+            modal: { transition: "none" },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -433,7 +432,7 @@ test("modal shell options must not override host-controlled props", async () => 
   const onClose = vi.fn();
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <RunOnMount
         onMount={(modal) => {
           modal.open({
@@ -441,14 +440,14 @@ test("modal shell options must not override host-controlled props", async () => 
             component: Content,
             modal: {
               show: false,
-              transition: "none",
               onClose: vi.fn(),
+              transition: "none",
               onShowChange: vi.fn(),
             },
           });
         }}
       />
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   await waitFor(() => {
@@ -466,15 +465,15 @@ test("nested BridgeModalHost should warn in development", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   render(
-    <BridgeUIProvider>
+    <BridgeModalHost>
       <BridgeModalHost>
         <span>nested</span>
       </BridgeModalHost>
-    </BridgeUIProvider>,
+    </BridgeModalHost>,
   );
 
   expect(warn).toHaveBeenCalledWith(
-    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.",
+    "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.",
   );
 
   warn.mockRestore();

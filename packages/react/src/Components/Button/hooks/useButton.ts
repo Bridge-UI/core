@@ -65,7 +65,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     bridgeKeys: buttonBridgeKeys,
   });
 
-  const { entry: bridgeButton, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeButton } = useBridgeUIComponent<
     ButtonMerged,
     "Button"
   >({
@@ -91,8 +91,8 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
-    entry: bridgeButton,
     props: customProps,
+    entry: bridgeButton,
   });
 
   // Elements

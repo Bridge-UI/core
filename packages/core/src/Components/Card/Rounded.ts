@@ -1,31 +1,23 @@
-// prettier-ignore
 export interface CardRoundedItem {
-  "root": string;
-  "header": string;
   "footer": string;
+  "header": string;
+  "root": string;
 }
 
-// prettier-ignore
 export interface CardRounded {
-  "none": CardRoundedItem;
-  "xs": CardRoundedItem;
-  "sm": CardRoundedItem;
-  "md": CardRoundedItem;
-  "lg": CardRoundedItem;
-  "xl": CardRoundedItem;
   "2xl": CardRoundedItem;
   "3xl": CardRoundedItem;
   "4xl": CardRoundedItem;
   "full": CardRoundedItem;
+  "lg": CardRoundedItem;
+  "md": CardRoundedItem;
+  "none": CardRoundedItem;
+  "sm": CardRoundedItem;
+  "xl": CardRoundedItem;
+  "xs": CardRoundedItem;
 }
 
-// prettier-ignore
 export const roundedProps: CardRounded = {
-  "none": {
-    "root": "rounded-none",
-    "header": "rounded-t-none",
-    "footer": "rounded-b-none",
-  },
   "xs": {
     "root": "rounded-xs",
     "header": "rounded-t-xs",
@@ -65,6 +57,11 @@ export const roundedProps: CardRounded = {
     "root": "rounded-4xl",
     "header": "rounded-t-4xl",
     "footer": "rounded-b-4xl",
+  },
+  "none": {
+    "root": "rounded-none",
+    "header": "rounded-t-none",
+    "footer": "rounded-b-none",
   },
   "full": {
     "root": "rounded-full",

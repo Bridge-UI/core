@@ -1,11 +1,9 @@
-// prettier-ignore
 export interface LinkUnderline {
   "always": string;
-  "none": string;
   "hover": string;
+  "none": string;
 }
 
-// prettier-ignore
 export const underlineProps: LinkUnderline = {
   "always": "underline",
   "none": "no-underline",

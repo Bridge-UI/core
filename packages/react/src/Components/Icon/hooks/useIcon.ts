@@ -35,7 +35,7 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
     bridgeKeys: iconBridgeKeys,
   });
 
-  const { entry: bridgeIcon, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeIcon } = useBridgeUIComponent<
     IconMerged,
     "Icon"
   >({

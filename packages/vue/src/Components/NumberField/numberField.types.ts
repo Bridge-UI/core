@@ -26,6 +26,18 @@ export interface NumberFieldClasses extends TextFieldClasses {
 
 export interface NumberFieldPartsProps extends TextFieldPartsProps {}
 
+export interface NumberFieldEmits {
+  /**
+   * Emits the numeric value when it changes.
+   */
+  change: [value: number];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: number | null];
+}
+
 export interface NumberFieldOwnProps extends Omit<
   TextFieldOwnProps,
   "startIcon" | "endIcon"
@@ -57,7 +69,7 @@ export interface NumberFieldSlots extends TextFieldSlots {}
 
 export type NumberFieldProps = MergeHtmlProps<
   NumberFieldOwnProps,
-  InputHTMLAttributes
+  Omit<InputHTMLAttributes, "onChange" | "value" | "defaultValue">
 > & {
   /**
    * Bound with `v-model` on the component (`defineModel` internally).

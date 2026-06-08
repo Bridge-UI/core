@@ -11,11 +11,11 @@ test("it should render a number input with stepper buttons", () => {
 
 test("it should increment value when increment button is clicked", () => {
   cy.mount(NumberField, {
+    attrs: { "aria-label": "Amount" },
     props: {
       modelValue: 1,
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
-    attrs: { "aria-label": "Amount" },
   });
 
   cy.get('button[aria-label="Increment value"]').click();

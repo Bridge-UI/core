@@ -9,9 +9,8 @@ import { defineComponent, h, onMounted } from "vue";
 import {
   BridgeModalHost,
   BridgeModalHostMissingError,
-  useBridgeModal,
+  useModalAction,
 } from "@/Actions/Modal";
-import { BridgeUIProvider } from "@/Provider";
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
@@ -36,21 +35,21 @@ const Content = defineComponent({
   },
 });
 
-function mountWithProvider(consumer: ReturnType<typeof defineComponent>) {
+function mountWithModalHost(consumer: ReturnType<typeof defineComponent>) {
   const Root = defineComponent({
-    components: { BridgeUIProvider, Consumer: consumer },
-    template: "<BridgeUIProvider><Consumer /></BridgeUIProvider>",
+    components: { BridgeModalHost, Consumer: consumer },
+    template: "<BridgeModalHost><Consumer /></BridgeModalHost>",
   });
 
   return mount(Root, { attachTo: document.body });
 }
 
-test("useBridgeModal should throw when BridgeUIProvider is missing", () => {
+test("useModalAction should throw when BridgeModalHost is missing", () => {
   const Consumer = defineComponent({
-    setup() {
-      expect(() => useBridgeModal()).toThrow(BridgeModalHostMissingError);
-    },
     template: "<div />",
+    setup() {
+      expect(() => useModalAction()).toThrow(BridgeModalHostMissingError);
+    },
   });
 
   mount(Consumer);
@@ -59,7 +58,7 @@ test("useBridgeModal should throw when BridgeUIProvider is missing", () => {
 test("open should return an id and render modal content", async () => {
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
+      const modal = useModalAction();
 
       onMounted(() => {
         modal.open({
@@ -72,7 +71,7 @@ test("open should return an id and render modal content", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -83,11 +82,11 @@ test("open should return an id and render modal content", async () => {
 });
 
 test("close should unmount imperative modal", async () => {
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(async () => {
         const id = bridgeModal.open({
@@ -104,7 +103,7 @@ test("close should unmount imperative modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -112,12 +111,12 @@ test("close should unmount imperative modal", async () => {
 });
 
 test("isOpen and stackSize should reflect mounted entries", async () => {
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let id = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         id = bridgeModal.open({
@@ -130,7 +129,7 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -148,24 +147,24 @@ test("isOpen and stackSize should reflect mounted entries", async () => {
 });
 
 test("closeTop should close only the topmost imperative modal", async () => {
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let outerId = "";
   let innerId = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         outerId = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Outer" },
+          modal: { transition: "none" },
         });
         innerId = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Inner" },
+          modal: { transition: "none" },
         });
       });
 
@@ -173,7 +172,7 @@ test("closeTop should close only the topmost imperative modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -191,19 +190,19 @@ test("closeTop should close only the topmost imperative modal", async () => {
 test("onClose should run before onClosed when close is called", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let id = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         id = bridgeModal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 
@@ -211,7 +210,7 @@ test("onClose should run before onClosed when close is called", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -231,14 +230,14 @@ test("onClose should run before onClosed when escape is pressed", async () => {
 
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
+      const modal = useModalAction();
 
       onMounted(() => {
         modal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 
@@ -246,7 +245,7 @@ test("onClose should run before onClosed when escape is pressed", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -261,18 +260,18 @@ test("onClose should run before onClosed when escape is pressed", async () => {
 });
 
 test("update should patch props on an open modal", async () => {
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let id = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         id = bridgeModal.open({
           component: Content,
-          modal: { transition: "none" },
           props: { label: "Before" },
+          modal: { transition: "none" },
         });
         bridgeModal.update(id, { props: { label: "After" } });
       });
@@ -281,7 +280,7 @@ test("update should patch props on an open modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -291,17 +290,17 @@ test("update should patch props on an open modal", async () => {
 });
 
 test("update should patch modal shell options on an open modal", async () => {
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let id = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         id = bridgeModal.open({
           component: Content,
-          modal: { transition: "none", size: "sm" },
+          modal: { size: "sm", transition: "none" },
         });
         bridgeModal.update(id, { modal: { size: "lg" } });
       });
@@ -310,7 +309,7 @@ test("update should patch modal shell options on an open modal", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -324,13 +323,13 @@ test("open with persistent modal should ignore escape", async () => {
 
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
+      const modal = useModalAction();
 
       onMounted(() => {
         modal.open({
           onClose,
           component: Content,
-          modal: { transition: "none", persistent: true },
+          modal: { persistent: true, transition: "none" },
         });
       });
 
@@ -338,7 +337,7 @@ test("open with persistent modal should ignore escape", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -352,7 +351,7 @@ test("open with persistent modal should ignore escape", async () => {
 test("stacked imperative modals should use incremental z-index", async () => {
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
+      const modal = useModalAction();
 
       onMounted(() => {
         modal.open({
@@ -369,7 +368,7 @@ test("stacked imperative modals should use incremental z-index", async () => {
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -390,19 +389,19 @@ test("stacked imperative modals should use incremental z-index", async () => {
 test("onClose should run before onClosed when the overlay is clicked", async () => {
   const onClose = vi.fn();
   const onClosed = vi.fn();
-  let bridgeModal!: ReturnType<typeof useBridgeModal>;
+  let bridgeModal!: ReturnType<typeof useModalAction>;
   let id = "";
 
   const Consumer = defineComponent({
     setup() {
-      bridgeModal = useBridgeModal();
+      bridgeModal = useModalAction();
 
       onMounted(() => {
         id = bridgeModal.open({
-          component: Content,
-          modal: { transition: "none" },
           onClose,
           onClosed,
+          component: Content,
+          modal: { transition: "none" },
         });
       });
 
@@ -410,7 +409,7 @@ test("onClose should run before onClosed when the overlay is clicked", async () 
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -431,7 +430,7 @@ test("modal shell options must not override host-controlled props", async () => 
 
   const Consumer = defineComponent({
     setup() {
-      const modal = useBridgeModal();
+      const modal = useModalAction();
 
       onMounted(() => {
         modal.open({
@@ -449,7 +448,7 @@ test("modal shell options must not override host-controlled props", async () => 
     },
   });
 
-  mountWithProvider(Consumer);
+  mountWithModalHost(Consumer);
 
   await flushPromises();
 
@@ -465,9 +464,9 @@ test("nested BridgeModalHost should warn in development", async () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
   const Root = defineComponent({
-    components: { BridgeUIProvider, BridgeModalHost },
+    components: { BridgeModalHost },
     template:
-      "<BridgeUIProvider><BridgeModalHost><span>nested</span></BridgeModalHost></BridgeUIProvider>",
+      "<BridgeModalHost><BridgeModalHost><span>nested</span></BridgeModalHost></BridgeModalHost>",
   });
 
   mount(Root);
@@ -475,7 +474,7 @@ test("nested BridgeModalHost should warn in development", async () => {
   await flushPromises();
 
   expect(warn).toHaveBeenCalledWith(
-    "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.",
+    "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.",
   );
 
   warn.mockRestore();

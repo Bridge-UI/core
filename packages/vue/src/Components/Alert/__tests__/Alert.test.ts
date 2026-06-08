@@ -33,19 +33,19 @@ test("it should render the default icon for error color", () => {
 });
 
 test("it should not render an icon when icon is null", () => {
-  const wrapper = mount(Alert, { props: { title: "No icon", icon: null } });
+  const wrapper = mount(Alert, { props: { icon: null, title: "No icon" } });
 
   expect(wrapper.find("svg").exists()).toBe(false);
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  const wrapper = mount(Alert, { props: { title: "Rounded", rounded: "lg" } });
+  const wrapper = mount(Alert, { props: { rounded: "lg", title: "Rounded" } });
 
   expect(wrapper.find(".w-full").classes()).toContain("rounded-lg");
 });
 
 test("it should apply shadow classes when shadow prop is set", () => {
-  const wrapper = mount(Alert, { props: { title: "Shadow", shadow: "md" } });
+  const wrapper = mount(Alert, { props: { shadow: "md", title: "Shadow" } });
 
   expect(wrapper.find(".w-full").classes()).toContain("shadow-md");
 });
@@ -121,6 +121,7 @@ test("it should forward partsProps to the default icon", () => {
 
 test("it should forward partsProps to title and body containers", () => {
   const wrapper = mount(Alert, {
+    slots: { default: "Body text" },
     props: {
       title: "Title",
       partsProps: {
@@ -128,7 +129,6 @@ test("it should forward partsProps to title and body containers", () => {
         title: { id: "alert-title" },
       },
     },
-    slots: { default: "Body text" },
   });
 
   expect(wrapper.find("#alert-body").exists()).toBe(true);

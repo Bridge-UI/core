@@ -84,6 +84,17 @@ export type {
   SelectSize,
   SelectVariant,
 } from "@core/Components/Select";
+export {
+  colorProps as snackbarColorProps,
+  positionProps as snackbarPositionProps,
+  transitionProps as snackbarTransitionProps,
+} from "@core/Components/Snackbar";
+export type {
+  SnackbarColor,
+  SnackbarColorItem,
+  SnackbarPosition,
+  SnackbarTransition,
+} from "@core/Components/Snackbar";
 export type { TextareaResize } from "@core/Components/Textarea";
 export type {
   ToggleColor,
@@ -133,6 +144,7 @@ export {
   hideLayer,
   invokeLayerDismiss,
   isLayerMounted,
+  mergeLayerShellProps,
   removeLayer,
   updateLayer,
 } from "@core/Layer";
@@ -149,7 +161,9 @@ export {
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
+  getSnackbarTransitionClass,
   hasModalTransition,
+  hasSnackbarTransition,
   isLayerStackTop,
   isModalBackdropClick,
   mergeBridgeUILayeredClasses,

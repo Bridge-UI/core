@@ -3,11 +3,13 @@ export type {
   BridgeModalApi,
   BridgeModalController,
   BridgeModalEntry,
+  BridgeModalHostProps,
   BridgeModalOpenOptions,
+  BridgeModalShellProps,
   BridgeModalUpdateOptions,
 } from "@/Actions/Modal/bridgeModal.types";
 export { default as BridgeModalHost } from "@/Actions/Modal/BridgeModalHost.vue";
 export {
   BridgeModalHostMissingError,
-  useBridgeModal,
-} from "@/Actions/Modal/useBridgeModal";
+  useModalAction,
+} from "@/Actions/Modal/useModalAction";

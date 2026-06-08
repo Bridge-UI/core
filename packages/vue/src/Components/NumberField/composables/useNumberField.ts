@@ -1,8 +1,8 @@
 import { computed, type Ref } from "vue";
 
 export type UseNumberFieldOptions = {
-  min?: number;
   max?: number;
+  min?: number;
   step?: number;
 };
 

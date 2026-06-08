@@ -63,7 +63,7 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
     bridgeKeys: toggleBridgeKeys,
   });
 
-  const { entry: bridgeToggle, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeToggle } = useBridgeUIComponent<
     ToggleMerged,
     "Toggle"
   >({
@@ -158,9 +158,9 @@ export function useToggle(props: ToggleProps, libDefaults: ToggleLibDefaults) {
       {
         ...partsProps?.input,
         ...switcher.controlBind,
-        type: "checkbox",
-        role: "switch",
         checked,
+        role: "switch",
+        type: "checkbox",
         onChange: handleChange,
       },
       inputInheritedAttrs,

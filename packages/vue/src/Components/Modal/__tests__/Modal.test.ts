@@ -61,11 +61,11 @@ test("it should teleport to body when modelValue is true", () => {
 
 test("it should support controlled modelValue without closing when persistent", async () => {
   const wrapper = mountModal({
+    slots: { default: "Persistent" },
     props: {
       modelValue: true,
       persistent: true,
     },
-    slots: { default: "Persistent" },
   });
 
   const overlay = document.body.querySelector(".bg-black\\/50");
@@ -93,7 +93,7 @@ test("it should not close when clicking inside the panel", async () => {
 test("it should apply size classes on the panel from sm breakpoint", () => {
   mountModal({
     slots: { default: "Sized" },
-    props: { modelValue: true, size: "lg" },
+    props: { size: "lg", modelValue: true },
   });
 
   const panel = document.body.querySelector('[role="dialog"]');
@@ -104,7 +104,7 @@ test("it should apply size classes on the panel from sm breakpoint", () => {
 test("it should apply blur classes on the overlay", () => {
   mountModal({
     slots: { default: "Blur" },
-    props: { modelValue: true, blur: "md" },
+    props: { blur: "md", modelValue: true },
   });
 
   const overlay = document.body.querySelector(".bg-black\\/50");
@@ -165,8 +165,8 @@ test("it should close on overlay click", async () => {
 
 test("it should close on wrapper backdrop click", async () => {
   const wrapper = mountModal({
-    props: { modelValue: true, transition: "none" },
     slots: { default: "<div>content</div>" },
+    props: { modelValue: true, transition: "none" },
   });
 
   const el = document.body.querySelector(".flex.min-h-full.w-full");
@@ -233,8 +233,8 @@ test("it should render nested modals with separate dialog layers", () => {
         h(
           Modal,
           {
-            modelValue: outer.value,
             transition: "none",
+            modelValue: outer.value,
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -243,8 +243,8 @@ test("it should render nested modals with separate dialog layers", () => {
             h(
               Modal,
               {
-                modelValue: inner.value,
                 transition: "none",
+                modelValue: inner.value,
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },
@@ -272,8 +272,8 @@ test("it should close only the topmost nested modal on escape", async () => {
         h(
           Modal,
           {
-            modelValue: outer.value,
             transition: "none",
+            modelValue: outer.value,
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -282,8 +282,8 @@ test("it should close only the topmost nested modal on escape", async () => {
             h(
               Modal,
               {
-                modelValue: inner.value,
                 transition: "none",
+                modelValue: inner.value,
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },
@@ -314,8 +314,8 @@ test("it should keep body scroll locked when an inner modal closes", async () =>
         h(
           Modal,
           {
-            modelValue: outer.value,
             transition: "none",
+            modelValue: outer.value,
             "onUpdate:modelValue": (value: boolean) => {
               outer.value = value;
             },
@@ -324,8 +324,8 @@ test("it should keep body scroll locked when an inner modal closes", async () =>
             h(
               Modal,
               {
-                modelValue: inner.value,
                 transition: "none",
+                modelValue: inner.value,
                 "onUpdate:modelValue": (value: boolean) => {
                   inner.value = value;
                 },
@@ -408,8 +408,8 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
           h(
             Modal,
             {
-              modelValue: outer.value,
               transition: "none",
+              modelValue: outer.value,
               "onUpdate:modelValue": (value: boolean) => {
                 outer.value = value;
               },
@@ -419,8 +419,8 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
           h(
             Modal,
             {
-              modelValue: middle.value,
               transition: "none",
+              modelValue: middle.value,
               "onUpdate:modelValue": (value: boolean) => {
                 middle.value = value;
               },
@@ -430,8 +430,8 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
           h(
             Modal,
             {
-              modelValue: inner.value,
               transition: "none",
+              modelValue: inner.value,
               "onUpdate:modelValue": (value: boolean) => {
                 inner.value = value;
               },

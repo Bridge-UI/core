@@ -6,16 +6,14 @@ import {
   underlinedProps,
 } from "@core/Components/Select/Color";
 
-// prettier-ignore
 export interface SelectVariant {
-  "outline": SelectColor;
   "filled": SelectColor;
+  "outline": SelectColor;
   "underlined": SelectColor;
 }
 
-// prettier-ignore
 export const variantProps: SelectVariant = {
-  "outline": outlineProps,
   "filled": filledProps,
+  "outline": outlineProps,
   "underlined": underlinedProps,
 };

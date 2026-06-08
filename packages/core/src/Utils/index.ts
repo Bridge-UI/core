@@ -104,10 +104,10 @@ export function mergePropsWithBridgeUIDefaults<
   libDefaults,
   componentName,
 }: {
-  props: P;
   componentName: K;
-  libDefaults?: Partial<P>;
   components: BridgeUIComponentsConfig | null | undefined;
+  libDefaults?: Partial<P>;
+  props: P;
 }): P {
   const fromRegistry = get(components, [componentName, "defaultProps"]) as
     | Partial<P>
@@ -126,8 +126,8 @@ export function splitComponentProps<
   props,
   bridgeKeys,
 }: {
-  props: P;
   bridgeKeys: BridgeKeys;
+  props: P;
 }): {
   customProps: Pick<P, BridgeKeys[number]>;
   inheritedAttrs: Omit<P, BridgeKeys[number]>;
@@ -162,6 +162,10 @@ export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@core/Utils/portal";
+export {
+  getSnackbarTransitionClass,
+  hasSnackbarTransition,
+} from "@core/Utils/snackbar";
 export type {
   ClassPropKey,
   LibDefaultsShape,

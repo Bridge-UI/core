@@ -23,7 +23,7 @@ test("it should render body content via default slot", () => {
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  cy.mount(Card, { props: { title: "Rounded", rounded: "lg" } });
+  cy.mount(Card, { props: { rounded: "lg", title: "Rounded" } });
 
   cy.contains("Rounded")
     .closest(".flex.w-full")
@@ -32,7 +32,7 @@ test("it should apply rounded classes when rounded prop is set", () => {
 
 test("it should apply shadow classes for elevated variant", () => {
   cy.mount(Card, {
-    props: { title: "Shadow", variant: "elevated", shadow: "md" },
+    props: { shadow: "md", title: "Shadow", variant: "elevated" },
   });
 
   cy.contains("Shadow")
@@ -42,7 +42,7 @@ test("it should apply shadow classes for elevated variant", () => {
 
 test("it should not apply shadow for flat variant", () => {
   cy.mount(Card, {
-    props: { title: "Flat", variant: "flat", shadow: "md" },
+    props: { shadow: "md", title: "Flat", variant: "flat" },
   });
 
   cy.contains("Flat")

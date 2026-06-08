@@ -5,5 +5,6 @@ export type {
   LabelOwnProps,
   LabelProps,
   LabelSizeOverrides,
+  LabelSlots,
 } from "@/Components/Label/label.types";
 export { default as Label } from "@/Components/Label/Label.vue";

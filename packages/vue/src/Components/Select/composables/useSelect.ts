@@ -11,7 +11,7 @@ export function useSelect(
 ) {
   const slots = useSlots();
 
-  const { entry: bridgeSelect, merged } = useBridgeUIComponent({
+  const { merged, entry: bridgeSelect } = useBridgeUIComponent({
     props,
     libDefaults,
     componentName: "Select",

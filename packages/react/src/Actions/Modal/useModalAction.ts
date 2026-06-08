@@ -8,14 +8,13 @@ import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
 
 export class BridgeModalHostMissingError extends Error {
   constructor() {
-    super(
-      "useBridgeModal() requires <BridgeUIProvider /> (or <BridgeModalHost />) in the app tree.",
-    );
+    super("useModalAction() requires <BridgeModalHost /> in the app tree.");
+
     this.name = "BridgeModalHostMissingError";
   }
 }
 
-export function useBridgeModal(): BridgeModalApi {
+export function useModalAction(): BridgeModalApi {
   const api = useContext(BridgeModalContext);
 
   const apiRef = useRef(api);

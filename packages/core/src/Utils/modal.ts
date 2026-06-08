@@ -16,8 +16,9 @@ export const LAYER_STACK_BASE_Z_INDEX = 50;
 
 type LayerStackEntry = {
   id: LayerId;
-  order: number;
+  lockScroll?: boolean;
   onEscape?: () => void;
+  order: number;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -32,10 +33,10 @@ let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
 export type LayerStackHandle = {
   id: LayerId;
-  order: number;
   level: number;
-  zIndex: number;
+  order: number;
   release: () => void;
+  zIndex: number;
 };
 
 export type LayerStackSnapshotEntry = {
@@ -265,22 +266,28 @@ export function isLayerStackTop(id: LayerId): boolean {
 export function pushLayerStack(
   options: {
     id?: LayerId;
-    order?: number;
+    lockScroll?: boolean;
     onEscape?: () => void;
+    order?: number;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);
+  const lockScroll = options.lockScroll !== false;
   const order = options.order ?? acquireLayerStackOrder();
 
   stack.push({
     id,
     order,
+    lockScroll,
     onEscape: options.onEscape,
   });
 
   const level = getLayerStackOrderRank(id);
 
-  lockBodyScroll();
+  if (lockScroll) {
+    lockBodyScroll();
+  }
+
   attachEscapeListener();
   notifyLayerStackListeners();
 
@@ -290,9 +297,13 @@ export function pushLayerStack(
     level,
     zIndex: LAYER_STACK_BASE_Z_INDEX + level,
     release: () => {
-      remove(stack, (entry) => entry.id === id);
+      const entry = stack.find((item) => item.id === id);
 
-      unlockBodyScroll();
+      remove(stack, (item) => item.id === id);
+
+      if (entry?.lockScroll !== false) {
+        unlockBodyScroll();
+      }
 
       if (stack.length === 0) {
         detachEscapeListener();

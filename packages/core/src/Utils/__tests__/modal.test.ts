@@ -29,6 +29,14 @@ test("pushLayerStack should increment z-index per level", () => {
   expect(inner.zIndex).toBe(LAYER_STACK_BASE_Z_INDEX + 1);
 });
 
+test("pushLayerStack should skip scroll lock when lockScroll is false", () => {
+  const handle = pushLayerStack({ lockScroll: false });
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+
+  handle.release();
+});
+
 test("pushLayerStack should ref-count body scroll lock", () => {
   const outer = pushLayerStack();
 
@@ -105,13 +113,13 @@ test("getLayerStackSnapshot should list open modals", () => {
 
   expect(getLayerStackSnapshot()).toEqual([
     {
-      id: outer.id,
       order: 1,
+      id: outer.id,
       zIndex: LAYER_STACK_BASE_Z_INDEX,
     },
     {
-      id: inner.id,
       order: 2,
+      id: inner.id,
       zIndex: LAYER_STACK_BASE_Z_INDEX + 1,
     },
   ]);

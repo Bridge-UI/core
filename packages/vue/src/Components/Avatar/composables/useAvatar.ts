@@ -11,7 +11,7 @@ export function useAvatar(
 ) {
   const slots = useSlots();
 
-  const { entry: bridgeAvatar, merged } = useBridgeUIComponent({
+  const { merged, entry: bridgeAvatar } = useBridgeUIComponent({
     props,
     libDefaults,
     componentName: "Avatar",

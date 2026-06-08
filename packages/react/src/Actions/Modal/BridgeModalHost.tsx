@@ -1,20 +1,21 @@
 // ** External Imports
-import { completeLayerHide, invokeLayerDismiss } from "@bridge-ui/core";
-import { createElement, useContext, useEffect, type ReactNode } from "react";
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core";
+import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports
 import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
+import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import { useBridgeModalController } from "@/Actions/Modal/createBridgeModalController";
 import { Modal } from "@/Components/Modal";
 
-export type BridgeModalHostProps = {
-  children?: ReactNode;
-};
-
 const NESTED_HOST_WARNING =
-  "[Bridge UI] Nested <BridgeModalHost /> detected. useBridgeModal() will target the nearest host only. Remove the extra host or rely on <BridgeUIProvider />.";
+  "[Bridge UI] Nested <BridgeModalHost /> detected. useModalAction() will target the nearest host only. Remove the extra host.";
 
-export function BridgeModalHost({ children }: BridgeModalHostProps) {
+export function BridgeModalHost({ modal, children }: BridgeModalHostProps) {
   const parentApi = useContext(BridgeModalContext);
   const api = useBridgeModalController();
 
@@ -35,7 +36,7 @@ export function BridgeModalHost({ children }: BridgeModalHostProps) {
         return (
           <Modal
             key={entryId}
-            {...entry.modal}
+            {...mergeLayerShellProps(modal, entry.modal)}
             show={entry.show}
             stackId={entryId}
             onClose={() => invokeLayerDismiss(api.entries, entryId)}

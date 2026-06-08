@@ -68,7 +68,7 @@ export function useButton(
     });
   });
 
-  const { entry: bridgeButton, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeButton } = useBridgeUIComponent<
     ButtonMerged,
     "Button"
   >({

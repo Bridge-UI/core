@@ -98,7 +98,7 @@ export function useFormField(
     bridgeKeys: formFieldBridgeKeys,
   });
 
-  const { entry: bridgeFormField, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeFormField } = useBridgeUIComponent<
     FormFieldMerged,
     "FormField"
   >({
@@ -365,8 +365,8 @@ export function useFormField(
         id: controlId,
         disabled: isDisabled,
         readOnly: isReadonly,
-        "aria-invalid": invalidated || undefined,
         "aria-describedby": ariaDescribedBy,
+        "aria-invalid": invalidated || undefined,
       },
       inputInheritedAttrs,
       cn({
