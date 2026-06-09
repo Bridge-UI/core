@@ -91,10 +91,7 @@ const teleportTarget = computed(() => {
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <component
-        v-if="hasNamedSlot(slots, 'default')"
-        :is="resolveNamedSlot(slots, 'default')"
-      />
+      <component :is="resolveNamedSlot(slots, 'default')" />
     </div>
   </Teleport>
 </template>

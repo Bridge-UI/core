@@ -13,6 +13,7 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
+  claimOpenMenu,
   cn,
   createFocusable,
   createPositionable,
@@ -102,8 +103,6 @@ export function useMenu(
 
   const layerStackIdRef = useRef("");
 
-  const [active, setActive] = useState(show);
-
   const [mounted, setMounted] = useState(show);
 
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -115,6 +114,8 @@ export function useMenu(
   const stackHandleRef = useRef<LayerStackHandle | null>(null);
 
   const positionHandleRef = useRef<PositionHandle | null>(null);
+
+  const releaseOpenMenuClaimRef = useRef<(() => void) | null>(null);
 
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
@@ -168,7 +169,7 @@ export function useMenu(
     props: customProps,
   });
 
-  const isHiddenWhileMounted = merged.keepMounted && !active;
+  const isHiddenWhileMounted = merged.keepMounted && !show;
 
   const isPortaled = merged.teleportTo !== false;
 
@@ -207,7 +208,15 @@ export function useMenu(
   }
 
   function getReferenceElement(): HTMLElement | null {
-    return anchorEl ?? triggerRef.current;
+    if (anchorEl instanceof HTMLElement) {
+      return anchorEl;
+    }
+
+    if (anchorEl && "current" in anchorEl) {
+      return anchorEl.current;
+    }
+
+    return triggerRef.current;
   }
 
   function focusReference() {
@@ -224,8 +233,26 @@ export function useMenu(
     return reference?.contains(target) ?? false;
   }
 
+  function isAnotherMenuOpener(target: Node) {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+
+    if (isInsideReference(target)) {
+      return false;
+    }
+
+    if (contentRef.current?.contains(target)) {
+      return false;
+    }
+
+    return Boolean(
+      target.closest('[aria-haspopup="menu"], button, [role="button"]'),
+    );
+  }
+
   function requestClose() {
-    if (merged.persistent) {
+    if (merged.persistent || !show) {
       return;
     }
 
@@ -297,7 +324,7 @@ export function useMenu(
     positionHandleRef.current?.destroy();
     positionHandleRef.current = null;
 
-    if (!active || !reference || !floating) {
+    if (!show || !reference || !floating) {
       return;
     }
 
@@ -308,7 +335,7 @@ export function useMenu(
       strategy: merged.strategy,
       placement: merged.placement,
       onReferenceHidden: () => {
-        if (!merged.persistent) {
+        if (!merged.persistent && show) {
           requestClose();
         }
       },
@@ -321,19 +348,41 @@ export function useMenu(
   useLayoutEffect(() => {
     if (show) {
       setMounted(true);
-      setActive(true);
 
-      return;
+      let cancelled = false;
+
+      queueMicrotask(() => {
+        if (cancelled || !show) {
+          return;
+        }
+
+        releaseOpenMenuClaimRef.current = claimOpenMenu({
+          id: menuId,
+          requestClose,
+        });
+      });
+
+      return () => {
+        cancelled = true;
+      };
     }
 
-    setActive(false);
+    releaseOpenMenuClaimRef.current?.();
+    releaseOpenMenuClaimRef.current = null;
 
     if (!merged.keepMounted) {
       setMounted(false);
     }
-  }, [show, merged.keepMounted]);
+  }, [show, menuId, merged.keepMounted]);
 
   useLayoutEffect(() => {
+    if (!show || !mounted) {
+      positionHandleRef.current?.destroy();
+      positionHandleRef.current = null;
+
+      return;
+    }
+
     syncPositionable();
 
     return () => {
@@ -341,7 +390,8 @@ export function useMenu(
       positionHandleRef.current = null;
     };
   }, [
-    active,
+    show,
+    mounted,
     anchorEl,
     merged.offset,
     merged.strategy,
@@ -350,15 +400,15 @@ export function useMenu(
   ]);
 
   useLayoutEffect(() => {
-    if (!active || merged.disableAutoFocus || !contentRef.current) {
+    if (!show || merged.disableAutoFocus || !contentRef.current) {
       return;
     }
 
     createFocusable(contentRef.current).focusFirst();
-  }, [active, merged.disableAutoFocus]);
+  }, [show, merged.disableAutoFocus]);
 
   useLayoutEffect(() => {
-    if (!show || !active || stackOrderRef.current === null) {
+    if (!show || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
       setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
@@ -392,16 +442,10 @@ export function useMenu(
       stackHandleRef.current = null;
       layerStackIdRef.current = "";
     };
-  }, [
-    show,
-    active,
-    merged.persistent,
-    merged.closeOnEscape,
-    merged.disableScrollLock,
-  ]);
+  }, [show, merged.persistent, merged.closeOnEscape, merged.disableScrollLock]);
 
   useEffect(() => {
-    if (!active) {
+    if (!show) {
       return;
     }
 
@@ -420,10 +464,10 @@ export function useMenu(
     syncZIndex();
 
     return subscribeLayerStack(syncZIndex);
-  }, [active]);
+  }, [show]);
 
   useEffect(() => {
-    if (!show || !active) {
+    if (!show) {
       return;
     }
 
@@ -445,6 +489,10 @@ export function useMenu(
           return;
         }
 
+        if (isAnotherMenuOpener(target)) {
+          return;
+        }
+
         requestClose();
       }
 
@@ -458,7 +506,7 @@ export function useMenu(
       cancelAnimationFrame(frameId);
       removePointerListener?.();
     };
-  }, [show, active, anchorEl, merged.persistent, merged.closeOnClickAway]);
+  }, [show, anchorEl, merged.persistent, merged.closeOnClickAway]);
 
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
     className: cn({
@@ -479,7 +527,7 @@ export function useMenu(
       onClickCapture: handleTriggerClick,
       "aria-controls": show ? menuId : undefined,
       className: cn({
-        "cursor-pointer outline-hidden": true,
+        "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
         [get(mergedClasses, "trigger") ?? ""]: true,
       }),
     },
@@ -509,7 +557,6 @@ export function useMenu(
   return {
     slots,
     merged,
-    active,
     menuId,
     mounted,
     children,

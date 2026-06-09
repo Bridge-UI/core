@@ -157,6 +157,7 @@ export {
   type FocusTrap,
   type FocusTrapOptions,
 } from "@core/Utils/focus";
+export { claimOpenMenu, resetOpenMenuLayersForTests } from "@core/Utils/menu";
 export {
   acquireLayerStackOrder,
   countModalTransitionLayers,

@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode, RefObject } from "react";
 
 // ** Core Imports
 import type {
@@ -81,7 +81,7 @@ export interface MenuOwnProps {
    *
    * @default undefined
    */
-  anchorEl?: HTMLElement | null;
+  anchorEl?: HTMLElement | RefObject<HTMLElement | null> | null;
 
   /**
    * The children to render inside the menu panel.

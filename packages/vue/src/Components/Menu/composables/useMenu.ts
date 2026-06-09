@@ -16,6 +16,7 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
+  claimOpenMenu,
   cn,
   createFocusable,
   createPositionable,
@@ -103,8 +104,6 @@ export function useMenu(
 
   const mounted = ref(false);
 
-  const active = ref(false);
-
   const layerStackId = ref("");
 
   const triggerRef = ref<HTMLElement | null>(null);
@@ -117,6 +116,8 @@ export function useMenu(
   let unsubscribeLayerStack: (() => void) | null = null;
   let positionHandle: PositionHandle | null = null;
   let removePointerListener: (() => void) | null = null;
+  let releaseOpenMenuClaim: (() => void) | null = null;
+  let allowReferenceHiddenClose = false;
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
@@ -162,7 +163,7 @@ export function useMenu(
   });
 
   const isHiddenWhileMounted = computed(() => {
-    return merged.value.keepMounted && !active.value;
+    return merged.value.keepMounted && !show.value;
   });
 
   const isPortaled = computed(() => {
@@ -209,8 +210,26 @@ export function useMenu(
     return reference?.contains(target) ?? false;
   }
 
+  function isAnotherMenuOpener(target: Node) {
+    if (!(target instanceof Element)) {
+      return false;
+    }
+
+    if (isInsideReference(target)) {
+      return false;
+    }
+
+    if (contentRef.value?.contains(target)) {
+      return false;
+    }
+
+    return Boolean(
+      target.closest('[aria-haspopup="menu"], button, [role="button"]'),
+    );
+  }
+
   function requestClose() {
-    if (!canClose.value) {
+    if (!canClose.value || !show.value) {
       return;
     }
 
@@ -276,6 +295,7 @@ export function useMenu(
   }
 
   function destroyPositionable() {
+    allowReferenceHiddenClose = false;
     positionHandle?.destroy();
     positionHandle = null;
   }
@@ -286,7 +306,7 @@ export function useMenu(
     const reference = getReferenceElement();
     const floating = contentRef.value;
 
-    if (!active.value || !reference || !floating) {
+    if (!show.value || !reference || !floating) {
       return;
     }
 
@@ -297,17 +317,23 @@ export function useMenu(
       strategy: merged.value.strategy,
       placement: merged.value.placement,
       onReferenceHidden: () => {
-        if (canClose.value) {
-          requestClose();
+        if (!allowReferenceHiddenClose || !canClose.value || !show.value) {
+          return;
         }
+
+        requestClose();
       },
     });
 
     positionHandle.start();
+
+    void nextTick(() => {
+      allowReferenceHiddenClose = true;
+    });
   }
 
   function syncAutoFocus() {
-    if (!active.value || merged.value.disableAutoFocus || !contentRef.value) {
+    if (!show.value || merged.value.disableAutoFocus || !contentRef.value) {
       return;
     }
 
@@ -317,7 +343,7 @@ export function useMenu(
   function attachPointerListener() {
     removePointerListener?.();
 
-    if (!active.value) {
+    if (!show.value) {
       removePointerListener = null;
 
       return;
@@ -335,6 +361,10 @@ export function useMenu(
       }
 
       if (merged.value.closeOnClickAway === false || !canClose.value) {
+        return;
+      }
+
+      if (isAnotherMenuOpener(target)) {
         return;
       }
 
@@ -421,6 +451,21 @@ export function useMenu(
     }
   }
 
+  function teardownOpenState() {
+    releaseOpenMenuClaim?.();
+    releaseOpenMenuClaim = null;
+    removePointerListener?.();
+    removePointerListener = null;
+    unsubscribeLayerStack?.();
+    unsubscribeLayerStack = null;
+    stackHandle?.release();
+    stackHandle = null;
+    stackOrder = null;
+    layerStackId.value = "";
+    stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
+    destroyPositionable();
+  }
+
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
@@ -443,7 +488,7 @@ export function useMenu(
         onClickCapture: handleTriggerClick,
         "aria-controls": show.value ? menuId : undefined,
         class: cn({
-          "cursor-pointer outline-hidden": true,
+          "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
           [get(mergedClasses.value, "trigger") ?? ""]: true,
         }),
       },
@@ -478,12 +523,37 @@ export function useMenu(
     (isShown) => {
       if (isShown) {
         mounted.value = true;
-        active.value = true;
+
+        void nextTick(() => {
+          if (!show.value) {
+            return;
+          }
+
+          releaseOpenMenuClaim = claimOpenMenu({ id: menuId, requestClose });
+        });
+
+        stackOrder = acquireLayerStackOrder();
+        stackHandle = pushLayerStack({
+          order: stackOrder,
+          onEscape: handleEscape,
+          lockScroll: merged.value.disableScrollLock !== true,
+        });
+
+        layerStackId.value = stackHandle.id;
+        stackZIndex.value = stackHandle.zIndex;
+        syncZIndex();
+        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
+
+        void nextTick(() => {
+          syncPositionable();
+          syncAutoFocus();
+          attachPointerListener();
+        });
 
         return;
       }
 
-      active.value = false;
+      teardownOpenState();
 
       if (!merged.value.keepMounted) {
         mounted.value = false;
@@ -494,7 +564,7 @@ export function useMenu(
 
   watch(
     [
-      active,
+      show,
       () => props.anchorEl,
       () => merged.value.offset,
       () => merged.value.strategy,
@@ -507,54 +577,14 @@ export function useMenu(
     },
   );
 
-  watch([active, () => merged.value.disableAutoFocus], () => {
+  watch([show, () => merged.value.disableAutoFocus], () => {
     void nextTick(() => {
       syncAutoFocus();
     });
   });
 
-  watch(
-    active,
-    (isActive) => {
-      void nextTick(() => {
-        attachPointerListener();
-      });
-
-      if (isActive) {
-        stackOrder = acquireLayerStackOrder();
-
-        stackHandle = pushLayerStack({
-          order: stackOrder,
-          onEscape: handleEscape,
-          lockScroll: merged.value.disableScrollLock !== true,
-        });
-
-        layerStackId.value = stackHandle.id;
-        stackZIndex.value = stackHandle.zIndex;
-        syncZIndex();
-        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
-      } else {
-        unsubscribeLayerStack?.();
-        unsubscribeLayerStack = null;
-        stackHandle?.release();
-        stackHandle = null;
-        stackOrder = null;
-        layerStackId.value = "";
-        stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
-        destroyPositionable();
-      }
-    },
-    { immediate: true },
-  );
-
   onBeforeUnmount(() => {
-    removePointerListener?.();
-    removePointerListener = null;
-    unsubscribeLayerStack?.();
-    unsubscribeLayerStack = null;
-    destroyPositionable();
-    stackHandle?.release();
-    stackHandle = null;
+    teardownOpenState();
   });
 
   return {

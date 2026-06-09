@@ -13,6 +13,7 @@ import {
 } from "@core/Layer/registry";
 import type { LayerId } from "@core/Layer/types";
 import { hasDocument, hasWindow } from "@core/Utils/env";
+import { resetOpenMenuLayersForTests } from "@core/Utils/menu";
 
 export { createLayerId };
 export type { LayerId };
@@ -352,9 +353,10 @@ export function resetLayerStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
-  resetLayerIdCounterForTests();
   savedBodyOverflow = "";
   savedBodyPaddingRight = "";
+  resetLayerIdCounterForTests();
+  resetOpenMenuLayersForTests();
 
   if (hasDocument()) {
     document.body.style.overflow = "";

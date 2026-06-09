@@ -54,11 +54,13 @@ function MenuShell({
   }
 
   return (
-    <div {...rootBind}>
-      <div {...triggerBind}>{slots?.trigger}</div>
+    <Fragment>
+      <div {...rootBind}>
+        <div {...triggerBind}>{slots?.trigger}</div>
+      </div>
 
       {content}
-    </div>
+    </Fragment>
   );
 }
 

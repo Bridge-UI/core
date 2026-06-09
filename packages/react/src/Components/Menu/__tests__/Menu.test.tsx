@@ -1,5 +1,11 @@
 // ** External Imports
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, expect, test } from "vitest";
 
@@ -103,6 +109,46 @@ test("it should close the menu when the trigger is clicked again", () => {
 
   fireEvent.click(screen.getByText("Open"));
   expect(screen.queryByRole("menu")).toBeNull();
+});
+
+test("it should switch to another menu in one click while one is open", async () => {
+  function Host() {
+    const [openA, setOpenA] = useState(false);
+    const [openB, setOpenB] = useState(false);
+
+    return (
+      <div>
+        <Menu
+          show={openA}
+          onShowChange={setOpenA}
+          slots={{ trigger: <Button>A</Button> }}
+        >
+          Menu A
+        </Menu>
+        <Menu
+          show={openB}
+          onShowChange={setOpenB}
+          slots={{ trigger: <Button>B</Button> }}
+        >
+          Menu B
+        </Menu>
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  fireEvent.click(screen.getByText("A"));
+  expect(screen.getByRole("menu")).toBeTruthy();
+  expect(document.body.textContent).toContain("Menu A");
+
+  fireEvent.pointerDown(screen.getByText("B"));
+  fireEvent.click(screen.getByText("B"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Menu B");
+    expect(document.body.textContent).not.toContain("Menu A");
+  });
 });
 
 test("it should release scroll lock when the menu closes", () => {
