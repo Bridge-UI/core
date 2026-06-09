@@ -6,11 +6,13 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
+import { List } from "@/Components/List";
+import { ListItem } from "@/Components/ListItem";
 import { Menu } from "@/Components/Menu";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
@@ -22,10 +24,12 @@ afterEach(() => {
 });
 
 function ControlledMenu({
+  children,
   onTriggerClick,
   disableScrollLock,
   initialOpen = false,
 }: {
+  children?: ReactNode;
   disableScrollLock?: boolean;
   initialOpen?: boolean;
   onTriggerClick?: () => void;
@@ -41,7 +45,7 @@ function ControlledMenu({
         trigger: <Button onClick={onTriggerClick}>Open</Button>,
       }}
     >
-      Menu body
+      {children ?? "Menu body"}
     </Menu>
   );
 }
@@ -144,6 +148,73 @@ test("it should switch to another menu in one click while one is open", async ()
 
   fireEvent.pointerDown(screen.getByText("B"));
   fireEvent.click(screen.getByText("B"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Menu B");
+    expect(document.body.textContent).not.toContain("Menu A");
+  });
+});
+
+test("it should render List and ListItem inside the menu panel", () => {
+  render(
+    <ControlledMenu initialOpen>
+      <List dense padding="none">
+        <ListItem interactive primary="Item one" role="menuitem" />
+      </List>
+    </ControlledMenu>,
+  );
+
+  expect(screen.getByRole("menu")).toBeTruthy();
+  expect(screen.getByRole("menuitem")).toBeTruthy();
+  expect(screen.getByText("Item one")).toBeTruthy();
+});
+
+test("it should close other menus with anchorEl when another opens", async () => {
+  function Host() {
+    const anchorARef = useRef<HTMLButtonElement>(null);
+    const anchorBRef = useRef<HTMLButtonElement>(null);
+    const [openA, setOpenA] = useState(false);
+    const [openB, setOpenB] = useState(false);
+
+    return (
+      <div>
+        <button
+          ref={anchorARef}
+          type="button"
+          onClick={() => {
+            setOpenA(true);
+          }}
+        >
+          Open A
+        </button>
+
+        <Menu show={openA} onShowChange={setOpenA} anchorEl={anchorARef}>
+          Menu A
+        </Menu>
+
+        <button
+          ref={anchorBRef}
+          type="button"
+          onClick={() => {
+            setOpenB(true);
+          }}
+        >
+          Open B
+        </button>
+
+        <Menu show={openB} onShowChange={setOpenB} anchorEl={anchorBRef}>
+          Menu B
+        </Menu>
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  fireEvent.click(screen.getByText("Open A"));
+  expect(document.body.textContent).toContain("Menu A");
+
+  fireEvent.click(screen.getByText("Open B"));
 
   await waitFor(() => {
     expect(document.body.textContent).toContain("Menu B");

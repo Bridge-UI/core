@@ -117,6 +117,8 @@ export function useMenu(
 
   const releaseOpenMenuClaimRef = useRef<(() => void) | null>(null);
 
+  const allowReferenceHiddenCloseRef = useRef(false);
+
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -317,12 +319,17 @@ export function useMenu(
     }
   }
 
-  function syncPositionable() {
-    const reference = getReferenceElement();
-    const floating = contentRef.current;
-
+  function destroyPositionable() {
+    allowReferenceHiddenCloseRef.current = false;
     positionHandleRef.current?.destroy();
     positionHandleRef.current = null;
+  }
+
+  function syncPositionable() {
+    destroyPositionable();
+
+    const reference = getReferenceElement();
+    const floating = contentRef.current;
 
     if (!show || !reference || !floating) {
       return;
@@ -335,14 +342,24 @@ export function useMenu(
       strategy: merged.strategy,
       placement: merged.placement,
       onReferenceHidden: () => {
-        if (!merged.persistent && show) {
-          requestClose();
+        if (
+          !allowReferenceHiddenCloseRef.current ||
+          merged.persistent ||
+          !show
+        ) {
+          return;
         }
+
+        requestClose();
       },
     });
 
     positionHandleRef.current = handle;
     handle.start();
+
+    queueMicrotask(() => {
+      allowReferenceHiddenCloseRef.current = true;
+    });
   }
 
   useLayoutEffect(() => {
@@ -377,8 +394,7 @@ export function useMenu(
 
   useLayoutEffect(() => {
     if (!show || !mounted) {
-      positionHandleRef.current?.destroy();
-      positionHandleRef.current = null;
+      destroyPositionable();
 
       return;
     }
@@ -386,8 +402,7 @@ export function useMenu(
     syncPositionable();
 
     return () => {
-      positionHandleRef.current?.destroy();
-      positionHandleRef.current = null;
+      destroyPositionable();
     };
   }, [
     show,

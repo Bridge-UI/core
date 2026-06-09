@@ -46,7 +46,7 @@ test("it should open the menu when the trigger is clicked", async () => {
     slots: {
       trigger: () => h(Button, null, () => "Open"),
       default: () =>
-        h(List, { dense: true, role: "menu", padding: "none" }, () => [
+        h(List, { dense: true, padding: "none" }, () => [
           h(ListItem, {
             role: "menuitem",
             interactive: true,
@@ -107,6 +107,27 @@ test("it should open when the trigger child also sets modelValue on click", asyn
 
   expect(open.value).toBe(true);
   expect(document.body.textContent).toContain("Menu body");
+});
+
+test("it should close the menu when the trigger is clicked again", async () => {
+  const wrapper = mountMenu({
+    slots: {
+      default: () => "Menu body",
+      trigger: () => h(Button, null, () => "Open"),
+    },
+  });
+
+  const trigger = wrapper.find('[aria-haspopup="menu"]');
+
+  await trigger.trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="menu"]')).not.toBeNull();
+
+  await trigger.trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="menu"]')).toBeNull();
 });
 
 test("it should toggle open state via v-model", async () => {

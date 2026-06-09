@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, inject, useAttrs, useSlots } from "vue";
+import { computed, inject, toValue, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import { cn, splitComponentProps } from "@bridge-ui/core";
@@ -60,7 +60,7 @@ export function useListSection(
   });
 
   const isDense = computed(() => {
-    return listContext?.value.dense ?? false;
+    return listContext ? toValue(listContext).dense : false;
   });
 
   const label = computed(() => {

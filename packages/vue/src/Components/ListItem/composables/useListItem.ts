@@ -1,6 +1,14 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, inject, useAttrs, useSlots, type Slot } from "vue";
+import {
+  computed,
+  getCurrentInstance,
+  inject,
+  toValue,
+  useAttrs,
+  useSlots,
+  type Slot,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -81,7 +89,17 @@ export function useListItem(
   });
 
   const isDense = computed(() => {
-    return merged.value.dense ?? listContext?.value.dense ?? false;
+    const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
+
+    if ("dense" in vnodeProps) {
+      return props.dense === true;
+    }
+
+    if (props.dense === true) {
+      return true;
+    }
+
+    return listContext ? toValue(listContext).dense : false;
   });
 
   const alignClass = computed(() => {
