@@ -45,14 +45,14 @@ export type PositionHandle = {
  * Anchors a floating element to a reference using Floating UI (Menu, Popover, etc.).
  */
 export function createPositionable(options: PositionOptions): PositionHandle {
-  const reference = options.reference;
   const floating = options.floating;
+  const reference = options.reference;
   const onReferenceHidden = options.onReferenceHidden;
 
-  let cleanup: (() => void) | null = null;
-  let placement: Placement = options.placement ?? "bottom-start";
   let offsetValue = options.offset ?? 4;
+  let cleanup: (() => void) | null = null;
   let strategy: PositionStrategy = options.strategy ?? "fixed";
+  let placement: Placement = options.placement ?? "bottom-start";
 
   async function computeAndApply() {
     if (!hasDocument()) {

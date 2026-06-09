@@ -98,9 +98,12 @@ export type {
   LinkSlots,
   LinkUnderlineOverrides,
 } from "@/Components/Link";
-export { Menu } from "@/Components/Menu";
+export { Menu, useMenu } from "@/Components/Menu";
 export type {
   MenuClasses,
+  MenuOptions,
+  MenuOwnProps,
+  MenuPartsProps,
   MenuProps,
   MenuRoundedOverrides,
   MenuShadowOverrides,
