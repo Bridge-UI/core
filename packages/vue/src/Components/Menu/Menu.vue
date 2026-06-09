@@ -9,7 +9,7 @@ import type {
   MenuOwnProps,
   MenuSlots,
 } from "@/Components/Menu/menu.types";
-import { resolveNamedSlot } from "@/Utils";
+import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<MenuSlots>();
 
@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<MenuOwnProps>(), {
   closeOnEscape: true,
   closeOnClickAway: true,
   disableAutoFocus: false,
+  disableScrollLock: true,
   placement: "bottom-start",
 });
 
@@ -40,7 +41,6 @@ const {
   merged,
   mounted,
   rootBind,
-  hasTrigger,
   triggerBind,
   contentBind,
   setTriggerRef,
@@ -55,6 +55,7 @@ const {
     teleportTo: "body",
     closeOnEscape: true,
     closeOnClickAway: true,
+    disableScrollLock: true,
     placement: "bottom-start",
   },
   {
@@ -62,8 +63,11 @@ const {
     onClose: () => emit("close"),
     onShowChange: (show) => props.onShowChange?.(show),
   },
-  slots,
 );
+
+const hasTrigger = computed(() => {
+  return hasNamedSlot(slots, "trigger");
+});
 
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
@@ -87,7 +91,10 @@ const teleportTarget = computed(() => {
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <component :is="resolveNamedSlot(slots, 'default')" />
+      <component
+        v-if="hasNamedSlot(slots, 'default')"
+        :is="resolveNamedSlot(slots, 'default')"
+      />
     </div>
   </Teleport>
 </template>

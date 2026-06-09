@@ -11,7 +11,6 @@ import {
   watch,
   type ComponentPublicInstance,
   type Ref,
-  type Slots,
 } from "vue";
 
 // ** Core Imports
@@ -36,7 +35,6 @@ import { roundedProps, shadowProps } from "@bridge-ui/core/Components/Menu";
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
 import {
-  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -46,7 +44,6 @@ const menuBridgeKeys = [
   "offset",
   "shadow",
   "rounded",
-  "anchorEl",
   "classes",
   "strategy",
   "placement",
@@ -57,6 +54,7 @@ const menuBridgeKeys = [
   "closeOnEscape",
   "closeOnClickAway",
   "disableAutoFocus",
+  "disableScrollLock",
 ] as const satisfies readonly (keyof MenuOwnProps)[];
 
 type MenuLibDefaults = LibDefaultsShape<
@@ -69,6 +67,7 @@ type MenuLibDefaults = LibDefaultsShape<
   | "teleportTo"
   | "closeOnEscape"
   | "closeOnClickAway"
+  | "disableScrollLock"
 >;
 
 type MenuMerged = MergeLibDefaults<MenuOwnProps, MenuLibDefaults>;
@@ -97,7 +96,6 @@ export function useMenu(
   props: MenuOwnProps,
   libDefaults: MenuLibDefaults,
   options: MenuOptions = {},
-  slots: Slots | undefined = undefined,
 ) {
   const attrs = useAttrs();
 
@@ -193,16 +191,12 @@ export function useMenu(
     return !merged.value.persistent;
   });
 
-  const hasTrigger = computed(() => {
-    return hasNamedSlot(slots, "trigger");
-  });
-
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onShowChange"]);
+    return omit(split.value.inheritedAttrs, ["anchorEl", "onShowChange"]);
   });
 
   function getReferenceElement(): HTMLElement | null {
-    return merged.value.anchorEl ?? triggerRef.value;
+    return props.anchorEl ?? triggerRef.value;
   }
 
   function focusReference() {
@@ -223,9 +217,7 @@ export function useMenu(
     setShow(false);
   }
 
-  function handleTriggerClick(event: MouseEvent) {
-    event.stopPropagation();
-
+  function handleTriggerClick() {
     if (merged.value.persistent && show.value) {
       return;
     }
@@ -372,14 +364,36 @@ export function useMenu(
   }
 
   function setTriggerRef(element: Element | ComponentPublicInstance | null) {
-    triggerRef.value = resolveHTMLElement(element);
+    const next = resolveHTMLElement(element);
+
+    if (triggerRef.value === next) {
+      return;
+    }
+
+    triggerRef.value = next;
+
+    if (!next) {
+      return;
+    }
+
     void nextTick(() => {
       syncPositionable();
     });
   }
 
   function setContentRef(element: Element | ComponentPublicInstance | null) {
-    contentRef.value = resolveHTMLElement(element);
+    const next = resolveHTMLElement(element);
+
+    if (contentRef.value === next) {
+      return;
+    }
+
+    contentRef.value = next;
+
+    if (!next) {
+      return;
+    }
+
     void nextTick(() => {
       syncPositionable();
       syncAutoFocus();
@@ -410,7 +424,7 @@ export function useMenu(
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
-        "relative inline-block text-left": hasTrigger.value,
+        "relative inline-block text-left": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });
@@ -423,10 +437,10 @@ export function useMenu(
       {
         tabindex: 0,
         role: "button",
-        onClick: handleTriggerClick,
         "aria-expanded": show.value,
         onKeydown: handleTriggerKeyDown,
         "aria-haspopup": "menu" as const,
+        onClickCapture: handleTriggerClick,
         "aria-controls": show.value ? menuId : undefined,
         class: cn({
           "cursor-pointer outline-hidden": true,
@@ -449,7 +463,7 @@ export function useMenu(
         },
         "aria-hidden": isHiddenWhileMounted.value ? true : undefined,
         class: cn({
-          "bg-white ring-1 ring-black/5 outline-hidden min-w-32 w-max max-w-[calc(100vw-16px)] py-1": true,
+          "bg-white ring-1 ring-black/5 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
           "invisible pointer-events-none": isHiddenWhileMounted.value,
           [roundedClass.value ?? ""]: true,
           [shadowClass.value ?? ""]: true,
@@ -481,7 +495,7 @@ export function useMenu(
   watch(
     [
       active,
-      () => merged.value.anchorEl,
+      () => props.anchorEl,
       () => merged.value.offset,
       () => merged.value.strategy,
       () => merged.value.placement,
@@ -499,33 +513,39 @@ export function useMenu(
     });
   });
 
-  watch(active, (isActive) => {
-    attachPointerListener();
-
-    if (isActive) {
-      stackOrder = acquireLayerStackOrder();
-
-      stackHandle = pushLayerStack({
-        order: stackOrder,
-        lockScroll: false,
-        onEscape: handleEscape,
+  watch(
+    active,
+    (isActive) => {
+      void nextTick(() => {
+        attachPointerListener();
       });
 
-      layerStackId.value = stackHandle.id;
-      stackZIndex.value = stackHandle.zIndex;
-      syncZIndex();
-      unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
-    } else {
-      unsubscribeLayerStack?.();
-      unsubscribeLayerStack = null;
-      stackHandle?.release();
-      stackHandle = null;
-      stackOrder = null;
-      layerStackId.value = "";
-      stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
-      destroyPositionable();
-    }
-  });
+      if (isActive) {
+        stackOrder = acquireLayerStackOrder();
+
+        stackHandle = pushLayerStack({
+          order: stackOrder,
+          onEscape: handleEscape,
+          lockScroll: merged.value.disableScrollLock !== true,
+        });
+
+        layerStackId.value = stackHandle.id;
+        stackZIndex.value = stackHandle.zIndex;
+        syncZIndex();
+        unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
+      } else {
+        unsubscribeLayerStack?.();
+        unsubscribeLayerStack = null;
+        stackHandle?.release();
+        stackHandle = null;
+        stackOrder = null;
+        layerStackId.value = "";
+        stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
+        destroyPositionable();
+      }
+    },
+    { immediate: true },
+  );
 
   onBeforeUnmount(() => {
     removePointerListener?.();
@@ -542,7 +562,6 @@ export function useMenu(
     menuId,
     mounted,
     rootBind,
-    hasTrigger,
     isPortaled,
     triggerBind,
     contentBind,

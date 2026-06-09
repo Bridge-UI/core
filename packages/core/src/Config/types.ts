@@ -62,6 +62,8 @@ import type {
   LinkSize,
   LinkUnderline,
 } from "@core/Components/Link";
+import type { ListPadding } from "@core/Components/List";
+import type { ListItemAlign } from "@core/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type {
   ModalAlign,
@@ -118,6 +120,9 @@ export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
+export interface ListConfigOverrides {}
+export interface ListItemConfigOverrides {}
+export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
@@ -272,6 +277,31 @@ export interface LinkConfigBase {
   }>;
 }
 
+export interface ListConfigBase {
+  classes: object;
+  customProps: Partial<{
+    padding: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    padding: keyof ListPadding;
+  }>;
+}
+
+export interface ListItemConfigBase {
+  classes: object;
+  customProps: Partial<{
+    align: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    align: keyof ListItemAlign;
+    role: "button" | "menuitem" | "option";
+  }>;
+}
+
+export interface ListSectionConfigBase {
+  classes: object;
+}
+
 export interface MenuConfigBase {
   classes: object;
   customProps: Partial<{
@@ -407,6 +437,11 @@ export type BridgeUIComponentsConfig = Partial<{
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
+  List: Partial<Overwrite<ListConfigBase, ListConfigOverrides>>;
+  ListItem: Partial<Overwrite<ListItemConfigBase, ListItemConfigOverrides>>;
+  ListSection: Partial<
+    Overwrite<ListSectionConfigBase, ListSectionConfigOverrides>
+  >;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   NumberField: Partial<

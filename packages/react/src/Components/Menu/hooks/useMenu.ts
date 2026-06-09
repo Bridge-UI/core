@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
-  type MouseEvent,
 } from "react";
 
 // ** Core Imports
@@ -43,7 +42,6 @@ const menuBridgeKeys = [
   "offset",
   "shadow",
   "rounded",
-  "anchorEl",
   "classes",
   "strategy",
   "placement",
@@ -54,6 +52,7 @@ const menuBridgeKeys = [
   "closeOnEscape",
   "closeOnClickAway",
   "disableAutoFocus",
+  "disableScrollLock",
   "slots",
 ] as const satisfies readonly (keyof MenuOwnProps)[];
 
@@ -67,6 +66,7 @@ type MenuLibDefaults = LibDefaultsShape<
   | "teleportTo"
   | "closeOnEscape"
   | "closeOnClickAway"
+  | "disableScrollLock"
 >;
 
 type MenuMerged = MergeLibDefaults<MenuOwnProps, MenuLibDefaults>;
@@ -149,10 +149,15 @@ export function useMenu(
     return props.children;
   });
 
+  const anchorEl = derived(() => {
+    return props.anchorEl ?? null;
+  });
+
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
       "show",
       "onClose",
+      "anchorEl",
       "children",
       "onShowChange",
     ]);
@@ -202,7 +207,7 @@ export function useMenu(
   }
 
   function getReferenceElement(): HTMLElement | null {
-    return merged.anchorEl ?? triggerRef.current;
+    return anchorEl ?? triggerRef.current;
   }
 
   function focusReference() {
@@ -227,9 +232,7 @@ export function useMenu(
     setShow(false);
   }
 
-  function handleTriggerClick(event: MouseEvent<HTMLDivElement>) {
-    event.stopPropagation();
-
+  function handleTriggerClick() {
     if (merged.persistent && show) {
       return;
     }
@@ -339,7 +342,7 @@ export function useMenu(
     };
   }, [
     active,
-    merged.anchorEl,
+    anchorEl,
     merged.offset,
     merged.strategy,
     merged.placement,
@@ -355,7 +358,7 @@ export function useMenu(
   }, [active, merged.disableAutoFocus]);
 
   useLayoutEffect(() => {
-    if (!active || stackOrderRef.current === null) {
+    if (!show || !active || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
       setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
@@ -373,9 +376,9 @@ export function useMenu(
     }
 
     const handle = pushLayerStack({
-      lockScroll: false,
       onEscape: handleEscape,
       order: stackOrderRef.current,
+      lockScroll: merged.disableScrollLock !== true,
     });
 
     stackHandleRef.current = handle;
@@ -389,7 +392,13 @@ export function useMenu(
       stackHandleRef.current = null;
       layerStackIdRef.current = "";
     };
-  }, [show, active, merged.persistent, merged.closeOnEscape]);
+  }, [
+    show,
+    active,
+    merged.persistent,
+    merged.closeOnEscape,
+    merged.disableScrollLock,
+  ]);
 
   useEffect(() => {
     if (!active) {
@@ -414,34 +423,42 @@ export function useMenu(
   }, [active]);
 
   useEffect(() => {
-    if (!active) {
+    if (!show || !active) {
       return;
     }
 
-    function handlePointerDown(event: PointerEvent) {
-      const target = event.target as Node;
+    let removePointerListener: (() => void) | null = null;
 
-      if (isInsideReference(target)) {
-        return;
+    const frameId = requestAnimationFrame(() => {
+      function handlePointerDown(event: PointerEvent) {
+        const target = event.target as Node;
+
+        if (isInsideReference(target)) {
+          return;
+        }
+
+        if (contentRef.current?.contains(target)) {
+          return;
+        }
+
+        if (merged.closeOnClickAway === false || merged.persistent) {
+          return;
+        }
+
+        requestClose();
       }
 
-      if (contentRef.current?.contains(target)) {
-        return;
-      }
-
-      if (merged.closeOnClickAway === false || merged.persistent) {
-        return;
-      }
-
-      requestClose();
-    }
-
-    document.addEventListener("pointerdown", handlePointerDown, true);
+      document.addEventListener("pointerdown", handlePointerDown, true);
+      removePointerListener = () => {
+        document.removeEventListener("pointerdown", handlePointerDown, true);
+      };
+    });
 
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown, true);
+      cancelAnimationFrame(frameId);
+      removePointerListener?.();
     };
-  }, [active, merged.anchorEl, merged.closeOnClickAway, merged.persistent]);
+  }, [show, active, anchorEl, merged.persistent, merged.closeOnClickAway]);
 
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
     className: cn({
@@ -457,9 +474,9 @@ export function useMenu(
       tabIndex: 0,
       role: "button",
       "aria-expanded": show,
-      onClick: handleTriggerClick,
       onKeyDown: handleTriggerKeyDown,
       "aria-haspopup": "menu" as const,
+      onClickCapture: handleTriggerClick,
       "aria-controls": show ? menuId : undefined,
       className: cn({
         "cursor-pointer outline-hidden": true,
@@ -480,7 +497,7 @@ export function useMenu(
       },
       "aria-hidden": isHiddenWhileMounted ? true : undefined,
       className: cn({
-        "bg-white ring-1 ring-black/5 outline-hidden min-w-32 w-max max-w-[calc(100vw-16px)] py-1": true,
+        "bg-white ring-1 ring-black/5 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
         "invisible pointer-events-none": isHiddenWhileMounted,
         [roundedClass ?? ""]: true,
         [shadowClass ?? ""]: true,

@@ -9,6 +9,9 @@ import type { FormFieldClasses, FormFieldProps } from "@/Components/FormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
+import type { ListClasses, ListProps } from "@/Components/List";
+import type { ListItemClasses, ListItemProps } from "@/Components/ListItem";
+import type { ListSectionClasses } from "@/Components/ListSection";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type { NumberFieldClasses } from "@/Components/NumberField";
@@ -81,6 +84,20 @@ declare module "@bridge-ui/core" {
   interface LinkConfigOverrides {
     classes: LinkClasses;
     defaultProps: Partial<Pick<LinkProps, "size" | "color" | "underline">>;
+  }
+
+  interface ListConfigOverrides {
+    classes: ListClasses;
+    defaultProps: Partial<Pick<ListProps, "padding">>;
+  }
+
+  interface ListItemConfigOverrides {
+    classes: ListItemClasses;
+    defaultProps: Partial<Pick<ListItemProps, "align" | "role">>;
+  }
+
+  interface ListSectionConfigOverrides {
+    classes: ListSectionClasses;
   }
 
   interface MenuConfigOverrides {

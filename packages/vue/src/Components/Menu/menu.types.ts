@@ -86,6 +86,7 @@ export interface MenuOwnProps {
    * Element that anchors the menu panel (MUI `anchorEl`). When set, it is used
    * for positioning and click-away instead of the `trigger` slot wrapper.
    * Prefer this when the opener lives outside the `Menu` or is controlled manually.
+   * Not merged into Bridge defaults (DOM nodes must not be deep-merged).
    *
    * @default undefined
    */
@@ -118,6 +119,13 @@ export interface MenuOwnProps {
    * @default false
    */
   disableAutoFocus?: boolean;
+
+  /**
+   * When true, body scroll is not locked while the menu is open.
+   *
+   * @default true
+   */
+  disableScrollLock?: boolean;
 
   /**
    * When true, the menu stays mounted in the DOM after closing (hidden).

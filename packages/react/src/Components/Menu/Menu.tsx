@@ -17,6 +17,7 @@ const menuLibDefaults = {
   teleportTo: "body",
   closeOnEscape: true,
   closeOnClickAway: true,
+  disableScrollLock: true,
   placement: "bottom-start",
 } as const;
 
