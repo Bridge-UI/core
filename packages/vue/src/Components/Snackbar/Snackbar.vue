@@ -24,6 +24,7 @@ const emit = defineEmits<SnackbarEmits>();
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<SnackbarOwnProps>(), {
+  duration: 5000,
   closeButton: true,
   progressbar: true,
   teleportTo: "body",
@@ -101,8 +102,6 @@ const teleportTarget = computed(() => {
           v-bind="panelBind"
           :class="cn(panelBind.class, { flex: hasRight })"
         >
-          <div v-if="showProgress" v-bind="progressBind" />
-
           <div v-bind="contentBind(hasRight)">
             <div
               :class="{
@@ -171,6 +170,8 @@ const teleportTarget = computed(() => {
           </div>
 
           <slot name="right" />
+
+          <div v-if="showProgress" v-bind="progressBind" />
         </div>
       </div>
     </div>
@@ -180,8 +181,6 @@ const teleportTarget = computed(() => {
       v-else-if="rendered"
       :class="cn(panelBind.class, { flex: hasRight })"
     >
-      <div v-if="showProgress" v-bind="progressBind" />
-
       <div v-bind="contentBind(hasRight)">
         <div
           :class="{
@@ -250,6 +249,8 @@ const teleportTarget = computed(() => {
       </div>
 
       <slot name="right" />
+
+      <div v-if="showProgress" v-bind="progressBind" />
     </div>
   </Teleport>
 </template>

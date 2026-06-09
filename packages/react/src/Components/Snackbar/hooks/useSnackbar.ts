@@ -524,7 +524,7 @@ export function useSnackbar(
     {},
     {
       className: cn({
-        "absolute top-0 left-0 h-0.5 w-full rounded-full": true,
+        "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
         [get(colorClass, "progressColor") ?? ""]: true,
         [get(mergedClasses, "progress") ?? ""]: true,
       }),

@@ -56,8 +56,6 @@ function SnackbarPanel({
         flex: hasRight,
       })}
     >
-      {showProgress && <div {...progressBind} />}
-
       <div {...contentBind(hasRight)}>
         <div
           className={cn({
@@ -140,6 +138,8 @@ function SnackbarPanel({
       </div>
 
       {slots?.right}
+
+      {showProgress && <div {...progressBind} />}
     </div>
   );
 }

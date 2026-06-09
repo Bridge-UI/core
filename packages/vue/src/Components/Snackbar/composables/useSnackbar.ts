@@ -117,12 +117,11 @@ export function useSnackbar(
 
   let unsubscribeLayerStack: (() => void) | null = null;
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    SnackbarProps,
-    typeof snackbarBridgeKeys
-  >({
-    props: { ...props, ...attrs },
-    bridgeKeys: snackbarBridgeKeys,
+  const split = computed(() => {
+    return splitComponentProps<SnackbarProps, typeof snackbarBridgeKeys>({
+      props: { ...attrs, ...props },
+      bridgeKeys: snackbarBridgeKeys,
+    });
   });
 
   const { merged, entry: bridgeSnackbar } = useBridgeUIComponent<
@@ -130,19 +129,19 @@ export function useSnackbar(
     "Snackbar"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Snackbar",
+    props: () => split.value.customProps,
   });
 
   const partsProps = computed(() => merged.value.partsProps);
 
   const rootInheritedAttrs = computed(() => {
-    return omit(inheritedAttrs, ["onShowChange"]);
+    return omit(split.value.inheritedAttrs, ["onShowChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    props: customProps,
     entry: bridgeSnackbar,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -393,9 +392,13 @@ export function useSnackbar(
 
       progressActive.value = false;
 
-      nextTick(() => {
+      const frame = requestAnimationFrame(() => {
         progressActive.value = true;
       });
+
+      return () => {
+        cancelAnimationFrame(frame);
+      };
     },
     { immediate: true },
   );
@@ -534,7 +537,7 @@ export function useSnackbar(
       {},
       {
         class: cn({
-          "absolute top-0 left-0 h-0.5 w-full rounded-full": true,
+          "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
           [get(colorClass.value, "progressColor") ?? ""]: true,
           [get(mergedClasses.value, "progress") ?? ""]: true,
         }),
