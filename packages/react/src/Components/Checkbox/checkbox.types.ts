@@ -12,17 +12,17 @@ import type {
 
 // ** Local Imports
 import type {
-  SwitcherClasses,
-  SwitcherOwnProps,
-  SwitcherPartsProps,
-  SwitcherSlots,
-} from "@/Components/Switcher/switcher.types";
+  FormControlClasses,
+  FormControlOwnProps,
+  FormControlPartsProps,
+  FormControlSlots,
+} from "@/Components/FormControl/formControl.types";
 
 export interface CheckboxSizeOverrides {}
 export interface CheckboxColorOverrides {}
 export interface CheckboxRoundedOverrides {}
 
-export interface CheckboxClasses extends SwitcherClasses {
+export interface CheckboxClasses extends FormControlClasses {
   /**
    * The classes to apply to the custom control box.
    */
@@ -39,7 +39,7 @@ export interface CheckboxClasses extends SwitcherClasses {
   input?: string;
 }
 
-export interface CheckboxPartsProps extends SwitcherPartsProps {
+export interface CheckboxPartsProps extends FormControlPartsProps {
   /**
    * Props forwarded to the custom control box.
    */
@@ -57,7 +57,7 @@ export interface CheckboxPartsProps extends SwitcherPartsProps {
 }
 
 export interface CheckboxOwnProps extends Omit<
-  SwitcherOwnProps,
+  FormControlOwnProps,
   "field" | "slots" | "classes" | "children" | "partsProps"
 > {
   /**
@@ -68,7 +68,7 @@ export interface CheckboxOwnProps extends Omit<
   checked?: boolean;
 
   /**
-   * Classes for the switcher chrome and the checkbox control.
+   * Classes for the form control chrome and the checkbox control.
    *
    * @default undefined
    */
@@ -103,7 +103,7 @@ export interface CheckboxOwnProps extends Omit<
   rounded?: MergeProps<CheckboxRounded, CheckboxRoundedOverrides>;
 
   /**
-   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * Size of the control and of form control labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
    * @default "md"
@@ -118,7 +118,7 @@ export interface CheckboxOwnProps extends Omit<
   slots?: CheckboxSlots;
 }
 
-export interface CheckboxSlots extends SwitcherSlots {}
+export interface CheckboxSlots extends FormControlSlots {}
 
 export type CheckboxProps = MergeHtmlProps<
   CheckboxOwnProps,

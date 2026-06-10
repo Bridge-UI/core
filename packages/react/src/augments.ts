@@ -5,6 +5,10 @@ import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
+import type {
+  FormControlClasses,
+  FormControlProps,
+} from "@/Components/FormControl";
 import type { FormFieldClasses, FormFieldProps } from "@/Components/FormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
@@ -19,9 +23,8 @@ import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
-import type { SwitcherClasses, SwitcherProps } from "@/Components/Switcher";
+import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
-import type { ToggleClasses, ToggleProps } from "@/Components/Toggle";
 
 declare module "@bridge-ui/core" {
   interface AlertConfigOverrides {
@@ -60,6 +63,13 @@ declare module "@bridge-ui/core" {
   interface CheckboxConfigOverrides {
     classes: CheckboxClasses;
     defaultProps: Partial<Pick<CheckboxProps, "size" | "color" | "rounded">>;
+  }
+
+  interface FormControlConfigOverrides {
+    classes: FormControlClasses;
+    defaultProps: Partial<
+      Pick<FormControlProps, "size" | "error" | "withoutErrorMessage">
+    >;
   }
 
   interface FormFieldConfigOverrides {
@@ -112,6 +122,19 @@ declare module "@bridge-ui/core" {
     >;
   }
 
+  interface NumberFieldConfigOverrides {
+    classes: NumberFieldClasses;
+  }
+
+  interface PasswordFieldConfigOverrides {
+    classes: PasswordFieldClasses;
+  }
+
+  interface RadioConfigOverrides {
+    classes: RadioClasses;
+    defaultProps: Partial<Pick<RadioProps, "size" | "color" | "rounded">>;
+  }
+
   interface SnackbarConfigOverrides {
     classes: SnackbarClasses;
     defaultProps: Partial<
@@ -129,11 +152,6 @@ declare module "@bridge-ui/core" {
     >;
   }
 
-  interface RadioConfigOverrides {
-    classes: RadioClasses;
-    defaultProps: Partial<Pick<RadioProps, "size" | "color" | "rounded">>;
-  }
-
   interface SelectConfigOverrides {
     classes: SelectClasses;
     defaultProps: Partial<
@@ -141,19 +159,9 @@ declare module "@bridge-ui/core" {
     >;
   }
 
-  interface SwitcherConfigOverrides {
-    classes: SwitcherClasses;
-    defaultProps: Partial<
-      Pick<SwitcherProps, "size" | "error" | "withoutErrorMessage">
-    >;
-  }
-
-  interface NumberFieldConfigOverrides {
-    classes: NumberFieldClasses;
-  }
-
-  interface PasswordFieldConfigOverrides {
-    classes: PasswordFieldClasses;
+  interface SwitchConfigOverrides {
+    classes: SwitchClasses;
+    defaultProps: Partial<Pick<SwitchProps, "size" | "color" | "rounded">>;
   }
 
   interface TextareaConfigOverrides {
@@ -162,10 +170,5 @@ declare module "@bridge-ui/core" {
       resize: Record<string, string>;
     }>;
     defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
-  }
-
-  interface ToggleConfigOverrides {
-    classes: ToggleClasses;
-    defaultProps: Partial<Pick<ToggleProps, "size" | "color" | "rounded">>;
   }
 }

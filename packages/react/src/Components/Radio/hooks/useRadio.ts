@@ -18,12 +18,12 @@ import {
 } from "@bridge-ui/core/Components/Radio";
 
 // ** Local Imports
+import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";
 import type {
   RadioClasses,
   RadioOwnProps,
   RadioProps,
 } from "@/Components/Radio/radio.types";
-import { useSwitcher } from "@/Components/Switcher/hooks/useSwitcher";
 import {
   derived,
   mergePartBind,
@@ -51,7 +51,7 @@ type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   // Setup
-  const switcher = useSwitcher(props, {
+  const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
     size: libDefaults.size ?? "sm",
@@ -79,7 +79,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(switcher.inputInheritedAttrs, [
+    return omit(formControl.inputInheritedAttrs, [
       "color",
       "value",
       "checked",
@@ -111,7 +111,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   });
 
   const colorKey = derived(() => {
-    if (switcher.invalidated) {
+    if (formControl.invalidated) {
       return "error";
     }
 
@@ -160,7 +160,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return mergePartBind(
       {
         ...partsProps?.input,
-        ...switcher.controlBind,
+        ...formControl.controlBind,
         checked,
         type: "radio",
         value: merged.value,
@@ -220,9 +220,9 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   return {
     checked,
     dotBind,
-    switcher,
     fieldBind,
     inputBind,
+    formControl,
     controlBind,
   };
 }

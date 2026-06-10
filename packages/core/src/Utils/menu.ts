@@ -1,3 +1,6 @@
+/**
+ * A claim to open a menu.
+ */
 type OpenMenuClaim = {
   id: string;
   requestClose: () => void;

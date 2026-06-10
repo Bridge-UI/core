@@ -8,12 +8,18 @@ import {
   type SnackbarTransition,
 } from "@core/Components/Snackbar/Transition";
 
+/**
+ * Gets the transition class for a snackbar.
+ */
 export function getSnackbarTransitionClass(
   transition: keyof SnackbarTransition,
 ): string {
   return transitionProps[transition] ?? "";
 }
 
+/**
+ * Checks if a snackbar has a transition.
+ */
 export function hasSnackbarTransition(
   transition: keyof SnackbarTransition | undefined,
 ): boolean {

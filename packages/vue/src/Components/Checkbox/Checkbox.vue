@@ -12,7 +12,7 @@ import type {
   CheckboxSlots,
 } from "@/Components/Checkbox/checkbox.types";
 import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
-import { Switcher } from "@/Components/Switcher";
+import { FormControl } from "@/Components/FormControl";
 
 const attrs = useAttrs();
 
@@ -32,10 +32,10 @@ const {
   merged,
   iconBind,
   inputRef,
-  switcher,
   fieldBind,
   inputBind,
   isChecked,
+  formControl,
   controlBind,
 } = useCheckbox(
   () => ({ ...attrs, ...props }),
@@ -55,8 +55,8 @@ function onChange(event: Event) {
 </script>
 
 <template>
-  <Switcher :field="switcher">
-    <label v-bind="fieldBind" :for="switcher.controlId.value">
+  <FormControl :field="formControl">
+    <label v-bind="fieldBind" :for="formControl.controlId.value">
       <input
         ref="inputRef"
         v-bind="inputBind"
@@ -77,5 +77,5 @@ function onChange(event: Event) {
         />
       </span>
     </label>
-  </Switcher>
+  </FormControl>
 </template>

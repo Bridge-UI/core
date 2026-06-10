@@ -58,6 +58,8 @@ export type UnionProps<Base extends PropertyKey, Overrides extends object> =
 /**
  * Own props plus native HTML attributes for the root element.
  * Pass framework `HTMLAttributes` as the second argument (React, Vue, etc.).
+ *
+ * @internal
  */
 export type MergeHtmlProps<
   OwnProps extends object,
@@ -66,6 +68,8 @@ export type MergeHtmlProps<
 
 /**
  * Required library defaults for a subset of `OwnProps` (non-null prop types).
+ *
+ * @internal
  */
 export type LibDefaultsShape<
   OwnProps extends object,
@@ -77,6 +81,8 @@ export type LibDefaultsShape<
 /**
  * `OwnProps` with keys from `libDefaults` required (pass `typeof` your defaults object).
  * Required keys keep the prop types from `OwnProps`, not literal types from `libDefaults`.
+ *
+ * @internal
  */
 export type MergeLibDefaults<
   OwnProps extends object,

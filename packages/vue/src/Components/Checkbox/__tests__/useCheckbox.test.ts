@@ -49,7 +49,7 @@ test("it should reflect checked state from model ref", () => {
   expect(isChecked.value).toBe(true);
 });
 
-test("it should use error color when switcher is invalid and checked", () => {
+test("it should use error color when form control is invalid and checked", () => {
   const { controlBind } = mountUseCheckbox({ error: true }, true);
 
   expect(controlBind.value.class).toContain("bg-error-600");

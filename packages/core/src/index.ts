@@ -101,14 +101,14 @@ export type {
   SnackbarPosition,
   SnackbarTransition,
 } from "@core/Components/Snackbar";
-export type { TextareaResize } from "@core/Components/Textarea";
 export type {
-  ToggleColor,
-  ToggleColorItem,
-  ToggleRounded,
-  ToggleSize,
-  ToggleSizeItem,
-} from "@core/Components/Toggle";
+  SwitchColor,
+  SwitchColorItem,
+  SwitchRounded,
+  SwitchSize,
+  SwitchSizeItem,
+} from "@core/Components/Switch";
+export type { TextareaResize } from "@core/Components/Textarea";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
@@ -126,6 +126,7 @@ export type {
   CardConfigOverrides,
   CheckboxConfigOverrides,
   Direction,
+  FormControlConfigOverrides,
   FormFieldConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
@@ -136,9 +137,8 @@ export type {
   PasswordFieldConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
-  SwitcherConfigOverrides,
+  SwitchConfigOverrides,
   TextareaConfigOverrides,
-  ToggleConfigOverrides,
 } from "@core/Config";
 export {
   closeAllLayers,

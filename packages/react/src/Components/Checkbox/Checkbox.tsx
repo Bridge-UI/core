@@ -4,16 +4,16 @@ import { cn } from "@bridge-ui/core";
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import { useCheckbox } from "@/Components/Checkbox/hooks/useCheckbox";
-import { Switcher } from "@/Components/Switcher";
+import { FormControl } from "@/Components/FormControl";
 
 function Checkbox(props: CheckboxProps) {
   const {
     checked,
     iconBind,
-    switcher,
     CheckIcon,
     fieldBind,
     inputBind,
+    formControl,
     controlBind,
   } = useCheckbox(props, {
     size: "md",
@@ -22,8 +22,8 @@ function Checkbox(props: CheckboxProps) {
   });
 
   return (
-    <Switcher field={switcher}>
-      <label htmlFor={switcher.controlId} {...fieldBind}>
+    <FormControl field={formControl}>
+      <label htmlFor={formControl.controlId} {...fieldBind}>
         <input {...inputBind} />
 
         <span {...controlBind}>
@@ -39,7 +39,7 @@ function Checkbox(props: CheckboxProps) {
           )}
         </span>
       </label>
-    </Switcher>
+    </FormControl>
   );
 }
 

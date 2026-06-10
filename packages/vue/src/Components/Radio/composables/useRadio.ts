@@ -17,11 +17,11 @@ import {
 } from "@bridge-ui/core/Components/Radio";
 
 // ** Local Imports
+import { useFormControl } from "@/Components/FormControl";
 import type {
   RadioClasses,
   RadioOwnProps,
 } from "@/Components/Radio/radio.types";
-import { useSwitcher } from "@/Components/Switcher";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -53,7 +53,7 @@ export function useRadio(
   // Setup
   const attrs = useAttrs();
 
-  const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
+  const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
     error: false,
     withoutErrorMessage: false,
     size: libDefaults.size ?? "sm",
@@ -90,7 +90,7 @@ export function useRadio(
   });
 
   const colorKey = computed(() => {
-    if (switcher.invalidated.value) {
+    if (formControl.invalidated.value) {
       return "error";
     }
 
@@ -130,7 +130,7 @@ export function useRadio(
     return mergePartBind(
       {
         ...partsProps.value?.input,
-        ...switcher.controlBind.value,
+        ...formControl.controlBind.value,
         type: "radio",
         name: merged.value.name,
         value: merged.value.value,
@@ -189,10 +189,10 @@ export function useRadio(
   return {
     merged,
     dotBind,
-    switcher,
     fieldBind,
     inputBind,
     isChecked,
+    formControl,
     controlBind,
   };
 }

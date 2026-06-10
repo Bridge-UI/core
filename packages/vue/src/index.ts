@@ -68,6 +68,16 @@ export type {
   CheckboxSizeOverrides,
   CheckboxSlots,
 } from "@/Components/Checkbox";
+export { FormControl, useFormControl } from "@/Components/FormControl";
+export type {
+  FormControlClasses,
+  FormControlOwnProps,
+  FormControlPartsProps,
+  FormControlProps,
+  FormControlSizeOverrides,
+  FormControlSlots,
+  UseFormControlReturn,
+} from "@/Components/FormControl";
 export { FormField, useFormField } from "@/Components/FormField";
 export type {
   FormFieldClasses,
@@ -201,16 +211,17 @@ export type {
   SnackbarSlots,
   SnackbarTransitionOverrides,
 } from "@/Components/Snackbar";
-export { Switcher, useSwitcher } from "@/Components/Switcher";
+export { Switch, useSwitch } from "@/Components/Switch";
 export type {
-  SwitcherClasses,
-  SwitcherOwnProps,
-  SwitcherPartsProps,
-  SwitcherProps,
-  SwitcherSizeOverrides,
-  SwitcherSlots,
-  UseSwitcherReturn,
-} from "@/Components/Switcher";
+  SwitchClasses,
+  SwitchColorOverrides,
+  SwitchOwnProps,
+  SwitchPartsProps,
+  SwitchProps,
+  SwitchRoundedOverrides,
+  SwitchSizeOverrides,
+  SwitchSlots,
+} from "@/Components/Switch";
 export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,
@@ -227,17 +238,6 @@ export type {
   TextFieldProps,
   TextFieldSlots,
 } from "@/Components/TextField";
-export { Toggle, useToggle } from "@/Components/Toggle";
-export type {
-  ToggleClasses,
-  ToggleColorOverrides,
-  ToggleOwnProps,
-  TogglePartsProps,
-  ToggleProps,
-  ToggleRoundedOverrides,
-  ToggleSizeOverrides,
-  ToggleSlots,
-} from "@/Components/Toggle";
 export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextApi } from "@/Provider";
 export {
