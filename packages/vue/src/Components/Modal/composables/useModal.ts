@@ -8,6 +8,7 @@ import {
   toValue,
   useAttrs,
   watch,
+  type ComponentPublicInstance,
   type Ref,
 } from "vue";
 
@@ -44,6 +45,7 @@ import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 import type { ModalOwnProps, ModalProps } from "@/Components/Modal/modal.types";
 import {
   mergePartBind,
+  resolveVnodeRefElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -334,8 +336,8 @@ export function useModal(
     });
   }
 
-  function setPanelRef(element: HTMLElement | null) {
-    panelRef.value = element;
+  function setPanelRef(element: Element | ComponentPublicInstance | null) {
+    panelRef.value = resolveVnodeRefElement(element);
     syncFocusTrap();
   }
 

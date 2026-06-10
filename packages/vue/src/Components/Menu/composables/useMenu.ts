@@ -37,6 +37,7 @@ import { roundedProps, shadowProps } from "@bridge-ui/core/Components/Menu";
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
 import {
   mergePartBind,
+  resolveVnodeRefElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -377,24 +378,8 @@ export function useMenu(
     };
   }
 
-  function resolveHTMLElement(
-    element: Element | ComponentPublicInstance | null,
-  ): HTMLElement | null {
-    if (element instanceof HTMLElement) {
-      return element;
-    }
-
-    if (element && "$el" in element) {
-      const el = element.$el;
-
-      return el instanceof HTMLElement ? el : null;
-    }
-
-    return null;
-  }
-
   function setTriggerRef(element: Element | ComponentPublicInstance | null) {
-    const next = resolveHTMLElement(element);
+    const next = resolveVnodeRefElement(element);
 
     if (triggerRef.value === next) {
       return;
@@ -412,7 +397,7 @@ export function useMenu(
   }
 
   function setContentRef(element: Element | ComponentPublicInstance | null) {
-    const next = resolveHTMLElement(element);
+    const next = resolveVnodeRefElement(element);
 
     if (contentRef.value === next) {
       return;
