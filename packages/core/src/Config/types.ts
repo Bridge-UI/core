@@ -62,6 +62,8 @@ import type {
   LinkSize,
   LinkUnderline,
 } from "@core/Components/Link";
+import type { ListPadding } from "@core/Components/List";
+import type { ListItemAlign } from "@core/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type {
   ModalAlign,
@@ -86,16 +88,18 @@ import type {
 import type {
   SnackbarColor,
   SnackbarColorItem,
+  SnackbarPadding,
+  SnackbarPaddingItem,
   SnackbarPosition,
   SnackbarTransition,
 } from "@core/Components/Snackbar";
-import type { TextareaResize } from "@core/Components/Textarea";
 import type {
-  ToggleColor,
-  ToggleColorItem,
-  ToggleRounded,
-  ToggleSize,
-} from "@core/Components/Toggle";
+  SwitchColor,
+  SwitchColorItem,
+  SwitchRounded,
+  SwitchSize,
+} from "@core/Components/Switch";
+import type { TextareaResize } from "@core/Components/Textarea";
 import type { Overwrite } from "@core/Utils/types";
 
 export type Direction = "ltr" | "rtl";
@@ -116,6 +120,9 @@ export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
+export interface ListConfigOverrides {}
+export interface ListItemConfigOverrides {}
+export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
@@ -123,9 +130,9 @@ export interface PasswordFieldConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SnackbarConfigOverrides {}
-export interface SwitcherConfigOverrides {}
+export interface FormControlConfigOverrides {}
 export interface TextareaConfigOverrides {}
-export interface ToggleConfigOverrides {}
+export interface SwitchConfigOverrides {}
 
 export interface AlertConfigBase {
   classes: object;
@@ -229,6 +236,19 @@ export interface IconConfigBase {
   }>;
 }
 
+export interface FormControlConfigBase {
+  classes: object;
+  customProps: Partial<{
+    size: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    errorless: boolean;
+    size: keyof LabelSize;
+    withoutErrorMessage: boolean;
+    withValidationColors: boolean;
+  }>;
+}
+
 export interface FormFieldConfigBase {
   classes: object;
   customProps: Partial<{
@@ -270,6 +290,31 @@ export interface LinkConfigBase {
   }>;
 }
 
+export interface ListConfigBase {
+  classes: object;
+  customProps: Partial<{
+    padding: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    padding: keyof ListPadding;
+  }>;
+}
+
+export interface ListItemConfigBase {
+  classes: object;
+  customProps: Partial<{
+    align: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    align: keyof ListItemAlign;
+    role: "button" | "menuitem" | "option";
+  }>;
+}
+
+export interface ListSectionConfigBase {
+  classes: object;
+}
+
 export interface MenuConfigBase {
   classes: object;
   customProps: Partial<{
@@ -299,22 +344,12 @@ export interface ModalConfigBase {
   }>;
 }
 
-export interface SnackbarConfigBase {
+export interface NumberFieldConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, SnackbarColorItem>;
-    position: Record<string, string>;
-    transition: Record<string, string>;
-  }>;
-  defaultProps: Partial<{
-    closeButton: boolean;
-    color: keyof SnackbarColor;
-    duration: number | false;
-    position: keyof SnackbarPosition;
-    progressbar: boolean;
-    teleportTo: string | false;
-    transition: keyof SnackbarTransition;
-  }>;
+}
+
+export interface PasswordFieldConfigBase {
+  classes: object;
 }
 
 export interface RadioConfigBase {
@@ -328,6 +363,26 @@ export interface RadioConfigBase {
     color: keyof RadioColor;
     rounded: keyof RadioRounded;
     size: keyof RadioSize;
+  }>;
+}
+
+export interface SnackbarConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, SnackbarColorItem>;
+    padding: Record<string, SnackbarPaddingItem>;
+    position: Record<string, string>;
+    transition: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    closeButton: boolean;
+    color: keyof SnackbarColor;
+    duration: number | false;
+    padding: keyof SnackbarPadding;
+    position: keyof SnackbarPosition;
+    progressbar: boolean;
+    teleportTo: string | false;
+    transition: keyof SnackbarTransition;
   }>;
 }
 
@@ -346,24 +401,17 @@ export interface SelectConfigBase {
   }>;
 }
 
-export interface NumberFieldConfigBase {
-  classes: object;
-}
-
-export interface PasswordFieldConfigBase {
-  classes: object;
-}
-
-export interface SwitcherConfigBase {
+export interface SwitchConfigBase {
   classes: object;
   customProps: Partial<{
+    color: Record<string, SwitchColorItem>;
+    rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
   defaultProps: Partial<{
-    errorless: boolean;
-    size: keyof LabelSize;
-    withoutErrorMessage: boolean;
-    withValidationColors: boolean;
+    color: keyof SwitchColor;
+    rounded: keyof SwitchRounded;
+    size: keyof SwitchSize;
   }>;
 }
 
@@ -378,20 +426,6 @@ export interface TextareaConfigBase {
   }>;
 }
 
-export interface ToggleConfigBase {
-  classes: object;
-  customProps: Partial<{
-    color: Record<string, ToggleColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
-  defaultProps: Partial<{
-    color: keyof ToggleColor;
-    rounded: keyof ToggleRounded;
-    size: keyof ToggleSize;
-  }>;
-}
-
 export type BridgeUIComponentsConfig = Partial<{
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
@@ -399,10 +433,18 @@ export type BridgeUIComponentsConfig = Partial<{
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
+  FormControl: Partial<
+    Overwrite<FormControlConfigBase, FormControlConfigOverrides>
+  >;
   FormField: Partial<Overwrite<FormFieldConfigBase, FormFieldConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
+  List: Partial<Overwrite<ListConfigBase, ListConfigOverrides>>;
+  ListItem: Partial<Overwrite<ListItemConfigBase, ListItemConfigOverrides>>;
+  ListSection: Partial<
+    Overwrite<ListSectionConfigBase, ListSectionConfigOverrides>
+  >;
   Menu: Partial<Overwrite<MenuConfigBase, MenuConfigOverrides>>;
   Modal: Partial<Overwrite<ModalConfigBase, ModalConfigOverrides>>;
   NumberField: Partial<
@@ -414,9 +456,8 @@ export type BridgeUIComponentsConfig = Partial<{
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
-  Switcher: Partial<Overwrite<SwitcherConfigBase, SwitcherConfigOverrides>>;
+  Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
-  Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
 }>;
 
 export interface BridgeUIOptions {

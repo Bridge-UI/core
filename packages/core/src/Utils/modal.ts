@@ -13,6 +13,7 @@ import {
 } from "@core/Layer/registry";
 import type { LayerId } from "@core/Layer/types";
 import { hasDocument, hasWindow } from "@core/Utils/env";
+import { resetOpenMenuLayersForTests } from "@core/Utils/menu";
 
 export { createLayerId };
 export type { LayerId };
@@ -25,6 +26,7 @@ type LayerStackEntry = {
   lockScroll?: boolean;
   onEscape?: () => void;
   order: number;
+  scrollLockReleased?: boolean;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -34,6 +36,7 @@ const stackListeners = new Set<() => void>();
 let nextStackOrder = 0;
 let scrollLockCount = 0;
 let savedBodyOverflow = "";
+let savedBodyPaddingRight = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
 export type LayerStackHandle = {
@@ -41,6 +44,7 @@ export type LayerStackHandle = {
   level: number;
   order: number;
   release: () => void;
+  releaseScrollLock: () => void;
   zIndex: number;
 };
 
@@ -119,7 +123,7 @@ function handleGlobalEscape(event: KeyboardEvent) {
 }
 
 /**
- * Locks the body scroll.
+ * Locks the body scroll and compensates layout shift when the scrollbar is hidden.
  */
 function lockBodyScroll() {
   if (!hasDocument()) {
@@ -129,8 +133,21 @@ function lockBodyScroll() {
   scrollLockCount += 1;
 
   if (scrollLockCount === 1) {
-    savedBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+
+    savedBodyOverflow = body.style.overflow;
+    savedBodyPaddingRight = body.style.paddingRight;
+
+    const scrollbarWidth = getScrollbarWidth();
+
+    if (scrollbarWidth > 0) {
+      const computedPaddingRight =
+        Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
+
+      body.style.paddingRight = `${computedPaddingRight + scrollbarWidth}px`;
+    }
+
+    body.style.overflow = "hidden";
   }
 }
 
@@ -143,6 +160,31 @@ function getLayerStackOrderRank(id: LayerId): number {
   const rank = sorted.findIndex((entry) => entry.id === id);
 
   return rank < 0 ? 0 : rank;
+}
+
+/**
+ * Width of the vertical scrollbar when the page overflows (0 when none is shown).
+ */
+function getScrollbarWidth(): number {
+  if (!hasWindow() || !hasDocument()) {
+    return 0;
+  }
+
+  return Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+}
+
+/**
+ * Restores body scroll for a layer without removing it from the stack.
+ */
+function releaseLayerScrollLock(id: LayerId) {
+  const entry = stack.find((item) => item.id === id);
+
+  if (!entry || entry.scrollLockReleased || entry.lockScroll === false) {
+    return;
+  }
+
+  entry.scrollLockReleased = true;
+  unlockBodyScroll();
 }
 
 /**
@@ -170,6 +212,8 @@ function unlockBodyScroll() {
 
   if (scrollLockCount === 0) {
     document.body.style.overflow = savedBodyOverflow;
+    document.body.style.paddingRight = savedBodyPaddingRight;
+    savedBodyPaddingRight = "";
   }
 }
 
@@ -185,12 +229,13 @@ export function acquireLayerStackOrder(): number {
 /** How many layers fire `transitionend` on leave (overlay + panel when animated). */
 export function countModalTransitionLayers(
   transition: keyof ModalTransition,
+  options: { hideBackdrop?: boolean } = {},
 ): number {
   if (!hasModalTransition(transition)) {
     return 0;
   }
 
-  return 2;
+  return options.hideBackdrop ? 1 : 2;
 }
 
 export function getModalOverlayTransitionClass(
@@ -280,12 +325,15 @@ export function pushLayerStack(
     order,
     level,
     zIndex: LAYER_STACK_BASE_Z_INDEX + level,
+    releaseScrollLock: () => {
+      releaseLayerScrollLock(id);
+    },
     release: () => {
       const entry = stack.find((item) => item.id === id);
 
       remove(stack, (item) => item.id === id);
 
-      if (entry?.lockScroll !== false) {
+      if (entry?.lockScroll !== false && !entry?.scrollLockReleased) {
         unlockBodyScroll();
       }
 
@@ -305,11 +353,14 @@ export function resetLayerStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
-  resetLayerIdCounterForTests();
   savedBodyOverflow = "";
+  savedBodyPaddingRight = "";
+  resetLayerIdCounterForTests();
+  resetOpenMenuLayersForTests();
 
   if (hasDocument()) {
     document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
   }
 
   detachEscapeListener();

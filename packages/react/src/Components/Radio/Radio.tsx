@@ -1,10 +1,10 @@
 // ** Local Imports
+import { FormControl } from "@/Components/FormControl";
 import { useRadio } from "@/Components/Radio/hooks/useRadio";
 import type { RadioProps } from "@/Components/Radio/radio.types";
-import { Switcher } from "@/Components/Switcher";
 
 function Radio(props: RadioProps) {
-  const { dotBind, switcher, fieldBind, inputBind, controlBind } = useRadio(
+  const { dotBind, fieldBind, inputBind, formControl, controlBind } = useRadio(
     props,
     {
       size: "md",
@@ -14,15 +14,15 @@ function Radio(props: RadioProps) {
   );
 
   return (
-    <Switcher field={switcher}>
-      <label htmlFor={switcher.controlId} {...fieldBind}>
+    <FormControl field={formControl}>
+      <label htmlFor={formControl.controlId} {...fieldBind}>
         <input {...inputBind} />
 
         <span {...controlBind}>
           <span {...dotBind} />
         </span>
       </label>
-    </Switcher>
+    </FormControl>
   );
 }
 

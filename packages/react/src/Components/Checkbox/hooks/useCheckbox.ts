@@ -24,7 +24,7 @@ import type {
   CheckboxOwnProps,
   CheckboxProps,
 } from "@/Components/Checkbox/checkbox.types";
-import { useSwitcher } from "@/Components/Switcher/hooks/useSwitcher";
+import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";
 import {
   derived,
   mergePartBind,
@@ -55,7 +55,7 @@ export function useCheckbox(
   libDefaults: CheckboxLibDefaults,
 ) {
   // Setup
-  const switcher = useSwitcher(props, {
+  const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
     size: libDefaults.size ?? "sm",
@@ -83,7 +83,7 @@ export function useCheckbox(
   });
 
   const inputInheritedAttrs = derived(() => {
-    return omit(switcher.inputInheritedAttrs, [
+    return omit(formControl.inputInheritedAttrs, [
       "color",
       "checked",
       "rounded",
@@ -117,7 +117,7 @@ export function useCheckbox(
   });
 
   const colorKey = derived(() => {
-    if (switcher.invalidated) {
+    if (formControl.invalidated) {
       return "error";
     }
 
@@ -172,7 +172,7 @@ export function useCheckbox(
     return mergePartBind(
       {
         ...partsProps?.input,
-        ...switcher.controlBind,
+        ...formControl.controlBind,
         checked,
         ref: inputRef,
         type: "checkbox",
@@ -231,9 +231,9 @@ export function useCheckbox(
   return {
     checked,
     iconBind,
-    switcher,
     fieldBind,
     inputBind,
+    formControl,
     controlBind,
     CheckIcon: Check,
   };

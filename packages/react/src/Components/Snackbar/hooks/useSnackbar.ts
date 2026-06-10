@@ -21,6 +21,7 @@ import {
   mergeBridgeUILayeredClasses,
   pushLayerStack,
   snackbarColorProps,
+  snackbarPaddingProps,
   snackbarPositionProps,
   snackbarTransitionProps,
   splitComponentProps,
@@ -48,10 +49,10 @@ const snackbarBridgeKeys = [
   "img",
   "icon",
   "color",
-  "dense",
   "title",
   "slots",
   "classes",
+  "padding",
   "stackId",
   "duration",
   "position",
@@ -66,6 +67,7 @@ const snackbarBridgeKeys = [
 type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
+  | "padding"
   | "duration"
   | "position"
   | "teleportTo"
@@ -185,6 +187,15 @@ export function useSnackbar(
 
     return get(classes, merged.color);
   }, [merged.color, bridgeSnackbar?.customProps?.color]);
+
+  const paddingClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarPaddingProps,
+      bridgeSnackbar?.customProps?.padding,
+    );
+
+    return get(classes, merged.padding);
+  }, [merged.padding, bridgeSnackbar?.customProps?.padding]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
@@ -493,7 +504,8 @@ export function useSnackbar(
     partsProps?.title,
     {},
     cn({
-      "text-sm font-medium text-dark-900 dark:text-dark-400": true,
+      "text-sm font-medium": true,
+      [get(colorClass, "titleColor") ?? ""]: true,
       [get(mergedClasses, "title") ?? ""]: true,
     }),
   );
@@ -512,7 +524,8 @@ export function useSnackbar(
     {},
     {
       className: cn({
-        "absolute top-0 left-0 h-0.5 w-full rounded-full bg-dark-300 dark:bg-dark-600": true,
+        "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
+        [get(colorClass, "progressColor") ?? ""]: true,
         [get(mergedClasses, "progress") ?? ""]: true,
       }),
       style: showProgress
@@ -528,6 +541,18 @@ export function useSnackbar(
     },
   );
 
+  function contentBind(hasRight: boolean) {
+    return mergePartBind(
+      partsProps?.content,
+      {},
+      cn({
+        [get(paddingClass, "contentRight") ?? ""]: hasRight,
+        [get(paddingClass, "content") ?? ""]: !hasRight,
+        [get(mergedClasses, "content") ?? ""]: true,
+      }),
+    );
+  }
+
   return {
     merged,
     stackId,
@@ -537,6 +562,8 @@ export function useSnackbar(
     titleBind,
     isPortaled,
     portalBind,
+    contentBind,
+    showProgress,
     progressBind,
     requestClose,
     resolvedIcon,

@@ -7,6 +7,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   SnackbarColor,
+  SnackbarPadding,
   SnackbarPosition,
   SnackbarTransition,
 } from "@bridge-ui/core";
@@ -15,6 +16,7 @@ import type {
 import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
+export interface SnackbarPaddingOverrides {}
 export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
@@ -23,6 +25,11 @@ export interface SnackbarClasses {
    * The classes to apply to the inline actions slot wrapper.
    */
   actions?: string;
+
+  /**
+   * The classes to apply to the main content wrapper.
+   */
+  content?: string;
 
   /**
    * The classes to apply to the description.
@@ -68,6 +75,11 @@ export interface SnackbarEmits {
 }
 
 export interface SnackbarPartsProps {
+  /**
+   * Props forwarded to the main content wrapper.
+   */
+  content?: HTMLAttributes;
+
   /**
    * Props forwarded to the description element.
    */
@@ -124,13 +136,6 @@ export interface SnackbarOwnProps {
   color?: MergeProps<SnackbarColor, SnackbarColorOverrides>;
 
   /**
-   * Compact layout (reduced horizontal padding).
-   *
-   * @default false
-   */
-  dense?: boolean;
-
-  /**
    * Body text below the title.
    */
   description?: string;
@@ -156,6 +161,13 @@ export interface SnackbarOwnProps {
    * Called when `v-model` visibility should change (controlled state).
    */
   onShowChange?: (show: boolean) => void;
+
+  /**
+   * Padding for the content area.
+   *
+   * @default "medium"
+   */
+  padding?: MergeProps<SnackbarPadding, SnackbarPaddingOverrides>;
 
   /**
    * Extra props for internal parts (`icon`, `title`, `description`, etc.).
@@ -233,7 +245,7 @@ export interface SnackbarSlots {
   title?: Slot;
 
   /**
-   * Content before the close button (e.g. dense accept action).
+   * Content before the close button (e.g. compact accept action with `padding="small"`).
    */
   trailing?: Slot;
 }

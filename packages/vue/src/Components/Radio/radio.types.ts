@@ -12,17 +12,17 @@ import type {
 
 // ** Local Imports
 import type {
-  SwitcherClasses,
-  SwitcherOwnProps,
-  SwitcherPartsProps,
-  SwitcherSlots,
-} from "@/Components/Switcher/switcher.types";
+  FormControlClasses,
+  FormControlOwnProps,
+  FormControlPartsProps,
+  FormControlSlots,
+} from "@/Components/FormControl/formControl.types";
 
 export interface RadioSizeOverrides {}
 export interface RadioColorOverrides {}
 export interface RadioRoundedOverrides {}
 
-export interface RadioClasses extends SwitcherClasses {
+export interface RadioClasses extends FormControlClasses {
   /**
    * The classes to apply to the custom control circle.
    */
@@ -39,7 +39,7 @@ export interface RadioClasses extends SwitcherClasses {
   input?: string;
 }
 
-export interface RadioPartsProps extends SwitcherPartsProps {
+export interface RadioPartsProps extends FormControlPartsProps {
   /**
    * Props forwarded to the custom control circle.
    */
@@ -64,7 +64,7 @@ export interface RadioEmits {
 }
 
 export interface RadioOwnProps extends Omit<
-  SwitcherOwnProps,
+  FormControlOwnProps,
   "field" | "slots" | "classes" | "partsProps"
 > {
   /**
@@ -75,7 +75,7 @@ export interface RadioOwnProps extends Omit<
   checked?: boolean;
 
   /**
-   * Classes for the switcher chrome and the radio control.
+   * Classes for the form control chrome and the radio control.
    *
    * @default undefined
    */
@@ -110,7 +110,7 @@ export interface RadioOwnProps extends Omit<
   rounded?: MergeProps<RadioRounded, RadioRoundedOverrides>;
 
   /**
-   * Size of the control and of switcher labels (`2xs` … `2xl`, same scale as
+   * Size of the control and of form control labels (`2xs` … `2xl`, same scale as
    * `FormField`).
    *
    * @default "md"
@@ -132,7 +132,7 @@ export interface RadioOwnProps extends Omit<
   value?: string | number;
 }
 
-export interface RadioSlots extends SwitcherSlots {}
+export interface RadioSlots extends FormControlSlots {}
 
 export type RadioProps = MergeHtmlProps<
   RadioOwnProps,

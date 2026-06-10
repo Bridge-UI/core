@@ -7,6 +7,7 @@ import type {
   MergeProps,
   ModalAlign,
   ModalBlur,
+  ModalScroll,
   ModalSize,
   ModalTransition,
 } from "@bridge-ui/core";
@@ -15,6 +16,7 @@ export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
 export interface ModalAlignOverrides {}
 export interface ModalTransitionOverrides {}
+export interface ModalScrollOverrides {}
 
 export interface ModalClasses {
   /**
@@ -110,6 +112,48 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
+   * When true, the modal does not auto-focus the first focusable element on open.
+   *
+   * @default false
+   */
+  disableAutoFocus?: boolean;
+
+  /**
+   * When true, focus is not trapped inside the modal while open.
+   *
+   * @default false
+   */
+  disableEnforceFocus?: boolean;
+
+  /**
+   * When true, focus is not restored to the previously focused element on close.
+   *
+   * @default false
+   */
+  disableRestoreFocus?: boolean;
+
+  /**
+   * When true, body scroll is not locked while the modal is open.
+   *
+   * @default false
+   */
+  disableScrollLock?: boolean;
+
+  /**
+   * When true, the backdrop overlay is not rendered.
+   *
+   * @default false
+   */
+  hideBackdrop?: boolean;
+
+  /**
+   * When true, the modal stays mounted in the DOM after closing (hidden).
+   *
+   * @default false
+   */
+  keepMounted?: boolean;
+
+  /**
    * Called when `show` should change (controlled state).
    *
    * @default undefined
@@ -129,6 +173,13 @@ export interface ModalOwnProps {
    * @default false
    */
   persistent?: boolean;
+
+  /**
+   * Where scroll happens: the page (`body`) or the dialog panel (`paper`).
+   *
+   * @default "body"
+   */
+  scroll?: MergeProps<ModalScroll, ModalScrollOverrides>;
 
   /**
    * Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).

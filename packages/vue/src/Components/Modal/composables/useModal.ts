@@ -8,6 +8,7 @@ import {
   toValue,
   useAttrs,
   watch,
+  type ComponentPublicInstance,
   type Ref,
 } from "vue";
 
@@ -16,6 +17,7 @@ import {
   acquireLayerStackOrder,
   cn,
   countModalTransitionLayers,
+  createFocusTrap,
   getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
@@ -26,6 +28,7 @@ import {
   resolveEffectiveModalTransition,
   splitComponentProps,
   subscribeLayerStack,
+  type FocusTrap,
   type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -42,6 +45,7 @@ import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 import type { ModalOwnProps, ModalProps } from "@/Components/Modal/modal.types";
 import {
   mergePartBind,
+  resolveVnodeRefElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -50,14 +54,21 @@ const modalBridgeKeys = [
   "blur",
   "size",
   "align",
+  "scroll",
   "classes",
   "stackId",
   "partsProps",
   "persistent",
   "teleportTo",
   "transition",
+  "keepMounted",
+  "hideBackdrop",
   "closeOnEscape",
   "closeOnOverlay",
+  "disableAutoFocus",
+  "disableScrollLock",
+  "disableEnforceFocus",
+  "disableRestoreFocus",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
@@ -65,6 +76,7 @@ type ModalLibDefaults = LibDefaultsShape<
   | "blur"
   | "size"
   | "align"
+  | "scroll"
   | "teleportTo"
   | "transition"
   | "closeOnEscape"
@@ -106,13 +118,19 @@ export function useModal(
   // Setup
   const attrs = useAttrs();
 
-  const rendered = ref(false);
+  const mounted = ref(false);
+
+  const active = ref(false);
 
   const layerStackId = ref("");
+
+  const panelRef = ref<HTMLElement | null>(null);
 
   let leaveTransitionEndsPending = 0;
 
   let stackOrder: number | null = null;
+
+  let focusTrap: FocusTrap | null = null;
 
   let stackHandle: LayerStackHandle | null = null;
   let unsubscribeLayerStack: (() => void) | null = null;
@@ -170,6 +188,14 @@ export function useModal(
     return hasModalTransition(effectiveTransition.value);
   });
 
+  const scrollMode = computed(() => {
+    return merged.value.scroll ?? "body";
+  });
+
+  const isHiddenWhileMounted = computed(() => {
+    return merged.value.keepMounted && !active.value;
+  });
+
   // Classes
   const alignClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -221,8 +247,12 @@ export function useModal(
       style: {
         zIndex: stackZIndex.value,
       },
+      "aria-hidden": isHiddenWhileMounted.value ? true : undefined,
       class: cn({
-        "fixed inset-0 overflow-y-auto": true,
+        "fixed inset-0": true,
+        "overflow-y-auto": scrollMode.value === "body",
+        "overflow-hidden": scrollMode.value === "paper",
+        "invisible pointer-events-none": isHiddenWhileMounted.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });
@@ -275,6 +305,8 @@ export function useModal(
         class: cn({
           "relative w-full": true,
           [sizeClass.value ?? ""]: true,
+          "max-h-[calc(100dvh-2rem)] overflow-y-auto":
+            scrollMode.value === "paper",
           [panelTransitionClass.value]: transitionEnabled.value,
           [get(mergedClasses.value, "panel") ?? ""]: true,
         }),
@@ -283,8 +315,36 @@ export function useModal(
   });
 
   // Handlers
+  function releaseFocusTrap() {
+    focusTrap?.release();
+    focusTrap = null;
+  }
+
+  function syncFocusTrap() {
+    if (!active.value || transitionState.value !== "open" || !panelRef.value) {
+      releaseFocusTrap();
+
+      return;
+    }
+
+    releaseFocusTrap();
+    focusTrap = createFocusTrap({
+      container: panelRef.value,
+      disableAutoFocus: merged.value.disableAutoFocus,
+      disableEnforceFocus: merged.value.disableEnforceFocus,
+      disableRestoreFocus: merged.value.disableRestoreFocus,
+    });
+  }
+
+  function setPanelRef(element: Element | ComponentPublicInstance | null) {
+    panelRef.value = resolveVnodeRefElement(element);
+    syncFocusTrap();
+  }
+
   function finishLeave() {
     leaveTransitionEndsPending = 0;
+    active.value = false;
+    releaseFocusTrap();
 
     if (show.value) {
       setShow(false);
@@ -292,11 +352,16 @@ export function useModal(
       options.onShowChange?.(false);
     }
 
-    rendered.value = false;
     transitionState.value = "closed";
+
+    if (!merged.value.keepMounted) {
+      mounted.value = false;
+    }
   }
 
   function startLeave() {
+    stackHandle?.releaseScrollLock();
+
     if (!transitionEnabled.value) {
       finishLeave();
 
@@ -306,6 +371,7 @@ export function useModal(
     transitionState.value = "closed";
     leaveTransitionEndsPending = countModalTransitionLayers(
       effectiveTransition.value,
+      { hideBackdrop: merged.value.hideBackdrop },
     );
 
     if (leaveTransitionEndsPending === 0) {
@@ -330,7 +396,7 @@ export function useModal(
   }
 
   function handleShellTransitionEnd(event: TransitionEvent) {
-    if (!rendered.value || transitionState.value !== "closed") {
+    if (!mounted.value || transitionState.value !== "closed") {
       return;
     }
 
@@ -366,7 +432,7 @@ export function useModal(
       return;
     }
 
-    if (!rendered.value) {
+    if (!mounted.value) {
       return;
     }
 
@@ -405,19 +471,35 @@ export function useModal(
     show,
     (isShown) => {
       if (isShown) {
-        rendered.value = true;
+        mounted.value = true;
+        active.value = true;
         scheduleOpen();
 
         return;
       }
 
-      if (!rendered.value) {
+      if (!mounted.value) {
         return;
       }
 
       startLeave();
     },
     { immediate: true },
+  );
+
+  watch(
+    [
+      active,
+      transitionState,
+      () => merged.value.disableAutoFocus,
+      () => merged.value.disableEnforceFocus,
+      () => merged.value.disableRestoreFocus,
+    ],
+    () => {
+      void nextTick(() => {
+        syncFocusTrap();
+      });
+    },
   );
 
   function syncZIndex() {
@@ -429,15 +511,16 @@ export function useModal(
   }
 
   watch(
-    rendered,
-    (isRendered) => {
-      if (isRendered) {
+    active,
+    (isActive) => {
+      if (isActive) {
         stackOrder = acquireLayerStackOrder();
 
         stackHandle = pushLayerStack({
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
+          lockScroll: merged.value.disableScrollLock !== true,
         });
 
         layerStackId.value = stackHandle.id;
@@ -460,17 +543,19 @@ export function useModal(
   onBeforeUnmount(() => {
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
+    releaseFocusTrap();
     stackHandle?.release();
     stackHandle = null;
   });
 
   return {
     merged,
-    rendered,
+    mounted,
     rootBind,
     panelBind,
     overlayBind,
     wrapperBind,
+    setPanelRef,
     layerStackId,
     handleOverlayClick,
     handleWrapperClick,

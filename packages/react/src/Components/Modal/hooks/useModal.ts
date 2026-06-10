@@ -15,6 +15,7 @@ import {
   acquireLayerStackOrder,
   cn,
   countModalTransitionLayers,
+  createFocusTrap,
   getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
@@ -25,6 +26,7 @@ import {
   resolveEffectiveModalTransition,
   splitComponentProps,
   subscribeLayerStack,
+  type FocusTrap,
   type LayerStackHandle,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -49,14 +51,21 @@ const modalBridgeKeys = [
   "blur",
   "size",
   "align",
+  "scroll",
   "classes",
   "stackId",
   "partsProps",
   "persistent",
   "teleportTo",
   "transition",
+  "keepMounted",
+  "hideBackdrop",
   "closeOnEscape",
   "closeOnOverlay",
+  "disableAutoFocus",
+  "disableScrollLock",
+  "disableEnforceFocus",
+  "disableRestoreFocus",
 ] as const satisfies readonly (keyof ModalOwnProps)[];
 
 type ModalLibDefaults = LibDefaultsShape<
@@ -64,6 +73,7 @@ type ModalLibDefaults = LibDefaultsShape<
   | "blur"
   | "size"
   | "align"
+  | "scroll"
   | "teleportTo"
   | "transition"
   | "closeOnEscape"
@@ -107,11 +117,17 @@ export function useModal(
 
   const layerStackIdRef = useRef("");
 
-  const [rendered, setRendered] = useState(show);
+  const [active, setActive] = useState(show);
+
+  const [mounted, setMounted] = useState(show);
+
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const leaveTransitionEndsPendingRef = useRef(0);
 
   const stackOrderRef = useRef<number | null>(null);
+
+  const focusTrapRef = useRef<FocusTrap | null>(null);
 
   const stackHandleRef = useRef<LayerStackHandle | null>(null);
 
@@ -158,11 +174,15 @@ export function useModal(
 
   const transitionEnabled = hasModalTransition(effectiveTransition);
 
+  const scrollMode = merged.scroll ?? "body";
+
+  const isHiddenWhileMounted = merged.keepMounted && !active;
+
   if (show && stackOrderRef.current === null) {
     stackOrderRef.current = acquireLayerStackOrder();
   }
 
-  if (!show && !rendered && stackOrderRef.current !== null) {
+  if (!show && !mounted && stackOrderRef.current !== null) {
     stackOrderRef.current = null;
   }
 
@@ -209,8 +229,15 @@ export function useModal(
     onShowChange?.(next);
   }
 
+  function releaseFocusTrap() {
+    focusTrapRef.current?.release();
+    focusTrapRef.current = null;
+  }
+
   function finishLeave() {
     leaveTransitionEndsPendingRef.current = 0;
+    setActive(false);
+    releaseFocusTrap();
     setTransitionState("closed");
 
     if (show) {
@@ -219,10 +246,14 @@ export function useModal(
       onShowChange?.(false);
     }
 
-    setRendered(false);
+    if (!merged.keepMounted) {
+      setMounted(false);
+    }
   }
 
   function startLeave() {
+    stackHandleRef.current?.releaseScrollLock();
+
     if (!transitionEnabled) {
       finishLeave();
 
@@ -230,8 +261,10 @@ export function useModal(
     }
 
     setTransitionState("closed");
-    leaveTransitionEndsPendingRef.current =
-      countModalTransitionLayers(effectiveTransition);
+    leaveTransitionEndsPendingRef.current = countModalTransitionLayers(
+      effectiveTransition,
+      { hideBackdrop: merged.hideBackdrop },
+    );
 
     if (leaveTransitionEndsPendingRef.current === 0) {
       finishLeave();
@@ -253,7 +286,7 @@ export function useModal(
   }
 
   function handleShellTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
-    if (!rendered || transitionState !== "closed") {
+    if (!mounted || transitionState !== "closed") {
       return;
     }
 
@@ -288,7 +321,7 @@ export function useModal(
       return;
     }
 
-    if (!rendered) {
+    if (!mounted) {
       return;
     }
 
@@ -313,13 +346,14 @@ export function useModal(
 
   useLayoutEffect(() => {
     if (show) {
-      setRendered(true);
+      setMounted(true);
+      setActive(true);
       scheduleOpen();
 
       return;
     }
 
-    if (!rendered) {
+    if (!mounted) {
       return;
     }
 
@@ -327,7 +361,31 @@ export function useModal(
   }, [show]);
 
   useLayoutEffect(() => {
-    if (!rendered || stackOrderRef.current === null) {
+    if (!active || transitionState !== "open" || !panelRef.current) {
+      releaseFocusTrap();
+
+      return;
+    }
+
+    releaseFocusTrap();
+    focusTrapRef.current = createFocusTrap({
+      container: panelRef.current,
+      disableAutoFocus: merged.disableAutoFocus,
+      disableEnforceFocus: merged.disableEnforceFocus,
+      disableRestoreFocus: merged.disableRestoreFocus,
+    });
+
+    return releaseFocusTrap;
+  }, [
+    active,
+    transitionState,
+    merged.disableAutoFocus,
+    merged.disableEnforceFocus,
+    merged.disableRestoreFocus,
+  ]);
+
+  useLayoutEffect(() => {
+    if (!active || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
       setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
@@ -347,6 +405,7 @@ export function useModal(
       id: stackId,
       onEscape: handleEscape,
       order: stackOrderRef.current,
+      lockScroll: merged.disableScrollLock !== true,
     });
 
     stackHandleRef.current = handle;
@@ -360,10 +419,17 @@ export function useModal(
       stackHandleRef.current = null;
       layerStackIdRef.current = "";
     };
-  }, [show, stackId, rendered, merged.persistent, merged.closeOnEscape]);
+  }, [
+    show,
+    active,
+    stackId,
+    merged.persistent,
+    merged.closeOnEscape,
+    merged.disableScrollLock,
+  ]);
 
   useEffect(() => {
-    if (!rendered) {
+    if (!active) {
       return;
     }
 
@@ -382,7 +448,7 @@ export function useModal(
     syncZIndex();
 
     return subscribeLayerStack(syncZIndex);
-  }, [rendered]);
+  }, [active]);
 
   // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
@@ -390,8 +456,12 @@ export function useModal(
       zIndex: stackZIndex,
     },
     onTransitionEnd: handleShellTransitionEnd,
+    "aria-hidden": isHiddenWhileMounted ? true : undefined,
     className: cn({
-      "fixed inset-0 overflow-y-auto": true,
+      "fixed inset-0": true,
+      "overflow-y-auto": scrollMode === "body",
+      "overflow-hidden": scrollMode === "paper",
+      "invisible pointer-events-none": isHiddenWhileMounted,
       [get(mergedClasses, "root") ?? ""]: true,
     }),
   });
@@ -425,6 +495,7 @@ export function useModal(
   const panelBind = mergePartBind(
     partsProps?.panel,
     {
+      ref: panelRef,
       role: "dialog",
       "aria-modal": true,
     },
@@ -434,6 +505,7 @@ export function useModal(
       className: cn({
         "relative w-full": true,
         [sizeClass ?? ""]: true,
+        "max-h-[calc(100dvh-2rem)] overflow-y-auto": scrollMode === "paper",
         [panelTransitionClass]: transitionEnabled,
         [get(mergedClasses, "panel") ?? ""]: true,
       }),
@@ -442,7 +514,7 @@ export function useModal(
 
   return {
     merged,
-    rendered,
+    mounted,
     rootBind,
     panelBind,
     overlayBind,

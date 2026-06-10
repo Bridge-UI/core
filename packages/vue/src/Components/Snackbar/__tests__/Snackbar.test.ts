@@ -1,6 +1,6 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -9,6 +9,8 @@ import { resetLayerStackForTests } from "@bridge-ui/core";
 import { Snackbar } from "@/Components/Snackbar";
 
 afterEach(async () => {
+  vi.useRealTimers();
+
   while (mountedWrappers.length > 0) {
     mountedWrappers.pop()?.unmount();
   }
@@ -28,7 +30,6 @@ function mountSnackbar(
     attachTo: document.body,
     ...options,
     props: {
-      duration: false,
       modelValue: false,
       transition: "none",
       ...(options.props ?? {}),
@@ -44,7 +45,9 @@ function mountSnackbar(
 }
 
 test("it should not render in the document when modelValue is false", () => {
-  mountSnackbar({ props: { title: "Hidden", modelValue: false } });
+  mountSnackbar({
+    props: { title: "Hidden", duration: false, modelValue: false },
+  });
 
   expect(
     document.body.querySelector('[data-snackbar-part="panel"]'),
@@ -56,6 +59,7 @@ test("it should teleport to body when modelValue is true", async () => {
     slots: { default: "Body" },
     props: {
       title: "Toast",
+      duration: false,
       modelValue: true,
     },
   });
@@ -71,6 +75,7 @@ test("it should teleport to body when modelValue is true", async () => {
 test("it should emit update:modelValue when the close button is clicked", async () => {
   const wrapper = mountSnackbar({
     props: {
+      duration: false,
       modelValue: true,
       title: "Close me",
     },
@@ -89,6 +94,7 @@ test("it should emit update:modelValue when the close button is clicked", async 
 test("it should emit close when the close button is clicked", async () => {
   const wrapper = mountSnackbar({
     props: {
+      duration: false,
       modelValue: true,
       title: "Close me",
     },
@@ -107,6 +113,7 @@ test("it should emit close when the close button is clicked", async () => {
 test("it should emit update:modelValue on escape keydown", async () => {
   const wrapper = mountSnackbar({
     props: {
+      duration: false,
       modelValue: true,
       title: "Dismiss",
     },
@@ -124,6 +131,7 @@ test("it should render title and description when modelValue is true", async () 
   mountSnackbar({
     props: {
       title: "Hello",
+      duration: false,
       modelValue: true,
       description: "World",
     },
@@ -139,6 +147,7 @@ test("it should apply top-center position classes on the portal layer", async ()
   mountSnackbar({
     props: {
       title: "Top",
+      duration: false,
       modelValue: true,
       position: "top-center",
     },
@@ -156,6 +165,7 @@ test("it should stack with increasing z-index", async () => {
   mountSnackbar({
     props: {
       title: "One",
+      duration: false,
       modelValue: true,
     },
   });
@@ -163,6 +173,7 @@ test("it should stack with increasing z-index", async () => {
   mountSnackbar({
     props: {
       title: "Two",
+      duration: false,
       modelValue: true,
     },
   });
@@ -179,10 +190,47 @@ test("it should stack with increasing z-index", async () => {
   expect(secondZ).toBeGreaterThan(firstZ);
 });
 
+test("it should render the progress bar by default", async () => {
+  mountSnackbar({
+    props: {
+      title: "Toast",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+  const progress = panel?.querySelector(":scope > .h-0\\.5");
+
+  expect(progress?.className).toContain("bg-primary-500");
+});
+
+test("it should auto-dismiss after the default duration", async () => {
+  vi.useFakeTimers();
+
+  const wrapper = mountSnackbar({
+    props: {
+      title: "Timed",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Timed");
+
+  await vi.advanceTimersByTimeAsync(5000);
+  await flushPromises();
+
+  expect(wrapper.props("modelValue")).toBe(false);
+});
+
 test("it should not lock body scroll", async () => {
   mountSnackbar({
     props: {
       title: "Toast",
+      duration: false,
       modelValue: true,
     },
   });

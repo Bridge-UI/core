@@ -28,7 +28,7 @@ import type {
   CheckboxClasses,
   CheckboxOwnProps,
 } from "@/Components/Checkbox/checkbox.types";
-import { useSwitcher } from "@/Components/Switcher";
+import { useFormControl } from "@/Components/FormControl";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -60,7 +60,7 @@ export function useCheckbox(
   const attrs = useAttrs();
   const inputRef = ref<HTMLInputElement | null>(null);
 
-  const switcher = useSwitcher(() => ({ ...attrs, ...toValue(props) }), {
+  const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
     error: false,
     withoutErrorMessage: false,
     size: libDefaults.size ?? "sm",
@@ -97,7 +97,7 @@ export function useCheckbox(
   });
 
   const colorKey = computed(() => {
-    if (switcher.invalidated.value) {
+    if (formControl.invalidated.value) {
       return "error";
     }
 
@@ -144,7 +144,7 @@ export function useCheckbox(
     return mergePartBind(
       {
         ...partsProps.value?.input,
-        ...switcher.controlBind.value,
+        ...formControl.controlBind.value,
         type: "checkbox",
       },
       omit(split.value.inheritedAttrs, ["class"]),
@@ -198,10 +198,10 @@ export function useCheckbox(
     merged,
     iconBind,
     inputRef,
-    switcher,
     fieldBind,
     inputBind,
     isChecked,
+    formControl,
     controlBind,
   };
 }

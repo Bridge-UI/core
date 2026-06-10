@@ -11,6 +11,7 @@ import type { ModalProps } from "@/Components/Modal/modal.types";
 const modalLibDefaults = {
   size: "md",
   blur: "none",
+  scroll: "body",
   teleportTo: "body",
   transition: "fade",
   closeOnEscape: true,
@@ -19,6 +20,7 @@ const modalLibDefaults = {
 } as const;
 
 function ModalShell({
+  merged,
   children,
   rootBind,
   panelBind,
@@ -29,7 +31,9 @@ function ModalShell({
 }: ReturnType<typeof useModal> & { children: ModalProps["children"] }) {
   return (
     <div {...rootBind}>
-      <div {...overlayBind} aria-hidden="true" onClick={handleOverlayClick} />
+      {!merged.hideBackdrop ? (
+        <div {...overlayBind} aria-hidden="true" onClick={handleOverlayClick} />
+      ) : null}
 
       <div {...wrapperBind} onClick={handleWrapperClick}>
         <div {...panelBind}>{children}</div>
@@ -69,7 +73,7 @@ function Modal({
     },
   );
 
-  if (!modalState.rendered) {
+  if (!modalState.mounted) {
     return null;
   }
 

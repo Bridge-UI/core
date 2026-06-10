@@ -30,6 +30,7 @@
     "dist"
   ],
   "dependencies": {
+    "@floating-ui/dom": "^1.7.6",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^3.6.0"

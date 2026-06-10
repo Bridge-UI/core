@@ -23,6 +23,7 @@ import {
   mergeBridgeUILayeredClasses,
   pushLayerStack,
   snackbarColorProps,
+  snackbarPaddingProps,
   snackbarPositionProps,
   snackbarTransitionProps,
   splitComponentProps,
@@ -49,9 +50,9 @@ const snackbarBridgeKeys = [
   "img",
   "icon",
   "color",
-  "dense",
   "title",
   "classes",
+  "padding",
   "stackId",
   "duration",
   "position",
@@ -66,6 +67,7 @@ const snackbarBridgeKeys = [
 type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
+  | "padding"
   | "duration"
   | "position"
   | "teleportTo"
@@ -115,12 +117,11 @@ export function useSnackbar(
 
   let unsubscribeLayerStack: (() => void) | null = null;
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
-    SnackbarProps,
-    typeof snackbarBridgeKeys
-  >({
-    props: { ...props, ...attrs },
-    bridgeKeys: snackbarBridgeKeys,
+  const split = computed(() => {
+    return splitComponentProps<SnackbarProps, typeof snackbarBridgeKeys>({
+      props: { ...attrs, ...props },
+      bridgeKeys: snackbarBridgeKeys,
+    });
   });
 
   const { merged, entry: bridgeSnackbar } = useBridgeUIComponent<
@@ -128,19 +129,19 @@ export function useSnackbar(
     "Snackbar"
   >({
     libDefaults,
-    props: customProps,
     componentName: "Snackbar",
+    props: () => split.value.customProps,
   });
 
   const partsProps = computed(() => merged.value.partsProps);
 
   const rootInheritedAttrs = computed(() => {
-    return omit(inheritedAttrs, ["onShowChange"]);
+    return omit(split.value.inheritedAttrs, ["onShowChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    props: customProps,
     entry: bridgeSnackbar,
+    props: () => split.value.customProps,
   });
 
   // Elements
@@ -173,6 +174,15 @@ export function useSnackbar(
     );
 
     return get(classes, merged.value.color);
+  });
+
+  const paddingClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarPaddingProps,
+      bridgeSnackbar.value?.customProps?.padding,
+    );
+
+    return get(classes, merged.value.padding);
   });
 
   const resolvedIcon = computed(() => {
@@ -271,8 +281,10 @@ export function useSnackbar(
 
     transitionState.value = "closed";
 
-    nextTick(() => {
-      transitionState.value = "open";
+    void nextTick(() => {
+      requestAnimationFrame(() => {
+        transitionState.value = "open";
+      });
     });
   }
 
@@ -380,9 +392,13 @@ export function useSnackbar(
 
       progressActive.value = false;
 
-      nextTick(() => {
+      const frame = requestAnimationFrame(() => {
         progressActive.value = true;
       });
+
+      return () => {
+        cancelAnimationFrame(frame);
+      };
     },
     { immediate: true },
   );
@@ -497,7 +513,8 @@ export function useSnackbar(
       partsProps.value?.title,
       {},
       cn({
-        "text-sm font-medium text-dark-900 dark:text-dark-400": true,
+        "text-sm font-medium": true,
+        [get(colorClass.value, "titleColor") ?? ""]: true,
         [get(mergedClasses.value, "title") ?? ""]: true,
       }),
     );
@@ -520,7 +537,8 @@ export function useSnackbar(
       {},
       {
         class: cn({
-          "absolute top-0 left-0 h-0.5 w-full rounded-full bg-dark-300 dark:bg-dark-600": true,
+          "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
+          [get(colorClass.value, "progressColor") ?? ""]: true,
           [get(mergedClasses.value, "progress") ?? ""]: true,
         }),
         style: showProgress.value
@@ -537,6 +555,18 @@ export function useSnackbar(
     );
   });
 
+  function contentBind(hasRight: boolean) {
+    return mergePartBind(
+      partsProps.value?.content,
+      {},
+      cn({
+        [get(paddingClass.value, "contentRight") ?? ""]: hasRight,
+        [get(paddingClass.value, "content") ?? ""]: !hasRight,
+        [get(mergedClasses.value, "content") ?? ""]: true,
+      }),
+    );
+  }
+
   return {
     merged,
     iconBind,
@@ -545,6 +575,8 @@ export function useSnackbar(
     titleBind,
     isPortaled,
     portalBind,
+    contentBind,
+    showProgress,
     progressBind,
     requestClose,
     resolvedIcon,

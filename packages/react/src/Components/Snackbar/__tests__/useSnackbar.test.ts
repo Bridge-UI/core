@@ -21,6 +21,7 @@ afterEach(() => {
 const libDefaults = {
   duration: 5000,
   color: "primary",
+  padding: "medium",
   closeButton: true,
   progressbar: true,
   teleportTo: "body",

@@ -5,6 +5,7 @@ import {
   defineComponent,
   toValue,
   unref,
+  type ComponentPublicInstance,
   type ComputedRef,
   type MaybeRefOrGetter,
 } from "vue";
@@ -132,6 +133,25 @@ export function resolveFieldAdornmentIconSize(
     },
     fieldSize ?? "md",
   ) as keyof IconSize;
+}
+
+/**
+ * Resolves a Vue template ref callback value to an HTMLElement.
+ */
+export function resolveVnodeRefElement(
+  element: Element | ComponentPublicInstance | null,
+): HTMLElement | null {
+  if (element instanceof HTMLElement) {
+    return element;
+  }
+
+  if (element && "$el" in element) {
+    const el = element.$el;
+
+    return el instanceof HTMLElement ? el : null;
+  }
+
+  return null;
 }
 
 // ** Exports

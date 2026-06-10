@@ -18,6 +18,7 @@ afterEach(() => {
 const libDefaults: Partial<SnackbarOwnProps> = {
   duration: 5000,
   color: "primary",
+  padding: "medium",
   closeButton: true,
   progressbar: true,
   teleportTo: "body",

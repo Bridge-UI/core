@@ -39,8 +39,8 @@ test("it should forward value on inputBind", () => {
   expect(result.current.inputBind.value).toBe("plan-a");
 });
 
-test("it should mark switcher as invalidated when error is set", () => {
+test("it should mark form control as invalidated when error is set", () => {
   const { result } = renderUseRadio({ value: "a", error: true });
 
-  expect(result.current.switcher.invalidated).toBe(true);
+  expect(result.current.formControl.invalidated).toBe(true);
 });

@@ -4,6 +4,7 @@ import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
+  usesTrailingSnackbarActions,
   type SnackbarColor,
 } from "@bridge-ui/core";
 import { computed } from "vue";
@@ -38,16 +39,20 @@ const hasRight = computed(() => {
   return Boolean(rightButtons && (actions?.accept || actions?.reject));
 });
 
+const trailingActions = computed(() => {
+  return usesTrailingSnackbarActions(snackbarProps.value.padding);
+});
+
 const hasInlineActions = computed(() => {
   return (
     !rightButtons &&
-    !snackbarProps.value.dense &&
+    !trailingActions.value &&
     Boolean(actions?.accept || actions?.reject)
   );
 });
 
 const hasTrailing = computed(() => {
-  return Boolean(snackbarProps.value.dense && actions?.accept?.label);
+  return Boolean(trailingActions.value && actions?.accept?.label);
 });
 </script>
 

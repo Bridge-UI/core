@@ -396,3 +396,54 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
     ]);
   });
 });
+
+test("it should not render backdrop when hideBackdrop is true", () => {
+  render(
+    <Modal show hideBackdrop>
+      Hidden backdrop
+    </Modal>,
+  );
+
+  expect(document.body.querySelector(".bg-black\\/50")).toBeNull();
+});
+
+test("it should skip scroll lock when disableScrollLock is true", () => {
+  render(
+    <Modal show disableScrollLock>
+      Scrollable page
+    </Modal>,
+  );
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should keep dialog mounted when keepMounted is true", async () => {
+  const { rerender } = render(
+    <Modal show keepMounted transition="none">
+      Kept
+    </Modal>,
+  );
+
+  rerender(
+    <Modal show={false} keepMounted transition="none">
+      Kept
+    </Modal>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+});
+
+test("it should scroll inside panel when scroll is paper", () => {
+  render(
+    <Modal show scroll="paper">
+      Paper scroll
+    </Modal>,
+  );
+
+  const panel = document.body.querySelector('[role="dialog"]');
+
+  expect(panel?.className).toContain("overflow-y-auto");
+  expect(panel?.className).toContain("max-h-[calc(100dvh-2rem)]");
+});

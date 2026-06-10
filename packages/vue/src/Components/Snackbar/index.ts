@@ -6,6 +6,7 @@ export type {
   SnackbarColorOverrides,
   SnackbarEmits,
   SnackbarOwnProps,
+  SnackbarPaddingOverrides,
   SnackbarPartsProps,
   SnackbarProps,
   SnackbarSlots,

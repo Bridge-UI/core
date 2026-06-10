@@ -456,16 +456,67 @@ test("it should refresh z-index when a sibling modal unmounts", async () => {
 
   expect(inner.value).toBe(false);
 
+  await flushPromises();
+
+  expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(2);
+
   const zIndexes = [
-    ...document.body.querySelectorAll<HTMLElement>(
-      ".fixed.inset-0.overflow-y-auto",
-    ),
+    ...document.body.querySelectorAll<HTMLElement>('[role="dialog"]'),
   ]
-    .map((root) => Number(root.style.zIndex))
+    .map((panel) => {
+      return Number(panel.parentElement?.parentElement?.style.zIndex);
+    })
     .sort((left, right) => left - right);
 
   expect(zIndexes).toEqual([
     LAYER_STACK_BASE_Z_INDEX,
     LAYER_STACK_BASE_Z_INDEX + 1,
   ]);
+});
+
+test("it should not render backdrop when hideBackdrop is true", () => {
+  const wrapper = mountModal({
+    slots: { default: "No backdrop" },
+    props: { modelValue: true, hideBackdrop: true },
+  });
+
+  expect(wrapper.props("hideBackdrop")).toBe(true);
+  expect(document.body.querySelector('[data-modal-part="overlay"]')).toBeNull();
+});
+
+test("it should skip scroll lock when disableScrollLock is true", () => {
+  mountModal({
+    slots: { default: "Scrollable page" },
+    props: { modelValue: true, disableScrollLock: true },
+  });
+
+  expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should keep dialog mounted when keepMounted is true", async () => {
+  const wrapper = mountModal({
+    slots: { default: "Kept" },
+    props: {
+      modelValue: true,
+      keepMounted: true,
+      transition: "none",
+    },
+  });
+
+  await wrapper.setProps({ modelValue: false });
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should scroll inside panel when scroll is paper", () => {
+  mountModal({
+    slots: { default: "Paper scroll" },
+    props: { scroll: "paper", modelValue: true },
+  });
+
+  const panel = document.body.querySelector('[role="dialog"]');
+
+  expect(panel?.className).toContain("overflow-y-auto");
+  expect(panel?.className).toContain("max-h-[calc(100dvh-2rem)]");
 });
