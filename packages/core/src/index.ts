@@ -10,6 +10,8 @@ export type {
 export type {
   AvatarColor,
   AvatarColorItem,
+  AvatarIconSize,
+  AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
 } from "@core/Components/Avatar";

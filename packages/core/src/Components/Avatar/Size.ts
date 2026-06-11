@@ -9,8 +9,8 @@ export interface AvatarSize {
 }
 
 export const sizeProps: AvatarSize = {
-  "xs": "w-8 h-8 text-xs",
-  "sm": "w-9 h-9 text-sm",
+  "xs": "w-7 h-7 text-xs",
+  "sm": "w-8 h-8 text-sm",
   "2xs": "w-6 h-6 text-2xs",
   "md": "w-10 h-10 text-sm",
   "xl": "w-14 h-14 text-lg",
