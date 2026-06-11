@@ -83,13 +83,6 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
-export type {
-  SelectColor,
-  SelectColorItem,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
-} from "@core/Components/Select";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,

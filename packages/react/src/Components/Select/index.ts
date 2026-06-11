@@ -2,11 +2,11 @@
 export { default as Select } from "@/Components/Select/Select";
 export type {
   SelectClasses,
-  SelectColorOverrides,
+  SelectModel,
   SelectOption,
+  SelectOwnProps,
+  SelectPartsProps,
   SelectProps,
-  SelectRoundedOverrides,
-  SelectSizeOverrides,
   SelectSlots,
-  SelectVariantOverrides,
+  SelectValue,
 } from "@/Components/Select/select.types";

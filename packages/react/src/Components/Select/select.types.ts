@@ -1,21 +1,27 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  MergeProps,
-  SelectColor,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
-} from "@bridge-ui/core";
+import type { MergeHtmlProps } from "@bridge-ui/core";
 
-export interface SelectSizeOverrides {}
-export interface SelectColorOverrides {}
-export interface SelectRoundedOverrides {}
-export interface SelectVariantOverrides {}
+// ** Local Imports
+import type {
+  FormFieldClasses,
+  FormFieldOwnProps,
+  FormFieldPartsProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
+
+export type SelectValue = string | number;
+
+export type SelectModel = SelectValue | SelectValue[];
 
 export interface SelectOption {
+  /**
+   * Secondary line below the label.
+   */
+  description?: string;
+
   /**
    * Whether the option is disabled.
    */
@@ -29,95 +35,35 @@ export interface SelectOption {
   /**
    * The value of the option.
    */
-  value: string | number;
+  value: SelectValue;
 }
 
-export interface SelectClasses {
+export interface SelectClasses extends FormFieldClasses {
+  /**
+   * The classes to apply to selected chips (multiple mode).
+   */
+  chip?: string;
+
   /**
    * The classes to apply to the dropdown content.
    */
   content?: string;
 
   /**
-   * The classes to apply to the description.
-   */
-  description?: string;
-
-  /**
-   * The classes to apply to the error message.
-   */
-  error?: string;
-
-  /**
    * The classes to apply to the option item.
    */
   item?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the trigger.
-   */
-  trigger?: string;
 }
 
-export interface SelectProps {
-  /**
-   * The children to render.
-   *
-   * @default undefined
-   */
-  children?: ReactNode;
+export interface SelectPartsProps extends FormFieldPartsProps {}
 
+export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
-   * The classes to apply to the select.
+   * Whether the value can be cleared.
    *
-   * @default undefined
+   * @default true
    */
-  classes?: SelectClasses;
-
-  /**
-   * The color to apply to the select.
-   *
-   * @default "primary"
-   */
-  color?: MergeProps<SelectColor, SelectColorOverrides>;
-
-  /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the select is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * The label text for the select.
-   *
-   * @default undefined
-   */
-  label?: string;
+  clearable?: boolean;
 
   /**
    * Whether multiple values can be selected.
@@ -128,93 +74,40 @@ export interface SelectProps {
 
   /**
    * Callback when the selection changes.
-   *
-   * @default undefined
    */
-  onChange?: (value: string | number | (string | number)[]) => void;
+  onChange?: (value: SelectModel) => void;
 
   /**
    * The list of options to display.
-   *
-   * @default undefined
    */
   options?: SelectOption[];
 
   /**
-   * The placeholder text.
-   *
-   * @default undefined
+   * Placeholder shown when no value is selected.
    */
   placeholder?: string;
 
   /**
-   * Whether the select is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The roundedness of the select.
-   *
-   * @default "md"
-   */
-  rounded?: MergeProps<SelectRounded, SelectRoundedOverrides>;
-
-  /**
-   * Whether the options are searchable.
+   * Whether options can be filtered via the trigger input.
    *
    * @default false
    */
   searchable?: boolean;
 
   /**
-   * The size of the select.
-   *
-   * @default "md"
-   */
-  size?: MergeProps<SelectSize, SelectSizeOverrides>;
-
-  /**
-   * The slots to apply to the select.
-   *
-   * @default undefined
-   */
-  slots?: SelectSlots;
-
-  /**
    * The selected value.
-   *
-   * @default undefined
    */
-  value?: string | number | (string | number)[];
-
-  /**
-   * The variant of the select.
-   *
-   * @default "outline"
-   */
-  variant?: MergeProps<SelectVariant, SelectVariantOverrides>;
+  value?: SelectModel;
 }
 
-export interface SelectSlots {
+export interface SelectSlots extends FormFieldSlots {
   /**
-   * The slot for the description.
-   */
-  description?: ReactNode;
-
-  /**
-   * The slot for the error message.
-   */
-  error?: ReactNode;
-
-  /**
-   * The slot for the label.
-   */
-  label?: ReactNode;
-
-  /**
-   * The slot for the option item.
+   * Custom option item content.
    */
   option?: ReactNode;
 }
+
+export type SelectProps = MergeHtmlProps<
+  SelectOwnProps,
+  InputHTMLAttributes<HTMLInputElement>
+>;

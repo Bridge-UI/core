@@ -213,17 +213,13 @@ export { Select, SelectOption } from "@/Components/Select";
 export type {
   SelectAsyncData,
   SelectClasses,
-  SelectColorOverrides,
   SelectEmits,
   SelectModel,
   SelectOptionData,
   SelectOptionProps,
   SelectProps,
-  SelectRoundedOverrides,
-  SelectSizeOverrides,
   SelectSlots,
   SelectValue,
-  SelectVariantOverrides,
 } from "@/Components/Select";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {

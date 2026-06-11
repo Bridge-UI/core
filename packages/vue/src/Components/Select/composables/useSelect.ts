@@ -19,8 +19,6 @@ import {
   adjustAutosizeTextareaHeight,
   cn,
   splitComponentProps,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -65,17 +63,7 @@ const selectBridgeKeys = [
   "optionDescription",
 ] as const satisfies readonly (keyof SelectOwnProps)[];
 
-type SelectRegistryProps = Pick<
-  SelectOwnProps,
-  "size" | "color" | "classes" | "rounded" | "variant"
->;
-
-type SelectLibDefaults = LibDefaultsShape<
-  SelectRegistryProps,
-  "size" | "color" | "rounded" | "variant"
->;
-
-type SelectMerged = MergeLibDefaults<SelectRegistryProps, SelectLibDefaults>;
+type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -188,23 +176,16 @@ export function useSelect(
 
   const registryProps = computed((): SelectRegistryProps => {
     return {
-      size: props.size,
-      color: props.color,
-      rounded: props.rounded,
-      variant: props.variant,
       classes: selectMerged.value.classes,
     };
   });
 
-  const { entry: bridgeSelect } = useBridgeUIComponent<SelectMerged, "Select">({
+  const { entry: bridgeSelect } = useBridgeUIComponent<
+    SelectRegistryProps,
+    "Select"
+  >({
     componentName: "Select",
     props: () => registryProps.value,
-    libDefaults: {
-      size: "md",
-      rounded: "md",
-      color: "primary",
-      variant: "outline",
-    },
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<SelectClasses>({

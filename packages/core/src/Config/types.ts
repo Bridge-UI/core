@@ -81,13 +81,6 @@ import type {
   RadioSize,
 } from "@core/Components/Radio";
 import type {
-  SelectColor,
-  SelectColorItem,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
-} from "@core/Components/Select";
-import type {
   SnackbarColor,
   SnackbarColorItem,
   SnackbarPadding,
@@ -402,17 +395,6 @@ export interface SnackbarConfigBase {
 
 export interface SelectConfigBase {
   classes: object;
-  customProps: Partial<{
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-    variant: Record<string, Record<string, SelectColorItem>>;
-  }>;
-  defaultProps: Partial<{
-    color: keyof SelectColor;
-    rounded: keyof SelectRounded;
-    size: keyof SelectSize;
-    variant: keyof SelectVariant;
-  }>;
 }
 
 export interface SwitchConfigBase {

@@ -13,11 +13,6 @@ import type {
 } from "@/Components/FormField/formField.types";
 import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
-export interface SelectSizeOverrides {}
-export interface SelectColorOverrides {}
-export interface SelectRoundedOverrides {}
-export interface SelectVariantOverrides {}
-
 export type SelectValue = string | number;
 
 export type SelectModel = SelectValue | SelectValue[];

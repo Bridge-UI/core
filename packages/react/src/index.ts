@@ -183,13 +183,13 @@ export type {
 export { Select } from "@/Components/Select";
 export type {
   SelectClasses,
-  SelectColorOverrides,
+  SelectModel,
   SelectOption,
+  SelectOwnProps,
+  SelectPartsProps,
   SelectProps,
-  SelectRoundedOverrides,
-  SelectSizeOverrides,
   SelectSlots,
-  SelectVariantOverrides,
+  SelectValue,
 } from "@/Components/Select";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {
