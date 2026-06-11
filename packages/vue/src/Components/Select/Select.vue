@@ -76,7 +76,6 @@ const {
   emptyMessage,
   listboxColor,
   visibleOptions,
-  isSearchActive,
   selectedOptions,
   highlightedIndex,
   hideEmptyMessage,
@@ -87,7 +86,6 @@ const {
   <FormField :field="formField">
     <div
       v-if="multiple"
-      v-on:click.stop
       class="flex min-w-0 flex-1 flex-wrap items-center gap-1"
     >
       <span
@@ -139,8 +137,8 @@ const {
     :options="visibleOptions"
     :is-selected="isSelected"
     v-on:select="selectOption"
+    :disable-auto-focus="true"
     :empty-message="emptyMessage"
-    :disable-auto-focus="isSearchActive"
     :highlighted-index="highlightedIndex"
     :hide-empty-message="hideEmptyMessage"
     :labelled-by="formField.controlId.value"

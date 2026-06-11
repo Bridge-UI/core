@@ -20,6 +20,7 @@ import {
   cn,
   splitComponentProps,
 } from "@bridge-ui/core";
+import { colorProps } from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
 import {
@@ -324,7 +325,7 @@ export function useSelect(
     containerRef.value = element instanceof HTMLElement ? element : null;
   };
 
-  function handleContainerClick(event: MouseEvent) {
+  function handleTriggerPointer(event: MouseEvent) {
     if (props.disabled || props.readonly) {
       return;
     }
@@ -341,6 +342,7 @@ export function useSelect(
     }
 
     if (!isSearchActive.value) {
+      closeMenu();
       triggerRef.value?.focus({ preventScroll: true });
     }
   }
@@ -364,18 +366,15 @@ export function useSelect(
       ...formFieldCustom,
       endIcon,
       classes: mergedClasses.value,
-      readonly: triggerReadonly.value,
       partsProps: {
         ...formFieldCustom.partsProps,
         container: mergePartBind(
           formFieldCustom.partsProps?.container,
+          {},
           {
             ref: handleContainerRef,
-            onClick: handleContainerClick,
+            onClick: handleTriggerPointer,
           },
-          cn({
-            "cursor-pointer": !props.disabled && !props.readonly,
-          }),
         ),
       },
     };
@@ -433,7 +432,7 @@ export function useSelect(
 
     open.value = true;
     searchQuery.value = "";
-    navigation.resetHighlight();
+    navigation.highlightCurrentSelection(isSelected);
     emit("open");
     void fetchAsyncOptions("");
   }
@@ -471,10 +470,11 @@ export function useSelect(
       setModel(current);
       emitChange(current);
       searchQuery.value = "";
-      navigation.resetHighlight();
-      void nextTick(() =>
-        adjustHeight(triggerRef.value as HTMLTextAreaElement),
-      );
+      highlightedIndex.value = -1;
+      void nextTick(() => {
+        adjustHeight(triggerRef.value as HTMLTextAreaElement);
+        triggerRef.value?.focus({ preventScroll: true });
+      });
 
       return;
     }
@@ -688,14 +688,32 @@ export function useSelect(
     );
   }
 
+  const listboxColor = computed(() => {
+    if (formField.invalidated.value) {
+      return "error" as const;
+    }
+
+    return formField.merged.value.color ?? "primary";
+  });
+
+  const selectedValueTextClass = computed(() => {
+    return get(colorProps, listboxColor.value)?.value;
+  });
+
   const triggerBind = computed(() => {
+    const showPointerCursor =
+      !props.disabled && !props.readonly && !isSearchActive.value;
+
+    const showSelectedValueStyle =
+      hasValue.value && !multiple.value && !isSearchActive.value;
+
     return mergePartBind(
-      formField.inputBind.value,
       {
         role: "combobox",
         value: displayValue.value,
         "aria-controls": listboxId,
         "aria-expanded": open.value,
+        readonly: triggerReadonly.value,
         onKeydown: handleTriggerKeyDown,
         placeholder: selectMerged.value.placeholder,
         "aria-autocomplete": isSearchEnabled.value ? "list" : undefined,
@@ -714,9 +732,12 @@ export function useSelect(
               onInput: handleTriggerInput,
             }),
       },
+      formField.inputBind.value,
       cn({
-        "cursor-pointer": !isSearchActive.value && !props.disabled,
+        "cursor-pointer": showPointerCursor,
         "overflow-hidden": multiple.value,
+        [cn(selectedValueTextClass.value, mergedClasses.value.value) ?? ""]:
+          showSelectedValueStyle,
       }),
     );
   });
@@ -747,14 +768,6 @@ export function useSelect(
 
   onMounted(() => {
     adjustHeight(triggerRef.value as HTMLTextAreaElement | null);
-  });
-
-  const listboxColor = computed(() => {
-    if (formField.invalidated.value) {
-      return "error" as const;
-    }
-
-    return formField.merged.value.color ?? "primary";
   });
 
   return {

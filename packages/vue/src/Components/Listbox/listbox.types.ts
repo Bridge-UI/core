@@ -18,7 +18,12 @@ export interface ListboxClasses {
   check?: string;
 
   /**
-   * Classes merged onto selected or highlighted options.
+   * Classes merged onto keyboard-highlighted options.
+   */
+  optionHighlighted?: string;
+
+  /**
+   * Classes merged onto selected options.
    */
   optionSelected?: string;
 }

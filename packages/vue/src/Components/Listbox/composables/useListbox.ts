@@ -72,6 +72,10 @@ export function useListbox(
     return colorClasses.value?.selected;
   });
 
+  const optionHighlightedClass = computed(() => {
+    return colorClasses.value?.highlighted;
+  });
+
   const checkClass = computed(() => {
     return colorClasses.value?.check;
   });
@@ -81,5 +85,6 @@ export function useListbox(
     checkClass,
     mergedClasses,
     optionSelectedClass,
+    optionHighlightedClass,
   };
 }

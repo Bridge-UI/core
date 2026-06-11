@@ -39,12 +39,15 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   emptyMessage: "No options",
 });
 
-const { merged, checkClass, mergedClasses, optionSelectedClass } = useListbox(
-  props,
-  {
-    color: "primary",
-  },
-);
+const {
+  merged,
+  checkClass,
+  mergedClasses,
+  optionSelectedClass,
+  optionHighlightedClass,
+} = useListbox(props, {
+  color: "primary",
+});
 
 const showEmptyState = computed(() => {
   return (
@@ -62,23 +65,36 @@ function resolveSelected(value: ListboxValue) {
   return props.isSelected?.(value) ?? false;
 }
 
-function isOptionActive(value: ListboxValue, index: number) {
-  return resolveSelected(value) || props.highlightedIndex === index;
+function isOptionHighlighted(index: number) {
+  return props.highlightedIndex === index;
+}
+
+function keepFocusOnCombobox(event: MouseEvent) {
+  event.preventDefault();
 }
 
 function getOptionPartsProps(
   option: ListboxOption,
   index: number,
-): ListItemPartsProps | undefined {
-  if (!isOptionActive(option.value, index)) {
-    return undefined;
+): ListItemPartsProps {
+  const interactive: NonNullable<ListItemPartsProps["interactive"]> = {
+    tabindex: -1,
+    onMousedown: keepFocusOnCombobox,
+  };
+
+  if (resolveSelected(option.value)) {
+    interactive.class = cn(
+      optionSelectedClass.value,
+      mergedClasses.value.optionSelected,
+    );
+  } else if (isOptionHighlighted(index)) {
+    interactive.class = cn(
+      optionHighlightedClass.value,
+      mergedClasses.value.optionHighlighted,
+    );
   }
 
-  return {
-    interactive: {
-      class: cn(optionSelectedClass.value, mergedClasses.value.optionSelected),
-    },
-  };
+  return { interactive };
 }
 
 function handleSelect(option: ListboxOption) {
@@ -124,6 +140,7 @@ function handleSelect(option: ListboxOption) {
       <ListItem
         interactive
         role="option"
+        :selected="false"
         :primary="option.label"
         :key="String(option.value)"
         :disabled="option.disabled"
@@ -133,7 +150,6 @@ function handleSelect(option: ListboxOption) {
         :id="`${listboxId}-option-${index}`"
         :parts-props="getOptionPartsProps(option, index)"
         :aria-selected="resolveSelected(option.value)"
-        :selected="isOptionActive(option.value, index)"
       >
         <template v-if="hasNamedSlot(slots, 'option')" #default>
           <slot

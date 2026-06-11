@@ -2,7 +2,10 @@
 import { computed, toValue, type MaybeRefOrGetter, type Ref } from "vue";
 
 // ** Local Imports
-import type { ListboxOption } from "@/Components/Listbox/listbox.types";
+import type {
+  ListboxOption,
+  ListboxValue,
+} from "@/Components/Listbox/listbox.types";
 
 export function findFirstEnabledOptionIndex(options: ListboxOption[]) {
   return options.findIndex((option) => !option.disabled);
@@ -25,6 +28,12 @@ export function moveListboxHighlight(
 ) {
   if (!options.length) {
     return -1;
+  }
+
+  if (currentIndex < 0) {
+    return delta > 0
+      ? findFirstEnabledOptionIndex(options)
+      : findLastEnabledOptionIndex(options);
   }
 
   let index = currentIndex;
@@ -71,6 +80,26 @@ export function useListboxNavigation(
     highlightedIndex.value = findFirstEnabledOptionIndex(toValue(options));
   }
 
+  function highlightCurrentSelection(
+    isSelected?: (value: ListboxValue) => boolean,
+  ) {
+    const resolvedOptions = toValue(options);
+
+    if (isSelected) {
+      const selectedIndex = resolvedOptions.findIndex(
+        (option) => !option.disabled && isSelected(option.value),
+      );
+
+      if (selectedIndex >= 0) {
+        highlightedIndex.value = selectedIndex;
+
+        return;
+      }
+    }
+
+    highlightedIndex.value = -1;
+  }
+
   function highlightFirst() {
     highlightedIndex.value = findFirstEnabledOptionIndex(toValue(options));
   }
@@ -98,5 +127,6 @@ export function useListboxNavigation(
     highlightFirst,
     activeDescendantId,
     getHighlightedOption,
+    highlightCurrentSelection,
   };
 }

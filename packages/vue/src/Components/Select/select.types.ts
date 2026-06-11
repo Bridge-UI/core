@@ -59,6 +59,11 @@ export interface SelectClasses extends FormFieldClasses {
    * The classes to apply to the option item.
    */
   item?: string;
+
+  /**
+   * The classes to apply to the selected value text in the trigger (single mode).
+   */
+  value?: string;
 }
 
 export interface SelectPartsProps extends FormFieldPartsProps {}
