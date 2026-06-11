@@ -1,12 +1,13 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   AvatarColor,
   AvatarRounded,
   AvatarSize,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -31,7 +32,7 @@ export interface AvatarClasses {
   root?: string;
 }
 
-export interface AvatarProps {
+export interface AvatarOwnProps {
   /**
    * The alt text for the avatar image.
    *
@@ -95,3 +96,8 @@ export interface AvatarProps {
    */
   src?: string;
 }
+
+export type AvatarProps = MergeHtmlProps<
+  AvatarOwnProps,
+  HTMLAttributes<HTMLDivElement>
+>;

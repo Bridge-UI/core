@@ -2,13 +2,28 @@
 // ** Local Imports
 import type { AvatarProps, AvatarSlots } from "@/Components/Avatar";
 import { useAvatar } from "@/Components/Avatar";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { Icon } from "@/Components/Icon";
+import { resolveNamedSlot } from "@/Utils";
+
+defineOptions({ inheritAttrs: false });
 
 defineSlots<AvatarSlots>();
 
 const props = defineProps<AvatarProps>();
 
-const { slots, merged } = useAvatar(props, {
+const {
+  slots,
+  merged,
+  rootBind,
+  iconBind,
+  hasImage,
+  imageBind,
+  fallbackBind,
+  resolvedIcon,
+  hasFallbackSlot,
+  hasFallbackText,
+  hasCustomContent,
+} = useAvatar(props, {
   size: "md",
   rounded: "full",
   color: "secondary",
@@ -16,26 +31,23 @@ const { slots, merged } = useAvatar(props, {
 </script>
 
 <template>
-  <div class="inline-flex shrink-0 items-center justify-center overflow-hidden">
+  <div v-bind="rootBind">
     <component
-      v-if="hasNamedSlot(slots, 'default')"
+      v-if="hasCustomContent"
       :is="resolveNamedSlot(slots, 'default')"
     />
 
-    <img
-      :alt="merged.alt"
-      :src="merged.src"
-      v-else-if="merged.src"
-      class="h-full w-full object-cover object-center"
-    />
+    <img v-else-if="hasImage" v-bind="imageBind" />
 
     <component
-      v-else-if="hasNamedSlot(slots, 'fallback')"
+      v-else-if="hasFallbackSlot"
       :is="resolveNamedSlot(slots, 'fallback')"
     />
 
-    <span v-else-if="merged.fallback">
+    <span v-else-if="hasFallbackText" v-bind="fallbackBind">
       {{ merged.fallback }}
     </span>
+
+    <Icon v-else :icon="resolvedIcon" v-bind="iconBind" />
   </div>
 </template>

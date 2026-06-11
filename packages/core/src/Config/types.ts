@@ -10,6 +10,7 @@ import type {
 import type {
   AvatarColor,
   AvatarColorItem,
+  AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
 } from "@core/Components/Avatar";
@@ -155,6 +156,7 @@ export interface AvatarConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, AvatarColorItem>;
+    iconSize: Record<string, AvatarIconSizeItem>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;

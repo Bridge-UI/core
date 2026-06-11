@@ -4,6 +4,11 @@ export type {
   AvatarColor,
   AvatarColorItem,
 } from "@core/Components/Avatar/Color";
+export { iconSizeProps } from "@core/Components/Avatar/IconSize";
+export type {
+  AvatarIconSize,
+  AvatarIconSizeItem,
+} from "@core/Components/Avatar/IconSize";
 export { roundedProps } from "@core/Components/Avatar/Rounded";
 export type { AvatarRounded } from "@core/Components/Avatar/Rounded";
 export { sizeProps } from "@core/Components/Avatar/Size";
