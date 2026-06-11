@@ -1,0 +1,85 @@
+// ** External Imports
+import { get } from "es-toolkit/compat";
+import { computed, useAttrs } from "vue";
+
+// ** Core Imports
+import {
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
+import { colorProps } from "@bridge-ui/core/Components/Listbox";
+
+// ** Local Imports
+import type {
+  ListboxClasses,
+  ListboxOwnProps,
+  ListboxProps,
+} from "@/Components/Listbox/listbox.types";
+import {
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const listboxBridgeKeys = [
+  "color",
+  "classes",
+  "partsProps",
+] as const satisfies readonly (keyof ListboxOwnProps)[];
+
+type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "color">;
+
+type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
+
+export function useListbox(
+  props: ListboxOwnProps,
+  libDefaults: ListboxLibDefaults,
+) {
+  const attrs = useAttrs();
+
+  const split = computed(() => {
+    return splitComponentProps<ListboxProps, typeof listboxBridgeKeys>({
+      props: { ...attrs, ...props },
+      bridgeKeys: listboxBridgeKeys,
+    });
+  });
+
+  const { merged, entry: bridgeListbox } = useBridgeUIComponent<
+    ListboxMerged,
+    "Listbox"
+  >({
+    libDefaults,
+    componentName: "Listbox",
+    props: () => split.value.customProps,
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
+    entry: bridgeListbox,
+    props: () => split.value.customProps,
+  });
+
+  const colorClasses = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeListbox.value?.customProps?.color,
+    );
+
+    return get(classes, merged.value.color ?? "primary");
+  });
+
+  const optionSelectedClass = computed(() => {
+    return colorClasses.value?.selected;
+  });
+
+  const checkClass = computed(() => {
+    return colorClasses.value?.check;
+  });
+
+  return {
+    merged,
+    checkClass,
+    mergedClasses,
+    optionSelectedClass,
+  };
+}

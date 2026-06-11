@@ -1,21 +1,286 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { InputHTMLAttributes, Slot, TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
+import type { MergeHtmlProps } from "@bridge-ui/core";
+
+// ** Local Imports
 import type {
-  MergeProps,
-  SelectColor,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
-} from "@bridge-ui/core";
+  FormFieldClasses,
+  FormFieldOwnProps,
+  FormFieldPartsProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
+import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
 export interface SelectSizeOverrides {}
 export interface SelectColorOverrides {}
 export interface SelectRoundedOverrides {}
 export interface SelectVariantOverrides {}
 
-export interface SelectOption {
+export type SelectValue = string | number;
+
+export type SelectModel = SelectValue | SelectValue[];
+
+export type SelectOption = ListboxOption;
+
+export type SelectOptionInput =
+  | SelectOption
+  | string
+  | number
+  | Record<string, unknown>;
+
+export type SelectAsyncData =
+  | string
+  | {
+      alwaysFetch?: boolean;
+      credentials?: RequestCredentials;
+      method?: "GET" | "POST";
+      params?: Record<string, unknown>;
+      url: string;
+    }
+  | {
+      resolveSelected?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
+      search: (
+        query: string,
+        ctx: { selected: SelectValue[] },
+      ) => Promise<SelectOptionLike[]>;
+    };
+
+export type SelectOptionLike = SelectOption | string | Record<string, unknown>;
+
+export interface SelectClasses extends FormFieldClasses {
+  /**
+   * The classes to apply to selected chips (multiple mode).
+   */
+  chip?: string;
+
+  /**
+   * The classes to apply to the dropdown content.
+   */
+  content?: string;
+
+  /**
+   * The classes to apply to the option item.
+   */
+  item?: string;
+}
+
+export interface SelectPartsProps extends FormFieldPartsProps {}
+
+export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
+  /**
+   * Remote data source. Implies `searchable`.
+   */
+  asyncData?: SelectAsyncData;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
+
+  /**
+   * Initial value when uncontrolled.
+   */
+  defaultValue?: SelectModel;
+
+  /**
+   * Message when the filtered list is empty.
+   *
+   * @default "No options"
+   */
+  emptyMessage?: string;
+
+  /**
+   * Inverts the visual order of options.
+   *
+   * @default false
+   */
+  flipOptions?: boolean;
+
+  /**
+   * Hides the empty-state message.
+   *
+   * @default false
+   */
+  hideEmptyMessage?: boolean;
+
+  /**
+   * External or async loading state.
+   */
+  loading?: boolean;
+
+  /**
+   * Minimum option count before search UI is enabled.
+   *
+   * @default 11
+   */
+  minItemsForSearch?: number;
+
+  /**
+   * Whether multiple values can be selected.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
+   * Key used to read the description from option objects.
+   *
+   * @default "description"
+   */
+  optionDescription?: string;
+
+  /**
+   * Key used to read the label from option objects.
+   *
+   * @default "label"
+   */
+  optionLabel?: string;
+
+  /**
+   * The list of options to display.
+   */
+  options?: SelectOptionInput[];
+
+  /**
+   * Key used to read the value from option objects.
+   *
+   * @default "value"
+   */
+  optionValue?: string;
+
+  /**
+   * Placeholder shown when no value is selected.
+   */
+  placeholder?: string;
+
+  /**
+   * Whether options can be filtered via the trigger input.
+   *
+   * @default false
+   */
+  searchable?: boolean;
+}
+
+export interface SelectSlots extends FormFieldSlots {
+  /**
+   * Content below the trigger, above the option list.
+   */
+  afterOptions?: Slot;
+
+  /**
+   * Content above the option list.
+   */
+  beforeOptions?: Slot;
+
+  /**
+   * Custom chip content (multiple mode).
+   */
+  chip?: Slot<{ option: SelectOption }>;
+
+  /**
+   * Custom empty-state content.
+   */
+  empty?: Slot;
+
+  /**
+   * Custom loading content.
+   */
+  loading?: Slot;
+
+  /**
+   * Custom option item content.
+   */
+  option?: Slot<{ option: SelectOption; selected: boolean }>;
+}
+
+export type SelectSingleProps = MergeHtmlProps<
+  SelectOwnProps,
+  InputHTMLAttributes
+> & {
+  /**
+   * Bound with `v-model` on the component.
+   */
+  modelValue?: SelectValue | null;
+
+  /**
+   * Whether multiple values can be selected.
+   *
+   * @default false
+   */
+  multiple: false;
+};
+
+export type SelectMultipleProps = MergeHtmlProps<
+  SelectOwnProps,
+  TextareaHTMLAttributes
+> & {
+  /**
+   * Bound with `v-model` on the component.
+   */
+  modelValue?: SelectValue[] | null;
+
+  /**
+   * Whether multiple values can be selected.
+   *
+   * @default true
+   */
+  multiple: true;
+};
+
+export type SelectProps = SelectSingleProps | SelectMultipleProps;
+
+export interface SelectEmits {
+  /**
+   * Emitted when the selection changes.
+   */
+  change: [value: SelectModel];
+
+  /**
+   * Emitted when the value is cleared.
+   */
+  clear: [];
+
+  /**
+   * Emitted when the menu closes.
+   */
+  close: [];
+
+  /**
+   * Emitted when an option is deselected (multiple mode).
+   */
+  deselect: [option: SelectOption];
+
+  /**
+   * Emitted when the menu opens.
+   */
+  open: [];
+
+  /**
+   * Emitted when the search query changes.
+   */
+  search: [query: string];
+
+  /**
+   * Emitted when an option is selected.
+   */
+  select: [option: SelectOption];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: SelectModel];
+}
+
+export interface SelectOptionProps {
+  /**
+   * Secondary line below the label.
+   */
+  description?: string;
+
   /**
    * Whether the option is disabled.
    */
@@ -29,183 +294,5 @@ export interface SelectOption {
   /**
    * The value of the option.
    */
-  value: string | number;
-}
-
-export interface SelectClasses {
-  /**
-   * The classes to apply to the dropdown content.
-   */
-  content?: string;
-
-  /**
-   * The classes to apply to the description.
-   */
-  description?: string;
-
-  /**
-   * The classes to apply to the error message.
-   */
-  error?: string;
-
-  /**
-   * The classes to apply to the option item.
-   */
-  item?: string;
-
-  /**
-   * The classes to apply to the label.
-   */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the trigger.
-   */
-  trigger?: string;
-}
-
-export interface SelectProps {
-  /**
-   * The classes to apply to the select.
-   *
-   * @default undefined
-   */
-  classes?: SelectClasses;
-
-  /**
-   * The color to apply to the select.
-   *
-   * @default "primary"
-   */
-  color?: MergeProps<SelectColor, SelectColorOverrides>;
-
-  /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the select is disabled.
-   *
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
-   * The error message to display.
-   *
-   * @default undefined
-   */
-  error?: string;
-
-  /**
-   * The label text for the select.
-   *
-   * @default undefined
-   */
-  label?: string;
-
-  /**
-   * The selected value.
-   *
-   * @default undefined
-   */
-  modelValue?: string | number | (string | number)[];
-
-  /**
-   * Whether multiple values can be selected.
-   *
-   * @default false
-   */
-  multiple?: boolean;
-
-  /**
-   * The list of options to display.
-   *
-   * @default undefined
-   */
-  options?: SelectOption[];
-
-  /**
-   * The placeholder text.
-   *
-   * @default undefined
-   */
-  placeholder?: string;
-
-  /**
-   * Whether the select is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The roundedness of the select.
-   *
-   * @default "md"
-   */
-  rounded?: MergeProps<SelectRounded, SelectRoundedOverrides>;
-
-  /**
-   * Whether the options are searchable.
-   *
-   * @default false
-   */
-  searchable?: boolean;
-
-  /**
-   * The size of the select.
-   *
-   * @default "md"
-   */
-  size?: MergeProps<SelectSize, SelectSizeOverrides>;
-
-  /**
-   * The variant of the select.
-   *
-   * @default "outline"
-   */
-  variant?: MergeProps<SelectVariant, SelectVariantOverrides>;
-}
-
-export interface SelectEmits {
-  /**
-   * Emitted when the selection changes.
-   */
-  change: [value: string | number | (string | number)[]];
-
-  /**
-   * Emitted when `v-model` should update.
-   */
-  "update:modelValue": [value: string | number | (string | number)[]];
-}
-
-export interface SelectSlots {
-  /**
-   * Custom description content.
-   */
-  description?: Slot<undefined>;
-
-  /**
-   * Custom error message content.
-   */
-  error?: Slot<undefined>;
-
-  /**
-   * Custom label content.
-   */
-  label?: Slot<undefined>;
-
-  /**
-   * Custom option item content.
-   */
-  option?: Slot<undefined>;
+  value: SelectValue;
 }

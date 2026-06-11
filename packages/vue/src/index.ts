@@ -120,6 +120,27 @@ export type {
   ListPartsProps,
   ListProps,
 } from "@/Components/List";
+export {
+  Listbox,
+  findFirstEnabledOptionIndex,
+  findLastEnabledOptionIndex,
+  getListboxActiveDescendantId,
+  getListboxOptionId,
+  moveListboxHighlight,
+  useListbox,
+  useListboxNavigation,
+} from "@/Components/Listbox";
+export type {
+  ListboxClasses,
+  ListboxColorOverrides,
+  ListboxEmits,
+  ListboxOption,
+  ListboxOwnProps,
+  ListboxPartsProps,
+  ListboxProps,
+  ListboxSlots,
+  ListboxValue,
+} from "@/Components/Listbox";
 export { ListItem } from "@/Components/ListItem";
 export type {
   ListItemAlignOverrides,
@@ -188,15 +209,20 @@ export type {
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio";
-export { Select } from "@/Components/Select";
+export { Select, SelectOption } from "@/Components/Select";
 export type {
+  SelectAsyncData,
   SelectClasses,
   SelectColorOverrides,
-  SelectOption,
+  SelectEmits,
+  SelectModel,
+  SelectOptionData,
+  SelectOptionProps,
   SelectProps,
   SelectRoundedOverrides,
   SelectSizeOverrides,
   SelectSlots,
+  SelectValue,
   SelectVariantOverrides,
 } from "@/Components/Select";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";

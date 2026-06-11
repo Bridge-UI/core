@@ -65,6 +65,7 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { ListPadding } from "@core/Components/List";
+export type { ListboxColor, ListboxColorItem } from "@core/Components/Listbox";
 export type { ListItemAlign } from "@core/Components/ListItem";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 export { transitionProps } from "@core/Components/Modal";
