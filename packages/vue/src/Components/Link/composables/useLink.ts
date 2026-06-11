@@ -49,7 +49,6 @@ type LinkLibDefaults = LibDefaultsShape<
 type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;
 
 export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
-  // Setup
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -78,7 +77,6 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     props: () => split.value.customProps,
   });
 
-  // Elements
   const isDisabled = computed(() => {
     return Boolean(merged.value.disabled);
   });
@@ -107,7 +105,6 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     return undefined;
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -135,7 +132,6 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     return get(classes, merged.value.underline);
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,

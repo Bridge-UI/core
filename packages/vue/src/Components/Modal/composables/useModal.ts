@@ -115,7 +115,6 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const mounted = ref(false);
@@ -196,7 +195,6 @@ export function useModal(
     return merged.value.keepMounted && !active.value;
   });
 
-  // Classes
   const alignClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
@@ -240,7 +238,6 @@ export function useModal(
     return omit(split.value.inheritedAttrs, ["onShowChange"]);
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
       onTransitionend: handleShellTransitionEnd,
@@ -314,7 +311,6 @@ export function useModal(
     );
   });
 
-  // Handlers
   function releaseFocusTrap() {
     focusTrap?.release();
     focusTrap = null;
@@ -420,7 +416,6 @@ export function useModal(
     }
   }
 
-  // Handlers
   function requestClose() {
     if (!canClose.value) {
       return;

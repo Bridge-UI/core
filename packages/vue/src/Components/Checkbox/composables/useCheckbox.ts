@@ -56,7 +56,6 @@ export function useCheckbox(
   libDefaults: CheckboxLibDefaults,
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
-  // Setup
   const attrs = useAttrs();
   const inputRef = ref<HTMLInputElement | null>(null);
 
@@ -91,7 +90,6 @@ export function useCheckbox(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const isChecked = computed(() => {
     return Boolean(toValue(checked));
   });
@@ -104,7 +102,6 @@ export function useCheckbox(
     return merged.value.color;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -132,14 +129,12 @@ export function useCheckbox(
     return get(classes, merged.value.rounded ?? "sm");
   });
 
-  // Handlers
   watchEffect(() => {
     if (inputRef.value) {
       inputRef.value.indeterminate = Boolean(merged.value.indeterminate);
     }
   });
 
-  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {

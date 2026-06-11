@@ -3,7 +3,6 @@ import { useFormField } from "@/Components/FormField";
 import type { TextFieldProps } from "@/Components/TextField/textField.types";
 
 export function useTextField(props: TextFieldProps) {
-  // Setup
   const formField = useFormField(props, {
     size: "md",
     rounded: "md",

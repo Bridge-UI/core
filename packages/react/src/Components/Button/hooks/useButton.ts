@@ -56,7 +56,6 @@ type ButtonLibDefaults = LibDefaultsShape<
 type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
 
 export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
-  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     ButtonProps,
     typeof buttonBridgeKeys
@@ -95,7 +94,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     entry: bridgeButton,
   });
 
-  // Elements
   const tag = derived(() => {
     return merged.as ?? "button";
   });
@@ -140,7 +138,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return merged.href;
   });
 
-  // Classes
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
@@ -176,7 +173,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return get(classes, merged.rounded);
   }, [merged.rounded, bridgeButton?.customProps?.rounded]);
 
-  // Binds
   const iconBind = derived(() => {
     return mergePartBind(
       partsProps?.icon,

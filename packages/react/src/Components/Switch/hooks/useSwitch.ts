@@ -49,7 +49,6 @@ type SwitchLibDefaults = LibDefaultsShape<
 type SwitchMerged = MergeLibDefaults<SwitchOwnProps, SwitchLibDefaults>;
 
 export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
-  // Setup
   const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
@@ -91,7 +90,6 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     entry: bridgeSwitch,
   });
 
-  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(customProps.defaultChecked);
   });
@@ -116,7 +114,6 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     return merged.color;
   });
 
-  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -144,7 +141,6 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     return get(classes, merged.rounded ?? "full");
   }, [merged.rounded, bridgeSwitch?.customProps?.rounded]);
 
-  // Handlers
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {
       setUncontrolledChecked(event.target.checked);
@@ -153,7 +149,6 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     inputInheritedAttrs.onChange?.(event);
   };
 
-  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {

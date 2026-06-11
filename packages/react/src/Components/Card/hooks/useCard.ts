@@ -45,7 +45,6 @@ type CardLibDefaults = LibDefaultsShape<
 type CardMerged = MergeLibDefaults<CardOwnProps, CardLibDefaults>;
 
 export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
-  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     CardProps,
     typeof cardBridgeKeys
@@ -84,7 +83,6 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     props: customProps,
   });
 
-  // Elements
   const hasDefaultBody = derived(() => {
     return Boolean(children);
   });
@@ -93,7 +91,6 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     return Boolean(slots?.footer);
   });
 
-  // Classes
   const variantClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -142,7 +139,6 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     return get(classes, merged.rounded);
   }, [merged.rounded, bridgeCard?.customProps?.rounded]);
 
-  // Binds
   const bodyBind = derived(() => {
     return mergePartBind(
       partsProps?.body,

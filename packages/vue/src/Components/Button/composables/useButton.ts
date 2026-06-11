@@ -58,7 +58,6 @@ export function useButton(
   props: ButtonOwnProps,
   libDefaults: ButtonLibDefaults,
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const split = computed(() => {
@@ -86,7 +85,6 @@ export function useButton(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const tag = computed(() => {
     return merged.value.as ?? "button";
   });
@@ -131,7 +129,6 @@ export function useButton(
     return merged.value.href;
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
@@ -167,7 +164,6 @@ export function useButton(
     return get(classes, merged.value.rounded);
   });
 
-  // Binds
   const iconBind = computed(() => {
     return mergePartBind(
       partsProps.value?.icon,

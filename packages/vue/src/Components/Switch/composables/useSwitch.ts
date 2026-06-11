@@ -48,7 +48,6 @@ export function useSwitch(
   libDefaults: SwitchLibDefaults,
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
@@ -82,7 +81,6 @@ export function useSwitch(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const isChecked = computed(() => {
     return Boolean(toValue(checked));
   });
@@ -95,7 +93,6 @@ export function useSwitch(
     return merged.value.color;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -123,7 +120,6 @@ export function useSwitch(
     return get(classes, merged.value.rounded ?? "full");
   });
 
-  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {

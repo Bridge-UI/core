@@ -51,7 +51,6 @@ type AvatarLibDefaults = LibDefaultsShape<
 type AvatarMerged = MergeLibDefaults<AvatarOwnProps, AvatarLibDefaults>;
 
 export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
-  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     AvatarProps,
     typeof avatarBridgeKeys
@@ -82,7 +81,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     entry: bridgeAvatar,
   });
 
-  // Elements
   const hasCustomContent = derived(() => {
     return isPropPresent(children);
   });
@@ -103,7 +101,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return !hasImage && !hasCustomContent;
   });
 
-  // Classes
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -140,7 +137,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return get(classes, merged.size);
   }, [merged.size, bridgeAvatar?.customProps?.iconSize]);
 
-  // Binds
   const rootBind = derived(() => {
     return mergePartBind(
       {},

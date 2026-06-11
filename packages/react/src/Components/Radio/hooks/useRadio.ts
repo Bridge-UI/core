@@ -50,7 +50,6 @@ type RadioLibDefaults = LibDefaultsShape<
 type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
-  // Setup
   const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
@@ -93,7 +92,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     entry: bridgeRadio,
   });
 
-  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(customProps.defaultChecked);
   });
@@ -118,7 +116,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return merged.color;
   });
 
-  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -146,7 +143,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return get(classes, merged.rounded ?? "full");
   }, [merged.rounded, bridgeRadio?.customProps?.rounded]);
 
-  // Handlers
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {
       setUncontrolledChecked(event.target.checked);
@@ -155,7 +151,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     inputInheritedAttrs.onChange?.(event);
   };
 
-  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {

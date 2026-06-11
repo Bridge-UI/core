@@ -57,7 +57,6 @@ export function useFormControl(
   props: Omit<FormControlProps, "field">,
   libDefaults: FormControlLibDefaults,
 ) {
-  // Setup
   const autoId = useId();
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -98,7 +97,6 @@ export function useFormControl(
     entry: bridgeFormControl,
   });
 
-  // Elements
   const invalidated = derived(() => {
     return merged.error === true;
   });
@@ -150,12 +148,10 @@ export function useFormControl(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const textSizeClass = derived(() => {
     return get(labelSizeProps, merged.size ?? "md");
   });
 
-  // Binds
   const rootBind = derived(() => {
     return mergePartBind(
       partsProps?.root,

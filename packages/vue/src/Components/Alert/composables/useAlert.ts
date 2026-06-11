@@ -47,7 +47,6 @@ type AlertLibDefaults = LibDefaultsShape<
 type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
 
 export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
-  // Setup
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -76,14 +75,12 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     props: () => split.value.customProps,
   });
 
-  // Elements
   const hasDefaultBody = computed(() => {
     const content = slots.default?.();
 
     return Boolean(content && content.length > 0);
   });
 
-  // Classes
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -134,7 +131,6 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     return themeIcon ?? get(alertDefaultIcons, merged.value.color);
   });
 
-  // Binds
   const bodyBind = computed(() => {
     return mergePartBind(
       partsProps.value?.body,

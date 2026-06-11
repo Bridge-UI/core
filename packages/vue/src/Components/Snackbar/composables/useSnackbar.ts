@@ -90,7 +90,6 @@ export function useSnackbar(
   libDefaults: SnackbarLibDefaults,
   options: SnackbarOptions = {},
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const rendered = ref(false);
@@ -144,7 +143,6 @@ export function useSnackbar(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const show = computed(() => {
     if (!isNil(options.show)) {
       return toValue(options.show);
@@ -227,7 +225,6 @@ export function useSnackbar(
     return get(classes, merged.value.position ?? "bottom-center");
   });
 
-  // Handlers
   function clearDismissTimer() {
     if (timerRef.value) {
       clearTimeout(timerRef.value);
@@ -455,7 +452,6 @@ export function useSnackbar(
     stackHandle = null;
   });
 
-  // Binds
   const portalBind = computed(() => {
     return mergePartBind(
       partsProps.value?.portal,

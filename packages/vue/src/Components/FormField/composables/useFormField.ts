@@ -91,7 +91,6 @@ export function useFormField(
   libDefaults: FormFieldLibDefaults,
   options: FormFieldOptions = {},
 ) {
-  // Setup
   const autoId = useId();
   const slots = useSlots();
 
@@ -127,7 +126,6 @@ export function useFormField(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const invalidated = computed(() => {
     return merged.value.error === true;
   });
@@ -222,7 +220,6 @@ export function useFormField(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -310,7 +307,6 @@ export function useFormField(
     });
   });
 
-  // Binds
   const endBind = computed(() => {
     return mergePartBind(
       partsProps.value?.end,

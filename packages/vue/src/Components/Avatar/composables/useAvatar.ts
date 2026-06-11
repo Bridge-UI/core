@@ -73,7 +73,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     props: () => split.value.customProps,
   });
 
-  // Elements
   const hasCustomContent = computed(() => {
     return hasNamedSlot(slots, "default");
   });
@@ -98,7 +97,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return !hasImage.value && !hasCustomContent.value;
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -135,7 +133,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return get(classes, merged.value.size);
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       {},

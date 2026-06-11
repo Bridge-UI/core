@@ -87,7 +87,6 @@ export function useFormField(
   libDefaults: FormFieldLibDefaults,
   options: FormFieldOptions = {},
 ) {
-  // Setup
   const autoId = useId();
 
   const { customProps, inheritedAttrs } = splitComponentProps<
@@ -132,7 +131,6 @@ export function useFormField(
     entry: bridgeFormField,
   });
 
-  // Elements
   const invalidated = derived(() => {
     return merged.error === true;
   });
@@ -224,7 +222,6 @@ export function useFormField(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -312,7 +309,6 @@ export function useFormField(
     });
   });
 
-  // Binds
   const endBind = derived(() => {
     return mergePartBind(
       partsProps?.end,

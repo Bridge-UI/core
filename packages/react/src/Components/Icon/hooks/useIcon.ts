@@ -26,7 +26,6 @@ type IconLibDefaults = LibDefaultsShape<IconOwnProps, "size">;
 type IconMerged = MergeLibDefaults<IconOwnProps, IconLibDefaults>;
 
 export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
-  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     IconProps,
     typeof iconBridgeKeys
@@ -44,7 +43,6 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
     componentName: "Icon",
   });
 
-  // Classes
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -54,7 +52,6 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
     return get(classes, merged.size);
   }, [merged.size, bridgeIcon?.customProps?.size]);
 
-  // Binds
   const rootBind = derived(() => {
     return mergePartBind(
       {},

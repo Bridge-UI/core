@@ -50,7 +50,6 @@ export function useRadio(
   libDefaults: RadioLibDefaults,
   modelValue: MaybeRefOrGetter<string | number | undefined>,
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
@@ -84,7 +83,6 @@ export function useRadio(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const isChecked = computed(() => {
     return toValue(modelValue) === merged.value.value;
   });
@@ -97,7 +95,6 @@ export function useRadio(
     return merged.value.color;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -125,7 +122,6 @@ export function useRadio(
     return get(classes, merged.value.rounded ?? "full");
   });
 
-  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {

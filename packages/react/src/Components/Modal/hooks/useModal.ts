@@ -112,7 +112,6 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  // Setup
   const { onClose, stackId, onShowChange, show = false } = options;
 
   const layerStackIdRef = useRef("");
@@ -186,7 +185,6 @@ export function useModal(
     stackOrderRef.current = null;
   }
 
-  // Classes
   const alignClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
@@ -220,7 +218,6 @@ export function useModal(
   const overlayTransitionClass =
     getModalOverlayTransitionClass(effectiveTransition);
 
-  // Handlers
   function setShow(next: boolean) {
     if (!next) {
       onClose?.();
@@ -450,7 +447,6 @@ export function useModal(
     return subscribeLayerStack(syncZIndex);
   }, [active]);
 
-  // Binds
   const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
     style: {
       zIndex: stackZIndex,

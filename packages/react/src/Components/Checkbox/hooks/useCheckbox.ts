@@ -54,7 +54,6 @@ export function useCheckbox(
   props: CheckboxProps,
   libDefaults: CheckboxLibDefaults,
 ) {
-  // Setup
   const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
@@ -99,7 +98,6 @@ export function useCheckbox(
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
     return Boolean(customProps.defaultChecked);
   });
@@ -124,7 +122,6 @@ export function useCheckbox(
     return merged.color;
   });
 
-  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -152,7 +149,6 @@ export function useCheckbox(
     return get(classes, merged.rounded ?? "sm");
   }, [merged.rounded, bridgeCheckbox?.customProps?.rounded]);
 
-  // Handlers
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.indeterminate = Boolean(merged.indeterminate);
@@ -167,7 +163,6 @@ export function useCheckbox(
     inputInheritedAttrs.onChange?.(event);
   };
 
-  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {

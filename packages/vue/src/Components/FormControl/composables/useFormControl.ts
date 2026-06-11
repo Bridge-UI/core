@@ -63,7 +63,6 @@ export function useFormControl(
   props: MaybeRefOrGetter<Omit<FormControlOwnProps, "field">>,
   libDefaults: FormControlLibDefaults,
 ) {
-  // Setup
   const autoId = useId();
   const slots = useSlots();
   const attrs = useAttrs();
@@ -96,7 +95,6 @@ export function useFormControl(
     props: () => split.value.customProps,
   });
 
-  // Elements
   const invalidated = computed(() => {
     return merged.value.error === true;
   });
@@ -151,12 +149,10 @@ export function useFormControl(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const textSizeClass = computed(() => {
     return get(labelSizeProps, merged.value.size ?? "md");
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       partsProps.value?.root,

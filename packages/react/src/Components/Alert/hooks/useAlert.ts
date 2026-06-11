@@ -48,7 +48,6 @@ type AlertLibDefaults = LibDefaultsShape<
 type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
 
 export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
-  // Setup
   const { customProps, inheritedAttrs } = splitComponentProps<
     AlertProps,
     typeof alertBridgeKeys
@@ -87,12 +86,10 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     props: customProps,
   });
 
-  // Elements
   const hasDefaultBody = derived(() => {
     return Boolean(children);
   });
 
-  // Classes
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -143,7 +140,6 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     return themeIcon ?? get(alertDefaultIcons, merged.color);
   }, [merged.icon, merged.color, colorClass]);
 
-  // Binds
   const bodyBind = derived(() => {
     return mergePartBind(
       partsProps?.body,
