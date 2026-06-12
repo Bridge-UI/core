@@ -51,6 +51,11 @@ export interface SelectClasses extends FormFieldClasses {
   chip?: string;
 
   /**
+   * The classes to apply to clear icons (rest + hover).
+   */
+  clear?: string;
+
+  /**
    * The classes to apply to the dropdown content.
    */
   content?: string;

@@ -5,6 +5,7 @@ import { provide, ref, useTemplateRef } from "vue";
 
 // ** Local Imports
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/composables/useSelect";
 import type {
@@ -67,6 +68,7 @@ const {
   formField,
   isLoading,
   clearable,
+  clearBind,
   isSelected,
   clearValue,
   removeChip,
@@ -75,6 +77,7 @@ const {
   containerRef,
   emptyMessage,
   listboxColor,
+  clearIconSize,
   visibleOptions,
   selectedOptions,
   highlightedIndex,
@@ -97,15 +100,15 @@ const {
           <span class="truncate">{{ option.label }}</span>
         </slot>
 
-        <button
-          type="button"
-          data-select-clear
+        <span
+          v-bind="clearBind"
           :aria-label="`Remove ${option.label}`"
           v-on:click="removeChip(option, $event)"
-          class="inline-flex shrink-0 rounded-sm p-0.5 hover:bg-black/10"
+          v-on:keydown.enter.prevent="removeChip(option, $event)"
+          v-on:keydown.space.prevent="removeChip(option, $event)"
         >
-          <X class="size-3.5" />
-        </button>
+          <Icon :icon="X" :size="clearIconSize" />
+        </span>
       </span>
 
       <textarea ref="trigger" v-bind="triggerBind" />
@@ -114,16 +117,16 @@ const {
     <div v-else class="flex min-w-0 flex-1 items-center gap-1">
       <input ref="trigger" class="min-w-0 flex-1" v-bind="triggerBind" />
 
-      <button
-        type="button"
-        data-select-clear
+      <span
+        v-bind="clearBind"
         v-on:click="clearValue"
         aria-label="Clear selection"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
         v-if="clearable && hasValue && !formField.isDisabled.value"
-        class="inline-flex shrink-0 items-center justify-center rounded-sm p-1 text-gray-500 hover:bg-black/5 hover:text-gray-700"
       >
-        <X class="size-4" />
-      </button>
+        <Icon :icon="X" :size="clearIconSize" />
+      </span>
     </div>
   </FormField>
 

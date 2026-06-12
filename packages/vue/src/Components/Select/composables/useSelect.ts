@@ -41,6 +41,7 @@ import type {
 import {
   hasNamedSlot,
   mergePartBind,
+  resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -325,6 +326,10 @@ export function useSelect(
     containerRef.value = element instanceof HTMLElement ? element : null;
   };
 
+  function handleClearPointer(event: MouseEvent) {
+    event.preventDefault();
+  }
+
   function handleTriggerPointer(event: MouseEvent) {
     if (props.disabled || props.readonly) {
       return;
@@ -374,6 +379,10 @@ export function useSelect(
           {
             ref: handleContainerRef,
             onClick: handleTriggerPointer,
+            class: cn({
+              "cursor-pointer":
+                !props.disabled && !props.readonly && !isSearchActive.value,
+            }),
           },
         ),
       },
@@ -701,9 +710,6 @@ export function useSelect(
   });
 
   const triggerBind = computed(() => {
-    const showPointerCursor =
-      !props.disabled && !props.readonly && !isSearchActive.value;
-
     const showSelectedValueStyle =
       hasValue.value && !multiple.value && !isSearchActive.value;
 
@@ -734,8 +740,7 @@ export function useSelect(
       },
       formField.inputBind.value,
       cn({
-        "cursor-pointer": showPointerCursor,
-        "overflow-hidden": multiple.value,
+        "resize-none overflow-hidden": multiple.value,
         [cn(selectedValueTextClass.value, mergedClasses.value.value) ?? ""]:
           showSelectedValueStyle,
       }),
@@ -770,6 +775,28 @@ export function useSelect(
     adjustHeight(triggerRef.value as HTMLTextAreaElement | null);
   });
 
+  const clearIconSize = computed(() => {
+    return resolveFieldAdornmentIconSize(formField.merged.value.size);
+  });
+
+  const clearBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabindex: 0,
+        role: "button",
+        "data-select-clear": true,
+        onMousedown: handleClearPointer,
+        class: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [get(colorProps, listboxColor.value)?.clear ?? ""]: true,
+          [mergedClasses.value.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
     slots,
@@ -779,6 +806,7 @@ export function useSelect(
     formField,
     isLoading,
     clearable,
+    clearBind,
     isSelected,
     clearValue,
     removeChip,
@@ -786,6 +814,7 @@ export function useSelect(
     listboxColor,
     selectOption,
     containerRef,
+    clearIconSize,
     visibleOptions,
     isSearchActive,
     selectedOptions,
