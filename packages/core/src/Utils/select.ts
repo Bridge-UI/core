@@ -10,18 +10,30 @@ import type {
   SelectValue,
 } from "@core/Components/Select/types";
 
+/**
+ * The default async results limit for the select.
+ */
 export const DEFAULT_SELECT_ASYNC_RESULTS_LIMIT = 20;
 
+/**
+ * The type of the select option keys.
+ */
 export type SelectOptionKeys = {
   optionDescription: string;
   optionLabel: string;
   optionValue: string;
 };
 
+/**
+ * The function checks if the value is a record.
+ */
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+/**
+ * The function normalizes a select option.
+ */
 export function normalizeSelectOption(
   item: SelectOptionInput,
   keys: SelectOptionKeys,
@@ -59,6 +71,9 @@ export function normalizeSelectOption(
   return { label: "", value: "" };
 }
 
+/**
+ * The function normalizes a list of select options.
+ */
 export function normalizeSelectOptions(
   items: SelectOptionInput[] | SelectOptionLike[] | undefined,
   keys: SelectOptionKeys,
@@ -72,14 +87,23 @@ export function normalizeSelectOptions(
   );
 }
 
+/**
+ * The function checks if two select values are equal.
+ */
 export function selectValuesEqual(a: SelectValue, b: SelectValue) {
   return String(a) === String(b);
 }
 
+/**
+ * The function resolves the async limit for the select.
+ */
 export function resolveSelectAsyncLimit(asyncData: SelectAsyncData) {
   return asyncData.limit ?? DEFAULT_SELECT_ASYNC_RESULTS_LIMIT;
 }
 
+/**
+ * The function merges a list of select options.
+ */
 export function mergeSelectAsyncOptions<T extends { value: SelectValue }>(
   selected: T[],
   search: T[],
@@ -114,6 +138,9 @@ export function mergeSelectAsyncOptions<T extends { value: SelectValue }>(
   return merged;
 }
 
+/**
+ * The function fetches the async data for the select.
+ */
 export async function fetchSelectAsyncData(
   asyncData: SelectAsyncData,
   query: string,
@@ -132,6 +159,9 @@ export async function fetchSelectAsyncData(
   return { search, selected: selectedResults };
 }
 
+/**
+ * The function resolves the async options for the select.
+ */
 export async function resolveSelectAsyncOptions<T extends SelectOption>(
   asyncData: SelectAsyncData,
   query: string,
