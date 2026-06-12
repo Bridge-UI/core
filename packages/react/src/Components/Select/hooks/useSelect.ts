@@ -15,10 +15,13 @@ import {
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  createSelectAsyncSearch,
   normalizeSelectOptions,
+  resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
   splitComponentProps,
+  type SelectAsyncSearch,
 } from "@bridge-ui/core";
 import { colorProps } from "@bridge-ui/core/Components/Listbox";
 
@@ -96,6 +99,7 @@ export function useSelect(
 
   const [asyncLoading, setAsyncLoading] = useState(false);
   const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
+  const asyncSearchRef = useRef<SelectAsyncSearch | null>(null);
   const [resolvedSelected, setResolvedSelected] = useState<SelectOption[]>([]);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<SelectProps["value"]>(defaultValue);
@@ -302,6 +306,8 @@ export function useSelect(
   );
 
   const closeMenu = useCallback(() => {
+    asyncSearchRef.current?.cancel();
+
     setOpen((current) => {
       if (!current) {
         return current;
@@ -324,15 +330,19 @@ export function useSelect(
     setSearchQuery("");
     setHighlightedIndex(highlightCurrentSelection(resolvedOptions, isSelected));
     onOpen?.();
-    void fetchAsyncOptions("");
+
+    if (isAsync && selectMerged.asyncData) {
+      asyncSearchRef.current?.searchImmediate("");
+    }
   }, [
     open,
     onOpen,
+    isAsync,
     isSelected,
     props.disabled,
     props.readonly,
     resolvedOptions,
-    fetchAsyncOptions,
+    selectMerged.asyncData,
   ]);
 
   const selectOption = useCallback(
@@ -461,9 +471,11 @@ export function useSelect(
 
       navigation.resetHighlight();
 
-      void fetchAsyncOptions(target.value);
+      if (isAsync) {
+        asyncSearchRef.current?.searchDebounced(target.value);
+      }
     },
-    [open, onSearch, openMenu, navigation, fetchAsyncOptions],
+    [open, onSearch, openMenu, navigation, isAsync],
   );
 
   const handleTriggerKeyDown = useCallback(
@@ -776,17 +788,34 @@ export function useSelect(
   const resolveSelectedOptions = useCallback(async () => {
     const asyncData = selectMerged.asyncData;
 
-    if (!asyncData?.resolveSelected || selectedValues.length === 0) {
+    if (!asyncData?.resolve || selectedValues.length === 0) {
       return;
     }
 
     setResolvedSelected(
       normalizeSelectOptions(
-        await asyncData.resolveSelected(selectedValues),
+        await asyncData.resolve(selectedValues),
         optionKeys,
       ),
     );
   }, [optionKeys, selectedValues, selectMerged.asyncData]);
+
+  useEffect(() => {
+    if (!isAsync || !selectMerged.asyncData) {
+      asyncSearchRef.current?.cancel();
+      asyncSearchRef.current = null;
+      return;
+    }
+
+    const search = createSelectAsyncSearch(
+      (query) => void fetchAsyncOptions(query),
+      resolveSelectAsyncDebounce(selectMerged.asyncData),
+    );
+
+    asyncSearchRef.current = search;
+
+    return () => search.cancel();
+  }, [isAsync, selectMerged.asyncData, fetchAsyncOptions]);
 
   useEffect(() => {
     adjustHeight(triggerRef.current as HTMLTextAreaElement | null);

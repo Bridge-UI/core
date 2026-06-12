@@ -188,16 +188,19 @@ export {
   type PositionStrategy,
 } from "@core/Utils/position";
 export {
-  DEFAULT_SELECT_ASYNC_RESULTS_LIMIT,
+  createSelectAsyncSearch,
+  DEFAULT_SELECT_ASYNC_DEBOUNCE,
+  DEFAULT_SELECT_ASYNC_LIMIT,
   fetchSelectAsyncData,
   mergeSelectAsyncOptions,
   normalizeSelectOption,
   normalizeSelectOptions,
+  resolveSelectAsyncDebounce,
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
 } from "@core/Utils/select";
-export type { SelectOptionKeys } from "@core/Utils/select";
+export type { SelectAsyncSearch, SelectOptionKeys } from "@core/Utils/select";
 export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,

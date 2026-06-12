@@ -1,15 +1,18 @@
 // @vitest-environment happy-dom
 
 // ** External Imports
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import type { SelectOption } from "@core/Components/Select/types";
 import {
-  DEFAULT_SELECT_ASYNC_RESULTS_LIMIT,
+  DEFAULT_SELECT_ASYNC_DEBOUNCE,
+  DEFAULT_SELECT_ASYNC_LIMIT,
+  createSelectAsyncSearch,
   mergeSelectAsyncOptions,
   normalizeSelectOption,
   normalizeSelectOptions,
+  resolveSelectAsyncDebounce,
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -84,7 +87,7 @@ describe("resolveSelectAsyncLimit", () => {
       resolveSelectAsyncLimit({
         search: async () => [],
       }),
-    ).toBe(DEFAULT_SELECT_ASYNC_RESULTS_LIMIT);
+    ).toBe(DEFAULT_SELECT_ASYNC_LIMIT);
   });
 
   test("it should use asyncData.limit when provided", () => {
@@ -94,6 +97,73 @@ describe("resolveSelectAsyncLimit", () => {
         search: async () => [],
       }),
     ).toBe(5);
+  });
+});
+
+describe("resolveSelectAsyncDebounce", () => {
+  test("it should default to the shared async debounce delay", () => {
+    expect(
+      resolveSelectAsyncDebounce({
+        search: async () => [],
+      }),
+    ).toBe(DEFAULT_SELECT_ASYNC_DEBOUNCE);
+  });
+
+  test("it should use asyncData.debounce when provided", () => {
+    expect(
+      resolveSelectAsyncDebounce({
+        debounce: 300,
+        search: async () => [],
+      }),
+    ).toBe(300);
+  });
+});
+
+describe("createSelectAsyncSearch", () => {
+  test("it should debounce search calls while typing", () => {
+    vi.useFakeTimers();
+
+    const fetch = vi.fn();
+    const search = createSelectAsyncSearch(fetch, 500);
+
+    search.searchDebounced("a");
+    search.searchDebounced("ab");
+    search.searchDebounced("abc");
+
+    expect(fetch).not.toHaveBeenCalled();
+
+    vi.advanceTimersByTime(500);
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith("abc");
+
+    vi.useRealTimers();
+  });
+
+  test("it should fetch immediately with searchImmediate", () => {
+    const fetch = vi.fn();
+    const search = createSelectAsyncSearch(fetch, 500);
+
+    search.searchImmediate("");
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith("");
+  });
+
+  test("it should cancel a pending debounced search", () => {
+    vi.useFakeTimers();
+
+    const fetch = vi.fn();
+    const search = createSelectAsyncSearch(fetch, 500);
+
+    search.searchDebounced("abc");
+    search.cancel();
+
+    vi.advanceTimersByTime(500);
+
+    expect(fetch).not.toHaveBeenCalled();
+
+    vi.useRealTimers();
   });
 });
 
@@ -148,12 +218,12 @@ describe("mergeSelectAsyncOptions", () => {
 
   test("it should default to the shared async results limit", () => {
     const search = Array.from(
-      { length: DEFAULT_SELECT_ASYNC_RESULTS_LIMIT + 5 },
+      { length: DEFAULT_SELECT_ASYNC_LIMIT + 5 },
       (_, index) => option(index + 10),
     );
 
     const merged = mergeSelectAsyncOptions([], search);
 
-    expect(merged).toHaveLength(DEFAULT_SELECT_ASYNC_RESULTS_LIMIT);
+    expect(merged).toHaveLength(DEFAULT_SELECT_ASYNC_LIMIT);
   });
 });

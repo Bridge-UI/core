@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil } from "es-toolkit/compat";
+import { debounce, get, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import type {
@@ -10,29 +10,117 @@ import type {
   SelectValue,
 } from "@core/Components/Select/types";
 
-/**
- * The default async results limit for the select.
- */
-export const DEFAULT_SELECT_ASYNC_RESULTS_LIMIT = 20;
+export const DEFAULT_SELECT_ASYNC_DEBOUNCE = 500;
 
-/**
- * The type of the select option keys.
- */
+export const DEFAULT_SELECT_ASYNC_LIMIT = 20;
+
 export type SelectOptionKeys = {
   optionDescription: string;
   optionLabel: string;
   optionValue: string;
 };
 
-/**
- * The function checks if the value is a record.
- */
+export type SelectAsyncSearch = {
+  cancel: () => void;
+  searchDebounced: (query: string) => void;
+  searchImmediate: (query: string) => void;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 /**
- * The function normalizes a select option.
+ * Debounces async `search` calls while typing. Use `searchImmediate` on open.
+ */
+export function createSelectAsyncSearch(
+  fetch: (query: string) => void,
+  debounceMs: number,
+): SelectAsyncSearch {
+  const debouncedFetch = debounce(fetch, debounceMs);
+
+  function cancel() {
+    debouncedFetch.cancel();
+  }
+
+  function searchImmediate(query: string) {
+    debouncedFetch.cancel();
+    fetch(query);
+  }
+
+  function searchDebounced(query: string) {
+    if (debounceMs <= 0) {
+      debouncedFetch.cancel();
+      fetch(query);
+      return;
+    }
+
+    debouncedFetch(query);
+  }
+
+  return { cancel, searchDebounced, searchImmediate };
+}
+
+/**
+ * Fetches async search and resolve payloads for the select.
+ */
+export async function fetchSelectAsyncData(
+  asyncData: SelectAsyncData,
+  query: string,
+  selected: SelectValue[],
+): Promise<{
+  search: SelectOptionLike[];
+  selected: SelectOptionLike[];
+}> {
+  const [search, selectedResults] = await Promise.all([
+    asyncData.search(query, { selected }),
+    selected.length > 0 && asyncData.resolve
+      ? asyncData.resolve(selected)
+      : Promise.resolve([]),
+  ]);
+
+  return { search, selected: selectedResults };
+}
+
+/**
+ * Merges selected and search options, deduped by value, capped by `limit`.
+ */
+export function mergeSelectAsyncOptions<T extends { value: SelectValue }>(
+  selected: T[],
+  search: T[],
+  limit = DEFAULT_SELECT_ASYNC_LIMIT,
+): T[] {
+  const seen = new Set<string>();
+  const merged: T[] = [];
+
+  const push = (option: T) => {
+    const key = String(option.value);
+
+    if (seen.has(key)) {
+      return;
+    }
+
+    seen.add(key);
+    merged.push(option);
+  };
+
+  for (const option of selected) {
+    push(option);
+  }
+
+  for (const option of search) {
+    if (merged.length >= limit) {
+      break;
+    }
+
+    push(option);
+  }
+
+  return merged;
+}
+
+/**
+ * Normalizes a single select option input.
  */
 export function normalizeSelectOption(
   item: SelectOptionInput,
@@ -72,7 +160,7 @@ export function normalizeSelectOption(
 }
 
 /**
- * The function normalizes a list of select options.
+ * Normalizes a list of select option inputs.
  */
 export function normalizeSelectOptions(
   items: SelectOptionInput[] | SelectOptionLike[] | undefined,
@@ -88,79 +176,21 @@ export function normalizeSelectOptions(
 }
 
 /**
- * The function checks if two select values are equal.
+ * Resolves the async search debounce delay for the select.
  */
-export function selectValuesEqual(a: SelectValue, b: SelectValue) {
-  return String(a) === String(b);
+export function resolveSelectAsyncDebounce(asyncData: SelectAsyncData) {
+  return asyncData.debounce ?? DEFAULT_SELECT_ASYNC_DEBOUNCE;
 }
 
 /**
- * The function resolves the async limit for the select.
+ * Resolves the async results limit for the select.
  */
 export function resolveSelectAsyncLimit(asyncData: SelectAsyncData) {
-  return asyncData.limit ?? DEFAULT_SELECT_ASYNC_RESULTS_LIMIT;
+  return asyncData.limit ?? DEFAULT_SELECT_ASYNC_LIMIT;
 }
 
 /**
- * The function merges a list of select options.
- */
-export function mergeSelectAsyncOptions<T extends { value: SelectValue }>(
-  selected: T[],
-  search: T[],
-  limit = DEFAULT_SELECT_ASYNC_RESULTS_LIMIT,
-): T[] {
-  const seen = new Set<string>();
-  const merged: T[] = [];
-
-  const push = (option: T) => {
-    const key = String(option.value);
-
-    if (seen.has(key)) {
-      return;
-    }
-
-    seen.add(key);
-    merged.push(option);
-  };
-
-  for (const option of selected) {
-    push(option);
-  }
-
-  for (const option of search) {
-    if (merged.length >= limit) {
-      break;
-    }
-
-    push(option);
-  }
-
-  return merged;
-}
-
-/**
- * The function fetches the async data for the select.
- */
-export async function fetchSelectAsyncData(
-  asyncData: SelectAsyncData,
-  query: string,
-  selected: SelectValue[],
-): Promise<{
-  search: SelectOptionLike[];
-  selected: SelectOptionLike[];
-}> {
-  const [search, selectedResults] = await Promise.all([
-    asyncData.search(query, { selected }),
-    selected.length > 0 && asyncData.resolveSelected
-      ? asyncData.resolveSelected(selected)
-      : Promise.resolve([]),
-  ]);
-
-  return { search, selected: selectedResults };
-}
-
-/**
- * The function resolves the async options for the select.
+ * Fetches, normalizes, and merges async select options.
  */
 export async function resolveSelectAsyncOptions<T extends SelectOption>(
   asyncData: SelectAsyncData,
@@ -189,4 +219,11 @@ export async function resolveSelectAsyncOptions<T extends SelectOption>(
       limit,
     ),
   };
+}
+
+/**
+ * Checks if two select values are equal.
+ */
+export function selectValuesEqual(a: SelectValue, b: SelectValue) {
+  return String(a) === String(b);
 }

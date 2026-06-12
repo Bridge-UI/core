@@ -17,6 +17,14 @@ export type SelectOptionLike = string | SelectOption | Record<string, unknown>;
 
 export interface SelectAsyncData {
   /**
+   * Delay before calling `search` after the user stops typing (ms).
+   * Set to `0` to fetch on every keystroke.
+   *
+   * @default 500
+   */
+  debounce?: number;
+
+  /**
    * Max number of options shown in the dropdown (selected values always
    * included; search results fill remaining slots).
    *
@@ -28,7 +36,7 @@ export interface SelectAsyncData {
    * Resolves labels for the current selection (e.g. after reload or when values
    * are set programmatically). Use with remote search for Laravel/API backends.
    */
-  resolveSelected?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
+  resolve?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
 
   /**
    * Fetches options for the current search query and selection context.

@@ -170,7 +170,8 @@ export {
 } from "@core/Layer";
 export type { LayerId } from "@core/Layer";
 export {
-  DEFAULT_SELECT_ASYNC_RESULTS_LIMIT,
+  DEFAULT_SELECT_ASYNC_DEBOUNCE,
+  DEFAULT_SELECT_ASYNC_LIMIT,
   LAYER_STACK_BASE_Z_INDEX,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
@@ -181,6 +182,7 @@ export {
   createFocusable,
   createMergePartBind,
   createPositionable,
+  createSelectAsyncSearch,
   fetchSelectAsyncData,
   getFocusableElements,
   getLayerStackEntry,
@@ -204,6 +206,7 @@ export {
   resetOpenMenuLayersForTests,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,
+  resolveSelectAsyncDebounce,
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -228,6 +231,7 @@ export type {
   PositionOptions,
   PositionPlacement,
   PositionStrategy,
+  SelectAsyncSearch,
   SelectOptionKeys,
   UnionProps,
 } from "@core/Utils";

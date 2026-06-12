@@ -4,6 +4,7 @@ import { ChevronsUpDown } from "lucide-vue-next";
 import {
   computed,
   nextTick,
+  onBeforeUnmount,
   onMounted,
   ref,
   useAttrs,
@@ -18,10 +19,13 @@ import {
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  createSelectAsyncSearch,
   normalizeSelectOptions,
+  resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
   splitComponentProps,
+  type SelectAsyncSearch,
 } from "@bridge-ui/core";
 import { colorProps } from "@bridge-ui/core/Components/Listbox";
 
@@ -88,6 +92,7 @@ export function useSelect(
 
   const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
+  let asyncSearch: SelectAsyncSearch | null = null;
   const resolvedSelected = ref<SelectOption[]>([]);
 
   const split = computed(() => {
@@ -378,10 +383,15 @@ export function useSelect(
     searchQuery.value = "";
     navigation.highlightCurrentSelection(isSelected);
     emit("open");
-    void fetchAsyncOptions("");
+
+    if (isAsync.value && selectMerged.value.asyncData) {
+      asyncSearch?.searchImmediate("");
+    }
   }
 
   function closeMenu() {
+    asyncSearch?.cancel();
+
     if (!open.value) {
       return;
     }
@@ -483,7 +493,9 @@ export function useSelect(
 
     navigation.resetHighlight();
 
-    void fetchAsyncOptions(searchQuery.value);
+    if (isAsync.value) {
+      asyncSearch?.searchDebounced(searchQuery.value);
+    }
   }
 
   function handleTriggerKeyDown(event: KeyboardEvent) {
@@ -594,12 +606,12 @@ export function useSelect(
   async function resolveSelectedOptions() {
     const asyncData = selectMerged.value.asyncData;
 
-    if (!asyncData?.resolveSelected || selectedValues.value.length === 0) {
+    if (!asyncData?.resolve || selectedValues.value.length === 0) {
       return;
     }
 
     resolvedSelected.value = normalizeSelectOptions(
-      await asyncData.resolveSelected(selectedValues.value),
+      await asyncData.resolve(selectedValues.value),
       optionKeys.value,
     );
   }
@@ -683,11 +695,27 @@ export function useSelect(
 
   watch(
     () => selectMerged.value.asyncData,
-    () => {
+    (asyncData) => {
+      asyncSearch?.cancel();
       asyncOptions.value = [];
       void resolveSelectedOptions();
+
+      if (!asyncData) {
+        asyncSearch = null;
+        return;
+      }
+
+      asyncSearch = createSelectAsyncSearch(
+        (query) => void fetchAsyncOptions(query),
+        resolveSelectAsyncDebounce(asyncData),
+      );
     },
+    { immediate: true },
   );
+
+  onBeforeUnmount(() => {
+    asyncSearch?.cancel();
+  });
 
   onMounted(() => {
     adjustHeight(triggerRef.value as HTMLTextAreaElement | null);
