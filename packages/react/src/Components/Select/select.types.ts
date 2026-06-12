@@ -11,38 +11,49 @@ import type {
   FormFieldPartsProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
 export type SelectValue = string | number;
 
 export type SelectModel = SelectValue | SelectValue[];
 
-export interface SelectOption {
-  /**
-   * Secondary line below the label.
-   */
-  description?: string;
+export type SelectOption = ListboxOption;
 
-  /**
-   * Whether the option is disabled.
-   */
-  disabled?: boolean;
+export type SelectOptionInput =
+  | SelectOption
+  | string
+  | number
+  | Record<string, unknown>;
 
-  /**
-   * The label of the option.
-   */
-  label: string;
+export type SelectAsyncData =
+  | string
+  | {
+      alwaysFetch?: boolean;
+      credentials?: RequestCredentials;
+      method?: "GET" | "POST";
+      params?: Record<string, unknown>;
+      url: string;
+    }
+  | {
+      resolveSelected?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
+      search: (
+        query: string,
+        ctx: { selected: SelectValue[] },
+      ) => Promise<SelectOptionLike[]>;
+    };
 
-  /**
-   * The value of the option.
-   */
-  value: SelectValue;
-}
+export type SelectOptionLike = SelectOption | string | Record<string, unknown>;
 
 export interface SelectClasses extends FormFieldClasses {
   /**
    * The classes to apply to selected chips (multiple mode).
    */
   chip?: string;
+
+  /**
+   * The classes to apply to clear icons (rest + hover).
+   */
+  clear?: string;
 
   /**
    * The classes to apply to the dropdown content.
@@ -53,17 +64,65 @@ export interface SelectClasses extends FormFieldClasses {
    * The classes to apply to the option item.
    */
   item?: string;
+
+  /**
+   * The classes to apply to the selected value text in the trigger (single mode).
+   */
+  value?: string;
 }
 
 export interface SelectPartsProps extends FormFieldPartsProps {}
 
 export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
+   * Remote data source. Implies `searchable`.
+   */
+  asyncData?: SelectAsyncData;
+
+  /**
    * Whether the value can be cleared.
    *
    * @default true
    */
   clearable?: boolean;
+
+  /**
+   * Initial value when uncontrolled.
+   */
+  defaultValue?: SelectModel | null;
+
+  /**
+   * Message when the filtered list is empty.
+   *
+   * @default "No options"
+   */
+  emptyMessage?: string;
+
+  /**
+   * Inverts the visual order of options.
+   *
+   * @default false
+   */
+  flipOptions?: boolean;
+
+  /**
+   * Hides the empty-state message.
+   *
+   * @default false
+   */
+  hideEmptyMessage?: boolean;
+
+  /**
+   * External or async loading state.
+   */
+  loading?: boolean;
+
+  /**
+   * Minimum option count before search UI is enabled.
+   *
+   * @default 11
+   */
+  minItemsForSearch?: number;
 
   /**
    * Whether multiple values can be selected.
@@ -73,14 +132,30 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   multiple?: boolean;
 
   /**
-   * Callback when the selection changes.
+   * Key used to read the description from option objects.
+   *
+   * @default "description"
    */
-  onChange?: (value: SelectModel) => void;
+  optionDescription?: string;
+
+  /**
+   * Key used to read the label from option objects.
+   *
+   * @default "label"
+   */
+  optionLabel?: string;
 
   /**
    * The list of options to display.
    */
-  options?: SelectOption[];
+  options?: SelectOptionInput[];
+
+  /**
+   * Key used to read the value from option objects.
+   *
+   * @default "value"
+   */
+  optionValue?: string;
 
   /**
    * Placeholder shown when no value is selected.
@@ -95,19 +170,81 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   searchable?: boolean;
 
   /**
-   * The selected value.
+   * The selected value (controlled).
    */
-  value?: SelectModel;
+  value?: SelectModel | null;
+}
+
+export interface SelectCallbacks {
+  /**
+   * Callback when the selection changes.
+   */
+  onChange?: (value: SelectModel) => void;
+
+  /**
+   * Callback when the value is cleared.
+   */
+  onClear?: () => void;
+
+  /**
+   * Callback when the menu closes.
+   */
+  onClose?: () => void;
+
+  /**
+   * Callback when an option is deselected (multiple mode).
+   */
+  onDeselect?: (option: SelectOption) => void;
+
+  /**
+   * Callback when the menu opens.
+   */
+  onOpen?: () => void;
+
+  /**
+   * Callback when the search query changes.
+   */
+  onSearch?: (query: string) => void;
+
+  /**
+   * Callback when an option is selected.
+   */
+  onSelect?: (option: SelectOption) => void;
 }
 
 export interface SelectSlots extends FormFieldSlots {
   /**
+   * Content below the trigger, above the option list.
+   */
+  afterOptions?: ReactNode;
+
+  /**
+   * Content above the option list.
+   */
+  beforeOptions?: ReactNode;
+
+  /**
+   * Custom chip content (multiple mode).
+   */
+  chip?: (ctx: { option: SelectOption }) => ReactNode;
+
+  /**
+   * Custom empty-state content.
+   */
+  empty?: ReactNode;
+
+  /**
+   * Custom loading content.
+   */
+  loading?: ReactNode;
+
+  /**
    * Custom option item content.
    */
-  option?: ReactNode;
+  option?: (ctx: { option: SelectOption; selected: boolean }) => ReactNode;
 }
 
 export type SelectProps = MergeHtmlProps<
-  SelectOwnProps,
+  SelectOwnProps & SelectCallbacks & { slots?: SelectSlots },
   InputHTMLAttributes<HTMLInputElement>
 >;
