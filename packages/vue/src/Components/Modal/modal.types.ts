@@ -15,8 +15,8 @@ import type {
 export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
 export interface ModalAlignOverrides {}
-export interface ModalTransitionOverrides {}
 export interface ModalScrollOverrides {}
+export interface ModalTransitionOverrides {}
 
 export interface ModalClasses {
   /**
@@ -40,21 +40,7 @@ export interface ModalClasses {
   wrapper?: string;
 }
 
-export interface ModalEmits {
-  /**
-   * Emitted when the user dismisses the modal (overlay or Escape).
-   * Not emitted when the parent sets `v-model` to `false` directly.
-   */
-  close: [];
-
-  /**
-   * Emitted when `show` should change (controlled state).
-   * Listen with `@show-change` / `v-on:show-change`.
-   */
-  "show-change": [show: boolean];
-}
-
-export interface ModalPartsProps {
+export interface ModalCustomProps {
   /**
    * Props forwarded to the overlay.
    */
@@ -74,6 +60,20 @@ export interface ModalPartsProps {
    * Props forwarded to the centering wrapper.
    */
   wrapper?: HTMLAttributes;
+}
+
+export interface ModalEmits {
+  /**
+   * Emitted when the user dismisses the modal (overlay or Escape).
+   * Not emitted when the parent sets `v-model` to `false` directly.
+   */
+  close: [];
+
+  /**
+   * Emitted when `show` should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
 }
 
 /**
@@ -118,6 +118,13 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
+   * Props forwarded to each modal part.
+   *
+   * @default undefined
+   */
+  customProps?: ModalCustomProps;
+
+  /**
    * When true, the modal does not auto-focus the first focusable element on open.
    *
    * @default false
@@ -158,13 +165,6 @@ export interface ModalOwnProps {
    * @default false
    */
   keepMounted?: boolean;
-
-  /**
-   * Props forwarded to each modal part.
-   *
-   * @default undefined
-   */
-  partsProps?: ModalPartsProps;
 
   /**
    * When true, escape and overlay clicks do not close the modal.
@@ -209,11 +209,11 @@ export interface ModalOwnProps {
   transition?: MergeProps<ModalTransition, ModalTransitionOverrides>;
 }
 
-export type ModalProps = MergeHtmlProps<ModalOwnProps, HTMLAttributes>;
-
 export interface ModalSlots {
   /**
    * Modal content (e.g. a `Card` component).
    */
   default?: Slot<undefined>;
 }
+
+export type ModalProps = MergeHtmlProps<ModalOwnProps, HTMLAttributes>;

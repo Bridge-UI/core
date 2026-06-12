@@ -36,7 +36,7 @@ const alertBridgeKeys = [
   "padding",
   "rounded",
   "variant",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof AlertOwnProps)[];
 
 type AlertLibDefaults = LibDefaultsShape<
@@ -63,16 +63,16 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   >({
     libDefaults,
     componentName: "Alert",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeAlert,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const hasDefaultBody = computed(() => {
@@ -133,7 +133,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
 
   const bodyBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.body,
+      customProps.value?.body,
       {},
       cn({
         "grow text-sm text-start": true,
@@ -146,7 +146,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
 
   const iconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.icon,
+      customProps.value?.icon,
       {},
       cn({
         "w-5 h-5 shrink-0": true,
@@ -158,7 +158,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
 
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
         "w-full flex flex-col p-4": true,
@@ -173,7 +173,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
 
   const titleBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.title,
+      customProps.value?.title,
       {},
       cn({
         "text-start text-sm whitespace-normal": true,

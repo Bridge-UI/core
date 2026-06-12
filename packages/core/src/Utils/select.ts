@@ -10,16 +10,24 @@ import type {
   SelectValue,
 } from "@core/Components/Select/types";
 
+/** Default debounce delay (ms) for async select search while typing. */
 export const DEFAULT_SELECT_ASYNC_DEBOUNCE = 500;
 
+/** Default page size for async select option lists. */
 export const DEFAULT_SELECT_ASYNC_LIMIT = 20;
 
+/**
+ * Object keys used to read option fields from arbitrary data.
+ */
 export type SelectOptionKeys = {
   optionDescription: string;
   optionLabel: string;
   optionValue: string;
 };
 
+/**
+ * Debounced search helpers for async select data.
+ */
 export type SelectAsyncSearch = {
   cancel: () => void;
   searchDebounced: (query: string) => void;

@@ -221,7 +221,7 @@ test("it should forward additional attributes to the input", () => {
     <FormFieldHarness
       id="field-id"
       placeholder="Enter email"
-      partsProps={{
+      customProps={{
         input: { "data-testid": "form-field-input" },
       }}
     />,
@@ -233,10 +233,10 @@ test("it should forward additional attributes to the input", () => {
   expect(input.getAttribute("placeholder")).toBe("Enter email");
 });
 
-test("it should forward partsProps to the input", () => {
+test("it should forward customProps to the input", () => {
   render(
     <FormFieldHarness
-      partsProps={{
+      customProps={{
         input: { "data-testid": "form-field-input" },
       }}
     />,
@@ -245,11 +245,11 @@ test("it should forward partsProps to the input", () => {
   expect(screen.getByTestId("form-field-input")).toBeTruthy();
 });
 
-test("it should forward partsProps to description", () => {
+test("it should forward customProps to description", () => {
   render(
     <FormFieldHarness
       description="Helper"
-      partsProps={{
+      customProps={{
         description: { "data-testid": "field-description" },
       }}
     />,
@@ -269,7 +269,7 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
   expect(root?.classList.contains("p-2")).toBe(false);
 });
 
-test("it should forward classes and partsProps to chrome", () => {
+test("it should forward classes and customProps to chrome", () => {
   render(
     <FormFieldHarness
       label="Email"
@@ -278,7 +278,7 @@ test("it should forward classes and partsProps to chrome", () => {
         label: "custom-label-class",
         corner: "custom-corner-class",
       }}
-      partsProps={{
+      customProps={{
         label: { "data-testid": "field-label" },
         corner: { "data-testid": "field-corner" },
       }}

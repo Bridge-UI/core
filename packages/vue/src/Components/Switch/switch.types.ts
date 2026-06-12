@@ -13,8 +13,8 @@ import type {
 // ** Local Imports
 import type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlSlots,
 } from "@/Components/FormControl/formControl.types";
 
@@ -39,7 +39,7 @@ export interface SwitchClasses extends FormControlClasses {
   track?: string;
 }
 
-export interface SwitchPartsProps extends FormControlPartsProps {
+export interface SwitchCustomProps extends FormControlCustomProps {
   /**
    * Props forwarded to the native input.
    */
@@ -65,7 +65,7 @@ export interface SwitchEmits {
 
 export interface SwitchOwnProps extends Omit<
   FormControlOwnProps,
-  "field" | "slots" | "classes" | "partsProps"
+  "field" | "slots" | "classes" | "customProps"
 > {
   /**
    * Whether the switch is on.
@@ -93,7 +93,7 @@ export interface SwitchOwnProps extends Omit<
    *
    * @default undefined
    */
-  partsProps?: SwitchPartsProps;
+  customProps?: SwitchCustomProps;
 
   /**
    * The roundedness of the switch track.

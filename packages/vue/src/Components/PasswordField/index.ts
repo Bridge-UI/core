@@ -1,9 +1,10 @@
+// ** Exports
 export { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
 export type { UsePasswordFieldOptions } from "@/Components/PasswordField/composables/usePasswordField";
 export type {
   PasswordFieldClasses,
+  PasswordFieldCustomProps,
   PasswordFieldOwnProps,
-  PasswordFieldPartsProps,
   PasswordFieldProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";

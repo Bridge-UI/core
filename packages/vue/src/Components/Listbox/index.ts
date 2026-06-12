@@ -11,10 +11,10 @@ export {
 export type {
   ListboxClasses,
   ListboxColorOverrides,
+  ListboxCustomProps,
   ListboxEmits,
   ListboxOption,
   ListboxOwnProps,
-  ListboxPartsProps,
   ListboxProps,
   ListboxSlots,
   ListboxValue,

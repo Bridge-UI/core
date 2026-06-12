@@ -107,7 +107,7 @@ export function useSelect(
   const isControlled = valueProp !== undefined;
   const modelValue = isControlled ? valueProp : uncontrolledValue;
 
-  const { inheritedAttrs, customProps: selectMerged } = splitComponentProps<
+  const { inheritedAttrs, componentProps: selectMerged } = splitComponentProps<
     SelectOwnProps,
     typeof selectBridgeKeys
   >({
@@ -635,7 +635,7 @@ export function useSelect(
   const formFieldInput = useMemo((): Omit<FormFieldOwnProps, "field"> => {
     const inherited = omit(inheritedAttrs, ["className"]);
 
-    const { customProps: formFieldCustom } = splitComponentProps<
+    const { componentProps: formFieldCustom } = splitComponentProps<
       Omit<FormFieldOwnProps, "field">,
       typeof formFieldBridgeKeys
     >({
@@ -652,10 +652,10 @@ export function useSelect(
       endIcon,
       slots: formFieldSlots,
       classes: mergedClasses,
-      partsProps: {
-        ...formFieldCustom.partsProps,
+      customProps: {
+        ...formFieldCustom.customProps,
         container: mergePartBind(
-          formFieldCustom.partsProps?.container,
+          formFieldCustom.customProps?.container,
           {},
           {
             ref: handleContainerRef,

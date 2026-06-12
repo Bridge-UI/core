@@ -35,7 +35,7 @@ export interface ListboxClasses {
   scroll?: string;
 }
 
-export interface ListboxPartsProps {
+export interface ListboxCustomProps {
   /**
    * Props forwarded to the floating menu panel.
    */
@@ -48,6 +48,19 @@ export interface ListboxPartsProps {
 }
 
 export type { ListboxOption, ListboxValue } from "@bridge-ui/core";
+
+export interface ListboxEmits {
+  /**
+   * Emitted when the user activates an option.
+   */
+  select: [option: ListboxOption];
+
+  /**
+   * Emitted when open state should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
+}
 
 export interface ListboxOwnProps {
   /**
@@ -66,6 +79,11 @@ export interface ListboxOwnProps {
    * @default "primary"
    */
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
+
+  /**
+   * Extra props for internal parts.
+   */
+  customProps?: ListboxCustomProps;
 
   /**
    * When true, the menu does not auto-focus the first item on open.
@@ -143,11 +161,6 @@ export interface ListboxOwnProps {
   options: ListboxOption[];
 
   /**
-   * Extra props for internal parts.
-   */
-  partsProps?: ListboxPartsProps;
-
-  /**
    * Preferred placement of the panel relative to the anchor.
    *
    * @default "bottom-start"
@@ -160,19 +173,6 @@ export interface ListboxOwnProps {
    * @default true
    */
   showCheckmark?: boolean;
-}
-
-export interface ListboxEmits {
-  /**
-   * Emitted when the user activates an option.
-   */
-  select: [option: ListboxOption];
-
-  /**
-   * Emitted when open state should change (controlled state).
-   * Listen with `@show-change` / `v-on:show-change`.
-   */
-  "show-change": [show: boolean];
 }
 
 export interface ListboxSlots {

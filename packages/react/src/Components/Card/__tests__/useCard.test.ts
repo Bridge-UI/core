@@ -124,9 +124,9 @@ test("it should apply className after classes.root in rootBind", () => {
   expect(result.current.rootBind.className).not.toContain("p-2");
 });
 
-test("it should forward partsProps.root onto rootBind", () => {
+test("it should forward customProps.root onto rootBind", () => {
   const { result } = renderUseCard({
-    partsProps: { root: { id: "card-root-part" } },
+    customProps: { root: { id: "card-root-part" } },
   });
 
   expect(result.current.rootBind.id).toBe("card-root-part");

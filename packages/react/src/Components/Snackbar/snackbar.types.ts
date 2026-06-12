@@ -67,7 +67,7 @@ export interface SnackbarClasses {
   title?: string;
 }
 
-export interface SnackbarPartsProps {
+export interface SnackbarCustomProps {
   /**
    * Props forwarded to the main content wrapper.
    */
@@ -134,6 +134,11 @@ export interface SnackbarOwnProps {
   color?: MergeProps<SnackbarColor, SnackbarColorOverrides>;
 
   /**
+   * Extra props for internal parts (`icon`, `title`, `description`, etc.).
+   */
+  customProps?: SnackbarCustomProps;
+
+  /**
    * Body text below the title.
    */
   description?: string;
@@ -161,11 +166,6 @@ export interface SnackbarOwnProps {
    * @default "medium"
    */
   padding?: MergeProps<SnackbarPadding, SnackbarPaddingOverrides>;
-
-  /**
-   * Extra props for internal parts (`icon`, `title`, `description`, etc.).
-   */
-  partsProps?: SnackbarPartsProps;
 
   /**
    * Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`.

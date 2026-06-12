@@ -105,19 +105,19 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
   expect(root?.classList.contains("p-2")).toBe(false);
 });
 
-test("it should forward partsProps to the default icon", () => {
+test("it should forward customProps to the default icon", () => {
   const { container } = render(
-    <Alert title="Notice" partsProps={{ icon: { id: "alert-icon" } }} />,
+    <Alert title="Notice" customProps={{ icon: { id: "alert-icon" } }} />,
   );
 
   expect(container.querySelector("#alert-icon")).toBeTruthy();
 });
 
-test("it should forward partsProps to title and body containers", () => {
+test("it should forward customProps to title and body containers", () => {
   const { container } = render(
     <Alert
       title="Title"
-      partsProps={{
+      customProps={{
         body: { id: "alert-body" },
         title: { id: "alert-title" },
       }}

@@ -279,9 +279,9 @@ test("it should forward fallthrough attrs to the input", () => {
   expect(input.attributes("placeholder")).toBe("Enter email");
 });
 
-test("it should forward partsProps to the input", () => {
+test("it should forward customProps to the input", () => {
   const wrapper = mountFormField({
-    partsProps: {
+    customProps: {
       input: { "data-testid": "form-field-input" },
     },
   });
@@ -289,10 +289,10 @@ test("it should forward partsProps to the input", () => {
   expect(wrapper.find('[data-testid="form-field-input"]').exists()).toBe(true);
 });
 
-test("it should forward partsProps to description", () => {
+test("it should forward customProps to description", () => {
   const wrapper = mountFormField({
     description: "Helper",
-    partsProps: {
+    customProps: {
       description: { "data-testid": "field-description" },
     },
   });
@@ -312,7 +312,7 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
   expect(root.classes()).not.toContain("p-2");
 });
 
-test("it should forward classes and partsProps to chrome", () => {
+test("it should forward classes and customProps to chrome", () => {
   const wrapper = mountFormField({
     label: "Email",
     corner: "Optional",
@@ -320,7 +320,7 @@ test("it should forward classes and partsProps to chrome", () => {
       label: "custom-label-class",
       corner: "custom-corner-class",
     },
-    partsProps: {
+    customProps: {
       label: { "data-testid": "field-label" },
       corner: { "data-testid": "field-corner" },
     },

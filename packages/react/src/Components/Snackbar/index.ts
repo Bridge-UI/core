@@ -5,9 +5,9 @@ export { default as Snackbar } from "@/Components/Snackbar/Snackbar";
 export type {
   SnackbarClasses,
   SnackbarColorOverrides,
+  SnackbarCustomProps,
   SnackbarOwnProps,
   SnackbarPaddingOverrides,
-  SnackbarPartsProps,
   SnackbarProps,
   SnackbarSlots,
   SnackbarTransitionOverrides,

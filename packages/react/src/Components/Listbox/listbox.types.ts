@@ -35,7 +35,29 @@ export interface ListboxClasses {
   scroll?: string;
 }
 
-export interface ListboxPartsProps {
+export interface ListboxControlledProps {
+  /**
+   * Emitted when the user activates an option.
+   */
+  onSelect?: (option: ListboxOption) => void;
+
+  /**
+   * Called when open state should change.
+   */
+  onShowChange?: (show: boolean) => void;
+
+  /**
+   * Whether the panel is open.
+   */
+  show?: boolean;
+
+  /**
+   * Named slots for listbox regions.
+   */
+  slots?: ListboxSlots;
+}
+
+export interface ListboxCustomProps {
   /**
    * Props forwarded to the floating menu panel.
    */
@@ -66,6 +88,11 @@ export interface ListboxOwnProps {
    * @default "primary"
    */
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
+
+  /**
+   * Extra props for internal parts.
+   */
+  customProps?: ListboxCustomProps;
 
   /**
    * When true, the menu does not auto-focus the first item on open.
@@ -143,11 +170,6 @@ export interface ListboxOwnProps {
   options: ListboxOption[];
 
   /**
-   * Extra props for internal parts.
-   */
-  partsProps?: ListboxPartsProps;
-
-  /**
    * Preferred placement of the panel relative to the anchor.
    *
    * @default "bottom-start"
@@ -187,28 +209,6 @@ export interface ListboxSlots {
    * Custom option item content.
    */
   option?: (ctx: { option: ListboxOption; selected: boolean }) => ReactNode;
-}
-
-export interface ListboxControlledProps {
-  /**
-   * Emitted when the user activates an option.
-   */
-  onSelect?: (option: ListboxOption) => void;
-
-  /**
-   * Called when open state should change.
-   */
-  onShowChange?: (show: boolean) => void;
-
-  /**
-   * Whether the panel is open.
-   */
-  show?: boolean;
-
-  /**
-   * Named slots for listbox regions.
-   */
-  slots?: ListboxSlots;
 }
 
 export type ListboxProps = MergeHtmlProps<

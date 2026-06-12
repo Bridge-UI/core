@@ -33,7 +33,7 @@ const switchBridgeKeys = [
   "color",
   "classes",
   "rounded",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof SwitchOwnProps)[];
 
 type SwitchLibDefaults = LibDefaultsShape<
@@ -69,16 +69,16 @@ export function useSwitch(
   >({
     libDefaults,
     componentName: "Switch",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<SwitchClasses>({
     entry: bridgeSwitch,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isChecked = computed(() => {
@@ -123,7 +123,7 @@ export function useSwitch(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         ...formControl.controlBind.value,
         role: "switch",
         type: "checkbox",
@@ -138,7 +138,7 @@ export function useSwitch(
 
   const trackBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.track,
+      customProps.value?.track,
       { "aria-hidden": true },
       cn({
         "block cursor-pointer transition ease-in-out duration-100": true,
@@ -153,7 +153,7 @@ export function useSwitch(
 
   const thumbBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.thumb,
+      customProps.value?.thumb,
       { "aria-hidden": true },
       cn({
         "pointer-events-none absolute start-0.5 top-1/2 -translate-y-1/2 rounded-full shadow-sm transition ease-in-out duration-200": true,

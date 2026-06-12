@@ -1,5 +1,6 @@
 dist
 .fleet
+.cursor
 scripts
 node_modules
 

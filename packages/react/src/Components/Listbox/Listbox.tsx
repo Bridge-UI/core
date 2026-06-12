@@ -15,7 +15,7 @@ import type {
   ListboxValue,
 } from "@/Components/Listbox/listbox.types";
 import { ListItem } from "@/Components/ListItem";
-import type { ListItemPartsProps } from "@/Components/ListItem/listItem.types";
+import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { Menu } from "@/Components/Menu";
 
 const listboxLibDefaults = {
@@ -86,11 +86,11 @@ function Listbox({
     return highlightedIndex === index;
   }
 
-  function getOptionPartsProps(
+  function getOptionCustomProps(
     option: ListboxOption,
     index: number,
-  ): ListItemPartsProps {
-    const interactive: NonNullable<ListItemPartsProps["interactive"]> = {
+  ): ListItemCustomProps {
+    const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
       tabIndex: -1,
       onMouseDown: keepFocusOnCombobox,
     };
@@ -126,7 +126,7 @@ function Listbox({
       onShowChange={onShowChange}
       closeOnClickAway
       disableAutoFocus={disableAutoFocus}
-      partsProps={{ content: merged.partsProps?.content }}
+      customProps={{ content: merged.customProps?.content }}
     >
       {slots?.beforeOptions}
 
@@ -146,7 +146,7 @@ function Listbox({
           >
             {options.map((option, index) => {
               const selected = resolveSelected(option.value);
-              const optionPartsProps = getOptionPartsProps(option, index);
+              const optionCustomProps = getOptionCustomProps(option, index);
 
               return (
                 <ListItem
@@ -158,11 +158,11 @@ function Listbox({
                   disabled={option.disabled}
                   secondary={option.description}
                   primary={slots?.option ? undefined : option.label}
-                  partsProps={{
-                    ...optionPartsProps,
+                  customProps={{
+                    ...optionCustomProps,
                     root: { id: getListboxOptionId(listboxId, index) },
                     interactive: {
-                      ...optionPartsProps.interactive,
+                      ...optionCustomProps.interactive,
                       onClick: () => handleSelect(option),
                     },
                   }}

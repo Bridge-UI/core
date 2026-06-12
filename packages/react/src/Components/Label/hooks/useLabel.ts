@@ -37,7 +37,7 @@ type LabelLibDefaults = LibDefaultsShape<LabelOwnProps, "size">;
 type LabelMerged = MergeLibDefaults<LabelOwnProps, LabelLibDefaults>;
 
 export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     LabelProps,
     typeof labelBridgeKeys
   >({
@@ -50,7 +50,7 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
     "Label"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Label",
   });
 
@@ -64,7 +64,7 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LabelClasses>({
     entry: bridgeLabel,
-    props: customProps,
+    props: componentProps,
   });
 
   const sizeClass = useMemo(() => {

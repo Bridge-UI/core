@@ -2,9 +2,9 @@
 export { default as Card } from "@/Components/Card/Card";
 export type {
   CardClasses,
+  CardCustomProps,
   CardOwnProps,
   CardPaddingOverrides,
-  CardPartsProps,
   CardProps,
   CardRoundedOverrides,
   CardShadowOverrides,

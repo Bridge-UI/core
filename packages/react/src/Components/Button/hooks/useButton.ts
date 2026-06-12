@@ -45,7 +45,7 @@ const buttonBridgeKeys = [
   "variant",
   "disabled",
   "startIcon",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
 
 type ButtonLibDefaults = LibDefaultsShape<
@@ -56,7 +56,7 @@ type ButtonLibDefaults = LibDefaultsShape<
 type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
 
 export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ButtonProps,
     typeof buttonBridgeKeys
   >({
@@ -69,7 +69,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     "Button"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Button",
   });
 
@@ -81,8 +81,8 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return props.children;
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const rootInheritedAttrs = derived(() => {
@@ -90,8 +90,8 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
-    props: customProps,
     entry: bridgeButton,
+    props: componentProps,
   });
 
   const tag = derived(() => {
@@ -148,12 +148,12 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   }, [merged.size, merged.density, bridgeButton?.customProps?.density]);
 
   const variantKey = useMemo(() => {
-    if (!isNil(customProps.variant)) {
-      return customProps.variant;
+    if (!isNil(componentProps.variant)) {
+      return componentProps.variant;
     }
 
     return isMini ? "flat" : merged.variant;
-  }, [isMini, merged.variant, customProps.variant]);
+  }, [isMini, merged.variant, componentProps.variant]);
 
   const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -175,7 +175,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const iconBind = derived(() => {
     return mergePartBind(
-      partsProps?.icon,
+      customProps?.icon,
       {},
       cn({
         "shrink-0": true,
@@ -186,7 +186,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.root,
+      customProps?.root,
       rootInheritedAttrs,
       cn({
         "inline-flex items-center justify-center": true,
@@ -212,7 +212,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const endIconBind = derived(() => {
     return mergePartBind(
-      partsProps?.endIcon,
+      customProps?.endIcon,
       {},
       cn({
         "shrink-0": true,
@@ -223,7 +223,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const endSlotBind = derived(() => {
     return mergePartBind(
-      partsProps?.end,
+      customProps?.end,
       {},
       "inline-flex shrink-0 items-center",
     );
@@ -231,7 +231,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const startIconBind = derived(() => {
     return mergePartBind(
-      partsProps?.startIcon,
+      customProps?.startIcon,
       {},
       cn({
         "shrink-0": true,
@@ -242,7 +242,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const startSlotBind = derived(() => {
     return mergePartBind(
-      partsProps?.start,
+      customProps?.start,
       {},
       "inline-flex shrink-0 items-center",
     );
@@ -250,7 +250,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
 
   const loadingIconBind = derived(() => {
     return mergePartBind(
-      partsProps?.loading,
+      customProps?.loading,
       {},
       cn({
         "shrink-0 animate-spin": true,

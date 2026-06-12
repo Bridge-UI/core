@@ -1,10 +1,13 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement, type MouseEvent } from "react";
 import { afterEach, expect, test, vi } from "vitest";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useMenu, type MenuOwnProps, type MenuProps } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
   resetLayerStackForTests();
@@ -47,7 +50,7 @@ test("it should override placement when prop is passed", () => {
 
 test("it should expose menu semantics on trigger and content binds", () => {
   const { result } = renderUseMenu(
-    { slots: { trigger: <span>Open</span> } },
+    { slots: { trigger: createElement("span", null, "Open") } },
     { show: false },
   );
 
@@ -58,7 +61,7 @@ test("it should expose menu semantics on trigger and content binds", () => {
 
 test("it should reflect aria-expanded when show is true", () => {
   const { result } = renderUseMenu(
-    { slots: { trigger: <span>Open</span> } },
+    { slots: { trigger: createElement("span", null, "Open") } },
     { show: true },
   );
 
@@ -70,14 +73,14 @@ test("it should call onShowChange when trigger capture handler runs", () => {
   const onShowChange = vi.fn();
 
   const { result } = renderUseMenu(
-    { slots: { trigger: <span>Open</span> } },
+    { slots: { trigger: createElement("span", null, "Open") } },
     { show: false, onShowChange },
   );
 
   result.current.triggerBind.onClickCapture?.({
     preventDefault() {},
     stopPropagation() {},
-  } as React.MouseEvent<HTMLDivElement>);
+  } as MouseEvent<HTMLDivElement>);
 
   expect(onShowChange).toHaveBeenCalledWith(true);
 });

@@ -4,8 +4,8 @@ export { default as Link } from "@/Components/Link/Link";
 export type {
   LinkClasses,
   LinkColorOverrides,
+  LinkCustomProps,
   LinkOwnProps,
-  LinkPartsProps,
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,

@@ -15,9 +15,6 @@ import type { LayerId } from "@core/Layer/types";
 import { hasDocument, hasWindow } from "@core/Utils/env";
 import { resetOpenMenuLayersForTests } from "@core/Utils/menu";
 
-export { createLayerId };
-export type { LayerId };
-
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
 export const LAYER_STACK_BASE_Z_INDEX = 50;
 
@@ -39,6 +36,9 @@ let savedBodyOverflow = "";
 let savedBodyPaddingRight = "";
 let escapeListener: ((event: KeyboardEvent) => void) | null = null;
 
+/**
+ * Handle returned when a layer is pushed onto the global stack.
+ */
 export type LayerStackHandle = {
   id: LayerId;
   level: number;
@@ -48,6 +48,9 @@ export type LayerStackHandle = {
   zIndex: number;
 };
 
+/**
+ * Read-only snapshot of one layer on the stack.
+ */
 export type LayerStackSnapshotEntry = {
   id: LayerId;
   order: number;
@@ -238,12 +241,18 @@ export function countModalTransitionLayers(
   return options.hideBackdrop ? 1 : 2;
 }
 
+/**
+ * Tailwind transition class for the modal overlay.
+ */
 export function getModalOverlayTransitionClass(
   transition: keyof ModalTransition,
 ): string {
   return get(transitionProps, [transition, "overlay"], "");
 }
 
+/**
+ * Tailwind transition class for the modal panel.
+ */
 export function getModalPanelTransitionClass(
   transition: keyof ModalTransition,
 ): string {
@@ -272,6 +281,9 @@ export function getLayerStackSnapshot(): readonly LayerStackSnapshotEntry[] {
   return stack.map(toStackSnapshotEntry);
 }
 
+/**
+ * Whether the modal uses enter/leave transition classes.
+ */
 export function hasModalTransition(
   transition: keyof ModalTransition | undefined,
 ): boolean {

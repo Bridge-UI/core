@@ -2,6 +2,7 @@
 export type {
   AvatarClasses,
   AvatarColorOverrides,
+  AvatarOwnProps,
   AvatarProps,
   AvatarRoundedOverrides,
   AvatarSizeOverrides,

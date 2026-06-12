@@ -41,7 +41,7 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
   >({
     libDefaults,
     componentName: "Icon",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const sizeClass = computed(() => {

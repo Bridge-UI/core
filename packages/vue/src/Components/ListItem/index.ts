@@ -3,8 +3,8 @@ export { useListItem } from "@/Components/ListItem/composables/useListItem";
 export type {
   ListItemAlignOverrides,
   ListItemClasses,
+  ListItemCustomProps,
   ListItemOwnProps,
-  ListItemPartsProps,
   ListItemProps,
   ListItemSlots,
 } from "@/Components/ListItem/listItem.types";

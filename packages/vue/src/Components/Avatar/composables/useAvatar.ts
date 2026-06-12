@@ -65,12 +65,12 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   >({
     libDefaults,
     componentName: "Avatar",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<AvatarClasses>({
     entry: bridgeAvatar,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const hasCustomContent = computed(() => {

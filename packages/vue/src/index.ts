@@ -48,9 +48,9 @@ export type {
 export { Card, useCard } from "@/Components/Card";
 export type {
   CardClasses,
+  CardCustomProps,
   CardOwnProps,
   CardPaddingOverrides,
-  CardPartsProps,
   CardProps,
   CardRoundedOverrides,
   CardShadowOverrides,
@@ -61,8 +61,8 @@ export { Checkbox, useCheckbox } from "@/Components/Checkbox";
 export type {
   CheckboxClasses,
   CheckboxColorOverrides,
+  CheckboxCustomProps,
   CheckboxOwnProps,
-  CheckboxPartsProps,
   CheckboxProps,
   CheckboxRoundedOverrides,
   CheckboxSizeOverrides,
@@ -71,8 +71,8 @@ export type {
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlProps,
   FormControlSizeOverrides,
   FormControlSlots,
@@ -82,8 +82,8 @@ export { FormField, useFormField } from "@/Components/FormField";
 export type {
   FormFieldClasses,
   FormFieldColorOverrides,
+  FormFieldCustomProps,
   FormFieldOwnProps,
-  FormFieldPartsProps,
   FormFieldProps,
   FormFieldRoundedOverrides,
   FormFieldSizeOverrides,
@@ -104,8 +104,8 @@ export { Link, useLink } from "@/Components/Link";
 export type {
   LinkClasses,
   LinkColorOverrides,
+  LinkCustomProps,
   LinkOwnProps,
-  LinkPartsProps,
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,
@@ -115,9 +115,9 @@ export { List, useList } from "@/Components/List";
 export type {
   ListClasses,
   ListContextValue,
+  ListCustomProps,
   ListOwnProps,
   ListPaddingOverrides,
-  ListPartsProps,
   ListProps,
 } from "@/Components/List";
 export {
@@ -133,10 +133,10 @@ export {
 export type {
   ListboxClasses,
   ListboxColorOverrides,
+  ListboxCustomProps,
   ListboxEmits,
   ListboxOption,
   ListboxOwnProps,
-  ListboxPartsProps,
   ListboxProps,
   ListboxSlots,
   ListboxValue,
@@ -145,26 +145,26 @@ export { ListItem } from "@/Components/ListItem";
 export type {
   ListItemAlignOverrides,
   ListItemClasses,
+  ListItemCustomProps,
   ListItemOwnProps,
-  ListItemPartsProps,
   ListItemProps,
   ListItemSlots,
 } from "@/Components/ListItem";
 export { ListSection } from "@/Components/ListSection";
 export type {
   ListSectionClasses,
+  ListSectionCustomProps,
   ListSectionOwnProps,
-  ListSectionPartsProps,
   ListSectionProps,
   ListSectionSlots,
 } from "@/Components/ListSection";
 export { Menu, useMenu } from "@/Components/Menu";
 export type {
   MenuClasses,
+  MenuCustomProps,
   MenuEmits,
   MenuOptions,
   MenuOwnProps,
-  MenuPartsProps,
   MenuProps,
   MenuRoundedOverrides,
   MenuShadowOverrides,
@@ -175,9 +175,9 @@ export type {
   ModalAlignOverrides,
   ModalBlurOverrides,
   ModalClasses,
+  ModalCustomProps,
   ModalEmits,
   ModalOwnProps,
-  ModalPartsProps,
   ModalProps,
   ModalSizeOverrides,
   ModalSlots,
@@ -185,16 +185,16 @@ export type {
 export { NumberField, useNumberField } from "@/Components/NumberField";
 export type {
   NumberFieldClasses,
+  NumberFieldCustomProps,
   NumberFieldOwnProps,
-  NumberFieldPartsProps,
   NumberFieldProps,
   NumberFieldSlots,
 } from "@/Components/NumberField";
 export { PasswordField, usePasswordField } from "@/Components/PasswordField";
 export type {
   PasswordFieldClasses,
+  PasswordFieldCustomProps,
   PasswordFieldOwnProps,
-  PasswordFieldPartsProps,
   PasswordFieldProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField";
@@ -202,8 +202,8 @@ export { Radio, useRadio } from "@/Components/Radio";
 export type {
   RadioClasses,
   RadioColorOverrides,
+  RadioCustomProps,
   RadioOwnProps,
-  RadioPartsProps,
   RadioProps,
   RadioRoundedOverrides,
   RadioSizeOverrides,
@@ -225,10 +225,10 @@ export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {
   SnackbarClasses,
   SnackbarColorOverrides,
+  SnackbarCustomProps,
   SnackbarEmits,
   SnackbarOwnProps,
   SnackbarPaddingOverrides,
-  SnackbarPartsProps,
   SnackbarProps,
   SnackbarSlots,
   SnackbarTransitionOverrides,
@@ -237,8 +237,8 @@ export { Switch, useSwitch } from "@/Components/Switch";
 export type {
   SwitchClasses,
   SwitchColorOverrides,
+  SwitchCustomProps,
   SwitchOwnProps,
-  SwitchPartsProps,
   SwitchProps,
   SwitchRoundedOverrides,
   SwitchSizeOverrides,
@@ -247,16 +247,16 @@ export type {
 export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,
+  TextareaCustomProps,
   TextareaOwnProps,
-  TextareaPartsProps,
   TextareaProps,
   TextareaSlots,
 } from "@/Components/Textarea";
 export { TextField, useTextField } from "@/Components/TextField";
 export type {
   TextFieldClasses,
+  TextFieldCustomProps,
   TextFieldOwnProps,
-  TextFieldPartsProps,
   TextFieldProps,
   TextFieldSlots,
 } from "@/Components/TextField";

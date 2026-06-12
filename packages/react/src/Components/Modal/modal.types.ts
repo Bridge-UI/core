@@ -15,8 +15,8 @@ import type {
 export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
 export interface ModalAlignOverrides {}
-export interface ModalTransitionOverrides {}
 export interface ModalScrollOverrides {}
+export interface ModalTransitionOverrides {}
 
 export interface ModalClasses {
   /**
@@ -40,7 +40,7 @@ export interface ModalClasses {
   wrapper?: string;
 }
 
-export interface ModalPartsProps {
+export interface ModalCustomProps {
   /**
    * Props forwarded to the overlay.
    */
@@ -111,6 +111,13 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
+   * Props forwarded to each modal part.
+   *
+   * @default undefined
+   */
+  customProps?: ModalCustomProps;
+
+  /**
    * When true, the modal does not auto-focus the first focusable element on open.
    *
    * @default false
@@ -167,13 +174,6 @@ export interface ModalOwnProps {
    * @default undefined
    */
   onShowChange?: (show: boolean) => void;
-
-  /**
-   * Props forwarded to each modal part.
-   *
-   * @default undefined
-   */
-  partsProps?: ModalPartsProps;
 
   /**
    * When true, escape and overlay clicks do not close the modal.

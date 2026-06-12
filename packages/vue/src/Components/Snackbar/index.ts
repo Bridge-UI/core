@@ -4,10 +4,10 @@ export type { SnackbarOptions } from "@/Components/Snackbar/composables/useSnack
 export type {
   SnackbarClasses,
   SnackbarColorOverrides,
+  SnackbarCustomProps,
   SnackbarEmits,
   SnackbarOwnProps,
   SnackbarPaddingOverrides,
-  SnackbarPartsProps,
   SnackbarProps,
   SnackbarSlots,
   SnackbarTransitionOverrides,

@@ -51,12 +51,12 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
   >({
     libDefaults,
     componentName: "Label",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LabelClasses>({
     entry: bridgeLabel,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const sizeClass = computed(() => {

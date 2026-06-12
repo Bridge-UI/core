@@ -45,7 +45,7 @@ export interface FormControlClasses {
   startLabel?: string;
 }
 
-export interface FormControlPartsProps {
+export interface FormControlCustomProps {
   /**
    * Props forwarded to the helper text element.
    */
@@ -106,6 +106,13 @@ export interface FormControlOwnProps {
   controlId?: string;
 
   /**
+   * Extra props for internal parts (`row`, `mainLabel`, `description`, …).
+   *
+   * @default undefined
+   */
+  customProps?: FormControlCustomProps;
+
+  /**
    * Helper text below the control row (hidden when invalid).
    *
    * @default undefined
@@ -154,13 +161,6 @@ export interface FormControlOwnProps {
    * @default undefined
    */
   mainLabel?: string;
-
-  /**
-   * Extra props for internal parts (`row`, `mainLabel`, `description`, …).
-   *
-   * @default undefined
-   */
-  partsProps?: FormControlPartsProps;
 
   /**
    * Whether the control is read-only.

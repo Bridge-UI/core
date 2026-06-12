@@ -6,8 +6,8 @@ export type {
   ModalAlignOverrides,
   ModalBlurOverrides,
   ModalClasses,
+  ModalCustomProps,
   ModalOwnProps,
-  ModalPartsProps,
   ModalProps,
   ModalSizeOverrides,
 } from "@/Components/Modal/modal.types";

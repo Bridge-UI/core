@@ -77,7 +77,7 @@ export interface FormFieldClasses {
   start?: string;
 }
 
-export interface FormFieldPartsProps {
+export interface FormFieldCustomProps {
   /**
    * Props forwarded to the input container (`<div>`).
    */
@@ -170,6 +170,13 @@ export interface FormFieldOwnProps {
   corner?: string;
 
   /**
+   * Extra props for internal parts (`header`, `label`, `input`, `container`, …).
+   *
+   * @default undefined
+   */
+  customProps?: FormFieldCustomProps;
+
+  /**
    * Helper text below the control (hidden when the field is invalid).
    *
    * @default undefined
@@ -233,13 +240,6 @@ export interface FormFieldOwnProps {
    * @default undefined
    */
   label?: string;
-
-  /**
-   * Extra props for internal parts (`header`, `label`, `input`, `container`, …).
-   *
-   * @default undefined
-   */
-  partsProps?: FormFieldPartsProps;
 
   /**
    * Whether the control is read-only.

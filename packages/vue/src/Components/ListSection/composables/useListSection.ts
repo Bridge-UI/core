@@ -24,7 +24,7 @@ const listSectionBridgeKeys = [
   "title",
   "sticky",
   "classes",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ListSectionOwnProps)[];
 
 export function useListSection(
@@ -47,16 +47,16 @@ export function useListSection(
     "ListSection"
   >({
     componentName: "ListSection",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeListSection,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isDense = computed(() => {
@@ -72,7 +72,7 @@ export function useListSection(
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
         "list-none": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
@@ -82,7 +82,7 @@ export function useListSection(
 
   const titleBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.title,
+      customProps.value?.title,
       {},
       {
         role: "presentation",

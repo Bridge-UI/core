@@ -38,7 +38,7 @@ const linkBridgeKeys = [
   "leftIcon",
   "rightIcon",
   "underline",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
 
 type LinkLibDefaults = LibDefaultsShape<
@@ -65,16 +65,16 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   >({
     libDefaults,
     componentName: "Link",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
     entry: bridgeLink,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isDisabled = computed(() => {
@@ -134,7 +134,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
 
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
         "inline-flex items-center gap-x-1 font-medium": true,
@@ -151,7 +151,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
 
   const leftIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.leftIcon,
+      customProps.value?.leftIcon,
       {},
       cn({
         "shrink-0": true,
@@ -162,7 +162,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
 
   const rightIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.rightIcon,
+      customProps.value?.rightIcon,
       {},
       cn({
         "shrink-0": true,

@@ -35,7 +35,7 @@ const radioBridgeKeys = [
   "value",
   "classes",
   "rounded",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof RadioOwnProps)[];
 
 type RadioLibDefaults = LibDefaultsShape<
@@ -71,16 +71,16 @@ export function useRadio(
   >({
     libDefaults,
     componentName: "Radio",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<RadioClasses>({
     entry: bridgeRadio,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isChecked = computed(() => {
@@ -125,7 +125,7 @@ export function useRadio(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         ...formControl.controlBind.value,
         type: "radio",
         name: merged.value.name,
@@ -141,7 +141,7 @@ export function useRadio(
 
   const controlBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.control,
+      customProps.value?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -157,7 +157,7 @@ export function useRadio(
 
   const dotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.dot,
+      customProps.value?.dot,
       {},
       cn({
         "rounded-full bg-white transition-transform duration-100": true,

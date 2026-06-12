@@ -106,7 +106,7 @@ export function useSelect(
   });
 
   const selectMerged = computed(() => {
-    return split.value.customProps;
+    return split.value.componentProps;
   });
 
   const registryProps = computed((): SelectRegistryProps => {
@@ -301,7 +301,7 @@ export function useSelect(
     >({
       bridgeKeys: formFieldBridgeKeys,
       props: inherited as Omit<FormFieldOwnProps, "field">,
-    }).customProps;
+    }).componentProps;
 
     const endIcon =
       formFieldCustom.endIcon ??
@@ -311,10 +311,10 @@ export function useSelect(
       ...formFieldCustom,
       endIcon,
       classes: mergedClasses.value,
-      partsProps: {
-        ...formFieldCustom.partsProps,
+      customProps: {
+        ...formFieldCustom.customProps,
         container: mergePartBind(
-          formFieldCustom.partsProps?.container,
+          formFieldCustom.customProps?.container,
           {},
           {
             ref: handleContainerRef,

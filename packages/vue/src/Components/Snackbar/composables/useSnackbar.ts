@@ -56,7 +56,7 @@ const snackbarBridgeKeys = [
   "stackId",
   "duration",
   "position",
-  "partsProps",
+  "customProps",
   "teleportTo",
   "transition",
   "description",
@@ -129,10 +129,10 @@ export function useSnackbar(
   >({
     libDefaults,
     componentName: "Snackbar",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => merged.value.partsProps);
+  const customProps = computed(() => merged.value.customProps);
 
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, ["onShowChange"]);
@@ -140,7 +140,7 @@ export function useSnackbar(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeSnackbar,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const show = computed(() => {
@@ -454,7 +454,7 @@ export function useSnackbar(
 
   const portalBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.portal,
+      customProps.value?.portal,
       {
         "data-snackbar-layer": true,
         style: {
@@ -471,7 +471,7 @@ export function useSnackbar(
 
   const panelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       {
         ...rootInheritedAttrs.value,
         "data-snackbar-part": "panel",
@@ -494,7 +494,7 @@ export function useSnackbar(
 
   const iconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.icon,
+      customProps.value?.icon,
       {},
       cn({
         "w-6 h-6 shrink-0": true,
@@ -506,7 +506,7 @@ export function useSnackbar(
 
   const titleBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.title,
+      customProps.value?.title,
       {},
       cn({
         "text-sm font-medium": true,
@@ -518,7 +518,7 @@ export function useSnackbar(
 
   const descriptionBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.description,
+      customProps.value?.description,
       {},
       cn({
         "mt-1 text-sm text-dark-500 dark:text-dark-500": true,
@@ -529,7 +529,7 @@ export function useSnackbar(
 
   const progressBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.progress,
+      customProps.value?.progress,
       {},
       {
         class: cn({
@@ -553,7 +553,7 @@ export function useSnackbar(
 
   function contentBind(hasRight: boolean) {
     return mergePartBind(
-      partsProps.value?.content,
+      customProps.value?.content,
       {},
       cn({
         [get(paddingClass.value, "contentRight") ?? ""]: hasRight,
