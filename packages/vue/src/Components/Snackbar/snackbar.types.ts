@@ -67,13 +67,6 @@ export interface SnackbarClasses {
   title?: string;
 }
 
-export interface SnackbarEmits {
-  /**
-   * Emitted when the snackbar requests to close.
-   */
-  close: [];
-}
-
 export interface SnackbarCustomProps {
   /**
    * Props forwarded to the main content wrapper.
@@ -109,6 +102,13 @@ export interface SnackbarCustomProps {
    * Props forwarded to the title element.
    */
   title?: HTMLAttributes;
+}
+
+export interface SnackbarEmits {
+  /**
+   * Emitted when the snackbar requests to close.
+   */
+  close: [];
 }
 
 /**

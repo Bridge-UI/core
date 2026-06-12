@@ -111,4 +111,5 @@ export function createPositionable(options: PositionOptions): PositionHandle {
   };
 }
 
+/** Floating UI placement alias re-exported from `@floating-ui/dom`. */
 export type { Placement as PositionPlacement };

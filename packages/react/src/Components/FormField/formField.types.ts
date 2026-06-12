@@ -140,45 +140,6 @@ export interface FormFieldCustomProps {
   startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
-export interface FormFieldSlots {
-  /**
-   * Slot at the inline end of the header row (secondary label).
-   */
-  corner?: ReactNode;
-
-  /**
-   * The form control (input, textarea, select trigger, etc.).
-   */
-  default?: ReactNode;
-
-  /**
-   * Helper text below the control (hidden when the field is invalid).
-   */
-  description?: ReactNode;
-
-  /**
-   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
-   * for plain suffix text.
-   */
-  end?: ReactNode;
-
-  /**
-   * Custom error message content.
-   */
-  errorMessage?: ReactNode;
-
-  /**
-   * Slot at the inline start of the header row (primary label).
-   */
-  label?: ReactNode;
-
-  /**
-   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
-   * prop for plain prefix text.
-   */
-  start?: ReactNode;
-}
-
 export interface FormFieldOwnProps {
   /**
    * The form control (input, textarea, select trigger, etc.).
@@ -356,6 +317,45 @@ export interface FormFieldOwnProps {
    * @default false
    */
   withoutErrorMessage?: boolean;
+}
+
+export interface FormFieldSlots {
+  /**
+   * Slot at the inline end of the header row (secondary label).
+   */
+  corner?: ReactNode;
+
+  /**
+   * The form control (input, textarea, select trigger, etc.).
+   */
+  default?: ReactNode;
+
+  /**
+   * Helper text below the control (hidden when the field is invalid).
+   */
+  description?: ReactNode;
+
+  /**
+   * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
+   * for plain suffix text.
+   */
+  end?: ReactNode;
+
+  /**
+   * Custom error message content.
+   */
+  errorMessage?: ReactNode;
+
+  /**
+   * Slot at the inline start of the header row (primary label).
+   */
+  label?: ReactNode;
+
+  /**
+   * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
+   * prop for plain prefix text.
+   */
+  start?: ReactNode;
 }
 
 export type FormFieldProps = MergeHtmlProps<

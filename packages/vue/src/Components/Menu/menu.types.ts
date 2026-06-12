@@ -51,14 +51,6 @@ export interface MenuClasses {
   trigger?: string;
 }
 
-export interface MenuEmits {
-  /**
-   * Emitted when the user dismisses the menu (Escape or click-away).
-   * Not emitted when the parent sets `v-model` to `false` directly.
-   */
-  close: [];
-}
-
 export interface MenuCustomProps {
   /**
    * Props forwarded to the floating menu panel.
@@ -74,6 +66,14 @@ export interface MenuCustomProps {
    * Props forwarded to the trigger wrapper.
    */
   trigger?: HTMLAttributes;
+}
+
+export interface MenuEmits {
+  /**
+   * Emitted when the user dismisses the menu (Escape or click-away).
+   * Not emitted when the parent sets `v-model` to `false` directly.
+   */
+  close: [];
 }
 
 /**

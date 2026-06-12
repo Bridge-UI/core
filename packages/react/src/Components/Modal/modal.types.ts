@@ -15,8 +15,8 @@ import type {
 export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}
 export interface ModalAlignOverrides {}
-export interface ModalTransitionOverrides {}
 export interface ModalScrollOverrides {}
+export interface ModalTransitionOverrides {}
 
 export interface ModalClasses {
   /**

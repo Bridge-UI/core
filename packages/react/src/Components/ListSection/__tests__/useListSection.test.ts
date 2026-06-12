@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -14,9 +15,8 @@ function renderUseListSection(
   context: { dense: boolean } | null = null,
 ) {
   return renderHook(() => useListSection(props), {
-    wrapper: ({ children }) => (
-      <ListContext.Provider value={context}>{children}</ListContext.Provider>
-    ),
+    wrapper: ({ children }) =>
+      createElement(ListContext.Provider, { value: context }, children),
   });
 }
 

@@ -1,13 +1,4 @@
-// ** External Imports
-import type { DefineComponent } from "vue";
-
-// ** Local Imports
-import type { AlertProps } from "@/Components/Alert/alert.types";
-import AlertVue from "@/Components/Alert/Alert.vue";
-
 // ** Exports
-export const Alert = AlertVue as DefineComponent<AlertProps>;
-
 export type {
   AlertClasses,
   AlertColorOverrides,
@@ -20,4 +11,5 @@ export type {
   AlertSlots,
   AlertVariantOverrides,
 } from "@/Components/Alert/alert.types";
+export { default as Alert } from "@/Components/Alert/Alert.vue";
 export { useAlert } from "@/Components/Alert/composables/useAlert";

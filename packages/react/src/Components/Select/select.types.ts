@@ -27,6 +27,43 @@ export type {
   SelectValue,
 } from "@bridge-ui/core";
 
+export interface SelectCallbacks {
+  /**
+   * Callback when the selection changes.
+   */
+  onChange?: (value: SelectModel) => void;
+
+  /**
+   * Callback when the value is cleared.
+   */
+  onClear?: () => void;
+
+  /**
+   * Callback when the menu closes.
+   */
+  onClose?: () => void;
+
+  /**
+   * Callback when an option is deselected (multiple mode).
+   */
+  onDeselect?: (option: SelectOption) => void;
+
+  /**
+   * Callback when the menu opens.
+   */
+  onOpen?: () => void;
+
+  /**
+   * Callback when the search query changes.
+   */
+  onSearch?: (query: string) => void;
+
+  /**
+   * Callback when an option is selected.
+   */
+  onSelect?: (option: SelectOption) => void;
+}
+
 export interface SelectClasses extends FormFieldClasses {
   /**
    * The classes to apply to selected chips (multiple mode).
@@ -172,43 +209,6 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * The selected value (controlled).
    */
   value?: SelectModel | null;
-}
-
-export interface SelectCallbacks {
-  /**
-   * Callback when the selection changes.
-   */
-  onChange?: (value: SelectModel) => void;
-
-  /**
-   * Callback when the value is cleared.
-   */
-  onClear?: () => void;
-
-  /**
-   * Callback when the menu closes.
-   */
-  onClose?: () => void;
-
-  /**
-   * Callback when an option is deselected (multiple mode).
-   */
-  onDeselect?: (option: SelectOption) => void;
-
-  /**
-   * Callback when the menu opens.
-   */
-  onOpen?: () => void;
-
-  /**
-   * Callback when the search query changes.
-   */
-  onSearch?: (query: string) => void;
-
-  /**
-   * Callback when an option is selected.
-   */
-  onSelect?: (option: SelectOption) => void;
 }
 
 export interface SelectSlots extends FormFieldSlots {

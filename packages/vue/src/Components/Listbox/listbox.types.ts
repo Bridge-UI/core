@@ -49,6 +49,19 @@ export interface ListboxCustomProps {
 
 export type { ListboxOption, ListboxValue } from "@bridge-ui/core";
 
+export interface ListboxEmits {
+  /**
+   * Emitted when the user activates an option.
+   */
+  select: [option: ListboxOption];
+
+  /**
+   * Emitted when open state should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
+}
+
 export interface ListboxOwnProps {
   /**
    * Element that anchors the floating panel (typically the field container).
@@ -160,19 +173,6 @@ export interface ListboxOwnProps {
    * @default true
    */
   showCheckmark?: boolean;
-}
-
-export interface ListboxEmits {
-  /**
-   * Emitted when the user activates an option.
-   */
-  select: [option: ListboxOption];
-
-  /**
-   * Emitted when open state should change (controlled state).
-   * Listen with `@show-change` / `v-on:show-change`.
-   */
-  "show-change": [show: boolean];
 }
 
 export interface ListboxSlots {

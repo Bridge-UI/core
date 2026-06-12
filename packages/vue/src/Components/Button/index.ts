@@ -1,13 +1,4 @@
-// ** External Imports
-import type { DefineComponent } from "vue";
-
-// ** Local Imports
-import type { ButtonProps } from "@/Components/Button/button.types";
-import ButtonVue from "@/Components/Button/Button.vue";
-
 // ** Exports
-export const Button = ButtonVue as DefineComponent<ButtonProps>;
-
 export type {
   ButtonClasses,
   ButtonColorOverrides,
@@ -20,4 +11,5 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button/button.types";
+export { default as Button } from "@/Components/Button/Button.vue";
 export { useButton } from "@/Components/Button/composables/useButton";

@@ -57,6 +57,70 @@ export interface SelectClasses extends FormFieldClasses {
 
 export interface SelectCustomProps extends FormFieldCustomProps {}
 
+export interface SelectEmits {
+  /**
+   * Emitted when the selection changes.
+   */
+  change: [value: SelectModel];
+
+  /**
+   * Emitted when the value is cleared.
+   */
+  clear: [];
+
+  /**
+   * Emitted when the menu closes.
+   */
+  close: [];
+
+  /**
+   * Emitted when an option is deselected (multiple mode).
+   */
+  deselect: [option: SelectOption];
+
+  /**
+   * Emitted when the menu opens.
+   */
+  open: [];
+
+  /**
+   * Emitted when the search query changes.
+   */
+  search: [query: string];
+
+  /**
+   * Emitted when an option is selected.
+   */
+  select: [option: SelectOption];
+
+  /**
+   * Emitted when `v-model` should update.
+   */
+  "update:modelValue": [value: SelectModel];
+}
+
+export interface SelectOptionProps {
+  /**
+   * Secondary line below the label.
+   */
+  description?: string;
+
+  /**
+   * Whether the option is disabled.
+   */
+  disabled?: boolean;
+
+  /**
+   * The label of the option.
+   */
+  label: string;
+
+  /**
+   * The value of the option.
+   */
+  value: SelectValue;
+}
+
 export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * Remote data source. Implies `searchable`.
@@ -237,67 +301,3 @@ export type SelectMultipleProps = MergeHtmlProps<
 };
 
 export type SelectProps = SelectSingleProps | SelectMultipleProps;
-
-export interface SelectEmits {
-  /**
-   * Emitted when the selection changes.
-   */
-  change: [value: SelectModel];
-
-  /**
-   * Emitted when the value is cleared.
-   */
-  clear: [];
-
-  /**
-   * Emitted when the menu closes.
-   */
-  close: [];
-
-  /**
-   * Emitted when an option is deselected (multiple mode).
-   */
-  deselect: [option: SelectOption];
-
-  /**
-   * Emitted when the menu opens.
-   */
-  open: [];
-
-  /**
-   * Emitted when the search query changes.
-   */
-  search: [query: string];
-
-  /**
-   * Emitted when an option is selected.
-   */
-  select: [option: SelectOption];
-
-  /**
-   * Emitted when `v-model` should update.
-   */
-  "update:modelValue": [value: SelectModel];
-}
-
-export interface SelectOptionProps {
-  /**
-   * Secondary line below the label.
-   */
-  description?: string;
-
-  /**
-   * Whether the option is disabled.
-   */
-  disabled?: boolean;
-
-  /**
-   * The label of the option.
-   */
-  label: string;
-
-  /**
-   * The value of the option.
-   */
-  value: SelectValue;
-}

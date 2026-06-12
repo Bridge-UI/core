@@ -161,7 +161,6 @@ export { claimOpenMenu, resetOpenMenuLayersForTests } from "@core/Utils/menu";
 export {
   acquireLayerStackOrder,
   countModalTransitionLayers,
-  createLayerId,
   getLayerStackEntry,
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,

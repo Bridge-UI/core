@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
-import type { AvatarProps, AvatarSlots } from "@/Components/Avatar";
+import type { AvatarOwnProps, AvatarSlots } from "@/Components/Avatar";
 import { useAvatar } from "@/Components/Avatar";
 import { Icon } from "@/Components/Icon";
 import { resolveNamedSlot } from "@/Utils";
@@ -9,7 +9,7 @@ defineOptions({ inheritAttrs: false });
 
 defineSlots<AvatarSlots>();
 
-const props = defineProps<AvatarProps>();
+const props = defineProps<AvatarOwnProps>();
 
 const {
   slots,

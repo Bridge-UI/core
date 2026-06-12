@@ -28,6 +28,8 @@ export interface ListSectionCustomProps {
   title?: HTMLAttributes;
 }
 
+export type ListSectionLabel = string | VNode | VNode[] | undefined;
+
 /**
  * Section heading inside a `List` (MUI `ListSubheader`-like).
  */
@@ -86,5 +88,3 @@ export type ListSectionProps = MergeHtmlProps<
   ListSectionOwnProps,
   HTMLAttributes
 >;
-
-export type ListSectionLabel = string | VNode | VNode[] | undefined;
