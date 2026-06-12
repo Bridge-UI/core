@@ -15,6 +15,8 @@ function Select(props: SelectProps) {
     null,
   );
 
+  const { maxHeight, disableMaxHeight, ...selectProps } = props;
+
   const setTriggerRef = (
     element: HTMLInputElement | HTMLTextAreaElement | null,
   ) => {
@@ -45,7 +47,7 @@ function Select(props: SelectProps) {
     highlightedIndex,
     hideEmptyMessage,
     handleOpenChange,
-  } = useSelect(props, triggerRef);
+  } = useSelect(selectProps, triggerRef);
 
   return (
     <>
@@ -112,20 +114,22 @@ function Select(props: SelectProps) {
 
       <Listbox
         show={open}
-        onShowChange={handleOpenChange}
+        disableAutoFocus
         loading={isLoading}
         multiple={multiple}
         color={listboxColor}
         listboxId={listboxId}
+        maxHeight={maxHeight}
         anchorEl={containerRef}
-        options={visibleOptions}
-        isSelected={isSelected}
         onSelect={selectOption}
-        disableAutoFocus
+        isSelected={isSelected}
+        options={visibleOptions}
         emptyMessage={emptyMessage}
+        onShowChange={handleOpenChange}
+        labelledBy={formField.controlId}
+        disableMaxHeight={disableMaxHeight}
         highlightedIndex={highlightedIndex}
         hideEmptyMessage={hideEmptyMessage}
-        labelledBy={formField.controlId}
         slots={{
           empty: slots?.empty,
           option: slots?.option,

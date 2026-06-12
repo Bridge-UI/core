@@ -154,3 +154,33 @@ test("it should mark selected options with aria-selected", async () => {
     expect(apple?.getAttribute("aria-selected")).toBe("true");
   });
 });
+
+test("it should render a scroll container with default max height", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  const scrollContainer = screen
+    .getByRole("listbox")
+    .closest(".overflow-y-auto");
+
+  expect(scrollContainer).not.toBeNull();
+  expect(scrollContainer?.classList.contains("max-h-60")).toBe(true);
+});

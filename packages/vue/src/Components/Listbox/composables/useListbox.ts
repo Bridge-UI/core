@@ -4,6 +4,7 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
+  cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -18,6 +19,7 @@ import type {
   ListboxProps,
 } from "@/Components/Listbox/listbox.types";
 import {
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -25,7 +27,9 @@ import {
 const listboxBridgeKeys = [
   "color",
   "classes",
+  "maxHeight",
   "partsProps",
+  "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
 type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "color">;
@@ -80,9 +84,25 @@ export function useListbox(
     return colorClasses.value?.check;
   });
 
+  const scrollBind = computed(() => {
+    const maxHeightClass = merged.value.maxHeight ?? "max-h-60";
+    const disableMaxHeight = merged.value.disableMaxHeight === true;
+
+    return mergePartBind(
+      merged.value.partsProps?.scroll,
+      {},
+      cn({
+        "overflow-y-auto overscroll-contain": !disableMaxHeight,
+        [maxHeightClass]: !disableMaxHeight,
+        [mergedClasses.value.scroll ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
+    scrollBind,
     mergedClasses,
     optionSelectedClass,
     optionHighlightedClass,

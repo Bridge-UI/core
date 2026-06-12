@@ -3,6 +3,7 @@ import { get } from "es-toolkit/compat";
 
 // ** Core Imports
 import {
+  cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -18,6 +19,7 @@ import type {
 } from "@/Components/Listbox/listbox.types";
 import {
   derived,
+  mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -25,7 +27,9 @@ import {
 const listboxBridgeKeys = [
   "color",
   "classes",
+  "maxHeight",
   "partsProps",
+  "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
 type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "color">;
@@ -79,9 +83,25 @@ export function useListbox(
     return colorClasses?.check;
   });
 
+  const scrollBind = derived(() => {
+    const maxHeightClass = merged.maxHeight ?? "max-h-60";
+    const disableMaxHeight = merged.disableMaxHeight === true;
+
+    return mergePartBind(
+      merged.partsProps?.scroll,
+      {},
+      cn({
+        "overflow-y-auto overscroll-contain": !disableMaxHeight,
+        [maxHeightClass]: !disableMaxHeight,
+        [mergedClasses.scroll ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
+    scrollBind,
     mergedClasses,
     optionSelectedClass,
     optionHighlightedClass,

@@ -53,6 +53,7 @@ const selectBridgeKeys = [
   "multiple",
   "asyncData",
   "clearable",
+  "maxHeight",
   "searchable",
   "flipOptions",
   "placeholder",
@@ -63,6 +64,7 @@ const selectBridgeKeys = [
   "hideEmptyMessage",
   "minItemsForSearch",
   "optionDescription",
+  "disableMaxHeight",
 ] as const satisfies readonly (keyof SelectOwnProps)[];
 
 type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
@@ -638,48 +640,18 @@ export function useSelect(
   async function fetchAsyncOptions(query: string) {
     const asyncData = selectMerged.value.asyncData;
 
-    if (!asyncData || typeof asyncData === "string") {
-      return;
-    }
-
-    if ("search" in asyncData) {
-      asyncLoading.value = true;
-
-      try {
-        const results = await asyncData.search(query, {
-          selected: selectedValues.value,
-        });
-
-        asyncOptions.value = normalizeAsyncOptions(results, optionKeys.value);
-      } finally {
-        asyncLoading.value = false;
-      }
-
-      return;
-    }
-
-    if (!("url" in asyncData)) {
+    if (!asyncData) {
       return;
     }
 
     asyncLoading.value = true;
 
     try {
-      const url = new URL(asyncData.url, window.location.origin);
-      url.searchParams.set("search", query);
-      url.searchParams.set("selected", JSON.stringify(selectedValues.value));
-
-      const response = await fetch(url.toString(), {
-        method: asyncData.method ?? "GET",
-        credentials: asyncData.credentials,
+      const results = await asyncData.search(query, {
+        selected: selectedValues.value,
       });
 
-      if (!response.ok) {
-        return;
-      }
-
-      const payload = (await response.json()) as SelectOptionLike[];
-      asyncOptions.value = normalizeAsyncOptions(payload, optionKeys.value);
+      asyncOptions.value = normalizeAsyncOptions(results, optionKeys.value);
     } finally {
       asyncLoading.value = false;
     }
@@ -688,13 +660,7 @@ export function useSelect(
   async function resolveSelectedOptions() {
     const asyncData = selectMerged.value.asyncData;
 
-    if (
-      !asyncData ||
-      typeof asyncData === "string" ||
-      !("resolveSelected" in asyncData) ||
-      !asyncData.resolveSelected ||
-      selectedValues.value.length === 0
-    ) {
+    if (!asyncData?.resolveSelected || selectedValues.value.length === 0) {
       return;
     }
 

@@ -65,7 +65,12 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { ListPadding } from "@core/Components/List";
-export type { ListboxColor, ListboxColorItem } from "@core/Components/Listbox";
+export type {
+  ListboxColor,
+  ListboxColorItem,
+  ListboxOption,
+  ListboxValue,
+} from "@core/Components/Listbox";
 export type { ListItemAlign } from "@core/Components/ListItem";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 export { transitionProps } from "@core/Components/Modal";
@@ -83,6 +88,14 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
+export type {
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+  SelectOptionLike,
+  SelectValue,
+} from "@core/Components/Select";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,

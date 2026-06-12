@@ -2,7 +2,13 @@
 import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type {
+  MergeHtmlProps,
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
@@ -11,38 +17,15 @@ import type {
   FormFieldPartsProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
-import type { ListboxOption } from "@/Components/Listbox/listbox.types";
 
-export type SelectValue = string | number;
-
-export type SelectModel = SelectValue | SelectValue[];
-
-export type SelectOption = ListboxOption;
-
-export type SelectOptionInput =
-  | SelectOption
-  | string
-  | number
-  | Record<string, unknown>;
-
-export type SelectAsyncData =
-  | string
-  | {
-      alwaysFetch?: boolean;
-      credentials?: RequestCredentials;
-      method?: "GET" | "POST";
-      params?: Record<string, unknown>;
-      url: string;
-    }
-  | {
-      resolveSelected?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
-      search: (
-        query: string,
-        ctx: { selected: SelectValue[] },
-      ) => Promise<SelectOptionLike[]>;
-    };
-
-export type SelectOptionLike = SelectOption | string | Record<string, unknown>;
+export type {
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+  SelectOptionLike,
+  SelectValue,
+} from "@bridge-ui/core";
 
 export interface SelectClasses extends FormFieldClasses {
   /**
@@ -92,6 +75,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   defaultValue?: SelectModel | null;
 
   /**
+   * When true, the dropdown options list is not height-limited.
+   * Forwarded to the internal `Listbox`.
+   *
+   * @default false
+   */
+  disableMaxHeight?: boolean;
+
+  /**
    * Message when the filtered list is empty.
    *
    * @default "No options"
@@ -116,6 +107,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * External or async loading state.
    */
   loading?: boolean;
+
+  /**
+   * Tailwind max-height class for the dropdown options area.
+   * Forwarded to the internal `Listbox`.
+   *
+   * @default "max-h-60"
+   */
+  maxHeight?: string;
 
   /**
    * Minimum option count before search UI is enabled.

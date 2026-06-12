@@ -53,12 +53,14 @@ const selectBridgeKeys = [
   "multiple",
   "asyncData",
   "clearable",
+  "maxHeight",
   "searchable",
   "flipOptions",
   "placeholder",
   "optionLabel",
   "optionValue",
   "emptyMessage",
+  "disableMaxHeight",
   "hideEmptyMessage",
   "minItemsForSearch",
   "optionDescription",
@@ -346,48 +348,18 @@ export function useSelect(
     async (query: string) => {
       const asyncData = selectMerged.asyncData;
 
-      if (!asyncData || typeof asyncData === "string") {
-        return;
-      }
-
-      if ("search" in asyncData) {
-        setAsyncLoading(true);
-
-        try {
-          const results = await asyncData.search(query, {
-            selected: selectedValues,
-          });
-
-          setAsyncOptions(normalizeAsyncOptions(results, optionKeys));
-        } finally {
-          setAsyncLoading(false);
-        }
-
-        return;
-      }
-
-      if (!("url" in asyncData)) {
+      if (!asyncData) {
         return;
       }
 
       setAsyncLoading(true);
 
       try {
-        const url = new URL(asyncData.url, window.location.origin);
-        url.searchParams.set("search", query);
-        url.searchParams.set("selected", JSON.stringify(selectedValues));
-
-        const response = await fetch(url.toString(), {
-          method: asyncData.method ?? "GET",
-          credentials: asyncData.credentials,
+        const results = await asyncData.search(query, {
+          selected: selectedValues,
         });
 
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = (await response.json()) as SelectOptionLike[];
-        setAsyncOptions(normalizeAsyncOptions(payload, optionKeys));
+        setAsyncOptions(normalizeAsyncOptions(results, optionKeys));
       } finally {
         setAsyncLoading(false);
       }
@@ -751,14 +723,14 @@ export function useSelect(
       },
     };
   }, [
-    formFieldSlots,
-    handleContainerClick,
-    handleContainerRef,
-    inheritedAttrs,
-    isSearchActive,
     mergedClasses,
+    formFieldSlots,
     props.disabled,
     props.readonly,
+    inheritedAttrs,
+    isSearchActive,
+    handleContainerRef,
+    handleContainerClick,
   ]);
 
   const formField = useFormField(
@@ -870,13 +842,7 @@ export function useSelect(
   const resolveSelectedOptions = useCallback(async () => {
     const asyncData = selectMerged.asyncData;
 
-    if (
-      !asyncData ||
-      typeof asyncData === "string" ||
-      !("resolveSelected" in asyncData) ||
-      !asyncData.resolveSelected ||
-      selectedValues.length === 0
-    ) {
+    if (!asyncData?.resolveSelected || selectedValues.length === 0) {
       return;
     }
 

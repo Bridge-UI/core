@@ -45,3 +45,24 @@ test("it should merge registry classes", () => {
 
   expect(result.current.mergedClasses.check).toBe("custom-check");
 });
+
+test("it should apply default scroll classes", () => {
+  const { result } = renderUseListbox();
+
+  expect(result.current.scrollBind.className).toContain("max-h-60");
+  expect(result.current.scrollBind.className).toContain("overflow-y-auto");
+});
+
+test("it should apply custom maxHeight tailwind class", () => {
+  const { result } = renderUseListbox({ maxHeight: "max-h-80" });
+
+  expect(result.current.scrollBind.className).toContain("max-h-80");
+  expect(result.current.scrollBind.className).not.toContain("max-h-60");
+});
+
+test("it should disable max height when disableMaxHeight is true", () => {
+  const { result } = renderUseListbox({ disableMaxHeight: true });
+
+  expect(result.current.scrollBind.className).not.toContain("max-h-60");
+  expect(result.current.scrollBind.className).not.toContain("overflow-y-auto");
+});

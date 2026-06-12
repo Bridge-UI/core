@@ -118,3 +118,14 @@ test("it should mark selected options with aria-selected on the list item", asyn
 
   expect(apple?.getAttribute("aria-selected")).toBe("true");
 });
+
+test("it should render a scroll container with default max height", async () => {
+  mountListbox({ props: { modelValue: true } });
+
+  await flushPromises();
+
+  const scrollContainer = document.body.querySelector(".overflow-y-auto");
+
+  expect(scrollContainer).not.toBeNull();
+  expect(scrollContainer?.classList.contains("max-h-60")).toBe(true);
+});

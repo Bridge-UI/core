@@ -4,6 +4,8 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 // ** Core Imports
 import type {
   ListboxColor,
+  ListboxOption,
+  ListboxValue,
   MergeHtmlProps,
   MergeProps,
   PositionPlacement,
@@ -26,6 +28,11 @@ export interface ListboxClasses {
    * Classes merged onto selected options.
    */
   optionSelected?: string;
+
+  /**
+   * Classes merged onto the scrollable options container.
+   */
+  scroll?: string;
 }
 
 export interface ListboxPartsProps {
@@ -33,36 +40,14 @@ export interface ListboxPartsProps {
    * Props forwarded to the floating menu panel.
    */
   content?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the scrollable options container.
+   */
+  scroll?: HTMLAttributes<HTMLDivElement>;
 }
 
-export type ListboxValue = string | number;
-
-export interface ListboxOption {
-  /**
-   * Secondary line below the label.
-   */
-  description?: string;
-
-  /**
-   * Whether the option is disabled.
-   */
-  disabled?: boolean;
-
-  /**
-   * The label of the option.
-   */
-  label: string;
-
-  /**
-   * Original data when mapped from arbitrary objects.
-   */
-  raw?: unknown;
-
-  /**
-   * The value of the option.
-   */
-  value: ListboxValue;
-}
+export type { ListboxOption, ListboxValue } from "@bridge-ui/core";
 
 export interface ListboxOwnProps {
   /**
@@ -89,6 +74,13 @@ export interface ListboxOwnProps {
    * @default false
    */
   disableAutoFocus?: boolean;
+
+  /**
+   * When true, the options list is not height-limited.
+   *
+   * @default false
+   */
+  disableMaxHeight?: boolean;
 
   /**
    * Message when the options list is empty.
@@ -130,6 +122,13 @@ export interface ListboxOwnProps {
    * External loading state.
    */
   loading?: boolean;
+
+  /**
+   * Tailwind max-height class for the options scroll area (e.g. `max-h-80`).
+   *
+   * @default "max-h-60"
+   */
+  maxHeight?: string;
 
   /**
    * Whether multiple options can be selected.

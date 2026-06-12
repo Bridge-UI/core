@@ -49,6 +49,7 @@ function Listbox({
   const {
     merged,
     checkClass,
+    scrollBind,
     mergedClasses,
     optionSelectedClass,
     optionHighlightedClass,
@@ -134,48 +135,50 @@ function Listbox({
           {slots?.loading ?? <span>Loading...</span>}
         </div>
       ) : (
-        <List
-          dense
-          role="listbox"
-          padding="none"
-          id={listboxId}
-          aria-labelledby={labelledBy}
-          aria-multiselectable={multiple || undefined}
-        >
-          {options.map((option, index) => {
-            const selected = resolveSelected(option.value);
-            const optionPartsProps = getOptionPartsProps(option, index);
+        <div {...scrollBind}>
+          <List
+            dense
+            role="listbox"
+            padding="none"
+            id={listboxId}
+            aria-labelledby={labelledBy}
+            aria-multiselectable={multiple || undefined}
+          >
+            {options.map((option, index) => {
+              const selected = resolveSelected(option.value);
+              const optionPartsProps = getOptionPartsProps(option, index);
 
-            return (
-              <ListItem
-                interactive
-                role="option"
-                selected={false}
-                key={String(option.value)}
-                primary={slots?.option ? undefined : option.label}
-                disabled={option.disabled}
-                secondary={option.description}
-                aria-selected={selected}
-                partsProps={{
-                  ...optionPartsProps,
-                  root: { id: getListboxOptionId(listboxId, index) },
-                  interactive: {
-                    ...optionPartsProps.interactive,
-                    onClick: () => handleSelect(option),
-                  },
-                }}
-                slots={{
-                  end:
-                    showCheckmark && selected ? (
-                      <Check className={cn("size-4", resolvedCheckClass)} />
-                    ) : undefined,
-                }}
-              >
-                {slots?.option?.({ option, selected })}
-              </ListItem>
-            );
-          })}
-        </List>
+              return (
+                <ListItem
+                  interactive
+                  role="option"
+                  selected={false}
+                  aria-selected={selected}
+                  key={String(option.value)}
+                  disabled={option.disabled}
+                  secondary={option.description}
+                  primary={slots?.option ? undefined : option.label}
+                  partsProps={{
+                    ...optionPartsProps,
+                    root: { id: getListboxOptionId(listboxId, index) },
+                    interactive: {
+                      ...optionPartsProps.interactive,
+                      onClick: () => handleSelect(option),
+                    },
+                  }}
+                  slots={{
+                    end:
+                      showCheckmark && selected ? (
+                        <Check className={cn("size-4", resolvedCheckClass)} />
+                      ) : undefined,
+                  }}
+                >
+                  {slots?.option?.({ option, selected })}
+                </ListItem>
+              );
+            })}
+          </List>
+        </div>
       )}
 
       {showEmptyState && !slots?.empty ? (

@@ -2,7 +2,7 @@
 // ** External Imports
 import { cn } from "@bridge-ui/core";
 import { Check } from "lucide-vue-next";
-import { computed, useSlots } from "vue";
+import { computed, useSlots, watch } from "vue";
 
 // ** Local Imports
 import { List } from "@/Components/List";
@@ -27,6 +27,10 @@ const emit = defineEmits<ListboxEmits>();
 
 const open = defineModel<boolean>({ default: false });
 
+watch(open, (show) => {
+  emit("show-change", show);
+});
+
 const props = withDefaults(defineProps<ListboxOwnProps>(), {
   loading: false,
   multiple: false,
@@ -42,6 +46,7 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
 const {
   merged,
   checkClass,
+  scrollBind,
   mergedClasses,
   optionSelectedClass,
   optionHighlightedClass,
@@ -59,6 +64,12 @@ const showEmptyState = computed(() => {
 
 const resolvedCheckClass = computed(() => {
   return cn(checkClass.value, mergedClasses.value.check);
+});
+
+const scrollPartsBind = computed(() => {
+  const { class: _class, style: _style, ...rest } = scrollBind.value;
+
+  return rest;
 });
 
 function resolveSelected(value: ListboxValue) {
@@ -128,42 +139,48 @@ function handleSelect(option: ListboxOption) {
       <span v-else>Loading...</span>
     </div>
 
-    <List
-      dense
+    <div
       v-else
-      role="listbox"
-      padding="none"
-      :id="listboxId"
-      :aria-labelledby="labelledBy"
-      :aria-multiselectable="multiple || undefined"
+      :class="scrollBind.class"
+      :style="scrollBind.style"
+      v-bind="scrollPartsBind"
     >
-      <ListItem
-        interactive
-        role="option"
-        :selected="false"
-        :primary="option.label"
-        :key="String(option.value)"
-        :disabled="option.disabled"
-        :secondary="option.description"
-        v-on:click="handleSelect(option)"
-        v-for="(option, index) in options"
-        :id="`${listboxId}-option-${index}`"
-        :parts-props="getOptionPartsProps(option, index)"
-        :aria-selected="resolveSelected(option.value)"
+      <List
+        dense
+        role="listbox"
+        padding="none"
+        :id="listboxId"
+        :aria-labelledby="labelledBy"
+        :aria-multiselectable="multiple || undefined"
       >
-        <template v-if="hasNamedSlot(slots, 'option')" #default>
-          <slot
-            name="option"
-            :option="option"
-            :selected="resolveSelected(option.value)"
-          />
-        </template>
+        <ListItem
+          interactive
+          role="option"
+          :selected="false"
+          :primary="option.label"
+          :key="String(option.value)"
+          :disabled="option.disabled"
+          :secondary="option.description"
+          v-on:click="handleSelect(option)"
+          v-for="(option, index) in options"
+          :id="`${listboxId}-option-${index}`"
+          :aria-selected="resolveSelected(option.value)"
+          :parts-props="getOptionPartsProps(option, index)"
+        >
+          <template v-if="hasNamedSlot(slots, 'option')" #default>
+            <slot
+              name="option"
+              :option="option"
+              :selected="resolveSelected(option.value)"
+            />
+          </template>
 
-        <template #end v-if="showCheckmark && resolveSelected(option.value)">
-          <Check :class="resolvedCheckClass" class="size-4" />
-        </template>
-      </ListItem>
-    </List>
+          <template #end v-if="showCheckmark && resolveSelected(option.value)">
+            <Check :class="resolvedCheckClass" class="size-4" />
+          </template>
+        </ListItem>
+      </List>
+    </div>
 
     <div
       class="px-4 py-3 text-sm text-gray-500"

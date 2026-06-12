@@ -142,9 +142,11 @@ const {
     v-on:select="selectOption"
     :disable-auto-focus="true"
     :empty-message="emptyMessage"
+    :max-height="props.maxHeight"
     :highlighted-index="highlightedIndex"
     :hide-empty-message="hideEmptyMessage"
     :labelled-by="formField.controlId.value"
+    :disable-max-height="props.disableMaxHeight"
   >
     <template v-if="hasNamedSlot(slots, 'beforeOptions')" #beforeOptions>
       <component :is="resolveNamedSlot(slots, 'beforeOptions')" />

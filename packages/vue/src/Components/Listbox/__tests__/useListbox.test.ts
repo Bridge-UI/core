@@ -59,3 +59,49 @@ test("it should merge registry classes", () => {
 
   expect(mergedClasses.value.check).toBe("custom-check");
 });
+
+test("it should apply default scroll classes", () => {
+  const { scrollBind } = mountUseListbox();
+
+  expect(scrollBind.value.class).toContain("max-h-60");
+  expect(scrollBind.value.class).toContain("overflow-y-auto");
+});
+
+test("it should apply custom maxHeight tailwind class", () => {
+  const { scrollBind } = mountUseListbox({ maxHeight: "max-h-80" });
+
+  expect(scrollBind.value.class).toContain("max-h-80");
+  expect(scrollBind.value.class).not.toContain("max-h-60");
+});
+
+test("it should disable max height when disableMaxHeight is true", () => {
+  const { scrollBind } = mountUseListbox({ disableMaxHeight: true });
+
+  expect(scrollBind.value.class).not.toContain("max-h-60");
+  expect(scrollBind.value.class).not.toContain("overflow-y-auto");
+});
+
+test("it should apply scroll classes when props are reactive like defineProps", () => {
+  let result!: ReturnType<typeof useListbox>;
+
+  const Wrapper = defineComponent({
+    props: {
+      options: { type: Array, required: true },
+      listboxId: { type: String, required: true },
+    },
+    setup(props) {
+      result = useListbox(props as unknown as ListboxOwnProps, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  mount(Wrapper, {
+    props: {
+      listboxId: "test-listbox",
+      options: [{ label: "Active", value: "active" }],
+    },
+  });
+
+  expect(result.scrollBind.value.class).toContain("max-h-60");
+});
