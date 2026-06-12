@@ -341,6 +341,13 @@ export function useSelect(
       return;
     }
 
+    if (
+      target.closest(".wrapper-start-slot") ||
+      target.closest(".wrapper-end-slot")
+    ) {
+      return;
+    }
+
     if (!open.value) {
       openMenu();
       return;
@@ -710,6 +717,15 @@ export function useSelect(
   });
 
   const triggerBind = computed(() => {
+    const showPointerCursor =
+      !props.disabled && !props.readonly && !isSearchActive.value;
+
+    const showTextCursor =
+      !props.disabled &&
+      !props.readonly &&
+      isSearchActive.value &&
+      isSearchEnabled.value;
+
     const showSelectedValueStyle =
       hasValue.value && !multiple.value && !isSearchActive.value;
 
@@ -740,6 +756,8 @@ export function useSelect(
       },
       formField.inputBind.value,
       cn({
+        "cursor-text": showTextCursor,
+        "cursor-pointer": showPointerCursor,
         "resize-none overflow-hidden": multiple.value,
         [cn(selectedValueTextClass.value, mergedClasses.value.value) ?? ""]:
           showSelectedValueStyle,
