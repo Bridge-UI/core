@@ -4,8 +4,8 @@ export { default as Switch } from "@/Components/Switch/Switch";
 export type {
   SwitchClasses,
   SwitchColorOverrides,
+  SwitchCustomProps,
   SwitchOwnProps,
-  SwitchPartsProps,
   SwitchProps,
   SwitchRoundedOverrides,
   SwitchSizeOverrides,

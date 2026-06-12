@@ -25,7 +25,7 @@ function NumberField(props: NumberFieldProps) {
     variant,
     onChange,
     step = 1,
-    partsProps,
+    customProps,
     defaultValue,
     ...textFieldProps
   } = props;
@@ -64,13 +64,13 @@ function NumberField(props: NumberFieldProps) {
       withErrorIcon={false}
       classes={mergedClasses}
       onChange={handleChange}
-      partsProps={{
-        ...partsProps,
+      customProps={{
+        ...customProps,
         input: {
-          ...partsProps?.input,
+          ...customProps?.input,
           className: cn(
             "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-            partsProps?.input?.className,
+            customProps?.input?.className,
           ),
         },
       }}

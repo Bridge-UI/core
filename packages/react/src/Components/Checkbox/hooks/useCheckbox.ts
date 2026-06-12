@@ -38,7 +38,7 @@ const checkboxBridgeKeys = [
   "classes",
   "checked",
   "rounded",
-  "partsProps",
+  "customProps",
   "indeterminate",
   "defaultChecked",
 ] as const satisfies readonly (keyof CheckboxProps)[];
@@ -60,7 +60,7 @@ export function useCheckbox(
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps } = splitComponentProps<
+  const { componentProps } = splitComponentProps<
     CheckboxProps,
     typeof checkboxBridgeKeys
   >({
@@ -73,12 +73,12 @@ export function useCheckbox(
     "Checkbox"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Checkbox",
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -92,18 +92,18 @@ export function useCheckbox(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CheckboxClasses>({
-    props: customProps,
+    props: componentProps,
     entry: bridgeCheckbox,
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(customProps.defaultChecked);
+    return Boolean(componentProps.defaultChecked);
   });
 
   const isControlled = derived(() => {
-    return !isNil(customProps.checked);
+    return !isNil(componentProps.checked);
   });
 
   const checked = derived(() => {
@@ -166,7 +166,7 @@ export function useCheckbox(
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        ...partsProps?.input,
+        ...customProps?.input,
         ...formControl.controlBind,
         checked,
         ref: inputRef,
@@ -183,7 +183,7 @@ export function useCheckbox(
 
   const controlBind = derived(() => {
     return mergePartBind(
-      partsProps?.control,
+      customProps?.control,
       {
         "aria-hidden": true,
       },
@@ -202,7 +202,7 @@ export function useCheckbox(
 
   const iconBind = derived(() => {
     return mergePartBind(
-      partsProps?.icon,
+      customProps?.icon,
       {},
       cn({
         "text-white": true,

@@ -52,7 +52,7 @@ type AvatarLibDefaults = LibDefaultsShape<
 type AvatarMerged = MergeLibDefaults<AvatarOwnProps, AvatarLibDefaults>;
 
 export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     AvatarProps,
     typeof avatarBridgeKeys
   >({
@@ -65,7 +65,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     "Avatar"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Avatar",
   });
 
@@ -82,8 +82,8 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<AvatarClasses>({
-    props: customProps,
     entry: bridgeAvatar,
+    props: componentProps,
   });
 
   const hasCustomContent = derived(() => {

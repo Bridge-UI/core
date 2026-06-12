@@ -6,8 +6,8 @@ export {
 export type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
 export type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlProps,
   FormControlSizeOverrides,
   FormControlSlots,

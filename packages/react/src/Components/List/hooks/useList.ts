@@ -27,7 +27,7 @@ const listBridgeKeys = [
   "nested",
   "classes",
   "padding",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
 type ListLibDefaults = LibDefaultsShape<ListOwnProps, "padding">;
@@ -35,7 +35,7 @@ type ListLibDefaults = LibDefaultsShape<ListOwnProps, "padding">;
 type ListMerged = MergeLibDefaults<ListOwnProps, ListLibDefaults>;
 
 export function useList(props: ListProps, libDefaults: ListLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ListProps,
     typeof listBridgeKeys
   >({
@@ -48,7 +48,7 @@ export function useList(props: ListProps, libDefaults: ListLibDefaults) {
     "List"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "List",
   });
 
@@ -62,7 +62,7 @@ export function useList(props: ListProps, libDefaults: ListLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeList,
-    props: customProps,
+    props: componentProps,
   });
 
   const paddingClass = useMemo(() => {
@@ -80,12 +80,12 @@ export function useList(props: ListProps, libDefaults: ListLibDefaults) {
     };
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(partsProps?.root, rootInheritedAttrs, {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
         "m-0 list-none": true,
         [paddingClass ?? ""]: true,

@@ -11,9 +11,9 @@ export const Alert = AlertVue as DefineComponent<AlertProps>;
 export type {
   AlertClasses,
   AlertColorOverrides,
+  AlertCustomProps,
   AlertOwnProps,
   AlertPaddingOverrides,
-  AlertPartsProps,
   AlertProps,
   AlertRoundedOverrides,
   AlertShadowOverrides,

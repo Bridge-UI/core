@@ -47,7 +47,7 @@ export interface ListItemClasses {
   start?: string;
 }
 
-export interface ListItemPartsProps {
+export interface ListItemCustomProps {
   /**
    * Props forwarded to the main content column.
    */
@@ -110,6 +110,13 @@ export interface ListItemOwnProps {
   classes?: ListItemClasses;
 
   /**
+   * Props forwarded to each item part.
+   *
+   * @default undefined
+   */
+  customProps?: ListItemCustomProps;
+
+  /**
    * Compact vertical padding. Inherits `dense` from parent `List` when omitted.
    *
    * @default undefined
@@ -136,13 +143,6 @@ export interface ListItemOwnProps {
    * @default false
    */
   interactive?: boolean;
-
-  /**
-   * Props forwarded to each item part.
-   *
-   * @default undefined
-   */
-  partsProps?: ListItemPartsProps;
 
   /**
    * Primary label text.

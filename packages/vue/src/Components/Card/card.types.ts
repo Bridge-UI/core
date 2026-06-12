@@ -43,7 +43,7 @@ export interface CardClasses {
   title?: string;
 }
 
-export interface CardPartsProps {
+export interface CardCustomProps {
   /**
    * Props forwarded to the default body container.
    */
@@ -86,19 +86,19 @@ export interface CardOwnProps {
   classes?: CardClasses;
 
   /**
-   * Padding for header, body, and footer (horizontal alignment is shared).
-   *
-   * @default "medium"
-   */
-  padding?: MergeProps<CardPadding, CardPaddingOverrides>;
-
-  /**
    * Extra props for internal parts (`header`, `title`, `body`, `footer`, etc.).
    * Root HTML attributes stay on the component top level.
    *
    * @default undefined
    */
-  partsProps?: CardPartsProps;
+  customProps?: CardCustomProps;
+
+  /**
+   * Padding for header, body, and footer (horizontal alignment is shared).
+   *
+   * @default "medium"
+   */
+  padding?: MergeProps<CardPadding, CardPaddingOverrides>;
 
   /**
    * The roundedness of the card.

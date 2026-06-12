@@ -38,10 +38,10 @@ const { isVisible, toggleVisibility } = usePasswordField({
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
 
-const mergedPartsProps = computed(() => ({
-  ...props.partsProps,
+const mergedCustomProps = computed(() => ({
+  ...props.customProps,
   input: {
-    ...props.partsProps?.input,
+    ...props.customProps?.input,
     type: inputType.value,
   },
 }));
@@ -70,7 +70,7 @@ const toggleIconSize = computed(() => {
     }"
     :classes="mergedClasses"
     :with-error-icon="false"
-    :parts-props="mergedPartsProps"
+    :parts-props="mergedCustomProps"
   >
     <template #end>
       <button

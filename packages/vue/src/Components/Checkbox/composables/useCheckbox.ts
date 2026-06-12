@@ -40,7 +40,7 @@ const checkboxBridgeKeys = [
   "color",
   "classes",
   "rounded",
-  "partsProps",
+  "customProps",
   "indeterminate",
 ] as const satisfies readonly (keyof CheckboxOwnProps)[];
 
@@ -78,16 +78,16 @@ export function useCheckbox(
   >({
     libDefaults,
     componentName: "Checkbox",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CheckboxClasses>({
     entry: bridgeCheckbox,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isChecked = computed(() => {
@@ -138,7 +138,7 @@ export function useCheckbox(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         ...formControl.controlBind.value,
         type: "checkbox",
       },
@@ -152,7 +152,7 @@ export function useCheckbox(
 
   const controlBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.control,
+      customProps.value?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -168,7 +168,7 @@ export function useCheckbox(
 
   const iconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.icon,
+      customProps.value?.icon,
       {},
       cn({
         "text-white": true,

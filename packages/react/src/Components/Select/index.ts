@@ -4,10 +4,10 @@ export { default as Select } from "@/Components/Select/Select";
 export type {
   SelectCallbacks,
   SelectClasses,
+  SelectCustomProps,
   SelectModel,
   SelectOption,
   SelectOwnProps,
-  SelectPartsProps,
   SelectProps,
   SelectSlots,
   SelectValue,

@@ -34,7 +34,7 @@ const cardBridgeKeys = [
   "rounded",
   "variant",
   "borderless",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof CardOwnProps)[];
 
 type CardLibDefaults = LibDefaultsShape<
@@ -61,16 +61,16 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
   >({
     libDefaults,
     componentName: "Card",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeCard,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const hasDefaultBody = computed(() => {
@@ -133,7 +133,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
   const bodyBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.body,
+      customProps.value?.body,
       {},
       cn({
         grow: true,
@@ -146,7 +146,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
   const footerBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.footer,
+      customProps.value?.footer,
       {},
       cn({
         "border-t": showDividers.value,
@@ -161,7 +161,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
   const headerBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.header,
+      customProps.value?.header,
       {},
       cn({
         "flex items-center justify-between": true,
@@ -176,7 +176,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
         "flex w-full flex-col": true,
@@ -190,7 +190,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
   const titleBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.title,
+      customProps.value?.title,
       {},
       cn({
         "text-base font-medium whitespace-normal": true,

@@ -3,9 +3,9 @@ export { useMenu } from "@/Components/Menu/composables/useMenu";
 export type { MenuOptions } from "@/Components/Menu/composables/useMenu";
 export type {
   MenuClasses,
+  MenuCustomProps,
   MenuEmits,
   MenuOwnProps,
-  MenuPartsProps,
   MenuProps,
   MenuRoundedOverrides,
   MenuShadowOverrides,

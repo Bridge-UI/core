@@ -13,8 +13,8 @@ import type {
 // ** Local Imports
 import type {
   FormFieldClasses,
+  FormFieldCustomProps,
   FormFieldOwnProps,
-  FormFieldPartsProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 
@@ -54,7 +54,7 @@ export interface SelectClasses extends FormFieldClasses {
   value?: string;
 }
 
-export interface SelectPartsProps extends FormFieldPartsProps {}
+export interface SelectCustomProps extends FormFieldCustomProps {}
 
 export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**

@@ -4,8 +4,8 @@ export { default as Radio } from "@/Components/Radio/Radio";
 export type {
   RadioClasses,
   RadioColorOverrides,
+  RadioCustomProps,
   RadioOwnProps,
-  RadioPartsProps,
   RadioProps,
   RadioRoundedOverrides,
   RadioSizeOverrides,

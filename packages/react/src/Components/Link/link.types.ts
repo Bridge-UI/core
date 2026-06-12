@@ -35,7 +35,7 @@ export interface LinkClasses {
   root?: string;
 }
 
-export interface LinkPartsProps {
+export interface LinkCustomProps {
   /**
    * Props forwarded to the left `Icon` (`icon` is set by the link).
    */
@@ -75,6 +75,14 @@ export interface LinkOwnProps {
   color?: MergeProps<LinkColor, LinkColorOverrides>;
 
   /**
+   * Extra props for internal parts (`leftIcon`, `rightIcon`, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  customProps?: LinkCustomProps;
+
+  /**
    * Whether the link is disabled.
    *
    * @default false
@@ -101,14 +109,6 @@ export interface LinkOwnProps {
    * @default undefined
    */
   leftIcon?: LucideIcon;
-
-  /**
-   * Extra props for internal parts (`leftIcon`, `rightIcon`, etc.).
-   * Root HTML attributes stay on the component top level.
-   *
-   * @default undefined
-   */
-  partsProps?: LinkPartsProps;
 
   /**
    * The icon to display after the link text.

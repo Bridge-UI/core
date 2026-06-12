@@ -46,7 +46,7 @@ const listItemBridgeKeys = [
   "disabled",
   "selected",
   "secondary",
-  "partsProps",
+  "customProps",
   "interactive",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
@@ -76,16 +76,16 @@ export function useListItem(
   >({
     libDefaults,
     componentName: "ListItem",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeListItem,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isDense = computed(() => {
@@ -136,7 +136,7 @@ export function useListItem(
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
         "list-none": true,
         "border-b border-black/10 last:border-b-0": merged.value.divider,
@@ -151,7 +151,7 @@ export function useListItem(
     }
 
     return mergePartBind(
-      partsProps.value?.interactive,
+      customProps.value?.interactive,
       {},
       {
         role: merged.value.role,
@@ -186,7 +186,7 @@ export function useListItem(
 
   const startBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.start,
+      customProps.value?.start,
       {},
       {
         class: cn({
@@ -199,7 +199,7 @@ export function useListItem(
 
   const contentBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.content,
+      customProps.value?.content,
       {},
       {
         class: cn({
@@ -212,7 +212,7 @@ export function useListItem(
 
   const primaryBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.primary,
+      customProps.value?.primary,
       {},
       {
         class: cn({
@@ -225,7 +225,7 @@ export function useListItem(
 
   const secondaryBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.secondary,
+      customProps.value?.secondary,
       {},
       {
         class: cn({
@@ -238,7 +238,7 @@ export function useListItem(
 
   const endBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.end,
+      customProps.value?.end,
       {},
       {
         class: cn({

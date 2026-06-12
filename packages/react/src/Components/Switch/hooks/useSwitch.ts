@@ -37,7 +37,7 @@ const switchBridgeKeys = [
   "classes",
   "checked",
   "rounded",
-  "partsProps",
+  "customProps",
   "defaultChecked",
 ] as const satisfies readonly (keyof SwitchProps)[];
 
@@ -55,7 +55,7 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps } = splitComponentProps<
+  const { componentProps } = splitComponentProps<
     SwitchProps,
     typeof switchBridgeKeys
   >({
@@ -68,12 +68,12 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     "Switch"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Switch",
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -86,16 +86,16 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<SwitchClasses>({
-    props: customProps,
     entry: bridgeSwitch,
+    props: componentProps,
   });
 
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(customProps.defaultChecked);
+    return Boolean(componentProps.defaultChecked);
   });
 
   const isControlled = derived(() => {
-    return !isNil(customProps.checked);
+    return !isNil(componentProps.checked);
   });
 
   const checked = derived(() => {
@@ -152,7 +152,7 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        ...partsProps?.input,
+        ...customProps?.input,
         ...formControl.controlBind,
         checked,
         role: "switch",
@@ -169,7 +169,7 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
 
   const trackBind = derived(() => {
     return mergePartBind(
-      partsProps?.track,
+      customProps?.track,
       { "aria-hidden": true },
       cn({
         "block cursor-pointer transition ease-in-out duration-100": true,
@@ -184,7 +184,7 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
 
   const thumbBind = derived(() => {
     return mergePartBind(
-      partsProps?.thumb,
+      customProps?.thumb,
       { "aria-hidden": true },
       cn({
         "pointer-events-none absolute start-0.5 top-1/2 -translate-y-1/2 rounded-full shadow-sm transition ease-in-out duration-200": true,

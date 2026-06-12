@@ -35,7 +35,7 @@ export interface ListboxClasses {
   scroll?: string;
 }
 
-export interface ListboxPartsProps {
+export interface ListboxCustomProps {
   /**
    * Props forwarded to the floating menu panel.
    */
@@ -66,6 +66,11 @@ export interface ListboxOwnProps {
    * @default "primary"
    */
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
+
+  /**
+   * Extra props for internal parts.
+   */
+  customProps?: ListboxCustomProps;
 
   /**
    * When true, the menu does not auto-focus the first item on open.
@@ -141,11 +146,6 @@ export interface ListboxOwnProps {
    * Options to render.
    */
   options: ListboxOption[];
-
-  /**
-   * Extra props for internal parts.
-   */
-  partsProps?: ListboxPartsProps;
 
   /**
    * Preferred placement of the panel relative to the anchor.

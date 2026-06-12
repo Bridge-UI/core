@@ -54,7 +54,7 @@ const modalBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
-  "partsProps",
+  "customProps",
   "persistent",
   "teleportTo",
   "transition",
@@ -136,7 +136,7 @@ export function useModal(
     "closed",
   );
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ModalProps,
     typeof modalBridgeKeys
   >({
@@ -149,11 +149,11 @@ export function useModal(
     "Modal"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Modal",
   });
 
-  const partsProps = merged.partsProps;
+  const customProps = merged.customProps;
 
   const rootInheritedAttrs = omit(inheritedAttrs, [
     "show",
@@ -164,7 +164,7 @@ export function useModal(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeModal,
-    props: customProps,
+    props: componentProps,
   });
 
   const effectiveTransition = useMemo((): keyof ModalTransition => {
@@ -447,7 +447,7 @@ export function useModal(
     return subscribeLayerStack(syncZIndex);
   }, [active]);
 
-  const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
+  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
     style: {
       zIndex: stackZIndex,
     },
@@ -463,7 +463,7 @@ export function useModal(
   });
 
   const overlayBind = mergePartBind(
-    partsProps?.overlay,
+    customProps?.overlay,
     {},
     {
       "data-modal-part": "overlay",
@@ -478,7 +478,7 @@ export function useModal(
   );
 
   const wrapperBind = mergePartBind(
-    partsProps?.wrapper,
+    customProps?.wrapper,
     {},
     cn({
       "flex min-h-full w-full transform p-4": true,
@@ -489,7 +489,7 @@ export function useModal(
   );
 
   const panelBind = mergePartBind(
-    partsProps?.panel,
+    customProps?.panel,
     {
       ref: panelRef,
       role: "dialog",

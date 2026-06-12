@@ -54,7 +54,7 @@ export interface ModalEmits {
   "show-change": [show: boolean];
 }
 
-export interface ModalPartsProps {
+export interface ModalCustomProps {
   /**
    * Props forwarded to the overlay.
    */
@@ -118,6 +118,13 @@ export interface ModalOwnProps {
   closeOnOverlay?: boolean;
 
   /**
+   * Props forwarded to each modal part.
+   *
+   * @default undefined
+   */
+  customProps?: ModalCustomProps;
+
+  /**
    * When true, the modal does not auto-focus the first focusable element on open.
    *
    * @default false
@@ -158,13 +165,6 @@ export interface ModalOwnProps {
    * @default false
    */
   keepMounted?: boolean;
-
-  /**
-   * Props forwarded to each modal part.
-   *
-   * @default undefined
-   */
-  partsProps?: ModalPartsProps;
 
   /**
    * When true, escape and overlay clicks do not close the modal.

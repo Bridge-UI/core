@@ -57,7 +57,7 @@ const modalBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
-  "partsProps",
+  "customProps",
   "persistent",
   "teleportTo",
   "transition",
@@ -167,16 +167,16 @@ export function useModal(
   >({
     libDefaults,
     componentName: "Modal",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeModal,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const effectiveTransition = computed((): keyof ModalTransition => {
@@ -239,7 +239,7 @@ export function useModal(
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       onTransitionend: handleShellTransitionEnd,
       style: {
         zIndex: stackZIndex.value,
@@ -257,7 +257,7 @@ export function useModal(
 
   const overlayBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.overlay,
+      customProps.value?.overlay,
       {
         onClick: handleOverlayClick,
       },
@@ -276,7 +276,7 @@ export function useModal(
 
   const wrapperBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.wrapper,
+      customProps.value?.wrapper,
       {
         onClick: handleWrapperClick,
       },
@@ -291,7 +291,7 @@ export function useModal(
 
   const panelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.panel,
+      customProps.value?.panel,
       {
         role: "dialog",
         "aria-modal": true,

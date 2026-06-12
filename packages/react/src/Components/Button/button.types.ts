@@ -54,7 +54,7 @@ export interface ButtonClasses {
   startIcon?: string;
 }
 
-export interface ButtonPartsProps {
+export interface ButtonCustomProps {
   /**
    * Props forwarded to the inline-end slot wrapper.
    */
@@ -121,6 +121,14 @@ export interface ButtonOwnProps {
   color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
+   * Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  customProps?: ButtonCustomProps;
+
+  /**
    * The density of the button.
    *
    * @default "default"
@@ -168,14 +176,6 @@ export interface ButtonOwnProps {
    * @default false
    */
   loading?: boolean;
-
-  /**
-   * Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.).
-   * Root HTML attributes stay on the component top level.
-   *
-   * @default undefined
-   */
-  partsProps?: ButtonPartsProps;
 
   /**
    * The roundedness of the button.

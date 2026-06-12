@@ -23,13 +23,13 @@ const listSectionBridgeKeys = [
   "title",
   "sticky",
   "classes",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ListSectionOwnProps)[];
 
 export function useListSection(props: ListSectionProps) {
   const listContext = useListContext();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ListSectionProps,
     typeof listSectionBridgeKeys
   >({
@@ -41,7 +41,7 @@ export function useListSection(props: ListSectionProps) {
     ListSectionOwnProps,
     "ListSection"
   >({
-    props: customProps,
+    props: componentProps,
     componentName: "ListSection",
   });
 
@@ -53,12 +53,12 @@ export function useListSection(props: ListSectionProps) {
     return omit(inheritedAttrs, ["children"]);
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    props: customProps,
+    props: componentProps,
     entry: bridgeListSection,
   });
 
@@ -71,7 +71,7 @@ export function useListSection(props: ListSectionProps) {
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(partsProps?.root, rootInheritedAttrs, {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
         "list-none": true,
         [get(mergedClasses, "root") ?? ""]: true,
@@ -81,7 +81,7 @@ export function useListSection(props: ListSectionProps) {
 
   const titleBind = derived(() => {
     return mergePartBind(
-      partsProps?.title,
+      customProps?.title,
       {},
       {
         role: "presentation",

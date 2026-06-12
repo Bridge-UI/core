@@ -7,8 +7,8 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 // ** Local Imports
 import type {
   TextFieldClasses,
+  TextFieldCustomProps,
   TextFieldOwnProps,
-  TextFieldPartsProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
 
@@ -24,7 +24,7 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldPartsProps extends TextFieldPartsProps {}
+export interface NumberFieldCustomProps extends TextFieldCustomProps {}
 
 export interface NumberFieldOwnProps extends Omit<
   TextFieldOwnProps,

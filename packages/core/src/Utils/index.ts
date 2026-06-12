@@ -125,7 +125,7 @@ export function mergePropsWithBridgeUIDefaults<
 }
 
 /**
- * Splits `props` into Bridge keys (`customProps`) and the rest (`inheritedAttrs`).
+ * Splits `props` into Bridge keys (`componentProps`) and the rest (`inheritedAttrs`).
  */
 export function splitComponentProps<
   P extends object,
@@ -137,13 +137,13 @@ export function splitComponentProps<
   bridgeKeys: BridgeKeys;
   props: P;
 }): {
-  customProps: Pick<P, BridgeKeys[number]>;
+  componentProps: Pick<P, BridgeKeys[number]>;
   inheritedAttrs: Omit<P, BridgeKeys[number]>;
 } {
   const list = compact(bridgeKeys);
 
   return {
-    customProps: pick(props, list),
+    componentProps: pick(props, list),
     inheritedAttrs: omit(props, list),
   };
 }

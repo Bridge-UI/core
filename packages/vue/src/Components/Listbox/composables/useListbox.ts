@@ -28,7 +28,7 @@ const listboxBridgeKeys = [
   "color",
   "classes",
   "maxHeight",
-  "partsProps",
+  "customProps",
   "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
@@ -55,12 +55,12 @@ export function useListbox(
   >({
     libDefaults,
     componentName: "Listbox",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
     entry: bridgeListbox,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const colorClasses = computed(() => {
@@ -89,7 +89,7 @@ export function useListbox(
     const disableMaxHeight = merged.value.disableMaxHeight === true;
 
     return mergePartBind(
-      merged.value.partsProps?.scroll,
+      merged.value.customProps?.scroll,
       {},
       cn({
         "overflow-y-auto overscroll-contain": !disableMaxHeight,

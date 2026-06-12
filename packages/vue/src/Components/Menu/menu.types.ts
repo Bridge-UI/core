@@ -59,7 +59,7 @@ export interface MenuEmits {
   close: [];
 }
 
-export interface MenuPartsProps {
+export interface MenuCustomProps {
   /**
    * Props forwarded to the floating menu panel.
    */
@@ -114,6 +114,13 @@ export interface MenuOwnProps {
   closeOnEscape?: boolean;
 
   /**
+   * Props forwarded to each menu part.
+   *
+   * @default undefined
+   */
+  customProps?: MenuCustomProps;
+
+  /**
    * When true, the menu does not auto-focus the first focusable item on open.
    *
    * @default false
@@ -147,13 +154,6 @@ export interface MenuOwnProps {
    * @default undefined
    */
   onShowChange?: (show: boolean) => void;
-
-  /**
-   * Props forwarded to each menu part.
-   *
-   * @default undefined
-   */
-  partsProps?: MenuPartsProps;
 
   /**
    * When true, escape and click-away do not close the menu.

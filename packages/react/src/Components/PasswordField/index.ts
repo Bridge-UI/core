@@ -3,8 +3,8 @@ export type { UsePasswordFieldOptions } from "@/Components/PasswordField/hooks/u
 export { default as PasswordField } from "@/Components/PasswordField/PasswordField";
 export type {
   PasswordFieldClasses,
+  PasswordFieldCustomProps,
   PasswordFieldOwnProps,
-  PasswordFieldPartsProps,
   PasswordFieldProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";

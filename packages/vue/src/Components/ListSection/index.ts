@@ -2,8 +2,8 @@
 export { useListSection } from "@/Components/ListSection/composables/useListSection";
 export type {
   ListSectionClasses,
+  ListSectionCustomProps,
   ListSectionOwnProps,
-  ListSectionPartsProps,
   ListSectionProps,
   ListSectionSlots,
 } from "@/Components/ListSection/listSection.types";

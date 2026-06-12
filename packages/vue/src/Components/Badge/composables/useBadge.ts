@@ -61,12 +61,12 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   >({
     libDefaults,
     componentName: "Badge",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const isMini = computed(() => {

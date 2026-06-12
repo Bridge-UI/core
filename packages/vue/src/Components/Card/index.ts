@@ -10,9 +10,9 @@ export const Card = CardVue as DefineComponent<CardProps>;
 
 export type {
   CardClasses,
+  CardCustomProps,
   CardOwnProps,
   CardPaddingOverrides,
-  CardPartsProps,
   CardProps,
   CardRoundedOverrides,
   CardShadowOverrides,

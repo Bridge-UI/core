@@ -47,7 +47,7 @@ type BadgeLibDefaults = LibDefaultsShape<
 type BadgeMerged = MergeLibDefaults<BadgeOwnProps, BadgeLibDefaults>;
 
 export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     BadgeProps,
     typeof badgeBridgeKeys
   >({
@@ -60,7 +60,7 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
     "Badge"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Badge",
   });
 
@@ -74,7 +74,7 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: customProps,
+    props: componentProps,
   });
 
   const isMini = derived(() => {

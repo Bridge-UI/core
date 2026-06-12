@@ -38,7 +38,7 @@ const radioBridgeKeys = [
   "classes",
   "checked",
   "rounded",
-  "partsProps",
+  "customProps",
   "defaultChecked",
 ] as const satisfies readonly (keyof RadioProps)[];
 
@@ -56,7 +56,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps } = splitComponentProps<
+  const { componentProps } = splitComponentProps<
     RadioProps,
     typeof radioBridgeKeys
   >({
@@ -69,12 +69,12 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     "Radio"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Radio",
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -88,16 +88,16 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<RadioClasses>({
-    props: customProps,
     entry: bridgeRadio,
+    props: componentProps,
   });
 
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(customProps.defaultChecked);
+    return Boolean(componentProps.defaultChecked);
   });
 
   const isControlled = derived(() => {
-    return !isNil(customProps.checked);
+    return !isNil(componentProps.checked);
   });
 
   const checked = derived(() => {
@@ -154,7 +154,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        ...partsProps?.input,
+        ...customProps?.input,
         ...formControl.controlBind,
         checked,
         type: "radio",
@@ -171,7 +171,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
 
   const controlBind = derived(() => {
     return mergePartBind(
-      partsProps?.control,
+      customProps?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -187,7 +187,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
 
   const dotBind = derived(() => {
     return mergePartBind(
-      partsProps?.dot,
+      customProps?.dot,
       {},
       cn({
         "rounded-full bg-white transition-transform duration-100": true,

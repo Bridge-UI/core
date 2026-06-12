@@ -13,8 +13,8 @@ import type {
 // ** Local Imports
 import type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlSlots,
 } from "@/Components/FormControl/formControl.types";
 
@@ -39,7 +39,7 @@ export interface RadioClasses extends FormControlClasses {
   input?: string;
 }
 
-export interface RadioPartsProps extends FormControlPartsProps {
+export interface RadioCustomProps extends FormControlCustomProps {
   /**
    * Props forwarded to the custom control circle.
    */
@@ -58,7 +58,7 @@ export interface RadioPartsProps extends FormControlPartsProps {
 
 export interface RadioOwnProps extends Omit<
   FormControlOwnProps,
-  "field" | "slots" | "classes" | "children" | "partsProps"
+  "field" | "slots" | "classes" | "children" | "customProps"
 > {
   /**
    * Whether the radio is checked.
@@ -82,18 +82,18 @@ export interface RadioOwnProps extends Omit<
   color?: MergeProps<RadioColor, RadioColorOverrides>;
 
   /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
+  customProps?: RadioCustomProps;
+
+  /**
    * The `name` attribute shared by radios in the same group.
    *
    * @default undefined
    */
   name?: string;
-
-  /**
-   * Extra props for internal parts.
-   *
-   * @default undefined
-   */
-  partsProps?: RadioPartsProps;
 
   /**
    * The roundedness of the radio control.

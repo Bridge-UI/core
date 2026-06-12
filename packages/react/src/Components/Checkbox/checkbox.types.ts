@@ -13,8 +13,8 @@ import type {
 // ** Local Imports
 import type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlSlots,
 } from "@/Components/FormControl/formControl.types";
 
@@ -39,7 +39,7 @@ export interface CheckboxClasses extends FormControlClasses {
   input?: string;
 }
 
-export interface CheckboxPartsProps extends FormControlPartsProps {
+export interface CheckboxCustomProps extends FormControlCustomProps {
   /**
    * Props forwarded to the custom control box.
    */
@@ -58,7 +58,7 @@ export interface CheckboxPartsProps extends FormControlPartsProps {
 
 export interface CheckboxOwnProps extends Omit<
   FormControlOwnProps,
-  "field" | "slots" | "classes" | "children" | "partsProps"
+  "field" | "slots" | "classes" | "children" | "customProps"
 > {
   /**
    * Whether the checkbox is checked.
@@ -82,18 +82,18 @@ export interface CheckboxOwnProps extends Omit<
   color?: MergeProps<CheckboxColor, CheckboxColorOverrides>;
 
   /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
+  customProps?: CheckboxCustomProps;
+
+  /**
    * Whether the checkbox is in an indeterminate state.
    *
    * @default false
    */
   indeterminate?: boolean;
-
-  /**
-   * Extra props for internal parts.
-   *
-   * @default undefined
-   */
-  partsProps?: CheckboxPartsProps;
 
   /**
    * The roundedness of the checkbox control.

@@ -39,7 +39,7 @@ const linkBridgeKeys = [
   "leftIcon",
   "rightIcon",
   "underline",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof LinkOwnProps)[];
 
 type LinkLibDefaults = LibDefaultsShape<
@@ -50,7 +50,7 @@ type LinkLibDefaults = LibDefaultsShape<
 type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;
 
 export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     LinkProps,
     typeof linkBridgeKeys
   >({
@@ -63,7 +63,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
     "Link"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Link",
   });
 
@@ -79,13 +79,13 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
     return omit(inheritedAttrs, ["slots", "children"]);
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
     entry: bridgeLink,
-    props: customProps,
+    props: componentProps,
   });
 
   const rootAriaDisabled = derived(() => {
@@ -141,7 +141,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
 
   const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.root,
+      customProps?.root,
       rootInheritedAttrs,
       cn({
         "inline-flex items-center gap-x-1 font-medium": true,
@@ -158,7 +158,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
 
   const leftIconBind = derived(() => {
     return mergePartBind(
-      partsProps?.leftIcon,
+      customProps?.leftIcon,
       {},
       cn({
         "shrink-0": true,
@@ -169,7 +169,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
 
   const rightIconBind = derived(() => {
     return mergePartBind(
-      partsProps?.rightIcon,
+      customProps?.rightIcon,
       {},
       cn({
         "shrink-0": true,

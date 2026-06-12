@@ -12,8 +12,8 @@ export { useLink } from "@/Components/Link/composables/useLink";
 export type {
   LinkClasses,
   LinkColorOverrides,
+  LinkCustomProps,
   LinkOwnProps,
-  LinkPartsProps,
   LinkProps,
   LinkSizeOverrides,
   LinkSlots,

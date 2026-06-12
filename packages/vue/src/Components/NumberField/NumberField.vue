@@ -60,16 +60,16 @@ const stepperIconSize = computed(() => {
   return resolveFieldAdornmentIconSize(props.size);
 });
 
-const mergedPartsProps = computed(() => {
+const mergedCustomProps = computed(() => {
   const inputClass = cn(
     "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-    props.partsProps?.input?.class,
+    props.customProps?.input?.class,
   );
 
   return {
-    ...props.partsProps,
+    ...props.customProps,
     input: {
-      ...props.partsProps?.input,
+      ...props.customProps?.input,
       class: inputClass,
     },
   };
@@ -112,7 +112,7 @@ const stringModel = computed({
     :step="props.step"
     :classes="mergedClasses"
     :with-error-icon="false"
-    :parts-props="mergedPartsProps"
+    :parts-props="mergedCustomProps"
   >
     <template #end>
       <div

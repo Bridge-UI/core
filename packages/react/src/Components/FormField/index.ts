@@ -3,8 +3,8 @@ export { default as FormField } from "@/Components/FormField/FormField";
 export type {
   FormFieldClasses,
   FormFieldColorOverrides,
+  FormFieldCustomProps,
   FormFieldOwnProps,
-  FormFieldPartsProps,
   FormFieldProps,
   FormFieldRoundedOverrides,
   FormFieldSizeOverrides,

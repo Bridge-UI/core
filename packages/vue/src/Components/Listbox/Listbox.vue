@@ -15,7 +15,7 @@ import type {
   ListboxValue,
 } from "@/Components/Listbox/listbox.types";
 import { ListItem } from "@/Components/ListItem";
-import type { ListItemPartsProps } from "@/Components/ListItem/listItem.types";
+import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { Menu } from "@/Components/Menu";
 import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
@@ -84,11 +84,11 @@ function keepFocusOnCombobox(event: MouseEvent) {
   event.preventDefault();
 }
 
-function getOptionPartsProps(
+function getOptionCustomProps(
   option: ListboxOption,
   index: number,
-): ListItemPartsProps {
-  const interactive: NonNullable<ListItemPartsProps["interactive"]> = {
+): ListItemCustomProps {
+  const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
     tabindex: -1,
     onMousedown: keepFocusOnCombobox,
   };
@@ -124,7 +124,7 @@ function handleSelect(option: ListboxOption) {
     :placement="placement"
     :close-on-click-away="true"
     :disable-auto-focus="disableAutoFocus"
-    :parts-props="{ content: merged.partsProps?.content }"
+    :parts-props="{ content: merged.customProps?.content }"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"
@@ -165,7 +165,7 @@ function handleSelect(option: ListboxOption) {
           v-for="(option, index) in options"
           :id="`${listboxId}-option-${index}`"
           :aria-selected="resolveSelected(option.value)"
-          :parts-props="getOptionPartsProps(option, index)"
+          :parts-props="getOptionCustomProps(option, index)"
         >
           <template v-if="hasNamedSlot(slots, 'option')" #default>
             <slot

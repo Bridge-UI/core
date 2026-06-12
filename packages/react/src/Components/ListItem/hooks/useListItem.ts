@@ -40,7 +40,7 @@ const listItemBridgeKeys = [
   "disabled",
   "selected",
   "secondary",
-  "partsProps",
+  "customProps",
   "interactive",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
@@ -54,7 +54,7 @@ export function useListItem(
 ) {
   const listContext = useListContext();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ListItemProps,
     typeof listItemBridgeKeys
   >({
@@ -67,7 +67,7 @@ export function useListItem(
     "ListItem"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "ListItem",
   });
 
@@ -83,12 +83,12 @@ export function useListItem(
     return omit(inheritedAttrs, ["slots", "children"]);
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    props: customProps,
+    props: componentProps,
     entry: bridgeListItem,
   });
 
@@ -124,7 +124,7 @@ export function useListItem(
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(partsProps?.root, rootInheritedAttrs, {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
         "list-none": true,
         "border-b border-black/10 last:border-b-0": merged.divider,
@@ -139,7 +139,7 @@ export function useListItem(
     }
 
     return mergePartBind(
-      partsProps?.interactive,
+      customProps?.interactive,
       {},
       {
         role: merged.role,
@@ -174,7 +174,7 @@ export function useListItem(
 
   const startBind = derived(() => {
     return mergePartBind(
-      partsProps?.start,
+      customProps?.start,
       {},
       {
         className: cn({
@@ -187,7 +187,7 @@ export function useListItem(
 
   const contentBind = derived(() => {
     return mergePartBind(
-      partsProps?.content,
+      customProps?.content,
       {},
       {
         className: cn({
@@ -200,7 +200,7 @@ export function useListItem(
 
   const primaryBind = derived(() => {
     return mergePartBind(
-      partsProps?.primary,
+      customProps?.primary,
       {},
       {
         className: cn({
@@ -213,7 +213,7 @@ export function useListItem(
 
   const secondaryBind = derived(() => {
     return mergePartBind(
-      partsProps?.secondary,
+      customProps?.secondary,
       {},
       {
         className: cn({
@@ -226,7 +226,7 @@ export function useListItem(
 
   const endBind = derived(() => {
     return mergePartBind(
-      partsProps?.end,
+      customProps?.end,
       {},
       {
         className: cn({

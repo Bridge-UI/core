@@ -90,13 +90,13 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("link-attrs");
 });
 
-test("it should forward partsProps to icon sub-parts", () => {
+test("it should forward customProps to icon sub-parts", () => {
   const wrapper = mount(Link, {
     slots: { default: "Docs" },
     props: {
       href: "/docs",
       leftIcon: Info,
-      partsProps: {
+      customProps: {
         leftIcon: { id: "link-left-icon" },
       },
     },

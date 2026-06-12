@@ -13,9 +13,9 @@ export { default as Listbox } from "@/Components/Listbox/Listbox";
 export type {
   ListboxClasses,
   ListboxControlledProps,
+  ListboxCustomProps,
   ListboxOption,
   ListboxOwnProps,
-  ListboxPartsProps,
   ListboxProps,
   ListboxSlots,
   ListboxValue,

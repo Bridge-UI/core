@@ -140,12 +140,12 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("button-attrs");
 });
 
-test("it should forward partsProps to icon sub-parts", () => {
+test("it should forward customProps to icon sub-parts", () => {
   const wrapper = mount(Button, {
     slots: { default: "Save" },
     props: {
       startIcon: CircleAlert,
-      partsProps: {
+      customProps: {
         endIcon: { id: "end-icon" },
         startIcon: { id: "start-icon" },
       },
@@ -155,14 +155,14 @@ test("it should forward partsProps to icon sub-parts", () => {
   expect(wrapper.find("#start-icon").exists()).toBe(true);
 });
 
-test("it should forward partsProps to slot wrappers", () => {
+test("it should forward customProps to slot wrappers", () => {
   const wrapper = mount(Button, {
     slots: {
       start: "◀",
       default: "Label",
     },
     props: {
-      partsProps: {
+      customProps: {
         start: { "data-testid": "start-slot" },
       },
     },

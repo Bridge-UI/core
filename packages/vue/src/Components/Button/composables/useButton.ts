@@ -44,7 +44,7 @@ const buttonBridgeKeys = [
   "variant",
   "disabled",
   "startIcon",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
 
 type ButtonLibDefaults = LibDefaultsShape<
@@ -73,16 +73,16 @@ export function useButton(
   >({
     libDefaults,
     componentName: "Button",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ButtonClasses>({
     entry: bridgeButton,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const tag = computed(() => {
@@ -139,8 +139,8 @@ export function useButton(
   });
 
   const variantKey = computed(() => {
-    if (!isNil(split.value.customProps.variant)) {
-      return split.value.customProps.variant;
+    if (!isNil(split.value.componentProps.variant)) {
+      return split.value.componentProps.variant;
     }
 
     return isMini.value ? "flat" : merged.value.variant;
@@ -166,7 +166,7 @@ export function useButton(
 
   const iconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.icon,
+      customProps.value?.icon,
       {},
       cn({
         "shrink-0": true,
@@ -177,7 +177,7 @@ export function useButton(
 
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
         "inline-flex items-center justify-center": true,
@@ -203,7 +203,7 @@ export function useButton(
 
   const endIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.endIcon,
+      customProps.value?.endIcon,
       {},
       cn({
         "shrink-0": true,
@@ -214,7 +214,7 @@ export function useButton(
 
   const endSlotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.end,
+      customProps.value?.end,
       {},
       "inline-flex shrink-0 items-center",
     );
@@ -222,7 +222,7 @@ export function useButton(
 
   const startIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.startIcon,
+      customProps.value?.startIcon,
       {},
       cn({
         "shrink-0": true,
@@ -233,7 +233,7 @@ export function useButton(
 
   const startSlotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.start,
+      customProps.value?.start,
       {},
       "inline-flex shrink-0 items-center",
     );
@@ -241,7 +241,7 @@ export function useButton(
 
   const loadingIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.loading,
+      customProps.value?.loading,
       {},
       cn({
         "shrink-0 animate-spin": true,
