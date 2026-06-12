@@ -5,6 +5,7 @@ import { Icon } from "@/Components/Icon";
 
 function Avatar(props: AvatarProps) {
   const {
+    slots,
     merged,
     children,
     rootBind,
@@ -13,6 +14,7 @@ function Avatar(props: AvatarProps) {
     imageBind,
     fallbackBind,
     resolvedIcon,
+    hasFallbackSlot,
     hasFallbackText,
     hasCustomContent,
   } = useAvatar(props, {
@@ -27,13 +29,17 @@ function Avatar(props: AvatarProps) {
 
       {!hasCustomContent && hasImage && <img {...imageBind} />}
 
-      {!hasCustomContent && !hasImage && hasFallbackText && (
-        <span {...fallbackBind}>{merged.fallback}</span>
-      )}
+      {!hasCustomContent && !hasImage && hasFallbackSlot && slots?.fallback}
 
-      {!hasCustomContent && !hasImage && !hasFallbackText && (
-        <Icon icon={resolvedIcon} {...iconBind} />
-      )}
+      {!hasCustomContent &&
+        !hasImage &&
+        !hasFallbackSlot &&
+        hasFallbackText && <span {...fallbackBind}>{merged.fallback}</span>}
+
+      {!hasCustomContent &&
+        !hasImage &&
+        !hasFallbackSlot &&
+        !hasFallbackText && <Icon icon={resolvedIcon} {...iconBind} />}
     </div>
   );
 }

@@ -40,7 +40,7 @@ const dismissFromAction = () => {
     :model-value="entry.show"
     v-on:close="dismissFromModal"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
-    :on-show-change="
+    v-on:show-change="
       (show) =>
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
     "

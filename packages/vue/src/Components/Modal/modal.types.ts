@@ -46,6 +46,12 @@ export interface ModalEmits {
    * Not emitted when the parent sets `v-model` to `false` directly.
    */
   close: [];
+
+  /**
+   * Emitted when `show` should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
 }
 
 export interface ModalPartsProps {
@@ -152,13 +158,6 @@ export interface ModalOwnProps {
    * @default false
    */
   keepMounted?: boolean;
-
-  /**
-   * Called when `show` should change (controlled state).
-   *
-   * @default undefined
-   */
-  onShowChange?: (show: boolean) => void;
 
   /**
    * Props forwarded to each modal part.

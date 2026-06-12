@@ -440,7 +440,6 @@ test("it should not override host-controlled props with modal shell options", as
           modal: {
             show: false,
             transition: "none",
-            onShowChange: vi.fn(),
           },
         });
       });

@@ -46,6 +46,12 @@ test("it should render children when custom content is passed", () => {
   expect(screen.getByText("Custom")).toBeTruthy();
 });
 
+test("it should render fallback slot when no image is available", () => {
+  render(<Avatar slots={{ fallback: <span>Custom fallback</span> }} />);
+
+  expect(screen.getByText("Custom fallback")).toBeTruthy();
+});
+
 test("it should apply rounded-full by default", () => {
   const { container } = render(<Avatar fallback="JP" />);
 

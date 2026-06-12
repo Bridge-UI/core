@@ -60,7 +60,7 @@ const {
     show: model,
     stackId: props.stackId,
     onClose: () => emit("close"),
-    onShowChange: (show) => props.onShowChange?.(show),
+    onShowChange: (show) => emit("show-change", show),
   },
 );
 

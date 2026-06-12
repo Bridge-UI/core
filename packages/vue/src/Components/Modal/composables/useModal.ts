@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get } from "es-toolkit/compat";
 import {
   computed,
   nextTick,
@@ -235,7 +235,7 @@ export function useModal(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onShowChange"]);
+    return split.value.inheritedAttrs;
   });
 
   const rootBind = computed(() => {
