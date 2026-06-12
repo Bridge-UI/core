@@ -170,6 +170,7 @@ export {
 } from "@core/Layer";
 export type { LayerId } from "@core/Layer";
 export {
+  DEFAULT_SELECT_ASYNC_RESULTS_LIMIT,
   LAYER_STACK_BASE_Z_INDEX,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
@@ -180,6 +181,7 @@ export {
   createFocusable,
   createMergePartBind,
   createPositionable,
+  fetchSelectAsyncData,
   getFocusableElements,
   getLayerStackEntry,
   getLayerStackSnapshot,
@@ -194,11 +196,17 @@ export {
   isModalBackdropClick,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  mergeSelectAsyncOptions,
+  normalizeSelectOption,
+  normalizeSelectOptions,
   pushLayerStack,
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,
+  resolveSelectAsyncLimit,
+  resolveSelectAsyncOptions,
+  selectValuesEqual,
   splitComponentProps,
   subscribeLayerStack,
   usesTrailingSnackbarActions,
@@ -220,5 +228,6 @@ export type {
   PositionOptions,
   PositionPlacement,
   PositionStrategy,
+  SelectOptionKeys,
   UnionProps,
 } from "@core/Utils";

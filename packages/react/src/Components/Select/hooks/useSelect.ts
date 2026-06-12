@@ -15,6 +15,9 @@ import {
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  normalizeSelectOptions,
+  resolveSelectAsyncOptions,
+  selectValuesEqual,
   splitComponentProps,
 } from "@bridge-ui/core";
 import { colorProps } from "@bridge-ui/core/Components/Listbox";
@@ -32,8 +35,6 @@ import {
 import type {
   SelectClasses,
   SelectOption,
-  SelectOptionInput,
-  SelectOptionLike,
   SelectOwnProps,
   SelectProps,
   SelectValue,
@@ -67,81 +68,6 @@ const selectBridgeKeys = [
 ] as const satisfies readonly (keyof SelectOwnProps)[];
 
 type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function normalizeOption(
-  item: SelectOptionInput,
-  keys: {
-    optionDescription: string;
-    optionLabel: string;
-    optionValue: string;
-  },
-): SelectOption {
-  if (typeof item === "string" || typeof item === "number") {
-    const label = String(item);
-
-    return { label, value: item };
-  }
-
-  if (isRecord(item) && "label" in item && "value" in item) {
-    return {
-      raw: item,
-      label: String(item.label),
-      value: item.value as SelectValue,
-      disabled: Boolean(item.disabled),
-      description: item.description ? String(item.description) : undefined,
-    };
-  }
-
-  if (isRecord(item)) {
-    const label = String(get(item, keys.optionLabel, ""));
-    const description = get(item, keys.optionDescription);
-    const value = get(item, keys.optionValue) as SelectValue;
-
-    return {
-      label,
-      value,
-      raw: item,
-      disabled: Boolean(get(item, "disabled", false)),
-      description: isNil(description) ? undefined : String(description),
-    };
-  }
-
-  return { label: "", value: "" };
-}
-
-function normalizeOptions(
-  options: SelectOptionInput[] | undefined,
-  keys: {
-    optionDescription: string;
-    optionLabel: string;
-    optionValue: string;
-  },
-): SelectOption[] {
-  if (!options?.length) {
-    return [];
-  }
-
-  return options.map((item) => normalizeOption(item, keys));
-}
-
-function normalizeAsyncOptions(
-  items: SelectOptionLike[],
-  keys: {
-    optionDescription: string;
-    optionLabel: string;
-    optionValue: string;
-  },
-): SelectOption[] {
-  return items.map((item) => normalizeOption(item as SelectOptionInput, keys));
-}
-
-function valuesEqual(a: SelectValue, b: SelectValue) {
-  return String(a) === String(b);
-}
 
 export function useSelect(
   props: SelectProps,
@@ -213,7 +139,7 @@ export function useSelect(
   ]);
 
   const staticOptions = useMemo(() => {
-    return normalizeOptions(selectMerged.options, optionKeys);
+    return normalizeSelectOptions(selectMerged.options, optionKeys);
   }, [optionKeys, selectMerged.options]);
 
   const resolvedOptions = useMemo(() => {
@@ -328,7 +254,7 @@ export function useSelect(
 
   const isSelected = useCallback(
     (value: SelectValue) => {
-      return selectedValues.some((item) => valuesEqual(item, value));
+      return selectedValues.some((item) => selectValuesEqual(item, value));
     },
     [selectedValues],
   );
@@ -355,11 +281,19 @@ export function useSelect(
       setAsyncLoading(true);
 
       try {
-        const results = await asyncData.search(query, {
-          selected: selectedValues,
-        });
+        const { options, resolvedSelected: resolved } =
+          await resolveSelectAsyncOptions(
+            asyncData,
+            query,
+            selectedValues,
+            (items) => normalizeSelectOptions(items, optionKeys),
+          );
 
-        setAsyncOptions(normalizeAsyncOptions(results, optionKeys));
+        if (resolved.length > 0) {
+          setResolvedSelected(resolved);
+        }
+
+        setAsyncOptions(options);
       } finally {
         setAsyncLoading(false);
       }
@@ -410,7 +344,7 @@ export function useSelect(
       if (multiple) {
         const current = [...selectedValues];
         const index = current.findIndex((value) =>
-          valuesEqual(value, option.value),
+          selectValuesEqual(value, option.value),
         );
 
         if (index >= 0) {
@@ -484,7 +418,7 @@ export function useSelect(
       }
 
       const current = selectedValues.filter(
-        (value) => !valuesEqual(value, option.value),
+        (value) => !selectValuesEqual(value, option.value),
       );
 
       setModel(current);
@@ -847,7 +781,7 @@ export function useSelect(
     }
 
     setResolvedSelected(
-      normalizeAsyncOptions(
+      normalizeSelectOptions(
         await asyncData.resolveSelected(selectedValues),
         optionKeys,
       ),

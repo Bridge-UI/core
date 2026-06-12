@@ -17,6 +17,14 @@ export type SelectOptionLike = string | SelectOption | Record<string, unknown>;
 
 export interface SelectAsyncData {
   /**
+   * Max number of options shown in the dropdown (selected values always
+   * included; search results fill remaining slots).
+   *
+   * @default 20
+   */
+  limit?: number;
+
+  /**
    * Resolves labels for the current selection (e.g. after reload or when values
    * are set programmatically). Use with remote search for Laravel/API backends.
    */
