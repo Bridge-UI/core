@@ -142,7 +142,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
         [mergedClasses.value.root ?? ""]: true,
         [roundedClass.value ?? ""]: true,
         [sizeClass.value ?? ""]:
-          showFallbackSurface.value || hasCustomContent.value,
+          showFallbackSurface.value || hasCustomContent.value || hasImage.value,
         [get(colorClass.value, "background") ?? ""]: showFallbackSurface.value,
         [get(colorClass.value, "text") ?? ""]: showFallbackSurface.value,
       }),

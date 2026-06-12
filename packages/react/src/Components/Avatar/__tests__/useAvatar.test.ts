@@ -81,9 +81,10 @@ test("it should apply size classes on root for icon fallback", () => {
 test("it should apply size classes on image when src is passed", () => {
   const { result } = renderUseAvatar({ src: "https://example.com/avatar.jpg" });
 
+  expect(result.current.rootBind.className).toContain("w-10");
+  expect(result.current.rootBind.className).toContain("h-10");
   expect(result.current.imageBind.className).toContain("w-10");
   expect(result.current.imageBind.className).toContain("h-10");
-  expect(result.current.rootBind.className).not.toContain("w-10");
 });
 
 test("it should merge className into rootBind", () => {

@@ -82,9 +82,10 @@ test("it should apply size classes on image when src is passed", () => {
     src: "https://example.com/avatar.jpg",
   });
 
+  expect(rootBind.value.class).toContain("w-10");
+  expect(rootBind.value.class).toContain("h-10");
   expect(imageBind.value.class).toContain("w-10");
   expect(imageBind.value.class).toContain("h-10");
-  expect(rootBind.value.class).not.toContain("w-10");
 });
 
 test("it should merge class into root bind", () => {
