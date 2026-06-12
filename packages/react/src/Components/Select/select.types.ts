@@ -1,52 +1,84 @@
 // ** External Imports
-import type { ReactNode } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
-  MergeProps,
-  SelectColor,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
+  MergeHtmlProps,
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
 } from "@bridge-ui/core";
 
-export interface SelectSizeOverrides {}
-export interface SelectColorOverrides {}
-export interface SelectRoundedOverrides {}
-export interface SelectVariantOverrides {}
+// ** Local Imports
+import type {
+  FormFieldClasses,
+  FormFieldCustomProps,
+  FormFieldOwnProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 
-export interface SelectOption {
+export type {
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+  SelectOptionLike,
+  SelectValue,
+} from "@bridge-ui/core";
+
+export interface SelectCallbacks {
   /**
-   * Whether the option is disabled.
+   * Callback when the selection changes.
    */
-  disabled?: boolean;
+  onChange?: (value: SelectModel) => void;
 
   /**
-   * The label of the option.
+   * Callback when the value is cleared.
    */
-  label: string;
+  onClear?: () => void;
 
   /**
-   * The value of the option.
+   * Callback when the menu closes.
    */
-  value: string | number;
+  onClose?: () => void;
+
+  /**
+   * Callback when an option is deselected (multiple mode).
+   */
+  onDeselect?: (option: SelectOption) => void;
+
+  /**
+   * Callback when the menu opens.
+   */
+  onOpen?: () => void;
+
+  /**
+   * Callback when the search query changes.
+   */
+  onSearch?: (query: string) => void;
+
+  /**
+   * Callback when an option is selected.
+   */
+  onSelect?: (option: SelectOption) => void;
 }
 
-export interface SelectClasses {
+export interface SelectClasses extends FormFieldClasses {
+  /**
+   * The classes to apply to selected chips (multiple mode).
+   */
+  chip?: string;
+
+  /**
+   * The classes to apply to clear icons (rest + hover).
+   */
+  clear?: string;
+
   /**
    * The classes to apply to the dropdown content.
    */
   content?: string;
-
-  /**
-   * The classes to apply to the description.
-   */
-  description?: string;
-
-  /**
-   * The classes to apply to the error message.
-   */
-  error?: string;
 
   /**
    * The classes to apply to the option item.
@@ -54,70 +86,79 @@ export interface SelectClasses {
   item?: string;
 
   /**
-   * The classes to apply to the label.
+   * The classes to apply to the selected value text in the trigger (single mode).
    */
-  label?: string;
-
-  /**
-   * The classes to apply to the root.
-   */
-  root?: string;
-
-  /**
-   * The classes to apply to the trigger.
-   */
-  trigger?: string;
+  value?: string;
 }
 
-export interface SelectProps {
+export interface SelectCustomProps extends FormFieldCustomProps {}
+
+export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
-   * The children to render.
-   *
-   * @default undefined
+   * Remote data source. Implies `searchable`.
    */
-  children?: ReactNode;
+  asyncData?: SelectAsyncData;
 
   /**
-   * The classes to apply to the select.
+   * Whether the value can be cleared.
    *
-   * @default undefined
+   * @default true
    */
-  classes?: SelectClasses;
+  clearable?: boolean;
 
   /**
-   * The color to apply to the select.
-   *
-   * @default "primary"
+   * Initial value when uncontrolled.
    */
-  color?: MergeProps<SelectColor, SelectColorOverrides>;
+  defaultValue?: SelectModel | null;
 
   /**
-   * The description text below the label.
-   *
-   * @default undefined
-   */
-  description?: string;
-
-  /**
-   * Whether the select is disabled.
+   * When true, the dropdown options list is not height-limited.
+   * Forwarded to the internal `Listbox`.
    *
    * @default false
    */
-  disabled?: boolean;
+  disableMaxHeight?: boolean;
 
   /**
-   * The error message to display.
+   * Message when the filtered list is empty.
    *
-   * @default undefined
+   * @default "No options"
    */
-  error?: string;
+  emptyMessage?: string;
 
   /**
-   * The label text for the select.
+   * Inverts the visual order of options.
    *
-   * @default undefined
+   * @default false
    */
-  label?: string;
+  flipOptions?: boolean;
+
+  /**
+   * Hides the empty-state message.
+   *
+   * @default false
+   */
+  hideEmptyMessage?: boolean;
+
+  /**
+   * External or async loading state.
+   */
+  loading?: boolean;
+
+  /**
+   * Tailwind max-height class for the dropdown options area.
+   * Forwarded to the internal `Listbox`.
+   *
+   * @default "max-h-60"
+   */
+  maxHeight?: string;
+
+  /**
+   * Minimum option count before search UI is enabled.
+   *
+   * @default 11
+   */
+  minItemsForSearch?: number;
 
   /**
    * Whether multiple values can be selected.
@@ -127,94 +168,82 @@ export interface SelectProps {
   multiple?: boolean;
 
   /**
-   * Callback when the selection changes.
+   * Key used to read the description from option objects.
    *
-   * @default undefined
+   * @default "description"
    */
-  onChange?: (value: string | number | (string | number)[]) => void;
+  optionDescription?: string;
+
+  /**
+   * Key used to read the label from option objects.
+   *
+   * @default "label"
+   */
+  optionLabel?: string;
 
   /**
    * The list of options to display.
-   *
-   * @default undefined
    */
-  options?: SelectOption[];
+  options?: SelectOptionInput[];
 
   /**
-   * The placeholder text.
+   * Key used to read the value from option objects.
    *
-   * @default undefined
+   * @default "value"
+   */
+  optionValue?: string;
+
+  /**
+   * Placeholder shown when no value is selected.
    */
   placeholder?: string;
 
   /**
-   * Whether the select is required.
-   *
-   * @default false
-   */
-  required?: boolean;
-
-  /**
-   * The roundedness of the select.
-   *
-   * @default "md"
-   */
-  rounded?: MergeProps<SelectRounded, SelectRoundedOverrides>;
-
-  /**
-   * Whether the options are searchable.
+   * Whether options can be filtered via the trigger input.
    *
    * @default false
    */
   searchable?: boolean;
 
   /**
-   * The size of the select.
-   *
-   * @default "md"
+   * The selected value (controlled).
    */
-  size?: MergeProps<SelectSize, SelectSizeOverrides>;
-
-  /**
-   * The slots to apply to the select.
-   *
-   * @default undefined
-   */
-  slots?: SelectSlots;
-
-  /**
-   * The selected value.
-   *
-   * @default undefined
-   */
-  value?: string | number | (string | number)[];
-
-  /**
-   * The variant of the select.
-   *
-   * @default "outline"
-   */
-  variant?: MergeProps<SelectVariant, SelectVariantOverrides>;
+  value?: SelectModel | null;
 }
 
-export interface SelectSlots {
+export interface SelectSlots extends FormFieldSlots {
   /**
-   * The slot for the description.
+   * Content below the trigger, above the option list.
    */
-  description?: ReactNode;
+  afterOptions?: ReactNode;
 
   /**
-   * The slot for the error message.
+   * Content above the option list.
    */
-  error?: ReactNode;
+  beforeOptions?: ReactNode;
 
   /**
-   * The slot for the label.
+   * Custom chip content (multiple mode).
    */
-  label?: ReactNode;
+  chip?: (ctx: { option: SelectOption }) => ReactNode;
 
   /**
-   * The slot for the option item.
+   * Custom empty-state content.
    */
-  option?: ReactNode;
+  empty?: ReactNode;
+
+  /**
+   * Custom loading content.
+   */
+  loading?: ReactNode;
+
+  /**
+   * Custom option item content.
+   */
+  option?: (ctx: { option: SelectOption; selected: boolean }) => ReactNode;
 }
+
+export type SelectProps = MergeHtmlProps<
+  SelectOwnProps & SelectCallbacks & { slots?: SelectSlots },
+  InputHTMLAttributes<HTMLInputElement>
+>;

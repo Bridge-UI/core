@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get } from "es-toolkit/compat";
 import {
   computed,
   nextTick,
@@ -57,10 +57,10 @@ const modalBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
-  "partsProps",
   "persistent",
   "teleportTo",
   "transition",
+  "customProps",
   "keepMounted",
   "hideBackdrop",
   "closeOnEscape",
@@ -115,7 +115,6 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const mounted = ref(false);
@@ -168,16 +167,16 @@ export function useModal(
   >({
     libDefaults,
     componentName: "Modal",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeModal,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const effectiveTransition = computed((): keyof ModalTransition => {
@@ -196,7 +195,6 @@ export function useModal(
     return merged.value.keepMounted && !active.value;
   });
 
-  // Classes
   const alignClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
@@ -237,12 +235,11 @@ export function useModal(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onShowChange"]);
+    return split.value.inheritedAttrs;
   });
 
-  // Binds
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       onTransitionend: handleShellTransitionEnd,
       style: {
         zIndex: stackZIndex.value,
@@ -260,7 +257,7 @@ export function useModal(
 
   const overlayBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.overlay,
+      customProps.value?.overlay,
       {
         onClick: handleOverlayClick,
       },
@@ -279,7 +276,7 @@ export function useModal(
 
   const wrapperBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.wrapper,
+      customProps.value?.wrapper,
       {
         onClick: handleWrapperClick,
       },
@@ -294,7 +291,7 @@ export function useModal(
 
   const panelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.panel,
+      customProps.value?.panel,
       {
         role: "dialog",
         "aria-modal": true,
@@ -314,7 +311,6 @@ export function useModal(
     );
   });
 
-  // Handlers
   function releaseFocusTrap() {
     focusTrap?.release();
     focusTrap = null;
@@ -420,7 +416,6 @@ export function useModal(
     }
   }
 
-  // Handlers
   function requestClose() {
     if (!canClose.value) {
       return;

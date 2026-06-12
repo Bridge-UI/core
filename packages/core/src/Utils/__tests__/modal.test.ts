@@ -5,8 +5,8 @@ import { isString } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
+import { createLayerId } from "@core/Layer/registry";
 import {
-  createLayerId,
   getLayerStackEntry,
   getLayerStackSnapshot,
   isLayerStackTop,

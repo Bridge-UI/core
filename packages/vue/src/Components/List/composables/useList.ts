@@ -27,7 +27,7 @@ const listBridgeKeys = [
   "nested",
   "classes",
   "padding",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
 type ListLibDefaults = LibDefaultsShape<ListOwnProps, "padding">;
@@ -50,16 +50,16 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
   >({
     libDefaults,
     componentName: "List",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeList,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const contextValue = computed(() => {
@@ -84,7 +84,7 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(partsProps.value?.root, rootInheritedAttrs.value, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
         "m-0 list-none": true,
         [paddingClass.value ?? ""]: true,

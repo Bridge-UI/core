@@ -2,8 +2,8 @@
 export { useTextField } from "@/Components/TextField/composables/useTextField";
 export type {
   TextFieldClasses,
+  TextFieldCustomProps,
   TextFieldOwnProps,
-  TextFieldPartsProps,
   TextFieldProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";

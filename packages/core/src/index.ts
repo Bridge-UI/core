@@ -65,6 +65,12 @@ export type {
   LinkUnderline,
 } from "@core/Components/Link";
 export type { ListPadding } from "@core/Components/List";
+export type {
+  ListboxColor,
+  ListboxColorItem,
+  ListboxOption,
+  ListboxValue,
+} from "@core/Components/Listbox";
 export type { ListItemAlign } from "@core/Components/ListItem";
 export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 export { transitionProps } from "@core/Components/Modal";
@@ -83,11 +89,12 @@ export type {
   RadioSize,
 } from "@core/Components/Radio";
 export type {
-  SelectColor,
-  SelectColorItem,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
+  SelectAsyncData,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+  SelectOptionLike,
+  SelectValue,
 } from "@core/Components/Select";
 export {
   colorProps as snackbarColorProps,
@@ -163,6 +170,8 @@ export {
 } from "@core/Layer";
 export type { LayerId } from "@core/Layer";
 export {
+  DEFAULT_SELECT_ASYNC_DEBOUNCE,
+  DEFAULT_SELECT_ASYNC_LIMIT,
   LAYER_STACK_BASE_Z_INDEX,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
@@ -173,6 +182,8 @@ export {
   createFocusable,
   createMergePartBind,
   createPositionable,
+  createSelectAsyncSearch,
+  fetchSelectAsyncData,
   getFocusableElements,
   getLayerStackEntry,
   getLayerStackSnapshot,
@@ -187,11 +198,18 @@ export {
   isModalBackdropClick,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
+  mergeSelectAsyncOptions,
+  normalizeSelectOption,
+  normalizeSelectOptions,
   pushLayerStack,
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,
+  resolveSelectAsyncDebounce,
+  resolveSelectAsyncLimit,
+  resolveSelectAsyncOptions,
+  selectValuesEqual,
   splitComponentProps,
   subscribeLayerStack,
   usesTrailingSnackbarActions,
@@ -213,5 +231,7 @@ export type {
   PositionOptions,
   PositionPlacement,
   PositionStrategy,
+  SelectAsyncSearch,
+  SelectOptionKeys,
   UnionProps,
 } from "@core/Utils";

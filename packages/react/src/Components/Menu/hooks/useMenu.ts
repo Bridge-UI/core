@@ -46,9 +46,9 @@ const menuBridgeKeys = [
   "classes",
   "strategy",
   "placement",
-  "partsProps",
   "persistent",
   "teleportTo",
+  "customProps",
   "keepMounted",
   "closeOnEscape",
   "closeOnClickAway",
@@ -121,7 +121,7 @@ export function useMenu(
 
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     MenuProps,
     typeof menuBridgeKeys
   >({
@@ -134,11 +134,11 @@ export function useMenu(
     "Menu"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Menu",
   });
 
-  const partsProps = merged.partsProps;
+  const customProps = merged.customProps;
 
   const slots = derived(() => {
     return props.slots;
@@ -168,7 +168,7 @@ export function useMenu(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeMenu,
-    props: customProps,
+    props: componentProps,
   });
 
   const isHiddenWhileMounted = merged.keepMounted && !show;
@@ -523,7 +523,7 @@ export function useMenu(
     };
   }, [show, anchorEl, merged.persistent, merged.closeOnClickAway]);
 
-  const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
+  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
     className: cn({
       "relative inline-block text-left": hasTrigger,
       [get(mergedClasses, "root") ?? ""]: true,
@@ -531,7 +531,7 @@ export function useMenu(
   });
 
   const triggerBind = mergePartBind(
-    partsProps?.trigger,
+    customProps?.trigger,
     { ref: triggerRef },
     {
       tabIndex: 0,
@@ -549,7 +549,7 @@ export function useMenu(
   );
 
   const contentBind = mergePartBind(
-    partsProps?.content,
+    customProps?.content,
     { ref: contentRef },
     {
       id: menuId,

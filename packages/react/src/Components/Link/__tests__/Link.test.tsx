@@ -90,12 +90,12 @@ test("it should merge className with root classes", () => {
   );
 });
 
-test("it should forward partsProps to icon sub-parts", () => {
+test("it should forward customProps to icon sub-parts", () => {
   const { container } = render(
     <Link
       href="/docs"
       leftIcon={Info}
-      partsProps={{
+      customProps={{
         leftIcon: { id: "link-left-icon" },
       }}
     >

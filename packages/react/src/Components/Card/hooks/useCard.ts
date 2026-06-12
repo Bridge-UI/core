@@ -34,7 +34,7 @@ const cardBridgeKeys = [
   "rounded",
   "variant",
   "borderless",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof CardOwnProps)[];
 
 type CardLibDefaults = LibDefaultsShape<
@@ -45,8 +45,7 @@ type CardLibDefaults = LibDefaultsShape<
 type CardMerged = MergeLibDefaults<CardOwnProps, CardLibDefaults>;
 
 export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
-  // Setup
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     CardProps,
     typeof cardBridgeKeys
   >({
@@ -59,7 +58,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     "Card"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Card",
   });
 
@@ -71,8 +70,8 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     return props.children;
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const rootInheritedAttrs = derived(() => {
@@ -81,10 +80,9 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeCard,
-    props: customProps,
+    props: componentProps,
   });
 
-  // Elements
   const hasDefaultBody = derived(() => {
     return Boolean(children);
   });
@@ -93,7 +91,6 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     return Boolean(slots?.footer);
   });
 
-  // Classes
   const variantClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -142,10 +139,9 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     return get(classes, merged.rounded);
   }, [merged.rounded, bridgeCard?.customProps?.rounded]);
 
-  // Binds
   const bodyBind = derived(() => {
     return mergePartBind(
-      partsProps?.body,
+      customProps?.body,
       {},
       cn({
         grow: true,
@@ -158,7 +154,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
   const footerBind = derived(() => {
     return mergePartBind(
-      partsProps?.footer,
+      customProps?.footer,
       {},
       cn({
         "border-t": showDividers,
@@ -173,7 +169,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
   const headerBind = derived(() => {
     return mergePartBind(
-      partsProps?.header,
+      customProps?.header,
       {},
       cn({
         "flex items-center justify-between": true,
@@ -188,7 +184,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
   const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.root,
+      customProps?.root,
       rootInheritedAttrs,
       cn({
         "flex w-full flex-col": true,
@@ -202,7 +198,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
   const titleBind = derived(() => {
     return mergePartBind(
-      partsProps?.title,
+      customProps?.title,
       {},
       cn({
         "text-base font-medium whitespace-normal": true,

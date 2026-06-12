@@ -106,11 +106,11 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("alert-attrs");
 });
 
-test("it should forward partsProps to the default icon", () => {
+test("it should forward customProps to the default icon", () => {
   const wrapper = mount(Alert, {
     props: {
       title: "Notice",
-      partsProps: {
+      customProps: {
         icon: { id: "alert-icon" },
       },
     },
@@ -119,12 +119,12 @@ test("it should forward partsProps to the default icon", () => {
   expect(wrapper.find("#alert-icon").exists()).toBe(true);
 });
 
-test("it should forward partsProps to title and body containers", () => {
+test("it should forward customProps to title and body containers", () => {
   const wrapper = mount(Alert, {
     slots: { default: "Body text" },
     props: {
       title: "Title",
-      partsProps: {
+      customProps: {
         body: { id: "alert-body" },
         title: { id: "alert-title" },
       },

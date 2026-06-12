@@ -7,8 +7,8 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 // ** Local Imports
 import type {
   TextFieldClasses,
+  TextFieldCustomProps,
   TextFieldOwnProps,
-  TextFieldPartsProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
 
@@ -19,7 +19,7 @@ export interface PasswordFieldClasses extends TextFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldPartsProps extends TextFieldPartsProps {}
+export interface PasswordFieldCustomProps extends TextFieldCustomProps {}
 
 export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
   /**

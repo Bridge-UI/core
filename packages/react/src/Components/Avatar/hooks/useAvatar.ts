@@ -26,6 +26,7 @@ import type {
 } from "@/Components/Avatar/avatar.types";
 import {
   derived,
+  hasNamedSlot,
   isPropPresent,
   mergePartBind,
   useBridgeUIComponent,
@@ -51,8 +52,7 @@ type AvatarLibDefaults = LibDefaultsShape<
 type AvatarMerged = MergeLibDefaults<AvatarOwnProps, AvatarLibDefaults>;
 
 export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
-  // Setup
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     AvatarProps,
     typeof avatarBridgeKeys
   >({
@@ -65,7 +65,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     "Avatar"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Avatar",
   });
 
@@ -73,22 +73,29 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return props.children;
   });
 
+  const slots = derived(() => {
+    return props.slots;
+  });
+
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["children"]);
+    return omit(inheritedAttrs, ["slots", "children"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<AvatarClasses>({
-    props: customProps,
     entry: bridgeAvatar,
+    props: componentProps,
   });
 
-  // Elements
   const hasCustomContent = derived(() => {
     return isPropPresent(children);
   });
 
   const hasImage = derived(() => {
     return !isNil(merged.src) && !isEmpty(merged.src);
+  });
+
+  const hasFallbackSlot = derived(() => {
+    return hasNamedSlot(slots, "fallback");
   });
 
   const hasFallbackText = derived(() => {
@@ -103,7 +110,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return !hasImage && !hasCustomContent;
   });
 
-  // Classes
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -140,7 +146,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return get(classes, merged.size);
   }, [merged.size, bridgeAvatar?.customProps?.iconSize]);
 
-  // Binds
   const rootBind = derived(() => {
     return mergePartBind(
       {},
@@ -149,7 +154,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
         "inline-flex shrink-0 items-center justify-center overflow-hidden": true,
         [mergedClasses.root ?? ""]: true,
         [roundedClass ?? ""]: true,
-        [sizeClass ?? ""]: showFallbackSurface || hasCustomContent,
+        [sizeClass ?? ""]: showFallbackSurface || hasCustomContent || hasImage,
         [get(colorClass, "background") ?? ""]: showFallbackSurface,
         [get(colorClass, "text") ?? ""]: showFallbackSurface,
       }),
@@ -198,6 +203,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   });
 
   return {
+    slots,
     merged,
     children,
     rootBind,
@@ -206,6 +212,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     imageBind,
     fallbackBind,
     resolvedIcon,
+    hasFallbackSlot,
     hasFallbackText,
     hasCustomContent,
   };

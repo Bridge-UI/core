@@ -36,8 +36,8 @@ export const formControlBridgeKeys = [
   "required",
   "controlId",
   "mainLabel",
-  "partsProps",
   "startLabel",
+  "customProps",
   "description",
   "errorMessage",
   "withoutErrorMessage",
@@ -57,10 +57,9 @@ export function useFormControl(
   props: Omit<FormControlProps, "field">,
   libDefaults: FormControlLibDefaults,
 ) {
-  // Setup
   const autoId = useId();
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     Omit<FormControlProps, "field">,
     typeof formControlBridgeKeys
   >({
@@ -73,7 +72,7 @@ export function useFormControl(
     "FormControl"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "FormControl",
   });
 
@@ -81,8 +80,8 @@ export function useFormControl(
     return props.slots;
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -94,11 +93,10 @@ export function useFormControl(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormControlClasses>({
-    props: customProps,
+    props: componentProps,
     entry: bridgeFormControl,
   });
 
-  // Elements
   const invalidated = derived(() => {
     return merged.error === true;
   });
@@ -150,15 +148,13 @@ export function useFormControl(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const textSizeClass = derived(() => {
     return get(labelSizeProps, merged.size ?? "md");
   });
 
-  // Binds
   const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.root,
+      customProps?.root,
       {
         className: cn(inheritedAttrs.className),
       },
@@ -173,7 +169,7 @@ export function useFormControl(
 
   const rowBind = derived(() => {
     return mergePartBind(
-      partsProps?.row,
+      customProps?.row,
       {},
       cn({
         "flex items-center gap-x-2": true,
@@ -184,7 +180,7 @@ export function useFormControl(
 
   const startLabelBind = derived(() => {
     return mergePartBind(
-      partsProps?.startLabel,
+      customProps?.startLabel,
       { htmlFor: controlId },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -198,7 +194,7 @@ export function useFormControl(
 
   const mainLabelBind = derived(() => {
     return mergePartBind(
-      partsProps?.mainLabel,
+      customProps?.mainLabel,
       { htmlFor: controlId },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -212,7 +208,7 @@ export function useFormControl(
 
   const endLabelBind = derived(() => {
     return mergePartBind(
-      partsProps?.endLabel,
+      customProps?.endLabel,
       { htmlFor: controlId },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -226,7 +222,7 @@ export function useFormControl(
 
   const descriptionBind = derived(() => {
     return mergePartBind(
-      partsProps?.description,
+      customProps?.description,
       { id: `${controlId}-description` },
       cn({
         "mt-2 text-gray-500 dark:text-gray-400": true,
@@ -238,7 +234,7 @@ export function useFormControl(
 
   const errorMessageBind = derived(() => {
     return mergePartBind(
-      partsProps?.errorMessage,
+      customProps?.errorMessage,
       { id: `${controlId}-error` },
       cn({
         "mt-2 text-error-600 dark:text-error-400": true,

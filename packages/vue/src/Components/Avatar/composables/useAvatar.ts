@@ -65,15 +65,14 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   >({
     libDefaults,
     componentName: "Avatar",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<AvatarClasses>({
     entry: bridgeAvatar,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const hasCustomContent = computed(() => {
     return hasNamedSlot(slots, "default");
   });
@@ -98,7 +97,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return !hasImage.value && !hasCustomContent.value;
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -135,7 +133,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return get(classes, merged.value.size);
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       {},
@@ -145,7 +142,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
         [mergedClasses.value.root ?? ""]: true,
         [roundedClass.value ?? ""]: true,
         [sizeClass.value ?? ""]:
-          showFallbackSurface.value || hasCustomContent.value,
+          showFallbackSurface.value || hasCustomContent.value || hasImage.value,
         [get(colorClass.value, "background") ?? ""]: showFallbackSurface.value,
         [get(colorClass.value, "text") ?? ""]: showFallbackSurface.value,
       }),

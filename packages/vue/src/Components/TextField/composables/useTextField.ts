@@ -6,7 +6,6 @@ import { useFormField } from "@/Components/FormField/composables/useFormField";
 import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 
 export function useTextField(props: TextFieldOwnProps) {
-  // Setup
   const attrs = useAttrs();
 
   const formField = useFormField(() => ({ ...attrs, ...props }), {

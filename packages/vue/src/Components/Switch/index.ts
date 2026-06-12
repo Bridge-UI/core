@@ -3,9 +3,9 @@ export { useSwitch } from "@/Components/Switch/composables/useSwitch";
 export type {
   SwitchClasses,
   SwitchColorOverrides,
+  SwitchCustomProps,
   SwitchEmits,
   SwitchOwnProps,
-  SwitchPartsProps,
   SwitchProps,
   SwitchRoundedOverrides,
   SwitchSizeOverrides,

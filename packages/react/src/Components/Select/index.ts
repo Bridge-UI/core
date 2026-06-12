@@ -1,12 +1,14 @@
 // ** Exports
+export { useSelect } from "@/Components/Select/hooks/useSelect";
 export { default as Select } from "@/Components/Select/Select";
 export type {
+  SelectCallbacks,
   SelectClasses,
-  SelectColorOverrides,
+  SelectCustomProps,
+  SelectModel,
   SelectOption,
+  SelectOwnProps,
   SelectProps,
-  SelectRoundedOverrides,
-  SelectSizeOverrides,
   SelectSlots,
-  SelectVariantOverrides,
+  SelectValue,
 } from "@/Components/Select/select.types";

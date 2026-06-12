@@ -118,9 +118,9 @@ test("it should apply className after classes.root in rootBind", () => {
   expect(result.current.rootBind.className).not.toContain("p-2");
 });
 
-test("it should forward partsProps.root onto rootBind", () => {
+test("it should forward customProps.root onto rootBind", () => {
   const { result } = renderUseAlert({
-    partsProps: { root: { id: "alert-root-part" } },
+    customProps: { root: { id: "alert-root-part" } },
   });
 
   expect(result.current.rootBind.id).toBe("alert-root-part");

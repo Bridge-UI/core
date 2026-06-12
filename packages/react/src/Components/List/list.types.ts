@@ -13,7 +13,7 @@ export interface ListClasses {
   root?: string;
 }
 
-export interface ListPartsProps {
+export interface ListCustomProps {
   /**
    * Props forwarded to the root element.
    */
@@ -47,6 +47,13 @@ export interface ListOwnProps {
   classes?: ListClasses;
 
   /**
+   * Props forwarded to each list part.
+   *
+   * @default undefined
+   */
+  customProps?: ListCustomProps;
+
+  /**
    * Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root.
    *
    * @default false
@@ -66,13 +73,6 @@ export interface ListOwnProps {
    * @default "normal"
    */
   padding?: MergeProps<ListPadding, ListPaddingOverrides>;
-
-  /**
-   * Props forwarded to each list part.
-   *
-   * @default undefined
-   */
-  partsProps?: ListPartsProps;
 }
 
 export type ListProps = MergeHtmlProps<

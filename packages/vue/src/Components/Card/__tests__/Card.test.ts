@@ -125,12 +125,12 @@ test("it should forward fallthrough attrs to the root element", () => {
   expect(root.attributes("data-testid")).toBe("card-attrs");
 });
 
-test("it should forward partsProps to title and body containers", () => {
+test("it should forward customProps to title and body containers", () => {
   const wrapper = mount(Card, {
     slots: { default: "Body text" },
     props: {
       title: "Title",
-      partsProps: {
+      customProps: {
         body: { id: "card-body" },
         title: { id: "card-title" },
       },
@@ -141,12 +141,12 @@ test("it should forward partsProps to title and body containers", () => {
   expect(wrapper.find("#card-title").exists()).toBe(true);
 });
 
-test("it should forward partsProps to footer container", () => {
+test("it should forward customProps to footer container", () => {
   const wrapper = mount(Card, {
     slots: { footer: "Footer" },
     props: {
       title: "Title",
-      partsProps: { footer: { id: "card-footer" } },
+      customProps: { footer: { id: "card-footer" } },
     },
   });
 

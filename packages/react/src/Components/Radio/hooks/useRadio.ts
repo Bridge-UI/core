@@ -38,7 +38,7 @@ const radioBridgeKeys = [
   "classes",
   "checked",
   "rounded",
-  "partsProps",
+  "customProps",
   "defaultChecked",
 ] as const satisfies readonly (keyof RadioProps)[];
 
@@ -50,14 +50,13 @@ type RadioLibDefaults = LibDefaultsShape<
 type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
-  // Setup
   const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
     size: libDefaults.size ?? "sm",
   });
 
-  const { customProps } = splitComponentProps<
+  const { componentProps } = splitComponentProps<
     RadioProps,
     typeof radioBridgeKeys
   >({
@@ -70,12 +69,12 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     "Radio"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Radio",
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const inputInheritedAttrs = derived(() => {
@@ -89,17 +88,16 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<RadioClasses>({
-    props: customProps,
     entry: bridgeRadio,
+    props: componentProps,
   });
 
-  // Elements
   const [uncontrolledChecked, setUncontrolledChecked] = useState(() => {
-    return Boolean(customProps.defaultChecked);
+    return Boolean(componentProps.defaultChecked);
   });
 
   const isControlled = derived(() => {
-    return !isNil(customProps.checked);
+    return !isNil(componentProps.checked);
   });
 
   const checked = derived(() => {
@@ -118,7 +116,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return merged.color;
   });
 
-  // Classes
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -146,7 +143,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return get(classes, merged.rounded ?? "full");
   }, [merged.rounded, bridgeRadio?.customProps?.rounded]);
 
-  // Handlers
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {
       setUncontrolledChecked(event.target.checked);
@@ -155,11 +151,10 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     inputInheritedAttrs.onChange?.(event);
   };
 
-  // Binds
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        ...partsProps?.input,
+        ...customProps?.input,
         ...formControl.controlBind,
         checked,
         type: "radio",
@@ -176,7 +171,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
 
   const controlBind = derived(() => {
     return mergePartBind(
-      partsProps?.control,
+      customProps?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -192,7 +187,7 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
 
   const dotBind = derived(() => {
     return mergePartBind(
-      partsProps?.dot,
+      customProps?.dot,
       {},
       cn({
         "rounded-full bg-white transition-transform duration-100": true,

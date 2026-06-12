@@ -67,14 +67,7 @@ export interface SnackbarClasses {
   title?: string;
 }
 
-export interface SnackbarEmits {
-  /**
-   * Emitted when the snackbar requests to close.
-   */
-  close: [];
-}
-
-export interface SnackbarPartsProps {
+export interface SnackbarCustomProps {
   /**
    * Props forwarded to the main content wrapper.
    */
@@ -111,6 +104,13 @@ export interface SnackbarPartsProps {
   title?: HTMLAttributes;
 }
 
+export interface SnackbarEmits {
+  /**
+   * Emitted when the snackbar requests to close.
+   */
+  close: [];
+}
+
 /**
  * Toast / notification panel. Sets `role="status"` and `aria-live="polite"` by default.
  * Use the `actions` and `right` slots for custom actions; imperative presets live in `useSnackbarAction`.
@@ -134,6 +134,11 @@ export interface SnackbarOwnProps {
    * @default "primary"
    */
   color?: MergeProps<SnackbarColor, SnackbarColorOverrides>;
+
+  /**
+   * Extra props for internal parts (`icon`, `title`, `description`, etc.).
+   */
+  customProps?: SnackbarCustomProps;
 
   /**
    * Body text below the title.
@@ -168,11 +173,6 @@ export interface SnackbarOwnProps {
    * @default "medium"
    */
   padding?: MergeProps<SnackbarPadding, SnackbarPaddingOverrides>;
-
-  /**
-   * Extra props for internal parts (`icon`, `title`, `description`, etc.).
-   */
-  partsProps?: SnackbarPartsProps;
 
   /**
    * Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`.

@@ -35,7 +35,7 @@ const radioBridgeKeys = [
   "value",
   "classes",
   "rounded",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof RadioOwnProps)[];
 
 type RadioLibDefaults = LibDefaultsShape<
@@ -50,7 +50,6 @@ export function useRadio(
   libDefaults: RadioLibDefaults,
   modelValue: MaybeRefOrGetter<string | number | undefined>,
 ) {
-  // Setup
   const attrs = useAttrs();
 
   const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
@@ -72,19 +71,18 @@ export function useRadio(
   >({
     libDefaults,
     componentName: "Radio",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<RadioClasses>({
     entry: bridgeRadio,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const isChecked = computed(() => {
     return toValue(modelValue) === merged.value.value;
   });
@@ -97,7 +95,6 @@ export function useRadio(
     return merged.value.color;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -125,11 +122,10 @@ export function useRadio(
     return get(classes, merged.value.rounded ?? "full");
   });
 
-  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         ...formControl.controlBind.value,
         type: "radio",
         name: merged.value.name,
@@ -145,7 +141,7 @@ export function useRadio(
 
   const controlBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.control,
+      customProps.value?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -161,7 +157,7 @@ export function useRadio(
 
   const dotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.dot,
+      customProps.value?.dot,
       {},
       cn({
         "rounded-full bg-white transition-transform duration-100": true,

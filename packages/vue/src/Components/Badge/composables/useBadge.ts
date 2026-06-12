@@ -46,7 +46,6 @@ type BadgeLibDefaults = LibDefaultsShape<
 type BadgeMerged = MergeLibDefaults<BadgeOwnProps, BadgeLibDefaults>;
 
 export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
-  // Setup
   const attrs = useAttrs();
 
   const split = computed(() => {
@@ -62,20 +61,18 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
   >({
     libDefaults,
     componentName: "Badge",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BadgeClasses>({
     entry: bridgeBadge,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const isMini = computed(() => {
     return merged.value.density === "mini";
   });
 
-  // Classes
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
@@ -103,7 +100,6 @@ export function useBadge(props: BadgeOwnProps, libDefaults: BadgeLibDefaults) {
     return get(classes, merged.value.rounded);
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
       {},

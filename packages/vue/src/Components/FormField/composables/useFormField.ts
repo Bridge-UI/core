@@ -69,7 +69,7 @@ export const formFieldBridgeKeys = [
   "required",
   "errorIcon",
   "startIcon",
-  "partsProps",
+  "customProps",
   "description",
   "errorMessage",
   "withErrorIcon",
@@ -91,7 +91,6 @@ export function useFormField(
   libDefaults: FormFieldLibDefaults,
   options: FormFieldOptions = {},
 ) {
-  // Setup
   const autoId = useId();
   const slots = useSlots();
 
@@ -111,11 +110,11 @@ export function useFormField(
   >({
     libDefaults,
     componentName: "FormField",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const control = computed(() => {
@@ -124,10 +123,9 @@ export function useFormField(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
     entry: bridgeFormField,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const invalidated = computed(() => {
     return merged.value.error === true;
   });
@@ -222,7 +220,6 @@ export function useFormField(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -310,10 +307,9 @@ export function useFormField(
     });
   });
 
-  // Binds
   const endBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.end,
+      customProps.value?.end,
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
@@ -332,7 +328,7 @@ export function useFormField(
     const inherited = split.value.inheritedAttrs as HTMLAttributes;
 
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       {
         class: cn(inherited.class),
         ...omit(inherited, ["class"]),
@@ -348,7 +344,7 @@ export function useFormField(
 
   const errorBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.errorMessage,
+      customProps.value?.errorMessage,
       {},
       cn({
         "mt-2 text-error-600 dark:text-error-400": true,
@@ -362,7 +358,7 @@ export function useFormField(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         id: controlId.value,
         disabled: isDisabled.value,
         readonly: isReadonly.value,
@@ -387,7 +383,7 @@ export function useFormField(
 
   const labelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.label,
+      customProps.value?.label,
       {},
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
@@ -404,7 +400,7 @@ export function useFormField(
 
   const startBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.start,
+      customProps.value?.start,
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
@@ -421,7 +417,7 @@ export function useFormField(
 
   const cornerBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.corner,
+      customProps.value?.corner,
       {},
       cn({
         "text-gray-500 dark:text-gray-400": !isNotched.value,
@@ -436,7 +432,7 @@ export function useFormField(
     const hasLabel = hasSlotOrProp(slots, "label", merged.value.label);
 
     return mergePartBind(
-      partsProps.value?.header,
+      customProps.value?.header,
       {},
       cn({
         flex: true,
@@ -453,7 +449,7 @@ export function useFormField(
 
   const headerBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.header,
+      customProps.value?.header,
       {},
       cn({
         flex: true,
@@ -466,7 +462,7 @@ export function useFormField(
 
   const endIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.endIcon,
+      customProps.value?.endIcon,
       {},
       cn({
         "inline-flex shrink-0 items-center justify-center self-center":
@@ -477,7 +473,7 @@ export function useFormField(
 
   const endSlotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.end,
+      customProps.value?.end,
       {},
       cn({
         "group/end wrapper-end-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
@@ -523,7 +519,7 @@ export function useFormField(
 
   const containerBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.container,
+      customProps.value?.container,
       {
         "data-bridge-rounded": merged.value.rounded ?? "md",
       },
@@ -555,7 +551,7 @@ export function useFormField(
 
   const startIconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.startIcon,
+      customProps.value?.startIcon,
       {},
       cn({
         "inline-flex shrink-0 items-center justify-center self-center":
@@ -566,7 +562,7 @@ export function useFormField(
 
   const startSlotBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.start,
+      customProps.value?.start,
       {},
       cn({
         "group/start wrapper-start-slot shrink-0 flex w-auto items-stretch self-stretch [&>*]:min-h-0": true,
@@ -579,7 +575,7 @@ export function useFormField(
 
   const descriptionBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.description,
+      customProps.value?.description,
       {},
       cn({
         "mt-2 text-gray-500 dark:text-gray-400": true,

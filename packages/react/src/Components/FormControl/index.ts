@@ -2,8 +2,8 @@
 export { default as FormControl } from "@/Components/FormControl/FormControl";
 export type {
   FormControlClasses,
+  FormControlCustomProps,
   FormControlOwnProps,
-  FormControlPartsProps,
   FormControlProps,
   FormControlSizeOverrides,
   FormControlSlots,

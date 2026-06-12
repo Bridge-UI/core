@@ -1,6 +1,7 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
 import { User } from "lucide-react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -49,6 +50,14 @@ test("it should detect fallback text when fallback is passed", () => {
   expect(result.current.hasFallbackText).toBe(true);
 });
 
+test("it should detect fallback slot when slots.fallback is passed", () => {
+  const { result } = renderUseAvatar({
+    slots: { fallback: createElement("span", null, "Custom") },
+  });
+
+  expect(result.current.hasFallbackSlot).toBe(true);
+});
+
 test("it should default resolved icon to User", () => {
   const { result } = renderUseAvatar();
 
@@ -72,9 +81,10 @@ test("it should apply size classes on root for icon fallback", () => {
 test("it should apply size classes on image when src is passed", () => {
   const { result } = renderUseAvatar({ src: "https://example.com/avatar.jpg" });
 
+  expect(result.current.rootBind.className).toContain("w-10");
+  expect(result.current.rootBind.className).toContain("h-10");
   expect(result.current.imageBind.className).toContain("w-10");
   expect(result.current.imageBind.className).toContain("h-10");
-  expect(result.current.rootBind.className).not.toContain("w-10");
 });
 
 test("it should merge className into rootBind", () => {

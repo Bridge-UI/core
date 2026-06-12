@@ -42,8 +42,8 @@ export const formControlBridgeKeys = [
   "required",
   "controlId",
   "mainLabel",
-  "partsProps",
   "startLabel",
+  "customProps",
   "description",
   "errorMessage",
   "withoutErrorMessage",
@@ -63,7 +63,6 @@ export function useFormControl(
   props: MaybeRefOrGetter<Omit<FormControlOwnProps, "field">>,
   libDefaults: FormControlLibDefaults,
 ) {
-  // Setup
   const autoId = useId();
   const slots = useSlots();
   const attrs = useAttrs();
@@ -84,19 +83,18 @@ export function useFormControl(
   >({
     libDefaults,
     componentName: "FormControl",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormControlClasses>({
     entry: bridgeFormControl,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const invalidated = computed(() => {
     return merged.value.error === true;
   });
@@ -151,15 +149,13 @@ export function useFormControl(
     return ids.length > 0 ? ids.join(" ") : undefined;
   });
 
-  // Classes
   const textSizeClass = computed(() => {
     return get(labelSizeProps, merged.value.size ?? "md");
   });
 
-  // Binds
   const rootBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.root,
+      customProps.value?.root,
       omit(split.value.inheritedAttrs, ["class"]),
       cn({
         "group/form-control relative w-full": true,
@@ -173,7 +169,7 @@ export function useFormControl(
 
   const rowBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.row,
+      customProps.value?.row,
       {},
       cn({
         "flex items-center gap-x-2": true,
@@ -184,7 +180,7 @@ export function useFormControl(
 
   const startLabelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.startLabel,
+      customProps.value?.startLabel,
       { for: controlId.value },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -198,7 +194,7 @@ export function useFormControl(
 
   const mainLabelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.mainLabel,
+      customProps.value?.mainLabel,
       { for: controlId.value },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -212,7 +208,7 @@ export function useFormControl(
 
   const endLabelBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.endLabel,
+      customProps.value?.endLabel,
       { for: controlId.value },
       cn({
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
@@ -226,7 +222,7 @@ export function useFormControl(
 
   const descriptionBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.description,
+      customProps.value?.description,
       { id: `${controlId.value}-description` },
       cn({
         "mt-2 text-gray-500 dark:text-gray-400": true,
@@ -238,7 +234,7 @@ export function useFormControl(
 
   const errorMessageBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.errorMessage,
+      customProps.value?.errorMessage,
       { id: `${controlId.value}-error` },
       cn({
         "mt-2 text-error-600 dark:text-error-400": true,

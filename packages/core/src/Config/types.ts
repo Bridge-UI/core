@@ -64,6 +64,7 @@ import type {
   LinkUnderline,
 } from "@core/Components/Link";
 import type { ListPadding } from "@core/Components/List";
+import type { ListboxColor, ListboxColorItem } from "@core/Components/Listbox";
 import type { ListItemAlign } from "@core/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type {
@@ -79,13 +80,6 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
-import type {
-  SelectColor,
-  SelectColorItem,
-  SelectRounded,
-  SelectSize,
-  SelectVariant,
-} from "@core/Components/Select";
 import type {
   SnackbarColor,
   SnackbarColorItem,
@@ -122,6 +116,7 @@ export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface ListConfigOverrides {}
+export interface ListboxConfigOverrides {}
 export interface ListItemConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
@@ -302,6 +297,16 @@ export interface ListConfigBase {
   }>;
 }
 
+export interface ListboxConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, ListboxColorItem>;
+  }>;
+  defaultProps: Partial<{
+    color: keyof ListboxColor;
+  }>;
+}
+
 export interface ListItemConfigBase {
   classes: object;
   customProps: Partial<{
@@ -390,17 +395,6 @@ export interface SnackbarConfigBase {
 
 export interface SelectConfigBase {
   classes: object;
-  customProps: Partial<{
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-    variant: Record<string, Record<string, SelectColorItem>>;
-  }>;
-  defaultProps: Partial<{
-    color: keyof SelectColor;
-    rounded: keyof SelectRounded;
-    size: keyof SelectSize;
-    variant: keyof SelectVariant;
-  }>;
 }
 
 export interface SwitchConfigBase {
@@ -443,6 +437,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   List: Partial<Overwrite<ListConfigBase, ListConfigOverrides>>;
+  Listbox: Partial<Overwrite<ListboxConfigBase, ListboxConfigOverrides>>;
   ListItem: Partial<Overwrite<ListItemConfigBase, ListItemConfigOverrides>>;
   ListSection: Partial<
     Overwrite<ListSectionConfigBase, ListSectionConfigOverrides>

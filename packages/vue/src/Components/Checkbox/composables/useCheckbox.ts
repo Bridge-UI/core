@@ -40,7 +40,7 @@ const checkboxBridgeKeys = [
   "color",
   "classes",
   "rounded",
-  "partsProps",
+  "customProps",
   "indeterminate",
 ] as const satisfies readonly (keyof CheckboxOwnProps)[];
 
@@ -56,7 +56,6 @@ export function useCheckbox(
   libDefaults: CheckboxLibDefaults,
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
-  // Setup
   const attrs = useAttrs();
   const inputRef = ref<HTMLInputElement | null>(null);
 
@@ -79,19 +78,18 @@ export function useCheckbox(
   >({
     libDefaults,
     componentName: "Checkbox",
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  const partsProps = computed(() => {
-    return merged.value.partsProps;
+  const customProps = computed(() => {
+    return merged.value.customProps;
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CheckboxClasses>({
     entry: bridgeCheckbox,
-    props: () => split.value.customProps,
+    props: () => split.value.componentProps,
   });
 
-  // Elements
   const isChecked = computed(() => {
     return Boolean(toValue(checked));
   });
@@ -104,7 +102,6 @@ export function useCheckbox(
     return merged.value.color;
   });
 
-  // Classes
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -132,18 +129,16 @@ export function useCheckbox(
     return get(classes, merged.value.rounded ?? "sm");
   });
 
-  // Handlers
   watchEffect(() => {
     if (inputRef.value) {
       inputRef.value.indeterminate = Boolean(merged.value.indeterminate);
     }
   });
 
-  // Binds
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        ...partsProps.value?.input,
+        ...customProps.value?.input,
         ...formControl.controlBind.value,
         type: "checkbox",
       },
@@ -157,7 +152,7 @@ export function useCheckbox(
 
   const controlBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.control,
+      customProps.value?.control,
       { "aria-hidden": true },
       cn({
         "inline-flex shrink-0 items-center justify-center border shadow-sm transition ease-in-out duration-100": true,
@@ -173,7 +168,7 @@ export function useCheckbox(
 
   const iconBind = computed(() => {
     return mergePartBind(
-      partsProps.value?.icon,
+      customProps.value?.icon,
       {},
       cn({
         "text-white": true,

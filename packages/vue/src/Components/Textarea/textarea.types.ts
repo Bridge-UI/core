@@ -11,8 +11,8 @@ import type {
 // ** Local Imports
 import type {
   FormFieldClasses,
+  FormFieldCustomProps,
   FormFieldOwnProps,
-  FormFieldPartsProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 
@@ -20,7 +20,7 @@ export interface TextareaResizeOverrides {}
 
 export interface TextareaClasses extends FormFieldClasses {}
 
-export interface TextareaPartsProps extends FormFieldPartsProps {}
+export interface TextareaCustomProps extends FormFieldCustomProps {}
 
 export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**

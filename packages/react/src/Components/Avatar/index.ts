@@ -7,5 +7,6 @@ export type {
   AvatarProps,
   AvatarRoundedOverrides,
   AvatarSizeOverrides,
+  AvatarSlots,
 } from "@/Components/Avatar/avatar.types";
 export { useAvatar } from "@/Components/Avatar/hooks/useAvatar";

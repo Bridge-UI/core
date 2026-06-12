@@ -3,8 +3,8 @@ export { default as Checkbox } from "@/Components/Checkbox/Checkbox";
 export type {
   CheckboxClasses,
   CheckboxColorOverrides,
+  CheckboxCustomProps,
   CheckboxOwnProps,
-  CheckboxPartsProps,
   CheckboxProps,
   CheckboxRoundedOverrides,
   CheckboxSizeOverrides,

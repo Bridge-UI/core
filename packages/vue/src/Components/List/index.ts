@@ -2,9 +2,9 @@
 export { useList } from "@/Components/List/composables/useList";
 export type {
   ListClasses,
+  ListCustomProps,
   ListOwnProps,
   ListPaddingOverrides,
-  ListPartsProps,
   ListProps,
 } from "@/Components/List/list.types";
 export { default as List } from "@/Components/List/List.vue";

@@ -37,7 +37,7 @@ const alertBridgeKeys = [
   "padding",
   "rounded",
   "variant",
-  "partsProps",
+  "customProps",
 ] as const satisfies readonly (keyof AlertOwnProps)[];
 
 type AlertLibDefaults = LibDefaultsShape<
@@ -48,8 +48,7 @@ type AlertLibDefaults = LibDefaultsShape<
 type AlertMerged = MergeLibDefaults<AlertOwnProps, AlertLibDefaults>;
 
 export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
-  // Setup
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     AlertProps,
     typeof alertBridgeKeys
   >({
@@ -62,7 +61,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     "Alert"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Alert",
   });
 
@@ -74,8 +73,8 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     return props.children;
   });
 
-  const partsProps = derived(() => {
-    return merged.partsProps;
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const rootInheritedAttrs = derived(() => {
@@ -84,15 +83,13 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeAlert,
-    props: customProps,
+    props: componentProps,
   });
 
-  // Elements
   const hasDefaultBody = derived(() => {
     return Boolean(children);
   });
 
-  // Classes
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -143,10 +140,9 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     return themeIcon ?? get(alertDefaultIcons, merged.color);
   }, [merged.icon, merged.color, colorClass]);
 
-  // Binds
   const bodyBind = derived(() => {
     return mergePartBind(
-      partsProps?.body,
+      customProps?.body,
       {},
       cn({
         "grow text-sm text-start": true,
@@ -159,7 +155,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   const iconBind = derived(() => {
     return mergePartBind(
-      partsProps?.icon,
+      customProps?.icon,
       {},
       cn({
         "w-5 h-5 shrink-0": true,
@@ -171,7 +167,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   const rootBind = derived(() => {
     return mergePartBind(
-      partsProps?.root,
+      customProps?.root,
       rootInheritedAttrs,
       cn({
         "w-full flex flex-col p-4": true,
@@ -186,7 +182,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
 
   const titleBind = derived(() => {
     return mergePartBind(
-      partsProps?.title,
+      customProps?.title,
       {},
       cn({
         "text-start text-sm whitespace-normal": true,

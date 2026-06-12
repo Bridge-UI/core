@@ -1,12 +1,13 @@
 // ** External Imports
 import type { LucideIcon } from "lucide-vue-next";
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   AvatarColor,
   AvatarRounded,
   AvatarSize,
+  MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
@@ -31,7 +32,7 @@ export interface AvatarClasses {
   root?: string;
 }
 
-export interface AvatarProps {
+export interface AvatarOwnProps {
   /**
    * The alt text for the avatar image.
    *
@@ -100,3 +101,5 @@ export interface AvatarSlots {
    */
   fallback?: Slot<undefined>;
 }
+
+export type AvatarProps = MergeHtmlProps<AvatarOwnProps, HTMLAttributes>;

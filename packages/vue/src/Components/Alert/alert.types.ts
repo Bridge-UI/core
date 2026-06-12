@@ -44,7 +44,7 @@ export interface AlertClasses {
   title?: string;
 }
 
-export interface AlertPartsProps {
+export interface AlertCustomProps {
   /**
    * Props forwarded to the default body container.
    */
@@ -87,6 +87,14 @@ export interface AlertOwnProps {
   color?: MergeProps<AlertColor, AlertColorOverrides>;
 
   /**
+   * Extra props for internal parts (`icon`, `title`, `body`, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  customProps?: AlertCustomProps;
+
+  /**
    * The icon to apply to the alert. Use `null` to omit the prop icon.
    *
    * @default undefined
@@ -99,14 +107,6 @@ export interface AlertOwnProps {
    * @default "medium"
    */
   padding?: MergeProps<AlertPadding, AlertPaddingOverrides>;
-
-  /**
-   * Extra props for internal parts (`icon`, `title`, `body`, etc.).
-   * Root HTML attributes stay on the component top level.
-   *
-   * @default undefined
-   */
-  partsProps?: AlertPartsProps;
 
   /**
    * The roundedness of the alert.

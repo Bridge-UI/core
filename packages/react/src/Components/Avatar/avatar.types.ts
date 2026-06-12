@@ -90,11 +90,25 @@ export interface AvatarOwnProps {
   size?: MergeProps<AvatarSize, AvatarSizeOverrides>;
 
   /**
+   * Named slots for avatar regions.
+   *
+   * @default undefined
+   */
+  slots?: AvatarSlots;
+
+  /**
    * The source URL for the avatar image.
    *
    * @default undefined
    */
   src?: string;
+}
+
+export interface AvatarSlots {
+  /**
+   * Custom fallback content when no image is available.
+   */
+  fallback?: ReactNode;
 }
 
 export type AvatarProps = MergeHtmlProps<

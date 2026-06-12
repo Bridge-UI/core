@@ -3,9 +3,9 @@ export { useRadio } from "@/Components/Radio/composables/useRadio";
 export type {
   RadioClasses,
   RadioColorOverrides,
+  RadioCustomProps,
   RadioEmits,
   RadioOwnProps,
-  RadioPartsProps,
   RadioProps,
   RadioRoundedOverrides,
   RadioSizeOverrides,

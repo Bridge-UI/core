@@ -54,10 +54,10 @@ const modalBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
-  "partsProps",
   "persistent",
   "teleportTo",
   "transition",
+  "customProps",
   "keepMounted",
   "hideBackdrop",
   "closeOnEscape",
@@ -112,7 +112,6 @@ export function useModal(
   libDefaults: ModalLibDefaults,
   options: ModalOptions = {},
 ) {
-  // Setup
   const { onClose, stackId, onShowChange, show = false } = options;
 
   const layerStackIdRef = useRef("");
@@ -137,7 +136,7 @@ export function useModal(
     "closed",
   );
 
-  const { customProps, inheritedAttrs } = splitComponentProps<
+  const { componentProps, inheritedAttrs } = splitComponentProps<
     ModalProps,
     typeof modalBridgeKeys
   >({
@@ -150,11 +149,11 @@ export function useModal(
     "Modal"
   >({
     libDefaults,
-    props: customProps,
+    props: componentProps,
     componentName: "Modal",
   });
 
-  const partsProps = merged.partsProps;
+  const customProps = merged.customProps;
 
   const rootInheritedAttrs = omit(inheritedAttrs, [
     "show",
@@ -165,7 +164,7 @@ export function useModal(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeModal,
-    props: customProps,
+    props: componentProps,
   });
 
   const effectiveTransition = useMemo((): keyof ModalTransition => {
@@ -186,7 +185,6 @@ export function useModal(
     stackOrderRef.current = null;
   }
 
-  // Classes
   const alignClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
@@ -220,7 +218,6 @@ export function useModal(
   const overlayTransitionClass =
     getModalOverlayTransitionClass(effectiveTransition);
 
-  // Handlers
   function setShow(next: boolean) {
     if (!next) {
       onClose?.();
@@ -450,8 +447,7 @@ export function useModal(
     return subscribeLayerStack(syncZIndex);
   }, [active]);
 
-  // Binds
-  const rootBind = mergePartBind(partsProps?.root, rootInheritedAttrs, {
+  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
     style: {
       zIndex: stackZIndex,
     },
@@ -467,7 +463,7 @@ export function useModal(
   });
 
   const overlayBind = mergePartBind(
-    partsProps?.overlay,
+    customProps?.overlay,
     {},
     {
       "data-modal-part": "overlay",
@@ -482,7 +478,7 @@ export function useModal(
   );
 
   const wrapperBind = mergePartBind(
-    partsProps?.wrapper,
+    customProps?.wrapper,
     {},
     cn({
       "flex min-h-full w-full transform p-4": true,
@@ -493,7 +489,7 @@ export function useModal(
   );
 
   const panelBind = mergePartBind(
-    partsProps?.panel,
+    customProps?.panel,
     {
       ref: panelRef,
       role: "dialog",
