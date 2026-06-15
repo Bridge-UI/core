@@ -1,20 +1,107 @@
 // ** External Imports
 import { debounce, get, isNil } from "es-toolkit/compat";
 
-// ** Local Imports
-import type {
-  SelectAsyncData,
-  SelectOption,
-  SelectOptionInput,
-  SelectOptionLike,
-  SelectValue,
-} from "@core/Components/Select/types";
-
-/** Default debounce delay (ms) for async select search while typing. */
+/**
+ * Default debounce delay (ms) for async select search while typing.
+ */
 export const DEFAULT_SELECT_ASYNC_DEBOUNCE = 500;
 
-/** Default page size for async select option lists. */
+/**
+ * Default page size for async select option lists.
+ */
 export const DEFAULT_SELECT_ASYNC_LIMIT = 20;
+
+export interface ListboxOption {
+  /**
+   * Secondary line below the label.
+   */
+  description?: string;
+
+  /**
+   * Whether the option is disabled.
+   */
+  disabled?: boolean;
+
+  /**
+   * The label of the option.
+   */
+  label: string;
+
+  /**
+   * Original data when mapped from arbitrary objects.
+   */
+  raw?: unknown;
+
+  /**
+   * The value of the option.
+   */
+  value: ListboxValue;
+}
+
+/**
+ * The value of the listbox option.
+ */
+export type ListboxValue = string | number;
+
+export interface SelectAsyncData {
+  /**
+   * Delay before calling `search` after the user stops typing (ms).
+   * Set to `0` to fetch on every keystroke.
+   *
+   * @default 500
+   */
+  debounce?: number;
+
+  /**
+   * Max number of options shown in the dropdown (selected values always
+   * included; search results fill remaining slots).
+   *
+   * @default 20
+   */
+  limit?: number;
+
+  /**
+   * Resolves labels for the current selection (e.g. after reload or when values
+   * are set programmatically). Use with remote search for Laravel/API backends.
+   */
+  resolve?: (values: SelectValue[]) => Promise<SelectOptionLike[]>;
+
+  /**
+   * Fetches options for the current search query and selection context.
+   */
+  search: (
+    query: string,
+    ctx: { selected: SelectValue[] },
+  ) => Promise<SelectOptionLike[]>;
+}
+
+/**
+ * Debounced search helpers for async select data.
+ */
+export type SelectAsyncSearch = {
+  cancel: () => void;
+  searchDebounced: (query: string) => void;
+  searchImmediate: (query: string) => void;
+};
+
+/**
+ * The model of the select.
+ */
+export type SelectModel = SelectValue | SelectValue[];
+
+/**
+ * The option of the select.
+ */
+export type SelectOption = ListboxOption;
+
+/**
+ * The input of the select.
+ */
+export type SelectOptionInput =
+  | number
+  | string
+  | SelectOption
+  | Record<string, unknown>;
 
 /**
  * Object keys used to read option fields from arbitrary data.
@@ -26,13 +113,14 @@ export type SelectOptionKeys = {
 };
 
 /**
- * Debounced search helpers for async select data.
+ * The like of the select option.
  */
-export type SelectAsyncSearch = {
-  cancel: () => void;
-  searchDebounced: (query: string) => void;
-  searchImmediate: (query: string) => void;
-};
+export type SelectOptionLike = string | SelectOption | Record<string, unknown>;
+
+/**
+ * The value of the select.
+ */
+export type SelectValue = number | string;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

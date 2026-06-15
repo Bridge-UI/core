@@ -88,14 +88,6 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
-export type {
-  SelectAsyncData,
-  SelectModel,
-  SelectOption,
-  SelectOptionInput,
-  SelectOptionLike,
-  SelectValue,
-} from "@core/Components/Select";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,
@@ -231,7 +223,13 @@ export type {
   PositionOptions,
   PositionPlacement,
   PositionStrategy,
+  SelectAsyncData,
   SelectAsyncSearch,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
   SelectOptionKeys,
+  SelectOptionLike,
+  SelectValue,
   UnionProps,
 } from "@core/Utils";

@@ -4,7 +4,7 @@
 import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
-import type { SelectOption } from "@core/Components/Select/types";
+import type { SelectOption } from "@core/Utils/select";
 import {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,

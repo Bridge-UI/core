@@ -199,7 +199,18 @@ export {
   resolveSelectAsyncOptions,
   selectValuesEqual,
 } from "@core/Utils/select";
-export type { SelectAsyncSearch, SelectOptionKeys } from "@core/Utils/select";
+export type {
+  ListboxOption,
+  ListboxValue,
+  SelectAsyncData,
+  SelectAsyncSearch,
+  SelectModel,
+  SelectOption,
+  SelectOptionInput,
+  SelectOptionKeys,
+  SelectOptionLike,
+  SelectValue,
+} from "@core/Utils/select";
 export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
