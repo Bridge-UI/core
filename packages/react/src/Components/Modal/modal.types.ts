@@ -76,6 +76,13 @@ export interface ModalOwnProps {
   align?: MergeProps<ModalAlign, ModalAlignOverrides>;
 
   /**
+   * When true, focuses the first focusable element inside the dialog on open.
+   *
+   * @default false
+   */
+  autoFocus?: boolean;
+
+  /**
    * Backdrop blur on the overlay.
    *
    * @default "none"
@@ -116,13 +123,6 @@ export interface ModalOwnProps {
    * @default undefined
    */
   customProps?: ModalCustomProps;
-
-  /**
-   * When true, the modal does not auto-focus the first focusable element on open.
-   *
-   * @default false
-   */
-  disableAutoFocus?: boolean;
 
   /**
    * When true, focus is not trapped inside the modal while open.

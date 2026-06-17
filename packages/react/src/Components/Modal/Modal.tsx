@@ -12,6 +12,7 @@ const modalLibDefaults = {
   size: "md",
   blur: "none",
   scroll: "body",
+  autoFocus: false,
   teleportTo: "body",
   transition: "fade",
   closeOnEscape: true,

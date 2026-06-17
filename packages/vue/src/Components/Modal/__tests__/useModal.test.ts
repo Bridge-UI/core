@@ -15,6 +15,7 @@ afterEach(() => {
 const libDefaults: Partial<ModalOwnProps> = {
   size: "md",
   blur: "none",
+  autoFocus: false,
   teleportTo: "body",
   transition: "fade",
   closeOnEscape: true,

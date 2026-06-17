@@ -21,13 +21,13 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ModalOwnProps>(), {
   scroll: "body",
+  autoFocus: false,
   persistent: false,
   keepMounted: false,
   teleportTo: "body",
   hideBackdrop: false,
   closeOnEscape: true,
   closeOnOverlay: true,
-  disableAutoFocus: false,
   disableScrollLock: false,
   disableEnforceFocus: false,
   disableRestoreFocus: false,
@@ -50,6 +50,7 @@ const {
     size: "md",
     blur: "none",
     scroll: "body",
+    autoFocus: false,
     teleportTo: "body",
     transition: "fade",
     closeOnEscape: true,

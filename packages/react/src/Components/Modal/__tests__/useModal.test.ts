@@ -18,6 +18,7 @@ afterEach(() => {
 const libDefaults = {
   size: "md",
   blur: "none",
+  autoFocus: false,
   teleportTo: "body",
   transition: "fade",
   closeOnEscape: true,

@@ -57,6 +57,7 @@ const modalBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
+  "autoFocus",
   "persistent",
   "teleportTo",
   "transition",
@@ -65,7 +66,6 @@ const modalBridgeKeys = [
   "hideBackdrop",
   "closeOnEscape",
   "closeOnOverlay",
-  "disableAutoFocus",
   "disableScrollLock",
   "disableEnforceFocus",
   "disableRestoreFocus",
@@ -77,6 +77,7 @@ type ModalLibDefaults = LibDefaultsShape<
   | "size"
   | "align"
   | "scroll"
+  | "autoFocus"
   | "teleportTo"
   | "transition"
   | "closeOnEscape"
@@ -326,7 +327,7 @@ export function useModal(
     releaseFocusTrap();
     focusTrap = createFocusTrap({
       container: panelRef.value,
-      disableAutoFocus: merged.value.disableAutoFocus,
+      disableAutoFocus: !merged.value.autoFocus,
       disableEnforceFocus: merged.value.disableEnforceFocus,
       disableRestoreFocus: merged.value.disableRestoreFocus,
     });
@@ -486,7 +487,7 @@ export function useModal(
     [
       active,
       transitionState,
-      () => merged.value.disableAutoFocus,
+      () => merged.value.autoFocus,
       () => merged.value.disableEnforceFocus,
       () => merged.value.disableRestoreFocus,
     ],
