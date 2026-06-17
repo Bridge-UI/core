@@ -78,10 +78,10 @@ const toggleIconSize = computed(() => {
         v-on:click="toggleVisibility"
         :aria-label="isVisible ? 'Hide password' : 'Show password'"
         :class="
-          cn(
-            'bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5',
-            mergedClasses.toggle,
-          )
+          cn({
+            'bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5': true,
+            [mergedClasses.toggle ?? '']: true,
+          })
         "
       >
         <Icon :icon="isVisible ? EyeOff : Eye" :size="toggleIconSize" />

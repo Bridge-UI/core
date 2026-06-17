@@ -51,10 +51,10 @@ function PasswordField(props: PasswordFieldProps) {
               onClick={toggleVisibility}
               disabled={textFieldProps.disabled}
               aria-label={isVisible ? "Hide password" : "Show password"}
-              className={cn(
-                "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5",
-                mergedClasses.toggle,
-              )}
+              className={cn({
+                "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5": true,
+                [mergedClasses.toggle ?? ""]: true,
+              })}
             >
               <Icon
                 icon={isVisible ? EyeOff : Eye}

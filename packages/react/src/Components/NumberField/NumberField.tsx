@@ -68,30 +68,26 @@ function NumberField(props: NumberFieldProps) {
         ...customProps,
         input: {
           ...customProps?.input,
-          className: cn(
-            "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-            customProps?.input?.className,
-          ),
+          className: cn({
+            "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none": true,
+            [customProps?.input?.className ?? ""]: true,
+          }),
         },
       }}
       slots={{
         ...slots,
         end: (
           <Fragment>
-            <div
-              className={cn(
-                "bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden",
-              )}
-            >
+            <div className="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden">
               <button
                 type="button"
                 {...incrementHold.handlers}
                 aria-label="Increment value"
                 disabled={textFieldProps.disabled}
-                className={cn(
-                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
-                  mergedClasses.increment,
-                )}
+                className={cn({
+                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+                  [mergedClasses.increment ?? ""]: true,
+                })}
               >
                 <Icon
                   icon={ChevronUp}
@@ -104,10 +100,10 @@ function NumberField(props: NumberFieldProps) {
                 {...decrementHold.handlers}
                 aria-label="Decrement value"
                 disabled={textFieldProps.disabled}
-                className={cn(
-                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
-                  mergedClasses.decrement,
-                )}
+                className={cn({
+                  "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+                  [mergedClasses.decrement ?? ""]: true,
+                })}
               >
                 <Icon
                   icon={ChevronDown}

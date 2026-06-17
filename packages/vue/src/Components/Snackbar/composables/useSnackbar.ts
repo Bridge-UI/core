@@ -461,11 +461,11 @@ export function useSnackbar(
           zIndex: stackZIndex.value,
         },
       },
-      cn(
-        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4",
-        positionClass.value,
-        get(mergedClasses.value, "portal") ?? "",
-      ),
+      cn({
+        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
+        [positionClass.value ?? ""]: true,
+        [get(mergedClasses.value, "portal") ?? ""]: true,
+      }),
     );
   });
 

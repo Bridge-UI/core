@@ -57,11 +57,11 @@ export function SnackbarActionControl({
         {...linkProps}
         classes={{
           ...action.link.classes,
-          root: cn(
-            layoutClasses(layout, hasReject, hasAccept),
-            action.className,
-            action.link.classes?.root,
-          ),
+          root: cn({
+            [layoutClasses(layout, hasReject, hasAccept)]: true,
+            [action.className ?? ""]: true,
+            [action.link.classes?.root ?? ""]: true,
+          }),
         }}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault();
@@ -82,14 +82,12 @@ export function SnackbarActionControl({
       {...action.button}
       classes={{
         ...action.button?.classes,
-        root: cn(
-          layoutClasses(layout, hasReject, hasAccept),
-          action.className,
-          action.button?.classes?.root,
-          layout === "right-accept" || layout === "right-reject"
-            ? "w-full"
-            : undefined,
-        ),
+        root: cn({
+          [layoutClasses(layout, hasReject, hasAccept)]: true,
+          [action.className ?? ""]: true,
+          [action.button?.classes?.root ?? ""]: true,
+          "w-full": layout === "right-accept" || layout === "right-reject",
+        }),
       }}
       onClick={() => onRun()}
     >

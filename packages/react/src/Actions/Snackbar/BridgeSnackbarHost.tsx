@@ -71,16 +71,16 @@ export function BridgeSnackbarHost({
   const stack = (
     <div
       data-snackbar-host
-      className={cn(
-        "fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4",
-        positionClass,
-      )}
+      className={cn({
+        "fixed inset-0 z-40 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
+        [positionClass ?? ""]: true,
+      })}
     >
       <div
-        className={cn(
-          "flex w-full max-w-sm gap-y-2 pointer-events-auto",
-          stackDirectionClass,
-        )}
+        className={cn({
+          "flex w-full max-w-sm gap-y-2 pointer-events-auto": true,
+          [stackDirectionClass ?? ""]: true,
+        })}
       >
         {api.entries.map((entry) => {
           const entryId = entry.id;

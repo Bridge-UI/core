@@ -121,11 +121,7 @@ const stringModel = computed({
   >
     <template #end>
       <div
-        :class="
-          cn(
-            'bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden',
-          )
-        "
+        class="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden"
       >
         <button
           type="button"
@@ -136,10 +132,10 @@ const stringModel = computed({
           v-on:pointerdown="incrementHold.onPressPointerDown"
           v-on:lostpointercapture="incrementHold.onPressLostPointerCapture"
           :class="
-            cn(
-              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
-              mergedClasses.increment,
-            )
+            cn({
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
+              [mergedClasses.increment ?? '']: true,
+            })
           "
         >
           <Icon :icon="ChevronUp" :size="stepperIconSize" />
@@ -154,10 +150,10 @@ const stringModel = computed({
           v-on:pointerdown="decrementHold.onPressPointerDown"
           v-on:lostpointercapture="decrementHold.onPressLostPointerCapture"
           :class="
-            cn(
-              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center',
-              mergedClasses.decrement,
-            )
+            cn({
+              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
+              [mergedClasses.decrement ?? '']: true,
+            })
           "
         >
           <Icon :icon="ChevronDown" :size="stepperIconSize" />
