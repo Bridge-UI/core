@@ -36,9 +36,10 @@ test("it should increment value when increment button is clicked", async () => {
   await wrapper.find('button[aria-label="Increment value"]').trigger("click");
 
   expect(wrapper.props("modelValue")).toBe(4);
+  expect(wrapper.emitted("change")).toEqual([[4]]);
 });
 
-test("it should decrement value when decrement button is clicked", async () => {
+test("it should emit change when decrement button is clicked", async () => {
   const wrapper = mount(NumberField, {
     props: {
       step: 2,
@@ -52,6 +53,7 @@ test("it should decrement value when decrement button is clicked", async () => {
   await wrapper.find('button[aria-label="Decrement value"]').trigger("click");
 
   expect(wrapper.props("modelValue")).toBe(2);
+  expect(wrapper.emitted("change")).toEqual([[2]]);
 });
 
 test("it should disable stepper buttons when disabled", () => {

@@ -34,6 +34,18 @@ test("it should reveal password when toggle is clicked", async () => {
   );
 });
 
+test("it should emit visibility-change when toggle is clicked", async () => {
+  const wrapper = mount(PasswordField);
+
+  await wrapper.find('button[aria-label="Show password"]').trigger("click");
+
+  expect(wrapper.emitted("visibility-change")).toEqual([[true]]);
+
+  await wrapper.find('button[aria-label="Hide password"]').trigger("click");
+
+  expect(wrapper.emitted("visibility-change")).toEqual([[true], [false]]);
+});
+
 test("it should disable toggle button when disabled", () => {
   const wrapper = mount(PasswordField, { props: { disabled: true } });
 

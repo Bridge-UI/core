@@ -11,6 +11,7 @@ import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
 import { usePasswordFieldClasses } from "@/Components/PasswordField/composables/usePasswordFieldClasses";
 import type {
+  PasswordFieldEmits,
   PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
@@ -20,6 +21,8 @@ import { resolveFieldAdornmentIconSize } from "@/Utils";
 defineSlots<PasswordFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const emit = defineEmits<PasswordFieldEmits>();
 
 const model = defineModel<string | null | undefined>();
 
@@ -33,7 +36,7 @@ const mergedClasses = usePasswordFieldClasses(props);
 
 const { isVisible, toggleVisibility } = usePasswordField({
   visible,
-  onVisibilityChange: (next) => props.onVisibilityChange?.(next),
+  onVisibilityChange: (next) => emit("visibility-change", next),
 });
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
@@ -47,11 +50,7 @@ const mergedCustomProps = computed(() => ({
 }));
 
 const textFieldProps = computed(() => {
-  const {
-    visible: _visible,
-    onVisibilityChange: _onVisibilityChange,
-    ...rest
-  } = props;
+  const { visible: _visible, ...rest } = props;
 
   return rest;
 });

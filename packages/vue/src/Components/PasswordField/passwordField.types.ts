@@ -21,16 +21,19 @@ export interface PasswordFieldClasses extends TextFieldClasses {
 
 export interface PasswordFieldCustomProps extends TextFieldCustomProps {}
 
+export interface PasswordFieldEmits {
+  /**
+   * Emitted when password visibility changes.
+   * Listen with `@visibility-change` / `v-on:visibility-change`.
+   */
+  "visibility-change": [visible: boolean];
+}
+
 export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
   /**
    * The classes to apply to the password field.
    */
   classes?: PasswordFieldClasses;
-
-  /**
-   * Callback when the visibility changes.
-   */
-  onVisibilityChange?: (visible: boolean) => void;
 
   /**
    * Whether the password is visible. Omit for uncontrolled mode.

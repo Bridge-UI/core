@@ -4,6 +4,7 @@ import { computed, type Ref } from "vue";
 export type UseNumberFieldOptions = {
   max?: number;
   min?: number;
+  onChange?: (value: number) => void;
   step?: number;
 };
 
@@ -25,6 +26,7 @@ export function useNumberField(
 
   const setValue = (next: number) => {
     model.value = next;
+    options.onChange?.(next);
   };
 
   const increment = (): boolean => {

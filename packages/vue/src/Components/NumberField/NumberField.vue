@@ -12,6 +12,7 @@ import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/composables/useNumberField";
 import { useNumberFieldClasses } from "@/Components/NumberField/composables/useNumberFieldClasses";
 import type {
+  NumberFieldEmits,
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
@@ -21,6 +22,8 @@ import { resolveFieldAdornmentIconSize, useHoldRepeat } from "@/Utils";
 defineSlots<NumberFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const emit = defineEmits<NumberFieldEmits>();
 
 const model = defineModel<number | null | undefined>();
 
@@ -34,6 +37,7 @@ const { increment, decrement } = useNumberField(model, {
   min: props.min,
   max: props.max,
   step: props.step,
+  onChange: (value) => emit("change", value),
 });
 
 const incrementHold = useHoldRepeat(
@@ -94,6 +98,7 @@ const stringModel = computed({
 
     if (!Number.isNaN(parsed)) {
       model.value = parsed;
+      emit("change", parsed);
     }
   },
 });

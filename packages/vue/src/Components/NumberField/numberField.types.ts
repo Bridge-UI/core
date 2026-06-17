@@ -28,7 +28,8 @@ export interface NumberFieldCustomProps extends TextFieldCustomProps {}
 
 export interface NumberFieldEmits {
   /**
-   * Emits the numeric value when it changes.
+   * Emitted with the numeric value when it changes.
+   * Listen with `@change` / `v-on:change`.
    */
   change: [value: number];
 

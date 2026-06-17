@@ -1,6 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
@@ -57,6 +57,17 @@ test("it should decrement by step", () => {
   decrement();
 
   expect(model.value).toBe(2);
+});
+
+test("it should call onChange when incrementing", () => {
+  const onChange = vi.fn();
+  const model = ref(2);
+  const { increment } = mountUseNumberField(model, { step: 2, onChange });
+
+  increment();
+
+  expect(model.value).toBe(4);
+  expect(onChange).toHaveBeenCalledWith(4);
 });
 
 test("it should respect max when incrementing", () => {

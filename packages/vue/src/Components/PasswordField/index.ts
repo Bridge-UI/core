@@ -4,6 +4,7 @@ export type { UsePasswordFieldOptions } from "@/Components/PasswordField/composa
 export type {
   PasswordFieldClasses,
   PasswordFieldCustomProps,
+  PasswordFieldEmits,
   PasswordFieldOwnProps,
   PasswordFieldProps,
   PasswordFieldSlots,
