@@ -2,8 +2,6 @@
 
 Primary action control. Renders as `button`, `a`, or `span` via the `as` prop.
 
-> Live examples: `testing-laravel` project → `resources/js/react/Pages/Button.tsx`
-
 ## Import
 
 ```tsx
