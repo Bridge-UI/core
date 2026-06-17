@@ -12,7 +12,7 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ### Icon, Image and Fallback
 
-```tsx
+```vue
 <Avatar :icon="User" />
 <Avatar fallback="JP" />
 <Avatar :src="avatarSrc" alt="Jane Doe" />
@@ -20,7 +20,7 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ### Colors
 
-```tsx
+```vue
 <Avatar fallback="P" color="primary" />
 
 <Avatar fallback="S" color="secondary" />
@@ -28,7 +28,7 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ### Sizes
 
-```tsx
+```vue
 <Avatar size="2xs" fallback="2" />
 <Avatar size="xs" fallback="3" />
 <Avatar size="sm" fallback="5" />
@@ -40,11 +40,11 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ### Customization
 
-```tsx
+```vue
 <Avatar fallback="JP" class="ring-primary-500 ring-2 ring-offset-2" />
 ```
 
-```tsx
+```vue
 <Avatar
   fallback="JP"
   :classes="{
@@ -56,7 +56,7 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ### Fallback slot
 
-```tsx
+```vue
 <Avatar>
   <template #fallback>
     <span class="text-xs font-semibold">Slot</span>
