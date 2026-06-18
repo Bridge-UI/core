@@ -17,16 +17,16 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 ### Usage
 
 ```vue
-const snackbar = useSnackbarAction(); snackbar.open({ title: "Saved",
-description: "Your changes were saved successfully.", color: "success", });
+const snackbar = useSnackbarAction(); snackbar.open({ title: "Saved", color:
+"success", description: "Your changes were saved successfully.", });
 ```
 
 ### open
 
 ```vue
-<Button @click="openBasic">Open basic</Button>
+<Button v-on:click="openBasic">Open basic</Button>
 
-<Button variant="outline" @click="openWithOptions">
+<Button variant="outline" v-on:click="openWithOptions">
   Open with options
 </Button>
 ```
@@ -34,11 +34,11 @@ description: "Your changes were saved successfully.", color: "success", });
 ### close / closeAll
 
 ```vue
-<Button variant="outline" @click="snackbar.closeTop()">
+<Button variant="outline" v-on:click="snackbar.closeTop()">
   closeTop()
 </Button>
 
-<Button variant="outline" @click="snackbar.closeAll()">
+<Button variant="outline" v-on:click="snackbar.closeAll()">
   closeAll()
 </Button>
 ```
@@ -46,12 +46,12 @@ description: "Your changes were saved successfully.", color: "success", });
 ### update
 
 ```vue
-<Button @click="openUpdateDemo">Open update demo</Button>
+<Button v-on:click="openUpdateDemo">Open update demo</Button>
 
 <Button
   variant="outline"
   :disabled="!updateDemoId"
-  @click="
+  v-on:click="
     snackbar.update(updateDemoId, {
       props: { title: 'Updated title' },
     })

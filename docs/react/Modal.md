@@ -54,11 +54,11 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
 
 ```tsx
 <Modal
-  show={open}
-  onShowChange={setOpen}
-  size="lg"
   blur="md"
+  size="lg"
+  show={open}
   transition="slide-up"
+  onShowChange={setOpen}
 >
   <Card
     borderless
@@ -72,8 +72,8 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
         <>
           <Button
             size="sm"
-            variant="flat"
             color="error"
+            variant="flat"
             onClick={() => setOpen(false)}
           >
             Discard

@@ -15,10 +15,10 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 ```vue
 <Menu v-model="open">
   <template #trigger>
-    <Button @click="open = true">Open menu</Button>
+    <Button v-on:click="open = true">Open menu</Button>
   </template>
 
-  <MenuContent @action="open = false" />
+  <MenuContent v-on:action="open = false" />
 </Menu>
 ```
 
@@ -27,7 +27,7 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 ```vue
 <Menu v-model="open" placement="bottom-end">
   <template #trigger>
-    <Button @click="open = true">Open menu</Button>
+    <Button v-on:click="open = true">Open menu</Button>
   </template>
 
   <MenuContent />
@@ -39,7 +39,7 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 ```vue
 <Menu v-model="open" persistent>
   <template #trigger>
-    <Button @click="open = true">Open persistent</Button>
+    <Button v-on:click="open = true">Open persistent</Button>
   </template>
 
   <MenuContent />
@@ -50,7 +50,7 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 
 ```vue
 <div ref="anchorRef">
-  <Button @click="open = true">External anchor</Button>
+  <Button v-on:click="open = true">External anchor</Button>
 </div>
 
 <Menu v-model="open" :anchor-el="anchorRef">

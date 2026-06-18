@@ -23,8 +23,8 @@ const id = dialog.open({
   title: "Delete item?",
   description: "This action cannot be undone.",
   actions: {
-    accept: { label: "Delete", color: "error" },
     reject: { label: "Cancel" },
+    accept: { label: "Delete", color: "error" },
   },
 });
 ```

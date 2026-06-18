@@ -21,8 +21,8 @@ const snackbar = useSnackbarAction();
 
 snackbar.open({
   title: "Saved",
-  description: "Your changes were saved successfully.",
   color: "success",
+  description: "Your changes were saved successfully.",
 });
 ```
 

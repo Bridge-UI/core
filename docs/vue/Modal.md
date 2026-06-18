@@ -13,7 +13,7 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 ### Usage
 
 ```vue
-<Button @click="open = true">Open modal</Button>
+<Button v-on:click="open = true">Open modal</Button>
 
 <Modal v-model="open">
   <ModalCard title="Confirm action" :on-close="() => (open = false)">
@@ -37,7 +37,7 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 ```vue
 <Modal v-model="outerOpen" size="lg">
   <ModalCard title="Outer modal" :on-close="() => (outerOpen = false)">
-    <Button size="sm" @click="innerOpen = true">Open nested modal</Button>
+    <Button size="sm" v-on:click="innerOpen = true">Open nested modal</Button>
   </ModalCard>
 
   <Modal v-model="innerOpen" size="sm">
@@ -51,7 +51,7 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 ### Full composition (Card)
 
 ```vue
-<Modal v-model="open" size="lg" blur="md" transition="slide-up">
+<Modal blur="md" size="lg" v-model="open" transition="slide-up">
   <Card
     borderless
     shadow="lg"
@@ -63,11 +63,11 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
     Large modal with Card title, body, and footer slots.
 
     <template #footer>
-      <Button size="sm" variant="flat" color="error" @click="open = false">
+      <Button size="sm" variant="flat" color="error" v-on:click="open = false">
         Discard
       </Button>
 
-      <Button size="sm" color="primary" @click="open = false">Save</Button>
+      <Button size="sm" color="primary" v-on:click="open = false">Save</Button>
     </template>
   </Card>
 </Modal>

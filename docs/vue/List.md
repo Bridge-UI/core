@@ -40,15 +40,15 @@ import { List } from "@bridge-ui/vue/Components/List";
     interactive
     role="menuitem"
     primary="Profile"
+    v-on:click="selected = 'profile'"
     :selected="selected === 'profile'"
-    @click="selected = 'profile'"
   />
   <ListItem
     interactive
     role="menuitem"
     primary="Settings"
+    v-on:click="selected = 'settings'"
     :selected="selected === 'settings'"
-    @click="selected = 'settings'"
   />
 </List>
 ```

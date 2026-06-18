@@ -13,11 +13,11 @@ import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
 ### Usage
 
 ```vue
-<Button @click="open = true">Show snackbar</Button>
+<Button v-on:click="open = true">Show snackbar</Button>
 
 <Snackbar
-  v-model="open"
   title="Saved"
+  v-model="open"
   description="Your changes were saved successfully."
 />
 ```
@@ -25,7 +25,7 @@ import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
 ### Duration and progressbar
 
 ```vue
-<Snackbar v-model="open" title="Auto dismiss" :duration="3000" progressbar />
+<Snackbar progressbar v-model="open" :duration="3000" title="Auto dismiss" />
 ```
 
 ### Slots
@@ -37,7 +37,9 @@ import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
   </template>
 
   <template #actions>
-    <Button size="sm" variant="flat" @click="open = false">Undo</Button>
+    <Button size="sm" variant="flat" v-on:click="open = false">
+      Undo
+    </Button>
   </template>
 
   Custom children below the description.

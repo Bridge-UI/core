@@ -24,9 +24,9 @@ modal: { size: "lg", title: "Settings" }, });
 ### open
 
 ```vue
-<Button @click="openBasic">Open basic</Button>
+<Button v-on:click="openBasic">Open basic</Button>
 
-<Button variant="outline" @click="openWithOptions">
+<Button variant="outline" v-on:click="openWithOptions">
   Open with modal options
 </Button>
 ```
@@ -37,12 +37,12 @@ modal: { size: "lg", title: "Settings" }, });
 <Button
   variant="outline"
   :disabled="!lastId"
-  @click="lastId && modal.close(lastId)"
+  v-on:click="lastId && modal.close(lastId)"
 >
   close(lastId)
 </Button>
 
-<Button variant="outline" @click="modal.closeTop()">
+<Button variant="outline" v-on:click="modal.closeTop()">
   closeTop()
 </Button>
 ```
@@ -50,7 +50,7 @@ modal: { size: "lg", title: "Settings" }, });
 ### Nested stack
 
 ```vue
-<Button @click="openNested">Open nested example</Button>
+<Button v-on:click="openNested">Open nested example</Button>
 ```
 
 ## API

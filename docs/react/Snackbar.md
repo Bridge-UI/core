@@ -16,10 +16,10 @@ import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 <Button onClick={() => setOpen(true)}>Show snackbar</Button>
 
 <Snackbar
-  title="Saved"
   show={open}
-  description="Your changes were saved successfully."
+  title="Saved"
   onShowChange={setOpen}
+  description="Your changes were saved successfully."
 />
 ```
 
@@ -28,9 +28,9 @@ import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 ```tsx
 <Snackbar
   show={open}
-  title="Auto dismiss"
-  duration={3000}
   progressbar
+  duration={3000}
+  title="Auto dismiss"
   onShowChange={setOpen}
 />
 ```

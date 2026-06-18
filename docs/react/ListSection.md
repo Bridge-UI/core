@@ -23,7 +23,7 @@ import { ListSection } from "@bridge-ui/react/Components/ListSection";
 ### Inset
 
 ```tsx
-<ListSection title="With icons below" inset />
+<ListSection inset title="With icons below" />
 ```
 
 ### Sticky

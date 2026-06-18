@@ -18,7 +18,11 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
   secondary="I'll be in your neighborhood doing errands"
 />
 
-<ListItem primary="Settings" interactive onClick={() => {}} />
+<ListItem
+  interactive
+  primary="Settings"
+  onClick={() => {}}
+/>
 ```
 
 ### Start and end slots

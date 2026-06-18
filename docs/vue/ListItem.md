@@ -18,7 +18,7 @@ import { ListItem } from "@bridge-ui/vue/Components/ListItem";
   secondary="I'll be in your neighborhood doing errands"
 />
 
-<ListItem primary="Settings" interactive @click="onSettings" />
+<ListItem interactive primary="Settings" v-on:click="onSettings" />
 ```
 
 ### Start and end slots

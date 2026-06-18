@@ -18,16 +18,16 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ```vue
 const dialog = useDialogAction(); const id = dialog.open({ title: "Delete
-item?", description: "This action cannot be undone.", actions: { accept: {
-label: "Delete", color: "error" }, reject: { label: "Cancel" }, }, });
+item?", description: "This action cannot be undone.", actions: { reject: {
+label: "Cancel" }, accept: { label: "Delete", color: "error" }, }, });
 ```
 
 ### open
 
 ```vue
-<Button @click="openBasic">Open basic</Button>
+<Button v-on:click="openBasic">Open basic</Button>
 
-<Button variant="outline" @click="openDestructive">
+<Button variant="outline" v-on:click="openDestructive">
   Open destructive
 </Button>
 ```
@@ -38,12 +38,12 @@ label: "Delete", color: "error" }, reject: { label: "Cancel" }, }, });
 <Button
   variant="outline"
   :disabled="!lastId"
-  @click="lastId && dialog.close(lastId)"
+  v-on:click="lastId && dialog.close(lastId)"
 >
   close(lastId)
 </Button>
 
-<Button variant="outline" @click="dialog.closeTop()">
+<Button variant="outline" v-on:click="dialog.closeTop()">
   closeTop()
 </Button>
 ```
@@ -51,12 +51,12 @@ label: "Delete", color: "error" }, reject: { label: "Cancel" }, }, });
 ### update
 
 ```vue
-<Button @click="openUpdateDemo">Open update demo</Button>
+<Button v-on:click="openUpdateDemo">Open update demo</Button>
 
 <Button
   variant="outline"
   :disabled="!updateDemoId"
-  @click="
+  v-on:click="
     dialog.update(updateDemoId, {
       props: { title: 'Updated title' },
     })
@@ -69,7 +69,7 @@ label: "Delete", color: "error" }, reject: { label: "Cancel" }, }, });
 ### Nested stack
 
 ```vue
-<Button @click="openNested">Open nested example</Button>
+<Button v-on:click="openNested">Open nested example</Button>
 ```
 
 ## API

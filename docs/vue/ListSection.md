@@ -23,7 +23,7 @@ import { ListSection } from "@bridge-ui/vue/Components/ListSection";
 ### Inset
 
 ```vue
-<ListSection title="With icons below" inset />
+<ListSection inset title="With icons below" />
 ```
 
 ### Sticky
