@@ -13,20 +13,24 @@ import { Select } from "@bridge-ui/react/Components/Select";
 ### Usage
 
 ```tsx
-<Select label="Country" options={countries} placeholder="Select a country" />
+<Select
+  label="Country"
+  options={countries}
+  placeholder="Select a country"
+/>
 
 <Select
-  label="Frameworks"
   multiple
   searchable
-  options={frameworks}
   value={selected}
+  label="Frameworks"
+  options={frameworks}
   onChange={setSelected}
 />
 
 <Select
-  label="Country"
   error
+  label="Country"
   errorMessage="Please select a valid country."
 />
 ```
@@ -83,8 +87,8 @@ import { Select } from "@bridge-ui/react/Components/Select";
 ```tsx
 <Select
   label="Country"
-  placeholder="Select a country"
   options={countries}
+  placeholder="Select a country"
   customProps={{
     root: { id: "country-field" },
     input: { name: "country", autoComplete: "country" },

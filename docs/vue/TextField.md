@@ -31,13 +31,14 @@ import { TextField } from "@bridge-ui/vue/Components/TextField";
 
 <TextField label="Website" start="https://" placeholder="example" />
 
-<TextField label="Amount" end="EUR" placeholder="0.00" />
+<TextField end="EUR" label="Amount" placeholder="0.00" />
 ```
 
 ### Input types
 
 ```vue
 <TextField type="email" label="Email" placeholder="you@example.com" />
+
 <TextField type="tel" label="Phone" placeholder="+351 900 000 000" />
 ```
 

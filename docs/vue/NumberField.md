@@ -13,17 +13,17 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 ### Usage
 
 ```vue
-<NumberField label="Quantity" :min="0" :max="20" :step="1" placeholder="0" />
+<NumberField :min="0" :max="20" :step="1" placeholder="0" label="Quantity" />
 
 <NumberField
-  v-model="quantity"
   label="Units"
+  v-model="quantity"
   description="Use the stepper or type a value."
 />
 
 <NumberField
-  label="Amount"
   error
+  label="Amount"
   error-message="Value must be between 0 and 100."
 />
 ```
@@ -31,15 +31,15 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 ### Min, max, and step
 
 ```vue
-<NumberField label="Items" :min="1" :max="99" :step="5" placeholder="0" />
+<NumberField :min="1" :max="99" :step="5" label="Items" placeholder="0" />
 ```
 
 ### customProps
 
 ```vue
 <NumberField
-  label="Quantity"
   placeholder="0"
+  label="Quantity"
   description="Input uses name via customProps."
   :custom-props="{
     input: { name: 'demo-quantity' },

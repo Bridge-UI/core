@@ -26,9 +26,9 @@ import { FormField } from "@bridge-ui/vue/Components/FormField";
   description="We never share your email."
   :custom-props="{
     root: { id: 'email-field' },
+    description: { id: 'email-desc' },
     label: { id: 'email-label', for: 'email-input' },
     input: { id: 'email-input', autocomplete: 'email', name: 'email' },
-    description: { id: 'email-desc' },
   }"
 >
   <input type="email" class="w-full rounded border px-3 py-2" />

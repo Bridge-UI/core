@@ -13,7 +13,13 @@ import { NumberField } from "@bridge-ui/react/Components/NumberField";
 ### Usage
 
 ```tsx
-<NumberField label="Quantity" min={0} max={20} step={1} placeholder="0" />
+<NumberField
+  min={0}
+  max={20}
+  step={1}
+  placeholder="0"
+  label="Quantity"
+/>
 
 <NumberField
   label="Units"
@@ -23,8 +29,8 @@ import { NumberField } from "@bridge-ui/react/Components/NumberField";
 />
 
 <NumberField
-  label="Amount"
   error
+  label="Amount"
   errorMessage="Value must be between 0 and 100."
 />
 ```
@@ -32,15 +38,15 @@ import { NumberField } from "@bridge-ui/react/Components/NumberField";
 ### Min, max, and step
 
 ```tsx
-<NumberField label="Items" min={1} max={99} step={5} placeholder="0" />
+<NumberField min={1} max={99} step={5} label="Items" placeholder="0" />
 ```
 
 ### customProps
 
 ```tsx
 <NumberField
-  label="Quantity"
   placeholder="0"
+  label="Quantity"
   description="Input uses name via customProps."
   customProps={{
     input: { name: "demo-quantity" },

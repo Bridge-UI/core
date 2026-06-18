@@ -16,14 +16,14 @@ import { Select } from "@bridge-ui/vue/Components/Select";
 <Select label="Country" :options="countries" placeholder="Select a country" />
 
 <Select
-  v-model="selected"
-  label="Frameworks"
   multiple
   searchable
+  label="Frameworks"
+  v-model="selected"
   :options="frameworks"
 />
 
-<Select label="Country" error error-message="Please select a valid country." />
+<Select error label="Country" error-message="Please select a valid country." />
 ```
 
 ### Searchable
@@ -75,8 +75,8 @@ import { Select } from "@bridge-ui/vue/Components/Select";
 ```vue
 <Select
   label="Country"
-  placeholder="Select a country"
   :options="countries"
+  placeholder="Select a country"
   :custom-props="{
     root: { id: 'country-field' },
     input: { name: 'country', autocomplete: 'country' },

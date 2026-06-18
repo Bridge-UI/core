@@ -13,7 +13,10 @@ import { PasswordField } from "@bridge-ui/react/Components/PasswordField";
 ### Usage
 
 ```tsx
-<PasswordField label="Password" placeholder="Enter password..." />
+<PasswordField
+  label="Password"
+  placeholder="Enter password..."
+/>
 
 <PasswordField
   label="New password"
@@ -23,8 +26,8 @@ import { PasswordField } from "@bridge-ui/react/Components/PasswordField";
 />
 
 <PasswordField
-  label="Password"
   error
+  label="Password"
   errorMessage="Password is too weak."
 />
 ```

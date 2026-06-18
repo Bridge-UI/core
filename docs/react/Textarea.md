@@ -13,20 +13,24 @@ import { Textarea } from "@bridge-ui/react/Components/Textarea";
 ### Usage
 
 ```tsx
-<Textarea rows={3} label="Notes" placeholder="Add details..." />
+<Textarea
+  rows={3}
+  label="Notes"
+  placeholder="Add details..."
+/>
 
 <Textarea
   rows={4}
   label="Bio"
   value={bio}
-  onChange={(event) => setBio(event.target.value)}
   description="Tell us about yourself."
+  onChange={(event) => setBio(event.target.value)}
 />
 
 <Textarea
+  error
   rows={3}
   label="Message"
-  error
   errorMessage="Please enter at least 10 characters."
 />
 ```

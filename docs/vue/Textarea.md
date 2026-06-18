@@ -16,16 +16,16 @@ import { Textarea } from "@bridge-ui/vue/Components/Textarea";
 <Textarea :rows="3" label="Notes" placeholder="Add details..." />
 
 <Textarea
-  v-model="bio"
   :rows="4"
   label="Bio"
+  v-model="bio"
   description="Tell us about yourself."
 />
 
 <Textarea
+  error
   :rows="3"
   label="Message"
-  error
   error-message="Please enter at least 10 characters."
 />
 ```

@@ -21,16 +21,17 @@ import { PasswordField } from "@bridge-ui/vue/Components/PasswordField";
   description="Use at least 8 characters."
 />
 
-<PasswordField label="Password" error error-message="Password is too weak." />
+<PasswordField error label="Password" error-message="Password is too weak." />
 ```
 
 ### Controlled visibility
 
 ```vue
 <PasswordField
-  v-model:visible="visible"
   label="Password"
+  :visible="visible"
   placeholder="••••••••"
+  v-on:visibility-change="visible = $event"
   description="visible is bound to parent state."
 />
 ```

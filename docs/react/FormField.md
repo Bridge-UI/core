@@ -26,9 +26,9 @@ import { FormField } from "@bridge-ui/react/Components/FormField";
   description="We never share your email."
   customProps={{
     root: { id: "email-field" },
+    description: { id: "email-desc" },
     label: { id: "email-label", htmlFor: "email-input" },
     input: { id: "email-input", autoComplete: "email", name: "email" },
-    description: { id: "email-desc" },
   }}
 >
   <input type="email" className="w-full rounded border px-3 py-2" />
