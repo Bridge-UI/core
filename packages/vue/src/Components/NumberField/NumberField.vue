@@ -117,7 +117,7 @@ const stringModel = computed({
     :step="props.step"
     :classes="mergedClasses"
     :with-error-icon="false"
-    :parts-props="mergedCustomProps"
+    :custom-props="mergedCustomProps"
   >
     <template #end>
       <div

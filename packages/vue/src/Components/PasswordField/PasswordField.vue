@@ -69,7 +69,7 @@ const toggleIconSize = computed(() => {
     }"
     :classes="mergedClasses"
     :with-error-icon="false"
-    :parts-props="mergedCustomProps"
+    :custom-props="mergedCustomProps"
   >
     <template #end>
       <button

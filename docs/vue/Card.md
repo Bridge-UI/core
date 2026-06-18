@@ -188,12 +188,12 @@ import { Card } from "@bridge-ui/vue/Components/Card";
 </Card>
 ```
 
-### partsProps
+### customProps
 
 ```vue
 <Card
   title="Forwarded part attributes"
-  :parts-props="{
+  :custom-props="{
     title: { id: 'card-demo-title' },
     root: { 'data-testid': 'card-root' },
     header: { 'aria-label': 'Card header' },
