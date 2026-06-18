@@ -53,11 +53,14 @@ import { ListSection } from "@bridge-ui/vue/Components/ListSection";
 
 ## Props
 
-| Prop     | Type      | Default | Description      |
-| -------- | --------- | ------- | ---------------- |
-| `inset`  | `boolean` | `false` | Indented heading |
-| `sticky` | `boolean` | `false` | Sticky subheader |
-| `title`  | `string`  | —       | Section title    |
+| Prop          | Type                     | Default | Description                                                               |
+| ------------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
+| `as`          | `"div" \| "li"`          | "li"    | The element to render as.                                                 |
+| `classes`     | `ListSectionClasses`     | —       | The classes to apply to the section.                                      |
+| `customProps` | `ListSectionCustomProps` | —       | Props forwarded to each section part.                                     |
+| `inset`       | `boolean`                | `false` | When true, adds left padding to align with items that have leading icons. |
+| `sticky`      | `boolean`                | `false` | When true, sticks the heading while scrolling long lists.                 |
+| `title`       | `string`                 | —       | Section label text.                                                       |
 
 ## Related components
 

@@ -58,12 +58,18 @@ import { Textarea } from "@bridge-ui/vue/Components/Textarea";
 
 ### Textarea-specific
 
-| Prop        | Type             | Default  | Description            |
-| ----------- | ---------------- | -------- | ---------------------- |
-| `rows`      | `number`         | —        | Visible rows           |
-| `autosize`  | `boolean`        | —        | Grow with content      |
-| `likeInput` | `boolean`        | `false`  | Match TextField chrome |
-| `resize`    | `TextareaResize` | `"none"` | CSS resize handle      |
+| Prop        | Type             | Default | Description                                                                                                                                                           |
+| ----------- | ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `autosize`  | `boolean`        | —       | Whether the textarea automatically resizes with its content. Defaults to `true` when `likeInput` is set; otherwise `false`.                                           |
+| `likeInput` | `boolean`        | `false` | Use compact TextField-like sizing instead of the default multiline textarea profile. Enables `autosize` and `rows={1}` by default; both can be overridden explicitly. |
+| `resize`    | `TextareaResize` | "none"  | Native resize handle (`resize` CSS). Ignored when `autosize` is `true`.                                                                                               |
+
+### v-model
+
+| Prop / Event        | Type                              | Default | Description                                                                  |
+| ------------------- | --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `string \| null`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: string \| null) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
 ### Inherited from FormField
 

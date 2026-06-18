@@ -60,16 +60,23 @@ import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 
 ### Checkbox-specific
 
-| Prop            | Type                  | Default     | Description                 |
-| --------------- | --------------------- | ----------- | --------------------------- |
-| `checked`       | `boolean`             | —           | Controlled checked          |
-| `classes`       | `CheckboxClasses`     | —           | Per-part classes            |
-| `color`         | `Color`               | `"primary"` | Accent color                |
-| `customProps`   | `CheckboxCustomProps` | —           | Props for internal parts    |
-| `indeterminate` | `boolean`             | `false`     | Indeterminate state         |
-| `rounded`       | `Rounded`             | `"sm"`      | Box radius                  |
-| `size`          | `Size`                | `"md"`      | Control size                |
-| `slots`         | `CheckboxSlots`       | —           | FormControl slots + control |
+| Prop            | Type                  | Default   | Description                                                                                |
+| --------------- | --------------------- | --------- | ------------------------------------------------------------------------------------------ |
+| `checked`       | `boolean`             | —         | Whether the checkbox is checked.                                                           |
+| `classes`       | `CheckboxClasses`     | —         | Classes for the form control chrome and the checkbox control.                              |
+| `color`         | `CheckboxColor`       | "primary" | The color to apply to the checkbox.                                                        |
+| `customProps`   | `CheckboxCustomProps` | —         | Extra props for internal parts.                                                            |
+| `indeterminate` | `boolean`             | `false`   | Whether the checkbox is in an indeterminate state.                                         |
+| `rounded`       | `CheckboxRounded`     | "sm"      | The roundedness of the checkbox control.                                                   |
+| `size`          | `CheckboxSize`        | "md"      | Size of the control and of form control labels (`2xs` … `2xl`, same scale as `FormField`). |
+| `slots`         | `CheckboxSlots`       | —         | Chrome slots and the control slot.                                                         |
+
+### v-model
+
+| Prop / Event        | Type                       | Default | Description                                                                  |
+| ------------------- | -------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `boolean`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: boolean) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
 ### Inherited from FormControl
 

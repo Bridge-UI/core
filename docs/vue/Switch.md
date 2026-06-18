@@ -46,15 +46,22 @@ import { Switch } from "@bridge-ui/vue/Components/Switch";
 
 ### Switch-specific
 
-| Prop          | Type                | Default     | Description              |
-| ------------- | ------------------- | ----------- | ------------------------ |
-| `classes`     | `SwitchClasses`     | —           | Per-part classes         |
-| `color`       | `Color`             | `"primary"` | Accent color             |
-| `customProps` | `SwitchCustomProps` | —           | Props for internal parts |
-| `modelValue`  | `boolean`           | —           | Checked state            |
-| `rounded`     | `Rounded`           | `"full"`    | Track radius             |
-| `size`        | `Size`              | `"md"`      | Control size             |
-| `slots`       | `SwitchSlots`       | —           | FormControl slots        |
+| Prop          | Type                | Default   | Description                                                                                |
+| ------------- | ------------------- | --------- | ------------------------------------------------------------------------------------------ |
+| `checked`     | `boolean`           | —         | Whether the switch is on.                                                                  |
+| `classes`     | `SwitchClasses`     | —         | Classes for the form control chrome and the switch control.                                |
+| `color`       | `SwitchColor`       | "primary" | The color to apply to the switch.                                                          |
+| `customProps` | `SwitchCustomProps` | —         | Extra props for internal parts.                                                            |
+| `rounded`     | `SwitchRounded`     | "full"    | The roundedness of the switch track.                                                       |
+| `size`        | `SwitchSize`        | "md"      | Size of the control and of form control labels (`2xs` … `2xl`, same scale as `FormField`). |
+| `slots`       | `SwitchSlots`       | —         | Chrome slots and the control slot.                                                         |
+
+### v-model
+
+| Prop / Event        | Type                       | Default | Description                                                                  |
+| ------------------- | -------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `boolean`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: boolean) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
 ### Inherited from FormControl
 

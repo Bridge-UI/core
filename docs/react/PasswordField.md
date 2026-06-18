@@ -60,14 +60,27 @@ import { PasswordField } from "@bridge-ui/react/Components/PasswordField";
 
 ### PasswordField-specific
 
-| Prop                 | Type                         | Default | Description           |
-| -------------------- | ---------------------------- | ------- | --------------------- |
-| `visible`            | `boolean \| null`            | —       | Controlled visibility |
-| `onVisibilityChange` | `(visible: boolean) => void` | —       | Toggle callback       |
+| Prop      | Type                   | Default | Description                                                  |
+| --------- | ---------------------- | ------- | ------------------------------------------------------------ |
+| `classes` | `PasswordFieldClasses` | —       | The classes to apply to the password field.                  |
+| `visible` | `boolean \| null`      | —       | Whether the password is visible. Omit for uncontrolled mode. |
+
+### Binding
+
+| Prop       | Type                                   | Default | Description                                            |
+| ---------- | -------------------------------------- | ------- | ------------------------------------------------------ |
+| `value`    | `string`                               | —       | Input value. Use with `onChange` for controlled state. |
+| `onChange` | `ChangeEventHandler<HTMLInputElement>` | —       | Native input change handler.                           |
 
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
+
+## Events
+
+| Callback             | Payload              | Description                              |
+| -------------------- | -------------------- | ---------------------------------------- |
+| `onVisibilityChange` | `(visible: boolean)` | Called when password visibility changes. |
 
 ## Related components
 

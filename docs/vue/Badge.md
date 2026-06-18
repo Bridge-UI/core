@@ -32,14 +32,15 @@ import { Badge } from "@bridge-ui/vue/Components/Badge";
 
 ## Props
 
-| Prop      | Type                  | Default     | Description    |
-| --------- | --------------------- | ----------- | -------------- |
-| `color`   | `Color`               | `"primary"` | Color preset   |
-| `density` | `"default" \| "mini"` | `"default"` | Compact pill   |
-| `full`    | `boolean`             | `false`     | Full width     |
-| `rounded` | `Rounded`             | `"md"`      | Border radius  |
-| `size`    | `Size`                | `"sm"`      | Text size      |
-| `variant` | `Variant`             | `"flat"`    | Visual variant |
+| Prop      | Type           | Default   | Description                        |
+| --------- | -------------- | --------- | ---------------------------------- |
+| `classes` | `BadgeClasses` | —         | The classes to apply to the badge. |
+| `color`   | `BadgeColor`   | "primary" | The color to apply to the badge.   |
+| `density` | `BadgeDensity` | "default" | The density of the badge.          |
+| `full`    | `boolean`      | `false`   | Whether the badge is full width.   |
+| `rounded` | `BadgeRounded` | "md"      | The roundedness of the badge.      |
+| `size`    | `BadgeSize`    | "sm"      | The size of the badge.             |
+| `variant` | `BadgeVariant` | "flat"    | The variant of the badge.          |
 
 ## Related components
 

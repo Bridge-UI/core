@@ -283,16 +283,18 @@ import { Card } from "@bridge-ui/react/Components/Card";
 
 ## Props
 
-| Prop          | Type                                 | Default      | Description                                 |
-| ------------- | ------------------------------------ | ------------ | ------------------------------------------- |
-| `borderless`  | `boolean`                            | `false`      | Remove border                               |
-| `customProps` | `CardCustomProps`                    | —            | `root`, `header`, `body`, `footer`, `title` |
-| `padding`     | `Padding`                            | `"medium"`   | Inner padding                               |
-| `rounded`     | `Rounded`                            | `"sm"`       | Border radius                               |
-| `shadow`      | `Shadow`                             | `"sm"`       | Shadow (elevated)                           |
-| `slots`       | `CardSlots`                          | —            | `title`, `action`, `footer`, `header`       |
-| `title`       | `string`                             | —            | Header title                                |
-| `variant`     | `"elevated" \| "outlined" \| "flat"` | `"elevated"` | Surface style                               |
+| Prop          | Type              | Default    | Description                                                                                                                       |
+| ------------- | ----------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `borderless`  | `boolean`         | `false`    | Removes header and footer borders.                                                                                                |
+| `children`    | `ReactNode`       | —          | The children to render.                                                                                                           |
+| `classes`     | `CardClasses`     | —          | The classes to apply to the card.                                                                                                 |
+| `customProps` | `CardCustomProps` | —          | Extra props for internal parts (`header`, `title`, `body`, `footer`, etc.). Root HTML attributes stay on the component top level. |
+| `padding`     | `CardPadding`     | "medium"   | Padding for header, body, and footer (horizontal alignment is shared).                                                            |
+| `rounded`     | `CardRounded`     | "sm"       | The roundedness of the card.                                                                                                      |
+| `shadow`      | `CardShadow`      | "sm"       | Shadow size. Only applied when `variant` is `elevated`.                                                                           |
+| `slots`       | `CardSlots`       | —          | The slots to apply to the card.                                                                                                   |
+| `title`       | `string`          | —          | The title to apply to the card.                                                                                                   |
+| `variant`     | `CardVariant`     | "elevated" | Visual style of the card.                                                                                                         |
 
 ## Related components
 

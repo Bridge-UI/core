@@ -20,10 +20,10 @@ import { InfoIcon } from "lucide-react";
 
 ## Props
 
-| Prop   | Type         | Default | Description                 |
-| ------ | ------------ | ------- | --------------------------- |
-| `icon` | `LucideIcon` | —       | Lucide component (required) |
-| `size` | `IconSize`   | `"md"`  | Icon size token             |
+| Prop   | Type         | Default | Description            |
+| ------ | ------------ | ------- | ---------------------- |
+| `icon` | `LucideIcon` | —       | Lucide icon component. |
+| `size` | `IconSize`   | "md"    | The size of the icon.  |
 
 ## Related components
 

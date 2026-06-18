@@ -44,17 +44,16 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ## Props
 
-| Prop       | Type            | Default     | Description            |
-| ---------- | --------------- | ----------- | ---------------------- |
-| `alt`      | `string`        | —           | Image alt text         |
-| `classes`  | `AvatarClasses` | —           | `root`, `fallback`     |
-| `color`    | `Color`         | `"primary"` | Fallback background    |
-| `fallback` | `string`        | —           | Initials when no image |
-| `icon`     | `LucideIcon`    | —           | Icon when no image     |
-| `rounded`  | `Rounded`       | `"full"`    | Border radius          |
-| `size`     | `Size`          | `"md"`      | Avatar size            |
-| `slots`    | `AvatarSlots`   | —           | `fallback`             |
-| `src`      | `string`        | —           | Image URL              |
+| Prop       | Type            | Default   | Description                                              |
+| ---------- | --------------- | --------- | -------------------------------------------------------- |
+| `alt`      | `string`        | —         | The alt text for the avatar image.                       |
+| `classes`  | `AvatarClasses` | —         | The classes to apply to the avatar.                      |
+| `color`    | `AvatarColor`   | "primary" | The color to apply to the avatar fallback.               |
+| `fallback` | `string`        | —         | The fallback text to display when no image is available. |
+| `icon`     | `LucideIcon`    | —         | The icon to display as fallback.                         |
+| `rounded`  | `AvatarRounded` | "full"    | The roundedness of the avatar.                           |
+| `size`     | `AvatarSize`    | "md"      | The size of the avatar.                                  |
+| `src`      | `string`        | —         | The source URL for the avatar image.                     |
 
 ## Related components
 

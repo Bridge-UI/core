@@ -52,14 +52,19 @@ import { NumberField } from "@bridge-ui/react/Components/NumberField";
 
 ### NumberField-specific
 
-| Prop       | Type                      | Default | Description          |
-| ---------- | ------------------------- | ------- | -------------------- |
-| `classes`  | `NumberFieldClasses`      | —       | Per-part classes     |
-| `max`      | `number`                  | —       | Maximum value        |
-| `min`      | `number`                  | —       | Minimum value        |
-| `onChange` | `(value: number) => void` | —       | Value change (React) |
-| `step`     | `number`                  | `1`     | Step increment       |
-| `value`    | `number`                  | —       | Controlled value     |
+| Prop      | Type                 | Default | Description                               |
+| --------- | -------------------- | ------- | ----------------------------------------- |
+| `classes` | `NumberFieldClasses` | —       | The classes to apply to the number field. |
+| `max`     | `number`             | —       | The maximum value.                        |
+| `min`     | `number`             | —       | The minimum value.                        |
+| `step`    | `number`             | 1       | The step increment value.                 |
+
+### Binding
+
+| Prop       | Type                      | Default | Description                                                               |
+| ---------- | ------------------------- | ------- | ------------------------------------------------------------------------- |
+| `value`    | `number \| string`        | —       | Input value (native attribute). Use with `onChange` for controlled state. |
+| `onChange` | `(value: number) => void` | —       | Called with the numeric value when it changes.                            |
 
 ### Inherited from FormField
 

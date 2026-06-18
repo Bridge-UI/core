@@ -51,17 +51,29 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 
 ### NumberField-specific
 
-| Prop         | Type                 | Default | Description      |
-| ------------ | -------------------- | ------- | ---------------- |
-| `classes`    | `NumberFieldClasses` | —       | Per-part classes |
-| `max`        | `number`             | —       | Maximum value    |
-| `min`        | `number`             | —       | Minimum value    |
-| `modelValue` | `number`             | —       | Bound value      |
-| `step`       | `number`             | `1`     | Step increment   |
+| Prop      | Type                 | Default | Description                               |
+| --------- | -------------------- | ------- | ----------------------------------------- |
+| `classes` | `NumberFieldClasses` | —       | The classes to apply to the number field. |
+| `max`     | `number`             | —       | The maximum value.                        |
+| `min`     | `number`             | —       | The minimum value.                        |
+| `step`    | `number`             | 1       | The step increment value.                 |
+
+### v-model
+
+| Prop / Event        | Type                              | Default | Description                                                                  |
+| ------------------- | --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `number \| null`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: number \| null) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
+
+## Events
+
+| Event         | Payload           | Description                                     |
+| ------------- | ----------------- | ----------------------------------------------- |
+| `v-on:change` | `(value: number)` | Emitted with the numeric value when it changes. |
 
 ## Related components
 

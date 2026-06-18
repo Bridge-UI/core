@@ -60,16 +60,22 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
 
 ## Props
 
-| Prop          | Type                                 | Default    | Description                            |
-| ------------- | ------------------------------------ | ---------- | -------------------------------------- |
-| `disabled`    | `boolean`                            | `false`    | Disabled row                           |
-| `divider`     | `boolean`                            | `false`    | Bottom divider                         |
-| `interactive` | `boolean`                            | `false`    | Clickable row                          |
-| `primary`     | `ReactNode`                          | —          | Main text                              |
-| `role`        | `"button" \| "menuitem" \| "option"` | `"button"` | ARIA role                              |
-| `secondary`   | `ReactNode`                          | —          | Secondary line                         |
-| `selected`    | `boolean`                            | `false`    | Selected state                         |
-| `slots`       | `ListItemSlots`                      | —          | `start`, `end`, `primary`, `secondary` |
+| Prop          | Type                                 | Default  | Description                                                                           |
+| ------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------- |
+| `align`       | `ListItemAlign`                      | "center" | Vertical alignment of start/content/end slots.                                        |
+| `as`          | `"div" \| "li"`                      | "li"     | The element to render as.                                                             |
+| `children`    | `ReactNode`                          | —        | The children to render inside the content column when `primary` is not set.           |
+| `classes`     | `ListItemClasses`                    | —        | The classes to apply to the item.                                                     |
+| `customProps` | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                    |
+| `dense`       | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.           |
+| `disabled`    | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                             |
+| `divider`     | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                      |
+| `interactive` | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.        |
+| `primary`     | `ReactNode`                          | —        | Primary label text. Use `children` or `slots.primary` for custom markup.              |
+| `role`        | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Common values: `menuitem`, `option`, `button`. |
+| `secondary`   | `ReactNode`                          | —        | Secondary/description text below the primary line.                                    |
+| `selected`    | `boolean`                            | `false`  | When true, highlights the item as selected.                                           |
+| `slots`       | `ListItemSlots`                      | —        | The slots to apply to the item.                                                       |
 
 ## Related components
 

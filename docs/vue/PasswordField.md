@@ -54,13 +54,27 @@ import { PasswordField } from "@bridge-ui/vue/Components/PasswordField";
 
 ### PasswordField-specific
 
-| Prop      | Type              | Default | Description           |
-| --------- | ----------------- | ------- | --------------------- |
-| `visible` | `boolean \| null` | —       | Controlled visibility |
+| Prop      | Type                   | Default | Description                                                  |
+| --------- | ---------------------- | ------- | ------------------------------------------------------------ |
+| `classes` | `PasswordFieldClasses` | —       | The classes to apply to the password field.                  |
+| `visible` | `boolean \| null`      | —       | Whether the password is visible. Omit for uncontrolled mode. |
+
+### v-model
+
+| Prop / Event        | Type                              | Default | Description                                                                  |
+| ------------------- | --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `string \| null`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: string \| null) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
 
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
+
+## Events
+
+| Event                    | Payload              | Description                               |
+| ------------------------ | -------------------- | ----------------------------------------- |
+| `v-on:visibility-change` | `(visible: boolean)` | Emitted when password visibility changes. |
 
 ## Related components
 

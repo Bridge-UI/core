@@ -56,15 +56,21 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 
 ### Switch-specific
 
-| Prop          | Type                | Default     | Description              |
-| ------------- | ------------------- | ----------- | ------------------------ |
-| `checked`     | `boolean`           | —           | Controlled checked state |
-| `classes`     | `SwitchClasses`     | —           | Per-part classes         |
-| `color`       | `Color`             | `"primary"` | Accent color             |
-| `customProps` | `SwitchCustomProps` | —           | Props for internal parts |
-| `rounded`     | `Rounded`           | `"full"`    | Track radius             |
-| `size`        | `Size`              | `"md"`      | Control size             |
-| `slots`       | `SwitchSlots`       | —           | FormControl slots        |
+| Prop          | Type                | Default   | Description                                                                                |
+| ------------- | ------------------- | --------- | ------------------------------------------------------------------------------------------ |
+| `classes`     | `SwitchClasses`     | —         | Classes for the form control chrome and the switch control.                                |
+| `color`       | `SwitchColor`       | "primary" | The color to apply to the switch.                                                          |
+| `customProps` | `SwitchCustomProps` | —         | Extra props for internal parts.                                                            |
+| `rounded`     | `SwitchRounded`     | "full"    | The roundedness of the switch track.                                                       |
+| `size`        | `SwitchSize`        | "md"      | Size of the control and of form control labels (`2xs` … `2xl`, same scale as `FormField`). |
+| `slots`       | `SwitchSlots`       | —         | Chrome slots and the control slot.                                                         |
+
+### Binding
+
+| Prop       | Type                                   | Default | Description                                                         |
+| ---------- | -------------------------------------- | ------- | ------------------------------------------------------------------- |
+| `checked`  | `boolean`                              | —       | Whether the switch is on. Use with `onChange` for controlled state. |
+| `onChange` | `ChangeEventHandler<HTMLInputElement>` | —       | Native input change handler.                                        |
 
 ### Inherited from FormControl
 

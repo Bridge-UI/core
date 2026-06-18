@@ -75,19 +75,17 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
 
 ## Props
 
-| Prop          | Type                             | Default     | Description                                   |
-| ------------- | -------------------------------- | ----------- | --------------------------------------------- |
-| default slot  | —                                | —           | Alert body content                            |
-| `classes`     | `AlertClasses`                   | —           | Per-part classes                              |
-| `color`       | `Color`                          | `"primary"` | Color preset                                  |
-| `customProps` | `AlertCustomProps`               | —           | Props for `root`, `title`, `body`, `icon`     |
-| `icon`        | `LucideIcon \| null`             | —           | Lucide icon component                         |
-| `padding`     | `Padding`                        | `"medium"`  | Inner padding                                 |
-| `rounded`     | `Rounded`                        | `"sm"`      | Border radius                                 |
-| `shadow`      | `Shadow`                         | `"sm"`      | Box shadow                                    |
-| slots         | `AlertSlots`                     | —           | `icon`, `title`, `action`, `footer`, `header` |
-| `title`       | `string`                         | —           | Alert title                                   |
-| `variant`     | `"flat" \| "outline" \| "solid"` | `"flat"`    | Visual variant                                |
+| Prop          | Type                 | Default   | Description                                                                                                           |
+| ------------- | -------------------- | --------- | --------------------------------------------------------------------------------------------------------------------- |
+| `classes`     | `AlertClasses`       | —         | The classes to apply to the alert.                                                                                    |
+| `color`       | `AlertColor`         | "primary" | The color to apply to the alert.                                                                                      |
+| `customProps` | `AlertCustomProps`   | —         | Extra props for internal parts (`icon`, `title`, `body`, etc.). Root HTML attributes stay on the component top level. |
+| `icon`        | `LucideIcon \| null` | —         | The icon to apply to the alert. Use `null` to omit the prop icon.                                                     |
+| `padding`     | `AlertPadding`       | "medium"  | The padding to apply to the alert.                                                                                    |
+| `rounded`     | `AlertRounded`       | "sm"      | The roundedness of the alert.                                                                                         |
+| `shadow`      | `AlertShadow`        | "sm"      | The shadow to apply to the alert.                                                                                     |
+| `title`       | `string`             | —         | The title to apply to the alert.                                                                                      |
+| `variant`     | `AlertVariant`       | "flat"    | The variant of the alert.                                                                                             |
 
 ## Accessibility
 

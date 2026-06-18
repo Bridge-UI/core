@@ -38,6 +38,8 @@ theme: "dark" });
 | `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults         |
 | `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction` |
 
+App content is passed via the **default slot** (see Usage above).
+
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`
 
 ## Related components

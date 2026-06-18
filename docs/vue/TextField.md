@@ -55,7 +55,16 @@ import { TextField } from "@bridge-ui/vue/Components/TextField";
 
 ## Props
 
-TextField props are the same as [FormField](./FormField.md), plus native input attributes merged on the input element (`type`, `placeholder`, `value`, etc.).
+### v-model
+
+| Prop / Event        | Type                              | Default | Description                                                                  |
+| ------------------- | --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `string \| null`                  | —       | Bound with `v-model`.                                                        |
+| `update:modelValue` | `(value: string \| null) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
+
+### Inherited from FormField
+
+See [FormField](./FormField.md).
 
 ## Related components
 

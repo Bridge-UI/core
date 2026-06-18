@@ -70,11 +70,23 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 
 ### Radio-specific
 
-| Prop      | Type               | Default | Description    |
-| --------- | ------------------ | ------- | -------------- |
-| `name`    | `string`           | —       | Group name     |
-| `value`   | `string \| number` | —       | Option value   |
-| `checked` | `boolean`          | —       | Selected state |
+| Prop          | Type               | Default   | Description                                                                                |
+| ------------- | ------------------ | --------- | ------------------------------------------------------------------------------------------ |
+| `classes`     | `RadioClasses`     | —         | Classes for the form control chrome and the radio control.                                 |
+| `color`       | `RadioColor`       | "primary" | The color to apply to the radio.                                                           |
+| `customProps` | `RadioCustomProps` | —         | Extra props for internal parts.                                                            |
+| `name`        | `string`           | —         | The `name` attribute shared by radios in the same group.                                   |
+| `rounded`     | `RadioRounded`     | "full"    | The roundedness of the radio control.                                                      |
+| `size`        | `RadioSize`        | "md"      | Size of the control and of form control labels (`2xs` … `2xl`, same scale as `FormField`). |
+| `slots`       | `RadioSlots`       | —         | Chrome slots and the control slot.                                                         |
+| `value`       | `string \| number` | —         | The value of this radio option.                                                            |
+
+### Binding
+
+| Prop       | Type                                   | Default | Description                                                             |
+| ---------- | -------------------------------------- | ------- | ----------------------------------------------------------------------- |
+| `checked`  | `boolean`                              | —       | Whether the radio is checked. Use with `onChange` for controlled state. |
+| `onChange` | `ChangeEventHandler<HTMLInputElement>` | —       | Native input change handler.                                            |
 
 ### Inherited from FormControl
 

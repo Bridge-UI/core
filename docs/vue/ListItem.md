@@ -60,16 +60,20 @@ import { ListItem } from "@bridge-ui/vue/Components/ListItem";
 
 ## Props
 
-| Prop          | Type                                 | Default    | Description                            |
-| ------------- | ------------------------------------ | ---------- | -------------------------------------- |
-| `disabled`    | `boolean`                            | `false`    | Disabled row                           |
-| `divider`     | `boolean`                            | `false`    | Bottom divider                         |
-| `interactive` | `boolean`                            | `false`    | Clickable row                          |
-| `primary`     | `string`                             | —          | Main text                              |
-| `role`        | `"button" \| "menuitem" \| "option"` | `"button"` | ARIA role                              |
-| `secondary`   | `string`                             | —          | Secondary line                         |
-| `selected`    | `boolean`                            | `false`    | Selected state                         |
-| slots         | `ListItemSlots`                      | —          | `start`, `end`, `primary`, `secondary` |
+| Prop          | Type                                 | Default  | Description                                                                    |
+| ------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------ |
+| `align`       | `ListItemAlign`                      | "center" | Vertical alignment of start/content/end slots.                                 |
+| `as`          | `"div" \| "li"`                      | "li"     | The element to render as.                                                      |
+| `classes`     | `ListItemClasses`                    | —        | The classes to apply to the item.                                              |
+| `customProps` | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                             |
+| `dense`       | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.    |
+| `disabled`    | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                      |
+| `divider`     | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                               |
+| `interactive` | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper. |
+| `primary`     | `string`                             | —        | Primary label text.                                                            |
+| `role`        | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper.                                         |
+| `secondary`   | `string`                             | —        | Secondary/description text below the primary line.                             |
+| `selected`    | `boolean`                            | `false`  | When true, highlights the item as selected.                                    |
 
 ## Related components
 

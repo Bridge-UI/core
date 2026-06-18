@@ -18,12 +18,13 @@ import { Label } from "@bridge-ui/vue/Components/Label";
 
 ## Props
 
-| Prop       | Type      | Default | Description           |
-| ---------- | --------- | ------- | --------------------- |
-| `error`    | `boolean` | `false` | Error styling         |
-| `for`      | `string`  | —       | Associated control id |
-| `required` | `boolean` | `false` | Required indicator    |
-| `size`     | `Size`    | `"md"`  | Label size            |
+| Prop       | Type           | Default | Description                                         |
+| ---------- | -------------- | ------- | --------------------------------------------------- |
+| `classes`  | `LabelClasses` | —       | The classes to apply to the label.                  |
+| `error`    | `boolean`      | `false` | Applies error label colors.                         |
+| `for`      | `string`       | —       | Associates the label with a form control.           |
+| `required` | `boolean`      | `false` | Shows a red required asterisk after the label text. |
+| `size`     | `LabelSize`    | "md"    | Typography scale aligned with TextField sizes.      |
 
 ## Related components
 

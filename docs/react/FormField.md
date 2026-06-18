@@ -37,32 +37,33 @@ import { FormField } from "@bridge-ui/react/Components/FormField";
 
 ## Props
 
-| Prop                  | Type                   | Default       | Description                   |
-| --------------------- | ---------------------- | ------------- | ----------------------------- |
-| `children`            | `ReactNode`            | —             | Form control slot             |
-| `classes`             | `FormFieldClasses`     | —             | Per-part class overrides      |
-| `color`               | `Color`                | `"primary"`   | Accent color                  |
-| `controlId`           | `string`               | —             | Associated control id         |
-| `corner`              | `string`               | —             | Corner hint (e.g. "Optional") |
-| `customProps`         | `FormFieldCustomProps` | —             | HTML props per internal part  |
-| `description`         | `string`               | —             | Helper text below the field   |
-| `disabled`            | `boolean`              | `false`       | Disabled state                |
-| `end`                 | `string`               | —             | Inline-end text adornment     |
-| `endIcon`             | `LucideIcon`           | —             | Icon at the inline end        |
-| `error`               | `boolean`              | `false`       | Error state                   |
-| `errorIcon`           | `LucideIcon`           | `CircleAlert` | Error icon when invalid       |
-| `errorMessage`        | `string`               | —             | Error message                 |
-| `label`               | `string`               | —             | Field label                   |
-| `readonly`            | `boolean`              | `false`       | Read-only state               |
-| `required`            | `boolean`              | `false`       | Required field                |
-| `rounded`             | `Rounded`              | `"md"`        | Border radius                 |
-| `size`                | `Size`                 | `"md"`        | Field size                    |
-| `slots`               | `FormFieldSlots`       | —             | Custom slot content           |
-| `start`               | `string`               | —             | Inline-start text adornment   |
-| `startIcon`           | `LucideIcon`           | —             | Icon at the inline start      |
-| `variant`             | `FormFieldVariant`     | `"outline"`   | Visual variant                |
-| `withErrorIcon`       | `boolean`              | `true`        | Show error icon when `error`  |
-| `withoutErrorMessage` | `boolean`              | `false`       | Hide error message row        |
+| Prop                  | Type                   | Default     | Description                                                                                                                                            |
+| --------------------- | ---------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `children`            | `ReactNode`            | —           | The form control (input, textarea, select trigger, etc.).                                                                                              |
+| `classes`             | `FormFieldClasses`     | —           | Classes for the field chrome and the control (includes label, container, adornments).                                                                  |
+| `color`               | `FormFieldColor`       | "primary"   | The color to apply to the field control.                                                                                                               |
+| `controlId`           | `string`               | —           | Associates labels and helper text with a form control. When omitted, an id is generated automatically.                                                 |
+| `corner`              | `string`               | —           | Secondary label text at the inline end of the header row.                                                                                              |
+| `customProps`         | `FormFieldCustomProps` | —           | Extra props for internal parts (`header`, `label`, `input`, `container`, …).                                                                           |
+| `description`         | `string`               | —           | Helper text below the control (hidden when the field is invalid).                                                                                      |
+| `disabled`            | `boolean`              | `false`     | Whether the control is disabled.                                                                                                                       |
+| `end`                 | `string`               | —           | Inline-end text inside the field (suffix), e.g. `@mail.com`.                                                                                           |
+| `endIcon`             | `LucideIcon`           | —           | Icon at the inline end.                                                                                                                                |
+| `error`               | `boolean`              | `false`     | When `true`, applies invalid styling on the label and hides description.                                                                               |
+| `errorIcon`           | `LucideIcon`           | CircleAlert | Icon used when `withErrorIcon` is enabled and the field is invalid.                                                                                    |
+| `errorMessage`        | `string`               | —           | Error message below the control. Shown only when set (or via `errorMessage` slot).                                                                     |
+| `field`               | `UseFormFieldReturn`   | —           | Pre-composed field API from a parent composable (e.g. `useTextField`). Used by `<FormField field={…} />`; not set on field wrappers such as TextField. |
+| `label`               | `string`               | —           | The primary label text above the control.                                                                                                              |
+| `readonly`            | `boolean`              | `false`     | Whether the control is read-only.                                                                                                                      |
+| `required`            | `boolean`              | `false`     | Shows a red asterisk on the label.                                                                                                                     |
+| `rounded`             | `FormFieldRounded`     | "md"        | The roundedness of the field control.                                                                                                                  |
+| `size`                | `FormFieldSize`        | "md"        | Typography scale for label, corner, description, error and control sizing.                                                                             |
+| `slots`               | `FormFieldSlots`       | —           | Chrome slots (`label`, `description`, `errorMessage`, …) and adornment slots.                                                                          |
+| `start`               | `string`               | —           | Inline-start text inside the field (prefix), e.g. `https://`.                                                                                          |
+| `startIcon`           | `LucideIcon`           | —           | Icon at the inline start.                                                                                                                              |
+| `variant`             | `FormFieldVariant`     | "outline"   | The visual variant of the field shell and control.                                                                                                     |
+| `withErrorIcon`       | `boolean`              | `true`      | When `true` and the field is invalid, shows an error icon at the inline end.                                                                           |
+| `withoutErrorMessage` | `boolean`              | `false`     | When `true`, does not reserve space below the control for error messages.                                                                              |
 
 ## Related components
 

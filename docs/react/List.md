@@ -72,12 +72,15 @@ import { List } from "@bridge-ui/react/Components/List";
 
 ## Props
 
-| Prop      | Type                    | Default    | Description         |
-| --------- | ----------------------- | ---------- | ------------------- |
-| `as`      | `"ul" \| "ol" \| "nav"` | `"ul"`     | Root element        |
-| `dense`   | `boolean`               | `false`    | Compact rows        |
-| `nested`  | `boolean`               | `false`    | Nested list styling |
-| `padding` | `"normal" \| "none"`    | `"normal"` | List padding        |
+| Prop          | Type                    | Default  | Description                                                                        |
+| ------------- | ----------------------- | -------- | ---------------------------------------------------------------------------------- |
+| `as`          | `"nav" \| "ol" \| "ul"` | "ul"     | The element to render as.                                                          |
+| `children`    | `ReactNode`             | —        | The children to render.                                                            |
+| `classes`     | `ListClasses`           | —        | The classes to apply to the list.                                                  |
+| `customProps` | `ListCustomProps`       | —        | Props forwarded to each list part.                                                 |
+| `dense`       | `boolean`               | `false`  | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
+| `nested`      | `boolean`               | `false`  | When true, indents the list for nested navigation/submenus.                        |
+| `padding`     | `ListPadding`           | "normal" | Root padding preset. Use `"none"` inside menus/cards (MUI `disablePadding`).       |
 
 ## Related components
 

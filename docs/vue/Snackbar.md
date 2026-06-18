@@ -59,20 +59,37 @@ import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
 
 ## Props
 
-| Prop          | Type                 | Default           | Description       |
-| ------------- | -------------------- | ----------------- | ----------------- |
-| `closeButton` | `boolean`            | `true`            | Dismiss button    |
-| `color`       | `Color`              | `"primary"`       | Color preset      |
-| `description` | `string`             | —                 | Body text         |
-| `duration`    | `number \| false`    | `5000`            | Auto-dismiss ms   |
-| `icon`        | `LucideIcon \| null` | —                 | Leading icon      |
-| `img`         | `string`             | —                 | Avatar image URL  |
-| `modelValue`  | `boolean`            | `false`           | Visible state     |
-| `position`    | `SnackbarPosition`   | `"bottom-center"` | Viewport position |
-| `progressbar` | `boolean`            | `true`            | Countdown bar     |
-| `teleportTo`  | `string \| false`    | `"body"`          | Portal target     |
-| `title`       | `string`             | —                 | Toast title       |
-| `transition`  | `SnackbarTransition` | `"slide"`         | Animation         |
+| Prop           | Type                      | Default         | Description                                                                    |
+| -------------- | ------------------------- | --------------- | ------------------------------------------------------------------------------ |
+| `classes`      | `SnackbarClasses`         | —               | The classes to apply to the snackbar.                                          |
+| `closeButton`  | `boolean`                 | `true`          | Whether to show the close button.                                              |
+| `color`        | `SnackbarColor`           | "primary"       | Tint color for the default icon.                                               |
+| `customProps`  | `SnackbarCustomProps`     | —               | Extra props for internal parts (`icon`, `title`, `description`, etc.).         |
+| `description`  | `string`                  | —               | Body text below the title.                                                     |
+| `duration`     | `number \| false`         | 5000            | Auto-dismiss delay in ms. `false` disables the timer.                          |
+| `icon`         | `LucideIcon \| null`      | —               | The icon to display. Use `null` to hide the icon.                              |
+| `img`          | `string`                  | —               | Avatar image URL (shown instead of icon when set).                             |
+| `onShowChange` | `(show: boolean) => void` | —               | Called when `v-model` visibility should change (controlled state).             |
+| `padding`      | `SnackbarPadding`         | "medium"        | Padding for the content area.                                                  |
+| `position`     | `SnackbarPosition`        | "bottom-center" | Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`. |
+| `progressbar`  | `boolean`                 | `true`          | Whether to show the countdown progress bar when `duration` is set.             |
+| `stackId`      | `string`                  | —               | Pre-assigned stack id (BridgeSnackbarHost).                                    |
+| `teleportTo`   | `string \| false`         | "body"          | Portal target. `false` renders inline without layer stack.                     |
+| `title`        | `string`                  | —               | Headline text.                                                                 |
+| `transition`   | `SnackbarTransition`      | "slide"         | Enter/leave animation preset.                                                  |
+
+### v-model
+
+| Prop / Event        | Type                       | Default | Description                                                                  |
+| ------------------- | -------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `modelValue`        | `boolean`                  | `false` | Whether the snackbar is visible. Bound with `v-model`.                       |
+| `update:modelValue` | `(value: boolean) => void` | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`. |
+
+## Events
+
+| Event        | Payload | Description                                  |
+| ------------ | ------- | -------------------------------------------- |
+| `v-on:close` | —       | Emitted when the snackbar requests to close. |
 
 ## Related components
 

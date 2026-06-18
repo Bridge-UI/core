@@ -64,7 +64,14 @@ import { TextField } from "@bridge-ui/react/Components/TextField";
 
 ## Props
 
-TextField props are the same as [FormField](./FormField.md), plus native input attributes merged on the input element (`type`, `placeholder`, `value`, `onChange`, etc.).
+Props are the same as [FormField](./FormField.md), plus native input attributes merged on the input element (`type`, `placeholder`, etc.).
+
+### Binding
+
+| Prop       | Type                                   | Default | Description                                            |
+| ---------- | -------------------------------------- | ------- | ------------------------------------------------------ |
+| `value`    | `string`                               | —       | Input value. Use with `onChange` for controlled state. |
+| `onChange` | `ChangeEventHandler<HTMLInputElement>` | —       | Native input change handler.                           |
 
 ## Related components
 

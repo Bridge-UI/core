@@ -111,19 +111,39 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
 
 ## Props
 
-| Prop             | Type                      | Default           | Description          |
-| ---------------- | ------------------------- | ----------------- | -------------------- |
-| `align`          | `ModalAlign`              | `"middle-center"` | Panel position       |
-| `blur`           | `ModalBlur`               | `"none"`          | Backdrop blur        |
-| `closeOnEscape`  | `boolean`                 | `true`            | Escape closes        |
-| `closeOnOverlay` | `boolean`                 | `true`            | Overlay click closes |
-| `onShowChange`   | `(show: boolean) => void` | —                 | Visibility callback  |
-| `persistent`     | `boolean`                 | `false`           | Block dismiss        |
-| `scroll`         | `"body" \| "panel"`       | `"body"`          | Scroll container     |
-| `show`           | `boolean`                 | `false`           | Open state           |
-| `size`           | `ModalSize`               | `"md"`            | Panel width          |
-| `teleportTo`     | `string \| false`         | `"body"`          | Portal target        |
-| `transition`     | `ModalTransition`         | `"fade"`          | Enter/exit animation |
+| Prop                  | Type               | Default         | Description                                                                                                            |
+| --------------------- | ------------------ | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `align`               | `ModalAlign`       | "middle-center" | Panel position from the `sm` breakpoint up (`{row}-{column}` grid). Mobile always uses bottom sheet (`bottom-center`). |
+| `autoFocus`           | `boolean`          | `false`         | When true, focuses the first focusable element inside the dialog on open.                                              |
+| `blur`                | `ModalBlur`        | "none"          | Backdrop blur on the overlay.                                                                                          |
+| `children`            | `ReactNode`        | —               | The children to render inside the dialog panel.                                                                        |
+| `classes`             | `ModalClasses`     | —               | The classes to apply to the modal.                                                                                     |
+| `closeOnEscape`       | `boolean`          | `true`          | Whether the modal closes on escape key press.                                                                          |
+| `closeOnOverlay`      | `boolean`          | `true`          | Whether the modal closes on overlay click.                                                                             |
+| `customProps`         | `ModalCustomProps` | —               | Props forwarded to each modal part.                                                                                    |
+| `disableEnforceFocus` | `boolean`          | `false`         | When true, focus is not trapped inside the modal while open.                                                           |
+| `disableRestoreFocus` | `boolean`          | `false`         | When true, focus is not restored to the previously focused element on close.                                           |
+| `disableScrollLock`   | `boolean`          | `false`         | When true, body scroll is not locked while the modal is open.                                                          |
+| `hideBackdrop`        | `boolean`          | `false`         | When true, the backdrop overlay is not rendered.                                                                       |
+| `keepMounted`         | `boolean`          | `false`         | When true, the modal stays mounted in the DOM after closing (hidden).                                                  |
+| `persistent`          | `boolean`          | `false`         | When true, escape and overlay clicks do not close the modal.                                                           |
+| `scroll`              | `ModalScroll`      | "body"          | Where scroll happens: the page (`body`) or the dialog panel (`paper`).                                                 |
+| `size`                | `ModalSize`        | "md"            | Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).                                                    |
+| `teleportTo`          | `string \| false`  | "body"          | Where to portal the modal. Pass `false` to render in place.                                                            |
+| `transition`          | `ModalTransition`  | "fade"          | Enter/leave animation for overlay and panel.                                                                           |
+
+### Binding
+
+| Prop           | Type                      | Default | Description                                                                 |
+| -------------- | ------------------------- | ------- | --------------------------------------------------------------------------- |
+| `show`         | `boolean`                 | `false` | Whether the modal is visible. Use with `onShowChange` for controlled state. |
+| `onShowChange` | `(show: boolean) => void` | —       | Called when `show` should change.                                           |
+
+## Events
+
+| Callback  | Payload | Description                                                                                                                                                                                                |
+| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `onClose` | —       | Called when the user dismisses the modal (overlay click or Escape). Not fired when the parent sets `show={false}` directly — use `onShowChange` for that. Sugar for `onShowChange(false)` on user dismiss. |
 
 ## Related components
 

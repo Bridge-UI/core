@@ -59,12 +59,18 @@ import { Textarea } from "@bridge-ui/react/Components/Textarea";
 
 ### Textarea-specific
 
-| Prop        | Type             | Default  | Description            |
-| ----------- | ---------------- | -------- | ---------------------- |
-| `rows`      | `number`         | —        | Visible rows           |
-| `autosize`  | `boolean`        | —        | Grow with content      |
-| `likeInput` | `boolean`        | `false`  | Match TextField chrome |
-| `resize`    | `TextareaResize` | `"none"` | CSS resize handle      |
+| Prop        | Type             | Default | Description                                                                                                                                                           |
+| ----------- | ---------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `autosize`  | `boolean`        | —       | Whether the textarea automatically resizes with its content. Defaults to `true` when `likeInput` is set; otherwise `false`.                                           |
+| `likeInput` | `boolean`        | `false` | Use compact TextField-like sizing instead of the default multiline textarea profile. Enables `autosize` and `rows={1}` by default; both can be overridden explicitly. |
+| `resize`    | `TextareaResize` | "none"  | Native resize handle (`resize` CSS). Ignored when `autosize` is `true`.                                                                                               |
+
+### Binding
+
+| Prop       | Type                                      | Default | Description                                               |
+| ---------- | ----------------------------------------- | ------- | --------------------------------------------------------- |
+| `value`    | `string`                                  | —       | Textarea value. Use with `onChange` for controlled state. |
+| `onChange` | `ChangeEventHandler<HTMLTextAreaElement>` | —       | Native textarea change handler.                           |
 
 ### Inherited from FormField
 

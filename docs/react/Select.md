@@ -96,35 +96,47 @@ import { Select } from "@bridge-ui/react/Components/Select";
 
 ### Select-specific
 
-| Prop                | Type                  | Default         | Description                  |
-| ------------------- | --------------------- | --------------- | ---------------------------- |
-| `asyncData`         | `{ search, resolve }` | —               | Async search + resolve       |
-| `clearable`         | `boolean`             | `true`          | Show clear button            |
-| `defaultValue`      | `SelectModel \| null` | —               | Initial uncontrolled value   |
-| `disableMaxHeight`  | `boolean`             | `false`         | Disable options max-height   |
-| `emptyMessage`      | `string`              | `"No options"`  | Empty list text              |
-| `flipOptions`       | `boolean`             | `false`         | Invert options order         |
-| `hideEmptyMessage`  | `boolean`             | `false`         | Hide empty-state message     |
-| `loading`           | `boolean`             | —               | Loading state                |
-| `maxHeight`         | `string`              | `"max-h-60"`    | Options list max height      |
-| `minItemsForSearch` | `number`              | `11`            | Auto-enable search threshold |
-| `multiple`          | `boolean`             | `false`         | Multi-select with chips      |
-| `onChange`          | `(value) => void`     | —               | Change handler (React)       |
-| `optionDescription` | `string`              | `"description"` | Option description key       |
-| `optionLabel`       | `string`              | `"label"`       | Option label key             |
-| `options`           | `SelectOptionInput[]` | —               | Static options               |
-| `optionValue`       | `string`              | `"value"`       | Option value key             |
-| `placeholder`       | `string`              | —               | Placeholder                  |
-| `searchable`        | `boolean`             | `false`         | Filter options               |
-| `value`             | `SelectModel \| null` | —               | Selected value(s)            |
+| Prop                | Type                  | Default       | Description                                                                                      |
+| ------------------- | --------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| `asyncData`         | `SelectAsyncData`     | —             | Remote data source. Implies `searchable`.                                                        |
+| `clearable`         | `boolean`             | `true`        | Whether the value can be cleared.                                                                |
+| `defaultValue`      | `SelectModel \| null` | —             | Initial value when uncontrolled.                                                                 |
+| `disableMaxHeight`  | `boolean`             | `false`       | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`. |
+| `emptyMessage`      | `string`              | "No options"  | Message when the filtered list is empty.                                                         |
+| `flipOptions`       | `boolean`             | `false`       | Inverts the visual order of options.                                                             |
+| `hideEmptyMessage`  | `boolean`             | `false`       | Hides the empty-state message.                                                                   |
+| `loading`           | `boolean`             | —             | External or async loading state.                                                                 |
+| `maxHeight`         | `string`              | "max-h-60"    | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.    |
+| `minItemsForSearch` | `number`              | 11            | Minimum option count before search UI is enabled.                                                |
+| `multiple`          | `boolean`             | `false`       | Whether multiple values can be selected.                                                         |
+| `optionDescription` | `string`              | "description" | Key used to read the description from option objects.                                            |
+| `optionLabel`       | `string`              | "label"       | Key used to read the label from option objects.                                                  |
+| `options`           | `SelectOptionInput[]` | —             | The list of options to display.                                                                  |
+| `optionValue`       | `string`              | "value"       | Key used to read the value from option objects.                                                  |
+| `placeholder`       | `string`              | —             | Placeholder shown when no value is selected.                                                     |
+| `searchable`        | `boolean`             | `false`       | Whether options can be filtered via the trigger input.                                           |
+
+### Binding
+
+| Prop       | Type                           | Default | Description                                                                |
+| ---------- | ------------------------------ | ------- | -------------------------------------------------------------------------- |
+| `value`    | `SelectModel \| null`          | —       | The selected value (controlled). Use with `onChange` for controlled state. |
+| `onChange` | `(value: SelectModel) => void` | —       | Called when the selection changes.                                         |
 
 ### Inherited from FormField
 
 See [FormField](./FormField.md).
 
-### Slots
+## Events
 
-`option`, `chip`, `beforeOptions`, `afterOptions`, `empty`, `loading`, plus FormField slots.
+| Callback     | Payload                  | Description                                          |
+| ------------ | ------------------------ | ---------------------------------------------------- |
+| `onClear`    | —                        | Called when the value is cleared.                    |
+| `onClose`    | —                        | Called when the menu closes.                         |
+| `onDeselect` | `(option: SelectOption)` | Called when an option is deselected (multiple mode). |
+| `onOpen`     | —                        | Called when the menu opens.                          |
+| `onSearch`   | `(query: string)`        | Called when the search query changes.                |
+| `onSelect`   | `(option: SelectOption)` | Called when an option is selected.                   |
 
 ## Related components
 
