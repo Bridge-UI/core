@@ -42,12 +42,15 @@ import type {
 import type {
   CheckboxColor,
   CheckboxColorItem,
+  CheckboxInvalidated,
   CheckboxRounded,
   CheckboxSize,
 } from "@core/Components/Checkbox";
+import type { FormControlInvalidated } from "@core/Components/FormControl";
 import type {
   FormFieldColor,
   FormFieldColorItem,
+  FormFieldInvalidated,
   FormFieldRounded,
   FormFieldRoundedItem,
   FormFieldSize,
@@ -64,7 +67,11 @@ import type {
   LinkUnderline,
 } from "@core/Components/Link";
 import type { ListPadding } from "@core/Components/List";
-import type { ListboxColor, ListboxColorItem } from "@core/Components/Listbox";
+import type {
+  ListboxColor,
+  ListboxColorItem,
+  ListboxInvalidated,
+} from "@core/Components/Listbox";
 import type { ListItemAlign } from "@core/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
 import type {
@@ -77,6 +84,7 @@ import type {
 import type {
   RadioColor,
   RadioColorItem,
+  RadioInvalidated,
   RadioRounded,
   RadioSize,
 } from "@core/Components/Radio";
@@ -91,6 +99,7 @@ import type {
 import type {
   SwitchColor,
   SwitchColorItem,
+  SwitchInvalidated,
   SwitchRounded,
   SwitchSize,
 } from "@core/Components/Switch";
@@ -214,6 +223,7 @@ export interface CheckboxConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, CheckboxColorItem>;
+    invalidated: Partial<CheckboxInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
@@ -236,6 +246,7 @@ export interface IconConfigBase {
 export interface FormControlConfigBase {
   classes: object;
   customProps: Partial<{
+    invalidated: Partial<FormControlInvalidated>;
     size: Record<string, string>;
   }>;
   defaultProps: Partial<{
@@ -250,6 +261,7 @@ export interface FormFieldConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -301,6 +313,7 @@ export interface ListboxConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, ListboxColorItem>;
+    invalidated: Partial<ListboxInvalidated>;
   }>;
   defaultProps: Partial<{
     color: keyof ListboxColor;
@@ -363,6 +376,7 @@ export interface RadioConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, RadioColorItem>;
+    invalidated: Partial<RadioInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
@@ -401,6 +415,7 @@ export interface SwitchConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, SwitchColorItem>;
+    invalidated: Partial<SwitchInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;

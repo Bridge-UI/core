@@ -166,9 +166,6 @@ declare module "@bridge-ui/core" {
 
   interface TextareaConfigOverrides {
     classes: TextareaClasses;
-    customProps: Partial<{
-      resize: Record<string, string>;
-    }>;
     defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
   }
 }

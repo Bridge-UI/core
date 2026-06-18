@@ -74,12 +74,6 @@ declare module "@bridge-ui/core" {
 
   interface FormFieldConfigOverrides {
     classes: FormFieldClasses;
-    customProps: Partial<{
-      color: Record<string, import("@bridge-ui/core").FormFieldColorItem>;
-      rounded: Record<string, import("@bridge-ui/core").FormFieldRoundedItem>;
-      size: Record<string, import("@bridge-ui/core").FormFieldSizeItem>;
-      variant: Record<string, import("@bridge-ui/core").FormFieldVariantItem>;
-    }>;
     defaultProps: Partial<
       Pick<
         FormFieldProps,
@@ -172,9 +166,6 @@ declare module "@bridge-ui/core" {
 
   interface TextareaConfigOverrides {
     classes: TextareaClasses;
-    customProps: Partial<{
-      resize: Record<string, string>;
-    }>;
     defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
   }
 }

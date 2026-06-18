@@ -20,6 +20,7 @@ import {
   adjustAutosizeTextareaHeight,
   cn,
   createSelectAsyncSearch,
+  mergeBridgeUILayeredClasses,
   normalizeSelectOptions,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
@@ -27,7 +28,10 @@ import {
   splitComponentProps,
   type SelectAsyncSearch,
 } from "@bridge-ui/core";
-import { colorProps } from "@bridge-ui/core/Components/Listbox";
+import {
+  colorProps,
+  invalidatedProps,
+} from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
 import {
@@ -115,7 +119,7 @@ export function useSelect(
     };
   });
 
-  const { entry: bridgeSelect } = useBridgeUIComponent<
+  const { components, entry: bridgeSelect } = useBridgeUIComponent<
     SelectRegistryProps,
     "Select"
   >({
@@ -616,16 +620,25 @@ export function useSelect(
     );
   }
 
-  const listboxColor = computed(() => {
-    if (formField.invalidated.value) {
-      return "error" as const;
+  const listboxPalette = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      get(components.value, ["Listbox", "customProps", "color"]),
+    );
+    const base = get(classes, formField.merged.value.color ?? "primary");
+
+    if (!formField.invalidated.value) {
+      return base;
     }
 
-    return formField.merged.value.color ?? "primary";
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      get(components.value, ["Listbox", "customProps", "invalidated"]),
+    );
   });
 
   const selectedValueTextClass = computed(() => {
-    return get(colorProps, listboxColor.value)?.value;
+    return listboxPalette.value?.value;
   });
 
   const triggerBind = computed(() => {
@@ -736,7 +749,7 @@ export function useSelect(
         onMousedown: handleClearPointer,
         class: cn({
           "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
-          [get(colorProps, listboxColor.value)?.clear ?? ""]: true,
+          [listboxPalette.value?.clear ?? ""]: true,
           [mergedClasses.value.clear ?? ""]: true,
         }),
       },
@@ -757,7 +770,6 @@ export function useSelect(
     clearValue,
     removeChip,
     triggerBind,
-    listboxColor,
     selectOption,
     containerRef,
     clearIconSize,

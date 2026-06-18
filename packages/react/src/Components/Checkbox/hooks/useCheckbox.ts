@@ -14,6 +14,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Components/Checkbox";
@@ -114,12 +115,24 @@ export function useCheckbox(
     return uncontrolledChecked;
   });
 
-  const colorKey = derived(() => {
-    if (formControl.invalidated) {
-      return "error";
-    }
+  const colorPalette = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeCheckbox?.customProps?.color,
+    );
 
-    return merged.color;
+    return get(classes, merged.color ?? "primary");
+  }, [merged.color, bridgeCheckbox?.customProps?.color]);
+
+  const invalidatedPalette = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeCheckbox?.customProps?.invalidated,
+    );
+  }, [bridgeCheckbox?.customProps?.invalidated]);
+
+  const colorClasses = derived(() => {
+    return formControl.invalidated ? invalidatedPalette : colorPalette;
   });
 
   const sizeClasses = useMemo(() => {
@@ -130,15 +143,6 @@ export function useCheckbox(
 
     return get(classes, merged.size ?? "sm");
   }, [merged.size, bridgeCheckbox?.customProps?.size]);
-
-  const colorClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeCheckbox?.customProps?.color,
-    );
-
-    return get(classes, colorKey);
-  }, [colorKey, bridgeCheckbox?.customProps?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

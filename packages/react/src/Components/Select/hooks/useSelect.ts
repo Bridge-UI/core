@@ -16,6 +16,7 @@ import {
   adjustAutosizeTextareaHeight,
   cn,
   createSelectAsyncSearch,
+  mergeBridgeUILayeredClasses,
   normalizeSelectOptions,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
@@ -23,7 +24,10 @@ import {
   splitComponentProps,
   type SelectAsyncSearch,
 } from "@bridge-ui/core";
-import { colorProps } from "@bridge-ui/core/Components/Listbox";
+import {
+  colorProps,
+  invalidatedProps,
+} from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
@@ -115,7 +119,7 @@ export function useSelect(
     props: propsForSplit as SelectOwnProps,
   });
 
-  const { entry: bridgeSelect } = useBridgeUIComponent<
+  const { components, entry: bridgeSelect } = useBridgeUIComponent<
     SelectRegistryProps,
     "Select"
   >({
@@ -694,11 +698,24 @@ export function useSelect(
     },
   );
 
-  const listboxColor = formField.invalidated
-    ? ("error" as const)
-    : (formField.merged.color ?? "primary");
+  const listboxPalette = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      get(components, ["Listbox", "customProps", "color"]),
+    );
+    const base = get(classes, formField.merged.color ?? "primary");
 
-  const selectedValueTextClass = get(colorProps, listboxColor)?.value;
+    if (!formField.invalidated) {
+      return base;
+    }
+
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      get(components, ["Listbox", "customProps", "invalidated"]),
+    );
+  }, [components, formField.invalidated, formField.merged.color]);
+
+  const selectedValueTextClass = listboxPalette?.value;
 
   const triggerBind = useMemo(() => {
     const showPointerCursor =
@@ -778,12 +795,12 @@ export function useSelect(
         onMouseDown: handleClearPointer,
         className: cn({
           "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
-          [get(colorProps, listboxColor)?.clear ?? ""]: true,
+          [listboxPalette?.clear ?? ""]: true,
           [mergedClasses.clear ?? ""]: true,
         }),
       },
     );
-  }, [listboxColor, handleClearPointer, mergedClasses.clear]);
+  }, [handleClearPointer, listboxPalette?.clear, mergedClasses.clear]);
 
   const resolveSelectedOptions = useCallback(async () => {
     const asyncData = selectMerged.asyncData;
@@ -858,7 +875,6 @@ export function useSelect(
     clearValue,
     removeChip,
     triggerBind,
-    listboxColor,
     selectOption,
     containerRef,
     emptyMessage,

@@ -14,10 +14,12 @@ import {
 // ** Core Imports
 import {
   cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { invalidatedProps } from "@bridge-ui/core/Components/FormControl";
 import { sizeProps as labelSizeProps } from "@bridge-ui/core/Components/Label";
 
 // ** Local Imports
@@ -153,6 +155,14 @@ export function useFormControl(
     return get(labelSizeProps, merged.value.size ?? "md");
   });
 
+  const invalidatedColors = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeFormControl.value?.customProps?.invalidated,
+      merged.value.customProps?.invalidated,
+    );
+  });
+
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
@@ -186,7 +196,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass.value ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError.value,
-        "text-error-600 dark:text-error-400": labelError.value,
+        [invalidatedColors.value.label ?? ""]: labelError.value,
         [mergedClasses.value.startLabel ?? ""]: true,
       }),
     );
@@ -200,7 +210,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass.value ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError.value,
-        "text-error-600 dark:text-error-400": labelError.value,
+        [invalidatedColors.value.label ?? ""]: labelError.value,
         [mergedClasses.value.mainLabel ?? ""]: true,
       }),
     );
@@ -214,7 +224,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass.value ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError.value,
-        "text-error-600 dark:text-error-400": labelError.value,
+        [invalidatedColors.value.label ?? ""]: labelError.value,
         [mergedClasses.value.endLabel ?? ""]: true,
       }),
     );
@@ -237,8 +247,9 @@ export function useFormControl(
       customProps.value?.errorMessage,
       { id: `${controlId.value}-error` },
       cn({
-        "mt-2 text-error-600 dark:text-error-400": true,
+        "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
+        [invalidatedColors.value.errorMessage ?? ""]: true,
         [textSizeClass.value ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),

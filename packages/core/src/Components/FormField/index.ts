@@ -4,6 +4,8 @@ export type {
   FormFieldColor,
   FormFieldColorItem,
 } from "@core/Components/FormField/Color";
+export { invalidatedProps } from "@core/Components/FormField/Invalidated";
+export type { FormFieldInvalidated } from "@core/Components/FormField/Invalidated";
 export { roundedProps } from "@core/Components/FormField/Rounded";
 export type {
   FormFieldRounded,

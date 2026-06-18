@@ -5,6 +5,7 @@ import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   FormFieldColor,
+  FormFieldInvalidated,
   FormFieldRounded,
   FormFieldSize,
   FormFieldVariant,
@@ -118,6 +119,13 @@ export interface FormFieldCustomProps {
    * Props forwarded to the `<input>`.
    */
   input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
+
+  /**
+   * Error-state field chrome colors (label, container, adornments, …).
+   *
+   * @default undefined
+   */
+  invalidated?: Partial<FormFieldInvalidated>;
 
   /**
    * Props forwarded to the primary label element.
