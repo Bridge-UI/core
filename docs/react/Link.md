@@ -4,7 +4,7 @@ Styled anchor for in-app and external navigation.
 
 ## Import
 
-```tsx
+```ts
 import { Link } from "@bridge-ui/react/Components/Link";
 ```
 

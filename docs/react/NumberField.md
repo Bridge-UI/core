@@ -4,7 +4,7 @@ Numeric input with increment/decrement controls. Extends FormField props.
 
 ## Import
 
-```tsx
+```ts
 import { NumberField } from "@bridge-ui/react/Components/NumberField";
 ```
 

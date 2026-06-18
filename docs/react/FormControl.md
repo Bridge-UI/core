@@ -4,7 +4,7 @@ Low-level form control chrome (labels, description, error) for Checkbox, Radio, 
 
 ## Import
 
-```tsx
+```ts
 import { FormControl } from "@bridge-ui/react/Components/FormControl";
 ```
 

@@ -4,7 +4,7 @@ Surface container with optional title, action, and footer.
 
 ## Import
 
-```vue
+```ts
 import { Card } from "@bridge-ui/vue/Components/Card";
 ```
 

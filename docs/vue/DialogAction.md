@@ -4,7 +4,7 @@ Imperative API to open preset confirmation dialogs. Requires `BridgeUIHosts` and
 
 ## Import
 
-```vue
+```ts
 import { useDialogAction } from "@bridge-ui/vue/Actions";
 ```
 
@@ -16,10 +16,17 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```vue
-const dialog = useDialogAction(); const id = dialog.open({ title: "Delete
-item?", description: "This action cannot be undone.", actions: { reject: {
-label: "Cancel" }, accept: { label: "Delete", color: "error" }, }, });
+```ts
+const dialog = useDialogAction();
+
+const id = dialog.open({
+  title: "Delete item?",
+  description: "This action cannot be undone.",
+  actions: {
+    reject: { label: "Cancel" },
+    accept: { label: "Delete", color: "error" },
+  },
+});
 ```
 
 ### open

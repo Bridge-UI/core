@@ -4,7 +4,7 @@ Accessible label element with required and error styling.
 
 ## Import
 
-```tsx
+```ts
 import { Label } from "@bridge-ui/react/Components/Label";
 ```
 

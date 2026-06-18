@@ -4,7 +4,7 @@ Displays a user image, initials fallback, or icon.
 
 ## Import
 
-```tsx
+```ts
 import { Avatar } from "@bridge-ui/react/Components/Avatar";
 ```
 

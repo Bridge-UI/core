@@ -4,7 +4,7 @@ Single-line text input with FormField chrome, icons, and adornments.
 
 ## Import
 
-```tsx
+```ts
 import { TextField } from "@bridge-ui/react/Components/TextField";
 ```
 

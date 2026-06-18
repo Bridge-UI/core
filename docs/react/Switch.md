@@ -4,7 +4,7 @@ Toggle switch. Extends FormControl props.
 
 ## Import
 
-```tsx
+```ts
 import { Switch } from "@bridge-ui/react/Components/Switch";
 ```
 

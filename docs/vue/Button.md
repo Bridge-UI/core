@@ -4,7 +4,7 @@ Primary action control. Renders as `button`, `a`, or `span` via the `as` prop.
 
 ## Import
 
-```vue
+```ts
 import { Button } from "@bridge-ui/vue/Components/Button";
 ```
 

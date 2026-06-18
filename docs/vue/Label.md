@@ -4,7 +4,7 @@ Accessible label element with required and error styling.
 
 ## Import
 
-```vue
+```ts
 import { Label } from "@bridge-ui/vue/Components/Label";
 ```
 

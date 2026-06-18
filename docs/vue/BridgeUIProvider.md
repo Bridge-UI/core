@@ -4,7 +4,7 @@ Root provider for theme, locale, direction, and component registry defaults.
 
 ## Import
 
-```vue
+```ts
 import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 ```
 
@@ -26,9 +26,10 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 
 ### Runtime updates
 
-```vue
-const { setGlobal, setComponents } = useBridgeUI(); setGlobal({ locale: "pt-BR",
-theme: "dark" });
+```ts
+const { setGlobal, setComponents } = useBridgeUI();
+
+setGlobal({ locale: "pt-BR", theme: "dark" });
 ```
 
 ## Props

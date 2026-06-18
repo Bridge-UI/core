@@ -4,7 +4,7 @@ Anchored floating panel for actions and dropdowns. Control with `show` / `onShow
 
 ## Import
 
-```tsx
+```ts
 import { Menu } from "@bridge-ui/react/Components/Menu";
 ```
 

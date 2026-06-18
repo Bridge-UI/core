@@ -4,7 +4,7 @@ Renders a Lucide icon with design-system sizing.
 
 ## Import
 
-```tsx
+```ts
 import { Icon } from "@bridge-ui/react/Components/Icon";
 ```
 
@@ -12,10 +12,12 @@ import { Icon } from "@bridge-ui/react/Components/Icon";
 
 ### Usage
 
-```tsx
+```ts
 import { InfoIcon } from "lucide-react";
+```
 
-<Icon size="md" icon={InfoIcon} />;
+```tsx
+<Icon size="md" icon={InfoIcon} />
 ```
 
 ## Props

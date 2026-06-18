@@ -4,7 +4,7 @@ Renders a Lucide icon with design-system sizing.
 
 ## Import
 
-```vue
+```ts
 import { Icon } from "@bridge-ui/vue/Components/Icon";
 ```
 
@@ -12,9 +12,11 @@ import { Icon } from "@bridge-ui/vue/Components/Icon";
 
 ### Usage
 
-```vue
+```ts
 import { Info } from "lucide-vue-next";
+```
 
+```vue
 <Icon size="md" :icon="Info" />
 ```
 

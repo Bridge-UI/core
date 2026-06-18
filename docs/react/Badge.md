@@ -4,7 +4,7 @@ Small label for counts, status, or tags.
 
 ## Import
 
-```tsx
+```ts
 import { Badge } from "@bridge-ui/react/Components/Badge";
 ```
 

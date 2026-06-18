@@ -4,7 +4,7 @@ Imperative API for toast notifications. Requires `BridgeSnackbarHost`.
 
 ## Import
 
-```tsx
+```ts
 import { useSnackbarAction } from "@bridge-ui/react/Actions";
 ```
 
@@ -16,7 +16,7 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```tsx
+```ts
 const snackbar = useSnackbarAction();
 
 snackbar.open({

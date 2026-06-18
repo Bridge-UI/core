@@ -4,7 +4,7 @@ Toast notification portaled to the viewport. Sets `role="status"` and `aria-live
 
 ## Import
 
-```vue
+```ts
 import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
 ```
 

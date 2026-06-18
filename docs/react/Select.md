@@ -4,7 +4,7 @@ Dropdown select with single/multiple value, search, and async data.
 
 ## Import
 
-```tsx
+```ts
 import { Select } from "@bridge-ui/react/Components/Select";
 ```
 

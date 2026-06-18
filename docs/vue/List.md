@@ -4,7 +4,7 @@ Vertical list container. Use with `ListItem` and `ListSection`.
 
 ## Import
 
-```vue
+```ts
 import { List } from "@bridge-ui/vue/Components/List";
 ```
 

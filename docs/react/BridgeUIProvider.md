@@ -4,7 +4,7 @@ Root provider for theme, locale, direction, and component registry defaults.
 
 ## Import
 
-```tsx
+```ts
 import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
 ```
 
@@ -26,7 +26,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
 
 ### Runtime updates
 
-```tsx
+```ts
 const { setGlobal, setComponents } = useBridgeUI();
 
 setGlobal({ locale: "pt-BR", theme: "dark" });

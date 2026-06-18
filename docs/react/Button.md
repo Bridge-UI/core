@@ -4,7 +4,7 @@ Primary action control. Renders as `button`, `a`, or `span` via the `as` prop.
 
 ## Import
 
-```tsx
+```ts
 import { Button } from "@bridge-ui/react/Components/Button";
 ```
 

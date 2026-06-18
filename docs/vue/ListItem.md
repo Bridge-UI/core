@@ -4,7 +4,7 @@ List row with primary/secondary text and optional start/end slots.
 
 ## Import
 
-```vue
+```ts
 import { ListItem } from "@bridge-ui/vue/Components/ListItem";
 ```
 

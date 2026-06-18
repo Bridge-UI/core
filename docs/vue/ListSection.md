@@ -4,7 +4,7 @@ Section heading inside a `List` (subheader).
 
 ## Import
 
-```vue
+```ts
 import { ListSection } from "@bridge-ui/vue/Components/ListSection";
 ```
 

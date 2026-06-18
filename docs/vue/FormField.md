@@ -4,7 +4,7 @@ Form field chrome (label, adornments, error) used by TextField, Select, and othe
 
 ## Import
 
-```vue
+```ts
 import { FormField } from "@bridge-ui/vue/Components/FormField";
 ```
 

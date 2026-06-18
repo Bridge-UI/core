@@ -4,7 +4,7 @@ Dropdown select with single/multiple value, search, and async data.
 
 ## Import
 
-```vue
+```ts
 import { Select } from "@bridge-ui/vue/Components/Select";
 ```
 

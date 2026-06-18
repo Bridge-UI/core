@@ -4,7 +4,7 @@ Vertical list container. Use with `ListItem` and `ListSection`.
 
 ## Import
 
-```tsx
+```ts
 import { List } from "@bridge-ui/react/Components/List";
 ```
 

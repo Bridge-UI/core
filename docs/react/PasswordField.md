@@ -4,7 +4,7 @@ Password input with visibility toggle. Extends FormField props.
 
 ## Import
 
-```tsx
+```ts
 import { PasswordField } from "@bridge-ui/react/Components/PasswordField";
 ```
 

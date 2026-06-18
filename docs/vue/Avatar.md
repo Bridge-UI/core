@@ -4,7 +4,7 @@ Displays a user image, initials fallback, or icon.
 
 ## Import
 
-```vue
+```ts
 import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 ```
 

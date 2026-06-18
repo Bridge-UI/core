@@ -4,7 +4,7 @@ Modal overlay with portal, backdrop, and focus management. Put `Card` or any con
 
 ## Import
 
-```vue
+```ts
 import { Modal } from "@bridge-ui/vue/Components/Modal";
 ```
 

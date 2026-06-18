@@ -4,7 +4,7 @@ Radio input for mutually exclusive choices. Extends FormControl props.
 
 ## Import
 
-```tsx
+```ts
 import { Radio } from "@bridge-ui/react/Components/Radio";
 ```
 

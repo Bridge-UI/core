@@ -4,7 +4,7 @@ Checkbox input with labels and form chrome. Extends FormControl props.
 
 ## Import
 
-```vue
+```ts
 import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 ```
 

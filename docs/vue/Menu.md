@@ -4,7 +4,7 @@ Anchored floating panel for actions and dropdowns. Control with `v-model` / `sho
 
 ## Import
 
-```vue
+```ts
 import { Menu } from "@bridge-ui/vue/Components/Menu";
 ```
 

@@ -4,7 +4,7 @@ Imperative API to open preset confirmation dialogs. Requires `BridgeUIHosts` and
 
 ## Import
 
-```tsx
+```ts
 import { useDialogAction } from "@bridge-ui/react/Actions";
 ```
 
@@ -16,7 +16,7 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```tsx
+```ts
 const dialog = useDialogAction();
 
 const id = dialog.open({

@@ -4,7 +4,7 @@ Toast notification portaled to the viewport. Sets `role="status"` and `aria-live
 
 ## Import
 
-```tsx
+```ts
 import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 ```
 

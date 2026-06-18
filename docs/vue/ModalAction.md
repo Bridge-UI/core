@@ -4,7 +4,7 @@ Imperative API to mount custom components inside `Modal`. Requires `BridgeModalH
 
 ## Import
 
-```vue
+```ts
 import { useModalAction } from "@bridge-ui/vue/Actions";
 ```
 
@@ -16,9 +16,13 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```vue
-const modal = useModalAction(); const id = modal.open({ component: SettingsForm,
-modal: { size: "lg", title: "Settings" }, });
+```ts
+const modal = useModalAction();
+
+const id = modal.open({
+  component: SettingsForm,
+  modal: { size: "lg", title: "Settings" },
+});
 ```
 
 ### open

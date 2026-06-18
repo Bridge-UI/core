@@ -4,7 +4,7 @@ Alert banner for feedback messages. Does not set `role` or `aria-live` by defaul
 
 ## Import
 
-```tsx
+```ts
 import { Alert } from "@bridge-ui/react/Components/Alert";
 ```
 

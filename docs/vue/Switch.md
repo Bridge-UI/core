@@ -4,7 +4,7 @@ Toggle switch. Extends FormControl props.
 
 ## Import
 
-```vue
+```ts
 import { Switch } from "@bridge-ui/vue/Components/Switch";
 ```
 

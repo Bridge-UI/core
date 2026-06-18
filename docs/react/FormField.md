@@ -4,7 +4,7 @@ Form field chrome (label, adornments, error) used by TextField, Select, and othe
 
 ## Import
 
-```tsx
+```ts
 import { FormField } from "@bridge-ui/react/Components/FormField";
 ```
 

@@ -4,7 +4,7 @@ Imperative API for toast notifications. Requires `BridgeSnackbarHost`.
 
 ## Import
 
-```vue
+```ts
 import { useSnackbarAction } from "@bridge-ui/vue/Actions";
 ```
 
@@ -16,9 +16,14 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```vue
-const snackbar = useSnackbarAction(); snackbar.open({ title: "Saved", color:
-"success", description: "Your changes were saved successfully.", });
+```ts
+const snackbar = useSnackbarAction();
+
+snackbar.open({
+  title: "Saved",
+  color: "success",
+  description: "Your changes were saved successfully.",
+});
 ```
 
 ### open

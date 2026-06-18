@@ -4,7 +4,7 @@ Surface container with optional title, action, and footer.
 
 ## Import
 
-```tsx
+```ts
 import { Card } from "@bridge-ui/react/Components/Card";
 ```
 

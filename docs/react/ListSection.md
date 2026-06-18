@@ -4,7 +4,7 @@ Section heading inside a `List` (subheader).
 
 ## Import
 
-```tsx
+```ts
 import { ListSection } from "@bridge-ui/react/Components/ListSection";
 ```
 

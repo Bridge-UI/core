@@ -4,7 +4,7 @@ Password input with visibility toggle. Extends FormField props.
 
 ## Import
 
-```vue
+```ts
 import { PasswordField } from "@bridge-ui/vue/Components/PasswordField";
 ```
 

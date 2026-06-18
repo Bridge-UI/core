@@ -4,7 +4,7 @@ Multiline text input. Extends FormField props.
 
 ## Import
 
-```tsx
+```ts
 import { Textarea } from "@bridge-ui/react/Components/Textarea";
 ```
 

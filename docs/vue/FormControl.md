@@ -4,7 +4,7 @@ Low-level form control chrome (labels, description, error) for Checkbox, Radio, 
 
 ## Import
 
-```vue
+```ts
 import { FormControl } from "@bridge-ui/vue/Components/FormControl";
 ```
 

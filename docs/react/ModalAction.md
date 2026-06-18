@@ -4,7 +4,7 @@ Imperative API to mount custom components inside `Modal`. Requires `BridgeModalH
 
 ## Import
 
-```tsx
+```ts
 import { useModalAction } from "@bridge-ui/react/Actions";
 ```
 
@@ -16,7 +16,7 @@ Mount `BridgeUIHosts` with the matching host (`BridgeDialogHost`, `BridgeModalHo
 
 ### Usage
 
-```tsx
+```ts
 const modal = useModalAction();
 
 const id = modal.open({

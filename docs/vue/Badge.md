@@ -4,7 +4,7 @@ Small label for counts, status, or tags.
 
 ## Import
 
-```vue
+```ts
 import { Badge } from "@bridge-ui/vue/Components/Badge";
 ```
 

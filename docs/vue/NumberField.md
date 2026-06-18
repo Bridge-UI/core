@@ -4,7 +4,7 @@ Numeric input with increment/decrement controls. Extends FormField props.
 
 ## Import
 
-```vue
+```ts
 import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 ```
 

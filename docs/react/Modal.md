@@ -4,7 +4,7 @@ Modal overlay with portal, backdrop, and focus management. Put `Card` or any con
 
 ## Import
 
-```tsx
+```ts
 import { Modal } from "@bridge-ui/react/Components/Modal";
 ```
 

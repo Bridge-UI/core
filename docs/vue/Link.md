@@ -4,7 +4,7 @@ Styled anchor for in-app and external navigation.
 
 ## Import
 
-```vue
+```ts
 import { Link } from "@bridge-ui/vue/Components/Link";
 ```
 
