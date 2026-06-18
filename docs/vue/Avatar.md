@@ -10,47 +10,25 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 ## Examples
 
-### Icon, Image and Fallback
+### Usage
 
 ```vue
-<Avatar :icon="User" />
-<Avatar fallback="JP" />
+<Avatar fallback="JD" />
+
+<Avatar :icon="User" color="primary" />
+
 <Avatar :src="avatarSrc" alt="Jane Doe" />
 ```
 
-### Colors
-
-```vue
-<Avatar fallback="P" color="primary" />
-
-<Avatar fallback="S" color="secondary" />
-```
-
-### Sizes
-
-```vue
-<Avatar size="2xs" fallback="2" />
-<Avatar size="xs" fallback="3" />
-<Avatar size="sm" fallback="5" />
-<Avatar size="md" fallback="8" />
-<Avatar size="lg" fallback="12" />
-<Avatar size="xl" fallback="99" />
-<Avatar size="2xl" fallback="99+" />
-```
-
-### Customization
-
-```vue
-<Avatar fallback="JP" class="ring-primary-500 ring-2 ring-offset-2" />
-```
+### Classes
 
 ```vue
 <Avatar
   fallback="JP"
   :classes="{
-    root: "ring-2 ring-info-500",
-    fallback: "font-bold tracking-widest",
-  }
+    root: 'ring-2 ring-info-500',
+    fallback: 'font-bold tracking-widest',
+  }"
 />
 ```
 

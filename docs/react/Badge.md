@@ -10,42 +10,16 @@ import { Badge } from "@bridge-ui/react/Components/Badge";
 
 ## Examples
 
-### Default
+### Usage
 
 ```tsx
-<Badge color="primary">"P"</Badge>
-<Badge variant="flat">F</Badge>
-<Badge size="2xs">2</Badge>
-<Badge rounded="none">1</Badge>
-```
+<Badge>New</Badge>
 
-### Mini
+<Badge density="mini">3</Badge>
 
-```tsx
-<Badge density="mini" color="primary">"P"</Badge>
-<Badge density="mini" variant="flat">F</Badge>
-<Badge density="mini" size="2xs">2</Badge>
-<Badge density="mini" rounded="none">1</Badge>
-```
-
-### Variants
-
-```tsx
-<Badge variant="flat">Flat</Badge>
-<Badge variant="solid">Solid</Badge>
-<Badge variant="outline">Outline</Badge>
-```
-
-### Sizes
-
-```tsx
-<Badge size="2xs">2xs</Badge>
-<Badge size="xs">xs</Badge>
-<Badge size="sm">sm</Badge>
-<Badge size="md">md</Badge>
-<Badge size="lg">lg</Badge>
-<Badge size="xl">xl</Badge>
-<Badge size="2xl">2xl</Badge>
+<Badge color="success" variant="flat">
+  Active
+</Badge>
 ```
 
 ### Custom classes

@@ -10,80 +10,31 @@ import { Button } from "@bridge-ui/react/Components/Button";
 
 ## Examples
 
-### Default
+### Usage
 
 ```tsx
-<Button color="primary" variant="light" aria-label="primary">
-  Click me
+<Button color="primary">Click me</Button>
+
+<Button variant="outline" startIcon={Plus}>
+  With icon
 </Button>
-```
 
-### Mini
-
-```tsx
-<Button density="mini" color="primary" variant="light" aria-label="primary">
-  Click me
-</Button>
-```
-
-### Variants
-
-```tsx
-<Button variant="solid">Solid</Button>
-<Button variant="outline">Outline</Button>
-<Button variant="flat">Flat</Button>
-<Button variant="light">Light</Button>
-```
-
-### Sizes
-
-```tsx
-<Button size="2xs">Size 2xs</Button>
-<Button size="xs">Size xs</Button>
-<Button size="sm">Size sm</Button>
-<Button size="md">Size md</Button>
-<Button size="lg">Size lg</Button>
-<Button size="xl">Size xl</Button>
-<Button size="2xl">Size 2xl</Button>
-```
-
-### States
-
-```tsx
-<Button disabled>Disabled</Button>
-<Button loading>Loading</Button>
-```
-
-### Icons
-
-```tsx
-<Button startIcon={Plus}>Start icon</Button>
-<Button endIcon={ArrowRight}>End icon</Button>
-<Button startIcon={Plus} endIcon={ArrowRight}>
-  Both icons
-</Button>
-```
-
-### Full width
-
-```tsx
-<Button full>Full width button</Button>
-```
-
-### As link
-
-```tsx
 <Button as="a" href="https://example.com">
   External link
 </Button>
 ```
 
-### Custom classes
+### Density
 
 ```tsx
-<Button color="primary" className="tracking-widest uppercase shadow-lg">
-  Styled root
-</Button>
+<Button density="mini" icon={Settings} aria-label="Settings" />
+```
+
+### States
+
+```tsx
+<Button loading>Loading</Button>
+<Button disabled>Disabled</Button>
 ```
 
 ### Slots

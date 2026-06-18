@@ -10,30 +10,17 @@ import { Alert } from "@bridge-ui/react/Components/Alert";
 
 ## Examples
 
-### Colors & variants
+### Usage
 
 ```tsx
-<Alert color="primary" title="Alert Message!" />
+<Alert color="primary" title="Heads up" />
 
-<Alert color="error" title="Alert Message!">
-  This is a description of the alert message.
+<Alert color="error" title="Something went wrong">
+  Please try again in a few minutes.
 </Alert>
 
-<Alert color="warning" variant="flat" title="Alert Message!">
-  This is a description of the alert message.
-</Alert>
-
-<Alert color="success" variant="outline" title="Alert Message!">
-  This is a description of the alert message.
-</Alert>
-
-<Alert
-  color="info"
-  rounded="2xl"
-  variant="solid"
-  title="Alert Message!"
->
-  This is a description of the alert message.
+<Alert color="success" variant="outline" title="Saved">
+  Your changes were saved successfully.
 </Alert>
 ```
 
@@ -47,25 +34,6 @@ import { Alert } from "@bridge-ui/react/Components/Alert";
   title="Alert Message!"
   classes={{
     title: "text-2xl italic font-extrabold",
-  }}
-/>
-
-<Alert
-  color="dark"
-  shadow="2xl"
-  rounded="2xl"
-  padding="large"
-  title="Alert Message!"
->
-  This is a description of the alert message.
-</Alert>
-
-<Alert
-  color="dark"
-  variant="outline"
-  title="Alert Message!"
-  slots={{
-    icon: <Icon size="md" icon={InfoIcon} />,
   }}
 />
 

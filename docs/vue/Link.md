@@ -10,80 +10,29 @@ import { Link } from "@bridge-ui/vue/Components/Link";
 
 ## Examples
 
-### Default
+### Usage
 
 ```vue
-<Link href="/vue/alert">Go to Alert</Link>
+<Link href="/dashboard">Dashboard</Link>
 
-<Link href="#" color="primary">
-  Primary Link
+<Link href="https://example.com" color="primary" underline="hover">
+  External link
 </Link>
 
-<Link href="#" size="2xs">
-  2xs link
-</Link>
-```
-
-### Underline
-
-```vue
-<Link href="#" underline="always">
-  Always
-</Link>
-<Link href="#" underline="hover">
-  Hover
-</Link>
-<Link href="#" underline="none">
-  None
+<Link href="#" :left-icon="Info">
+  With icon
 </Link>
 ```
 
 ### States
 
 ```vue
-<Link href="/vue/button" disabled>
+<Link href="/button" disabled>
   Disabled
 </Link>
+
 <Link href="https://example.com" external>
   External
-</Link>
-```
-
-### Icons
-
-```vue
-<Link href="#" :left-icon="Info">
-  Left icon
-</Link>
-<Link href="#" :right-icon="ArrowRight">
-  Right icon
-</Link>
-<Link href="#" :left-icon="Info" :right-icon="ExternalLink">
-  Both icons
-</Link>
-```
-
-### Slots
-
-```vue
-<Link href="#">
-  <template #prepend>
-    <span class="text-xs opacity-80">◀</span>
-  </template>
-
-  With slots
-
-  <template #append>
-    <span class="text-xs opacity-80">▶</span>
-  </template>
-</Link>
-```
-
-### Custom classes
-
-```vue
-<Link href="#" class="font-semibold italic">
-  Styled link
 </Link>
 ```
 

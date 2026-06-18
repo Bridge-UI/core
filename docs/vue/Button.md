@@ -10,80 +10,31 @@ import { Button } from "@bridge-ui/vue/Components/Button";
 
 ## Examples
 
-### Default
+### Usage
 
 ```vue
-<Button color="primary" variant="light" aria-label="primary">
-  Click me
+<Button color="primary">Click me</Button>
+
+<Button variant="outline" :start-icon="Plus">
+  With icon
 </Button>
-```
 
-### Mini
-
-```vue
-<Button density="mini" color="primary" variant="light" aria-label="primary">
-  Click me
-</Button>
-```
-
-### Variants
-
-```vue
-<Button variant="solid">Solid</Button>
-<Button variant="outline">Outline</Button>
-<Button variant="flat">Flat</Button>
-<Button variant="light">Light</Button>
-```
-
-### Sizes
-
-```vue
-<Button size="2xs">Size 2xs</Button>
-<Button size="xs">Size xs</Button>
-<Button size="sm">Size sm</Button>
-<Button size="md">Size md</Button>
-<Button size="lg">Size lg</Button>
-<Button size="xl">Size xl</Button>
-<Button size="2xl">Size 2xl</Button>
-```
-
-### States
-
-```vue
-<Button disabled>Disabled</Button>
-<Button loading>Loading</Button>
-```
-
-### Icons
-
-```vue
-<Button :start-icon="Plus">Start icon</Button>
-<Button :end-icon="ArrowRight">End icon</Button>
-<Button :start-icon="Plus" :end-icon="ArrowRight">
-  Both icons
-</Button>
-```
-
-### Full width
-
-```vue
-<Button full>Full width button</Button>
-```
-
-### As link
-
-```vue
 <Button as="a" href="https://example.com">
   External link
 </Button>
 ```
 
-### Custom classes
+### Density
 
 ```vue
-<Button color="primary" class="tracking-widest uppercase shadow-lg">
-  Styled root
-</Button>
+<Button density="mini" :icon="Settings" aria-label="Settings" />
+```
+
+### States
+
+```vue
+<Button loading>Loading</Button>
+<Button disabled>Disabled</Button>
 ```
 
 ### Slots

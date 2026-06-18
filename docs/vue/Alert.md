@@ -10,25 +10,17 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
 
 ## Examples
 
-### Colors & variants
+### Usage
 
 ```vue
-<Alert color="primary" title="Alert Message!" />
+<Alert color="primary" title="Heads up" />
 
-<Alert color="error" title="Alert Message!">
-  This is a description of the alert message.
+<Alert color="error" title="Something went wrong">
+  Please try again in a few minutes.
 </Alert>
 
-<Alert color="warning" variant="flat" title="Alert Message!">
-  This is a description of the alert message.
-</Alert>
-
-<Alert color="success" variant="outline" title="Alert Message!">
-  This is a description of the alert message.
-</Alert>
-
-<Alert color="info" rounded="2xl" variant="solid" title="Alert Message!">
-  This is a description of the alert message.
+<Alert color="success" variant="outline" title="Saved">
+  Your changes were saved successfully.
 </Alert>
 ```
 
@@ -45,22 +37,6 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
   }"
 />
 
-<Alert
-  color="dark"
-  shadow="2xl"
-  rounded="2xl"
-  padding="large"
-  title="Alert Message!"
->
-  This is a description of the alert message.
-</Alert>
-
-<Alert color="dark" variant="outline" title="Alert Message!">
-  <template #icon>
-    <Icon size="md" :icon="Info" />
-  </template>
-</Alert>
-
 <Alert color="primary" title="Alert Message!">
   <template #action>
     <Button size="sm" color="primary" variant="flat">Dismiss</Button>
@@ -75,7 +51,7 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
   <template #footer>
     <Button size="sm" color="secondary">Cancel</Button>
 
-      <Button size="sm" color="secondary">Confirm</Button>
+    <Button size="sm" color="secondary">Confirm</Button>
   </template>
 </Alert>
 ```
