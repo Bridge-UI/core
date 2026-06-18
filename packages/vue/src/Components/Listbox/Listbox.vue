@@ -124,7 +124,7 @@ function handleSelect(option: ListboxOption) {
     :placement="placement"
     :close-on-click-away="true"
     :disable-auto-focus="disableAutoFocus"
-    :parts-props="{ content: merged.customProps?.content }"
+    :custom-props="{ content: merged.customProps?.content }"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"
@@ -165,7 +165,7 @@ function handleSelect(option: ListboxOption) {
           v-for="(option, index) in options"
           :id="`${listboxId}-option-${index}`"
           :aria-selected="resolveSelected(option.value)"
-          :parts-props="getOptionCustomProps(option, index)"
+          :custom-props="getOptionCustomProps(option, index)"
         >
           <template v-if="hasNamedSlot(slots, 'option')" #default>
             <slot
