@@ -14,7 +14,11 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
 
 ```tsx
 <BridgeUIProvider
-  global={{ theme: "light", locale: "en-US", direction: "ltr" }}
+  global={{
+    theme: "light",
+    locale: "en-US",
+    direction: "ltr",
+  }}
 >
   <App />
 </BridgeUIProvider>

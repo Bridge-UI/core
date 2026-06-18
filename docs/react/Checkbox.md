@@ -24,7 +24,10 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
   onChange={(event) => setTerms(event.target.checked)}
 />
 
-<Checkbox indeterminate mainLabel="Select all" />
+<Checkbox
+  indeterminate
+  mainLabel="Select all"
+/>
 ```
 
 ### Required and error
@@ -42,9 +45,17 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 ### States
 
 ```tsx
-<Checkbox disabled defaultChecked mainLabel="Disabled" />
+<Checkbox
+  disabled
+  defaultChecked
+  mainLabel="Disabled"
+/>
 
-<Checkbox readonly defaultChecked mainLabel="Read-only" />
+<Checkbox
+  readonly
+  defaultChecked
+  mainLabel="Read-only"
+/>
 ```
 
 ### customProps
@@ -53,9 +64,9 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 <Checkbox
   mainLabel="Accept terms"
   customProps={{
+    icon: { "aria-hidden": true },
     input: { name: "terms", value: "yes" },
     control: { "data-testid": "terms-control" },
-    icon: { "aria-hidden": true },
   }}
 />
 ```
@@ -77,19 +88,7 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 
 ### Inherited from FormControl
 
-| Prop                  | Type      | Default | Description                 |
-| --------------------- | --------- | ------- | --------------------------- |
-| `controlId`           | `string`  | —       | Associated control id       |
-| `description`         | `string`  | —       | Helper text                 |
-| `disabled`            | `boolean` | `false` | Disabled                    |
-| `endLabel`            | `string`  | —       | Label at the end of the row |
-| `error`               | `boolean` | `false` | Error state                 |
-| `errorMessage`        | `string`  | —       | Error message               |
-| `mainLabel`           | `string`  | —       | Label after the control     |
-| `readonly`            | `boolean` | `false` | Read-only                   |
-| `required`            | `boolean` | `false` | Required                    |
-| `startLabel`          | `string`  | —       | Label before the control    |
-| `withoutErrorMessage` | `boolean` | `false` | Hide error message row      |
+See [FormControl](./FormControl.md).
 
 ## Related components
 

@@ -35,7 +35,12 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 ### Required and error
 
 ```tsx
-<Radio required name="required" value="req" mainLabel="Required field" />
+<Radio
+  required
+  value="req"
+  name="required"
+  mainLabel="Required field"
+/>
 
 <Radio
   error
@@ -55,8 +60,8 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
   mainLabel="Pro plan"
   customProps={{
     input: { id: "plan-pro" },
-    control: { "data-testid": "plan-pro-control" },
     dot: { "aria-hidden": true },
+    control: { "data-testid": "plan-pro-control" },
   }}
 />
 ```
@@ -73,18 +78,7 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 
 ### Inherited from FormControl
 
-| Prop           | Type      | Default | Description                 |
-| -------------- | --------- | ------- | --------------------------- |
-| `mainLabel`    | `string`  | —       | Label after the control     |
-| `startLabel`   | `string`  | —       | Label before the control    |
-| `endLabel`     | `string`  | —       | Label at the end of the row |
-| `description`  | `string`  | —       | Helper text                 |
-| `error`        | `boolean` | `false` | Error state                 |
-| `errorMessage` | `string`  | —       | Error message               |
-| `required`     | `boolean` | `false` | Required                    |
-| `disabled`     | `boolean` | `false` | Disabled                    |
-| `readonly`     | `boolean` | `false` | Read-only                   |
-| `size`         | `Size`    | `"md"`  | Control size                |
+See [FormControl](./FormControl.md).
 
 ## Related components
 

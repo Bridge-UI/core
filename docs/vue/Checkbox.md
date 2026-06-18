@@ -49,9 +49,9 @@ import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 <Checkbox
   main-label="Accept terms"
   :custom-props="{
+    icon: { 'aria-hidden': true },
     input: { name: 'terms', value: 'yes' },
     control: { 'data-testid': 'terms-control' },
-    icon: { 'aria-hidden': true },
   }"
 />
 ```
@@ -73,19 +73,7 @@ import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 
 ### Inherited from FormControl
 
-| Prop                  | Type      | Default | Description                 |
-| --------------------- | --------- | ------- | --------------------------- |
-| `controlId`           | `string`  | —       | Associated control id       |
-| `description`         | `string`  | —       | Helper text                 |
-| `disabled`            | `boolean` | `false` | Disabled                    |
-| `endLabel`            | `string`  | —       | Label at the end of the row |
-| `error`               | `boolean` | `false` | Error state                 |
-| `errorMessage`        | `string`  | —       | Error message               |
-| `mainLabel`           | `string`  | —       | Label after the control     |
-| `readonly`            | `boolean` | `false` | Read-only                   |
-| `required`            | `boolean` | `false` | Required                    |
-| `startLabel`          | `string`  | —       | Label before the control    |
-| `withoutErrorMessage` | `boolean` | `false` | Hide error message row      |
+See [FormControl](./FormControl.md).
 
 ## Related components
 

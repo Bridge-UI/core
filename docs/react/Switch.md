@@ -28,7 +28,10 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 ### Required and error
 
 ```tsx
-<Switch required mainLabel="Required field" />
+<Switch
+  required
+  mainLabel="Required field"
+/>
 
 <Switch
   error
@@ -65,18 +68,7 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 
 ### Inherited from FormControl
 
-| Prop                  | Type      | Default | Description                 |
-| --------------------- | --------- | ------- | --------------------------- |
-| `description`         | `string`  | —       | Helper text                 |
-| `disabled`            | `boolean` | `false` | Disabled                    |
-| `endLabel`            | `string`  | —       | Label at the end of the row |
-| `error`               | `boolean` | `false` | Error state                 |
-| `errorMessage`        | `string`  | —       | Error message               |
-| `mainLabel`           | `string`  | —       | Label after the control     |
-| `readonly`            | `boolean` | `false` | Read-only                   |
-| `required`            | `boolean` | `false` | Required                    |
-| `startLabel`          | `string`  | —       | Label before the control    |
-| `withoutErrorMessage` | `boolean` | `false` | Hide error message row      |
+See [FormControl](./FormControl.md).
 
 ## Related components
 

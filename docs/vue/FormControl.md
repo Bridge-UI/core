@@ -39,18 +39,25 @@ import { FormControl } from "@bridge-ui/vue/Components/FormControl";
 
 ## Props
 
-| Prop           | Type      | Default | Description                 |
-| -------------- | --------- | ------- | --------------------------- |
-| `description`  | `string`  | —       | Helper text                 |
-| `disabled`     | `boolean` | `false` | Disabled                    |
-| `endLabel`     | `string`  | —       | Label at the end of the row |
-| `error`        | `boolean` | `false` | Error state                 |
-| `errorMessage` | `string`  | —       | Error message               |
-| `mainLabel`    | `string`  | —       | Label after the control     |
-| `readonly`     | `boolean` | `false` | Read-only                   |
-| `required`     | `boolean` | `false` | Required                    |
-| `size`         | `Size`    | `"md"`  | Control size                |
-| `startLabel`   | `string`  | —       | Label before the control    |
+| Prop                  | Type                     | Default | Description                                              |
+| --------------------- | ------------------------ | ------- | -------------------------------------------------------- |
+| default slot          | —                        | —       | Form control inside the row                              |
+| `classes`             | `FormControlClasses`     | —       | Per-part classes (`root`, `row`, labels, description, …) |
+| `controlId`           | `string`                 | —       | Associated control id (auto-generated when omitted)      |
+| `customProps`         | `FormControlCustomProps` | —       | Props for internal parts                                 |
+| `description`         | `string`                 | —       | Helper text below the row (hidden when invalid)          |
+| `disabled`            | `boolean`                | `false` | Disabled state                                           |
+| `endLabel`            | `string`                 | —       | Inline-end label after the main label                    |
+| `error`               | `boolean`                | `false` | Invalid styling on labels; hides description             |
+| `errorMessage`        | `string`                 | —       | Error message below the row                              |
+| `field`               | `UseFormControlReturn`   | —       | Pre-composed API for `<FormControl :field="…" />` only   |
+| `mainLabel`           | `string`                 | —       | Main label next to the control                           |
+| `readonly`            | `boolean`                | `false` | Read-only state                                          |
+| `required`            | `boolean`                | `false` | Sets native `required` on the control                    |
+| `size`                | `LabelSize`              | `"md"`  | Typography scale for labels, description, and error      |
+| `slots`               | `FormControlSlots`       | —       | `mainLabel`, `startLabel`, `endLabel`, `description`, …  |
+| `startLabel`          | `string`                 | —       | Inline-start label before the control                    |
+| `withoutErrorMessage` | `boolean`                | `false` | Do not reserve space below the row for errors            |
 
 ## Related components
 
