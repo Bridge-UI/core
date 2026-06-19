@@ -5,16 +5,18 @@ import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useNumberField } from "@/Components/NumberField";
+import type { NumberFieldOwnProps } from "@/Components/NumberField/numberField.types";
 
 function mountUseNumberField(
   model: ReturnType<typeof ref<number | null | undefined>>,
-  options: Parameters<typeof useNumberField>[1] = {},
+  props: Partial<NumberFieldOwnProps> = {},
+  options: { onChange?: (value: number) => void } = {},
 ) {
   let result!: ReturnType<typeof useNumberField>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = useNumberField(model, options);
+      result = useNumberField(props as NumberFieldOwnProps, model, options);
 
       return () => h("div");
     },
@@ -25,20 +27,18 @@ function mountUseNumberField(
   return result;
 }
 
-test("it should return undefined inputValue when no value is set", () => {
+test("it should return undefined stringModel when no value is set", () => {
   const model = ref<number | null | undefined>(undefined);
-  const { inputValue, currentValue } = mountUseNumberField(model);
+  const { stringModel } = mountUseNumberField(model);
 
-  expect(inputValue.value).toBeUndefined();
-  expect(currentValue.value).toBeUndefined();
+  expect(stringModel.value).toBeUndefined();
 });
 
 test("it should reflect model value", () => {
   const model = ref(5);
-  const { inputValue, currentValue } = mountUseNumberField(model);
+  const { stringModel } = mountUseNumberField(model);
 
-  expect(inputValue.value).toBe("5");
-  expect(currentValue.value).toBe(5);
+  expect(stringModel.value).toBe("5");
 });
 
 test("it should increment by step", () => {
@@ -62,7 +62,7 @@ test("it should decrement by step", () => {
 test("it should call onChange when incrementing", () => {
   const onChange = vi.fn();
   const model = ref(2);
-  const { increment } = mountUseNumberField(model, { step: 2, onChange });
+  const { increment } = mountUseNumberField(model, { step: 2 }, { onChange });
 
   increment();
 

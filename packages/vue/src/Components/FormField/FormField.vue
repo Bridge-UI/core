@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { type Component, computed } from "vue";
+import { type Component, computed, useSlots } from "vue";
 
 // ** Local Imports
 import FilledFormField from "@/Components/FormField/FilledFormField.vue";
@@ -20,8 +20,16 @@ const props = defineProps<{
   field: UseFormFieldReturn;
 }>();
 
+const localSlots = useSlots();
+
 const api = computed((): UseFormFieldReturn => {
-  return props.field;
+  return {
+    ...props.field,
+    slots: {
+      ...props.field.slots,
+      ...localSlots,
+    },
+  };
 });
 
 const shells: Record<string, Component> = {

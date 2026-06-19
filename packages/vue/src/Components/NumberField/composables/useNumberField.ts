@@ -1,27 +1,118 @@
+// ** External Imports
 import { isNil } from "es-toolkit/compat";
-import { computed, type Ref } from "vue";
+import { computed, useAttrs, type Ref } from "vue";
+
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
+
+// ** Local Imports
+import { useFormField } from "@/Components/FormField/composables/useFormField";
+import type {
+  NumberFieldClasses,
+  NumberFieldOwnProps,
+} from "@/Components/NumberField/numberField.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 
 export type UseNumberFieldOptions = {
-  max?: number;
-  min?: number;
   onChange?: (value: number) => void;
-  step?: number;
 };
 
+/**
+ * Composes `NumberField` form chrome, input bind, registry classes, and stepper logic.
+ */
 export function useNumberField(
+  props: NumberFieldOwnProps,
   model: Ref<number | null | undefined>,
-  options: UseNumberFieldOptions,
+  options: UseNumberFieldOptions = {},
 ) {
-  const step = options.step ?? 1;
+  const attrs = useAttrs();
+  const step = computed(() => props.step ?? 1);
+
+  const { entry } = useBridgeUIComponent<
+    Pick<NumberFieldOwnProps, "classes">,
+    "NumberField"
+  >({
+    componentName: "NumberField",
+    props: () => ({ classes: props.classes }),
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<NumberFieldClasses>({
+    entry,
+    props: () => ({ classes: props.classes }),
+  });
+
+  const formField = useFormField(
+    () => {
+      const {
+        min: _min,
+        max: _max,
+        step: _step,
+        classes: _classes,
+        ...rest
+      } = props;
+
+      return {
+        ...attrs,
+        ...rest,
+        withErrorIcon: false,
+        classes: mergedClasses.value,
+      };
+    },
+    {
+      size: "md",
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+      withErrorIcon: false,
+    },
+    {
+      reservedSlots: () => ["end"],
+    },
+  );
+
+  const inputBind = computed(() => {
+    return mergePartBind(
+      formField.inputBind.value,
+      {
+        type: "number",
+        min: props.min,
+        max: props.max,
+        step: step.value,
+      },
+      cn({
+        "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none": true,
+      }),
+    );
+  });
 
   const currentValue = computed(() => model.value ?? undefined);
 
-  const inputValue = computed(() => {
-    if (isNil(currentValue.value)) {
-      return undefined;
-    }
+  const stringModel = computed({
+    get: () => {
+      if (isNil(currentValue.value)) {
+        return undefined;
+      }
 
-    return String(currentValue.value);
+      return String(currentValue.value);
+    },
+    set: (raw: string | null | undefined) => {
+      if (raw === "" || isNil(raw)) {
+        model.value = undefined;
+
+        return;
+      }
+
+      const parsed = Number(raw);
+
+      if (!Number.isNaN(parsed)) {
+        model.value = parsed;
+        options.onChange?.(parsed);
+      }
+    },
   });
 
   const setValue = (next: number) => {
@@ -30,11 +121,10 @@ export function useNumberField(
   };
 
   const increment = (): boolean => {
-    const base = currentValue.value ?? options.min ?? 0;
+    const base = currentValue.value ?? props.min ?? 0;
+    const next = base + step.value;
 
-    const next = base + step;
-
-    if (!isNil(options.max) && next > options.max) {
+    if (!isNil(props.max) && next > props.max) {
       return false;
     }
 
@@ -44,11 +134,10 @@ export function useNumberField(
   };
 
   const decrement = (): boolean => {
-    const base = currentValue.value ?? options.min ?? 0;
+    const base = currentValue.value ?? props.min ?? 0;
+    const next = base - step.value;
 
-    const next = base - step;
-
-    if (!isNil(options.min) && next < options.min) {
+    if (!isNil(props.min) && next < props.min) {
       return false;
     }
 
@@ -59,8 +148,10 @@ export function useNumberField(
 
   return {
     decrement,
+    formField,
     increment,
-    inputValue,
-    currentValue,
+    inputBind,
+    stringModel,
+    mergedClasses,
   };
 }

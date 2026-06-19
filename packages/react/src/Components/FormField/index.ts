@@ -17,5 +17,6 @@ export {
 } from "@/Components/FormField/hooks/useFormField";
 export type {
   FormFieldOptions,
+  FormFieldReservedSlotName,
   UseFormFieldReturn,
 } from "@/Components/FormField/hooks/useFormField";

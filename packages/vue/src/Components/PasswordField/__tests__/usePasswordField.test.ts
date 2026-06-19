@@ -1,19 +1,21 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
-import { defineComponent, h, toRef } from "vue";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { usePasswordField } from "@/Components/PasswordField";
+import type { PasswordFieldOwnProps } from "@/Components/PasswordField/passwordField.types";
 
 function mountUsePasswordField(
-  options: Parameters<typeof usePasswordField>[0],
+  props: Partial<PasswordFieldOwnProps> = {},
+  options: { onVisibilityChange?: (visible: boolean) => void } = {},
 ) {
   let result!: ReturnType<typeof usePasswordField>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = usePasswordField(options);
+      result = usePasswordField(props as PasswordFieldOwnProps, options);
 
       return () => h("div");
     },
@@ -50,7 +52,10 @@ test("it should toggle visibility when uncontrolled", () => {
 
 test("it should call onVisibilityChange when toggling", () => {
   const onVisibilityChange = vi.fn();
-  const { toggleVisibility } = mountUsePasswordField({ onVisibilityChange });
+  const { toggleVisibility } = mountUsePasswordField(
+    {},
+    { onVisibilityChange },
+  );
 
   toggleVisibility();
   toggleVisibility();
@@ -59,13 +64,11 @@ test("it should call onVisibilityChange when toggling", () => {
   expect(onVisibilityChange).toHaveBeenLastCalledWith(false);
 });
 
-test("it should read visible from props via toRef", () => {
+test("it should read visible from props", () => {
   const Wrapper = defineComponent({
     props: { visible: Boolean },
     setup(props) {
-      const { isVisible } = usePasswordField({
-        visible: toRef(props, "visible"),
-      });
+      const { isVisible } = usePasswordField(props);
 
       return () => h("span", { "data-visible": String(isVisible.value) });
     },
