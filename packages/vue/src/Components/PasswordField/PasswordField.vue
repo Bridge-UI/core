@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { Eye, EyeOff } from "lucide-vue-next";
-import { computed, nextTick, toRef, watch } from "vue";
+import { computed, toRef } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -41,23 +41,8 @@ const { isVisible, toggleVisibility } = usePasswordField({
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
 
-watch(
-  isVisible,
-  async () => {
-    const value = model.value;
-
-    if (value == null || value === "") {
-      return;
-    }
-
-    await nextTick();
-    model.value = value;
-  },
-  { flush: "pre" },
-);
-
 const textFieldProps = computed(() => {
-  const { visible: _visible, ...rest } = props;
+  const { visible: _visible, modelValue: _modelValue, ...rest } = props;
 
   return rest;
 });
