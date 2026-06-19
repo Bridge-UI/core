@@ -57,3 +57,44 @@ test("it should render a label when label prop is provided", () => {
 
   expect(wrapper.text()).toContain("Password");
 });
+
+test("it should preserve value when controlled visible toggles from parent", async () => {
+  const wrapper = mount(PasswordField, {
+    props: {
+      visible: false,
+      label: "Password",
+      modelValue: "secret",
+      "onUpdate:modelValue": (value: string | null | undefined) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "secret",
+  );
+
+  await wrapper.setProps({ visible: true });
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "secret",
+  );
+});
+
+test("it should preserve value when visibility toggles via the eye button", async () => {
+  const wrapper = mount(PasswordField, {
+    props: {
+      modelValue: "secret",
+      "onUpdate:modelValue": (value: string | null | undefined) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  await wrapper.find('button[aria-label="Show password"]').trigger("click");
+  await wrapper.find('button[aria-label="Hide password"]').trigger("click");
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "secret",
+  );
+});

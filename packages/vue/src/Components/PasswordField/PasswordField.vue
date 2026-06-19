@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { Eye, EyeOff } from "lucide-vue-next";
-import { computed, toRef } from "vue";
+import { computed, nextTick, toRef, watch } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -41,13 +41,20 @@ const { isVisible, toggleVisibility } = usePasswordField({
 
 const inputType = computed(() => (isVisible.value ? "text" : "password"));
 
-const mergedCustomProps = computed(() => ({
-  ...props.customProps,
-  input: {
-    ...props.customProps?.input,
-    type: inputType.value,
+watch(
+  isVisible,
+  async () => {
+    const value = model.value;
+
+    if (value == null || value === "") {
+      return;
+    }
+
+    await nextTick();
+    model.value = value;
   },
-}));
+  { flush: "pre" },
+);
 
 const textFieldProps = computed(() => {
   const { visible: _visible, ...rest } = props;
@@ -67,9 +74,10 @@ const toggleIconSize = computed(() => {
       ...textFieldProps,
       ...$attrs,
     }"
+    :type="inputType"
     :classes="mergedClasses"
     :with-error-icon="false"
-    :custom-props="mergedCustomProps"
+    :custom-props="props.customProps"
   >
     <template #end>
       <button
