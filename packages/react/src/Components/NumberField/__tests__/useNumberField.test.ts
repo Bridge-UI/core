@@ -5,18 +5,16 @@ import { expect, test, vi } from "vitest";
 // ** Local Imports
 import { useNumberField } from "@/Components/NumberField";
 
-test("it should return undefined inputValue when no value is set", () => {
+test("it should return empty input value when no value is set", () => {
   const { result } = renderHook(() => useNumberField({}));
 
-  expect(result.current.inputValue).toBeUndefined();
-  expect(result.current.currentValue).toBeUndefined();
+  expect(result.current.inputBind.value).toBe("");
 });
 
 test("it should reflect controlled value", () => {
   const { result } = renderHook(() => useNumberField({ value: 5 }));
 
-  expect(result.current.inputValue).toBe("5");
-  expect(result.current.currentValue).toBe(5);
+  expect(result.current.inputBind.value).toBe("5");
 });
 
 test("it should increment by step", () => {

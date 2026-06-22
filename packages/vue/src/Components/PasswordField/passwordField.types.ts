@@ -6,20 +6,20 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
-  TextFieldClasses,
-  TextFieldCustomProps,
-  TextFieldOwnProps,
-  TextFieldSlots,
-} from "@/Components/TextField/textField.types";
+  FormFieldClasses,
+  FormFieldCustomProps,
+  FormFieldOwnProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 
-export interface PasswordFieldClasses extends TextFieldClasses {
+export interface PasswordFieldClasses extends FormFieldClasses {
   /**
    * The classes to apply to the visibility toggle button.
    */
   toggle?: string;
 }
 
-export interface PasswordFieldCustomProps extends TextFieldCustomProps {}
+export interface PasswordFieldCustomProps extends FormFieldCustomProps {}
 
 export interface PasswordFieldEmits {
   /**
@@ -29,7 +29,10 @@ export interface PasswordFieldEmits {
   "visibility-change": [visible: boolean];
 }
 
-export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
+export interface PasswordFieldOwnProps extends Omit<
+  FormFieldOwnProps,
+  "type" | "field" | "classes"
+> {
   /**
    * The classes to apply to the password field.
    */
@@ -41,7 +44,7 @@ export interface PasswordFieldOwnProps extends Omit<TextFieldOwnProps, "type"> {
   visible?: boolean | null;
 }
 
-export interface PasswordFieldSlots extends TextFieldSlots {}
+export interface PasswordFieldSlots extends FormFieldSlots {}
 
 export type PasswordFieldProps = MergeHtmlProps<
   PasswordFieldOwnProps,

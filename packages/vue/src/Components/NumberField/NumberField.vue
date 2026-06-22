@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { isNil } from "es-toolkit/compat";
 import { ChevronDown, ChevronUp } from "lucide-vue-next";
 import { computed } from "vue";
 
@@ -8,15 +7,14 @@ import { computed } from "vue";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
+import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/composables/useNumberField";
-import { useNumberFieldClasses } from "@/Components/NumberField/composables/useNumberFieldClasses";
 import type {
   NumberFieldEmits,
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
-import { TextField } from "@/Components/TextField";
 import { resolveFieldAdornmentIconSize, useHoldRepeat } from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
@@ -31,12 +29,14 @@ const props = withDefaults(defineProps<NumberFieldOwnProps>(), {
   step: 1,
 });
 
-const mergedClasses = useNumberFieldClasses(props);
-
-const { increment, decrement } = useNumberField(model, {
-  min: props.min,
-  max: props.max,
-  step: props.step,
+const {
+  decrement,
+  formField,
+  increment,
+  inputBind,
+  stringModel,
+  mergedClasses,
+} = useNumberField(props, model, {
   onChange: (value) => emit("change", value),
 });
 
@@ -54,71 +54,15 @@ const decrementHold = useHoldRepeat(
   }),
 );
 
-const textFieldProps = computed(() => {
-  const { min: _min, max: _max, step: _step, ...rest } = props;
-
-  return rest;
-});
-
 const stepperIconSize = computed(() => {
   return resolveFieldAdornmentIconSize(props.size);
-});
-
-const mergedCustomProps = computed(() => {
-  const inputClass = cn(
-    "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-    props.customProps?.input?.class,
-  );
-
-  return {
-    ...props.customProps,
-    input: {
-      ...props.customProps?.input,
-      class: inputClass,
-    },
-  };
-});
-
-const stringModel = computed({
-  get: () => {
-    if (isNil(model.value)) {
-      return undefined;
-    }
-
-    return String(model.value);
-  },
-  set: (raw: string | null | undefined) => {
-    if (raw === "" || isNil(raw)) {
-      model.value = undefined;
-
-      return;
-    }
-
-    const parsed = Number(raw);
-
-    if (!Number.isNaN(parsed)) {
-      model.value = parsed;
-      emit("change", parsed);
-    }
-  },
 });
 </script>
 
 <template>
-  <TextField
-    v-model="stringModel"
-    v-bind="{
-      ...textFieldProps,
-      ...$attrs,
-    }"
-    type="number"
-    :min="props.min"
-    :max="props.max"
-    :step="props.step"
-    :classes="mergedClasses"
-    :with-error-icon="false"
-    :custom-props="mergedCustomProps"
-  >
+  <FormField :field="formField">
+    <input v-model="stringModel" v-bind="inputBind" />
+
     <template #end>
       <div
         class="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden"
@@ -160,5 +104,5 @@ const stringModel = computed({
         </button>
       </div>
     </template>
-  </TextField>
+  </FormField>
 </template>

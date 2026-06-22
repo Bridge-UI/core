@@ -30,6 +30,7 @@ import {
 import type {
   FormFieldClasses,
   FormFieldOwnProps,
+  FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 import {
   hasNamedSlot,
@@ -38,6 +39,11 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+export type FormFieldReservedSlotName = Exclude<
+  keyof FormFieldSlots,
+  "default"
+>;
 
 export type FormFieldOptions = {
   /**
@@ -51,6 +57,12 @@ export type FormFieldOptions = {
    * When the control is a `<textarea>`, use compact TextField-like sizing tokens.
    */
   likeInput?: () => boolean | undefined;
+
+  /**
+   * Slots rendered on `<FormField>` by the field wrapper instead of received
+   * from a parent consumer. Reserves matching container inset spacing.
+   */
+  reservedSlots?: () => readonly FormFieldReservedSlotName[] | undefined;
 };
 
 export const formFieldBridgeKeys = [
@@ -294,8 +306,11 @@ export function useFormField(
   });
 
   const containerSpacing = computed(() => {
-    const hasEndSlot = hasNamedSlot(slots, "end");
-    const hasStartSlot = hasNamedSlot(slots, "start");
+    const reserved = options.reservedSlots?.() ?? [];
+
+    const hasEndSlot = hasNamedSlot(slots, "end") || reserved.includes("end");
+    const hasStartSlot =
+      hasNamedSlot(slots, "start") || reserved.includes("start");
 
     if (isStacked.value) {
       return undefined;
