@@ -68,15 +68,6 @@ jobs:
       - run: npm ci
       - run: npm run build
         if: steps.cache-dist.outputs.cache-hit != 'true'
-      - uses: actions/upload-artifact@v4
-        with:
-          retention-days: 1
-          name: package-dist
-          if-no-files-found: error
-          path: |
-            packages/vue/dist
-            packages/core/dist
-            packages/react/dist
 
   type-check:
     needs: build
@@ -85,15 +76,21 @@ jobs:
     if: github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: package-dist
-          path: .
       - uses: actions/setup-node@v4
         with:
           cache: npm
           node-version: 22
+      - uses: actions/cache@v4
+        id: cache-dist
+        with:
+          path: |
+            packages/vue/dist
+            packages/core/dist
+            packages/react/dist
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
+      - run: npm run build:core
+        if: steps.cache-dist.outputs.cache-hit != 'true'
       - run: npm run type-check
 
   test:
@@ -107,15 +104,21 @@ jobs:
         package: [vue, core, react]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: package-dist
-          path: .
       - uses: actions/setup-node@v4
         with:
           cache: npm
           node-version: 22
+      - uses: actions/cache@v4
+        id: cache-dist
+        with:
+          path: |
+            packages/vue/dist
+            packages/core/dist
+            packages/react/dist
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
+      - run: npm run build:core
+        if: steps.cache-dist.outputs.cache-hit != 'true'
       - run: npm run test:${{ matrix.package }}
 
   cypress:
@@ -129,15 +132,21 @@ jobs:
         package: [vue, react]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: package-dist
-          path: .
       - uses: actions/setup-node@v4
         with:
           cache: npm
           node-version: 22
+      - uses: actions/cache@v4
+        id: cache-dist
+        with:
+          path: |
+            packages/vue/dist
+            packages/core/dist
+            packages/react/dist
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
+      - run: npm run build:core
+        if: steps.cache-dist.outputs.cache-hit != 'true'
       - name: Component tests
         uses: cypress-io/github-action@v6
         with:
