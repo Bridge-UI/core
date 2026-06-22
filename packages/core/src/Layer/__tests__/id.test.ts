@@ -3,10 +3,7 @@ import { isString } from "es-toolkit/compat";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import {
-  createLayerId,
-  resetLayerIdCounterForTests,
-} from "@core/Layer/registry";
+import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
 
 test("it should generate unique ids", () => {
   resetLayerIdCounterForTests();

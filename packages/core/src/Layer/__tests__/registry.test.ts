@@ -15,8 +15,8 @@ import {
   trimLayersToMax,
   updateLayer,
   updateLayerMerged,
-} from "@core/Layer/registry";
-import type { LayerRegistryEntry } from "@core/Layer/types";
+} from "@/Layer/registry";
+import type { LayerRegistryEntry } from "@/Layer/types";
 
 type TestEntry = LayerRegistryEntry & { label: string };
 

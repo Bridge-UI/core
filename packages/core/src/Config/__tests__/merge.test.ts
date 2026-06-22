@@ -6,8 +6,8 @@ import {
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-} from "@core/Config/merge";
-import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
+} from "@/Config/merge";
+import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 
 test("it should return base when no partials provided", () => {
   const result = mergeBridgeUIGlobal({

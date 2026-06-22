@@ -1,10 +1,6 @@
 // ** Local Imports
-import type { AlertColor } from "@core/Components/Alert/Color";
-import {
-  flatProps,
-  outlineProps,
-  solidProps,
-} from "@core/Components/Alert/Color";
+import type { AlertColor } from "@/Components/Alert/Color";
+import { flatProps, outlineProps, solidProps } from "@/Components/Alert/Color";
 
 export interface AlertVariant {
   /**

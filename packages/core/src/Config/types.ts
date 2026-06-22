@@ -6,14 +6,14 @@ import type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@core/Components/Alert";
+} from "@/Components/Alert";
 import type {
   AvatarColor,
   AvatarColorItem,
   AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
-} from "@core/Components/Avatar";
+} from "@/Components/Avatar";
 import type {
   BadgeColor,
   BadgeColorItem,
@@ -21,7 +21,7 @@ import type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
-} from "@core/Components/Badge";
+} from "@/Components/Badge";
 import type {
   ButtonColor,
   ButtonColorItem,
@@ -29,7 +29,7 @@ import type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@core/Components/Button";
+} from "@/Components/Button";
 import type {
   CardPadding,
   CardPaddingItem,
@@ -38,15 +38,15 @@ import type {
   CardShadow,
   CardVariant,
   CardVariantItem,
-} from "@core/Components/Card";
+} from "@/Components/Card";
 import type {
   CheckboxColor,
   CheckboxColorItem,
   CheckboxInvalidated,
   CheckboxRounded,
   CheckboxSize,
-} from "@core/Components/Checkbox";
-import type { FormControlInvalidated } from "@core/Components/FormControl";
+} from "@/Components/Checkbox";
+import type { FormControlInvalidated } from "@/Components/FormControl";
 import type {
   FormFieldColor,
   FormFieldColorItem,
@@ -57,37 +57,37 @@ import type {
   FormFieldSizeItem,
   FormFieldVariant,
   FormFieldVariantItem,
-} from "@core/Components/FormField";
-import type { IconSize } from "@core/Components/Icon";
-import type { LabelInvalidated, LabelSize } from "@core/Components/Label";
+} from "@/Components/FormField";
+import type { IconSize } from "@/Components/Icon";
+import type { LabelInvalidated, LabelSize } from "@/Components/Label";
 import type {
   LinkColor,
   LinkColorItem,
   LinkSize,
   LinkUnderline,
-} from "@core/Components/Link";
-import type { ListPadding } from "@core/Components/List";
+} from "@/Components/Link";
+import type { ListPadding } from "@/Components/List";
 import type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
-} from "@core/Components/Listbox";
-import type { ListItemAlign } from "@core/Components/ListItem";
-import type { MenuRounded, MenuShadow } from "@core/Components/Menu";
+} from "@/Components/Listbox";
+import type { ListItemAlign } from "@/Components/ListItem";
+import type { MenuRounded, MenuShadow } from "@/Components/Menu";
 import type {
   ModalAlign,
   ModalBlur,
   ModalSize,
   ModalTransition,
   ModalTransitionLayer,
-} from "@core/Components/Modal";
+} from "@/Components/Modal";
 import type {
   RadioColor,
   RadioColorItem,
   RadioInvalidated,
   RadioRounded,
   RadioSize,
-} from "@core/Components/Radio";
+} from "@/Components/Radio";
 import type {
   SnackbarColor,
   SnackbarColorItem,
@@ -95,16 +95,16 @@ import type {
   SnackbarPaddingItem,
   SnackbarPosition,
   SnackbarTransition,
-} from "@core/Components/Snackbar";
+} from "@/Components/Snackbar";
 import type {
   SwitchColor,
   SwitchColorItem,
   SwitchInvalidated,
   SwitchRounded,
   SwitchSize,
-} from "@core/Components/Switch";
-import type { TextareaResize } from "@core/Components/Textarea";
-import type { Overwrite } from "@core/Utils/types";
+} from "@/Components/Switch";
+import type { TextareaResize } from "@/Components/Textarea";
+import type { Overwrite } from "@/Utils/types";
 
 export type Direction = "ltr" | "rtl";
 

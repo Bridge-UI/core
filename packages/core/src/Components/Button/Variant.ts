@@ -1,11 +1,11 @@
 // ** Local Imports
-import type { ButtonColor } from "@core/Components/Button/Color";
+import type { ButtonColor } from "@/Components/Button/Color";
 import {
   flatProps,
   lightProps,
   outlineProps,
   solidProps,
-} from "@core/Components/Button/Color";
+} from "@/Components/Button/Color";
 
 export interface ButtonVariant {
   /**

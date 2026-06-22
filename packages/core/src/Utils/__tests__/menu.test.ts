@@ -1,6 +1,6 @@
 import { afterEach, expect, test, vi } from "vitest";
 
-import { claimOpenMenu, resetOpenMenuLayersForTests } from "@core/Utils/menu";
+import { claimOpenMenu, resetOpenMenuLayersForTests } from "@/Utils/menu";
 
 afterEach(() => {
   resetOpenMenuLayersForTests();

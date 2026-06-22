@@ -1,6 +1,6 @@
 // ** Local Imports
-import type { ButtonSize } from "@core/Components/Button/Size";
-import { defaultSizeProps, miniSizeProps } from "@core/Components/Button/Size";
+import type { ButtonSize } from "@/Components/Button/Size";
+import { defaultSizeProps, miniSizeProps } from "@/Components/Button/Size";
 
 export interface ButtonDensity {
   /**

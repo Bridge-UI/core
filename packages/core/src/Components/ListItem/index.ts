@@ -1,3 +1,3 @@
 // ** Exports
-export { alignProps } from "@core/Components/ListItem/Align";
-export type { ListItemAlign } from "@core/Components/ListItem/Align";
+export { alignProps } from "@/Components/ListItem/Align";
+export type { ListItemAlign } from "@/Components/ListItem/Align";

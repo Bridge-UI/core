@@ -1,6 +1,6 @@
 // ** Local Imports
-import type { BadgeSize } from "@core/Components/Badge/Size";
-import { defaultSizeProps, miniSizeProps } from "@core/Components/Badge/Size";
+import type { BadgeSize } from "@/Components/Badge/Size";
+import { defaultSizeProps, miniSizeProps } from "@/Components/Badge/Size";
 
 export interface BadgeDensity {
   /**

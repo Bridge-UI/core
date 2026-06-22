@@ -4,7 +4,7 @@
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
-import { createPositionable } from "@core/Utils/position";
+import { createPositionable } from "@/Utils/position";
 
 afterEach(() => {
   document.body.innerHTML = "";

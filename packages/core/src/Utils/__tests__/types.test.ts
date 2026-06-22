@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
-import type { MergeHtmlProps } from "@core/Utils/types";
+import type { MergeHtmlProps } from "@/Utils/types";
 
 describe("MergeHtmlProps", () => {
   test("it should merge own props with HTML attributes", () => {

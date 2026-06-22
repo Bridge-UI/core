@@ -8,7 +8,7 @@ import {
   createFocusable,
   createFocusTrap,
   getFocusableElements,
-} from "@core/Utils/focus";
+} from "@/Utils/focus";
 
 afterEach(() => {
   document.body.innerHTML = "";

@@ -6,7 +6,7 @@ export type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@core/Components/Alert";
+} from "@/Components/Alert";
 export type {
   AvatarColor,
   AvatarColorItem,
@@ -14,7 +14,7 @@ export type {
   AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
-} from "@core/Components/Avatar";
+} from "@/Components/Avatar";
 export type {
   BadgeColor,
   BadgeColorItem,
@@ -22,7 +22,7 @@ export type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
-} from "@core/Components/Badge";
+} from "@/Components/Badge";
 export type {
   ButtonColor,
   ButtonColorItem,
@@ -30,7 +30,7 @@ export type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@core/Components/Button";
+} from "@/Components/Button";
 export type {
   CardPadding,
   CardPaddingItem,
@@ -39,14 +39,14 @@ export type {
   CardShadow,
   CardVariant,
   CardVariantItem,
-} from "@core/Components/Card";
+} from "@/Components/Card";
 export type {
   CheckboxColor,
   CheckboxColorItem,
   CheckboxRounded,
   CheckboxSize,
-} from "@core/Components/Checkbox";
-export type { FormControlInvalidated } from "@core/Components/FormControl";
+} from "@/Components/Checkbox";
+export type { FormControlInvalidated } from "@/Components/FormControl";
 export type {
   FormFieldColor,
   FormFieldColorItem,
@@ -57,25 +57,25 @@ export type {
   FormFieldSizeItem,
   FormFieldVariant,
   FormFieldVariantItem,
-} from "@core/Components/FormField";
-export type { IconSize } from "@core/Components/Icon";
-export type { LabelSize } from "@core/Components/Label";
+} from "@/Components/FormField";
+export type { IconSize } from "@/Components/Icon";
+export type { LabelSize } from "@/Components/Label";
 export type {
   LinkColor,
   LinkColorItem,
   LinkSize,
   LinkUnderline,
-} from "@core/Components/Link";
-export type { ListPadding } from "@core/Components/List";
+} from "@/Components/Link";
+export type { ListPadding } from "@/Components/List";
 export type {
   ListboxColor,
   ListboxColorItem,
   ListboxOption,
   ListboxValue,
-} from "@core/Components/Listbox";
-export type { ListItemAlign } from "@core/Components/ListItem";
-export type { MenuRounded, MenuShadow } from "@core/Components/Menu";
-export { transitionProps } from "@core/Components/Modal";
+} from "@/Components/Listbox";
+export type { ListItemAlign } from "@/Components/ListItem";
+export type { MenuRounded, MenuShadow } from "@/Components/Menu";
+export { transitionProps } from "@/Components/Modal";
 export type {
   ModalAlign,
   ModalBlur,
@@ -83,19 +83,19 @@ export type {
   ModalSize,
   ModalTransition,
   ModalTransitionLayer,
-} from "@core/Components/Modal";
+} from "@/Components/Modal";
 export type {
   RadioColor,
   RadioColorItem,
   RadioRounded,
   RadioSize,
-} from "@core/Components/Radio";
+} from "@/Components/Radio";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,
   positionProps as snackbarPositionProps,
   transitionProps as snackbarTransitionProps,
-} from "@core/Components/Snackbar";
+} from "@/Components/Snackbar";
 export type {
   SnackbarColor,
   SnackbarColorItem,
@@ -103,21 +103,21 @@ export type {
   SnackbarPaddingItem,
   SnackbarPosition,
   SnackbarTransition,
-} from "@core/Components/Snackbar";
+} from "@/Components/Snackbar";
 export type {
   SwitchColor,
   SwitchColorItem,
   SwitchRounded,
   SwitchSize,
   SwitchSizeItem,
-} from "@core/Components/Switch";
-export type { TextareaResize } from "@core/Components/Textarea";
+} from "@/Components/Switch";
+export type { TextareaResize } from "@/Components/Textarea";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-} from "@core/Config";
+} from "@/Config";
 export type {
   AlertConfigOverrides,
   AvatarConfigOverrides,
@@ -142,7 +142,7 @@ export type {
   SelectConfigOverrides,
   SwitchConfigOverrides,
   TextareaConfigOverrides,
-} from "@core/Config";
+} from "@/Config";
 export {
   closeAllLayers,
   closeLayer,
@@ -161,8 +161,8 @@ export {
   trimLayersToMax,
   updateLayer,
   updateLayerMerged,
-} from "@core/Layer";
-export type { LayerId } from "@core/Layer";
+} from "@/Layer";
+export type { LayerId } from "@/Layer";
 export {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
@@ -207,7 +207,7 @@ export {
   splitComponentProps,
   subscribeLayerStack,
   usesTrailingSnackbarActions,
-} from "@core/Utils";
+} from "@/Utils";
 export type {
   ClassPropKey,
   FocusTrap,
@@ -234,4 +234,4 @@ export type {
   SelectOptionLike,
   SelectValue,
   UnionProps,
-} from "@core/Utils";
+} from "@/Utils";

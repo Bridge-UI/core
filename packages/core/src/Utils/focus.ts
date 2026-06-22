@@ -1,5 +1,5 @@
 // ** Local Imports
-import { hasDocument } from "@core/Utils/env";
+import { hasDocument } from "@/Utils/env";
 
 /**
  * A handle for the focusable elements inside a container.
