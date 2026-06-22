@@ -305,6 +305,7 @@ export function useFormField(
 
   const containerSpacing = derived(() => {
     const reserved = options.reservedSlots?.() ?? [];
+
     const hasEndSlot = hasNamedSlot(slots, "end") || reserved.includes("end");
     const hasStartSlot =
       hasNamedSlot(slots, "start") || reserved.includes("start");

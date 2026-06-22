@@ -25,8 +25,8 @@ function PasswordField(props: PasswordFieldProps) {
             <Fragment>
               <button
                 type="button"
-                onClick={toggleVisibility}
                 disabled={props.disabled}
+                onClick={toggleVisibility}
                 aria-label={isVisible ? "Hide password" : "Show password"}
                 className={cn({
                   "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5": true,

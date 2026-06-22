@@ -78,9 +78,9 @@ export function useNumberField(
     return mergePartBind(
       formField.inputBind.value,
       {
-        type: "number",
         min: props.min,
         max: props.max,
+        type: "number",
         step: step.value,
       },
       cn({

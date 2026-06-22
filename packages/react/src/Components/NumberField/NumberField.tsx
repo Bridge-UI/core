@@ -34,9 +34,9 @@ function NumberField(props: NumberFieldProps) {
               <div className="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden">
                 <button
                   type="button"
+                  disabled={props.disabled}
                   {...incrementHold.handlers}
                   aria-label="Increment value"
-                  disabled={props.disabled}
                   className={cn({
                     "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
                     [mergedClasses.increment ?? ""]: true,
@@ -50,9 +50,9 @@ function NumberField(props: NumberFieldProps) {
 
                 <button
                   type="button"
+                  disabled={props.disabled}
                   {...decrementHold.handlers}
                   aria-label="Decrement value"
-                  disabled={props.disabled}
                   className={cn({
                     "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
                     [mergedClasses.decrement ?? ""]: true,
