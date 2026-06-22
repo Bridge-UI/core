@@ -59,7 +59,7 @@ import type {
   FormFieldVariantItem,
 } from "@core/Components/FormField";
 import type { IconSize } from "@core/Components/Icon";
-import type { LabelSize } from "@core/Components/Label";
+import type { LabelInvalidated, LabelSize } from "@core/Components/Label";
 import type {
   LinkColor,
   LinkColorItem,
@@ -278,6 +278,7 @@ export interface FormFieldConfigBase {
 export interface LabelConfigBase {
   classes: object;
   customProps: Partial<{
+    invalidated: Partial<LabelInvalidated>;
     size: Record<string, string>;
   }>;
   defaultProps: Partial<{
