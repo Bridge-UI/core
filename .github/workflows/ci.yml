@@ -1,6 +1,8 @@
-name: CI
+name: Bridge UI CI
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     types:
