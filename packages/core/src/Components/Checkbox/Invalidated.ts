@@ -1,6 +1,17 @@
 export interface CheckboxInvalidated {
+  /**
+   * Base color when invalid.
+   */
   "base": string;
+
+  /**
+   * Checked color when invalid.
+   */
   "checked": string;
+
+  /**
+   * Focus color when invalid.
+   */
   "focus": string;
 }
 

@@ -11,9 +11,24 @@ export interface SnackbarPaddingItem {
 }
 
 export interface SnackbarPadding {
+  /**
+   * Padding scale token `large`.
+   */
   "large": SnackbarPaddingItem;
+
+  /**
+   * Padding scale token `medium`.
+   */
   "medium": SnackbarPaddingItem;
+
+  /**
+   * No padding.
+   */
   "none": SnackbarPaddingItem;
+
+  /**
+   * Padding scale token `small`.
+   */
   "small": SnackbarPaddingItem;
 }
 

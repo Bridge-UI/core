@@ -21,10 +21,29 @@ export interface FormFieldVariantItem {
 }
 
 export interface FormFieldVariant {
+  /**
+   * Filled visual variant.
+   */
   "filled": FormFieldVariantItem;
+
+  /**
+   * Notched outline visual variant.
+   */
   "notched": FormFieldVariantItem;
+
+  /**
+   * Outline visual variant.
+   */
   "outline": FormFieldVariantItem;
+
+  /**
+   * Stacked label visual variant.
+   */
   "stacked": FormFieldVariantItem;
+
+  /**
+   * Underlined visual variant.
+   */
   "underlined": FormFieldVariantItem;
 }
 

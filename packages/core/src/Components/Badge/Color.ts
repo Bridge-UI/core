@@ -1,16 +1,54 @@
 export interface BadgeColorItem {
+  /**
+   * Background color classes.
+   */
   "background": string;
+
+  /**
+   * Border color classes.
+   */
   "border"?: string;
+
+  /**
+   * Text color classes.
+   */
   "text": string;
 }
 
 export interface BadgeColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": BadgeColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": BadgeColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": BadgeColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": BadgeColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": BadgeColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": BadgeColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": BadgeColorItem;
 }
 

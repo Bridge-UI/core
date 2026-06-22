@@ -1,7 +1,22 @@
 export interface AlertPadding {
+  /**
+   * Classes for the `large` token.
+   */
   "large": string;
+
+  /**
+   * Classes for the `medium` token.
+   */
   "medium": string;
+
+  /**
+   * No effect (empty token).
+   */
   "none": string;
+
+  /**
+   * Classes for the `small` token.
+   */
   "small": string;
 }
 

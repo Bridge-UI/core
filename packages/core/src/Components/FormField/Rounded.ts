@@ -1,19 +1,69 @@
 export interface FormFieldRoundedItem {
+  /**
+   * End adornment color classes.
+   */
   "end": string;
+
+  /**
+   * Input text color classes.
+   */
   "input": string;
+
+  /**
+   * Start adornment color classes.
+   */
   "start": string;
 }
 
 export interface FormFieldRounded {
+  /**
+   * Border radius classes for the `2xl` token.
+   */
   "2xl": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `3xl` token.
+   */
   "3xl": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `4xl` token.
+   */
   "4xl": FormFieldRoundedItem;
+
+  /**
+   * Full width or fully rounded token.
+   */
   "full": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `lg` token.
+   */
   "lg": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `md` token.
+   */
   "md": FormFieldRoundedItem;
+
+  /**
+   * No effect (empty token).
+   */
   "none": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `sm` token.
+   */
   "sm": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `xl` token.
+   */
   "xl": FormFieldRoundedItem;
+
+  /**
+   * Border radius classes for the `xs` token.
+   */
   "xs": FormFieldRoundedItem;
 }
 

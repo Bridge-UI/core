@@ -1,15 +1,49 @@
 export interface AvatarColorItem {
+  /**
+   * Avatar background color classes.
+   */
   "background": string;
+
+  /**
+   * Fallback text color classes.
+   */
   "text": string;
 }
 
 export interface AvatarColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": AvatarColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": AvatarColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": AvatarColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": AvatarColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": AvatarColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": AvatarColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": AvatarColorItem;
 }
 

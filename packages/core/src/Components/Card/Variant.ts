@@ -1,16 +1,54 @@
 export interface CardVariantItem {
+  /**
+   * Border classes for the card shell.
+   */
   "border": string;
+
+  /**
+   * Footer region classes.
+   */
   "footer": string;
+
+  /**
+   * Root shell classes.
+   */
   "root": string;
+
+  /**
+   * Default text color classes.
+   */
   "text": string;
 }
 
 export interface CardVariant {
+  /**
+   * Elevated visual variant.
+   */
   "elevated": CardVariantItem;
+
+  /**
+   * Flat visual variant.
+   */
   "flat": CardVariantItem;
+
+  /**
+   * `outlined` visual variant.
+   */
   "outlined": CardVariantItem;
+
+  /**
+   * Plain visual variant.
+   */
   "plain": CardVariantItem;
+
+  /**
+   * Text color classes.
+   */
   "text": CardVariantItem;
+
+  /**
+   * Tonal visual variant.
+   */
   "tonal": CardVariantItem;
 }
 

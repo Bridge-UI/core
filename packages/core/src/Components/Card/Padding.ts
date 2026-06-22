@@ -1,13 +1,39 @@
 export interface CardPaddingItem {
+  /**
+   * Body region padding classes.
+   */
   "body": string;
+
+  /**
+   * Footer region padding classes.
+   */
   "footer": string;
+
+  /**
+   * Header region padding classes.
+   */
   "header": string;
 }
 
 export interface CardPadding {
+  /**
+   * Padding scale token `large`.
+   */
   "large": CardPaddingItem;
+
+  /**
+   * Padding scale token `medium`.
+   */
   "medium": CardPaddingItem;
+
+  /**
+   * No effect (empty token).
+   */
   "none": CardPaddingItem;
+
+  /**
+   * Padding scale token `small`.
+   */
   "small": CardPaddingItem;
 }
 

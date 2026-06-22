@@ -1,19 +1,69 @@
 export interface CardRoundedItem {
+  /**
+   * Footer corner radius classes.
+   */
   "footer": string;
+
+  /**
+   * Header corner radius classes.
+   */
   "header": string;
+
+  /**
+   * Root corner radius classes.
+   */
   "root": string;
 }
 
 export interface CardRounded {
+  /**
+   * Border radius classes for the `2xl` token.
+   */
   "2xl": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `3xl` token.
+   */
   "3xl": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `4xl` token.
+   */
   "4xl": CardRoundedItem;
+
+  /**
+   * Full width or fully rounded token.
+   */
   "full": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `lg` token.
+   */
   "lg": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `md` token.
+   */
   "md": CardRoundedItem;
+
+  /**
+   * No effect (empty token).
+   */
   "none": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `sm` token.
+   */
   "sm": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `xl` token.
+   */
   "xl": CardRoundedItem;
+
+  /**
+   * Border radius classes for the `xs` token.
+   */
   "xs": CardRoundedItem;
 }
 

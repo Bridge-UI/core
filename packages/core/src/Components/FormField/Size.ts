@@ -62,53 +62,185 @@ export interface FormFieldSizeItem {
 }
 
 export interface FormFieldSize {
+  /**
+   * Extra extra large size token (per variant).
+   */
   "2xl": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Extra extra small size token (per variant).
+   */
   "2xs": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Large size token (per variant).
+   */
   "lg": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Medium size token (per variant).
+   */
   "md": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Small size token (per variant).
+   */
   "sm": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Extra large size token (per variant).
+   */
   "xl": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
+
+  /**
+   * Extra small size token (per variant).
+   */
   "xs": {
+    /**
+     * Filled variant sizing.
+     */
     "filled": FormFieldSizeItem;
+    /**
+     * Notched outline variant sizing.
+     */
     "notched": FormFieldSizeItem;
+    /**
+     * Outline variant sizing.
+     */
     "outline": FormFieldSizeItem;
+    /**
+     * Stacked label variant sizing.
+     */
     "stacked": FormFieldSizeItem;
+    /**
+     * Underlined variant sizing.
+     */
     "underlined": FormFieldSizeItem;
   };
 }

@@ -1,18 +1,64 @@
 export interface AlertColorItem {
+  /**
+   * Background color classes.
+   */
   "background": string;
+
+  /**
+   * Border color classes.
+   */
   "border"?: string;
+
+  /**
+   * Leading icon component reference.
+   */
   "icon"?: unknown;
+
+  /**
+   * Icon color classes.
+   */
   "iconColor": string;
+
+  /**
+   * Text color classes.
+   */
   "text": string;
 }
 
 export interface AlertColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": AlertColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": AlertColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": AlertColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": AlertColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": AlertColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": AlertColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": AlertColorItem;
 }
 

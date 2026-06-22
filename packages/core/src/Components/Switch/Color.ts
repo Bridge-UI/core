@@ -1,17 +1,59 @@
 export interface SwitchColorItem {
+  /**
+   * Focus ring classes.
+   */
   "focus": string;
+
+  /**
+   * Thumb element classes.
+   */
   "thumb": string;
+
+  /**
+   * Track element classes.
+   */
   "track": string;
+
+  /**
+   * Track classes when checked.
+   */
   "trackChecked": string;
 }
 
 export interface SwitchColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": SwitchColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": SwitchColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": SwitchColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": SwitchColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": SwitchColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": SwitchColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": SwitchColorItem;
 }
 

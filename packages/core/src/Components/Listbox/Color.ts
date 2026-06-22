@@ -26,12 +26,39 @@ export interface ListboxColorItem {
 }
 
 export interface ListboxColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": ListboxColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": ListboxColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": ListboxColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": ListboxColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": ListboxColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": ListboxColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": ListboxColorItem;
 }
 

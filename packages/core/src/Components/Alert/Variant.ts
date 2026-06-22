@@ -7,8 +7,19 @@ import {
 } from "@core/Components/Alert/Color";
 
 export interface AlertVariant {
+  /**
+   * Flat visual variant.
+   */
   "flat": AlertColor;
+
+  /**
+   * Outline visual variant.
+   */
   "outline": AlertColor;
+
+  /**
+   * Solid visual variant.
+   */
   "solid": AlertColor;
 }
 

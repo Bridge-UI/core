@@ -1,12 +1,47 @@
 export interface CardShadow {
+  /**
+   * Box shadow classes for the `2xl` token.
+   */
   "2xl": string;
+
+  /**
+   * Box shadow classes for the `2xs` token.
+   */
   "2xs": string;
+
+  /**
+   * Inner shadow token.
+   */
   "inner": string;
+
+  /**
+   * Box shadow classes for the `lg` token.
+   */
   "lg": string;
+
+  /**
+   * Box shadow classes for the `md` token.
+   */
   "md": string;
+
+  /**
+   * No effect (empty token).
+   */
   "none": string;
+
+  /**
+   * Box shadow classes for the `sm` token.
+   */
   "sm": string;
+
+  /**
+   * Box shadow classes for the `xl` token.
+   */
   "xl": string;
+
+  /**
+   * Box shadow classes for the `xs` token.
+   */
   "xs": string;
 }
 
