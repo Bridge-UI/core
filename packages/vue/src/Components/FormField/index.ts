@@ -2,6 +2,7 @@
 export { useFormField } from "@/Components/FormField/composables/useFormField";
 export type {
   FormFieldOptions,
+  FormFieldReservedSlotName,
   UseFormFieldReturn,
 } from "@/Components/FormField/composables/useFormField";
 export type {

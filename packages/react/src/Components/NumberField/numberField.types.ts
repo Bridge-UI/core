@@ -6,13 +6,13 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
-  TextFieldClasses,
-  TextFieldCustomProps,
-  TextFieldOwnProps,
-  TextFieldSlots,
-} from "@/Components/TextField/textField.types";
+  FormFieldClasses,
+  FormFieldCustomProps,
+  FormFieldOwnProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 
-export interface NumberFieldClasses extends TextFieldClasses {
+export interface NumberFieldClasses extends FormFieldClasses {
   /**
    * The classes to apply to the decrement button.
    */
@@ -24,11 +24,11 @@ export interface NumberFieldClasses extends TextFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldCustomProps extends TextFieldCustomProps {}
+export interface NumberFieldCustomProps extends FormFieldCustomProps {}
 
 export interface NumberFieldOwnProps extends Omit<
-  TextFieldOwnProps,
-  "startIcon" | "endIcon"
+  FormFieldOwnProps,
+  "field" | "classes" | "endIcon" | "children" | "onChange" | "startIcon"
 > {
   /**
    * The classes to apply to the number field.
@@ -58,7 +58,7 @@ export interface NumberFieldOwnProps extends Omit<
   step?: number;
 }
 
-export interface NumberFieldSlots extends TextFieldSlots {}
+export interface NumberFieldSlots extends FormFieldSlots {}
 
 export type NumberFieldProps = MergeHtmlProps<
   NumberFieldOwnProps,

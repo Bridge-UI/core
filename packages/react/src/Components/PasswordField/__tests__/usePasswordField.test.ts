@@ -6,7 +6,7 @@ import { expect, test, vi } from "vitest";
 import { usePasswordField } from "@/Components/PasswordField";
 
 test("it should default to hidden password", () => {
-  const { result } = renderHook(() => usePasswordField());
+  const { result } = renderHook(() => usePasswordField({}));
 
   expect(result.current.isVisible).toBe(false);
 });
@@ -18,7 +18,7 @@ test("it should use visible when controlled", () => {
 });
 
 test("it should toggle visibility when uncontrolled", () => {
-  const { result } = renderHook(() => usePasswordField());
+  const { result } = renderHook(() => usePasswordField({}));
 
   act(() => {
     result.current.toggleVisibility();

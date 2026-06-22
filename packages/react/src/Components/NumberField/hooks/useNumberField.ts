@@ -3,13 +3,21 @@ import { isEmpty, isNaN, isNil, isNumber, isString } from "es-toolkit/compat";
 import type { ChangeEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
-// ** Local Imports
-import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
 
-type UseNumberFieldOptions = Pick<
+// ** Local Imports
+import { useFormField } from "@/Components/FormField/hooks/useFormField";
+import type {
+  NumberFieldClasses,
   NumberFieldProps,
-  "max" | "min" | "step" | "value" | "onChange" | "defaultValue"
->;
+} from "@/Components/NumberField/numberField.types";
+import {
+  derived,
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
 
 function toNumericValue(
   raw: NumberFieldProps["value"] | NumberFieldProps["defaultValue"],
@@ -35,8 +43,35 @@ function toNumericValue(
   return undefined;
 }
 
-export function useNumberField(options: UseNumberFieldOptions) {
-  const { min, max, value, onChange, step = 1, defaultValue } = options;
+/**
+ * Composes `NumberField` form chrome, input bind, registry classes, and stepper logic.
+ */
+export function useNumberField(props: NumberFieldProps) {
+  const {
+    min,
+    max,
+    value,
+    slots,
+    classes,
+    onChange,
+    step = 1,
+    customProps,
+    defaultValue,
+    ...formFieldProps
+  } = props;
+
+  const { entry } = useBridgeUIComponent<
+    Pick<NumberFieldProps, "classes">,
+    "NumberField"
+  >({
+    props: { classes },
+    componentName: "NumberField",
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<NumberFieldClasses>({
+    entry,
+    props: { classes },
+  });
 
   const [internalValue, setInternalValue] = useState<number | undefined>(() => {
     return toNumericValue(defaultValue);
@@ -86,7 +121,6 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
   const increment = useCallback((): boolean => {
     const base = currentValueRef.current ?? min ?? 0;
-
     const next = base + step;
 
     if (!isNil(max) && next > max) {
@@ -100,7 +134,6 @@ export function useNumberField(options: UseNumberFieldOptions) {
 
   const decrement = useCallback((): boolean => {
     const base = currentValueRef.current ?? min ?? 0;
-
     const next = base - step;
 
     if (!isNil(min) && next < min) {
@@ -112,13 +145,48 @@ export function useNumberField(options: UseNumberFieldOptions) {
     return true;
   }, [min, step, setValue]);
 
-  const inputValue = isNil(currentValue) ? undefined : String(currentValue);
+  const formField = useFormField(
+    {
+      ...formFieldProps,
+      slots,
+      withErrorIcon: false,
+      classes: mergedClasses,
+    },
+    {
+      size: "md",
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+      withErrorIcon: false,
+    },
+    {
+      reservedSlots: () => ["end"],
+    },
+  );
+
+  const inputBind = derived(() => {
+    return mergePartBind(
+      formField.inputBind,
+      {
+        min,
+        max,
+        step,
+        type: "number",
+        onChange: handleChange,
+        value: isNil(currentValue) ? "" : String(currentValue),
+      },
+      cn({
+        "appearance:textfield [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none": true,
+        [customProps?.input?.className ?? ""]: true,
+      }),
+    );
+  });
 
   return {
     decrement,
+    formField,
     increment,
-    inputValue,
-    currentValue,
-    handleChange,
+    inputBind,
+    mergedClasses,
   };
 }
