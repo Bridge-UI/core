@@ -161,8 +161,8 @@ export function useFormControl(
       merged.customProps?.invalidated,
     );
   }, [
-    bridgeFormControl?.customProps?.invalidated,
     merged.customProps?.invalidated,
+    bridgeFormControl?.customProps?.invalidated,
   ]);
 
   const rootBind = derived(() => {

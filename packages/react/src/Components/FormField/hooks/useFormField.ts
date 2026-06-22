@@ -248,8 +248,8 @@ export function useFormField(
       merged.customProps?.invalidated,
     );
   }, [
-    bridgeFormField?.customProps?.invalidated,
     merged.customProps?.invalidated,
+    bridgeFormField?.customProps?.invalidated,
   ]);
 
   const invalidatedColors = useMemo(() => {
