@@ -66,12 +66,6 @@ const resolvedCheckClass = computed(() => {
   return cn(checkClass.value, mergedClasses.value.check);
 });
 
-const scrollPartsBind = computed(() => {
-  const { class: _class, style: _style, ...rest } = scrollBind.value;
-
-  return rest;
-});
-
 function resolveSelected(value: ListboxValue) {
   return props.isSelected?.(value) ?? false;
 }
@@ -139,12 +133,7 @@ function handleSelect(option: ListboxOption) {
       <span v-else>Loading...</span>
     </div>
 
-    <div
-      v-else
-      :class="scrollBind.class"
-      :style="scrollBind.style"
-      v-bind="scrollPartsBind"
-    >
+    <div v-else v-bind="scrollBind">
       <List
         dense
         role="listbox"
