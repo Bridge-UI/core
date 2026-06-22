@@ -14,7 +14,7 @@ import type {
   LayerPatch,
   LayerRegistryEntry,
   LayerUpdatePatch,
-} from "@core/Layer/types";
+} from "@/Layer/types";
 
 let fallbackIdCounter = 0;
 

@@ -9,7 +9,7 @@
     "types": ["node"],
     "noEmit": true,
     "paths": {
-      "@core/*": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],

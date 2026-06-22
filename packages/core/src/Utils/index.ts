@@ -14,8 +14,8 @@ import { toMerged } from "es-toolkit/object";
 import { twMerge } from "tailwind-merge";
 
 // ** Local Imports
-import type { BridgeUIComponentsConfig } from "@core/Config/types";
-import type { ClassPropKey, MergePartBind } from "@core/Utils/types";
+import type { BridgeUIComponentsConfig } from "@/Config/types";
+import type { ClassPropKey, MergePartBind } from "@/Utils/types";
 
 /**
  * Converts a string or object to a record of strings.
@@ -148,7 +148,7 @@ export function splitComponentProps<
   };
 }
 
-export { hasDocument, hasWindow } from "@core/Utils/env";
+export { hasDocument, hasWindow } from "@/Utils/env";
 export {
   createFocusable,
   createFocusTrap,
@@ -156,8 +156,8 @@ export {
   type FocusableHandle,
   type FocusTrap,
   type FocusTrapOptions,
-} from "@core/Utils/focus";
-export { claimOpenMenu, resetOpenMenuLayersForTests } from "@core/Utils/menu";
+} from "@/Utils/focus";
+export { claimOpenMenu, resetOpenMenuLayersForTests } from "@/Utils/menu";
 export {
   acquireLayerStackOrder,
   countModalTransitionLayers,
@@ -174,18 +174,18 @@ export {
   subscribeLayerStack,
   type LayerStackHandle,
   type LayerStackSnapshotEntry,
-} from "@core/Utils/modal";
+} from "@/Utils/modal";
 export {
   isModalBackdropClick,
   resolveModalPortalElement,
-} from "@core/Utils/portal";
+} from "@/Utils/portal";
 export {
   createPositionable,
   type PositionHandle,
   type PositionOptions,
   type PositionPlacement,
   type PositionStrategy,
-} from "@core/Utils/position";
+} from "@/Utils/position";
 export {
   createSelectAsyncSearch,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
@@ -198,7 +198,7 @@ export {
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
-} from "@core/Utils/select";
+} from "@/Utils/select";
 export type {
   ListboxOption,
   ListboxValue,
@@ -210,12 +210,12 @@ export type {
   SelectOptionKeys,
   SelectOptionLike,
   SelectValue,
-} from "@core/Utils/select";
+} from "@/Utils/select";
 export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   usesTrailingSnackbarActions,
-} from "@core/Utils/snackbar";
+} from "@/Utils/snackbar";
 export type {
   ClassPropKey,
   LibDefaultsShape,
@@ -225,4 +225,4 @@ export type {
   MergeProps,
   Overwrite,
   UnionProps,
-} from "@core/Utils/types";
+} from "@/Utils/types";

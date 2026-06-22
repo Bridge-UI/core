@@ -3,8 +3,8 @@ export {
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-} from "@core/Config/merge";
-export { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
+} from "@/Config/merge";
+export { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 export type {
   AlertConfigBase,
   AlertConfigOverrides,
@@ -54,4 +54,4 @@ export type {
   SwitchConfigOverrides,
   TextareaConfigBase,
   TextareaConfigOverrides,
-} from "@core/Config/types";
+} from "@/Config/types";

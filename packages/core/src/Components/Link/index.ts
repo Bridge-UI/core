@@ -1,7 +1,7 @@
 // ** Exports
-export { colorProps } from "@core/Components/Link/Color";
-export type { LinkColor, LinkColorItem } from "@core/Components/Link/Color";
-export { sizeProps } from "@core/Components/Link/Size";
-export type { LinkSize } from "@core/Components/Link/Size";
-export { underlineProps } from "@core/Components/Link/Underline";
-export type { LinkUnderline } from "@core/Components/Link/Underline";
+export { colorProps } from "@/Components/Link/Color";
+export type { LinkColor, LinkColorItem } from "@/Components/Link/Color";
+export { sizeProps } from "@/Components/Link/Size";
+export type { LinkSize } from "@/Components/Link/Size";
+export { underlineProps } from "@/Components/Link/Underline";
+export type { LinkUnderline } from "@/Components/Link/Underline";

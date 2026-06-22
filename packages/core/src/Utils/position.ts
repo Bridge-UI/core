@@ -10,7 +10,7 @@ import {
 } from "@floating-ui/dom";
 
 // ** Local Imports
-import { hasDocument } from "@core/Utils/env";
+import { hasDocument } from "@/Utils/env";
 
 /**
  * The strategy to use for the positionable.

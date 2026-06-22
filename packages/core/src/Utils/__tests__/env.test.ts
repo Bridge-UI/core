@@ -4,7 +4,7 @@
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
-import { hasDocument, hasWindow } from "@core/Utils/env";
+import { hasDocument, hasWindow } from "@/Utils/env";
 
 describe("hasWindow", () => {
   test("it should return true in jsdom", () => {

@@ -18,7 +18,7 @@ const entries = Object.fromEntries(
 
 export default defineConfig({
   resolve: {
-    alias: { "@core": resolve(__dirname, "src") },
+    alias: { "@": resolve(__dirname, "src") },
   },
   plugins: [
     dts({

@@ -3,9 +3,9 @@ import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
-} from "@core/Config/types";
-import { BRIDGE_UI_DEFAULT_GLOBAL } from "@core/Config/types";
-import { mergeBridgeUILayeredClasses } from "@core/Utils";
+} from "@/Config/types";
+import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
+import { mergeBridgeUILayeredClasses } from "@/Utils";
 
 /**
  * Merges the base and partials into a single object.

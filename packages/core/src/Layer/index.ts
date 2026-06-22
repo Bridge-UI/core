@@ -3,7 +3,7 @@ export {
   completeLayerHide,
   findLayerEntry,
   invokeLayerDismiss,
-} from "@core/Layer/host";
+} from "@/Layer/host";
 export {
   closeAllLayers,
   closeLayer,
@@ -19,6 +19,6 @@ export {
   trimLayersToMax,
   updateLayer,
   updateLayerMerged,
-} from "@core/Layer/registry";
-export { mergeLayerShellProps } from "@core/Layer/shell";
-export type { LayerId } from "@core/Layer/types";
+} from "@/Layer/registry";
+export { mergeLayerShellProps } from "@/Layer/shell";
+export type { LayerId } from "@/Layer/types";

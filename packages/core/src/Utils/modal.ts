@@ -6,14 +6,11 @@ import { get, isNil } from "es-toolkit/compat";
 import {
   transitionProps,
   type ModalTransition,
-} from "@core/Components/Modal/Transition";
-import {
-  createLayerId,
-  resetLayerIdCounterForTests,
-} from "@core/Layer/registry";
-import type { LayerId } from "@core/Layer/types";
-import { hasDocument, hasWindow } from "@core/Utils/env";
-import { resetOpenMenuLayersForTests } from "@core/Utils/menu";
+} from "@/Components/Modal/Transition";
+import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
+import type { LayerId } from "@/Layer/types";
+import { hasDocument, hasWindow } from "@/Utils/env";
+import { resetOpenMenuLayersForTests } from "@/Utils/menu";
 
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
 export const LAYER_STACK_BASE_Z_INDEX = 50;

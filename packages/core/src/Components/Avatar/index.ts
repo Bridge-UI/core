@@ -1,15 +1,12 @@
 // ** Exports
-export { colorProps } from "@core/Components/Avatar/Color";
-export type {
-  AvatarColor,
-  AvatarColorItem,
-} from "@core/Components/Avatar/Color";
-export { iconSizeProps } from "@core/Components/Avatar/IconSize";
+export { colorProps } from "@/Components/Avatar/Color";
+export type { AvatarColor, AvatarColorItem } from "@/Components/Avatar/Color";
+export { iconSizeProps } from "@/Components/Avatar/IconSize";
 export type {
   AvatarIconSize,
   AvatarIconSizeItem,
-} from "@core/Components/Avatar/IconSize";
-export { roundedProps } from "@core/Components/Avatar/Rounded";
-export type { AvatarRounded } from "@core/Components/Avatar/Rounded";
-export { sizeProps } from "@core/Components/Avatar/Size";
-export type { AvatarSize } from "@core/Components/Avatar/Size";
+} from "@/Components/Avatar/IconSize";
+export { roundedProps } from "@/Components/Avatar/Rounded";
+export type { AvatarRounded } from "@/Components/Avatar/Rounded";
+export { sizeProps } from "@/Components/Avatar/Size";
+export type { AvatarSize } from "@/Components/Avatar/Size";

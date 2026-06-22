@@ -2,13 +2,13 @@
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import type { BridgeUIComponentsConfig } from "@core/Config/types";
+import type { BridgeUIComponentsConfig } from "@/Config/types";
 import {
   cn,
   createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
-} from "@core/Utils";
+} from "@/Utils";
 
 test("it should merge simple class strings", () => {
   expect(cn("foo", "bar")).toBe("foo bar");

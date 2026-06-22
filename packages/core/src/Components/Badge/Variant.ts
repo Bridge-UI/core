@@ -1,10 +1,6 @@
 // ** Local Imports
-import type { BadgeColor } from "@core/Components/Badge/Color";
-import {
-  flatProps,
-  outlineProps,
-  solidProps,
-} from "@core/Components/Badge/Color";
+import type { BadgeColor } from "@/Components/Badge/Color";
+import { flatProps, outlineProps, solidProps } from "@/Components/Badge/Color";
 
 export interface BadgeVariant {
   /**
