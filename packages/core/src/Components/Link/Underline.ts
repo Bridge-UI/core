@@ -1,6 +1,17 @@
 export interface LinkUnderline {
+  /**
+   * Underline always visible.
+   */
   "always": string;
+
+  /**
+   * Underline on hover only.
+   */
   "hover": string;
+
+  /**
+   * No effect (empty token).
+   */
   "none": string;
 }
 

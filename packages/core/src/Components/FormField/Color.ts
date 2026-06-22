@@ -1,17 +1,59 @@
 export interface FormFieldColorItem {
+  /**
+   * End adornment color classes.
+   */
   "end": string;
+
+  /**
+   * Input text color classes.
+   */
   "input": string;
+
+  /**
+   * Start adornment color classes.
+   */
   "start": string;
+
+  /**
+   * Underlined variant color classes.
+   */
   "underlined"?: string;
 }
 
 export interface FormFieldColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": FormFieldColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": FormFieldColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": FormFieldColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": FormFieldColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": FormFieldColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": FormFieldColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": FormFieldColorItem;
 }
 

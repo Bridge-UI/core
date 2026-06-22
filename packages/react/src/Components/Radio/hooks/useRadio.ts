@@ -13,6 +13,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Components/Radio";
@@ -108,12 +109,24 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return uncontrolledChecked;
   });
 
-  const colorKey = derived(() => {
-    if (formControl.invalidated) {
-      return "error";
-    }
+  const colorPalette = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeRadio?.customProps?.color,
+    );
 
-    return merged.color;
+    return get(classes, merged.color ?? "primary");
+  }, [merged.color, bridgeRadio?.customProps?.color]);
+
+  const invalidatedPalette = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeRadio?.customProps?.invalidated,
+    );
+  }, [bridgeRadio?.customProps?.invalidated]);
+
+  const colorClasses = derived(() => {
+    return formControl.invalidated ? invalidatedPalette : colorPalette;
   });
 
   const sizeClasses = useMemo(() => {
@@ -124,15 +137,6 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
 
     return get(classes, merged.size ?? "sm");
   }, [merged.size, bridgeRadio?.customProps?.size]);
-
-  const colorClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeRadio?.customProps?.color,
-    );
-
-    return get(classes, colorKey);
-  }, [colorKey, bridgeRadio?.customProps?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

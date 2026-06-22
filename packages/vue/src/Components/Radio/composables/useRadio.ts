@@ -12,6 +12,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Components/Radio";
@@ -87,12 +88,26 @@ export function useRadio(
     return toValue(modelValue) === merged.value.value;
   });
 
-  const colorKey = computed(() => {
-    if (formControl.invalidated.value) {
-      return "error";
-    }
+  const colorPalette = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeRadio.value?.customProps?.color,
+    );
 
-    return merged.value.color;
+    return get(classes, merged.value.color ?? "primary");
+  });
+
+  const invalidatedPalette = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeRadio.value?.customProps?.invalidated,
+    );
+  });
+
+  const colorClasses = computed(() => {
+    return formControl.invalidated.value
+      ? invalidatedPalette.value
+      : colorPalette.value;
   });
 
   const sizeClasses = computed(() => {
@@ -102,15 +117,6 @@ export function useRadio(
     );
 
     return get(classes, merged.value.size ?? "sm");
-  });
-
-  const colorClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeRadio.value?.customProps?.color,
-    );
-
-    return get(classes, colorKey.value);
   });
 
   const roundedClasses = computed(() => {

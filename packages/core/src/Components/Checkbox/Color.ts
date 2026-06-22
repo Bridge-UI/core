@@ -1,16 +1,54 @@
 export interface CheckboxColorItem {
+  /**
+   * Rest state classes.
+   */
   "base": string;
+
+  /**
+   * Checked state classes.
+   */
   "checked": string;
+
+  /**
+   * Focus ring classes.
+   */
   "focus": string;
 }
 
 export interface CheckboxColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": CheckboxColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": CheckboxColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": CheckboxColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": CheckboxColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": CheckboxColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": CheckboxColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": CheckboxColorItem;
 }
 

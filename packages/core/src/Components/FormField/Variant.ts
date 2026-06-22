@@ -21,10 +21,29 @@ export interface FormFieldVariantItem {
 }
 
 export interface FormFieldVariant {
+  /**
+   * Filled visual variant.
+   */
   "filled": FormFieldVariantItem;
+
+  /**
+   * Notched outline visual variant.
+   */
   "notched": FormFieldVariantItem;
+
+  /**
+   * Outline visual variant.
+   */
   "outline": FormFieldVariantItem;
+
+  /**
+   * Stacked label visual variant.
+   */
   "stacked": FormFieldVariantItem;
+
+  /**
+   * Underlined visual variant.
+   */
   "underlined": FormFieldVariantItem;
 }
 
@@ -54,6 +73,6 @@ export const variantProps: FormFieldVariant = {
     "container":
       "relative bg-white dark:bg-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-500 focus-within:ring-2",
     "label":
-      "pointer-events-auto min-w-0 bg-white px-1 font-medium leading-none text-gray-700 group-data-[invalid]:text-error-600 dark:bg-gray-900 dark:text-gray-300 dark:group-data-[invalid]:text-error-400",
+      "pointer-events-auto min-w-0 bg-white px-1 font-medium leading-none text-gray-700 dark:bg-gray-900 dark:text-gray-300",
   },
 };

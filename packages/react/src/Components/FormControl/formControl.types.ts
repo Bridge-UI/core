@@ -2,7 +2,12 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { LabelSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
+import type {
+  FormControlInvalidated,
+  LabelSize,
+  MergeHtmlProps,
+  MergeProps,
+} from "@bridge-ui/core";
 
 import type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";
 
@@ -60,6 +65,13 @@ export interface FormControlCustomProps {
    * Props forwarded to the error message element.
    */
   errorMessage?: HTMLAttributes<HTMLParagraphElement>;
+
+  /**
+   * Error-state label and message colors (`label`, `errorMessage`, `required`).
+   *
+   * @default undefined
+   */
+  invalidated?: Partial<FormControlInvalidated>;
 
   /**
    * Props forwarded to the main inline label element.

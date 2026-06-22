@@ -14,6 +14,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
   variantProps,
@@ -243,14 +244,29 @@ export function useFormField(
     return get(classes, [merged.size, merged.variant ?? "outline"]);
   }, [merged.size, merged.variant, bridgeFormField?.customProps?.size]);
 
-  const colorClasses = useMemo(() => {
+  const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeFormField?.customProps?.color,
     );
 
-    return get(classes, merged.color);
+    return get(classes, merged.color ?? "primary");
   }, [merged.color, bridgeFormField?.customProps?.color]);
+
+  const invalidatedPalette = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeFormField?.customProps?.invalidated,
+      merged.customProps?.invalidated,
+    );
+  }, [
+    merged.customProps?.invalidated,
+    bridgeFormField?.customProps?.invalidated,
+  ]);
+
+  const invalidatedColors = useMemo(() => {
+    return invalidated ? invalidatedPalette : undefined;
+  }, [invalidated, invalidatedPalette]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -270,25 +286,14 @@ export function useFormField(
     return get(classes, merged.variant ?? "outline");
   }, [merged.variant, bridgeFormField?.customProps?.variant]);
 
-  const focusColorPalette = useMemo(() => {
-    if (invalidated) {
-      const classes = mergeBridgeUILayeredClasses(
-        colorProps,
-        bridgeFormField?.customProps?.color,
-      );
-
-      return get(classes, "error");
-    }
-
-    return colorClasses;
-  }, [invalidated, colorClasses, bridgeFormField?.customProps?.color]);
-
   const containerColorFocus = derived(() => {
+    const palette = invalidated ? invalidatedPalette : colorPalette;
+
     if (isUnderlined) {
-      return focusColorPalette?.underlined;
+      return palette?.underlined;
     }
 
-    return focusColorPalette?.input;
+    return palette?.input;
   });
 
   const stackedBodySpacing = derived(() => {
@@ -332,9 +337,8 @@ export function useFormField(
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-gray-500": !invalidated,
         [roundedClasses?.end ?? ""]: !isUnderlined && !isStacked,
-        [colorClasses?.end ?? ""]: !invalidated,
-        "group-data-[invalid]:text-error-500": true,
-        "text-error-500": invalidated,
+        [colorPalette?.end ?? ""]: !invalidated,
+        [invalidatedColors?.adornment ?? ""]: invalidated,
         [mergedClasses.end ?? ""]: true,
       }),
     );
@@ -361,8 +365,9 @@ export function useFormField(
       customProps?.errorMessage,
       {},
       cn({
-        "mt-2 text-error-600 dark:text-error-400": true,
+        "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
+        [invalidatedColors?.errorMessage ?? ""]: true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),
@@ -401,8 +406,8 @@ export function useFormField(
       {},
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-error-600 dark:text-error-400": invalidated && !isNotched,
-        "text-gray-700 dark:text-gray-300": !invalidated && !isNotched,
+        "text-gray-700 dark:text-gray-300": !invalidated,
+        [invalidatedColors?.label ?? ""]: invalidated,
         [sizeClasses?.text ?? ""]: true,
         [variantClasses?.label ?? ""]: isNotched,
         [mergedClasses.label ?? ""]: true,
@@ -418,9 +423,8 @@ export function useFormField(
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-gray-400": !invalidated,
         [roundedClasses?.start ?? ""]: !isUnderlined && !isStacked,
-        [colorClasses?.start ?? ""]: !invalidated,
-        "group-data-[invalid]:text-error-500": true,
-        "text-error-500": invalidated,
+        [colorPalette?.start ?? ""]: !invalidated,
+        [invalidatedColors?.adornment ?? ""]: invalidated,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -481,7 +485,7 @@ export function useFormField(
       {},
       {},
       cn({
-        "text-error-500 dark:text-error-500 select-none": true,
+        [invalidatedPalette?.required ?? ""]: true,
         [mergedClasses.required ?? ""]: true,
       }),
     );
@@ -531,9 +535,8 @@ export function useFormField(
         [containerSpacing ?? ""]: true,
         [containerColorFocus ?? ""]: true,
         "rounded-none": isUnderlined,
-        "bg-error-50 ring-error-500 focus-within:ring-error-600 dark:ring-error-700 dark:bg-error-700/10 dark:ring-error-600 dark:focus-within:ring-error-600":
-          invalidated && !isUnderlined,
-        "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600":
+        [invalidatedColors?.container ?? ""]: invalidated && !isUnderlined,
+        [invalidatedColors?.containerUnderlined ?? ""]:
           invalidated && isUnderlined,
         [mergedClasses.container ?? ""]: true,
       }),

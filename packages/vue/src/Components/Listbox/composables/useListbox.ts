@@ -10,7 +10,10 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps } from "@bridge-ui/core/Components/Listbox";
+import {
+  colorProps,
+  invalidatedProps,
+} from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
 import type {
@@ -27,6 +30,7 @@ import {
 const listboxBridgeKeys = [
   "color",
   "classes",
+  "invalidated",
   "maxHeight",
   "customProps",
   "disableMaxHeight",
@@ -63,13 +67,26 @@ export function useListbox(
     props: () => split.value.componentProps,
   });
 
-  const colorClasses = computed(() => {
+  const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeListbox.value?.customProps?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
+  });
+
+  const invalidatedPalette = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeListbox.value?.customProps?.invalidated,
+    );
+  });
+
+  const colorClasses = computed(() => {
+    return merged.value.invalidated
+      ? invalidatedPalette.value
+      : colorPalette.value;
   });
 
   const optionSelectedClass = computed(() => {

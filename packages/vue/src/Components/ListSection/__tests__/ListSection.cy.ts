@@ -1,5 +1,5 @@
 // ** External Imports
-import { defineComponent } from "vue";
+import { h } from "vue";
 
 // ** Local Imports
 import { List } from "@/Components/List";
@@ -28,12 +28,12 @@ test("it should apply sticky classes when sticky is true", () => {
 });
 
 test("it should inherit dense padding from parent List", () => {
-  const Host = defineComponent({
-    components: { List, ListSection },
-    template: '<List dense><ListSection title="Dense section" /></List>',
+  cy.mount(List, {
+    props: { dense: true },
+    slots: {
+      default: () => h(ListSection, { title: "Dense section" }),
+    },
   });
-
-  cy.mount(Host);
 
   cy.get('[role="presentation"]').should("have.class", "py-1.5");
 });

@@ -8,9 +8,24 @@ import {
 } from "@core/Components/Button/Color";
 
 export interface ButtonVariant {
+  /**
+   * Flat visual variant.
+   */
   "flat": ButtonColor;
+
+  /**
+   * Light visual variant.
+   */
   "light": ButtonColor;
+
+  /**
+   * Outline visual variant.
+   */
   "outline": ButtonColor;
+
+  /**
+   * Solid visual variant.
+   */
   "solid": ButtonColor;
 }
 

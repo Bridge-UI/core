@@ -1,17 +1,59 @@
 export interface SnackbarColorItem {
+  /**
+   * Leading icon component reference.
+   */
   "icon"?: unknown;
+
+  /**
+   * Icon color classes.
+   */
   "iconColor": string;
+
+  /**
+   * Progress bar color classes.
+   */
   "progressColor": string;
+
+  /**
+   * Title text color classes.
+   */
   "titleColor": string;
 }
 
 export interface SnackbarColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": SnackbarColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": SnackbarColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": SnackbarColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": SnackbarColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": SnackbarColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": SnackbarColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": SnackbarColorItem;
 }
 

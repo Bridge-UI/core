@@ -1,41 +1,179 @@
 export interface ButtonColorItem {
+  /**
+   * Rest state classes.
+   */
   "base": string;
+
+  /**
+   * Focus ring classes.
+   */
   "focus": string;
+
+  /**
+   * Hover state classes.
+   */
   "hover": string;
 }
 
 export interface ButtonColor {
+  /**
+   * `amber` color palette entry.
+   */
   "amber": ButtonColorItem;
+
+  /**
+   * `black` color palette entry.
+   */
   "black": ButtonColorItem;
+
+  /**
+   * `blue` color palette entry.
+   */
   "blue": ButtonColorItem;
+
+  /**
+   * `cyan` color palette entry.
+   */
   "cyan": ButtonColorItem;
+
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": ButtonColorItem;
+
+  /**
+   * `emerald` color palette entry.
+   */
   "emerald": ButtonColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": ButtonColorItem;
+
+  /**
+   * `fuchsia` color palette entry.
+   */
   "fuchsia": ButtonColorItem;
+
+  /**
+   * `gray` color palette entry.
+   */
   "gray": ButtonColorItem;
+
+  /**
+   * `green` color palette entry.
+   */
   "green": ButtonColorItem;
+
+  /**
+   * `indigo` color palette entry.
+   */
   "indigo": ButtonColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": ButtonColorItem;
+
+  /**
+   * `lime` color palette entry.
+   */
   "lime": ButtonColorItem;
+
+  /**
+   * `neutral` color palette entry.
+   */
   "neutral": ButtonColorItem;
+
+  /**
+   * No effect (empty token).
+   */
   "none": ButtonColorItem;
+
+  /**
+   * `orange` color palette entry.
+   */
   "orange": ButtonColorItem;
+
+  /**
+   * `pink` color palette entry.
+   */
   "pink": ButtonColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": ButtonColorItem;
+
+  /**
+   * `purple` color palette entry.
+   */
   "purple": ButtonColorItem;
+
+  /**
+   * `red` color palette entry.
+   */
   "red": ButtonColorItem;
+
+  /**
+   * `rose` color palette entry.
+   */
   "rose": ButtonColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": ButtonColorItem;
+
+  /**
+   * `sky` color palette entry.
+   */
   "sky": ButtonColorItem;
+
+  /**
+   * `slate` color palette entry.
+   */
   "slate": ButtonColorItem;
+
+  /**
+   * `stone` color palette entry.
+   */
   "stone": ButtonColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": ButtonColorItem;
+
+  /**
+   * `teal` color palette entry.
+   */
   "teal": ButtonColorItem;
+
+  /**
+   * `violet` color palette entry.
+   */
   "violet": ButtonColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": ButtonColorItem;
+
+  /**
+   * `white` color palette entry.
+   */
   "white": ButtonColorItem;
+
+  /**
+   * `yellow` color palette entry.
+   */
   "yellow": ButtonColorItem;
+
+  /**
+   * `zinc` color palette entry.
+   */
   "zinc": ButtonColorItem;
 }
 

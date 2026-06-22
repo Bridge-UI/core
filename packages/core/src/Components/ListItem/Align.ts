@@ -1,5 +1,12 @@
 export interface ListItemAlign {
+  /**
+   * Vertically centered alignment.
+   */
   center: string;
+
+  /**
+   * Top-aligned content.
+   */
   start: string;
 }
 

@@ -43,6 +43,7 @@ export type BridgeSnackbarControllerOptions = {
    * Maximum number of visible snackbars. When exceeded, the oldest closes before opening the new one.
    */
   max?: number;
+
   /**
    * Default auto-dismiss delay (ms) for `open()`. `false` keeps snackbars open until dismissed.
    * Per-call `duration` overrides this.

@@ -46,9 +46,11 @@ export type {
   CheckboxRounded,
   CheckboxSize,
 } from "@core/Components/Checkbox";
+export type { FormControlInvalidated } from "@core/Components/FormControl";
 export type {
   FormFieldColor,
   FormFieldColorItem,
+  FormFieldInvalidated,
   FormFieldRounded,
   FormFieldRoundedItem,
   FormFieldSize,

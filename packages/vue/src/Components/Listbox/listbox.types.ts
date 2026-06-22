@@ -122,6 +122,13 @@ export interface ListboxOwnProps {
   highlightedIndex?: number;
 
   /**
+   * When `true`, applies invalidated option colors.
+   *
+   * @default false
+   */
+  invalidated?: boolean;
+
+  /**
    * Whether a value is selected (shows checkmark when `showCheckmark` is true).
    */
   isSelected?: (value: ListboxValue) => boolean;

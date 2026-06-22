@@ -1,13 +1,39 @@
 export interface ModalTransitionLayer {
+  /**
+   * Backdrop overlay transition classes.
+   */
   "overlay": string;
+
+  /**
+   * Dialog panel transition classes.
+   */
   "panel": string;
 }
 
 export interface ModalTransition {
+  /**
+   * Fade enter/leave transition.
+   */
   "fade": ModalTransitionLayer;
+
+  /**
+   * No effect (empty token).
+   */
   "none": ModalTransitionLayer;
+
+  /**
+   * Scale enter/leave transition.
+   */
   "scale": ModalTransitionLayer;
+
+  /**
+   * `slide-down` enter/leave transition.
+   */
   "slide-down": ModalTransitionLayer;
+
+  /**
+   * `slide-up` enter/leave transition.
+   */
   "slide-up": ModalTransitionLayer;
 }
 

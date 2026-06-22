@@ -1,16 +1,54 @@
 export interface RadioColorItem {
+  /**
+   * Rest state classes.
+   */
   "base": string;
+
+  /**
+   * Checked state classes.
+   */
   "checked": string;
+
+  /**
+   * Focus ring classes.
+   */
   "focus": string;
 }
 
 export interface RadioColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": RadioColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": RadioColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": RadioColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": RadioColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": RadioColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": RadioColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": RadioColorItem;
 }
 

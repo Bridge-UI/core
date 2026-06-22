@@ -1,15 +1,17 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
-import { useId } from "react";
+import { useId, useMemo } from "react";
 
 // ** Core Imports
 import {
   cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { invalidatedProps } from "@bridge-ui/core/Components/FormControl";
 import { sizeProps as labelSizeProps } from "@bridge-ui/core/Components/Label";
 
 // ** Local Imports
@@ -152,6 +154,17 @@ export function useFormControl(
     return get(labelSizeProps, merged.size ?? "md");
   });
 
+  const invalidatedColors = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeFormControl?.customProps?.invalidated,
+      merged.customProps?.invalidated,
+    );
+  }, [
+    merged.customProps?.invalidated,
+    bridgeFormControl?.customProps?.invalidated,
+  ]);
+
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
@@ -186,7 +199,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError,
-        "text-error-600 dark:text-error-400": labelError,
+        [invalidatedColors.label ?? ""]: labelError,
         [mergedClasses.startLabel ?? ""]: true,
       }),
     );
@@ -200,7 +213,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError,
-        "text-error-600 dark:text-error-400": labelError,
+        [invalidatedColors.label ?? ""]: labelError,
         [mergedClasses.mainLabel ?? ""]: true,
       }),
     );
@@ -214,7 +227,7 @@ export function useFormControl(
         "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
         [textSizeClass ?? ""]: true,
         "text-gray-700 dark:text-gray-300": !labelError,
-        "text-error-600 dark:text-error-400": labelError,
+        [invalidatedColors.label ?? ""]: labelError,
         [mergedClasses.endLabel ?? ""]: true,
       }),
     );
@@ -237,8 +250,9 @@ export function useFormControl(
       customProps?.errorMessage,
       { id: `${controlId}-error` },
       cn({
-        "mt-2 text-error-600 dark:text-error-400": true,
+        "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
+        [invalidatedColors.errorMessage ?? ""]: true,
         [textSizeClass ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),

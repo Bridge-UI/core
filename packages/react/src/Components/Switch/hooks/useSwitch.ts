@@ -13,6 +13,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Components/Switch";
@@ -106,12 +107,24 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     return uncontrolledChecked;
   });
 
-  const colorKey = derived(() => {
-    if (formControl.invalidated) {
-      return "error";
-    }
+  const colorPalette = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeSwitch?.customProps?.color,
+    );
 
-    return merged.color;
+    return get(classes, merged.color ?? "primary");
+  }, [merged.color, bridgeSwitch?.customProps?.color]);
+
+  const invalidatedPalette = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeSwitch?.customProps?.invalidated,
+    );
+  }, [bridgeSwitch?.customProps?.invalidated]);
+
+  const colorClasses = derived(() => {
+    return formControl.invalidated ? invalidatedPalette : colorPalette;
   });
 
   const sizeClasses = useMemo(() => {
@@ -122,15 +135,6 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
 
     return get(classes, merged.size ?? "sm");
   }, [merged.size, bridgeSwitch?.customProps?.size]);
-
-  const colorClasses = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeSwitch?.customProps?.color,
-    );
-
-    return get(classes, colorKey);
-  }, [colorKey, bridgeSwitch?.customProps?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

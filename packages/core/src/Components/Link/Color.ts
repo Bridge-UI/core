@@ -1,15 +1,49 @@
 export interface LinkColorItem {
+  /**
+   * Rest link color classes.
+   */
   "base": string;
+
+  /**
+   * Hover link color classes.
+   */
   "hover": string;
 }
 
 export interface LinkColor {
+  /**
+   * `dark` semantic color palette.
+   */
   "dark": LinkColorItem;
+
+  /**
+   * `error` semantic color palette.
+   */
   "error": LinkColorItem;
+
+  /**
+   * Info semantic color palette.
+   */
   "info": LinkColorItem;
+
+  /**
+   * `primary` semantic color palette.
+   */
   "primary": LinkColorItem;
+
+  /**
+   * `secondary` semantic color palette.
+   */
   "secondary": LinkColorItem;
+
+  /**
+   * `success` semantic color palette.
+   */
   "success": LinkColorItem;
+
+  /**
+   * `warning` semantic color palette.
+   */
   "warning": LinkColorItem;
 }
 

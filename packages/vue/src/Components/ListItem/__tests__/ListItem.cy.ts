@@ -1,5 +1,5 @@
 // ** External Imports
-import { defineComponent } from "vue";
+import { h } from "vue";
 
 // ** Local Imports
 import { List } from "@/Components/List";
@@ -25,13 +25,17 @@ test("it should render an interactive wrapper with menuitem role", () => {
 });
 
 test("it should inherit dense padding from parent List", () => {
-  const Host = defineComponent({
-    components: { List, ListItem },
-    template:
-      '<List dense><ListItem interactive primary="Dense item" role="menuitem" /></List>',
+  cy.mount(List, {
+    props: { dense: true },
+    slots: {
+      default: () =>
+        h(ListItem, {
+          role: "menuitem",
+          interactive: true,
+          primary: "Dense item",
+        }),
+    },
   });
-
-  cy.mount(Host);
 
   cy.get('[role="menuitem"]').should("have.class", "py-1.5");
 });

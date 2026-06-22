@@ -1,16 +1,54 @@
 export interface SwitchSizeItem {
+  /**
+   * Thumb element classes.
+   */
   "thumb": string;
+
+  /**
+   * Thumb translate classes when checked.
+   */
   "thumbCheckedTranslate": string;
+
+  /**
+   * Track element classes.
+   */
   "track": string;
 }
 
 export interface SwitchSize {
+  /**
+   * Size scale token `2xl`.
+   */
   "2xl": SwitchSizeItem;
+
+  /**
+   * Size scale token `2xs`.
+   */
   "2xs": SwitchSizeItem;
+
+  /**
+   * Size scale token `lg`.
+   */
   "lg": SwitchSizeItem;
+
+  /**
+   * Size scale token `md`.
+   */
   "md": SwitchSizeItem;
+
+  /**
+   * Size scale token `sm`.
+   */
   "sm": SwitchSizeItem;
+
+  /**
+   * Size scale token `xl`.
+   */
   "xl": SwitchSizeItem;
+
+  /**
+   * Size scale token `xs`.
+   */
   "xs": SwitchSizeItem;
 }
 

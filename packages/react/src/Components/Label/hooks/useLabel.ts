@@ -10,7 +10,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Label";
+import { invalidatedProps, sizeProps } from "@bridge-ui/core/Components/Label";
 
 // ** Local Imports
 import type {
@@ -76,12 +76,19 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
     return get(classes, merged.size);
   }, [merged.size, bridgeLabel?.customProps?.size]);
 
+  const invalidatedColors = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeLabel?.customProps?.invalidated,
+    );
+  }, [bridgeLabel?.customProps?.invalidated]);
+
   const requiredBind = derived(() => {
     return mergePartBind(
       {},
       {},
       cn({
-        "text-error-500 dark:text-error-500 select-none": true,
+        [invalidatedColors.required ?? ""]: true,
         [mergedClasses.required ?? ""]: true,
       }),
     );
@@ -93,8 +100,8 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
       rootInheritedAttrs,
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-error-600 dark:text-error-400": merged.error,
         "text-gray-700 dark:text-gray-300": !merged.error,
+        [invalidatedColors.label ?? ""]: merged.error,
         [sizeClass ?? ""]: true,
         [mergedClasses.root ?? ""]: true,
       }),

@@ -37,7 +37,6 @@ function Select(props: SelectProps) {
     clearValue,
     removeChip,
     triggerBind,
-    listboxColor,
     selectOption,
     containerRef,
     emptyMessage,
@@ -117,7 +116,8 @@ function Select(props: SelectProps) {
         disableAutoFocus
         loading={isLoading}
         multiple={multiple}
-        color={listboxColor}
+        color={formField.merged.color}
+        invalidated={formField.invalidated}
         listboxId={listboxId}
         maxHeight={maxHeight}
         anchorEl={containerRef}

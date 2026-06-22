@@ -12,6 +12,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Components/Switch";
@@ -85,12 +86,26 @@ export function useSwitch(
     return Boolean(toValue(checked));
   });
 
-  const colorKey = computed(() => {
-    if (formControl.invalidated.value) {
-      return "error";
-    }
+  const colorPalette = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeSwitch.value?.customProps?.color,
+    );
 
-    return merged.value.color;
+    return get(classes, merged.value.color ?? "primary");
+  });
+
+  const invalidatedPalette = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      invalidatedProps,
+      bridgeSwitch.value?.customProps?.invalidated,
+    );
+  });
+
+  const colorClasses = computed(() => {
+    return formControl.invalidated.value
+      ? invalidatedPalette.value
+      : colorPalette.value;
   });
 
   const sizeClasses = computed(() => {
@@ -100,15 +115,6 @@ export function useSwitch(
     );
 
     return get(classes, merged.value.size ?? "sm");
-  });
-
-  const colorClasses = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeSwitch.value?.customProps?.color,
-    );
-
-    return get(classes, colorKey.value);
   });
 
   const roundedClasses = computed(() => {

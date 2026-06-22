@@ -1,6 +1,17 @@
 export interface SnackbarTransition {
+  /**
+   * Fade enter/leave transition.
+   */
   "fade": string;
+
+  /**
+   * No effect (empty token).
+   */
   "none": string;
+
+  /**
+   * Slide enter/leave transition.
+   */
   "slide": string;
 }
 

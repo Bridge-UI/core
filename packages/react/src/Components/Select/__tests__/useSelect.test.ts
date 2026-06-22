@@ -63,8 +63,8 @@ test("it should resolve visible options from props", () => {
   expect(result.current.visibleOptions[0]?.label).toBe("Apple");
 });
 
-test("it should use error listbox color when field is invalid", () => {
+test("it should apply invalidated listbox palette when field is invalid", () => {
   const { result } = renderUseSelect({ options, error: true });
 
-  expect(result.current.listboxColor).toBe("error");
+  expect(result.current.formField.invalidated).toBe(true);
 });

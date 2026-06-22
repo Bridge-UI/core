@@ -76,7 +76,6 @@ const {
   selectOption,
   containerRef,
   emptyMessage,
-  listboxColor,
   clearIconSize,
   visibleOptions,
   selectedOptions,
@@ -134,7 +133,8 @@ const {
     v-model="open"
     :loading="isLoading"
     :multiple="multiple"
-    :color="listboxColor"
+    :color="formField.merged.value.color"
+    :invalidated="formField.invalidated.value"
     :listbox-id="listboxId"
     :anchor-el="containerRef"
     :options="visibleOptions"
