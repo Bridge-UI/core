@@ -1,6 +1,7 @@
 {
   "type": "module",
   "version": "0.0.0",
+  "sideEffects": false,
   "name": "@bridge-ui/react",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
