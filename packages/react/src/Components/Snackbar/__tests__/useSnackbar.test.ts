@@ -160,3 +160,33 @@ test("it should resolve default icon from color", async () => {
     expect(result.current.resolvedIcon).toBeTruthy();
   });
 });
+
+test("it should freeze progress bar scale when hover pauses the timer", async () => {
+  let mockedNow = 1_000;
+
+  vi.spyOn(Date, "now").mockImplementation(() => mockedNow);
+
+  const { result } = renderUseSnackbar(
+    { duration: 5000, transition: "none" },
+    { show: true },
+  );
+
+  await waitFor(() => {
+    expect(result.current.rendered).toBe(true);
+  });
+
+  mockedNow = 3_500;
+
+  act(() => {
+    result.current.panelBind.onMouseEnter?.(
+      {} as Parameters<
+        NonNullable<typeof result.current.panelBind.onMouseEnter>
+      >[0],
+    );
+  });
+
+  expect(result.current.progressBind.style?.transform).toBe("scaleX(0.5)");
+  expect(result.current.progressBind.style?.transition).toBe("none");
+
+  vi.restoreAllMocks();
+});

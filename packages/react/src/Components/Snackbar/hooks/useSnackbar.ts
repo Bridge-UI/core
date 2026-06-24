@@ -114,11 +114,16 @@ export function useSnackbar(
   const layerStackIdRef = useRef("");
 
   const timerStartedAtRef = useRef(0);
+
+  const progressTransitionMsRef = useRef(0);
+
   const [rendered, setRendered] = useState(show);
 
   const stackOrderRef = useRef<number | null>(null);
 
   const [timerPaused, setTimerPaused] = useState(false);
+
+  const [progressScale, setProgressScale] = useState(1);
 
   const [progressActive, setProgressActive] = useState(false);
 
@@ -314,6 +319,7 @@ export function useSnackbar(
     clearDismissTimer();
     remainingMsRef.current = ms;
     timerStartedAtRef.current = Date.now();
+    progressTransitionMsRef.current = ms;
 
     timerRef.current = setTimeout(() => {
       requestClose();
@@ -327,6 +333,8 @@ export function useSnackbar(
 
     clearDismissTimer();
     remainingMsRef.current -= Date.now() - timerStartedAtRef.current;
+    setProgressScale(Math.max(remainingMsRef.current / durationMs, 0));
+    setProgressActive(false);
     setTimerPaused(true);
   }
 
@@ -335,8 +343,16 @@ export function useSnackbar(
       return;
     }
 
+    const remaining = Math.max(remainingMsRef.current, 0);
+
     setTimerPaused(false);
-    startDismissTimer(Math.max(remainingMsRef.current, 0));
+    setProgressActive(false);
+
+    requestAnimationFrame(() => {
+      setProgressActive(true);
+    });
+
+    startDismissTimer(remaining);
   }
 
   function handlePanelTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
@@ -386,11 +402,13 @@ export function useSnackbar(
   useEffect(() => {
     if (!showProgress) {
       setProgressActive(false);
+      setProgressScale(1);
 
       return;
     }
 
     setProgressActive(false);
+    setProgressScale(1);
 
     const frame = requestAnimationFrame(() => {
       setProgressActive(true);
@@ -527,10 +545,10 @@ export function useSnackbar(
       style: showProgress
         ? {
             transformOrigin: "left center",
-            transform: progressActive ? "scaleX(0)" : "scaleX(1)",
+            transform: `scaleX(${progressActive && !timerPaused ? 0 : progressScale})`,
             transition:
               progressActive && !timerPaused
-                ? `transform ${durationMs}ms linear`
+                ? `transform ${progressTransitionMsRef.current}ms linear`
                 : "none",
           }
         : undefined,

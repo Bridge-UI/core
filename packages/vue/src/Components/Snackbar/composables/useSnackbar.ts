@@ -96,6 +96,8 @@ export function useSnackbar(
 
   const layerStackId = ref("");
 
+  const progressScale = ref(1);
+
   const remainingMsRef = ref(0);
 
   const timerPaused = ref(false);
@@ -103,6 +105,8 @@ export function useSnackbar(
   const timerStartedAtRef = ref(0);
 
   const progressActive = ref(false);
+
+  const progressTransitionMsRef = ref(0);
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
@@ -303,6 +307,7 @@ export function useSnackbar(
     clearDismissTimer();
     remainingMsRef.value = ms;
     timerStartedAtRef.value = Date.now();
+    progressTransitionMsRef.value = ms;
 
     timerRef.value = setTimeout(() => {
       requestClose();
@@ -316,6 +321,8 @@ export function useSnackbar(
 
     clearDismissTimer();
     remainingMsRef.value -= Date.now() - timerStartedAtRef.value;
+    progressScale.value = Math.max(remainingMsRef.value / durationMs.value, 0);
+    progressActive.value = false;
     timerPaused.value = true;
   }
 
@@ -324,8 +331,16 @@ export function useSnackbar(
       return;
     }
 
+    const remaining = Math.max(remainingMsRef.value, 0);
+
     timerPaused.value = false;
-    startDismissTimer(Math.max(remainingMsRef.value, 0));
+    progressActive.value = false;
+
+    requestAnimationFrame(() => {
+      progressActive.value = true;
+    });
+
+    startDismissTimer(remaining);
   }
 
   function handlePanelTransitionEnd(event: TransitionEvent) {
@@ -383,11 +398,13 @@ export function useSnackbar(
     ([visible]) => {
       if (!visible) {
         progressActive.value = false;
+        progressScale.value = 1;
 
         return;
       }
 
       progressActive.value = false;
+      progressScale.value = 1;
 
       const frame = requestAnimationFrame(() => {
         progressActive.value = true;
@@ -540,10 +557,10 @@ export function useSnackbar(
         style: showProgress.value
           ? {
               transformOrigin: "left center",
-              transform: progressActive.value ? "scaleX(0)" : "scaleX(1)",
+              transform: `scaleX(${progressActive.value && !timerPaused.value ? 0 : progressScale.value})`,
               transition:
                 progressActive.value && !timerPaused.value
-                  ? `transform ${durationMs.value}ms linear`
+                  ? `transform ${progressTransitionMsRef.value}ms linear`
                   : "none",
             }
           : undefined,

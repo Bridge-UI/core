@@ -1,6 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
@@ -122,4 +122,30 @@ test("it should close on escape keydown", () => {
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
   expect(show.value).toBe(false);
+});
+
+test("it should freeze progress bar scale when hover pauses the timer", async () => {
+  let mockedNow = 1_000;
+
+  vi.spyOn(Date, "now").mockImplementation(() => mockedNow);
+
+  const { result } = mountUseSnackbar({ duration: 5000, transition: "none" });
+
+  await vi.waitFor(() => {
+    expect(result.rendered.value).toBe(true);
+  });
+
+  mockedNow = 3_500;
+
+  result.panelBind.value.onMouseenter?.(
+    new MouseEvent("mouseenter") as unknown as MouseEvent,
+  );
+
+  await vi.waitFor(() => {
+    expect(result.progressBind.value.style?.transform).toBe("scaleX(0.5)");
+  });
+
+  expect(result.progressBind.value.style?.transition).toBe("none");
+
+  vi.restoreAllMocks();
 });
