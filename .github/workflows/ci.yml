@@ -66,7 +66,7 @@ jobs:
             packages/vue/dist
             packages/core/dist
             packages/react/dist
-          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/env.d.ts', 'packages/**/tsconfig.json', 'packages/**/vite.config.ts', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
       - run: npm run build
         if: steps.cache-dist.outputs.cache-hit != 'true'
@@ -89,7 +89,7 @@ jobs:
             packages/vue/dist
             packages/core/dist
             packages/react/dist
-          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/env.d.ts', 'packages/**/tsconfig.json', 'packages/**/vite.config.ts', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
       - run: npm run build:core
         if: steps.cache-dist.outputs.cache-hit != 'true'
@@ -117,7 +117,7 @@ jobs:
             packages/vue/dist
             packages/core/dist
             packages/react/dist
-          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/env.d.ts', 'packages/**/tsconfig.json', 'packages/**/vite.config.ts', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
       - run: npm run build:core
         if: steps.cache-dist.outputs.cache-hit != 'true'
@@ -145,7 +145,7 @@ jobs:
             packages/vue/dist
             packages/core/dist
             packages/react/dist
-          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/vite.config.ts', 'packages/**/tsconfig.json', 'packages/**/tsconfig.*.json') }}
+          key: build-dist-${{ hashFiles('package-lock.json', 'packages/**/src/**', 'packages/**/env.d.ts', 'packages/**/tsconfig.json', 'packages/**/vite.config.ts', 'packages/**/tsconfig.*.json') }}
       - run: npm ci
       - run: npm run build:core
         if: steps.cache-dist.outputs.cache-hit != 'true'
