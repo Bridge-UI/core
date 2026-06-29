@@ -36,6 +36,7 @@
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.0.0",
     "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/language-core": "^3.2.9",
     "cypress": "^15.15.0",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",

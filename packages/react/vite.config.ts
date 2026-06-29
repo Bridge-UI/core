@@ -63,6 +63,11 @@ export default defineConfig({
     },
     rollupOptions: {
       preserveEntrySignatures: "strict",
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: "src",
+        entryFileNames: "[name].js",
+      },
       external: [
         "clsx",
         "react",
@@ -73,11 +78,6 @@ export default defineConfig({
         "react/jsx-runtime",
         /^@bridge-ui\/core/,
       ],
-      output: {
-        preserveModules: true,
-        preserveModulesRoot: "src",
-        entryFileNames: "[name].js",
-      },
     },
   },
 });

@@ -50,8 +50,10 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
+      processor: "vue",
       entryRoot: srcDir,
       tsconfigPath: "./tsconfig.json",
+      include: ["src/**/*.ts", "src/**/*.vue"],
       beforeWriteFile: (filePath, content) => ({
         filePath,
         content: content.replace(/\{\n\}/g, "{}"),
@@ -64,6 +66,12 @@ export default defineConfig({
       entry: collectLibEntries(srcDir),
     },
     rollupOptions: {
+      preserveEntrySignatures: "strict",
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: "src",
+        entryFileNames: "[name].js",
+      },
       external: [
         "vue",
         "clsx",
@@ -72,12 +80,6 @@ export default defineConfig({
         "lucide-vue-next",
         /^@bridge-ui\/core/,
       ],
-      preserveEntrySignatures: "strict",
-      output: {
-        preserveModules: true,
-        preserveModulesRoot: "src",
-        entryFileNames: "[name].js",
-      },
     },
   },
 });
