@@ -1,4 +1,5 @@
-@source "../Actions";
+@source "./Actions";
+@source "./Components";
 @source "../../core/src/Components";
 
 @theme inline {
