@@ -42,7 +42,7 @@ type TextareaMerged = MergeLibDefaults<
 
 export function useTextarea(
   props: TextareaOwnProps,
-  textareaRef: Ref<HTMLTextAreaElement | null>,
+  textareaRef: Ref<null | HTMLTextAreaElement>,
 ) {
   const attrs = useAttrs();
 
@@ -129,11 +129,11 @@ export function useTextarea(
 
   const inheritedOnInput = computed(() => {
     return (attrs as Record<string, unknown>).onInput as
-      | ((event: Event) => void)
-      | undefined;
+      | undefined
+      | ((event: Event) => void);
   });
 
-  const adjustHeight = (element: HTMLTextAreaElement | null) => {
+  const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !autosize.value) {
       return;
     }

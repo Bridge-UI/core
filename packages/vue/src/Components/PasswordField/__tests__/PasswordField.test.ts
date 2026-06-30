@@ -65,7 +65,7 @@ test("it should preserve value when controlled visible toggles from parent", asy
       visible: false,
       label: "Password",
       modelValue: "secret",
-      "onUpdate:modelValue": (value: string | null | undefined) => {
+      "onUpdate:modelValue": (value: null | string | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },
@@ -86,7 +86,7 @@ test("it should preserve value when visibility toggles via the eye button", asyn
   const wrapper = mount(PasswordField, {
     props: {
       modelValue: "secret",
-      "onUpdate:modelValue": (value: string | null | undefined) => {
+      "onUpdate:modelValue": (value: null | string | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },

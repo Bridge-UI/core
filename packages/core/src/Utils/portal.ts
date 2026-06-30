@@ -6,8 +6,8 @@ import { hasDocument } from "@/Utils/env";
  * Returns `null` when rendering in place (`teleportTo={false}`).
  */
 export function resolveModalPortalElement(
-  teleportTo: string | false | undefined,
-): HTMLElement | null {
+  teleportTo: false | string | undefined,
+): null | HTMLElement {
   if (teleportTo === false) {
     return null;
   }
@@ -31,7 +31,7 @@ export function resolveModalPortalElement(
  * Matches `click.self` — only the backdrop/wrapper itself was clicked.
  */
 export function isModalBackdropClick(
-  event: Pick<MouseEvent, "currentTarget" | "target">,
+  event: Pick<MouseEvent, "target" | "currentTarget">,
 ): boolean {
   return event.target === event.currentTarget;
 }

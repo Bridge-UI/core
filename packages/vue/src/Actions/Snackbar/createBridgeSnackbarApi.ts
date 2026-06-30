@@ -49,12 +49,12 @@ export type BridgeSnackbarApiOptions = {
    *
    * @default 5000
    */
-  timeout?: number | false;
+  timeout?: false | number;
 };
 
 function resolveOpenOptions(
   openOptions: BridgeSnackbarOpenOptions,
-  timeout: number | false | undefined,
+  timeout: false | number | undefined,
 ): BridgeSnackbarOpenOptions {
   if (!isNil(openOptions.duration)) {
     return openOptions;

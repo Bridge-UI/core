@@ -8,7 +8,7 @@ import { useTextarea, type TextareaOwnProps } from "@/Components/Textarea";
 
 function mountUseTextarea(props: TextareaOwnProps = {}) {
   let result!: ReturnType<typeof useTextarea>;
-  const textareaRef = ref<HTMLTextAreaElement | null>(null);
+  const textareaRef = ref<null | HTMLTextAreaElement>(null);
 
   const Wrapper = defineComponent({
     setup() {

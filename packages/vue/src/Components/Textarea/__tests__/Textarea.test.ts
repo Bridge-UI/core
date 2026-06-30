@@ -47,7 +47,7 @@ test("it should update modelValue when textarea changes", async () => {
   const wrapper = mount(Textarea, {
     props: {
       modelValue: "",
-      "onUpdate:modelValue": (value: string | null | undefined) => {
+      "onUpdate:modelValue": (value: null | string | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },

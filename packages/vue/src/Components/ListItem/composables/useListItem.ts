@@ -40,9 +40,9 @@ const listItemBridgeKeys = [
   "role",
   "align",
   "dense",
-  "primary",
   "classes",
   "divider",
+  "primary",
   "disabled",
   "selected",
   "secondary",
@@ -50,7 +50,7 @@ const listItemBridgeKeys = [
   "interactive",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
-type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "align" | "role">;
+type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role" | "align">;
 
 type ListItemMerged = MergeLibDefaults<ListItemOwnProps, ListItemLibDefaults>;
 
@@ -269,7 +269,7 @@ export function useListItem(
 export function resolveListItemPrimary(
   slots: ReturnType<typeof useSlots>,
   primary?: string,
-): Slot | (() => string | null) {
+): Slot | (() => null | string) {
   if (hasNamedSlot(slots, "primary")) {
     return resolveNamedSlot(slots, "primary")!;
   }

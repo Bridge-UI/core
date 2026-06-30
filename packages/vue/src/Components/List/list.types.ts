@@ -29,7 +29,7 @@ export interface ListOwnProps {
    *
    * @default "ul"
    */
-  as?: "nav" | "ol" | "ul";
+  as?: "ol" | "ul" | "nav";
 
   /**
    * The classes to apply to the list.

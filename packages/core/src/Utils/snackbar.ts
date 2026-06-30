@@ -21,7 +21,7 @@ export function getSnackbarTransitionClass(
  * Checks if a snackbar has a transition.
  */
 export function hasSnackbarTransition(
-  transition: keyof SnackbarTransition | undefined,
+  transition: undefined | keyof SnackbarTransition,
 ): boolean {
   return !isNil(transition) && transition !== "none";
 }
@@ -30,7 +30,7 @@ export function hasSnackbarTransition(
  * `small` padding places a single accept action in the trailing slot (former `dense` layout).
  */
 export function usesTrailingSnackbarActions(
-  padding: keyof SnackbarPadding | undefined,
+  padding: undefined | keyof SnackbarPadding,
 ): boolean {
   return padding === "small";
 }

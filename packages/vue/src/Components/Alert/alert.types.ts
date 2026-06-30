@@ -99,7 +99,7 @@ export interface AlertOwnProps {
    *
    * @default undefined
    */
-  icon?: LucideIcon | null;
+  icon?: null | LucideIcon;
 
   /**
    * The padding to apply to the alert.

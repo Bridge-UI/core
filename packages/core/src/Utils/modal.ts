@@ -31,7 +31,7 @@ let nextStackOrder = 0;
 let scrollLockCount = 0;
 let savedBodyOverflow = "";
 let savedBodyPaddingRight = "";
-let escapeListener: ((event: KeyboardEvent) => void) | null = null;
+let escapeListener: null | ((event: KeyboardEvent) => void) = null;
 
 /**
  * Handle returned when a layer is pushed onto the global stack.
@@ -99,7 +99,7 @@ function detachEscapeListener() {
 /**
  * Gets the topmost layer stack entry.
  */
-function getTopStackEntry(): LayerStackEntry | undefined {
+function getTopStackEntry(): undefined | LayerStackEntry {
   return maxBy(stack, (entry) => entry.order);
 }
 
@@ -261,7 +261,7 @@ export function getModalPanelTransitionClass(
  */
 export function getLayerStackEntry(
   id: LayerId,
-): LayerStackSnapshotEntry | undefined {
+): undefined | LayerStackSnapshotEntry {
   const entry = stack.find((item) => item.id === id);
 
   if (!entry) {
@@ -282,7 +282,7 @@ export function getLayerStackSnapshot(): readonly LayerStackSnapshotEntry[] {
  * Whether the modal uses enter/leave transition classes.
  */
 export function hasModalTransition(
-  transition: keyof ModalTransition | undefined,
+  transition: undefined | keyof ModalTransition,
 ): boolean {
   return !isNil(transition) && transition !== "none";
 }

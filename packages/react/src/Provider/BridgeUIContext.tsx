@@ -11,7 +11,7 @@ export interface BridgeUIContextValue {
   setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
 }
 
-export const BridgeUIContext = createContext<BridgeUIContextValue | null>(null);
+export const BridgeUIContext = createContext<null | BridgeUIContextValue>(null);
 
 export interface BridgeUIProviderProps {
   children: ReactNode;

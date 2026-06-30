@@ -107,7 +107,7 @@ export type BridgeDialogContentProps = {
   /**
    * Extra Card shell options (padding, variant, classes, etc.).
    */
-  card?: Partial<Omit<CardOwnProps, "children" | "slots" | "title">>;
+  card?: Partial<Omit<CardOwnProps, "slots" | "title" | "children">>;
 
   /**
    * Color for the accept action button.

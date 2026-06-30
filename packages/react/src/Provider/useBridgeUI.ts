@@ -7,6 +7,6 @@ import {
   type BridgeUIContextValue,
 } from "@/Provider/BridgeUIContext";
 
-export function useBridgeUI(): BridgeUIContextValue | null {
+export function useBridgeUI(): null | BridgeUIContextValue {
   return useContext(BridgeUIContext);
 }

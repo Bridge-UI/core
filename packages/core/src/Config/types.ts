@@ -330,7 +330,7 @@ export interface ListItemConfigBase {
   }>;
   defaultProps: Partial<{
     align: keyof ListItemAlign;
-    role: "button" | "menuitem" | "option";
+    role: "button" | "option" | "menuitem";
   }>;
 }
 
@@ -362,7 +362,7 @@ export interface ModalConfigBase {
     align: keyof ModalAlign;
     blur: keyof ModalBlur;
     size: keyof ModalSize;
-    teleportTo: string | false;
+    teleportTo: false | string;
     transition: keyof ModalTransition;
   }>;
 }
@@ -402,12 +402,12 @@ export interface SnackbarConfigBase {
   defaultProps: Partial<{
     closeButton: boolean;
     color: keyof SnackbarColor;
-    duration: number | false;
+    duration: false | number;
     padding: keyof SnackbarPadding;
     position: keyof SnackbarPosition;
     progressbar: boolean;
     rounded: keyof SnackbarRounded;
-    teleportTo: string | false;
+    teleportTo: false | string;
     transition: keyof SnackbarTransition;
   }>;
 }

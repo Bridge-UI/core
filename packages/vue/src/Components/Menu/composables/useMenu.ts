@@ -45,8 +45,8 @@ import {
 const menuBridgeKeys = [
   "offset",
   "shadow",
-  "rounded",
   "classes",
+  "rounded",
   "strategy",
   "placement",
   "persistent",
@@ -107,17 +107,17 @@ export function useMenu(
 
   const layerStackId = ref("");
 
-  const triggerRef = ref<HTMLElement | null>(null);
+  const triggerRef = ref<null | HTMLElement>(null);
 
-  const contentRef = ref<HTMLElement | null>(null);
+  const contentRef = ref<null | HTMLElement>(null);
 
-  let stackOrder: number | null = null;
+  let stackOrder: null | number = null;
 
-  let stackHandle: LayerStackHandle | null = null;
-  let unsubscribeLayerStack: (() => void) | null = null;
-  let positionHandle: PositionHandle | null = null;
-  let removePointerListener: (() => void) | null = null;
-  let releaseOpenMenuClaim: (() => void) | null = null;
+  let stackHandle: null | LayerStackHandle = null;
+  let unsubscribeLayerStack: null | (() => void) = null;
+  let positionHandle: null | PositionHandle = null;
+  let removePointerListener: null | (() => void) = null;
+  let releaseOpenMenuClaim: null | (() => void) = null;
   let allowReferenceHiddenClose = false;
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
@@ -197,7 +197,7 @@ export function useMenu(
     return omit(split.value.inheritedAttrs, ["anchorEl", "onShowChange"]);
   });
 
-  function getReferenceElement(): HTMLElement | null {
+  function getReferenceElement(): null | HTMLElement {
     return props.anchorEl ?? triggerRef.value;
   }
 
@@ -378,7 +378,7 @@ export function useMenu(
     };
   }
 
-  function setTriggerRef(element: Element | ComponentPublicInstance | null) {
+  function setTriggerRef(element: null | Element | ComponentPublicInstance) {
     const next = resolveVnodeRefElement(element);
 
     if (triggerRef.value === next) {
@@ -396,7 +396,7 @@ export function useMenu(
     });
   }
 
-  function setContentRef(element: Element | ComponentPublicInstance | null) {
+  function setContentRef(element: null | Element | ComponentPublicInstance) {
     const next = resolveVnodeRefElement(element);
 
     if (contentRef.value === next) {

@@ -125,11 +125,11 @@ export function useModal(
 
   const leaveTransitionEndsPendingRef = useRef(0);
 
-  const stackOrderRef = useRef<number | null>(null);
+  const stackOrderRef = useRef<null | number>(null);
 
-  const focusTrapRef = useRef<FocusTrap | null>(null);
+  const focusTrapRef = useRef<null | FocusTrap>(null);
 
-  const stackHandleRef = useRef<LayerStackHandle | null>(null);
+  const stackHandleRef = useRef<null | LayerStackHandle>(null);
 
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 

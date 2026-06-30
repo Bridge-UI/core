@@ -36,8 +36,8 @@ import {
 const checkboxBridgeKeys = [
   "size",
   "color",
-  "classes",
   "checked",
+  "classes",
   "rounded",
   "customProps",
   "indeterminate",

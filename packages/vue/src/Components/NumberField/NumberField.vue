@@ -23,7 +23,7 @@ defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<NumberFieldEmits>();
 
-const model = defineModel<number | null | undefined>();
+const model = defineModel<null | number | undefined>();
 
 const props = withDefaults(defineProps<NumberFieldOwnProps>(), {
   step: 1,

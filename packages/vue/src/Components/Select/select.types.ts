@@ -273,7 +273,7 @@ export type SelectSingleProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component.
    */
-  modelValue?: SelectValue | null;
+  modelValue?: null | SelectValue;
 
   /**
    * Whether multiple values can be selected.
@@ -290,7 +290,7 @@ export type SelectMultipleProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component.
    */
-  modelValue?: SelectValue[] | null;
+  modelValue?: null | SelectValue[];
 
   /**
    * Whether multiple values can be selected.

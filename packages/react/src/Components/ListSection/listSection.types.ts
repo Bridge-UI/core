@@ -37,7 +37,7 @@ export interface ListSectionOwnProps {
    *
    * @default "li"
    */
-  as?: "div" | "li";
+  as?: "li" | "div";
 
   /**
    * The children to render. Use `title` for plain text.

@@ -40,10 +40,11 @@ import {
 } from "@/Utils";
 
 const menuBridgeKeys = [
+  "slots",
   "offset",
   "shadow",
-  "rounded",
   "classes",
+  "rounded",
   "strategy",
   "placement",
   "persistent",
@@ -54,7 +55,6 @@ const menuBridgeKeys = [
   "closeOnClickAway",
   "disableAutoFocus",
   "disableScrollLock",
-  "slots",
 ] as const satisfies readonly (keyof MenuOwnProps)[];
 
 type MenuLibDefaults = LibDefaultsShape<
@@ -109,13 +109,13 @@ export function useMenu(
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const stackOrderRef = useRef<number | null>(null);
+  const stackOrderRef = useRef<null | number>(null);
 
-  const stackHandleRef = useRef<LayerStackHandle | null>(null);
+  const stackHandleRef = useRef<null | LayerStackHandle>(null);
 
-  const positionHandleRef = useRef<PositionHandle | null>(null);
+  const positionHandleRef = useRef<null | PositionHandle>(null);
 
-  const releaseOpenMenuClaimRef = useRef<(() => void) | null>(null);
+  const releaseOpenMenuClaimRef = useRef<null | (() => void)>(null);
 
   const allowReferenceHiddenCloseRef = useRef(false);
 
@@ -209,7 +209,7 @@ export function useMenu(
     onShowChange?.(next);
   }
 
-  function getReferenceElement(): HTMLElement | null {
+  function getReferenceElement(): null | HTMLElement {
     if (anchorEl instanceof HTMLElement) {
       return anchorEl;
     }
@@ -486,7 +486,7 @@ export function useMenu(
       return;
     }
 
-    let removePointerListener: (() => void) | null = null;
+    let removePointerListener: null | (() => void) = null;
 
     const frameId = requestAnimationFrame(() => {
       function handlePointerDown(event: PointerEvent) {

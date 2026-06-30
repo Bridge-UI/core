@@ -103,7 +103,7 @@ declare module "@bridge-ui/core" {
 
   interface ListItemConfigOverrides {
     classes: ListItemClasses;
-    defaultProps: Partial<Pick<ListItemProps, "align" | "role">>;
+    defaultProps: Partial<Pick<ListItemProps, "role" | "align">>;
   }
 
   interface ListSectionConfigOverrides {
@@ -112,7 +112,7 @@ declare module "@bridge-ui/core" {
 
   interface MenuConfigOverrides {
     classes: MenuClasses;
-    defaultProps: Partial<Pick<MenuProps, "rounded" | "shadow">>;
+    defaultProps: Partial<Pick<MenuProps, "shadow" | "rounded">>;
   }
 
   interface ModalConfigOverrides {

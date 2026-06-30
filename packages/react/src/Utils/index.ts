@@ -24,8 +24,8 @@ export type UseBridgeUIComponentReturn<
   K extends keyof BridgeUIComponentsConfig,
 > = {
   bridge: ReturnType<typeof useBridgeUI>;
-  components: BridgeUIComponentsConfig | null;
-  entry: RegistryEntryFor<K> | undefined;
+  components: null | BridgeUIComponentsConfig;
+  entry: undefined | RegistryEntryFor<K>;
   merged: P;
 };
 
@@ -61,8 +61,8 @@ export function useBridgeUIComponent<
   const components = isNil(bridge) ? null : (bridge.components ?? null);
 
   const entry = get(components, componentName) as
-    | RegistryEntryFor<K>
-    | undefined;
+    | undefined
+    | RegistryEntryFor<K>;
 
   const merged = useMemo(() => {
     return mergePropsWithBridgeUIDefaults({
@@ -93,7 +93,7 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
 }) {
   return useMemo(() => {
     return mergeBridgeUILayeredClasses(
-      get(entry, "classes") as Partial<C> | undefined,
+      get(entry, "classes") as undefined | Partial<C>,
       props.classes,
     );
   }, [entry, props.classes]);

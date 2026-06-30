@@ -166,12 +166,12 @@ export interface SnackbarOwnProps {
    *
    * @default 5000
    */
-  duration?: number | false;
+  duration?: false | number;
 
   /**
    * The icon to display. Use `null` to hide the icon.
    */
-  icon?: LucideIcon | null;
+  icon?: null | LucideIcon;
 
   /**
    * Avatar image URL (shown instead of icon when set).
@@ -216,7 +216,7 @@ export interface SnackbarOwnProps {
    *
    * @default "body"
    */
-  teleportTo?: string | false;
+  teleportTo?: false | string;
 
   /**
    * Headline text.

@@ -8,40 +8,6 @@ import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 import vueParser from "vue-eslint-parser";
 
-const typeSorting = [
-  "error",
-  {
-    order: "asc" as const,
-    type: "alphabetical" as const,
-  },
-];
-
-const unusedVars = [
-  "error",
-  {
-    argsIgnorePattern: "^_",
-    varsIgnorePattern: "^_",
-  },
-];
-
-const lineLengthSorting = {
-  order: "asc" as const,
-  type: "line-length" as const,
-};
-
-const objectSorting = [
-  "error",
-  {
-    type: "unsorted" as const,
-    useConfigurationIf: {
-      callingFunctionNamePattern: "^cn$",
-    },
-  },
-  lineLengthSorting,
-];
-
-const jsxPropsSorting = ["error", lineLengthSorting];
-
 export default defineConfig(
   {
     ignores: ["**/dist/**", "**/coverage/**", "**/node_modules/**"],
@@ -90,14 +56,20 @@ export default defineConfig(
     plugins: {
       "react-hooks": reactHooks,
     },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      "perfectionist/sort-jsx-props": jsxPropsSorting,
-    },
     languageOptions: {
       parserOptions: {
         ecmaFeatures: { jsx: true },
       },
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      "perfectionist/sort-jsx-props": [
+        "error",
+        {
+          order: "asc" as const,
+          type: "line-length" as const,
+        },
+      ],
     },
   },
   {
@@ -106,11 +78,67 @@ export default defineConfig(
     },
     rules: {
       "vue/multi-word-component-names": "off",
-      "perfectionist/sort-objects": objectSorting,
-      "perfectionist/sort-interfaces": typeSorting,
-      "perfectionist/sort-object-types": typeSorting,
-      "@typescript-eslint/no-unused-vars": unusedVars,
       "@typescript-eslint/no-empty-object-type": "off",
+      "perfectionist/sort-interfaces": [
+        "error",
+        {
+          order: "asc" as const,
+          type: "alphabetical" as const,
+        },
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "perfectionist/sort-object-types": [
+        "error",
+        {
+          order: "asc" as const,
+          type: "alphabetical" as const,
+        },
+      ],
+      "perfectionist/sort-union-types": [
+        "error",
+        {
+          order: "asc" as const,
+          type: "line-length" as const,
+
+          fallbackSort: {
+            order: "asc" as const,
+            type: "alphabetical" as const,
+          },
+        },
+      ],
+      "perfectionist/sort-objects": [
+        "error",
+        {
+          type: "unsorted" as const,
+          useConfigurationIf: {
+            callingFunctionNamePattern: "^cn$",
+          },
+        },
+        {
+          order: "asc" as const,
+          type: "line-length" as const,
+        },
+      ],
+      "perfectionist/sort-arrays": [
+        "error",
+        {
+          order: "asc" as const,
+          type: "line-length" as const,
+          useConfigurationIf: {
+            matchesAstSelector: "TSAsExpression > ArrayExpression",
+          },
+          fallbackSort: {
+            order: "asc" as const,
+            type: "alphabetical" as const,
+          },
+        },
+      ],
     },
   },
   eslintConfigPrettier,

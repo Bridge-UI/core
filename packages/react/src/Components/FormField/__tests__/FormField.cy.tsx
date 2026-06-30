@@ -26,7 +26,7 @@ function FieldHarness({
   id?: string;
   label?: string;
   readonly?: boolean;
-  variant?: "outline" | "filled" | "stacked" | "notched" | "underlined";
+  variant?: "filled" | "notched" | "outline" | "stacked" | "underlined";
 }) {
   const field = useFormField(
     {

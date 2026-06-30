@@ -49,7 +49,7 @@ const buttonBridgeKeys = [
 
 type ButtonLibDefaults = LibDefaultsShape<
   ButtonOwnProps,
-  "as" | "color" | "density" | "rounded" | "size" | "variant"
+  "as" | "size" | "color" | "density" | "rounded" | "variant"
 >;
 
 type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;

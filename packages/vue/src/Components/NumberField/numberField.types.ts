@@ -36,7 +36,7 @@ export interface NumberFieldEmits {
   /**
    * Emitted when `v-model` should update.
    */
-  "update:modelValue": [value: number | null];
+  "update:modelValue": [value: null | number];
 }
 
 export interface NumberFieldOwnProps extends Omit<
@@ -70,10 +70,10 @@ export interface NumberFieldSlots extends FormFieldSlots {}
 
 export type NumberFieldProps = MergeHtmlProps<
   NumberFieldOwnProps,
-  Omit<InputHTMLAttributes, "onChange" | "value" | "defaultValue">
+  Omit<InputHTMLAttributes, "value" | "onChange" | "defaultValue">
 > & {
   /**
    * Bound with `v-model` on the component (`defineModel` internally).
    */
-  modelValue?: number | null;
+  modelValue?: null | number;
 };

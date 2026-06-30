@@ -18,7 +18,7 @@ const libDefaults = {
 
 function renderUseListItem(
   props: ListItemProps = {},
-  context: { dense: boolean } | null = null,
+  context: null | { dense: boolean } = null,
 ) {
   return renderHook(() => useListItem(props, libDefaults), {
     wrapper: ({ children }) =>

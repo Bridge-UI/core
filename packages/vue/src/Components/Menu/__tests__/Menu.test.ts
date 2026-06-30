@@ -336,8 +336,8 @@ test("it should keep the open menu on pointerdown over another trigger until cli
 test("it should close other menus with anchorEl when another opens", async () => {
   const openA = ref(false);
   const openB = ref(false);
-  const anchorA = ref<HTMLElement | null>(null);
-  const anchorB = ref<HTMLElement | null>(null);
+  const anchorA = ref<null | HTMLElement>(null);
+  const anchorB = ref<null | HTMLElement>(null);
 
   const Host = defineComponent({
     setup() {
@@ -414,7 +414,7 @@ test("it should close other menus with anchorEl when another opens", async () =>
 
 test("it should switch placement menus in one click in either direction", async () => {
   const placements = ["top-start", "bottom-end"] as const;
-  const open = ref<(typeof placements)[number] | null>(null);
+  const open = ref<null | (typeof placements)[number]>(null);
 
   const Host = defineComponent({
     setup() {

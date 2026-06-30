@@ -23,7 +23,7 @@ defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<PasswordFieldEmits>();
 
-const model = defineModel<string | null | undefined>();
+const model = defineModel<null | string | undefined>();
 
 const props = withDefaults(defineProps<PasswordFieldOwnProps>(), {
   visible: null,
