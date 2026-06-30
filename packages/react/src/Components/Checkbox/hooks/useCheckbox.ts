@@ -220,7 +220,7 @@ export function useCheckbox(
       {},
       {},
       cn({
-        "relative inline-flex shrink-0 items-center": true,
+        "relative inline-flex shrink-0 cursor-pointer items-center": true,
         "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2": true,
         [colorClasses?.focus ?? ""]: true,
       }),
