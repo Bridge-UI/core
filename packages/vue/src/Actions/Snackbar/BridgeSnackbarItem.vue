@@ -26,6 +26,10 @@ const snackbarColor = computed(() => {
   return (snackbarProps.value.color ?? "primary") as keyof SnackbarColor;
 });
 
+const snackbarRounded = computed(() => {
+  return snackbarProps.value.rounded ?? "lg";
+});
+
 const dismissFromSnackbar = () => {
   invokeLayerDismiss(props.api.entries.value, props.entry.id);
 };
@@ -64,18 +68,23 @@ const hasTrailing = computed(() => {
     :model-value="entry.show"
     v-on:close="dismissFromSnackbar"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
-    :on-show-change="
+    v-on:leave-complete="
+      () =>
+        completeLayerHide(api.entries.value, entry.id, false, api.removeEntry)
+    "
+    v-on:show-change="
       (show) =>
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
     "
   >
-    <template v-if="hasInlineActions" #actions>
+    <template #actions v-if="hasInlineActions">
       <BridgeSnackbarAction
         role="accept"
         layout="inline"
         :action="actions.accept"
         v-if="actions?.accept?.label"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.accept?.onClick)"
       />
 
@@ -85,25 +94,27 @@ const hasTrailing = computed(() => {
         :action="actions.reject"
         v-if="actions?.reject?.label"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.reject?.onClick)"
       />
     </template>
 
-    <template v-if="hasTrailing" #trailing>
+    <template #trailing v-if="hasTrailing">
       <BridgeSnackbarAction
         role="accept"
         layout="trailing"
         :action="actions!.accept!"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.accept?.onClick)"
       />
     </template>
 
-    <template v-if="hasRight" #right>
+    <template #right v-if="hasRight">
       <div class="flex flex-col border-l border-dark-200 dark:border-dark-700">
         <div
-          v-if="actions?.accept?.label"
           class="flex flex-1 h-0"
+          v-if="actions?.accept?.label"
           :class="{
             'border-b border-dark-200 dark:border-dark-700': actions?.reject,
           }"
@@ -113,17 +124,19 @@ const hasTrailing = computed(() => {
             layout="right-accept"
             :action="actions.accept"
             :snackbar-color="snackbarColor"
+            :snackbar-rounded="snackbarRounded"
             :has-reject="Boolean(actions?.reject)"
             v-on:run="runAction(actions?.accept?.onClick)"
           />
         </div>
 
-        <div v-if="actions?.reject?.label" class="flex flex-1 h-0">
+        <div class="flex flex-1 h-0" v-if="actions?.reject?.label">
           <BridgeSnackbarAction
             role="reject"
             layout="right-reject"
             :action="actions.reject"
             :snackbar-color="snackbarColor"
+            :snackbar-rounded="snackbarRounded"
             :has-accept="Boolean(actions?.accept)"
             v-on:run="runAction(actions?.reject?.onClick)"
           />

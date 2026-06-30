@@ -22,7 +22,7 @@ test("it should apply default md size classes", () => {
 });
 
 test("it should apply sm size classes", () => {
-  const { container } = render(<Icon icon={Info} size="sm" />);
+  const { container } = render(<Icon size="sm" icon={Info} />);
 
   const svg = container.querySelector("svg");
 
@@ -31,7 +31,7 @@ test("it should apply sm size classes", () => {
 });
 
 test("it should apply xl size classes", () => {
-  const { container } = render(<Icon icon={Info} size="xl" />);
+  const { container } = render(<Icon size="xl" icon={Info} />);
 
   const svg = container.querySelector("svg");
 
@@ -48,7 +48,7 @@ test("it should merge custom className prop", () => {
 });
 
 test("it should apply lg size classes", () => {
-  const { container } = render(<Icon icon={Info} size="lg" />);
+  const { container } = render(<Icon size="lg" icon={Info} />);
 
   const svg = container.querySelector("svg");
 
@@ -58,7 +58,7 @@ test("it should apply lg size classes", () => {
 
 test("it should forward additional attributes to the svg element", () => {
   const { container } = render(
-    <Icon icon={Info} id="info-icon" data-testid="icon" aria-hidden />,
+    <Icon icon={Info} aria-hidden id="info-icon" data-testid="icon" />,
   );
 
   const svg = container.querySelector("#info-icon");
@@ -69,7 +69,7 @@ test("it should forward additional attributes to the svg element", () => {
 });
 
 test("it should apply 2xs size classes", () => {
-  const { container } = render(<Icon icon={Info} size="2xs" />);
+  const { container } = render(<Icon size="2xs" icon={Info} />);
 
   const svg = container.querySelector("svg");
 

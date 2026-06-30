@@ -24,6 +24,11 @@ const unusedVars = [
   },
 ];
 
+const lineLengthSorting = {
+  order: "asc" as const,
+  type: "line-length" as const,
+};
+
 const objectSorting = [
   "error",
   {
@@ -32,11 +37,10 @@ const objectSorting = [
       callingFunctionNamePattern: "^cn$",
     },
   },
-  {
-    order: "asc" as const,
-    type: "line-length" as const,
-  },
+  lineLengthSorting,
 ];
+
+const jsxPropsSorting = ["error", lineLengthSorting];
 
 export default defineConfig(
   {
@@ -57,6 +61,28 @@ export default defineConfig(
     },
     rules: {
       "no-undef": "off",
+      "vue/attributes-order": [
+        "error",
+        {
+          sortLineLength: true,
+          order: [
+            [
+              "SLOT",
+              "EVENTS",
+              "GLOBAL",
+              "UNIQUE",
+              "CONTENT",
+              "DEFINITION",
+              "OTHER_ATTR",
+              "CONDITIONALS",
+              "LIST_RENDERING",
+              "TWO_WAY_BINDING",
+              "OTHER_DIRECTIVES",
+              "RENDER_MODIFIERS",
+            ],
+          ],
+        },
+      ],
     },
   },
   {
@@ -66,6 +92,7 @@ export default defineConfig(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "perfectionist/sort-jsx-props": jsxPropsSorting,
     },
     languageOptions: {
       parserOptions: {

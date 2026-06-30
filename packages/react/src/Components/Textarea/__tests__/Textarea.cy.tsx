@@ -15,13 +15,13 @@ test("it should render a label when label prop is provided", () => {
 });
 
 test("it should render description when description prop is provided", () => {
-  cy.mount(<Textarea description="Helper text" aria-label="Notes" />);
+  cy.mount(<Textarea aria-label="Notes" description="Helper text" />);
 
   cy.contains("Helper text").should("be.visible");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {
-  cy.mount(<Textarea error errorMessage="Required" aria-label="Notes" />);
+  cy.mount(<Textarea error aria-label="Notes" errorMessage="Required" />);
 
   cy.contains("Required").should("be.visible");
   cy.get("textarea").should("have.attr", "aria-invalid", "true");
@@ -34,7 +34,7 @@ test("it should apply disabled attribute when disabled", () => {
 });
 
 test("it should set aria-describedby when description is shown", () => {
-  cy.mount(<Textarea description="Helper" id="field-id" aria-label="Notes" />);
+  cy.mount(<Textarea id="field-id" aria-label="Notes" description="Helper" />);
 
   cy.get("textarea").should(
     "have.attr",
@@ -50,7 +50,7 @@ test("it should apply vertical resize when resize is vertical", () => {
 });
 
 test("it should forward placeholder to the textarea", () => {
-  cy.mount(<Textarea placeholder="Write here" aria-label="Notes" />);
+  cy.mount(<Textarea aria-label="Notes" placeholder="Write here" />);
 
   cy.get("textarea").should("have.attr", "placeholder", "Write here");
 });

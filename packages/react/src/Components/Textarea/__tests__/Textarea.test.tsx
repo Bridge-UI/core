@@ -24,19 +24,19 @@ test("it should render a label when label prop is provided", () => {
 });
 
 test("it should render description when description prop is provided", () => {
-  render(<Textarea description="Helper text" aria-label="Notes" />);
+  render(<Textarea aria-label="Notes" description="Helper text" />);
 
   expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
 test("it should hide description when field is invalid", () => {
-  render(<Textarea error description="Helper text" aria-label="Notes" />);
+  render(<Textarea error aria-label="Notes" description="Helper text" />);
 
   expect(screen.queryByText("Helper text")).toBeNull();
 });
 
 test("it should render error message when errorMessage prop is provided", () => {
-  render(<Textarea error errorMessage="Required" aria-label="Notes" />);
+  render(<Textarea error aria-label="Notes" errorMessage="Required" />);
 
   expect(screen.getByText("Required")).toBeTruthy();
 });
@@ -54,7 +54,7 @@ test("it should apply disabled attribute when disabled", () => {
 });
 
 test("it should set aria-describedby to description id when description is shown", () => {
-  render(<Textarea description="Helper" id="notes-field" aria-label="Notes" />);
+  render(<Textarea id="notes-field" aria-label="Notes" description="Helper" />);
 
   const textarea = screen.getByRole("textbox");
 
@@ -72,7 +72,7 @@ test("it should render error icon when error is set", () => {
 
 test("it should render start icon when startIcon prop is set", () => {
   const { container } = render(
-    <Textarea startIcon={CircleAlert} aria-label="Notes" />,
+    <Textarea aria-label="Notes" startIcon={CircleAlert} />,
   );
 
   expect(container.querySelector("svg")).not.toBeNull();
@@ -88,7 +88,7 @@ test("it should apply vertical resize class when resize is vertical", () => {
 
 test("it should forward placeholder to the textarea", () => {
   const { container } = render(
-    <Textarea placeholder="Write here" aria-label="Notes" />,
+    <Textarea aria-label="Notes" placeholder="Write here" />,
   );
 
   expect(

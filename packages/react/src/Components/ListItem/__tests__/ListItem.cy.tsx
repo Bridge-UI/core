@@ -9,7 +9,7 @@ test("it should render primary text from the primary prop", () => {
 });
 
 test("it should render an interactive wrapper with menuitem role", () => {
-  cy.mount(<ListItem interactive primary="Action" role="menuitem" />);
+  cy.mount(<ListItem interactive role="menuitem" primary="Action" />);
 
   cy.get('[role="menuitem"]').should("exist");
   cy.get('[role="menuitem"]').should("have.attr", "tabindex", "0");
@@ -18,7 +18,7 @@ test("it should render an interactive wrapper with menuitem role", () => {
 test("it should inherit dense padding from parent List", () => {
   cy.mount(
     <List dense>
-      <ListItem interactive primary="Dense item" role="menuitem" />
+      <ListItem interactive role="menuitem" primary="Dense item" />
     </List>,
   );
 

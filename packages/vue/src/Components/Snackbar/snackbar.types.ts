@@ -9,6 +9,7 @@ import type {
   SnackbarColor,
   SnackbarPadding,
   SnackbarPosition,
+  SnackbarRounded,
   SnackbarTransition,
 } from "@bridge-ui/core";
 
@@ -17,6 +18,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
 export interface SnackbarPaddingOverrides {}
+export interface SnackbarRoundedOverrides {}
 export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
@@ -109,6 +111,20 @@ export interface SnackbarEmits {
    * Emitted when the snackbar requests to close.
    */
   close: [];
+
+  /**
+   * Emitted after the leave transition when `v-model` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   * Listen with `@leave-complete` / `v-on:leave-complete`.
+   */
+  "leave-complete": [];
+
+  /**
+   * Emitted when `v-model` visibility should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
 }
 
 /**
@@ -163,11 +179,6 @@ export interface SnackbarOwnProps {
   img?: string;
 
   /**
-   * Called when `v-model` visibility should change (controlled state).
-   */
-  onShowChange?: (show: boolean) => void;
-
-  /**
    * Padding for the content area.
    *
    * @default "medium"
@@ -187,6 +198,13 @@ export interface SnackbarOwnProps {
    * @default true
    */
   progressbar?: boolean;
+
+  /**
+   * The roundedness of the snackbar panel.
+   *
+   * @default "lg"
+   */
+  rounded?: MergeProps<SnackbarRounded, SnackbarRoundedOverrides>;
 
   /**
    * Pre-assigned stack id (BridgeSnackbarHost).

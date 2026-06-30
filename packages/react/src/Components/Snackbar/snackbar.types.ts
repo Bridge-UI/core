@@ -9,6 +9,7 @@ import type {
   SnackbarColor,
   SnackbarPadding,
   SnackbarPosition,
+  SnackbarRounded,
   SnackbarTransition,
 } from "@bridge-ui/core";
 
@@ -17,6 +18,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
 export interface SnackbarPaddingOverrides {}
+export interface SnackbarRoundedOverrides {}
 export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
@@ -182,6 +184,13 @@ export interface SnackbarOwnProps {
   progressbar?: boolean;
 
   /**
+   * The roundedness of the snackbar panel.
+   *
+   * @default "lg"
+   */
+  rounded?: MergeProps<SnackbarRounded, SnackbarRoundedOverrides>;
+
+  /**
    * The slots to apply to the snackbar.
    */
   slots?: SnackbarSlots;
@@ -251,6 +260,13 @@ export type SnackbarProps = MergeHtmlProps<
    * Called when the snackbar requests to close.
    */
   onClose?: () => void;
+
+  /**
+   * Called after the leave transition when `show` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
 
   /**
    * Called when `show` should change (controlled state).

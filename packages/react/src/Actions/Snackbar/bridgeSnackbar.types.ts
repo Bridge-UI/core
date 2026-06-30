@@ -1,5 +1,5 @@
 // ** External Imports
-import type { LayerId, SnackbarColor } from "@bridge-ui/core";
+import type { LayerId, SnackbarColor, SnackbarRounded } from "@bridge-ui/core";
 import { snackbarPositionProps } from "@bridge-ui/core";
 import type { ReactNode } from "react";
 
@@ -64,6 +64,8 @@ export type SnackbarActionLayout =
 
 export type SnackbarActionColor = keyof SnackbarColor;
 
+export type SnackbarActionRounded = keyof SnackbarRounded;
+
 export type BridgeSnackbarActionProps = {
   action: SnackbarAction;
   hasAccept?: boolean;
@@ -71,6 +73,7 @@ export type BridgeSnackbarActionProps = {
   layout: SnackbarActionLayout;
   role: "accept" | "reject";
   snackbarColor: SnackbarActionColor;
+  snackbarRounded?: SnackbarActionRounded;
 };
 
 export type SnackbarActionControlProps = BridgeSnackbarActionProps & {

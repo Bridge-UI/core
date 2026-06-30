@@ -116,8 +116,6 @@ function Select(props: SelectProps) {
         disableAutoFocus
         loading={isLoading}
         multiple={multiple}
-        color={formField.merged.color}
-        invalidated={formField.invalidated}
         listboxId={listboxId}
         maxHeight={maxHeight}
         anchorEl={containerRef}
@@ -125,8 +123,10 @@ function Select(props: SelectProps) {
         isSelected={isSelected}
         options={visibleOptions}
         emptyMessage={emptyMessage}
+        color={formField.merged.color}
         onShowChange={handleOpenChange}
         labelledBy={formField.controlId}
+        invalidated={formField.invalidated}
         disableMaxHeight={disableMaxHeight}
         highlightedIndex={highlightedIndex}
         hideEmptyMessage={hideEmptyMessage}

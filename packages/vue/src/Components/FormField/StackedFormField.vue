@@ -32,8 +32,8 @@ defineProps<{
 
       <div v-bind="api.stackedBodyBind.value">
         <div
-          v-bind="api.insetLabelRowBind.value"
           v-if="api.hasInsetLabelRow.value"
+          v-bind="api.insetLabelRowBind.value"
         >
           <label
             :for="api.controlId.value"
@@ -47,8 +47,8 @@ defineProps<{
             />
 
             <span
-              v-if="api.merged.value.required"
               v-bind="api.requiredBind.value"
+              v-if="api.merged.value.required"
             >
               *
             </span>

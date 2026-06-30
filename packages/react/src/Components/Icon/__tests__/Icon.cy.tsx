@@ -17,13 +17,13 @@ test("it should apply default md size classes", () => {
 });
 
 test("it should apply sm size classes", () => {
-  cy.mount(<Icon icon={Info} size="sm" />);
+  cy.mount(<Icon size="sm" icon={Info} />);
 
   cy.get("svg").should("have.class", "w-3.5").and("have.class", "h-3.5");
 });
 
 test("it should apply xl size classes", () => {
-  cy.mount(<Icon icon={Info} size="xl" />);
+  cy.mount(<Icon size="xl" icon={Info} />);
 
   cy.get("svg").should("have.class", "w-6").and("have.class", "h-6");
 });
@@ -35,13 +35,13 @@ test("it should merge custom className prop", () => {
 });
 
 test("it should apply lg size classes", () => {
-  cy.mount(<Icon icon={Info} size="lg" />);
+  cy.mount(<Icon size="lg" icon={Info} />);
 
   cy.get("svg").should("have.class", "w-5").and("have.class", "h-5");
 });
 
 test("it should apply 2xs size classes", () => {
-  cy.mount(<Icon icon={Info} size="2xs" />);
+  cy.mount(<Icon size="2xs" icon={Info} />);
 
   cy.get("svg").should("have.class", "w-2").and("have.class", "h-2");
 });

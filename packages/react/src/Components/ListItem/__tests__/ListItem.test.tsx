@@ -13,7 +13,7 @@ test("it should render primary text from the primary prop", () => {
 });
 
 test("it should render an interactive wrapper with menuitem role", () => {
-  render(<ListItem interactive primary="Action" role="menuitem" />);
+  render(<ListItem interactive role="menuitem" primary="Action" />);
 
   const interactive = screen.getByRole("menuitem");
 
@@ -23,7 +23,7 @@ test("it should render an interactive wrapper with menuitem role", () => {
 test("it should inherit dense padding from parent List", () => {
   const { container } = render(
     <List dense>
-      <ListItem interactive primary="Dense item" role="menuitem" />
+      <ListItem interactive role="menuitem" primary="Dense item" />
     </List>,
   );
 

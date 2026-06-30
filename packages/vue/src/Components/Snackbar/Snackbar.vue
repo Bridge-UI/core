@@ -50,6 +50,7 @@ const {
 } = useSnackbar(
   props,
   {
+    rounded: "lg",
     duration: 5000,
     color: "primary",
     padding: "medium",
@@ -63,7 +64,8 @@ const {
     show: model,
     stackId: props.stackId,
     onClose: () => emit("close"),
-    onShowChange: (show) => props.onShowChange?.(show),
+    onLeaveComplete: () => emit("leave-complete"),
+    onShowChange: (show) => emit("show-change", show),
   },
 );
 
@@ -96,7 +98,7 @@ const teleportTarget = computed(() => {
 
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="rendered && isPortaled" v-bind="portalBind">
+    <div v-bind="portalBind" v-if="rendered && isPortaled">
       <div class="w-full max-w-sm pointer-events-auto">
         <div
           v-bind="panelBind"

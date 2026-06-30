@@ -1,6 +1,12 @@
 // ** External Imports
-import { fireEvent, render, screen } from "@testing-library/react";
-import { Fragment } from "react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { Fragment, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -77,9 +83,9 @@ test("it should apply top-center position classes on the portal layer", () => {
     <Snackbar
       show
       title="Top"
-      position="top-center"
       duration={false}
       transition="none"
+      position="top-center"
     />,
   );
 
@@ -125,8 +131,8 @@ test("it should call onShowChange when close button is clicked", () => {
 test("it should stack with increasing z-index", () => {
   render(
     <Fragment>
-      <Snackbar show title="One" transition="none" duration={false} />
-      <Snackbar show title="Two" transition="none" duration={false} />
+      <Snackbar show title="One" duration={false} transition="none" />
+      <Snackbar show title="Two" duration={false} transition="none" />
     </Fragment>,
   );
 
@@ -140,8 +146,139 @@ test("it should stack with increasing z-index", () => {
   expect(secondZ).toBeGreaterThan(firstZ);
 });
 
+test("it should apply rounded classes when rounded prop is set", () => {
+  render(
+    <Snackbar
+      show
+      rounded="xl"
+      title="Rounded"
+      duration={false}
+      transition="none"
+    />,
+  );
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  expect(panel?.classList.contains("rounded-xl")).toBe(true);
+});
+
 test("it should not lock body scroll", () => {
-  render(<Snackbar show title="Toast" transition="none" duration={false} />);
+  render(<Snackbar show title="Toast" duration={false} transition="none" />);
 
   expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should stay open when reopened before the leave transition ends", async () => {
+  const onShowChange = vi.fn();
+
+  const { rerender } = render(
+    <Snackbar
+      show
+      title="First"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByRole("status")).toBeTruthy();
+  });
+
+  rerender(
+    <Snackbar
+      show={false}
+      title="First"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  rerender(
+    <Snackbar
+      show
+      title="Second"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  act(() => {
+    fireEvent.transitionEnd(panel!, {
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    });
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Second");
+  });
+
+  expect(onShowChange).not.toHaveBeenCalledWith(false);
+});
+
+function MultiSnackbarDemo() {
+  const [active, setActive] = useState<string | null>(null);
+
+  return (
+    <Fragment>
+      <button type="button" onClick={() => setActive("a")}>
+        Open A
+      </button>
+
+      <button type="button" onClick={() => setActive("b")}>
+        Open B
+      </button>
+
+      <Snackbar
+        key="a"
+        title="Snack A"
+        transition="slide"
+        show={active === "a"}
+        onShowChange={(open) => !open && setActive(null)}
+      />
+
+      <Snackbar
+        key="b"
+        title="Snack B"
+        transition="slide"
+        show={active === "b"}
+        onShowChange={(open) => !open && setActive(null)}
+      />
+    </Fragment>
+  );
+}
+
+test("it should not reset shared state when a replaced snackbar finishes leaving", async () => {
+  render(<MultiSnackbarDemo />);
+
+  fireEvent.click(screen.getByText("Open A"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack A");
+  });
+
+  fireEvent.click(screen.getByText("Open B"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack B");
+  });
+
+  const panels = document.body.querySelectorAll('[data-snackbar-part="panel"]');
+
+  act(() => {
+    fireEvent.transitionEnd(panels[0]!, {
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    });
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack B");
+    expect(document.body.textContent).not.toContain("Snack A");
+  });
 });

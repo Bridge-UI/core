@@ -41,7 +41,7 @@ function ControlledSelect(
 }
 
 test("it should render the combobox trigger", () => {
-  render(<Select aria-label="Fruit" options={options} />);
+  render(<Select options={options} aria-label="Fruit" />);
 
   expect(screen.getByRole("combobox")).toBeTruthy();
 });
@@ -53,7 +53,7 @@ test("it should render a label when label prop is provided", () => {
 });
 
 test("it should open the listbox when the field is clicked", async () => {
-  render(<Select aria-label="Fruit" options={options} />);
+  render(<Select options={options} aria-label="Fruit" />);
 
   fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
 
@@ -67,9 +67,9 @@ test("it should select an option and update the value", async () => {
 
   render(
     <Select
-      aria-label="Fruit"
-      options={options}
       value=""
+      options={options}
+      aria-label="Fruit"
       onChange={onChange}
     />,
   );
@@ -88,8 +88,8 @@ test("it should select an option and update the value", async () => {
 test("it should display the selected option label in single mode", () => {
   render(
     <ControlledSelect
-      aria-label="Fruit"
       options={options}
+      aria-label="Fruit"
       initialValue="apple"
     />,
   );
@@ -104,9 +104,9 @@ test("it should clear the value when clear control is clicked", () => {
 
   render(
     <Select
-      aria-label="Fruit"
-      options={options}
       value="apple"
+      options={options}
+      aria-label="Fruit"
       onChange={onChange}
     />,
   );
@@ -117,7 +117,7 @@ test("it should clear the value when clear control is clicked", () => {
 });
 
 test("it should expose combobox aria attributes when open", async () => {
-  render(<Select aria-label="Fruit" options={options} />);
+  render(<Select options={options} aria-label="Fruit" />);
 
   const combobox = screen.getByRole("combobox");
 
@@ -132,7 +132,7 @@ test("it should expose combobox aria attributes when open", async () => {
 });
 
 test("it should filter options when searchable", async () => {
-  render(<Select aria-label="Fruit" options={options} searchable />);
+  render(<Select searchable options={options} aria-label="Fruit" />);
 
   const combobox = screen.getByRole("combobox");
 

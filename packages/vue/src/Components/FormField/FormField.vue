@@ -48,7 +48,7 @@ const shell = computed(() => {
 </script>
 
 <template>
-  <component :is="shell" :api="api">
+  <component :api="api" :is="shell">
     <slot />
   </component>
 </template>

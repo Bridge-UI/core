@@ -98,6 +98,14 @@ export function BridgeSnackbarHost({
               stackId={entryId}
               {...snackbarProps}
               teleportTo={false}
+              onClose={() => invokeLayerDismiss(api.entries, entryId)}
+              onLeaveComplete={() => {
+                completeLayerHide(api.entries, entryId, false, api.removeEntry);
+              }}
+              onShowChange={(show) => {
+                api.syncShow(entryId, show);
+                completeLayerHide(api.entries, entryId, show, api.removeEntry);
+              }}
               slots={resolveBridgeSnackbarSlots(
                 {
                   actions,
@@ -107,11 +115,6 @@ export function BridgeSnackbarHost({
                 },
                 () => api.close(entryId),
               )}
-              onClose={() => invokeLayerDismiss(api.entries, entryId)}
-              onShowChange={(show) => {
-                api.syncShow(entryId, show);
-                completeLayerHide(api.entries, entryId, show, api.removeEntry);
-              }}
             />
           );
         })}

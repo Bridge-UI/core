@@ -2,7 +2,7 @@
 import { Avatar } from "@/Components/Avatar";
 
 test("it should render an image when src is passed", () => {
-  cy.mount(<Avatar src="https://example.com/avatar.jpg" alt="Jane Doe" />);
+  cy.mount(<Avatar alt="Jane Doe" src="https://example.com/avatar.jpg" />);
 
   cy.get("img")
     .should("exist")

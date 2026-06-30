@@ -18,14 +18,14 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should be checked when checked prop is true", () => {
-  cy.mount(<Radio value="a" checked mainLabel="Option A" />);
+  cy.mount(<Radio checked value="a" mainLabel="Option A" />);
 
   cy.get('input[type="radio"]').should("be.checked");
 });
 
 test("it should render error message when error is set", () => {
   cy.mount(
-    <Radio value="a" mainLabel="Option A" error errorMessage="Required" />,
+    <Radio error value="a" mainLabel="Option A" errorMessage="Required" />,
   );
 
   cy.contains("Required").should("be.visible");
@@ -33,7 +33,7 @@ test("it should render error message when error is set", () => {
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  cy.mount(<Radio value="a" mainLabel="Option A" disabled />);
+  cy.mount(<Radio disabled value="a" mainLabel="Option A" />);
 
   cy.get('input[type="radio"]').should("be.disabled");
 });

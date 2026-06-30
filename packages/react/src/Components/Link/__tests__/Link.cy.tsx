@@ -13,7 +13,7 @@ test("it should render as an anchor with children", () => {
 
 test("it should apply aria-disabled when disabled", () => {
   cy.mount(
-    <Link href="/docs" disabled>
+    <Link disabled href="/docs">
       Disabled
     </Link>,
   );
@@ -23,7 +23,7 @@ test("it should apply aria-disabled when disabled", () => {
 
 test("it should open in a new tab when external is true", () => {
   cy.mount(
-    <Link href="https://example.com" external>
+    <Link external href="https://example.com">
       External
     </Link>,
   );

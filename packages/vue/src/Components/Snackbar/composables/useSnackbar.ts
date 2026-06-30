@@ -25,6 +25,7 @@ import {
   snackbarColorProps,
   snackbarPaddingProps,
   snackbarPositionProps,
+  snackbarRoundedProps,
   snackbarTransitionProps,
   splitComponentProps,
   subscribeLayerStack,
@@ -53,6 +54,7 @@ const snackbarBridgeKeys = [
   "title",
   "classes",
   "padding",
+  "rounded",
   "stackId",
   "duration",
   "position",
@@ -68,6 +70,7 @@ type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
   | "padding"
+  | "rounded"
   | "duration"
   | "position"
   | "teleportTo"
@@ -79,9 +82,33 @@ type SnackbarLibDefaults = LibDefaultsShape<
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
 
 export type SnackbarOptions = {
+  /**
+   * Called when the snackbar requests to close.
+   */
   onClose?: () => void;
+
+  /**
+   * Called after the leave transition when `show` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
   onShowChange?: (show: boolean) => void;
+
+  /**
+   * Whether the snackbar is visible.
+   *
+   * @default false
+   */
   show?: Ref<boolean> | boolean;
+
+  /**
+   * Pre-assigned stack id (BridgeSnackbarHost).
+   */
   stackId?: string;
 };
 
@@ -101,6 +128,8 @@ export function useSnackbar(
   const remainingMsRef = ref(0);
 
   const timerPaused = ref(false);
+
+  const pendingLeave = ref(false);
 
   const timerStartedAtRef = ref(0);
 
@@ -187,6 +216,15 @@ export function useSnackbar(
     return get(classes, merged.value.padding);
   });
 
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarRoundedProps,
+      bridgeSnackbar.value?.customProps?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
+  });
+
   const resolvedIcon = computed(() => {
     if (isNull(merged.value.icon)) {
       return null;
@@ -249,13 +287,18 @@ export function useSnackbar(
   }
 
   function finishLeave() {
+    if (!pendingLeave.value) {
+      return;
+    }
+
+    pendingLeave.value = false;
     transitionState.value = "closed";
     clearDismissTimer();
 
     if (show.value) {
       setShow(false);
     } else {
-      options.onShowChange?.(false);
+      options.onLeaveComplete?.();
     }
 
     rendered.value = false;
@@ -263,6 +306,7 @@ export function useSnackbar(
 
   function startLeave() {
     clearDismissTimer();
+    pendingLeave.value = true;
 
     if (!transitionEnabled.value) {
       finishLeave();
@@ -274,6 +318,8 @@ export function useSnackbar(
   }
 
   function scheduleOpen() {
+    pendingLeave.value = false;
+
     if (!transitionEnabled.value) {
       transitionState.value = "open";
 
@@ -501,8 +547,9 @@ export function useSnackbar(
       },
       cn({
         "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,
-        "bg-white shadow-lg ring-1 ring-black/5 rounded-lg": true,
+        "bg-white shadow-lg ring-1 ring-black/5": true,
         "dark:bg-dark-800 dark:border dark:border-dark-700": true,
+        [get(roundedClass.value, "base") ?? ""]: true,
         [panelTransitionClass.value]: transitionEnabled.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),

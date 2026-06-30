@@ -11,5 +11,10 @@ export type {
 } from "@/Components/Snackbar/Padding";
 export { positionProps } from "@/Components/Snackbar/Position";
 export type { SnackbarPosition } from "@/Components/Snackbar/Position";
+export { roundedProps } from "@/Components/Snackbar/Rounded";
+export type {
+  SnackbarRounded,
+  SnackbarRoundedItem,
+} from "@/Components/Snackbar/Rounded";
 export { transitionProps } from "@/Components/Snackbar/Transition";
 export type { SnackbarTransition } from "@/Components/Snackbar/Transition";

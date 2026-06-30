@@ -133,8 +133,6 @@ const {
     v-model="open"
     :loading="isLoading"
     :multiple="multiple"
-    :color="formField.merged.value.color"
-    :invalidated="formField.invalidated.value"
     :listbox-id="listboxId"
     :anchor-el="containerRef"
     :options="visibleOptions"
@@ -143,28 +141,30 @@ const {
     :disable-auto-focus="true"
     :empty-message="emptyMessage"
     :max-height="props.maxHeight"
+    :color="formField.merged.value.color"
     :highlighted-index="highlightedIndex"
     :hide-empty-message="hideEmptyMessage"
     :labelled-by="formField.controlId.value"
+    :invalidated="formField.invalidated.value"
     :disable-max-height="props.disableMaxHeight"
   >
-    <template v-if="hasNamedSlot(slots, 'beforeOptions')" #beforeOptions>
+    <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
       <component :is="resolveNamedSlot(slots, 'beforeOptions')" />
     </template>
 
-    <template v-if="hasNamedSlot(slots, 'loading')" #loading>
+    <template #loading v-if="hasNamedSlot(slots, 'loading')">
       <component :is="resolveNamedSlot(slots, 'loading')" />
     </template>
 
-    <template v-if="hasNamedSlot(slots, 'option')" #option="slotProps">
+    <template #option="slotProps" v-if="hasNamedSlot(slots, 'option')">
       <slot name="option" v-bind="slotProps" />
     </template>
 
-    <template v-if="hasNamedSlot(slots, 'empty')" #empty>
+    <template #empty v-if="hasNamedSlot(slots, 'empty')">
       <component :is="resolveNamedSlot(slots, 'empty')" />
     </template>
 
-    <template v-if="hasNamedSlot(slots, 'afterOptions')" #afterOptions>
+    <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">
       <component :is="resolveNamedSlot(slots, 'afterOptions')" />
     </template>
   </Listbox>

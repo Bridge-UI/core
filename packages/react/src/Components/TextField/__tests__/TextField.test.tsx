@@ -31,19 +31,19 @@ test("it should render corner text when corner prop is provided", () => {
 });
 
 test("it should render description when description prop is provided", () => {
-  render(<TextField description="Helper text" aria-label="Field" />);
+  render(<TextField aria-label="Field" description="Helper text" />);
 
   expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
 test("it should hide description when field is invalid", () => {
-  render(<TextField error description="Helper text" aria-label="Field" />);
+  render(<TextField error aria-label="Field" description="Helper text" />);
 
   expect(screen.queryByText("Helper text")).toBeNull();
 });
 
 test("it should render error message when errorMessage prop is provided", () => {
-  render(<TextField error errorMessage="Required" aria-label="Field" />);
+  render(<TextField error aria-label="Field" errorMessage="Required" />);
 
   expect(screen.getByText("Required")).toBeTruthy();
 });
@@ -76,7 +76,7 @@ test("it should set aria-invalid on the input when error is set", () => {
 });
 
 test("it should set aria-describedby to description id when description is shown", () => {
-  render(<TextField description="Helper" id="field-id" aria-label="Field" />);
+  render(<TextField id="field-id" aria-label="Field" description="Helper" />);
 
   const input = screen.getByRole("textbox");
 
@@ -114,7 +114,7 @@ test("it should render start text when start prop is set", () => {
 
 test("it should render start icon when startIcon prop is set", () => {
   const { container } = render(
-    <TextField startIcon={CircleAlert} aria-label="Field" />,
+    <TextField aria-label="Field" startIcon={CircleAlert} />,
   );
 
   expect(container.querySelector("svg")).not.toBeNull();
@@ -122,7 +122,7 @@ test("it should render start icon when startIcon prop is set", () => {
 
 test("it should render end icon when endIcon prop is set", () => {
   const { container } = render(
-    <TextField endIcon={CircleAlert} aria-label="Field" />,
+    <TextField aria-label="Field" endIcon={CircleAlert} />,
   );
 
   expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);
@@ -136,7 +136,7 @@ test("it should render error icon when invalid and withErrorIcon is enabled", ()
 
 test("it should render error icon instead of end icon when error is set", () => {
   const { container } = render(
-    <TextField endIcon={CircleAlert} error aria-label="Field" />,
+    <TextField error aria-label="Field" endIcon={CircleAlert} />,
   );
 
   expect(container.querySelectorAll("svg").length).toBe(1);
@@ -152,21 +152,21 @@ test("it should render error icon when end slot is empty and error is set", () =
 
 test("it should hide error icon when withErrorIcon is false", () => {
   const { container } = render(
-    <TextField error withErrorIcon={false} aria-label="Field" />,
+    <TextField error aria-label="Field" withErrorIcon={false} />,
   );
 
   expect(container.querySelector("svg")).toBeNull();
 });
 
 test("it should render required asterisk when required is true", () => {
-  render(<TextField label="Email" required aria-label="Email" />);
+  render(<TextField required label="Email" aria-label="Email" />);
 
   expect(screen.getByText("*")).toBeTruthy();
 });
 
 test("it should apply error color on the label when error is set", () => {
   const { container } = render(
-    <TextField label="Email" error aria-label="Email" />,
+    <TextField error label="Email" aria-label="Email" />,
   );
 
   expect(container.querySelector(".text-error-600")).not.toBeNull();
@@ -196,7 +196,7 @@ test("it should render end slot content", () => {
 
 test("it should merge className with root classes", () => {
   const { container } = render(
-    <TextField className="custom-field" aria-label="Field" />,
+    <TextField aria-label="Field" className="custom-field" />,
   );
 
   expect(
@@ -244,7 +244,7 @@ test("it should forward customProps to description", () => {
 
 test("it should apply user className after classes.root (tailwind-merge)", () => {
   const { container } = render(
-    <TextField className="p-4" classes={{ root: "p-2" }} aria-label="Field" />,
+    <TextField className="p-4" aria-label="Field" classes={{ root: "p-2" }} />,
   );
 
   const root = container.querySelector(".w-full");

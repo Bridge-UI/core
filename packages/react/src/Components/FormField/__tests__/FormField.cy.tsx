@@ -89,7 +89,7 @@ test("it should apply readonly attribute when readonly", () => {
 });
 
 test("it should set aria-describedby when description is shown", () => {
-  cy.mount(<FieldHarness description="Helper" id="field-id" />);
+  cy.mount(<FieldHarness id="field-id" description="Helper" />);
 
   cy.get("input").should(
     "have.attr",
@@ -105,13 +105,13 @@ test("it should set data-invalid on the root when error is set", () => {
 });
 
 test("it should render filled variant shell", () => {
-  cy.mount(<FieldHarness variant="filled" label="Email" />);
+  cy.mount(<FieldHarness label="Email" variant="filled" />);
 
   cy.get(".bg-gray-100").should("exist");
 });
 
 test("it should render stacked variant shell", () => {
-  cy.mount(<FieldHarness variant="stacked" label="Quantity" />);
+  cy.mount(<FieldHarness label="Quantity" variant="stacked" />);
 
   cy.get(".flex.min-h-0.min-w-0.flex-1.flex-col").should("exist");
 });

@@ -38,7 +38,7 @@ defineProps<{
           :is="resolveSlotOrProp(api.slots, 'label', api.merged.value.label)"
         />
 
-        <span v-if="api.merged.value.required" v-bind="api.requiredBind.value">
+        <span v-bind="api.requiredBind.value" v-if="api.merged.value.required">
           *
         </span>
       </label>

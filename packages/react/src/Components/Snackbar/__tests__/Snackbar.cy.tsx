@@ -85,13 +85,27 @@ test("it should apply position classes on the portal layer", () => {
     <Snackbar
       show
       title="Top"
+      duration={false}
+      transition="none"
       position="top-center"
+    />,
+  );
+
+  cy.get("[data-snackbar-layer]").should("have.class", "items-start");
+});
+
+test("it should apply rounded classes when rounded prop is set", () => {
+  cy.mount(
+    <Snackbar
+      show
+      rounded="xl"
+      title="Rounded"
       duration={false}
       transition="none"
     />,
   );
 
-  cy.get("[data-snackbar-layer]").should("have.class", "items-start");
+  cy.get('[data-snackbar-part="panel"]').should("have.class", "rounded-xl");
 });
 
 test("it should render title and description", () => {
@@ -99,9 +113,9 @@ test("it should render title and description", () => {
     <Snackbar
       show
       title="Hello"
-      description="World"
       duration={false}
       transition="none"
+      description="World"
     />,
   );
 

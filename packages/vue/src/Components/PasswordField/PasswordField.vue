@@ -56,7 +56,7 @@ const toggleIconSize = computed(() => {
           })
         "
       >
-        <Icon :icon="isVisible ? EyeOff : Eye" :size="toggleIconSize" />
+        <Icon :size="toggleIconSize" :icon="isVisible ? EyeOff : Eye" />
       </button>
     </template>
   </FormField>

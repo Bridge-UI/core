@@ -16,7 +16,7 @@ test("it should render a radio control", () => {
 });
 
 test("it should be checked when checked prop is true", () => {
-  render(<Radio value="a" checked mainLabel="Option A" />);
+  render(<Radio checked value="a" mainLabel="Option A" />);
 
   expect((screen.getByRole("radio") as HTMLInputElement).checked).toBe(true);
 });
@@ -40,13 +40,13 @@ test("it should toggle in uncontrolled mode when clicked", () => {
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  render(<Radio value="a" mainLabel="Option A" disabled />);
+  render(<Radio disabled value="a" mainLabel="Option A" />);
 
   expect((screen.getByRole("radio") as HTMLInputElement).disabled).toBe(true);
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Radio value="a" mainLabel="Option A" error />);
+  render(<Radio error value="a" mainLabel="Option A" />);
 
   expect(screen.getByRole("radio").getAttribute("aria-invalid")).toBe("true");
 });
@@ -58,7 +58,7 @@ test("it should forward name to the native input", () => {
 });
 
 test("it should link label to control id", () => {
-  render(<Radio value="a" mainLabel="Option A" controlId="plan-a" />);
+  render(<Radio value="a" controlId="plan-a" mainLabel="Option A" />);
 
   expect(screen.getByLabelText("Option A").id).toBe("plan-a");
 });

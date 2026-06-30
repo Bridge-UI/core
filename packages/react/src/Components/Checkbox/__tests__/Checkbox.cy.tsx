@@ -9,7 +9,7 @@ test("it should render with main label", () => {
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  cy.mount(<Checkbox mainLabel="Accept terms" defaultChecked={false} />);
+  cy.mount(<Checkbox defaultChecked={false} mainLabel="Accept terms" />);
 
   cy.get('input[type="checkbox"]')
     .should("not.be.checked")
@@ -26,20 +26,20 @@ test("it should render description when description prop is provided", () => {
 });
 
 test("it should render error message when error is set", () => {
-  cy.mount(<Checkbox mainLabel="Accept" error errorMessage="Required" />);
+  cy.mount(<Checkbox error mainLabel="Accept" errorMessage="Required" />);
 
   cy.contains("Required").should("be.visible");
   cy.get('input[type="checkbox"]').should("have.attr", "aria-invalid", "true");
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  cy.mount(<Checkbox mainLabel="Accept" disabled />);
+  cy.mount(<Checkbox disabled mainLabel="Accept" />);
 
   cy.get('input[type="checkbox"]').should("be.disabled");
 });
 
 test("it should reflect checked state when controlled", () => {
-  cy.mount(<Checkbox mainLabel="Accept" checked />);
+  cy.mount(<Checkbox checked mainLabel="Accept" />);
 
   cy.get('input[type="checkbox"]').should("be.checked");
 });

@@ -9,7 +9,7 @@ test("it should render with main label", () => {
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  cy.mount(<Switch mainLabel="Notifications" defaultChecked={false} />);
+  cy.mount(<Switch defaultChecked={false} mainLabel="Notifications" />);
 
   cy.get('input[role="switch"]')
     .should("not.be.checked")
@@ -29,20 +29,20 @@ test("it should render description when description prop is provided", () => {
 });
 
 test("it should render error message when error is set", () => {
-  cy.mount(<Switch mainLabel="Notifications" error errorMessage="Required" />);
+  cy.mount(<Switch error errorMessage="Required" mainLabel="Notifications" />);
 
   cy.contains("Required").should("be.visible");
   cy.get('input[role="switch"]').should("have.attr", "aria-invalid", "true");
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  cy.mount(<Switch mainLabel="Notifications" disabled />);
+  cy.mount(<Switch disabled mainLabel="Notifications" />);
 
   cy.get('input[role="switch"]').should("be.disabled");
 });
 
 test("it should reflect checked state when controlled", () => {
-  cy.mount(<Switch mainLabel="Notifications" checked />);
+  cy.mount(<Switch checked mainLabel="Notifications" />);
 
   cy.get('input[role="switch"]').should("be.checked");
 });

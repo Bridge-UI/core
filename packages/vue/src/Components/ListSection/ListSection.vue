@@ -29,7 +29,7 @@ const rootTag = computed(() => {
 </script>
 
 <template>
-  <div v-if="rootTag === 'div'" v-bind="titleBind">
+  <div v-bind="titleBind" v-if="rootTag === 'div'">
     <component :is="label" />
   </div>
 

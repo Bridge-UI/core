@@ -51,7 +51,7 @@ const {
       <component :is="resolveNamedSlot(slots, 'action')" />
     </div>
 
-    <div v-if="hasDefaultBody" v-bind="bodyBind">
+    <div v-bind="bodyBind" v-if="hasDefaultBody">
       <component :is="resolveNamedSlot(slots, 'default')" />
     </div>
 

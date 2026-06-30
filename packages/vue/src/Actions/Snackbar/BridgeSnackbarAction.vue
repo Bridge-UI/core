@@ -4,7 +4,7 @@ import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
-import { cn, type LinkColor } from "@bridge-ui/core";
+import { cn, snackbarRoundedProps, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { BridgeSnackbarActionProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
@@ -36,15 +36,22 @@ const linkProps = computed(() => {
 });
 
 const layoutClass = computed(() => {
+  const rounded = props.snackbarRounded ?? "lg";
+  const roundedClasses = get(snackbarRoundedProps, rounded);
+  const topRightClass = get(roundedClasses, "tr");
+  const bottomRightClass = get(roundedClasses, "br");
+
   const rootClass = {
     trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      "w-full rounded-none rounded-tr-lg": true,
-      "rounded-br-lg": !props.hasReject,
+      "w-full rounded-none": true,
+      [topRightClass ?? ""]: true,
+      [bottomRightClass ?? ""]: !props.hasReject,
     }),
     "right-reject": cn({
-      "w-full rounded-none rounded-br-lg": true,
-      "rounded-tr-lg": !props.hasAccept,
+      "w-full rounded-none": true,
+      [bottomRightClass ?? ""]: true,
+      [topRightClass ?? ""]: !props.hasAccept,
     }),
   };
 

@@ -13,6 +13,7 @@ import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 const snackbarLibDefaults = {
+  rounded: "lg",
   duration: 5000,
   color: "primary",
   padding: "medium",
@@ -149,6 +150,7 @@ function Snackbar({
   stackId,
   onShowChange,
   show = false,
+  onLeaveComplete,
   ...ownProps
 }: SnackbarProps) {
   const isControlled = onShowChange != null;
@@ -187,6 +189,7 @@ function Snackbar({
     {
       onClose,
       stackId,
+      onLeaveComplete,
       show: resolvedShow,
       onShowChange: handleShowChange,
     },

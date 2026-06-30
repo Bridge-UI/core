@@ -121,10 +121,10 @@ function Listbox({
   return (
     <Menu
       show={show}
+      closeOnClickAway
       anchorEl={anchorEl}
       placement={placement}
       onShowChange={onShowChange}
-      closeOnClickAway
       disableAutoFocus={disableAutoFocus}
       customProps={{ content: merged.customProps?.content }}
     >
@@ -158,6 +158,12 @@ function Listbox({
                   disabled={option.disabled}
                   secondary={option.description}
                   primary={slots?.option ? undefined : option.label}
+                  slots={{
+                    end:
+                      showCheckmark && selected ? (
+                        <Check className={cn("size-4", resolvedCheckClass)} />
+                      ) : undefined,
+                  }}
                   customProps={{
                     ...optionCustomProps,
                     root: { id: getListboxOptionId(listboxId, index) },
@@ -165,12 +171,6 @@ function Listbox({
                       ...optionCustomProps.interactive,
                       onClick: () => handleSelect(option),
                     },
-                  }}
-                  slots={{
-                    end:
-                      showCheckmark && selected ? (
-                        <Check className={cn("size-4", resolvedCheckClass)} />
-                      ) : undefined,
                   }}
                 >
                   {slots?.option?.({ option, selected })}

@@ -1,6 +1,7 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -226,6 +227,23 @@ test("it should auto-dismiss after the default duration", async () => {
   expect(wrapper.props("modelValue")).toBe(false);
 });
 
+test("it should apply rounded classes when rounded prop is set", async () => {
+  mountSnackbar({
+    props: {
+      rounded: "xl",
+      duration: false,
+      title: "Rounded",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  expect(panel?.classList.contains("rounded-xl")).toBe(true);
+});
+
 test("it should not lock body scroll", async () => {
   mountSnackbar({
     props: {
@@ -238,4 +256,101 @@ test("it should not lock body scroll", async () => {
   await flushPromises();
 
   expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should stay open when reopened before the leave transition ends", async () => {
+  const onUpdate = vi.fn();
+
+  const wrapper = mount(Snackbar, {
+    attachTo: document.body,
+    props: {
+      title: "First",
+      duration: false,
+      modelValue: true,
+      transition: "slide",
+      "onUpdate:modelValue": onUpdate,
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  await flushPromises();
+
+  await wrapper.setProps({ modelValue: false });
+  await wrapper.setProps({ title: "Second", modelValue: true });
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  panel?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    }),
+  );
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Second");
+  expect(onUpdate).not.toHaveBeenCalledWith(false);
+});
+
+test("it should not reset shared state when a replaced snackbar finishes leaving", async () => {
+  const active = ref<"a" | "b" | null>(null);
+
+  const wrapper = mount(
+    {
+      components: { Snackbar },
+      setup() {
+        return { active };
+      },
+      template: `
+        <button type="button" @click="active = 'a'">Open A</button>
+        <button type="button" @click="active = 'b'">Open B</button>
+        <Snackbar
+          key="a"
+          title="Snack A"
+          transition="slide"
+          :model-value="active === 'a'"
+          @update:model-value="(open) => !open && (active = null)"
+        />
+        <Snackbar
+          key="b"
+          title="Snack B"
+          transition="slide"
+          :model-value="active === 'b'"
+          @update:model-value="(open) => !open && (active = null)"
+        />
+      `,
+    },
+    { attachTo: document.body },
+  );
+
+  mountedWrappers.push(wrapper as ReturnType<typeof mount<typeof Snackbar>>);
+
+  await wrapper.findAll("button")[0]!.trigger("click");
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack A");
+
+  await wrapper.findAll("button")[1]!.trigger("click");
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack B");
+
+  const panels = document.body.querySelectorAll('[data-snackbar-part="panel"]');
+
+  panels[0]?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    }),
+  );
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack B");
+  expect(document.body.textContent).not.toContain("Snack A");
 });

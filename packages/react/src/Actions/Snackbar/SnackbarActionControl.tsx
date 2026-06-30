@@ -3,30 +3,38 @@ import { get } from "es-toolkit/compat";
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, type LinkColor } from "@bridge-ui/core";
+import { cn, snackbarRoundedProps, type LinkColor } from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
   SnackbarActionControlProps,
   SnackbarActionLayout,
+  SnackbarActionRounded,
 } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
 
 function layoutClasses(
   layout: SnackbarActionLayout,
+  rounded: SnackbarActionRounded = "lg",
   hasReject?: boolean,
   hasAccept?: boolean,
 ): string {
+  const roundedClasses = get(snackbarRoundedProps, rounded);
+  const topRightClass = get(roundedClasses, "tr");
+  const bottomRightClass = get(roundedClasses, "br");
+
   const rootClass = {
     trailing: "mr-4 shrink-0",
     "right-accept": cn({
-      "w-full rounded-none rounded-tr-lg": true,
-      "rounded-br-lg": !hasReject,
+      "w-full rounded-none": true,
+      [topRightClass ?? ""]: true,
+      [bottomRightClass ?? ""]: !hasReject,
     }),
     "right-reject": cn({
-      "w-full rounded-none rounded-br-lg": true,
-      "rounded-tr-lg": !hasAccept,
+      "w-full rounded-none": true,
+      [bottomRightClass ?? ""]: true,
+      [topRightClass ?? ""]: !hasAccept,
     }),
   };
 
@@ -41,6 +49,7 @@ export function SnackbarActionControl({
   hasReject,
   hasAccept,
   snackbarColor,
+  snackbarRounded = "lg",
 }: SnackbarActionControlProps) {
   const buttonColor = role === "accept" ? snackbarColor : "secondary";
 
@@ -55,18 +64,19 @@ export function SnackbarActionControl({
         underline="hover"
         color={linkColor}
         {...linkProps}
-        classes={{
-          ...action.link.classes,
-          root: cn({
-            [layoutClasses(layout, hasReject, hasAccept)]: true,
-            [action.className ?? ""]: true,
-            [action.link.classes?.root ?? ""]: true,
-          }),
-        }}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault();
           linkOnClick?.(event);
           onRun();
+        }}
+        classes={{
+          ...action.link.classes,
+          root: cn({
+            [layoutClasses(layout, snackbarRounded, hasReject, hasAccept)]:
+              true,
+            [action.className ?? ""]: true,
+            [action.link.classes?.root ?? ""]: true,
+          }),
         }}
       >
         {action.label}
@@ -80,16 +90,16 @@ export function SnackbarActionControl({
       color={buttonColor}
       variant={action.solid ? "outline" : "flat"}
       {...action.button}
+      onClick={() => onRun()}
       classes={{
         ...action.button?.classes,
         root: cn({
-          [layoutClasses(layout, hasReject, hasAccept)]: true,
+          [layoutClasses(layout, snackbarRounded, hasReject, hasAccept)]: true,
           [action.className ?? ""]: true,
           [action.button?.classes?.root ?? ""]: true,
           "w-full": layout === "right-accept" || layout === "right-reject",
         }),
       }}
-      onClick={() => onRun()}
     >
       {action.label}
     </Button>

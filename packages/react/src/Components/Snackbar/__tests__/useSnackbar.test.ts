@@ -19,6 +19,7 @@ afterEach(() => {
 });
 
 const libDefaults = {
+  rounded: "lg",
   duration: 5000,
   color: "primary",
   padding: "medium",
@@ -158,6 +159,17 @@ test("it should resolve default icon from color", async () => {
 
   await waitFor(() => {
     expect(result.current.resolvedIcon).toBeTruthy();
+  });
+});
+
+test("it should include rounded classes when rounded is set", async () => {
+  const { result } = renderUseSnackbar(
+    { rounded: "md", duration: false, transition: "none" },
+    { show: true },
+  );
+
+  await waitFor(() => {
+    expect(result.current.panelBind.className).toContain("rounded-md");
   });
 });
 

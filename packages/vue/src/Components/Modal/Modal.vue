@@ -89,7 +89,7 @@ const showBackdrop = computed(() => {
 <template>
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" v-bind="rootBind">
-      <div v-if="showBackdrop" aria-hidden="true" v-bind="overlayBind" />
+      <div aria-hidden="true" v-if="showBackdrop" v-bind="overlayBind" />
 
       <div v-bind="wrapperBind">
         <div :ref="setPanelRef" v-bind="panelBind">
