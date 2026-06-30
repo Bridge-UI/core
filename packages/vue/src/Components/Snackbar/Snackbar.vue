@@ -64,8 +64,8 @@ const {
     show: model,
     stackId: props.stackId,
     onClose: () => emit("close"),
-    onLeaveComplete: () => props.onLeaveComplete?.(),
-    onShowChange: (show) => props.onShowChange?.(show),
+    onLeaveComplete: () => emit("leave-complete"),
+    onShowChange: (show) => emit("show-change", show),
   },
 );
 

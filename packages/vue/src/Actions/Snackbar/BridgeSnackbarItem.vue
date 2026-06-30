@@ -68,11 +68,11 @@ const hasTrailing = computed(() => {
     :model-value="entry.show"
     v-on:close="dismissFromSnackbar"
     v-on:update:model-value="api.syncShow(entry.id, $event)"
-    :on-leave-complete="
+    v-on:leave-complete="
       () =>
         completeLayerHide(api.entries.value, entry.id, false, api.removeEntry)
     "
-    :on-show-change="
+    v-on:show-change="
       (show) =>
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
     "

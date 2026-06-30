@@ -111,6 +111,20 @@ export interface SnackbarEmits {
    * Emitted when the snackbar requests to close.
    */
   close: [];
+
+  /**
+   * Emitted after the leave transition when `v-model` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   * Listen with `@leave-complete` / `v-on:leave-complete`.
+   */
+  "leave-complete": [];
+
+  /**
+   * Emitted when `v-model` visibility should change (controlled state).
+   * Listen with `@show-change` / `v-on:show-change`.
+   */
+  "show-change": [show: boolean];
 }
 
 /**
@@ -163,18 +177,6 @@ export interface SnackbarOwnProps {
    * Avatar image URL (shown instead of icon when set).
    */
   img?: string;
-
-  /**
-   * Called after the leave transition when `v-model` is already `false`.
-   *
-   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
-   */
-  onLeaveComplete?: () => void;
-
-  /**
-   * Called when `v-model` visibility should change (controlled state).
-   */
-  onShowChange?: (show: boolean) => void;
 
   /**
    * Padding for the content area.
