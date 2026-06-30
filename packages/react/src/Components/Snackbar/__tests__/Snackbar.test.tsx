@@ -1,5 +1,11 @@
 // ** External Imports
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { Fragment } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
@@ -160,4 +166,57 @@ test("it should not lock body scroll", () => {
   render(<Snackbar show title="Toast" duration={false} transition="none" />);
 
   expect(document.body.style.overflow).not.toBe("hidden");
+});
+
+test("it should stay open when reopened before the leave transition ends", async () => {
+  const onShowChange = vi.fn();
+
+  const { rerender } = render(
+    <Snackbar
+      show
+      title="First"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByRole("status")).toBeTruthy();
+  });
+
+  rerender(
+    <Snackbar
+      show={false}
+      title="First"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  rerender(
+    <Snackbar
+      show
+      title="Second"
+      duration={false}
+      transition="slide"
+      onShowChange={onShowChange}
+    />,
+  );
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  act(() => {
+    fireEvent.transitionEnd(panel!, {
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    });
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Second");
+  });
+
+  expect(onShowChange).not.toHaveBeenCalledWith(false);
 });

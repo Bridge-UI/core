@@ -256,3 +256,41 @@ test("it should not lock body scroll", async () => {
 
   expect(document.body.style.overflow).not.toBe("hidden");
 });
+
+test("it should stay open when reopened before the leave transition ends", async () => {
+  const onUpdate = vi.fn();
+
+  const wrapper = mount(Snackbar, {
+    attachTo: document.body,
+    props: {
+      title: "First",
+      duration: false,
+      modelValue: true,
+      transition: "slide",
+      "onUpdate:modelValue": onUpdate,
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  await flushPromises();
+
+  await wrapper.setProps({ modelValue: false });
+  await wrapper.setProps({ title: "Second", modelValue: true });
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  panel?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    }),
+  );
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Second");
+  expect(onUpdate).not.toHaveBeenCalledWith(false);
+});

@@ -105,6 +105,8 @@ export function useSnackbar(
 
   const timerPaused = ref(false);
 
+  const pendingLeave = ref(false);
+
   const timerStartedAtRef = ref(0);
 
   const progressActive = ref(false);
@@ -261,6 +263,11 @@ export function useSnackbar(
   }
 
   function finishLeave() {
+    if (!pendingLeave.value) {
+      return;
+    }
+
+    pendingLeave.value = false;
     transitionState.value = "closed";
     clearDismissTimer();
 
@@ -275,6 +282,7 @@ export function useSnackbar(
 
   function startLeave() {
     clearDismissTimer();
+    pendingLeave.value = true;
 
     if (!transitionEnabled.value) {
       finishLeave();
@@ -286,6 +294,8 @@ export function useSnackbar(
   }
 
   function scheduleOpen() {
+    pendingLeave.value = false;
+
     if (!transitionEnabled.value) {
       transitionState.value = "open";
 
