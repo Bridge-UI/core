@@ -142,6 +142,7 @@ declare module "@bridge-ui/core" {
         SnackbarProps,
         | "color"
         | "padding"
+        | "rounded"
         | "duration"
         | "position"
         | "teleportTo"

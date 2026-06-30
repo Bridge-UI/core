@@ -94,6 +94,8 @@ import type {
   SnackbarPadding,
   SnackbarPaddingItem,
   SnackbarPosition,
+  SnackbarRounded,
+  SnackbarRoundedItem,
   SnackbarTransition,
 } from "@/Components/Snackbar";
 import type {
@@ -394,6 +396,7 @@ export interface SnackbarConfigBase {
     color: Record<string, SnackbarColorItem>;
     padding: Record<string, SnackbarPaddingItem>;
     position: Record<string, string>;
+    rounded: Record<string, SnackbarRoundedItem>;
     transition: Record<string, string>;
   }>;
   defaultProps: Partial<{
@@ -403,6 +406,7 @@ export interface SnackbarConfigBase {
     padding: keyof SnackbarPadding;
     position: keyof SnackbarPosition;
     progressbar: boolean;
+    rounded: keyof SnackbarRounded;
     teleportTo: string | false;
     transition: keyof SnackbarTransition;
   }>;
