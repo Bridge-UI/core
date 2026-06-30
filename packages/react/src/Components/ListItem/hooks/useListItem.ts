@@ -34,9 +34,9 @@ const listItemBridgeKeys = [
   "align",
   "dense",
   "slots",
-  "primary",
   "classes",
   "divider",
+  "primary",
   "disabled",
   "selected",
   "secondary",
@@ -44,7 +44,7 @@ const listItemBridgeKeys = [
   "interactive",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
-type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "align" | "role">;
+type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role" | "align">;
 
 type ListItemMerged = MergeLibDefaults<ListItemOwnProps, ListItemLibDefaults>;
 

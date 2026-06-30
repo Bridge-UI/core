@@ -60,9 +60,9 @@ const snackbarBridgeKeys = [
   "position",
   "teleportTo",
   "transition",
+  "closeButton",
   "customProps",
   "description",
-  "closeButton",
   "progressbar",
 ] as const satisfies readonly (keyof SnackbarOwnProps)[];
 
@@ -104,7 +104,7 @@ export type SnackbarOptions = {
    *
    * @default false
    */
-  show?: Ref<boolean> | boolean;
+  show?: boolean | Ref<boolean>;
 
   /**
    * Pre-assigned stack id (BridgeSnackbarHost).
@@ -141,13 +141,13 @@ export function useSnackbar(
 
   const transitionState = ref<"open" | "closed">("closed");
 
-  const timerRef = ref<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = ref<null | ReturnType<typeof setTimeout>>(null);
 
-  let stackOrder: number | null = null;
+  let stackOrder: null | number = null;
 
-  let stackHandle: LayerStackHandle | null = null;
+  let stackHandle: null | LayerStackHandle = null;
 
-  let unsubscribeLayerStack: (() => void) | null = null;
+  let unsubscribeLayerStack: null | (() => void) = null;
 
   const split = computed(() => {
     return splitComponentProps<SnackbarProps, typeof snackbarBridgeKeys>({
@@ -234,7 +234,7 @@ export function useSnackbar(
       return merged.value.icon;
     }
 
-    const themeIcon = get(colorClass.value, "icon") as LucideIcon | undefined;
+    const themeIcon = get(colorClass.value, "icon") as undefined | LucideIcon;
 
     return themeIcon ?? get(snackbarDefaultIcons, merged.value.color);
   });

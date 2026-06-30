@@ -50,8 +50,8 @@ const snackbarBridgeKeys = [
   "img",
   "icon",
   "color",
-  "title",
   "slots",
+  "title",
   "classes",
   "padding",
   "rounded",
@@ -60,9 +60,9 @@ const snackbarBridgeKeys = [
   "position",
   "teleportTo",
   "transition",
+  "closeButton",
   "customProps",
   "description",
-  "closeButton",
   "progressbar",
 ] as const satisfies readonly (keyof SnackbarOwnProps)[];
 
@@ -137,7 +137,7 @@ export function useSnackbar(
 
   const [rendered, setRendered] = useState(show);
 
-  const stackOrderRef = useRef<number | null>(null);
+  const stackOrderRef = useRef<null | number>(null);
 
   const [timerPaused, setTimerPaused] = useState(false);
 
@@ -145,9 +145,9 @@ export function useSnackbar(
 
   const [progressActive, setProgressActive] = useState(false);
 
-  const stackHandleRef = useRef<LayerStackHandle | null>(null);
+  const stackHandleRef = useRef<null | LayerStackHandle>(null);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
 
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
@@ -236,7 +236,7 @@ export function useSnackbar(
       return merged.icon;
     }
 
-    const themeIcon = get(colorClass, "icon") as LucideIcon | undefined;
+    const themeIcon = get(colorClass, "icon") as undefined | LucideIcon;
 
     return themeIcon ?? get(snackbarDefaultIcons, merged.color);
   }, [merged.icon, merged.color, colorClass]);

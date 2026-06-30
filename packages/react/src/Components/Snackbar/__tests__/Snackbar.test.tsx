@@ -222,7 +222,7 @@ test("it should stay open when reopened before the leave transition ends", async
 });
 
 function MultiSnackbarDemo() {
-  const [active, setActive] = useState<string | null>(null);
+  const [active, setActive] = useState<null | string>(null);
 
   return (
     <Fragment>

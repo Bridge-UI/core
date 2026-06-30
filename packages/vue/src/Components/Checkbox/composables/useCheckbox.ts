@@ -58,7 +58,7 @@ export function useCheckbox(
   checked: MaybeRefOrGetter<boolean | undefined>,
 ) {
   const attrs = useAttrs();
-  const inputRef = ref<HTMLInputElement | null>(null);
+  const inputRef = ref<null | HTMLInputElement>(null);
 
   const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
     error: false,

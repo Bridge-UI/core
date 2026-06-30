@@ -41,7 +41,7 @@ export interface ListboxOption {
 /**
  * The value of the listbox option.
  */
-export type ListboxValue = string | number;
+export type ListboxValue = number | string;
 
 export interface SelectAsyncData {
   /**
@@ -259,7 +259,7 @@ export function normalizeSelectOption(
  * Normalizes a list of select option inputs.
  */
 export function normalizeSelectOptions(
-  items: SelectOptionInput[] | SelectOptionLike[] | undefined,
+  items: undefined | SelectOptionLike[] | SelectOptionInput[],
   keys: SelectOptionKeys,
 ): SelectOption[] {
   if (!items?.length) {

@@ -100,13 +100,13 @@ export type BridgeSnackbarHostProps = {
    *
    * @default "body"
    */
-  teleportTo?: string | false;
+  teleportTo?: false | string;
 
   /**
    * Default auto-dismiss delay (ms). `false` keeps snackbars open until dismissed.
    * Per-call `open({ duration })` overrides this.
    */
-  timeout?: number | false;
+  timeout?: false | number;
 };
 
 export type BridgeSnackbarItemProps = {

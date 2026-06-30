@@ -55,5 +55,5 @@ export type TextareaProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component.
    */
-  modelValue?: string | null;
+  modelValue?: null | string;
 };

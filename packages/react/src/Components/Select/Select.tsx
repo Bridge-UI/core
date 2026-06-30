@@ -11,14 +11,14 @@ import { useSelect } from "@/Components/Select/hooks/useSelect";
 import type { SelectProps } from "@/Components/Select/select.types";
 
 function Select(props: SelectProps) {
-  const triggerRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(
+  const triggerRef = useRef<null | HTMLInputElement | HTMLTextAreaElement>(
     null,
   );
 
   const { maxHeight, disableMaxHeight, ...selectProps } = props;
 
   const setTriggerRef = (
-    element: HTMLInputElement | HTMLTextAreaElement | null,
+    element: null | HTMLInputElement | HTMLTextAreaElement,
   ) => {
     triggerRef.current = element;
   };

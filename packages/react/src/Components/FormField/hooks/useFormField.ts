@@ -58,7 +58,7 @@ export type FormFieldOptions = {
    * Slots rendered on `<FormField>` by the field wrapper instead of received
    * from a parent consumer. Reserves matching container inset spacing.
    */
-  reservedSlots?: () => readonly FormFieldReservedSlotName[] | undefined;
+  reservedSlots?: () => undefined | readonly FormFieldReservedSlotName[];
 };
 
 export const formFieldBridgeKeys = [
@@ -87,7 +87,7 @@ export const formFieldBridgeKeys = [
 
 type FormFieldLibDefaults = LibDefaultsShape<
   FormFieldOwnProps,
-  "color" | "rounded" | "size" | "variant" | "errorIcon" | "withErrorIcon"
+  "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
 >;
 
 type FormFieldMerged = MergeLibDefaults<

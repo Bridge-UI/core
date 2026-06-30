@@ -100,7 +100,7 @@ export interface ListItemOwnProps {
    *
    * @default "li"
    */
-  as?: "div" | "li";
+  as?: "li" | "div";
 
   /**
    * The classes to apply to the item.
@@ -156,7 +156,7 @@ export interface ListItemOwnProps {
    *
    * @default "button"
    */
-  role?: "button" | "menuitem" | "option";
+  role?: "button" | "option" | "menuitem";
 
   /**
    * Secondary/description text below the primary line.
@@ -173,7 +173,7 @@ export interface ListItemOwnProps {
   selected?: boolean;
 }
 
-export type ListItemPrimaryContent = string | VNode | VNode[] | undefined;
+export type ListItemPrimaryContent = VNode | string | VNode[] | undefined;
 
 export interface ListItemSlots {
   /**

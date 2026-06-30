@@ -16,7 +16,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<RadioOwnProps>();
 
-const model = defineModel<string | number>();
+const model = defineModel<number | string>();
 
 const modelRef = computed(() => {
   return model.value;

@@ -30,7 +30,7 @@ function toEntry<TProps>(
     modal: options.modal,
     onClose: options.onClose,
     onClosed: options.onClosed,
-    props: options.props as Record<string, unknown> | undefined,
+    props: options.props as undefined | Record<string, unknown>,
     component: options.component as BridgeModalEntry["component"],
   });
 }

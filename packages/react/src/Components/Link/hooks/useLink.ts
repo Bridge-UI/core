@@ -44,7 +44,7 @@ const linkBridgeKeys = [
 
 type LinkLibDefaults = LibDefaultsShape<
   LinkOwnProps,
-  "color" | "size" | "underline"
+  "size" | "color" | "underline"
 >;
 
 type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;

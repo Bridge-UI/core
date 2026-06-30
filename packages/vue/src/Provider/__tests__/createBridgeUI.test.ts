@@ -9,8 +9,8 @@ import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
 
 function mountWithPlugin(
   options: Parameters<typeof createBridgeUI>[0] = {},
-): BridgeUIContextApi | undefined {
-  let injected: BridgeUIContextApi | undefined;
+): undefined | BridgeUIContextApi {
+  let injected: undefined | BridgeUIContextApi;
 
   const App = defineComponent({
     setup() {

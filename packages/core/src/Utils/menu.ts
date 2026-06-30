@@ -6,7 +6,7 @@ type OpenMenuClaim = {
   requestClose: () => void;
 };
 
-let openMenuClaim: OpenMenuClaim | null = null;
+let openMenuClaim: null | OpenMenuClaim = null;
 
 /**
  * Marks a menu as open and closes whichever menu was open before.

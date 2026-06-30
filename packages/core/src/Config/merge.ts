@@ -15,7 +15,7 @@ export function mergeBridgeUIGlobal({
   partials,
 }: {
   base: BridgeUIGlobal;
-  partials: Array<Partial<BridgeUIGlobal> | undefined>;
+  partials: Array<undefined | Partial<BridgeUIGlobal>>;
 }): BridgeUIGlobal {
   return mergeBridgeUILayeredClasses(base, ...partials) as BridgeUIGlobal;
 }
@@ -28,7 +28,7 @@ export function mergeBridgeUIComponents({
   partials,
 }: {
   base: BridgeUIComponentsConfig;
-  partials: Array<BridgeUIComponentsConfig | undefined>;
+  partials: Array<undefined | BridgeUIComponentsConfig>;
 }): BridgeUIComponentsConfig {
   return mergeBridgeUILayeredClasses(
     base,

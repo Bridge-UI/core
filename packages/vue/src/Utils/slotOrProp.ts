@@ -2,7 +2,7 @@
 import { get, isEmpty, isNil, isString } from "es-toolkit/compat";
 import type { Slot, Slots, VNodeChild } from "vue";
 
-type VueSlots = Slots | Readonly<Slots> | undefined;
+type VueSlots = Slots | undefined | Readonly<Slots>;
 
 /**
  * Whether a prop value is considered present for fallback rendering.
@@ -58,8 +58,8 @@ export function resolveNamedSlot(
 export function resolveSlotOrProp(
   slots: VueSlots,
   name: string,
-  fallback?: string | number | null,
-): Slot | (() => VNodeChild | null) {
+  fallback?: null | number | string,
+): Slot | (() => null | VNodeChild) {
   const slotFn = get(slots, name) as Slot | undefined;
 
   if (!isNil(slotFn)) {

@@ -5,4 +5,4 @@ import { createContext } from "react";
 import type { BridgeSnackbarController } from "@/Actions/Snackbar/bridgeSnackbar.types";
 
 export const BridgeSnackbarContext =
-  createContext<BridgeSnackbarController | null>(null);
+  createContext<null | BridgeSnackbarController>(null);

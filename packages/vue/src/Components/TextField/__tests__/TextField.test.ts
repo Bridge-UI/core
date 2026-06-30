@@ -341,7 +341,7 @@ test("it should update modelValue when input changes", async () => {
     props: {
       label: "Email",
       modelValue: "",
-      "onUpdate:modelValue": (value: string | null | undefined) => {
+      "onUpdate:modelValue": (value: null | string | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },

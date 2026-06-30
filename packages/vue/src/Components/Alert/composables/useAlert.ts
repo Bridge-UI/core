@@ -126,7 +126,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       return merged.value.icon;
     }
 
-    const themeIcon = get(colorClass.value, "icon") as LucideIcon | undefined;
+    const themeIcon = get(colorClass.value, "icon") as undefined | LucideIcon;
 
     return themeIcon ?? get(alertDefaultIcons, merged.value.color);
   });

@@ -5,7 +5,7 @@ export type ListContextValue = {
   dense: boolean;
 };
 
-export const ListContext = createContext<ListContextValue | null>(null);
+export const ListContext = createContext<null | ListContextValue>(null);
 
 export function useListContext() {
   return useContext(ListContext);

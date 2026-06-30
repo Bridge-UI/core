@@ -19,7 +19,7 @@ import {
 } from "@/Provider/BridgeUIContext";
 
 function useBridgeUIContextValue(
-  parent: BridgeUIContextValue | null,
+  parent: null | BridgeUIContextValue,
   globalProp: BridgeUIProviderProps["global"],
   componentsProp: BridgeUIProviderProps["components"],
 ): BridgeUIContextValue {

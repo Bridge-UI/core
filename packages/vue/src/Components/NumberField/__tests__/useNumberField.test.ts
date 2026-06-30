@@ -8,7 +8,7 @@ import { useNumberField } from "@/Components/NumberField";
 import type { NumberFieldOwnProps } from "@/Components/NumberField/numberField.types";
 
 function mountUseNumberField(
-  model: ReturnType<typeof ref<number | null | undefined>>,
+  model: ReturnType<typeof ref<null | number | undefined>>,
   props: Partial<NumberFieldOwnProps> = {},
   options: { onChange?: (value: number) => void } = {},
 ) {
@@ -28,7 +28,7 @@ function mountUseNumberField(
 }
 
 test("it should return undefined stringModel when no value is set", () => {
-  const model = ref<number | null | undefined>(undefined);
+  const model = ref<null | number | undefined>(undefined);
   const { stringModel } = mountUseNumberField(model);
 
   expect(stringModel.value).toBeUndefined();

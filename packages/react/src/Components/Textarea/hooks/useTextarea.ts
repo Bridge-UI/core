@@ -134,7 +134,7 @@ export function useTextarea(props: TextareaProps) {
   );
 
   const adjustHeight = useCallback(
-    (element: HTMLTextAreaElement | null) => {
+    (element: null | HTMLTextAreaElement) => {
       if (!element || !autosize) {
         return;
       }
@@ -154,7 +154,7 @@ export function useTextarea(props: TextareaProps) {
   );
 
   const textareaRef = useCallback(
-    (element: HTMLTextAreaElement | null) => {
+    (element: null | HTMLTextAreaElement) => {
       adjustHeight(element);
     },
     [adjustHeight],

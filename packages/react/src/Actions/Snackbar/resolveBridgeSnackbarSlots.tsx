@@ -12,10 +12,10 @@ import type { SnackbarSlots } from "@/Components/Snackbar/snackbar.types";
 export function resolveBridgeSnackbarSlots(
   props: Pick<
     BridgeSnackbarContentProps,
-    "actions" | "rightButtons" | "padding" | "color" | "rounded"
+    "color" | "actions" | "padding" | "rounded" | "rightButtons"
   >,
   close: () => void,
-): SnackbarSlots | undefined {
+): undefined | SnackbarSlots {
   const {
     actions,
     rightButtons,

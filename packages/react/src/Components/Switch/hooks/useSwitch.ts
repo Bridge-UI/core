@@ -35,8 +35,8 @@ import {
 const switchBridgeKeys = [
   "size",
   "color",
-  "classes",
   "checked",
+  "classes",
   "rounded",
   "customProps",
   "defaultChecked",

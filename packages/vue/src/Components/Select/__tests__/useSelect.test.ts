@@ -19,7 +19,7 @@ const options: SelectOption[] = [
 
 function mountUseSelect(props: Partial<SelectOwnProps> = {}) {
   const model = ref<string | undefined>(undefined);
-  const triggerRef = ref<HTMLInputElement | null>(null);
+  const triggerRef = ref<null | HTMLInputElement>(null);
   const declarativeOptions = ref<SelectOption[]>([]);
   const emit = vi.fn() as unknown as SetupContext<SelectEmits>["emit"];
   let result!: ReturnType<typeof useSelect>;

@@ -85,7 +85,7 @@ export function createMergePartBind<const K extends ClassPropKey>(classKey: K) {
  * override earlier ones). Typical use: `registry.classes` then `props.classes`.
  */
 export function mergeBridgeUILayeredClasses<C extends object>(
-  ...layers: Array<Partial<C> | undefined>
+  ...layers: Array<undefined | Partial<C>>
 ): Partial<C> {
   return reduce(
     layers,
@@ -113,13 +113,13 @@ export function mergePropsWithBridgeUIDefaults<
   componentName,
 }: {
   componentName: K;
-  components: BridgeUIComponentsConfig | null | undefined;
+  components: null | undefined | BridgeUIComponentsConfig;
   libDefaults?: Partial<P>;
   props: P;
 }): P {
   const fromRegistry = get(components, [componentName, "defaultProps"]) as
-    | Partial<P>
-    | undefined;
+    | undefined
+    | Partial<P>;
 
   return mergeBridgeUILayeredClasses<P>(libDefaults, fromRegistry, props) as P;
 }

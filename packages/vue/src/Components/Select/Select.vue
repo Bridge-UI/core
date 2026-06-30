@@ -22,7 +22,7 @@ defineSlots<SelectSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const model = defineModel<SelectValue | SelectValue[] | null>();
+const model = defineModel<null | SelectValue | SelectValue[]>();
 
 const props = withDefaults(defineProps<SelectOwnProps>(), {
   clearable: true,

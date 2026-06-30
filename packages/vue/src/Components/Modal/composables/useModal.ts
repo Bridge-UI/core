@@ -124,16 +124,16 @@ export function useModal(
 
   const layerStackId = ref("");
 
-  const panelRef = ref<HTMLElement | null>(null);
+  const panelRef = ref<null | HTMLElement>(null);
 
   let leaveTransitionEndsPending = 0;
 
-  let stackOrder: number | null = null;
+  let stackOrder: null | number = null;
 
-  let focusTrap: FocusTrap | null = null;
+  let focusTrap: null | FocusTrap = null;
 
-  let stackHandle: LayerStackHandle | null = null;
-  let unsubscribeLayerStack: (() => void) | null = null;
+  let stackHandle: null | LayerStackHandle = null;
+  let unsubscribeLayerStack: null | (() => void) = null;
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
@@ -333,7 +333,7 @@ export function useModal(
     });
   }
 
-  function setPanelRef(element: Element | ComponentPublicInstance | null) {
+  function setPanelRef(element: null | Element | ComponentPublicInstance) {
     panelRef.value = resolveVnodeRefElement(element);
     syncFocusTrap();
   }
@@ -397,7 +397,7 @@ export function useModal(
       return;
     }
 
-    const target = event.target as HTMLElement | null;
+    const target = event.target as null | HTMLElement;
 
     if (
       target?.dataset.modalPart !== "overlay" &&

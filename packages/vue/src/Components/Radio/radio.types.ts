@@ -60,7 +60,7 @@ export interface RadioEmits {
   /**
    * Emitted when `v-model` should update.
    */
-  "update:modelValue": [value: string | number];
+  "update:modelValue": [value: number | string];
 }
 
 export interface RadioOwnProps extends Omit<
@@ -129,7 +129,7 @@ export interface RadioOwnProps extends Omit<
    *
    * @default undefined
    */
-  value?: string | number;
+  value?: number | string;
 }
 
 export interface RadioSlots extends FormControlSlots {}
@@ -141,5 +141,5 @@ export type RadioProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component (`defineModel` internally).
    */
-  modelValue?: string | number;
+  modelValue?: number | string;
 };

@@ -32,8 +32,8 @@ export type UseBridgeUIComponentReturn<
   K extends keyof BridgeUIComponentsConfig,
 > = {
   bridge: ReturnType<typeof useBridgeUI>;
-  components: ComputedRef<BridgeUIComponentsConfig | null>;
-  entry: ComputedRef<RegistryEntryFor<K> | undefined>;
+  components: ComputedRef<null | BridgeUIComponentsConfig>;
+  entry: ComputedRef<undefined | RegistryEntryFor<K>>;
   merged: ComputedRef<P>;
 };
 
@@ -77,10 +77,10 @@ export function useBridgeUIComponent<
     return isNil(bridge) ? null : unref(bridge.components);
   });
 
-  const entry = computed((): RegistryEntryFor<K> | undefined => {
+  const entry = computed((): undefined | RegistryEntryFor<K> => {
     return get(components.value, componentName) as
-      | RegistryEntryFor<K>
-      | undefined;
+      | undefined
+      | RegistryEntryFor<K>;
   });
 
   const merged = computed(() => {
@@ -107,12 +107,12 @@ export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
 }: {
-  entry: ComputedRef<{ classes?: object } | undefined>;
+  entry: ComputedRef<undefined | { classes?: object }>;
   props: MaybeRefOrGetter<{ classes?: Partial<C> }>;
 }) {
   return computed(() => {
     return mergeBridgeUILayeredClasses(
-      get(entry.value, "classes") as Partial<C> | undefined,
+      get(entry.value, "classes") as undefined | Partial<C>,
       toValue(props).classes,
     );
   });
@@ -139,8 +139,8 @@ export function resolveFieldAdornmentIconSize(
  * Resolves a Vue template ref callback value to an HTMLElement.
  */
 export function resolveVnodeRefElement(
-  element: Element | ComponentPublicInstance | null,
-): HTMLElement | null {
+  element: null | Element | ComponentPublicInstance,
+): null | HTMLElement {
   if (element instanceof HTMLElement) {
     return element;
   }

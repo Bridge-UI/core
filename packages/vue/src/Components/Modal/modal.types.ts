@@ -199,7 +199,7 @@ export interface ModalOwnProps {
    *
    * @default "body"
    */
-  teleportTo?: string | false;
+  teleportTo?: false | string;
 
   /**
    * Enter/leave animation for overlay and panel.

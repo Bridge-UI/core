@@ -109,7 +109,7 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * Initial value when uncontrolled.
    */
-  defaultValue?: SelectModel | null;
+  defaultValue?: null | SelectModel;
 
   /**
    * When true, the dropdown options list is not height-limited.
@@ -208,7 +208,7 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * The selected value (controlled).
    */
-  value?: SelectModel | null;
+  value?: null | SelectModel;
 }
 
 export interface SelectSlots extends FormFieldSlots {

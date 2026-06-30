@@ -12,7 +12,7 @@ import {
 
 function renderUseListSection(
   props: ListSectionProps = {},
-  context: { dense: boolean } | null = null,
+  context: null | { dense: boolean } = null,
 ) {
   return renderHook(() => useListSection(props), {
     wrapper: ({ children }) =>

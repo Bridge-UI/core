@@ -41,7 +41,7 @@ export interface PasswordFieldOwnProps extends Omit<
   /**
    * Whether the password is visible. Omit for uncontrolled mode.
    */
-  visible?: boolean | null;
+  visible?: null | boolean;
 }
 
 export interface PasswordFieldSlots extends FormFieldSlots {}
@@ -53,5 +53,5 @@ export type PasswordFieldProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component (`defineModel` internally).
    */
-  modelValue?: string | null;
+  modelValue?: null | string;
 };

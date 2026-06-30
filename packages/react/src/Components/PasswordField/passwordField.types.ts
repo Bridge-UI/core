@@ -38,7 +38,7 @@ export interface PasswordFieldOwnProps extends Omit<
   /**
    * Whether the password is visible. Omit for uncontrolled mode.
    */
-  visible?: boolean | null;
+  visible?: null | boolean;
 }
 
 export interface PasswordFieldSlots extends FormFieldSlots {}

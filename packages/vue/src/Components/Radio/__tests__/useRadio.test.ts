@@ -14,7 +14,7 @@ const libDefaults = {
 
 function mountUseRadio(
   props: RadioOwnProps = {},
-  modelValue: string | number | undefined = undefined,
+  modelValue: number | string | undefined = undefined,
 ) {
   let result!: ReturnType<typeof useRadio>;
 

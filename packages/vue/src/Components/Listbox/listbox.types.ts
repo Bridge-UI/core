@@ -66,7 +66,7 @@ export interface ListboxOwnProps {
   /**
    * Element that anchors the floating panel (typically the field container).
    */
-  anchorEl?: HTMLElement | null;
+  anchorEl?: null | HTMLElement;
 
   /**
    * Classes for listbox parts.

@@ -122,7 +122,7 @@ export interface RadioOwnProps extends Omit<
    *
    * @default undefined
    */
-  value?: string | number;
+  value?: number | string;
 }
 
 export interface RadioSlots extends FormControlSlots {}

@@ -3,7 +3,7 @@ import { isNil } from "es-toolkit/compat";
 import type { MouseEventHandler, PointerEventHandler } from "react";
 import { useCallback, useEffect, useRef } from "react";
 
-export type HoldRepeatAction = () => boolean | void;
+export type HoldRepeatAction = () => void | boolean;
 
 export type UseHoldRepeatOptions = {
   disabled?: boolean;

@@ -15,7 +15,7 @@ import { hasDocument } from "@/Utils/env";
 /**
  * The strategy to use for the positionable.
  */
-export type PositionStrategy = "absolute" | "fixed";
+export type PositionStrategy = "fixed" | "absolute";
 
 /**
  * Options for the positionable.
@@ -50,7 +50,7 @@ export function createPositionable(options: PositionOptions): PositionHandle {
   const onReferenceHidden = options.onReferenceHidden;
 
   let offsetValue = options.offset ?? 4;
-  let cleanup: (() => void) | null = null;
+  let cleanup: null | (() => void) = null;
   let strategy: PositionStrategy = options.strategy ?? "fixed";
   let placement: Placement = options.placement ?? "bottom-start";
 

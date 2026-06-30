@@ -6,12 +6,12 @@ import { hasDocument } from "@/Utils/env";
  */
 export type FocusableHandle = {
   elements: () => HTMLElement[];
-  first: () => HTMLElement | undefined;
+  first: () => undefined | HTMLElement;
   focusFirst: () => void;
   focusLast: () => void;
-  last: () => HTMLElement | undefined;
-  next: () => HTMLElement | undefined;
-  previous: () => HTMLElement | undefined;
+  last: () => undefined | HTMLElement;
+  next: () => undefined | HTMLElement;
+  previous: () => undefined | HTMLElement;
 };
 
 /**

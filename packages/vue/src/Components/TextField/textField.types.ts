@@ -29,5 +29,5 @@ export type TextFieldProps = MergeHtmlProps<
    *
    * @default undefined
    */
-  modelValue?: string | null;
+  modelValue?: null | string;
 };

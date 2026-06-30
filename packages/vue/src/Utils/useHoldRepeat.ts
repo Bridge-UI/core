@@ -2,7 +2,7 @@
 import { isNil } from "es-toolkit/compat";
 import { onBeforeUnmount, toValue, type MaybeRefOrGetter } from "vue";
 
-export type HoldRepeatAction = () => boolean | void;
+export type HoldRepeatAction = () => void | boolean;
 
 export type UseHoldRepeatOptions = {
   disabled?: boolean;
@@ -19,8 +19,8 @@ export function useHoldRepeat(
 ) {
   let skipClick = false;
 
-  let delayTimer: ReturnType<typeof setTimeout> | undefined;
-  let intervalTimer: ReturnType<typeof setInterval> | undefined;
+  let delayTimer: undefined | ReturnType<typeof setTimeout>;
+  let intervalTimer: undefined | ReturnType<typeof setInterval>;
 
   const stop = () => {
     if (!isNil(delayTimer)) {

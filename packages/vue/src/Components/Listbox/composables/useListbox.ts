@@ -30,9 +30,9 @@ import {
 const listboxBridgeKeys = [
   "color",
   "classes",
-  "invalidated",
   "maxHeight",
   "customProps",
+  "invalidated",
   "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 

@@ -15,7 +15,7 @@ const props = defineProps<{
   global?: Partial<BridgeUIGlobal>;
 }>();
 
-const parent = inject<BridgeUIContextApi | undefined>(
+const parent = inject<undefined | BridgeUIContextApi>(
   BRIDGE_UI_INJECTION_KEY,
   undefined,
 );

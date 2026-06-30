@@ -49,7 +49,7 @@ type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 export function useRadio(
   props: MaybeRefOrGetter<RadioOwnProps>,
   libDefaults: RadioLibDefaults,
-  modelValue: MaybeRefOrGetter<string | number | undefined>,
+  modelValue: MaybeRefOrGetter<number | string | undefined>,
 ) {
   const attrs = useAttrs();
 

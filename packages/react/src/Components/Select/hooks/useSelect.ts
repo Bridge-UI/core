@@ -64,9 +64,9 @@ const selectBridgeKeys = [
   "maxHeight",
   "searchable",
   "flipOptions",
-  "placeholder",
   "optionLabel",
   "optionValue",
+  "placeholder",
   "emptyMessage",
   "disableMaxHeight",
   "hideEmptyMessage",
@@ -78,7 +78,7 @@ type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
 
 export function useSelect(
   props: SelectProps,
-  triggerRef: RefObject<HTMLInputElement | HTMLTextAreaElement | null>,
+  triggerRef: RefObject<null | HTMLInputElement | HTMLTextAreaElement>,
 ) {
   const listboxId = useId();
 
@@ -99,11 +99,11 @@ export function useSelect(
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const containerRef = useRef<HTMLElement | null>(null);
+  const containerRef = useRef<null | HTMLElement>(null);
 
   const [asyncLoading, setAsyncLoading] = useState(false);
   const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
-  const asyncSearchRef = useRef<SelectAsyncSearch | null>(null);
+  const asyncSearchRef = useRef<null | SelectAsyncSearch>(null);
   const [resolvedSelected, setResolvedSelected] = useState<SelectOption[]>([]);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<SelectProps["value"]>(defaultValue);
@@ -268,7 +268,7 @@ export function useSelect(
   );
 
   const adjustHeight = useCallback(
-    (element: HTMLTextAreaElement | null) => {
+    (element: null | HTMLTextAreaElement) => {
       if (!element || !multiple) {
         return;
       }
@@ -614,7 +614,7 @@ export function useSelect(
     ],
   );
 
-  const handleContainerRef = useCallback((element: HTMLElement | null) => {
+  const handleContainerRef = useCallback((element: null | HTMLElement) => {
     containerRef.current = element;
   }, []);
 
@@ -835,7 +835,7 @@ export function useSelect(
   }, [isAsync, selectMerged.asyncData, fetchAsyncOptions]);
 
   useEffect(() => {
-    adjustHeight(triggerRef.current as HTMLTextAreaElement | null);
+    adjustHeight(triggerRef.current as null | HTMLTextAreaElement);
   }, [open, multiple, triggerRef, adjustHeight]);
 
   useEffect(() => {

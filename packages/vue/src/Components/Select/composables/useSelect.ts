@@ -65,23 +65,23 @@ const selectBridgeKeys = [
   "maxHeight",
   "searchable",
   "flipOptions",
-  "placeholder",
   "optionLabel",
   "optionValue",
-  "emptyMessage",
+  "placeholder",
   "defaultValue",
+  "emptyMessage",
+  "disableMaxHeight",
   "hideEmptyMessage",
   "minItemsForSearch",
   "optionDescription",
-  "disableMaxHeight",
 ] as const satisfies readonly (keyof SelectOwnProps)[];
 
 type SelectRegistryProps = Pick<SelectOwnProps, "classes">;
 
 export function useSelect(
   props: SelectOwnProps,
-  model: Ref<SelectValue | SelectValue[] | null | undefined>,
-  triggerRef: Ref<HTMLInputElement | HTMLTextAreaElement | null>,
+  model: Ref<null | undefined | SelectValue | SelectValue[]>,
+  triggerRef: Ref<null | HTMLInputElement | HTMLTextAreaElement>,
   emit: SetupContext<SelectEmits>["emit"],
   declarativeOptions: Ref<SelectOption[]>,
 ) {
@@ -92,11 +92,11 @@ export function useSelect(
   const open = ref(false);
   const searchQuery = ref("");
   const highlightedIndex = ref(-1);
-  const containerRef = ref<HTMLElement | null>(null);
+  const containerRef = ref<null | HTMLElement>(null);
 
   const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
-  let asyncSearch: SelectAsyncSearch | null = null;
+  let asyncSearch: null | SelectAsyncSearch = null;
   const resolvedSelected = ref<SelectOption[]>([]);
 
   const split = computed(() => {
@@ -259,7 +259,7 @@ export function useSelect(
     return selectedOptions.value[0]?.label ?? "";
   });
 
-  const handleContainerRef = (element: Element | null) => {
+  const handleContainerRef = (element: null | Element) => {
     containerRef.value = element instanceof HTMLElement ? element : null;
   };
 
@@ -348,7 +348,7 @@ export function useSelect(
     },
   );
 
-  const adjustHeight = (element: HTMLTextAreaElement | null) => {
+  const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !multiple.value) {
       return;
     }
@@ -360,11 +360,11 @@ export function useSelect(
     return selectedValues.value.some((item) => selectValuesEqual(item, value));
   }
 
-  function setModel(next: SelectValue | SelectValue[] | null | undefined) {
+  function setModel(next: null | undefined | SelectValue | SelectValue[]) {
     model.value = next as typeof model.value;
   }
 
-  function emitChange(next: SelectValue | SelectValue[] | null | undefined) {
+  function emitChange(next: null | undefined | SelectValue | SelectValue[]) {
     if (multiple.value) {
       const value = Array.isArray(next) ? next : [];
       emit("update:modelValue", value);
@@ -693,7 +693,7 @@ export function useSelect(
   watch(
     () => [open.value, multiple.value, triggerRef.value] as const,
     () => {
-      adjustHeight(triggerRef.value as HTMLTextAreaElement | null);
+      adjustHeight(triggerRef.value as null | HTMLTextAreaElement);
     },
     { immediate: true },
   );
@@ -731,7 +731,7 @@ export function useSelect(
   });
 
   onMounted(() => {
-    adjustHeight(triggerRef.value as HTMLTextAreaElement | null);
+    adjustHeight(triggerRef.value as null | HTMLTextAreaElement);
   });
 
   const clearIconSize = computed(() => {

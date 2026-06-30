@@ -90,7 +90,7 @@ export interface MenuOwnProps {
    *
    * @default undefined
    */
-  anchorEl?: HTMLElement | null;
+  anchorEl?: null | HTMLElement;
 
   /**
    * The classes to apply to the menu.
@@ -195,7 +195,7 @@ export interface MenuOwnProps {
    *
    * @default "body"
    */
-  teleportTo?: string | false;
+  teleportTo?: false | string;
 }
 
 export interface MenuSlots {

@@ -27,7 +27,7 @@ test("it should increment value when increment button is clicked", async () => {
     props: {
       step: 2,
       modelValue: 2,
-      "onUpdate:modelValue": (value: number | null | undefined) => {
+      "onUpdate:modelValue": (value: null | number | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },
@@ -44,7 +44,7 @@ test("it should emit change when decrement button is clicked", async () => {
     props: {
       step: 2,
       modelValue: 4,
-      "onUpdate:modelValue": (value: number | null | undefined) => {
+      "onUpdate:modelValue": (value: null | number | undefined) => {
         wrapper.setProps({ modelValue: value });
       },
     },

@@ -81,7 +81,7 @@ export interface MenuOwnProps {
    *
    * @default undefined
    */
-  anchorEl?: HTMLElement | RefObject<HTMLElement | null> | null;
+  anchorEl?: null | HTMLElement | RefObject<null | HTMLElement>;
 
   /**
    * The children to render inside the menu panel.
@@ -216,7 +216,7 @@ export interface MenuOwnProps {
    *
    * @default "body"
    */
-  teleportTo?: string | false;
+  teleportTo?: false | string;
 }
 
 export interface MenuSlots {

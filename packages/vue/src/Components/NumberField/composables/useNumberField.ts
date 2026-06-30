@@ -26,7 +26,7 @@ export type UseNumberFieldOptions = {
  */
 export function useNumberField(
   props: NumberFieldOwnProps,
-  model: Ref<number | null | undefined>,
+  model: Ref<null | number | undefined>,
   options: UseNumberFieldOptions = {},
 ) {
   const attrs = useAttrs();
@@ -99,7 +99,7 @@ export function useNumberField(
 
       return String(currentValue.value);
     },
-    set: (raw: string | null | undefined) => {
+    set: (raw: null | string | undefined) => {
       if (raw === "" || isNil(raw)) {
         model.value = undefined;
 

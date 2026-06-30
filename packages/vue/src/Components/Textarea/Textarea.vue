@@ -14,7 +14,7 @@ defineSlots<TextareaSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const model = defineModel<string | null | undefined>();
+const model = defineModel<null | string | undefined>();
 
 const props = withDefaults(defineProps<TextareaOwnProps>(), {
   withErrorIcon: true,

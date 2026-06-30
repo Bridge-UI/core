@@ -101,7 +101,7 @@ export interface ListItemOwnProps {
    *
    * @default "li"
    */
-  as?: "div" | "li";
+  as?: "li" | "div";
 
   /**
    * The children to render inside the content column when `primary` is not set.
@@ -164,7 +164,7 @@ export interface ListItemOwnProps {
    *
    * @default "button"
    */
-  role?: "button" | "menuitem" | "option";
+  role?: "button" | "option" | "menuitem";
 
   /**
    * Secondary/description text below the primary line.
