@@ -9,6 +9,7 @@ import type {
   SnackbarColor,
   SnackbarPadding,
   SnackbarPosition,
+  SnackbarRounded,
   SnackbarTransition,
 } from "@bridge-ui/core";
 
@@ -17,6 +18,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface SnackbarColorOverrides {}
 export interface SnackbarPaddingOverrides {}
+export interface SnackbarRoundedOverrides {}
 export interface SnackbarPositionOverrides {}
 export interface SnackbarTransitionOverrides {}
 
@@ -180,6 +182,13 @@ export interface SnackbarOwnProps {
    * @default true
    */
   progressbar?: boolean;
+
+  /**
+   * The roundedness of the snackbar panel.
+   *
+   * @default "lg"
+   */
+  rounded?: MergeProps<SnackbarRounded, SnackbarRoundedOverrides>;
 
   /**
    * The slots to apply to the snackbar.

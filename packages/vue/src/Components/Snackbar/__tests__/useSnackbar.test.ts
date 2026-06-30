@@ -16,6 +16,7 @@ afterEach(() => {
 });
 
 const libDefaults: Partial<SnackbarOwnProps> = {
+  rounded: "lg",
   duration: 5000,
   color: "primary",
   padding: "medium",
@@ -122,6 +123,16 @@ test("it should close on escape keydown", () => {
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
   expect(show.value).toBe(false);
+});
+
+test("it should include rounded classes when rounded is set", () => {
+  const { result } = mountUseSnackbar({
+    rounded: "md",
+    duration: false,
+    transition: "none",
+  });
+
+  expect(result.panelBind.value.class).toContain("rounded-md");
 });
 
 test("it should freeze progress bar scale when hover pauses the timer", async () => {

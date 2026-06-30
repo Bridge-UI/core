@@ -50,6 +50,7 @@ const {
 } = useSnackbar(
   props,
   {
+    rounded: "lg",
     duration: 5000,
     color: "primary",
     padding: "medium",

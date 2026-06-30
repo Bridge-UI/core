@@ -26,6 +26,10 @@ const snackbarColor = computed(() => {
   return (snackbarProps.value.color ?? "primary") as keyof SnackbarColor;
 });
 
+const snackbarRounded = computed(() => {
+  return snackbarProps.value.rounded ?? "lg";
+});
+
 const dismissFromSnackbar = () => {
   invokeLayerDismiss(props.api.entries.value, props.entry.id);
 };
@@ -76,6 +80,7 @@ const hasTrailing = computed(() => {
         :action="actions.accept"
         v-if="actions?.accept?.label"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.accept?.onClick)"
       />
 
@@ -85,6 +90,7 @@ const hasTrailing = computed(() => {
         :action="actions.reject"
         v-if="actions?.reject?.label"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.reject?.onClick)"
       />
     </template>
@@ -95,6 +101,7 @@ const hasTrailing = computed(() => {
         layout="trailing"
         :action="actions!.accept!"
         :snackbar-color="snackbarColor"
+        :snackbar-rounded="snackbarRounded"
         v-on:run="runAction(actions?.accept?.onClick)"
       />
     </template>
@@ -113,6 +120,7 @@ const hasTrailing = computed(() => {
             layout="right-accept"
             :action="actions.accept"
             :snackbar-color="snackbarColor"
+            :snackbar-rounded="snackbarRounded"
             :has-reject="Boolean(actions?.reject)"
             v-on:run="runAction(actions?.accept?.onClick)"
           />
@@ -124,6 +132,7 @@ const hasTrailing = computed(() => {
             layout="right-reject"
             :action="actions.reject"
             :snackbar-color="snackbarColor"
+            :snackbar-rounded="snackbarRounded"
             :has-accept="Boolean(actions?.accept)"
             v-on:run="runAction(actions?.reject?.onClick)"
           />

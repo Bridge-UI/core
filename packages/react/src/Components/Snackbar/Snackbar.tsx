@@ -13,6 +13,7 @@ import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 const snackbarLibDefaults = {
+  rounded: "lg",
   duration: 5000,
   color: "primary",
   padding: "medium",

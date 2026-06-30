@@ -94,6 +94,7 @@ export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,
   positionProps as snackbarPositionProps,
+  roundedProps as snackbarRoundedProps,
   transitionProps as snackbarTransitionProps,
 } from "@/Components/Snackbar";
 export type {
@@ -102,6 +103,8 @@ export type {
   SnackbarPadding,
   SnackbarPaddingItem,
   SnackbarPosition,
+  SnackbarRounded,
+  SnackbarRoundedItem,
   SnackbarTransition,
 } from "@/Components/Snackbar";
 export type {

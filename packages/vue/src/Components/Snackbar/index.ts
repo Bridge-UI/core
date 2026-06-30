@@ -9,6 +9,7 @@ export type {
   SnackbarOwnProps,
   SnackbarPaddingOverrides,
   SnackbarProps,
+  SnackbarRoundedOverrides,
   SnackbarSlots,
   SnackbarTransitionOverrides,
 } from "@/Components/Snackbar/snackbar.types";

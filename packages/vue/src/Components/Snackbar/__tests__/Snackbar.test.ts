@@ -226,6 +226,23 @@ test("it should auto-dismiss after the default duration", async () => {
   expect(wrapper.props("modelValue")).toBe(false);
 });
 
+test("it should apply rounded classes when rounded prop is set", async () => {
+  mountSnackbar({
+    props: {
+      rounded: "xl",
+      duration: false,
+      title: "Rounded",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  expect(panel?.classList.contains("rounded-xl")).toBe(true);
+});
+
 test("it should not lock body scroll", async () => {
   mountSnackbar({
     props: {

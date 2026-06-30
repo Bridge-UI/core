@@ -140,6 +140,22 @@ test("it should stack with increasing z-index", () => {
   expect(secondZ).toBeGreaterThan(firstZ);
 });
 
+test("it should apply rounded classes when rounded prop is set", () => {
+  render(
+    <Snackbar
+      show
+      title="Rounded"
+      rounded="xl"
+      duration={false}
+      transition="none"
+    />,
+  );
+
+  const panel = document.body.querySelector('[data-snackbar-part="panel"]');
+
+  expect(panel?.classList.contains("rounded-xl")).toBe(true);
+});
+
 test("it should not lock body scroll", () => {
   render(<Snackbar show title="Toast" transition="none" duration={false} />);
 

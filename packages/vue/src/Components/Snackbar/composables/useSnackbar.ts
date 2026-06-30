@@ -25,6 +25,7 @@ import {
   snackbarColorProps,
   snackbarPaddingProps,
   snackbarPositionProps,
+  snackbarRoundedProps,
   snackbarTransitionProps,
   splitComponentProps,
   subscribeLayerStack,
@@ -53,6 +54,7 @@ const snackbarBridgeKeys = [
   "title",
   "classes",
   "padding",
+  "rounded",
   "stackId",
   "duration",
   "position",
@@ -68,6 +70,7 @@ type SnackbarLibDefaults = LibDefaultsShape<
   SnackbarOwnProps,
   | "color"
   | "padding"
+  | "rounded"
   | "duration"
   | "position"
   | "teleportTo"
@@ -185,6 +188,15 @@ export function useSnackbar(
     );
 
     return get(classes, merged.value.padding);
+  });
+
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      snackbarRoundedProps,
+      bridgeSnackbar.value?.customProps?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
   });
 
   const resolvedIcon = computed(() => {
@@ -501,8 +513,9 @@ export function useSnackbar(
       },
       cn({
         "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,
-        "bg-white shadow-lg ring-1 ring-black/5 rounded-lg": true,
+        "bg-white shadow-lg ring-1 ring-black/5": true,
         "dark:bg-dark-800 dark:border dark:border-dark-700": true,
+        [get(roundedClass.value, "base") ?? ""]: true,
         [panelTransitionClass.value]: transitionEnabled.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),

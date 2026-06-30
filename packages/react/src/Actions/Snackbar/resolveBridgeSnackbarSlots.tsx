@@ -12,13 +12,14 @@ import type { SnackbarSlots } from "@/Components/Snackbar/snackbar.types";
 export function resolveBridgeSnackbarSlots(
   props: Pick<
     BridgeSnackbarContentProps,
-    "actions" | "rightButtons" | "padding" | "color"
+    "actions" | "rightButtons" | "padding" | "color" | "rounded"
   >,
   close: () => void,
 ): SnackbarSlots | undefined {
   const {
     actions,
     rightButtons,
+    rounded = "lg",
     color = "primary",
     padding = "medium",
   } = props;
@@ -48,6 +49,7 @@ export function resolveBridgeSnackbarSlots(
               layout="right-accept"
               action={actions.accept}
               snackbarColor={snackbarColor}
+              snackbarRounded={rounded}
               hasReject={Boolean(actions.reject)}
               onRun={() => {
                 actions.accept?.onClick?.();
@@ -64,6 +66,7 @@ export function resolveBridgeSnackbarSlots(
               layout="right-reject"
               action={actions.reject}
               snackbarColor={snackbarColor}
+              snackbarRounded={rounded}
               hasAccept={Boolean(actions.accept)}
               onRun={() => {
                 actions.reject?.onClick?.();
