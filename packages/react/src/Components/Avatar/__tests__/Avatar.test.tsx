@@ -12,7 +12,7 @@ import { Avatar } from "@/Components/Avatar";
 
 test("it should render an image when src is passed", () => {
   const { container } = render(
-    <Avatar src="https://example.com/avatar.jpg" alt="Jane Doe" />,
+    <Avatar alt="Jane Doe" src="https://example.com/avatar.jpg" />,
   );
 
   const image = container.querySelector("img");

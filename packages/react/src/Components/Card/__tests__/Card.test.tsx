@@ -24,7 +24,7 @@ test("it should render body content via children", () => {
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  const { container } = render(<Card title="Rounded" rounded="lg" />);
+  const { container } = render(<Card rounded="lg" title="Rounded" />);
 
   expect(
     container.querySelector(".flex.w-full")?.classList.contains("rounded-lg"),
@@ -33,7 +33,7 @@ test("it should apply rounded classes when rounded prop is set", () => {
 
 test("it should apply shadow classes for elevated variant", () => {
   const { container } = render(
-    <Card title="Shadow" variant="elevated" shadow="md" />,
+    <Card shadow="md" title="Shadow" variant="elevated" />,
   );
 
   expect(
@@ -43,7 +43,7 @@ test("it should apply shadow classes for elevated variant", () => {
 
 test("it should not apply shadow for flat variant", () => {
   const { container } = render(
-    <Card title="Flat" variant="flat" shadow="md" />,
+    <Card shadow="md" title="Flat" variant="flat" />,
   );
 
   const root = container.querySelector(".flex.w-full");
@@ -99,7 +99,7 @@ test("it should merge className with root classes", () => {
 
 test("it should forward additional attributes to the root element", () => {
   const { container } = render(
-    <Card title="With id" id="card-root" data-testid="card" />,
+    <Card id="card-root" title="With id" data-testid="card" />,
   );
 
   const root = container.querySelector("#card-root");
@@ -149,7 +149,7 @@ test("it should forward customProps to footer container", () => {
 });
 
 test("it should omit header border when borderless is true", () => {
-  const { container } = render(<Card title="Borderless" borderless />);
+  const { container } = render(<Card borderless title="Borderless" />);
 
   expect(container.querySelector(".border-b")).toBeNull();
 });

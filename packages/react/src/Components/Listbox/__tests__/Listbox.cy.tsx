@@ -21,10 +21,10 @@ function ListboxDemo({ initialOpen = true }: { initialOpen?: boolean }) {
 
       <Listbox
         show={open}
-        onShowChange={setOpen}
-        anchorEl={anchorRef}
-        listboxId="cy-listbox"
         options={options}
+        anchorEl={anchorRef}
+        onShowChange={setOpen}
+        listboxId="cy-listbox"
       />
     </div>
   );
@@ -48,10 +48,10 @@ test("it should select an option on click", () => {
       <div ref={anchorRef}>
         <Listbox
           show
+          options={options}
           onSelect={onSelect}
           anchorEl={anchorRef}
           listboxId="cy-listbox"
-          options={options}
         />
       </div>
     );
@@ -71,9 +71,9 @@ test("it should show empty message when there are no options", () => {
       <div ref={anchorRef}>
         <Listbox
           show
+          options={[]}
           anchorEl={anchorRef}
           listboxId="cy-listbox"
-          options={[]}
         />
       </div>
     );

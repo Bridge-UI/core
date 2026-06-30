@@ -425,7 +425,7 @@ test("it should keep dialog mounted when keepMounted is true", async () => {
   );
 
   rerender(
-    <Modal show={false} keepMounted transition="none">
+    <Modal keepMounted show={false} transition="none">
       Kept
     </Modal>,
   );

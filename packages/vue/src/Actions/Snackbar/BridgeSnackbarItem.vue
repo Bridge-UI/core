@@ -73,7 +73,7 @@ const hasTrailing = computed(() => {
         completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
     "
   >
-    <template v-if="hasInlineActions" #actions>
+    <template #actions v-if="hasInlineActions">
       <BridgeSnackbarAction
         role="accept"
         layout="inline"
@@ -95,7 +95,7 @@ const hasTrailing = computed(() => {
       />
     </template>
 
-    <template v-if="hasTrailing" #trailing>
+    <template #trailing v-if="hasTrailing">
       <BridgeSnackbarAction
         role="accept"
         layout="trailing"
@@ -106,11 +106,11 @@ const hasTrailing = computed(() => {
       />
     </template>
 
-    <template v-if="hasRight" #right>
+    <template #right v-if="hasRight">
       <div class="flex flex-col border-l border-dark-200 dark:border-dark-700">
         <div
-          v-if="actions?.accept?.label"
           class="flex flex-1 h-0"
+          v-if="actions?.accept?.label"
           :class="{
             'border-b border-dark-200 dark:border-dark-700': actions?.reject,
           }"
@@ -126,7 +126,7 @@ const hasTrailing = computed(() => {
           />
         </div>
 
-        <div v-if="actions?.reject?.label" class="flex flex-1 h-0">
+        <div class="flex flex-1 h-0" v-if="actions?.reject?.label">
           <BridgeSnackbarAction
             role="reject"
             layout="right-reject"

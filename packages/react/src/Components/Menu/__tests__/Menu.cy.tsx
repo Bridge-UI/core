@@ -29,8 +29,8 @@ test("it should call onShowChange when the trigger is clicked", () => {
   cy.mount(
     <Menu
       show={false}
-      onShowChange={cy.stub().as("onShowChange")}
       slots={{ trigger: <Button>Open</Button> }}
+      onShowChange={cy.stub().as("onShowChange")}
     >
       Menu body
     </Menu>,
@@ -45,8 +45,8 @@ test("it should call onShowChange when the trigger is clicked again", () => {
   cy.mount(
     <Menu
       show
-      onShowChange={cy.stub().as("onShowChange")}
       slots={{ trigger: <Button>Open</Button> }}
+      onShowChange={cy.stub().as("onShowChange")}
     >
       Menu body
     </Menu>,
@@ -61,7 +61,7 @@ test("it should render List and ListItem inside the menu panel", () => {
   cy.mount(
     <Menu show slots={{ trigger: <Button>Open</Button> }}>
       <List dense padding="none">
-        <ListItem interactive primary="Item one" role="menuitem" />
+        <ListItem interactive role="menuitem" primary="Item one" />
       </List>
     </Menu>,
   );

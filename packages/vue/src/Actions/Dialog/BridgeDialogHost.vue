@@ -31,8 +31,8 @@ provide(BRIDGE_DIALOG_INJECTION_KEY, api);
 
   <BridgeDialogItem
     :api="api"
-    :key="entry.id"
     :entry="entry"
+    :key="entry.id"
     :host-modal="props.modal"
     v-for="entry in dialogEntries"
   />

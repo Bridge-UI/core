@@ -17,12 +17,12 @@ function SelectDemo({
   const [value, setValue] = useState(initialValue);
 
   return (
-    <Select label="Fruit" options={options} value={value} onChange={setValue} />
+    <Select label="Fruit" value={value} options={options} onChange={setValue} />
   );
 }
 
 test("it should render with default props", () => {
-  cy.mount(<Select aria-label="Fruit" options={options} />);
+  cy.mount(<Select options={options} aria-label="Fruit" />);
 
   cy.get('[role="combobox"]').should("exist");
   cy.get(".w-full").should("exist");
@@ -35,7 +35,7 @@ test("it should render a label when label prop is provided", () => {
 });
 
 test("it should open the listbox when the field is clicked", () => {
-  cy.mount(<Select aria-label="Fruit" options={options} />);
+  cy.mount(<Select options={options} aria-label="Fruit" />);
 
   cy.get(".group\\/field").click();
   cy.get('[role="listbox"]').should("exist");

@@ -22,6 +22,6 @@ const { merged, rootBind, requiredBind } = useLabel(props, {
   <label v-bind="rootBind">
     <component :is="resolveNamedSlot(slots, 'default')" />
 
-    <span v-if="merged.required" v-bind="requiredBind">*</span>
+    <span v-bind="requiredBind" v-if="merged.required">*</span>
   </label>
 </template>

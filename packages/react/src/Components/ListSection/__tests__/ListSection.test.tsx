@@ -19,7 +19,7 @@ test("it should render children as the title", () => {
 });
 
 test("it should apply sticky classes when sticky is true", () => {
-  const { container } = render(<ListSection title="Sticky" sticky />);
+  const { container } = render(<ListSection sticky title="Sticky" />);
 
   expect(
     container
@@ -29,7 +29,7 @@ test("it should apply sticky classes when sticky is true", () => {
 });
 
 test("it should apply inset padding when inset is true", () => {
-  const { container } = render(<ListSection title="Inset" inset />);
+  const { container } = render(<ListSection inset title="Inset" />);
 
   expect(
     container

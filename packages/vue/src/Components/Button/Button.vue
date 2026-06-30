@@ -85,7 +85,7 @@ const {
         :icon="merged.startIcon"
       />
 
-      <div v-else-if="hasNamedSlot(slots, 'start')" v-bind="startSlotBind">
+      <div v-bind="startSlotBind" v-else-if="hasNamedSlot(slots, 'start')">
         <component :is="resolveNamedSlot(slots, 'start')" />
       </div>
 
@@ -103,7 +103,7 @@ const {
         :icon="merged.endIcon"
       />
 
-      <div v-else-if="hasNamedSlot(slots, 'end')" v-bind="endSlotBind">
+      <div v-bind="endSlotBind" v-else-if="hasNamedSlot(slots, 'end')">
         <component :is="resolveNamedSlot(slots, 'end')" />
       </div>
     </template>

@@ -43,10 +43,10 @@ function ControlledListbox({
 
       <Listbox
         show={open}
-        onShowChange={setOpen}
         anchorEl={anchorRef}
-        listboxId="test-listbox"
         options={listOptions}
+        onShowChange={setOpen}
+        listboxId="test-listbox"
       />
     </div>
   );
@@ -74,11 +74,11 @@ test("it should call onSelect when an option is clicked", async () => {
       <div ref={anchorRef}>
         <Listbox
           show={open}
-          onShowChange={setOpen}
+          options={options}
           onSelect={onSelect}
           anchorEl={anchorRef}
+          onShowChange={setOpen}
           listboxId="test-listbox"
-          options={options}
         />
       </div>
     );
@@ -114,9 +114,9 @@ test("it should show loading state", async () => {
         <Listbox
           show
           loading
+          options={[]}
           anchorEl={anchorRef}
           listboxId="test-listbox"
-          options={[]}
         />
       </div>
     );
@@ -137,9 +137,9 @@ test("it should mark selected options with aria-selected", async () => {
       <div ref={anchorRef}>
         <Listbox
           show
+          options={options}
           anchorEl={anchorRef}
           listboxId="test-listbox"
-          options={options}
           isSelected={(value) => value === "apple"}
         />
       </div>

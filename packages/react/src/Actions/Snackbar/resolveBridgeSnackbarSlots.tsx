@@ -48,8 +48,8 @@ export function resolveBridgeSnackbarSlots(
               role="accept"
               layout="right-accept"
               action={actions.accept}
-              snackbarColor={snackbarColor}
               snackbarRounded={rounded}
+              snackbarColor={snackbarColor}
               hasReject={Boolean(actions.reject)}
               onRun={() => {
                 actions.accept?.onClick?.();
@@ -65,8 +65,8 @@ export function resolveBridgeSnackbarSlots(
               role="reject"
               layout="right-reject"
               action={actions.reject}
-              snackbarColor={snackbarColor}
               snackbarRounded={rounded}
+              snackbarColor={snackbarColor}
               hasAccept={Boolean(actions.accept)}
               onRun={() => {
                 actions.reject?.onClick?.();

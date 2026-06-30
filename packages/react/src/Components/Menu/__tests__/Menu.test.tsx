@@ -100,7 +100,7 @@ test("it should not lock body scroll by default", () => {
 });
 
 test("it should lock body scroll when disableScrollLock is false", () => {
-  render(<ControlledMenu disableScrollLock={false} initialOpen />);
+  render(<ControlledMenu initialOpen disableScrollLock={false} />);
 
   expect(document.body.style.overflow).toBe("hidden");
 });
@@ -159,7 +159,7 @@ test("it should render List and ListItem inside the menu panel", () => {
   render(
     <ControlledMenu initialOpen>
       <List dense padding="none">
-        <ListItem interactive primary="Item one" role="menuitem" />
+        <ListItem interactive role="menuitem" primary="Item one" />
       </List>
     </ControlledMenu>,
   );
@@ -179,8 +179,8 @@ test("it should close other menus with anchorEl when another opens", async () =>
     return (
       <div>
         <button
-          ref={anchorARef}
           type="button"
+          ref={anchorARef}
           onClick={() => {
             setOpenA(true);
           }}
@@ -188,13 +188,13 @@ test("it should close other menus with anchorEl when another opens", async () =>
           Open A
         </button>
 
-        <Menu show={openA} onShowChange={setOpenA} anchorEl={anchorARef}>
+        <Menu show={openA} anchorEl={anchorARef} onShowChange={setOpenA}>
           Menu A
         </Menu>
 
         <button
-          ref={anchorBRef}
           type="button"
+          ref={anchorBRef}
           onClick={() => {
             setOpenB(true);
           }}
@@ -202,7 +202,7 @@ test("it should close other menus with anchorEl when another opens", async () =>
           Open B
         </button>
 
-        <Menu show={openB} onShowChange={setOpenB} anchorEl={anchorBRef}>
+        <Menu show={openB} anchorEl={anchorBRef} onShowChange={setOpenB}>
           Menu B
         </Menu>
       </div>

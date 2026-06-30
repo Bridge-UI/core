@@ -61,7 +61,7 @@ test("it should render with default props", () => {
 
 test("it should render main label when mainLabel prop is provided", () => {
   cy.mount(
-    <FormControlHarness mainLabel="Email notifications" controlId="notify" />,
+    <FormControlHarness controlId="notify" mainLabel="Email notifications" />,
   );
 
   cy.contains("Email notifications").should("be.visible");
@@ -70,7 +70,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 
 test("it should link label to inherited input id when id is provided", () => {
   cy.mount(
-    <FormControlHarness mainLabel="Email notifications" id="notify-id" />,
+    <FormControlHarness id="notify-id" mainLabel="Email notifications" />,
   );
 
   cy.get('input[id="notify-id"]').should("exist");

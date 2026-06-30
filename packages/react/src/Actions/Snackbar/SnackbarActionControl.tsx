@@ -64,6 +64,11 @@ export function SnackbarActionControl({
         underline="hover"
         color={linkColor}
         {...linkProps}
+        onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+          event.preventDefault();
+          linkOnClick?.(event);
+          onRun();
+        }}
         classes={{
           ...action.link.classes,
           root: cn({
@@ -72,11 +77,6 @@ export function SnackbarActionControl({
             [action.className ?? ""]: true,
             [action.link.classes?.root ?? ""]: true,
           }),
-        }}
-        onClick={(event: MouseEvent<HTMLAnchorElement>) => {
-          event.preventDefault();
-          linkOnClick?.(event);
-          onRun();
         }}
       >
         {action.label}
@@ -90,6 +90,7 @@ export function SnackbarActionControl({
       color={buttonColor}
       variant={action.solid ? "outline" : "flat"}
       {...action.button}
+      onClick={() => onRun()}
       classes={{
         ...action.button?.classes,
         root: cn({
@@ -99,7 +100,6 @@ export function SnackbarActionControl({
           "w-full": layout === "right-accept" || layout === "right-reject",
         }),
       }}
-      onClick={() => onRun()}
     >
       {action.label}
     </Button>

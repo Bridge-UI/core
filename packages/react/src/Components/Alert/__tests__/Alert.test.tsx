@@ -30,13 +30,13 @@ test("it should render the default icon for error color", () => {
 });
 
 test("it should not render an icon when icon is null", () => {
-  const { container } = render(<Alert title="No icon" icon={null} />);
+  const { container } = render(<Alert icon={null} title="No icon" />);
 
   expect(container.querySelector("svg")).toBeNull();
 });
 
 test("it should apply rounded classes when rounded prop is set", () => {
-  const { container } = render(<Alert title="Rounded" rounded="lg" />);
+  const { container } = render(<Alert rounded="lg" title="Rounded" />);
 
   expect(
     container.querySelector(".w-full")?.classList.contains("rounded-lg"),
@@ -44,7 +44,7 @@ test("it should apply rounded classes when rounded prop is set", () => {
 });
 
 test("it should apply shadow classes when shadow prop is set", () => {
-  const { container } = render(<Alert title="Shadow" shadow="md" />);
+  const { container } = render(<Alert shadow="md" title="Shadow" />);
 
   expect(
     container.querySelector(".w-full")?.classList.contains("shadow-md"),

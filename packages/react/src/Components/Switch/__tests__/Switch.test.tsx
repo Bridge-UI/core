@@ -27,7 +27,7 @@ test("it should render description when description prop is provided", () => {
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  render(<Switch mainLabel="Notifications" defaultChecked={false} />);
+  render(<Switch defaultChecked={false} mainLabel="Notifications" />);
 
   const toggle = screen.getByRole("switch") as HTMLInputElement;
 
@@ -39,19 +39,19 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should reflect checked state when controlled", () => {
-  render(<Switch mainLabel="Notifications" checked />);
+  render(<Switch checked mainLabel="Notifications" />);
 
   expect((screen.getByRole("switch") as HTMLInputElement).checked).toBe(true);
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  render(<Switch mainLabel="Notifications" disabled />);
+  render(<Switch disabled mainLabel="Notifications" />);
 
   expect((screen.getByRole("switch") as HTMLInputElement).disabled).toBe(true);
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Switch mainLabel="Notifications" error />);
+  render(<Switch error mainLabel="Notifications" />);
 
   expect(screen.getByRole("switch").getAttribute("aria-invalid")).toBe("true");
 });

@@ -107,7 +107,7 @@ test("it should set aria-invalid on the input when error is set", () => {
 });
 
 test("it should set aria-describedby to description id when description is shown", () => {
-  render(<FormFieldHarness description="Helper" id="field-id" />);
+  render(<FormFieldHarness id="field-id" description="Helper" />);
 
   const input = screen.getByRole("textbox");
 
@@ -116,7 +116,7 @@ test("it should set aria-describedby to description id when description is shown
 });
 
 test("it should set aria-describedby to error id when error is shown", () => {
-  render(<FormFieldHarness error errorMessage="Required" id="field-id" />);
+  render(<FormFieldHarness error id="field-id" errorMessage="Required" />);
 
   const input = screen.getByRole("textbox");
 
@@ -156,7 +156,7 @@ test("it should render error icon when invalid and withErrorIcon is enabled", ()
 
 test("it should render error icon instead of end icon when error is set", () => {
   const { container } = render(
-    <FormFieldHarness endIcon={CircleAlert} error />,
+    <FormFieldHarness error endIcon={CircleAlert} />,
   );
 
   expect(container.querySelectorAll("svg").length).toBe(1);
@@ -179,13 +179,13 @@ test("it should hide error icon when withErrorIcon is false", () => {
 });
 
 test("it should render required asterisk when required is true", () => {
-  render(<FormFieldHarness label="Email" required />);
+  render(<FormFieldHarness required label="Email" />);
 
   expect(screen.getByText("*")).toBeTruthy();
 });
 
 test("it should apply error color on the label when error is set", () => {
-  const { container } = render(<FormFieldHarness label="Email" error />);
+  const { container } = render(<FormFieldHarness error label="Email" />);
 
   expect(container.querySelector(".text-error-600")).not.toBeNull();
 });
@@ -349,7 +349,7 @@ test("it should update the input value when changed", () => {
 
 test("it should render filled variant container styles", () => {
   const { container } = render(
-    <FormFieldHarness variant="filled" label="Email" />,
+    <FormFieldHarness label="Email" variant="filled" />,
   );
 
   expect(container.querySelector(".bg-gray-100")).not.toBeNull();
@@ -357,7 +357,7 @@ test("it should render filled variant container styles", () => {
 
 test("it should render notched variant with floating label row", () => {
   const { container } = render(
-    <FormFieldHarness variant="notched" label="Email" />,
+    <FormFieldHarness label="Email" variant="notched" />,
   );
 
   expect(container.querySelector(".-translate-y-1\\/2")).not.toBeNull();
@@ -365,7 +365,7 @@ test("it should render notched variant with floating label row", () => {
 
 test("it should render stacked variant with stacked body layout", () => {
   const { container } = render(
-    <FormFieldHarness variant="stacked" label="Quantity" />,
+    <FormFieldHarness label="Quantity" variant="stacked" />,
   );
 
   expect(

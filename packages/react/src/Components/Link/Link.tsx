@@ -38,7 +38,7 @@ function Link(props: LinkProps) {
       ) : (
         <Fragment>
           {merged.leftIcon ? (
-            <Icon icon={merged.leftIcon} size={merged.size} {...leftIconBind} />
+            <Icon size={merged.size} icon={merged.leftIcon} {...leftIconBind} />
           ) : null}
         </Fragment>
       )}
@@ -51,8 +51,8 @@ function Link(props: LinkProps) {
         <Fragment>
           {merged.rightIcon ? (
             <Icon
-              icon={merged.rightIcon}
               size={merged.size}
+              icon={merged.rightIcon}
               {...rightIconBind}
             />
           ) : null}

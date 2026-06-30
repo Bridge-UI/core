@@ -125,7 +125,7 @@ function handleSelect(option: ListboxOption) {
       :is="resolveNamedSlot(slots, 'beforeOptions')"
     />
 
-    <div class="px-4 py-3 text-sm text-gray-500" v-if="loading">
+    <div v-if="loading" class="px-4 py-3 text-sm text-gray-500">
       <component
         v-if="hasNamedSlot(slots, 'loading')"
         :is="resolveNamedSlot(slots, 'loading')"
@@ -156,7 +156,7 @@ function handleSelect(option: ListboxOption) {
           :aria-selected="resolveSelected(option.value)"
           :custom-props="getOptionCustomProps(option, index)"
         >
-          <template v-if="hasNamedSlot(slots, 'option')" #default>
+          <template #default v-if="hasNamedSlot(slots, 'option')">
             <slot
               name="option"
               :option="option"
@@ -165,7 +165,7 @@ function handleSelect(option: ListboxOption) {
           </template>
 
           <template #end v-if="showCheckmark && resolveSelected(option.value)">
-            <Check :class="resolvedCheckClass" class="size-4" />
+            <Check class="size-4" :class="resolvedCheckClass" />
           </template>
         </ListItem>
       </List>

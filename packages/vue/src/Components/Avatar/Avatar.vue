@@ -37,14 +37,14 @@ const {
       :is="resolveNamedSlot(slots, 'default')"
     />
 
-    <img v-else-if="hasImage" v-bind="imageBind" />
+    <img v-bind="imageBind" v-else-if="hasImage" />
 
     <component
       v-else-if="hasFallbackSlot"
       :is="resolveNamedSlot(slots, 'fallback')"
     />
 
-    <span v-else-if="hasFallbackText" v-bind="fallbackBind">
+    <span v-bind="fallbackBind" v-else-if="hasFallbackText">
       {{ merged.fallback }}
     </span>
 

@@ -77,9 +77,9 @@ test("it should apply top-center position classes on the portal layer", () => {
     <Snackbar
       show
       title="Top"
-      position="top-center"
       duration={false}
       transition="none"
+      position="top-center"
     />,
   );
 
@@ -125,8 +125,8 @@ test("it should call onShowChange when close button is clicked", () => {
 test("it should stack with increasing z-index", () => {
   render(
     <Fragment>
-      <Snackbar show title="One" transition="none" duration={false} />
-      <Snackbar show title="Two" transition="none" duration={false} />
+      <Snackbar show title="One" duration={false} transition="none" />
+      <Snackbar show title="Two" duration={false} transition="none" />
     </Fragment>,
   );
 
@@ -144,8 +144,8 @@ test("it should apply rounded classes when rounded prop is set", () => {
   render(
     <Snackbar
       show
-      title="Rounded"
       rounded="xl"
+      title="Rounded"
       duration={false}
       transition="none"
     />,
@@ -157,7 +157,7 @@ test("it should apply rounded classes when rounded prop is set", () => {
 });
 
 test("it should not lock body scroll", () => {
-  render(<Snackbar show title="Toast" transition="none" duration={false} />);
+  render(<Snackbar show title="Toast" duration={false} transition="none" />);
 
   expect(document.body.style.overflow).not.toBe("hidden");
 });

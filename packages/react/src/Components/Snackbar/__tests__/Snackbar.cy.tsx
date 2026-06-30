@@ -85,9 +85,9 @@ test("it should apply position classes on the portal layer", () => {
     <Snackbar
       show
       title="Top"
-      position="top-center"
       duration={false}
       transition="none"
+      position="top-center"
     />,
   );
 
@@ -98,8 +98,8 @@ test("it should apply rounded classes when rounded prop is set", () => {
   cy.mount(
     <Snackbar
       show
-      title="Rounded"
       rounded="xl"
+      title="Rounded"
       duration={false}
       transition="none"
     />,
@@ -113,9 +113,9 @@ test("it should render title and description", () => {
     <Snackbar
       show
       title="Hello"
-      description="World"
       duration={false}
       transition="none"
+      description="World"
     />,
   );
 

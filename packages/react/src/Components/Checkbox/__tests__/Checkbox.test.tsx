@@ -24,13 +24,13 @@ test("it should render description when description prop is provided", () => {
 });
 
 test("it should render error message when error is set", () => {
-  render(<Checkbox mainLabel="Accept" error errorMessage="Required" />);
+  render(<Checkbox error mainLabel="Accept" errorMessage="Required" />);
 
   expect(screen.getByText("Required")).toBeTruthy();
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  render(<Checkbox mainLabel="Accept" disabled />);
+  render(<Checkbox disabled mainLabel="Accept" />);
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).disabled).toBe(
     true,
@@ -38,7 +38,7 @@ test("it should apply disabled attribute when disabled", () => {
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Checkbox mainLabel="Accept" error />);
+  render(<Checkbox error mainLabel="Accept" />);
 
   expect(screen.getByRole("checkbox").getAttribute("aria-invalid")).toBe(
     "true",
@@ -58,14 +58,14 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should reflect checked state when controlled", () => {
-  render(<Checkbox mainLabel="Accept" checked />);
+  render(<Checkbox checked mainLabel="Accept" />);
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
 });
 
 test("it should set indeterminate on the native input when indeterminate is true", () => {
   render(
-    <Checkbox mainLabel="Select all" indeterminate defaultChecked={false} />,
+    <Checkbox indeterminate mainLabel="Select all" defaultChecked={false} />,
   );
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).indeterminate).toBe(

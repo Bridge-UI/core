@@ -15,7 +15,7 @@ test("it should render children as the title", () => {
 });
 
 test("it should apply sticky classes when sticky is true", () => {
-  cy.mount(<ListSection title="Sticky" sticky />);
+  cy.mount(<ListSection sticky title="Sticky" />);
 
   cy.get('[role="presentation"]').should("have.class", "sticky");
 });

@@ -69,8 +69,8 @@ function Button(props: ButtonProps) {
         <Fragment>
           {merged.startIcon ? (
             <Icon
-              icon={merged.startIcon}
               size={merged.size}
+              icon={merged.startIcon}
               {...startIconBind}
             />
           ) : (
@@ -84,7 +84,7 @@ function Button(props: ButtonProps) {
           {isPropPresent(merged.text) ? merged.text : children}
 
           {merged.endIcon ? (
-            <Icon icon={merged.endIcon} size={merged.size} {...endIconBind} />
+            <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />
           ) : (
             <Fragment>
               {hasNamedSlot(slots, "end") && (

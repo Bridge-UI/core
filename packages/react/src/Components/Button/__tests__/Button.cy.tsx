@@ -75,7 +75,7 @@ test("it should render mini density with icon", () => {
 
 test("it should disable mini density button", () => {
   cy.mount(
-    <Button density="mini" icon={Settings} disabled aria-label="Settings" />,
+    <Button disabled density="mini" icon={Settings} aria-label="Settings" />,
   );
 
   cy.get("button").should("be.disabled");
@@ -83,7 +83,7 @@ test("it should disable mini density button", () => {
 
 test("it should show spinner when mini density is loading", () => {
   cy.mount(
-    <Button density="mini" loading icon={Settings} aria-label="Settings" />,
+    <Button loading density="mini" icon={Settings} aria-label="Settings" />,
   );
 
   cy.get("svg.animate-spin").should("exist");

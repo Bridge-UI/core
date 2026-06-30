@@ -130,7 +130,7 @@ test("it should set aria-describedby to description id when description is shown
 
 test("it should set aria-describedby to error id when error is shown", () => {
   render(
-    <FormControlHarness error errorMessage="Required" controlId="field-id" />,
+    <FormControlHarness error controlId="field-id" errorMessage="Required" />,
   );
 
   const input = screen.getByRole("checkbox");
