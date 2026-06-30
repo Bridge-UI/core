@@ -1,6 +1,7 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -293,4 +294,63 @@ test("it should stay open when reopened before the leave transition ends", async
 
   expect(document.body.textContent).toContain("Second");
   expect(onUpdate).not.toHaveBeenCalledWith(false);
+});
+
+test("it should not reset shared state when a replaced snackbar finishes leaving", async () => {
+  const active = ref<"a" | "b" | null>(null);
+
+  const wrapper = mount(
+    {
+      components: { Snackbar },
+      setup() {
+        return { active };
+      },
+      template: `
+        <button type="button" @click="active = 'a'">Open A</button>
+        <button type="button" @click="active = 'b'">Open B</button>
+        <Snackbar
+          key="a"
+          title="Snack A"
+          transition="slide"
+          :model-value="active === 'a'"
+          @update:model-value="(open) => !open && (active = null)"
+        />
+        <Snackbar
+          key="b"
+          title="Snack B"
+          transition="slide"
+          :model-value="active === 'b'"
+          @update:model-value="(open) => !open && (active = null)"
+        />
+      `,
+    },
+    { attachTo: document.body },
+  );
+
+  mountedWrappers.push(wrapper as ReturnType<typeof mount<typeof Snackbar>>);
+
+  await wrapper.findAll("button")[0]!.trigger("click");
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack A");
+
+  await wrapper.findAll("button")[1]!.trigger("click");
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack B");
+
+  const panels = document.body.querySelectorAll('[data-snackbar-part="panel"]');
+
+  panels[0]?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    }),
+  );
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Snack B");
+  expect(document.body.textContent).not.toContain("Snack A");
 });

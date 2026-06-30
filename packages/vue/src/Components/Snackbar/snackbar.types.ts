@@ -165,6 +165,13 @@ export interface SnackbarOwnProps {
   img?: string;
 
   /**
+   * Called after the leave transition when `v-model` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
+
+  /**
    * Called when `v-model` visibility should change (controlled state).
    */
   onShowChange?: (show: boolean) => void;

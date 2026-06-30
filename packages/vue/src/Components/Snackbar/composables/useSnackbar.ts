@@ -82,9 +82,33 @@ type SnackbarLibDefaults = LibDefaultsShape<
 type SnackbarMerged = MergeLibDefaults<SnackbarOwnProps, SnackbarLibDefaults>;
 
 export type SnackbarOptions = {
+  /**
+   * Called when the snackbar requests to close.
+   */
   onClose?: () => void;
+
+  /**
+   * Called after the leave transition when `show` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
+
+  /**
+   * Called when `show` should change (controlled state).
+   */
   onShowChange?: (show: boolean) => void;
+
+  /**
+   * Whether the snackbar is visible.
+   *
+   * @default false
+   */
   show?: Ref<boolean> | boolean;
+
+  /**
+   * Pre-assigned stack id (BridgeSnackbarHost).
+   */
   stackId?: string;
 };
 
@@ -274,7 +298,7 @@ export function useSnackbar(
     if (show.value) {
       setShow(false);
     } else {
-      options.onShowChange?.(false);
+      options.onLeaveComplete?.();
     }
 
     rendered.value = false;

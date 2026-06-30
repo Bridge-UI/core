@@ -262,6 +262,13 @@ export type SnackbarProps = MergeHtmlProps<
   onClose?: () => void;
 
   /**
+   * Called after the leave transition when `show` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
+
+  /**
    * Called when `show` should change (controlled state).
    */
   onShowChange?: (show: boolean) => void;

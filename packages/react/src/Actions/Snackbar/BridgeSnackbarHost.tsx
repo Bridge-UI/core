@@ -99,6 +99,9 @@ export function BridgeSnackbarHost({
               {...snackbarProps}
               teleportTo={false}
               onClose={() => invokeLayerDismiss(api.entries, entryId)}
+              onLeaveComplete={() => {
+                completeLayerHide(api.entries, entryId, false, api.removeEntry);
+              }}
               onShowChange={(show) => {
                 api.syncShow(entryId, show);
                 completeLayerHide(api.entries, entryId, show, api.removeEntry);

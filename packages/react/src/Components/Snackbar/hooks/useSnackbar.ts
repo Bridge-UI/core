@@ -88,6 +88,13 @@ export type SnackbarOptions = {
   onClose?: () => void;
 
   /**
+   * Called after the leave transition when `show` is already `false`.
+   *
+   * @internal Used by `BridgeSnackbarHost` to remove registry entries.
+   */
+  onLeaveComplete?: () => void;
+
+  /**
    * Called when `show` should change (controlled state).
    */
   onShowChange?: (show: boolean) => void;
@@ -110,7 +117,13 @@ export function useSnackbar(
   libDefaults: SnackbarLibDefaults,
   options: SnackbarOptions = {},
 ) {
-  const { onClose, stackId, onShowChange, show = false } = options;
+  const {
+    onClose,
+    stackId,
+    onShowChange,
+    show = false,
+    onLeaveComplete,
+  } = options;
 
   const remainingMsRef = useRef(0);
 
@@ -288,7 +301,7 @@ export function useSnackbar(
     if (show) {
       setShow(false);
     } else {
-      onShowChange?.(false);
+      onLeaveComplete?.();
     }
 
     setRendered(false);

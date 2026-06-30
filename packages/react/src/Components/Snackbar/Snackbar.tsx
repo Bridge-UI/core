@@ -150,6 +150,7 @@ function Snackbar({
   stackId,
   onShowChange,
   show = false,
+  onLeaveComplete,
   ...ownProps
 }: SnackbarProps) {
   const isControlled = onShowChange != null;
@@ -188,6 +189,7 @@ function Snackbar({
     {
       onClose,
       stackId,
+      onLeaveComplete,
       show: resolvedShow,
       onShowChange: handleShowChange,
     },

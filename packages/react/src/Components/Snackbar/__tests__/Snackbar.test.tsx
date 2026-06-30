@@ -6,7 +6,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -219,4 +219,66 @@ test("it should stay open when reopened before the leave transition ends", async
   });
 
   expect(onShowChange).not.toHaveBeenCalledWith(false);
+});
+
+function MultiSnackbarDemo() {
+  const [active, setActive] = useState<string | null>(null);
+
+  return (
+    <Fragment>
+      <button type="button" onClick={() => setActive("a")}>
+        Open A
+      </button>
+
+      <button type="button" onClick={() => setActive("b")}>
+        Open B
+      </button>
+
+      <Snackbar
+        key="a"
+        title="Snack A"
+        transition="slide"
+        show={active === "a"}
+        onShowChange={(open) => !open && setActive(null)}
+      />
+
+      <Snackbar
+        key="b"
+        title="Snack B"
+        transition="slide"
+        show={active === "b"}
+        onShowChange={(open) => !open && setActive(null)}
+      />
+    </Fragment>
+  );
+}
+
+test("it should not reset shared state when a replaced snackbar finishes leaving", async () => {
+  render(<MultiSnackbarDemo />);
+
+  fireEvent.click(screen.getByText("Open A"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack A");
+  });
+
+  fireEvent.click(screen.getByText("Open B"));
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack B");
+  });
+
+  const panels = document.body.querySelectorAll('[data-snackbar-part="panel"]');
+
+  act(() => {
+    fireEvent.transitionEnd(panels[0]!, {
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    });
+  });
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Snack B");
+    expect(document.body.textContent).not.toContain("Snack A");
+  });
 });
