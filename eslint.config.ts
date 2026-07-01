@@ -105,7 +105,6 @@ export default defineConfig(
         {
           order: "asc" as const,
           type: "line-length" as const,
-
           fallbackSort: {
             order: "asc" as const,
             type: "alphabetical" as const,
