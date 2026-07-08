@@ -1,8 +1,32 @@
 {
   "type": "module",
+  "license": "MIT",
   "version": "0.0.0",
+  "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/core",
+  "homepage": "https://github.com/Bridge-UI/core#readme",
+  "description": "Shared types, design tokens, and utilities for Bridge UI.",
+  "bugs": {
+    "url": "https://github.com/Bridge-UI/core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "directory": "packages/core",
+    "url": "git+https://github.com/Bridge-UI/core.git"
+  },
+  "keywords": [
+    "bridge-ui",
+    "utilities",
+    "components",
+    "typescript",
+    "design-system",
+    "design-tokens"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

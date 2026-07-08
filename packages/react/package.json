@@ -1,8 +1,32 @@
 {
   "type": "module",
+  "license": "MIT",
   "version": "0.0.0",
+  "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/react",
+  "homepage": "https://github.com/Bridge-UI/core#readme",
+  "description": "React components and hooks for Bridge UI.",
+  "bugs": {
+    "url": "https://github.com/Bridge-UI/core/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "directory": "packages/react",
+    "url": "git+https://github.com/Bridge-UI/core.git"
+  },
+  "keywords": [
+    "ui",
+    "react",
+    "tailwind",
+    "bridge-ui",
+    "components",
+    "design-system"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
