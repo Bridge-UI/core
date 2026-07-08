@@ -1,7 +1,6 @@
 dist
 .fleet
 .cursor
-scripts
 node_modules
 
 # Vite cache for Cypress component tests

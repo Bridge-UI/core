@@ -2,6 +2,10 @@
 
 Markdown reference for **React** and **Vue** packages.
 
+## Maintainers
+
+- [Release guide](./RELEASE.md)
+
 ## React
 
 - [Alert](./react/Alert.md)

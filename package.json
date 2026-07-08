@@ -30,7 +30,8 @@
     "lint": "eslint packages/core/src packages/react/src packages/vue/src",
     "lint:fix": "eslint packages/core/src packages/react/src packages/vue/src --fix",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "bump-version": "bash scripts/bump-version.sh"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

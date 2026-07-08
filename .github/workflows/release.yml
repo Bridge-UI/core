@@ -58,19 +58,28 @@ jobs:
           node-version: 24
 
       - name: Install dependencies
-        run: |
-          npm ci
+        run: npm ci
 
-      - name: Set package versions
+      - name: Verify package versions
         run: |
           VERSION="${{ steps.release.outputs.value }}"
 
-          npm version "$VERSION" -w @bridge-ui/core --no-git-tag-version --allow-same-version
-          npm version "$VERSION" -w @bridge-ui/react --no-git-tag-version --allow-same-version
-          npm version "$VERSION" -w @bridge-ui/vue --no-git-tag-version --allow-same-version
+          for pkg in core react vue; do
+            PKG_VERSION=$(node -p "require('./packages/${pkg}/package.json').version")
+            if [ "$PKG_VERSION" != "$VERSION" ]; then
+              echo "packages/${pkg}/package.json version is ${PKG_VERSION}, expected ${VERSION}"
+              exit 1
+            fi
+          done
 
-          npm pkg set "peerDependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/react
-          npm pkg set "peerDependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/vue
+          EXPECTED_PEER="^${VERSION}"
+          REACT_PEER=$(node -p "require('./packages/react/package.json').peerDependencies['@bridge-ui/core']")
+          VUE_PEER=$(node -p "require('./packages/vue/package.json').peerDependencies['@bridge-ui/core']")
+
+          if [ "$REACT_PEER" != "$EXPECTED_PEER" ] || [ "$VUE_PEER" != "$EXPECTED_PEER" ]; then
+            echo "peerDependencies.@bridge-ui/core must be ${EXPECTED_PEER} in react and vue"
+            exit 1
+          fi
 
       - run: npm run build
       - run: npm run test:run
