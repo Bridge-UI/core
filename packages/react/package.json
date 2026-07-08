@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/react",
@@ -56,7 +56,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@bridge-ui/core": "*",
+    "@bridge-ui/core": "^0.0.1-beta.1",
     "lucide-react": ">=0.400.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"

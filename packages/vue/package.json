@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/vue",
@@ -56,7 +56,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@bridge-ui/core": "*",
+    "@bridge-ui/core": "^0.0.1-beta.1",
     "lucide-vue-next": ">=0.400.0",
     "vue": "^3.4.0"
   },
