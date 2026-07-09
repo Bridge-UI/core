@@ -1,6 +1,6 @@
 @source "./Actions";
 @source "./Components";
-@source "../../core/src/Components";
+@source "../../core/dist/Components";
 
 @theme inline {
   /* Typography */

@@ -50,7 +50,11 @@
       "import": "./dist/Components/*/index.js",
       "types": "./dist/Components/*/index.d.ts"
     },
-    "./theme.css": "./dist/theme.css"
+    "./theme.css": {
+      "style": "./dist/theme.css",
+      "import": "./dist/theme.css",
+      "default": "./dist/theme.css"
+    }
   },
   "files": [
     "dist"
