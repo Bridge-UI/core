@@ -69,4 +69,4 @@ npm pkg set "peerDependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/vue
 echo ""
 echo "Bumped to $VERSION"
 echo ""
-echo "Commit with message: chore(release): $VERSION"
+echo "Commit with message: chore(release): version $VERSION"

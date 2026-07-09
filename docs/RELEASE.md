@@ -32,7 +32,7 @@ Releases are created on GitHub. Pushing a version tag triggers the [Bridge UI Re
 npm run bump-version -- 0.1.0
 ```
 
-Commit with message: `chore(release): 0.1.0`, then push to `main`.
+Commit with message: `chore(release): version 0.1.0`, then push to `main`.
 
 The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fails if they differ.
 
