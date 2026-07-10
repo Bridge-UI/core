@@ -1,0 +1,95 @@
+name: Documentation
+title: "[Docs]: "
+description: Report missing, unclear, or incorrect documentation.
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Documentation lives in [`docs/`](https://github.com/Bridge-UI/core/tree/main/docs). Component pages follow `docs/react/{Component}.md` and `docs/vue/{Component}.md`. See the [index](https://github.com/Bridge-UI/core/blob/main/docs/README.md).
+
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Framework
+      description: Which docs are affected?
+      options:
+        - React
+        - Vue
+        - Both
+        - General (README, RELEASE.md, docs index)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component or topic
+      description: Which page or topic needs attention? Choose "Other" if not listed.
+      options:
+        - Index (docs/README.md)
+        - Release guide (docs/RELEASE.md)
+        - Alert
+        - Avatar
+        - Badge
+        - BridgeUIProvider
+        - Button
+        - Card
+        - Checkbox
+        - DialogAction
+        - FormControl
+        - FormField
+        - Icon
+        - Label
+        - Link
+        - List
+        - ListItem
+        - ListSection
+        - Listbox (no doc page yet)
+        - Menu
+        - Modal
+        - ModalAction
+        - NumberField
+        - PasswordField
+        - Radio
+        - Select
+        - Snackbar
+        - SnackbarAction
+        - Switch
+        - Textarea
+        - TextField
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: doc-path
+    attributes:
+      label: Doc file path (optional)
+      description: Path or section heading, e.g. `docs/react/Button.md` or "## Props".
+      placeholder: docs/react/Button.md
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or missing?
+      description: Describe the documentation problem. Include a link to the file or section if possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: How should the docs be updated? Draft text is welcome.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues to avoid duplicates
+          required: true

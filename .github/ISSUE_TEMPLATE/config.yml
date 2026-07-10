@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Component reference
+    url: https://github.com/Bridge-UI/core/blob/main/docs/README.md
+    about: Browse the React and Vue docs before opening an issue.
+  - name: Discussions
+    url: https://github.com/Bridge-UI/core/discussions
+    about: Ask questions or share ideas that are not bugs or feature requests.

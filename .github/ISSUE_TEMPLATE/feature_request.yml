@@ -1,0 +1,111 @@
+name: Feature request
+title: "[Feature]: "
+description: Suggest a new component, prop, or improvement to Bridge UI.
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Bridge UI aims for **React/Vue parity**—shared logic belongs in `@bridge-ui/core`.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What problem does this solve? What are you trying to build?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the API, behavior, or component you would like to see.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: packages
+    attributes:
+      label: Affected packages
+      description: Which packages would this change touch?
+      options:
+        - label: "@bridge-ui/core (shared types, tokens, or utilities)"
+        - label: "@bridge-ui/react"
+        - label: "@bridge-ui/vue"
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Related component or area
+      description: Existing component this extends, or "New component" for something new.
+      options:
+        - New component
+        - Alert
+        - Avatar
+        - Badge
+        - BridgeUIProvider
+        - Button
+        - Card
+        - Checkbox
+        - DialogAction
+        - FormControl
+        - FormField
+        - Icon
+        - Label
+        - Link
+        - List
+        - Listbox
+        - ListItem
+        - ListSection
+        - Menu
+        - Modal
+        - ModalAction
+        - NumberField
+        - PasswordField
+        - Radio
+        - Select
+        - Snackbar
+        - SnackbarAction
+        - Switch
+        - Textarea
+        - TextField
+        - Utils / shared types
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-sketch
+    attributes:
+      label: API sketch (optional)
+      description: Example props, slots, or usage in React or Vue.
+      render: tsx
+      placeholder: |
+        <Select
+          async
+          onSearch={handleSearch}
+        />
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you considered, or workarounds you are using today.
+
+  - type: checkboxes
+    id: parity
+    attributes:
+      label: Parity
+      options:
+        - label: This should ship with equivalent React and Vue APIs
+          required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and discussions to avoid duplicates
+          required: true
