@@ -13,6 +13,7 @@ import {
   LAYER_STACK_BASE_Z_INDEX,
   pushLayerStack,
   resetLayerStackForTests,
+  SCROLLBAR_COMPENSATION_VAR,
   subscribeLayerStack,
 } from "@/Utils/modal";
 
@@ -68,11 +69,17 @@ test("it should compensate body padding when a scrollbar is present", () => {
 
   expect(document.body.style.overflow).toBe("hidden");
   expect(document.body.style.paddingRight).toBe("25px");
+  expect(
+    document.documentElement.style.getPropertyValue(SCROLLBAR_COMPENSATION_VAR),
+  ).toBe("17px");
 
   handle.release();
 
   expect(document.body.style.overflow).toBe("");
   expect(document.body.style.paddingRight).toBe("8px");
+  expect(
+    document.documentElement.style.getPropertyValue(SCROLLBAR_COMPENSATION_VAR),
+  ).toBe("");
 
   innerWidthSpy.mockRestore();
   clientWidthSpy.mockRestore();
