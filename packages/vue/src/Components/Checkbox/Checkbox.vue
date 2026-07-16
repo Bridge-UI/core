@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { Check } from "lucide-vue-next";
+import { Check } from "@lucide/vue";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports

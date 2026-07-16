@@ -1,5 +1,5 @@
 // ** External Imports
-import { Info } from "lucide-vue-next";
+import { Info } from "@lucide/vue";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";

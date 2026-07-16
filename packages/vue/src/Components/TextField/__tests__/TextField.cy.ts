@@ -1,5 +1,5 @@
 // ** External Imports
-import { CircleAlert } from "lucide-vue-next";
+import { CircleAlert } from "@lucide/vue";
 
 // ** Local Imports
 import { TextField } from "@/Components/TextField";

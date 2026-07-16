@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { Loader2 } from "lucide-vue-next";
+import { Loader2 } from "@lucide/vue";
 import { useSlots } from "vue";
 
 // ** Local Imports

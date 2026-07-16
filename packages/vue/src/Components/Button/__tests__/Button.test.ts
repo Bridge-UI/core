@@ -1,6 +1,6 @@
 // ** External Imports
+import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
-import { CircleAlert } from "lucide-vue-next";
 import { expect, test } from "vitest";
 
 // ** Local Imports

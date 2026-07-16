@@ -13,7 +13,7 @@ import { Icon } from "@bridge-ui/vue/Components/Icon";
 ### Usage
 
 ```ts
-import { Info } from "lucide-vue-next";
+import { Info } from "@lucide/vue";
 ```
 
 ```vue

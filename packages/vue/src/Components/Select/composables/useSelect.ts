@@ -1,6 +1,6 @@
 // ** External Imports
+import { ChevronsUpDown } from "@lucide/vue";
 import { get, isNil, omit } from "es-toolkit/compat";
-import { ChevronsUpDown } from "lucide-vue-next";
 import {
   computed,
   nextTick,

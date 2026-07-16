@@ -1,6 +1,6 @@
 // ** External Imports
+import { CircleX } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
-import { CircleX } from "lucide-vue-next";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 

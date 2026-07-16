@@ -1,6 +1,6 @@
 // ** External Imports
+import { CircleAlert } from "@lucide/vue";
 import { get, omit } from "es-toolkit/compat";
-import { CircleAlert } from "lucide-vue-next";
 import {
   computed,
   type HTMLAttributes,

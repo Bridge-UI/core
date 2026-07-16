@@ -1,6 +1,6 @@
 // ** External Imports
+import type { LucideIcon } from "@lucide/vue";
 import { get, isNull } from "es-toolkit/compat";
-import type { LucideIcon } from "lucide-vue-next";
 import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports

@@ -1,5 +1,5 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-vue-next";
+import type { LucideIcon } from "@lucide/vue";
 import type { AnchorHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports

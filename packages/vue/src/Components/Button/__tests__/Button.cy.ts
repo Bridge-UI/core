@@ -1,5 +1,5 @@
 // ** External Imports
-import { CircleAlert, Settings } from "lucide-vue-next";
+import { CircleAlert, Settings } from "@lucide/vue";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";

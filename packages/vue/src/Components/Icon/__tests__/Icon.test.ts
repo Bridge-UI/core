@@ -1,6 +1,6 @@
 // ** External Imports
+import { Eye, EyeOff, Info } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
-import { Eye, EyeOff, Info } from "lucide-vue-next";
 import { expect, test } from "vitest";
 import { nextTick } from "vue";
 

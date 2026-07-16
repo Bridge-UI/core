@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { cn } from "@bridge-ui/core";
-import { Check } from "lucide-vue-next";
+import { Check } from "@lucide/vue";
 import { computed, useSlots, watch } from "vue";
 
 // ** Local Imports
