@@ -15,6 +15,13 @@ import { resetOpenMenuLayersForTests } from "@/Utils/menu";
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
 export const LAYER_STACK_BASE_Z_INDEX = 50;
 
+/**
+ * CSS custom property set on `:root` while body scroll is locked.
+ * Use on `position: fixed` / `sticky` chrome (e.g. site headers) if needed:
+ * `padding-inline-end: var(--bridge-scrollbar-compensation, 0px)`.
+ */
+export const SCROLLBAR_COMPENSATION_VAR = "--bridge-scrollbar-compensation";
+
 type LayerStackEntry = {
   id: LayerId;
   lockScroll?: boolean;
@@ -123,6 +130,25 @@ function handleGlobalEscape(event: KeyboardEvent) {
 }
 
 /**
+ * Sets the scrollbar compensation CSS variable on `:root`.
+ */
+function setScrollbarCompensationVar(scrollbarWidth: number) {
+  if (!hasDocument()) {
+    return;
+  }
+
+  if (scrollbarWidth > 0) {
+    document.documentElement.style.setProperty(
+      SCROLLBAR_COMPENSATION_VAR,
+      `${scrollbarWidth}px`,
+    );
+    return;
+  }
+
+  document.documentElement.style.removeProperty(SCROLLBAR_COMPENSATION_VAR);
+}
+
+/**
  * Locks the body scroll and compensates layout shift when the scrollbar is hidden.
  */
 function lockBodyScroll() {
@@ -145,6 +171,7 @@ function lockBodyScroll() {
         Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
 
       body.style.paddingRight = `${computedPaddingRight + scrollbarWidth}px`;
+      setScrollbarCompensationVar(scrollbarWidth);
     }
 
     body.style.overflow = "hidden";
@@ -214,6 +241,7 @@ function unlockBodyScroll() {
     document.body.style.overflow = savedBodyOverflow;
     document.body.style.paddingRight = savedBodyPaddingRight;
     savedBodyPaddingRight = "";
+    setScrollbarCompensationVar(0);
   }
 }
 
@@ -370,6 +398,7 @@ export function resetLayerStackForTests() {
   if (hasDocument()) {
     document.body.style.overflow = "";
     document.body.style.paddingRight = "";
+    setScrollbarCompensationVar(0);
   }
 
   detachEscapeListener();

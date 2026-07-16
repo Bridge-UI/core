@@ -171,6 +171,7 @@ export {
   pushLayerStack,
   resetLayerStackForTests,
   resolveEffectiveModalTransition,
+  SCROLLBAR_COMPENSATION_VAR,
   subscribeLayerStack,
   type LayerStackHandle,
   type LayerStackSnapshotEntry,
