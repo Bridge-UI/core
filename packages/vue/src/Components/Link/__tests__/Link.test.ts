@@ -1,6 +1,6 @@
 // ** External Imports
+import { Info } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
-import { Info } from "lucide-vue-next";
 import { expect, test } from "vitest";
 
 // ** Local Imports

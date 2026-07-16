@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { ChevronDown, ChevronUp } from "lucide-vue-next";
+import { ChevronDown, ChevronUp } from "@lucide/vue";
 import { computed } from "vue";
 
 // ** Core Imports

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff } from "@lucide/vue";
 import { computed } from "vue";
 
 // ** Core Imports

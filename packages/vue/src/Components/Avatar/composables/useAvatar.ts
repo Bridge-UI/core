@@ -1,6 +1,6 @@
 // ** External Imports
+import { User } from "@lucide/vue";
 import { get, isEmpty, isNil } from "es-toolkit/compat";
-import { User } from "lucide-vue-next";
 import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports

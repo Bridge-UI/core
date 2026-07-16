@@ -1,5 +1,5 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-vue-next";
+import type { LucideIcon } from "@lucide/vue";
 import {
   Bell,
   CircleAlert,
@@ -7,7 +7,7 @@ import {
   CircleX,
   Info,
   TriangleAlert,
-} from "lucide-vue-next";
+} from "@lucide/vue";
 
 // ** Core Imports
 import type { SnackbarColor } from "@bridge-ui/core";

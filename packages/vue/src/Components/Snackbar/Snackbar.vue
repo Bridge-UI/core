@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { X } from "lucide-vue-next";
+import { X } from "@lucide/vue";
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
