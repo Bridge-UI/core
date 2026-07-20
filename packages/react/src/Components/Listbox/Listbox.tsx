@@ -44,12 +44,13 @@ function Listbox({
   placement = "bottom-start",
   isSelected: isSelectedProp,
   emptyMessage = "No options",
+  loadingMessage = "Loading...",
   ...ownProps
 }: ListboxProps) {
   const {
-    merged,
     checkClass,
     scrollBind,
+    contentBind,
     loadingBind,
     mergedClasses,
     loadingTrackBind,
@@ -128,20 +129,21 @@ function Listbox({
       placement={placement}
       onShowChange={onShowChange}
       disableAutoFocus={disableAutoFocus}
-      customProps={{ content: merged.customProps?.content }}
+      customProps={{ content: contentBind }}
     >
       {slots?.beforeOptions}
 
-      {loading &&
-        (slots?.loading ? (
-          <div className="px-4 py-3 text-sm text-gray-500">{slots.loading}</div>
-        ) : (
+      {loading ? (
+        <>
           <div {...loadingTrackBind}>
             <div {...loadingBind} />
           </div>
-        ))}
 
-      {(!loading || !slots?.loading) && (
+          <div className="px-4 py-3 text-sm text-gray-500">
+            {slots?.loading ?? loadingMessage}
+          </div>
+        </>
+      ) : (
         <div {...scrollBind}>
           <List
             dense

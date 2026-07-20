@@ -41,12 +41,13 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   disableAutoFocus: false,
   placement: "bottom-start",
   emptyMessage: "No options",
+  loadingMessage: "Loading...",
 });
 
 const {
-  merged,
   checkClass,
   scrollBind,
+  contentBind,
   loadingBind,
   mergedClasses,
   loadingTrackBind,
@@ -54,6 +55,12 @@ const {
   optionHighlightedClass,
 } = useListbox(props, {
   color: "primary",
+});
+
+const menuCustomProps = computed(() => {
+  return {
+    content: contentBind.value,
+  };
 });
 
 const showEmptyState = computed(() => {
@@ -119,26 +126,29 @@ function handleSelect(option: ListboxOption) {
     :anchor-el="anchorEl"
     :placement="placement"
     :close-on-click-away="true"
+    :custom-props="menuCustomProps"
     :disable-auto-focus="disableAutoFocus"
-    :custom-props="{ content: merged.customProps?.content }"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"
       :is="resolveNamedSlot(slots, 'beforeOptions')"
     />
 
-    <div
-      class="px-4 py-3 text-sm text-gray-500"
-      v-if="loading && hasNamedSlot(slots, 'loading')"
-    >
-      <component :is="resolveNamedSlot(slots, 'loading')" />
-    </div>
+    <template v-if="loading">
+      <div v-bind="loadingTrackBind">
+        <div v-bind="loadingBind" />
+      </div>
 
-    <div v-else-if="loading" v-bind="loadingTrackBind">
-      <div v-bind="loadingBind" />
-    </div>
+      <div class="px-4 py-3 text-sm text-gray-500">
+        <component
+          v-if="hasNamedSlot(slots, 'loading')"
+          :is="resolveNamedSlot(slots, 'loading')"
+        />
+        <span v-else>{{ loadingMessage }}</span>
+      </div>
+    </template>
 
-    <div v-bind="scrollBind" v-if="!loading || !hasNamedSlot(slots, 'loading')">
+    <div v-else v-bind="scrollBind">
       <List
         dense
         role="listbox"

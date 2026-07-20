@@ -163,12 +163,19 @@ export interface ListboxOwnProps {
   listboxId: string;
 
   /**
-   * When `true`, shows an indeterminate progress bar at the top of the panel.
-   * Options remain visible when present (useful for async search).
+   * When `true`, shows an indeterminate progress bar and loading text in the
+   * panel (options are hidden while loading).
    *
    * @default false
    */
   loading?: boolean;
+
+  /**
+   * Message shown while `loading` is true (ignored when the `loading` slot is set).
+   *
+   * @default "Loading..."
+   */
+  loadingMessage?: string;
 
   /**
    * Tailwind max-height class for the options scroll area (e.g. `max-h-80`).
@@ -221,7 +228,8 @@ export interface ListboxSlots {
   empty?: ReactNode;
 
   /**
-   * Custom loading content. Replaces the default progress bar when set.
+   * Custom loading content. Replaces the default `loadingMessage` when set.
+   * The progress bar still renders above this content.
    */
   loading?: ReactNode;
 

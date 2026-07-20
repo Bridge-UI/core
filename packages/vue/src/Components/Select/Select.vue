@@ -77,6 +77,7 @@ const {
   containerRef,
   emptyMessage,
   clearIconSize,
+  loadingMessage,
   visibleOptions,
   selectedOptions,
   highlightedIndex,
@@ -141,6 +142,7 @@ const {
     :disable-auto-focus="true"
     :empty-message="emptyMessage"
     :max-height="props.maxHeight"
+    :loading-message="loadingMessage"
     :color="formField.merged.value.color"
     :highlighted-index="highlightedIndex"
     :hide-empty-message="hideEmptyMessage"

@@ -174,6 +174,13 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   loading?: boolean;
 
   /**
+   * Message shown in the dropdown while loading.
+   *
+   * @default "Loading..."
+   */
+  loadingMessage?: string;
+
+  /**
    * Tailwind max-height class for the dropdown options area.
    * Forwarded to the internal `Listbox`.
    *

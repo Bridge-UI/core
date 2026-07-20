@@ -105,7 +105,7 @@ test("it should show empty message when there are no options", async () => {
   });
 });
 
-test("it should show loading progress bar when loading", async () => {
+test("it should show loading progress bar and text when loading", async () => {
   function Host() {
     const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -126,10 +126,11 @@ test("it should show loading progress bar when loading", async () => {
 
   await waitFor(() => {
     expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
+    expect(screen.getByText("Loading...")).toBeTruthy();
   });
 });
 
-test("it should keep options visible while loading", async () => {
+test("it should use loadingMessage when provided", async () => {
   function Host() {
     const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -138,9 +139,10 @@ test("it should keep options visible while loading", async () => {
         <Listbox
           show
           loading
-          options={options}
+          options={[]}
           anchorEl={anchorRef}
           listboxId="test-listbox"
+          loadingMessage="Fetching..."
         />
       </div>
     );
@@ -149,8 +151,7 @@ test("it should keep options visible while loading", async () => {
   render(<Host />);
 
   await waitFor(() => {
-    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
-    expect(screen.getByText("Apple")).toBeTruthy();
+    expect(screen.getByText("Fetching...")).toBeTruthy();
   });
 });
 

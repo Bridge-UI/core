@@ -101,6 +101,16 @@ export function useListbox(
     return colorClasses.value?.check;
   });
 
+  const contentBind = computed(() => {
+    return mergePartBind(
+      merged.value.customProps?.content,
+      {},
+      cn({
+        relative: true,
+      }),
+    );
+  });
+
   const scrollBind = computed(() => {
     const maxHeightClass = merged.value.maxHeight ?? "max-h-60";
     const disableMaxHeight = merged.value.disableMaxHeight === true;
@@ -124,7 +134,7 @@ export function useListbox(
         "aria-hidden": true,
       },
       cn({
-        "h-0.5 w-full shrink-0 overflow-hidden": true,
+        "pointer-events-none absolute top-0 right-0 left-0 z-10 h-0.5 overflow-hidden": true,
       }),
     );
   });
@@ -135,7 +145,7 @@ export function useListbox(
       {},
       cn({
         "h-full w-1/3 animate-bridge-listbox-indeterminate": true,
-        [colorClasses.value?.progressColor ?? ""]: true,
+        [colorPalette.value?.progressColor ?? ""]: true,
         [mergedClasses.value.loading ?? ""]: true,
       }),
     );
@@ -145,6 +155,7 @@ export function useListbox(
     merged,
     checkClass,
     scrollBind,
+    contentBind,
     loadingBind,
     mergedClasses,
     loadingTrackBind,

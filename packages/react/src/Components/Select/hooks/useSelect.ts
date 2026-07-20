@@ -68,6 +68,7 @@ const selectBridgeKeys = [
   "optionValue",
   "placeholder",
   "emptyMessage",
+  "loadingMessage",
   "disableMaxHeight",
   "hideEmptyMessage",
   "minItemsForSearch",
@@ -859,6 +860,7 @@ export function useSelect(
   );
 
   const emptyMessage = selectMerged.emptyMessage ?? "No options";
+  const loadingMessage = selectMerged.loadingMessage ?? "Loading...";
   const hideEmptyMessage = selectMerged.hideEmptyMessage === true;
 
   return {
@@ -879,6 +881,7 @@ export function useSelect(
     containerRef,
     emptyMessage,
     clearIconSize,
+    loadingMessage,
     visibleOptions,
     isSearchActive,
     selectedOptions,
