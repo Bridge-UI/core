@@ -6,6 +6,7 @@ import { expect, test } from "vitest";
 import { useListbox, type ListboxOwnProps } from "@/Components/Listbox";
 
 const libDefaults = {
+  size: "md",
   color: "primary",
 } as const satisfies Partial<ListboxOwnProps>;
 
@@ -65,4 +66,22 @@ test("it should disable max height when disableMaxHeight is true", () => {
 
   expect(result.current.scrollBind.className).not.toContain("max-h-60");
   expect(result.current.scrollBind.className).not.toContain("overflow-y-auto");
+});
+
+test("it should return default size as md", () => {
+  const { result } = renderUseListbox();
+
+  expect(result.current.merged.size).toBe("md");
+  expect(result.current.sizeClasses?.option).toContain("px-4");
+  expect(result.current.messageBind.className).toContain("text-sm");
+});
+
+test("it should apply size classes when size is overridden", () => {
+  const { result } = renderUseListbox({ size: "xs" });
+
+  expect(result.current.merged.size).toBe("xs");
+  expect(result.current.sizeClasses?.option).toContain("px-3");
+  expect(result.current.sizeClasses?.primary).toContain("text-xs");
+  expect(result.current.messageBind.className).toContain("text-xs");
+  expect(result.current.checkClass).toContain("size-3");
 });

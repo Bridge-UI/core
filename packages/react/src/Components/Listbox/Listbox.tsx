@@ -19,6 +19,7 @@ import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { Menu } from "@/Components/Menu";
 
 const listboxLibDefaults = {
+  size: "md",
   color: "primary",
 } as const;
 
@@ -44,13 +45,18 @@ function Listbox({
   placement = "bottom-start",
   isSelected: isSelectedProp,
   emptyMessage = "No options",
+  loadingMessage = "Loading...",
   ...ownProps
 }: ListboxProps) {
   const {
-    merged,
     checkClass,
     scrollBind,
+    contentBind,
+    messageBind,
+    loadingBind,
+    sizeClasses,
     mergedClasses,
+    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   } = useListbox(
@@ -93,21 +99,28 @@ function Listbox({
     const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
       tabIndex: -1,
       onMouseDown: keepFocusOnCombobox,
+      className: cn(sizeClasses?.option),
     };
 
     if (resolveSelected(option.value)) {
       interactive.className = cn(
+        interactive.className,
         optionSelectedClass,
         mergedClasses.optionSelected,
       );
     } else if (isOptionHighlighted(index)) {
       interactive.className = cn(
+        interactive.className,
         optionHighlightedClass,
         mergedClasses.optionHighlighted,
       );
     }
 
-    return { interactive };
+    return {
+      interactive,
+      primary: { className: sizeClasses?.primary },
+      secondary: { className: sizeClasses?.secondary },
+    };
   }
 
   function handleSelect(option: ListboxOption) {
@@ -126,14 +139,18 @@ function Listbox({
       placement={placement}
       onShowChange={onShowChange}
       disableAutoFocus={disableAutoFocus}
-      customProps={{ content: merged.customProps?.content }}
+      customProps={{ content: contentBind }}
     >
       {slots?.beforeOptions}
 
       {loading ? (
-        <div className="px-4 py-3 text-sm text-gray-500">
-          {slots?.loading ?? <span>Loading...</span>}
-        </div>
+        <>
+          <div {...loadingTrackBind}>
+            <div {...loadingBind} />
+          </div>
+
+          <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
+        </>
       ) : (
         <div {...scrollBind}>
           <List
@@ -161,7 +178,7 @@ function Listbox({
                   slots={{
                     end:
                       showCheckmark && selected ? (
-                        <Check className={cn("size-4", resolvedCheckClass)} />
+                        <Check className={resolvedCheckClass} />
                       ) : undefined,
                   }}
                   customProps={{
@@ -182,7 +199,7 @@ function Listbox({
       )}
 
       {showEmptyState && !slots?.empty ? (
-        <div className="px-4 py-3 text-sm text-gray-500">{emptyMessage}</div>
+        <div {...messageBind}>{emptyMessage}</div>
       ) : null}
 
       {showEmptyState && slots?.empty ? slots.empty : null}

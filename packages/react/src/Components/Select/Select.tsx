@@ -41,6 +41,7 @@ function Select(props: SelectProps) {
     containerRef,
     emptyMessage,
     clearIconSize,
+    loadingMessage,
     visibleOptions,
     selectedOptions,
     highlightedIndex,
@@ -123,7 +124,9 @@ function Select(props: SelectProps) {
         isSelected={isSelected}
         options={visibleOptions}
         emptyMessage={emptyMessage}
+        size={formField.merged.size}
         color={formField.merged.color}
+        loadingMessage={loadingMessage}
         onShowChange={handleOpenChange}
         labelledBy={formField.controlId}
         invalidated={formField.invalidated}

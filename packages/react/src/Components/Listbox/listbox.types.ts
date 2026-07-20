@@ -5,12 +5,14 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 import type {
   ListboxColor,
   ListboxOption,
+  ListboxSize,
   ListboxValue,
   MergeHtmlProps,
   MergeProps,
   PositionPlacement,
 } from "@bridge-ui/core";
 
+export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
 
 export interface ListboxClasses {
@@ -18,6 +20,11 @@ export interface ListboxClasses {
    * Classes merged onto the check icon.
    */
   check?: string;
+
+  /**
+   * Classes merged onto the indeterminate loading progress bar.
+   */
+  loading?: string;
 
   /**
    * Classes merged onto keyboard-highlighted options.
@@ -62,6 +69,11 @@ export interface ListboxCustomProps {
    * Props forwarded to the floating menu panel.
    */
   content?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the indeterminate loading progress bar.
+   */
+  loading?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the scrollable options container.
@@ -153,9 +165,19 @@ export interface ListboxOwnProps {
   listboxId: string;
 
   /**
-   * External loading state.
+   * When `true`, shows an indeterminate progress bar and loading text in the
+   * panel (options are hidden while loading).
+   *
+   * @default false
    */
   loading?: boolean;
+
+  /**
+   * Message shown while `loading` is true (ignored when the `loading` slot is set).
+   *
+   * @default "Loading..."
+   */
+  loadingMessage?: string;
 
   /**
    * Tailwind max-height class for the options scroll area (e.g. `max-h-80`).
@@ -189,6 +211,13 @@ export interface ListboxOwnProps {
    * @default true
    */
   showCheckmark?: boolean;
+
+  /**
+   * Typography and option padding scale, aligned with `FormField` / `Select`.
+   *
+   * @default "md"
+   */
+  size?: MergeProps<ListboxSize, ListboxSizeOverrides>;
 }
 
 export interface ListboxSlots {
@@ -208,7 +237,8 @@ export interface ListboxSlots {
   empty?: ReactNode;
 
   /**
-   * Custom loading content.
+   * Custom loading content. Replaces the default `loadingMessage` when set.
+   * The progress bar still renders above this content.
    */
   loading?: ReactNode;
 

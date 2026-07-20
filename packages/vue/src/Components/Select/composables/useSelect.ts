@@ -70,6 +70,7 @@ const selectBridgeKeys = [
   "placeholder",
   "defaultValue",
   "emptyMessage",
+  "loadingMessage",
   "disableMaxHeight",
   "hideEmptyMessage",
   "minItemsForSearch",
@@ -782,6 +783,9 @@ export function useSelect(
     ),
     hideEmptyMessage: computed(
       () => selectMerged.value.hideEmptyMessage === true,
+    ),
+    loadingMessage: computed(
+      () => selectMerged.value.loadingMessage ?? "Loading...",
     ),
   };
 }

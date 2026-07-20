@@ -105,7 +105,7 @@ test("it should show empty message when there are no options", async () => {
   });
 });
 
-test("it should show loading state", async () => {
+test("it should show loading progress bar and text when loading", async () => {
   function Host() {
     const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -125,7 +125,33 @@ test("it should show loading state", async () => {
   render(<Host />);
 
   await waitFor(() => {
+    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
     expect(screen.getByText("Loading...")).toBeTruthy();
+  });
+});
+
+test("it should use loadingMessage when provided", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          loading
+          options={[]}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+          loadingMessage="Fetching..."
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Fetching...")).toBeTruthy();
   });
 });
 
@@ -183,4 +209,59 @@ test("it should render a scroll container with default max height", async () => 
 
   expect(scrollContainer).not.toBeNull();
   expect(scrollContainer?.classList.contains("max-h-60")).toBe(true);
+});
+
+test("it should apply size classes to options and empty message", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          size="xs"
+          options={[]}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("No options")).toBeTruthy();
+  });
+
+  expect(screen.getByText("No options").className).toContain("text-xs");
+});
+
+test("it should apply size classes to option rows", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          size="xs"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Apple")).toBeTruthy();
+  });
+
+  const option = screen.getByRole("option", { name: "Apple" });
+
+  expect(option.className).toContain("px-3");
+  expect(screen.getByText("Apple").className).toContain("text-xs");
 });

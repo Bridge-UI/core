@@ -12,6 +12,7 @@ import {
 import {
   colorProps,
   invalidatedProps,
+  sizeProps,
 } from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
@@ -27,7 +28,8 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const listboxBridgeKeys = [
+export const listboxBridgeKeys = [
+  "size",
   "color",
   "classes",
   "maxHeight",
@@ -36,7 +38,7 @@ const listboxBridgeKeys = [
   "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
-type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "color">;
+type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "size" | "color">;
 
 type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
 
@@ -86,6 +88,15 @@ export function useListbox(
     return merged.invalidated ? invalidatedPalette : colorPalette;
   });
 
+  const sizeClasses = derived(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeListbox?.customProps?.size,
+    );
+
+    return get(classes, merged.size ?? "md");
+  });
+
   const optionSelectedClass = derived(() => {
     return colorClasses?.selected;
   });
@@ -95,7 +106,17 @@ export function useListbox(
   });
 
   const checkClass = derived(() => {
-    return colorClasses?.check;
+    return cn(sizeClasses?.check, colorClasses?.check);
+  });
+
+  const contentBind = derived(() => {
+    return mergePartBind(
+      merged.customProps?.content,
+      {},
+      cn({
+        relative: true,
+      }),
+    );
   });
 
   const scrollBind = derived(() => {
@@ -113,11 +134,52 @@ export function useListbox(
     );
   });
 
+  const loadingTrackBind = derived(() => {
+    return mergePartBind(
+      {},
+      {
+        role: "progressbar",
+        "aria-hidden": true,
+      },
+      cn({
+        "h-0.5 w-full shrink-0 overflow-hidden": true,
+      }),
+    );
+  });
+
+  const loadingBind = derived(() => {
+    return mergePartBind(
+      merged.customProps?.loading,
+      {},
+      cn({
+        "h-full w-1/3 animate-bridge-listbox-indeterminate": true,
+        [colorPalette?.progressColor ?? ""]: true,
+        [mergedClasses.loading ?? ""]: true,
+      }),
+    );
+  });
+
+  const messageBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-gray-500": true,
+        [sizeClasses?.message ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
+    contentBind,
+    messageBind,
+    loadingBind,
+    sizeClasses,
     mergedClasses,
+    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   };

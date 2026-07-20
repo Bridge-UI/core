@@ -70,7 +70,10 @@ export type { ListPadding } from "@/Components/List";
 export type {
   ListboxColor,
   ListboxColorItem,
+  ListboxInvalidated,
   ListboxOption,
+  ListboxSize,
+  ListboxSizeItem,
   ListboxValue,
 } from "@/Components/Listbox";
 export type { ListItemAlign } from "@/Components/ListItem";

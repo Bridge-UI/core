@@ -13,6 +13,7 @@ import {
 import {
   colorProps,
   invalidatedProps,
+  sizeProps,
 } from "@bridge-ui/core/Components/Listbox";
 
 // ** Local Imports
@@ -27,7 +28,8 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const listboxBridgeKeys = [
+export const listboxBridgeKeys = [
+  "size",
   "color",
   "classes",
   "maxHeight",
@@ -36,7 +38,7 @@ const listboxBridgeKeys = [
   "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
-type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "color">;
+type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "size" | "color">;
 
 type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
 
@@ -89,6 +91,15 @@ export function useListbox(
       : colorPalette.value;
   });
 
+  const sizeClasses = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeListbox.value?.customProps?.size,
+    );
+
+    return get(classes, merged.value.size ?? "md");
+  });
+
   const optionSelectedClass = computed(() => {
     return colorClasses.value?.selected;
   });
@@ -98,7 +109,17 @@ export function useListbox(
   });
 
   const checkClass = computed(() => {
-    return colorClasses.value?.check;
+    return cn(sizeClasses.value?.check, colorClasses.value?.check);
+  });
+
+  const contentBind = computed(() => {
+    return mergePartBind(
+      merged.value.customProps?.content,
+      {},
+      cn({
+        relative: true,
+      }),
+    );
   });
 
   const scrollBind = computed(() => {
@@ -116,11 +137,52 @@ export function useListbox(
     );
   });
 
+  const loadingTrackBind = computed(() => {
+    return mergePartBind(
+      {},
+      {
+        role: "progressbar",
+        "aria-hidden": true,
+      },
+      cn({
+        "h-0.5 w-full shrink-0 overflow-hidden": true,
+      }),
+    );
+  });
+
+  const loadingBind = computed(() => {
+    return mergePartBind(
+      merged.value.customProps?.loading,
+      {},
+      cn({
+        "h-full w-1/3 animate-bridge-listbox-indeterminate": true,
+        [colorPalette.value?.progressColor ?? ""]: true,
+        [mergedClasses.value.loading ?? ""]: true,
+      }),
+    );
+  });
+
+  const messageBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        "text-gray-500": true,
+        [sizeClasses.value?.message ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
+    contentBind,
+    messageBind,
+    loadingBind,
+    sizeClasses,
     mergedClasses,
+    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   };
