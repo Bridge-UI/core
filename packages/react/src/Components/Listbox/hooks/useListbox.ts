@@ -142,7 +142,7 @@ export function useListbox(
         "aria-hidden": true,
       },
       cn({
-        "pointer-events-none absolute top-0 right-0 left-0 z-10 h-0.5 overflow-hidden": true,
+        "h-0.5 w-full shrink-0 overflow-hidden": true,
       }),
     );
   });
