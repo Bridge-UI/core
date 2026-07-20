@@ -105,7 +105,7 @@ test("it should show empty message when there are no options", async () => {
   });
 });
 
-test("it should show loading state", async () => {
+test("it should show loading progress bar when loading", async () => {
   function Host() {
     const anchorRef = useRef<HTMLDivElement>(null);
 
@@ -125,7 +125,32 @@ test("it should show loading state", async () => {
   render(<Host />);
 
   await waitFor(() => {
-    expect(screen.getByText("Loading...")).toBeTruthy();
+    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
+  });
+});
+
+test("it should keep options visible while loading", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          loading
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
+    expect(screen.getByText("Apple")).toBeTruthy();
   });
 });
 

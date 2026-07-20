@@ -20,6 +20,11 @@ export interface ListboxClasses {
   check?: string;
 
   /**
+   * Classes merged onto the indeterminate loading progress bar.
+   */
+  loading?: string;
+
+  /**
    * Classes merged onto keyboard-highlighted options.
    */
   optionHighlighted?: string;
@@ -62,6 +67,11 @@ export interface ListboxCustomProps {
    * Props forwarded to the floating menu panel.
    */
   content?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the indeterminate loading progress bar.
+   */
+  loading?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the scrollable options container.
@@ -153,7 +163,10 @@ export interface ListboxOwnProps {
   listboxId: string;
 
   /**
-   * External loading state.
+   * When `true`, shows an indeterminate progress bar at the top of the panel.
+   * Options remain visible when present (useful for async search).
+   *
+   * @default false
    */
   loading?: boolean;
 
@@ -208,7 +221,7 @@ export interface ListboxSlots {
   empty?: ReactNode;
 
   /**
-   * Custom loading content.
+   * Custom loading content. Replaces the default progress bar when set.
    */
   loading?: ReactNode;
 

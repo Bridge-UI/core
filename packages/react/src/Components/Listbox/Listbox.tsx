@@ -50,7 +50,9 @@ function Listbox({
     merged,
     checkClass,
     scrollBind,
+    loadingBind,
     mergedClasses,
+    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   } = useListbox(
@@ -130,11 +132,16 @@ function Listbox({
     >
       {slots?.beforeOptions}
 
-      {loading ? (
-        <div className="px-4 py-3 text-sm text-gray-500">
-          {slots?.loading ?? <span>Loading...</span>}
-        </div>
-      ) : (
+      {loading &&
+        (slots?.loading ? (
+          <div className="px-4 py-3 text-sm text-gray-500">{slots.loading}</div>
+        ) : (
+          <div {...loadingTrackBind}>
+            <div {...loadingBind} />
+          </div>
+        ))}
+
+      {(!loading || !slots?.loading) && (
         <div {...scrollBind}>
           <List
             dense

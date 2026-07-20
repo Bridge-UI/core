@@ -90,7 +90,7 @@ test("it should render the empty message when there are no options", async () =>
   expect(document.body.textContent).toContain("Nothing here");
 });
 
-test("it should show loading state", async () => {
+test("it should show loading progress bar when loading", async () => {
   mountListbox({
     props: {
       options: [],
@@ -101,7 +101,21 @@ test("it should show loading state", async () => {
 
   await flushPromises();
 
-  expect(document.body.textContent).toContain("Loading...");
+  expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
+});
+
+test("it should keep options visible while loading", async () => {
+  mountListbox({
+    props: {
+      loading: true,
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
+  expect(document.body.textContent).toContain("Active");
 });
 
 test("it should mark selected options with aria-selected on the list item", async () => {

@@ -59,7 +59,7 @@ test("it should show empty message when there are no options", () => {
   cy.contains("Nothing here").should("be.visible");
 });
 
-test("it should show loading state", () => {
+test("it should show loading progress bar when loading", () => {
   const anchor = document.createElement("div");
   document.body.appendChild(anchor);
 
@@ -73,5 +73,5 @@ test("it should show loading state", () => {
     },
   });
 
-  cy.contains("Loading...").should("be.visible");
+  cy.get('[role="progressbar"]').should("be.visible");
 });

@@ -47,7 +47,9 @@ const {
   merged,
   checkClass,
   scrollBind,
+  loadingBind,
   mergedClasses,
+  loadingTrackBind,
   optionSelectedClass,
   optionHighlightedClass,
 } = useListbox(props, {
@@ -125,15 +127,18 @@ function handleSelect(option: ListboxOption) {
       :is="resolveNamedSlot(slots, 'beforeOptions')"
     />
 
-    <div v-if="loading" class="px-4 py-3 text-sm text-gray-500">
-      <component
-        v-if="hasNamedSlot(slots, 'loading')"
-        :is="resolveNamedSlot(slots, 'loading')"
-      />
-      <span v-else>Loading...</span>
+    <div
+      class="px-4 py-3 text-sm text-gray-500"
+      v-if="loading && hasNamedSlot(slots, 'loading')"
+    >
+      <component :is="resolveNamedSlot(slots, 'loading')" />
     </div>
 
-    <div v-else v-bind="scrollBind">
+    <div v-else-if="loading" v-bind="loadingTrackBind">
+      <div v-bind="loadingBind" />
+    </div>
+
+    <div v-bind="scrollBind" v-if="!loading || !hasNamedSlot(slots, 'loading')">
       <List
         dense
         role="listbox"

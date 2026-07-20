@@ -97,6 +97,20 @@
   --color-info-800: var(--color-blue-800);
   --color-info-900: var(--color-blue-900);
   --color-info-950: var(--color-blue-950);
+
+  /* Listbox indeterminate loading bar */
+  --animate-bridge-listbox-indeterminate: bridge-listbox-indeterminate 1.4s
+    ease-in-out infinite;
+}
+
+@keyframes bridge-listbox-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 /**

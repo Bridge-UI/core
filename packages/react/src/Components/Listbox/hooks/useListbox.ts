@@ -113,11 +113,38 @@ export function useListbox(
     );
   });
 
+  const loadingTrackBind = derived(() => {
+    return mergePartBind(
+      {},
+      {
+        role: "progressbar",
+        "aria-hidden": true,
+      },
+      cn({
+        "h-0.5 w-full shrink-0 overflow-hidden": true,
+      }),
+    );
+  });
+
+  const loadingBind = derived(() => {
+    return mergePartBind(
+      merged.customProps?.loading,
+      {},
+      cn({
+        "h-full w-1/3 animate-bridge-listbox-indeterminate": true,
+        [colorClasses?.progressColor ?? ""]: true,
+        [mergedClasses.loading ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
+    loadingBind,
     mergedClasses,
+    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   };

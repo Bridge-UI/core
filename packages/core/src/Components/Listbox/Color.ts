@@ -15,6 +15,11 @@ export interface ListboxColorItem {
   "highlighted": string;
 
   /**
+   * Indeterminate loading progress bar color classes.
+   */
+  "progressColor": string;
+
+  /**
    * Selected option row.
    */
   "selected": string;
@@ -67,6 +72,7 @@ export const colorProps: ListboxColor = {
     "check": "text-dark-600 dark:text-dark-400",
     "value": "text-dark-700 dark:text-dark-200",
     "highlighted": "bg-black/5 dark:bg-white/10",
+    "progressColor": "bg-dark-500 dark:bg-dark-400",
     "selected":
       "bg-dark-50 text-dark-700 dark:bg-dark-900/40 dark:text-dark-200",
     "clear":
@@ -76,6 +82,7 @@ export const colorProps: ListboxColor = {
     "check": "text-info-600 dark:text-info-400",
     "value": "text-info-700 dark:text-info-300",
     "highlighted": "bg-black/5 dark:bg-white/10",
+    "progressColor": "bg-info-500 dark:bg-info-400",
     "selected":
       "bg-info-50 text-info-700 dark:bg-info-950/40 dark:text-info-300",
     "clear":
@@ -85,6 +92,7 @@ export const colorProps: ListboxColor = {
     "highlighted": "bg-black/5 dark:bg-white/10",
     "check": "text-error-600 dark:text-error-400",
     "value": "text-error-700 dark:text-error-300",
+    "progressColor": "bg-error-500 dark:bg-error-400",
     "selected":
       "bg-error-50 text-error-700 dark:bg-error-950/40 dark:text-error-300",
     "clear":
@@ -94,6 +102,7 @@ export const colorProps: ListboxColor = {
     "highlighted": "bg-black/5 dark:bg-white/10",
     "check": "text-primary-600 dark:text-primary-400",
     "value": "text-primary-700 dark:text-primary-300",
+    "progressColor": "bg-primary-500 dark:bg-primary-400",
     "selected":
       "bg-primary-50 text-primary-700 dark:bg-primary-950/40 dark:text-primary-300",
     "clear":
@@ -103,6 +112,7 @@ export const colorProps: ListboxColor = {
     "highlighted": "bg-black/5 dark:bg-white/10",
     "check": "text-success-600 dark:text-success-400",
     "value": "text-success-700 dark:text-success-300",
+    "progressColor": "bg-success-500 dark:bg-success-400",
     "selected":
       "bg-success-50 text-success-700 dark:bg-success-950/40 dark:text-success-300",
     "clear":
@@ -112,6 +122,7 @@ export const colorProps: ListboxColor = {
     "highlighted": "bg-black/5 dark:bg-white/10",
     "check": "text-warning-600 dark:text-warning-400",
     "value": "text-warning-700 dark:text-warning-300",
+    "progressColor": "bg-warning-500 dark:bg-warning-400",
     "selected":
       "bg-warning-50 text-warning-700 dark:bg-warning-950/40 dark:text-warning-300",
     "clear":
@@ -121,6 +132,7 @@ export const colorProps: ListboxColor = {
     "highlighted": "bg-black/5 dark:bg-white/10",
     "check": "text-secondary-600 dark:text-secondary-400",
     "value": "text-secondary-700 dark:text-secondary-300",
+    "progressColor": "bg-secondary-500 dark:bg-secondary-400",
     "selected":
       "bg-secondary-50 text-secondary-700 dark:bg-secondary-950/40 dark:text-secondary-300",
     "clear":
