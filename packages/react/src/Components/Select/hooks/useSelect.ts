@@ -41,6 +41,7 @@ import {
 } from "@/Components/Listbox/hooks/useListboxNavigation";
 import type {
   SelectClasses,
+  SelectCustomProps,
   SelectOption,
   SelectOwnProps,
   SelectProps,
@@ -652,15 +653,18 @@ export function useSelect(
       formFieldCustom.endIcon ??
       (hasNamedSlot(formFieldSlots, "end") ? undefined : ChevronsUpDown);
 
+    const { listbox: _listbox, ...formFieldOnlyCustom } =
+      (formFieldCustom.customProps ?? {}) as SelectCustomProps;
+
     return {
       ...formFieldCustom,
       endIcon,
       slots: formFieldSlots,
       classes: mergedClasses,
       customProps: {
-        ...formFieldCustom.customProps,
+        ...formFieldOnlyCustom,
         container: mergePartBind(
-          formFieldCustom.customProps?.container,
+          formFieldOnlyCustom.container,
           {},
           {
             ref: handleContainerRef,
@@ -863,6 +867,45 @@ export function useSelect(
   const loadingMessage = selectMerged.loadingMessage ?? "Loading...";
   const hideEmptyMessage = selectMerged.hideEmptyMessage === true;
 
+  const listboxProps = useMemo(() => {
+    return {
+      emptyMessage,
+      loadingMessage,
+      hideEmptyMessage,
+      disableAutoFocus: true,
+      maxHeight: props.maxHeight,
+      size: formField.merged.size,
+      color: formField.merged.color,
+      disableMaxHeight: props.disableMaxHeight === true,
+      ...props.customProps?.listbox,
+      multiple,
+      listboxId,
+      isSelected,
+      highlightedIndex,
+      loading: isLoading,
+      options: visibleOptions,
+      labelledBy: formField.controlId,
+      invalidated: formField.invalidated,
+    };
+  }, [
+    multiple,
+    listboxId,
+    isLoading,
+    isSelected,
+    emptyMessage,
+    props.maxHeight,
+    loadingMessage,
+    visibleOptions,
+    hideEmptyMessage,
+    highlightedIndex,
+    formField.controlId,
+    formField.merged.size,
+    formField.invalidated,
+    formField.merged.color,
+    props.disableMaxHeight,
+    props.customProps?.listbox,
+  ]);
+
   return {
     open,
     slots,
@@ -879,8 +922,10 @@ export function useSelect(
     triggerBind,
     selectOption,
     containerRef,
+    listboxProps,
     emptyMessage,
     clearIconSize,
+    mergedClasses,
     loadingMessage,
     visibleOptions,
     isSearchActive,

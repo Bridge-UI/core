@@ -68,6 +68,16 @@ export type {
   CheckboxSizeOverrides,
   CheckboxSlots,
 } from "@/Components/Checkbox";
+export { Chip, useChip } from "@/Components/Chip";
+export type {
+  ChipClasses,
+  ChipCustomProps,
+  ChipEmits,
+  ChipOwnProps,
+  ChipProps,
+  ChipSizeOverrides,
+  ChipSlots,
+} from "@/Components/Chip";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,

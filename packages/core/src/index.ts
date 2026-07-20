@@ -46,6 +46,7 @@ export type {
   CheckboxRounded,
   CheckboxSize,
 } from "@/Components/Checkbox";
+export type { ChipSize, ChipSizeItem } from "@/Components/Chip";
 export type { FormControlInvalidated } from "@/Components/FormControl";
 export type {
   FormFieldColor,
@@ -134,6 +135,7 @@ export type {
   ButtonConfigOverrides,
   CardConfigOverrides,
   CheckboxConfigOverrides,
+  ChipConfigOverrides,
   Direction,
   FormControlConfigOverrides,
   FormFieldConfigOverrides,
