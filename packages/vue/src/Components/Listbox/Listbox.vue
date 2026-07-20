@@ -157,6 +157,7 @@ function handleSelect(option: ListboxOption) {
           v-if="hasNamedSlot(slots, 'loading')"
           :is="resolveNamedSlot(slots, 'loading')"
         />
+
         <span v-else>{{ loadingMessage }}</span>
       </div>
     </template>

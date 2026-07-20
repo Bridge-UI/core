@@ -58,6 +58,7 @@ const hasContent = computed(() => {
         v-if="hasNamedSlot(slots, 'default')"
         :is="resolveNamedSlot(slots, 'default')"
       />
+
       <template v-else>{{ label }}</template>
     </span>
 
