@@ -193,3 +193,21 @@ test("it should not set aria-describedby when error is true without errorMessage
 
   expect(inputBind.value["aria-describedby"]).toBeUndefined();
 });
+
+test("it should show loading when loading prop is true", () => {
+  const { inputBind, showLoading, loadingBind, containerBind } =
+    mountUseFormField({ loading: true });
+
+  expect(showLoading.value).toBe(true);
+  expect(inputBind.value["aria-busy"]).toBe(true);
+  expect(loadingBind.value.role).toBe("progressbar");
+  expect(loadingBind.value.class).toContain("animate-pulse");
+  expect(containerBind.value.class).toContain("overflow-hidden");
+});
+
+test("it should not show loading when loading prop is omitted", () => {
+  const { inputBind, showLoading } = mountUseFormField();
+
+  expect(showLoading.value).toBe(false);
+  expect(inputBind.value["aria-busy"]).toBeUndefined();
+});

@@ -120,6 +120,8 @@ defineProps<{
       <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
         <component :is="resolveNamedSlot(api.slots, 'end')" />
       </div>
+
+      <div v-if="api.showLoading.value" v-bind="api.loadingBind.value" />
     </div>
 
     <p

@@ -28,6 +28,14 @@ test("it should merge default form field size and variant", () => {
   expect(result.current.formField.merged.color).toBe("primary");
 });
 
+test("it should forward loading to FormField when loading is true", () => {
+  const { result } = renderUseSelect({ options, loading: true });
+
+  expect(result.current.isLoading).toBe(true);
+  expect(result.current.formField.merged.loading).toBe(true);
+  expect(result.current.formField.showLoading).toBe(true);
+});
+
 test("it should expose combobox semantics on trigger bind", () => {
   const { result } = renderUseSelect({ options, "aria-label": "Fruit" });
 

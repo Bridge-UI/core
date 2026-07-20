@@ -314,6 +314,7 @@ export function useSelect(
     return {
       ...formFieldCustom,
       endIcon,
+      loading: isLoading.value,
       classes: mergedClasses.value,
       customProps: {
         ...formFieldCustom.customProps,

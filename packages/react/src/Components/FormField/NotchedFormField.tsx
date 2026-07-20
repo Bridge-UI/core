@@ -93,6 +93,8 @@ function NotchedFormField({ api, children }: NotchedFormFieldProps) {
             )
           )}
         </div>
+
+        {api.showLoading && <div {...api.loadingBind} />}
       </div>
 
       {!api.invalidated &&

@@ -60,6 +60,20 @@ test("it should render a combobox trigger with FormField chrome", () => {
   );
 });
 
+test("it should show FormField loading bar when loading is true", () => {
+  const wrapper = mountSelect({
+    props: {
+      loading: true,
+      modelValue: undefined,
+    },
+  });
+
+  expect(wrapper.find('[role="progressbar"]').exists()).toBe(true);
+  expect(wrapper.find('[role="combobox"]').attributes("aria-busy")).toBe(
+    "true",
+  );
+});
+
 test("it should open the menu when the combobox is clicked", async () => {
   mountSelect({
     props: {

@@ -119,6 +119,8 @@ defineProps<{
           />
         </div>
       </div>
+
+      <div v-if="api.showLoading.value" v-bind="api.loadingBind.value" />
     </div>
 
     <p

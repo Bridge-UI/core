@@ -63,6 +63,11 @@ export interface FormFieldClasses {
   label?: string;
 
   /**
+   * Classes merged onto the loading progress bar.
+   */
+  loading?: string;
+
+  /**
    * Classes merged onto the required asterisk.
    */
   required?: string;
@@ -130,6 +135,11 @@ export interface FormFieldCustomProps {
    * Props forwarded to the primary label element.
    */
   label?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the loading progress bar.
+   */
+  loading?: HTMLAttributes;
 
   /**
    * Props forwarded to the root wrapper.
@@ -248,6 +258,14 @@ export interface FormFieldOwnProps {
    * @default undefined
    */
   label?: string;
+
+  /**
+   * When `true`, shows a thin indeterminate progress bar at the bottom of the
+   * input container.
+   *
+   * @default false
+   */
+  loading?: boolean;
 
   /**
    * Whether the control is read-only.

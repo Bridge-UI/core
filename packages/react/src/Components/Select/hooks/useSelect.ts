@@ -654,6 +654,7 @@ export function useSelect(
     return {
       ...formFieldCustom,
       endIcon,
+      loading: isLoading,
       slots: formFieldSlots,
       classes: mergedClasses,
       customProps: {
@@ -673,6 +674,7 @@ export function useSelect(
       },
     };
   }, [
+    isLoading,
     mergedClasses,
     formFieldSlots,
     props.disabled,

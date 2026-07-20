@@ -72,6 +72,49 @@ test("it should hide description when field is invalid", () => {
   expect(screen.queryByText("Helper text")).toBeNull();
 });
 
+test("it should render a loading progress bar when loading is true", () => {
+  const { container } = render(<FormFieldHarness loading />);
+
+  expect(container.querySelector('[role="progressbar"]')).not.toBeNull();
+});
+
+test("it should not render a loading progress bar when loading is false", () => {
+  const { container } = render(<FormFieldHarness />);
+
+  expect(container.querySelector('[role="progressbar"]')).toBeNull();
+});
+
+test("it should set aria-busy on the input when loading is true", () => {
+  render(<FormFieldHarness loading />);
+
+  expect(screen.getByRole("textbox").getAttribute("aria-busy")).toBe("true");
+});
+
+test("it should forward customProps to the loading progress bar", () => {
+  render(
+    <FormFieldHarness
+      loading
+      customProps={{
+        loading: { "data-testid": "field-loading" },
+      }}
+    />,
+  );
+
+  expect(screen.getByTestId("field-loading")).toBeTruthy();
+});
+
+test("it should merge classes.loading onto the progress bar", () => {
+  const { container } = render(
+    <FormFieldHarness loading classes={{ loading: "custom-loading-class" }} />,
+  );
+
+  expect(
+    container
+      .querySelector('[role="progressbar"]')
+      ?.classList.contains("custom-loading-class"),
+  ).toBe(true);
+});
+
 test("it should render error message when errorMessage prop is provided", () => {
   render(<FormFieldHarness error errorMessage="Required" />);
 

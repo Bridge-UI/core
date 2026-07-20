@@ -92,6 +92,8 @@ function OutlinedFormField({ api, children }: OutlinedFormFieldProps) {
             </div>
           )
         )}
+
+        {api.showLoading && <div {...api.loadingBind} />}
       </div>
 
       {!api.invalidated &&

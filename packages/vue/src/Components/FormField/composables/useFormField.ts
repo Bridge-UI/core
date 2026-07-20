@@ -75,6 +75,7 @@ export const formFieldBridgeKeys = [
   "corner",
   "classes",
   "endIcon",
+  "loading",
   "rounded",
   "variant",
   "disabled",
@@ -194,6 +195,10 @@ export function useFormField(
       invalidated.value &&
       hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
     );
+  });
+
+  const showLoading = computed(() => {
+    return Boolean(merged.value.loading);
   });
 
   const hasInsetLabelRow = computed(() => {
@@ -382,6 +387,7 @@ export function useFormField(
         disabled: isDisabled.value,
         readonly: isReadonly.value,
         "aria-describedby": ariaDescribedBy.value,
+        "aria-busy": showLoading.value || undefined,
         "aria-invalid": invalidated.value || undefined,
       },
       omit(split.value.inheritedAttrs, ["class"]),
@@ -544,6 +550,7 @@ export function useFormField(
           isStacked.value,
         "group/field relative flex justify-start gap-x-2 items-stretch":
           !isStacked.value,
+        "overflow-hidden": showLoading.value && !isStacked.value,
         "transition-all ease-in-out duration-150 outline-none": true,
         "bg-gray-100 dark:bg-gray-800": isDisabled.value && !invalidated.value,
         [sizeClasses.value?.container ?? ""]: !isTextareaControl.value,
@@ -601,6 +608,21 @@ export function useFormField(
     );
   });
 
+  const loadingBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.loading,
+      {
+        role: "progressbar",
+        "aria-hidden": true,
+      },
+      cn({
+        "absolute bottom-0 left-0 h-0.5 w-full pointer-events-none animate-pulse": true,
+        [colorPalette.value?.progressColor ?? ""]: true,
+        [mergedClasses.value.loading ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     slots,
     merged,
@@ -623,6 +645,8 @@ export function useFormField(
     endIconBind,
     endSlotBind,
     invalidated,
+    loadingBind,
+    showLoading,
     requiredBind,
     containerBind,
     startIconBind,

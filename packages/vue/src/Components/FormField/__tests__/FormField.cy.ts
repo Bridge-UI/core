@@ -26,6 +26,7 @@ const FieldHarness = defineComponent({
     label: String,
     error: Boolean,
     variant: String,
+    loading: Boolean,
     disabled: Boolean,
     readonly: Boolean,
     description: String,
@@ -53,6 +54,13 @@ test("it should render description when description prop is provided", () => {
   cy.mount(FieldHarness, { props: { description: "Helper text" } });
 
   cy.contains("Helper text").should("be.visible");
+});
+
+test("it should render a loading progress bar when loading is true", () => {
+  cy.mount(FieldHarness, { props: { loading: true } });
+
+  cy.get('[role="progressbar"]').should("be.visible");
+  cy.get("input").should("have.attr", "aria-busy", "true");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

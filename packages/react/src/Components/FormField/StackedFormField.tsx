@@ -101,6 +101,8 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
         {hasNamedSlot(api.slots, "end") && (
           <div {...api.endSlotBind}>{api.slots?.end}</div>
         )}
+
+        {api.showLoading && <div {...api.loadingBind} />}
       </div>
 
       {!api.invalidated &&

@@ -92,6 +92,8 @@ function FilledFormField({ api, children }: FilledFormFieldProps) {
             </div>
           )
         )}
+
+        {api.showLoading && <div {...api.loadingBind} />}
       </div>
 
       {!api.invalidated &&

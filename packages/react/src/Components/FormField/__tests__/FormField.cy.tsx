@@ -13,6 +13,7 @@ function FieldHarness({
   id,
   error,
   label,
+  loading,
   variant,
   disabled,
   readonly,
@@ -25,6 +26,7 @@ function FieldHarness({
   errorMessage?: string;
   id?: string;
   label?: string;
+  loading?: boolean;
   readonly?: boolean;
   variant?: "filled" | "notched" | "outline" | "stacked" | "underlined";
 }) {
@@ -33,6 +35,7 @@ function FieldHarness({
       id,
       error,
       label,
+      loading,
       variant,
       disabled,
       readonly,
@@ -67,6 +70,13 @@ test("it should render description when description prop is provided", () => {
   cy.mount(<FieldHarness description="Helper text" />);
 
   cy.contains("Helper text").should("be.visible");
+});
+
+test("it should render a loading progress bar when loading is true", () => {
+  cy.mount(<FieldHarness loading />);
+
+  cy.get('[role="progressbar"]').should("be.visible");
+  cy.get("input").should("have.attr", "aria-busy", "true");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

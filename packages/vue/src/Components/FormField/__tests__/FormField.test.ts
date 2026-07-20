@@ -91,6 +91,46 @@ test("it should hide description when field is invalid", () => {
   expect(wrapper.text()).not.toContain("Helper text");
 });
 
+test("it should render a loading progress bar when loading is true", () => {
+  const wrapper = mountFormField({ loading: true });
+
+  expect(wrapper.find('[role="progressbar"]').exists()).toBe(true);
+});
+
+test("it should not render a loading progress bar when loading is false", () => {
+  const wrapper = mountFormField();
+
+  expect(wrapper.find('[role="progressbar"]').exists()).toBe(false);
+});
+
+test("it should set aria-busy on the input when loading is true", () => {
+  const wrapper = mountFormField({ loading: true });
+
+  expect(wrapper.find("input").attributes("aria-busy")).toBe("true");
+});
+
+test("it should forward customProps to the loading progress bar", () => {
+  const wrapper = mountFormField({
+    loading: true,
+    customProps: {
+      loading: { "data-testid": "field-loading" },
+    },
+  });
+
+  expect(wrapper.find('[data-testid="field-loading"]').exists()).toBe(true);
+});
+
+test("it should merge classes.loading onto the progress bar", () => {
+  const wrapper = mountFormField({
+    loading: true,
+    classes: { loading: "custom-loading-class" },
+  });
+
+  expect(wrapper.find('[role="progressbar"]').classes()).toContain(
+    "custom-loading-class",
+  );
+});
+
 test("it should render error message when errorMessage prop is provided", () => {
   const wrapper = mountFormField({
     error: true,

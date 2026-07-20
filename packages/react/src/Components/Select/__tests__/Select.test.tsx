@@ -46,6 +46,15 @@ test("it should render the combobox trigger", () => {
   expect(screen.getByRole("combobox")).toBeTruthy();
 });
 
+test("it should show FormField loading bar when loading is true", () => {
+  const { container } = render(
+    <Select loading options={options} aria-label="Fruit" />,
+  );
+
+  expect(container.querySelector('[role="progressbar"]')).not.toBeNull();
+  expect(screen.getByRole("combobox").getAttribute("aria-busy")).toBe("true");
+});
+
 test("it should render a label when label prop is provided", () => {
   render(<Select label="Fruit" options={options} />);
 

@@ -109,6 +109,8 @@ defineProps<{
           :icon="api.merged.value.endIcon"
         />
       </div>
+
+      <div v-if="api.showLoading.value" v-bind="api.loadingBind.value" />
     </div>
 
     <p

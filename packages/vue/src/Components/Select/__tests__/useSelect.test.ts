@@ -51,6 +51,14 @@ test("it should merge default form field size and variant", () => {
   expect(result.formField.merged.value.color).toBe("primary");
 });
 
+test("it should forward loading to FormField when loading is true", () => {
+  const { result } = mountUseSelect({ loading: true });
+
+  expect(result.isLoading.value).toBe(true);
+  expect(result.formField.merged.value.loading).toBe(true);
+  expect(result.formField.showLoading.value).toBe(true);
+});
+
 test("it should expose combobox semantics on trigger bind", () => {
   const { result } = mountUseSelect();
 

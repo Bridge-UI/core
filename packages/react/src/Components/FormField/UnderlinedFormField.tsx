@@ -92,6 +92,8 @@ function UnderlinedFormField({ api, children }: UnderlinedFormFieldProps) {
             </div>
           )
         )}
+
+        {api.showLoading && <div {...api.loadingBind} />}
       </div>
 
       {!api.invalidated &&
