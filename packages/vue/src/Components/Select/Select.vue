@@ -84,7 +84,7 @@ const {
   <FormField :field="formField">
     <div
       v-if="multiple"
-      class="flex min-w-0 flex-1 flex-wrap items-center gap-1"
+      class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
     >
       <Chip
         dismissible

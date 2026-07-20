@@ -17,7 +17,7 @@ test("it should return default size as md", () => {
   const { result } = renderUseChip();
 
   expect(result.current.merged.size).toBe("md");
-  expect(result.current.rootBind.className).toContain("px-2");
+  expect(result.current.rootBind.className).toContain("px-1.5");
 });
 
 test("it should apply size classes when size is overridden", () => {

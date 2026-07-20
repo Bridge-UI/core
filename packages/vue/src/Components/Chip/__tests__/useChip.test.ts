@@ -30,7 +30,7 @@ test("it should return default size as md", () => {
   const { merged, rootBind } = mountUseChip();
 
   expect(merged.value.size).toBe("md");
-  expect(rootBind.value.class).toContain("px-2");
+  expect(rootBind.value.class).toContain("px-1.5");
 });
 
 test("it should apply size classes when size is overridden", () => {

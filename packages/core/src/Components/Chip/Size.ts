@@ -62,36 +62,36 @@ export const sizeProps: ChipSize = {
   "xs": {
     "clear": "xs",
     "label": "text-xs",
-    "root": "gap-0.5 rounded px-1.5 py-0",
+    "root": "gap-0.5 rounded px-1 py-0",
   },
   "2xs": {
     "clear": "2xs",
     "label": "text-2xs",
     "root": "gap-0.5 rounded px-1 py-0",
   },
-  "md": {
-    "clear": "md",
-    "label": "text-sm",
-    "root": "gap-1 rounded-md px-2 py-0.5",
+  "xl": {
+    "clear": "lg",
+    "label": "text-base",
+    "root": "gap-1 rounded-md px-2 py-1",
   },
   "2xl": {
     "clear": "lg",
     "label": "text-lg",
-    "root": "gap-1.5 rounded-md px-3 py-1",
+    "root": "gap-1 rounded-md px-2.5 py-1",
   },
   "lg": {
     "clear": "md",
     "label": "text-sm",
-    "root": "gap-1 rounded-md px-2.5 py-0.5",
-  },
-  "xl": {
-    "clear": "lg",
-    "label": "text-base",
-    "root": "gap-1 rounded-md px-2.5 py-1",
+    "root": "gap-0.5 rounded-md px-2 py-0.5",
   },
   "sm": {
     "clear": "sm",
     "label": "text-xs",
+    "root": "gap-0.5 rounded-md px-1.5 py-0.5",
+  },
+  "md": {
+    "clear": "md",
+    "label": "text-sm",
     "root": "gap-0.5 rounded-md px-1.5 py-0.5",
   },
 };
