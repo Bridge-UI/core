@@ -4,6 +4,7 @@ import { X } from "@lucide/vue";
 import { provide, ref, useTemplateRef } from "vue";
 
 // ** Local Imports
+import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
@@ -64,24 +65,18 @@ const {
   slots,
   hasValue,
   multiple,
-  listboxId,
   formField,
-  isLoading,
   clearable,
   clearBind,
-  isSelected,
   clearValue,
   removeChip,
   triggerBind,
   selectOption,
   containerRef,
-  emptyMessage,
+  listboxProps,
   clearIconSize,
-  loadingMessage,
-  visibleOptions,
+  mergedClasses,
   selectedOptions,
-  highlightedIndex,
-  hideEmptyMessage,
 } = useSelect(props, model, triggerRef, emit, declarativeOptions);
 </script>
 
@@ -89,27 +84,23 @@ const {
   <FormField :field="formField">
     <div
       v-if="multiple"
-      class="flex min-w-0 flex-1 flex-wrap items-center gap-1"
+      class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
     >
-      <span
+      <Chip
+        dismissible
         :key="String(option.value)"
         v-for="option in selectedOptions"
-        class="inline-flex max-w-full items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-100"
+        :size="formField.merged.value.size"
+        :custom-props="{ clear: clearBind }"
+        :disabled="formField.isDisabled.value"
+        :clear-label="`Remove ${option.label}`"
+        :classes="{ root: mergedClasses.chip }"
+        v-on:dismiss="removeChip(option, $event)"
       >
         <slot name="chip" :option="option">
-          <span class="truncate">{{ option.label }}</span>
+          {{ option.label }}
         </slot>
-
-        <span
-          v-bind="clearBind"
-          :aria-label="`Remove ${option.label}`"
-          v-on:click="removeChip(option, $event)"
-          v-on:keydown.enter.prevent="removeChip(option, $event)"
-          v-on:keydown.space.prevent="removeChip(option, $event)"
-        >
-          <Icon :icon="X" :size="clearIconSize" />
-        </span>
-      </span>
+      </Chip>
 
       <textarea ref="trigger" v-bind="triggerBind" />
     </div>
@@ -131,25 +122,10 @@ const {
   </FormField>
 
   <Listbox
+    v-bind="listboxProps"
     v-model="open"
-    :loading="isLoading"
-    :multiple="multiple"
-    :listbox-id="listboxId"
     :anchor-el="containerRef"
-    :options="visibleOptions"
-    :is-selected="isSelected"
     v-on:select="selectOption"
-    :disable-auto-focus="true"
-    :empty-message="emptyMessage"
-    :max-height="props.maxHeight"
-    :loading-message="loadingMessage"
-    :size="formField.merged.value.size"
-    :color="formField.merged.value.color"
-    :highlighted-index="highlightedIndex"
-    :hide-empty-message="hideEmptyMessage"
-    :labelled-by="formField.controlId.value"
-    :invalidated="formField.invalidated.value"
-    :disable-max-height="props.disableMaxHeight"
   >
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
       <component :is="resolveNamedSlot(slots, 'beforeOptions')" />

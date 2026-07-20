@@ -42,6 +42,7 @@ import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 import type {
   SelectClasses,
+  SelectCustomProps,
   SelectEmits,
   SelectOption,
   SelectOwnProps,
@@ -312,14 +313,17 @@ export function useSelect(
       formFieldCustom.endIcon ??
       (hasNamedSlot(slots, "end") ? undefined : ChevronsUpDown);
 
+    const { listbox: _listbox, ...formFieldOnlyCustom } =
+      (formFieldCustom.customProps ?? {}) as SelectCustomProps;
+
     return {
       ...formFieldCustom,
       endIcon,
       classes: mergedClasses.value,
       customProps: {
-        ...formFieldCustom.customProps,
+        ...formFieldOnlyCustom,
         container: mergePartBind(
-          formFieldCustom.customProps?.container,
+          formFieldOnlyCustom.container,
           {},
           {
             ref: handleContainerRef,
@@ -332,6 +336,10 @@ export function useSelect(
         ),
       },
     };
+  });
+
+  const listboxCustomProps = computed(() => {
+    return props.customProps?.listbox;
   });
 
   const formField = useFormField(
@@ -757,6 +765,28 @@ export function useSelect(
     );
   });
 
+  const listboxProps = computed(() => {
+    return {
+      disableAutoFocus: true,
+      maxHeight: props.maxHeight,
+      size: formField.merged.value.size,
+      color: formField.merged.value.color,
+      disableMaxHeight: props.disableMaxHeight === true,
+      emptyMessage: selectMerged.value.emptyMessage ?? "No options",
+      hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
+      loadingMessage: selectMerged.value.loadingMessage ?? "Loading...",
+      ...listboxCustomProps.value,
+      listboxId,
+      isSelected,
+      loading: isLoading.value,
+      multiple: multiple.value,
+      options: visibleOptions.value,
+      labelledBy: formField.controlId.value,
+      highlightedIndex: highlightedIndex.value,
+      invalidated: formField.invalidated.value,
+    };
+  });
+
   return {
     open,
     slots,
@@ -773,19 +803,21 @@ export function useSelect(
     triggerBind,
     selectOption,
     containerRef,
+    listboxProps,
     clearIconSize,
+    mergedClasses,
     visibleOptions,
     isSearchActive,
     selectedOptions,
     highlightedIndex,
-    emptyMessage: computed(
-      () => selectMerged.value.emptyMessage ?? "No options",
-    ),
-    hideEmptyMessage: computed(
-      () => selectMerged.value.hideEmptyMessage === true,
-    ),
-    loadingMessage: computed(
-      () => selectMerged.value.loadingMessage ?? "Loading...",
-    ),
+    emptyMessage: computed(() => {
+      return selectMerged.value.emptyMessage ?? "No options";
+    }),
+    hideEmptyMessage: computed(() => {
+      return selectMerged.value.hideEmptyMessage === true;
+    }),
+    loadingMessage: computed(() => {
+      return selectMerged.value.loadingMessage ?? "Loading...";
+    }),
   };
 }

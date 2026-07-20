@@ -4,6 +4,7 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useRef } from "react";
 
 // ** Local Imports
+import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
@@ -15,7 +16,11 @@ function Select(props: SelectProps) {
     null,
   );
 
-  const { maxHeight, disableMaxHeight, ...selectProps } = props;
+  const {
+    maxHeight: _maxHeight,
+    disableMaxHeight: _disableMaxHeight,
+    ...selectProps
+  } = props;
 
   const setTriggerRef = (
     element: null | HTMLInputElement | HTMLTextAreaElement,
@@ -28,24 +33,18 @@ function Select(props: SelectProps) {
     slots,
     hasValue,
     multiple,
-    listboxId,
     formField,
-    isLoading,
     clearable,
     clearBind,
-    isSelected,
     clearValue,
     removeChip,
     triggerBind,
     selectOption,
     containerRef,
-    emptyMessage,
+    listboxProps,
     clearIconSize,
-    loadingMessage,
-    visibleOptions,
+    mergedClasses,
     selectedOptions,
-    highlightedIndex,
-    hideEmptyMessage,
     handleOpenChange,
   } = useSelect(selectProps, triggerRef);
 
@@ -53,32 +52,20 @@ function Select(props: SelectProps) {
     <>
       <FormField field={formField}>
         {multiple ? (
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5">
             {selectedOptions.map((option) => (
-              <span
+              <Chip
+                dismissible
                 key={String(option.value)}
-                className="inline-flex max-w-full items-center gap-1 rounded-md bg-gray-100 px-2 py-0.5 text-sm text-gray-800 dark:bg-gray-700 dark:text-gray-100"
+                size={formField.merged.size}
+                disabled={formField.isDisabled}
+                customProps={{ clear: clearBind }}
+                clearLabel={`Remove ${option.label}`}
+                classes={{ root: mergedClasses.chip }}
+                onDismiss={(event) => removeChip(option, event)}
               >
-                {slots?.chip ? (
-                  slots.chip({ option })
-                ) : (
-                  <span className="truncate">{option.label}</span>
-                )}
-
-                <span
-                  {...clearBind}
-                  aria-label={`Remove ${option.label}`}
-                  onClick={(event) => removeChip(option, event)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      removeChip(option, event);
-                    }
-                  }}
-                >
-                  <Icon icon={X} size={clearIconSize} />
-                </span>
-              </span>
+                {slots?.chip ? slots.chip({ option }) : option.label}
+              </Chip>
             ))}
 
             <textarea
@@ -113,26 +100,11 @@ function Select(props: SelectProps) {
       </FormField>
 
       <Listbox
+        {...listboxProps}
         show={open}
-        disableAutoFocus
-        loading={isLoading}
-        multiple={multiple}
-        listboxId={listboxId}
-        maxHeight={maxHeight}
         anchorEl={containerRef}
         onSelect={selectOption}
-        isSelected={isSelected}
-        options={visibleOptions}
-        emptyMessage={emptyMessage}
-        size={formField.merged.size}
-        color={formField.merged.color}
-        loadingMessage={loadingMessage}
         onShowChange={handleOpenChange}
-        labelledBy={formField.controlId}
-        invalidated={formField.invalidated}
-        disableMaxHeight={disableMaxHeight}
-        highlightedIndex={highlightedIndex}
-        hideEmptyMessage={hideEmptyMessage}
         slots={{
           empty: slots?.empty,
           option: slots?.option,

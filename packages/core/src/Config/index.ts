@@ -21,6 +21,8 @@ export type {
   CardConfigOverrides,
   CheckboxConfigBase,
   CheckboxConfigOverrides,
+  ChipConfigBase,
+  ChipConfigOverrides,
   Direction,
   FormControlConfigBase,
   FormControlConfigOverrides,

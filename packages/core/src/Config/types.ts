@@ -46,6 +46,7 @@ import type {
   CheckboxRounded,
   CheckboxSize,
 } from "@/Components/Checkbox";
+import type { ChipSize, ChipSizeItem } from "@/Components/Chip";
 import type { FormControlInvalidated } from "@/Components/FormControl";
 import type {
   FormFieldColor,
@@ -124,6 +125,7 @@ export interface BadgeConfigOverrides {}
 export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
+export interface ChipConfigOverrides {}
 export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
@@ -235,6 +237,16 @@ export interface CheckboxConfigBase {
     color: keyof CheckboxColor;
     rounded: keyof CheckboxRounded;
     size: keyof CheckboxSize;
+  }>;
+}
+
+export interface ChipConfigBase {
+  classes: object;
+  customProps: Partial<{
+    size: Record<string, ChipSizeItem>;
+  }>;
+  defaultProps: Partial<{
+    size: keyof ChipSize;
   }>;
 }
 
@@ -453,6 +465,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
+  Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
   FormControl: Partial<
     Overwrite<FormControlConfigBase, FormControlConfigOverrides>
   >;

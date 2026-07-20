@@ -17,6 +17,7 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { ListboxOwnProps } from "@/Components/Listbox/listbox.types";
 
 export type {
   SelectAsyncData,
@@ -91,7 +92,20 @@ export interface SelectClasses extends FormFieldClasses {
   value?: string;
 }
 
-export interface SelectCustomProps extends FormFieldCustomProps {}
+export interface SelectCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the internal `Listbox`.
+   * Open state, options, and selection handlers stay owned by `Select`.
+   *
+   * @default undefined
+   */
+  listbox?: Partial<
+    Omit<
+      ListboxOwnProps,
+      "options" | "anchorEl" | "listboxId" | "isSelected" | "highlightedIndex"
+    >
+  >;
+}
 
 export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
@@ -105,6 +119,13 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default true
    */
   clearable?: boolean;
+
+  /**
+   * Extra props for FormField parts and the internal `Listbox`.
+   *
+   * @default undefined
+   */
+  customProps?: SelectCustomProps;
 
   /**
    * Initial value when uncontrolled.
