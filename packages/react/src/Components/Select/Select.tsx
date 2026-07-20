@@ -124,6 +124,7 @@ function Select(props: SelectProps) {
         isSelected={isSelected}
         options={visibleOptions}
         emptyMessage={emptyMessage}
+        size={formField.merged.size}
         color={formField.merged.color}
         loadingMessage={loadingMessage}
         onShowChange={handleOpenChange}

@@ -19,6 +19,7 @@ import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { Menu } from "@/Components/Menu";
 
 const listboxLibDefaults = {
+  size: "md",
   color: "primary",
 } as const;
 
@@ -51,7 +52,9 @@ function Listbox({
     checkClass,
     scrollBind,
     contentBind,
+    messageBind,
     loadingBind,
+    sizeClasses,
     mergedClasses,
     loadingTrackBind,
     optionSelectedClass,
@@ -96,21 +99,28 @@ function Listbox({
     const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
       tabIndex: -1,
       onMouseDown: keepFocusOnCombobox,
+      className: cn(sizeClasses?.option),
     };
 
     if (resolveSelected(option.value)) {
       interactive.className = cn(
+        interactive.className,
         optionSelectedClass,
         mergedClasses.optionSelected,
       );
     } else if (isOptionHighlighted(index)) {
       interactive.className = cn(
+        interactive.className,
         optionHighlightedClass,
         mergedClasses.optionHighlighted,
       );
     }
 
-    return { interactive };
+    return {
+      interactive,
+      primary: { className: sizeClasses?.primary },
+      secondary: { className: sizeClasses?.secondary },
+    };
   }
 
   function handleSelect(option: ListboxOption) {
@@ -139,9 +149,7 @@ function Listbox({
             <div {...loadingBind} />
           </div>
 
-          <div className="px-4 py-3 text-sm text-gray-500">
-            {slots?.loading ?? loadingMessage}
-          </div>
+          <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
         </>
       ) : (
         <div {...scrollBind}>
@@ -170,7 +178,7 @@ function Listbox({
                   slots={{
                     end:
                       showCheckmark && selected ? (
-                        <Check className={cn("size-4", resolvedCheckClass)} />
+                        <Check className={resolvedCheckClass} />
                       ) : undefined,
                   }}
                   customProps={{
@@ -191,7 +199,7 @@ function Listbox({
       )}
 
       {showEmptyState && !slots?.empty ? (
-        <div className="px-4 py-3 text-sm text-gray-500">{emptyMessage}</div>
+        <div {...messageBind}>{emptyMessage}</div>
       ) : null}
 
       {showEmptyState && slots?.empty ? slots.empty : null}

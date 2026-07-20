@@ -7,6 +7,7 @@ import { defineComponent, h } from "vue";
 import { useListbox, type ListboxOwnProps } from "@/Components/Listbox";
 
 const libDefaults = {
+  size: "md",
   color: "primary",
 } as const satisfies Partial<ListboxOwnProps>;
 
@@ -104,4 +105,24 @@ test("it should apply scroll classes when props are reactive like defineProps", 
   });
 
   expect(result.scrollBind.value.class).toContain("max-h-60");
+});
+
+test("it should return default size as md", () => {
+  const { merged, sizeClasses, messageBind } = mountUseListbox();
+
+  expect(merged.value.size).toBe("md");
+  expect(sizeClasses.value?.option).toContain("px-4");
+  expect(messageBind.value.class).toContain("text-sm");
+});
+
+test("it should apply size classes when size is overridden", () => {
+  const { merged, checkClass, sizeClasses, messageBind } = mountUseListbox({
+    size: "xs",
+  });
+
+  expect(merged.value.size).toBe("xs");
+  expect(sizeClasses.value?.option).toContain("px-3");
+  expect(sizeClasses.value?.primary).toContain("text-xs");
+  expect(messageBind.value.class).toContain("text-xs");
+  expect(checkClass.value).toContain("size-3");
 });

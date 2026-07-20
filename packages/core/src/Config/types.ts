@@ -71,6 +71,8 @@ import type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
+  ListboxSize,
+  ListboxSizeItem,
 } from "@/Components/Listbox";
 import type { ListItemAlign } from "@/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@/Components/Menu";
@@ -317,9 +319,11 @@ export interface ListboxConfigBase {
   customProps: Partial<{
     color: Record<string, ListboxColorItem>;
     invalidated: Partial<ListboxInvalidated>;
+    size: Record<string, ListboxSizeItem>;
   }>;
   defaultProps: Partial<{
     color: keyof ListboxColor;
+    size: keyof ListboxSize;
   }>;
 }
 

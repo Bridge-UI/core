@@ -210,3 +210,58 @@ test("it should render a scroll container with default max height", async () => 
   expect(scrollContainer).not.toBeNull();
   expect(scrollContainer?.classList.contains("max-h-60")).toBe(true);
 });
+
+test("it should apply size classes to options and empty message", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          size="xs"
+          options={[]}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("No options")).toBeTruthy();
+  });
+
+  expect(screen.getByText("No options").className).toContain("text-xs");
+});
+
+test("it should apply size classes to option rows", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          size="xs"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Apple")).toBeTruthy();
+  });
+
+  const option = screen.getByRole("option", { name: "Apple" });
+
+  expect(option.className).toContain("px-3");
+  expect(screen.getByText("Apple").className).toContain("text-xs");
+});

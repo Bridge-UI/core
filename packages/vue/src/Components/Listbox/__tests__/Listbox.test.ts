@@ -145,3 +145,39 @@ test("it should render a scroll container with default max height", async () => 
   expect(scrollContainer).not.toBeNull();
   expect(scrollContainer?.classList.contains("max-h-60")).toBe(true);
 });
+
+test("it should apply size classes to empty message", async () => {
+  mountListbox({
+    props: {
+      size: "xs",
+      options: [],
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const empty = document.body.querySelector(".text-gray-500");
+
+  expect(empty?.textContent).toContain("No options");
+  expect(empty?.className).toContain("text-xs");
+});
+
+test("it should apply size classes to option rows", async () => {
+  mountListbox({
+    props: {
+      size: "xs",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const option = document.body.querySelector('[role="option"]');
+  const primary = Array.from(document.body.querySelectorAll("span")).find(
+    (el) => el.textContent === "Active",
+  );
+
+  expect(option?.className).toContain("px-3");
+  expect(primary?.className).toContain("text-xs");
+});

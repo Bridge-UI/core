@@ -5,12 +5,14 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 import type {
   ListboxColor,
   ListboxOption,
+  ListboxSize,
   ListboxValue,
   MergeHtmlProps,
   MergeProps,
   PositionPlacement,
 } from "@bridge-ui/core";
 
+export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
 
 export interface ListboxClasses {
@@ -209,6 +211,13 @@ export interface ListboxOwnProps {
    * @default true
    */
   showCheckmark?: boolean;
+
+  /**
+   * Typography and option padding scale, aligned with `FormField` / `Select`.
+   *
+   * @default "md"
+   */
+  size?: MergeProps<ListboxSize, ListboxSizeOverrides>;
 }
 
 export interface ListboxSlots {

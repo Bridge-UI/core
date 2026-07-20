@@ -1,8 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
-import { cn } from "@bridge-ui/core";
 import { Check } from "@lucide/vue";
 import { computed, useSlots, watch } from "vue";
+
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
 import { List } from "@/Components/List";
@@ -32,6 +34,7 @@ watch(open, (show) => {
 });
 
 const props = withDefaults(defineProps<ListboxOwnProps>(), {
+  size: "md",
   loading: false,
   multiple: false,
   color: "primary",
@@ -48,12 +51,15 @@ const {
   checkClass,
   scrollBind,
   contentBind,
+  messageBind,
   loadingBind,
+  sizeClasses,
   mergedClasses,
   loadingTrackBind,
   optionSelectedClass,
   optionHighlightedClass,
 } = useListbox(props, {
+  size: "md",
   color: "primary",
 });
 
@@ -94,21 +100,28 @@ function getOptionCustomProps(
   const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
     tabindex: -1,
     onMousedown: keepFocusOnCombobox,
+    class: cn(sizeClasses.value?.option),
   };
 
   if (resolveSelected(option.value)) {
     interactive.class = cn(
+      interactive.class,
       optionSelectedClass.value,
       mergedClasses.value.optionSelected,
     );
   } else if (isOptionHighlighted(index)) {
     interactive.class = cn(
+      interactive.class,
       optionHighlightedClass.value,
       mergedClasses.value.optionHighlighted,
     );
   }
 
-  return { interactive };
+  return {
+    interactive,
+    primary: { class: sizeClasses.value?.primary },
+    secondary: { class: sizeClasses.value?.secondary },
+  };
 }
 
 function handleSelect(option: ListboxOption) {
@@ -139,7 +152,7 @@ function handleSelect(option: ListboxOption) {
         <div v-bind="loadingBind" />
       </div>
 
-      <div class="px-4 py-3 text-sm text-gray-500">
+      <div v-bind="messageBind">
         <component
           v-if="hasNamedSlot(slots, 'loading')"
           :is="resolveNamedSlot(slots, 'loading')"
@@ -180,14 +193,14 @@ function handleSelect(option: ListboxOption) {
           </template>
 
           <template #end v-if="showCheckmark && resolveSelected(option.value)">
-            <Check class="size-4" :class="resolvedCheckClass" />
+            <Check :class="resolvedCheckClass" />
           </template>
         </ListItem>
       </List>
     </div>
 
     <div
-      class="px-4 py-3 text-sm text-gray-500"
+      v-bind="messageBind"
       v-if="showEmptyState && !hasNamedSlot(slots, 'empty')"
     >
       {{ emptyMessage }}
