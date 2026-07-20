@@ -48,9 +48,9 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
 });
 
 const {
+  merged,
   checkClass,
   scrollBind,
-  contentBind,
   messageBind,
   loadingBind,
   sizeClasses,
@@ -61,12 +61,6 @@ const {
 } = useListbox(props, {
   size: "md",
   color: "primary",
-});
-
-const menuCustomProps = computed(() => {
-  return {
-    content: contentBind.value,
-  };
 });
 
 const showEmptyState = computed(() => {
@@ -139,8 +133,8 @@ function handleSelect(option: ListboxOption) {
     :anchor-el="anchorEl"
     :placement="placement"
     :close-on-click-away="true"
-    :custom-props="menuCustomProps"
     :disable-auto-focus="disableAutoFocus"
+    :custom-props="{ content: merged.customProps?.content }"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"

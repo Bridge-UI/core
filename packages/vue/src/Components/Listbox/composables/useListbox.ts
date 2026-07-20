@@ -112,16 +112,6 @@ export function useListbox(
     return cn(sizeClasses.value?.check, colorClasses.value?.check);
   });
 
-  const contentBind = computed(() => {
-    return mergePartBind(
-      merged.value.customProps?.content,
-      {},
-      cn({
-        relative: true,
-      }),
-    );
-  });
-
   const scrollBind = computed(() => {
     const maxHeightClass = merged.value.maxHeight ?? "max-h-60";
     const disableMaxHeight = merged.value.disableMaxHeight === true;
@@ -177,7 +167,6 @@ export function useListbox(
     merged,
     checkClass,
     scrollBind,
-    contentBind,
     messageBind,
     loadingBind,
     sizeClasses,

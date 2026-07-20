@@ -49,9 +49,9 @@ function Listbox({
   ...ownProps
 }: ListboxProps) {
   const {
+    merged,
     checkClass,
     scrollBind,
-    contentBind,
     messageBind,
     loadingBind,
     sizeClasses,
@@ -139,7 +139,7 @@ function Listbox({
       placement={placement}
       onShowChange={onShowChange}
       disableAutoFocus={disableAutoFocus}
-      customProps={{ content: contentBind }}
+      customProps={{ content: merged.customProps?.content }}
     >
       {slots?.beforeOptions}
 
