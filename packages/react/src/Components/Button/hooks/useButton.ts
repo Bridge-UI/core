@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, includes, isNil, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -114,10 +114,6 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     return merged.disabled || merged.loading;
   });
 
-  const rootType = derived(() => {
-    return isButton ? ("button" as const) : undefined;
-  });
-
   const rootDisabled = derived(() => {
     return isButton ? isDisabled : undefined;
   });
@@ -136,6 +132,20 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     }
 
     return merged.href;
+  });
+
+  const rootType = derived(() => {
+    if (!isButton) {
+      return undefined;
+    }
+
+    const type = get(inheritedAttrs, "type");
+
+    if (includes(["submit", "reset", "button"], type)) {
+      return type;
+    }
+
+    return "button";
   });
 
   const sizeClass = useMemo(() => {
