@@ -158,3 +158,39 @@ test("it should forward customProps to slot wrappers", () => {
 
   expect(container.querySelector('[data-testid="start-slot"]')).toBeTruthy();
 });
+
+test("it should default type to button", () => {
+  render(<Button>Default</Button>);
+
+  const button = screen.getByRole("button", { name: "Default" });
+
+  expect((button as HTMLButtonElement).type).toBe("button");
+});
+
+test("it should respect type submit", () => {
+  render(<Button type="submit">Save</Button>);
+
+  const button = screen.getByRole("button", { name: "Save" });
+
+  expect((button as HTMLButtonElement).type).toBe("submit");
+});
+
+test("it should respect type reset", () => {
+  render(<Button type="reset">Cancel</Button>);
+
+  const button = screen.getByRole("button", { name: "Cancel" });
+
+  expect((button as HTMLButtonElement).type).toBe("reset");
+});
+
+test("it should omit type when rendered as an anchor", () => {
+  render(
+    <Button as="a" href="https://example.com">
+      Link
+    </Button>,
+  );
+
+  const link = screen.getByRole("link", { name: "Link" });
+
+  expect(link.getAttribute("type")).toBeNull();
+});

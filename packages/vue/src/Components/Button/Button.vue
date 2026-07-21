@@ -49,9 +49,9 @@ const {
 <template>
   <component
     :is="tag"
-    :type="rootType"
     :href="rootHref"
     v-bind="rootBind"
+    :type="rootType"
     :disabled="rootDisabled"
     :aria-busy="rootAriaBusy"
     :aria-disabled="rootAriaDisabled"

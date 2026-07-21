@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil } from "es-toolkit/compat";
+import { get, includes, isNil } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
@@ -105,10 +105,6 @@ export function useButton(
     return merged.value.disabled || merged.value.loading;
   });
 
-  const rootType = computed(() => {
-    return isButton.value ? ("button" as const) : undefined;
-  });
-
   const rootDisabled = computed(() => {
     return isButton.value ? isDisabled.value : undefined;
   });
@@ -127,6 +123,20 @@ export function useButton(
     }
 
     return merged.value.href;
+  });
+
+  const rootType = computed(() => {
+    if (!isButton.value) {
+      return undefined;
+    }
+
+    const type = get(split.value.inheritedAttrs, "type");
+
+    if (includes(["submit", "reset", "button"], type)) {
+      return type;
+    }
+
+    return "button";
   });
 
   const sizeClass = computed(() => {

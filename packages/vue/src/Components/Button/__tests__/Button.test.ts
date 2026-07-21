@@ -185,3 +185,38 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
   expect(root.classes()).toContain("p-4");
   expect(root.classes()).not.toContain("p-2");
 });
+
+test("it should default type to button", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Default" },
+  });
+
+  expect(wrapper.find("button").attributes("type")).toBe("button");
+});
+
+test("it should respect type submit", () => {
+  const wrapper = mount(Button, {
+    attrs: { type: "submit" },
+    slots: { default: "Save" },
+  });
+
+  expect(wrapper.find("button").attributes("type")).toBe("submit");
+});
+
+test("it should respect type reset", () => {
+  const wrapper = mount(Button, {
+    attrs: { type: "reset" },
+    slots: { default: "Cancel" },
+  });
+
+  expect(wrapper.find("button").attributes("type")).toBe("reset");
+});
+
+test("it should omit type when rendered as an anchor", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Link" },
+    props: { as: "a", href: "https://example.com" },
+  });
+
+  expect(wrapper.find("a").attributes("type")).toBeUndefined();
+});
