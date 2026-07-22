@@ -90,7 +90,7 @@ export function useDivider(
       role: "separator",
       "aria-orientation": merged.orientation,
       className: cn({
-        "m-0 shrink-0 border-0 border-solid": true,
+        "m-0 shrink-0 border-0": true,
         [colorClass ?? ""]: true,
         [orientationClass ?? ""]: true,
         [mergedClasses.root ?? ""]: true,

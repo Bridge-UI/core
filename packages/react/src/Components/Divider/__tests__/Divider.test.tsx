@@ -21,7 +21,7 @@ test("it should apply horizontal orientation by default", () => {
   const root = container.querySelector("hr");
 
   expect(root?.classList.contains("w-full")).toBe(true);
-  expect(root?.classList.contains("border-t")).toBe(true);
+  expect(root?.classList.contains("h-px")).toBe(true);
   expect(root?.getAttribute("aria-orientation")).toBe("horizontal");
 });
 
@@ -30,23 +30,23 @@ test("it should apply vertical orientation when orientation is vertical", () => 
 
   const root = container.querySelector("hr");
 
-  expect(root?.classList.contains("border-l")).toBe(true);
+  expect(root?.classList.contains("w-px")).toBe(true);
   expect(root?.getAttribute("aria-orientation")).toBe("vertical");
 });
 
 test("it should apply dark color by default", () => {
   const { container } = render(<Divider />);
 
-  expect(
-    container.querySelector("hr")?.classList.contains("border-dark-200"),
-  ).toBe(true);
+  expect(container.querySelector("hr")?.classList.contains("bg-dark-200")).toBe(
+    true,
+  );
 });
 
 test("it should apply primary color when color is primary", () => {
   const { container } = render(<Divider color="primary" />);
 
   expect(
-    container.querySelector("hr")?.classList.contains("border-primary-200"),
+    container.querySelector("hr")?.classList.contains("bg-primary-200"),
   ).toBe(true);
 });
 

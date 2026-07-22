@@ -1,16 +1,16 @@
 export interface DividerOrientation {
   /**
-   * Horizontal divider (full width, top border).
+   * Horizontal divider (full width, 1px tall).
    */
   "horizontal": string;
 
   /**
-   * Vertical divider (stretch height, left border).
+   * Vertical divider (stretch height, 1px wide).
    */
   "vertical": string;
 }
 
 export const orientationProps: DividerOrientation = {
-  "horizontal": "w-full border-t",
-  "vertical": "self-stretch h-auto min-h-full border-l",
+  "horizontal": "h-px w-full",
+  "vertical": "w-px self-stretch h-auto min-h-full",
 };
