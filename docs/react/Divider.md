@@ -40,7 +40,7 @@ import { Divider } from "@bridge-ui/react/Components/Divider";
 ### Custom classes
 
 ```tsx
-<Divider className="my-6" />
+<Divider className="my-6 h-0.5 bg-primary-500" />
 ```
 
 ## Props
@@ -48,7 +48,7 @@ import { Divider } from "@bridge-ui/react/Components/Divider";
 | Prop          | Type                 | Default        | Description                          |
 | ------------- | -------------------- | -------------- | ------------------------------------ |
 | `classes`     | `DividerClasses`     | —              | The classes to apply to the divider. |
-| `color`       | `DividerColor`       | `"dark"`       | The color of the divider.            |
+| `color`       | `DividerColor`       | `"dark"`       | The fill color of the divider.       |
 | `orientation` | `DividerOrientation` | `"horizontal"` | The orientation of the divider.      |
 
 ## Related components

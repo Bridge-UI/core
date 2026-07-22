@@ -75,14 +75,14 @@ test("it should apply className after classes.root in rootBind", () => {
 test("it should apply vertical orientation classes", () => {
   const { result } = renderUseDivider({ orientation: "vertical" });
 
-  expect(result.current.rootBind.className).toContain("border-l");
+  expect(result.current.rootBind.className).toContain("w-px");
   expect(result.current.rootBind["aria-orientation"]).toBe("vertical");
 });
 
 test("it should apply primary color class when color is primary", () => {
   const { result } = renderUseDivider({ color: "primary" });
 
-  expect(result.current.rootBind.className).toContain("border-primary-200");
+  expect(result.current.rootBind.className).toContain("bg-primary-200");
 });
 
 test("it should set separator role on rootBind", () => {

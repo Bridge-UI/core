@@ -1,46 +1,50 @@
 export interface DividerColor {
   /**
-   * `dark` semantic border color.
+   * `dark` semantic fill color.
    */
   "dark": string;
 
   /**
-   * `error` semantic border color.
+   * `error` semantic fill color.
    */
   "error": string;
 
   /**
-   * `info` semantic border color.
+   * `info` semantic fill color.
    */
   "info": string;
 
   /**
-   * `primary` semantic border color.
+   * `primary` semantic fill color.
    */
   "primary": string;
 
   /**
-   * `secondary` semantic border color.
+   * `secondary` semantic fill color.
    */
   "secondary": string;
 
   /**
-   * `success` semantic border color.
+   * `success` semantic fill color.
    */
   "success": string;
 
   /**
-   * `warning` semantic border color.
+   * `warning` semantic fill color.
    */
   "warning": string;
 }
 
+/**
+ * Divider colors use background utilities (not `border-*`) so host resets like
+ * `* { border-color: … }` cannot wash out semantic colors.
+ */
 export const colorProps: DividerColor = {
-  "dark": "border-dark-200 dark:border-dark-600",
-  "info": "border-info-200 dark:border-info-700",
-  "error": "border-error-200 dark:border-error-700",
-  "primary": "border-primary-200 dark:border-primary-700",
-  "success": "border-success-200 dark:border-success-700",
-  "warning": "border-warning-200 dark:border-warning-700",
-  "secondary": "border-secondary-200 dark:border-secondary-700",
+  "dark": "bg-dark-200 dark:bg-dark-600",
+  "info": "bg-info-200 dark:bg-info-700",
+  "error": "bg-error-200 dark:bg-error-700",
+  "primary": "bg-primary-200 dark:bg-primary-700",
+  "success": "bg-success-200 dark:bg-success-700",
+  "warning": "bg-warning-200 dark:bg-warning-700",
+  "secondary": "bg-secondary-200 dark:bg-secondary-700",
 };

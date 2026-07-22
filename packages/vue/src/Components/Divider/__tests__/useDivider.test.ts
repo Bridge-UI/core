@@ -81,14 +81,14 @@ test("it should apply class after classes.root in root bind", () => {
 test("it should apply vertical orientation classes", () => {
   const { rootBind } = mountUseDivider({ orientation: "vertical" });
 
-  expect(rootBind.value.class).toContain("border-l");
+  expect(rootBind.value.class).toContain("w-px");
   expect(rootBind.value["aria-orientation"]).toBe("vertical");
 });
 
 test("it should apply primary color class when color is primary", () => {
   const { rootBind } = mountUseDivider({ color: "primary" });
 
-  expect(rootBind.value.class).toContain("border-primary-200");
+  expect(rootBind.value.class).toContain("bg-primary-200");
 });
 
 test("it should set separator role on rootBind", () => {

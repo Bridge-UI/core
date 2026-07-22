@@ -16,7 +16,7 @@ test("it should apply horizontal orientation by default", () => {
   const root = wrapper.find("hr");
 
   expect(root.classes()).toContain("w-full");
-  expect(root.classes()).toContain("border-t");
+  expect(root.classes()).toContain("h-px");
   expect(root.attributes("aria-orientation")).toBe("horizontal");
 });
 
@@ -26,14 +26,14 @@ test("it should apply vertical orientation when orientation is vertical", () => 
   });
   const root = wrapper.find("hr");
 
-  expect(root.classes()).toContain("border-l");
+  expect(root.classes()).toContain("w-px");
   expect(root.attributes("aria-orientation")).toBe("vertical");
 });
 
 test("it should apply dark color by default", () => {
   const wrapper = mount(Divider);
 
-  expect(wrapper.find("hr").classes()).toContain("border-dark-200");
+  expect(wrapper.find("hr").classes()).toContain("bg-dark-200");
 });
 
 test("it should apply primary color when color is primary", () => {
@@ -41,7 +41,7 @@ test("it should apply primary color when color is primary", () => {
     props: { color: "primary" },
   });
 
-  expect(wrapper.find("hr").classes()).toContain("border-primary-200");
+  expect(wrapper.find("hr").classes()).toContain("bg-primary-200");
 });
 
 test("it should expose separator role", () => {
