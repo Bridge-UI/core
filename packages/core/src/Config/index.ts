@@ -52,6 +52,8 @@ export type {
   RadioConfigOverrides,
   SelectConfigBase,
   SelectConfigOverrides,
+  SkeletonConfigBase,
+  SkeletonConfigOverrides,
   SwitchConfigBase,
   SwitchConfigOverrides,
   TextareaConfigBase,
