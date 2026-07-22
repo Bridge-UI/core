@@ -6,6 +6,7 @@ import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
+import type { DividerClasses, DividerProps } from "@/Components/Divider";
 import type {
   FormControlClasses,
   FormControlProps,
@@ -70,6 +71,11 @@ declare module "@bridge-ui/core" {
   interface ChipConfigOverrides {
     classes: ChipClasses;
     defaultProps: Partial<Pick<ChipProps, "size">>;
+  }
+
+  interface DividerConfigOverrides {
+    classes: DividerClasses;
+    defaultProps: Partial<Pick<DividerProps, "color" | "orientation">>;
   }
 
   interface FormControlConfigOverrides {

@@ -47,6 +47,7 @@ export type {
   CheckboxSize,
 } from "@/Components/Checkbox";
 export type { ChipSize, ChipSizeItem } from "@/Components/Chip";
+export type { DividerColor, DividerOrientation } from "@/Components/Divider";
 export type { FormControlInvalidated } from "@/Components/FormControl";
 export type {
   FormFieldColor,
@@ -138,6 +139,7 @@ export type {
   CheckboxConfigOverrides,
   ChipConfigOverrides,
   Direction,
+  DividerConfigOverrides,
   FormControlConfigOverrides,
   FormFieldConfigOverrides,
   IconConfigOverrides,
