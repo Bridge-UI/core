@@ -24,6 +24,8 @@ export type {
   ChipConfigBase,
   ChipConfigOverrides,
   Direction,
+  DividerConfigBase,
+  DividerConfigOverrides,
   FormControlConfigBase,
   FormControlConfigOverrides,
   FormFieldConfigBase,

@@ -78,6 +78,14 @@ export type {
   ChipSizeOverrides,
   ChipSlots,
 } from "@/Components/Chip";
+export { Divider, useDivider } from "@/Components/Divider";
+export type {
+  DividerClasses,
+  DividerColorOverrides,
+  DividerOrientationOverrides,
+  DividerOwnProps,
+  DividerProps,
+} from "@/Components/Divider";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,

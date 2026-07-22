@@ -47,6 +47,7 @@ import type {
   CheckboxSize,
 } from "@/Components/Checkbox";
 import type { ChipSize, ChipSizeItem } from "@/Components/Chip";
+import type { DividerColor, DividerOrientation } from "@/Components/Divider";
 import type { FormControlInvalidated } from "@/Components/FormControl";
 import type {
   FormFieldColor,
@@ -127,6 +128,7 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
+export interface DividerConfigOverrides {}
 export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
@@ -434,6 +436,18 @@ export interface SelectConfigBase {
   classes: object;
 }
 
+export interface DividerConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, string>;
+    orientation: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    color: keyof DividerColor;
+    orientation: keyof DividerOrientation;
+  }>;
+}
+
 export interface SkeletonConfigBase {
   classes: object;
   customProps: Partial<{
@@ -478,6 +492,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
+  Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   FormControl: Partial<
     Overwrite<FormControlConfigBase, FormControlConfigOverrides>
   >;
