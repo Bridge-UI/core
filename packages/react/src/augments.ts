@@ -23,6 +23,7 @@ import type { NumberFieldClasses } from "@/Components/NumberField";
 import type { PasswordFieldClasses } from "@/Components/PasswordField";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type { SkeletonClasses, SkeletonProps } from "@/Components/Skeleton";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
 import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
@@ -164,6 +165,11 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<
       Pick<SelectProps, "size" | "color" | "rounded" | "variant">
     >;
+  }
+
+  interface SkeletonConfigOverrides {
+    classes: SkeletonClasses;
+    defaultProps: Partial<Pick<SkeletonProps, "rounded">>;
   }
 
   interface SwitchConfigOverrides {

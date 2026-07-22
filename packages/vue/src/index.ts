@@ -231,6 +231,13 @@ export type {
   SelectSlots,
   SelectValue,
 } from "@/Components/Select";
+export { Skeleton, useSkeleton } from "@/Components/Skeleton";
+export type {
+  SkeletonClasses,
+  SkeletonOwnProps,
+  SkeletonProps,
+  SkeletonRoundedOverrides,
+} from "@/Components/Skeleton";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {
   SnackbarClasses,

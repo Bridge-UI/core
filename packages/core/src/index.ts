@@ -94,6 +94,7 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@/Components/Radio";
+export type { SkeletonRounded } from "@/Components/Skeleton";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,
@@ -148,6 +149,7 @@ export type {
   PasswordFieldConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
+  SkeletonConfigOverrides,
   SwitchConfigOverrides,
   TextareaConfigOverrides,
 } from "@/Config";

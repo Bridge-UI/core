@@ -91,6 +91,7 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@/Components/Radio";
+import type { SkeletonRounded } from "@/Components/Skeleton";
 import type {
   SnackbarColor,
   SnackbarColorItem,
@@ -140,6 +141,7 @@ export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
+export interface SkeletonConfigOverrides {}
 export interface SnackbarConfigOverrides {}
 export interface FormControlConfigOverrides {}
 export interface TextareaConfigOverrides {}
@@ -432,6 +434,16 @@ export interface SelectConfigBase {
   classes: object;
 }
 
+export interface SkeletonConfigBase {
+  classes: object;
+  customProps: Partial<{
+    rounded: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    rounded: keyof SkeletonRounded;
+  }>;
+}
+
 export interface SwitchConfigBase {
   classes: object;
   customProps: Partial<{
@@ -489,6 +501,7 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
+  Skeleton: Partial<Overwrite<SkeletonConfigBase, SkeletonConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
