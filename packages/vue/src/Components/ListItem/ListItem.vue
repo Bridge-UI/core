@@ -3,6 +3,7 @@
 import { computed, useSlots } from "vue";
 
 // ** Local Imports
+import Icon from "@/Components/Icon/Icon.vue";
 import {
   resolveListItemPrimary,
   useListItem,
@@ -11,7 +12,7 @@ import type {
   ListItemOwnProps,
   ListItemSlots,
 } from "@/Components/ListItem/listItem.types";
-import { resolveNamedSlot, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, resolveNamedSlot, resolveSlotOrProp } from "@/Utils";
 
 defineSlots<ListItemSlots>();
 
@@ -43,6 +44,8 @@ const {
   hasSecondary,
   secondaryBind,
   interactiveBind,
+  selectedIconBind,
+  resolvedSelectedIcon,
 } = useListItem(props, { role: "button", align: "center" }, slots);
 
 const rootTag = computed(() => {
@@ -55,6 +58,10 @@ const primaryContent = computed(() => {
 
 const secondaryContent = computed(() => {
   return resolveSlotOrProp(slots, "secondary", props.secondary);
+});
+
+const hasEndSlot = computed(() => {
+  return hasNamedSlot(slots, "end");
 });
 </script>
 
@@ -77,7 +84,13 @@ const secondaryContent = computed(() => {
         </div>
 
         <div v-if="hasEnd" v-bind="endBind">
-          <component :is="resolveNamedSlot(slots, 'end')" />
+          <component v-if="hasEndSlot" :is="resolveNamedSlot(slots, 'end')" />
+
+          <Icon
+            v-bind="selectedIconBind"
+            :icon="resolvedSelectedIcon"
+            v-else-if="resolvedSelectedIcon"
+          />
         </div>
       </div>
     </div>
@@ -98,7 +111,13 @@ const secondaryContent = computed(() => {
       </div>
 
       <div v-if="hasEnd" v-bind="endBind">
-        <component :is="resolveNamedSlot(slots, 'end')" />
+        <component v-if="hasEndSlot" :is="resolveNamedSlot(slots, 'end')" />
+
+        <Icon
+          v-bind="selectedIconBind"
+          :icon="resolvedSelectedIcon"
+          v-else-if="resolvedSelectedIcon"
+        />
       </div>
     </div>
   </component>

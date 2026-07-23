@@ -44,6 +44,22 @@ test("it should apply selected styles when selected is true", () => {
   expect(interactive?.classList.contains("text-primary-700")).toBe(true);
 });
 
+test("it should render a check icon when selected is true", () => {
+  const { container } = render(
+    <ListItem selected interactive primary="Selected" />,
+  );
+
+  expect(container.querySelector("svg")).not.toBeNull();
+});
+
+test("it should not render a selected icon when selectedIcon is null", () => {
+  const { container } = render(
+    <ListItem selected interactive primary="Selected" selectedIcon={null} />,
+  );
+
+  expect(container.querySelector("svg")).toBeNull();
+});
+
 test("it should disable interaction when disabled is true", () => {
   const { container } = render(
     <ListItem disabled interactive primary="Disabled" />,

@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { Check, Star } from "lucide-react";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
@@ -10,6 +11,7 @@ import {
   type ListItemOwnProps,
   type ListItemProps,
 } from "@/Components/ListItem";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   role: "button",
@@ -19,10 +21,29 @@ const libDefaults = {
 function renderUseListItem(
   props: ListItemProps = {},
   context: null | { dense: boolean } = null,
+  options: { registrySelectedIcon?: null | typeof Star } = {},
 ) {
   return renderHook(() => useListItem(props, libDefaults), {
-    wrapper: ({ children }) =>
-      createElement(ListContext.Provider, { value: context }, children),
+    wrapper: ({ children }) => {
+      const withList = createElement(
+        ListContext.Provider,
+        { value: context },
+        children,
+      );
+
+      if (!("registrySelectedIcon" in options)) {
+        return withList;
+      }
+
+      return createElement(BridgeUIProvider, {
+        children: withList,
+        components: {
+          ListItem: {
+            defaultProps: { selectedIcon: options.registrySelectedIcon },
+          },
+        },
+      });
+    },
   });
 }
 
@@ -76,6 +97,58 @@ test("it should apply selected styles on interactive bind", () => {
   });
 
   expect(result.current.interactiveBind?.className).toContain("bg-primary-50");
+});
+
+test("it should resolve Check as the default selected icon", () => {
+  const { result } = renderUseListItem({
+    selected: true,
+    interactive: true,
+    primary: "Selected",
+  });
+
+  expect(result.current.resolvedSelectedIcon).toBe(Check);
+});
+
+test("it should suppress the selected icon when selectedIcon is null", () => {
+  const { result } = renderUseListItem({
+    selected: true,
+    interactive: true,
+    selectedIcon: null,
+    primary: "Selected",
+  });
+
+  expect(result.current.resolvedSelectedIcon).toBeNull();
+});
+
+test("it should use a custom selectedIcon when provided", () => {
+  const { result } = renderUseListItem({
+    selected: true,
+    interactive: true,
+    selectedIcon: Star,
+    primary: "Selected",
+  });
+
+  expect(result.current.resolvedSelectedIcon).toStrictEqual(Star);
+});
+
+test("it should resolve selectedIcon from BridgeUIProvider defaultProps", () => {
+  const { result } = renderUseListItem(
+    { selected: true, interactive: true, primary: "Selected" },
+    null,
+    { registrySelectedIcon: Star },
+  );
+
+  expect(result.current.resolvedSelectedIcon).toStrictEqual(Star);
+});
+
+test("it should suppress the selected icon from BridgeUIProvider when null", () => {
+  const { result } = renderUseListItem(
+    { selected: true, interactive: true, primary: "Selected" },
+    null,
+    { registrySelectedIcon: null },
+  );
+
+  expect(result.current.resolvedSelectedIcon).toBeNull();
 });
 
 test("it should disable interaction when disabled is true", () => {

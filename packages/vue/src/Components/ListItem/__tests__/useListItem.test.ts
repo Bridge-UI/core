@@ -1,4 +1,5 @@
 // ** External Imports
+import { Check, Star } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { computed, defineComponent, h, provide } from "vue";
@@ -6,6 +7,7 @@ import { computed, defineComponent, h, provide } from "vue";
 // ** Local Imports
 import { LIST_INJECTION_KEY } from "@/Components/List";
 import { useListItem, type ListItemOwnProps } from "@/Components/ListItem";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   role: "button",
@@ -15,10 +17,11 @@ const libDefaults = {
 function mountUseListItem(
   props: Partial<ListItemOwnProps> = {},
   slots: Record<string, () => unknown> = {},
+  options: { registrySelectedIcon?: null | typeof Star } = {},
 ) {
   let result!: ReturnType<typeof useListItem>;
 
-  const Wrapper = defineComponent({
+  const Consumer = defineComponent({
     setup() {
       result = useListItem(
         props,
@@ -30,7 +33,24 @@ function mountUseListItem(
     },
   });
 
-  mount(Wrapper);
+  if (!("registrySelectedIcon" in options)) {
+    mount(Consumer);
+
+    return result;
+  }
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        ListItem: {
+          defaultProps: { selectedIcon: options.registrySelectedIcon },
+        },
+      },
+    },
+  });
 
   return result;
 }
@@ -107,6 +127,58 @@ test("it should apply selected styles on interactive bind", () => {
   });
 
   expect(interactiveBind.value?.class).toContain("bg-primary-50");
+});
+
+test("it should resolve Check as the default selected icon", () => {
+  const { resolvedSelectedIcon } = mountUseListItem({
+    selected: true,
+    interactive: true,
+    primary: "Selected",
+  });
+
+  expect(resolvedSelectedIcon.value).toBe(Check);
+});
+
+test("it should suppress the selected icon when selectedIcon is null", () => {
+  const { resolvedSelectedIcon } = mountUseListItem({
+    selected: true,
+    interactive: true,
+    selectedIcon: null,
+    primary: "Selected",
+  });
+
+  expect(resolvedSelectedIcon.value).toBeNull();
+});
+
+test("it should use a custom selectedIcon when provided", () => {
+  const { resolvedSelectedIcon } = mountUseListItem({
+    selected: true,
+    interactive: true,
+    selectedIcon: Star,
+    primary: "Selected",
+  });
+
+  expect(resolvedSelectedIcon.value).toStrictEqual(Star);
+});
+
+test("it should resolve selectedIcon from BridgeUIProvider defaultProps", () => {
+  const { resolvedSelectedIcon } = mountUseListItem(
+    { selected: true, interactive: true, primary: "Selected" },
+    {},
+    { registrySelectedIcon: Star },
+  );
+
+  expect(resolvedSelectedIcon.value).toStrictEqual(Star);
+});
+
+test("it should suppress the selected icon from BridgeUIProvider when null", () => {
+  const { resolvedSelectedIcon } = mountUseListItem(
+    { selected: true, interactive: true, primary: "Selected" },
+    {},
+    { registrySelectedIcon: null },
+  );
+
+  expect(resolvedSelectedIcon.value).toBeNull();
 });
 
 test("it should disable interaction when disabled is true", () => {

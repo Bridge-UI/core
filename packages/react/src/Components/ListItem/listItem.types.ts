@@ -1,4 +1,5 @@
 // ** External Imports
+import type { LucideIcon } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -7,6 +8,9 @@ import type {
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
+
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
 
 export interface ListItemAlignOverrides {}
 
@@ -40,6 +44,11 @@ export interface ListItemClasses {
    * The classes to apply to the secondary text.
    */
   secondary?: string;
+
+  /**
+   * The classes to apply to the selected icon.
+   */
+  selectedIcon?: string;
 
   /**
    * The classes to apply to the leading slot.
@@ -77,6 +86,11 @@ export interface ListItemCustomProps {
    * Props forwarded to the secondary text.
    */
   secondary?: HTMLAttributes<HTMLSpanElement>;
+
+  /**
+   * Props forwarded to the default selected `Icon` (`icon` is set by the item).
+   */
+  selectedIcon?: Partial<Omit<IconProps, "icon">>;
 
   /**
    * Props forwarded to the leading slot wrapper.
@@ -179,6 +193,14 @@ export interface ListItemOwnProps {
    * @default false
    */
   selected?: boolean;
+
+  /**
+   * The icon shown when `selected` is true. Use `null` to hide it.
+   * The `end` slot replaces this icon when provided.
+   *
+   * @default Check
+   */
+  selectedIcon?: null | LucideIcon;
 
   /**
    * The slots to apply to the item.

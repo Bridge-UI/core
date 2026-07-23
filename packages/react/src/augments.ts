@@ -116,7 +116,9 @@ declare module "@bridge-ui/core" {
 
   interface ListItemConfigOverrides {
     classes: ListItemClasses;
-    defaultProps: Partial<Pick<ListItemProps, "role" | "align">>;
+    defaultProps: Partial<
+      Pick<ListItemProps, "role" | "align" | "selectedIcon">
+    >;
   }
 
   interface ListSectionConfigOverrides {

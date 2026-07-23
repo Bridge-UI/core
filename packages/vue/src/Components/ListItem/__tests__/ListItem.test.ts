@@ -75,6 +75,31 @@ test("it should apply selected styles when selected is true", () => {
   expect(interactive.classes()).toContain("text-primary-700");
 });
 
+test("it should render a check icon when selected is true", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      selected: true,
+      interactive: true,
+      primary: "Selected",
+    },
+  });
+
+  expect(wrapper.find("svg").exists()).toBe(true);
+});
+
+test("it should not render a selected icon when selectedIcon is null", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      selected: true,
+      interactive: true,
+      selectedIcon: null,
+      primary: "Selected",
+    },
+  });
+
+  expect(wrapper.find("svg").exists()).toBe(false);
+});
+
 test("it should disable interaction when disabled is true", () => {
   const wrapper = mount(ListItem, {
     props: {

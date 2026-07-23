@@ -351,6 +351,7 @@ export interface ListItemConfigBase {
   defaultProps: Partial<{
     align: keyof ListItemAlign;
     role: "button" | "option" | "menuitem";
+    selectedIcon: unknown;
   }>;
 }
 

@@ -1,5 +1,6 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { Check, type LucideIcon } from "@lucide/vue";
+import { get, isNull, omit } from "es-toolkit/compat";
 import {
   computed,
   getCurrentInstance,
@@ -48,6 +49,7 @@ const listItemBridgeKeys = [
   "secondary",
   "customProps",
   "interactive",
+  "selectedIcon",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role" | "align">;
@@ -127,8 +129,20 @@ export function useListItem(
     return hasNamedSlot(slots, "start");
   });
 
+  const resolvedSelectedIcon = computed((): null | LucideIcon => {
+    if (!merged.value.selected) {
+      return null;
+    }
+
+    if (isNull(merged.value.selectedIcon)) {
+      return null;
+    }
+
+    return merged.value.selectedIcon ?? Check;
+  });
+
   const hasEnd = computed(() => {
-    return hasNamedSlot(slots, "end");
+    return hasNamedSlot(slots, "end") || resolvedSelectedIcon.value != null;
   });
 
   const rootInheritedAttrs = computed(() => {
@@ -249,6 +263,20 @@ export function useListItem(
     );
   });
 
+  const selectedIconBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.selectedIcon,
+      {},
+      {
+        size: "sm" as const,
+        class: cn({
+          "shrink-0": true,
+          [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     merged,
     hasEnd,
@@ -263,6 +291,8 @@ export function useListItem(
     hasSecondary,
     secondaryBind,
     interactiveBind,
+    selectedIconBind,
+    resolvedSelectedIcon,
   };
 }
 
