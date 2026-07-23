@@ -2,6 +2,7 @@
 import { createElement } from "react";
 
 // ** Local Imports
+import { Icon } from "@/Components/Icon";
 import { useListItem } from "@/Components/ListItem/hooks/useListItem";
 import type { ListItemProps } from "@/Components/ListItem/listItem.types";
 
@@ -19,6 +20,8 @@ function ListItemRow({
   secondaryBind,
   primaryContent,
   secondaryContent,
+  selectedIconBind,
+  resolvedSelectedIcon,
 }: ReturnType<typeof useListItem>) {
   return (
     <div className={rowClassName}>
@@ -32,7 +35,15 @@ function ListItemRow({
         ) : null}
       </div>
 
-      {hasEnd ? <div {...endBind}>{slots?.end}</div> : null}
+      {hasEnd ? (
+        <div {...endBind}>
+          {slots?.end}
+
+          {!slots?.end && resolvedSelectedIcon != null ? (
+            <Icon icon={resolvedSelectedIcon} {...selectedIconBind} />
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNull, omit } from "es-toolkit/compat";
+import { Check, type LucideIcon } from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -42,6 +43,7 @@ const listItemBridgeKeys = [
   "secondary",
   "customProps",
   "interactive",
+  "selectedIcon",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role" | "align">;
@@ -119,8 +121,20 @@ export function useListItem(
     return Boolean(slots?.start);
   });
 
+  const resolvedSelectedIcon = useMemo((): null | LucideIcon => {
+    if (!merged.selected) {
+      return null;
+    }
+
+    if (isNull(merged.selectedIcon)) {
+      return null;
+    }
+
+    return merged.selectedIcon ?? Check;
+  }, [merged.selected, merged.selectedIcon]);
+
   const hasEnd = derived(() => {
-    return Boolean(slots?.end);
+    return Boolean(slots?.end) || resolvedSelectedIcon != null;
   });
 
   const rootBind = derived(() => {
@@ -237,6 +251,20 @@ export function useListItem(
     );
   });
 
+  const selectedIconBind = derived(() => {
+    return mergePartBind(
+      customProps?.selectedIcon,
+      {},
+      {
+        size: "sm" as const,
+        className: cn({
+          "shrink-0": true,
+          [get(mergedClasses, "selectedIcon") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   const primaryContent = derived(() => {
     return resolveSlotOrProp({
       slots,
@@ -270,5 +298,7 @@ export function useListItem(
     primaryContent,
     interactiveBind,
     secondaryContent,
+    selectedIconBind,
+    resolvedSelectedIcon,
   };
 }

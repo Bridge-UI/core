@@ -52,6 +52,31 @@ test("it should apply selected styles when selected is true", () => {
   cy.get('[role="button"]').should("have.class", "bg-primary-50");
 });
 
+test("it should render a check icon when selected is true", () => {
+  cy.mount(ListItem, {
+    props: {
+      selected: true,
+      interactive: true,
+      primary: "Selected",
+    },
+  });
+
+  cy.get("svg").should("exist");
+});
+
+test("it should not render a selected icon when selectedIcon is null", () => {
+  cy.mount(ListItem, {
+    props: {
+      selected: true,
+      interactive: true,
+      selectedIcon: null,
+      primary: "Selected",
+    },
+  });
+
+  cy.get("svg").should("not.exist");
+});
+
 test("it should disable interaction when disabled is true", () => {
   cy.mount(ListItem, {
     props: {
