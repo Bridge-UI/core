@@ -18,6 +18,18 @@ import type { BridgeUIComponentsConfig } from "@/Config/types";
 import type { ClassPropKey, MergePartBind } from "@/Utils/types";
 
 /**
+ * Props that must not be deep-merged (`toMerged` / `es-toolkit`).
+ * React nodes, DOM nodes, and refs can be plain objects with cycles
+ * (e.g. fiber `_owner`) and would throw RangeError on merge.
+ */
+const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
+  "slots",
+  "anchorEl",
+  "children",
+  "teleportTo",
+] as const;
+
+/**
  * Converts a string or object to a record of strings.
  */
 function toBridgeProps<K extends ClassPropKey>(
@@ -121,7 +133,24 @@ export function mergePropsWithBridgeUIDefaults<
     | undefined
     | Partial<P>;
 
-  return mergeBridgeUILayeredClasses<P>(libDefaults, fromRegistry, props) as P;
+  const omitNonMergeable = (value: undefined | Partial<P>) => {
+    return omit(value ?? {}, [
+      ...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS,
+    ]) as Partial<P>;
+  };
+
+  const merged = mergeBridgeUILayeredClasses<P>(
+    omitNonMergeable(libDefaults),
+    omitNonMergeable(fromRegistry),
+    omitNonMergeable(props),
+  );
+
+  return {
+    ...merged,
+    ...pick(libDefaults ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
+    ...pick(fromRegistry ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
+    ...pick(props, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
+  } as P;
 }
 
 /**
