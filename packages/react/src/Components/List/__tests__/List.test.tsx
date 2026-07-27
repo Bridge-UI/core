@@ -13,20 +13,7 @@ test("it should render the root element", () => {
   expect(root).not.toBeNull();
   expect(root?.classList.contains("m-0")).toBe(true);
   expect(root?.classList.contains("list-none")).toBe(true);
-});
-
-test("it should apply padding classes when padding prop is set", () => {
-  const { container: noneContainer } = render(<List padding="none" />);
-  const { container: normalContainer } = render(<List padding="normal" />);
-
-  const none = noneContainer.querySelector("ul");
-  const normal = normalContainer.querySelector("ul");
-
-  expect(none?.classList.contains("p-0")).toBe(true);
-  expect(none?.classList.contains("py-2")).toBe(false);
-
-  expect(normal?.classList.contains("py-2")).toBe(true);
-  expect(normal?.classList.contains("p-0")).toBe(false);
+  expect(root?.classList.contains("py-2")).toBe(true);
 });
 
 test("it should apply nested indent when nested is true", () => {

@@ -46,7 +46,7 @@ test("it should open the menu when the trigger is clicked", async () => {
     slots: {
       trigger: () => h(Button, null, () => "Open"),
       default: () =>
-        h(List, { dense: true, padding: "none" }, () => [
+        h(List, { dense: true, class: "p-0" }, () => [
           h(ListItem, {
             role: "menuitem",
             interactive: true,

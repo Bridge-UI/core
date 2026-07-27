@@ -6,12 +6,7 @@ test("it should render the root element", () => {
 
   cy.get("ul").should("exist");
   cy.get("ul").should("have.class", "list-none");
-});
-
-test("it should apply padding classes when padding prop is set", () => {
-  cy.mount(<List padding="none" />);
-
-  cy.get("ul").should("have.class", "p-0");
+  cy.get("ul").should("have.class", "py-2");
 });
 
 test("it should apply nested indent when nested is true", () => {

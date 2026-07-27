@@ -11,17 +11,7 @@ test("it should render the root element", () => {
   expect(wrapper.element.tagName).toBe("UL");
   expect(wrapper.classes()).toContain("m-0");
   expect(wrapper.classes()).toContain("list-none");
-});
-
-test("it should apply padding classes when padding prop is set", () => {
-  const none = mount(List, { props: { padding: "none" } });
-  const normal = mount(List, { props: { padding: "normal" } });
-
-  expect(none.classes()).toContain("p-0");
-  expect(none.classes()).not.toContain("py-2");
-
-  expect(normal.classes()).toContain("py-2");
-  expect(normal.classes()).not.toContain("p-0");
+  expect(wrapper.classes()).toContain("py-2");
 });
 
 test("it should apply nested indent when nested is true", () => {

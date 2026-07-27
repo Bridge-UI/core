@@ -11,7 +11,6 @@ import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   role: "button",
-  align: "center",
 } as const satisfies Partial<ListItemOwnProps>;
 
 function mountUseListItem(

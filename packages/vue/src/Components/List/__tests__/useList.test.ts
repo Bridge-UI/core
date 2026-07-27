@@ -10,16 +10,12 @@ import {
   type ListOwnProps,
 } from "@/Components/List";
 
-const libDefaults = {
-  padding: "normal",
-} as const satisfies Partial<ListOwnProps>;
-
 function mountUseList(props: Partial<ListOwnProps> = {}) {
   let result!: ReturnType<typeof useList>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = useList(props, libDefaults);
+      result = useList(props);
 
       return () => h("div");
     },
@@ -30,31 +26,12 @@ function mountUseList(props: Partial<ListOwnProps> = {}) {
   return result;
 }
 
-test("it should return default padding as normal", () => {
-  const { merged } = mountUseList();
-
-  expect(merged.value.padding).toBe("normal");
-});
-
-test("it should override padding when prop is passed", () => {
-  const { merged } = mountUseList({ padding: "none" });
-
-  expect(merged.value.padding).toBe("none");
-});
-
 test("it should apply list root classes", () => {
   const { rootBind } = mountUseList();
 
   expect(rootBind.value.class).toContain("m-0");
   expect(rootBind.value.class).toContain("list-none");
-});
-
-test("it should apply padding classes on root bind", () => {
-  const none = mountUseList({ padding: "none" });
-  const normal = mountUseList({ padding: "normal" });
-
-  expect(none.rootBind.value.class).toContain("p-0");
-  expect(normal.rootBind.value.class).toContain("py-2");
+  expect(rootBind.value.class).toContain("py-2");
 });
 
 test("it should apply nested indent on root bind", () => {
@@ -78,7 +55,7 @@ test("it should provide dense context to descendants", () => {
 
   const Wrapper = defineComponent({
     setup() {
-      useList({ dense: true }, libDefaults);
+      useList({ dense: true });
 
       return () => h(Probe);
     },

@@ -5,7 +5,6 @@ export type {
   ListClasses,
   ListCustomProps,
   ListOwnProps,
-  ListPaddingOverrides,
   ListProps,
 } from "@/Components/List/list.types";
 export { useListContext } from "@/Components/List/ListContext";

@@ -158,7 +158,7 @@ test("it should switch to another menu in one click while one is open", async ()
 test("it should render List and ListItem inside the menu panel", () => {
   render(
     <ControlledMenu initialOpen>
-      <List dense padding="none">
+      <List dense className="p-0">
         <ListItem interactive role="menuitem" primary="Item one" />
       </List>
     </ControlledMenu>,

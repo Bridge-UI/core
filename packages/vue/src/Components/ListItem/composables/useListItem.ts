@@ -16,13 +16,11 @@ import {
 // ** Core Imports
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type ListboxOption,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { alignProps } from "@bridge-ui/core/Components/ListItem";
 
 // ** Local Imports
 import { LIST_INJECTION_KEY } from "@/Components/List/listInjectionKey";
@@ -44,7 +42,6 @@ import {
 const listItemBridgeKeys = [
   "as",
   "role",
-  "align",
   "dense",
   "value",
   "classes",
@@ -58,7 +55,7 @@ const listItemBridgeKeys = [
   "selectedIcon",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
-type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role" | "align">;
+type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role">;
 
 type ListItemMerged = MergeLibDefaults<ListItemOwnProps, ListItemLibDefaults>;
 
@@ -188,15 +185,6 @@ export function useListItem(
     return listContext ? toValue(listContext).dense : false;
   });
 
-  const alignClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      alignProps,
-      bridgeListItem.value?.customProps?.align,
-    );
-
-    return get(classes, merged.value.align);
-  });
-
   const hasPrimary = computed(() => {
     return (
       hasNamedSlot(slots, "primary") ||
@@ -292,7 +280,7 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
+          "flex w-full min-w-0 items-center gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-4": true,
           "py-2": !isDense.value,
@@ -314,7 +302,6 @@ export function useListItem(
             listboxHighlighted.value &&
             !listboxSelected.value,
           "opacity-50 pointer-events-none": merged.value.disabled,
-          [alignClass.value ?? ""]: true,
           [get(mergedClasses.value, "interactive") ?? ""]: true,
           [listboxContext.value?.sizeClasses?.option ?? ""]: true,
         }),
@@ -325,10 +312,10 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
+      "items-center": !merged.value.interactive,
       "px-4": !merged.value.interactive,
       "py-2": !merged.value.interactive && !isDense.value,
       "py-1.5": !merged.value.interactive && isDense.value,
-      [alignClass.value ?? ""]: !merged.value.interactive,
     });
   });
 

@@ -15,12 +15,9 @@ const props = withDefaults(defineProps<ListOwnProps>(), {
   as: "ul",
   dense: false,
   nested: false,
-  padding: "normal",
 });
 
-const { merged, rootBind } = useList(props, {
-  padding: "normal",
-});
+const { merged, rootBind } = useList(props);
 
 const rootTag = computed(() => {
   return merged.value.as ?? "ul";
