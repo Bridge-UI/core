@@ -3,11 +3,11 @@ import type { InputHTMLAttributes, Slot, TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  ListboxOptionsInput,
   MergeHtmlProps,
   SelectAsyncData,
   SelectModel,
   SelectOption,
-  SelectOptionInput,
   SelectValue,
 } from "@bridge-ui/core";
 
@@ -21,6 +21,8 @@ import type {
 import type { ListboxOwnProps } from "@/Components/Listbox/listbox.types";
 
 export type {
+  ListboxOptionGroup,
+  ListboxOptionsInput,
   SelectAsyncData,
   SelectModel,
   SelectOption,
@@ -238,9 +240,10 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   optionLabel?: string;
 
   /**
-   * The list of options to display.
+   * The list of options to display. May include section groups
+   * (`{ title, options, sticky? }`).
    */
-  options?: SelectOptionInput[];
+  options?: ListboxOptionsInput;
 
   /**
    * Key used to read the value from option objects.
@@ -279,6 +282,13 @@ export interface SelectSlots extends FormFieldSlots {
   chip?: Slot<{ option: SelectOption }>;
 
   /**
+   * Composed dropdown content (`ListSection` / `ListItem` with `value`).
+   * When set (and not using declarative `SelectOption` children), replaces
+   * mapped `options` inside the listbox.
+   */
+  default?: Slot;
+
+  /**
    * Custom empty-state content.
    */
   empty?: Slot;
@@ -289,7 +299,7 @@ export interface SelectSlots extends FormFieldSlots {
   loading?: Slot;
 
   /**
-   * Custom option item content.
+   * Custom option item content when rendering from the `options` prop.
    */
   option?: Slot<{ option: SelectOption; selected: boolean }>;
 }

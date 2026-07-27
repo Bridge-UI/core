@@ -16,12 +16,16 @@ import {
   adjustAutosizeTextareaHeight,
   cn,
   createSelectAsyncSearch,
+  filterListboxEntries,
+  flattenListboxOptions,
   mergeBridgeUILayeredClasses,
+  normalizeListboxEntries,
   normalizeSelectOptions,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
   splitComponentProps,
+  type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core";
 import {
@@ -59,6 +63,7 @@ const selectBridgeKeys = [
   "classes",
   "loading",
   "options",
+  "children",
   "multiple",
   "asyncData",
   "clearable",
@@ -148,19 +153,80 @@ export function useSelect(
     selectMerged.optionDescription,
   ]);
 
-  const staticOptions = useMemo(() => {
-    return normalizeSelectOptions(selectMerged.options, optionKeys);
+  const staticEntries = useMemo(() => {
+    return normalizeListboxEntries(selectMerged.options, optionKeys);
   }, [optionKeys, selectMerged.options]);
 
-  const resolvedOptions = useMemo(() => {
-    const base = asyncOptions.length > 0 ? asyncOptions : staticOptions;
+  const staticOptions = useMemo(() => {
+    return flattenListboxOptions(staticEntries);
+  }, [staticEntries]);
 
-    if (selectMerged.flipOptions) {
-      return [...base].reverse();
+  const [registeredOptions, setRegisteredOptions] = useState<SelectOption[]>(
+    [],
+  );
+
+  const handleRegisteredOptionsChange = useCallback(
+    (options: SelectOption[]) => {
+      setRegisteredOptions((current) => {
+        if (
+          current.length === options.length &&
+          current.every(
+            (option, index) =>
+              String(option.value) === String(options[index]?.value),
+          )
+        ) {
+          return current;
+        }
+
+        return options;
+      });
+    },
+    [],
+  );
+
+  const hasComposedChildren = selectMerged.children != null;
+
+  const resolvedEntries = useMemo((): ListboxEntry[] => {
+    if (hasComposedChildren) {
+      return [];
     }
 
-    return base;
-  }, [asyncOptions, staticOptions, selectMerged.flipOptions]);
+    if (asyncOptions.length > 0) {
+      const asyncEntries = normalizeListboxEntries(asyncOptions, optionKeys);
+
+      if (selectMerged.flipOptions) {
+        return [...asyncEntries].reverse();
+      }
+
+      return asyncEntries;
+    }
+
+    if (selectMerged.flipOptions) {
+      return [...staticEntries].reverse().map((entry) => {
+        if (entry.type === "section") {
+          return { ...entry, options: [...entry.options].reverse() };
+        }
+
+        return entry;
+      });
+    }
+
+    return staticEntries;
+  }, [
+    asyncOptions,
+    hasComposedChildren,
+    optionKeys,
+    selectMerged.flipOptions,
+    staticEntries,
+  ]);
+
+  const resolvedOptions = useMemo(() => {
+    if (hasComposedChildren) {
+      return registeredOptions;
+    }
+
+    return flattenListboxOptions(resolvedEntries);
+  }, [hasComposedChildren, registeredOptions, resolvedEntries]);
 
   const selectedValues = useMemo((): SelectValue[] => {
     const value = modelValue;
@@ -204,17 +270,29 @@ export function useSelect(
 
   const isLoading = Boolean(selectMerged.loading) || asyncLoading;
 
-  const visibleOptions = useMemo(() => {
+  const visibleEntries = useMemo(() => {
+    if (hasComposedChildren) {
+      return [];
+    }
+
     if (!isSearchActive || !searchQuery.trim()) {
-      return resolvedOptions;
+      return resolvedEntries;
     }
 
     const query = searchQuery.trim().toLowerCase();
 
-    return resolvedOptions.filter((option) => {
+    return filterListboxEntries(resolvedEntries, (option) => {
       return option.label.toLowerCase().includes(query);
     });
-  }, [searchQuery, isSearchActive, resolvedOptions]);
+  }, [hasComposedChildren, isSearchActive, resolvedEntries, searchQuery]);
+
+  const visibleOptions = useMemo(() => {
+    if (hasComposedChildren) {
+      return registeredOptions;
+    }
+
+    return flattenListboxOptions(visibleEntries);
+  }, [hasComposedChildren, registeredOptions, visibleEntries]);
 
   const navigation = useListboxNavigation(
     visibleOptions,
@@ -883,9 +961,11 @@ export function useSelect(
       isSelected,
       highlightedIndex,
       loading: isLoading,
+      entries: visibleEntries,
       options: visibleOptions,
       labelledBy: formField.controlId,
       invalidated: formField.invalidated,
+      onRegisteredOptionsChange: handleRegisteredOptionsChange,
     };
   }, [
     multiple,
@@ -894,6 +974,7 @@ export function useSelect(
     isSelected,
     emptyMessage,
     loadingMessage,
+    visibleEntries,
     visibleOptions,
     props.maxHeight,
     hideEmptyMessage,
@@ -904,6 +985,7 @@ export function useSelect(
     formField.merged.color,
     props.disableMaxHeight,
     props.customProps?.listbox,
+    handleRegisteredOptionsChange,
   ]);
 
   return {
@@ -933,5 +1015,6 @@ export function useSelect(
     highlightedIndex,
     hideEmptyMessage,
     handleOpenChange,
+    children: selectMerged.children,
   };
 }

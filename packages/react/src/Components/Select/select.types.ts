@@ -3,11 +3,11 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  ListboxOptionsInput,
   MergeHtmlProps,
   SelectAsyncData,
   SelectModel,
   SelectOption,
-  SelectOptionInput,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -20,6 +20,8 @@ import type {
 import type { ListboxOwnProps } from "@/Components/Listbox/listbox.types";
 
 export type {
+  ListboxOptionGroup,
+  ListboxOptionsInput,
   SelectAsyncData,
   SelectModel,
   SelectOption,
@@ -112,6 +114,12 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * Remote data source. Implies `searchable`.
    */
   asyncData?: SelectAsyncData;
+
+  /**
+   * Composed dropdown content (`ListSection` / `ListItem` with `value`).
+   * When set, replaces mapped `options` inside the listbox.
+   */
+  children?: ReactNode;
 
   /**
    * Whether the value can be cleared.
@@ -210,9 +218,10 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   optionLabel?: string;
 
   /**
-   * The list of options to display.
+   * The list of options to display. May include section groups
+   * (`{ title, options, sticky? }`).
    */
-  options?: SelectOptionInput[];
+  options?: ListboxOptionsInput;
 
   /**
    * Key used to read the value from option objects.

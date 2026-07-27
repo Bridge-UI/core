@@ -33,6 +33,7 @@ function Select(props: SelectProps) {
     slots,
     hasValue,
     multiple,
+    children,
     formField,
     clearable,
     clearBind,
@@ -112,7 +113,9 @@ function Select(props: SelectProps) {
           afterOptions: slots?.afterOptions,
           beforeOptions: slots?.beforeOptions,
         }}
-      />
+      >
+        {children}
+      </Listbox>
     </>
   );
 }
