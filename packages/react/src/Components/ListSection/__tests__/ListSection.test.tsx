@@ -18,8 +18,23 @@ test("it should render children as the title", () => {
   expect(screen.getByText("Custom label")).toBeTruthy();
 });
 
-test("it should apply sticky classes when sticky is true", () => {
+test("it should apply sticky classes on the li root when sticky is true", () => {
   const { container } = render(<ListSection sticky title="Sticky" />);
+
+  expect(container.querySelector("li")?.classList.contains("sticky")).toBe(
+    true,
+  );
+  expect(
+    container
+      .querySelector('[role="presentation"]')
+      ?.classList.contains("sticky"),
+  ).toBe(false);
+});
+
+test("it should apply sticky classes on the title when as is div", () => {
+  const { container } = render(
+    <ListSection sticky as="div" title="Sticky div" />,
+  );
 
   expect(
     container
