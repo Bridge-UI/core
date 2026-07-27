@@ -101,6 +101,16 @@
   /* Listbox indeterminate loading bar */
   --animate-bridge-listbox-indeterminate: bridge-listbox-indeterminate 1.4s
     ease-in-out infinite;
+
+  /* Progress linear bar animations */
+  --animate-bridge-progress-indeterminate: bridge-progress-indeterminate 1.4s
+    ease-in-out infinite;
+  --animate-bridge-progress-query: bridge-progress-query 1.4s ease-in-out
+    infinite;
+
+  /* Spinner circular animations */
+  --animate-bridge-spinner-rotate: bridge-spinner-rotate 1.4s linear infinite;
+  --animate-bridge-spinner-dash: bridge-spinner-dash 1.4s ease-in-out infinite;
 }
 
 @keyframes bridge-listbox-indeterminate {
@@ -110,6 +120,53 @@
 
   100% {
     transform: translateX(400%);
+  }
+}
+
+@keyframes bridge-progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@keyframes bridge-progress-query {
+  0% {
+    transform: translateX(400%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes bridge-spinner-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bridge-spinner-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
   }
 }
 
