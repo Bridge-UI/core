@@ -28,6 +28,8 @@ import { ListSection } from "@bridge-ui/react/Components/ListSection";
 
 ### Sticky
 
+With the default `as="li"`, sticky styles apply on the section root (with an opaque background) so the heading can stick while sibling items scroll. Use `as="div"` when you need sticky on the title element itself. The list (or a parent) needs a scroll container with a constrained height.
+
 ```tsx
 <div className="max-h-48 overflow-y-auto">
   <List>
@@ -53,15 +55,15 @@ import { ListSection } from "@bridge-ui/react/Components/ListSection";
 
 ## Props
 
-| Prop          | Type                     | Default | Description                                                               |
-| ------------- | ------------------------ | ------- | ------------------------------------------------------------------------- |
-| `as`          | `"div" \| "li"`          | "li"    | The element to render as.                                                 |
-| `children`    | `ReactNode`              | —       | The children to render. Use `title` for plain text.                       |
-| `classes`     | `ListSectionClasses`     | —       | The classes to apply to the section.                                      |
-| `customProps` | `ListSectionCustomProps` | —       | Props forwarded to each section part.                                     |
-| `inset`       | `boolean`                | `false` | When true, adds left padding to align with items that have leading icons. |
-| `sticky`      | `boolean`                | `false` | When true, sticks the heading while scrolling long lists.                 |
-| `title`       | `ReactNode`              | —       | Section label text.                                                       |
+| Prop          | Type                     | Default | Description                                                                                                                                                  |
+| ------------- | ------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `as`          | `"div" \| "li"`          | "li"    | The element to render as.                                                                                                                                    |
+| `children`    | `ReactNode`              | —       | The children to render. Use `title` for plain text.                                                                                                          |
+| `classes`     | `ListSectionClasses`     | —       | The classes to apply to the section.                                                                                                                         |
+| `customProps` | `ListSectionCustomProps` | —       | Props forwarded to each section part.                                                                                                                        |
+| `inset`       | `boolean`                | `false` | When true, adds left padding to align with items that have leading icons.                                                                                    |
+| `sticky`      | `boolean`                | `false` | When true, sticks the heading while scrolling. On `as="li"` (default), sticky + opaque background apply to the root; on `as="div"`, they apply to the title. |
+| `title`       | `ReactNode`              | —       | Section label text.                                                                                                                                          |
 
 ## Related components
 
