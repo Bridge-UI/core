@@ -86,7 +86,7 @@ export function useListSection(props: ListSectionProps) {
       {
         role: "presentation",
         className: cn({
-          "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase": true,
+          "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-950 dark:text-dark-400": true,
           "sticky top-0 z-10": merged.sticky,
           "py-2": !isDense,
           "py-1.5": isDense,
