@@ -5,9 +5,11 @@ import {
   computed,
   getCurrentInstance,
   inject,
+  onBeforeUnmount,
   toValue,
   useAttrs,
   useSlots,
+  watch,
   type Slot,
 } from "vue";
 
@@ -17,12 +19,15 @@ import {
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
+  type ListboxOption,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
 import { alignProps } from "@bridge-ui/core/Components/ListItem";
 
 // ** Local Imports
 import { LIST_INJECTION_KEY } from "@/Components/List/listInjectionKey";
+import { getListboxOptionId } from "@/Components/Listbox/composables/useListboxNavigation";
+import { LISTBOX_INJECTION_KEY } from "@/Components/Listbox/listboxInjectionKey";
 import type {
   ListItemOwnProps,
   ListItemProps,
@@ -41,6 +46,7 @@ const listItemBridgeKeys = [
   "role",
   "align",
   "dense",
+  "value",
   "classes",
   "divider",
   "primary",
@@ -64,6 +70,8 @@ export function useListItem(
   const attrs = useAttrs();
 
   const listContext = inject(LIST_INJECTION_KEY, null);
+  const listboxContextRef = inject(LISTBOX_INJECTION_KEY, null);
+  const hasListboxContext = listboxContextRef != null;
 
   const split = computed(() => {
     return splitComponentProps<ListItemProps, typeof listItemBridgeKeys>({
@@ -79,6 +87,82 @@ export function useListItem(
     libDefaults,
     componentName: "ListItem",
     props: () => split.value.componentProps,
+  });
+
+  const listboxContext = computed(() => {
+    return listboxContextRef ? toValue(listboxContextRef) : null;
+  });
+
+  const listboxOption = computed((): null | ListboxOption => {
+    if (merged.value.value == null || !hasListboxContext) {
+      return null;
+    }
+
+    return {
+      value: merged.value.value,
+      description: merged.value.secondary,
+      disabled: Boolean(merged.value.disabled),
+      label: merged.value.primary ?? String(merged.value.value),
+    };
+  });
+
+  let unregister: undefined | (() => void);
+
+  watch(
+    () => {
+      const option = listboxOption.value;
+
+      if (!option) {
+        return null;
+      }
+
+      return `${String(option.value)}:${option.label}:${option.disabled}:${option.description ?? ""}`;
+    },
+    () => {
+      unregister?.();
+      unregister = undefined;
+
+      const option = listboxOption.value;
+
+      if (!option || !listboxContextRef) {
+        return;
+      }
+
+      unregister = toValue(listboxContextRef).registerOption(option);
+    },
+    { immediate: true },
+  );
+
+  onBeforeUnmount(() => {
+    unregister?.();
+  });
+
+  const isListboxOption = computed(() => {
+    return listboxOption.value != null;
+  });
+
+  const listboxSelected = computed(() => {
+    if (!listboxOption.value || !listboxContext.value) {
+      return false;
+    }
+
+    return listboxContext.value.isSelected(listboxOption.value.value);
+  });
+
+  const listboxOptionIndex = computed(() => {
+    if (!listboxOption.value || !listboxContext.value) {
+      return -1;
+    }
+
+    return listboxContext.value.getOptionIndex(listboxOption.value.value);
+  });
+
+  const listboxHighlighted = computed(() => {
+    if (!listboxContext.value || listboxOptionIndex.value < 0) {
+      return false;
+    }
+
+    return listboxContext.value.highlightedIndex === listboxOptionIndex.value;
   });
 
   const customProps = computed(() => {
@@ -130,6 +214,14 @@ export function useListItem(
   });
 
   const resolvedSelectedIcon = computed((): null | LucideIcon => {
+    if (isListboxOption.value) {
+      if (!listboxSelected.value || !listboxContext.value?.showCheckmark) {
+        return null;
+      }
+
+      return Check;
+    }
+
     if (!merged.value.selected) {
       return null;
     }
@@ -156,11 +248,22 @@ export function useListItem(
         "border-b border-black/10 last:border-b-0": merged.value.divider,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
+      id:
+        isListboxOption.value &&
+        listboxContext.value?.listboxId &&
+        listboxOptionIndex.value >= 0
+          ? getListboxOptionId(
+              listboxContext.value.listboxId,
+              listboxOptionIndex.value,
+            )
+          : undefined,
     });
   });
 
   const interactiveBind = computed(() => {
-    if (!merged.value.interactive) {
+    const interactive = merged.value.interactive || isListboxOption.value;
+
+    if (!interactive) {
       return null;
     }
 
@@ -168,18 +271,50 @@ export function useListItem(
       customProps.value?.interactive,
       {},
       {
-        role: merged.value.role,
-        tabindex: merged.value.disabled ? -1 : 0,
         "aria-disabled": merged.value.disabled ? true : undefined,
-        "data-selected": merged.value.selected ? true : undefined,
+        role: isListboxOption.value ? "option" : merged.value.role,
+        tabindex: merged.value.disabled || isListboxOption.value ? -1 : 0,
+        "data-selected":
+          merged.value.selected || listboxSelected.value ? true : undefined,
+        "aria-selected": isListboxOption.value
+          ? listboxSelected.value
+          : undefined,
+        onMousedown: isListboxOption.value
+          ? (event: MouseEvent) => {
+              event.preventDefault();
+            }
+          : undefined,
+        onClick: isListboxOption.value
+          ? () => {
+              if (listboxOption.value) {
+                listboxContext.value?.onSelect(listboxOption.value);
+              }
+            }
+          : undefined,
         class: cn({
           "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.value.disabled,
-          "px-4": true,
-          "py-2": !isDense.value,
-          "py-1.5": isDense.value,
-          "hover:bg-black/5 focus-visible:bg-black/5": !merged.value.disabled,
-          "bg-primary-50 text-primary-700": merged.value.selected,
+          "px-4": !isListboxOption.value,
+          [listboxContext.value?.sizeClasses?.option ?? "px-4"]:
+            isListboxOption.value,
+          "py-2": !isListboxOption.value && !isDense.value,
+          "py-1.5": !isListboxOption.value && isDense.value,
+          "hover:bg-black/5 focus-visible:bg-black/5":
+            !merged.value.disabled && !isListboxOption.value,
+          "bg-primary-50 text-primary-700":
+            merged.value.selected && !isListboxOption.value,
+          [listboxContext.value?.optionSelectedClass ?? ""]:
+            isListboxOption.value && listboxSelected.value,
+          [listboxContext.value?.mergedClasses.optionSelected ?? ""]:
+            isListboxOption.value && listboxSelected.value,
+          [listboxContext.value?.optionHighlightedClass ?? ""]:
+            isListboxOption.value &&
+            listboxHighlighted.value &&
+            !listboxSelected.value,
+          [listboxContext.value?.mergedClasses.optionHighlighted ?? ""]:
+            isListboxOption.value &&
+            listboxHighlighted.value &&
+            !listboxSelected.value,
           "opacity-50 pointer-events-none": merged.value.disabled,
           [alignClass.value ?? ""]: true,
           [get(mergedClasses.value, "interactive") ?? ""]: true,
@@ -191,10 +326,13 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "px-4": !merged.value.interactive,
-      "py-2": !merged.value.interactive && !isDense.value,
-      "py-1.5": !merged.value.interactive && isDense.value,
-      [alignClass.value ?? ""]: !merged.value.interactive,
+      "px-4": !merged.value.interactive && !isListboxOption.value,
+      "py-2":
+        !merged.value.interactive && !isListboxOption.value && !isDense.value,
+      "py-1.5":
+        !merged.value.interactive && !isListboxOption.value && isDense.value,
+      [alignClass.value ?? ""]:
+        !merged.value.interactive && !isListboxOption.value,
     });
   });
 
@@ -230,7 +368,9 @@ export function useListItem(
       {},
       {
         class: cn({
-          "block truncate text-sm font-medium": true,
+          "block truncate text-sm font-medium": !isListboxOption.value,
+          [listboxContext.value?.sizeClasses?.primary ??
+          "block truncate text-sm font-medium"]: isListboxOption.value,
           [get(mergedClasses.value, "primary") ?? ""]: true,
         }),
       },
@@ -243,7 +383,9 @@ export function useListItem(
       {},
       {
         class: cn({
-          "mt-0.5 block truncate text-xs text-dark-500": true,
+          "mt-0.5 block truncate text-xs text-dark-500": !isListboxOption.value,
+          [listboxContext.value?.sizeClasses?.secondary ??
+          "mt-0.5 block truncate text-xs text-dark-500"]: isListboxOption.value,
           [get(mergedClasses.value, "secondary") ?? ""]: true,
         }),
       },
@@ -271,6 +413,7 @@ export function useListItem(
         size: "sm" as const,
         class: cn({
           "shrink-0": true,
+          [listboxContext.value?.checkClass ?? ""]: isListboxOption.value,
           [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
         }),
       },

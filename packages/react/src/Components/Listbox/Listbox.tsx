@@ -1,21 +1,36 @@
 // ** External Imports
 import { Check } from "lucide-react";
-import type { MouseEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEvent,
+} from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import {
+  cn,
+  entriesFromListboxOptions,
+  flattenListboxOptions,
+  mapListboxEntriesToRows,
+  type ListboxOption,
+  type ListboxValue,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
 import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
-import type {
-  ListboxOption,
-  ListboxProps,
-  ListboxValue,
-} from "@/Components/Listbox/listbox.types";
+import type { ListboxProps } from "@/Components/Listbox/listbox.types";
+import {
+  ListboxContext,
+  type ListboxContextValue,
+} from "@/Components/Listbox/ListboxContext";
 import { ListItem } from "@/Components/ListItem";
 import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
+import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
 
 const listboxLibDefaults = {
@@ -30,6 +45,8 @@ function keepFocusOnCombobox(event: MouseEvent) {
 function Listbox({
   slots,
   options,
+  entries,
+  children,
   onSelect,
   anchorEl,
   listboxId,
@@ -42,12 +59,17 @@ function Listbox({
   highlightedIndex = -1,
   hideEmptyMessage = false,
   disableAutoFocus = false,
+  onRegisteredOptionsChange,
   placement = "bottom-start",
   isSelected: isSelectedProp,
   emptyMessage = "No options",
   loadingMessage = "Loading...",
   ...ownProps
 }: ListboxProps) {
+  const resolvedOptions = useMemo(() => {
+    return options ?? [];
+  }, [options]);
+
   const {
     merged,
     checkClass,
@@ -62,7 +84,6 @@ function Listbox({
   } = useListbox(
     {
       ...ownProps,
-      options,
       loading,
       multiple,
       anchorEl,
@@ -74,19 +95,142 @@ function Listbox({
       highlightedIndex,
       hideEmptyMessage,
       disableAutoFocus,
+      options: resolvedOptions,
       isSelected: isSelectedProp,
     },
     listboxLibDefaults,
   );
 
+  const resolvedEntries = useMemo(() => {
+    if (entries) {
+      return entries;
+    }
+
+    return entriesFromListboxOptions(resolvedOptions);
+  }, [entries, resolvedOptions]);
+
+  const flatOptions = useMemo(() => {
+    return flattenListboxOptions(resolvedEntries);
+  }, [resolvedEntries]);
+
+  const hasComposedChildren = children != null;
+
   const showEmptyState =
-    !loading && options.length === 0 && hideEmptyMessage !== true;
+    !loading &&
+    !hasComposedChildren &&
+    flatOptions.length === 0 &&
+    hideEmptyMessage !== true;
 
   const resolvedCheckClass = cn(checkClass, mergedClasses.check);
 
-  function resolveSelected(value: ListboxValue) {
-    return isSelectedProp?.(value) ?? false;
-  }
+  const registeredOptionsRef = useRef<ListboxOption[]>([]);
+  const [registeredOptions, setRegisteredOptions] = useState<ListboxOption[]>(
+    [],
+  );
+  const flatOptionsRef = useRef(flatOptions);
+  const hasComposedChildrenRef = useRef(hasComposedChildren);
+
+  useEffect(() => {
+    flatOptionsRef.current = flatOptions;
+  }, [flatOptions]);
+
+  useEffect(() => {
+    hasComposedChildrenRef.current = hasComposedChildren;
+  }, [hasComposedChildren]);
+
+  const resolveSelected = useCallback(
+    (value: ListboxValue) => {
+      return isSelectedProp?.(value) ?? false;
+    },
+    [isSelectedProp],
+  );
+
+  const mappedRows = useMemo(() => {
+    return mapListboxEntriesToRows(resolvedEntries, resolveSelected);
+  }, [resolvedEntries, resolveSelected]);
+
+  const handleSelect = useCallback(
+    (option: ListboxOption) => {
+      if (option.disabled) {
+        return;
+      }
+
+      onSelect?.(option);
+    },
+    [onSelect],
+  );
+
+  const registerOption = useCallback((option: ListboxOption) => {
+    const alreadyRegistered = registeredOptionsRef.current.some(
+      (entry) => String(entry.value) === String(option.value),
+    );
+
+    if (!alreadyRegistered) {
+      registeredOptionsRef.current = [...registeredOptionsRef.current, option];
+      setRegisteredOptions(registeredOptionsRef.current);
+    }
+
+    return () => {
+      registeredOptionsRef.current = registeredOptionsRef.current.filter(
+        (entry) => String(entry.value) !== String(option.value),
+      );
+      setRegisteredOptions([...registeredOptionsRef.current]);
+    };
+  }, []);
+
+  const getOptionIndex = useCallback((value: ListboxValue) => {
+    const source = hasComposedChildrenRef.current
+      ? registeredOptionsRef.current
+      : flatOptionsRef.current;
+
+    return source.findIndex((option) => String(option.value) === String(value));
+  }, []);
+
+  useEffect(() => {
+    if (!hasComposedChildren) {
+      return;
+    }
+
+    onRegisteredOptionsChange?.(registeredOptions);
+  }, [
+    registeredOptions,
+    hasComposedChildren,
+    onRegisteredOptionsChange,
+  ]);
+
+  const listboxContext = useMemo((): ListboxContextValue => {
+    return {
+      listboxId,
+      sizeClasses,
+      showCheckmark,
+      getOptionIndex,
+      registerOption,
+      highlightedIndex,
+      optionSelectedClass,
+      onSelect: handleSelect,
+      optionHighlightedClass,
+      isSelected: resolveSelected,
+      checkClass: resolvedCheckClass,
+      mergedClasses: {
+        optionSelected: mergedClasses.optionSelected,
+        optionHighlighted: mergedClasses.optionHighlighted,
+      },
+    };
+  }, [
+    listboxId,
+    sizeClasses,
+    handleSelect,
+    showCheckmark,
+    getOptionIndex,
+    registerOption,
+    resolveSelected,
+    highlightedIndex,
+    resolvedCheckClass,
+    optionSelectedClass,
+    optionHighlightedClass,
+    mergedClasses.optionSelected,
+    mergedClasses.optionHighlighted,
+  ]);
 
   function isOptionHighlighted(index: number) {
     return highlightedIndex === index;
@@ -123,12 +267,50 @@ function Listbox({
     };
   }
 
-  function handleSelect(option: ListboxOption) {
-    if (option.disabled) {
-      return;
-    }
+  function renderMappedEntries() {
+    return mappedRows.map((row) => {
+      if (row.kind === "section") {
+        return (
+          <ListSection
+            key={row.key}
+            title={row.title}
+            sticky={row.sticky}
+          />
+        );
+      }
 
-    onSelect?.(option);
+      const { option, index, selected } = row;
+      const optionCustomProps = getOptionCustomProps(option, index);
+
+      return (
+        <ListItem
+          interactive
+          role="option"
+          selected={false}
+          key={row.key}
+          aria-selected={selected}
+          disabled={option.disabled}
+          secondary={option.description}
+          primary={slots?.option ? undefined : option.label}
+          slots={{
+            end:
+              showCheckmark && selected ? (
+                <Check className={resolvedCheckClass} />
+              ) : undefined,
+          }}
+          customProps={{
+            ...optionCustomProps,
+            root: { id: getListboxOptionId(listboxId, index) },
+            interactive: {
+              ...optionCustomProps.interactive,
+              onClick: () => handleSelect(option),
+            },
+          }}
+        >
+          {slots?.option?.({ option, selected })}
+        </ListItem>
+      );
+    });
   }
 
   return (
@@ -153,48 +335,18 @@ function Listbox({
         </>
       ) : (
         <div {...scrollBind}>
-          <List
-            dense
-            role="listbox"
-            padding="none"
-            id={listboxId}
-            aria-labelledby={labelledBy}
-            aria-multiselectable={multiple || undefined}
-          >
-            {options.map((option, index) => {
-              const selected = resolveSelected(option.value);
-              const optionCustomProps = getOptionCustomProps(option, index);
-
-              return (
-                <ListItem
-                  interactive
-                  role="option"
-                  selected={false}
-                  aria-selected={selected}
-                  key={String(option.value)}
-                  disabled={option.disabled}
-                  secondary={option.description}
-                  primary={slots?.option ? undefined : option.label}
-                  slots={{
-                    end:
-                      showCheckmark && selected ? (
-                        <Check className={resolvedCheckClass} />
-                      ) : undefined,
-                  }}
-                  customProps={{
-                    ...optionCustomProps,
-                    root: { id: getListboxOptionId(listboxId, index) },
-                    interactive: {
-                      ...optionCustomProps.interactive,
-                      onClick: () => handleSelect(option),
-                    },
-                  }}
-                >
-                  {slots?.option?.({ option, selected })}
-                </ListItem>
-              );
-            })}
-          </List>
+          <ListboxContext.Provider value={listboxContext}>
+            <List
+              dense
+              role="listbox"
+              padding="none"
+              id={listboxId}
+              aria-labelledby={labelledBy}
+              aria-multiselectable={multiple || undefined}
+            >
+              {hasComposedChildren ? children : renderMappedEntries()}
+            </List>
+          </ListboxContext.Provider>
         </div>
       )}
 

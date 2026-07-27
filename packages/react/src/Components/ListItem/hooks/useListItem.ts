@@ -1,7 +1,7 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
 import { Check, type LucideIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
 import {
@@ -9,12 +9,15 @@ import {
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
+  type ListboxOption,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
 import { alignProps } from "@bridge-ui/core/Components/ListItem";
 
 // ** Local Imports
 import { useListContext } from "@/Components/List/ListContext";
+import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
+import { useListboxContext } from "@/Components/Listbox/ListboxContext";
 import type {
   ListItemOwnProps,
   ListItemProps,
@@ -35,6 +38,7 @@ const listItemBridgeKeys = [
   "align",
   "dense",
   "slots",
+  "value",
   "classes",
   "divider",
   "primary",
@@ -55,6 +59,7 @@ export function useListItem(
   libDefaults: ListItemLibDefaults,
 ) {
   const listContext = useListContext();
+  const listboxContext = useListboxContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ListItemProps,
@@ -71,6 +76,72 @@ export function useListItem(
     libDefaults,
     props: componentProps,
     componentName: "ListItem",
+  });
+
+  const hasListboxContext = listboxContext != null;
+
+  const listboxOption = useMemo((): null | ListboxOption => {
+    if (merged.value == null || !hasListboxContext) {
+      return null;
+    }
+
+    const label =
+      typeof merged.primary === "string"
+        ? merged.primary
+        : String(merged.value);
+    const description =
+      typeof merged.secondary === "string" ? merged.secondary : undefined;
+
+    return {
+      label,
+      description,
+      value: merged.value,
+      disabled: Boolean(merged.disabled),
+    };
+  }, [
+    hasListboxContext,
+    merged.disabled,
+    merged.primary,
+    merged.secondary,
+    merged.value,
+  ]);
+
+  useEffect(() => {
+    if (!listboxOption) {
+      return;
+    }
+
+    const register = listboxContext?.registerOption;
+
+    if (!register) {
+      return;
+    }
+
+    return register(listboxOption);
+  }, [listboxOption, listboxContext?.registerOption]);
+
+  const listboxSelected = derived(() => {
+    if (!listboxOption || !listboxContext) {
+      return false;
+    }
+
+    return listboxContext.isSelected(listboxOption.value);
+  });
+
+  const listboxOptionIndex = derived(() => {
+    if (!listboxOption || !listboxContext) {
+      return -1;
+    }
+
+    return listboxContext.getOptionIndex(listboxOption.value);
+  });
+
+  const listboxHighlighted = derived(() => {
+    if (!listboxContext || listboxOptionIndex < 0) {
+      return false;
+    }
+
+    return listboxContext.highlightedIndex === listboxOptionIndex;
   });
 
   const slots = derived(() => {
@@ -121,7 +192,17 @@ export function useListItem(
     return Boolean(slots?.start);
   });
 
+  const isListboxOption = listboxOption != null;
+
   const resolvedSelectedIcon = useMemo((): null | LucideIcon => {
+    if (isListboxOption) {
+      if (!listboxSelected || !listboxContext?.showCheckmark) {
+        return null;
+      }
+
+      return Check;
+    }
+
     if (!merged.selected) {
       return null;
     }
@@ -131,7 +212,13 @@ export function useListItem(
     }
 
     return merged.selectedIcon ?? Check;
-  }, [merged.selected, merged.selectedIcon]);
+  }, [
+    isListboxOption,
+    listboxContext?.showCheckmark,
+    listboxSelected,
+    merged.selected,
+    merged.selectedIcon,
+  ]);
 
   const hasEnd = derived(() => {
     return Boolean(slots?.end) || resolvedSelectedIcon != null;
@@ -144,11 +231,17 @@ export function useListItem(
         "border-b border-black/10 last:border-b-0": merged.divider,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
+      id:
+        isListboxOption && listboxContext?.listboxId && listboxOptionIndex >= 0
+          ? getListboxOptionId(listboxContext.listboxId, listboxOptionIndex)
+          : undefined,
     });
   });
 
   const interactiveBind = derived(() => {
-    if (!merged.interactive) {
+    const interactive = merged.interactive || isListboxOption;
+
+    if (!interactive) {
       return null;
     }
 
@@ -156,18 +249,41 @@ export function useListItem(
       customProps?.interactive,
       {},
       {
-        role: merged.role,
-        tabIndex: merged.disabled ? -1 : 0,
+        role: isListboxOption ? "option" : merged.role,
         "aria-disabled": merged.disabled ? true : undefined,
-        "data-selected": merged.selected ? true : undefined,
+        tabIndex: merged.disabled || isListboxOption ? -1 : 0,
+        "aria-selected": isListboxOption ? listboxSelected : undefined,
+        "data-selected": merged.selected || listboxSelected ? true : undefined,
+        onMouseDown: isListboxOption
+          ? (event: MouseEvent) => {
+              event.preventDefault();
+            }
+          : undefined,
+        onClick: isListboxOption
+          ? () => {
+              if (listboxOption) {
+                listboxContext?.onSelect(listboxOption);
+              }
+            }
+          : undefined,
         className: cn({
           "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.disabled,
-          "px-4": true,
-          "py-2": !isDense,
-          "py-1.5": isDense,
-          "hover:bg-black/5 focus-visible:bg-black/5": !merged.disabled,
-          "bg-primary-50 text-primary-700": merged.selected,
+          "px-4": !isListboxOption,
+          [listboxContext?.sizeClasses?.option ?? "px-4"]: isListboxOption,
+          "py-2": !isListboxOption && !isDense,
+          "py-1.5": !isListboxOption && isDense,
+          "hover:bg-black/5 focus-visible:bg-black/5":
+            !merged.disabled && !isListboxOption,
+          "bg-primary-50 text-primary-700": merged.selected && !isListboxOption,
+          [listboxContext?.optionSelectedClass ?? ""]:
+            isListboxOption && listboxSelected,
+          [listboxContext?.mergedClasses.optionSelected ?? ""]:
+            isListboxOption && listboxSelected,
+          [listboxContext?.optionHighlightedClass ?? ""]:
+            isListboxOption && listboxHighlighted && !listboxSelected,
+          [listboxContext?.mergedClasses.optionHighlighted ?? ""]:
+            isListboxOption && listboxHighlighted && !listboxSelected,
           "opacity-50 pointer-events-none": merged.disabled,
           [alignClass ?? ""]: true,
           [get(mergedClasses, "interactive") ?? ""]: true,
@@ -179,10 +295,10 @@ export function useListItem(
   const rowClassName = derived(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "px-4": !merged.interactive,
-      "py-2": !merged.interactive && !isDense,
-      "py-1.5": !merged.interactive && isDense,
-      [alignClass ?? ""]: !merged.interactive,
+      "px-4": !merged.interactive && !isListboxOption,
+      "py-2": !merged.interactive && !isListboxOption && !isDense,
+      "py-1.5": !merged.interactive && !isListboxOption && isDense,
+      [alignClass ?? ""]: !merged.interactive && !isListboxOption,
     });
   });
 
@@ -218,7 +334,9 @@ export function useListItem(
       {},
       {
         className: cn({
-          "block truncate text-sm font-medium": true,
+          "block truncate text-sm font-medium": !isListboxOption,
+          [listboxContext?.sizeClasses?.primary ??
+          "block truncate text-sm font-medium"]: isListboxOption,
           [get(mergedClasses, "primary") ?? ""]: true,
         }),
       },
@@ -231,7 +349,9 @@ export function useListItem(
       {},
       {
         className: cn({
-          "mt-0.5 block truncate text-xs text-dark-500": true,
+          "mt-0.5 block truncate text-xs text-dark-500": !isListboxOption,
+          [listboxContext?.sizeClasses?.secondary ??
+          "mt-0.5 block truncate text-xs text-dark-500"]: isListboxOption,
           [get(mergedClasses, "secondary") ?? ""]: true,
         }),
       },
@@ -259,6 +379,7 @@ export function useListItem(
         size: "sm" as const,
         className: cn({
           "shrink-0": true,
+          [listboxContext?.checkClass ?? ""]: isListboxOption,
           [get(mergedClasses, "selectedIcon") ?? ""]: true,
         }),
       },

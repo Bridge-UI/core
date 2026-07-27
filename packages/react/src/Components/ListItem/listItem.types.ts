@@ -5,6 +5,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   ListItemAlign,
+  ListboxValue,
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
@@ -208,6 +209,13 @@ export interface ListItemOwnProps {
    * @default undefined
    */
   slots?: ListItemSlots;
+
+  /**
+   * When set inside a `Listbox`, registers this row as a selectable option.
+   *
+   * @default undefined
+   */
+  value?: ListboxValue;
 }
 
 export interface ListItemSlots {
