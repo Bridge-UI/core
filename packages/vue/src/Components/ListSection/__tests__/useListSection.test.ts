@@ -46,8 +46,22 @@ test("it should apply section title classes", () => {
   expect(titleBind.value.role).toBe("presentation");
 });
 
-test("it should apply sticky classes when sticky is true", () => {
-  const { titleBind } = mountUseListSection({ sticky: true, title: "Sticky" });
+test("it should apply sticky classes on root when sticky is true", () => {
+  const { rootBind, titleBind } = mountUseListSection({
+    sticky: true,
+    title: "Sticky",
+  });
+
+  expect(rootBind.value.class).toContain("sticky");
+  expect(titleBind.value.class).not.toContain("sticky");
+});
+
+test("it should apply sticky classes on title when as is div", () => {
+  const { titleBind } = mountUseListSection({
+    as: "div",
+    sticky: true,
+    title: "Sticky",
+  });
 
   expect(titleBind.value.class).toContain("sticky");
 });

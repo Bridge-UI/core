@@ -74,6 +74,7 @@ test("it should expose interactive bind when interactive is true", () => {
   });
 
   expect(interactiveBind.value?.role).toBe("button");
+  expect(interactiveBind.value?.class).toContain("px-4");
   expect(interactiveBind.value?.class).toContain("cursor-pointer");
 });
 

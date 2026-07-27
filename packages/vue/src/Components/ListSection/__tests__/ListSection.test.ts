@@ -23,9 +23,20 @@ test("it should render default slot content as the title", () => {
   expect(wrapper.text()).toContain("Custom label");
 });
 
-test("it should apply sticky classes when sticky is true", () => {
+test("it should apply sticky classes on the li root when sticky is true", () => {
   const wrapper = mount(ListSection, {
     props: { sticky: true, title: "Sticky" },
+  });
+
+  expect(wrapper.find("li").classes()).toContain("sticky");
+  expect(wrapper.find('[role="presentation"]').classes()).not.toContain(
+    "sticky",
+  );
+});
+
+test("it should apply sticky classes on the title when as is div", () => {
+  const wrapper = mount(ListSection, {
+    props: { as: "div", sticky: true, title: "Sticky div" },
   });
 
   expect(wrapper.find('[role="presentation"]').classes()).toContain("sticky");

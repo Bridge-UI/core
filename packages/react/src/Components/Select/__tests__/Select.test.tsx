@@ -9,13 +9,17 @@ import {
 import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
+
 // ** Local Imports
+import { ListItem } from "@/Components/ListItem";
+import { ListSection } from "@/Components/ListSection";
 import { Select } from "@/Components/Select";
 import type {
   SelectOption,
   SelectProps,
 } from "@/Components/Select/select.types";
-import { resetLayerStackForTests } from "@bridge-ui/core";
 
 afterEach(() => {
   cleanup();
@@ -148,4 +152,93 @@ test("it should filter options when searchable", async () => {
     expect(screen.getByText("Banana")).toBeTruthy();
     expect(screen.queryByText("Apple")).toBeNull();
   });
+});
+
+test("it should render grouped options with section titles", async () => {
+  render(
+    <Select
+      aria-label="Fruit"
+      options={[
+        {
+          sticky: true,
+          title: "Fruits",
+          options: [
+            { label: "Apple", value: "apple" },
+            { label: "Banana", value: "banana" },
+          ],
+        },
+        { label: "Other", value: "other" },
+      ]}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByText("Fruits")).toBeTruthy();
+  });
+
+  expect(screen.getByText("Apple")).toBeTruthy();
+  expect(screen.getByText("Other")).toBeTruthy();
+});
+
+test("it should filter within grouped options and drop empty sections", async () => {
+  render(
+    <Select
+      searchable
+      aria-label="Fruit"
+      options={[
+        {
+          title: "Fruits",
+          options: [
+            { label: "Apple", value: "apple" },
+            { label: "Banana", value: "banana" },
+          ],
+        },
+        {
+          title: "Other",
+          options: [{ label: "Carrot", value: "carrot" }],
+        },
+      ]}
+    />,
+  );
+
+  const combobox = screen.getByRole("combobox");
+
+  fireEvent.click(combobox.closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  fireEvent.input(combobox, { target: { value: "ban" } });
+
+  await waitFor(() => {
+    expect(screen.getByText("Banana")).toBeTruthy();
+    expect(screen.getByText("Fruits")).toBeTruthy();
+    expect(screen.queryByText("Other")).toBeNull();
+    expect(screen.queryByText("Carrot")).toBeNull();
+  });
+});
+
+test("it should select from composed ListSection and ListItem children", async () => {
+  const onChange = vi.fn();
+
+  render(
+    <Select value="" aria-label="Fruit" onChange={onChange}>
+      <ListSection title="Fruits" />
+      <ListItem value="apple" primary="Apple" />
+      <ListItem value="banana" primary="Banana" />
+    </Select>,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByText("Fruits")).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByRole("option", { name: "Apple" }));
+
+  expect(onChange).toHaveBeenCalledWith("apple");
 });

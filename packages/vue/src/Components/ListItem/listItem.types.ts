@@ -5,6 +5,7 @@ import type { HTMLAttributes, Slot, VNode } from "vue";
 // ** Core Imports
 import type {
   ListItemAlign,
+  ListboxValue,
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
@@ -193,6 +194,13 @@ export interface ListItemOwnProps {
    * @default Check
    */
   selectedIcon?: null | LucideIcon;
+
+  /**
+   * When set inside a `Listbox`, registers this row as a selectable option.
+   *
+   * @default undefined
+   */
+  value?: ListboxValue;
 }
 
 export type ListItemPrimaryContent = VNode | string | VNode[] | undefined;

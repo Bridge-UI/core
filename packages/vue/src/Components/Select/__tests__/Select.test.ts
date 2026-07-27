@@ -1,11 +1,15 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
-// ** Local Imports
-import { Select as SelectField, SelectOption } from "@/Components/Select";
+// ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core";
+
+// ** Local Imports
+import { ListItem } from "@/Components/ListItem";
+import { ListSection } from "@/Components/ListSection";
+import { Select as SelectField, SelectOption } from "@/Components/Select";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -198,4 +202,67 @@ test("it should filter options when searchable", async () => {
 
   expect(document.body.textContent).toContain("Pending");
   expect(document.body.textContent).not.toContain("Active");
+});
+
+test("it should render grouped options with section titles", async () => {
+  mountSelect({
+    props: {
+      modelValue: undefined,
+      options: [
+        {
+          sticky: true,
+          title: "Status",
+          options: [
+            { label: "Active", value: "active" },
+            { label: "Pending", value: "pending" },
+          ],
+        },
+        { label: "Other", value: "other" },
+      ],
+    },
+  });
+
+  const combobox = document.body.querySelector('[role="combobox"]');
+
+  await combobox?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Status");
+  expect(document.body.textContent).toContain("Active");
+  expect(document.body.textContent).toContain("Other");
+});
+
+test("it should select from composed default slot", async () => {
+  const onChange = vi.fn();
+
+  mountSelect({
+    props: {
+      onChange,
+      options: [],
+      modelValue: undefined,
+    },
+    slots: {
+      default: () => [
+        h(ListSection, { title: "Status" }),
+        h(ListItem, { value: "active", primary: "Active" }),
+        h(ListItem, { value: "pending", primary: "Pending" }),
+      ],
+    },
+  });
+
+  const combobox = document.body.querySelector('[role="combobox"]');
+
+  await combobox?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Status");
+
+  const active = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Active"));
+
+  await active?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith("active");
 });

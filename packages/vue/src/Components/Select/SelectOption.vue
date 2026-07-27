@@ -6,6 +6,8 @@ import { inject, onBeforeUnmount, onMounted } from "vue";
 import type { SelectOptionProps } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
 
+defineOptions({ inheritAttrs: false, name: "SelectOption" });
+
 const props = defineProps<SelectOptionProps>();
 
 const registration = inject(SELECT_OPTION_KEY, null);

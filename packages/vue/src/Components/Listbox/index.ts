@@ -13,6 +13,7 @@ export type {
   ListboxColorOverrides,
   ListboxCustomProps,
   ListboxEmits,
+  ListboxEntry,
   ListboxOption,
   ListboxOwnProps,
   ListboxProps,
@@ -20,3 +21,7 @@ export type {
   ListboxValue,
 } from "@/Components/Listbox/listbox.types";
 export { default as Listbox } from "@/Components/Listbox/Listbox.vue";
+export {
+  LISTBOX_INJECTION_KEY,
+  type ListboxContextValue,
+} from "@/Components/Listbox/listboxInjectionKey";

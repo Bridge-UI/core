@@ -66,7 +66,7 @@ export function useHoldRepeat(
     if (options?.disabled) {
       stop();
     }
-  }, [options?.disabled, stop]);
+  }, [stop, options?.disabled]);
 
   useEffect(() => stop, [stop]);
 

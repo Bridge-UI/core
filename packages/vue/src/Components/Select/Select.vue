@@ -77,6 +77,8 @@ const {
   clearIconSize,
   mergedClasses,
   selectedOptions,
+  hasComposedList,
+  handleRegisteredOptionsChange,
 } = useSelect(props, model, triggerRef, emit, declarativeOptions);
 </script>
 
@@ -126,7 +128,12 @@ const {
     v-model="open"
     :anchor-el="containerRef"
     v-on:select="selectOption"
+    v-on:registered-options-change="handleRegisteredOptionsChange"
   >
+    <template #default v-if="hasComposedList">
+      <slot />
+    </template>
+
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
       <component :is="resolveNamedSlot(slots, 'beforeOptions')" />
     </template>
@@ -148,5 +155,8 @@ const {
     </template>
   </Listbox>
 
-  <slot />
+  <!-- Declarative `SelectOption` children register here (data-only). -->
+  <div hidden aria-hidden="true" v-if="!hasComposedList">
+    <slot />
+  </div>
 </template>

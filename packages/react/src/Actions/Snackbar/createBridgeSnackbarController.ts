@@ -148,8 +148,8 @@ export function useBridgeSnackbarController(
     isOpen,
     update,
     entries,
-    closeTop,
     closeAll,
+    closeTop,
     syncShow,
     removeEntry,
   ]);

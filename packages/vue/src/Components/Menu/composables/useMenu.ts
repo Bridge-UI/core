@@ -452,12 +452,14 @@ export function useMenu(
   }
 
   const rootBind = computed(() => {
-    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
-      class: cn({
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
         "relative inline-block text-left": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-    });
+    );
   });
 
   const triggerBind = computed(() => {

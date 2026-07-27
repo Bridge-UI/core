@@ -89,7 +89,7 @@ export function useListboxNavigation(
 ) {
   const activeDescendantId = useMemo(() => {
     return getListboxActiveDescendantId(listboxId, highlightedIndex);
-  }, [highlightedIndex, listboxId]);
+  }, [listboxId, highlightedIndex]);
 
   const resetHighlight = useCallback(() => {
     setHighlightedIndex(findFirstEnabledOptionIndex(options));
@@ -121,7 +121,7 @@ export function useListboxNavigation(
 
   const getHighlightedOption = useCallback(() => {
     return options[highlightedIndex];
-  }, [highlightedIndex, options]);
+  }, [options, highlightedIndex]);
 
   return {
     moveHighlight,

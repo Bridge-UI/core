@@ -2,11 +2,13 @@
 import { ChevronsUpDown } from "@lucide/vue";
 import { get, isNil, omit } from "es-toolkit/compat";
 import {
+  Comment,
   computed,
   nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
+  Text,
   useAttrs,
   useId,
   useSlots,
@@ -20,12 +22,16 @@ import {
   adjustAutosizeTextareaHeight,
   cn,
   createSelectAsyncSearch,
+  filterListboxEntries,
+  flattenListboxOptions,
   mergeBridgeUILayeredClasses,
+  normalizeListboxEntries,
   normalizeSelectOptions,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
   splitComponentProps,
+  type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core";
 import {
@@ -144,23 +150,110 @@ export function useSelect(
     };
   });
 
-  const staticOptions = computed(() => {
+  const staticEntries = computed(() => {
     if (declarativeOptions.value.length > 0) {
-      return declarativeOptions.value;
+      return declarativeOptions.value.map((option) => ({
+        option,
+        type: "option" as const,
+      }));
     }
 
-    return normalizeSelectOptions(selectMerged.value.options, optionKeys.value);
+    return normalizeListboxEntries(
+      selectMerged.value.options,
+      optionKeys.value,
+    );
+  });
+
+  const staticOptions = computed(() => {
+    return flattenListboxOptions(staticEntries.value);
+  });
+
+  const registeredOptions = ref<SelectOption[]>([]);
+
+  function isSelectOptionNode(node: unknown): boolean {
+    if (!node || typeof node !== "object") {
+      return false;
+    }
+
+    const type = (node as { type?: unknown }).type;
+
+    if (!type || typeof type !== "object") {
+      return false;
+    }
+
+    const name = (type as { __name?: string; name?: string }).name;
+    const scriptName = (type as { __name?: string }).__name;
+
+    return name === "SelectOption" || scriptName === "SelectOption";
+  }
+
+  function defaultSlotIsComposedList() {
+    if (!hasNamedSlot(slots, "default")) {
+      return false;
+    }
+
+    const nodes = slots.default?.({}) ?? [];
+
+    return nodes.some((node) => {
+      if (!node || typeof node !== "object") {
+        return false;
+      }
+
+      const type = (node as { type?: unknown }).type;
+
+      if (type === Comment || type === Text || type === undefined) {
+        return false;
+      }
+
+      if (typeof type === "symbol") {
+        return false;
+      }
+
+      return !isSelectOptionNode(node);
+    });
+  }
+
+  const hasComposedList = computed(() => {
+    return defaultSlotIsComposedList() && !selectMerged.value.options?.length;
+  });
+
+  const resolvedEntries = computed((): ListboxEntry[] => {
+    if (hasComposedList.value) {
+      return [];
+    }
+
+    if (asyncOptions.value.length > 0) {
+      const asyncEntries = normalizeListboxEntries(
+        asyncOptions.value,
+        optionKeys.value,
+      );
+
+      if (selectMerged.value.flipOptions) {
+        return [...asyncEntries].reverse();
+      }
+
+      return asyncEntries;
+    }
+
+    if (selectMerged.value.flipOptions) {
+      return [...staticEntries.value].reverse().map((entry) => {
+        if (entry.type === "section") {
+          return { ...entry, options: [...entry.options].reverse() };
+        }
+
+        return entry;
+      });
+    }
+
+    return staticEntries.value;
   });
 
   const resolvedOptions = computed(() => {
-    const base =
-      asyncOptions.value.length > 0 ? asyncOptions.value : staticOptions.value;
-
-    if (selectMerged.value.flipOptions) {
-      return [...base].reverse();
+    if (hasComposedList.value) {
+      return registeredOptions.value;
     }
 
-    return base;
+    return flattenListboxOptions(resolvedEntries.value);
   });
 
   const selectedValues = computed((): SelectValue[] => {
@@ -223,16 +316,28 @@ export function useSelect(
     return Boolean(selectMerged.value.loading) || asyncLoading.value;
   });
 
-  const visibleOptions = computed(() => {
+  const visibleEntries = computed(() => {
+    if (hasComposedList.value) {
+      return [];
+    }
+
     if (!isSearchActive.value || !searchQuery.value.trim()) {
-      return resolvedOptions.value;
+      return resolvedEntries.value;
     }
 
     const query = searchQuery.value.trim().toLowerCase();
 
-    return resolvedOptions.value.filter((option) => {
+    return filterListboxEntries(resolvedEntries.value, (option) => {
       return option.label.toLowerCase().includes(query);
     });
+  });
+
+  const visibleOptions = computed(() => {
+    if (hasComposedList.value) {
+      return registeredOptions.value;
+    }
+
+    return flattenListboxOptions(visibleEntries.value);
   });
 
   const navigation = useListboxNavigation(
@@ -780,12 +885,29 @@ export function useSelect(
       isSelected,
       loading: isLoading.value,
       multiple: multiple.value,
+      entries: visibleEntries.value,
       options: visibleOptions.value,
       labelledBy: formField.controlId.value,
       highlightedIndex: highlightedIndex.value,
       invalidated: formField.invalidated.value,
     };
   });
+
+  function handleRegisteredOptionsChange(options: SelectOption[]) {
+    const current = registeredOptions.value;
+
+    if (
+      current.length === options.length &&
+      current.every(
+        (option, index) =>
+          String(option.value) === String(options[index]?.value),
+      )
+    ) {
+      return;
+    }
+
+    registeredOptions.value = options;
+  }
 
   return {
     open,
@@ -809,7 +931,9 @@ export function useSelect(
     visibleOptions,
     isSearchActive,
     selectedOptions,
+    hasComposedList,
     highlightedIndex,
+    handleRegisteredOptionsChange,
     emptyMessage: computed(() => {
       return selectMerged.value.emptyMessage ?? "No options";
     }),

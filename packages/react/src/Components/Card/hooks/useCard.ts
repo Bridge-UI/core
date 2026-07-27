@@ -106,7 +106,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
     }
 
     return Boolean(get(variantClass, "border"));
-  }, [merged.borderless, variantClass]);
+  }, [variantClass, merged.borderless]);
 
   const shadowClass = useMemo(() => {
     if (merged.variant !== "elevated") {

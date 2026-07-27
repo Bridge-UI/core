@@ -4,6 +4,7 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 // ** Core Imports
 import type {
   ListboxColor,
+  ListboxEntry,
   ListboxOption,
   ListboxSize,
   ListboxValue,
@@ -44,6 +45,11 @@ export interface ListboxClasses {
 
 export interface ListboxControlledProps {
   /**
+   * Called when composed `ListItem` options register or unregister.
+   */
+  onRegisteredOptionsChange?: (options: ListboxOption[]) => void;
+
+  /**
    * Emitted when the user activates an option.
    */
   onSelect?: (option: ListboxOption) => void;
@@ -81,13 +87,23 @@ export interface ListboxCustomProps {
   scroll?: HTMLAttributes<HTMLDivElement>;
 }
 
-export type { ListboxOption, ListboxValue } from "@bridge-ui/core";
+export type {
+  ListboxEntry,
+  ListboxOption,
+  ListboxValue,
+} from "@bridge-ui/core";
 
 export interface ListboxOwnProps {
   /**
    * Element that anchors the floating panel (typically the field container).
    */
   anchorEl?: null | HTMLElement | RefObject<null | HTMLElement>;
+
+  /**
+   * Composed list content (`ListSection` / `ListItem`). When set, replaces the
+   * mapped `options` / `entries` render inside the list.
+   */
+  children?: ReactNode;
 
   /**
    * Classes for listbox parts.
@@ -127,6 +143,12 @@ export interface ListboxOwnProps {
    * @default "No options"
    */
   emptyMessage?: string;
+
+  /**
+   * Structured entries (sections + options). When set, preferred over a flat
+   * `options` map for rendering section headers.
+   */
+  entries?: ListboxEntry[];
 
   /**
    * Hides the empty-state message.
@@ -194,9 +216,12 @@ export interface ListboxOwnProps {
   multiple?: boolean;
 
   /**
-   * Options to render.
+   * Options to render. Used for empty-state and as a flat fallback when
+   * `entries` is omitted. Ignored for list body when `children` is set.
+   *
+   * @default []
    */
-  options: ListboxOption[];
+  options?: ListboxOption[];
 
   /**
    * Preferred placement of the panel relative to the anchor.

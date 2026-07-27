@@ -4,6 +4,7 @@ import type { HTMLAttributes, Slot } from "vue";
 // ** Core Imports
 import type {
   ListboxColor,
+  ListboxEntry,
   ListboxOption,
   ListboxSize,
   ListboxValue,
@@ -59,9 +60,18 @@ export interface ListboxCustomProps {
   scroll?: HTMLAttributes;
 }
 
-export type { ListboxOption, ListboxValue } from "@bridge-ui/core";
+export type {
+  ListboxEntry,
+  ListboxOption,
+  ListboxValue,
+} from "@bridge-ui/core";
 
 export interface ListboxEmits {
+  /**
+   * Emitted when composed `ListItem` options register or unregister.
+   */
+  "registered-options-change": [options: ListboxOption[]];
+
   /**
    * Emitted when the user activates an option.
    */
@@ -118,6 +128,12 @@ export interface ListboxOwnProps {
    * @default "No options"
    */
   emptyMessage?: string;
+
+  /**
+   * Structured entries (sections + options). When set, preferred over a flat
+   * `options` map for rendering section headers.
+   */
+  entries?: ListboxEntry[];
 
   /**
    * Hides the empty-state message.
@@ -185,9 +201,12 @@ export interface ListboxOwnProps {
   multiple?: boolean;
 
   /**
-   * Options to render.
+   * Options to render. Used for empty-state and as a flat fallback when
+   * `entries` is omitted. Ignored for list body when the default slot is set.
+   *
+   * @default []
    */
-  options: ListboxOption[];
+  options?: ListboxOption[];
 
   /**
    * Preferred placement of the panel relative to the anchor.
@@ -221,6 +240,12 @@ export interface ListboxSlots {
    * Content above the list.
    */
   beforeOptions?: Slot;
+
+  /**
+   * Composed list content (`ListSection` / `ListItem`). When set, replaces the
+   * mapped `options` / `entries` render inside the list.
+   */
+  default?: Slot;
 
   /**
    * Custom empty-state content.

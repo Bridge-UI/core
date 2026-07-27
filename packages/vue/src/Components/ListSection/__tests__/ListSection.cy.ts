@@ -19,12 +19,13 @@ test("it should render default slot content as the title", () => {
   cy.contains("Custom label").should("be.visible");
 });
 
-test("it should apply sticky classes when sticky is true", () => {
+test("it should apply sticky classes on the li root when sticky is true", () => {
   cy.mount(ListSection, {
     props: { sticky: true, title: "Sticky" },
   });
 
-  cy.get('[role="presentation"]').should("have.class", "sticky");
+  cy.get("li").should("have.class", "sticky");
+  cy.get('[role="presentation"]').should("not.have.class", "sticky");
 });
 
 test("it should inherit dense padding from parent List", () => {

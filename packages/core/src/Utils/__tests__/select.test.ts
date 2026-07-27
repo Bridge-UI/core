@@ -9,7 +9,12 @@ import {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
   createSelectAsyncSearch,
+  filterListboxEntries,
+  flattenListboxOptions,
+  isListboxOptionGroup,
+  mapListboxEntriesToRows,
   mergeSelectAsyncOptions,
+  normalizeListboxEntries,
   normalizeSelectOption,
   normalizeSelectOptions,
   resolveSelectAsyncDebounce,
@@ -71,6 +76,213 @@ describe("normalizeSelectOption", () => {
 describe("normalizeSelectOptions", () => {
   test("it should return an empty array for empty input", () => {
     expect(normalizeSelectOptions(undefined, keys)).toEqual([]);
+  });
+
+  test("it should flatten section groups into options", () => {
+    expect(
+      normalizeSelectOptions(
+        [
+          {
+            sticky: true,
+            title: "Fruits",
+            options: [
+              { label: "Apple", value: "apple" },
+              { label: "Banana", value: "banana" },
+            ],
+          },
+          { label: "Other", value: "other" },
+        ],
+        keys,
+      ),
+    ).toEqual([
+      {
+        label: "Apple",
+        value: "apple",
+        disabled: false,
+        description: undefined,
+        raw: { label: "Apple", value: "apple" },
+      },
+      {
+        label: "Banana",
+        value: "banana",
+        disabled: false,
+        description: undefined,
+        raw: { label: "Banana", value: "banana" },
+      },
+      {
+        label: "Other",
+        value: "other",
+        disabled: false,
+        description: undefined,
+        raw: { label: "Other", value: "other" },
+      },
+    ]);
+  });
+});
+
+describe("isListboxOptionGroup", () => {
+  test("it should detect section groups", () => {
+    expect(
+      isListboxOptionGroup({
+        title: "Fruits",
+        options: [{ label: "A", value: "a" }],
+      }),
+    ).toBe(true);
+    expect(isListboxOptionGroup({ label: "Apple", value: "apple" })).toBe(
+      false,
+    );
+  });
+});
+
+describe("normalizeListboxEntries", () => {
+  test("it should preserve sections and standalone options", () => {
+    expect(
+      normalizeListboxEntries(
+        [
+          {
+            sticky: true,
+            title: "Fruits",
+            options: [{ label: "Apple", value: "apple" }],
+          },
+          { label: "Other", value: "other" },
+        ],
+        keys,
+      ),
+    ).toEqual([
+      {
+        sticky: true,
+        type: "section",
+        title: "Fruits",
+        options: [
+          {
+            label: "Apple",
+            value: "apple",
+            disabled: false,
+            description: undefined,
+            raw: { label: "Apple", value: "apple" },
+          },
+        ],
+      },
+      {
+        type: "option",
+        option: {
+          label: "Other",
+          value: "other",
+          disabled: false,
+          description: undefined,
+          raw: { label: "Other", value: "other" },
+        },
+      },
+    ]);
+  });
+});
+
+describe("filterListboxEntries", () => {
+  test("it should drop empty sections after filtering", () => {
+    const entries = normalizeListboxEntries(
+      [
+        {
+          title: "Fruits",
+          options: [
+            { label: "Apple", value: "apple" },
+            { label: "Carrot", value: "carrot" },
+          ],
+        },
+        { label: "Other", value: "other" },
+      ],
+      keys,
+    );
+
+    expect(
+      filterListboxEntries(entries, (option) =>
+        option.label.toLowerCase().includes("app"),
+      ),
+    ).toEqual([
+      {
+        sticky: false,
+        type: "section",
+        title: "Fruits",
+        options: [
+          {
+            label: "Apple",
+            value: "apple",
+            disabled: false,
+            description: undefined,
+            raw: { label: "Apple", value: "apple" },
+          },
+        ],
+      },
+    ]);
+  });
+});
+
+describe("flattenListboxOptions", () => {
+  test("it should flatten section options in order", () => {
+    const entries = normalizeListboxEntries(
+      [
+        {
+          title: "Fruits",
+          options: [{ label: "Apple", value: "apple" }],
+        },
+        { label: "Other", value: "other" },
+      ],
+      keys,
+    );
+
+    expect(
+      flattenListboxOptions(entries).map((option) => option.value),
+    ).toEqual(["apple", "other"]);
+  });
+});
+
+describe("mapListboxEntriesToRows", () => {
+  test("it should map sections and options with flat indices", () => {
+    const entries = normalizeListboxEntries(
+      [
+        {
+          sticky: true,
+          title: "Fruits",
+          options: [
+            { label: "Apple", value: "apple" },
+            { label: "Banana", value: "banana" },
+          ],
+        },
+        { label: "Other", value: "other" },
+      ],
+      keys,
+    );
+
+    expect(
+      mapListboxEntriesToRows(entries, (value) => value === "banana"),
+    ).toEqual([
+      {
+        sticky: true,
+        kind: "section",
+        title: "Fruits",
+        key: "section-0-Fruits",
+      },
+      {
+        index: 0,
+        key: "apple",
+        kind: "option",
+        selected: false,
+        option: expect.objectContaining({ value: "apple" }),
+      },
+      {
+        index: 1,
+        key: "banana",
+        kind: "option",
+        selected: true,
+        option: expect.objectContaining({ value: "banana" }),
+      },
+      {
+        index: 2,
+        key: "other",
+        kind: "option",
+        selected: false,
+        option: expect.objectContaining({ value: "other" }),
+      },
+    ]);
   });
 });
 

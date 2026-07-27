@@ -71,13 +71,21 @@ export function useListSection(
     return omit(split.value.inheritedAttrs, []);
   });
 
+  const isDivRoot = computed(() => {
+    return merged.value.as === "div";
+  });
+
   const rootBind = computed(() => {
-    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
-      class: cn({
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
         "list-none": true,
+        "sticky top-0 z-10 bg-white dark:bg-dark-950":
+          merged.value.sticky && !isDivRoot.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-    });
+    );
   });
 
   const titleBind = computed(() => {
@@ -88,7 +96,7 @@ export function useListSection(
         role: "presentation",
         class: cn({
           "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-950 dark:text-dark-400": true,
-          "sticky top-0 z-10": merged.value.sticky,
+          "sticky top-0 z-10": merged.value.sticky && isDivRoot.value,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,
           "pl-14": merged.value.inset,

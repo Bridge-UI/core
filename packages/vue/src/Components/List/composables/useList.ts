@@ -84,14 +84,16 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
-      class: cn({
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
         "m-0 list-none": true,
         [paddingClass.value ?? ""]: true,
         "pl-4": merged.value.nested,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-    });
+    );
   });
 
   return {

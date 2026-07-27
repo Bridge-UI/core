@@ -9,10 +9,14 @@ import {
 import { useRef, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
+
 // ** Local Imports
 import { Listbox } from "@/Components/Listbox";
 import type { ListboxOption } from "@/Components/Listbox/listbox.types";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { ListItem } from "@/Components/ListItem";
+import { ListSection } from "@/Components/ListSection";
 
 afterEach(() => {
   cleanup();
@@ -264,4 +268,87 @@ test("it should apply size classes to option rows", async () => {
 
   expect(option.className).toContain("px-3");
   expect(screen.getByText("Apple").className).toContain("text-xs");
+});
+
+test("it should render section headers from entries", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+          entries={[
+            {
+              sticky: true,
+              type: "section",
+              title: "Fruits",
+              options: [{ label: "Apple", value: "apple" }],
+            },
+            {
+              type: "option",
+              option: { label: "Other", value: "other" },
+            },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Fruits")).toBeTruthy();
+  });
+
+  expect(screen.getByText("Apple")).toBeTruthy();
+  expect(screen.getByText("Other")).toBeTruthy();
+  expect(screen.getByText("Fruits").closest("li")?.className).toContain(
+    "sticky",
+  );
+});
+
+test("it should render composed ListSection and ListItem children", async () => {
+  const onSelect = vi.fn();
+
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          onSelect={onSelect}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+          isSelected={(value) => value === "banana"}
+        >
+          <ListSection sticky title="Fruits" />
+          <ListItem value="apple" primary="Apple" />
+          <ListItem value="banana" primary="Banana" />
+        </Listbox>
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Fruits")).toBeTruthy();
+  });
+
+  expect(screen.getByRole("option", { name: "Apple" })).toBeTruthy();
+  expect(
+    screen
+      .getByRole("option", { name: "Banana" })
+      .getAttribute("aria-selected"),
+  ).toBe("true");
+
+  fireEvent.click(screen.getByRole("option", { name: "Apple" }));
+
+  expect(onSelect).toHaveBeenCalledWith(
+    expect.objectContaining({ label: "Apple", value: "apple" }),
+  );
 });

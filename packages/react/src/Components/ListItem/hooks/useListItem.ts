@@ -1,7 +1,7 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
 import { Check, type LucideIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
 import {
@@ -9,12 +9,15 @@ import {
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
+  type ListboxOption,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
 import { alignProps } from "@bridge-ui/core/Components/ListItem";
 
 // ** Local Imports
 import { useListContext } from "@/Components/List/ListContext";
+import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
+import { useListboxContext } from "@/Components/Listbox/ListboxContext";
 import type {
   ListItemOwnProps,
   ListItemProps,
@@ -35,6 +38,7 @@ const listItemBridgeKeys = [
   "align",
   "dense",
   "slots",
+  "value",
   "classes",
   "divider",
   "primary",
@@ -55,6 +59,7 @@ export function useListItem(
   libDefaults: ListItemLibDefaults,
 ) {
   const listContext = useListContext();
+  const listboxContext = useListboxContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ListItemProps,
@@ -71,6 +76,72 @@ export function useListItem(
     libDefaults,
     props: componentProps,
     componentName: "ListItem",
+  });
+
+  const hasListboxContext = listboxContext != null;
+
+  const listboxOption = useMemo((): null | ListboxOption => {
+    if (merged.value == null || !hasListboxContext) {
+      return null;
+    }
+
+    const label =
+      typeof merged.primary === "string"
+        ? merged.primary
+        : String(merged.value);
+    const description =
+      typeof merged.secondary === "string" ? merged.secondary : undefined;
+
+    return {
+      label,
+      description,
+      value: merged.value,
+      disabled: Boolean(merged.disabled),
+    };
+  }, [
+    merged.value,
+    merged.primary,
+    merged.disabled,
+    merged.secondary,
+    hasListboxContext,
+  ]);
+
+  useEffect(() => {
+    if (!listboxOption) {
+      return;
+    }
+
+    const register = listboxContext?.registerOption;
+
+    if (!register) {
+      return;
+    }
+
+    return register(listboxOption);
+  }, [listboxOption, listboxContext?.registerOption]);
+
+  const listboxSelected = derived(() => {
+    if (!listboxOption || !listboxContext) {
+      return false;
+    }
+
+    return listboxContext.isSelected(listboxOption.value);
+  });
+
+  const listboxOptionIndex = derived(() => {
+    if (!listboxOption || !listboxContext) {
+      return -1;
+    }
+
+    return listboxContext.getOptionIndex(listboxOption.value);
+  });
+
+  const listboxHighlighted = derived(() => {
+    if (!listboxContext || listboxOptionIndex < 0) {
+      return false;
+    }
+
+    return listboxContext.highlightedIndex === listboxOptionIndex;
   });
 
   const slots = derived(() => {
@@ -121,7 +192,17 @@ export function useListItem(
     return Boolean(slots?.start);
   });
 
+  const isListboxOption = listboxOption != null;
+
   const resolvedSelectedIcon = useMemo((): null | LucideIcon => {
+    if (isListboxOption) {
+      if (!listboxSelected || !listboxContext?.showCheckmark) {
+        return null;
+      }
+
+      return Check;
+    }
+
     if (!merged.selected) {
       return null;
     }
@@ -131,7 +212,13 @@ export function useListItem(
     }
 
     return merged.selectedIcon ?? Check;
-  }, [merged.selected, merged.selectedIcon]);
+  }, [
+    isListboxOption,
+    listboxSelected,
+    merged.selected,
+    merged.selectedIcon,
+    listboxContext?.showCheckmark,
+  ]);
 
   const hasEnd = derived(() => {
     return Boolean(slots?.end) || resolvedSelectedIcon != null;
@@ -144,11 +231,17 @@ export function useListItem(
         "border-b border-black/10 last:border-b-0": merged.divider,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
+      id:
+        isListboxOption && listboxContext?.listboxId && listboxOptionIndex >= 0
+          ? getListboxOptionId(listboxContext.listboxId, listboxOptionIndex)
+          : undefined,
     });
   });
 
   const interactiveBind = derived(() => {
-    if (!merged.interactive) {
+    const interactive = merged.interactive || isListboxOption;
+
+    if (!interactive) {
       return null;
     }
 
@@ -156,21 +249,44 @@ export function useListItem(
       customProps?.interactive,
       {},
       {
-        role: merged.role,
-        tabIndex: merged.disabled ? -1 : 0,
+        role: isListboxOption ? "option" : merged.role,
         "aria-disabled": merged.disabled ? true : undefined,
-        "data-selected": merged.selected ? true : undefined,
+        tabIndex: merged.disabled || isListboxOption ? -1 : 0,
+        "aria-selected": isListboxOption ? listboxSelected : undefined,
+        "data-selected": merged.selected || listboxSelected ? true : undefined,
+        onMouseDown: isListboxOption
+          ? (event: MouseEvent) => {
+              event.preventDefault();
+            }
+          : undefined,
+        onClick: isListboxOption
+          ? () => {
+              if (listboxOption) {
+                listboxContext?.onSelect(listboxOption);
+              }
+            }
+          : undefined,
         className: cn({
           "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.disabled,
           "px-4": true,
           "py-2": !isDense,
           "py-1.5": isDense,
-          "hover:bg-black/5 focus-visible:bg-black/5": !merged.disabled,
-          "bg-primary-50 text-primary-700": merged.selected,
+          "hover:bg-black/5 focus-visible:bg-black/5":
+            !merged.disabled && !isListboxOption,
+          "bg-primary-50 text-primary-700": merged.selected && !isListboxOption,
+          [listboxContext?.optionSelectedClass ?? ""]:
+            isListboxOption && listboxSelected,
+          [listboxContext?.mergedClasses.optionSelected ?? ""]:
+            isListboxOption && listboxSelected,
+          [listboxContext?.optionHighlightedClass ?? ""]:
+            isListboxOption && listboxHighlighted && !listboxSelected,
+          [listboxContext?.mergedClasses.optionHighlighted ?? ""]:
+            isListboxOption && listboxHighlighted && !listboxSelected,
           "opacity-50 pointer-events-none": merged.disabled,
           [alignClass ?? ""]: true,
           [get(mergedClasses, "interactive") ?? ""]: true,
+          [listboxContext?.sizeClasses?.option ?? ""]: true,
         }),
       },
     );
@@ -190,12 +306,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.start,
       {},
-      {
-        className: cn({
-          "flex shrink-0": true,
-          [get(mergedClasses, "start") ?? ""]: true,
-        }),
-      },
+      cn({
+        "flex shrink-0": true,
+        [get(mergedClasses, "start") ?? ""]: true,
+      }),
     );
   });
 
@@ -203,12 +317,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.content,
       {},
-      {
-        className: cn({
-          "min-w-0 flex-1": true,
-          [get(mergedClasses, "content") ?? ""]: true,
-        }),
-      },
+      cn({
+        "min-w-0 flex-1": true,
+        [get(mergedClasses, "content") ?? ""]: true,
+      }),
     );
   });
 
@@ -216,12 +328,11 @@ export function useListItem(
     return mergePartBind(
       customProps?.primary,
       {},
-      {
-        className: cn({
-          "block truncate text-sm font-medium": true,
-          [get(mergedClasses, "primary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "block truncate text-sm font-medium",
+        listboxContext?.sizeClasses?.primary,
+        get(mergedClasses, "primary"),
+      ),
     );
   });
 
@@ -229,12 +340,11 @@ export function useListItem(
     return mergePartBind(
       customProps?.secondary,
       {},
-      {
-        className: cn({
-          "mt-0.5 block truncate text-xs text-dark-500": true,
-          [get(mergedClasses, "secondary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "mt-0.5 block truncate text-xs text-dark-500",
+        listboxContext?.sizeClasses?.secondary,
+        get(mergedClasses, "secondary"),
+      ),
     );
   });
 
@@ -242,12 +352,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.end,
       {},
-      {
-        className: cn({
-          "ml-auto flex shrink-0 items-center": true,
-          [get(mergedClasses, "end") ?? ""]: true,
-        }),
-      },
+      cn({
+        "ml-auto flex shrink-0 items-center": true,
+        [get(mergedClasses, "end") ?? ""]: true,
+      }),
     );
   });
 
@@ -257,10 +365,11 @@ export function useListItem(
       {},
       {
         size: "sm" as const,
-        className: cn({
-          "shrink-0": true,
-          [get(mergedClasses, "selectedIcon") ?? ""]: true,
-        }),
+        className: cn(
+          "shrink-0",
+          listboxContext?.checkClass,
+          get(mergedClasses, "selectedIcon"),
+        ),
       },
     );
   });

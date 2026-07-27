@@ -1,10 +1,15 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
+import { h } from "vue";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
 
 // ** Local Imports
 import { Listbox } from "@/Components/Listbox";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { ListItem } from "@/Components/ListItem";
+import { ListSection } from "@/Components/ListSection";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -180,4 +185,76 @@ test("it should apply size classes to option rows", async () => {
 
   expect(option?.className).toContain("px-3");
   expect(primary?.className).toContain("text-xs");
+});
+
+test("it should render section headers from entries", async () => {
+  mountListbox({
+    props: {
+      options: [],
+      modelValue: true,
+      entries: [
+        {
+          sticky: true,
+          type: "section",
+          title: "Status",
+          options: [{ label: "Active", value: "active" }],
+        },
+        {
+          type: "option",
+          option: { label: "Other", value: "other" },
+        },
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Status");
+  expect(document.body.textContent).toContain("Active");
+  expect(document.body.textContent).toContain("Other");
+
+  const section = Array.from(document.body.querySelectorAll("li")).find((el) =>
+    el.classList.contains("sticky"),
+  );
+
+  expect(section).toBeTruthy();
+});
+
+test("it should render composed ListSection and ListItem children", async () => {
+  const onSelect = vi.fn();
+
+  mountListbox({
+    props: {
+      onSelect,
+      options: [],
+      modelValue: true,
+      isSelected: (value: string) => value === "pending",
+    },
+    slots: {
+      default: () => [
+        h(ListSection, { sticky: true, title: "Status" }),
+        h(ListItem, { value: "active", primary: "Active" }),
+        h(ListItem, { value: "pending", primary: "Pending" }),
+      ],
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Status");
+
+  const pending = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Pending"));
+
+  expect(pending?.getAttribute("aria-selected")).toBe("true");
+
+  const active = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Active"));
+
+  await active?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onSelect).toHaveBeenCalled();
 });

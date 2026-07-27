@@ -95,13 +95,71 @@ export type SelectModel = SelectValue | SelectValue[];
 export type SelectOption = ListboxOption;
 
 /**
- * The input of the select.
+ * Flat option input (not a section group).
  */
 export type SelectOptionInput =
   | number
   | string
   | SelectOption
   | Record<string, unknown>;
+
+/**
+ * Grouped options rendered as a `ListSection` in Listbox / Select.
+ */
+export interface ListboxOptionGroup {
+  /**
+   * Options belonging to this section.
+   */
+  options: Array<SelectOptionInput | ListboxOptionGroup>;
+
+  /**
+   * When true, sticks the section heading while scrolling.
+   */
+  sticky?: boolean;
+
+  /**
+   * Section heading label.
+   */
+  title: string;
+}
+
+/**
+ * A normalized list entry: either a section or a standalone option.
+ */
+export type ListboxEntry =
+  | {
+      option: ListboxOption;
+      type: "option";
+    }
+  | {
+      options: ListboxOption[];
+      sticky?: boolean;
+      title: string;
+      type: "section";
+    };
+
+/**
+ * Options list that may mix standalone options and section groups.
+ */
+export type ListboxOptionsInput = Array<SelectOptionInput | ListboxOptionGroup>;
+
+/**
+ * A render row for Listbox: section header or selectable option.
+ */
+export type ListboxRow =
+  | {
+      key: string;
+      kind: "section";
+      sticky?: boolean;
+      title: string;
+    }
+  | {
+      index: number;
+      key: string;
+      kind: "option";
+      option: ListboxOption;
+      selected: boolean;
+    };
 
 /**
  * Object keys used to read option fields from arbitrary data.
@@ -124,6 +182,19 @@ export type SelectValue = number | string;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Returns true when `value` is a section group (`title` + `options` array).
+ */
+export function isListboxOptionGroup(
+  value: unknown,
+): value is ListboxOptionGroup {
+  return (
+    isRecord(value) &&
+    typeof value.title === "string" &&
+    Array.isArray(value.options)
+  );
 }
 
 /**
@@ -256,19 +327,173 @@ export function normalizeSelectOption(
 }
 
 /**
- * Normalizes a list of select option inputs.
+ * Normalizes a mixed options list into section / option entries.
  */
-export function normalizeSelectOptions(
-  items: undefined | SelectOptionLike[] | SelectOptionInput[],
+export function normalizeListboxEntries(
+  items: undefined | SelectOptionLike[] | ListboxOptionsInput,
   keys: SelectOptionKeys,
-): SelectOption[] {
+): ListboxEntry[] {
   if (!items?.length) {
     return [];
   }
 
-  return items.map((item) =>
-    normalizeSelectOption(item as SelectOptionInput, keys),
-  );
+  const entries: ListboxEntry[] = [];
+
+  for (const item of items) {
+    if (isListboxOptionGroup(item)) {
+      const sectionOptions: ListboxOption[] = [];
+
+      for (const child of item.options) {
+        if (isListboxOptionGroup(child)) {
+          if (sectionOptions.length > 0) {
+            entries.push({
+              type: "section",
+              title: item.title,
+              sticky: Boolean(item.sticky),
+              options: sectionOptions.splice(0, sectionOptions.length),
+            });
+          }
+
+          entries.push(...normalizeListboxEntries([child], keys));
+          continue;
+        }
+
+        sectionOptions.push(
+          normalizeSelectOption(child as SelectOptionInput, keys),
+        );
+      }
+
+      entries.push({
+        type: "section",
+        title: item.title,
+        options: sectionOptions,
+        sticky: Boolean(item.sticky),
+      });
+      continue;
+    }
+
+    entries.push({
+      type: "option",
+      option: normalizeSelectOption(item as SelectOptionInput, keys),
+    });
+  }
+
+  return entries;
+}
+
+/**
+ * Flattens listbox entries into a single options array (skips section headers).
+ */
+export function flattenListboxOptions(
+  entries: ListboxEntry[],
+): ListboxOption[] {
+  const options: ListboxOption[] = [];
+
+  for (const entry of entries) {
+    if (entry.type === "section") {
+      options.push(...entry.options);
+      continue;
+    }
+
+    options.push(entry.option);
+  }
+
+  return options;
+}
+
+/**
+ * Builds render rows from listbox entries with flat option indices.
+ */
+export function mapListboxEntriesToRows(
+  entries: ListboxEntry[],
+  isSelected: (value: ListboxValue) => boolean = () => false,
+): ListboxRow[] {
+  const rows: ListboxRow[] = [];
+  let optionIndex = 0;
+
+  for (const [entryIndex, entry] of entries.entries()) {
+    if (entry.type === "section") {
+      rows.push({
+        kind: "section",
+        title: entry.title,
+        sticky: entry.sticky,
+        key: `section-${entryIndex}-${entry.title}`,
+      });
+
+      for (const option of entry.options) {
+        const index = optionIndex;
+        optionIndex += 1;
+        rows.push({
+          index,
+          option,
+          kind: "option",
+          key: String(option.value),
+          selected: isSelected(option.value),
+        });
+      }
+
+      continue;
+    }
+
+    const index = optionIndex;
+    optionIndex += 1;
+    rows.push({
+      index,
+      kind: "option",
+      option: entry.option,
+      key: String(entry.option.value),
+      selected: isSelected(entry.option.value),
+    });
+  }
+
+  return rows;
+}
+
+/**
+ * Wraps flat options as standalone listbox entries.
+ */
+export function entriesFromListboxOptions(
+  options: ListboxOption[],
+): ListboxEntry[] {
+  return options.map((option) => ({ option, type: "option" as const }));
+}
+
+/**
+ * Filters options inside entries; drops sections that end up empty.
+ */
+export function filterListboxEntries(
+  entries: ListboxEntry[],
+  predicate: (option: ListboxOption) => boolean,
+): ListboxEntry[] {
+  const result: ListboxEntry[] = [];
+
+  for (const entry of entries) {
+    if (entry.type === "section") {
+      const options = entry.options.filter(predicate);
+
+      if (options.length > 0) {
+        result.push({ ...entry, options });
+      }
+
+      continue;
+    }
+
+    if (predicate(entry.option)) {
+      result.push(entry);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Normalizes a list of select option inputs (flattens section groups).
+ */
+export function normalizeSelectOptions(
+  items: undefined | SelectOptionLike[] | ListboxOptionsInput,
+  keys: SelectOptionKeys,
+): SelectOption[] {
+  return flattenListboxOptions(normalizeListboxEntries(items, keys));
 }
 
 /**
