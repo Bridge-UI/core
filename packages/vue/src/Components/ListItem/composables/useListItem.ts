@@ -294,11 +294,9 @@ export function useListItem(
         class: cn({
           "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.value.disabled,
-          "px-4": !isListboxOption.value,
-          [listboxContext.value?.sizeClasses?.option ?? "px-4"]:
-            isListboxOption.value,
-          "py-2": !isListboxOption.value && !isDense.value,
-          "py-1.5": !isListboxOption.value && isDense.value,
+          "px-4": true,
+          "py-2": !isDense.value,
+          "py-1.5": isDense.value,
           "hover:bg-black/5 focus-visible:bg-black/5":
             !merged.value.disabled && !isListboxOption.value,
           "bg-primary-50 text-primary-700":
@@ -318,6 +316,7 @@ export function useListItem(
           "opacity-50 pointer-events-none": merged.value.disabled,
           [alignClass.value ?? ""]: true,
           [get(mergedClasses.value, "interactive") ?? ""]: true,
+          [listboxContext.value?.sizeClasses?.option ?? ""]: true,
         }),
       },
     );
@@ -326,13 +325,10 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "px-4": !merged.value.interactive && !isListboxOption.value,
-      "py-2":
-        !merged.value.interactive && !isListboxOption.value && !isDense.value,
-      "py-1.5":
-        !merged.value.interactive && !isListboxOption.value && isDense.value,
-      [alignClass.value ?? ""]:
-        !merged.value.interactive && !isListboxOption.value,
+      "px-4": !merged.value.interactive,
+      "py-2": !merged.value.interactive && !isDense.value,
+      "py-1.5": !merged.value.interactive && isDense.value,
+      [alignClass.value ?? ""]: !merged.value.interactive,
     });
   });
 
@@ -340,12 +336,10 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.start,
       {},
-      {
-        class: cn({
-          "flex shrink-0": true,
-          [get(mergedClasses.value, "start") ?? ""]: true,
-        }),
-      },
+      cn({
+        "flex shrink-0": true,
+        [get(mergedClasses.value, "start") ?? ""]: true,
+      }),
     );
   });
 
@@ -353,12 +347,10 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.content,
       {},
-      {
-        class: cn({
-          "min-w-0 flex-1": true,
-          [get(mergedClasses.value, "content") ?? ""]: true,
-        }),
-      },
+      cn({
+        "min-w-0 flex-1": true,
+        [get(mergedClasses.value, "content") ?? ""]: true,
+      }),
     );
   });
 
@@ -366,14 +358,11 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.primary,
       {},
-      {
-        class: cn({
-          "block truncate text-sm font-medium": !isListboxOption.value,
-          [listboxContext.value?.sizeClasses?.primary ??
-          "block truncate text-sm font-medium"]: isListboxOption.value,
-          [get(mergedClasses.value, "primary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "block truncate text-sm font-medium",
+        listboxContext.value?.sizeClasses?.primary,
+        get(mergedClasses.value, "primary"),
+      ),
     );
   });
 
@@ -381,14 +370,11 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.secondary,
       {},
-      {
-        class: cn({
-          "mt-0.5 block truncate text-xs text-dark-500": !isListboxOption.value,
-          [listboxContext.value?.sizeClasses?.secondary ??
-          "mt-0.5 block truncate text-xs text-dark-500"]: isListboxOption.value,
-          [get(mergedClasses.value, "secondary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "mt-0.5 block truncate text-xs text-dark-500",
+        listboxContext.value?.sizeClasses?.secondary,
+        get(mergedClasses.value, "secondary"),
+      ),
     );
   });
 
@@ -396,12 +382,10 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.end,
       {},
-      {
-        class: cn({
-          "ml-auto flex shrink-0 items-center": true,
-          [get(mergedClasses.value, "end") ?? ""]: true,
-        }),
-      },
+      cn({
+        "ml-auto flex shrink-0 items-center": true,
+        [get(mergedClasses.value, "end") ?? ""]: true,
+      }),
     );
   });
 
@@ -411,11 +395,11 @@ export function useListItem(
       {},
       {
         size: "sm" as const,
-        class: cn({
-          "shrink-0": true,
-          [listboxContext.value?.checkClass ?? ""]: isListboxOption.value,
-          [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
-        }),
+        class: cn(
+          "shrink-0",
+          listboxContext.value?.checkClass,
+          get(mergedClasses.value, "selectedIcon"),
+        ),
       },
     );
   });

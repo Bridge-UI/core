@@ -99,11 +99,11 @@ export function useListItem(
       disabled: Boolean(merged.disabled),
     };
   }, [
-    hasListboxContext,
-    merged.disabled,
-    merged.primary,
-    merged.secondary,
     merged.value,
+    merged.primary,
+    merged.disabled,
+    merged.secondary,
+    hasListboxContext,
   ]);
 
   useEffect(() => {
@@ -214,10 +214,10 @@ export function useListItem(
     return merged.selectedIcon ?? Check;
   }, [
     isListboxOption,
-    listboxContext?.showCheckmark,
     listboxSelected,
     merged.selected,
     merged.selectedIcon,
+    listboxContext?.showCheckmark,
   ]);
 
   const hasEnd = derived(() => {
@@ -269,10 +269,9 @@ export function useListItem(
         className: cn({
           "flex w-full min-w-0 gap-x-3 text-left outline-hidden transition-colors": true,
           "cursor-pointer select-none": !merged.disabled,
-          "px-4": !isListboxOption,
-          [listboxContext?.sizeClasses?.option ?? "px-4"]: isListboxOption,
-          "py-2": !isListboxOption && !isDense,
-          "py-1.5": !isListboxOption && isDense,
+          "px-4": true,
+          "py-2": !isDense,
+          "py-1.5": isDense,
           "hover:bg-black/5 focus-visible:bg-black/5":
             !merged.disabled && !isListboxOption,
           "bg-primary-50 text-primary-700": merged.selected && !isListboxOption,
@@ -287,6 +286,7 @@ export function useListItem(
           "opacity-50 pointer-events-none": merged.disabled,
           [alignClass ?? ""]: true,
           [get(mergedClasses, "interactive") ?? ""]: true,
+          [listboxContext?.sizeClasses?.option ?? ""]: true,
         }),
       },
     );
@@ -295,10 +295,10 @@ export function useListItem(
   const rowClassName = derived(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "px-4": !merged.interactive && !isListboxOption,
-      "py-2": !merged.interactive && !isListboxOption && !isDense,
-      "py-1.5": !merged.interactive && !isListboxOption && isDense,
-      [alignClass ?? ""]: !merged.interactive && !isListboxOption,
+      "px-4": !merged.interactive,
+      "py-2": !merged.interactive && !isDense,
+      "py-1.5": !merged.interactive && isDense,
+      [alignClass ?? ""]: !merged.interactive,
     });
   });
 
@@ -306,12 +306,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.start,
       {},
-      {
-        className: cn({
-          "flex shrink-0": true,
-          [get(mergedClasses, "start") ?? ""]: true,
-        }),
-      },
+      cn({
+        "flex shrink-0": true,
+        [get(mergedClasses, "start") ?? ""]: true,
+      }),
     );
   });
 
@@ -319,12 +317,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.content,
       {},
-      {
-        className: cn({
-          "min-w-0 flex-1": true,
-          [get(mergedClasses, "content") ?? ""]: true,
-        }),
-      },
+      cn({
+        "min-w-0 flex-1": true,
+        [get(mergedClasses, "content") ?? ""]: true,
+      }),
     );
   });
 
@@ -332,14 +328,11 @@ export function useListItem(
     return mergePartBind(
       customProps?.primary,
       {},
-      {
-        className: cn({
-          "block truncate text-sm font-medium": !isListboxOption,
-          [listboxContext?.sizeClasses?.primary ??
-          "block truncate text-sm font-medium"]: isListboxOption,
-          [get(mergedClasses, "primary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "block truncate text-sm font-medium",
+        listboxContext?.sizeClasses?.primary,
+        get(mergedClasses, "primary"),
+      ),
     );
   });
 
@@ -347,14 +340,11 @@ export function useListItem(
     return mergePartBind(
       customProps?.secondary,
       {},
-      {
-        className: cn({
-          "mt-0.5 block truncate text-xs text-dark-500": !isListboxOption,
-          [listboxContext?.sizeClasses?.secondary ??
-          "mt-0.5 block truncate text-xs text-dark-500"]: isListboxOption,
-          [get(mergedClasses, "secondary") ?? ""]: true,
-        }),
-      },
+      cn(
+        "mt-0.5 block truncate text-xs text-dark-500",
+        listboxContext?.sizeClasses?.secondary,
+        get(mergedClasses, "secondary"),
+      ),
     );
   });
 
@@ -362,12 +352,10 @@ export function useListItem(
     return mergePartBind(
       customProps?.end,
       {},
-      {
-        className: cn({
-          "ml-auto flex shrink-0 items-center": true,
-          [get(mergedClasses, "end") ?? ""]: true,
-        }),
-      },
+      cn({
+        "ml-auto flex shrink-0 items-center": true,
+        [get(mergedClasses, "end") ?? ""]: true,
+      }),
     );
   });
 
@@ -377,11 +365,11 @@ export function useListItem(
       {},
       {
         size: "sm" as const,
-        className: cn({
-          "shrink-0": true,
-          [listboxContext?.checkClass ?? ""]: isListboxOption,
-          [get(mergedClasses, "selectedIcon") ?? ""]: true,
-        }),
+        className: cn(
+          "shrink-0",
+          listboxContext?.checkClass,
+          get(mergedClasses, "selectedIcon"),
+        ),
       },
     );
   });
