@@ -147,7 +147,7 @@ function Listbox({
 
   const mappedRows = useMemo(() => {
     return mapListboxEntriesToRows(resolvedEntries, resolveSelected);
-  }, [resolvedEntries, resolveSelected]);
+  }, [resolveSelected, resolvedEntries]);
 
   const handleSelect = useCallback(
     (option: ListboxOption) => {
@@ -192,11 +192,7 @@ function Listbox({
     }
 
     onRegisteredOptionsChange?.(registeredOptions);
-  }, [
-    registeredOptions,
-    hasComposedChildren,
-    onRegisteredOptionsChange,
-  ]);
+  }, [registeredOptions, hasComposedChildren, onRegisteredOptionsChange]);
 
   const listboxContext = useMemo((): ListboxContextValue => {
     return {
@@ -267,52 +263,6 @@ function Listbox({
     };
   }
 
-  function renderMappedEntries() {
-    return mappedRows.map((row) => {
-      if (row.kind === "section") {
-        return (
-          <ListSection
-            key={row.key}
-            title={row.title}
-            sticky={row.sticky}
-          />
-        );
-      }
-
-      const { option, index, selected } = row;
-      const optionCustomProps = getOptionCustomProps(option, index);
-
-      return (
-        <ListItem
-          interactive
-          role="option"
-          selected={false}
-          key={row.key}
-          aria-selected={selected}
-          disabled={option.disabled}
-          secondary={option.description}
-          primary={slots?.option ? undefined : option.label}
-          slots={{
-            end:
-              showCheckmark && selected ? (
-                <Check className={resolvedCheckClass} />
-              ) : undefined,
-          }}
-          customProps={{
-            ...optionCustomProps,
-            root: { id: getListboxOptionId(listboxId, index) },
-            interactive: {
-              ...optionCustomProps.interactive,
-              onClick: () => handleSelect(option),
-            },
-          }}
-        >
-          {slots?.option?.({ option, selected })}
-        </ListItem>
-      );
-    });
-  }
-
   return (
     <Menu
       show={show}
@@ -344,7 +294,56 @@ function Listbox({
               aria-labelledby={labelledBy}
               aria-multiselectable={multiple || undefined}
             >
-              {hasComposedChildren ? children : renderMappedEntries()}
+              {hasComposedChildren
+                ? children
+                : mappedRows.map((row) => {
+                    if (row.kind === "section") {
+                      return (
+                        <ListSection
+                          key={row.key}
+                          title={row.title}
+                          sticky={row.sticky}
+                        />
+                      );
+                    }
+
+                    const { index, option, selected } = row;
+                    const optionCustomProps = getOptionCustomProps(
+                      option,
+                      index,
+                    );
+
+                    return (
+                      <ListItem
+                        interactive
+                        role="option"
+                        key={row.key}
+                        selected={false}
+                        aria-selected={selected}
+                        disabled={option.disabled}
+                        secondary={option.description}
+                        primary={slots?.option ? undefined : option.label}
+                        slots={{
+                          end:
+                            showCheckmark && selected ? (
+                              <Check className={resolvedCheckClass} />
+                            ) : undefined,
+                        }}
+                        customProps={{
+                          ...optionCustomProps,
+                          root: {
+                            id: getListboxOptionId(listboxId, index),
+                          },
+                          interactive: {
+                            ...optionCustomProps.interactive,
+                            onClick: () => handleSelect(option),
+                          },
+                        }}
+                      >
+                        {slots?.option?.({ option, selected })}
+                      </ListItem>
+                    );
+                  })}
             </List>
           </ListboxContext.Provider>
         </div>
