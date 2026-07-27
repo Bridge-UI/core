@@ -53,6 +53,18 @@ import { List } from "@bridge-ui/vue/Components/List";
 </List>
 ```
 
+### Selected icon
+
+Selected rows show a check icon by default. Customize it with `selectedIcon` on `ListItem`, or pass `null` to hide it.
+
+```vue
+<List>
+  <ListItem interactive selected primary="Inbox" />
+  <ListItem interactive selected primary="Starred" :selected-icon="Star" />
+  <ListItem interactive selected primary="No icon" :selected-icon="null" />
+</List>
+```
+
 ### Nested
 
 ```vue

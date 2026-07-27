@@ -57,6 +57,18 @@ import { List } from "@bridge-ui/react/Components/List";
 </List>
 ```
 
+### Selected icon
+
+Selected rows show a check icon by default. Customize it with `selectedIcon` on `ListItem`, or pass `null` to hide it.
+
+```tsx
+<List>
+  <ListItem interactive selected primary="Inbox" />
+  <ListItem interactive selected primary="Starred" selectedIcon={Star} />
+  <ListItem interactive selected primary="No icon" selectedIcon={null} />
+</List>
+```
+
 ### Nested
 
 ```tsx
