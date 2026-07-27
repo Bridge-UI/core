@@ -75,14 +75,16 @@ export function useListSection(props: ListSectionProps) {
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      className: cn({
+    return mergePartBind(
+      customProps?.root,
+      rootInheritedAttrs,
+      cn({
         "list-none": true,
         "sticky top-0 z-10 bg-white dark:bg-dark-950":
           merged.sticky && !isDivRoot,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
-    });
+    );
   });
 
   const titleBind = derived(() => {

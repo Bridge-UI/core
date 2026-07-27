@@ -523,12 +523,14 @@ export function useMenu(
     };
   }, [show, anchorEl, merged.persistent, merged.closeOnClickAway]);
 
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    className: cn({
+  const rootBind = mergePartBind(
+    customProps?.root,
+    rootInheritedAttrs,
+    cn({
       "relative inline-block text-left": hasTrigger,
       [get(mergedClasses, "root") ?? ""]: true,
     }),
-  });
+  );
 
   const triggerBind = mergePartBind(
     customProps?.trigger,
