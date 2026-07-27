@@ -239,7 +239,7 @@ export function useSnackbar(
     const themeIcon = get(colorClass, "icon") as undefined | LucideIcon;
 
     return themeIcon ?? get(snackbarDefaultIcons, merged.color);
-  }, [merged.icon, merged.color, colorClass]);
+  }, [colorClass, merged.icon, merged.color]);
 
   const durationMs = derived(() => {
     return merged.duration === false ? 0 : (merged.duration ?? 0);
@@ -452,7 +452,7 @@ export function useSnackbar(
     return () => {
       cancelAnimationFrame(frame);
     };
-  }, [showProgress, durationMs]);
+  }, [durationMs, showProgress]);
 
   useLayoutEffect(() => {
     if (!isPortaled || !rendered) {
@@ -478,7 +478,7 @@ export function useSnackbar(
       layerStackIdRef.current = "";
       setStackZIndex(LAYER_STACK_BASE_Z_INDEX);
     };
-  }, [rendered, isPortaled, stackId]);
+  }, [stackId, rendered, isPortaled]);
 
   useEffect(() => {
     if (!rendered || !isPortaled) {

@@ -157,7 +157,7 @@ export function useCheckbox(
     if (inputRef.current) {
       inputRef.current.indeterminate = Boolean(merged.indeterminate);
     }
-  }, [merged.indeterminate, checked]);
+  }, [checked, merged.indeterminate]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {

@@ -45,7 +45,7 @@ export function usePasswordField(props: PasswordFieldProps) {
     }
 
     return internalVisible;
-  }, [isControlled, internalVisible, visible]);
+  }, [visible, isControlled, internalVisible]);
 
   const inputType = isVisible ? "text" : "password";
 
@@ -86,7 +86,7 @@ export function usePasswordField(props: PasswordFieldProps) {
     }
 
     onVisibilityChange?.(next);
-  }, [isControlled, isVisible, onVisibilityChange]);
+  }, [isVisible, isControlled, onVisibilityChange]);
 
   return {
     formField,

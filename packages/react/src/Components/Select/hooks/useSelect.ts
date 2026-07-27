@@ -213,11 +213,11 @@ export function useSelect(
 
     return staticEntries;
   }, [
-    asyncOptions,
-    hasComposedChildren,
     optionKeys,
-    selectMerged.flipOptions,
+    asyncOptions,
     staticEntries,
+    hasComposedChildren,
+    selectMerged.flipOptions,
   ]);
 
   const resolvedOptions = useMemo(() => {
@@ -226,7 +226,7 @@ export function useSelect(
     }
 
     return flattenListboxOptions(resolvedEntries);
-  }, [hasComposedChildren, registeredOptions, resolvedEntries]);
+  }, [resolvedEntries, registeredOptions, hasComposedChildren]);
 
   const selectedValues = useMemo((): SelectValue[] => {
     const value = modelValue;
@@ -284,7 +284,7 @@ export function useSelect(
     return filterListboxEntries(resolvedEntries, (option) => {
       return option.label.toLowerCase().includes(query);
     });
-  }, [hasComposedChildren, isSearchActive, resolvedEntries, searchQuery]);
+  }, [searchQuery, isSearchActive, resolvedEntries, hasComposedChildren]);
 
   const visibleOptions = useMemo(() => {
     if (hasComposedChildren) {
@@ -292,7 +292,7 @@ export function useSelect(
     }
 
     return flattenListboxOptions(visibleEntries);
-  }, [hasComposedChildren, registeredOptions, visibleEntries]);
+  }, [visibleEntries, registeredOptions, hasComposedChildren]);
 
   const navigation = useListboxNavigation(
     visibleOptions,
@@ -758,10 +758,10 @@ export function useSelect(
   }, [
     mergedClasses,
     formFieldSlots,
-    props.disabled,
-    props.readonly,
     inheritedAttrs,
     isSearchActive,
+    props.disabled,
+    props.readonly,
     handleContainerRef,
     handleContainerClick,
   ]);
@@ -851,9 +851,9 @@ export function useSelect(
     listboxId,
     adjustHeight,
     displayValue,
+    isSearchActive,
     props.disabled,
     props.readonly,
-    isSearchActive,
     isSearchEnabled,
     triggerReadonly,
     handleTriggerInput,
@@ -883,7 +883,7 @@ export function useSelect(
         }),
       },
     );
-  }, [handleClearPointer, listboxPalette?.clear, mergedClasses.clear]);
+  }, [handleClearPointer, mergedClasses.clear, listboxPalette?.clear]);
 
   const resolveSelectedOptions = useCallback(async () => {
     const asyncData = selectMerged.asyncData;
@@ -915,7 +915,7 @@ export function useSelect(
     asyncSearchRef.current = search;
 
     return () => search.cancel();
-  }, [isAsync, selectMerged.asyncData, fetchAsyncOptions]);
+  }, [isAsync, fetchAsyncOptions, selectMerged.asyncData]);
 
   useEffect(() => {
     adjustHeight(triggerRef.current as null | HTMLTextAreaElement);
@@ -928,7 +928,7 @@ export function useSelect(
   useEffect(() => {
     setAsyncOptions([]);
     void resolveSelectedOptions();
-  }, [selectMerged.asyncData, resolveSelectedOptions]);
+  }, [resolveSelectedOptions, selectMerged.asyncData]);
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
@@ -969,8 +969,8 @@ export function useSelect(
     };
   }, [
     multiple,
-    listboxId,
     isLoading,
+    listboxId,
     isSelected,
     emptyMessage,
     loadingMessage,
@@ -980,8 +980,8 @@ export function useSelect(
     hideEmptyMessage,
     highlightedIndex,
     formField.controlId,
-    formField.merged.size,
     formField.invalidated,
+    formField.merged.size,
     formField.merged.color,
     props.disableMaxHeight,
     props.customProps?.listbox,
