@@ -29,6 +29,7 @@ import { ListItem } from "@/Components/ListItem";
 import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
+import { Progress } from "@/Components/Progress";
 import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
 
 defineSlots<ListboxSlots>();
@@ -62,10 +63,8 @@ const {
   checkClass,
   scrollBind,
   messageBind,
-  loadingBind,
   sizeClasses,
   mergedClasses,
-  loadingTrackBind,
   optionSelectedClass,
   optionHighlightedClass,
 } = useListbox(props, {
@@ -237,9 +236,14 @@ const mappedRows = computed(() => {
     />
 
     <template v-if="loading">
-      <div v-bind="loadingTrackBind">
-        <div v-bind="loadingBind" />
-      </div>
+      <Progress
+        size="xs"
+        aria-hidden
+        class="shrink-0"
+        :color="merged.color"
+        :classes="{ bar: mergedClasses.loading }"
+        :custom-props="{ bar: merged.customProps?.loading }"
+      />
 
       <div v-bind="messageBind">
         <component

@@ -127,31 +127,6 @@ export function useListbox(
     );
   });
 
-  const loadingTrackBind = computed(() => {
-    return mergePartBind(
-      {},
-      {
-        role: "progressbar",
-        "aria-hidden": true,
-      },
-      cn({
-        "h-0.5 w-full shrink-0 overflow-hidden": true,
-      }),
-    );
-  });
-
-  const loadingBind = computed(() => {
-    return mergePartBind(
-      merged.value.customProps?.loading,
-      {},
-      cn({
-        "h-full w-1/3 animate-bridge-listbox-indeterminate": true,
-        [colorPalette.value?.progressColor ?? ""]: true,
-        [mergedClasses.value.loading ?? ""]: true,
-      }),
-    );
-  });
-
   const messageBind = computed(() => {
     return mergePartBind(
       {},
@@ -168,10 +143,8 @@ export function useListbox(
     checkClass,
     scrollBind,
     messageBind,
-    loadingBind,
     sizeClasses,
     mergedClasses,
-    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   };

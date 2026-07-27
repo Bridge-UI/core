@@ -32,6 +32,7 @@ import { ListItem } from "@/Components/ListItem";
 import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
+import { Progress } from "@/Components/Progress";
 
 const listboxLibDefaults = {
   size: "md",
@@ -75,10 +76,8 @@ function Listbox({
     checkClass,
     scrollBind,
     messageBind,
-    loadingBind,
     sizeClasses,
     mergedClasses,
-    loadingTrackBind,
     optionSelectedClass,
     optionHighlightedClass,
   } = useListbox(
@@ -277,9 +276,14 @@ function Listbox({
 
       {loading ? (
         <>
-          <div {...loadingTrackBind}>
-            <div {...loadingBind} />
-          </div>
+          <Progress
+            size="xs"
+            aria-hidden
+            className="shrink-0"
+            color={merged.color}
+            classes={{ bar: mergedClasses.loading }}
+            customProps={{ bar: merged.customProps?.loading }}
+          />
 
           <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
         </>
