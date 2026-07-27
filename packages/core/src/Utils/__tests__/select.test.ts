@@ -240,8 +240,8 @@ describe("mapListboxEntriesToRows", () => {
     const entries = normalizeListboxEntries(
       [
         {
-          title: "Fruits",
           sticky: true,
+          title: "Fruits",
           options: [
             { label: "Apple", value: "apple" },
             { label: "Banana", value: "banana" },
@@ -256,29 +256,29 @@ describe("mapListboxEntriesToRows", () => {
       mapListboxEntriesToRows(entries, (value) => value === "banana"),
     ).toEqual([
       {
+        sticky: true,
         kind: "section",
         title: "Fruits",
-        sticky: true,
         key: "section-0-Fruits",
       },
       {
-        kind: "option",
         index: 0,
         key: "apple",
+        kind: "option",
         selected: false,
         option: expect.objectContaining({ value: "apple" }),
       },
       {
-        kind: "option",
         index: 1,
         key: "banana",
+        kind: "option",
         selected: true,
         option: expect.objectContaining({ value: "banana" }),
       },
       {
-        kind: "option",
         index: 2,
         key: "other",
+        kind: "option",
         selected: false,
         option: expect.objectContaining({ value: "other" }),
       },

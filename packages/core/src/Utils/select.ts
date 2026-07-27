@@ -141,7 +141,7 @@ export type ListboxEntry =
 /**
  * Options list that may mix standalone options and section groups.
  */
-export type ListboxOptionsInput = Array<ListboxOptionGroup | SelectOptionInput>;
+export type ListboxOptionsInput = Array<SelectOptionInput | ListboxOptionGroup>;
 
 /**
  * A render row for Listbox: section header or selectable option.
@@ -455,7 +455,7 @@ export function mapListboxEntriesToRows(
 export function entriesFromListboxOptions(
   options: ListboxOption[],
 ): ListboxEntry[] {
-  return options.map((option) => ({ type: "option" as const, option }));
+  return options.map((option) => ({ option, type: "option" as const }));
 }
 
 /**

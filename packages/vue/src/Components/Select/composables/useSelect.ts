@@ -181,7 +181,7 @@ export function useSelect(
       return false;
     }
 
-    const name = (type as { __name?: string; name?: string; }).name;
+    const name = (type as { __name?: string; name?: string }).name;
     const scriptName = (type as { __name?: string }).__name;
 
     return name === "SelectOption" || scriptName === "SelectOption";
