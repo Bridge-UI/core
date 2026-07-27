@@ -7,9 +7,7 @@ import { useList } from "@/Components/List/hooks/useList";
 import type { ListProps } from "@/Components/List/list.types";
 
 function List(props: ListProps) {
-  const { merged, children, rootBind, contextValue } = useList(props, {
-    padding: "normal",
-  });
+  const { merged, children, rootBind, contextValue } = useList(props);
 
   return (
     <ListContext.Provider value={contextValue}>

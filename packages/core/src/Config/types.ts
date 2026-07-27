@@ -68,7 +68,6 @@ import type {
   LinkSize,
   LinkUnderline,
 } from "@/Components/Link";
-import type { ListPadding } from "@/Components/List";
 import type {
   ListboxColor,
   ListboxColorItem,
@@ -76,7 +75,6 @@ import type {
   ListboxSize,
   ListboxSizeItem,
 } from "@/Components/Listbox";
-import type { ListItemAlign } from "@/Components/ListItem";
 import type { MenuRounded, MenuShadow } from "@/Components/Menu";
 import type {
   ModalAlign,
@@ -322,12 +320,6 @@ export interface LinkConfigBase {
 
 export interface ListConfigBase {
   classes: object;
-  customProps: Partial<{
-    padding: Record<string, string>;
-  }>;
-  defaultProps: Partial<{
-    padding: keyof ListPadding;
-  }>;
 }
 
 export interface ListboxConfigBase {
@@ -345,11 +337,7 @@ export interface ListboxConfigBase {
 
 export interface ListItemConfigBase {
   classes: object;
-  customProps: Partial<{
-    align: Record<string, string>;
-  }>;
   defaultProps: Partial<{
-    align: keyof ListItemAlign;
     role: "button" | "option" | "menuitem";
     selectedIcon: unknown;
   }>;

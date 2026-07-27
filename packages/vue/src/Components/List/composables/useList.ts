@@ -3,14 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { computed, provide, useAttrs } from "vue";
 
 // ** Core Imports
-import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { paddingProps } from "@bridge-ui/core/Components/List";
+import { cn, splitComponentProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { ListOwnProps, ListProps } from "@/Components/List/list.types";
@@ -26,15 +19,10 @@ const listBridgeKeys = [
   "dense",
   "nested",
   "classes",
-  "padding",
   "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
-type ListLibDefaults = LibDefaultsShape<ListOwnProps, "padding">;
-
-type ListMerged = MergeLibDefaults<ListOwnProps, ListLibDefaults>;
-
-export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
+export function useList(props: ListOwnProps) {
   const attrs = useAttrs();
 
   const split = computed(() => {
@@ -45,10 +33,9 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
   });
 
   const { merged, entry: bridgeList } = useBridgeUIComponent<
-    ListMerged,
+    ListOwnProps,
     "List"
   >({
-    libDefaults,
     componentName: "List",
     props: () => split.value.componentProps,
   });
@@ -70,15 +57,6 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
 
   provide(LIST_INJECTION_KEY, contextValue);
 
-  const paddingClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      paddingProps,
-      bridgeList.value?.customProps?.padding,
-    );
-
-    return get(classes, merged.value.padding);
-  });
-
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, []);
   });
@@ -88,8 +66,7 @@ export function useList(props: ListOwnProps, libDefaults: ListLibDefaults) {
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "m-0 list-none": true,
-        [paddingClass.value ?? ""]: true,
+        "m-0 list-none py-2": true,
         "pl-4": merged.value.nested,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),

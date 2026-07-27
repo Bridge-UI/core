@@ -2,9 +2,7 @@
 import type { HTMLAttributes } from "vue";
 
 // ** Core Imports
-import type { ListPadding, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
-
-export interface ListPaddingOverrides {}
+import type { MergeHtmlProps } from "@bridge-ui/core";
 
 export interface ListClasses {
   /**
@@ -58,13 +56,6 @@ export interface ListOwnProps {
    * @default false
    */
   nested?: boolean;
-
-  /**
-   * Root padding preset. Use `"none"` inside menus/cards (MUI `disablePadding`).
-   *
-   * @default "normal"
-   */
-  padding?: MergeProps<ListPadding, ListPaddingOverrides>;
 }
 
 export type ListProps = MergeHtmlProps<ListOwnProps, HTMLAttributes>;

@@ -24,7 +24,6 @@ const props = withDefaults(defineProps<ListItemOwnProps>(), {
   as: "li",
   role: "button",
   divider: false,
-  align: "center",
   disabled: false,
   selected: false,
   interactive: false,
@@ -46,7 +45,7 @@ const {
   interactiveBind,
   selectedIconBind,
   resolvedSelectedIcon,
-} = useListItem(props, { role: "button", align: "center" }, slots);
+} = useListItem(props, { role: "button" }, slots);
 
 const rootTag = computed(() => {
   return merged.value.as ?? "li";

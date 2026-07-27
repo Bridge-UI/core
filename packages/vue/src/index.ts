@@ -135,7 +135,6 @@ export type {
   ListContextValue,
   ListCustomProps,
   ListOwnProps,
-  ListPaddingOverrides,
   ListProps,
 } from "@/Components/List";
 export {
@@ -161,7 +160,6 @@ export type {
 } from "@/Components/Listbox";
 export { ListItem } from "@/Components/ListItem";
 export type {
-  ListItemAlignOverrides,
   ListItemClasses,
   ListItemCustomProps,
   ListItemOwnProps,

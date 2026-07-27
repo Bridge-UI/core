@@ -3,17 +3,10 @@ import type { LucideIcon } from "@lucide/vue";
 import type { HTMLAttributes, Slot, VNode } from "vue";
 
 // ** Core Imports
-import type {
-  ListItemAlign,
-  ListboxValue,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+import type { ListboxValue, MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
-
-export interface ListItemAlignOverrides {}
 
 export interface ListItemClasses {
   /**
@@ -103,13 +96,6 @@ export interface ListItemCustomProps {
  * List row (MUI `ListItem` / `ListItemButton`-like).
  */
 export interface ListItemOwnProps {
-  /**
-   * Vertical alignment of start/content/end slots.
-   *
-   * @default "center"
-   */
-  align?: MergeProps<ListItemAlign, ListItemAlignOverrides>;
-
   /**
    * The element to render as.
    *

@@ -78,7 +78,6 @@ When `selected` is true, a check icon is shown in the end slot by default (`Chec
 
 | Prop           | Type                                 | Default  | Description                                                                           |
 | -------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------- |
-| `align`        | `ListItemAlign`                      | "center" | Vertical alignment of start/content/end slots.                                        |
 | `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                             |
 | `children`     | `ReactNode`                          | —        | The children to render inside the content column when `primary` is not set.           |
 | `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                     |

@@ -60,7 +60,7 @@ test("it should call onShowChange when the trigger is clicked again", () => {
 test("it should render List and ListItem inside the menu panel", () => {
   cy.mount(
     <Menu show slots={{ trigger: <Button>Open</Button> }}>
-      <List dense padding="none">
+      <List dense className="p-0">
         <ListItem interactive role="menuitem" primary="Item one" />
       </List>
     </Menu>,

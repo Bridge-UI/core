@@ -1,7 +1,6 @@
 // ** Exports
 export { useListItem } from "@/Components/ListItem/composables/useListItem";
 export type {
-  ListItemAlignOverrides,
   ListItemClasses,
   ListItemCustomProps,
   ListItemOwnProps,

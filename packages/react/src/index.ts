@@ -129,12 +129,10 @@ export type {
   ListClasses,
   ListCustomProps,
   ListOwnProps,
-  ListPaddingOverrides,
   ListProps,
 } from "@/Components/List";
 export { ListItem, useListItem } from "@/Components/ListItem";
 export type {
-  ListItemAlignOverrides,
   ListItemClasses,
   ListItemCustomProps,
   ListItemOwnProps,

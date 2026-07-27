@@ -84,15 +84,14 @@ Selected rows show a check icon by default. Customize it with `selectedIcon` on 
 
 ## Props
 
-| Prop          | Type                    | Default  | Description                                                                        |
-| ------------- | ----------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `as`          | `"nav" \| "ol" \| "ul"` | "ul"     | The element to render as.                                                          |
-| `children`    | `ReactNode`             | —        | The children to render.                                                            |
-| `classes`     | `ListClasses`           | —        | The classes to apply to the list.                                                  |
-| `customProps` | `ListCustomProps`       | —        | Props forwarded to each list part.                                                 |
-| `dense`       | `boolean`               | `false`  | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
-| `nested`      | `boolean`               | `false`  | When true, indents the list for nested navigation/submenus.                        |
-| `padding`     | `ListPadding`           | "normal" | Root padding preset. Use `"none"` inside menus/cards (MUI `disablePadding`).       |
+| Prop          | Type                    | Default | Description                                                                        |
+| ------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------- |
+| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                          |
+| `children`    | `ReactNode`             | —       | The children to render.                                                            |
+| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
+| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
+| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
+| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                        |
 
 ## Related components
 

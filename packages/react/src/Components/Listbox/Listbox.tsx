@@ -289,8 +289,8 @@ function Listbox({
             <List
               dense
               role="listbox"
-              padding="none"
               id={listboxId}
+              className="p-0"
               aria-labelledby={labelledBy}
               aria-multiselectable={multiple || undefined}
             >

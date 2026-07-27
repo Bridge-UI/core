@@ -3,17 +3,10 @@ import type { LucideIcon } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  ListItemAlign,
-  ListboxValue,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+import type { ListboxValue, MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
-
-export interface ListItemAlignOverrides {}
 
 export interface ListItemClasses {
   /**
@@ -104,13 +97,6 @@ export interface ListItemCustomProps {
  * clickable rows; use `role="menuitem"` inside menus or `role="option"` in selects.
  */
 export interface ListItemOwnProps {
-  /**
-   * Vertical alignment of start/content/end slots.
-   *
-   * @default "center"
-   */
-  align?: MergeProps<ListItemAlign, ListItemAlignOverrides>;
-
   /**
    * The element to render as.
    *

@@ -51,7 +51,6 @@ function ListItemRow({
 function ListItem(props: ListItemProps) {
   const listItemState = useListItem(props, {
     role: "button",
-    align: "center",
   });
 
   const row = <ListItemRow {...listItemState} />;

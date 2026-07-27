@@ -4,7 +4,6 @@ export type {
   ListClasses,
   ListCustomProps,
   ListOwnProps,
-  ListPaddingOverrides,
   ListProps,
 } from "@/Components/List/list.types";
 export { default as List } from "@/Components/List/List.vue";

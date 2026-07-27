@@ -254,8 +254,8 @@ const mappedRows = computed(() => {
     <div v-else v-bind="scrollBind">
       <List
         dense
+        class="p-0"
         role="listbox"
-        padding="none"
         :id="listboxId"
         :aria-labelledby="labelledBy"
         :aria-multiselectable="multiple || undefined"
