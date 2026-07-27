@@ -39,6 +39,18 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
 />
 ```
 
+### Selected icon
+
+When `selected` is true, a check icon is shown in the end slot by default (`Check` from Lucide). Override it with `selectedIcon`, or pass `null` to hide it. Providing `slots.end` replaces the selected icon.
+
+```tsx
+<ListItem interactive selected primary="Inbox" />
+
+<ListItem interactive selected primary="Starred" selectedIcon={Star} />
+
+<ListItem interactive selected primary="Hidden check" selectedIcon={null} />
+```
+
 ### Disabled and divider
 
 ```tsx
@@ -64,23 +76,25 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
 
 ## Props
 
-| Prop          | Type                                 | Default  | Description                                                                           |
-| ------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------- |
-| `align`       | `ListItemAlign`                      | "center" | Vertical alignment of start/content/end slots.                                        |
-| `as`          | `"div" \| "li"`                      | "li"     | The element to render as.                                                             |
-| `children`    | `ReactNode`                          | —        | The children to render inside the content column when `primary` is not set.           |
-| `classes`     | `ListItemClasses`                    | —        | The classes to apply to the item.                                                     |
-| `customProps` | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                    |
-| `dense`       | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.           |
-| `disabled`    | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                             |
-| `divider`     | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                      |
-| `interactive` | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.        |
-| `primary`     | `ReactNode`                          | —        | Primary label text. Use `children` or `slots.primary` for custom markup.              |
-| `role`        | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Common values: `menuitem`, `option`, `button`. |
-| `secondary`   | `ReactNode`                          | —        | Secondary/description text below the primary line.                                    |
-| `selected`    | `boolean`                            | `false`  | When true, highlights the item as selected.                                           |
-| `slots`       | `ListItemSlots`                      | —        | The slots to apply to the item.                                                       |
+| Prop           | Type                                 | Default  | Description                                                                           |
+| -------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------- |
+| `align`        | `ListItemAlign`                      | "center" | Vertical alignment of start/content/end slots.                                        |
+| `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                             |
+| `children`     | `ReactNode`                          | —        | The children to render inside the content column when `primary` is not set.           |
+| `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                     |
+| `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                    |
+| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.           |
+| `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                             |
+| `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                      |
+| `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.        |
+| `primary`      | `ReactNode`                          | —        | Primary label text. Use `children` or `slots.primary` for custom markup.              |
+| `role`         | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Common values: `menuitem`, `option`, `button`. |
+| `secondary`    | `ReactNode`                          | —        | Secondary/description text below the primary line.                                    |
+| `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                           |
+| `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `slots.end`.   |
+| `slots`        | `ListItemSlots`                      | —        | The slots to apply to the item.                                                       |
+| `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.    |
 
 ## Related components
 
-List, ListSection, Menu
+List, ListSection, Menu, Select

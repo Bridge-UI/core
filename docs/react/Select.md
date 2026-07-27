@@ -82,6 +82,44 @@ import { Select } from "@bridge-ui/react/Components/Select";
 />
 ```
 
+### Grouped options
+
+`options` may mix standalone options and section groups (`{ title, options, sticky? }`). Search filters within sections and drops empty ones.
+
+```tsx
+<Select
+  searchable
+  label="Produce"
+  options={[
+    {
+      title: "Fruits",
+      sticky: true,
+      options: [
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana" },
+      ],
+    },
+    {
+      title: "Vegetables",
+      options: [{ label: "Carrot", value: "carrot" }],
+    },
+    { label: "Other", value: "other" },
+  ]}
+/>
+```
+
+### Composed list children
+
+Pass `ListSection` / `ListItem` as children to build the dropdown list manually. Set `value` on each `ListItem` so it registers as a selectable option. When children are present, mapped `options` are not rendered in the listbox.
+
+```tsx
+<Select label="Status" value={status} onChange={setStatus}>
+  <ListSection title="Workflow" sticky />
+  <ListItem value="open" primary="Open" />
+  <ListItem value="closed" primary="Closed" />
+</Select>
+```
+
 ### customProps
 
 ```tsx
@@ -100,25 +138,26 @@ import { Select } from "@bridge-ui/react/Components/Select";
 
 ### Select-specific
 
-| Prop                | Type                  | Default       | Description                                                                                      |
-| ------------------- | --------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
-| `asyncData`         | `SelectAsyncData`     | —             | Remote data source. Implies `searchable`.                                                        |
-| `clearable`         | `boolean`             | `true`        | Whether the value can be cleared.                                                                |
-| `defaultValue`      | `SelectModel \| null` | —             | Initial value when uncontrolled.                                                                 |
-| `disableMaxHeight`  | `boolean`             | `false`       | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`. |
-| `emptyMessage`      | `string`              | "No options"  | Message when the filtered list is empty.                                                         |
-| `flipOptions`       | `boolean`             | `false`       | Inverts the visual order of options.                                                             |
-| `hideEmptyMessage`  | `boolean`             | `false`       | Hides the empty-state message.                                                                   |
-| `loading`           | `boolean`             | —             | External or async loading state.                                                                 |
-| `maxHeight`         | `string`              | "max-h-60"    | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.    |
-| `minItemsForSearch` | `number`              | 11            | Minimum option count before search UI is enabled.                                                |
-| `multiple`          | `boolean`             | `false`       | Whether multiple values can be selected.                                                         |
-| `optionDescription` | `string`              | "description" | Key used to read the description from option objects.                                            |
-| `optionLabel`       | `string`              | "label"       | Key used to read the label from option objects.                                                  |
-| `options`           | `SelectOptionInput[]` | —             | The list of options to display.                                                                  |
-| `optionValue`       | `string`              | "value"       | Key used to read the value from option objects.                                                  |
-| `placeholder`       | `string`              | —             | Placeholder shown when no value is selected.                                                     |
-| `searchable`        | `boolean`             | `false`       | Whether options can be filtered via the trigger input.                                           |
+| Prop                | Type                  | Default       | Description                                                                                             |
+| ------------------- | --------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
+| `asyncData`         | `SelectAsyncData`     | —             | Remote data source. Implies `searchable`.                                                               |
+| `children`          | `ReactNode`           | —             | Composed dropdown content (`ListSection` / `ListItem` with `value`). Replaces mapped `options`.         |
+| `clearable`         | `boolean`             | `true`        | Whether the value can be cleared.                                                                       |
+| `defaultValue`      | `SelectModel \| null` | —             | Initial value when uncontrolled.                                                                        |
+| `disableMaxHeight`  | `boolean`             | `false`       | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
+| `emptyMessage`      | `string`              | "No options"  | Message when the filtered list is empty.                                                                |
+| `flipOptions`       | `boolean`             | `false`       | Inverts the visual order of options.                                                                    |
+| `hideEmptyMessage`  | `boolean`             | `false`       | Hides the empty-state message.                                                                          |
+| `loading`           | `boolean`             | —             | External or async loading state.                                                                        |
+| `maxHeight`         | `string`              | "max-h-60"    | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
+| `minItemsForSearch` | `number`              | 11            | Minimum option count before search UI is enabled.                                                       |
+| `multiple`          | `boolean`             | `false`       | Whether multiple values can be selected.                                                                |
+| `optionDescription` | `string`              | "description" | Key used to read the description from option objects.                                                   |
+| `optionLabel`       | `string`              | "label"       | Key used to read the label from option objects.                                                         |
+| `options`           | `ListboxOptionsInput` | —             | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
+| `optionValue`       | `string`              | "value"       | Key used to read the value from option objects.                                                         |
+| `placeholder`       | `string`              | —             | Placeholder shown when no value is selected.                                                            |
+| `searchable`        | `boolean`             | `false`       | Whether options can be filtered via the trigger input.                                                  |
 
 ### Binding
 
@@ -144,4 +183,4 @@ See [FormField](./FormField.md).
 
 ## Related components
 
-Menu, List, ListItem, FormField
+Menu, List, ListItem, ListSection, FormField
