@@ -1,10 +1,11 @@
 // ** External Imports
-import { isEmpty, isNil } from "es-toolkit/compat";
+import { isEmpty } from "es-toolkit/compat";
 import { toMerged } from "es-toolkit/object";
-import { useEffect, useMemo, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 
 // ** Core Imports
 import {
+  breakpointObserverOptionsKey,
   createBreakpointObserver,
   type BreakpointObserverOptions,
   type BreakpointSnapshot,
@@ -21,6 +22,8 @@ export type UseBreakpointOptions = BreakpointObserverOptions;
  * Falls back to `BridgeUIProvider` `global.mobileBreakpoint` and
  * `global.breakpoints`. Hook options win when passed.
  *
+ * On the server (and before hydration), `mobile` is `true` at width `0`.
+ *
  * @example
  * const breakpoint = useBreakpoint();
  * <Modal align={breakpoint.mobile ? "bottom-center" : "middle-center"} />
@@ -31,33 +34,25 @@ export function useBreakpoint(
   const bridge = useBridgeUI();
   const mobileBreakpoint =
     options?.mobileBreakpoint ?? bridge?.global.mobileBreakpoint;
-  const breakpoints = useMemo(() => {
-    const merged = toMerged(
-      bridge?.global.breakpoints ?? {},
-      options?.breakpoints ?? {},
-    ) as Record<string, string>;
+  const mergedBreakpoints = toMerged(
+    bridge?.global.breakpoints ?? {},
+    options?.breakpoints ?? {},
+  ) as Record<string, string>;
+  const breakpoints = isEmpty(mergedBreakpoints)
+    ? undefined
+    : mergedBreakpoints;
+  const optionsKey = breakpointObserverOptionsKey({
+    breakpoints,
+    mobileBreakpoint,
+  });
 
-    return isEmpty(merged) ? undefined : merged;
-  }, [options?.breakpoints, bridge?.global.breakpoints]);
-
-  const breakpointsKey = isNil(breakpoints)
-    ? null
-    : JSON.stringify(breakpoints);
-
+  // Recreate only when serialized options change (inline objects stay stable).
   const observer = useMemo(() => {
     return createBreakpointObserver({
+      breakpoints,
       mobileBreakpoint,
-      breakpoints: isNil(breakpointsKey)
-        ? undefined
-        : (JSON.parse(breakpointsKey) as Record<string, string>),
     });
-  }, [breakpointsKey, mobileBreakpoint]);
-
-  useEffect(() => {
-    return () => {
-      observer.destroy();
-    };
-  }, [observer]);
+  }, [optionsKey]);
 
   return useSyncExternalStore(
     observer.subscribe,

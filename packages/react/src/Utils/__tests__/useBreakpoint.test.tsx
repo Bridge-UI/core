@@ -2,10 +2,12 @@
 import { renderHook } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Core Imports
+import { resetBreakpointCachesForTests } from "@bridge-ui/core";
+
 // ** Local Imports
 import { BridgeUIProvider } from "@/Provider";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
-import { resetBreakpointCachesForTests } from "@bridge-ui/core";
 
 function mockViewport(width: number, height = 800) {
   Object.defineProperty(window, "innerWidth", {

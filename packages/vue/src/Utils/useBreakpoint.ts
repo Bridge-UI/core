@@ -33,6 +33,8 @@ export type UseBreakpointOptions = BreakpointObserverOptions;
  * Falls back to `BridgeUIProvider` `global.mobileBreakpoint` and
  * `global.breakpoints`. Composable options win when passed.
  *
+ * On the server (and before mount), `mobile` is `true` at width `0`.
+ *
  * @example
  * const breakpoint = useBreakpoint();
  * // :align="breakpoint.mobile ? 'bottom-center' : 'middle-center'"
@@ -49,15 +51,7 @@ export function useBreakpoint(
   let unsubscribe: undefined | (() => void);
 
   function applySnapshot(next: BreakpointSnapshot) {
-    const previousThresholdKeys = Object.keys(state.thresholds);
-
     Object.assign(state, next);
-
-    for (const key of previousThresholdKeys) {
-      if (!(key in next.thresholds)) {
-        delete state.thresholds[key];
-      }
-    }
   }
 
   function resolveOptions(
@@ -78,7 +72,7 @@ export function useBreakpoint(
 
   function bind(nextOptions?: UseBreakpointOptions) {
     unsubscribe?.();
-    observer?.destroy();
+    unsubscribe = undefined;
     observer = createBreakpointObserver(resolveOptions(nextOptions));
     applySnapshot(observer.getSnapshot());
     unsubscribe = observer.subscribe(() => {
@@ -106,7 +100,6 @@ export function useBreakpoint(
   onBeforeUnmount(() => {
     unsubscribe?.();
     unsubscribe = undefined;
-    observer?.destroy();
     observer = undefined;
   });
 

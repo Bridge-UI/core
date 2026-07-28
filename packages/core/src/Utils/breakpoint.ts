@@ -95,10 +95,14 @@ export type BreakpointSnapshot = {
 
 /**
  * Subscribe / snapshot handle for viewport breakpoints.
+ *
+ * Lifecycle is **subscribe-owned**: listeners attach on the first `subscribe`
+ * and tear down when the last subscriber unsubscribes. `destroy` is a no-op
+ * kept for API compatibility.
  */
 export type BreakpointObserver = {
   /**
-   * Release this handle. Shared observers tear down when the last consumer leaves.
+   * No-op. Tear-down is owned by `subscribe` unsubscribe.
    */
   destroy: () => void;
 
@@ -132,8 +136,17 @@ const sharedObservers = new Map<string, SharedBreakpointObserverEntry>();
 export function breakpointObserverOptionsKey(
   options?: BreakpointObserverOptions,
 ): string {
+  const breakpoints = options?.breakpoints;
+  const sortedBreakpoints = isNil(breakpoints)
+    ? null
+    : Object.fromEntries(
+        Object.entries(breakpoints).sort(([left], [right]) =>
+          left.localeCompare(right),
+        ),
+      );
+
   return JSON.stringify({
-    breakpoints: options?.breakpoints ?? null,
+    breakpoints: sortedBreakpoints,
     mobileBreakpoint: options?.mobileBreakpoint ?? "sm",
   });
 }
@@ -171,17 +184,49 @@ export function cssLengthToPx(value: string, rootFontSize = 16): number {
 }
 
 /**
+ * Walks style + grouping rules (e.g. `@layer`) for `--breakpoint-*` names.
+ */
+function collectBreakpointKeysFromRules(rules: CSSRuleList, keys: Set<string>) {
+  for (const rule of Array.from(rules)) {
+    if (rule instanceof CSSStyleRule) {
+      const { style } = rule;
+
+      for (let index = 0; index < style.length; index += 1) {
+        const property = style.item(index);
+
+        if (isNil(property) || !property.startsWith("--breakpoint-")) {
+          continue;
+        }
+
+        keys.add(property.slice("--breakpoint-".length));
+      }
+
+      continue;
+    }
+
+    if (!("cssRules" in rule)) {
+      continue;
+    }
+
+    try {
+      collectBreakpointKeysFromRules((rule as CSSGroupingRule).cssRules, keys);
+    } catch {
+      // Inaccessible nested rules (cross-origin / browser limits).
+    }
+  }
+}
+
+/**
  * Collects breakpoint names from stylesheets (`--breakpoint-*` custom properties).
- * Results are cached until {@link resetBreakpointCachesForTests}.
+ * Results are cached on the client until {@link resetBreakpointCachesForTests}.
+ * SSR never caches, so a shared module instance cannot poison the client.
  */
 export function discoverBreakpointKeys(): string[] {
-  if (!isNil(discoveredKeysCache)) {
-    return discoveredKeysCache;
+  if (!hasDocument()) {
+    return [];
   }
 
-  if (!hasDocument()) {
-    discoveredKeysCache = [];
-
+  if (!isNil(discoveredKeysCache)) {
     return discoveredKeysCache;
   }
 
@@ -196,19 +241,7 @@ export function discoverBreakpointKeys(): string[] {
       continue;
     }
 
-    for (const rule of Array.from(rules)) {
-      if (!(rule instanceof CSSStyleRule)) {
-        continue;
-      }
-
-      for (const property of Array.from(rule.style)) {
-        if (!property.startsWith("--breakpoint-")) {
-          continue;
-        }
-
-        keys.add(property.slice("--breakpoint-".length));
-      }
-    }
+    collectBreakpointKeysFromRules(rules, keys);
   }
 
   discoveredKeysCache = Array.from(keys);
@@ -307,7 +340,10 @@ export function buildBreakpointSnapshot(
   }
 
   const mobileThreshold =
-    get(thresholds, mobileBreakpoint) ?? sorted[0]?.[1] ?? 0;
+    get(thresholds, mobileBreakpoint) ??
+    get(thresholds, "sm") ??
+    sorted[0]?.[1] ??
+    0;
 
   return {
     name,
@@ -360,6 +396,10 @@ function createBreakpointObserverInstance(
     }
 
     const { width, height } = readViewport();
+
+    if (width === snapshot.width && height === snapshot.height) {
+      return;
+    }
 
     snapshot = buildBreakpointSnapshot(
       width,
@@ -429,47 +469,77 @@ function createBreakpointObserverInstance(
 }
 
 /**
- * Observes viewport breakpoints. Equivalent options share one listener set
- * (ref-counted); call {@link BreakpointObserver.destroy} when done.
+ * Observes viewport breakpoints. Equivalent options share one listener set.
+ *
+ * Ref-counting is subscribe-owned so React can safely call this during render
+ * without leaking when concurrent renders are discarded.
  */
 export function createBreakpointObserver(
   options?: BreakpointObserverOptions,
 ): BreakpointObserver {
   const key = breakpointObserverOptionsKey(options);
-  let entry = sharedObservers.get(key);
+  const mobileBreakpoint = options?.mobileBreakpoint ?? "sm";
 
-  if (isNil(entry)) {
-    entry = {
-      refCount: 0,
-      observer: createBreakpointObserverInstance(options),
-    };
-    sharedObservers.set(key, entry);
+  function getServerSnapshot() {
+    return buildBreakpointSnapshot(
+      0,
+      0,
+      resolveBreakpoints(options?.breakpoints),
+      mobileBreakpoint,
+    );
   }
 
-  const shared = entry;
+  function getSnapshot() {
+    const existing = sharedObservers.get(key);
 
-  shared.refCount += 1;
+    if (existing) {
+      return existing.observer.getSnapshot();
+    }
 
-  let released = false;
+    if (!hasWindow()) {
+      return getServerSnapshot();
+    }
+
+    return buildBreakpointSnapshot(
+      window.innerWidth,
+      window.innerHeight,
+      resolveBreakpoints(options?.breakpoints),
+      mobileBreakpoint,
+    );
+  }
 
   return {
-    subscribe: shared.observer.subscribe,
-    getSnapshot: shared.observer.getSnapshot,
-    getServerSnapshot: shared.observer.getServerSnapshot,
+    getSnapshot,
+    getServerSnapshot,
     destroy: () => {
-      if (released) {
-        return;
+      // Subscribe-owned lifecycle — kept for API compatibility.
+    },
+    subscribe: (listener) => {
+      let entry = sharedObservers.get(key);
+
+      if (isNil(entry)) {
+        entry = {
+          refCount: 0,
+          observer: createBreakpointObserverInstance(options),
+        };
+        sharedObservers.set(key, entry);
       }
 
-      released = true;
-      shared.refCount -= 1;
+      entry.refCount += 1;
 
-      if (shared.refCount > 0) {
-        return;
-      }
+      const unsubscribe = entry.observer.subscribe(listener);
 
-      shared.observer.destroy();
-      sharedObservers.delete(key);
+      return () => {
+        unsubscribe();
+        entry.refCount -= 1;
+
+        if (entry.refCount > 0) {
+          return;
+        }
+
+        entry.observer.destroy();
+        sharedObservers.delete(key);
+      };
     },
   };
 }

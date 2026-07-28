@@ -16,6 +16,9 @@ import {
 
 afterEach(() => {
   document.documentElement.removeAttribute("style");
+  document.head.querySelectorAll("[data-breakpoint-test]").forEach((node) => {
+    node.remove();
+  });
   resetBreakpointCachesForTests();
   vi.restoreAllMocks();
 });
@@ -75,6 +78,24 @@ describe("resolveBreakpoints", () => {
 
     expect(second).toBe(first);
   });
+
+  test("it should discover nested grouping-rule breakpoint variables", () => {
+    const style = document.createElement("style");
+    style.setAttribute("data-breakpoint-test", "true");
+    style.textContent = `
+      @media all {
+        :root {
+          --breakpoint-3xl: 120rem;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    resetBreakpointCachesForTests();
+
+    expect(discoverBreakpointKeys()).toContain("3xl");
+    expect(resolveBreakpoints()["3xl"]).toBe(1920);
+  });
 });
 
 describe("buildBreakpointSnapshot", () => {
@@ -124,6 +145,12 @@ describe("buildBreakpointSnapshot", () => {
 
     expect(snapshot.mobile).toBe(true);
   });
+
+  test("it should fall back to sm when mobileBreakpoint is unknown", () => {
+    const snapshot = buildBreakpointSnapshot(700, 600, thresholds, "tablet");
+
+    expect(snapshot.mobile).toBe(false);
+  });
 });
 
 describe("createBreakpointObserver", () => {
@@ -139,6 +166,7 @@ describe("createBreakpointObserver", () => {
     mockMatchMedia();
 
     const observer = createBreakpointObserver();
+    const unsubscribe = observer.subscribe(() => undefined);
     const snapshot = observer.getSnapshot();
 
     expect(snapshot.width).toBe(900);
@@ -146,7 +174,7 @@ describe("createBreakpointObserver", () => {
     expect(snapshot.greaterOrEqual("sm")).toBe(true);
     expect(snapshot.name).toBe("md");
 
-    observer.destroy();
+    unsubscribe();
   });
 
   test("it should notify subscribers on resize", () => {
@@ -162,8 +190,7 @@ describe("createBreakpointObserver", () => {
 
     const observer = createBreakpointObserver();
     const listener = vi.fn();
-
-    observer.subscribe(listener);
+    const unsubscribe = observer.subscribe(listener);
 
     Object.defineProperty(window, "innerWidth", {
       value: 1000,
@@ -175,7 +202,7 @@ describe("createBreakpointObserver", () => {
     expect(observer.getSnapshot().width).toBe(1000);
     expect(observer.getSnapshot().greaterOrEqual("sm")).toBe(true);
 
-    observer.destroy();
+    unsubscribe();
   });
 
   test("it should share one listener set for equivalent options", () => {
@@ -183,32 +210,54 @@ describe("createBreakpointObserver", () => {
 
     const first = createBreakpointObserver({ mobileBreakpoint: "sm" });
     const second = createBreakpointObserver({ mobileBreakpoint: "sm" });
+    const unsubFirst = first.subscribe(() => undefined);
+    const unsubSecond = second.subscribe(() => undefined);
 
     expect(window.matchMedia).toHaveBeenCalledTimes(
       Object.keys(DEFAULT_BREAKPOINTS).length,
     );
 
-    first.destroy();
-    second.destroy();
+    unsubFirst();
+    unsubSecond();
   });
 
-  test("it should tear down shared listeners after the last destroy", () => {
+  test("it should tear down shared listeners after the last unsubscribe", () => {
     mockMatchMedia();
 
     const first = createBreakpointObserver();
     const second = createBreakpointObserver();
+    const unsubFirst = first.subscribe(() => undefined);
+    const unsubSecond = second.subscribe(() => undefined);
     const addCount = (window.matchMedia as ReturnType<typeof vi.fn>).mock.calls
       .length;
 
-    first.destroy();
-    second.destroy();
+    unsubFirst();
+    unsubSecond();
 
     const third = createBreakpointObserver();
+    const unsubThird = third.subscribe(() => undefined);
 
     expect(window.matchMedia).toHaveBeenCalledTimes(
       addCount + Object.keys(DEFAULT_BREAKPOINTS).length,
     );
 
-    third.destroy();
+    unsubThird();
+  });
+
+  test("it should not attach listeners until subscribe", () => {
+    mockMatchMedia();
+
+    createBreakpointObserver();
+
+    expect(window.matchMedia).not.toHaveBeenCalled();
+  });
+
+  test("it should expose a server snapshot for hydration", () => {
+    const snapshot = createBreakpointObserver().getServerSnapshot();
+
+    expect(snapshot.width).toBe(0);
+    expect(snapshot.height).toBe(0);
+    expect(snapshot.name).toBe("xs");
+    expect(snapshot.mobile).toBe(true);
   });
 });

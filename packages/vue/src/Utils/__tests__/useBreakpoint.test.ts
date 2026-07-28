@@ -3,10 +3,12 @@ import { mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h } from "vue";
 
+// ** Core Imports
+import { resetBreakpointCachesForTests } from "@bridge-ui/core";
+
 // ** Local Imports
 import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
-import { resetBreakpointCachesForTests } from "@bridge-ui/core";
 
 function mockViewport(width: number, height = 800) {
   Object.defineProperty(window, "innerWidth", {
