@@ -81,7 +81,7 @@ export function useListSection(
       rootInheritedAttrs.value,
       cn({
         "list-none": true,
-        "sticky top-0 z-10 bg-white dark:bg-dark-950":
+        "sticky top-0 z-10 bg-white dark:bg-dark-800":
           merged.value.sticky && !isDivRoot.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
@@ -95,7 +95,7 @@ export function useListSection(
       {
         role: "presentation",
         class: cn({
-          "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-950 dark:text-dark-400": true,
+          "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-800 dark:text-dark-300": true,
           "sticky top-0 z-10": merged.value.sticky && isDivRoot.value,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,

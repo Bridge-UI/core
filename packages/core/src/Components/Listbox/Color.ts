@@ -63,15 +63,6 @@ export interface ListboxColor {
 }
 
 export const colorProps: ListboxColor = {
-  "dark": {
-    "check": "text-dark-600 dark:text-dark-400",
-    "value": "text-dark-700 dark:text-dark-200",
-    "highlighted": "bg-black/5 dark:bg-white/10",
-    "selected":
-      "bg-dark-50 text-dark-700 dark:bg-dark-900/40 dark:text-dark-200",
-    "clear":
-      "text-gray-400 hover:text-dark-600 dark:text-gray-500 dark:hover:text-dark-400",
-  },
   "info": {
     "check": "text-info-600 dark:text-info-400",
     "value": "text-info-700 dark:text-info-300",
@@ -80,6 +71,15 @@ export const colorProps: ListboxColor = {
       "bg-info-50 text-info-700 dark:bg-info-950/40 dark:text-info-300",
     "clear":
       "text-gray-400 hover:text-info-600 dark:text-gray-500 dark:hover:text-info-400",
+  },
+  "dark": {
+    "check": "text-dark-600 dark:text-dark-400",
+    "value": "text-dark-700 dark:text-dark-200",
+    "highlighted": "bg-black/5 dark:bg-white/10",
+    "selected":
+      "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white",
+    "clear":
+      "text-gray-400 hover:text-dark-600 dark:text-gray-500 dark:hover:text-dark-400",
   },
   "error": {
     "highlighted": "bg-black/5 dark:bg-white/10",

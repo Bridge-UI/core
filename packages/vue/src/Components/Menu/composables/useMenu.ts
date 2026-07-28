@@ -495,7 +495,7 @@ export function useMenu(
         },
         "aria-hidden": isHiddenWhileMounted.value ? true : undefined,
         class: cn({
-          "bg-white ring-1 ring-black/5 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
+          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
           "invisible pointer-events-none": isHiddenWhileMounted.value,
           [roundedClass.value ?? ""]: true,
           [shadowClass.value ?? ""]: true,

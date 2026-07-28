@@ -233,7 +233,8 @@ export function useListItem(
     return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
         "list-none": true,
-        "border-b border-black/10 last:border-b-0": merged.value.divider,
+        "border-b border-black/10 last:border-b-0 dark:border-white/10":
+          merged.value.divider,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
       id:
@@ -280,14 +281,14 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left outline-hidden transition-colors": true,
+          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-4": true,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,
-          "hover:bg-black/5 focus-visible:bg-black/5":
+          "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.value.disabled && !isListboxOption.value,
-          "bg-primary-50 text-primary-700":
+          "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
             merged.value.selected && !isListboxOption.value,
           [listboxContext.value?.optionSelectedClass ?? ""]:
             isListboxOption.value && listboxSelected.value,
@@ -312,7 +313,8 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "items-center": !merged.value.interactive,
+      "items-center text-dark-900 dark:text-dark-100":
+        !merged.value.interactive,
       "px-4": !merged.value.interactive,
       "py-2": !merged.value.interactive && !isDense.value,
       "py-1.5": !merged.value.interactive && isDense.value,
@@ -324,7 +326,7 @@ export function useListItem(
       customProps.value?.start,
       {},
       cn({
-        "flex shrink-0": true,
+        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
         [get(mergedClasses.value, "start") ?? ""]: true,
       }),
     );
@@ -358,7 +360,7 @@ export function useListItem(
       customProps.value?.secondary,
       {},
       cn(
-        "mt-0.5 block truncate text-xs text-dark-500",
+        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400",
         listboxContext.value?.sizeClasses?.secondary,
         get(mergedClasses.value, "secondary"),
       ),

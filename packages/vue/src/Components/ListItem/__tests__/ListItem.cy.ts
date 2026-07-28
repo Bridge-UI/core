@@ -49,7 +49,8 @@ test("it should apply selected styles when selected is true", () => {
     },
   });
 
-  cy.get('[role="button"]').should("have.class", "bg-primary-50");
+  cy.get('[role="button"]').should("have.class", "bg-dark-100");
+  cy.get('[role="button"]').should("have.class", "text-dark-900");
 });
 
 test("it should render a check icon when selected is true", () => {

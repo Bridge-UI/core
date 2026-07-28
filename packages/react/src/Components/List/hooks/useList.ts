@@ -66,7 +66,7 @@ export function useList(props: ListProps) {
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "m-0 list-none py-2": true,
+        "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
         "pl-4": merged.nested,
         [get(mergedClasses, "root") ?? ""]: true,
       }),

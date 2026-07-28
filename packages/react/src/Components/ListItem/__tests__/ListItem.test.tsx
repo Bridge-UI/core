@@ -40,8 +40,8 @@ test("it should apply selected styles when selected is true", () => {
 
   const interactive = container.querySelector('[role="button"]');
 
-  expect(interactive?.classList.contains("bg-primary-50")).toBe(true);
-  expect(interactive?.classList.contains("text-primary-700")).toBe(true);
+  expect(interactive?.classList.contains("bg-dark-100")).toBe(true);
+  expect(interactive?.classList.contains("text-dark-900")).toBe(true);
 });
 
 test("it should render a check icon when selected is true", () => {
