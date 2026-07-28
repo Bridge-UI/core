@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, and component registry defaults.
 
 ## Import
 
@@ -17,7 +17,9 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
   :global="{
     theme: 'light',
     locale: 'en-US',
+    breakpoints: {},
     direction: 'ltr',
+    mobileBreakpoint: 'sm',
   }"
 >
   <App />
@@ -34,10 +36,10 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                    |
-| ------------ | -------------------------- | ------- | ------------------------------ |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults         |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction` |
+| Prop         | Type                       | Default | Description                                                       |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                            |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints` |
 
 App content is passed via the **default slot** (see Usage above).
 

@@ -483,7 +483,6 @@ export function useModal(
     {},
     cn({
       "flex min-h-full w-full transform p-4": true,
-      "items-end justify-center": true,
       [alignClass ?? ""]: true,
       [get(mergedClasses, "wrapper") ?? ""]: true,
     }),

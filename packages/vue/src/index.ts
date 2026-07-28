@@ -307,9 +307,11 @@ export type {
 export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextApi } from "@/Provider";
 export {
+  useBreakpoint,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+export type { UseBreakpointOptions } from "@/Utils";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   cn,

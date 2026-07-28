@@ -127,8 +127,39 @@ import type { Overwrite } from "@/Utils/types";
 export type Direction = "ltr" | "rtl";
 
 export interface BridgeUIGlobal {
+  /**
+   * Global breakpoint CSS length overrides for `useBreakpoint`.
+   *
+   * @default {}
+   */
+  breakpoints: Record<string, string>;
+
+  /**
+   * Global text direction.
+   *
+   * @default "ltr"
+   */
   direction: Direction;
+
+  /**
+   * Global locale.
+   *
+   * @default "en-US"
+   */
   locale: string;
+
+  /**
+   * Default mobile threshold for `useBreakpoint` (`mobile` flag).
+   *
+   * @default "sm"
+   */
+  mobileBreakpoint: string;
+
+  /**
+   * Global theme.
+   *
+   * @default "light"
+   */
   theme: string;
 }
 
@@ -569,5 +600,7 @@ export interface BridgeUIOptions {
 export const BRIDGE_UI_DEFAULT_GLOBAL: BridgeUIGlobal = {
   theme: "light",
   locale: "en-US",
+  breakpoints: {},
   direction: "ltr",
+  mobileBreakpoint: "sm",
 };

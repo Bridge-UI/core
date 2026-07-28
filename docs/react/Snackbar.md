@@ -105,4 +105,4 @@ import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 
 ## Related components
 
-SnackbarAction, Alert, Button
+useSnackbarAction, Alert, Button

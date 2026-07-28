@@ -1,11 +1,11 @@
-# DialogAction
+# useDialogAction
 
 Imperative API to open preset confirmation dialogs. Requires `BridgeUIHosts` and `BridgeDialogHost`.
 
 ## Import
 
 ```ts
-import { useDialogAction } from "@bridge-ui/react/Actions";
+import { useDialogAction } from "@bridge-ui/vue/Actions";
 ```
 
 ## Prerequisites
@@ -31,43 +31,43 @@ const id = dialog.open({
 
 ### open
 
-```tsx
-<Button onClick={openBasic}>Open basic</Button>
+```vue
+<Button v-on:click="openBasic">Open basic</Button>
 
-<Button variant="outline" onClick={openDestructive}>
+<Button variant="outline" v-on:click="openDestructive">
   Open destructive
 </Button>
 ```
 
 ### close / closeTop
 
-```tsx
+```vue
 <Button
   variant="outline"
-  disabled={!lastId}
-  onClick={() => lastId && dialog.close(lastId)}
+  :disabled="!lastId"
+  v-on:click="lastId && dialog.close(lastId)"
 >
   close(lastId)
 </Button>
 
-<Button variant="outline" onClick={() => dialog.closeTop()}>
+<Button variant="outline" v-on:click="dialog.closeTop()">
   closeTop()
 </Button>
 ```
 
 ### update
 
-```tsx
-<Button onClick={openUpdateDemo}>Open update demo</Button>
+```vue
+<Button v-on:click="openUpdateDemo">Open update demo</Button>
 
 <Button
   variant="outline"
-  disabled={!updateDemoId}
-  onClick={() =>
+  :disabled="!updateDemoId"
+  v-on:click="
     dialog.update(updateDemoId, {
-      props: { title: "Updated title" },
+      props: { title: 'Updated title' },
     })
-  }
+  "
 >
   update props
 </Button>
@@ -75,8 +75,8 @@ const id = dialog.open({
 
 ### Nested stack
 
-```tsx
-<Button onClick={openNested}>Open nested example</Button>
+```vue
+<Button v-on:click="openNested">Open nested example</Button>
 ```
 
 ## API
@@ -94,4 +94,4 @@ const id = dialog.open({
 
 ## Related components
 
-Modal, ModalAction, BridgeUIProvider
+Modal, useModalAction, BridgeUIProvider

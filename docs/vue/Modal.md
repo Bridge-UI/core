@@ -32,6 +32,29 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 </Modal>
 ```
 
+### Responsive align
+
+```vue
+<script setup>
+import { useBreakpoint } from "@bridge-ui/vue";
+
+const breakpoint = useBreakpoint();
+</script>
+
+<template>
+  <Modal
+    v-model="open"
+    :align="breakpoint.mobile ? 'bottom-center' : 'middle-center'"
+  >
+    <ModalCard title="Responsive" :on-close="() => (open = false)">
+      Bottom sheet on mobile, centered from `sm` up.
+    </ModalCard>
+  </Modal>
+</template>
+```
+
+> **Breaking:** `align` now applies on all breakpoints. Mobile no longer forces a bottom sheet — use `useBreakpoint` (as above) to restore that pattern.
+
 ### Nested modals
 
 ```vue
@@ -92,25 +115,25 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 
 ## Props
 
-| Prop                  | Type               | Default         | Description                                                                                                            |
-| --------------------- | ------------------ | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `align`               | `ModalAlign`       | "middle-center" | Panel position from the `sm` breakpoint up (`{row}-{column}` grid). Mobile always uses bottom sheet (`bottom-center`). |
-| `autoFocus`           | `boolean`          | `false`         | When true, focuses the first focusable element inside the dialog on open.                                              |
-| `blur`                | `ModalBlur`        | "none"          | Backdrop blur on the overlay.                                                                                          |
-| `classes`             | `ModalClasses`     | —               | The classes to apply to the modal.                                                                                     |
-| `closeOnEscape`       | `boolean`          | `true`          | Whether the modal closes on escape key press.                                                                          |
-| `closeOnOverlay`      | `boolean`          | `true`          | Whether the modal closes on overlay click.                                                                             |
-| `customProps`         | `ModalCustomProps` | —               | Props forwarded to each modal part.                                                                                    |
-| `disableEnforceFocus` | `boolean`          | `false`         | When true, focus is not trapped inside the modal while open.                                                           |
-| `disableRestoreFocus` | `boolean`          | `false`         | When true, focus is not restored to the previously focused element on close.                                           |
-| `disableScrollLock`   | `boolean`          | `false`         | When true, body scroll is not locked while the modal is open.                                                          |
-| `hideBackdrop`        | `boolean`          | `false`         | When true, the backdrop overlay is not rendered.                                                                       |
-| `keepMounted`         | `boolean`          | `false`         | When true, the modal stays mounted in the DOM after closing (hidden).                                                  |
-| `persistent`          | `boolean`          | `false`         | When true, escape and overlay clicks do not close the modal.                                                           |
-| `scroll`              | `ModalScroll`      | "body"          | Where scroll happens: the page (`body`) or the dialog panel (`paper`).                                                 |
-| `size`                | `ModalSize`        | "md"            | Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).                                                    |
-| `teleportTo`          | `string \| false`  | "body"          | Where to teleport the modal. Pass `false` to render in place.                                                          |
-| `transition`          | `ModalTransition`  | "fade"          | Enter/leave animation for overlay and panel.                                                                           |
+| Prop                  | Type               | Default         | Description                                                                                                        |
+| --------------------- | ------------------ | --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `align`               | `ModalAlign`       | "middle-center" | Panel position on all breakpoints (`{row}-{column}` grid). Use `useBreakpoint` for a different align per viewport. |
+| `autoFocus`           | `boolean`          | `false`         | When true, focuses the first focusable element inside the dialog on open.                                          |
+| `blur`                | `ModalBlur`        | "none"          | Backdrop blur on the overlay.                                                                                      |
+| `classes`             | `ModalClasses`     | —               | The classes to apply to the modal.                                                                                 |
+| `closeOnEscape`       | `boolean`          | `true`          | Whether the modal closes on escape key press.                                                                      |
+| `closeOnOverlay`      | `boolean`          | `true`          | Whether the modal closes on overlay click.                                                                         |
+| `customProps`         | `ModalCustomProps` | —               | Props forwarded to each modal part.                                                                                |
+| `disableEnforceFocus` | `boolean`          | `false`         | When true, focus is not trapped inside the modal while open.                                                       |
+| `disableRestoreFocus` | `boolean`          | `false`         | When true, focus is not restored to the previously focused element on close.                                       |
+| `disableScrollLock`   | `boolean`          | `false`         | When true, body scroll is not locked while the modal is open.                                                      |
+| `hideBackdrop`        | `boolean`          | `false`         | When true, the backdrop overlay is not rendered.                                                                   |
+| `keepMounted`         | `boolean`          | `false`         | When true, the modal stays mounted in the DOM after closing (hidden).                                              |
+| `persistent`          | `boolean`          | `false`         | When true, escape and overlay clicks do not close the modal.                                                       |
+| `scroll`              | `ModalScroll`      | "body"          | Where scroll happens: the page (`body`) or the dialog panel (`paper`).                                             |
+| `size`                | `ModalSize`        | "md"            | Max width of the dialog from the `sm` breakpoint up (`sm:max-w-*`).                                                |
+| `teleportTo`          | `string \| false`  | "body"          | Where to teleport the modal. Pass `false` to render in place.                                                      |
+| `transition`          | `ModalTransition`  | "fade"          | Enter/leave animation for overlay and panel.                                                                       |
 
 ### v-model
 
@@ -128,4 +151,4 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 
 ## Related components
 
-Card, DialogAction, ModalAction
+Card, useDialogAction, useModalAction
