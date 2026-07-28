@@ -235,37 +235,37 @@ export interface SnackbarSlots {
   /**
    * Inline actions below the description.
    */
-  actions?: Slot;
+  actions?: Slot<undefined>;
 
   /**
    * Content below the title/description.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Custom description markup.
    */
-  description?: Slot;
+  description?: Slot<undefined>;
 
   /**
    * Custom icon markup.
    */
-  icon?: Slot;
+  icon?: Slot<undefined>;
 
   /**
    * Vertical action column on the right edge (WireUI `rightButtons` layout).
    */
-  right?: Slot;
+  right?: Slot<undefined>;
 
   /**
    * Custom title markup.
    */
-  title?: Slot;
+  title?: Slot<undefined>;
 
   /**
    * Content before the close button (e.g. compact accept action with `padding="small"`).
    */
-  trailing?: Slot;
+  trailing?: Slot<undefined>;
 }
 
 export type SnackbarProps = MergeHtmlProps<SnackbarOwnProps, HTMLAttributes>;

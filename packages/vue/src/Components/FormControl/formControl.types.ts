@@ -215,32 +215,32 @@ export interface FormControlSlots {
   /**
    * The form control (checkbox, radio, switch, …).
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Helper text below the control row (hidden when invalid).
    */
-  description?: Slot;
+  description?: Slot<undefined>;
 
   /**
    * Inline-end label after the main label.
    */
-  endLabel?: Slot;
+  endLabel?: Slot<undefined>;
 
   /**
    * Custom error message content.
    */
-  errorMessage?: Slot;
+  errorMessage?: Slot<undefined>;
 
   /**
    * Main label next to the control.
    */
-  mainLabel?: Slot;
+  mainLabel?: Slot<undefined>;
 
   /**
    * Inline-start label before the control.
    */
-  startLabel?: Slot;
+  startLabel?: Slot<undefined>;
 }
 
 export type FormControlProps = MergeHtmlProps<

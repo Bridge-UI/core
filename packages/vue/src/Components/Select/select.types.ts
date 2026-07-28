@@ -269,12 +269,12 @@ export interface SelectSlots extends FormFieldSlots {
   /**
    * Content below the trigger, above the option list.
    */
-  afterOptions?: Slot;
+  afterOptions?: Slot<undefined>;
 
   /**
    * Content above the option list.
    */
-  beforeOptions?: Slot;
+  beforeOptions?: Slot<undefined>;
 
   /**
    * Custom chip content (multiple mode).
@@ -286,17 +286,17 @@ export interface SelectSlots extends FormFieldSlots {
    * When set (and not using declarative `SelectOption` children), replaces
    * mapped `options` inside the listbox.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Custom empty-state content.
    */
-  empty?: Slot;
+  empty?: Slot<undefined>;
 
   /**
    * Custom loading content.
    */
-  loading?: Slot;
+  loading?: Slot<undefined>;
 
   /**
    * Custom option item content when rendering from the `options` prop.

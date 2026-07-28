@@ -110,7 +110,7 @@ export interface ChipSlots {
   /**
    * Chip content. Falls back to `label` when omitted.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 }
 
 export type ChipProps = MergeHtmlProps<ChipOwnProps, HTMLAttributes>;

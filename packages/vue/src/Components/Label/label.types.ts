@@ -59,7 +59,7 @@ export interface LabelSlots {
   /**
    * Label content.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 }
 
 export type LabelProps = MergeHtmlProps<LabelOwnProps, HTMLAttributes>;

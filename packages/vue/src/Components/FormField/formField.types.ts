@@ -325,39 +325,39 @@ export interface FormFieldSlots {
   /**
    * Slot at the inline end of the header row (secondary label).
    */
-  corner?: Slot;
+  corner?: Slot<undefined>;
 
   /**
    * The form control (input, textarea, select trigger, etc.).
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Helper text below the control (hidden when the field is invalid).
    */
-  description?: Slot;
+  description?: Slot<undefined>;
 
   /**
    * Inline-end slot for custom content (e.g. a `Button`). Prefer the `end` prop
    * for plain suffix text.
    */
-  end?: Slot;
+  end?: Slot<undefined>;
 
   /**
    * Custom error message content.
    */
-  errorMessage?: Slot;
+  errorMessage?: Slot<undefined>;
 
   /**
    * Slot at the inline start of the header row (primary label).
    */
-  label?: Slot;
+  label?: Slot<undefined>;
 
   /**
    * Inline-start slot for custom content (e.g. a `Button`). Prefer the `start`
    * prop for plain prefix text.
    */
-  start?: Slot;
+  start?: Slot<undefined>;
 }
 
 export type FormFieldProps = MergeHtmlProps<FormFieldOwnProps, HTMLAttributes>;

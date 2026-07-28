@@ -80,7 +80,7 @@ export interface BadgeSlots {
   /**
    * The content of the badge.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 }
 
 export type BadgeProps = MergeHtmlProps<BadgeOwnProps, HTMLAttributes>;

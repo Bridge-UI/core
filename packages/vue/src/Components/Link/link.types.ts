@@ -129,17 +129,17 @@ export interface LinkSlots {
   /**
    * Content after the label (inline end).
    */
-  append?: Slot;
+  append?: Slot<undefined>;
 
   /**
    * The link label.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Content before the label (inline start).
    */
-  prepend?: Slot;
+  prepend?: Slot<undefined>;
 }
 
 export type LinkProps = MergeHtmlProps<LinkOwnProps, AnchorHTMLAttributes>;

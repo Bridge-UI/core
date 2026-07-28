@@ -234,29 +234,29 @@ export interface ListboxSlots {
   /**
    * Content below the list.
    */
-  afterOptions?: Slot;
+  afterOptions?: Slot<undefined>;
 
   /**
    * Content above the list.
    */
-  beforeOptions?: Slot;
+  beforeOptions?: Slot<undefined>;
 
   /**
    * Composed list content (`ListSection` / `ListItem`). When set, replaces the
    * mapped `options` / `entries` render inside the list.
    */
-  default?: Slot;
+  default?: Slot<undefined>;
 
   /**
    * Custom empty-state content.
    */
-  empty?: Slot;
+  empty?: Slot<undefined>;
 
   /**
    * Custom loading content. Replaces the default `loadingMessage` when set.
    * The progress bar still renders above this content.
    */
-  loading?: Slot;
+  loading?: Slot<undefined>;
 
   /**
    * Custom option item content.
