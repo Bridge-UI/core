@@ -155,14 +155,12 @@ export function useProgress(
     return mergePartBind(
       customProps?.track,
       {},
-      {
-        className: cn({
-          "absolute inset-0": true,
-          [colorPalette?.track ?? ""]: true,
-          [roundedClass ?? ""]: true,
-          [mergedClasses.track ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute inset-0": true,
+        [colorPalette?.track ?? ""]: true,
+        [roundedClass ?? ""]: true,
+        [mergedClasses.track ?? ""]: true,
+      }),
     );
   });
 
@@ -176,14 +174,12 @@ export function useProgress(
       {
         style: { width: `${clampedBuffer}%` },
       },
-      {
-        className: cn({
-          "absolute top-0 left-0 h-full transition-[width] duration-200 ease-linear": true,
-          [colorPalette?.buffer ?? ""]: true,
-          [roundedClass ?? ""]: true,
-          [mergedClasses.buffer ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute top-0 left-0 h-full transition-[width] duration-200 ease-linear": true,
+        [colorPalette?.buffer ?? ""]: true,
+        [roundedClass ?? ""]: true,
+        [mergedClasses.buffer ?? ""]: true,
+      }),
     );
   });
 
@@ -191,16 +187,14 @@ export function useProgress(
     return mergePartBind(
       customProps?.bar,
       isDeterminate ? { style: { width: `${clampedValue}%` } } : {},
-      {
-        className: cn({
-          "absolute top-0 left-0 h-full": true,
-          "transition-[width] duration-200 ease-linear": isDeterminate,
-          [variantClass ?? ""]: isAnimated,
-          [colorPalette?.bar ?? ""]: true,
-          [roundedClass ?? ""]: true,
-          [mergedClasses.bar ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute top-0 left-0 h-full": true,
+        "transition-[width] duration-200 ease-linear": isDeterminate,
+        [variantClass ?? ""]: isAnimated,
+        [colorPalette?.bar ?? ""]: true,
+        [roundedClass ?? ""]: true,
+        [mergedClasses.bar ?? ""]: true,
+      }),
     );
   });
 
