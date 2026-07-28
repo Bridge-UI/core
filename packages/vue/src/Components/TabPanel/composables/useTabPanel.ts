@@ -55,10 +55,13 @@ export function useTabPanel(props: TabPanelOwnProps) {
     props: () => split.value.componentProps,
   });
 
-  const value = computed(() => merged.value.value);
-  const selected = computed(
-    () => tabsContextRef.value.selected === value.value,
-  );
+  const value = computed(() => {
+    return merged.value.value;
+  });
+
+  const selected = computed(() => {
+    return tabsContextRef.value.selected === value.value;
+  });
 
   const keepMounted = computed(() => {
     const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
@@ -75,7 +78,9 @@ export function useTabPanel(props: TabPanelOwnProps) {
     props: () => split.value.componentProps,
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const rootBind = computed(() => {
     const tabs = tabsContextRef.value;

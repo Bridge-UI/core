@@ -29,7 +29,9 @@ export function usePasswordField(
   const internalVisible = ref(false);
   const visible = toRef(props, "visible");
 
-  const isControlled = computed(() => !isNil(visible.value));
+  const isControlled = computed(() => {
+    return !isNil(visible.value);
+  });
 
   const isVisible = computed(() => {
     if (isControlled.value) {
@@ -39,7 +41,9 @@ export function usePasswordField(
     return internalVisible.value;
   });
 
-  const inputType = computed(() => (isVisible.value ? "text" : "password"));
+  const inputType = computed(() => {
+    return isVisible.value ? "text" : "password";
+  });
 
   const { entry } = useBridgeUIComponent<
     Pick<PasswordFieldOwnProps, "classes">,

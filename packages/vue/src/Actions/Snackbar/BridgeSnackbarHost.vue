@@ -39,9 +39,13 @@ const bridge = useBridgeUI();
 
 provide(BRIDGE_SNACKBAR_INJECTION_KEY, api);
 
-const snackbarEntries = computed(() => api.entries.value);
+const snackbarEntries = computed(() => {
+  return api.entries.value;
+});
 
-const snackbarEntry = computed(() => bridge?.components.value.Snackbar);
+const snackbarEntry = computed(() => {
+  return bridge?.components.value.Snackbar;
+});
 
 const resolvedPosition = computed(() => {
   return (
@@ -60,7 +64,9 @@ const positionClass = computed(() => {
   return get(classes, resolvedPosition.value);
 });
 
-const teleportDisabled = computed(() => props.teleportTo === false);
+const teleportDisabled = computed(() => {
+  return props.teleportTo === false;
+});
 
 const teleportTarget = computed(() => {
   if (props.teleportTo === false) {

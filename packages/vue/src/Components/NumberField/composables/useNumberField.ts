@@ -30,7 +30,9 @@ export function useNumberField(
   options: UseNumberFieldOptions = {},
 ) {
   const attrs = useAttrs();
-  const step = computed(() => props.step ?? 1);
+  const step = computed(() => {
+    return props.step ?? 1;
+  });
 
   const { entry } = useBridgeUIComponent<
     Pick<NumberFieldOwnProps, "classes">,
@@ -89,7 +91,9 @@ export function useNumberField(
     );
   });
 
-  const currentValue = computed(() => model.value ?? undefined);
+  const currentValue = computed(() => {
+    return model.value ?? undefined;
+  });
 
   const stringModel = computed({
     get: () => {

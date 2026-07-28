@@ -92,7 +92,9 @@ export function useTabs(
     props: () => split.value.componentProps,
   });
 
-  const selected = computed(() => model.value ?? "");
+  const selected = computed(() => {
+    return model.value ?? "";
+  });
 
   function setSelected(next: string) {
     if (disabledValues.value.includes(next)) {
@@ -192,10 +194,14 @@ export function useTabs(
     );
   });
 
-  const sizeItem = computed(() => get(sizeClasses.value, merged.value.size));
+  const sizeItem = computed(() => {
+    return get(sizeClasses.value, merged.value.size);
+  });
+
   const variantItem = computed(() => {
     return get(variantClasses.value, merged.value.variant);
   });
+
   const colorItem = computed(() => {
     return get(colorClasses.value, merged.value.color);
   });
@@ -242,7 +248,9 @@ export function useTabs(
 
   provide(TABS_INJECTION_KEY, contextValue);
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {

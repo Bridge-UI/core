@@ -61,11 +61,17 @@ export function useTab(props: TabOwnProps) {
     },
   );
 
-  const value = computed(() => merged.value.value);
-  const disabled = computed(() => merged.value.disabled === true);
-  const selected = computed(
-    () => tabsContextRef.value.selected === value.value,
-  );
+  const value = computed(() => {
+    return merged.value.value;
+  });
+
+  const disabled = computed(() => {
+    return merged.value.disabled === true;
+  });
+
+  const selected = computed(() => {
+    return tabsContextRef.value.selected === value.value;
+  });
 
   let unregister: null | (() => void) = null;
 
@@ -114,7 +120,9 @@ export function useTab(props: TabOwnProps) {
     split.value.inheritedAttrs.onKeydown?.(event);
   }
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const iconSize = computed(() => {
     return (tabsContextRef.value.tokenClasses.iconSize ??

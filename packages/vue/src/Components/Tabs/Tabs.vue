@@ -42,7 +42,9 @@ const { rootBind, tabItems } = useTabs(
   emit,
 );
 
-const hasTabItems = computed(() => tabItems.value.length > 0);
+const hasTabItems = computed(() => {
+  return tabItems.value.length > 0;
+});
 </script>
 
 <template>

@@ -85,7 +85,9 @@ const hasRight = computed(() => {
   return Boolean(slots.right);
 });
 
-const teleportDisabled = computed(() => merged.value.teleportTo === false);
+const teleportDisabled = computed(() => {
+  return merged.value.teleportTo === false;
+});
 
 const teleportTarget = computed(() => {
   if (merged.value.teleportTo === false) {

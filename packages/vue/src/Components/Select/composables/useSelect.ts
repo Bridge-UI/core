@@ -140,7 +140,9 @@ export function useSelect(
     props: () => registryProps.value,
   });
 
-  const multiple = computed(() => Boolean(selectMerged.value.multiple));
+  const multiple = computed(() => {
+    return Boolean(selectMerged.value.multiple);
+  });
 
   const optionKeys = computed(() => {
     return {

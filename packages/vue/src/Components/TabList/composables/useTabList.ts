@@ -122,7 +122,9 @@ export function useTabList(props: TabListOwnProps) {
     }
   }
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const rootBind = computed(() => {
     const tabs = tabsContextRef.value;

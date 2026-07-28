@@ -67,7 +67,9 @@ const {
 );
 
 defineExpose({
-  stackId: computed(() => props.stackId ?? layerStackId.value),
+  stackId: computed(() => {
+    return props.stackId ?? layerStackId.value;
+  }),
 });
 
 const teleportDisabled = computed(() => {
