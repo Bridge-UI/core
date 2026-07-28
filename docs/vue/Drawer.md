@@ -98,6 +98,8 @@ import { Drawer } from "@bridge-ui/vue/Components/Drawer";
 
 | Prop                  | Type                | Default | Description                                                                                |
 | --------------------- | ------------------- | ------- | ------------------------------------------------------------------------------------------ |
+| `ariaLabel`           | `string`            | —       | Accessible name for the dialog (`aria-label`).                                             |
+| `ariaLabelledBy`      | `string`            | —       | Id of the element that labels the dialog (`aria-labelledby`).                              |
 | `autoFocus`           | `boolean`           | `false` | When true, focuses the first focusable element inside the drawer on open.                  |
 | `blur`                | `DrawerBlur`        | "none"  | Backdrop blur on the overlay.                                                              |
 | `classes`             | `DrawerClasses`     | —       | The classes to apply to the drawer.                                                        |

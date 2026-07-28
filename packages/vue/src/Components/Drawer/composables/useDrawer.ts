@@ -18,6 +18,7 @@ import {
   cn,
   countDrawerTransitionLayers,
   createFocusTrap,
+  DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
   getLayerStackEntry,
@@ -60,6 +61,7 @@ const drawerBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
+  "ariaLabel",
   "autoFocus",
   "placement",
   "persistent",
@@ -69,6 +71,7 @@ const drawerBridgeKeys = [
   "keepMounted",
   "hideBackdrop",
   "closeOnEscape",
+  "ariaLabelledBy",
   "closeOnOverlay",
   "disableScrollLock",
   "disableEnforceFocus",
@@ -110,7 +113,7 @@ export type DrawerOptions = {
   show?: Ref<boolean>;
 
   /**
-   * Pre-assigned stack id (BridgeModalHost). When omitted, the stack generates a UUID.
+   * Pre-assigned stack id (BridgeDrawerHost). When omitted, the stack generates a UUID.
    */
   stackId?: string;
 };
@@ -122,13 +125,11 @@ export function useDrawer(
 ) {
   const attrs = useAttrs();
 
-  const mounted = ref(false);
-
   const active = ref(false);
 
-  const layerStackId = ref("");
+  const mounted = ref(false);
 
-  const panelRef = ref<null | HTMLElement>(null);
+  const layerStackId = ref("");
 
   let leaveTransitionEndsPending = 0;
 
@@ -136,12 +137,17 @@ export function useDrawer(
 
   let focusTrap: null | FocusTrap = null;
 
+  const panelRef = ref<null | HTMLElement>(null);
+
   let stackHandle: null | LayerStackHandle = null;
-  let unsubscribeLayerStack: null | (() => void) = null;
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
+  let unsubscribeLayerStack: null | (() => void) = null;
+
   const transitionState = ref<"open" | "closed">("closed");
+
+  let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
 
   const show = computed(() => {
     return toValue(options.show ?? false);
@@ -316,12 +322,14 @@ export function useDrawer(
       {
         role: "dialog",
         "aria-modal": true,
+        "aria-label": merged.value.ariaLabel,
+        "aria-labelledby": merged.value.ariaLabelledBy,
       },
       {
         "data-drawer-part": "panel",
         "data-state": transitionState.value,
         class: cn({
-          relative: true,
+          "relative rounded-none": true,
           [placementPanelClass.value ?? ""]: true,
           [sizeClass.value ?? ""]: true,
           "overflow-y-auto": scrollMode.value === "paper",
@@ -358,7 +366,15 @@ export function useDrawer(
     syncFocusTrap();
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeout !== null) {
+      clearTimeout(leaveFallbackTimeout);
+      leaveFallbackTimeout = null;
+    }
+  }
+
   function finishLeave() {
+    clearLeaveFallback();
     leaveTransitionEndsPending = 0;
     active.value = false;
     releaseFocusTrap();
@@ -393,7 +409,18 @@ export function useDrawer(
 
     if (leaveTransitionEndsPending === 0) {
       finishLeave();
+
+      return;
     }
+
+    clearLeaveFallback();
+    leaveFallbackTimeout = setTimeout(() => {
+      leaveFallbackTimeout = null;
+
+      if (leaveTransitionEndsPending > 0) {
+        finishLeave();
+      }
+    }, DRAWER_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
@@ -530,7 +557,9 @@ export function useDrawer(
     active,
     (isActive) => {
       if (isActive) {
-        stackOrder = acquireLayerStackOrder();
+        if (stackOrder === null) {
+          stackOrder = acquireLayerStackOrder();
+        }
 
         stackHandle = pushLayerStack({
           order: stackOrder,
@@ -543,25 +572,32 @@ export function useDrawer(
         stackZIndex.value = stackHandle.zIndex;
         syncZIndex();
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
-      } else {
-        unsubscribeLayerStack?.();
-        unsubscribeLayerStack = null;
-        stackHandle?.release();
-        stackHandle = null;
+
+        return;
+      }
+
+      unsubscribeLayerStack?.();
+      unsubscribeLayerStack = null;
+      stackHandle?.release();
+      stackHandle = null;
+      layerStackId.value = "";
+      stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
+
+      if (!mounted.value) {
         stackOrder = null;
-        layerStackId.value = "";
-        stackZIndex.value = LAYER_STACK_BASE_Z_INDEX;
       }
     },
     { immediate: true },
   );
 
   onBeforeUnmount(() => {
+    clearLeaveFallback();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     releaseFocusTrap();
     stackHandle?.release();
     stackHandle = null;
+    stackOrder = null;
   });
 
   return {

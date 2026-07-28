@@ -68,6 +68,20 @@ export interface DrawerCustomProps {
  */
 export interface DrawerOwnProps {
   /**
+   * Accessible name for the dialog panel (`aria-label`).
+   *
+   * @default undefined
+   */
+  ariaLabel?: string;
+
+  /**
+   * Id of the element that labels the dialog (`aria-labelledby`). Prefer over `ariaLabel` when a visible title exists.
+   *
+   * @default undefined
+   */
+  ariaLabelledBy?: string;
+
+  /**
    * When true, focuses the first focusable element inside the drawer on open.
    *
    * @default false
@@ -184,7 +198,7 @@ export interface DrawerOwnProps {
   /**
    * Where scroll happens: the page (`body`) or the drawer panel (`paper`).
    *
-   * @default "body"
+   * @default "paper"
    */
   scroll?: MergeProps<DrawerScroll, DrawerScrollOverrides>;
 
@@ -203,7 +217,7 @@ export interface DrawerOwnProps {
   size?: MergeProps<DrawerSize, DrawerSizeOverrides>;
 
   /**
-   * Stack id assigned when the drawer opens. Set by BridgeModalHost; do not set in app code.
+   * Stack id assigned when the drawer opens. Set by BridgeDrawerHost; do not set in app code.
    *
    * @internal
    */

@@ -194,6 +194,7 @@ export type {
 } from "@/Utils/breakpoint";
 export {
   countDrawerTransitionLayers,
+  DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
   hasDrawerTransition,

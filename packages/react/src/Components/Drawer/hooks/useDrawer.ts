@@ -16,6 +16,7 @@ import {
   cn,
   countDrawerTransitionLayers,
   createFocusTrap,
+  DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
   getLayerStackEntry,
@@ -46,6 +47,7 @@ import type {
   DrawerProps,
 } from "@/Components/Drawer/drawer.types";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -57,6 +59,7 @@ const drawerBridgeKeys = [
   "scroll",
   "classes",
   "stackId",
+  "ariaLabel",
   "autoFocus",
   "placement",
   "persistent",
@@ -66,6 +69,7 @@ const drawerBridgeKeys = [
   "keepMounted",
   "hideBackdrop",
   "closeOnEscape",
+  "ariaLabelledBy",
   "closeOnOverlay",
   "disableScrollLock",
   "disableEnforceFocus",
@@ -107,7 +111,7 @@ export type DrawerOptions = {
   show?: boolean;
 
   /**
-   * Pre-assigned stack id (BridgeModalHost). When omitted, the stack generates a UUID.
+   * Pre-assigned stack id (BridgeDrawerHost). When omitted, the stack generates a UUID.
    */
   stackId?: string;
 };
@@ -128,6 +132,10 @@ export function useDrawer(
   const panelRef = useRef<HTMLDivElement>(null);
 
   const leaveTransitionEndsPendingRef = useRef(0);
+
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
 
   const stackOrderRef = useRef<null | number>(null);
 
@@ -158,14 +166,18 @@ export function useDrawer(
     componentName: "Drawer",
   });
 
-  const customProps = merged.customProps;
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, [
-    "show",
-    "onClose",
-    "children",
-    "onShowChange",
-  ]);
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, [
+      "show",
+      "onClose",
+      "children",
+      "onShowChange",
+    ]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeDrawer,
@@ -176,11 +188,17 @@ export function useDrawer(
     return resolveEffectiveDrawerTransition(merged.transition ?? "none");
   }, [merged.transition]);
 
-  const transitionEnabled = hasDrawerTransition(effectiveTransition);
+  const transitionEnabled = derived(() => {
+    return hasDrawerTransition(effectiveTransition);
+  });
 
-  const scrollMode = merged.scroll ?? "body";
+  const scrollMode = derived(() => {
+    return merged.scroll ?? "paper";
+  });
 
-  const isHiddenWhileMounted = merged.keepMounted && !active;
+  const isHiddenWhileMounted = derived(() => {
+    return Boolean(merged.keepMounted && !active);
+  });
 
   if (show && stackOrderRef.current === null) {
     stackOrderRef.current = acquireLayerStackOrder();
@@ -199,7 +217,9 @@ export function useDrawer(
     return get(classes, merged.placement);
   }, [merged.placement, bridgeDrawer?.customProps?.placement]);
 
-  const placementPanelClass = get(placementPanelProps, merged.placement);
+  const placementPanelClass = derived(() => {
+    return get(placementPanelProps, merged.placement);
+  });
 
   const blurClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -226,13 +246,13 @@ export function useDrawer(
     return get(sizeItem, axis);
   }, [merged.size, merged.placement, bridgeDrawer?.customProps?.size]);
 
-  const panelTransitionClass = getDrawerPanelTransitionClass(
-    effectiveTransition,
-    merged.placement,
-  );
+  const panelTransitionClass = derived(() => {
+    return getDrawerPanelTransitionClass(effectiveTransition, merged.placement);
+  });
 
-  const overlayTransitionClass =
-    getDrawerOverlayTransitionClass(effectiveTransition);
+  const overlayTransitionClass = derived(() => {
+    return getDrawerOverlayTransitionClass(effectiveTransition);
+  });
 
   function setShow(next: boolean) {
     if (!next) {
@@ -247,7 +267,15 @@ export function useDrawer(
     focusTrapRef.current = null;
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeoutRef.current !== null) {
+      clearTimeout(leaveFallbackTimeoutRef.current);
+      leaveFallbackTimeoutRef.current = null;
+    }
+  }
+
   function finishLeave() {
+    clearLeaveFallback();
     leaveTransitionEndsPendingRef.current = 0;
     setActive(false);
     releaseFocusTrap();
@@ -281,7 +309,18 @@ export function useDrawer(
 
     if (leaveTransitionEndsPendingRef.current === 0) {
       finishLeave();
+
+      return;
     }
+
+    clearLeaveFallback();
+    leaveFallbackTimeoutRef.current = setTimeout(() => {
+      leaveFallbackTimeoutRef.current = null;
+
+      if (leaveTransitionEndsPendingRef.current > 0) {
+        finishLeave();
+      }
+    }, DRAWER_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
@@ -442,6 +481,15 @@ export function useDrawer(
   ]);
 
   useEffect(() => {
+    return () => {
+      if (leaveFallbackTimeoutRef.current !== null) {
+        clearTimeout(leaveFallbackTimeoutRef.current);
+        leaveFallbackTimeoutRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!active) {
       return;
     }
@@ -463,66 +511,76 @@ export function useDrawer(
     return subscribeLayerStack(syncZIndex);
   }, [active]);
 
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    style: {
-      zIndex: stackZIndex,
-    },
-    onTransitionEnd: handleShellTransitionEnd,
-    "aria-hidden": isHiddenWhileMounted ? true : undefined,
-    className: cn({
-      "fixed inset-0": true,
-      "overflow-y-auto": scrollMode === "body",
-      "overflow-hidden": scrollMode === "paper",
-      "invisible pointer-events-none": isHiddenWhileMounted,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      onTransitionEnd: handleShellTransitionEnd,
+      style: {
+        zIndex: stackZIndex,
+      },
+      "aria-hidden": isHiddenWhileMounted ? true : undefined,
+      className: cn({
+        "fixed inset-0": true,
+        "overflow-y-auto": scrollMode === "body",
+        "overflow-hidden": scrollMode === "paper",
+        "invisible pointer-events-none": isHiddenWhileMounted,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
   });
 
-  const overlayBind = mergePartBind(
-    customProps?.overlay,
-    {},
-    {
-      "data-drawer-part": "overlay",
-      "data-state": transitionState,
-      className: cn({
-        "fixed inset-0 bg-black/50": true,
-        [blurClass ?? ""]: true,
-        [overlayTransitionClass]: transitionEnabled,
-        [get(mergedClasses, "overlay") ?? ""]: true,
-      }),
-    },
-  );
+  const overlayBind = derived(() => {
+    return mergePartBind(
+      customProps?.overlay,
+      {},
+      {
+        "data-drawer-part": "overlay",
+        "data-state": transitionState,
+        className: cn({
+          "fixed inset-0 bg-black/50": true,
+          [blurClass ?? ""]: true,
+          [overlayTransitionClass]: transitionEnabled,
+          [get(mergedClasses, "overlay") ?? ""]: true,
+        }),
+      },
+    );
+  });
 
-  const wrapperBind = mergePartBind(
-    customProps?.wrapper,
-    {},
-    cn({
-      "flex min-h-full w-full transform p-0": true,
-      [placementClass ?? ""]: true,
-      [get(mergedClasses, "wrapper") ?? ""]: true,
-    }),
-  );
-
-  const panelBind = mergePartBind(
-    customProps?.panel,
-    {
-      ref: panelRef,
-      role: "dialog",
-      "aria-modal": true,
-    },
-    {
-      "data-drawer-part": "panel",
-      "data-state": transitionState,
-      className: cn({
-        "relative rounded-none": true,
-        [sizeClass ?? ""]: true,
-        [placementPanelClass ?? ""]: true,
-        "overflow-y-auto": scrollMode === "paper",
-        [panelTransitionClass]: transitionEnabled,
-        [get(mergedClasses, "panel") ?? ""]: true,
+  const wrapperBind = derived(() => {
+    return mergePartBind(
+      customProps?.wrapper,
+      {},
+      cn({
+        "flex min-h-full w-full transform p-0": true,
+        [placementClass ?? ""]: true,
+        [get(mergedClasses, "wrapper") ?? ""]: true,
       }),
-    },
-  );
+    );
+  });
+
+  const panelBind = derived(() => {
+    return mergePartBind(
+      customProps?.panel,
+      {
+        ref: panelRef,
+        role: "dialog",
+        "aria-modal": true,
+        "aria-label": merged.ariaLabel,
+        "aria-labelledby": merged.ariaLabelledBy,
+      },
+      {
+        "data-drawer-part": "panel",
+        "data-state": transitionState,
+        className: cn({
+          "relative rounded-none": true,
+          [sizeClass ?? ""]: true,
+          [placementPanelClass ?? ""]: true,
+          "overflow-y-auto": scrollMode === "paper",
+          [panelTransitionClass]: transitionEnabled,
+          [get(mergedClasses, "panel") ?? ""]: true,
+        }),
+      },
+    );
+  });
 
   return {
     merged,

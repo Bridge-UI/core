@@ -11,6 +11,12 @@ import {
 import { hasWindow } from "@/Utils/env";
 
 /**
+ * Fallback ms to finish leave when `transitionend` never fires.
+ * Matches `duration-300` drawer transitions with a small buffer.
+ */
+export const DRAWER_LEAVE_FALLBACK_MS = 350;
+
+/**
  * How many layers fire `transitionend` on leave (overlay + panel when animated).
  */
 export function countDrawerTransitionLayers(
