@@ -123,14 +123,25 @@ export function useProgress(
     return get(classes, merged.variant);
   }, [merged.variant, bridgeProgress?.customProps?.variant]);
 
-  const isBuffer = merged.variant === "buffer";
-  const isDeterminate =
-    merged.variant === "determinate" || merged.variant === "buffer";
-  const isAnimated =
-    merged.variant === "indeterminate" || merged.variant === "query";
+  const isBuffer = derived(() => {
+    return merged.variant === "buffer";
+  });
 
-  const clampedValue = clampProgress(merged.value);
-  const clampedBuffer = clampProgress(merged.valueBuffer);
+  const clampedValue = derived(() => {
+    return clampProgress(merged.value);
+  });
+
+  const clampedBuffer = derived(() => {
+    return clampProgress(merged.valueBuffer);
+  });
+
+  const isDeterminate = derived(() => {
+    return merged.variant === "determinate" || merged.variant === "buffer";
+  });
+
+  const isAnimated = derived(() => {
+    return merged.variant === "indeterminate" || merged.variant === "query";
+  });
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, inheritedAttrs, {

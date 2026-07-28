@@ -117,14 +117,45 @@ export function useSpinner(
     return get(classes, merged.variant);
   }, [merged.variant, bridgeSpinner?.customProps?.variant]);
 
-  const thickness = merged.thickness ?? DEFAULT_SPINNER_THICKNESS;
-  const isDeterminate = merged.variant === "determinate";
-  const isIndeterminate = merged.variant === "indeterminate";
-  const enableTrack = Boolean(merged.enableTrack);
-  const disableShrink = Boolean(merged.disableShrink);
-  const clampedValue = clampSpinner(merged.value);
-  const { radius, circumference } = getSpinnerCircleGeometry(thickness);
-  const center = SPINNER_VIEWBOX_SIZE / 2;
+  const radius = derived(() => {
+    return geometry.radius;
+  });
+
+  const circumference = derived(() => {
+    return geometry.circumference;
+  });
+
+  const center = derived(() => {
+    return SPINNER_VIEWBOX_SIZE / 2;
+  });
+
+  const clampedValue = derived(() => {
+    return clampSpinner(merged.value);
+  });
+
+  const enableTrack = derived(() => {
+    return Boolean(merged.enableTrack);
+  });
+
+  const disableShrink = derived(() => {
+    return Boolean(merged.disableShrink);
+  });
+
+  const isDeterminate = derived(() => {
+    return merged.variant === "determinate";
+  });
+
+  const isIndeterminate = derived(() => {
+    return merged.variant === "indeterminate";
+  });
+
+  const geometry = derived(() => {
+    return getSpinnerCircleGeometry(thickness);
+  });
+
+  const thickness = derived(() => {
+    return merged.thickness ?? DEFAULT_SPINNER_THICKNESS;
+  });
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, inheritedAttrs, {
