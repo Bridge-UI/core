@@ -81,13 +81,14 @@ export function useTabPanel(props: TabPanelOwnProps) {
     const tabs = tabsContextRef.value;
 
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
-      tabindex: 0,
       role: "tabpanel",
       hidden: !selected.value,
+      tabindex: selected.value ? 0 : -1,
       id: getTabPanelId(tabs.id, value.value),
       "aria-labelledby": getTabId(tabs.id, value.value),
       class: cn({
         [tabs.tokenClasses.panelSize ?? ""]: true,
+        [tabs.tokenClasses.panelOrientation ?? ""]: true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });

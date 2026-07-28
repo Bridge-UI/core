@@ -24,14 +24,18 @@ export function useTabItem(
     throw new Error("TabItem must be used within a Tabs provider");
   }
 
+  const tabsContextRef = tabs;
+
   let unregister: undefined | (() => void);
 
   function register() {
     unregister?.();
 
-    unregister = tabs.value.registerTabItem({
+    unregister = tabsContextRef.value.registerTabItem({
       value: props.value,
+      endIcon: props.endIcon,
       disabled: props.disabled,
+      startIcon: props.startIcon,
       keepMounted: props.keepMounted,
       panel: () => {
         return slots.default?.();
@@ -41,6 +45,21 @@ export function useTabItem(
         (() => {
           return slots.label?.();
         }),
+      slots:
+        slots.start || slots.end
+          ? {
+              end: slots.end
+                ? () => {
+                    return slots.end?.();
+                  }
+                : undefined,
+              start: slots.start
+                ? () => {
+                    return slots.start?.();
+                  }
+                : undefined,
+            }
+          : undefined,
     });
   }
 
@@ -48,7 +67,18 @@ export function useTabItem(
 
   watch(
     () =>
-      [props.label, props.value, props.disabled, props.keepMounted] as const,
+      [
+        props.label,
+        props.value,
+        props.endIcon,
+        props.disabled,
+        props.startIcon,
+        props.keepMounted,
+        Boolean(slots.end),
+        Boolean(slots.label),
+        Boolean(slots.start),
+        Boolean(slots.default),
+      ] as const,
     register,
   );
 

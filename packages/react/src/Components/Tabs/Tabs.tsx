@@ -30,13 +30,17 @@ function Tabs(props: TabsProps) {
               {tabItems.map((item) => (
                 <Tab
                   key={item.value}
+                  slots={item.slots}
                   value={item.value}
+                  endIcon={item.endIcon}
                   disabled={item.disabled}
+                  startIcon={item.startIcon}
                 >
                   {item.label}
                 </Tab>
               ))}
             </TabList>
+
             {tabItems.map((item) => (
               <TabPanel
                 key={item.value}
@@ -48,6 +52,7 @@ function Tabs(props: TabsProps) {
             ))}
           </>
         ) : null}
+
         {children}
       </div>
     </TabsContext.Provider>

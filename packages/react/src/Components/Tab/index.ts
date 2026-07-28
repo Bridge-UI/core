@@ -6,4 +6,5 @@ export type {
   TabCustomProps,
   TabOwnProps,
   TabProps,
+  TabSlots,
 } from "@/Components/Tab/tab.types";

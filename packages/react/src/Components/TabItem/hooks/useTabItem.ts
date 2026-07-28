@@ -12,15 +12,21 @@ export function useTabItem(props: TabItemProps) {
     return tabs.registerTabItem({
       value: props.value,
       label: props.label,
+      slots: props.slots,
       panel: props.children,
+      endIcon: props.endIcon,
       disabled: props.disabled,
+      startIcon: props.startIcon,
       keepMounted: props.keepMounted,
     });
   }, [
     props.value,
     props.label,
+    props.slots,
+    props.endIcon,
     props.children,
     props.disabled,
+    props.startIcon,
     props.keepMounted,
     tabs.registerTabItem,
   ]);

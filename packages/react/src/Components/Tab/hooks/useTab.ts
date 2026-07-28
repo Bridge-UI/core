@@ -8,21 +8,26 @@ import {
   getTabId,
   getTabPanelId,
   splitComponentProps,
+  type IconSize,
 } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { TabOwnProps, TabProps } from "@/Components/Tab/tab.types";
 import { useTabsContext } from "@/Components/Tabs/TabsContext";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
 const tabBridgeKeys = [
+  "slots",
   "value",
   "classes",
+  "endIcon",
   "disabled",
+  "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof TabOwnProps)[];
 
@@ -44,15 +49,41 @@ export function useTab(props: TabProps) {
     },
   );
 
-  const value = merged.value;
-  const disabled = merged.disabled === true;
-  const selected = tabs.selected === value;
+  const slots = derived(() => {
+    return props.slots;
+  });
+
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
+
+  const value = derived(() => {
+    return merged.value;
+  });
+
+  const disabled = derived(() => {
+    return merged.disabled === true;
+  });
+
+  const selected = derived(() => {
+    return tabs.selected === value;
+  });
+
+  const iconSize = derived(() => {
+    return (tabs.tokenClasses.iconSize ?? "md") as keyof IconSize;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["slots", "children"]);
+  });
 
   useEffect(() => {
     return tabs.registerTab(value, disabled);
   }, [value, disabled, tabs.registerTab]);
-
-  const rootInheritedAttrs = omit(inheritedAttrs, ["children"]);
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeTab,
@@ -83,31 +114,79 @@ export function useTab(props: TabProps) {
     rootInheritedAttrs.onKeyDown?.(event);
   }
 
-  const customProps = merged.customProps;
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      disabled,
+      role: "tab",
+      type: "button",
+      onClick: handleClick,
+      onKeyDown: handleKeyDown,
+      "aria-selected": selected,
+      tabIndex: selected ? 0 : -1,
+      id: getTabId(tabs.id, value),
+      "aria-controls": getTabPanelId(tabs.id, value),
+      className: cn({
+        "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
+        [tabs.tokenClasses.iconGap ?? ""]: true,
+        [tabs.tokenClasses.tabSize ?? ""]: true,
+        [tabs.tokenClasses.tabVariant ?? ""]: true,
+        [tabs.tokenClasses.tabOrientation ?? ""]: true,
+        [tabs.tokenClasses.tabVariantSelected ?? ""]: selected,
+        [tabs.tokenClasses.colorSelected ?? ""]: selected,
+        [tabs.tokenClasses.colorSelectedSoft ?? ""]:
+          selected && tabs.tokenClasses.softFill === true,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
+  });
 
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    disabled,
-    role: "tab",
-    type: "button",
-    onClick: handleClick,
-    onKeyDown: handleKeyDown,
-    "aria-selected": selected,
-    tabIndex: selected ? 0 : -1,
-    id: getTabId(tabs.id, value),
-    "aria-controls": getTabPanelId(tabs.id, value),
-    className: cn({
-      "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
-      [tabs.tokenClasses.tabSize ?? ""]: true,
-      [tabs.tokenClasses.tabVariant ?? ""]: true,
-      [tabs.tokenClasses.tabVariantSelected ?? ""]: selected,
-      [tabs.tokenClasses.colorSelected ?? ""]: selected,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const endIconBind = derived(() => {
+    return mergePartBind(
+      customProps?.endIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [get(mergedClasses, "endIcon") ?? ""]: true,
+      }),
+    );
+  });
+
+  const endSlotBind = derived(() => {
+    return mergePartBind(
+      customProps?.end,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
+  });
+
+  const startIconBind = derived(() => {
+    return mergePartBind(
+      customProps?.startIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [get(mergedClasses, "startIcon") ?? ""]: true,
+      }),
+    );
+  });
+
+  const startSlotBind = derived(() => {
+    return mergePartBind(
+      customProps?.start,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
   });
 
   return {
+    slots,
     merged,
+    children,
+    iconSize,
     rootBind,
-    children: props.children,
+    endIconBind,
+    endSlotBind,
+    startIconBind,
+    startSlotBind,
   };
 }

@@ -17,6 +17,7 @@ import type {
 } from "@/Components/TabList/tabList.types";
 import { useTabsContext } from "@/Components/Tabs/TabsContext";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -46,7 +47,17 @@ export function useTabList(props: TabListProps) {
     componentName: "TabList",
   });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, ["children"]);
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children"]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeTabList,
@@ -123,24 +134,24 @@ export function useTabList(props: TabListProps) {
     }
   }
 
-  const customProps = merged.customProps;
-
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    role: "tablist",
-    onKeyDown: handleKeyDown,
-    "aria-orientation": tabs.orientation,
-    className: cn({
-      flex: true,
-      [tabs.tokenClasses.listOrientation ?? ""]: true,
-      [tabs.tokenClasses.listSize ?? ""]: true,
-      [tabs.tokenClasses.listVariant ?? ""]: true,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      role: "tablist",
+      onKeyDown: handleKeyDown,
+      "aria-orientation": tabs.orientation,
+      className: cn({
+        flex: true,
+        [tabs.tokenClasses.listOrientation ?? ""]: true,
+        [tabs.tokenClasses.listSize ?? ""]: true,
+        [tabs.tokenClasses.listVariant ?? ""]: true,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
   });
 
   return {
     merged,
+    children,
     rootBind,
-    children: props.children,
   };
 }

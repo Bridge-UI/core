@@ -1,7 +1,17 @@
 /**
- * Per-token sizing for tabs list, tab triggers, and panels.
+ * Per-token sizing for tabs list, tab triggers, icons, and panels.
  */
 export interface TabsSizeItem {
+  /**
+   * Gap between icon and label inside a tab.
+   */
+  "gap": string;
+
+  /**
+   * Icon size token for `Icon` (`size` prop).
+   */
+  "icon": string;
+
   /**
    * Classes for the tab list container.
    */
@@ -43,18 +53,24 @@ export interface TabsSize {
  */
 export const sizeProps: TabsSize = {
   "md": {
-    "list": "gap-1",
-    "panel": "pt-3 text-sm",
-    "tab": "rounded-md px-3 py-2 text-sm",
+    "list": "",
+    "icon": "md",
+    "gap": "gap-2",
+    "panel": "pt-4 text-sm",
+    "tab": "px-3 py-3 text-sm font-medium",
   },
   "sm": {
-    "list": "gap-0.5",
-    "panel": "pt-2 text-sm",
-    "tab": "rounded-md px-2 py-1 text-xs",
+    "list": "",
+    "icon": "sm",
+    "gap": "gap-1.5",
+    "panel": "pt-3 text-sm",
+    "tab": "px-2.5 py-2 text-xs font-medium",
   },
   "lg": {
-    "list": "gap-1.5",
-    "panel": "pt-4 text-base",
-    "tab": "rounded-md px-4 py-2.5 text-base",
+    "list": "",
+    "icon": "lg",
+    "gap": "gap-2.5",
+    "panel": "pt-5 text-base",
+    "tab": "px-4 py-3.5 text-base font-medium",
   },
 };

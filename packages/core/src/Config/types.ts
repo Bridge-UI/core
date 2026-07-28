@@ -133,6 +133,7 @@ import type {
   TabsColor,
   TabsColorItem,
   TabsOrientation,
+  TabsOrientationItem,
   TabsSize,
   TabsSizeItem,
   TabsVariant,
@@ -596,7 +597,7 @@ export interface TabsConfigBase {
   classes: object;
   customProps: Partial<{
     color: Record<string, TabsColorItem>;
-    orientation: Record<string, string>;
+    orientation: Record<string, TabsOrientationItem>;
     size: Record<string, TabsSizeItem>;
     variant: Record<string, TabsVariantItem>;
   }>;

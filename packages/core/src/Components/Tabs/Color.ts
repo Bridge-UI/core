@@ -1,83 +1,47 @@
 /**
  * Per-color selected-state classes for tabs.
+ * Inactive tabs use `dark-*` from the variant; these apply when selected.
  */
 export interface TabsColorItem {
   /**
-   * Classes applied to the selected tab (and line indicator when `variant="line"`).
+   * Text accent for the selected tab (also drives the underline via `currentColor`).
    */
   "tabSelected": string;
+
+  /**
+   * Soft background fill for `pill` / `solid` selected tabs.
+   */
+  "tabSelectedSoft": string;
 }
 
 /**
- * Tabs color tokens.
+ * Tabs color tokens (selected accent). Only `primary` and `dark`.
  */
 export interface TabsColor {
   /**
-   * Danger accent for the selected tab.
+   * Dark / neutral accent for the selected tab.
    */
-  "danger": TabsColorItem;
+  "dark": TabsColorItem;
 
   /**
-   * Default / neutral accent.
-   */
-  "default": TabsColorItem;
-
-  /**
-   * Info accent for the selected tab.
-   */
-  "info": TabsColorItem;
-
-  /**
-   * Primary accent for the selected tab.
+   * Primary accent for the selected tab (default).
    */
   "primary": TabsColorItem;
-
-  /**
-   * Secondary accent for the selected tab.
-   */
-  "secondary": TabsColorItem;
-
-  /**
-   * Success accent for the selected tab.
-   */
-  "success": TabsColorItem;
-
-  /**
-   * Warning accent for the selected tab.
-   */
-  "warning": TabsColorItem;
 }
 
 /**
- * Default tabs color maps.
+ * Default tabs color maps (selected only).
+ * No `border-*` here — that would recolor `divide-x` in `enclosed`.
  */
 export const colorProps: TabsColor = {
-  "info": {
+  "dark": {
+    "tabSelectedSoft": "bg-dark-500/10 dark:bg-dark-500/20",
     "tabSelected":
-      "text-info-700 dark:text-info-300 border-info-600 dark:border-info-400 bg-info-500/15",
-  },
-  "danger": {
-    "tabSelected":
-      "text-danger-700 dark:text-danger-300 border-danger-600 dark:border-danger-400 bg-danger-500/15",
+      "text-dark-800 hover:text-dark-800 dark:text-dark-100 dark:hover:text-dark-100",
   },
   "primary": {
+    "tabSelectedSoft": "bg-primary-500/15 dark:bg-primary-500/20",
     "tabSelected":
-      "text-primary-700 dark:text-primary-300 border-primary-600 dark:border-primary-400 bg-primary-500/15",
-  },
-  "success": {
-    "tabSelected":
-      "text-success-700 dark:text-success-300 border-success-600 dark:border-success-400 bg-success-500/15",
-  },
-  "warning": {
-    "tabSelected":
-      "text-warning-800 dark:text-warning-300 border-warning-600 dark:border-warning-400 bg-warning-500/15",
-  },
-  "default": {
-    "tabSelected":
-      "text-secondary-900 dark:text-secondary-50 border-secondary-900 dark:border-secondary-50 bg-secondary-500/15",
-  },
-  "secondary": {
-    "tabSelected":
-      "text-secondary-800 dark:text-secondary-100 border-secondary-700 dark:border-secondary-300 bg-secondary-500/20",
+      "text-primary-600 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-400",
   },
 };

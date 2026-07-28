@@ -68,8 +68,8 @@ export function useTabs(
   model: Ref<string | undefined>,
   emit: SetupContext<TabsEmits>["emit"],
 ) {
-  const attrs = useAttrs();
   const vueId = useId();
+  const attrs = useAttrs();
   const tabsId = `bridge-tabs${vueId}`;
 
   const tabValues = ref<string[]>([]);
@@ -200,6 +200,10 @@ export function useTabs(
     return get(colorClasses.value, merged.value.color);
   });
 
+  const orientationItem = computed(() => {
+    return get(orientationClasses.value, merged.value.orientation);
+  });
+
   const contextValue = computed((): TabsContextValue => {
     return {
       focusTab,
@@ -217,16 +221,21 @@ export function useTabs(
         (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
         tabSize: get(sizeItem.value, "tab"),
+        iconGap: get(sizeItem.value, "gap"),
+        iconSize: get(sizeItem.value, "icon"),
         listSize: get(sizeItem.value, "list"),
         panelSize: get(sizeItem.value, "panel"),
         tabVariant: get(variantItem.value, "tab"),
         listVariant: get(variantItem.value, "list"),
+        tabOrientation: get(orientationItem.value, "tab"),
         colorSelected: get(colorItem.value, "tabSelected"),
+        listOrientation: get(orientationItem.value, "list"),
+        rootOrientation: get(orientationItem.value, "root"),
+        panelOrientation: get(orientationItem.value, "panel"),
         tabVariantSelected: get(variantItem.value, "tabSelected"),
-        listOrientation: get(
-          orientationClasses.value,
-          merged.value.orientation,
-        ),
+        colorSelectedSoft: get(colorItem.value, "tabSelectedSoft"),
+        softFill:
+          merged.value.variant === "pill" || merged.value.variant === "solid",
       },
     };
   });
@@ -238,6 +247,7 @@ export function useTabs(
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
       class: cn({
+        [get(orientationItem.value, "root") ?? ""]: true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });

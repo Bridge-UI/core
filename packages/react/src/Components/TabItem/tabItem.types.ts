@@ -1,5 +1,9 @@
 // ** External Imports
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+
+// ** Local Imports
+import type { TabSlots } from "@/Components/Tab/tab.types";
 
 export interface TabItemClasses {
   /**
@@ -35,6 +39,13 @@ export interface TabItemOwnProps {
   disabled?: boolean;
 
   /**
+   * Icon at the **inline end** on the tab trigger.
+   *
+   * @default undefined
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
    *
    * @default undefined
@@ -45,6 +56,20 @@ export interface TabItemOwnProps {
    * Label shown on the tab trigger.
    */
   label: ReactNode;
+
+  /**
+   * Custom start / end adornments for the tab trigger (when not using icon props).
+   *
+   * @default undefined
+   */
+  slots?: Pick<TabSlots, "end" | "start">;
+
+  /**
+   * Icon at the **inline start** on the tab trigger.
+   *
+   * @default undefined
+   */
+  startIcon?: LucideIcon;
 
   /**
    * Stable value for the tab / panel pair.

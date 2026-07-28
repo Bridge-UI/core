@@ -175,3 +175,62 @@ test("it should unmount inactive panels when keepMounted is false", () => {
   expect(wrapper.text()).toContain("Panel A");
   expect(wrapper.text()).not.toContain("Panel B");
 });
+
+test("it should apply line underline classes with after content", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "line" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  const tab = wrapper.find('[role="tab"]');
+
+  expect(tab.classes().join(" ")).toContain("after:content-['']");
+  expect(tab.classes().join(" ")).toContain("after:bg-current");
+});
+
+test("it should apply soft fill color classes for pill variant", () => {
+  const wrapper = mountTabs({
+    props: { color: "dark", modelValue: "a", variant: "pill" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "bg-dark-",
+  );
+});
+
+test("it should lay out vertical tabs beside panels", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", orientation: "vertical" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  expect(wrapper.classes().join(" ")).toContain("flex-row");
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "flex-col",
+  );
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "after:w-0.5",
+  );
+});

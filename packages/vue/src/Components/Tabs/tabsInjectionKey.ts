@@ -1,4 +1,5 @@
 // ** External Imports
+import type { LucideIcon } from "@lucide/vue";
 import type { ComputedRef, InjectionKey, VNodeChild } from "vue";
 
 // ** Core Imports
@@ -9,10 +10,17 @@ import type { TabsActivation } from "@bridge-ui/core";
  */
 export type TabsTokenClasses = {
   colorSelected?: string;
+  colorSelectedSoft?: string;
+  iconGap?: string;
+  iconSize?: string;
   listOrientation?: string;
   listSize?: string;
   listVariant?: string;
+  panelOrientation?: string;
   panelSize?: string;
+  rootOrientation?: string;
+  softFill?: boolean;
+  tabOrientation?: string;
   tabSize?: string;
   tabVariant?: string;
   tabVariantSelected?: string;
@@ -28,6 +36,11 @@ export type TabsItemEntry = {
   disabled?: boolean;
 
   /**
+   * Optional trailing Lucide icon on the tab trigger.
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
    */
   keepMounted?: boolean;
@@ -41,6 +54,19 @@ export type TabsItemEntry = {
    * Panel content render function.
    */
   panel: () => VNodeChild;
+
+  /**
+   * Custom start / end adornment render functions for the tab trigger.
+   */
+  slots?: {
+    end?: () => VNodeChild;
+    start?: () => VNodeChild;
+  };
+
+  /**
+   * Optional leading Lucide icon on the tab trigger.
+   */
+  startIcon?: LucideIcon;
 
   /**
    * Stable value matching the tab / panel pair.

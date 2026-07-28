@@ -26,6 +26,7 @@ import type {
 } from "@/Components/Tabs/TabsContext";
 import type { TabsOwnProps, TabsProps } from "@/Components/Tabs/tabs.types";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -77,14 +78,29 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
     componentName: "Tabs",
   });
 
-  const isControlled = props.value !== undefined;
+  const isControlled = derived(() => {
+    return props.value !== undefined;
+  });
+
   const [uncontrolled, setUncontrolled] = useState(
     () => props.defaultValue ?? "",
   );
 
-  const selected = isControlled ? (props.value ?? "") : uncontrolled;
+  const selected = derived(() => {
+    return isControlled ? (props.value ?? "") : uncontrolled;
+  });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, ["children", "onChange"]);
+  const children = derived(() => {
+    return props.children;
+  });
+
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children", "onChange"]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeTabs,
@@ -119,9 +135,21 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
     );
   }, [bridgeTabs?.customProps?.orientation]);
 
-  const sizeItem = get(sizeClasses, merged.size);
-  const variantItem = get(variantClasses, merged.variant);
-  const colorItem = get(colorClasses, merged.color);
+  const sizeItem = derived(() => {
+    return get(sizeClasses, merged.size);
+  });
+
+  const variantItem = derived(() => {
+    return get(variantClasses, merged.variant);
+  });
+
+  const colorItem = derived(() => {
+    return get(colorClasses, merged.color);
+  });
+
+  const orientationItem = derived(() => {
+    return get(orientationClasses, merged.orientation);
+  });
 
   const setSelected = useCallback(
     (next: string) => {
@@ -226,13 +254,20 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
         (merged.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
         tabSize: get(sizeItem, "tab"),
+        iconGap: get(sizeItem, "gap"),
+        iconSize: get(sizeItem, "icon"),
         listSize: get(sizeItem, "list"),
         panelSize: get(sizeItem, "panel"),
         tabVariant: get(variantItem, "tab"),
         listVariant: get(variantItem, "list"),
+        tabOrientation: get(orientationItem, "tab"),
         colorSelected: get(colorItem, "tabSelected"),
+        listOrientation: get(orientationItem, "list"),
+        rootOrientation: get(orientationItem, "root"),
+        panelOrientation: get(orientationItem, "panel"),
         tabVariantSelected: get(variantItem, "tabSelected"),
-        listOrientation: get(orientationClasses, merged.orientation),
+        colorSelectedSoft: get(colorItem, "tabSelectedSoft"),
+        softFill: merged.variant === "pill" || merged.variant === "solid",
       },
     };
   }, [
@@ -248,25 +283,27 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
     variantItem,
     disabledValues,
     registerTabItem,
+    merged.variant,
     merged.activation,
+    orientationItem,
     merged.keepMounted,
     merged.orientation,
-    orientationClasses,
   ]);
 
-  const customProps = merged.customProps;
-
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    className: cn({
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      className: cn({
+        [get(orientationItem, "root") ?? ""]: true,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
   });
 
   return {
     merged,
+    children,
     rootBind,
     tabItems,
     contextValue,
-    children: props.children,
   };
 }

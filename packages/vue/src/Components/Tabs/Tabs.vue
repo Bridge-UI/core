@@ -53,14 +53,26 @@ const hasTabItems = computed(() => tabItems.value.length > 0);
           :key="item.value"
           :value="item.value"
           v-for="item in tabItems"
+          :end-icon="item.endIcon"
           :disabled="item.disabled"
+          :start-icon="item.startIcon"
         >
+          <template #start v-if="item.slots?.start">
+            <component :is="item.slots.start" />
+          </template>
+
           <template v-if="typeof item.label === 'string'">
             {{ item.label }}
           </template>
+
           <component v-else :is="item.label" />
+
+          <template #end v-if="item.slots?.end">
+            <component :is="item.slots.end" />
+          </template>
         </Tab>
       </TabList>
+
       <TabPanel
         :key="item.value"
         :value="item.value"
@@ -70,6 +82,7 @@ const hasTabItems = computed(() => tabItems.value.length > 0);
         <component :is="item.panel" />
       </TabPanel>
     </template>
+
     <component :is="resolveNamedSlot(slots, 'default')" />
   </div>
 </template>

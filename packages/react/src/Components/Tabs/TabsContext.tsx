@@ -1,4 +1,5 @@
 // ** External Imports
+import type { LucideIcon } from "lucide-react";
 import { createContext, useContext, type ReactNode } from "react";
 
 // ** Core Imports
@@ -14,6 +15,11 @@ export type TabsItemEntry = {
   disabled?: boolean;
 
   /**
+   * Optional trailing Lucide icon on the tab trigger.
+   */
+  endIcon?: LucideIcon;
+
+  /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
    */
   keepMounted?: boolean;
@@ -27,6 +33,19 @@ export type TabsItemEntry = {
    * Panel content.
    */
   panel: ReactNode;
+
+  /**
+   * Custom start / end adornments for the tab trigger.
+   */
+  slots?: {
+    end?: ReactNode;
+    start?: ReactNode;
+  };
+
+  /**
+   * Optional leading Lucide icon on the tab trigger.
+   */
+  startIcon?: LucideIcon;
 
   /**
    * Stable value matching the tab / panel pair.
@@ -103,10 +122,17 @@ export type TabsContextValue = {
    */
   tokenClasses: {
     colorSelected?: string;
+    colorSelectedSoft?: string;
+    iconGap?: string;
+    iconSize?: string;
     listOrientation?: string;
     listSize?: string;
     listVariant?: string;
+    panelOrientation?: string;
     panelSize?: string;
+    rootOrientation?: string;
+    softFill?: boolean;
+    tabOrientation?: string;
     tabSize?: string;
     tabVariant?: string;
     tabVariantSelected?: string;

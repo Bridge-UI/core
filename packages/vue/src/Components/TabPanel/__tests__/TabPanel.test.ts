@@ -27,3 +27,28 @@ test("it should render a tabpanel linked to its tab", () => {
   expect(panel.text()).toContain("Content");
   expect(panel.attributes("aria-labelledby")).toBeDefined();
 });
+
+test("it should set tabIndex only on the selected panel", () => {
+  const wrapper = mount(Tabs, {
+    props: { modelValue: "a" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => [
+            h(Tab, { value: "a" }, { default: () => "Alpha" }),
+            h(Tab, { value: "b" }, { default: () => "Beta" }),
+          ],
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+        h(TabPanel, { value: "b" }, { default: () => "Panel B" }),
+      ],
+    },
+  });
+
+  const panels = wrapper.findAll('[role="tabpanel"]');
+  const panelA = panels.find((panel) => panel.text() === "Panel A");
+  const panelB = panels.find((panel) => panel.text() === "Panel B");
+
+  expect(panelA?.attributes("tabindex")).toBe("0");
+  expect(panelB?.attributes("tabindex")).toBe("-1");
+});

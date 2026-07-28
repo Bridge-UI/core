@@ -15,6 +15,7 @@ import {
   getTabId,
   getTabPanelId,
   splitComponentProps,
+  type IconSize,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -29,7 +30,9 @@ import {
 const tabBridgeKeys = [
   "value",
   "classes",
+  "endIcon",
   "disabled",
+  "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof TabOwnProps)[];
 
@@ -113,6 +116,11 @@ export function useTab(props: TabOwnProps) {
 
   const customProps = computed(() => merged.value.customProps);
 
+  const iconSize = computed(() => {
+    return (tabsContextRef.value.tokenClasses.iconSize ??
+      "md") as keyof IconSize;
+  });
+
   const rootBind = computed(() => {
     const tabs = tabsContextRef.value;
 
@@ -127,19 +135,66 @@ export function useTab(props: TabOwnProps) {
       id: getTabId(tabs.id, value.value),
       "aria-controls": getTabPanelId(tabs.id, value.value),
       class: cn({
-        "inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
+        "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
+        [tabs.tokenClasses.iconGap ?? ""]: true,
         [tabs.tokenClasses.tabSize ?? ""]: true,
         [tabs.tokenClasses.tabVariant ?? ""]: true,
+        [tabs.tokenClasses.tabOrientation ?? ""]: true,
         [tabs.tokenClasses.tabVariantSelected ?? ""]: selected.value,
         [tabs.tokenClasses.colorSelected ?? ""]: selected.value,
+        [tabs.tokenClasses.colorSelectedSoft ?? ""]:
+          selected.value && tabs.tokenClasses.softFill === true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });
   });
 
+  const endIconBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.endIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [get(mergedClasses.value, "endIcon") ?? ""]: true,
+      }),
+    );
+  });
+
+  const endSlotBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.end,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
+  });
+
+  const startIconBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.startIcon,
+      {},
+      cn({
+        "shrink-0": true,
+        [get(mergedClasses.value, "startIcon") ?? ""]: true,
+      }),
+    );
+  });
+
+  const startSlotBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.start,
+      {},
+      "inline-flex shrink-0 items-center",
+    );
+  });
+
   return {
     merged,
+    iconSize,
     rootBind,
     selected,
+    endIconBind,
+    endSlotBind,
+    startIconBind,
+    startSlotBind,
   };
 }

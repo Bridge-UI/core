@@ -1,5 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { User } from "lucide-react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
@@ -48,4 +49,27 @@ test("it should change panel when a TabItem tab is clicked", () => {
 
   expect(onChange).toHaveBeenCalledWith("npm");
   expect(screen.getByText("npm install").hasAttribute("hidden")).toBe(false);
+});
+
+test("it should render TabItem startIcon and end slot on the tab trigger", () => {
+  const { container } = render(
+    <Tabs defaultValue="inbox">
+      <TabItem
+        label="Inbox"
+        value="inbox"
+        startIcon={User}
+        slots={{
+          end: <span data-testid="item-end">3</span>,
+        }}
+      >
+        Inbox panel
+      </TabItem>
+    </Tabs>,
+  );
+
+  expect(container.querySelector("svg")).toBeTruthy();
+  expect(screen.getByTestId("item-end")).toBeTruthy();
+  expect(screen.getByRole("tab", { name: /Inbox/ }).className).toContain(
+    "gap-",
+  );
 });

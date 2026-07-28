@@ -16,6 +16,7 @@ import type {
 } from "@/Components/TabPanel/tabPanel.types";
 import { useTabsContext } from "@/Components/Tabs/TabsContext";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -47,36 +48,55 @@ export function useTabPanel(props: TabPanelProps) {
     componentName: "TabPanel",
   });
 
-  const value = merged.value;
-  const selected = tabs.selected === value;
-  const keepMounted = merged.keepMounted ?? tabs.keepMounted;
+  const children = derived(() => {
+    return props.children;
+  });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, ["children"]);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
+
+  const value = derived(() => {
+    return merged.value;
+  });
+
+  const selected = derived(() => {
+    return tabs.selected === value;
+  });
+
+  const keepMounted = derived(() => {
+    return merged.keepMounted ?? tabs.keepMounted;
+  });
+
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, ["children"]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeTabPanel,
     props: componentProps,
   });
 
-  const customProps = merged.customProps;
-
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    tabIndex: 0,
-    role: "tabpanel",
-    hidden: !selected,
-    id: getTabPanelId(tabs.id, value),
-    "aria-labelledby": getTabId(tabs.id, value),
-    className: cn({
-      [tabs.tokenClasses.panelSize ?? ""]: true,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      role: "tabpanel",
+      hidden: !selected,
+      tabIndex: selected ? 0 : -1,
+      id: getTabPanelId(tabs.id, value),
+      "aria-labelledby": getTabId(tabs.id, value),
+      className: cn({
+        [tabs.tokenClasses.panelSize ?? ""]: true,
+        [tabs.tokenClasses.panelOrientation ?? ""]: true,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
   });
 
   return {
     merged,
+    children,
     rootBind,
     selected,
     keepMounted,
-    children: props.children,
   };
 }

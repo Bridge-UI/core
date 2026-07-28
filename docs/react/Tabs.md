@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`.
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent is `primary` or `dark`; inactive tabs use `dark-*`.
 
 ## Import
 
@@ -20,7 +20,7 @@ import { TabPanel } from "@bridge-ui/react/Components/TabPanel";
 const [pkg, setPkg] = useState("bun");
 
 <Tabs value={pkg} onChange={setPkg}>
-  <TabList>
+  <TabList aria-label="Package manager">
     <Tab value="bun">bun</Tab>
     <Tab value="npm">npm</Tab>
     <Tab value="pnpm">pnpm</Tab>
@@ -33,8 +33,6 @@ const [pkg, setPkg] = useState("bun");
 
 ### TabItem shortcut
 
-Registers label + panel without a manual `TabList` / `TabPanel`.
-
 ```tsx
 <Tabs defaultValue="bun">
   <TabItem label="bun" value="bun">
@@ -46,10 +44,112 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 </Tabs>
 ```
 
-### Pill variant
+### With icons
 
 ```tsx
-<Tabs variant="pill" defaultValue="one">
+<Tabs defaultValue="account">
+  <TabList aria-label="Settings">
+    <Tab startIcon={User} value="account">
+      My Account
+    </Tab>
+    <Tab startIcon={Building2} value="company">
+      Company
+    </Tab>
+    <Tab startIcon={Users} value="team">
+      Team Members
+    </Tab>
+  </TabList>
+  <TabPanel value="account">Account</TabPanel>
+  <TabPanel value="company">Company</TabPanel>
+  <TabPanel value="team">Team</TabPanel>
+</Tabs>
+```
+
+### TabItem with icons and slots
+
+```tsx
+<Tabs defaultValue="inbox">
+  <TabItem startIcon={Inbox} label="Inbox" value="inbox">
+    Inbox
+  </TabItem>
+  <TabItem
+    label="Alerts"
+    value="alerts"
+    endIcon={ChevronDown}
+    slots={{
+      start: <Avatar size="sm" fallback="A" />,
+    }}
+  >
+    Alerts
+  </TabItem>
+</Tabs>
+```
+
+### Custom start / end on Tab
+
+```tsx
+<Tabs defaultValue="one">
+  <TabList>
+    <Tab
+      value="one"
+      slots={{
+        end: <Badge>3</Badge>,
+        start: <Avatar size="sm" fallback="1" />,
+      }}
+    >
+      One
+    </Tab>
+    <Tab endIcon={ChevronRight} value="two">
+      Two
+    </Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+```
+
+### Variants
+
+`line` (default), `plain`, `pill`, `solid`, `enclosed`.
+
+```tsx
+<Tabs variant="line" color="primary" defaultValue="one">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs color="dark" variant="pill" defaultValue="one">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs variant="solid" defaultValue="one">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs variant="plain" defaultValue="one">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs variant="enclosed" defaultValue="one">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -63,7 +163,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 
 ```tsx
 <Tabs defaultValue="account" orientation="vertical">
-  <TabList>
+  <TabList aria-label="Account">
     <Tab value="account">Account</Tab>
     <Tab value="settings">Settings</Tab>
   </TabList>
@@ -73,8 +173,6 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 ```
 
 ### Manual activation
-
-Arrow keys move focus only; Enter or Space selects.
 
 ```tsx
 <Tabs defaultValue="a" activation="manual">
@@ -89,24 +187,29 @@ Arrow keys move focus only; Enter or Space selects.
 
 ## Props (`Tabs`)
 
-| Prop           | Type                         | Default              |
-| -------------- | ---------------------------- | -------------------- |
-| `value`        | `string`                     | —                    |
-| `defaultValue` | `string`                     | first registered tab |
-| `onChange`     | `(value: string) => void`    | —                    |
-| `orientation`  | `"horizontal" \| "vertical"` | `"horizontal"`       |
-| `variant`      | `"line" \| "pill"`           | `"line"`             |
-| `color`        | color token                  | `"primary"`          |
-| `size`         | `"sm" \| "md" \| "lg"`       | `"md"`               |
-| `activation`   | `"automatic" \| "manual"`    | `"automatic"`        |
-| `keepMounted`  | `boolean`                    | `true`               |
+| Prop           | Type                                                   | Default              |
+| -------------- | ------------------------------------------------------ | -------------------- |
+| `value`        | `string`                                               | —                    |
+| `defaultValue` | `string`                                               | first registered tab |
+| `onChange`     | `(value: string) => void`                              | —                    |
+| `orientation`  | `"horizontal" \| "vertical"`                           | `"horizontal"`       |
+| `variant`      | `"line" \| "plain" \| "pill" \| "solid" \| "enclosed"` | `"line"`             |
+| `color`        | `"primary" \| "dark"`                                  | `"primary"`          |
+| `size`         | `"sm" \| "md" \| "lg"`                                 | `"md"`               |
+| `activation`   | `"automatic" \| "manual"`                              | `"automatic"`        |
+| `keepMounted`  | `boolean`                                              | `true`               |
 
 ## Props (`Tab`)
 
-| Prop       | Type      | Default  |
-| ---------- | --------- | -------- |
-| `value`    | `string`  | required |
-| `disabled` | `boolean` | `false`  |
+| Prop        | Type         | Default  |
+| ----------- | ------------ | -------- |
+| `value`     | `string`     | required |
+| `startIcon` | `LucideIcon` | —        |
+| `endIcon`   | `LucideIcon` | —        |
+| `disabled`  | `boolean`    | `false`  |
+| `slots`     | `TabSlots`   | —        |
+
+`slots.start` / `slots.end` are used when the matching Lucide icon prop is omitted.
 
 ## Props (`TabList`)
 
@@ -121,10 +224,13 @@ HTML attributes on the `role="tablist"` container (`aria-label`, `className`, et
 
 ## Props (`TabItem`)
 
-| Prop          | Type        | Default              |
-| ------------- | ----------- | -------------------- |
-| `value`       | `string`    | required             |
-| `label`       | `ReactNode` | required             |
-| `disabled`    | `boolean`   | `false`              |
-| `keepMounted` | `boolean`   | inherits from `Tabs` |
-| `children`    | `ReactNode` | panel content        |
+| Prop          | Type               | Default              |
+| ------------- | ------------------ | -------------------- |
+| `value`       | `string`           | required             |
+| `label`       | `ReactNode`        | required             |
+| `startIcon`   | `LucideIcon`       | —                    |
+| `endIcon`     | `LucideIcon`       | —                    |
+| `disabled`    | `boolean`          | `false`              |
+| `keepMounted` | `boolean`          | inherits from `Tabs` |
+| `slots`       | `{ start?, end? }` | —                    |
+| `children`    | `ReactNode`        | panel content        |

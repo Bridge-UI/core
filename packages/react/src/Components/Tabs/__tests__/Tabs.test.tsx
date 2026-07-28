@@ -109,3 +109,53 @@ test("it should unmount inactive panels when keepMounted is false", () => {
   expect(screen.getByText("Panel A")).toBeTruthy();
   expect(screen.queryByText("Panel B")).toBeNull();
 });
+
+test("it should apply line underline classes with after content", () => {
+  render(
+    <Tabs variant="line" defaultValue="a">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(tab.className).toContain("after:content-['']");
+  expect(tab.className).toContain("after:bg-current");
+});
+
+test("it should apply soft fill color classes for pill variant", () => {
+  render(
+    <Tabs color="dark" variant="pill" defaultValue="a">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  expect(screen.getByRole("tab", { name: "Alpha" }).className).toContain(
+    "bg-dark-",
+  );
+});
+
+test("it should lay out vertical tabs beside panels", () => {
+  const { container } = render(
+    <Tabs defaultValue="a" orientation="vertical">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const root = container.firstElementChild;
+  const list = screen.getByRole("tablist");
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(root?.className).toContain("flex-row");
+  expect(list.className).toContain("flex-col");
+  expect(tab.className).toContain("after:w-0.5");
+});

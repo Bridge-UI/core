@@ -273,6 +273,7 @@ export type {
   TabCustomProps,
   TabOwnProps,
   TabProps,
+  TabSlots,
 } from "@/Components/Tab";
 export { TabItem, useTabItem } from "@/Components/TabItem";
 export type {
