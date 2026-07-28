@@ -440,7 +440,7 @@ export function useSnackbar(
   );
 
   watch(
-    [showProgress, durationMs],
+    [durationMs, showProgress],
     ([visible]) => {
       if (!visible) {
         progressActive.value = false;

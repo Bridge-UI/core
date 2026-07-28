@@ -135,7 +135,7 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
 
       merged.onChange?.(next);
     },
-    [disabledValues, isControlled, merged],
+    [merged, isControlled, disabledValues],
   );
 
   const registerTab = useCallback(
@@ -238,19 +238,19 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
   }, [
     tabsId,
     selected,
-    setSelected,
-    registerTab,
-    registerTabItem,
     focusTab,
     tabItems,
-    tabValues,
-    disabledValues,
-    merged.keepMounted,
-    merged.activation,
-    merged.orientation,
     sizeItem,
-    variantItem,
+    tabValues,
     colorItem,
+    setSelected,
+    registerTab,
+    variantItem,
+    disabledValues,
+    registerTabItem,
+    merged.activation,
+    merged.keepMounted,
+    merged.orientation,
     orientationClasses,
   ]);
 

@@ -17,11 +17,11 @@ export function useTabItem(props: TabItemProps) {
       keepMounted: props.keepMounted,
     });
   }, [
-    tabs.registerTabItem,
     props.value,
     props.label,
     props.children,
     props.disabled,
     props.keepMounted,
+    tabs.registerTabItem,
   ]);
 }
