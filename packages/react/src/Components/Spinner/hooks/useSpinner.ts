@@ -117,6 +117,14 @@ export function useSpinner(
     return get(classes, merged.variant);
   }, [merged.variant, bridgeSpinner?.customProps?.variant]);
 
+  const thickness = derived(() => {
+    return merged.thickness ?? DEFAULT_SPINNER_THICKNESS;
+  });
+
+  const geometry = derived(() => {
+    return getSpinnerCircleGeometry(thickness);
+  });
+
   const radius = derived(() => {
     return geometry.radius;
   });
@@ -147,14 +155,6 @@ export function useSpinner(
 
   const isIndeterminate = derived(() => {
     return merged.variant === "indeterminate";
-  });
-
-  const geometry = derived(() => {
-    return getSpinnerCircleGeometry(thickness);
-  });
-
-  const thickness = derived(() => {
-    return merged.thickness ?? DEFAULT_SPINNER_THICKNESS;
   });
 
   const rootBind = derived(() => {

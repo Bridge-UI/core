@@ -88,7 +88,9 @@ export function useSpinner(
     props: () => split.value.componentProps,
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -117,18 +119,35 @@ export function useSpinner(
     return get(classes, merged.value.variant);
   });
 
-  const thickness = computed(
-    () => merged.value.thickness ?? DEFAULT_SPINNER_THICKNESS,
-  );
-  const isDeterminate = computed(() => merged.value.variant === "determinate");
-  const isIndeterminate = computed(
-    () => merged.value.variant === "indeterminate",
-  );
-  const enableTrack = computed(() => Boolean(merged.value.enableTrack));
-  const disableShrink = computed(() => Boolean(merged.value.disableShrink));
-  const clampedValue = computed(() => clampSpinner(merged.value.value));
-  const geometry = computed(() => getSpinnerCircleGeometry(thickness.value));
+  const thickness = computed(() => {
+    return merged.value.thickness ?? DEFAULT_SPINNER_THICKNESS;
+  });
+
+  const geometry = computed(() => {
+    return getSpinnerCircleGeometry(thickness.value);
+  });
+
   const center = SPINNER_VIEWBOX_SIZE / 2;
+
+  const clampedValue = computed(() => {
+    return clampSpinner(merged.value.value);
+  });
+
+  const enableTrack = computed(() => {
+    return Boolean(merged.value.enableTrack);
+  });
+
+  const disableShrink = computed(() => {
+    return Boolean(merged.value.disableShrink);
+  });
+
+  const isDeterminate = computed(() => {
+    return merged.value.variant === "determinate";
+  });
+
+  const isIndeterminate = computed(() => {
+    return merged.value.variant === "indeterminate";
+  });
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
