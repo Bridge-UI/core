@@ -142,7 +142,6 @@ export function useSpinner(
         : {}),
       class: cn({
         "inline-block": true,
-        "origin-center": isIndeterminate.value,
         [sizeClass.value ?? ""]: true,
         [variantClass.value ?? ""]: isIndeterminate.value,
         [mergedClasses.value.root ?? ""]: true,
@@ -176,7 +175,8 @@ export function useSpinner(
         cy: center,
         fill: "none",
         r: geometry.value.radius,
-        strokeWidth: thickness.value,
+        // Vue SVG attrs need kebab-case (`strokeWidth` is ignored → default 1).
+        "stroke-width": thickness.value,
       },
       cn({
         [colorPalette.value?.track ?? ""]: true,
@@ -198,17 +198,14 @@ export function useSpinner(
         }
       : {};
 
+    // Butt caps (SVG default). Round caps + a 1px dash reads as a jittering speck.
     const indeterminateStyle = isIndeterminate.value
-      ? disableShrink.value
-        ? {
-            strokeDashoffset: 0,
-            strokeDasharray: `${circumference * 0.8}px, ${circumference}px`,
-          }
-        : {
-            // Stable default until the dash keyframes kick in.
-            strokeDashoffset: 0,
-            strokeDasharray: "80px, 200px",
-          }
+      ? {
+          strokeDashoffset: 0,
+          strokeDasharray: disableShrink.value
+            ? `${circumference * 0.8}px, ${circumference}px`
+            : "80px, 200px",
+        }
       : {};
 
     return mergePartBind(
@@ -218,8 +215,8 @@ export function useSpinner(
         cx: center,
         cy: center,
         fill: "none",
-        strokeWidth: thickness.value,
-        strokeLinecap: "round" as const,
+        // Vue SVG attrs need kebab-case (`strokeWidth` is ignored → default 1).
+        "stroke-width": thickness.value,
         style: {
           ...determinateStyle,
           ...indeterminateStyle,

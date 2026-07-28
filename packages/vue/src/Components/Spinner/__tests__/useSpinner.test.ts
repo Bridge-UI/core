@@ -112,6 +112,12 @@ test("it should merge class into rootBind", () => {
   expect(rootBind.value.class).toContain("text-red-500");
 });
 
+test("it should expose stroke-width on circleBind from thickness", () => {
+  const { circleBind } = mountUseSpinner({ thickness: 5 });
+
+  expect(circleBind.value["stroke-width"]).toBe(5);
+});
+
 test("it should apply determinate stroke dash style", () => {
   const { circleBind } = mountUseSpinner({
     value: 50,

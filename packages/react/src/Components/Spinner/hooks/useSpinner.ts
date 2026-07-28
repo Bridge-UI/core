@@ -138,7 +138,6 @@ export function useSpinner(
         : {}),
       className: cn({
         "inline-block": true,
-        "origin-center": isIndeterminate,
         [sizeClass ?? ""]: true,
         [variantClass ?? ""]: isIndeterminate,
         [mergedClasses.root ?? ""]: true,
@@ -192,17 +191,14 @@ export function useSpinner(
         }
       : {};
 
+    // Butt caps (SVG default). Round caps + a 1px dash reads as a jittering speck.
     const indeterminateStyle = isIndeterminate
-      ? disableShrink
-        ? {
-            strokeDashoffset: 0,
-            strokeDasharray: `${circumference * 0.8}px, ${circumference}px`,
-          }
-        : {
-            // Stable default until the dash keyframes kick in.
-            strokeDashoffset: 0,
-            strokeDasharray: "80px, 200px",
-          }
+      ? {
+          strokeDashoffset: 0,
+          strokeDasharray: disableShrink
+            ? `${circumference * 0.8}px, ${circumference}px`
+            : "80px, 200px",
+        }
       : {};
 
     return mergePartBind(
@@ -213,7 +209,6 @@ export function useSpinner(
         cy: center,
         fill: "none",
         strokeWidth: thickness,
-        strokeLinecap: "round" as const,
         style: {
           ...determinateStyle,
           ...indeterminateStyle,

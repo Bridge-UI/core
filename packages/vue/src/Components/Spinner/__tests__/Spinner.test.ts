@@ -84,6 +84,15 @@ test("it should apply primary circle stroke by default", () => {
   expect(wrapper.find("circle").classes()).toContain("stroke-primary-500");
 });
 
+test("it should apply stroke-width from thickness", () => {
+  const wrapper = mount(Spinner, {
+    props: { thickness: 5 },
+    attrs: { "aria-label": "Loading…" },
+  });
+
+  expect(wrapper.find("circle").attributes("stroke-width")).toBe("5");
+});
+
 test("it should apply size class", () => {
   const wrapper = mount(Spinner, {
     props: { size: "lg" },
