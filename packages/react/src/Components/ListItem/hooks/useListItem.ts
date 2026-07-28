@@ -214,15 +214,16 @@ export function useListItem(
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      className: cn({
-        "list-none": true,
-        "border-b border-black/10 last:border-b-0": merged.divider,
-        [get(mergedClasses, "root") ?? ""]: true,
-      }),
       id:
         isListboxOption && listboxContext?.listboxId && listboxOptionIndex >= 0
           ? getListboxOptionId(listboxContext.listboxId, listboxOptionIndex)
           : undefined,
+      className: cn({
+        "list-none": true,
+        "border-b border-black/10 last:border-b-0 dark:border-white/10":
+          merged.divider,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
     });
   });
 
@@ -255,14 +256,15 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left outline-hidden transition-colors": true,
+          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.disabled,
           "px-4": true,
           "py-2": !isDense,
           "py-1.5": isDense,
-          "hover:bg-black/5 focus-visible:bg-black/5":
+          "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.disabled && !isListboxOption,
-          "bg-primary-50 text-primary-700": merged.selected && !isListboxOption,
+          "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
+            merged.selected && !isListboxOption,
           [listboxContext?.optionSelectedClass ?? ""]:
             isListboxOption && listboxSelected,
           [listboxContext?.mergedClasses.optionSelected ?? ""]:
@@ -282,7 +284,7 @@ export function useListItem(
   const rowClassName = derived(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "items-center": !merged.interactive,
+      "items-center text-dark-900 dark:text-dark-100": !merged.interactive,
       "px-4": !merged.interactive,
       "py-2": !merged.interactive && !isDense,
       "py-1.5": !merged.interactive && isDense,
@@ -294,7 +296,7 @@ export function useListItem(
       customProps?.start,
       {},
       cn({
-        "flex shrink-0": true,
+        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
         [get(mergedClasses, "start") ?? ""]: true,
       }),
     );
@@ -328,7 +330,7 @@ export function useListItem(
       customProps?.secondary,
       {},
       cn(
-        "mt-0.5 block truncate text-xs text-dark-500",
+        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400",
         listboxContext?.sizeClasses?.secondary,
         get(mergedClasses, "secondary"),
       ),

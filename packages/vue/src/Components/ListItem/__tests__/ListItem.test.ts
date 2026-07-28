@@ -71,8 +71,8 @@ test("it should apply selected styles when selected is true", () => {
 
   const interactive = wrapper.find('[role="button"]');
 
-  expect(interactive.classes()).toContain("bg-primary-50");
-  expect(interactive.classes()).toContain("text-primary-700");
+  expect(interactive.classes()).toContain("bg-dark-100");
+  expect(interactive.classes()).toContain("text-dark-900");
 });
 
 test("it should render a check icon when selected is true", () => {
