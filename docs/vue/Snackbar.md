@@ -95,4 +95,4 @@ import { Snackbar } from "@bridge-ui/vue/Components/Snackbar";
 
 ## Related components
 
-SnackbarAction, Alert, Button
+useSnackbarAction, Alert, Button

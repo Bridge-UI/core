@@ -1,4 +1,4 @@
-# SnackbarAction
+# useSnackbarAction
 
 Imperative API for toast notifications. Requires `BridgeSnackbarHost`.
 

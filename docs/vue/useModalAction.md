@@ -1,11 +1,11 @@
-# ModalAction
+# useModalAction
 
 Imperative API to mount custom components inside `Modal`. Requires `BridgeModalHost`.
 
 ## Import
 
 ```ts
-import { useModalAction } from "@bridge-ui/react/Actions";
+import { useModalAction } from "@bridge-ui/vue/Actions";
 ```
 
 ## Prerequisites
@@ -27,34 +27,34 @@ const id = modal.open({
 
 ### open
 
-```tsx
-<Button onClick={openBasic}>Open basic</Button>
+```vue
+<Button v-on:click="openBasic">Open basic</Button>
 
-<Button variant="outline" onClick={openWithOptions}>
+<Button variant="outline" v-on:click="openWithOptions">
   Open with modal options
 </Button>
 ```
 
 ### close / closeTop
 
-```tsx
+```vue
 <Button
   variant="outline"
-  disabled={!lastId}
-  onClick={() => lastId && modal.close(lastId)}
+  :disabled="!lastId"
+  v-on:click="lastId && modal.close(lastId)"
 >
   close(lastId)
 </Button>
 
-<Button variant="outline" onClick={() => modal.closeTop()}>
+<Button variant="outline" v-on:click="modal.closeTop()">
   closeTop()
 </Button>
 ```
 
 ### Nested stack
 
-```tsx
-<Button onClick={openNested}>Open nested example</Button>
+```vue
+<Button v-on:click="openNested">Open nested example</Button>
 ```
 
 ## API
@@ -72,4 +72,4 @@ const id = modal.open({
 
 ## Related components
 
-Modal, DialogAction, BridgeUIProvider
+Modal, useDialogAction, BridgeUIProvider
