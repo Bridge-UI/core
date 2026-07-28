@@ -177,6 +177,21 @@ export function splitComponentProps<
   };
 }
 
+export {
+  breakpointObserverOptionsKey,
+  buildBreakpointSnapshot,
+  createBreakpointObserver,
+  cssLengthToPx,
+  DEFAULT_BREAKPOINTS,
+  discoverBreakpointKeys,
+  resetBreakpointCachesForTests,
+  resolveBreakpoints,
+} from "@/Utils/breakpoint";
+export type {
+  BreakpointObserver,
+  BreakpointObserverOptions,
+  BreakpointSnapshot,
+} from "@/Utils/breakpoint";
 export { hasDocument, hasWindow } from "@/Utils/env";
 export {
   createFocusable,

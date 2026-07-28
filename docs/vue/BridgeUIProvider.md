@@ -18,6 +18,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
     theme: 'light',
     locale: 'en-US',
     direction: 'ltr',
+    mobileBreakpoint: 'sm',
   }"
 >
   <App />
@@ -34,10 +35,10 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                    |
-| ------------ | -------------------------- | ------- | ------------------------------ |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults         |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction` |
+| Prop         | Type                       | Default | Description                                                       |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                            |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints` |
 
 App content is passed via the **default slot** (see Usage above).
 

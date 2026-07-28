@@ -187,6 +187,7 @@ export {
 } from "@/Layer";
 export type { LayerId } from "@/Layer";
 export {
+  DEFAULT_BREAKPOINTS,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
   DEFAULT_SPINNER_THICKNESS,
@@ -194,14 +195,19 @@ export {
   SPINNER_VIEWBOX_SIZE,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
+  breakpointObserverOptionsKey,
+  buildBreakpointSnapshot,
   claimOpenMenu,
   cn,
   countModalTransitionLayers,
+  createBreakpointObserver,
   createFocusTrap,
   createFocusable,
   createMergePartBind,
   createPositionable,
   createSelectAsyncSearch,
+  cssLengthToPx,
+  discoverBreakpointKeys,
   entriesFromListboxOptions,
   fetchSelectAsyncData,
   filterListboxEntries,
@@ -228,8 +234,10 @@ export {
   normalizeSelectOption,
   normalizeSelectOptions,
   pushLayerStack,
+  resetBreakpointCachesForTests,
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
+  resolveBreakpoints,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,
   resolveSelectAsyncDebounce,
@@ -241,6 +249,9 @@ export {
   usesTrailingSnackbarActions,
 } from "@/Utils";
 export type {
+  BreakpointObserver,
+  BreakpointObserverOptions,
+  BreakpointSnapshot,
   ClassPropKey,
   FocusTrap,
   FocusTrapOptions,

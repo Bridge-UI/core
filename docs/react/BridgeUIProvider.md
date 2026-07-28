@@ -18,6 +18,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
     theme: "light",
     locale: "en-US",
     direction: "ltr",
+    mobileBreakpoint: "sm",
   }}
 >
   <App />
@@ -34,11 +35,11 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                           |
-| ------------ | -------------------------- | ------- | ------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`        |
+| Prop         | Type                       | Default | Description                                                       |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                             |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                            |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`
 
