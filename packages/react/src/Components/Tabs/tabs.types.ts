@@ -32,7 +32,7 @@ export interface TabsCustomProps {
 }
 
 /**
- * Tabs context root (MUI `TabContext`-like). Compose with `TabList`, `Tab`, and `TabPanel`.
+ * Tabs context root. Compose with `TabList`, `Tab`, and `TabPanel`.
  */
 export interface TabsOwnProps {
   /**

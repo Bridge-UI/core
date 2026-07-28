@@ -19,7 +19,7 @@ export interface ListCustomProps {
 }
 
 /**
- * Vertical list container (MUI `List`-like). Use with `ListItem` and `ListSection`.
+ * Vertical list container. Use with `ListItem` and `ListSection`.
  */
 export interface ListOwnProps {
   /**

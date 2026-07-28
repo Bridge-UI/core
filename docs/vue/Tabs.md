@@ -43,7 +43,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 ### Pill variant
 
 ```vue
-<Tabs variant="pill" v-model="tab">
+<Tabs v-model="tab" variant="pill">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -56,7 +56,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 ### Vertical
 
 ```vue
-<Tabs orientation="vertical" v-model="section">
+<Tabs v-model="section" orientation="vertical">
   <TabList>
     <Tab value="account">Account</Tab>
     <Tab value="settings">Settings</Tab>
@@ -71,7 +71,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 Arrow keys move focus only; Enter or Space selects.
 
 ```vue
-<Tabs activation="manual" v-model="letter">
+<Tabs v-model="letter" activation="manual">
   <TabList>
     <Tab value="a">A</Tab>
     <Tab value="b">B</Tab>

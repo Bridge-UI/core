@@ -67,8 +67,8 @@ import { ListSection } from "@bridge-ui/react/Components/ListSection";
   primary="Inbox"
   secondary="12 unread messages"
   slots={{
-    end: <span className="text-secondary-400 text-xs">12</span>,
     start: <Mail className="text-secondary-500 size-5" />,
+    end: <span className="text-secondary-400 text-xs">12</span>,
   }}
 />
 ```

@@ -264,14 +264,14 @@ import { Card } from "@bridge-ui/react/Components/Card";
     body: "leading-relaxed",
   }}
   slots={{
-    action: (
-      <Button size="sm" variant="flat">
-        Options
-      </Button>
-    ),
     footer: (
       <Button full size="sm">
         Continue
+      </Button>
+    ),
+    action: (
+      <Button size="sm" variant="flat">
+        Options
       </Button>
     ),
   }}

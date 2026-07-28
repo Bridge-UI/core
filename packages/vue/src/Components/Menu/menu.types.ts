@@ -77,13 +77,13 @@ export interface MenuEmits {
 }
 
 /**
- * Anchored menu panel (MUI `Menu`-like). Visibility is controlled with `v-model`
- * (not listed here — `defineModel` handles it). Anchor with `anchorEl` (MUI style)
+ * Anchored menu panel. Visibility is controlled with `v-model`
+ * (not listed here — `defineModel` handles it). Anchor with `anchorEl`
  * or put the opener in the `trigger` slot; menu items go in the default slot.
  */
 export interface MenuOwnProps {
   /**
-   * Element that anchors the menu panel (MUI `anchorEl`). When set, it is used
+   * Element that anchors the menu panel. When set, it is used
    * for positioning and click-away instead of the `trigger` slot wrapper.
    * Prefer this when the opener lives outside the `Menu` or is controlled manually.
    * Not merged into Bridge defaults (DOM nodes must not be deep-merged).

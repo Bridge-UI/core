@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel` (MUI `TabContext`-like).
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`.
 
 ## Import
 
@@ -62,7 +62,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 ### Vertical
 
 ```tsx
-<Tabs orientation="vertical" defaultValue="account">
+<Tabs defaultValue="account" orientation="vertical">
   <TabList>
     <Tab value="account">Account</Tab>
     <Tab value="settings">Settings</Tab>
@@ -77,7 +77,7 @@ Registers label + panel without a manual `TabList` / `TabPanel`.
 Arrow keys move focus only; Enter or Space selects.
 
 ```tsx
-<Tabs activation="manual" defaultValue="a">
+<Tabs defaultValue="a" activation="manual">
   <TabList>
     <Tab value="a">A</Tab>
     <Tab value="b">B</Tab>
