@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, and component registry defaults.
 
 ## Import
 
@@ -17,6 +17,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
   global={{
     theme: "light",
     locale: "en-US",
+    breakpoints: {},
     direction: "ltr",
     mobileBreakpoint: "sm",
   }}

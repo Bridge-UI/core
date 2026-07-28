@@ -83,6 +83,8 @@ useBreakpoint({
 
 Returns a **reactive object** — read properties on the object (do not destructure helpers) so updates stay reactive in script.
 
+On the server (and before mount), `width`/`height` are `0` and `mobile` is `true`.
+
 ### Options
 
 | Option             | Type                     | Default         | Description                                  |

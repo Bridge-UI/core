@@ -82,6 +82,8 @@ useBreakpoint({
 | `mobileBreakpoint` | `string`                 | global / `"sm"` | Threshold for `mobile`                       |
 | `breakpoints`      | `Record<string, string>` | global / `{}`   | Extra or overridden CSS lengths (`40rem`, …) |
 
+On the server (and before hydration), `width`/`height` are `0` and `mobile` is `true`.
+
 Breakpoints are read from `--breakpoint-*` (export via `@theme static` in Bridge themes). Custom names work when the CSS variable exists or is passed in `breakpoints`.
 
 ## Related

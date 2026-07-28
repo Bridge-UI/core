@@ -53,6 +53,8 @@ const breakpoint = useBreakpoint();
 </template>
 ```
 
+> **Breaking:** `align` now applies on all breakpoints. Mobile no longer forces a bottom sheet — use `useBreakpoint` (as above) to restore that pattern.
+
 ### Nested modals
 
 ```vue
