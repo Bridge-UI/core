@@ -137,8 +137,9 @@ export function useSpinner(
           }
         : {}),
       className: cn({
-        "inline-flex": true,
+        "inline-block": true,
         [sizeClass ?? ""]: true,
+        [variantClass ?? ""]: isIndeterminate,
         [mergedClasses.root ?? ""]: true,
       }),
     });
@@ -150,13 +151,11 @@ export function useSpinner(
       {
         viewBox: `0 0 ${SPINNER_VIEWBOX_SIZE} ${SPINNER_VIEWBOX_SIZE}`,
       },
-      {
-        className: cn({
-          "size-full": true,
-          [variantClass ?? ""]: isIndeterminate,
-          [mergedClasses.svg ?? ""]: true,
-        }),
-      },
+      cn({
+        // Keeps the progress centered while the root rotates.
+        "block size-full": true,
+        [mergedClasses.svg ?? ""]: true,
+      }),
     );
   });
 
@@ -174,12 +173,10 @@ export function useSpinner(
         fill: "none",
         strokeWidth: thickness,
       },
-      {
-        className: cn({
-          [colorPalette?.track ?? ""]: true,
-          [mergedClasses.track ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette?.track ?? ""]: true,
+        [mergedClasses.track ?? ""]: true,
+      }),
     );
   });
 
@@ -194,13 +191,15 @@ export function useSpinner(
         }
       : {};
 
-    const indeterminateStyle =
-      isIndeterminate && disableShrink
-        ? {
-            strokeDashoffset: 0,
-            strokeDasharray: `${circumference * 0.8}px, ${circumference}px`,
-          }
-        : {};
+    // Butt caps (SVG default). Round caps + a 1px dash reads as a jittering speck.
+    const indeterminateStyle = isIndeterminate
+      ? {
+          strokeDashoffset: 0,
+          strokeDasharray: disableShrink
+            ? `${circumference * 0.8}px, ${circumference}px`
+            : "80px, 200px",
+        }
+      : {};
 
     return mergePartBind(
       customProps?.circle,
@@ -210,19 +209,16 @@ export function useSpinner(
         cy: center,
         fill: "none",
         strokeWidth: thickness,
-        strokeLinecap: "round" as const,
         style: {
           ...determinateStyle,
           ...indeterminateStyle,
         },
       },
-      {
-        className: cn({
-          [colorPalette?.circle ?? ""]: true,
-          "animate-bridge-spinner-dash": isIndeterminate && !disableShrink,
-          [mergedClasses.circle ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette?.circle ?? ""]: true,
+        "animate-bridge-spinner-dash": isIndeterminate && !disableShrink,
+        [mergedClasses.circle ?? ""]: true,
+      }),
     );
   });
 

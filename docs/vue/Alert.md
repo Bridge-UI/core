@@ -19,7 +19,7 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
   Please try again in a few minutes.
 </Alert>
 
-<Alert color="success" variant="outline" title="Saved">
+<Alert title="Saved" color="success" variant="outline">
   Your changes were saved successfully.
 </Alert>
 ```
@@ -39,7 +39,7 @@ import { Alert } from "@bridge-ui/vue/Components/Alert";
 
 <Alert color="primary" title="Alert Message!">
   <template #action>
-    <Button size="sm" color="primary" variant="flat">Dismiss</Button>
+    <Button size="sm" variant="flat" color="primary">Dismiss</Button>
   </template>
 </Alert>
 ```

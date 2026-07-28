@@ -36,12 +36,12 @@ test("it should set aria-valuenow for determinate variant", () => {
   expect(root.attributes("aria-valuemax")).toBe("100");
 });
 
-test("it should apply rotate animation on svg for indeterminate", () => {
+test("it should apply rotate animation on root for indeterminate", () => {
   const wrapper = mount(Spinner, {
     attrs: { "aria-label": "Loading…" },
   });
 
-  expect(wrapper.find("svg").classes()).toContain(
+  expect(wrapper.find('[role="progressbar"]').classes()).toContain(
     "animate-bridge-spinner-rotate",
   );
 });
@@ -82,6 +82,15 @@ test("it should apply primary circle stroke by default", () => {
   });
 
   expect(wrapper.find("circle").classes()).toContain("stroke-primary-500");
+});
+
+test("it should apply stroke-width from thickness", () => {
+  const wrapper = mount(Spinner, {
+    props: { thickness: 5 },
+    attrs: { "aria-label": "Loading…" },
+  });
+
+  expect(wrapper.find("circle").attributes("stroke-width")).toBe("5");
 });
 
 test("it should apply size class", () => {

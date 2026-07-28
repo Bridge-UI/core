@@ -141,8 +141,9 @@ export function useSpinner(
           }
         : {}),
       class: cn({
-        "inline-flex": true,
+        "inline-block": true,
         [sizeClass.value ?? ""]: true,
+        [variantClass.value ?? ""]: isIndeterminate.value,
         [mergedClasses.value.root ?? ""]: true,
       }),
     });
@@ -154,13 +155,11 @@ export function useSpinner(
       {
         viewBox: `0 0 ${SPINNER_VIEWBOX_SIZE} ${SPINNER_VIEWBOX_SIZE}`,
       },
-      {
-        class: cn({
-          "size-full": true,
-          [variantClass.value ?? ""]: isIndeterminate.value,
-          [mergedClasses.value.svg ?? ""]: true,
-        }),
-      },
+      cn({
+        // Keeps the progress centered while the root rotates.
+        "block size-full": true,
+        [mergedClasses.value.svg ?? ""]: true,
+      }),
     );
   });
 
@@ -176,14 +175,13 @@ export function useSpinner(
         cy: center,
         fill: "none",
         r: geometry.value.radius,
-        strokeWidth: thickness.value,
+        // Vue SVG attrs need kebab-case (`strokeWidth` is ignored → default 1).
+        "stroke-width": thickness.value,
       },
-      {
-        class: cn({
-          [colorPalette.value?.track ?? ""]: true,
-          [mergedClasses.value.track ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette.value?.track ?? ""]: true,
+        [mergedClasses.value.track ?? ""]: true,
+      }),
     );
   });
 
@@ -200,13 +198,15 @@ export function useSpinner(
         }
       : {};
 
-    const indeterminateStyle =
-      isIndeterminate.value && disableShrink.value
-        ? {
-            strokeDashoffset: 0,
-            strokeDasharray: `${circumference * 0.8}px, ${circumference}px`,
-          }
-        : {};
+    // Butt caps (SVG default). Round caps + a 1px dash reads as a jittering speck.
+    const indeterminateStyle = isIndeterminate.value
+      ? {
+          strokeDashoffset: 0,
+          strokeDasharray: disableShrink.value
+            ? `${circumference * 0.8}px, ${circumference}px`
+            : "80px, 200px",
+        }
+      : {};
 
     return mergePartBind(
       customProps.value?.circle,
@@ -215,21 +215,19 @@ export function useSpinner(
         cx: center,
         cy: center,
         fill: "none",
-        strokeWidth: thickness.value,
-        strokeLinecap: "round" as const,
+        // Vue SVG attrs need kebab-case (`strokeWidth` is ignored → default 1).
+        "stroke-width": thickness.value,
         style: {
           ...determinateStyle,
           ...indeterminateStyle,
         },
       },
-      {
-        class: cn({
-          [colorPalette.value?.circle ?? ""]: true,
-          "animate-bridge-spinner-dash":
-            isIndeterminate.value && !disableShrink.value,
-          [mergedClasses.value.circle ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette.value?.circle ?? ""]: true,
+        "animate-bridge-spinner-dash":
+          isIndeterminate.value && !disableShrink.value,
+        [mergedClasses.value.circle ?? ""]: true,
+      }),
     );
   });
 

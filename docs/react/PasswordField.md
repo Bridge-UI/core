@@ -19,10 +19,10 @@ import { PasswordField } from "@bridge-ui/react/Components/PasswordField";
 />
 
 <PasswordField
-  label="New password"
   value={password}
-  onChange={(event) => setPassword(event.target.value)}
+  label="New password"
   description="Use at least 8 characters."
+  onChange={(event) => setPassword(event.target.value)}
 />
 
 <PasswordField

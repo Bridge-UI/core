@@ -40,19 +40,19 @@ import { ListItem } from "@bridge-ui/vue/Components/ListItem";
 When `selected` is true, a check icon is shown in the end slot by default (`Check` from Lucide). Override it with `selectedIcon`, or pass `null` to hide it. Providing the `#end` slot replaces the selected icon.
 
 ```vue
-<ListItem interactive selected primary="Inbox" />
+<ListItem selected interactive primary="Inbox" />
 
-<ListItem interactive selected primary="Starred" :selected-icon="Star" />
+<ListItem selected interactive primary="Starred" :selected-icon="Star" />
 
-<ListItem interactive selected primary="Hidden check" :selected-icon="null" />
+<ListItem selected interactive :selected-icon="null" primary="Hidden check" />
 ```
 
 ### Disabled and divider
 
 ```vue
-<ListItem primary="Available action" interactive />
-<ListItem primary="Disabled action" interactive disabled />
-<ListItem primary="With divider" divider />
+<ListItem interactive primary="Available action" />
+<ListItem disabled interactive primary="Disabled action" />
+<ListItem divider primary="With divider" />
 ```
 
 ### customProps

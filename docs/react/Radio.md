@@ -44,8 +44,8 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 
 <Radio
   error
-  name="error"
   value="err"
+  name="error"
   mainLabel="Invalid option"
   errorMessage="Please select a valid option."
 />

@@ -19,15 +19,15 @@ import { Progress } from "@bridge-ui/vue/Components/Progress";
 ### Determinate
 
 ```vue
-<Progress variant="determinate" :value="40" aria-label="Export data" />
+<Progress :value="40" variant="determinate" aria-label="Export data" />
 ```
 
 ### Buffer
 
 ```vue
 <Progress
-  variant="buffer"
   :value="30"
+  variant="buffer"
   :value-buffer="60"
   aria-label="Loading…"
 />
@@ -42,7 +42,7 @@ import { Progress } from "@bridge-ui/vue/Components/Progress";
 ### Color and size
 
 ```vue
-<Progress color="success" size="lg" aria-label="Saving…" />
+<Progress size="lg" color="success" aria-label="Saving…" />
 ```
 
 ## Props

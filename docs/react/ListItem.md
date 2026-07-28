@@ -20,8 +20,8 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
 
 <ListItem
   interactive
-  primary="Settings"
   onClick={() => {}}
+  primary="Settings"
 />
 ```
 
@@ -44,19 +44,19 @@ import { ListItem } from "@bridge-ui/react/Components/ListItem";
 When `selected` is true, a check icon is shown in the end slot by default (`Check` from Lucide). Override it with `selectedIcon`, or pass `null` to hide it. Providing `slots.end` replaces the selected icon.
 
 ```tsx
-<ListItem interactive selected primary="Inbox" />
+<ListItem selected interactive primary="Inbox" />
 
-<ListItem interactive selected primary="Starred" selectedIcon={Star} />
+<ListItem selected interactive primary="Starred" selectedIcon={Star} />
 
-<ListItem interactive selected primary="Hidden check" selectedIcon={null} />
+<ListItem selected interactive selectedIcon={null} primary="Hidden check" />
 ```
 
 ### Disabled and divider
 
 ```tsx
-<ListItem primary="Available action" interactive />
-<ListItem primary="Disabled action" interactive disabled />
-<ListItem primary="With divider" divider />
+<ListItem interactive primary="Available action" />
+<ListItem disabled interactive primary="Disabled action" />
+<ListItem divider primary="With divider" />
 ```
 
 ### customProps

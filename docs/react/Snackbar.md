@@ -27,8 +27,8 @@ import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 
 ```tsx
 <Snackbar
-  show={open}
   progressbar
+  show={open}
   duration={3000}
   title="Auto dismiss"
   onShowChange={setOpen}

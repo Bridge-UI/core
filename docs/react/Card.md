@@ -168,7 +168,7 @@ import { Card } from "@bridge-ui/react/Components/Card";
       </Button>
     ),
     footer: (
-      <Button size="sm" variant="flat" color="error">
+      <Button size="sm" color="error" variant="flat">
           Delete
         </Button>
 
@@ -201,15 +201,15 @@ import { Card } from "@bridge-ui/react/Components/Card";
 ```tsx
 <Card
   title="Styled parts"
+  slots={{
+    footer: <span className="text-sm">Custom footer classes</span>,
+  }}
   classes={{
     footer: "bg-secondary-50",
     body: "text-secondary-600",
     root: "ring-2 ring-primary-200",
     title: "text-xl font-bold tracking-tight",
     header: "bg-primary-50 dark:bg-primary-950/20",
-  }}
-  slots={{
-    footer: <span className="text-sm">Custom footer classes</span>,
   }}
 >
   Body text with custom classes applied.
@@ -221,15 +221,15 @@ import { Card } from "@bridge-ui/react/Components/Card";
 ```tsx
 <Card
   title="Forwarded part attributes"
+  slots={{
+    footer: <span>Inspect DOM for data attributes on each part.</span>,
+  }}
   customProps={{
     root: { id: "card-root" },
     footer: { id: "card-footer" },
     title: { id: "card-demo-title" },
     header: { "aria-label": "Card header" },
     body: { role: "region", "aria-labelledby": "card-demo-title" },
-  }}
-  slots={{
-    footer: <span>Inspect DOM for data attributes on each part.</span>,
   }}
 >
   Card body with forwarded attributes on each part.
@@ -270,7 +270,7 @@ import { Card } from "@bridge-ui/react/Components/Card";
       </Button>
     ),
     footer: (
-      <Button size="sm" full>
+      <Button full size="sm">
         Continue
       </Button>
     ),

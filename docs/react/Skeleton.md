@@ -15,9 +15,9 @@ import { Skeleton } from "@bridge-ui/react/Components/Skeleton";
 ```tsx
 <Skeleton className="h-4 w-32" />
 
-<Skeleton className="h-10 w-10" rounded="full" />
+<Skeleton rounded="full" className="h-10 w-10" />
 
-<Skeleton className="h-24 w-full" rounded="lg" />
+<Skeleton rounded="lg" className="h-24 w-full" />
 ```
 
 ### Custom classes

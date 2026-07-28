@@ -13,7 +13,7 @@ import { Label } from "@bridge-ui/react/Components/Label";
 ### Usage
 
 ```tsx
-<Label htmlFor="email" required>
+<Label required htmlFor="email">
   Email
 </Label>
 ```

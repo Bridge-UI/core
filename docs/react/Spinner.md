@@ -19,7 +19,7 @@ import { Spinner } from "@bridge-ui/react/Components/Spinner";
 ### Determinate
 
 ```tsx
-<Spinner variant="determinate" value={40} aria-label="Export data" />
+<Spinner value={40} variant="determinate" aria-label="Export data" />
 ```
 
 ### With track
@@ -37,7 +37,7 @@ import { Spinner } from "@bridge-ui/react/Components/Spinner";
 ### Color and size
 
 ```tsx
-<Spinner color="success" size="lg" aria-label="Saving…" />
+<Spinner size="lg" color="success" aria-label="Saving…" />
 ```
 
 ## Props

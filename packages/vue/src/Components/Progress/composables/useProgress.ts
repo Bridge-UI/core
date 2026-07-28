@@ -165,14 +165,12 @@ export function useProgress(
     return mergePartBind(
       customProps.value?.track,
       {},
-      {
-        class: cn({
-          "absolute inset-0": true,
-          [colorPalette.value?.track ?? ""]: true,
-          [roundedClass.value ?? ""]: true,
-          [mergedClasses.value.track ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute inset-0": true,
+        [colorPalette.value?.track ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        [mergedClasses.value.track ?? ""]: true,
+      }),
     );
   });
 
@@ -186,14 +184,12 @@ export function useProgress(
       {
         style: { width: `${clampedBuffer.value}%` },
       },
-      {
-        class: cn({
-          "absolute top-0 left-0 h-full transition-[width] duration-200 ease-linear": true,
-          [colorPalette.value?.buffer ?? ""]: true,
-          [roundedClass.value ?? ""]: true,
-          [mergedClasses.value.buffer ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute top-0 left-0 h-full transition-[width] duration-200 ease-linear": true,
+        [colorPalette.value?.buffer ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        [mergedClasses.value.buffer ?? ""]: true,
+      }),
     );
   });
 
@@ -201,16 +197,14 @@ export function useProgress(
     return mergePartBind(
       customProps.value?.bar,
       isDeterminate.value ? { style: { width: `${clampedValue.value}%` } } : {},
-      {
-        class: cn({
-          "absolute top-0 left-0 h-full": true,
-          "transition-[width] duration-200 ease-linear": isDeterminate.value,
-          [variantClass.value ?? ""]: isAnimated.value,
-          [colorPalette.value?.bar ?? ""]: true,
-          [roundedClass.value ?? ""]: true,
-          [mergedClasses.value.bar ?? ""]: true,
-        }),
-      },
+      cn({
+        "absolute top-0 left-0 h-full": true,
+        "transition-[width] duration-200 ease-linear": isDeterminate.value,
+        [variantClass.value ?? ""]: isAnimated.value,
+        [colorPalette.value?.bar ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
+        [mergedClasses.value.bar ?? ""]: true,
+      }),
     );
   });
 

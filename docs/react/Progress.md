@@ -19,13 +19,13 @@ import { Progress } from "@bridge-ui/react/Components/Progress";
 ### Determinate
 
 ```tsx
-<Progress variant="determinate" value={40} aria-label="Export data" />
+<Progress value={40} variant="determinate" aria-label="Export data" />
 ```
 
 ### Buffer
 
 ```tsx
-<Progress variant="buffer" value={30} valueBuffer={60} aria-label="Loading…" />
+<Progress value={30} valueBuffer={60} variant="buffer" aria-label="Loading…" />
 ```
 
 ### Query
@@ -37,7 +37,7 @@ import { Progress } from "@bridge-ui/react/Components/Progress";
 ### Color and size
 
 ```tsx
-<Progress color="success" size="lg" aria-label="Saving…" />
+<Progress size="lg" color="success" aria-label="Saving…" />
 ```
 
 ## Props

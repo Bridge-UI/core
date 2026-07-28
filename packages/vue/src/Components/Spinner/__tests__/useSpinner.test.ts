@@ -88,10 +88,10 @@ test("it should expose trackBind only when enableTrack is true", () => {
   expect(withTrack.enableTrack.value).toBe(true);
 });
 
-test("it should include rotate animation class on svgBind", () => {
-  const { svgBind } = mountUseSpinner();
+test("it should include rotate animation class on rootBind", () => {
+  const { rootBind } = mountUseSpinner();
 
-  expect(svgBind.value.class).toContain("animate-bridge-spinner-rotate");
+  expect(rootBind.value.class).toContain("animate-bridge-spinner-rotate");
 });
 
 test("it should omit dash animation when disableShrink is true", () => {
@@ -110,6 +110,12 @@ test("it should merge class into rootBind", () => {
   const { rootBind } = mountUseSpinner({ class: "text-red-500" });
 
   expect(rootBind.value.class).toContain("text-red-500");
+});
+
+test("it should expose stroke-width on circleBind from thickness", () => {
+  const { circleBind } = mountUseSpinner({ thickness: 5 });
+
+  expect(circleBind.value["stroke-width"]).toBe(5);
 });
 
 test("it should apply determinate stroke dash style", () => {

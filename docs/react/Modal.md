@@ -35,14 +35,14 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
 ### Nested modals
 
 ```tsx
-<Modal show={outerOpen} onShowChange={setOuterOpen} size="lg">
+<Modal size="lg" show={outerOpen} onShowChange={setOuterOpen}>
   <ModalCard title="Outer modal" onClose={() => setOuterOpen(false)}>
     <Button size="sm" onClick={() => setInnerOpen(true)}>
       Open nested modal
     </Button>
   </ModalCard>
 
-  <Modal show={innerOpen} onShowChange={setInnerOpen} size="sm">
+  <Modal size="sm" show={innerOpen} onShowChange={setInnerOpen}>
     <ModalCard title="Nested confirmation" onClose={() => setInnerOpen(false)}>
       Press Escape to close only this layer.
     </ModalCard>
