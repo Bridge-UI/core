@@ -31,7 +31,7 @@ test("it should apply indeterminate rotate animation", () => {
     attrs: { "aria-label": "Loading…" },
   });
 
-  cy.get('[role="progressbar"] svg').should(
+  cy.get('[role="progressbar"]').should(
     "have.class",
     "animate-bridge-spinner-rotate",
   );

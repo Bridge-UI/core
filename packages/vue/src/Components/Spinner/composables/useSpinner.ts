@@ -141,8 +141,10 @@ export function useSpinner(
           }
         : {}),
       class: cn({
-        "inline-flex": true,
+        "inline-block": true,
+        "origin-center": isIndeterminate.value,
         [sizeClass.value ?? ""]: true,
+        [variantClass.value ?? ""]: isIndeterminate.value,
         [mergedClasses.value.root ?? ""]: true,
       }),
     });
@@ -154,13 +156,11 @@ export function useSpinner(
       {
         viewBox: `0 0 ${SPINNER_VIEWBOX_SIZE} ${SPINNER_VIEWBOX_SIZE}`,
       },
-      {
-        class: cn({
-          "size-full": true,
-          [variantClass.value ?? ""]: isIndeterminate.value,
-          [mergedClasses.value.svg ?? ""]: true,
-        }),
-      },
+      cn({
+        // Keeps the progress centered while the root rotates.
+        "block size-full": true,
+        [mergedClasses.value.svg ?? ""]: true,
+      }),
     );
   });
 
@@ -178,12 +178,10 @@ export function useSpinner(
         r: geometry.value.radius,
         strokeWidth: thickness.value,
       },
-      {
-        class: cn({
-          [colorPalette.value?.track ?? ""]: true,
-          [mergedClasses.value.track ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette.value?.track ?? ""]: true,
+        [mergedClasses.value.track ?? ""]: true,
+      }),
     );
   });
 
@@ -200,13 +198,18 @@ export function useSpinner(
         }
       : {};
 
-    const indeterminateStyle =
-      isIndeterminate.value && disableShrink.value
+    const indeterminateStyle = isIndeterminate.value
+      ? disableShrink.value
         ? {
             strokeDashoffset: 0,
             strokeDasharray: `${circumference * 0.8}px, ${circumference}px`,
           }
-        : {};
+        : {
+            // Stable default until the dash keyframes kick in.
+            strokeDashoffset: 0,
+            strokeDasharray: "80px, 200px",
+          }
+      : {};
 
     return mergePartBind(
       customProps.value?.circle,
@@ -222,14 +225,12 @@ export function useSpinner(
           ...indeterminateStyle,
         },
       },
-      {
-        class: cn({
-          [colorPalette.value?.circle ?? ""]: true,
-          "animate-bridge-spinner-dash":
-            isIndeterminate.value && !disableShrink.value,
-          [mergedClasses.value.circle ?? ""]: true,
-        }),
-      },
+      cn({
+        [colorPalette.value?.circle ?? ""]: true,
+        "animate-bridge-spinner-dash":
+          isIndeterminate.value && !disableShrink.value,
+        [mergedClasses.value.circle ?? ""]: true,
+      }),
     );
   });
 

@@ -88,10 +88,10 @@ test("it should expose trackBind only when enableTrack is true", () => {
   expect(withTrack.enableTrack.value).toBe(true);
 });
 
-test("it should include rotate animation class on svgBind", () => {
-  const { svgBind } = mountUseSpinner();
+test("it should include rotate animation class on rootBind", () => {
+  const { rootBind } = mountUseSpinner();
 
-  expect(svgBind.value.class).toContain("animate-bridge-spinner-rotate");
+  expect(rootBind.value.class).toContain("animate-bridge-spinner-rotate");
 });
 
 test("it should omit dash animation when disableShrink is true", () => {

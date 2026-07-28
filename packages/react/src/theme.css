@@ -151,8 +151,9 @@
   }
 
   100% {
-    stroke-dasharray: 100px, 200px;
-    stroke-dashoffset: -125px;
+    /* Match 0% arc length so the loop does not snap/jitter. */
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: -126px;
   }
 }
 

@@ -78,10 +78,10 @@ test("it should expose trackBind only when enableTrack is true", () => {
   expect(withTrack.result.current.enableTrack).toBe(true);
 });
 
-test("it should include rotate animation class on svgBind", () => {
+test("it should include rotate animation class on rootBind", () => {
   const { result } = renderUseSpinner();
 
-  expect(result.current.svgBind.className).toContain(
+  expect(result.current.rootBind.className).toContain(
     "animate-bridge-spinner-rotate",
   );
 });

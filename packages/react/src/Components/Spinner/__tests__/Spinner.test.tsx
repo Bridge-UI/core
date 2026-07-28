@@ -33,12 +33,14 @@ test("it should set aria-valuenow for determinate variant", () => {
   expect(root.getAttribute("aria-valuemax")).toBe("100");
 });
 
-test("it should apply rotate animation on svg for indeterminate", () => {
-  const { container } = render(<Spinner aria-label="Loading…" />);
+test("it should apply rotate animation on root for indeterminate", () => {
+  render(<Spinner aria-label="Loading…" />);
 
-  const svg = container.querySelector("svg");
-
-  expect(svg?.classList.contains("animate-bridge-spinner-rotate")).toBe(true);
+  expect(
+    screen
+      .getByRole("progressbar")
+      .classList.contains("animate-bridge-spinner-rotate"),
+  ).toBe(true);
 });
 
 test("it should apply dash animation on circle by default", () => {

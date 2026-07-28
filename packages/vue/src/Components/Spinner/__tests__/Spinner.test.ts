@@ -36,12 +36,12 @@ test("it should set aria-valuenow for determinate variant", () => {
   expect(root.attributes("aria-valuemax")).toBe("100");
 });
 
-test("it should apply rotate animation on svg for indeterminate", () => {
+test("it should apply rotate animation on root for indeterminate", () => {
   const wrapper = mount(Spinner, {
     attrs: { "aria-label": "Loading…" },
   });
 
-  expect(wrapper.find("svg").classes()).toContain(
+  expect(wrapper.find('[role="progressbar"]').classes()).toContain(
     "animate-bridge-spinner-rotate",
   );
 });
