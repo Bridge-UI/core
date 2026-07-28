@@ -17,7 +17,7 @@ import { Avatar } from "@bridge-ui/vue/Components/Avatar";
 
 <Avatar :icon="User" color="primary" />
 
-<Avatar :src="avatarSrc" alt="Jane Doe" />
+<Avatar alt="Jane Doe" :src="avatarSrc" />
 ```
 
 ### Classes

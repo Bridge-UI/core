@@ -13,7 +13,7 @@ import { Label } from "@bridge-ui/vue/Components/Label";
 ### Usage
 
 ```vue
-<Label for="email" required>Email</Label>
+<Label required for="email">Email</Label>
 ```
 
 ## Props

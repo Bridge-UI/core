@@ -63,9 +63,9 @@ Selected rows show a check icon by default. Customize it with `selectedIcon` on 
 
 ```tsx
 <List>
-  <ListItem interactive selected primary="Inbox" />
-  <ListItem interactive selected primary="Starred" selectedIcon={Star} />
-  <ListItem interactive selected primary="No icon" selectedIcon={null} />
+  <ListItem selected interactive primary="Inbox" />
+  <ListItem selected interactive primary="Starred" selectedIcon={Star} />
+  <ListItem selected interactive primary="No icon" selectedIcon={null} />
 </List>
 ```
 

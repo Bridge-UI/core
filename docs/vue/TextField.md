@@ -21,7 +21,7 @@ import { TextField } from "@bridge-ui/vue/Components/TextField";
   description="This is how your name will appear."
 />
 
-<TextField label="Email" error error-message="Enter a valid email address." />
+<TextField error label="Email" error-message="Enter a valid email address." />
 ```
 
 ### Icons and adornments

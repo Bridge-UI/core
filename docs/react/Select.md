@@ -114,7 +114,7 @@ Pass `ListSection` / `ListItem` as children to build the dropdown list manually.
 
 ```tsx
 <Select label="Status" value={status} onChange={setStatus}>
-  <ListSection title="Workflow" sticky />
+  <ListSection sticky title="Workflow" />
   <ListItem value="open" primary="Open" />
   <ListItem value="closed" primary="Closed" />
 </Select>

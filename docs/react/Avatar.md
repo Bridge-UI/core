@@ -17,7 +17,7 @@ import { Avatar } from "@bridge-ui/react/Components/Avatar";
 
 <Avatar icon={User} color="primary" />
 
-<Avatar src="/avatar.jpg" alt="Jane Doe" />
+<Avatar alt="Jane Doe" src="/avatar.jpg" />
 ```
 
 ### Classes
