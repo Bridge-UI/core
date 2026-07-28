@@ -84,6 +84,13 @@ import type {
   ModalTransitionLayer,
 } from "@/Components/Modal";
 import type {
+  ProgressColor,
+  ProgressColorItem,
+  ProgressRounded,
+  ProgressSize,
+  ProgressVariant,
+} from "@/Components/Progress";
+import type {
   RadioColor,
   RadioColorItem,
   RadioInvalidated,
@@ -101,6 +108,12 @@ import type {
   SnackbarRoundedItem,
   SnackbarTransition,
 } from "@/Components/Snackbar";
+import type {
+  SpinnerColor,
+  SpinnerColorItem,
+  SpinnerSize,
+  SpinnerVariant,
+} from "@/Components/Spinner";
 import type {
   SwitchColor,
   SwitchColorItem,
@@ -139,10 +152,12 @@ export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
+export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SkeletonConfigOverrides {}
 export interface SnackbarConfigOverrides {}
+export interface SpinnerConfigOverrides {}
 export interface FormControlConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface SwitchConfigOverrides {}
@@ -437,6 +452,22 @@ export interface DividerConfigBase {
   }>;
 }
 
+export interface ProgressConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, ProgressColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    color: keyof ProgressColor;
+    rounded: keyof ProgressRounded;
+    size: keyof ProgressSize;
+    variant: keyof ProgressVariant;
+  }>;
+}
+
 export interface SkeletonConfigBase {
   classes: object;
   customProps: Partial<{
@@ -444,6 +475,23 @@ export interface SkeletonConfigBase {
   }>;
   defaultProps: Partial<{
     rounded: keyof SkeletonRounded;
+  }>;
+}
+
+export interface SpinnerConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, SpinnerColorItem>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
+  defaultProps: Partial<{
+    color: keyof SpinnerColor;
+    disableShrink: boolean;
+    enableTrack: boolean;
+    size: keyof SpinnerSize;
+    thickness: number;
+    variant: keyof SpinnerVariant;
   }>;
 }
 
@@ -503,10 +551,12 @@ export type BridgeUIComponentsConfig = Partial<{
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;
+  Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   Skeleton: Partial<Overwrite<SkeletonConfigBase, SkeletonConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
+  Spinner: Partial<Overwrite<SpinnerConfigBase, SpinnerConfigOverrides>>;
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
 }>;

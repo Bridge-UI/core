@@ -37,7 +37,7 @@ import { Menu } from "@bridge-ui/vue/Components/Menu";
 ### Persistent
 
 ```vue
-<Menu v-model="open" persistent>
+<Menu persistent v-model="open">
   <template #trigger>
     <Button v-on:click="open = true">Open persistent</Button>
   </template>

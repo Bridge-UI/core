@@ -15,7 +15,7 @@ import { Link } from "@bridge-ui/vue/Components/Link";
 ```vue
 <Link href="/dashboard">Dashboard</Link>
 
-<Link href="https://example.com" color="primary" underline="hover">
+<Link color="primary" underline="hover" href="https://example.com">
   External link
 </Link>
 
@@ -27,11 +27,11 @@ import { Link } from "@bridge-ui/vue/Components/Link";
 ### States
 
 ```vue
-<Link href="/button" disabled>
+<Link disabled href="/button">
   Disabled
 </Link>
 
-<Link href="https://example.com" external>
+<Link external href="https://example.com">
   External
 </Link>
 ```

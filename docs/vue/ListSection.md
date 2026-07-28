@@ -33,9 +33,9 @@ With the default `as="li"`, sticky styles apply on the section root (with an opa
 ```vue
 <div class="max-h-48 overflow-y-auto">
   <List>
-    <ListSection title="Section A" sticky />
+    <ListSection sticky title="Section A" />
     <ListItem primary="Item A1" />
-    <ListSection title="Section B" sticky />
+    <ListSection sticky title="Section B" />
     <ListItem primary="Item B1" />
   </List>
 </div>

@@ -29,8 +29,8 @@ import { Menu } from "@bridge-ui/react/Components/Menu";
 ```tsx
 <Menu
   show={open}
-  placement="bottom-end"
   onShowChange={setOpen}
+  placement="bottom-end"
   slots={{
     trigger: <Button onClick={() => setOpen(true)}>Open menu</Button>,
   }}

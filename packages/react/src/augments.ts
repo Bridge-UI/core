@@ -22,10 +22,12 @@ import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
 import type { NumberFieldClasses } from "@/Components/NumberField";
 import type { PasswordFieldClasses } from "@/Components/PasswordField";
+import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { SkeletonClasses, SkeletonProps } from "@/Components/Skeleton";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
+import type { SpinnerClasses, SpinnerProps } from "@/Components/Spinner";
 import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 
@@ -142,6 +144,13 @@ declare module "@bridge-ui/core" {
     classes: PasswordFieldClasses;
   }
 
+  interface ProgressConfigOverrides {
+    classes: ProgressClasses;
+    defaultProps: Partial<
+      Pick<ProgressProps, "size" | "color" | "rounded" | "variant">
+    >;
+  }
+
   interface RadioConfigOverrides {
     classes: RadioClasses;
     defaultProps: Partial<Pick<RadioProps, "size" | "color" | "rounded">>;
@@ -175,6 +184,21 @@ declare module "@bridge-ui/core" {
   interface SkeletonConfigOverrides {
     classes: SkeletonClasses;
     defaultProps: Partial<Pick<SkeletonProps, "rounded">>;
+  }
+
+  interface SpinnerConfigOverrides {
+    classes: SpinnerClasses;
+    defaultProps: Partial<
+      Pick<
+        SpinnerProps,
+        | "size"
+        | "color"
+        | "variant"
+        | "thickness"
+        | "enableTrack"
+        | "disableShrink"
+      >
+    >;
   }
 
   interface SwitchConfigOverrides {

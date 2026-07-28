@@ -214,6 +214,17 @@ export type {
   PasswordFieldProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField";
+export { Progress, useProgress } from "@/Components/Progress";
+export type {
+  ProgressClasses,
+  ProgressColorOverrides,
+  ProgressCustomProps,
+  ProgressOwnProps,
+  ProgressProps,
+  ProgressRoundedOverrides,
+  ProgressSizeOverrides,
+  ProgressVariantOverrides,
+} from "@/Components/Progress";
 export { Radio, useRadio } from "@/Components/Radio";
 export type {
   RadioClasses,
@@ -256,6 +267,16 @@ export type {
   SnackbarSlots,
   SnackbarTransitionOverrides,
 } from "@/Components/Snackbar";
+export { Spinner, useSpinner } from "@/Components/Spinner";
+export type {
+  SpinnerClasses,
+  SpinnerColorOverrides,
+  SpinnerCustomProps,
+  SpinnerOwnProps,
+  SpinnerProps,
+  SpinnerSizeOverrides,
+  SpinnerVariantOverrides,
+} from "@/Components/Spinner";
 export { Switch, useSwitch } from "@/Components/Switch";
 export type {
   SwitchClasses,

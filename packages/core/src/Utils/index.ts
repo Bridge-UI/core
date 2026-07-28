@@ -217,6 +217,12 @@ export {
   type PositionStrategy,
 } from "@/Utils/position";
 export {
+  DEFAULT_SPINNER_THICKNESS,
+  getSpinnerCircleGeometry,
+  SPINNER_VIEWBOX_SIZE,
+} from "@/Utils/progress";
+export type { SpinnerCircleGeometry } from "@/Utils/progress";
+export {
   createSelectAsyncSearch,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,

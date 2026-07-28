@@ -17,7 +17,7 @@ import { Card } from "@bridge-ui/vue/Components/Card";
   Card body content goes here.
 </Card>
 
-<Card title="Outlined card" variant="outlined">
+<Card variant="outlined" title="Outlined card">
   Outlined surface with a visible border.
 </Card>
 
@@ -84,13 +84,13 @@ import { Card } from "@bridge-ui/vue/Components/Card";
 <Card title="Card with actions">
   <template #action>
     <Button
-        size="sm"
-        variant="flat"
-        density="mini"
-        aria-label="More options"
-      >
-        <MoreHorizontal class="size-4" />
-      </Button>
+      size="sm"
+      variant="flat"
+      density="mini"
+      aria-label="More options"
+    >
+      <MoreHorizontal class="size-4" />
+    </Button>
   </template>
 
   Use the action slot for header controls.
@@ -138,7 +138,7 @@ import { Card } from "@bridge-ui/vue/Components/Card";
 ### Full composition
 
 ```vue
-<Card rounded="2xl" shadow="lg" title="Project settings">
+<Card shadow="lg" rounded="2xl" title="Project settings">
   <template #action>
     <Button size="sm" variant="outline">Edit</Button>
   </template>
@@ -146,7 +146,7 @@ import { Card } from "@bridge-ui/vue/Components/Card";
   Title, action, body, and footer together with elevated styling.
 
   <template #footer>
-    <Button size="sm" variant="flat" color="error">Delete</Button>
+    <Button size="sm" color="error" variant="flat">Delete</Button>
 
       <Button size="sm" color="primary">Save changes</Button>
   </template>
@@ -243,7 +243,7 @@ import { Card } from "@bridge-ui/vue/Components/Card";
   </template>
 
   <template #footer>
-    <Button size="sm" full>Continue</Button>
+    <Button full size="sm">Continue</Button>
   </template>
 </Card>
 ```

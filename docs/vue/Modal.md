@@ -25,7 +25,7 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 ### Persistent
 
 ```vue
-<Modal v-model="open" persistent>
+<Modal persistent v-model="open">
   <ModalCard title="Persistent modal" :on-close="() => (open = false)">
     Clicking the backdrop or pressing Escape has no effect.
   </ModalCard>
@@ -35,12 +35,12 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 ### Nested modals
 
 ```vue
-<Modal v-model="outerOpen" size="lg">
+<Modal size="lg" v-model="outerOpen">
   <ModalCard title="Outer modal" :on-close="() => (outerOpen = false)">
     <Button size="sm" v-on:click="innerOpen = true">Open nested modal</Button>
   </ModalCard>
 
-  <Modal v-model="innerOpen" size="sm">
+  <Modal size="sm" v-model="innerOpen">
     <ModalCard title="Nested confirmation" :on-close="() => (innerOpen = false)">
       Press Escape to close only this layer.
     </ModalCard>
@@ -63,7 +63,7 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
     Large modal with Card title, body, and footer slots.
 
     <template #footer>
-      <Button size="sm" variant="flat" color="error" v-on:click="open = false">
+      <Button size="sm" color="error" variant="flat" v-on:click="open = false">
         Discard
       </Button>
 

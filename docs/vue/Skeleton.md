@@ -15,9 +15,9 @@ import { Skeleton } from "@bridge-ui/vue/Components/Skeleton";
 ```vue
 <Skeleton class="h-4 w-32" />
 
-<Skeleton class="h-10 w-10" rounded="full" />
+<Skeleton rounded="full" class="h-10 w-10" />
 
-<Skeleton class="h-24 w-full" rounded="lg" />
+<Skeleton rounded="lg" class="h-24 w-full" />
 ```
 
 ### Custom classes

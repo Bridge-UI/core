@@ -23,7 +23,7 @@ export interface ListboxClasses {
   check?: string;
 
   /**
-   * Classes merged onto the indeterminate loading progress bar.
+   * Classes forwarded to the loading `Progress` bar.
    */
   loading?: string;
 
@@ -50,7 +50,7 @@ export interface ListboxCustomProps {
   content?: HTMLAttributes;
 
   /**
-   * Props forwarded to the indeterminate loading progress bar.
+   * Props forwarded to the loading `Progress` bar.
    */
   loading?: HTMLAttributes;
 

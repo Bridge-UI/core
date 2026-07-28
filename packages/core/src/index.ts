@@ -86,6 +86,13 @@ export type {
   ModalTransitionLayer,
 } from "@/Components/Modal";
 export type {
+  ProgressColor,
+  ProgressColorItem,
+  ProgressRounded,
+  ProgressSize,
+  ProgressVariant,
+} from "@/Components/Progress";
+export type {
   RadioColor,
   RadioColorItem,
   RadioRounded,
@@ -109,6 +116,12 @@ export type {
   SnackbarRoundedItem,
   SnackbarTransition,
 } from "@/Components/Snackbar";
+export type {
+  SpinnerColor,
+  SpinnerColorItem,
+  SpinnerSize,
+  SpinnerVariant,
+} from "@/Components/Spinner";
 export type {
   SwitchColor,
   SwitchColorItem,
@@ -145,9 +158,11 @@ export type {
   ModalConfigOverrides,
   NumberFieldConfigOverrides,
   PasswordFieldConfigOverrides,
+  ProgressConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
   SkeletonConfigOverrides,
+  SpinnerConfigOverrides,
   SwitchConfigOverrides,
   TextareaConfigOverrides,
 } from "@/Config";
@@ -174,7 +189,9 @@ export type { LayerId } from "@/Layer";
 export {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
+  DEFAULT_SPINNER_THICKNESS,
   LAYER_STACK_BASE_Z_INDEX,
+  SPINNER_VIEWBOX_SIZE,
   acquireLayerStackOrder,
   adjustAutosizeTextareaHeight,
   claimOpenMenu,
@@ -195,6 +212,7 @@ export {
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   getSnackbarTransitionClass,
+  getSpinnerCircleGeometry,
   hasDocument,
   hasModalTransition,
   hasSnackbarTransition,
@@ -253,5 +271,6 @@ export type {
   SelectOptionKeys,
   SelectOptionLike,
   SelectValue,
+  SpinnerCircleGeometry,
   UnionProps,
 } from "@/Utils";

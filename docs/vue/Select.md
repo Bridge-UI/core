@@ -102,7 +102,7 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 
 ```vue
 <Select label="Status" v-model="status">
-  <ListSection title="Workflow" sticky />
+  <ListSection sticky title="Workflow" />
   <ListItem value="open" primary="Open" />
   <ListItem value="closed" primary="Closed" />
 </Select>

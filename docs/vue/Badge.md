@@ -17,7 +17,7 @@ import { Badge } from "@bridge-ui/vue/Components/Badge";
 
 <Badge density="mini">3</Badge>
 
-<Badge color="success" variant="flat">
+<Badge variant="flat" color="success">
   Active
 </Badge>
 ```
