@@ -165,7 +165,9 @@ export function useSnackbar(
     props: () => split.value.componentProps,
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, ["onShowChange"]);
@@ -252,7 +254,9 @@ export function useSnackbar(
     );
   });
 
-  const isPortaled = computed(() => merged.value.teleportTo !== false);
+  const isPortaled = computed(() => {
+    return merged.value.teleportTo !== false;
+  });
 
   const positionClass = computed(() => {
     if (!isPortaled.value) {
@@ -440,7 +444,7 @@ export function useSnackbar(
   );
 
   watch(
-    [showProgress, durationMs],
+    [durationMs, showProgress],
     ([visible]) => {
       if (!visible) {
         progressActive.value = false;

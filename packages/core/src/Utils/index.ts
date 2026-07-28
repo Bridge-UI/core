@@ -192,6 +192,14 @@ export type {
   BreakpointObserverOptions,
   BreakpointSnapshot,
 } from "@/Utils/breakpoint";
+export {
+  countDrawerTransitionLayers,
+  DRAWER_LEAVE_FALLBACK_MS,
+  getDrawerOverlayTransitionClass,
+  getDrawerPanelTransitionClass,
+  hasDrawerTransition,
+  resolveEffectiveDrawerTransition,
+} from "@/Utils/drawer";
 export { hasDocument, hasWindow } from "@/Utils/env";
 export {
   createFocusable,
@@ -277,6 +285,8 @@ export {
   hasSnackbarTransition,
   usesTrailingSnackbarActions,
 } from "@/Utils/snackbar";
+export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Utils/tabs";
+export type { TabsActivation } from "@/Utils/tabs";
 export type {
   ClassPropKey,
   LibDefaultsShape,

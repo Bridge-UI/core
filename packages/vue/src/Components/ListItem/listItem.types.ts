@@ -93,7 +93,7 @@ export interface ListItemCustomProps {
 }
 
 /**
- * List row (MUI `ListItem` / `ListItemButton`-like).
+ * List row.
  */
 export interface ListItemOwnProps {
   /**

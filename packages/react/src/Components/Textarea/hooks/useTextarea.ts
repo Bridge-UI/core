@@ -150,7 +150,7 @@ export function useTextarea(props: TextareaProps) {
 
       onInput?.(event);
     },
-    [adjustHeight, onInput],
+    [onInput, adjustHeight],
   );
 
   const textareaRef = useCallback(

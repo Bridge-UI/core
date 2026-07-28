@@ -29,7 +29,7 @@ export interface ListSectionCustomProps {
 }
 
 /**
- * Section heading inside a `List` (MUI `ListSubheader`-like).
+ * Section heading inside a `List`.
  */
 export interface ListSectionOwnProps {
   /**

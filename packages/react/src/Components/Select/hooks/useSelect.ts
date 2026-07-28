@@ -559,7 +559,7 @@ export function useSelect(
         asyncSearchRef.current?.searchDebounced(target.value);
       }
     },
-    [open, onSearch, openMenu, navigation, isAsync],
+    [open, isAsync, onSearch, openMenu, navigation],
   );
 
   const handleTriggerKeyDown = useCallback(

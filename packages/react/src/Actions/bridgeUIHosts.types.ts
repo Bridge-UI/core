@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 // ** Local Imports
 import type { BridgeDialogHostProps } from "@/Actions/Dialog/bridgeDialog.types";
+import type { BridgeDrawerHostProps } from "@/Actions/Drawer/bridgeDrawer.types";
 import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 
@@ -16,6 +17,11 @@ export type BridgeUIHostsProps = {
    * Props forwarded to {@link BridgeDialogHost}.
    */
   dialog?: Omit<BridgeDialogHostProps, "children">;
+
+  /**
+   * Props forwarded to {@link BridgeDrawerHost}.
+   */
+  drawer?: Omit<BridgeDrawerHostProps, "children">;
 
   /**
    * Props forwarded to {@link BridgeModalHost}.

@@ -85,7 +85,9 @@ export function useProgress(
     props: () => split.value.componentProps,
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -123,7 +125,9 @@ export function useProgress(
     return get(classes, merged.value.variant);
   });
 
-  const isBuffer = computed(() => merged.value.variant === "buffer");
+  const isBuffer = computed(() => {
+    return merged.value.variant === "buffer";
+  });
 
   const isDeterminate = computed(() => {
     return (
@@ -139,8 +143,12 @@ export function useProgress(
     );
   });
 
-  const clampedValue = computed(() => clampProgress(merged.value.value));
-  const clampedBuffer = computed(() => clampProgress(merged.value.valueBuffer));
+  const clampedValue = computed(() => {
+    return clampProgress(merged.value.value);
+  });
+  const clampedBuffer = computed(() => {
+    return clampProgress(merged.value.valueBuffer);
+  });
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {

@@ -69,12 +69,12 @@ export interface MenuCustomProps {
 }
 
 /**
- * Anchored menu panel (MUI `Menu`-like). Control visibility with `show` and `onShowChange`.
- * Anchor with `anchorEl` (MUI style) or put the opener in `slots.trigger`; menu items go in `children`.
+ * Anchored menu panel. Control visibility with `show` and `onShowChange`.
+ * Anchor with `anchorEl` or put the opener in `slots.trigger`; menu items go in `children`.
  */
 export interface MenuOwnProps {
   /**
-   * Element that anchors the menu panel (MUI `anchorEl`). When set, it is used
+   * Element that anchors the menu panel. When set, it is used
    * for positioning and click-away instead of the `trigger` slot wrapper.
    * Prefer this when the opener lives outside the `Menu` or is controlled manually.
    * Not merged into Bridge defaults (DOM nodes must not be deep-merged).

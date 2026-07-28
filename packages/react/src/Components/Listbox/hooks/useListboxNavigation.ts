@@ -116,7 +116,7 @@ export function useListboxNavigation(
         moveListboxHighlight(options, highlightedIndex, delta),
       );
     },
-    [highlightedIndex, options, setHighlightedIndex],
+    [options, highlightedIndex, setHighlightedIndex],
   );
 
   const getHighlightedOption = useCallback(() => {

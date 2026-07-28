@@ -93,7 +93,7 @@ export interface ListItemCustomProps {
 }
 
 /**
- * List row (MUI `ListItem` / `ListItemButton`-like). Set `interactive` for
+ * List row. Set `interactive` for
  * clickable rows; use `role="menuitem"` inside menus or `role="option"` in selects.
  */
 export interface ListItemOwnProps {

@@ -81,6 +81,18 @@ export type {
   DividerOwnProps,
   DividerProps,
 } from "@/Components/Divider";
+export { Drawer, useDrawer } from "@/Components/Drawer";
+export type {
+  DrawerBlurOverrides,
+  DrawerClasses,
+  DrawerCustomProps,
+  DrawerOwnProps,
+  DrawerPlacementOverrides,
+  DrawerProps,
+  DrawerScrollOverrides,
+  DrawerSizeOverrides,
+  DrawerTransitionOverrides,
+} from "@/Components/Drawer";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,
@@ -255,6 +267,47 @@ export type {
   SwitchSizeOverrides,
   SwitchSlots,
 } from "@/Components/Switch";
+export { Tab, useTab } from "@/Components/Tab";
+export type {
+  TabClasses,
+  TabCustomProps,
+  TabOwnProps,
+  TabProps,
+  TabSlots,
+} from "@/Components/Tab";
+export { TabItem, useTabItem } from "@/Components/TabItem";
+export type {
+  TabItemClasses,
+  TabItemOwnProps,
+  TabItemProps,
+} from "@/Components/TabItem";
+export { TabList, useTabList } from "@/Components/TabList";
+export type {
+  TabListClasses,
+  TabListCustomProps,
+  TabListOwnProps,
+  TabListProps,
+} from "@/Components/TabList";
+export { TabPanel, useTabPanel } from "@/Components/TabPanel";
+export type {
+  TabPanelClasses,
+  TabPanelCustomProps,
+  TabPanelOwnProps,
+  TabPanelProps,
+} from "@/Components/TabPanel";
+export { Tabs, useTabs, useTabsContext } from "@/Components/Tabs";
+export type {
+  TabsClasses,
+  TabsColorOverrides,
+  TabsContextValue,
+  TabsCustomProps,
+  TabsItemEntry,
+  TabsOrientationOverrides,
+  TabsOwnProps,
+  TabsProps,
+  TabsSizeOverrides,
+  TabsVariantOverrides,
+} from "@/Components/Tabs";
 export { Textarea, useTextarea } from "@/Components/Textarea";
 export type {
   TextareaClasses,

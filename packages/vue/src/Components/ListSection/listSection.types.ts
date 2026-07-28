@@ -31,7 +31,7 @@ export interface ListSectionCustomProps {
 export type ListSectionLabel = VNode | string | VNode[] | undefined;
 
 /**
- * Section heading inside a `List` (MUI `ListSubheader`-like).
+ * Section heading inside a `List`.
  */
 export interface ListSectionOwnProps {
   /**

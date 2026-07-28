@@ -18,6 +18,20 @@ export type {
   DialogActions,
 } from "@/Actions/Dialog";
 export {
+  BridgeDrawerHost,
+  BridgeDrawerHostMissingError,
+  useDrawerAction,
+} from "@/Actions/Drawer";
+export type {
+  BridgeDrawerApi,
+  BridgeDrawerController,
+  BridgeDrawerEntry,
+  BridgeDrawerHostProps,
+  BridgeDrawerOpenOptions,
+  BridgeDrawerShellProps,
+  BridgeDrawerUpdateOptions,
+} from "@/Actions/Drawer";
+export {
   BridgeModalHost,
   BridgeModalHostMissingError,
   useModalAction,

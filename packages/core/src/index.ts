@@ -48,6 +48,24 @@ export type {
 } from "@/Components/Checkbox";
 export type { ChipSize, ChipSizeItem } from "@/Components/Chip";
 export type { DividerColor, DividerOrientation } from "@/Components/Divider";
+export {
+  blurProps as drawerBlurProps,
+  scrollProps as drawerScrollProps,
+  sizeProps as drawerSizeProps,
+  transitionProps as drawerTransitionProps,
+  placementPanelProps,
+  placementProps,
+} from "@/Components/Drawer";
+export type {
+  DrawerBlur,
+  DrawerPlacement,
+  DrawerScroll,
+  DrawerSize,
+  DrawerSizeItem,
+  DrawerSlidePanel,
+  DrawerTransition,
+  DrawerTransitionLayer,
+} from "@/Components/Drawer";
 export type { FormControlInvalidated } from "@/Components/FormControl";
 export type {
   FormFieldColor,
@@ -129,6 +147,21 @@ export type {
   SwitchSize,
   SwitchSizeItem,
 } from "@/Components/Switch";
+export {
+  colorProps as tabsColorProps,
+  orientationProps as tabsOrientationProps,
+  sizeProps as tabsSizeProps,
+  variantProps as tabsVariantProps,
+} from "@/Components/Tabs";
+export type {
+  TabsColor,
+  TabsColorItem,
+  TabsOrientation,
+  TabsSize,
+  TabsSizeItem,
+  TabsVariant,
+  TabsVariantItem,
+} from "@/Components/Tabs";
 export type { TextareaResize } from "@/Components/Textarea";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
@@ -149,6 +182,7 @@ export type {
   ChipConfigOverrides,
   Direction,
   DividerConfigOverrides,
+  DrawerConfigOverrides,
   FormControlConfigOverrides,
   FormFieldConfigOverrides,
   IconConfigOverrides,
@@ -164,6 +198,11 @@ export type {
   SkeletonConfigOverrides,
   SpinnerConfigOverrides,
   SwitchConfigOverrides,
+  TabConfigOverrides,
+  TabItemConfigOverrides,
+  TabListConfigOverrides,
+  TabPanelConfigOverrides,
+  TabsConfigOverrides,
   TextareaConfigOverrides,
 } from "@/Config";
 export {
@@ -191,6 +230,7 @@ export {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
   DEFAULT_SPINNER_THICKNESS,
+  DRAWER_LEAVE_FALLBACK_MS,
   LAYER_STACK_BASE_Z_INDEX,
   SPINNER_VIEWBOX_SIZE,
   acquireLayerStackOrder,
@@ -199,6 +239,7 @@ export {
   buildBreakpointSnapshot,
   claimOpenMenu,
   cn,
+  countDrawerTransitionLayers,
   countModalTransitionLayers,
   createBreakpointObserver,
   createFocusTrap,
@@ -212,6 +253,9 @@ export {
   fetchSelectAsyncData,
   filterListboxEntries,
   flattenListboxOptions,
+  getAdjacentTabValue,
+  getDrawerOverlayTransitionClass,
+  getDrawerPanelTransitionClass,
   getFocusableElements,
   getLayerStackEntry,
   getLayerStackSnapshot,
@@ -219,7 +263,10 @@ export {
   getModalPanelTransitionClass,
   getSnackbarTransitionClass,
   getSpinnerCircleGeometry,
+  getTabId,
+  getTabPanelId,
   hasDocument,
+  hasDrawerTransition,
   hasModalTransition,
   hasSnackbarTransition,
   hasWindow,
@@ -238,6 +285,7 @@ export {
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
   resolveBreakpoints,
+  resolveEffectiveDrawerTransition,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,
   resolveSelectAsyncDebounce,
@@ -283,5 +331,6 @@ export type {
   SelectOptionLike,
   SelectValue,
   SpinnerCircleGeometry,
+  TabsActivation,
   UnionProps,
 } from "@/Utils";
