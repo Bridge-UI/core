@@ -48,6 +48,14 @@ import type {
 } from "@/Components/Checkbox";
 import type { ChipSize, ChipSizeItem } from "@/Components/Chip";
 import type { DividerColor, DividerOrientation } from "@/Components/Divider";
+import type {
+  DrawerBlur,
+  DrawerPlacement,
+  DrawerSize,
+  DrawerSizeItem,
+  DrawerTransition,
+  DrawerTransitionLayer,
+} from "@/Components/Drawer";
 import type { FormControlInvalidated } from "@/Components/FormControl";
 import type {
   FormFieldColor,
@@ -121,6 +129,15 @@ import type {
   SwitchRounded,
   SwitchSize,
 } from "@/Components/Switch";
+import type {
+  TabsColor,
+  TabsColorItem,
+  TabsOrientation,
+  TabsSize,
+  TabsSizeItem,
+  TabsVariant,
+  TabsVariantItem,
+} from "@/Components/Tabs";
 import type { TextareaResize } from "@/Components/Textarea";
 import type { Overwrite } from "@/Utils/types";
 
@@ -181,6 +198,7 @@ export interface ListItemConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
+export interface DrawerConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
@@ -192,6 +210,11 @@ export interface SpinnerConfigOverrides {}
 export interface FormControlConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface SwitchConfigOverrides {}
+export interface TabsConfigOverrides {}
+export interface TabConfigOverrides {}
+export interface TabListConfigOverrides {}
+export interface TabPanelConfigOverrides {}
+export interface TabItemConfigOverrides {}
 
 export interface AlertConfigBase {
   classes: object;
@@ -422,6 +445,23 @@ export interface ModalConfigBase {
   }>;
 }
 
+export interface DrawerConfigBase {
+  classes: object;
+  customProps: Partial<{
+    blur: Record<string, string>;
+    placement: Record<string, string>;
+    size: Record<string, DrawerSizeItem>;
+    transition: Partial<Record<string, Partial<DrawerTransitionLayer>>>;
+  }>;
+  defaultProps: Partial<{
+    blur: keyof DrawerBlur;
+    placement: keyof DrawerPlacement;
+    size: keyof DrawerSize;
+    teleportTo: false | string;
+    transition: keyof DrawerTransition;
+  }>;
+}
+
 export interface NumberFieldConfigBase {
   classes: object;
 }
@@ -552,6 +592,46 @@ export interface TextareaConfigBase {
   }>;
 }
 
+export interface TabsConfigBase {
+  classes: object;
+  customProps: Partial<{
+    color: Record<string, TabsColorItem>;
+    orientation: Record<string, string>;
+    size: Record<string, TabsSizeItem>;
+    variant: Record<string, TabsVariantItem>;
+  }>;
+  defaultProps: Partial<{
+    activation: "manual" | "automatic";
+    color: keyof TabsColor;
+    keepMounted: boolean;
+    orientation: keyof TabsOrientation;
+    size: keyof TabsSize;
+    variant: keyof TabsVariant;
+  }>;
+}
+
+export interface TabListConfigBase {
+  classes: object;
+}
+
+export interface TabConfigBase {
+  classes: object;
+}
+
+export interface TabPanelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    keepMounted: boolean;
+  }>;
+}
+
+export interface TabItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    keepMounted: boolean;
+  }>;
+}
+
 export type BridgeUIComponentsConfig = Partial<{
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
@@ -561,6 +641,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
+  Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
   FormControl: Partial<
     Overwrite<FormControlConfigBase, FormControlConfigOverrides>
   >;
@@ -589,6 +670,11 @@ export type BridgeUIComponentsConfig = Partial<{
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
   Spinner: Partial<Overwrite<SpinnerConfigBase, SpinnerConfigOverrides>>;
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
+  Tab: Partial<Overwrite<TabConfigBase, TabConfigOverrides>>;
+  TabItem: Partial<Overwrite<TabItemConfigBase, TabItemConfigOverrides>>;
+  TabList: Partial<Overwrite<TabListConfigBase, TabListConfigOverrides>>;
+  TabPanel: Partial<Overwrite<TabPanelConfigBase, TabPanelConfigOverrides>>;
+  Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
 }>;
 

@@ -6,6 +6,7 @@ import { afterEach, expect, test } from "vitest";
 // ** Local Imports
 import { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
 import { useDialogAction } from "@/Actions/Dialog";
+import { useDrawerAction } from "@/Actions/Drawer";
 import { useModalAction } from "@/Actions/Modal";
 import { useSnackbarAction } from "@/Actions/Snackbar";
 import { resetLayerStackForTests } from "@bridge-ui/core";
@@ -19,9 +20,14 @@ function Content() {
   return <p className="bridge-modal-body">Modal</p>;
 }
 
+function DrawerContent() {
+  return <p className="bridge-drawer-body">Drawer</p>;
+}
+
 function OpenAllOnMount() {
   const modal = useModalAction();
   const dialog = useDialogAction();
+  const drawer = useDrawerAction();
   const snackbar = useSnackbarAction();
 
   useEffect(() => {
@@ -32,6 +38,8 @@ function OpenAllOnMount() {
       description: "Are you sure?",
       modal: { transition: "none" },
     });
+
+    drawer.open({ component: DrawerContent, drawer: { transition: "none" } });
 
     snackbar.open({
       title: "Toast",
@@ -44,7 +52,7 @@ function OpenAllOnMount() {
   return null;
 }
 
-test("it should mount modal, dialog, and snackbar imperatives", async () => {
+test("it should mount modal, dialog, drawer, and snackbar imperatives", async () => {
   render(
     <BridgeUIHosts>
       <OpenAllOnMount />
@@ -55,6 +63,7 @@ test("it should mount modal, dialog, and snackbar imperatives", async () => {
     expect(document.body.textContent).toContain("Modal");
     expect(document.body.textContent).toContain("Confirm");
     expect(document.body.textContent).toContain("Are you sure?");
+    expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Toast");
   });
 });
