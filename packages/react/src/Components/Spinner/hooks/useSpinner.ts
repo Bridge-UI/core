@@ -88,7 +88,9 @@ export function useSpinner(
     props: componentProps,
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

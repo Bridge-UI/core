@@ -52,18 +52,6 @@ export interface TabCustomProps {
   startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
-export interface TabSlots {
-  /**
-   * Slot at the inline end (ignored when `endIcon` is set).
-   */
-  end?: ReactNode;
-
-  /**
-   * Slot at the inline start (ignored when `startIcon` is set).
-   */
-  start?: ReactNode;
-}
-
 /**
  * Tab trigger (`role="tab"`). Must be used inside `Tabs` / `TabList`.
  */
@@ -121,6 +109,18 @@ export interface TabOwnProps {
    * Stable value matching a `TabPanel`.
    */
   value: string;
+}
+
+export interface TabSlots {
+  /**
+   * Slot at the inline end (ignored when `endIcon` is set).
+   */
+  end?: ReactNode;
+
+  /**
+   * Slot at the inline start (ignored when `startIcon` is set).
+   */
+  start?: ReactNode;
 }
 
 export type TabProps = MergeHtmlProps<

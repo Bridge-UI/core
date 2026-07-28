@@ -172,14 +172,18 @@ export function useSnackbar(
     componentName: "Snackbar",
   });
 
-  const customProps = merged.customProps;
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, [
-    "show",
-    "onClose",
-    "children",
-    "onShowChange",
-  ]);
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, [
+      "show",
+      "onClose",
+      "children",
+      "onShowChange",
+    ]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     props: componentProps,
@@ -502,94 +506,106 @@ export function useSnackbar(
     return subscribeLayerStack(syncZIndex);
   }, [rendered, isPortaled]);
 
-  const portalBind = mergePartBind(
-    customProps?.portal,
-    {},
-    {
-      "data-snackbar-layer": true,
-      style: {
-        zIndex: stackZIndex,
+  const portalBind = derived(() => {
+    return mergePartBind(
+      customProps?.portal,
+      {},
+      {
+        "data-snackbar-layer": true,
+        style: {
+          zIndex: stackZIndex,
+        },
+        className: cn({
+          "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
+          [positionClass ?? ""]: true,
+          [get(mergedClasses, "portal") ?? ""]: true,
+        }),
       },
-      className: cn({
-        "fixed inset-0 flex pointer-events-none px-4 py-6 sm:p-5 sm:pt-4": true,
-        [positionClass ?? ""]: true,
-        [get(mergedClasses, "portal") ?? ""]: true,
+    );
+  });
+
+  const panelBind = derived(() => {
+    return mergePartBind(
+      customProps?.root,
+      {
+        ...rootInheritedAttrs,
+        "data-snackbar-part": "panel",
+        "data-state": transitionState,
+        onMouseEnter: pauseDismissTimer,
+        onMouseLeave: resumeDismissTimer,
+        role: rootInheritedAttrs.role ?? "status",
+        onTransitionEnd: handlePanelTransitionEnd,
+        "aria-live": rootInheritedAttrs["aria-live"] ?? "polite",
+      },
+      cn({
+        "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,
+        "bg-white shadow-lg ring-1 ring-black/5": true,
+        "dark:bg-dark-800 dark:border dark:border-dark-700": true,
+        [get(roundedClass, "base") ?? ""]: true,
+        [panelTransitionClass]: transitionEnabled,
+        [get(mergedClasses, "root") ?? ""]: true,
       }),
-    },
-  );
+    );
+  });
 
-  const panelBind = mergePartBind(
-    customProps?.root,
-    {
-      ...rootInheritedAttrs,
-      "data-snackbar-part": "panel",
-      "data-state": transitionState,
-      onMouseEnter: pauseDismissTimer,
-      onMouseLeave: resumeDismissTimer,
-      role: rootInheritedAttrs.role ?? "status",
-      onTransitionEnd: handlePanelTransitionEnd,
-      "aria-live": rootInheritedAttrs["aria-live"] ?? "polite",
-    },
-    cn({
-      "relative w-full max-w-sm overflow-hidden pointer-events-auto": true,
-      "bg-white shadow-lg ring-1 ring-black/5": true,
-      "dark:bg-dark-800 dark:border dark:border-dark-700": true,
-      [get(roundedClass, "base") ?? ""]: true,
-      [panelTransitionClass]: transitionEnabled,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
-  );
-
-  const iconBind = mergePartBind(
-    customProps?.icon,
-    {},
-    cn({
-      "w-6 h-6 shrink-0": true,
-      [get(colorClass, "iconColor") ?? ""]: true,
-      [get(mergedClasses, "icon") ?? ""]: true,
-    }),
-  );
-
-  const titleBind = mergePartBind(
-    customProps?.title,
-    {},
-    cn({
-      "text-sm font-medium": true,
-      [get(colorClass, "titleColor") ?? ""]: true,
-      [get(mergedClasses, "title") ?? ""]: true,
-    }),
-  );
-
-  const descriptionBind = mergePartBind(
-    customProps?.description,
-    {},
-    cn({
-      "mt-1 text-sm text-dark-500 dark:text-dark-500": true,
-      [get(mergedClasses, "description") ?? ""]: true,
-    }),
-  );
-
-  const progressBind = mergePartBind(
-    customProps?.progress,
-    {},
-    {
-      className: cn({
-        "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
-        [get(colorClass, "progressColor") ?? ""]: true,
-        [get(mergedClasses, "progress") ?? ""]: true,
+  const iconBind = derived(() => {
+    return mergePartBind(
+      customProps?.icon,
+      {},
+      cn({
+        "w-6 h-6 shrink-0": true,
+        [get(colorClass, "iconColor") ?? ""]: true,
+        [get(mergedClasses, "icon") ?? ""]: true,
       }),
-      style: showProgress
-        ? {
-            transformOrigin: "left center",
-            transform: `scaleX(${progressActive && !timerPaused ? 0 : progressScale})`,
-            transition:
-              progressActive && !timerPaused
-                ? `transform ${progressTransitionMsRef.current}ms linear`
-                : "none",
-          }
-        : undefined,
-    },
-  );
+    );
+  });
+
+  const titleBind = derived(() => {
+    return mergePartBind(
+      customProps?.title,
+      {},
+      cn({
+        "text-sm font-medium": true,
+        [get(colorClass, "titleColor") ?? ""]: true,
+        [get(mergedClasses, "title") ?? ""]: true,
+      }),
+    );
+  });
+
+  const descriptionBind = derived(() => {
+    return mergePartBind(
+      customProps?.description,
+      {},
+      cn({
+        "mt-1 text-sm text-dark-500 dark:text-dark-500": true,
+        [get(mergedClasses, "description") ?? ""]: true,
+      }),
+    );
+  });
+
+  const progressBind = derived(() => {
+    return mergePartBind(
+      customProps?.progress,
+      {},
+      {
+        className: cn({
+          "absolute bottom-0 left-0 h-0.5 w-full rounded-full": true,
+          [get(colorClass, "progressColor") ?? ""]: true,
+          [get(mergedClasses, "progress") ?? ""]: true,
+        }),
+        style: showProgress
+          ? {
+              transformOrigin: "left center",
+              transform: `scaleX(${progressActive && !timerPaused ? 0 : progressScale})`,
+              transition:
+                progressActive && !timerPaused
+                  ? `transform ${progressTransitionMsRef.current}ms linear`
+                  : "none",
+            }
+          : undefined,
+      },
+    );
+  });
 
   function contentBind(hasRight: boolean) {
     return mergePartBind(
@@ -618,7 +634,11 @@ export function useSnackbar(
     requestClose,
     resolvedIcon,
     descriptionBind,
-    slots: derived(() => props.slots),
-    children: derived(() => props.children),
+    slots: derived(() => {
+      return props.slots;
+    }),
+    children: derived(() => {
+      return props.children;
+    }),
   };
 }

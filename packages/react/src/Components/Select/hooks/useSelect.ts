@@ -52,6 +52,7 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import {
+  derived,
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -255,20 +256,33 @@ export function useSelect(
     });
   }, [selectedValues, resolvedOptions, resolvedSelected]);
 
-  const hasValue = selectedValues.length > 0;
+  const hasValue = derived(() => {
+    return selectedValues.length > 0;
+  });
 
-  const clearable = selectMerged.clearable !== false;
+  const clearable = derived(() => {
+    return selectMerged.clearable !== false;
+  });
 
-  const isAsync = Boolean(selectMerged.asyncData);
+  const isAsync = derived(() => {
+    return Boolean(selectMerged.asyncData);
+  });
 
-  const isSearchEnabled =
-    isAsync ||
-    selectMerged.searchable ||
-    staticOptions.length >= (selectMerged.minItemsForSearch ?? 11);
+  const isSearchEnabled = derived(() => {
+    return (
+      isAsync ||
+      selectMerged.searchable ||
+      staticOptions.length >= (selectMerged.minItemsForSearch ?? 11)
+    );
+  });
 
-  const isSearchActive = open && isSearchEnabled;
+  const isSearchActive = derived(() => {
+    return open && isSearchEnabled;
+  });
 
-  const isLoading = Boolean(selectMerged.loading) || asyncLoading;
+  const isLoading = derived(() => {
+    return Boolean(selectMerged.loading) || asyncLoading;
+  });
 
   const visibleEntries = useMemo(() => {
     if (hasComposedChildren) {
@@ -301,8 +315,9 @@ export function useSelect(
     listboxId,
   );
 
-  const triggerReadonly =
-    props.readonly || props.disabled ? true : !isSearchActive;
+  const triggerReadonly = derived(() => {
+    return props.readonly || props.disabled ? true : !isSearchActive;
+  });
 
   const displayValue = useMemo(() => {
     if (isSearchActive) {

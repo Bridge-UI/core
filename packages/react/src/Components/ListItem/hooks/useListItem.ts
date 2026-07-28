@@ -22,6 +22,7 @@ import type {
 } from "@/Components/ListItem/listItem.types";
 import {
   derived,
+  hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
   mergePartBind,
@@ -177,7 +178,7 @@ export function useListItem(
   });
 
   const hasStart = derived(() => {
-    return Boolean(slots?.start);
+    return hasNamedSlot(slots, "start");
   });
 
   const isListboxOption = listboxOption != null;
@@ -209,7 +210,7 @@ export function useListItem(
   ]);
 
   const hasEnd = derived(() => {
-    return Boolean(slots?.end) || resolvedSelectedIcon != null;
+    return hasNamedSlot(slots, "end") || resolvedSelectedIcon != null;
   });
 
   const rootBind = derived(() => {

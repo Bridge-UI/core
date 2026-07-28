@@ -42,6 +42,7 @@ import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { ModalOwnProps, ModalProps } from "@/Components/Modal/modal.types";
 import {
+  derived,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -154,14 +155,18 @@ export function useModal(
     componentName: "Modal",
   });
 
-  const customProps = merged.customProps;
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
-  const rootInheritedAttrs = omit(inheritedAttrs, [
-    "show",
-    "onClose",
-    "children",
-    "onShowChange",
-  ]);
+  const rootInheritedAttrs = derived(() => {
+    return omit(inheritedAttrs, [
+      "show",
+      "onClose",
+      "children",
+      "onShowChange",
+    ]);
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     entry: bridgeModal,
@@ -172,11 +177,17 @@ export function useModal(
     return resolveEffectiveModalTransition(merged.transition ?? "none");
   }, [merged.transition]);
 
-  const transitionEnabled = hasModalTransition(effectiveTransition);
+  const transitionEnabled = derived(() => {
+    return hasModalTransition(effectiveTransition);
+  });
 
-  const scrollMode = merged.scroll ?? "body";
+  const scrollMode = derived(() => {
+    return merged.scroll ?? "body";
+  });
 
-  const isHiddenWhileMounted = merged.keepMounted && !active;
+  const isHiddenWhileMounted = derived(() => {
+    return Boolean(merged.keepMounted && !active);
+  });
 
   if (show && stackOrderRef.current === null) {
     stackOrderRef.current = acquireLayerStackOrder();
@@ -448,65 +459,73 @@ export function useModal(
     return subscribeLayerStack(syncZIndex);
   }, [active]);
 
-  const rootBind = mergePartBind(customProps?.root, rootInheritedAttrs, {
-    style: {
-      zIndex: stackZIndex,
-    },
-    onTransitionEnd: handleShellTransitionEnd,
-    "aria-hidden": isHiddenWhileMounted ? true : undefined,
-    className: cn({
-      "fixed inset-0": true,
-      "overflow-y-auto": scrollMode === "body",
-      "overflow-hidden": scrollMode === "paper",
-      "invisible pointer-events-none": isHiddenWhileMounted,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
+  const rootBind = derived(() => {
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      onTransitionEnd: handleShellTransitionEnd,
+      style: {
+        zIndex: stackZIndex,
+      },
+      "aria-hidden": isHiddenWhileMounted ? true : undefined,
+      className: cn({
+        "fixed inset-0": true,
+        "overflow-y-auto": scrollMode === "body",
+        "overflow-hidden": scrollMode === "paper",
+        "invisible pointer-events-none": isHiddenWhileMounted,
+        [get(mergedClasses, "root") ?? ""]: true,
+      }),
+    });
   });
 
-  const overlayBind = mergePartBind(
-    customProps?.overlay,
-    {},
-    {
-      "data-modal-part": "overlay",
-      "data-state": transitionState,
-      className: cn({
-        "fixed inset-0 bg-black/50": true,
-        [blurClass ?? ""]: true,
-        [overlayTransitionClass]: transitionEnabled,
-        [get(mergedClasses, "overlay") ?? ""]: true,
-      }),
-    },
-  );
+  const overlayBind = derived(() => {
+    return mergePartBind(
+      customProps?.overlay,
+      {},
+      {
+        "data-modal-part": "overlay",
+        "data-state": transitionState,
+        className: cn({
+          "fixed inset-0 bg-black/50": true,
+          [blurClass ?? ""]: true,
+          [overlayTransitionClass]: transitionEnabled,
+          [get(mergedClasses, "overlay") ?? ""]: true,
+        }),
+      },
+    );
+  });
 
-  const wrapperBind = mergePartBind(
-    customProps?.wrapper,
-    {},
-    cn({
-      "flex min-h-full w-full transform p-4": true,
-      [alignClass ?? ""]: true,
-      [get(mergedClasses, "wrapper") ?? ""]: true,
-    }),
-  );
-
-  const panelBind = mergePartBind(
-    customProps?.panel,
-    {
-      ref: panelRef,
-      role: "dialog",
-      "aria-modal": true,
-    },
-    {
-      "data-modal-part": "panel",
-      "data-state": transitionState,
-      className: cn({
-        "relative w-full": true,
-        [sizeClass ?? ""]: true,
-        "max-h-[calc(100dvh-2rem)] overflow-y-auto": scrollMode === "paper",
-        [panelTransitionClass]: transitionEnabled,
-        [get(mergedClasses, "panel") ?? ""]: true,
+  const wrapperBind = derived(() => {
+    return mergePartBind(
+      customProps?.wrapper,
+      {},
+      cn({
+        "flex min-h-full w-full transform p-4": true,
+        [alignClass ?? ""]: true,
+        [get(mergedClasses, "wrapper") ?? ""]: true,
       }),
-    },
-  );
+    );
+  });
+
+  const panelBind = derived(() => {
+    return mergePartBind(
+      customProps?.panel,
+      {
+        ref: panelRef,
+        role: "dialog",
+        "aria-modal": true,
+      },
+      {
+        "data-modal-part": "panel",
+        "data-state": transitionState,
+        className: cn({
+          "relative w-full": true,
+          [sizeClass ?? ""]: true,
+          "max-h-[calc(100dvh-2rem)] overflow-y-auto": scrollMode === "paper",
+          [panelTransitionClass]: transitionEnabled,
+          [get(mergedClasses, "panel") ?? ""]: true,
+        }),
+      },
+    );
+  });
 
   return {
     merged,

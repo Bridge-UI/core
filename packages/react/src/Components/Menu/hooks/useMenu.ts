@@ -34,6 +34,7 @@ import { roundedProps, shadowProps } from "@bridge-ui/core/Components/Menu";
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";
 import {
   derived,
+  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -138,14 +139,16 @@ export function useMenu(
     componentName: "Menu",
   });
 
-  const customProps = merged.customProps;
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const slots = derived(() => {
     return props.slots;
   });
 
   const hasTrigger = derived(() => {
-    return Boolean(props.slots?.trigger);
+    return hasNamedSlot(props.slots, "trigger");
   });
 
   const children = derived(() => {
@@ -171,9 +174,13 @@ export function useMenu(
     props: componentProps,
   });
 
-  const isHiddenWhileMounted = merged.keepMounted && !show;
+  const isHiddenWhileMounted = derived(() => {
+    return Boolean(merged.keepMounted && !show);
+  });
 
-  const isPortaled = merged.teleportTo !== false;
+  const isPortaled = derived(() => {
+    return merged.teleportTo !== false;
+  });
 
   if (show && stackOrderRef.current === null) {
     stackOrderRef.current = acquireLayerStackOrder();
@@ -523,53 +530,59 @@ export function useMenu(
     };
   }, [show, anchorEl, merged.persistent, merged.closeOnClickAway]);
 
-  const rootBind = mergePartBind(
-    customProps?.root,
-    rootInheritedAttrs,
-    cn({
-      "relative inline-block text-left": hasTrigger,
-      [get(mergedClasses, "root") ?? ""]: true,
-    }),
-  );
-
-  const triggerBind = mergePartBind(
-    customProps?.trigger,
-    { ref: triggerRef },
-    {
-      tabIndex: 0,
-      role: "button",
-      "aria-expanded": show,
-      onKeyDown: handleTriggerKeyDown,
-      "aria-haspopup": "menu" as const,
-      onClickCapture: handleTriggerClick,
-      "aria-controls": show ? menuId : undefined,
-      className: cn({
-        "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
-        [get(mergedClasses, "trigger") ?? ""]: true,
+  const rootBind = derived(() => {
+    return mergePartBind(
+      customProps?.root,
+      rootInheritedAttrs,
+      cn({
+        "relative inline-block text-left": hasTrigger,
+        [get(mergedClasses, "root") ?? ""]: true,
       }),
-    },
-  );
+    );
+  });
 
-  const contentBind = mergePartBind(
-    customProps?.content,
-    { ref: contentRef },
-    {
-      id: menuId,
-      role: "menu",
-      onKeyDown: handleContentKeyDown,
-      style: {
-        zIndex: stackZIndex,
+  const triggerBind = derived(() => {
+    return mergePartBind(
+      customProps?.trigger,
+      { ref: triggerRef },
+      {
+        tabIndex: 0,
+        role: "button",
+        "aria-expanded": show,
+        onKeyDown: handleTriggerKeyDown,
+        "aria-haspopup": "menu" as const,
+        onClickCapture: handleTriggerClick,
+        "aria-controls": show ? menuId : undefined,
+        className: cn({
+          "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
+          [get(mergedClasses, "trigger") ?? ""]: true,
+        }),
       },
-      "aria-hidden": isHiddenWhileMounted ? true : undefined,
-      className: cn({
-        "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
-        "invisible pointer-events-none": isHiddenWhileMounted,
-        [roundedClass ?? ""]: true,
-        [shadowClass ?? ""]: true,
-        [get(mergedClasses, "content") ?? ""]: true,
-      }),
-    },
-  );
+    );
+  });
+
+  const contentBind = derived(() => {
+    return mergePartBind(
+      customProps?.content,
+      { ref: contentRef },
+      {
+        id: menuId,
+        role: "menu",
+        onKeyDown: handleContentKeyDown,
+        style: {
+          zIndex: stackZIndex,
+        },
+        "aria-hidden": isHiddenWhileMounted ? true : undefined,
+        className: cn({
+          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
+          "invisible pointer-events-none": isHiddenWhileMounted,
+          [roundedClass ?? ""]: true,
+          [shadowClass ?? ""]: true,
+          [get(mergedClasses, "content") ?? ""]: true,
+        }),
+      },
+    );
+  });
 
   return {
     slots,

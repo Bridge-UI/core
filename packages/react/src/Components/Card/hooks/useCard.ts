@@ -21,6 +21,7 @@ import {
 import type { CardOwnProps, CardProps } from "@/Components/Card/card.types";
 import {
   derived,
+  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -88,7 +89,7 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
   });
 
   const hasFooter = derived(() => {
-    return Boolean(slots?.footer);
+    return hasNamedSlot(slots, "footer");
   });
 
   const variantClass = useMemo(() => {
