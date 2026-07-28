@@ -82,8 +82,9 @@ export interface ModalEmits {
  */
 export interface ModalOwnProps {
   /**
-   * Panel position from the `sm` breakpoint up (`{row}-{column}` grid).
-   * Mobile always uses bottom sheet (`bottom-center`).
+   * Panel position on all breakpoints (`{row}-{column}` grid).
+   * Use `useBreakpoint` if you need a different align per viewport
+   * (e.g. bottom sheet on mobile, centered on desktop).
    *
    * @default "middle-center"
    */

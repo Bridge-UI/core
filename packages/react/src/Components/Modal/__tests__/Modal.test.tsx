@@ -172,8 +172,9 @@ test("it should apply align classes on the wrapper", () => {
 
   const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
-  expect(wrapper?.className).toContain("sm:items-start");
-  expect(wrapper?.className).toContain("sm:justify-start");
+  expect(wrapper?.className).toContain("items-start");
+  expect(wrapper?.className).toContain("justify-start");
+  expect(wrapper?.className).not.toContain("items-end");
 });
 
 test("it should apply middle-end align classes on the wrapper", () => {
@@ -185,8 +186,8 @@ test("it should apply middle-end align classes on the wrapper", () => {
 
   const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
 
-  expect(wrapper?.className).toContain("sm:justify-end");
-  expect(wrapper?.className).toContain("sm:items-center");
+  expect(wrapper?.className).toContain("justify-end");
+  expect(wrapper?.className).toContain("items-center");
 });
 
 test("it should apply fade transition classes by default", () => {
