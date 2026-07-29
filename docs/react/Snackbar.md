@@ -84,6 +84,7 @@ import { Snackbar } from "@bridge-ui/react/Components/Snackbar";
 | `padding`     | `SnackbarPadding`     | "medium"        | Padding for the content area.                                                  |
 | `position`    | `SnackbarPosition`    | "bottom-center" | Viewport anchor when portaled (standalone). Ignored when `teleportTo={false}`. |
 | `progressbar` | `boolean`             | `true`          | Whether to show the countdown progress bar when `duration` is set.             |
+| `rounded`     | `SnackbarRounded`     | "lg"            | The roundedness of the snackbar panel.                                         |
 | `slots`       | `SnackbarSlots`       | —               | The slots to apply to the snackbar.                                            |
 | `stackId`     | `string`              | —               | Pre-assigned stack id (BridgeSnackbarHost).                                    |
 | `teleportTo`  | `string \| false`     | "body"          | Portal target. `false` renders inline without layer stack.                     |
