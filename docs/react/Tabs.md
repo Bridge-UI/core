@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent is `primary` or `dark`; inactive tabs use `dark-*`.
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent uses the semantic `color` palette; inactive tabs use `dark-*`.
 
 ## Import
 
@@ -187,17 +187,17 @@ const [pkg, setPkg] = useState("bun");
 
 ## Props (`Tabs`)
 
-| Prop           | Type                                                   | Default              |
-| -------------- | ------------------------------------------------------ | -------------------- |
-| `value`        | `string`                                               | —                    |
-| `defaultValue` | `string`                                               | first registered tab |
-| `onChange`     | `(value: string) => void`                              | —                    |
-| `orientation`  | `"horizontal" \| "vertical"`                           | `"horizontal"`       |
-| `variant`      | `"line" \| "plain" \| "pill" \| "solid" \| "enclosed"` | `"line"`             |
-| `color`        | `"primary" \| "dark"`                                  | `"primary"`          |
-| `size`         | `"sm" \| "md" \| "lg"`                                 | `"md"`               |
-| `activation`   | `"automatic" \| "manual"`                              | `"automatic"`        |
-| `keepMounted`  | `boolean`                                              | `true`               |
+| Prop           | Type                      | Default              |
+| -------------- | ------------------------- | -------------------- |
+| `value`        | `string`                  | —                    |
+| `defaultValue` | `string`                  | first registered tab |
+| `onChange`     | `(value: string) => void` | —                    |
+| `orientation`  | `TabsOrientation`         | `"horizontal"`       |
+| `variant`      | `TabsVariant`             | `"line"`             |
+| `color`        | `TabsColor`               | `"primary"`          |
+| `size`         | `TabsSize`                | `"md"`               |
+| `activation`   | `TabsActivation`          | `"automatic"`        |
+| `keepMounted`  | `boolean`                 | `true`               |
 
 ## Props (`Tab`)
 

@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent is `primary` or `dark`; inactive tabs use `dark-*`.
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent uses the semantic `color` palette; inactive tabs use `dark-*`.
 
 ## Import
 
@@ -149,14 +149,14 @@ import { TabPanel } from "@bridge-ui/vue/Components/TabPanel";
 
 ## Props (`Tabs`)
 
-| Prop          | Type                                                   | Default        |
-| ------------- | ------------------------------------------------------ | -------------- |
-| `activation`  | `"automatic" \| "manual"`                              | `"automatic"`  |
-| `color`       | `"primary" \| "dark"`                                  | `"primary"`    |
-| `keepMounted` | `boolean`                                              | `true`         |
-| `orientation` | `"horizontal" \| "vertical"`                           | `"horizontal"` |
-| `size`        | `"sm" \| "md" \| "lg"`                                 | `"md"`         |
-| `variant`     | `"line" \| "plain" \| "pill" \| "solid" \| "enclosed"` | `"line"`       |
+| Prop          | Type              | Default        |
+| ------------- | ----------------- | -------------- |
+| `activation`  | `TabsActivation`  | `"automatic"`  |
+| `color`       | `TabsColor`       | `"primary"`    |
+| `keepMounted` | `boolean`         | `true`         |
+| `orientation` | `TabsOrientation` | `"horizontal"` |
+| `size`        | `TabsSize`        | `"md"`         |
+| `variant`     | `TabsVariant`     | `"line"`       |
 
 ### v-model
 
