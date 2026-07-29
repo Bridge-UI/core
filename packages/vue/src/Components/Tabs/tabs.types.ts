@@ -62,7 +62,7 @@ export interface TabsOwnProps {
   classes?: TabsClasses;
 
   /**
-   * Accent color for the selected tab (`primary` or `dark`).
+   * Accent color for the selected tab.
    *
    * @default "primary"
    */
