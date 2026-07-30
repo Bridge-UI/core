@@ -12,10 +12,7 @@ export type {
   FormFieldRoundedItem,
 } from "@/Tokens/FormField/Rounded";
 export { sizeProps } from "@/Tokens/FormField/Size";
-export type {
-  FormFieldSize,
-  FormFieldSizeItem,
-} from "@/Tokens/FormField/Size";
+export type { FormFieldSize, FormFieldSizeItem } from "@/Tokens/FormField/Size";
 export { variantProps } from "@/Tokens/FormField/Variant";
 export type {
   FormFieldVariant,

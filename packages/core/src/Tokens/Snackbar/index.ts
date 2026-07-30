@@ -1,9 +1,6 @@
 // ** Exports
 export { colorProps } from "@/Tokens/Snackbar/Color";
-export type {
-  SnackbarColor,
-  SnackbarColorItem,
-} from "@/Tokens/Snackbar/Color";
+export type { SnackbarColor, SnackbarColorItem } from "@/Tokens/Snackbar/Color";
 export { paddingProps } from "@/Tokens/Snackbar/Padding";
 export type {
   SnackbarPadding,

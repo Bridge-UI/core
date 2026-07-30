@@ -1,10 +1,7 @@
 // ** Exports
 export { blurProps } from "@/Tokens/Drawer/Blur";
 export type { DrawerBlur } from "@/Tokens/Drawer/Blur";
-export {
-  placementPanelProps,
-  placementProps,
-} from "@/Tokens/Drawer/Placement";
+export { placementPanelProps, placementProps } from "@/Tokens/Drawer/Placement";
 export type { DrawerPlacement } from "@/Tokens/Drawer/Placement";
 export { scrollProps } from "@/Tokens/Drawer/Scroll";
 export type { DrawerScroll } from "@/Tokens/Drawer/Scroll";
