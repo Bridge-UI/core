@@ -11,7 +11,10 @@ import {
 } from "vue";
 
 // ** Core Imports
-import { createMergePartBind } from "@bridge-ui/core";
+import {
+  createMergeNestedComponentProps,
+  createMergePartBind,
+} from "@bridge-ui/core";
 import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 import type { IconSize } from "@bridge-ui/core/Components/Icon";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
@@ -55,6 +58,12 @@ export function defineHeadlessComponent(setup: () => void) {
  * Merges Vue-specific classes into the `class` attribute.
  */
 export const mergePartBind = createMergePartBind("class");
+
+/**
+ * Merges consumer nested-component props with package defaults (consumer wins).
+ */
+export const mergeNestedComponentProps =
+  createMergeNestedComponentProps(mergePartBind);
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.

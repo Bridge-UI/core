@@ -5,6 +5,7 @@ import { expect, test } from "vitest";
 import type { BridgeUIComponentsConfig } from "@/Config/types";
 import {
   cn,
+  createMergeNestedComponentProps,
   createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -186,5 +187,72 @@ test("it should use className for React", () => {
   ).toEqual({
     role: "alert",
     className: "bridge inherited part",
+  });
+});
+
+test("it should merge nested component classes and customProps", () => {
+  const mergeNestedComponentProps = createMergeNestedComponentProps(
+    createMergePartBind("className"),
+  );
+
+  const result = mergeNestedComponentProps(
+    {
+      size: "sm",
+      classes: { root: "user-root", label: "user-label" },
+      customProps: {
+        label: { id: "user-label" },
+        clear: { id: "user-clear", className: "user-clear" },
+      },
+    },
+    {
+      classes: { root: "pkg-root" },
+      customProps: {
+        clear: { role: "button", className: "pkg-clear" },
+      },
+    },
+  );
+
+  expect(result).toEqual({
+    size: "sm",
+    classes: {
+      label: "user-label",
+      root: "pkg-root user-root",
+    },
+    customProps: {
+      label: { id: "user-label" },
+      clear: {
+        role: "button",
+        id: "user-clear",
+        className: "pkg-clear user-clear",
+      },
+    },
+  });
+});
+
+test("it should keep user props when nested defaults are empty", () => {
+  const mergeNestedComponentProps = createMergeNestedComponentProps(
+    createMergePartBind("class"),
+  );
+
+  expect(
+    mergeNestedComponentProps({ classes: { root: "only-user" } }, {}),
+  ).toEqual({
+    classes: { root: "only-user" },
+  });
+});
+
+test("it should merge top-level className defaults", () => {
+  const mergeNestedComponentProps = createMergeNestedComponentProps(
+    createMergePartBind("className"),
+  );
+
+  expect(
+    mergeNestedComponentProps(
+      { id: "chip", className: "user" },
+      { className: "pkg" },
+    ),
+  ).toEqual({
+    id: "chip",
+    className: "pkg user",
   });
 });

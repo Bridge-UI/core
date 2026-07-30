@@ -113,6 +113,116 @@ export function mergeBridgeUILayeredClasses<C extends object>(
 }
 
 /**
+ * Package defaults for {@link createMergeNestedComponentProps}.
+ * Top-level attrs (e.g. `class` / `className`) merge via `mergePartBind`.
+ */
+export type NestedComponentDefaults<
+  P extends {
+    classes?: object;
+    customProps?: object;
+  },
+> = Partial<Omit<P, "classes" | "customProps">> & {
+  classes?: Partial<NonNullable<P["classes"]>>;
+  customProps?: {
+    [K in keyof NonNullable<P["customProps"]>]?: object;
+  };
+};
+
+/**
+ * `mergePartBind` callable used by {@link createMergeNestedComponentProps}.
+ */
+export type MergePartBindLike = (
+  partProps: object | undefined,
+  inheritedAttrs: object | undefined,
+  bridgeProps: object | string,
+) => object;
+
+/**
+ * Creates a helper that merges consumer nested-component props with package
+ * defaults. `classes` keys use `cn`; `customProps` parts and top-level attrs
+ * use `mergePartBind` (consumer wins).
+ */
+export function createMergeNestedComponentProps(
+  mergePartBind: MergePartBindLike,
+) {
+  return function mergeNestedComponentProps<
+    P extends {
+      classes?: object;
+      customProps?: object;
+    },
+  >(
+    userProps: undefined | Partial<P>,
+    defaults: NestedComponentDefaults<P> = {},
+  ): Partial<P> {
+    const {
+      classes: defaultClasses,
+      customProps: defaultCustom,
+      ...defaultAttrs
+    } = defaults;
+
+    const {
+      classes: userClasses,
+      customProps: userCustom,
+      ...userAttrs
+    } = (userProps ?? {}) as Partial<P> & {
+      classes?: Record<string, string | undefined>;
+      customProps?: Record<string, object | undefined>;
+    };
+
+    const hasDefaultAttrs = Object.keys(defaultAttrs).length > 0;
+
+    const result = (
+      hasDefaultAttrs
+        ? mergePartBind(userAttrs, {}, defaultAttrs as object)
+        : { ...userAttrs }
+    ) as Partial<P>;
+
+    if (!isNil(defaultClasses)) {
+      const classesRecord = (userClasses ?? {}) as Record<
+        string,
+        string | undefined
+      >;
+
+      const mergedClasses = { ...classesRecord } as NonNullable<P["classes"]>;
+
+      for (const [key, value] of Object.entries(defaultClasses)) {
+        (mergedClasses as Record<string, string | undefined>)[key] = cn(
+          value as string | undefined,
+          classesRecord[key],
+        );
+      }
+
+      result.classes = mergedClasses;
+    } else if (!isNil(userClasses)) {
+      result.classes = userClasses as P["classes"];
+    }
+
+    if (!isNil(defaultCustom)) {
+      const customRecord = (userCustom ?? {}) as Record<
+        string,
+        object | undefined
+      >;
+
+      const mergedCustom = { ...customRecord } as NonNullable<P["customProps"]>;
+
+      for (const [key, value] of Object.entries(defaultCustom)) {
+        (mergedCustom as Record<string, object>)[key] = mergePartBind(
+          customRecord[key],
+          {},
+          value as object,
+        );
+      }
+
+      result.customProps = mergedCustom;
+    } else if (!isNil(userCustom)) {
+      result.customProps = userCustom as P["customProps"];
+    }
+
+    return result;
+  };
+}
+
+/**
  * Merges props with Bridge UI defaults and registry defaults.
  */
 export function mergePropsWithBridgeUIDefaults<
