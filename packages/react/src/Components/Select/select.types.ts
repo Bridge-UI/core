@@ -19,7 +19,10 @@ import type {
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 import type { IconProps } from "@/Components/Icon";
-import type { ListboxOwnProps } from "@/Components/Listbox/listbox.types";
+import type {
+  ListboxControlledProps,
+  ListboxOwnProps,
+} from "@/Components/Listbox/listbox.types";
 
 export type {
   ListboxOptionGroup,
@@ -125,29 +128,11 @@ export interface SelectCustomProps extends FormFieldCustomProps {
 
   /**
    * Props forwarded to the internal `Listbox`.
-   * Open state, options, and selection handlers stay owned by `Select`.
+   * Merged last so they override Select defaults.
    *
    * @default undefined
    */
-  listbox?: Partial<
-    Omit<
-      ListboxOwnProps,
-      | "show"
-      | "slots"
-      | "entries"
-      | "loading"
-      | "options"
-      | "anchorEl"
-      | "multiple"
-      | "onSelect"
-      | "listboxId"
-      | "isSelected"
-      | "labelledBy"
-      | "onShowChange"
-      | "highlightedIndex"
-      | "onRegisteredOptionsChange"
-    >
-  >;
+  listbox?: Partial<ListboxOwnProps & ListboxControlledProps>;
 }
 
 export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {

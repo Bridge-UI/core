@@ -54,6 +54,23 @@ test("it should apply default scroll classes", () => {
   expect(result.current.scrollBind.className).toContain("overflow-y-auto");
 });
 
+test("it should forward scroll customProps onto scrollBind", () => {
+  const { result } = renderUseListbox({
+    customProps: {
+      scroll: {
+        id: "scroll-id",
+        className: "extra-scroll",
+        "data-testid": "listbox-scroll",
+      },
+    },
+  });
+
+  expect(result.current.scrollBind.id).toBe("scroll-id");
+  expect(result.current.scrollBind.className).toContain("max-h-60");
+  expect(result.current.scrollBind.className).toContain("extra-scroll");
+  expect(result.current.scrollBind["data-testid"]).toBe("listbox-scroll");
+});
+
 test("it should apply custom maxHeight tailwind class", () => {
   const { result } = renderUseListbox({ maxHeight: "max-h-80" });
 

@@ -446,17 +446,7 @@ export function useSelect(
   });
 
   const listboxCustomProps = computed(() => {
-    return omit(props.customProps?.listbox, [
-      "entries",
-      "options",
-      "loading",
-      "multiple",
-      "anchorEl",
-      "listboxId",
-      "labelledBy",
-      "isSelected",
-      "highlightedIndex",
-    ]);
+    return props.customProps?.listbox;
   });
 
   const formField = useFormField(
@@ -884,25 +874,25 @@ export function useSelect(
 
   const listboxProps = computed(() => {
     return {
+      listboxId,
+      isSelected,
       disableAutoFocus: true,
+      loading: isLoading.value,
+      multiple: multiple.value,
       maxHeight: props.maxHeight,
+      entries: visibleEntries.value,
+      options: visibleOptions.value,
       size: formField.merged.value.size,
       color: formField.merged.value.color,
+      labelledBy: formField.controlId.value,
+      rounded: formField.merged.value.rounded,
+      invalidated: formField.invalidated.value,
+      highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,
       emptyMessage: selectMerged.value.emptyMessage ?? "No options",
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
       loadingMessage: selectMerged.value.loadingMessage ?? "Loading...",
       ...listboxCustomProps.value,
-      listboxId,
-      isSelected,
-      loading: isLoading.value,
-      multiple: multiple.value,
-      entries: visibleEntries.value,
-      options: visibleOptions.value,
-      labelledBy: formField.controlId.value,
-      rounded: formField.merged.value.rounded,
-      invalidated: formField.invalidated.value,
-      highlightedIndex: highlightedIndex.value,
     };
   });
 

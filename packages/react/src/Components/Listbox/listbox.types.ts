@@ -89,21 +89,11 @@ export interface ListboxCustomProps {
 
   /**
    * Props forwarded to each mapped `ListItem` option.
-   * Value, disabled, interactive, and labels stay owned by `Listbox`.
+   * Merged last so they override Listbox defaults.
    *
    * @default undefined
    */
-  listItem?: Partial<
-    Omit<
-      ListItemOwnProps,
-      | "value"
-      | "primary"
-      | "children"
-      | "disabled"
-      | "secondary"
-      | "interactive"
-    >
-  >;
+  listItem?: Partial<ListItemOwnProps>;
 
   /**
    * Props forwarded to each mapped `ListSection`.
@@ -114,16 +104,11 @@ export interface ListboxCustomProps {
 
   /**
    * Props forwarded to the floating `Menu`.
-   * Open state, anchor, and panel children stay owned by `Listbox`.
+   * Merged last so they override Listbox defaults.
    *
    * @default undefined
    */
-  menu?: Partial<
-    Omit<
-      MenuOwnProps,
-      "show" | "onClose" | "anchorEl" | "children" | "onShowChange"
-    >
-  >;
+  menu?: Partial<MenuOwnProps>;
 
   /**
    * Props forwarded to the loading `Progress`.

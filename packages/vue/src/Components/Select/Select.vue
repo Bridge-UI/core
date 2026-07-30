@@ -137,8 +137,8 @@ const {
 
   <Listbox
     v-model="open"
-    :anchor-el="containerRef"
     v-bind="listboxProps"
+    :anchor-el="containerRef"
     v-on:select="selectOption"
     v-on:registered-options-change="handleRegisteredOptionsChange"
   >

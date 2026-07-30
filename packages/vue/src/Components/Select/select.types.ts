@@ -83,24 +83,11 @@ export interface SelectCustomProps extends FormFieldCustomProps {
 
   /**
    * Props forwarded to the internal `Listbox`.
-   * Open state, options, and selection handlers stay owned by `Select`.
+   * Merged last so they override Select defaults.
    *
    * @default undefined
    */
-  listbox?: Partial<
-    Omit<
-      ListboxOwnProps,
-      | "entries"
-      | "loading"
-      | "options"
-      | "anchorEl"
-      | "multiple"
-      | "listboxId"
-      | "isSelected"
-      | "labelledBy"
-      | "highlightedIndex"
-    >
-  >;
+  listbox?: Partial<ListboxOwnProps>;
 }
 
 export interface SelectEmits {
