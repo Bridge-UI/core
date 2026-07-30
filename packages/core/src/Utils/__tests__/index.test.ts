@@ -229,6 +229,28 @@ test("it should merge nested component classes and customProps", () => {
   });
 });
 
+test("it should shallow-merge nested component slots with consumer winning", () => {
+  const mergeNestedComponentProps = createMergeNestedComponentProps(
+    createMergePartBind("className"),
+  );
+
+  const itemEnd = "item-end";
+  const userStart = "user-start";
+  const itemStart = "item-start";
+
+  expect(
+    mergeNestedComponentProps(
+      { slots: { start: userStart } },
+      { slots: { end: itemEnd, start: itemStart } },
+    ),
+  ).toEqual({
+    slots: {
+      end: itemEnd,
+      start: userStart,
+    },
+  });
+});
+
 test("it should keep user props when nested defaults are empty", () => {
   const mergeNestedComponentProps = createMergeNestedComponentProps(
     createMergePartBind("class"),

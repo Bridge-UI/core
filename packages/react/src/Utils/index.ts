@@ -46,6 +46,7 @@ export const mergePartBind = createMergePartBind("className");
 
 /**
  * Merges consumer nested-component props with package defaults (consumer wins).
+ * Merges `classes`, `customProps`, and `slots`.
  */
 export const mergeNestedComponentProps =
   createMergeNestedComponentProps(mergePartBind);

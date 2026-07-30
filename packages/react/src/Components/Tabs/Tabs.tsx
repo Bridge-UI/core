@@ -5,6 +5,7 @@ import { TabPanel } from "@/Components/TabPanel";
 import { TabsContext } from "@/Components/Tabs/TabsContext";
 import { useTabs } from "@/Components/Tabs/hooks/useTabs";
 import type { TabsProps } from "@/Components/Tabs/tabs.types";
+import { mergeNestedComponentProps } from "@/Utils";
 
 const tabsLibDefaults = {
   size: "md",
@@ -34,11 +35,9 @@ function Tabs(props: TabsProps) {
                   endIcon={item.endIcon}
                   disabled={item.disabled}
                   startIcon={item.startIcon}
-                  {...props.customProps?.tab}
-                  slots={{
-                    ...item.slots,
-                    ...props.customProps?.tab?.slots,
-                  }}
+                  {...mergeNestedComponentProps(props.customProps?.tab, {
+                    slots: item.slots,
+                  })}
                 >
                   {item.label}
                 </Tab>
