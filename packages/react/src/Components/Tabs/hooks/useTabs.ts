@@ -108,32 +108,26 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
   });
 
   const sizeClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeTabs?.customProps?.size,
-    );
-  }, [bridgeTabs?.customProps?.size]);
+    return mergeBridgeUILayeredClasses(sizeProps, bridgeTabs?.tokens?.size);
+  }, [bridgeTabs?.tokens?.size]);
 
   const variantClasses = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeTabs?.customProps?.variant,
+      bridgeTabs?.tokens?.variant,
     );
-  }, [bridgeTabs?.customProps?.variant]);
+  }, [bridgeTabs?.tokens?.variant]);
 
   const colorClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeTabs?.customProps?.color,
-    );
-  }, [bridgeTabs?.customProps?.color]);
+    return mergeBridgeUILayeredClasses(colorProps, bridgeTabs?.tokens?.color);
+  }, [bridgeTabs?.tokens?.color]);
 
   const orientationClasses = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       orientationProps,
-      bridgeTabs?.customProps?.orientation,
+      bridgeTabs?.tokens?.orientation,
     );
-  }, [bridgeTabs?.customProps?.orientation]);
+  }, [bridgeTabs?.tokens?.orientation]);
 
   const sizeItem = derived(() => {
     return get(sizeClasses, merged.size);

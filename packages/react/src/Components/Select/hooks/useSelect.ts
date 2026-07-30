@@ -799,7 +799,7 @@ export function useSelect(
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components, ["Listbox", "customProps", "color"]),
+      get(components, ["Listbox", "tokens", "color"]),
     );
     const base = get(classes, formField.merged.color ?? "primary");
 
@@ -809,7 +809,7 @@ export function useSelect(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components, ["Listbox", "customProps", "invalidated"]),
+      get(components, ["Listbox", "tokens", "invalidated"]),
     );
   }, [components, formField.invalidated, formField.merged.color]);
 

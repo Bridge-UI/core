@@ -238,31 +238,28 @@ export function useFormField(
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeFormField?.customProps?.size,
+      bridgeFormField?.tokens?.size,
     );
 
     return get(classes, [merged.size, merged.variant ?? "outline"]);
-  }, [merged.size, merged.variant, bridgeFormField?.customProps?.size]);
+  }, [merged.size, merged.variant, bridgeFormField?.tokens?.size]);
 
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeFormField?.customProps?.color,
+      bridgeFormField?.tokens?.color,
     );
 
     return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeFormField?.customProps?.color]);
+  }, [merged.color, bridgeFormField?.tokens?.color]);
 
   const invalidatedPalette = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeFormField?.customProps?.invalidated,
+      bridgeFormField?.tokens?.invalidated,
       merged.customProps?.invalidated,
     );
-  }, [
-    merged.customProps?.invalidated,
-    bridgeFormField?.customProps?.invalidated,
-  ]);
+  }, [merged.customProps?.invalidated, bridgeFormField?.tokens?.invalidated]);
 
   const invalidatedColors = useMemo(() => {
     return invalidated ? invalidatedPalette : undefined;
@@ -271,20 +268,20 @@ export function useFormField(
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeFormField?.customProps?.rounded,
+      bridgeFormField?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeFormField?.customProps?.rounded]);
+  }, [merged.rounded, bridgeFormField?.tokens?.rounded]);
 
   const variantClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeFormField?.customProps?.variant,
+      bridgeFormField?.tokens?.variant,
     );
 
     return get(classes, merged.variant ?? "outline");
-  }, [merged.variant, bridgeFormField?.customProps?.variant]);
+  }, [merged.variant, bridgeFormField?.tokens?.variant]);
 
   const containerColorFocus = derived(() => {
     const palette = invalidated ? invalidatedPalette : colorPalette;

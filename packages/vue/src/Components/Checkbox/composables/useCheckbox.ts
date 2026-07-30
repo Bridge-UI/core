@@ -98,7 +98,7 @@ export function useCheckbox(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeCheckbox.value?.customProps?.color,
+      bridgeCheckbox.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
@@ -107,7 +107,7 @@ export function useCheckbox(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeCheckbox.value?.customProps?.invalidated,
+      bridgeCheckbox.value?.tokens?.invalidated,
     );
   });
 
@@ -120,7 +120,7 @@ export function useCheckbox(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeCheckbox.value?.customProps?.size,
+      bridgeCheckbox.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size ?? "sm");
@@ -129,7 +129,7 @@ export function useCheckbox(
   const roundedClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeCheckbox.value?.customProps?.rounded,
+      bridgeCheckbox.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded ?? "sm");

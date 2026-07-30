@@ -70,7 +70,7 @@ export function useDivider(
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeDivider.value?.customProps?.color,
+      bridgeDivider.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -79,7 +79,7 @@ export function useDivider(
   const orientationClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       orientationProps,
-      bridgeDivider.value?.customProps?.orientation,
+      bridgeDivider.value?.tokens?.orientation,
     );
 
     return get(classes, merged.value.orientation);

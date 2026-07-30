@@ -110,18 +110,18 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeSwitch?.customProps?.color,
+      bridgeSwitch?.tokens?.color,
     );
 
     return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeSwitch?.customProps?.color]);
+  }, [merged.color, bridgeSwitch?.tokens?.color]);
 
   const invalidatedPalette = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeSwitch?.customProps?.invalidated,
+      bridgeSwitch?.tokens?.invalidated,
     );
-  }, [bridgeSwitch?.customProps?.invalidated]);
+  }, [bridgeSwitch?.tokens?.invalidated]);
 
   const colorClasses = derived(() => {
     return formControl.invalidated ? invalidatedPalette : colorPalette;
@@ -130,20 +130,20 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeSwitch?.customProps?.size,
+      bridgeSwitch?.tokens?.size,
     );
 
     return get(classes, merged.size ?? "sm");
-  }, [merged.size, bridgeSwitch?.customProps?.size]);
+  }, [merged.size, bridgeSwitch?.tokens?.size]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeSwitch?.customProps?.rounded,
+      bridgeSwitch?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded ?? "full");
-  }, [merged.rounded, bridgeSwitch?.customProps?.rounded]);
+  }, [merged.rounded, bridgeSwitch?.tokens?.rounded]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {

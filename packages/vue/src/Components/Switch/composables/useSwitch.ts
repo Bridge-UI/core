@@ -89,7 +89,7 @@ export function useSwitch(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeSwitch.value?.customProps?.color,
+      bridgeSwitch.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
@@ -98,7 +98,7 @@ export function useSwitch(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeSwitch.value?.customProps?.invalidated,
+      bridgeSwitch.value?.tokens?.invalidated,
     );
   });
 
@@ -111,7 +111,7 @@ export function useSwitch(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeSwitch.value?.customProps?.size,
+      bridgeSwitch.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size ?? "sm");
@@ -120,7 +120,7 @@ export function useSwitch(
   const roundedClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeSwitch.value?.customProps?.rounded,
+      bridgeSwitch.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded ?? "full");

@@ -63,7 +63,7 @@ export function useSkeleton(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeSkeleton.value?.customProps?.rounded,
+      bridgeSkeleton.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);

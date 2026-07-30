@@ -219,12 +219,6 @@ export interface TabItemConfigOverrides {}
 
 export interface AlertConfigBase {
   classes: object;
-  customProps: Partial<{
-    padding: Record<string, string>;
-    rounded: Record<string, string>;
-    shadow: Record<string, string>;
-    variant: Record<string, Record<string, AlertColorItem>>;
-  }>;
   defaultProps: Partial<{
     color: keyof AlertColor;
     padding: keyof AlertPadding;
@@ -232,30 +226,31 @@ export interface AlertConfigBase {
     shadow: keyof AlertShadow;
     variant: keyof AlertVariant;
   }>;
+  tokens: Partial<{
+    padding: Record<string, string>;
+    rounded: Record<string, string>;
+    shadow: Record<string, string>;
+    variant: Record<string, Record<string, AlertColorItem>>;
+  }>;
 }
 
 export interface AvatarConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, AvatarColorItem>;
-    iconSize: Record<string, AvatarIconSizeItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof AvatarColor;
     rounded: keyof AvatarRounded;
     size: keyof AvatarSize;
   }>;
+  tokens: Partial<{
+    color: Record<string, AvatarColorItem>;
+    iconSize: Record<string, AvatarIconSizeItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
 }
 
 export interface BadgeConfigBase {
   classes: object;
-  customProps: Partial<{
-    density: Record<string, Record<string, string>>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, BadgeColorItem>>;
-  }>;
   defaultProps: Partial<{
     color: keyof BadgeColor;
     density: keyof BadgeDensity;
@@ -263,15 +258,15 @@ export interface BadgeConfigBase {
     size: keyof BadgeSize;
     variant: keyof BadgeVariant;
   }>;
+  tokens: Partial<{
+    density: Record<string, Record<string, string>>;
+    rounded: Record<string, string>;
+    variant: Record<string, Record<string, BadgeColorItem>>;
+  }>;
 }
 
 export interface ButtonConfigBase {
   classes: object;
-  customProps: Partial<{
-    density: Record<string, Record<string, string>>;
-    rounded: Record<string, string>;
-    variant: Record<string, Record<string, ButtonColorItem>>;
-  }>;
   defaultProps: Partial<{
     color: keyof ButtonColor;
     density: keyof ButtonDensity;
@@ -279,81 +274,79 @@ export interface ButtonConfigBase {
     size: keyof ButtonSize;
     variant: keyof ButtonVariant;
   }>;
+  tokens: Partial<{
+    density: Record<string, Record<string, string>>;
+    rounded: Record<string, string>;
+    variant: Record<string, Record<string, ButtonColorItem>>;
+  }>;
 }
 
 export interface CardConfigBase {
   classes: object;
-  customProps: Partial<{
-    padding: Record<string, CardPaddingItem>;
-    rounded: Record<string, CardRoundedItem>;
-    shadow: Record<string, string>;
-    variant: Record<string, CardVariantItem>;
-  }>;
   defaultProps: Partial<{
     padding: keyof CardPadding;
     rounded: keyof CardRounded;
     shadow: keyof CardShadow;
     variant: keyof CardVariant;
   }>;
+  tokens: Partial<{
+    padding: Record<string, CardPaddingItem>;
+    rounded: Record<string, CardRoundedItem>;
+    shadow: Record<string, string>;
+    variant: Record<string, CardVariantItem>;
+  }>;
 }
 
 export interface CheckboxConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, CheckboxColorItem>;
-    invalidated: Partial<CheckboxInvalidated>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof CheckboxColor;
     rounded: keyof CheckboxRounded;
     size: keyof CheckboxSize;
   }>;
+  tokens: Partial<{
+    color: Record<string, CheckboxColorItem>;
+    invalidated: Partial<CheckboxInvalidated>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
 }
 
 export interface ChipConfigBase {
   classes: object;
-  customProps: Partial<{
-    size: Record<string, ChipSizeItem>;
-  }>;
   defaultProps: Partial<{
     size: keyof ChipSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, ChipSizeItem>;
   }>;
 }
 
 export interface IconConfigBase {
-  customProps: Partial<{
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     size: keyof IconSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, string>;
   }>;
 }
 
 export interface FormControlConfigBase {
   classes: object;
-  customProps: Partial<{
-    invalidated: Partial<FormControlInvalidated>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     errorless: boolean;
     size: keyof LabelSize;
     withoutErrorMessage: boolean;
     withValidationColors: boolean;
   }>;
+  tokens: Partial<{
+    invalidated: Partial<FormControlInvalidated>;
+    size: Record<string, string>;
+  }>;
 }
 
 export interface FormFieldConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
-    rounded: Record<string, FormFieldRoundedItem>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
     rounded: keyof FormFieldRounded;
@@ -361,30 +354,37 @@ export interface FormFieldConfigBase {
     variant: keyof FormFieldVariant;
     withErrorIcon: boolean;
   }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
 }
 
 export interface LabelConfigBase {
   classes: object;
-  customProps: Partial<{
-    invalidated: Partial<LabelInvalidated>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     size: keyof LabelSize;
+  }>;
+  tokens: Partial<{
+    invalidated: Partial<LabelInvalidated>;
+    size: Record<string, string>;
   }>;
 }
 
 export interface LinkConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, LinkColorItem>;
-    size: Record<string, string>;
-    underline: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof LinkColor;
     size: keyof LinkSize;
     underline: keyof LinkUnderline;
+  }>;
+  tokens: Partial<{
+    color: Record<string, LinkColorItem>;
+    size: Record<string, string>;
+    underline: Record<string, string>;
   }>;
 }
 
@@ -394,14 +394,14 @@ export interface ListConfigBase {
 
 export interface ListboxConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, ListboxColorItem>;
-    invalidated: Partial<ListboxInvalidated>;
-    size: Record<string, ListboxSizeItem>;
-  }>;
   defaultProps: Partial<{
     color: keyof ListboxColor;
     size: keyof ListboxSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ListboxColorItem>;
+    invalidated: Partial<ListboxInvalidated>;
+    size: Record<string, ListboxSizeItem>;
   }>;
 }
 
@@ -419,24 +419,18 @@ export interface ListSectionConfigBase {
 
 export interface MenuConfigBase {
   classes: object;
-  customProps: Partial<{
-    rounded: Record<string, string>;
-    shadow: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     rounded: keyof MenuRounded;
     shadow: keyof MenuShadow;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    shadow: Record<string, string>;
   }>;
 }
 
 export interface ModalConfigBase {
   classes: object;
-  customProps: Partial<{
-    align: Record<string, string>;
-    blur: Record<string, string>;
-    size: Record<string, string>;
-    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
-  }>;
   defaultProps: Partial<{
     align: keyof ModalAlign;
     blur: keyof ModalBlur;
@@ -444,22 +438,28 @@ export interface ModalConfigBase {
     teleportTo: false | string;
     transition: keyof ModalTransition;
   }>;
+  tokens: Partial<{
+    align: Record<string, string>;
+    blur: Record<string, string>;
+    size: Record<string, string>;
+    transition: Partial<Record<string, Partial<ModalTransitionLayer>>>;
+  }>;
 }
 
 export interface DrawerConfigBase {
   classes: object;
-  customProps: Partial<{
-    blur: Record<string, string>;
-    placement: Record<string, string>;
-    size: Record<string, DrawerSizeItem>;
-    transition: Partial<Record<string, Partial<DrawerTransitionLayer>>>;
-  }>;
   defaultProps: Partial<{
     blur: keyof DrawerBlur;
     placement: keyof DrawerPlacement;
     size: keyof DrawerSize;
     teleportTo: false | string;
     transition: keyof DrawerTransition;
+  }>;
+  tokens: Partial<{
+    blur: Record<string, string>;
+    placement: Record<string, string>;
+    size: Record<string, DrawerSizeItem>;
+    transition: Partial<Record<string, Partial<DrawerTransitionLayer>>>;
   }>;
 }
 
@@ -473,28 +473,21 @@ export interface PasswordFieldConfigBase {
 
 export interface RadioConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, RadioColorItem>;
-    invalidated: Partial<RadioInvalidated>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof RadioColor;
     rounded: keyof RadioRounded;
     size: keyof RadioSize;
   }>;
+  tokens: Partial<{
+    color: Record<string, RadioColorItem>;
+    invalidated: Partial<RadioInvalidated>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
 }
 
 export interface SnackbarConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, SnackbarColorItem>;
-    padding: Record<string, SnackbarPaddingItem>;
-    position: Record<string, string>;
-    rounded: Record<string, SnackbarRoundedItem>;
-    transition: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     closeButton: boolean;
     color: keyof SnackbarColor;
@@ -506,6 +499,13 @@ export interface SnackbarConfigBase {
     teleportTo: false | string;
     transition: keyof SnackbarTransition;
   }>;
+  tokens: Partial<{
+    color: Record<string, SnackbarColorItem>;
+    padding: Record<string, SnackbarPaddingItem>;
+    position: Record<string, string>;
+    rounded: Record<string, SnackbarRoundedItem>;
+    transition: Record<string, string>;
+  }>;
 }
 
 export interface SelectConfigBase {
@@ -514,49 +514,44 @@ export interface SelectConfigBase {
 
 export interface DividerConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, string>;
-    orientation: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof DividerColor;
     orientation: keyof DividerOrientation;
+  }>;
+  tokens: Partial<{
+    color: Record<string, string>;
+    orientation: Record<string, string>;
   }>;
 }
 
 export interface ProgressConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, ProgressColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-    variant: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof ProgressColor;
     rounded: keyof ProgressRounded;
     size: keyof ProgressSize;
     variant: keyof ProgressVariant;
   }>;
+  tokens: Partial<{
+    color: Record<string, ProgressColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
 }
 
 export interface SkeletonConfigBase {
   classes: object;
-  customProps: Partial<{
-    rounded: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     rounded: keyof SkeletonRounded;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
   }>;
 }
 
 export interface SpinnerConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, SpinnerColorItem>;
-    size: Record<string, string>;
-    variant: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof SpinnerColor;
     disableShrink: boolean;
@@ -565,42 +560,41 @@ export interface SpinnerConfigBase {
     thickness: number;
     variant: keyof SpinnerVariant;
   }>;
+  tokens: Partial<{
+    color: Record<string, SpinnerColorItem>;
+    size: Record<string, string>;
+    variant: Record<string, string>;
+  }>;
 }
 
 export interface SwitchConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, SwitchColorItem>;
-    invalidated: Partial<SwitchInvalidated>;
-    rounded: Record<string, string>;
-    size: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     color: keyof SwitchColor;
     rounded: keyof SwitchRounded;
     size: keyof SwitchSize;
   }>;
+  tokens: Partial<{
+    color: Record<string, SwitchColorItem>;
+    invalidated: Partial<SwitchInvalidated>;
+    rounded: Record<string, string>;
+    size: Record<string, string>;
+  }>;
 }
 
 export interface TextareaConfigBase {
   classes: object;
-  customProps: Partial<{
-    resize: Record<string, string>;
-  }>;
   defaultProps: Partial<{
     autosize: boolean;
     resize: keyof TextareaResize;
+  }>;
+  tokens: Partial<{
+    resize: Record<string, string>;
   }>;
 }
 
 export interface TabsConfigBase {
   classes: object;
-  customProps: Partial<{
-    color: Record<string, TabsColorItem>;
-    orientation: Record<string, TabsOrientationItem>;
-    size: Record<string, TabsSizeItem>;
-    variant: Record<string, TabsVariantItem>;
-  }>;
   defaultProps: Partial<{
     activation: "manual" | "automatic";
     color: keyof TabsColor;
@@ -608,6 +602,12 @@ export interface TabsConfigBase {
     orientation: keyof TabsOrientation;
     size: keyof TabsSize;
     variant: keyof TabsVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, TabsColorItem>;
+    orientation: Record<string, TabsOrientationItem>;
+    size: Record<string, TabsSizeItem>;
+    variant: Record<string, TabsVariantItem>;
   }>;
 }
 

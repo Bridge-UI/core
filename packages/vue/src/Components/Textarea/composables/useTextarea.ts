@@ -121,7 +121,7 @@ export function useTextarea(
   const resizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       resizeProps,
-      bridgeTextarea.value?.customProps?.resize,
+      bridgeTextarea.value?.tokens?.resize,
     );
 
     return get(classes, resize.value ?? "none");

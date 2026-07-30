@@ -151,11 +151,11 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
-      bridgeButton?.customProps?.density,
+      bridgeButton?.tokens?.density,
     );
 
     return get(classes, [merged.density, merged.size]);
-  }, [merged.size, merged.density, bridgeButton?.customProps?.density]);
+  }, [merged.size, merged.density, bridgeButton?.tokens?.density]);
 
   const variantKey = useMemo(() => {
     if (!isNil(componentProps.variant)) {
@@ -168,20 +168,20 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeButton?.customProps?.variant,
+      bridgeButton?.tokens?.variant,
     );
 
     return get(classes, [variantKey, merged.color]);
-  }, [variantKey, merged.color, bridgeButton?.customProps?.variant]);
+  }, [variantKey, merged.color, bridgeButton?.tokens?.variant]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeButton?.customProps?.rounded,
+      bridgeButton?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeButton?.customProps?.rounded]);
+  }, [merged.rounded, bridgeButton?.tokens?.rounded]);
 
   const iconBind = derived(() => {
     return mergePartBind(

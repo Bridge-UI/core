@@ -86,7 +86,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
   const variantClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeCard.value?.customProps?.variant,
+      bridgeCard.value?.tokens?.variant,
     );
 
     return get(classes, merged.value.variant);
@@ -107,7 +107,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
 
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeCard.value?.customProps?.shadow,
+      bridgeCard.value?.tokens?.shadow,
     );
 
     return get(classes, merged.value.shadow);
@@ -116,7 +116,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
   const paddingClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       paddingProps,
-      bridgeCard.value?.customProps?.padding,
+      bridgeCard.value?.tokens?.padding,
     );
 
     return get(classes, merged.value.padding);
@@ -125,7 +125,7 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeCard.value?.customProps?.rounded,
+      bridgeCard.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);

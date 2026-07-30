@@ -92,7 +92,7 @@ export function useProgress(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeProgress.value?.customProps?.color,
+      bridgeProgress.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -101,7 +101,7 @@ export function useProgress(
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeProgress.value?.customProps?.size,
+      bridgeProgress.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
@@ -110,7 +110,7 @@ export function useProgress(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeProgress.value?.customProps?.rounded,
+      bridgeProgress.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -119,7 +119,7 @@ export function useProgress(
   const variantClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeProgress.value?.customProps?.variant,
+      bridgeProgress.value?.tokens?.variant,
     );
 
     return get(classes, merged.value.variant);

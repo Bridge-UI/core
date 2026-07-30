@@ -95,29 +95,29 @@ export function useSpinner(
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeSpinner?.customProps?.color,
+      bridgeSpinner?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeSpinner?.customProps?.color]);
+  }, [merged.color, bridgeSpinner?.tokens?.color]);
 
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeSpinner?.customProps?.size,
+      bridgeSpinner?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeSpinner?.customProps?.size]);
+  }, [merged.size, bridgeSpinner?.tokens?.size]);
 
   const variantClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeSpinner?.customProps?.variant,
+      bridgeSpinner?.tokens?.variant,
     );
 
     return get(classes, merged.variant);
-  }, [merged.variant, bridgeSpinner?.customProps?.variant]);
+  }, [merged.variant, bridgeSpinner?.tokens?.variant]);
 
   const thickness = derived(() => {
     return merged.thickness ?? DEFAULT_SPINNER_THICKNESS;

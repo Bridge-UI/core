@@ -142,7 +142,7 @@ export function useButton(
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
-      bridgeButton.value?.customProps?.density,
+      bridgeButton.value?.tokens?.density,
     );
 
     return get(classes, [merged.value.density, merged.value.size]);
@@ -159,7 +159,7 @@ export function useButton(
   const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeButton.value?.customProps?.variant,
+      bridgeButton.value?.tokens?.variant,
     );
 
     return get(classes, [variantKey.value, merged.value.color]);
@@ -168,7 +168,7 @@ export function useButton(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeButton.value?.customProps?.rounded,
+      bridgeButton.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);

@@ -70,20 +70,20 @@ export function useDivider(
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeDivider?.customProps?.color,
+      bridgeDivider?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeDivider?.customProps?.color]);
+  }, [merged.color, bridgeDivider?.tokens?.color]);
 
   const orientationClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       orientationProps,
-      bridgeDivider?.customProps?.orientation,
+      bridgeDivider?.tokens?.orientation,
     );
 
     return get(classes, merged.orientation);
-  }, [merged.orientation, bridgeDivider?.customProps?.orientation]);
+  }, [merged.orientation, bridgeDivider?.tokens?.orientation]);
 
   const rootBind = derived(() => {
     return mergePartBind({}, inheritedAttrs, {

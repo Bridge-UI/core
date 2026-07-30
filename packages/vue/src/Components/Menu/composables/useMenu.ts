@@ -174,7 +174,7 @@ export function useMenu(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeMenu.value?.customProps?.rounded,
+      bridgeMenu.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -183,7 +183,7 @@ export function useMenu(
   const shadowClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeMenu.value?.customProps?.shadow,
+      bridgeMenu.value?.tokens?.shadow,
     );
 
     return get(classes, merged.value.shadow);

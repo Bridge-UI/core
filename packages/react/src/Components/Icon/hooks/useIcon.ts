@@ -46,11 +46,11 @@ export function useIcon(props: IconProps, libDefaults: IconLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeIcon?.customProps?.size,
+      bridgeIcon?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeIcon?.customProps?.size]);
+  }, [merged.size, bridgeIcon?.tokens?.size]);
 
   const rootBind = derived(() => {
     return mergePartBind(

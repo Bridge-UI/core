@@ -158,7 +158,7 @@ export function useFormControl(
   const invalidatedColors = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeFormControl.value?.customProps?.invalidated,
+      bridgeFormControl.value?.tokens?.invalidated,
       merged.value.customProps?.invalidated,
     );
   });

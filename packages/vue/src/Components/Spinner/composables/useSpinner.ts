@@ -95,7 +95,7 @@ export function useSpinner(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeSpinner.value?.customProps?.color,
+      bridgeSpinner.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -104,7 +104,7 @@ export function useSpinner(
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeSpinner.value?.customProps?.size,
+      bridgeSpinner.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
@@ -113,7 +113,7 @@ export function useSpinner(
   const variantClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeSpinner.value?.customProps?.variant,
+      bridgeSpinner.value?.tokens?.variant,
     );
 
     return get(classes, merged.value.variant);

@@ -199,7 +199,7 @@ export function useModal(
   const alignClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
-      bridgeModal.value?.customProps?.align,
+      bridgeModal.value?.tokens?.align,
     );
 
     return get(classes, merged.value.align);
@@ -208,7 +208,7 @@ export function useModal(
   const blurClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       blurProps,
-      bridgeModal.value?.customProps?.blur,
+      bridgeModal.value?.tokens?.blur,
     );
 
     return get(classes, merged.value.blur);
@@ -217,7 +217,7 @@ export function useModal(
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeModal.value?.customProps?.size,
+      bridgeModal.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
