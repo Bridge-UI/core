@@ -36,7 +36,7 @@ import {
   alignProps,
   blurProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Modal";
+} from "@bridge-ui/core/Tokens/Modal";
 import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

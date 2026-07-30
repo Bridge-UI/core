@@ -10,7 +10,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { roundedProps } from "@bridge-ui/core/Components/Skeleton";
+import { roundedProps } from "@bridge-ui/core/Tokens/Skeleton";
 
 // ** Local Imports
 import type {

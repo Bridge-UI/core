@@ -6,7 +6,7 @@ export type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@/Components/Alert";
+} from "@/Tokens/Alert";
 export type {
   AvatarColor,
   AvatarColorItem,
@@ -14,7 +14,7 @@ export type {
   AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
-} from "@/Components/Avatar";
+} from "@/Tokens/Avatar";
 export type {
   BadgeColor,
   BadgeColorItem,
@@ -22,7 +22,7 @@ export type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
-} from "@/Components/Badge";
+} from "@/Tokens/Badge";
 export type {
   ButtonColor,
   ButtonColorItem,
@@ -30,7 +30,7 @@ export type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@/Components/Button";
+} from "@/Tokens/Button";
 export type {
   CardPadding,
   CardPaddingItem,
@@ -39,15 +39,15 @@ export type {
   CardShadow,
   CardVariant,
   CardVariantItem,
-} from "@/Components/Card";
+} from "@/Tokens/Card";
 export type {
   CheckboxColor,
   CheckboxColorItem,
   CheckboxRounded,
   CheckboxSize,
-} from "@/Components/Checkbox";
-export type { ChipSize, ChipSizeItem } from "@/Components/Chip";
-export type { DividerColor, DividerOrientation } from "@/Components/Divider";
+} from "@/Tokens/Checkbox";
+export type { ChipSize, ChipSizeItem } from "@/Tokens/Chip";
+export type { DividerColor, DividerOrientation } from "@/Tokens/Divider";
 export {
   blurProps as drawerBlurProps,
   scrollProps as drawerScrollProps,
@@ -55,7 +55,7 @@ export {
   transitionProps as drawerTransitionProps,
   placementPanelProps,
   placementProps,
-} from "@/Components/Drawer";
+} from "@/Tokens/Drawer";
 export type {
   DrawerBlur,
   DrawerPlacement,
@@ -65,8 +65,8 @@ export type {
   DrawerSlidePanel,
   DrawerTransition,
   DrawerTransitionLayer,
-} from "@/Components/Drawer";
-export type { FormControlInvalidated } from "@/Components/FormControl";
+} from "@/Tokens/Drawer";
+export type { FormControlInvalidated } from "@/Tokens/FormControl";
 export type {
   FormFieldColor,
   FormFieldColorItem,
@@ -77,24 +77,24 @@ export type {
   FormFieldSizeItem,
   FormFieldVariant,
   FormFieldVariantItem,
-} from "@/Components/FormField";
-export type { IconSize } from "@/Components/Icon";
-export type { LabelSize } from "@/Components/Label";
+} from "@/Tokens/FormField";
+export type { IconSize } from "@/Tokens/Icon";
+export type { LabelSize } from "@/Tokens/Label";
 export type {
   LinkColor,
   LinkColorItem,
   LinkSize,
   LinkUnderline,
-} from "@/Components/Link";
+} from "@/Tokens/Link";
 export type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
   ListboxSize,
   ListboxSizeItem,
-} from "@/Components/Listbox";
-export type { MenuRounded, MenuShadow } from "@/Components/Menu";
-export { transitionProps } from "@/Components/Modal";
+} from "@/Tokens/Listbox";
+export type { MenuRounded, MenuShadow } from "@/Tokens/Menu";
+export { transitionProps } from "@/Tokens/Modal";
 export type {
   ModalAlign,
   ModalBlur,
@@ -102,28 +102,28 @@ export type {
   ModalSize,
   ModalTransition,
   ModalTransitionLayer,
-} from "@/Components/Modal";
+} from "@/Tokens/Modal";
 export type {
   ProgressColor,
   ProgressColorItem,
   ProgressRounded,
   ProgressSize,
   ProgressVariant,
-} from "@/Components/Progress";
+} from "@/Tokens/Progress";
 export type {
   RadioColor,
   RadioColorItem,
   RadioRounded,
   RadioSize,
-} from "@/Components/Radio";
-export type { SkeletonRounded } from "@/Components/Skeleton";
+} from "@/Tokens/Radio";
+export type { SkeletonRounded } from "@/Tokens/Skeleton";
 export {
   colorProps as snackbarColorProps,
   paddingProps as snackbarPaddingProps,
   positionProps as snackbarPositionProps,
   roundedProps as snackbarRoundedProps,
   transitionProps as snackbarTransitionProps,
-} from "@/Components/Snackbar";
+} from "@/Tokens/Snackbar";
 export type {
   SnackbarColor,
   SnackbarColorItem,
@@ -133,26 +133,26 @@ export type {
   SnackbarRounded,
   SnackbarRoundedItem,
   SnackbarTransition,
-} from "@/Components/Snackbar";
+} from "@/Tokens/Snackbar";
 export type {
   SpinnerColor,
   SpinnerColorItem,
   SpinnerSize,
   SpinnerVariant,
-} from "@/Components/Spinner";
+} from "@/Tokens/Spinner";
 export type {
   SwitchColor,
   SwitchColorItem,
   SwitchRounded,
   SwitchSize,
   SwitchSizeItem,
-} from "@/Components/Switch";
+} from "@/Tokens/Switch";
 export {
   colorProps as tabsColorProps,
   orientationProps as tabsOrientationProps,
   sizeProps as tabsSizeProps,
   variantProps as tabsVariantProps,
-} from "@/Components/Tabs";
+} from "@/Tokens/Tabs";
 export type {
   TabsColor,
   TabsColorItem,
@@ -161,8 +161,8 @@ export type {
   TabsSizeItem,
   TabsVariant,
   TabsVariantItem,
-} from "@/Components/Tabs";
-export type { TextareaResize } from "@/Components/Textarea";
+} from "@/Tokens/Tabs";
+export type { TextareaResize } from "@/Tokens/Textarea";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,

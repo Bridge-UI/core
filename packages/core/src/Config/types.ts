@@ -6,14 +6,14 @@ import type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@/Components/Alert";
+} from "@/Tokens/Alert";
 import type {
   AvatarColor,
   AvatarColorItem,
   AvatarIconSizeItem,
   AvatarRounded,
   AvatarSize,
-} from "@/Components/Avatar";
+} from "@/Tokens/Avatar";
 import type {
   BadgeColor,
   BadgeColorItem,
@@ -21,7 +21,7 @@ import type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
-} from "@/Components/Badge";
+} from "@/Tokens/Badge";
 import type {
   ButtonColor,
   ButtonColorItem,
@@ -29,7 +29,7 @@ import type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@/Components/Button";
+} from "@/Tokens/Button";
 import type {
   CardPadding,
   CardPaddingItem,
@@ -38,16 +38,16 @@ import type {
   CardShadow,
   CardVariant,
   CardVariantItem,
-} from "@/Components/Card";
+} from "@/Tokens/Card";
 import type {
   CheckboxColor,
   CheckboxColorItem,
   CheckboxInvalidated,
   CheckboxRounded,
   CheckboxSize,
-} from "@/Components/Checkbox";
-import type { ChipSize, ChipSizeItem } from "@/Components/Chip";
-import type { DividerColor, DividerOrientation } from "@/Components/Divider";
+} from "@/Tokens/Checkbox";
+import type { ChipSize, ChipSizeItem } from "@/Tokens/Chip";
+import type { DividerColor, DividerOrientation } from "@/Tokens/Divider";
 import type {
   DrawerBlur,
   DrawerPlacement,
@@ -55,8 +55,8 @@ import type {
   DrawerSizeItem,
   DrawerTransition,
   DrawerTransitionLayer,
-} from "@/Components/Drawer";
-import type { FormControlInvalidated } from "@/Components/FormControl";
+} from "@/Tokens/Drawer";
+import type { FormControlInvalidated } from "@/Tokens/FormControl";
 import type {
   FormFieldColor,
   FormFieldColorItem,
@@ -67,45 +67,45 @@ import type {
   FormFieldSizeItem,
   FormFieldVariant,
   FormFieldVariantItem,
-} from "@/Components/FormField";
-import type { IconSize } from "@/Components/Icon";
-import type { LabelInvalidated, LabelSize } from "@/Components/Label";
+} from "@/Tokens/FormField";
+import type { IconSize } from "@/Tokens/Icon";
+import type { LabelInvalidated, LabelSize } from "@/Tokens/Label";
 import type {
   LinkColor,
   LinkColorItem,
   LinkSize,
   LinkUnderline,
-} from "@/Components/Link";
+} from "@/Tokens/Link";
 import type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
   ListboxSize,
   ListboxSizeItem,
-} from "@/Components/Listbox";
-import type { MenuRounded, MenuShadow } from "@/Components/Menu";
+} from "@/Tokens/Listbox";
+import type { MenuRounded, MenuShadow } from "@/Tokens/Menu";
 import type {
   ModalAlign,
   ModalBlur,
   ModalSize,
   ModalTransition,
   ModalTransitionLayer,
-} from "@/Components/Modal";
+} from "@/Tokens/Modal";
 import type {
   ProgressColor,
   ProgressColorItem,
   ProgressRounded,
   ProgressSize,
   ProgressVariant,
-} from "@/Components/Progress";
+} from "@/Tokens/Progress";
 import type {
   RadioColor,
   RadioColorItem,
   RadioInvalidated,
   RadioRounded,
   RadioSize,
-} from "@/Components/Radio";
-import type { SkeletonRounded } from "@/Components/Skeleton";
+} from "@/Tokens/Radio";
+import type { SkeletonRounded } from "@/Tokens/Skeleton";
 import type {
   SnackbarColor,
   SnackbarColorItem,
@@ -115,20 +115,20 @@ import type {
   SnackbarRounded,
   SnackbarRoundedItem,
   SnackbarTransition,
-} from "@/Components/Snackbar";
+} from "@/Tokens/Snackbar";
 import type {
   SpinnerColor,
   SpinnerColorItem,
   SpinnerSize,
   SpinnerVariant,
-} from "@/Components/Spinner";
+} from "@/Tokens/Spinner";
 import type {
   SwitchColor,
   SwitchColorItem,
   SwitchInvalidated,
   SwitchRounded,
   SwitchSize,
-} from "@/Components/Switch";
+} from "@/Tokens/Switch";
 import type {
   TabsColor,
   TabsColorItem,
@@ -138,8 +138,8 @@ import type {
   TabsSizeItem,
   TabsVariant,
   TabsVariantItem,
-} from "@/Components/Tabs";
-import type { TextareaResize } from "@/Components/Textarea";
+} from "@/Tokens/Tabs";
+import type { TextareaResize } from "@/Tokens/Textarea";
 import type { Overwrite } from "@/Utils/types";
 
 export type Direction = "ltr" | "rtl";

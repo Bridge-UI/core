@@ -16,7 +16,7 @@ import {
   roundedProps,
   shadowProps,
   variantProps,
-} from "@bridge-ui/core/Components/Alert";
+} from "@bridge-ui/core/Tokens/Alert";
 
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";

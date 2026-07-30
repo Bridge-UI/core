@@ -11,8 +11,8 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { invalidatedProps } from "@bridge-ui/core/Components/FormControl";
-import { sizeProps as labelSizeProps } from "@bridge-ui/core/Components/Label";
+import { invalidatedProps } from "@bridge-ui/core/Tokens/FormControl";
+import { sizeProps as labelSizeProps } from "@bridge-ui/core/Tokens/Label";
 
 // ** Local Imports
 import type {

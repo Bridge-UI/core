@@ -42,13 +42,13 @@
       "import": "./dist/Utils/index.js",
       "types": "./dist/Utils/index.d.ts"
     },
-    "./Components/*/*": {
-      "import": "./dist/Components/*/*.js",
-      "types": "./dist/Components/*/*.d.ts"
+    "./Tokens/*/*": {
+      "import": "./dist/Tokens/*/*.js",
+      "types": "./dist/Tokens/*/*.d.ts"
     },
-    "./Components/*": {
-      "import": "./dist/Components/*/index.js",
-      "types": "./dist/Components/*/index.d.ts"
+    "./Tokens/*": {
+      "import": "./dist/Tokens/*/index.js",
+      "types": "./dist/Tokens/*/index.d.ts"
     }
   },
   "files": [

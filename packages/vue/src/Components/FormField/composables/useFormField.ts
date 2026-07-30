@@ -24,7 +24,7 @@ import {
   roundedProps,
   sizeProps,
   variantProps,
-} from "@bridge-ui/core/Components/FormField";
+} from "@bridge-ui/core/Tokens/FormField";
 
 // ** Local Imports
 import type {

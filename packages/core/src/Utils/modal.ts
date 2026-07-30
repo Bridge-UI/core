@@ -6,7 +6,7 @@ import { get, isNil } from "es-toolkit/compat";
 import {
   transitionProps,
   type ModalTransition,
-} from "@/Components/Modal/Transition";
+} from "@/Tokens/Modal/Transition";
 import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
 import { hasDocument, hasWindow } from "@/Utils/env";

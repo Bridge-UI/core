@@ -15,8 +15,8 @@ import {
   createMergeNestedComponentProps,
   createMergePartBind,
 } from "@bridge-ui/core";
-import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
-import type { IconSize } from "@bridge-ui/core/Components/Icon";
+import type { FormFieldSize } from "@bridge-ui/core/Tokens/FormField";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   mergeBridgeUILayeredClasses,

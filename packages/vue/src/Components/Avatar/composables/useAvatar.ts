@@ -16,7 +16,7 @@ import {
   iconSizeProps,
   roundedProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Avatar";
+} from "@bridge-ui/core/Tokens/Avatar";
 
 // ** Local Imports
 import type {

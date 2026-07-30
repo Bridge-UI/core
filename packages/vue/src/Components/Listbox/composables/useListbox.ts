@@ -14,7 +14,7 @@ import {
   colorProps,
   invalidatedProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Listbox";
+} from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import type {

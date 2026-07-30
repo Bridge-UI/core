@@ -13,7 +13,7 @@ import {
 import {
   colorProps,
   orientationProps,
-} from "@bridge-ui/core/Components/Divider";
+} from "@bridge-ui/core/Tokens/Divider";
 
 // ** Local Imports
 import type {

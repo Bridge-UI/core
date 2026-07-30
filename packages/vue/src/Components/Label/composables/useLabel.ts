@@ -10,7 +10,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Components/Label";
+import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
 
 // ** Local Imports
 import type {
