@@ -252,6 +252,25 @@ describe("createBreakpointObserver", () => {
     expect(window.matchMedia).not.toHaveBeenCalled();
   });
 
+  test("it should return a stable getSnapshot reference before subscribe", () => {
+    Object.defineProperty(window, "innerWidth", {
+      value: 500,
+      configurable: true,
+    });
+    Object.defineProperty(window, "innerHeight", {
+      value: 800,
+      configurable: true,
+    });
+    mockMatchMedia();
+
+    const observer = createBreakpointObserver();
+    const first = observer.getSnapshot();
+    const second = observer.getSnapshot();
+
+    expect(first).toBe(second);
+    expect(observer.getServerSnapshot()).toBe(observer.getServerSnapshot());
+  });
+
   test("it should expose a server snapshot for hydration", () => {
     const snapshot = createBreakpointObserver().getServerSnapshot();
 
