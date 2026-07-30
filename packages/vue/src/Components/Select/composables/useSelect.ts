@@ -890,8 +890,9 @@ export function useSelect(
       entries: visibleEntries.value,
       options: visibleOptions.value,
       labelledBy: formField.controlId.value,
-      highlightedIndex: highlightedIndex.value,
+      rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
+      highlightedIndex: highlightedIndex.value,
     };
   });
 

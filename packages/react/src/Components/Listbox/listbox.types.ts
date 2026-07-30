@@ -8,6 +8,7 @@ import type {
   ListboxOption,
   ListboxSize,
   ListboxValue,
+  MenuRounded,
   MergeHtmlProps,
   MergeProps,
   PositionPlacement,
@@ -15,6 +16,7 @@ import type {
 
 export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
+export interface ListboxRoundedOverrides {}
 
 export interface ListboxClasses {
   /**
@@ -229,6 +231,15 @@ export interface ListboxOwnProps {
    * @default "bottom-start"
    */
   placement?: PositionPlacement;
+
+  /**
+   * Roundedness of the floating panel (`Menu`). When omitted, `Menu` defaults
+   * apply (including `Menu.defaultProps.rounded`).
+   *
+   * `Select` always forwards its own `rounded` here so the dropdown matches the
+   * field, independent of `Menu.defaultProps`.
+   */
+  rounded?: MergeProps<MenuRounded, ListboxRoundedOverrides>;
 
   /**
    * Shows a check icon on selected options.

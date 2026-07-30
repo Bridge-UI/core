@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { Check } from "@lucide/vue";
+import { isNil } from "es-toolkit/compat";
 import { computed, provide, ref, useSlots, watch } from "vue";
 
 // ** Core Imports
@@ -229,6 +230,7 @@ const mappedRows = computed(() => {
     :close-on-click-away="true"
     :disable-auto-focus="disableAutoFocus"
     :custom-props="{ content: merged.customProps?.content }"
+    v-bind="!isNil(rounded) ? { rounded } : {}"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"

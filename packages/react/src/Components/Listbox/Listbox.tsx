@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { Check } from "lucide-react";
 import {
   useCallback,
@@ -47,6 +48,7 @@ function Listbox({
   slots,
   options,
   entries,
+  rounded,
   children,
   onSelect,
   anchorEl,
@@ -270,6 +272,7 @@ function Listbox({
       placement={placement}
       onShowChange={onShowChange}
       disableAutoFocus={disableAutoFocus}
+      {...(!isNil(rounded) ? { rounded } : {})}
       customProps={{ content: merged.customProps?.content }}
     >
       {slots?.beforeOptions}
