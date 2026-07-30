@@ -72,7 +72,7 @@ export function useListbox(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeListbox.value?.customProps?.color,
+      bridgeListbox.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
@@ -81,7 +81,7 @@ export function useListbox(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeListbox.value?.customProps?.invalidated,
+      bridgeListbox.value?.tokens?.invalidated,
     );
   });
 
@@ -94,7 +94,7 @@ export function useListbox(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeListbox.value?.customProps?.size,
+      bridgeListbox.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size ?? "md");
@@ -117,7 +117,7 @@ export function useListbox(
     const disableMaxHeight = merged.value.disableMaxHeight === true;
 
     return mergePartBind(
-      merged.value.customProps?.scroll,
+      {},
       {},
       cn({
         "overflow-y-auto overscroll-contain": !disableMaxHeight,

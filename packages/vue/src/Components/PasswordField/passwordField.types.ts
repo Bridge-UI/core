@@ -1,5 +1,5 @@
 // ** External Imports
-import type { InputHTMLAttributes } from "vue";
+import type { ButtonHTMLAttributes, InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type { MergeHtmlProps } from "@bridge-ui/core";
@@ -11,6 +11,7 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 
 export interface PasswordFieldClasses extends FormFieldClasses {
   /**
@@ -19,7 +20,21 @@ export interface PasswordFieldClasses extends FormFieldClasses {
   toggle?: string;
 }
 
-export interface PasswordFieldCustomProps extends FormFieldCustomProps {}
+export interface PasswordFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the visibility toggle button.
+   *
+   * @default undefined
+   */
+  toggle?: ButtonHTMLAttributes;
+
+  /**
+   * Props forwarded to the visibility toggle `Icon` (`icon` is set by the field).
+   *
+   * @default undefined
+   */
+  toggleIcon?: Partial<Omit<IconProps, "icon">>;
+}
 
 export interface PasswordFieldEmits {
   /**
@@ -37,6 +52,13 @@ export interface PasswordFieldOwnProps extends Omit<
    * The classes to apply to the password field.
    */
   classes?: PasswordFieldClasses;
+
+  /**
+   * Extra props for FormField parts and the visibility toggle.
+   *
+   * @default undefined
+   */
+  customProps?: PasswordFieldCustomProps;
 
   /**
    * Whether the password is visible. Omit for uncontrolled mode.

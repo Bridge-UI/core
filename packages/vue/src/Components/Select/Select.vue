@@ -17,7 +17,11 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergeNestedComponentProps,
+  resolveNamedSlot,
+} from "@/Utils";
 
 defineSlots<SelectSlots>();
 
@@ -93,11 +97,15 @@ const {
         :key="String(option.value)"
         v-for="option in selectedOptions"
         :size="formField.merged.value.size"
-        :custom-props="{ clear: clearBind }"
         :disabled="formField.isDisabled.value"
         :clear-label="`Remove ${option.label}`"
-        :classes="{ root: mergedClasses.chip }"
         v-on:dismiss="removeChip(option, $event)"
+        v-bind="
+          mergeNestedComponentProps(props.customProps?.chip, {
+            classes: { root: mergedClasses.chip },
+            customProps: { clear: clearBind },
+          })
+        "
       >
         <slot name="chip" :option="option">
           {{ option.label }}
@@ -118,7 +126,11 @@ const {
         v-on:keydown.space.prevent="clearValue"
         v-if="clearable && hasValue && !formField.isDisabled.value"
       >
-        <Icon :icon="X" :size="clearIconSize" />
+        <Icon
+          :icon="X"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
       </span>
     </div>
   </FormField>

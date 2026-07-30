@@ -15,7 +15,11 @@ import type {
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
-import { resolveFieldAdornmentIconSize, useHoldRepeat } from "@/Utils";
+import {
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+  useHoldRepeat,
+} from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
@@ -57,6 +61,44 @@ const decrementHold = useHoldRepeat(
 const stepperIconSize = computed(() => {
   return resolveFieldAdornmentIconSize(props.size);
 });
+
+const incrementBind = computed(() => {
+  return mergePartBind(
+    props.customProps?.increment,
+    {
+      type: "button",
+      disabled: props.disabled,
+      "aria-label": "Increment value",
+      onClick: incrementHold.onPressClick,
+      onPointerup: incrementHold.onPressPointerUp,
+      onPointerdown: incrementHold.onPressPointerDown,
+      onLostpointercapture: incrementHold.onPressLostPointerCapture,
+    },
+    cn({
+      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+      [mergedClasses.value.increment ?? ""]: true,
+    }),
+  );
+});
+
+const decrementBind = computed(() => {
+  return mergePartBind(
+    props.customProps?.decrement,
+    {
+      type: "button",
+      disabled: props.disabled,
+      "aria-label": "Decrement value",
+      onClick: decrementHold.onPressClick,
+      onPointerup: decrementHold.onPressPointerUp,
+      onPointerdown: decrementHold.onPressPointerDown,
+      onLostpointercapture: decrementHold.onPressLostPointerCapture,
+    },
+    cn({
+      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+      [mergedClasses.value.decrement ?? ""]: true,
+    }),
+  );
+});
 </script>
 
 <template>
@@ -67,40 +109,20 @@ const stepperIconSize = computed(() => {
       <div
         class="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden"
       >
-        <button
-          type="button"
-          :disabled="props.disabled"
-          aria-label="Increment value"
-          v-on:click="incrementHold.onPressClick"
-          v-on:pointerup="incrementHold.onPressPointerUp"
-          v-on:pointerdown="incrementHold.onPressPointerDown"
-          v-on:lostpointercapture="incrementHold.onPressLostPointerCapture"
-          :class="
-            cn({
-              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
-              [mergedClasses.increment ?? '']: true,
-            })
-          "
-        >
-          <Icon :icon="ChevronUp" :size="stepperIconSize" />
+        <button v-bind="incrementBind">
+          <Icon
+            :icon="ChevronUp"
+            :size="stepperIconSize"
+            v-bind="props.customProps?.incrementIcon"
+          />
         </button>
 
-        <button
-          type="button"
-          :disabled="props.disabled"
-          aria-label="Decrement value"
-          v-on:click="decrementHold.onPressClick"
-          v-on:pointerup="decrementHold.onPressPointerUp"
-          v-on:pointerdown="decrementHold.onPressPointerDown"
-          v-on:lostpointercapture="decrementHold.onPressLostPointerCapture"
-          :class="
-            cn({
-              'bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center': true,
-              [mergedClasses.decrement ?? '']: true,
-            })
-          "
-        >
-          <Icon :icon="ChevronDown" :size="stepperIconSize" />
+        <button v-bind="decrementBind">
+          <Icon
+            :icon="ChevronDown"
+            :size="stepperIconSize"
+            v-bind="props.customProps?.decrementIcon"
+          />
         </button>
       </div>
     </template>

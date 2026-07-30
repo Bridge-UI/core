@@ -1,14 +1,6 @@
 // ** External Imports
 import { isNil } from "es-toolkit/compat";
-import { Check } from "lucide-react";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type MouseEvent,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
@@ -23,26 +15,21 @@ import {
 // ** Local Imports
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
-import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
 import type { ListboxProps } from "@/Components/Listbox/listbox.types";
 import {
   ListboxContext,
   type ListboxContextValue,
 } from "@/Components/Listbox/ListboxContext";
 import { ListItem } from "@/Components/ListItem";
-import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
+import { mergeNestedComponentProps } from "@/Utils";
 
 const listboxLibDefaults = {
   size: "md",
   color: "primary",
 } as const;
-
-function keepFocusOnCombobox(event: MouseEvent) {
-  event.preventDefault();
-}
 
 function Listbox({
   slots,
@@ -229,40 +216,11 @@ function Listbox({
     mergedClasses.optionHighlighted,
   ]);
 
-  function isOptionHighlighted(index: number) {
-    return highlightedIndex === index;
-  }
-
-  function getOptionCustomProps(
-    option: ListboxOption,
-    index: number,
-  ): ListItemCustomProps {
-    const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
-      tabIndex: -1,
-      onMouseDown: keepFocusOnCombobox,
-      className: cn(sizeClasses?.option),
-    };
-
-    if (resolveSelected(option.value)) {
-      interactive.className = cn(
-        interactive.className,
-        optionSelectedClass,
-        mergedClasses.optionSelected,
-      );
-    } else if (isOptionHighlighted(index)) {
-      interactive.className = cn(
-        interactive.className,
-        optionHighlightedClass,
-        mergedClasses.optionHighlighted,
-      );
-    }
-
-    return {
-      interactive,
-      primary: { className: sizeClasses?.primary },
-      secondary: { className: sizeClasses?.secondary },
-    };
-  }
+  const menuProps = merged.customProps?.menu;
+  const listProps = merged.customProps?.list;
+  const listItemProps = merged.customProps?.listItem;
+  const progressProps = merged.customProps?.progress;
+  const listSectionProps = merged.customProps?.listSection;
 
   return (
     <Menu
@@ -273,7 +231,7 @@ function Listbox({
       onShowChange={onShowChange}
       disableAutoFocus={disableAutoFocus}
       {...(!isNil(rounded) ? { rounded } : {})}
-      customProps={{ content: merged.customProps?.content }}
+      {...menuProps}
     >
       {slots?.beforeOptions}
 
@@ -282,10 +240,11 @@ function Listbox({
           <Progress
             size="xs"
             aria-hidden
-            className="shrink-0"
             color={merged.color}
-            classes={{ bar: mergedClasses.loading }}
-            customProps={{ bar: merged.customProps?.loading }}
+            {...mergeNestedComponentProps(progressProps, {
+              className: "shrink-0",
+              classes: { bar: mergedClasses.loading },
+            })}
           />
 
           <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
@@ -297,9 +256,11 @@ function Listbox({
               dense
               role="listbox"
               id={listboxId}
-              className="p-0"
               aria-labelledby={labelledBy}
               aria-multiselectable={multiple || undefined}
+              {...mergeNestedComponentProps(listProps, {
+                className: "p-0",
+              })}
             >
               {hasComposedChildren
                 ? children
@@ -310,42 +271,23 @@ function Listbox({
                           key={row.key}
                           title={row.title}
                           sticky={row.sticky}
+                          {...listSectionProps}
                         />
                       );
                     }
 
-                    const { index, option, selected } = row;
-                    const optionCustomProps = getOptionCustomProps(
-                      option,
-                      index,
-                    );
+                    const { option, selected } = row;
 
                     return (
                       <ListItem
                         interactive
-                        role="option"
                         key={row.key}
-                        selected={false}
-                        aria-selected={selected}
+                        value={option.value}
                         disabled={option.disabled}
                         secondary={option.description}
                         primary={slots?.option ? undefined : option.label}
-                        slots={{
-                          end:
-                            showCheckmark && selected ? (
-                              <Check className={resolvedCheckClass} />
-                            ) : undefined,
-                        }}
-                        customProps={{
-                          ...optionCustomProps,
-                          root: {
-                            id: getListboxOptionId(listboxId, index),
-                          },
-                          interactive: {
-                            ...optionCustomProps.interactive,
-                            onClick: () => handleSelect(option),
-                          },
-                        }}
+                        {...listItemProps}
+                        customProps={listItemProps?.customProps}
                       >
                         {slots?.option?.({ option, selected })}
                       </ListItem>

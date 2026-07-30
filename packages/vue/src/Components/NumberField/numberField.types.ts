@@ -1,5 +1,5 @@
 // ** External Imports
-import type { InputHTMLAttributes } from "vue";
+import type { ButtonHTMLAttributes, InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type { MergeHtmlProps } from "@bridge-ui/core";
@@ -11,6 +11,7 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 
 export interface NumberFieldClasses extends FormFieldClasses {
   /**
@@ -24,7 +25,35 @@ export interface NumberFieldClasses extends FormFieldClasses {
   increment?: string;
 }
 
-export interface NumberFieldCustomProps extends FormFieldCustomProps {}
+export interface NumberFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the decrement button.
+   *
+   * @default undefined
+   */
+  decrement?: ButtonHTMLAttributes;
+
+  /**
+   * Props forwarded to the decrement `Icon` (`icon` is set by the field).
+   *
+   * @default undefined
+   */
+  decrementIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the increment button.
+   *
+   * @default undefined
+   */
+  increment?: ButtonHTMLAttributes;
+
+  /**
+   * Props forwarded to the increment `Icon` (`icon` is set by the field).
+   *
+   * @default undefined
+   */
+  incrementIcon?: Partial<Omit<IconProps, "icon">>;
+}
 
 export interface NumberFieldEmits {
   /**
@@ -47,6 +76,13 @@ export interface NumberFieldOwnProps extends Omit<
    * The classes to apply to the number field.
    */
   classes?: NumberFieldClasses;
+
+  /**
+   * Extra props for FormField parts and the stepper buttons.
+   *
+   * @default undefined
+   */
+  customProps?: NumberFieldCustomProps;
 
   /**
    * The maximum value.

@@ -14,6 +14,13 @@ import type {
   PositionPlacement,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { ListOwnProps } from "@/Components/List/list.types";
+import type { ListItemOwnProps } from "@/Components/ListItem/listItem.types";
+import type { ListSectionOwnProps } from "@/Components/ListSection/listSection.types";
+import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
+
 export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
 export interface ListboxRoundedOverrides {}
@@ -74,19 +81,47 @@ export interface ListboxControlledProps {
 
 export interface ListboxCustomProps {
   /**
-   * Props forwarded to the floating menu panel.
+   * Props forwarded to the internal `List`.
+   *
+   * @default undefined
    */
-  content?: HTMLAttributes<HTMLDivElement>;
+  list?: Partial<Omit<ListOwnProps, "children">>;
 
   /**
-   * Props forwarded to the loading `Progress` bar.
+   * Props forwarded to each mapped `ListItem` option.
+   *
+   * @default undefined
    */
-  loading?: HTMLAttributes<HTMLDivElement>;
+  listItem?: Partial<
+    Omit<ListItemOwnProps, "primary" | "children" | "secondary">
+  >;
 
   /**
-   * Props forwarded to the scrollable options container.
+   * Props forwarded to each mapped `ListSection`.
+   *
+   * @default undefined
    */
-  scroll?: HTMLAttributes<HTMLDivElement>;
+  listSection?: Partial<Omit<ListSectionOwnProps, "title" | "children">>;
+
+  /**
+   * Props forwarded to the floating `Menu`.
+   * Open state, anchor, and panel children stay owned by `Listbox`.
+   *
+   * @default undefined
+   */
+  menu?: Partial<
+    Omit<
+      MenuOwnProps,
+      "show" | "onClose" | "anchorEl" | "children" | "onShowChange"
+    >
+  >;
+
+  /**
+   * Props forwarded to the loading `Progress`.
+   *
+   * @default undefined
+   */
+  progress?: Partial<ProgressOwnProps>;
 }
 
 export type {
@@ -120,7 +155,10 @@ export interface ListboxOwnProps {
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
 
   /**
-   * Extra props for internal parts.
+   * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
+   * `progress`).
+   *
+   * @default undefined
    */
   customProps?: ListboxCustomProps;
 

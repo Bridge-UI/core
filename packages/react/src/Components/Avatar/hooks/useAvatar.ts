@@ -42,6 +42,7 @@ const avatarBridgeKeys = [
   "classes",
   "rounded",
   "fallback",
+  "customProps",
 ] as const satisfies readonly (keyof AvatarOwnProps)[];
 
 type AvatarLibDefaults = LibDefaultsShape<
@@ -75,6 +76,10 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const slots = derived(() => {
     return props.slots;
+  });
+
+  const customProps = derived(() => {
+    return merged.customProps;
   });
 
   const rootInheritedAttrs = derived(() => {
@@ -113,42 +118,42 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeAvatar?.customProps?.size,
+      bridgeAvatar?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeAvatar?.customProps?.size]);
+  }, [merged.size, bridgeAvatar?.tokens?.size]);
 
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeAvatar?.customProps?.color,
+      bridgeAvatar?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeAvatar?.customProps?.color]);
+  }, [merged.color, bridgeAvatar?.tokens?.color]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeAvatar?.customProps?.rounded,
+      bridgeAvatar?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeAvatar?.customProps?.rounded]);
+  }, [merged.rounded, bridgeAvatar?.tokens?.rounded]);
 
   const iconSizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       iconSizeProps,
-      bridgeAvatar?.customProps?.iconSize,
+      bridgeAvatar?.tokens?.iconSize,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeAvatar?.customProps?.iconSize]);
+  }, [merged.size, bridgeAvatar?.tokens?.iconSize]);
 
   const rootBind = derived(() => {
     return mergePartBind(
-      {},
+      customProps?.root,
       rootInheritedAttrs,
       cn({
         "inline-flex shrink-0 items-center justify-center overflow-hidden": true,
@@ -163,7 +168,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const imageBind = derived(() => {
     return mergePartBind(
-      {},
+      customProps?.image,
       {
         alt: merged.alt,
         src: merged.src,
@@ -179,7 +184,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const fallbackBind = derived(() => {
     return mergePartBind(
-      {},
+      customProps?.fallback,
       {},
       cn({
         "font-medium": true,
@@ -192,7 +197,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const iconBind = derived(() => {
     return mergePartBind(
-      {},
+      customProps?.icon,
       {},
       cn({
         "shrink-0": true,

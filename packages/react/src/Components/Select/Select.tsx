@@ -10,6 +10,7 @@ import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/hooks/useSelect";
 import type { SelectProps } from "@/Components/Select/select.types";
+import { mergeNestedComponentProps } from "@/Utils";
 
 function Select(props: SelectProps) {
   const triggerRef = useRef<null | HTMLInputElement | HTMLTextAreaElement>(
@@ -60,10 +61,12 @@ function Select(props: SelectProps) {
                 key={String(option.value)}
                 size={formField.merged.size}
                 disabled={formField.isDisabled}
-                customProps={{ clear: clearBind }}
                 clearLabel={`Remove ${option.label}`}
-                classes={{ root: mergedClasses.chip }}
                 onDismiss={(event) => removeChip(option, event)}
+                {...mergeNestedComponentProps(selectProps.customProps?.chip, {
+                  customProps: { clear: clearBind },
+                  classes: { root: mergedClasses.chip },
+                })}
               >
                 {slots?.chip ? slots.chip({ option }) : option.label}
               </Chip>
@@ -93,7 +96,11 @@ function Select(props: SelectProps) {
                   }
                 }}
               >
-                <Icon icon={X} size={clearIconSize} />
+                <Icon
+                  icon={X}
+                  size={clearIconSize}
+                  {...selectProps.customProps?.clearIcon}
+                />
               </span>
             ) : null}
           </div>
@@ -101,7 +108,6 @@ function Select(props: SelectProps) {
       </FormField>
 
       <Listbox
-        {...listboxProps}
         show={open}
         anchorEl={containerRef}
         onSelect={selectOption}
@@ -113,6 +119,7 @@ function Select(props: SelectProps) {
           afterOptions: slots?.afterOptions,
           beforeOptions: slots?.beforeOptions,
         }}
+        {...listboxProps}
       >
         {children}
       </Listbox>

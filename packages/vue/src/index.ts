@@ -17,6 +17,7 @@ export { Avatar } from "@/Components/Avatar";
 export type {
   AvatarClasses,
   AvatarColorOverrides,
+  AvatarCustomProps,
   AvatarProps,
   AvatarRoundedOverrides,
   AvatarSizeOverrides,

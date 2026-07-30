@@ -12,12 +12,14 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { ChipOwnProps } from "@/Components/Chip/chip.types";
 import type {
   FormFieldClasses,
   FormFieldCustomProps,
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { ListboxOwnProps } from "@/Components/Listbox/listbox.types";
 
 export type {
@@ -59,6 +61,26 @@ export interface SelectClasses extends FormFieldClasses {
 }
 
 export interface SelectCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to each selected-value `Chip` (multiple mode).
+   * Dismiss behavior, size, and label stay owned by `Select`.
+   *
+   * @default undefined
+   */
+  chip?: Partial<
+    Omit<
+      ChipOwnProps,
+      "size" | "label" | "disabled" | "clearLabel" | "dismissible"
+    >
+  >;
+
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `Select`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the internal `Listbox`.
    * Open state, options, and selection handlers stay owned by `Select`.
@@ -151,7 +173,8 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   clearable?: boolean;
 
   /**
-   * Extra props for FormField parts and the internal `Listbox`.
+   * Extra props for FormField parts, selected chips, clear icon, and the
+   * internal `Listbox`.
    *
    * @default undefined
    */

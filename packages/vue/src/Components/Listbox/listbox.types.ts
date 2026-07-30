@@ -14,6 +14,13 @@ import type {
   PositionPlacement,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { ListOwnProps } from "@/Components/List/list.types";
+import type { ListItemOwnProps } from "@/Components/ListItem/listItem.types";
+import type { ListSectionOwnProps } from "@/Components/ListSection/listSection.types";
+import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
+
 export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
 export interface ListboxRoundedOverrides {}
@@ -47,19 +54,40 @@ export interface ListboxClasses {
 
 export interface ListboxCustomProps {
   /**
-   * Props forwarded to the floating menu panel.
+   * Props forwarded to the internal `List`.
+   *
+   * @default undefined
    */
-  content?: HTMLAttributes;
+  list?: Partial<ListOwnProps>;
 
   /**
-   * Props forwarded to the loading `Progress` bar.
+   * Props forwarded to each mapped `ListItem` option.
+   *
+   * @default undefined
    */
-  loading?: HTMLAttributes;
+  listItem?: Partial<Omit<ListItemOwnProps, "primary" | "secondary">>;
 
   /**
-   * Props forwarded to the scrollable options container.
+   * Props forwarded to each mapped `ListSection`.
+   *
+   * @default undefined
    */
-  scroll?: HTMLAttributes;
+  listSection?: Partial<Omit<ListSectionOwnProps, "title">>;
+
+  /**
+   * Props forwarded to the floating `Menu`.
+   * Open state, anchor, and panel children stay owned by `Listbox`.
+   *
+   * @default undefined
+   */
+  menu?: Partial<Omit<MenuOwnProps, "anchorEl" | "onShowChange">>;
+
+  /**
+   * Props forwarded to the loading `Progress`.
+   *
+   * @default undefined
+   */
+  progress?: Partial<ProgressOwnProps>;
 }
 
 export type {
@@ -105,7 +133,10 @@ export interface ListboxOwnProps {
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
 
   /**
-   * Extra props for internal parts.
+   * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
+   * `progress`).
+   *
+   * @default undefined
    */
   customProps?: ListboxCustomProps;
 

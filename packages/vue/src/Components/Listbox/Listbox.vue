@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { Check } from "@lucide/vue";
 import { isNil } from "es-toolkit/compat";
 import { computed, provide, ref, useSlots, watch } from "vue";
 
@@ -27,11 +26,14 @@ import {
   type ListboxContextValue,
 } from "@/Components/Listbox/listboxInjectionKey";
 import { ListItem } from "@/Components/ListItem";
-import type { ListItemCustomProps } from "@/Components/ListItem/listItem.types";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergeNestedComponentProps,
+  resolveNamedSlot,
+} from "@/Utils";
 
 defineSlots<ListboxSlots>();
 
@@ -112,45 +114,6 @@ function resolveSelected(value: ListboxValue) {
   return props.isSelected?.(value) ?? false;
 }
 
-function isOptionHighlighted(index: number) {
-  return props.highlightedIndex === index;
-}
-
-function keepFocusOnCombobox(event: MouseEvent) {
-  event.preventDefault();
-}
-
-function getOptionCustomProps(
-  option: ListboxOption,
-  index: number,
-): ListItemCustomProps {
-  const interactive: NonNullable<ListItemCustomProps["interactive"]> = {
-    tabindex: -1,
-    onMousedown: keepFocusOnCombobox,
-    class: cn(sizeClasses.value?.option),
-  };
-
-  if (resolveSelected(option.value)) {
-    interactive.class = cn(
-      interactive.class,
-      optionSelectedClass.value,
-      mergedClasses.value.optionSelected,
-    );
-  } else if (isOptionHighlighted(index)) {
-    interactive.class = cn(
-      interactive.class,
-      optionHighlightedClass.value,
-      mergedClasses.value.optionHighlighted,
-    );
-  }
-
-  return {
-    interactive,
-    primary: { class: sizeClasses.value?.primary },
-    secondary: { class: sizeClasses.value?.secondary },
-  };
-}
-
 function handleSelect(option: ListboxOption) {
   if (option.disabled) {
     return;
@@ -220,6 +183,58 @@ provide(LISTBOX_INJECTION_KEY, listboxContext);
 const mappedRows = computed(() => {
   return mapListboxEntriesToRows(resolvedEntries.value, resolveSelected);
 });
+
+const menuProps = computed(() => {
+  return merged.value.customProps?.menu;
+});
+
+const listProps = computed(() => {
+  return merged.value.customProps?.list;
+});
+
+const listItemProps = computed(() => {
+  return merged.value.customProps?.listItem;
+});
+
+const progressProps = computed(() => {
+  return merged.value.customProps?.progress;
+});
+
+const listSectionProps = computed(() => {
+  return merged.value.customProps?.listSection;
+});
+
+const menuBind = computed(() => {
+  return {
+    ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
+    ...menuProps.value,
+  };
+});
+
+const progressBind = computed(() => {
+  return {
+    size: "xs" as const,
+    "aria-hidden": true,
+    color: merged.value.color,
+    ...mergeNestedComponentProps(progressProps.value, {
+      class: "shrink-0",
+      classes: { bar: mergedClasses.value.loading },
+    }),
+  };
+});
+
+const listBind = computed(() => {
+  return {
+    dense: true,
+    role: "listbox",
+    id: props.listboxId,
+    "aria-labelledby": props.labelledBy,
+    "aria-multiselectable": props.multiple || undefined,
+    ...mergeNestedComponentProps(listProps.value, {
+      class: "p-0",
+    }),
+  };
+});
 </script>
 
 <template>
@@ -229,8 +244,7 @@ const mappedRows = computed(() => {
     :placement="placement"
     :close-on-click-away="true"
     :disable-auto-focus="disableAutoFocus"
-    :custom-props="{ content: merged.customProps?.content }"
-    v-bind="!isNil(rounded) ? { rounded } : {}"
+    v-bind="menuBind"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"
@@ -238,14 +252,7 @@ const mappedRows = computed(() => {
     />
 
     <template v-if="loading">
-      <Progress
-        size="xs"
-        aria-hidden
-        class="shrink-0"
-        :color="merged.color"
-        :classes="{ bar: mergedClasses.loading }"
-        :custom-props="{ bar: merged.customProps?.loading }"
-      />
+      <Progress v-bind="progressBind" />
 
       <div v-bind="messageBind">
         <component
@@ -258,34 +265,25 @@ const mappedRows = computed(() => {
     </template>
 
     <div v-else v-bind="scrollBind">
-      <List
-        dense
-        class="p-0"
-        role="listbox"
-        :id="listboxId"
-        :aria-labelledby="labelledBy"
-        :aria-multiselectable="multiple || undefined"
-      >
+      <List v-bind="listBind">
         <slot v-if="hasComposedChildren" />
 
         <template v-else :key="row.key" v-for="row in mappedRows">
           <ListSection
             :title="row.title"
             :sticky="row.sticky"
+            v-bind="listSectionProps"
             v-if="row.kind === 'section'"
           />
 
           <ListItem
             v-else
             interactive
-            role="option"
-            :selected="false"
-            :aria-selected="row.selected"
+            :value="row.option.value"
             :disabled="row.option.disabled"
             :secondary="row.option.description"
-            v-on:click="handleSelect(row.option)"
-            :id="`${listboxId}-option-${row.index}`"
-            :custom-props="getOptionCustomProps(row.option, row.index)"
+            v-bind="listItemProps"
+            :custom-props="listItemProps?.customProps"
             :primary="
               hasNamedSlot(slots, 'option') ? undefined : row.option.label
             "
@@ -296,10 +294,6 @@ const mappedRows = computed(() => {
                 :option="row.option"
                 :selected="row.selected"
               />
-            </template>
-
-            <template #end v-if="showCheckmark && row.selected">
-              <Check :class="resolvedCheckClass" />
             </template>
           </ListItem>
         </template>
