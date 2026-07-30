@@ -90,7 +90,15 @@ export interface SelectCustomProps extends FormFieldCustomProps {
   listbox?: Partial<
     Omit<
       ListboxOwnProps,
-      "options" | "anchorEl" | "listboxId" | "isSelected" | "highlightedIndex"
+      | "entries"
+      | "loading"
+      | "options"
+      | "anchorEl"
+      | "multiple"
+      | "listboxId"
+      | "isSelected"
+      | "labelledBy"
+      | "highlightedIndex"
     >
   >;
 }

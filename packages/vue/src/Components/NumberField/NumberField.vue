@@ -66,7 +66,7 @@ const incrementBind = computed(() => {
   return mergePartBind(
     props.customProps?.increment,
     {
-      type: "button",
+      type: "button" as const,
       disabled: props.disabled,
       "aria-label": "Increment value",
       onClick: incrementHold.onPressClick,
@@ -85,7 +85,7 @@ const decrementBind = computed(() => {
   return mergePartBind(
     props.customProps?.decrement,
     {
-      type: "button",
+      type: "button" as const,
       disabled: props.disabled,
       "aria-label": "Decrement value",
       onClick: decrementHold.onPressClick,

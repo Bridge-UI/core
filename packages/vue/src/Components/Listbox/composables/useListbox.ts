@@ -117,7 +117,7 @@ export function useListbox(
     const disableMaxHeight = merged.value.disableMaxHeight === true;
 
     return mergePartBind(
-      {},
+      merged.value.customProps?.scroll,
       {},
       cn({
         "overflow-y-auto overscroll-contain": !disableMaxHeight,

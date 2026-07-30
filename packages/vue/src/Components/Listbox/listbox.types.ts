@@ -62,10 +62,16 @@ export interface ListboxCustomProps {
 
   /**
    * Props forwarded to each mapped `ListItem` option.
+   * Value, disabled, interactive, and labels stay owned by `Listbox`.
    *
    * @default undefined
    */
-  listItem?: Partial<Omit<ListItemOwnProps, "primary" | "secondary">>;
+  listItem?: Partial<
+    Omit<
+      ListItemOwnProps,
+      "value" | "primary" | "disabled" | "secondary" | "interactive"
+    >
+  >;
 
   /**
    * Props forwarded to each mapped `ListSection`.
@@ -88,6 +94,13 @@ export interface ListboxCustomProps {
    * @default undefined
    */
   progress?: Partial<ProgressOwnProps>;
+
+  /**
+   * Props forwarded to the scrollable options container.
+   *
+   * @default undefined
+   */
+  scroll?: HTMLAttributes;
 }
 
 export type {
@@ -134,7 +147,7 @@ export interface ListboxOwnProps {
 
   /**
    * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
-   * `progress`).
+   * `progress`, `scroll`).
    *
    * @default undefined
    */

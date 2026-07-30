@@ -446,7 +446,17 @@ export function useSelect(
   });
 
   const listboxCustomProps = computed(() => {
-    return props.customProps?.listbox;
+    return omit(props.customProps?.listbox, [
+      "entries",
+      "options",
+      "loading",
+      "multiple",
+      "anchorEl",
+      "listboxId",
+      "labelledBy",
+      "isSelected",
+      "highlightedIndex",
+    ]);
   });
 
   const formField = useFormField(

@@ -287,7 +287,6 @@ function Listbox({
                         secondary={option.description}
                         primary={slots?.option ? undefined : option.label}
                         {...listItemProps}
-                        customProps={listItemProps?.customProps}
                       >
                         {slots?.option?.({ option, selected })}
                       </ListItem>

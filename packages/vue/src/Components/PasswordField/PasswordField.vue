@@ -38,7 +38,7 @@ const toggleBind = computed(() => {
   return mergePartBind(
     props.customProps?.toggle,
     {
-      type: "button",
+      type: "button" as const,
       disabled: props.disabled,
       onClick: toggleVisibility,
       "aria-label": isVisible.value ? "Hide password" : "Show password",

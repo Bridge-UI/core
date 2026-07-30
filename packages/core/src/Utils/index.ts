@@ -122,7 +122,17 @@ export type NestedComponentDefaults<
     customProps?: object;
   },
 > = Partial<Omit<P, "classes" | "customProps">> & {
+  /**
+   * Vue root class string (merged via `mergePartBind`).
+   */
+  class?: string;
+
   classes?: Partial<NonNullable<P["classes"]>>;
+
+  /**
+   * React root class string (merged via `mergePartBind`).
+   */
+  className?: string;
   customProps?: {
     [K in keyof NonNullable<P["customProps"]>]?: object;
   };

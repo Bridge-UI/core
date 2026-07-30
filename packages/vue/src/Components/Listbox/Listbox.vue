@@ -282,11 +282,10 @@ const listBind = computed(() => {
             :value="row.option.value"
             :disabled="row.option.disabled"
             :secondary="row.option.description"
-            v-bind="listItemProps"
-            :custom-props="listItemProps?.customProps"
             :primary="
               hasNamedSlot(slots, 'option') ? undefined : row.option.label
             "
+            v-bind="listItemProps"
           >
             <template #default v-if="hasNamedSlot(slots, 'option')">
               <slot

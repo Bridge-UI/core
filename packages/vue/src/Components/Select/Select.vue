@@ -136,9 +136,9 @@ const {
   </FormField>
 
   <Listbox
-    v-bind="listboxProps"
     v-model="open"
     :anchor-el="containerRef"
+    v-bind="listboxProps"
     v-on:select="selectOption"
     v-on:registered-options-change="handleRegisteredOptionsChange"
   >
