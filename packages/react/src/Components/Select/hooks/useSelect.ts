@@ -979,6 +979,7 @@ export function useSelect(
       entries: visibleEntries,
       options: visibleOptions,
       labelledBy: formField.controlId,
+      rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
     };
@@ -999,6 +1000,7 @@ export function useSelect(
     formField.merged.size,
     formField.merged.color,
     props.disableMaxHeight,
+    formField.merged.rounded,
     props.customProps?.listbox,
     handleRegisteredOptionsChange,
   ]);
