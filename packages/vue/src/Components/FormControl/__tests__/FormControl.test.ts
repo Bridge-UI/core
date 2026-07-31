@@ -79,6 +79,63 @@ test("it should render start and end labels when provided", () => {
   expect(wrapper.text()).toContain("Start");
 });
 
+test("it should render start, control, and end in DOM order", () => {
+  const wrapper = mountFormControl({
+    endLabel: "End",
+    startLabel: "Start",
+  });
+
+  const row = wrapper.find(".group\\/form-control > div");
+  const children = row.element.children;
+
+  expect(children).toHaveLength(3);
+  expect(row.classes()).toContain("flex-row");
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should keep logical DOM order under dir=rtl", () => {
+  const wrapper = mount(
+    defineComponent({
+      inheritAttrs: false,
+      setup() {
+        const field = useFormControl(
+          () => ({ endLabel: "End", startLabel: "Start" }),
+          libDefaults,
+        );
+
+        return () =>
+          h("div", { dir: "rtl" }, [
+            h(FormControl, { field }, () =>
+              h("input", {
+                ...field.controlBind.value,
+                type: "checkbox",
+                "aria-label": "Control",
+              }),
+            ),
+          ]);
+      },
+    }),
+  );
+
+  const row = wrapper.find(".group\\/form-control > div");
+  const children = row.element.children;
+
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should render a required asterisk on the end label when required", () => {
+  const wrapper = mountFormControl({
+    required: true,
+    endLabel: "Email notifications",
+  });
+
+  expect(wrapper.text()).toContain("*");
+});
+
 test("it should render description when description prop is provided", () => {
   const wrapper = mountFormControl({ description: "Helper text" });
 

@@ -37,8 +37,8 @@ function FormControlHarness(props: Omit<FormControlOwnProps, "field"> = {}) {
 test("it should render the control element", () => {
   const { container } = render(<FormControlHarness />);
 
-  expect(container.querySelector(".group\\/form-control")).not.toBeNull();
   expect(screen.getByRole("checkbox", { name: "Control" })).toBeTruthy();
+  expect(container.querySelector(".group\\/form-control")).not.toBeNull();
 });
 
 test("it should render end label when endLabel prop is provided", () => {
@@ -62,6 +62,42 @@ test("it should render start and end labels when provided", () => {
 
   expect(screen.getByText("End")).toBeTruthy();
   expect(screen.getByText("Start")).toBeTruthy();
+});
+
+test("it should render start, control, and end in DOM order", () => {
+  const { container } = render(
+    <FormControlHarness endLabel="End" startLabel="Start" />,
+  );
+
+  const row = container.querySelector(".group\\/form-control > div");
+  const children = row ? Array.from(row.children) : [];
+
+  expect(children).toHaveLength(3);
+  expect(row?.className).toContain("flex-row");
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should keep logical DOM order under dir=rtl", () => {
+  const { container } = render(
+    <div dir="rtl">
+      <FormControlHarness endLabel="End" startLabel="Start" />
+    </div>,
+  );
+
+  const row = container.querySelector(".group\\/form-control > div");
+  const children = row ? Array.from(row.children) : [];
+
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should render a required asterisk on the end label when required", () => {
+  render(<FormControlHarness required endLabel="Email notifications" />);
+
+  expect(screen.getByText("*")).toBeTruthy();
 });
 
 test("it should render description when description prop is provided", () => {

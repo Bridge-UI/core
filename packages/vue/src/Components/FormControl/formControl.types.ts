@@ -66,7 +66,7 @@ export interface FormControlCustomProps {
   errorMessage?: HTMLAttributes;
 
   /**
-   * Error-state label and message colors (`label`, `errorMessage`, `required`).
+   * Error-state message colors (`errorMessage`). Label colors come from `Label` when `error` is set.
    *
    * @default undefined
    */
@@ -128,7 +128,7 @@ export interface FormControlOwnProps {
   disabled?: boolean;
 
   /**
-   * Inline-end label text after the control. Flips to the left in RTL.
+   * Inline-end label text after the control (right in LTR, left in RTL).
    *
    * @default undefined
    */
@@ -164,7 +164,8 @@ export interface FormControlOwnProps {
   readonly?: boolean;
 
   /**
-   * Sets the native `required` attribute on the control.
+   * Sets the native `required` attribute on the control and shows a required
+   * asterisk on start/end labels.
    *
    * @default false
    */
@@ -187,7 +188,7 @@ export interface FormControlOwnProps {
   slots?: FormControlSlots;
 
   /**
-   * Inline-start label text before the control. Flips to the right in RTL.
+   * Inline-start label text before the control (left in LTR, right in RTL).
    *
    * @default undefined
    */
@@ -213,7 +214,7 @@ export interface FormControlSlots {
   description?: Slot<undefined>;
 
   /**
-   * Inline-end label after the control (flips with RTL).
+   * Inline-end label after the control (right in LTR, left in RTL).
    */
   endLabel?: Slot<undefined>;
 
@@ -223,7 +224,7 @@ export interface FormControlSlots {
   errorMessage?: Slot<undefined>;
 
   /**
-   * Inline-start label before the control (flips with RTL).
+   * Inline-start label before the control (left in LTR, right in RTL).
    */
   startLabel?: Slot<undefined>;
 }

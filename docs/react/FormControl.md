@@ -47,15 +47,15 @@ import { FormControl } from "@bridge-ui/react/Components/FormControl";
 | `customProps`         | `FormControlCustomProps` | —       | Extra props for internal parts (`row`, `endLabel`, `description`, …).                                                               |
 | `description`         | `string`                 | —       | Helper text below the control row (hidden when invalid).                                                                            |
 | `disabled`            | `boolean`                | `false` | Whether the control is disabled.                                                                                                    |
-| `endLabel`            | `string`                 | —       | Inline-end label after the control (flips to the start side in RTL).                                                                |
+| `endLabel`            | `string`                 | —       | Inline-end label after the control (right in LTR, left in RTL).                                                                     |
 | `error`               | `boolean`                | `false` | When `true`, applies invalid styling on labels and hides description.                                                               |
 | `errorMessage`        | `string`                 | —       | Error message below the control row.                                                                                                |
 | `field`               | `UseFormControlReturn`   | —       | Pre-composed form control API from a parent composable. Used by `<FormControl field={…} />`; not set on Checkbox, Radio, or Switch. |
 | `readonly`            | `boolean`                | `false` | Whether the control is read-only.                                                                                                   |
-| `required`            | `boolean`                | `false` | Sets the native `required` attribute on the control.                                                                                |
+| `required`            | `boolean`                | `false` | Sets the native `required` attribute on the control and shows a required asterisk on labels.                                        |
 | `size`                | `LabelSize`              | "md"    | Typography scale for labels, description, and error text (aligned with `FormField` / `Label`).                                      |
 | `slots`               | `FormControlSlots`       | —       | Chrome slots (`startLabel`, `endLabel`, `description`, `errorMessage`, …) and the control.                                          |
-| `startLabel`          | `string`                 | —       | Inline-start label before the control (flips to the end side in RTL).                                                               |
+| `startLabel`          | `string`                 | —       | Inline-start label before the control (left in LTR, right in RTL).                                                                  |
 | `withoutErrorMessage` | `boolean`                | `false` | When `true`, does not reserve space below the row for error messages.                                                               |
 
 ## Related components

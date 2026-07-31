@@ -191,6 +191,7 @@ export function useFormControl(
         for: controlId.value,
         size: merged.value.size,
         error: invalidated.value,
+        required: merged.value.required,
         classes: {
           root: cn({
             "cursor-pointer": true,

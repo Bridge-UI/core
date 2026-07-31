@@ -191,6 +191,7 @@ export function useFormControl(
         size: merged.size,
         error: invalidated,
         htmlFor: controlId,
+        required: merged.required,
         classes: {
           root: cn({
             "cursor-pointer": true,
