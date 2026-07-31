@@ -1,4 +1,6 @@
-<p align="center"><img src="#" height="100"></p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/Bridge-UI/docs/main/assets/logo.svg" height="100" alt="Bridge UI logo">
+</p>
 
 <h2><p align="center">BridgeUI</p></h2>
 
