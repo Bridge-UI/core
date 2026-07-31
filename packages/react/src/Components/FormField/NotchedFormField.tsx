@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 // ** Local Imports
+import FormFieldLabel from "@/Components/FormField/FormFieldLabel";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Icon } from "@/Components/Icon";
 import {
@@ -26,17 +27,7 @@ function NotchedFormField({ api, children }: NotchedFormFieldProps) {
       <div {...api.containerBind}>
         {api.hasInsetLabelRow && (
           <div {...api.insetLabelRowBind}>
-            {hasSlotOrProp(api.slots, "label", api.merged.label) && (
-              <label htmlFor={api.controlId} {...api.labelBind}>
-                {resolveSlotOrProp({
-                  name: "label",
-                  slots: api.slots,
-                  fallback: api.merged.label,
-                })}
-
-                {api.merged.required && <span {...api.requiredBind}>*</span>}
-              </label>
-            )}
+            <FormFieldLabel api={api} />
 
             {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
               <span {...api.cornerBind}>

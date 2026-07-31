@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
+import FormFieldLabel from "@/Components/FormField/FormFieldLabel.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import { Icon } from "@/Components/Icon";
 import {
@@ -35,24 +36,7 @@ defineProps<{
           v-if="api.hasInsetLabelRow.value"
           v-bind="api.insetLabelRowBind.value"
         >
-          <label
-            :for="api.controlId.value"
-            v-bind="api.labelBind.value"
-            v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
-          >
-            <component
-              :is="
-                resolveSlotOrProp(api.slots, 'label', api.merged.value.label)
-              "
-            />
-
-            <span
-              v-bind="api.requiredBind.value"
-              v-if="api.merged.value.required"
-            >
-              *
-            </span>
-          </label>
+          <FormFieldLabel :api="api" />
 
           <span
             v-bind="api.cornerBind.value"

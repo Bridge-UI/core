@@ -30,7 +30,7 @@ export interface FormFieldInvalidated {
   "input": string;
 
   /**
-   * Label text color (`startLabel`, `mainLabel`, `endLabel`).
+   * Label text color.
    */
   "label": string;
 

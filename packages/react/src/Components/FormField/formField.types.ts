@@ -16,6 +16,7 @@ import type {
 // ** Local Imports
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import type { IconProps } from "@/Components/Icon";
+import type { LabelProps } from "@/Components/Label/label.types";
 
 export interface FormFieldSizeOverrides {}
 export interface FormFieldColorOverrides {}
@@ -128,9 +129,11 @@ export interface FormFieldCustomProps {
   invalidated?: Partial<FormFieldInvalidated>;
 
   /**
-   * Props forwarded to the primary label element.
+   * Props forwarded to the primary `Label` (content stays owned by `FormField`).
+   *
+   * @default undefined
    */
-  label?: HTMLAttributes<HTMLLabelElement>;
+  label?: Partial<Omit<LabelProps, "children">>;
 
   /**
    * Props forwarded to the root wrapper.
