@@ -40,14 +40,13 @@ export interface TabsCustomProps {
   /**
    * Props forwarded to each mapped `Tab` when using the `items` API.
    * Value, icons, disabled, and label stay owned by `Tabs`.
-   * `slots` merge with each item's slots (consumer wins per key).
    *
    * @default undefined
    */
   tab?: Partial<
     Omit<
       TabOwnProps,
-      "value" | "endIcon" | "children" | "disabled" | "startIcon"
+      "slots" | "value" | "endIcon" | "children" | "disabled" | "startIcon"
     >
   >;
 

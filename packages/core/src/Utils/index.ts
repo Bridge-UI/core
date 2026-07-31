@@ -120,35 +120,22 @@ export type NestedComponentDefaults<
   P extends {
     classes?: object;
     customProps?: object;
-    slots?: object;
   },
-> = Partial<Omit<P, "slots" | "classes" | "customProps">> & {
+> = Partial<Omit<P, "classes" | "customProps">> & {
   /**
    * Vue root class string (merged via `mergePartBind`).
    */
   class?: string;
 
-  /**
-   * Part classes merged with `cn` (defaults first, consumer wins conflicts).
-   */
   classes?: Partial<NonNullable<P["classes"]>>;
 
   /**
    * React root class string (merged via `mergePartBind`).
    */
   className?: string;
-
-  /**
-   * Nested part props merged via `mergePartBind` (consumer wins).
-   */
   customProps?: {
     [K in keyof NonNullable<P["customProps"]>]?: object;
   };
-
-  /**
-   * Named slots shallow-merged (defaults first, consumer wins per key).
-   */
-  slots?: Partial<NonNullable<P["slots"]>>;
 };
 
 /**
@@ -163,7 +150,7 @@ export type MergePartBindLike = (
 /**
  * Creates a helper that merges consumer nested-component props with package
  * defaults. `classes` keys use `cn`; `customProps` parts and top-level attrs
- * use `mergePartBind`; `slots` keys shallow-merge (consumer wins).
+ * use `mergePartBind` (consumer wins).
  */
 export function createMergeNestedComponentProps(
   mergePartBind: MergePartBindLike,
@@ -172,28 +159,24 @@ export function createMergeNestedComponentProps(
     P extends {
       classes?: object;
       customProps?: object;
-      slots?: object;
     },
   >(
     userProps: undefined | Partial<P>,
     defaults: NestedComponentDefaults<P> = {},
   ): Partial<P> {
     const {
-      slots: defaultSlots,
       classes: defaultClasses,
       customProps: defaultCustom,
       ...defaultAttrs
     } = defaults;
 
     const {
-      slots: userSlots,
       classes: userClasses,
       customProps: userCustom,
       ...userAttrs
     } = (userProps ?? {}) as Partial<P> & {
       classes?: Record<string, string | undefined>;
       customProps?: Record<string, object | undefined>;
-      slots?: Record<string, unknown>;
     };
 
     const hasDefaultAttrs = Object.keys(defaultAttrs).length > 0;
@@ -243,15 +226,6 @@ export function createMergeNestedComponentProps(
       result.customProps = mergedCustom;
     } else if (!isNil(userCustom)) {
       result.customProps = userCustom as P["customProps"];
-    }
-
-    if (!isNil(defaultSlots)) {
-      result.slots = {
-        ...defaultSlots,
-        ...(userSlots ?? {}),
-      } as P["slots"];
-    } else if (!isNil(userSlots)) {
-      result.slots = userSlots as P["slots"];
     }
 
     return result;
