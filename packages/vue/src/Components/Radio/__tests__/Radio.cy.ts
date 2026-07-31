@@ -54,6 +54,14 @@ test("it should apply disabled attribute when disabled", () => {
   cy.get('input[type="radio"]').should("be.disabled");
 });
 
+test("it should start selected with defaultChecked without v-model", () => {
+  cy.mount(Radio, {
+    props: { value: "a", endLabel: "Option A", defaultChecked: true },
+  });
+
+  cy.get('input[type="radio"]').should("be.checked");
+});
+
 test("it should forward name to the native input", () => {
   cy.mount(Radio, {
     props: { value: "a", name: "plan", endLabel: "Option A" },

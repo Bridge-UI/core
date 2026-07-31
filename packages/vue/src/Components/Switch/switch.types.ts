@@ -68,13 +68,6 @@ export interface SwitchOwnProps extends Omit<
   "field" | "slots" | "classes" | "customProps"
 > {
   /**
-   * Whether the switch is on.
-   *
-   * @default undefined
-   */
-  checked?: boolean;
-
-  /**
    * Classes for the form control chrome and the switch control.
    *
    * @default undefined
@@ -94,6 +87,14 @@ export interface SwitchOwnProps extends Omit<
    * @default undefined
    */
   customProps?: SwitchCustomProps;
+
+  /**
+   * Initial on state for uncontrolled usage (when `v-model` / `modelValue`
+   * is not bound).
+   *
+   * @default false
+   */
+  defaultChecked?: boolean;
 
   /**
    * The roundedness of the switch track.

@@ -35,6 +35,7 @@ const switchBridgeKeys = [
   "classes",
   "rounded",
   "customProps",
+  "defaultChecked",
 ] as const satisfies readonly (keyof SwitchOwnProps)[];
 
 type SwitchLibDefaults = LibDefaultsShape<

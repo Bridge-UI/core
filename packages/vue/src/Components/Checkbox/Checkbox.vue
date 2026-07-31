@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { Check } from "@lucide/vue";
-import { computed, useAttrs } from "vue";
+import { computed, ref, useAttrs } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -22,10 +22,12 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<CheckboxOwnProps>();
 
-const model = defineModel<boolean>({ default: false });
+const uncontrolledChecked = ref(Boolean(props.defaultChecked));
+
+const model = defineModel<boolean | undefined>({ default: undefined });
 
 const checked = computed(() => {
-  return model.value;
+  return model.value ?? uncontrolledChecked.value;
 });
 
 const {
@@ -51,6 +53,7 @@ function onChange(event: Event) {
   const target = event.target as HTMLInputElement;
 
   model.value = target.checked;
+  uncontrolledChecked.value = target.checked;
 }
 </script>
 

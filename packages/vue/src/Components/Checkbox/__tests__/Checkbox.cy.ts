@@ -60,3 +60,17 @@ test("it should reflect checked state from modelValue", () => {
 
   cy.get('input[type="checkbox"]').should("be.checked");
 });
+
+test("it should start checked and toggle freely with defaultChecked", () => {
+  cy.mount(Checkbox, {
+    props: { endLabel: "Accept", defaultChecked: true },
+  });
+
+  cy.get('input[type="checkbox"]').should("be.checked");
+
+  cy.get('input[type="checkbox"]').click({ force: true });
+  cy.get('input[type="checkbox"]').should("not.be.checked");
+
+  cy.get('input[type="checkbox"]').click({ force: true });
+  cy.get('input[type="checkbox"]').should("be.checked");
+});

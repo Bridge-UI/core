@@ -79,6 +79,31 @@ test("it should forward name to the native input", () => {
   expect(wrapper.find('input[type="radio"]').attributes("name")).toBe("plan");
 });
 
+test("it should start selected when defaultChecked is set without v-model", () => {
+  const wrapper = mount(Radio, {
+    props: { value: "a", defaultChecked: true, endLabel: "Option A" },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(true);
+});
+
+test("it should ignore defaultChecked when modelValue is bound", () => {
+  const wrapper = mount(Radio, {
+    props: {
+      value: "a",
+      modelValue: "b",
+      defaultChecked: true,
+      endLabel: "Option A",
+    },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
 test("it should link label to control id", () => {
   const wrapper = mount(Radio, {
     attrs: { controlId: "plan-a" },

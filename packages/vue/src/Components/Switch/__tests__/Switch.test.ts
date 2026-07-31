@@ -70,3 +70,39 @@ test("it should render track and thumb elements", () => {
 
   expect(wrapper.findAll("label span").length).toBeGreaterThanOrEqual(2);
 });
+
+test("it should start on when defaultChecked is set without v-model", () => {
+  const wrapper = mount(Switch, {
+    props: { defaultChecked: true, endLabel: "Notifications" },
+  });
+
+  expect(
+    (wrapper.find('input[role="switch"]').element as HTMLInputElement).checked,
+  ).toBe(true);
+});
+
+test("it should toggle freely when defaultChecked is set without v-model", async () => {
+  const wrapper = mount(Switch, {
+    props: { defaultChecked: true, endLabel: "Notifications" },
+  });
+
+  await wrapper.find('input[role="switch"]').setValue(false);
+
+  expect(
+    (wrapper.find('input[role="switch"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
+test("it should ignore defaultChecked when modelValue is bound", () => {
+  const wrapper = mount(Switch, {
+    props: {
+      modelValue: false,
+      defaultChecked: true,
+      endLabel: "Notifications",
+    },
+  });
+
+  expect(
+    (wrapper.find('input[role="switch"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});

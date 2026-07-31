@@ -98,6 +98,51 @@ test("it should set indeterminate on the native input when indeterminate is true
   ).toBe(true);
 });
 
+test("it should start checked when defaultChecked is set without v-model", () => {
+  const wrapper = mount(Checkbox, {
+    props: { endLabel: "Accept", defaultChecked: true },
+  });
+
+  expect(
+    (wrapper.find('input[type="checkbox"]').element as HTMLInputElement)
+      .checked,
+  ).toBe(true);
+});
+
+test("it should toggle freely when defaultChecked is set without v-model", async () => {
+  const wrapper = mount(Checkbox, {
+    props: { endLabel: "Accept", defaultChecked: true },
+  });
+
+  await wrapper.find('input[type="checkbox"]').setValue(false);
+
+  expect(
+    (wrapper.find('input[type="checkbox"]').element as HTMLInputElement)
+      .checked,
+  ).toBe(false);
+});
+
+test("it should ignore defaultChecked when modelValue is bound", () => {
+  const wrapper = mount(Checkbox, {
+    props: { modelValue: false, endLabel: "Accept", defaultChecked: true },
+  });
+
+  expect(
+    (wrapper.find('input[type="checkbox"]').element as HTMLInputElement)
+      .checked,
+  ).toBe(false);
+});
+
+test("it should not forward defaultChecked to the native input", () => {
+  const wrapper = mount(Checkbox, {
+    props: { endLabel: "Accept", defaultChecked: true },
+  });
+
+  expect(
+    wrapper.find('input[type="checkbox"]').attributes("defaultchecked"),
+  ).toBeUndefined();
+});
+
 test("it should link end label to control id", () => {
   const wrapper = mount(Checkbox, {
     attrs: { controlId: "terms-checkbox" },

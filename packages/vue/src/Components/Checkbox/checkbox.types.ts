@@ -68,13 +68,6 @@ export interface CheckboxOwnProps extends Omit<
   "field" | "slots" | "classes" | "customProps"
 > {
   /**
-   * Whether the checkbox is checked.
-   *
-   * @default undefined
-   */
-  checked?: boolean;
-
-  /**
    * Classes for the form control chrome and the checkbox control.
    *
    * @default undefined
@@ -94,6 +87,14 @@ export interface CheckboxOwnProps extends Omit<
    * @default undefined
    */
   customProps?: CheckboxCustomProps;
+
+  /**
+   * Initial checked state for uncontrolled usage (when `v-model` /
+   * `modelValue` is not bound).
+   *
+   * @default false
+   */
+  defaultChecked?: boolean;
 
   /**
    * Whether the checkbox is in an indeterminate state.

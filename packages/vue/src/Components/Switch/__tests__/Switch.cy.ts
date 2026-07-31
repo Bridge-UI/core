@@ -60,3 +60,17 @@ test("it should reflect checked state from modelValue", () => {
 
   cy.get('input[role="switch"]').should("be.checked");
 });
+
+test("it should start on and toggle freely with defaultChecked", () => {
+  cy.mount(Switch, {
+    props: { defaultChecked: true, endLabel: "Notifications" },
+  });
+
+  cy.get('input[role="switch"]').should("be.checked");
+
+  cy.get('input[role="switch"]').click({ force: true });
+  cy.get('input[role="switch"]').should("not.be.checked");
+
+  cy.get('input[role="switch"]').click({ force: true });
+  cy.get('input[role="switch"]').should("be.checked");
+});

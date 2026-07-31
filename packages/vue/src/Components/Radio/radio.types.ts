@@ -68,13 +68,6 @@ export interface RadioOwnProps extends Omit<
   "field" | "slots" | "classes" | "customProps"
 > {
   /**
-   * Whether the radio is checked.
-   *
-   * @default undefined
-   */
-  checked?: boolean;
-
-  /**
    * Classes for the form control chrome and the radio control.
    *
    * @default undefined
@@ -94,6 +87,14 @@ export interface RadioOwnProps extends Omit<
    * @default undefined
    */
   customProps?: RadioCustomProps;
+
+  /**
+   * Initial selected state for uncontrolled usage (when `v-model` /
+   * `modelValue` is not bound). For interactive groups, prefer `v-model`.
+   *
+   * @default false
+   */
+  defaultChecked?: boolean;
 
   /**
    * The `name` attribute shared by radios in the same group.
