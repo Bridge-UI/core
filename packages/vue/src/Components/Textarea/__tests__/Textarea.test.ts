@@ -58,6 +58,40 @@ test("it should update modelValue when textarea changes", async () => {
   expect(wrapper.props("modelValue")).toBe("Hello");
 });
 
+test("it should start with defaultValue when v-model is not bound", () => {
+  const wrapper = mount(Textarea, {
+    props: { defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("textarea").element.value).toBe("hello");
+});
+
+test("it should update freely when defaultValue is set without v-model", async () => {
+  const wrapper = mount(Textarea, {
+    props: { defaultValue: "hello" },
+  });
+
+  await wrapper.find("textarea").setValue("world");
+
+  expect(wrapper.find("textarea").element.value).toBe("world");
+});
+
+test("it should ignore defaultValue when modelValue is bound", () => {
+  const wrapper = mount(Textarea, {
+    props: { modelValue: "bound", defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("textarea").element.value).toBe("bound");
+});
+
+test("it should not forward defaultValue to the native textarea", () => {
+  const wrapper = mount(Textarea, {
+    props: { defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("textarea").attributes("defaultvalue")).toBeUndefined();
+});
+
 test("it should hide description when field is invalid", () => {
   const wrapper = mount(Textarea, {
     props: {

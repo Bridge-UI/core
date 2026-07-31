@@ -61,6 +61,14 @@ export interface PasswordFieldOwnProps extends Omit<
   customProps?: PasswordFieldCustomProps;
 
   /**
+   * Initial value for uncontrolled usage (when `v-model` / `modelValue` is
+   * not bound).
+   *
+   * @default undefined
+   */
+  defaultValue?: string;
+
+  /**
    * Whether the password is visible. Omit for uncontrolled mode.
    */
   visible?: null | boolean;

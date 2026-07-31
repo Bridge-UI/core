@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // ** External Imports
 import { Eye, EyeOff } from "@lucide/vue";
-import { computed } from "vue";
+import { isUndefined } from "es-toolkit/compat";
+import { computed, ref } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -29,6 +30,18 @@ const props = withDefaults(defineProps<PasswordFieldOwnProps>(), {
   visible: null,
 });
 
+const uncontrolledValue = ref<null | string | undefined>(props.defaultValue);
+
+const value = computed({
+  set: (next) => {
+    model.value = next;
+    uncontrolledValue.value = next;
+  },
+  get: () => {
+    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
+  },
+});
+
 const { formField, inputBind, isVisible, mergedClasses, toggleVisibility } =
   usePasswordField(props, {
     onVisibilityChange: (next) => emit("visibility-change", next),
@@ -53,7 +66,7 @@ const toggleBind = computed(() => {
 
 <template>
   <FormField :field="formField">
-    <input v-model="model" v-bind="inputBind" />
+    <input v-model="value" v-bind="inputBind" />
 
     <template #end>
       <button v-bind="toggleBind">

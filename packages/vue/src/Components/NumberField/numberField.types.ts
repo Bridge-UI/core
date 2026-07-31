@@ -85,6 +85,14 @@ export interface NumberFieldOwnProps extends Omit<
   customProps?: NumberFieldCustomProps;
 
   /**
+   * Initial value for uncontrolled usage (when `v-model` / `modelValue` is
+   * not bound).
+   *
+   * @default undefined
+   */
+  defaultValue?: number;
+
+  /**
    * The maximum value.
    */
   max?: number;

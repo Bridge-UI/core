@@ -54,6 +54,7 @@ export function useNumberField(
         max: _max,
         step: _step,
         classes: _classes,
+        defaultValue: _defaultValue,
         ...rest
       } = props;
 

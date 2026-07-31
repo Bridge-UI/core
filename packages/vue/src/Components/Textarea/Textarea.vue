@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
-import { useTemplateRef, watch } from "vue";
+import { isUndefined } from "es-toolkit/compat";
+import { computed, ref, useTemplateRef, watch } from "vue";
 
 // ** Local Imports
 import { FormField } from "@/Components/FormField";
@@ -20,6 +21,18 @@ const props = withDefaults(defineProps<TextareaOwnProps>(), {
   withErrorIcon: true,
 });
 
+const uncontrolledValue = ref<null | string | undefined>(props.defaultValue);
+
+const value = computed({
+  set: (next) => {
+    model.value = next;
+    uncontrolledValue.value = next;
+  },
+  get: () => {
+    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
+  },
+});
+
 const textareaRef = useTemplateRef<HTMLTextAreaElement>("textarea");
 
 const { formField, textareaBind, adjustHeight } = useTextarea(
@@ -27,13 +40,13 @@ const { formField, textareaBind, adjustHeight } = useTextarea(
   textareaRef,
 );
 
-watch(model, () => {
+watch(value, () => {
   adjustHeight(textareaRef.value);
 });
 </script>
 
 <template>
   <FormField :field="formField">
-    <textarea ref="textarea" v-model="model" v-bind="textareaBind" />
+    <textarea ref="textarea" v-model="value" v-bind="textareaBind" />
   </FormField>
 </template>

@@ -56,6 +56,41 @@ test("it should emit change when decrement button is clicked", async () => {
   expect(wrapper.emitted("change")).toEqual([[2]]);
 });
 
+test("it should start with defaultValue when v-model is not bound", () => {
+  const wrapper = mount(NumberField, {
+    props: { defaultValue: 5 },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("5");
+});
+
+test("it should step freely when defaultValue is set without v-model", async () => {
+  const wrapper = mount(NumberField, {
+    props: { defaultValue: 5 },
+  });
+
+  await wrapper.find('button[aria-label="Increment value"]').trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("6");
+  expect(wrapper.emitted("change")).toEqual([[6]]);
+});
+
+test("it should ignore defaultValue when modelValue is bound", () => {
+  const wrapper = mount(NumberField, {
+    props: { modelValue: 3, defaultValue: 5 },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("3");
+});
+
+test("it should not forward defaultValue to the native input", () => {
+  const wrapper = mount(NumberField, {
+    props: { defaultValue: 5 },
+  });
+
+  expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
+});
+
 test("it should disable stepper buttons when disabled", () => {
   const wrapper = mount(NumberField, { props: { disabled: true } });
 

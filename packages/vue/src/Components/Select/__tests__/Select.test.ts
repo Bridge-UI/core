@@ -266,3 +266,59 @@ test("it should select from composed default slot", async () => {
 
   expect(onChange).toHaveBeenCalledWith("active");
 });
+
+test("it should start with defaultValue when v-model is not bound", () => {
+  mountSelect({
+    props: { defaultValue: "pending" },
+  });
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Pending");
+});
+
+test("it should select freely when defaultValue is set without v-model", async () => {
+  const wrapper = mountSelect({
+    props: { defaultValue: "pending" },
+  });
+
+  await wrapper.find('[role="combobox"]').trigger("click");
+  await flushPromises();
+
+  const active = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Active"));
+
+  await active?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Active");
+});
+
+test("it should ignore defaultValue when modelValue is bound", () => {
+  mountSelect({
+    props: { modelValue: "active", defaultValue: "pending" },
+  });
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Active");
+});
+
+test("it should not forward defaultValue to the trigger input", () => {
+  mountSelect({
+    props: { defaultValue: "pending" },
+  });
+
+  const combobox = document.body.querySelector('[role="combobox"]');
+
+  expect(combobox?.getAttribute("defaultvalue")).toBeNull();
+});
