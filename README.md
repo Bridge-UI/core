@@ -2,6 +2,11 @@
 
 <h2><p align="center">BridgeUI</p></h2>
 
+<p align="center">
+<a href="https://github.com/Bridge-UI/core/actions"><img src="https://github.com/Bridge-UI/core/actions/workflows/ci.yml/badge.svg" alt="Tests"></a>
+<a href="LICENSE.md"><img src="https://img.shields.io/github/license/Bridge-UI/core" alt="License" /></a>
+</p>
+
 ### 🚀 Introduction
 
 Bridge UI is a component library for **React** and **Vue** with a shared foundation. Design tokens, types, and utilities live in `@bridge-ui/core`, while each framework package ships the same API surface with idiomatic implementations.
