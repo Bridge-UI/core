@@ -176,7 +176,10 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   customProps?: SelectCustomProps;
 
   /**
-   * Initial value when uncontrolled.
+   * Initial value for uncontrolled usage (when `v-model` / `modelValue` is
+   * not bound).
+   *
+   * @default undefined
    */
   defaultValue?: SelectModel;
 

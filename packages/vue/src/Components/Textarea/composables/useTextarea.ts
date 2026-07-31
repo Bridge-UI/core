@@ -94,7 +94,7 @@ export function useTextarea(
   const formField = useFormField(
     () => ({
       ...omit(attrs, ["rows"]),
-      ...omit(props, ["autosize", "resize", "likeInput"]),
+      ...omit(props, ["autosize", "resize", "likeInput", "defaultValue"]),
       classes: mergedClasses.value,
     }),
     {

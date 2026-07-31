@@ -60,7 +60,12 @@ export function usePasswordField(
 
   const formField = useFormField(
     () => {
-      const { visible: _visible, classes: _classes, ...rest } = props;
+      const {
+        visible: _visible,
+        classes: _classes,
+        defaultValue: _defaultValue,
+        ...rest
+      } = props;
 
       return {
         ...attrs,

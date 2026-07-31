@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useAttrs } from "vue";
+import { computed, ref, useAttrs } from "vue";
 
 // ** Local Imports
 import { FormControl } from "@/Components/FormControl";
@@ -18,33 +18,37 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<SwitchOwnProps>();
 
-const model = defineModel<boolean>({ default: false });
+const uncontrolledChecked = ref(Boolean(props.defaultChecked));
+
+const model = defineModel<boolean | undefined>({ default: undefined });
 
 const checked = computed(() => {
-  return model.value;
+  return model.value ?? uncontrolledChecked.value;
 });
 
-const { fieldBind, inputBind, thumbBind, trackBind, formControl } = useSwitch(
-  () => ({ ...attrs, ...props }),
-  {
-    size: "md",
-    rounded: "full",
-    color: "primary",
-  },
-  checked,
-);
+const { fieldBind, inputBind, isChecked, thumbBind, trackBind, formControl } =
+  useSwitch(
+    () => ({ ...attrs, ...props }),
+    {
+      size: "md",
+      rounded: "full",
+      color: "primary",
+    },
+    checked,
+  );
 
 function onChange(event: Event) {
   const target = event.target as HTMLInputElement;
 
   model.value = target.checked;
+  uncontrolledChecked.value = target.checked;
 }
 </script>
 
 <template>
   <FormControl :field="formControl">
     <label v-bind="fieldBind">
-      <input v-bind="inputBind" :checked="model" v-on:change="onChange" />
+      <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 
       <span v-bind="trackBind" />
 

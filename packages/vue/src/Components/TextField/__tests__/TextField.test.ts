@@ -336,6 +336,40 @@ test("it should update FormField chrome when label and error props change", asyn
   expect(wrapper.text()).not.toContain("Helper");
 });
 
+test("it should start with defaultValue when v-model is not bound", () => {
+  const wrapper = mount(TextField, {
+    props: { defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+});
+
+test("it should update freely when defaultValue is set without v-model", async () => {
+  const wrapper = mount(TextField, {
+    props: { defaultValue: "hello" },
+  });
+
+  await wrapper.find("input").setValue("world");
+
+  expect(wrapper.find("input").element.value).toBe("world");
+});
+
+test("it should ignore defaultValue when modelValue is bound", () => {
+  const wrapper = mount(TextField, {
+    props: { modelValue: "bound", defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("bound");
+});
+
+test("it should not forward defaultValue to the native input", () => {
+  const wrapper = mount(TextField, {
+    props: { defaultValue: "hello" },
+  });
+
+  expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
+});
+
 test("it should update modelValue when input changes", async () => {
   const wrapper = mount(TextField, {
     props: {

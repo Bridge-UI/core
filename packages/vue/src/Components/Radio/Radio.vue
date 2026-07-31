@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** External Imports
 import { isNil } from "es-toolkit/compat";
-import { computed, useAttrs } from "vue";
+import { computed, ref, useAttrs } from "vue";
 
 // ** Local Imports
 import { FormControl } from "@/Components/FormControl";
@@ -18,7 +18,13 @@ const props = defineProps<RadioOwnProps>();
 
 const model = defineModel<number | string>();
 
+const uncontrolledChecked = ref(Boolean(props.defaultChecked));
+
 const modelRef = computed(() => {
+  if (isNil(model.value) && uncontrolledChecked.value) {
+    return props.value;
+  }
+
   return model.value;
 });
 
@@ -41,6 +47,8 @@ const {
 );
 
 function onChange() {
+  uncontrolledChecked.value = true;
+
   if (!isNil(merged.value.value)) {
     model.value = merged.value.value;
   }

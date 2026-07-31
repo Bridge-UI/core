@@ -100,6 +100,40 @@ test("it should preserve value when visibility toggles via the eye button", asyn
   );
 });
 
+test("it should start with defaultValue when v-model is not bound", () => {
+  const wrapper = mount(PasswordField, {
+    props: { defaultValue: "hunter2" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("hunter2");
+});
+
+test("it should update freely when defaultValue is set without v-model", async () => {
+  const wrapper = mount(PasswordField, {
+    props: { defaultValue: "hunter2" },
+  });
+
+  await wrapper.find("input").setValue("secret");
+
+  expect(wrapper.find("input").element.value).toBe("secret");
+});
+
+test("it should ignore defaultValue when modelValue is bound", () => {
+  const wrapper = mount(PasswordField, {
+    props: { modelValue: "bound", defaultValue: "hunter2" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("bound");
+});
+
+test("it should not forward defaultValue to the native input", () => {
+  const wrapper = mount(PasswordField, {
+    props: { defaultValue: "hunter2" },
+  });
+
+  expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
+});
+
 test("it should preserve value without parent v-model when visible toggles", async () => {
   const Parent = defineComponent({
     components: { PasswordField },

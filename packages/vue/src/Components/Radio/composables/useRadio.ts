@@ -37,6 +37,7 @@ const radioBridgeKeys = [
   "classes",
   "rounded",
   "customProps",
+  "defaultChecked",
 ] as const satisfies readonly (keyof RadioOwnProps)[];
 
 type RadioLibDefaults = LibDefaultsShape<

@@ -31,6 +31,14 @@ export interface TextareaOwnProps extends Omit<FormFieldOwnProps, "field"> {
   autosize?: boolean;
 
   /**
+   * Initial value for uncontrolled usage (when `v-model` / `modelValue` is
+   * not bound).
+   *
+   * @default undefined
+   */
+  defaultValue?: string;
+
+  /**
    * Use compact TextField-like sizing instead of the default multiline textarea profile.
    * Enables `autosize` and `rows={1}` by default; both can be overridden explicitly.
    *

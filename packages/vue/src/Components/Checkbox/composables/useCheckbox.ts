@@ -43,6 +43,7 @@ const checkboxBridgeKeys = [
   "rounded",
   "customProps",
   "indeterminate",
+  "defaultChecked",
 ] as const satisfies readonly (keyof CheckboxOwnProps)[];
 
 type CheckboxLibDefaults = LibDefaultsShape<

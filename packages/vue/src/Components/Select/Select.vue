@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // ** External Imports
 import { X } from "@lucide/vue";
-import { provide, ref, useTemplateRef } from "vue";
+import { isUndefined } from "es-toolkit/compat";
+import { computed, provide, ref, useTemplateRef } from "vue";
 
 // ** Local Imports
 import { Chip } from "@/Components/Chip";
@@ -38,6 +39,20 @@ const props = withDefaults(defineProps<SelectOwnProps>(), {
 });
 
 const emit = defineEmits<SelectEmits>();
+
+const uncontrolledValue = ref<null | undefined | SelectValue | SelectValue[]>(
+  props.defaultValue,
+);
+
+const value = computed({
+  set: (next) => {
+    model.value = next;
+    uncontrolledValue.value = next;
+  },
+  get: () => {
+    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
+  },
+});
 
 const triggerRef = useTemplateRef<HTMLInputElement | HTMLTextAreaElement>(
   "trigger",
@@ -83,7 +98,7 @@ const {
   selectedOptions,
   hasComposedList,
   handleRegisteredOptionsChange,
-} = useSelect(props, model, triggerRef, emit, declarativeOptions);
+} = useSelect(props, value, triggerRef, emit, declarativeOptions);
 </script>
 
 <template>

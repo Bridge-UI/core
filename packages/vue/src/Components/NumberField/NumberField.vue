@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // ** External Imports
 import { ChevronDown, ChevronUp } from "@lucide/vue";
-import { computed } from "vue";
+import { isUndefined } from "es-toolkit/compat";
+import { computed, ref } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core";
@@ -33,6 +34,18 @@ const props = withDefaults(defineProps<NumberFieldOwnProps>(), {
   step: 1,
 });
 
+const uncontrolledValue = ref<null | number | undefined>(props.defaultValue);
+
+const value = computed({
+  set: (next) => {
+    model.value = next;
+    uncontrolledValue.value = next;
+  },
+  get: () => {
+    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
+  },
+});
+
 const {
   decrement,
   formField,
@@ -40,8 +53,8 @@ const {
   inputBind,
   stringModel,
   mergedClasses,
-} = useNumberField(props, model, {
-  onChange: (value) => emit("change", value),
+} = useNumberField(props, value, {
+  onChange: (next) => emit("change", next),
 });
 
 const incrementHold = useHoldRepeat(
