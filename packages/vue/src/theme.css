@@ -1,6 +1,6 @@
 @source "./Actions";
 @source "./Components";
-@source "../../core/dist/Components";
+@source "../../core/dist/Tokens";
 
 /* Emitted for JS (`useBreakpoint`) — Tailwind otherwise omits unused --breakpoint-* vars. */
 @theme static {

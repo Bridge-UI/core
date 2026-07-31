@@ -15,7 +15,7 @@ import {
   invalidatedProps,
   roundedProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Switch";
+} from "@bridge-ui/core/Tokens/Switch";
 
 // ** Local Imports
 import { useFormControl } from "@/Components/FormControl";

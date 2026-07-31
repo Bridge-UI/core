@@ -3,12 +3,12 @@ import { maxBy, remove } from "es-toolkit/array";
 import { get, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
+import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
+import type { LayerId } from "@/Layer/types";
 import {
   transitionProps,
   type ModalTransition,
-} from "@/Components/Modal/Transition";
-import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
-import type { LayerId } from "@/Layer/types";
+} from "@/Tokens/Modal/Transition";
 import { hasDocument, hasWindow } from "@/Utils/env";
 import { resetOpenMenuLayersForTests } from "@/Utils/menu";
 

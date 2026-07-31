@@ -5,7 +5,7 @@
   ],
   "overrides": [
     {
-      "files": "packages/core/src/Components/**/*.ts",
+      "files": "packages/core/src/Tokens/**/*.ts",
       "options": {
         "quoteProps": "preserve"
       }

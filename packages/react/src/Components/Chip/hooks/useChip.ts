@@ -10,7 +10,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Chip";
+import { sizeProps } from "@bridge-ui/core/Tokens/Chip";
 
 // ** Local Imports
 import type {

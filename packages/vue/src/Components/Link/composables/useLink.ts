@@ -14,7 +14,7 @@ import {
   colorProps,
   sizeProps,
   underlineProps,
-} from "@bridge-ui/core/Components/Link";
+} from "@bridge-ui/core/Tokens/Link";
 
 // ** Local Imports
 import type {

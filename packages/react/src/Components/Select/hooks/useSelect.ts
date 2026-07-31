@@ -28,10 +28,7 @@ import {
   type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-} from "@bridge-ui/core/Components/Listbox";
+import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";

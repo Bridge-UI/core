@@ -15,7 +15,7 @@ import {
   invalidatedProps,
   roundedProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Radio";
+} from "@bridge-ui/core/Tokens/Radio";
 
 // ** Local Imports
 import { useFormControl } from "@/Components/FormControl";

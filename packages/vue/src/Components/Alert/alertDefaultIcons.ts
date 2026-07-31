@@ -10,7 +10,7 @@ import {
 } from "@lucide/vue";
 
 // ** Core Imports
-import type { AlertColor } from "@bridge-ui/core/Components/Alert";
+import type { AlertColor } from "@bridge-ui/core/Tokens/Alert";
 
 /** Library fallbacks when neither the `icon` prop nor theme `icon` is set. */
 export const alertDefaultIcons: Record<keyof AlertColor, LucideIcon> = {

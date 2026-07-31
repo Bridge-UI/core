@@ -15,7 +15,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { resizeProps } from "@bridge-ui/core/Components/Textarea";
+import { resizeProps } from "@bridge-ui/core/Tokens/Textarea";
 
 // ** Local Imports
 import type { FormFieldProps } from "@/Components/FormField/formField.types";

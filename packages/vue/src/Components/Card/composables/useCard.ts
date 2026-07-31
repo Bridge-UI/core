@@ -15,7 +15,7 @@ import {
   roundedProps,
   shadowProps,
   variantProps,
-} from "@bridge-ui/core/Components/Card";
+} from "@bridge-ui/core/Tokens/Card";
 
 // ** Local Imports
 import type { CardOwnProps, CardProps } from "@/Components/Card/card.types";

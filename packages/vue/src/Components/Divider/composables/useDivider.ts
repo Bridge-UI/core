@@ -10,10 +10,7 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import {
-  colorProps,
-  orientationProps,
-} from "@bridge-ui/core/Components/Divider";
+import { colorProps, orientationProps } from "@bridge-ui/core/Tokens/Divider";
 
 // ** Local Imports
 import type {

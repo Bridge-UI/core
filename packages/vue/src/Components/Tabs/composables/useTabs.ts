@@ -25,7 +25,7 @@ import {
   orientationProps,
   sizeProps,
   variantProps,
-} from "@bridge-ui/core/Components/Tabs";
+} from "@bridge-ui/core/Tokens/Tabs";
 
 // ** Local Imports
 import type {

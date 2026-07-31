@@ -10,7 +10,7 @@ import {
   MergeLibDefaults,
   splitComponentProps,
 } from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Components/Icon";
+import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
 
 // ** Local Imports
 import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";

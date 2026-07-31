@@ -14,7 +14,7 @@ import {
   densityProps,
   roundedProps,
   variantProps,
-} from "@bridge-ui/core/Components/Badge";
+} from "@bridge-ui/core/Tokens/Badge";
 
 // ** Local Imports
 import type {

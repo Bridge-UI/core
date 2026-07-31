@@ -7,7 +7,7 @@ import {
   type DrawerPlacement,
   type DrawerSlidePanel,
   type DrawerTransition,
-} from "@/Components/Drawer";
+} from "@/Tokens/Drawer";
 import { hasWindow } from "@/Utils/env";
 
 /**

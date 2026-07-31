@@ -14,7 +14,7 @@ import {
   densityProps,
   roundedProps,
   variantProps,
-} from "@bridge-ui/core/Components/Button";
+} from "@bridge-ui/core/Tokens/Button";
 
 // ** Local Imports
 import type {

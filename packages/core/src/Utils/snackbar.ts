@@ -2,11 +2,11 @@
 import { isNil } from "es-toolkit/compat";
 
 // ** Local Imports
-import type { SnackbarPadding } from "@/Components/Snackbar/Padding";
+import type { SnackbarPadding } from "@/Tokens/Snackbar/Padding";
 import {
   transitionProps,
   type SnackbarTransition,
-} from "@/Components/Snackbar/Transition";
+} from "@/Tokens/Snackbar/Transition";
 
 /**
  * Gets the transition class for a snackbar.

@@ -28,7 +28,7 @@ import {
   type MergeLibDefaults,
   type PositionHandle,
 } from "@bridge-ui/core";
-import { roundedProps, shadowProps } from "@bridge-ui/core/Components/Menu";
+import { roundedProps, shadowProps } from "@bridge-ui/core/Tokens/Menu";
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";

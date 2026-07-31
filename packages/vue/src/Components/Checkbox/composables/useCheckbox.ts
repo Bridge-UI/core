@@ -22,7 +22,7 @@ import {
   invalidatedProps,
   roundedProps,
   sizeProps,
-} from "@bridge-ui/core/Components/Checkbox";
+} from "@bridge-ui/core/Tokens/Checkbox";
 
 // ** Local Imports
 import type {

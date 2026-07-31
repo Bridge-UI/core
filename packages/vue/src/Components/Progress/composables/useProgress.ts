@@ -15,7 +15,7 @@ import {
   roundedProps,
   sizeProps,
   variantProps,
-} from "@bridge-ui/core/Components/Progress";
+} from "@bridge-ui/core/Tokens/Progress";
 
 // ** Local Imports
 import type {

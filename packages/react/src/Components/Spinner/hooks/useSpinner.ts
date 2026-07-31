@@ -17,7 +17,7 @@ import {
   colorProps,
   sizeProps,
   variantProps,
-} from "@bridge-ui/core/Components/Spinner";
+} from "@bridge-ui/core/Tokens/Spinner";
 
 // ** Local Imports
 import type {
