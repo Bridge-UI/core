@@ -30,8 +30,8 @@ test("it should apply list root classes", () => {
   const { rootBind } = mountUseList();
 
   expect(rootBind.value.class).toContain("m-0");
-  expect(rootBind.value.class).toContain("list-none");
   expect(rootBind.value.class).toContain("py-2");
+  expect(rootBind.value.class).toContain("list-none");
 });
 
 test("it should apply nested indent on root bind", () => {

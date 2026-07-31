@@ -15,8 +15,8 @@ test("it should apply horizontal orientation by default", () => {
   const wrapper = mount(Divider);
   const root = wrapper.find("hr");
 
-  expect(root.classes()).toContain("w-full");
   expect(root.classes()).toContain("h-px");
+  expect(root.classes()).toContain("w-full");
   expect(root.attributes("aria-orientation")).toBe("horizontal");
 });
 

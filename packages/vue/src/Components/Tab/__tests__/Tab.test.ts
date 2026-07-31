@@ -22,8 +22,8 @@ test("it should render a tab button with aria attributes", () => {
 
   const tab = wrapper.find('[role="tab"]');
 
-  expect(tab.attributes("aria-selected")).toBe("true");
   expect(tab.attributes("tabindex")).toBe("0");
+  expect(tab.attributes("aria-selected")).toBe("true");
 });
 
 test("it should render a leading icon when startIcon is set", () => {
@@ -63,8 +63,8 @@ test("it should render start and end slots when icon props are omitted", () => {
     },
   });
 
-  expect(wrapper.find('[data-testid="start-slot"]').exists()).toBe(true);
   expect(wrapper.find('[data-testid="end-slot"]').exists()).toBe(true);
+  expect(wrapper.find('[data-testid="start-slot"]').exists()).toBe(true);
 });
 
 test("it should prefer endIcon over the end slot", () => {

@@ -48,11 +48,11 @@ test("it should render tablist tabs and the selected panel", () => {
   render(<BasicTabs />);
 
   expect(screen.getByRole("tablist")).toBeTruthy();
+  expect(screen.getByText("Panel B").hasAttribute("hidden")).toBe(true);
+  expect(screen.getByText("Panel A").hasAttribute("hidden")).toBe(false);
   expect(
     screen.getByRole("tab", { name: "Alpha" }).getAttribute("aria-selected"),
   ).toBe("true");
-  expect(screen.getByText("Panel A").hasAttribute("hidden")).toBe(false);
-  expect(screen.getByText("Panel B").hasAttribute("hidden")).toBe(true);
 });
 
 test("it should change selection when a tab is clicked", () => {
@@ -63,10 +63,10 @@ test("it should change selection when a tab is clicked", () => {
   fireEvent.click(screen.getByRole("tab", { name: "Beta" }));
 
   expect(onChange).toHaveBeenCalledWith("b");
+  expect(screen.getByText("Panel B").hasAttribute("hidden")).toBe(false);
   expect(
     screen.getByRole("tab", { name: "Beta" }).getAttribute("aria-selected"),
   ).toBe("true");
-  expect(screen.getByText("Panel B").hasAttribute("hidden")).toBe(false);
 });
 
 test("it should not select a disabled tab", () => {
@@ -122,8 +122,8 @@ test("it should apply line underline classes with after content", () => {
 
   const tab = screen.getByRole("tab", { name: "Alpha" });
 
-  expect(tab.className).toContain("after:content-['']");
   expect(tab.className).toContain("after:bg-current");
+  expect(tab.className).toContain("after:content-['']");
 });
 
 test("it should apply soft fill color classes for pill variant", () => {
@@ -155,7 +155,7 @@ test("it should lay out vertical tabs beside panels", () => {
   const list = screen.getByRole("tablist");
   const tab = screen.getByRole("tab", { name: "Alpha" });
 
-  expect(root?.className).toContain("flex-row");
   expect(list.className).toContain("flex-col");
+  expect(root?.className).toContain("flex-row");
   expect(tab.className).toContain("after:w-0.5");
 });

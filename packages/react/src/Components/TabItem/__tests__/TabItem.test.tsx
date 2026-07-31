@@ -27,8 +27,8 @@ test("it should build tablist and panels from TabItem children", () => {
   expect(
     screen.getByRole("tab", { name: "bun" }).getAttribute("aria-selected"),
   ).toBe("true");
-  expect(screen.getByText("bun install").hasAttribute("hidden")).toBe(false);
   expect(screen.getByText("npm install").hasAttribute("hidden")).toBe(true);
+  expect(screen.getByText("bun install").hasAttribute("hidden")).toBe(false);
 });
 
 test("it should change panel when a TabItem tab is clicked", () => {

@@ -162,8 +162,8 @@ test("it should grow downward with newest below oldest", async () => {
   const host = document.body.querySelector("[data-snackbar-host]");
   const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-  expect(host?.className).toContain("items-start");
   expect(panels?.length).toBe(2);
+  expect(host?.className).toContain("items-start");
   expect(panels?.[0]?.textContent).toContain("Older");
   expect(panels?.[1]?.textContent).toContain("Newer");
   expect(host?.querySelector(".flex-col")).toBeTruthy();
@@ -198,12 +198,12 @@ test("it should stack upward from the viewport edge", async () => {
   const host = document.body.querySelector("[data-snackbar-host]");
   const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-  expect(host?.className).toContain("items-end");
   expect(panels?.length).toBe(2);
-  expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
-  expect(host?.querySelector(".flex-col")).toBeFalsy();
+  expect(host?.className).toContain("items-end");
   expect(panels?.[0]?.textContent).toContain("Older");
   expect(panels?.[1]?.textContent).toContain("Newer");
+  expect(host?.querySelector(".flex-col")).toBeFalsy();
+  expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
 });
 
 test("it should stack in a single notification column", async () => {
@@ -332,15 +332,15 @@ test("it should reflect mounted entries", async () => {
   await nextTick();
 
   expect(isString(id)).toBe(true);
-  expect(bridgeSnackbar.isOpen(id)).toBe(true);
   expect(bridgeSnackbar.stackSize).toBe(1);
+  expect(bridgeSnackbar.isOpen(id)).toBe(true);
 
   bridgeSnackbar.close(id);
   await flushPromises();
   await nextTick();
 
-  expect(bridgeSnackbar.isOpen(id)).toBe(false);
   expect(bridgeSnackbar.stackSize).toBe(0);
+  expect(bridgeSnackbar.isOpen(id)).toBe(false);
 });
 
 test("it should close only the topmost snackbar", async () => {
@@ -370,11 +370,11 @@ test("it should close only the topmost snackbar", async () => {
   await flushPromises();
   await nextTick();
 
-  expect(document.body.textContent).not.toContain("Second");
-  expect(document.body.textContent).toContain("First");
-  expect(bridgeSnackbar.isOpen(secondId)).toBe(false);
-  expect(bridgeSnackbar.isOpen(firstId)).toBe(true);
   expect(bridgeSnackbar.stackSize).toBe(1);
+  expect(bridgeSnackbar.isOpen(firstId)).toBe(true);
+  expect(bridgeSnackbar.isOpen(secondId)).toBe(false);
+  expect(document.body.textContent).toContain("First");
+  expect(document.body.textContent).not.toContain("Second");
 });
 
 test("it should run before onClosed when close is called", async () => {

@@ -106,8 +106,8 @@ test("it should show loading progress bar and text when loading", async () => {
 
   await flushPromises();
 
-  expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
   expect(document.body.textContent).toContain("Loading...");
+  expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
 });
 
 test("it should use loadingMessage when provided", async () => {
@@ -164,8 +164,8 @@ test("it should apply size classes to empty message", async () => {
 
   const empty = document.body.querySelector(".text-gray-500");
 
-  expect(empty?.textContent).toContain("No options");
   expect(empty?.className).toContain("text-xs");
+  expect(empty?.textContent).toContain("No options");
 });
 
 test("it should apply size classes to option rows", async () => {
@@ -209,9 +209,9 @@ test("it should render section headers from entries", async () => {
 
   await flushPromises();
 
+  expect(document.body.textContent).toContain("Other");
   expect(document.body.textContent).toContain("Status");
   expect(document.body.textContent).toContain("Active");
-  expect(document.body.textContent).toContain("Other");
 
   const section = Array.from(document.body.querySelectorAll("li")).find((el) =>
     el.classList.contains("sticky"),

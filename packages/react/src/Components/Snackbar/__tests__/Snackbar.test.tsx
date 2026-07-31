@@ -37,8 +37,8 @@ test("it should render in a portal when show is true", () => {
   );
 
   expect(screen.getByRole("status")).toBeTruthy();
-  expect(document.body.textContent).toContain("Toast");
   expect(document.body.textContent).toContain("Body");
+  expect(document.body.textContent).toContain("Toast");
   expect(document.body.querySelector("[data-snackbar-layer]")).not.toBeNull();
 });
 

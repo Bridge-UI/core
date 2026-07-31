@@ -17,8 +17,8 @@ test("it should render an image when src is passed", () => {
   const image = wrapper.find("img");
 
   expect(image.exists()).toBe(true);
-  expect(image.attributes("src")).toBe("https://example.com/avatar.jpg");
   expect(image.attributes("alt")).toBe("Jane Doe");
+  expect(image.attributes("src")).toBe("https://example.com/avatar.jpg");
 });
 
 test("it should render fallback text when fallback is passed", () => {

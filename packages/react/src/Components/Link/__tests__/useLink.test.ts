@@ -28,8 +28,8 @@ test("it should merge default color and underline", () => {
 test("it should set rootAriaDisabled when disabled prop is true", () => {
   const { result } = renderUseLink({ disabled: true });
 
-  expect(result.current.rootAriaDisabled).toBe(true);
   expect(result.current.rootHref).toBeUndefined();
+  expect(result.current.rootAriaDisabled).toBe(true);
 });
 
 test("it should keep leftIcon in merged when leftIcon is set", () => {

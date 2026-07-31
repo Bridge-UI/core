@@ -67,9 +67,9 @@ test("it should teleport to body when modelValue is true", async () => {
 
   await flushPromises();
 
-  expect(document.body.querySelector('[role="status"]')).not.toBeNull();
-  expect(document.body.textContent).toContain("Toast");
   expect(document.body.textContent).toContain("Body");
+  expect(document.body.textContent).toContain("Toast");
+  expect(document.body.querySelector('[role="status"]')).not.toBeNull();
   expect(document.body.querySelector("[data-snackbar-layer]")).not.toBeNull();
 });
 
@@ -292,8 +292,8 @@ test("it should stay open when reopened before the leave transition ends", async
 
   await flushPromises();
 
-  expect(document.body.textContent).toContain("Second");
   expect(onUpdate).not.toHaveBeenCalledWith(false);
+  expect(document.body.textContent).toContain("Second");
 });
 
 test("it should not reset shared state when a replaced snackbar finishes leaving", async () => {

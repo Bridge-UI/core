@@ -61,9 +61,9 @@ test("it should mount modal, dialog, drawer, and snackbar imperatives", async ()
 
   await waitFor(() => {
     expect(document.body.textContent).toContain("Modal");
+    expect(document.body.textContent).toContain("Toast");
+    expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Confirm");
     expect(document.body.textContent).toContain("Are you sure?");
-    expect(document.body.textContent).toContain("Drawer");
-    expect(document.body.textContent).toContain("Toast");
   });
 });

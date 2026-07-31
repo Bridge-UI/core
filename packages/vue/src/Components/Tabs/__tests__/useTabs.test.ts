@@ -68,8 +68,8 @@ test("it should emit change and update:modelValue when selecting a tab", () => {
   result.contextValue.value.setSelected("b");
 
   expect(model.value).toBe("b");
-  expect(emit).toHaveBeenCalledWith("update:modelValue", "b");
   expect(emit).toHaveBeenCalledWith("change", "b");
+  expect(emit).toHaveBeenCalledWith("update:modelValue", "b");
 });
 
 test("it should not select a disabled tab", () => {

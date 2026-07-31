@@ -21,14 +21,14 @@ test("it should render children as the title", () => {
 test("it should apply sticky classes on the li root when sticky is true", () => {
   const { container } = render(<ListSection sticky title="Sticky" />);
 
-  expect(container.querySelector("li")?.classList.contains("sticky")).toBe(
-    true,
-  );
   expect(
     container
       .querySelector('[role="presentation"]')
       ?.classList.contains("sticky"),
   ).toBe(false);
+  expect(container.querySelector("li")?.classList.contains("sticky")).toBe(
+    true,
+  );
 });
 
 test("it should apply sticky classes on the title when as is div", () => {
@@ -70,6 +70,6 @@ test("it should inherit dense padding from parent List", () => {
 test("it should render a div root when as prop is div", () => {
   const { container } = render(<ListSection as="div" title="Div section" />);
 
-  expect(container.querySelector("div[role='presentation']")).not.toBeNull();
   expect(container.querySelector("li")).toBeNull();
+  expect(container.querySelector("div[role='presentation']")).not.toBeNull();
 });

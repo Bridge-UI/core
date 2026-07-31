@@ -128,8 +128,8 @@ test("it should apply selected styles on interactive bind", () => {
 
   expect(interactiveBind.value?.class).toContain("bg-dark-100");
   expect(interactiveBind.value?.class).toContain("text-dark-900");
-  expect(interactiveBind.value?.class).toContain("dark:bg-white/15");
   expect(interactiveBind.value?.class).toContain("dark:text-white");
+  expect(interactiveBind.value?.class).toContain("dark:bg-white/15");
 });
 
 test("it should resolve Check as the default selected icon", () => {

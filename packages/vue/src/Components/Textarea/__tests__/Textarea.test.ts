@@ -8,8 +8,8 @@ import { Textarea } from "@/Components/Textarea";
 test("it should render a textarea element", () => {
   const wrapper = mount(Textarea);
 
-  expect(wrapper.find("textarea").exists()).toBe(true);
   expect(wrapper.find(".w-full").exists()).toBe(true);
+  expect(wrapper.find("textarea").exists()).toBe(true);
 });
 
 test("it should render a label when label prop is provided", () => {

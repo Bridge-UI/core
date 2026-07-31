@@ -10,8 +10,8 @@ test("it should render the root element", () => {
 
   expect(wrapper.element.tagName).toBe("UL");
   expect(wrapper.classes()).toContain("m-0");
-  expect(wrapper.classes()).toContain("list-none");
   expect(wrapper.classes()).toContain("py-2");
+  expect(wrapper.classes()).toContain("list-none");
 });
 
 test("it should apply nested indent when nested is true", () => {

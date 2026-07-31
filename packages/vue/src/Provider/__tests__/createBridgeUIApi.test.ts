@@ -21,8 +21,8 @@ test("it should return global defaults when no parent and no options", () => {
   scope.run(() => {
     const api = createBridgeUIApi(undefined, createDefaultOptionsRef());
 
-    expect(api.global.value).toEqual(BRIDGE_UI_DEFAULT_GLOBAL);
     expect(api.components.value).toEqual({});
+    expect(api.global.value).toEqual(BRIDGE_UI_DEFAULT_GLOBAL);
   });
 
   scope.stop();

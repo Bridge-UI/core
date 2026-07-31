@@ -29,11 +29,11 @@ test("it should build tablist and panels from TabItem children", async () => {
   await flushPromises();
   await nextTick();
 
+  expect(wrapper.text()).toContain("bun install");
   expect(wrapper.find('[role="tablist"]').exists()).toBe(true);
   expect(wrapper.find('[role="tab"][aria-selected="true"]').text()).toContain(
     "bun",
   );
-  expect(wrapper.text()).toContain("bun install");
 });
 
 test("it should change panel when a TabItem tab is clicked", async () => {

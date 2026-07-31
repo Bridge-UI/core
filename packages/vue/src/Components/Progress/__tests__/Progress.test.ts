@@ -31,8 +31,8 @@ test("it should set aria-valuenow for determinate variant", () => {
 
   const root = wrapper.find('[role="progressbar"]');
 
-  expect(root.attributes("aria-valuenow")).toBe("40");
   expect(root.attributes("aria-valuemin")).toBe("0");
+  expect(root.attributes("aria-valuenow")).toBe("40");
   expect(root.attributes("aria-valuemax")).toBe("100");
 });
 

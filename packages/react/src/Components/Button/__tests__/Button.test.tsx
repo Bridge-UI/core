@@ -31,9 +31,9 @@ test("it should show loading spinner when loading", () => {
 
   const button = screen.getByRole("button");
 
+  expect(screen.queryByText("Saving")).toBeNull();
   expect(button.getAttribute("aria-busy")).toBe("true");
   expect(container.querySelector("svg.animate-spin")).not.toBeNull();
-  expect(screen.queryByText("Saving")).toBeNull();
 });
 
 test("it should render text prop when children are not provided", () => {

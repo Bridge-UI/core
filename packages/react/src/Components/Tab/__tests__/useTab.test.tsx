@@ -20,6 +20,6 @@ test("it should mark the selected tab", () => {
     wrapper: Wrapper,
   });
 
-  expect(result.current.rootBind["aria-selected"]).toBe(true);
   expect(result.current.rootBind.role).toBe("tab");
+  expect(result.current.rootBind["aria-selected"]).toBe(true);
 });

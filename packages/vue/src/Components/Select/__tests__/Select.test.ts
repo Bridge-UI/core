@@ -99,11 +99,11 @@ test("it should open the menu and select an option", async () => {
   await option?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
-  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
   expect(wrapper.emitted("select")?.[0]?.[0]).toMatchObject({
     label: "Active",
     value: "active",
   });
+  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
 });
 
 test("it should clear the selected value", async () => {
@@ -150,8 +150,8 @@ test("it should collect declarative SelectOption children", async () => {
   await wrapper.find('[role="combobox"]').trigger("click");
   await flushPromises();
 
-  expect(document.body.textContent).toContain("Pending");
   expect(document.body.textContent).toContain("Done");
+  expect(document.body.textContent).toContain("Pending");
 });
 
 test("it should not block pointer events on the field shell when closed", () => {
@@ -227,9 +227,9 @@ test("it should render grouped options with section titles", async () => {
   await combobox?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
+  expect(document.body.textContent).toContain("Other");
   expect(document.body.textContent).toContain("Status");
   expect(document.body.textContent).toContain("Active");
-  expect(document.body.textContent).toContain("Other");
 });
 
 test("it should select from composed default slot", async () => {

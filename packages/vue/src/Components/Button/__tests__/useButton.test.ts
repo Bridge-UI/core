@@ -171,8 +171,8 @@ test("it should hide start icon when loading", () => {
     props: { loading: true, startIcon: CircleAlert },
   });
 
-  expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
   expect(wrapper.text()).not.toContain("Label");
+  expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
 });
 
 test("it should render text prop when default slot is not used", () => {
@@ -206,8 +206,8 @@ test("it should render mini icon when density is mini and icon is set", () => {
     props: { density: "mini", icon: CircleAlert },
   });
 
-  expect(wrapper.find("svg").exists()).toBe(true);
   expect(wrapper.text()).toBe("");
+  expect(wrapper.find("svg").exists()).toBe(true);
 });
 
 test("it should render as button by default", () => {

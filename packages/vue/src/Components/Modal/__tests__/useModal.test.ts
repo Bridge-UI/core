@@ -73,10 +73,10 @@ test("it should set show to false when overlay is clicked", () => {
 test("it should apply fade transition classes on overlay when transition is fade", () => {
   const { result } = mountUseModal({ transition: "fade" });
 
-  expect(result.overlayBind.value["data-state"]).toBeDefined();
   expect(result.overlayBind.value.class).toContain(
     "data-[state=open]:opacity-100",
   );
+  expect(result.overlayBind.value["data-state"]).toBeDefined();
 });
 
 test("it should disable fade transition when prefers-reduced-motion is set", () => {

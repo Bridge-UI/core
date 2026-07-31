@@ -34,9 +34,9 @@ test("it should override color when prop is passed", () => {
 test("it should expose color classes for options", () => {
   const { result } = renderUseListbox({ color: "primary" });
 
+  expect(result.current.checkClass).toBeTruthy();
   expect(result.current.optionSelectedClass).toBeTruthy();
   expect(result.current.optionHighlightedClass).toBeTruthy();
-  expect(result.current.checkClass).toBeTruthy();
 });
 
 test("it should merge registry classes", () => {
@@ -97,8 +97,8 @@ test("it should apply size classes when size is overridden", () => {
   const { result } = renderUseListbox({ size: "xs" });
 
   expect(result.current.merged.size).toBe("xs");
+  expect(result.current.checkClass).toContain("size-3");
   expect(result.current.sizeClasses?.option).toContain("px-3");
   expect(result.current.sizeClasses?.primary).toContain("text-xs");
   expect(result.current.messageBind.className).toContain("text-xs");
-  expect(result.current.checkClass).toContain("size-3");
 });

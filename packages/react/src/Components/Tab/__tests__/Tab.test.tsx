@@ -23,8 +23,8 @@ test("it should render a tab button with aria attributes", () => {
 
   const tab = screen.getByRole("tab", { name: "Alpha" });
 
-  expect(tab.getAttribute("aria-selected")).toBe("true");
   expect(tab.getAttribute("tabindex")).toBe("0");
+  expect(tab.getAttribute("aria-selected")).toBe("true");
 });
 
 test("it should render a leading icon when startIcon is set", () => {
@@ -61,8 +61,8 @@ test("it should render start and end slots when icon props are omitted", () => {
     </Tabs>,
   );
 
-  expect(screen.getByTestId("start-slot")).toBeTruthy();
   expect(screen.getByTestId("end-slot")).toBeTruthy();
+  expect(screen.getByTestId("start-slot")).toBeTruthy();
 });
 
 test("it should prefer endIcon over the end slot", () => {

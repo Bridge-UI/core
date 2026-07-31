@@ -68,9 +68,9 @@ test("it should render tablist tabs and the selected panel", () => {
     .findAll('[role="tabpanel"]')
     .find((panel) => panel.text() === "Panel B");
 
-  expect(alpha?.attributes("aria-selected")).toBe("true");
-  expect(panelA?.attributes("hidden")).toBeUndefined();
   expect(panelB?.attributes("hidden")).toBeDefined();
+  expect(panelA?.attributes("hidden")).toBeUndefined();
+  expect(alpha?.attributes("aria-selected")).toBe("true");
 });
 
 test("it should change selection when a tab is clicked", async () => {
@@ -191,8 +191,8 @@ test("it should apply line underline classes with after content", () => {
 
   const tab = wrapper.find('[role="tab"]');
 
-  expect(tab.classes().join(" ")).toContain("after:content-['']");
   expect(tab.classes().join(" ")).toContain("after:bg-current");
+  expect(tab.classes().join(" ")).toContain("after:content-['']");
 });
 
 test("it should apply soft fill color classes for pill variant", () => {
@@ -227,10 +227,10 @@ test("it should lay out vertical tabs beside panels", () => {
   });
 
   expect(wrapper.classes().join(" ")).toContain("flex-row");
-  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
-    "flex-col",
-  );
   expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
     "after:w-0.5",
+  );
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "flex-col",
   );
 });

@@ -48,9 +48,9 @@ test("it should expose color classes for options", () => {
   const { checkClass, optionSelectedClass, optionHighlightedClass } =
     mountUseListbox({ color: "primary" });
 
+  expect(checkClass.value).toBeTruthy();
   expect(optionSelectedClass.value).toBeTruthy();
   expect(optionHighlightedClass.value).toBeTruthy();
-  expect(checkClass.value).toBeTruthy();
 });
 
 test("it should merge registry classes", () => {
@@ -138,8 +138,8 @@ test("it should apply size classes when size is overridden", () => {
   });
 
   expect(merged.value.size).toBe("xs");
-  expect(sizeClasses.value?.option).toContain("px-3");
-  expect(sizeClasses.value?.primary).toContain("text-xs");
-  expect(messageBind.value.class).toContain("text-xs");
   expect(checkClass.value).toContain("size-3");
+  expect(sizeClasses.value?.option).toContain("px-3");
+  expect(messageBind.value.class).toContain("text-xs");
+  expect(sizeClasses.value?.primary).toContain("text-xs");
 });

@@ -36,8 +36,8 @@ test("it should invoke onClose before hiding", () => {
 
   const next = closeLayer(entries, "a");
 
-  expect(onClose).toHaveBeenCalledOnce();
   expect(next[0]?.show).toBe(false);
+  expect(onClose).toHaveBeenCalledOnce();
 });
 
 test("it should close only the topmost visible entry", () => {
@@ -53,15 +53,15 @@ test("it should close only the topmost visible entry", () => {
 
   expect(innerClose).toHaveBeenCalledOnce();
   expect(outerClose).not.toHaveBeenCalled();
-  expect(next.find((entry) => entry.id === "inner")?.show).toBe(false);
   expect(next.find((entry) => entry.id === "outer")?.show).toBe(true);
+  expect(next.find((entry) => entry.id === "inner")?.show).toBe(false);
 });
 
 test("it should stay true while animating out", () => {
   const entries: TestEntry[] = [createEntry("a", "A", false)];
 
-  expect(isLayerMounted(entries, "a")).toBe(true);
   expect(getLayerCount(entries)).toBe(1);
+  expect(isLayerMounted(entries, "a")).toBe(true);
 });
 
 test("it should patch an existing entry", () => {
@@ -90,8 +90,8 @@ test("it should toggle show without redundant updates", () => {
   const entries: TestEntry[] = [createEntry("a", "A", true)];
 
   expect(syncLayerShow(entries, "a", true)).toBe(entries);
-  expect(syncLayerShow(entries, "a", false)[0]?.show).toBe(false);
   expect(syncLayerShow(entries, "a", true)[0]?.show).toBe(true);
+  expect(syncLayerShow(entries, "a", false)[0]?.show).toBe(false);
 });
 
 test("it should dismiss every visible entry", () => {
@@ -125,8 +125,8 @@ test("it should close oldest visible entries first", () => {
 
   expect(firstClose).toHaveBeenCalledOnce();
   expect(secondClose).not.toHaveBeenCalled();
-  expect(next.find((entry) => entry.id === "a")?.show).toBe(false);
   expect(next.find((entry) => entry.id === "b")?.show).toBe(true);
+  expect(next.find((entry) => entry.id === "a")?.show).toBe(false);
 });
 
 test("it should shallow-merge configured keys", () => {

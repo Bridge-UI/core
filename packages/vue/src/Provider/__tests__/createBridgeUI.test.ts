@@ -40,8 +40,8 @@ test("it should provide default global config when no options given", () => {
   expect(api?.global.value.theme).toBe("light");
   expect(api?.global.value.locale).toBe("en-US");
   expect(api?.global.value.direction).toBe("ltr");
-  expect(api?.global.value.mobileBreakpoint).toBe("sm");
   expect(api?.global.value.breakpoints).toEqual({});
+  expect(api?.global.value.mobileBreakpoint).toBe("sm");
 });
 
 test("it should pass user options to the provider", () => {

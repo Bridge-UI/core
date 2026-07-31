@@ -120,8 +120,8 @@ test("it should apply left placement classes by default", () => {
   const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
   const panel = document.body.querySelector('[role="dialog"]');
 
-  expect(wrapper?.className).toContain("justify-start");
   expect(panel?.className).toContain("h-dvh");
+  expect(wrapper?.className).toContain("justify-start");
 });
 
 test("it should apply bottom placement classes on the wrapper and panel", () => {
@@ -133,8 +133,8 @@ test("it should apply bottom placement classes on the wrapper and panel", () => 
   const wrapper = document.body.querySelector(".flex.min-h-full.w-full");
   const panel = document.body.querySelector('[role="dialog"]');
 
-  expect(wrapper?.className).toContain("items-end");
   expect(panel?.className).toContain("w-full");
+  expect(wrapper?.className).toContain("items-end");
 });
 
 test("it should render content inside the default slot", () => {
@@ -297,8 +297,8 @@ test("it should close only the topmost nested drawer on escape", async () => {
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
-  expect(inner.value).toBe(false);
   expect(outer.value).toBe(true);
+  expect(inner.value).toBe(false);
 });
 
 test("it should assign incremental z-index to nested drawers", () => {

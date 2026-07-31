@@ -13,8 +13,8 @@ test("it should apply list root classes", () => {
   const { result } = renderUseList();
 
   expect(result.current.rootBind.className).toContain("m-0");
-  expect(result.current.rootBind.className).toContain("list-none");
   expect(result.current.rootBind.className).toContain("py-2");
+  expect(result.current.rootBind.className).toContain("list-none");
 });
 
 test("it should apply nested indent on root bind", () => {

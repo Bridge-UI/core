@@ -58,10 +58,10 @@ test("it should set aria-describedby to description id when description is shown
 
   const textarea = screen.getByRole("textbox");
 
-  expect(document.getElementById("notes-field-description")).not.toBeNull();
   expect(textarea.getAttribute("aria-describedby")).toBe(
     "notes-field-description",
   );
+  expect(document.getElementById("notes-field-description")).not.toBeNull();
 });
 
 test("it should render error icon when error is set", () => {

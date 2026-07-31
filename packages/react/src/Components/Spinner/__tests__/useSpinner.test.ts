@@ -73,9 +73,9 @@ test("it should expose trackBind only when enableTrack is true", () => {
   const withoutTrack = renderUseSpinner();
   const withTrack = renderUseSpinner({ enableTrack: true });
 
+  expect(withTrack.result.current.enableTrack).toBe(true);
   expect(withoutTrack.result.current.trackBind).toBeNull();
   expect(withTrack.result.current.trackBind).not.toBeNull();
-  expect(withTrack.result.current.enableTrack).toBe(true);
 });
 
 test("it should include rotate animation class on rootBind", () => {

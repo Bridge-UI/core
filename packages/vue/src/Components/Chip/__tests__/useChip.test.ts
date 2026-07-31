@@ -37,8 +37,8 @@ test("it should apply size classes when size is overridden", () => {
   const { merged, labelBind, clearIconSize } = mountUseChip({ size: "xs" });
 
   expect(merged.value.size).toBe("xs");
-  expect(labelBind.value.class).toContain("text-xs");
   expect(clearIconSize.value).toBe("xs");
+  expect(labelBind.value.class).toContain("text-xs");
 });
 
 test("it should merge registry classes", () => {
