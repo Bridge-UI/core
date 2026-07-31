@@ -58,7 +58,7 @@ const resolvedPosition = computed(() => {
 const positionClass = computed(() => {
   const classes = mergeBridgeUILayeredClasses(
     snackbarPositionProps,
-    snackbarEntry.value?.customProps?.position,
+    snackbarEntry.value?.tokens?.position,
   );
 
   return get(classes, resolvedPosition.value);

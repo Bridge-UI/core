@@ -739,7 +739,7 @@ export function useSelect(
   const listboxPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components.value, ["Listbox", "customProps", "color"]),
+      get(components.value, ["Listbox", "tokens", "color"]),
     );
     const base = get(classes, formField.merged.value.color ?? "primary");
 
@@ -749,7 +749,7 @@ export function useSelect(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components.value, ["Listbox", "customProps", "invalidated"]),
+      get(components.value, ["Listbox", "tokens", "invalidated"]),
     );
   });
 
@@ -874,25 +874,25 @@ export function useSelect(
 
   const listboxProps = computed(() => {
     return {
+      listboxId,
+      isSelected,
       disableAutoFocus: true,
+      loading: isLoading.value,
+      multiple: multiple.value,
       maxHeight: props.maxHeight,
+      entries: visibleEntries.value,
+      options: visibleOptions.value,
       size: formField.merged.value.size,
       color: formField.merged.value.color,
+      labelledBy: formField.controlId.value,
+      rounded: formField.merged.value.rounded,
+      invalidated: formField.invalidated.value,
+      highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,
       emptyMessage: selectMerged.value.emptyMessage ?? "No options",
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
       loadingMessage: selectMerged.value.loadingMessage ?? "Loading...",
       ...listboxCustomProps.value,
-      listboxId,
-      isSelected,
-      loading: isLoading.value,
-      multiple: multiple.value,
-      entries: visibleEntries.value,
-      options: visibleOptions.value,
-      labelledBy: formField.controlId.value,
-      rounded: formField.merged.value.rounded,
-      invalidated: formField.invalidated.value,
-      highlightedIndex: highlightedIndex.value,
     };
   });
 

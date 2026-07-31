@@ -58,11 +58,11 @@ export function BridgeSnackbarHost({
   const positionClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarPositionProps,
-      snackbarEntry?.customProps?.position,
+      snackbarEntry?.tokens?.position,
     );
 
     return get(classes, resolvedPosition);
-  }, [resolvedPosition, snackbarEntry?.customProps?.position]);
+  }, [resolvedPosition, snackbarEntry?.tokens?.position]);
 
   const stackDirectionClass = derived(() => {
     return resolvedPosition.startsWith("top") ? "flex-col" : "flex-col-reverse";

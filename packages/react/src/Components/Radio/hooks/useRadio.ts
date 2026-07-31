@@ -112,18 +112,18 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeRadio?.customProps?.color,
+      bridgeRadio?.tokens?.color,
     );
 
     return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeRadio?.customProps?.color]);
+  }, [merged.color, bridgeRadio?.tokens?.color]);
 
   const invalidatedPalette = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeRadio?.customProps?.invalidated,
+      bridgeRadio?.tokens?.invalidated,
     );
-  }, [bridgeRadio?.customProps?.invalidated]);
+  }, [bridgeRadio?.tokens?.invalidated]);
 
   const colorClasses = derived(() => {
     return formControl.invalidated ? invalidatedPalette : colorPalette;
@@ -132,20 +132,20 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeRadio?.customProps?.size,
+      bridgeRadio?.tokens?.size,
     );
 
     return get(classes, merged.size ?? "sm");
-  }, [merged.size, bridgeRadio?.customProps?.size]);
+  }, [merged.size, bridgeRadio?.tokens?.size]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeRadio?.customProps?.rounded,
+      bridgeRadio?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded ?? "full");
-  }, [merged.rounded, bridgeRadio?.customProps?.rounded]);
+  }, [merged.rounded, bridgeRadio?.tokens?.rounded]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!isControlled) {

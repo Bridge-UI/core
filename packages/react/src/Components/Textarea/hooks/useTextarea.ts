@@ -109,11 +109,11 @@ export function useTextarea(props: TextareaProps) {
   const resizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       resizeProps,
-      bridgeTextarea?.customProps?.resize,
+      bridgeTextarea?.tokens?.resize,
     );
 
     return get(classes, resize ?? "none");
-  }, [resize, bridgeTextarea?.customProps?.resize]);
+  }, [resize, bridgeTextarea?.tokens?.resize]);
 
   const formField = useFormField(
     {

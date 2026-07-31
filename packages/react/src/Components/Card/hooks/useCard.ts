@@ -95,11 +95,11 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
   const variantClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeCard?.customProps?.variant,
+      bridgeCard?.tokens?.variant,
     );
 
     return get(classes, merged.variant);
-  }, [merged.variant, bridgeCard?.customProps?.variant]);
+  }, [merged.variant, bridgeCard?.tokens?.variant]);
 
   const showDividers = useMemo(() => {
     if (merged.borderless) {
@@ -116,29 +116,29 @@ export function useCard(props: CardProps, libDefaults: CardLibDefaults) {
 
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeCard?.customProps?.shadow,
+      bridgeCard?.tokens?.shadow,
     );
 
     return get(classes, merged.shadow);
-  }, [merged.shadow, merged.variant, bridgeCard?.customProps?.shadow]);
+  }, [merged.shadow, merged.variant, bridgeCard?.tokens?.shadow]);
 
   const paddingClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       paddingProps,
-      bridgeCard?.customProps?.padding,
+      bridgeCard?.tokens?.padding,
     );
 
     return get(classes, merged.padding);
-  }, [merged.padding, bridgeCard?.customProps?.padding]);
+  }, [merged.padding, bridgeCard?.tokens?.padding]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeCard?.customProps?.rounded,
+      bridgeCard?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeCard?.customProps?.rounded]);
+  }, [merged.rounded, bridgeCard?.tokens?.rounded]);
 
   const bodyBind = derived(() => {
     return mergePartBind(

@@ -115,29 +115,29 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeLink?.customProps?.size,
+      bridgeLink?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeLink?.customProps?.size]);
+  }, [merged.size, bridgeLink?.tokens?.size]);
 
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeLink?.customProps?.color,
+      bridgeLink?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeLink?.customProps?.color]);
+  }, [merged.color, bridgeLink?.tokens?.color]);
 
   const underlineClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       underlineProps,
-      bridgeLink?.customProps?.underline,
+      bridgeLink?.tokens?.underline,
     );
 
     return get(classes, merged.underline);
-  }, [merged.underline, bridgeLink?.customProps?.underline]);
+  }, [merged.underline, bridgeLink?.tokens?.underline]);
 
   const rootBind = derived(() => {
     return mergePartBind(

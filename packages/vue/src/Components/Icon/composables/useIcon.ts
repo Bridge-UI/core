@@ -47,7 +47,7 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeIcon.value?.customProps?.size,
+      bridgeIcon.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);

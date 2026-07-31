@@ -799,7 +799,7 @@ export function useSelect(
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components, ["Listbox", "customProps", "color"]),
+      get(components, ["Listbox", "tokens", "color"]),
     );
     const base = get(classes, formField.merged.color ?? "primary");
 
@@ -809,7 +809,7 @@ export function useSelect(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components, ["Listbox", "customProps", "invalidated"]),
+      get(components, ["Listbox", "tokens", "invalidated"]),
     );
   }, [components, formField.invalidated, formField.merged.color]);
 
@@ -962,26 +962,26 @@ export function useSelect(
 
   const listboxProps = useMemo(() => {
     return {
-      emptyMessage,
-      loadingMessage,
-      hideEmptyMessage,
-      disableAutoFocus: true,
-      maxHeight: props.maxHeight,
-      size: formField.merged.size,
-      color: formField.merged.color,
-      disableMaxHeight: props.disableMaxHeight === true,
-      ...props.customProps?.listbox,
       multiple,
       listboxId,
       isSelected,
+      emptyMessage,
+      loadingMessage,
+      hideEmptyMessage,
       highlightedIndex,
       loading: isLoading,
+      disableAutoFocus: true,
       entries: visibleEntries,
       options: visibleOptions,
+      maxHeight: props.maxHeight,
+      size: formField.merged.size,
+      color: formField.merged.color,
       labelledBy: formField.controlId,
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
+      disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
+      ...props.customProps?.listbox,
     };
   }, [
     multiple,

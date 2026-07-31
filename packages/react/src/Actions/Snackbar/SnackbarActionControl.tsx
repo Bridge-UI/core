@@ -13,6 +13,7 @@ import type {
 } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { Button } from "@/Components/Button";
 import { Link } from "@/Components/Link";
+import { mergeNestedComponentProps } from "@/Utils";
 
 function layoutClasses(
   layout: SnackbarActionLayout,
@@ -55,6 +56,11 @@ export function SnackbarActionControl({
 
   const linkColor = buttonColor as keyof LinkColor;
 
+  const layoutRootClass = cn({
+    [layoutClasses(layout, snackbarRounded, hasReject, hasAccept)]: true,
+    [action.className ?? ""]: true,
+  });
+
   if (action.link) {
     const { onClick: linkOnClick, ...linkProps } = action.link;
 
@@ -63,20 +69,13 @@ export function SnackbarActionControl({
         size="sm"
         underline="hover"
         color={linkColor}
-        {...linkProps}
+        {...mergeNestedComponentProps(linkProps, {
+          classes: { root: layoutRootClass },
+        })}
         onClick={(event: MouseEvent<HTMLAnchorElement>) => {
           event.preventDefault();
           linkOnClick?.(event);
           onRun();
-        }}
-        classes={{
-          ...action.link.classes,
-          root: cn({
-            [layoutClasses(layout, snackbarRounded, hasReject, hasAccept)]:
-              true,
-            [action.className ?? ""]: true,
-            [action.link.classes?.root ?? ""]: true,
-          }),
         }}
       >
         {action.label}
@@ -89,17 +88,15 @@ export function SnackbarActionControl({
       size="sm"
       color={buttonColor}
       variant={action.solid ? "outline" : "flat"}
-      {...action.button}
+      {...mergeNestedComponentProps(action.button, {
+        classes: {
+          root: cn({
+            [layoutRootClass]: true,
+            "w-full": layout === "right-accept" || layout === "right-reject",
+          }),
+        },
+      })}
       onClick={() => onRun()}
-      classes={{
-        ...action.button?.classes,
-        root: cn({
-          [layoutClasses(layout, snackbarRounded, hasReject, hasAccept)]: true,
-          [action.className ?? ""]: true,
-          [action.button?.classes?.root ?? ""]: true,
-          "w-full": layout === "right-accept" || layout === "right-reject",
-        }),
-      }}
     >
       {action.label}
     </Button>

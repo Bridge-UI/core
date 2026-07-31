@@ -70,18 +70,18 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeLabel?.customProps?.size,
+      bridgeLabel?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeLabel?.customProps?.size]);
+  }, [merged.size, bridgeLabel?.tokens?.size]);
 
   const invalidatedColors = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeLabel?.customProps?.invalidated,
+      bridgeLabel?.tokens?.invalidated,
     );
-  }, [bridgeLabel?.customProps?.invalidated]);
+  }, [bridgeLabel?.tokens?.invalidated]);
 
   const requiredBind = derived(() => {
     return mergePartBind(

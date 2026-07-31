@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LucideIcon } from "@lucide/vue";
-import type { HTMLAttributes, Slot } from "vue";
+import type { HTMLAttributes, ImgHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -10,6 +10,9 @@ import type {
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
+
+// ** Local Imports
+import type { IconProps } from "@/Components/Icon";
 
 export interface AvatarSizeOverrides {}
 export interface AvatarColorOverrides {}
@@ -30,6 +33,36 @@ export interface AvatarClasses {
    * The classes to apply to the root.
    */
   root?: string;
+}
+
+export interface AvatarCustomProps {
+  /**
+   * Props forwarded to the fallback text element.
+   *
+   * @default undefined
+   */
+  fallback?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the fallback `Icon` (`icon` is set by the avatar).
+   *
+   * @default undefined
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the image element.
+   *
+   * @default undefined
+   */
+  image?: ImgHTMLAttributes;
+
+  /**
+   * Props forwarded to the root element.
+   *
+   * @default undefined
+   */
+  root?: HTMLAttributes;
 }
 
 export interface AvatarOwnProps {
@@ -53,6 +86,13 @@ export interface AvatarOwnProps {
    * @default "primary"
    */
   color?: MergeProps<AvatarColor, AvatarColorOverrides>;
+
+  /**
+   * Extra props for internal parts (`root`, `image`, `fallback`, `icon`).
+   *
+   * @default undefined
+   */
+  customProps?: AvatarCustomProps;
 
   /**
    * The fallback text to display when no image is available.

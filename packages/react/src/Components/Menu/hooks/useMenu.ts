@@ -193,20 +193,20 @@ export function useMenu(
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeMenu?.customProps?.rounded,
+      bridgeMenu?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeMenu?.customProps?.rounded]);
+  }, [merged.rounded, bridgeMenu?.tokens?.rounded]);
 
   const shadowClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeMenu?.customProps?.shadow,
+      bridgeMenu?.tokens?.shadow,
     );
 
     return get(classes, merged.shadow);
-  }, [merged.shadow, bridgeMenu?.customProps?.shadow]);
+  }, [merged.shadow, bridgeMenu?.tokens?.shadow]);
 
   function setShow(next: boolean) {
     if (!next) {

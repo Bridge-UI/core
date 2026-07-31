@@ -203,7 +203,7 @@ export function useSnackbar(
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarColorProps,
-      bridgeSnackbar.value?.customProps?.color,
+      bridgeSnackbar.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -212,7 +212,7 @@ export function useSnackbar(
   const paddingClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarPaddingProps,
-      bridgeSnackbar.value?.customProps?.padding,
+      bridgeSnackbar.value?.tokens?.padding,
     );
 
     return get(classes, merged.value.padding);
@@ -221,7 +221,7 @@ export function useSnackbar(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarRoundedProps,
-      bridgeSnackbar.value?.customProps?.rounded,
+      bridgeSnackbar.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -265,7 +265,7 @@ export function useSnackbar(
 
     const classes = mergeBridgeUILayeredClasses(
       snackbarPositionProps,
-      bridgeSnackbar.value?.customProps?.position,
+      bridgeSnackbar.value?.tokens?.position,
     );
 
     return get(classes, merged.value.position ?? "bottom-center");

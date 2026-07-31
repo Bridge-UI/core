@@ -479,14 +479,18 @@ export function createBreakpointObserver(
 ): BreakpointObserver {
   const key = breakpointObserverOptionsKey(options);
   const mobileBreakpoint = options?.mobileBreakpoint ?? "sm";
+  let cachedServerSnapshot: undefined | BreakpointSnapshot;
+  let cachedPreSubscribeSnapshot: undefined | BreakpointSnapshot;
 
   function getServerSnapshot() {
-    return buildBreakpointSnapshot(
+    cachedServerSnapshot ??= buildBreakpointSnapshot(
       0,
       0,
       resolveBreakpoints(options?.breakpoints),
       mobileBreakpoint,
     );
+
+    return cachedServerSnapshot;
   }
 
   function getSnapshot() {
@@ -500,12 +504,16 @@ export function createBreakpointObserver(
       return getServerSnapshot();
     }
 
-    return buildBreakpointSnapshot(
+    // React may call getSnapshot during render before subscribe runs; return a
+    // stable reference so useSyncExternalStore does not loop.
+    cachedPreSubscribeSnapshot ??= buildBreakpointSnapshot(
       window.innerWidth,
       window.innerHeight,
       resolveBreakpoints(options?.breakpoints),
       mobileBreakpoint,
     );
+
+    return cachedPreSubscribeSnapshot;
   }
 
   return {

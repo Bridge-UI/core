@@ -63,11 +63,11 @@ export function useSkeleton(
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeSkeleton?.customProps?.rounded,
+      bridgeSkeleton?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeSkeleton?.customProps?.rounded]);
+  }, [merged.rounded, bridgeSkeleton?.tokens?.rounded]);
 
   const rootBind = derived(() => {
     return mergePartBind(

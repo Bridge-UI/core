@@ -93,38 +93,38 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeAlert?.customProps?.variant,
+      bridgeAlert?.tokens?.variant,
     );
 
     return get(classes, [merged.variant, merged.color]);
-  }, [merged.color, merged.variant, bridgeAlert?.customProps?.variant]);
+  }, [merged.color, merged.variant, bridgeAlert?.tokens?.variant]);
 
   const shadowClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeAlert?.customProps?.shadow,
+      bridgeAlert?.tokens?.shadow,
     );
 
     return get(classes, merged.shadow);
-  }, [merged.shadow, bridgeAlert?.customProps?.shadow]);
+  }, [merged.shadow, bridgeAlert?.tokens?.shadow]);
 
   const paddingClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       paddingProps,
-      bridgeAlert?.customProps?.padding,
+      bridgeAlert?.tokens?.padding,
     );
 
     return get(classes, merged.padding);
-  }, [merged.padding, bridgeAlert?.customProps?.padding]);
+  }, [merged.padding, bridgeAlert?.tokens?.padding]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeAlert?.customProps?.rounded,
+      bridgeAlert?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeAlert?.customProps?.rounded]);
+  }, [merged.rounded, bridgeAlert?.tokens?.rounded]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {

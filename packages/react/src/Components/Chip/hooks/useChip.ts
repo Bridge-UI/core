@@ -70,7 +70,7 @@ export function useChip(props: ChipOwnProps, libDefaults: ChipLibDefaults) {
   const sizeClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeChip?.customProps?.size,
+      bridgeChip?.tokens?.size,
     );
 
     return get(classes, merged.size ?? "md");

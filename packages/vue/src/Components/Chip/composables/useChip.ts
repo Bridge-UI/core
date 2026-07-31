@@ -74,7 +74,7 @@ export function useChip(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeChip.value?.customProps?.size,
+      bridgeChip.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size ?? "md");

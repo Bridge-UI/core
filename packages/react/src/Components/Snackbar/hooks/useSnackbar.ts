@@ -207,29 +207,29 @@ export function useSnackbar(
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarColorProps,
-      bridgeSnackbar?.customProps?.color,
+      bridgeSnackbar?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeSnackbar?.customProps?.color]);
+  }, [merged.color, bridgeSnackbar?.tokens?.color]);
 
   const paddingClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarPaddingProps,
-      bridgeSnackbar?.customProps?.padding,
+      bridgeSnackbar?.tokens?.padding,
     );
 
     return get(classes, merged.padding);
-  }, [merged.padding, bridgeSnackbar?.customProps?.padding]);
+  }, [merged.padding, bridgeSnackbar?.tokens?.padding]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       snackbarRoundedProps,
-      bridgeSnackbar?.customProps?.rounded,
+      bridgeSnackbar?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeSnackbar?.customProps?.rounded]);
+  }, [merged.rounded, bridgeSnackbar?.tokens?.rounded]);
 
   const resolvedIcon = useMemo(() => {
     if (isNull(merged.icon)) {
@@ -268,11 +268,11 @@ export function useSnackbar(
 
     const classes = mergeBridgeUILayeredClasses(
       snackbarPositionProps,
-      bridgeSnackbar?.customProps?.position,
+      bridgeSnackbar?.tokens?.position,
     );
 
     return get(classes, merged.position ?? "bottom-center");
-  }, [isPortaled, merged.position, bridgeSnackbar?.customProps?.position]);
+  }, [isPortaled, merged.position, bridgeSnackbar?.tokens?.position]);
 
   const showProgress = derived(() => {
     return durationMs > 0 && merged.progressbar !== false && show && rendered;

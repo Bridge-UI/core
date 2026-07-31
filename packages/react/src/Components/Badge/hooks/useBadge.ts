@@ -84,29 +84,29 @@ export function useBadge(props: BadgeProps, libDefaults: BadgeLibDefaults) {
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       densityProps,
-      bridgeBadge?.customProps?.density,
+      bridgeBadge?.tokens?.density,
     );
 
     return get(classes, [merged.density, merged.size]);
-  }, [merged.size, merged.density, bridgeBadge?.customProps?.density]);
+  }, [merged.size, merged.density, bridgeBadge?.tokens?.density]);
 
   const colorClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeBadge?.customProps?.variant,
+      bridgeBadge?.tokens?.variant,
     );
 
     return get(classes, [merged.variant, merged.color]);
-  }, [merged.color, merged.variant, bridgeBadge?.customProps?.variant]);
+  }, [merged.color, merged.variant, bridgeBadge?.tokens?.variant]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeBadge?.customProps?.rounded,
+      bridgeBadge?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeBadge?.customProps?.rounded]);
+  }, [merged.rounded, bridgeBadge?.tokens?.rounded]);
 
   const rootBind = derived(() => {
     return mergePartBind(

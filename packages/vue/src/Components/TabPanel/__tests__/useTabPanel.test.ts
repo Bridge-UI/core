@@ -42,7 +42,9 @@ test("it should throw when used outside a Tabs provider", () => {
     },
   });
 
-  expect(() => mount(Standalone)).toThrow(
-    "TabPanel must be used within a Tabs provider",
-  );
+  expect(() =>
+    mount(Standalone, {
+      global: { config: { warnHandler: () => undefined } },
+    }),
+  ).toThrow("TabPanel must be used within a Tabs provider");
 });

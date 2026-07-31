@@ -169,28 +169,28 @@ export function useTabs(
   const sizeClasses = computed(() => {
     return mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeTabs.value?.customProps?.size,
+      bridgeTabs.value?.tokens?.size,
     );
   });
 
   const variantClasses = computed(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeTabs.value?.customProps?.variant,
+      bridgeTabs.value?.tokens?.variant,
     );
   });
 
   const colorClasses = computed(() => {
     return mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeTabs.value?.customProps?.color,
+      bridgeTabs.value?.tokens?.color,
     );
   });
 
   const orientationClasses = computed(() => {
     return mergeBridgeUILayeredClasses(
       orientationProps,
-      bridgeTabs.value?.customProps?.orientation,
+      bridgeTabs.value?.tokens?.orientation,
     );
   });
 

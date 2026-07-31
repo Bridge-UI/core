@@ -50,7 +50,7 @@ const hasTabItems = computed(() => {
 <template>
   <div v-bind="rootBind">
     <template v-if="hasTabItems">
-      <TabList>
+      <TabList v-bind="props.customProps?.tabList">
         <Tab
           :key="item.value"
           :value="item.value"
@@ -58,6 +58,7 @@ const hasTabItems = computed(() => {
           :end-icon="item.endIcon"
           :disabled="item.disabled"
           :start-icon="item.startIcon"
+          v-bind="props.customProps?.tab"
         >
           <template #start v-if="item.slots?.start">
             <component :is="item.slots.start" />
@@ -80,6 +81,7 @@ const hasTabItems = computed(() => {
         :value="item.value"
         v-for="item in tabItems"
         :keep-mounted="item.keepMounted"
+        v-bind="props.customProps?.tabPanel"
       >
         <component :is="item.panel" />
       </TabPanel>

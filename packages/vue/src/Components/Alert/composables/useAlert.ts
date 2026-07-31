@@ -84,7 +84,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeAlert.value?.customProps?.variant,
+      bridgeAlert.value?.tokens?.variant,
     );
 
     return get(classes, [merged.value.variant, merged.value.color]);
@@ -93,7 +93,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   const shadowClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       shadowProps,
-      bridgeAlert.value?.customProps?.shadow,
+      bridgeAlert.value?.tokens?.shadow,
     );
 
     return get(classes, merged.value.shadow);
@@ -102,7 +102,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   const paddingClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       paddingProps,
-      bridgeAlert.value?.customProps?.padding,
+      bridgeAlert.value?.tokens?.padding,
     );
 
     return get(classes, merged.value.padding);
@@ -111,7 +111,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeAlert.value?.customProps?.rounded,
+      bridgeAlert.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);

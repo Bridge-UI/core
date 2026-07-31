@@ -12,6 +12,11 @@ import type {
   TabsVariant,
 } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { TabOwnProps } from "@/Components/Tab/tab.types";
+import type { TabListOwnProps } from "@/Components/TabList/tabList.types";
+import type { TabPanelOwnProps } from "@/Components/TabPanel/tabPanel.types";
+
 export interface TabsSizeOverrides {}
 export interface TabsColorOverrides {}
 export interface TabsVariantOverrides {}
@@ -27,8 +32,35 @@ export interface TabsClasses {
 export interface TabsCustomProps {
   /**
    * Props forwarded to the root element.
+   *
+   * @default undefined
    */
   root?: HTMLAttributes;
+
+  /**
+   * Props forwarded to each mapped `Tab` when using the `items` API.
+   * Value, icons, and disabled stay owned by `Tabs`.
+   *
+   * @default undefined
+   */
+  tab?: Partial<
+    Omit<TabOwnProps, "value" | "endIcon" | "disabled" | "startIcon">
+  >;
+
+  /**
+   * Props forwarded to the mapped `TabList` when using the `items` API.
+   *
+   * @default undefined
+   */
+  tabList?: Partial<TabListOwnProps>;
+
+  /**
+   * Props forwarded to each mapped `TabPanel` when using the `items` API.
+   * Value and keepMounted stay owned by `Tabs`.
+   *
+   * @default undefined
+   */
+  tabPanel?: Partial<Omit<TabPanelOwnProps, "value" | "keepMounted">>;
 }
 
 export interface TabsEmits {
@@ -69,7 +101,8 @@ export interface TabsOwnProps {
   color?: MergeProps<TabsColor, TabsColorOverrides>;
 
   /**
-   * Props forwarded to each tabs part.
+   * Extra props for the root and mapped `TabList` / `Tab` / `TabPanel` parts
+   * (items API).
    *
    * @default undefined
    */

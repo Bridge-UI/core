@@ -54,6 +54,8 @@ test("it should mount modal, dialog, drawer, and snackbar imperatives", async ()
         duration: false,
         transition: "none",
       });
+
+      return () => null;
     },
   });
 

@@ -39,6 +39,7 @@ const avatarBridgeKeys = [
   "classes",
   "rounded",
   "fallback",
+  "customProps",
 ] as const satisfies readonly (keyof AvatarProps)[];
 
 type AvatarLibDefaults = LibDefaultsShape<
@@ -100,7 +101,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeAvatar.value?.customProps?.size,
+      bridgeAvatar.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
@@ -109,7 +110,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeAvatar.value?.customProps?.color,
+      bridgeAvatar.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -118,7 +119,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeAvatar.value?.customProps?.rounded,
+      bridgeAvatar.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -127,15 +128,19 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   const iconSizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       iconSizeProps,
-      bridgeAvatar.value?.customProps?.iconSize,
+      bridgeAvatar.value?.tokens?.iconSize,
     );
 
     return get(classes, merged.value.size);
   });
 
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
+
   const rootBind = computed(() => {
     return mergePartBind(
-      {},
+      customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
         "inline-flex shrink-0 items-center justify-center overflow-hidden": true,
@@ -151,7 +156,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const imageBind = computed(() => {
     return mergePartBind(
-      {},
+      customProps.value?.image,
       {
         alt: merged.value.alt,
         src: merged.value.src,
@@ -167,7 +172,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const fallbackBind = computed(() => {
     return mergePartBind(
-      {},
+      customProps.value?.fallback,
       {},
       cn({
         "font-medium": true,
@@ -180,7 +185,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const iconBind = computed(() => {
     return mergePartBind(
-      {},
+      customProps.value?.icon,
       {},
       cn({
         "shrink-0": true,

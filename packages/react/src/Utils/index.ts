@@ -3,7 +3,10 @@ import { get, isNil } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { createMergePartBind } from "@bridge-ui/core";
+import {
+  createMergeNestedComponentProps,
+  createMergePartBind,
+} from "@bridge-ui/core";
 import type { FormFieldSize } from "@bridge-ui/core/Components/FormField";
 import type { IconSize } from "@bridge-ui/core/Components/Icon";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
@@ -40,6 +43,12 @@ export function derived<T>(getter: () => T): T {
  * Merges React-specific classes into the `className` attribute.
  */
 export const mergePartBind = createMergePartBind("className");
+
+/**
+ * Merges consumer nested-component props with package defaults (consumer wins).
+ */
+export const mergeNestedComponentProps =
+  createMergeNestedComponentProps(mergePartBind);
 
 /**
  * Registry entry + props merged with Bridge defaults for a named component.

@@ -179,9 +179,9 @@ test("it should mark selected options with aria-selected", async () => {
   render(<Host />);
 
   await waitFor(() => {
-    const apple = screen.getByText("Apple").closest("li");
+    const apple = screen.getByRole("option", { name: "Apple" });
 
-    expect(apple?.getAttribute("aria-selected")).toBe("true");
+    expect(apple.getAttribute("aria-selected")).toBe("true");
   });
 });
 

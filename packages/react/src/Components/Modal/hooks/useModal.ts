@@ -200,29 +200,29 @@ export function useModal(
   const alignClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       alignProps,
-      bridgeModal?.customProps?.align,
+      bridgeModal?.tokens?.align,
     );
 
     return get(classes, merged.align);
-  }, [merged.align, bridgeModal?.customProps?.align]);
+  }, [merged.align, bridgeModal?.tokens?.align]);
 
   const blurClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       blurProps,
-      bridgeModal?.customProps?.blur,
+      bridgeModal?.tokens?.blur,
     );
 
     return get(classes, merged.blur);
-  }, [merged.blur, bridgeModal?.customProps?.blur]);
+  }, [merged.blur, bridgeModal?.tokens?.blur]);
 
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeModal?.customProps?.size,
+      bridgeModal?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeModal?.customProps?.size]);
+  }, [merged.size, bridgeModal?.tokens?.size]);
 
   const panelTransitionClass =
     getModalPanelTransitionClass(effectiveTransition);

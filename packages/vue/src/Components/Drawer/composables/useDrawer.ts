@@ -219,7 +219,7 @@ export function useDrawer(
   const placementClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       placementProps,
-      bridgeDrawer.value?.customProps?.placement,
+      bridgeDrawer.value?.tokens?.placement,
     );
 
     return get(classes, placement.value);
@@ -232,7 +232,7 @@ export function useDrawer(
   const blurClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       blurProps,
-      bridgeDrawer.value?.customProps?.blur,
+      bridgeDrawer.value?.tokens?.blur,
     );
 
     return get(classes, merged.value.blur);
@@ -241,7 +241,7 @@ export function useDrawer(
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeDrawer.value?.customProps?.size,
+      bridgeDrawer.value?.tokens?.size,
     );
 
     return get(classes, [merged.value.size, sizeAxis.value]);

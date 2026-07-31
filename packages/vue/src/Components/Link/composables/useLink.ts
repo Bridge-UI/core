@@ -108,7 +108,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeLink.value?.customProps?.size,
+      bridgeLink.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
@@ -117,7 +117,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeLink.value?.customProps?.color,
+      bridgeLink.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color);
@@ -126,7 +126,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const underlineClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       underlineProps,
-      bridgeLink.value?.customProps?.underline,
+      bridgeLink.value?.tokens?.underline,
     );
 
     return get(classes, merged.value.underline);

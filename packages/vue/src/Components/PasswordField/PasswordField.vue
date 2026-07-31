@@ -15,7 +15,7 @@ import type {
   PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
-import { resolveFieldAdornmentIconSize } from "@/Utils";
+import { mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
 
@@ -34,8 +34,20 @@ const { formField, inputBind, isVisible, mergedClasses, toggleVisibility } =
     onVisibilityChange: (next) => emit("visibility-change", next),
   });
 
-const toggleIconSize = computed(() => {
-  return resolveFieldAdornmentIconSize(props.size);
+const toggleBind = computed(() => {
+  return mergePartBind(
+    props.customProps?.toggle,
+    {
+      type: "button" as const,
+      disabled: props.disabled,
+      onClick: toggleVisibility,
+      "aria-label": isVisible.value ? "Hide password" : "Show password",
+    },
+    cn({
+      "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5": true,
+      [mergedClasses.value.toggle ?? ""]: true,
+    }),
+  );
 });
 </script>
 
@@ -44,19 +56,12 @@ const toggleIconSize = computed(() => {
     <input v-model="model" v-bind="inputBind" />
 
     <template #end>
-      <button
-        type="button"
-        :disabled="props.disabled"
-        v-on:click="toggleVisibility"
-        :aria-label="isVisible ? 'Hide password' : 'Show password'"
-        :class="
-          cn({
-            'bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5': true,
-            [mergedClasses.toggle ?? '']: true,
-          })
-        "
-      >
-        <Icon :size="toggleIconSize" :icon="isVisible ? EyeOff : Eye" />
+      <button v-bind="toggleBind">
+        <Icon
+          :icon="isVisible ? EyeOff : Eye"
+          :size="resolveFieldAdornmentIconSize(props.size)"
+          v-bind="props.customProps?.toggleIcon"
+        />
       </button>
     </template>
   </FormField>

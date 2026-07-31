@@ -91,7 +91,7 @@ export function useRadio(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeRadio.value?.customProps?.color,
+      bridgeRadio.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
@@ -100,7 +100,7 @@ export function useRadio(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeRadio.value?.customProps?.invalidated,
+      bridgeRadio.value?.tokens?.invalidated,
     );
   });
 
@@ -113,7 +113,7 @@ export function useRadio(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeRadio.value?.customProps?.size,
+      bridgeRadio.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size ?? "sm");
@@ -122,7 +122,7 @@ export function useRadio(
   const roundedClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeRadio.value?.customProps?.rounded,
+      bridgeRadio.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded ?? "full");

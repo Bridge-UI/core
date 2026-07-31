@@ -92,38 +92,38 @@ export function useProgress(
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeProgress?.customProps?.color,
+      bridgeProgress?.tokens?.color,
     );
 
     return get(classes, merged.color);
-  }, [merged.color, bridgeProgress?.customProps?.color]);
+  }, [merged.color, bridgeProgress?.tokens?.color]);
 
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeProgress?.customProps?.size,
+      bridgeProgress?.tokens?.size,
     );
 
     return get(classes, merged.size);
-  }, [merged.size, bridgeProgress?.customProps?.size]);
+  }, [merged.size, bridgeProgress?.tokens?.size]);
 
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeProgress?.customProps?.rounded,
+      bridgeProgress?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeProgress?.customProps?.rounded]);
+  }, [merged.rounded, bridgeProgress?.tokens?.rounded]);
 
   const variantClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeProgress?.customProps?.variant,
+      bridgeProgress?.tokens?.variant,
     );
 
     return get(classes, merged.variant);
-  }, [merged.variant, bridgeProgress?.customProps?.variant]);
+  }, [merged.variant, bridgeProgress?.tokens?.variant]);
 
   const isBuffer = derived(() => {
     return merged.variant === "buffer";

@@ -236,7 +236,7 @@ export function useFormField(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeFormField.value?.customProps?.size,
+      bridgeFormField.value?.tokens?.size,
     );
 
     return get(classes, [merged.value.size, variantKey.value]);
@@ -245,7 +245,7 @@ export function useFormField(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeFormField.value?.customProps?.color,
+      bridgeFormField.value?.tokens?.color,
     );
 
     return get(classes, merged.value.color ?? "primary");
@@ -254,7 +254,7 @@ export function useFormField(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeFormField.value?.customProps?.invalidated,
+      bridgeFormField.value?.tokens?.invalidated,
       merged.value.customProps?.invalidated,
     );
   });
@@ -266,7 +266,7 @@ export function useFormField(
   const roundedClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeFormField.value?.customProps?.rounded,
+      bridgeFormField.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -275,7 +275,7 @@ export function useFormField(
   const variantClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeFormField.value?.customProps?.variant,
+      bridgeFormField.value?.tokens?.variant,
     );
 
     return get(classes, variantKey.value);

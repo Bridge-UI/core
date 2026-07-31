@@ -211,11 +211,11 @@ export function useDrawer(
   const placementClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       placementProps,
-      bridgeDrawer?.customProps?.placement,
+      bridgeDrawer?.tokens?.placement,
     );
 
     return get(classes, merged.placement);
-  }, [merged.placement, bridgeDrawer?.customProps?.placement]);
+  }, [merged.placement, bridgeDrawer?.tokens?.placement]);
 
   const placementPanelClass = derived(() => {
     return get(placementPanelProps, merged.placement);
@@ -224,16 +224,16 @@ export function useDrawer(
   const blurClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       blurProps,
-      bridgeDrawer?.customProps?.blur,
+      bridgeDrawer?.tokens?.blur,
     );
 
     return get(classes, merged.blur);
-  }, [merged.blur, bridgeDrawer?.customProps?.blur]);
+  }, [merged.blur, bridgeDrawer?.tokens?.blur]);
 
   const sizeClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeDrawer?.customProps?.size,
+      bridgeDrawer?.tokens?.size,
     );
 
     const sizeItem = get(classes, merged.size);
@@ -244,7 +244,7 @@ export function useDrawer(
         : "vertical";
 
     return get(sizeItem, axis);
-  }, [merged.size, merged.placement, bridgeDrawer?.customProps?.size]);
+  }, [merged.size, merged.placement, bridgeDrawer?.tokens?.size]);
 
   const panelTransitionClass = derived(() => {
     return getDrawerPanelTransitionClass(effectiveTransition, merged.placement);

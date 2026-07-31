@@ -157,13 +157,10 @@ export function useFormControl(
   const invalidatedColors = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeFormControl?.customProps?.invalidated,
+      bridgeFormControl?.tokens?.invalidated,
       merged.customProps?.invalidated,
     );
-  }, [
-    merged.customProps?.invalidated,
-    bridgeFormControl?.customProps?.invalidated,
-  ]);
+  }, [merged.customProps?.invalidated, bridgeFormControl?.tokens?.invalidated]);
 
   const rootBind = derived(() => {
     return mergePartBind(

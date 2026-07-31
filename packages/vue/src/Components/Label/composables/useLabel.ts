@@ -62,7 +62,7 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeLabel.value?.customProps?.size,
+      bridgeLabel.value?.tokens?.size,
     );
 
     return get(classes, merged.value.size);
@@ -71,7 +71,7 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
   const invalidatedColors = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeLabel.value?.customProps?.invalidated,
+      bridgeLabel.value?.tokens?.invalidated,
     );
   });
 

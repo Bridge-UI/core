@@ -125,7 +125,7 @@ test("it should use loadingMessage when provided", async () => {
   expect(document.body.textContent).toContain("Fetching...");
 });
 
-test("it should mark selected options with aria-selected on the list item", async () => {
+test("it should mark selected options with aria-selected on the option", async () => {
   mountListbox({
     props: {
       modelValue: true,
@@ -135,7 +135,7 @@ test("it should mark selected options with aria-selected on the list item", asyn
 
   await flushPromises();
 
-  const apple = document.body.querySelector("li");
+  const apple = document.body.querySelector('[role="option"]');
 
   expect(apple?.getAttribute("aria-selected")).toBe("true");
 });
