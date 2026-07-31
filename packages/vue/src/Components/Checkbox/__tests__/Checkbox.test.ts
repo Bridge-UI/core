@@ -7,15 +7,15 @@ import { Checkbox } from "@/Components/Checkbox";
 
 test("it should render a checkbox control", () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept terms" },
+    props: { endLabel: "Accept terms" },
   });
 
   expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true);
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
+test("it should render end label when endLabel prop is provided", () => {
   const wrapper = mount(Checkbox, {
-    props: { mainLabel: "Accept terms" },
+    props: { endLabel: "Accept terms" },
   });
 
   expect(wrapper.text()).toContain("Accept terms");
@@ -24,7 +24,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 test("it should render description when description prop is provided", () => {
   const wrapper = mount(Checkbox, {
     props: {
-      mainLabel: "Accept",
+      endLabel: "Accept",
       description: "You must accept to continue",
     },
   });
@@ -36,7 +36,7 @@ test("it should render error message when error is set", () => {
   const wrapper = mount(Checkbox, {
     props: {
       error: true,
-      mainLabel: "Accept",
+      endLabel: "Accept",
       errorMessage: "Required",
     },
   });
@@ -46,7 +46,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled on the input when disabled", () => {
   const wrapper = mount(Checkbox, {
-    props: { disabled: true, mainLabel: "Accept" },
+    props: { disabled: true, endLabel: "Accept" },
   });
 
   expect(
@@ -56,7 +56,7 @@ test("it should apply disabled on the input when disabled", () => {
 
 test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Checkbox, {
-    props: { error: true, mainLabel: "Accept" },
+    props: { error: true, endLabel: "Accept" },
   });
 
   expect(
@@ -66,7 +66,7 @@ test("it should set aria-invalid when error is set", () => {
 
 test("it should emit update:modelValue when toggled", async () => {
   const wrapper = mount(Checkbox, {
-    props: { modelValue: false, mainLabel: "Accept" },
+    props: { modelValue: false, endLabel: "Accept" },
   });
 
   await wrapper.find('input[type="checkbox"]').setValue(true);
@@ -76,7 +76,7 @@ test("it should emit update:modelValue when toggled", async () => {
 
 test("it should reflect checked state from modelValue", () => {
   const wrapper = mount(Checkbox, {
-    props: { modelValue: true, mainLabel: "Accept" },
+    props: { modelValue: true, endLabel: "Accept" },
   });
 
   expect(
@@ -87,7 +87,7 @@ test("it should reflect checked state from modelValue", () => {
 
 test("it should set indeterminate on the native input when indeterminate is true", async () => {
   const wrapper = mount(Checkbox, {
-    props: { modelValue: false, indeterminate: true, mainLabel: "Select all" },
+    props: { modelValue: false, indeterminate: true, endLabel: "Select all" },
   });
 
   await wrapper.vm.$nextTick();
@@ -98,10 +98,10 @@ test("it should set indeterminate on the native input when indeterminate is true
   ).toBe(true);
 });
 
-test("it should link main label to control id", () => {
+test("it should link end label to control id", () => {
   const wrapper = mount(Checkbox, {
     attrs: { controlId: "terms-checkbox" },
-    props: { mainLabel: "Accept", controlId: "terms-checkbox" },
+    props: { endLabel: "Accept", controlId: "terms-checkbox" },
   });
 
   const inputId = wrapper.find('input[type="checkbox"]').attributes("id");

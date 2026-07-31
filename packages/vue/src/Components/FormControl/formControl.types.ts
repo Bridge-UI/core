@@ -9,7 +9,9 @@ import type {
   MergeProps,
 } from "@bridge-ui/core";
 
+// ** Local Imports
 import type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
+import type { LabelProps } from "@/Components/Label/label.types";
 
 export interface FormControlSizeOverrides {}
 
@@ -28,11 +30,6 @@ export interface FormControlClasses {
    * Classes merged onto the error message below the control row.
    */
   errorMessage?: string;
-
-  /**
-   * Classes merged onto the main inline label next to the control.
-   */
-  mainLabel?: string;
 
   /**
    * Classes merged onto the root wrapper.
@@ -57,9 +54,11 @@ export interface FormControlCustomProps {
   description?: HTMLAttributes;
 
   /**
-   * Props forwarded to the inline-end label element.
+   * Props forwarded to the inline-end `Label` (content stays owned by `FormControl`).
+   *
+   * @default undefined
    */
-  endLabel?: HTMLAttributes;
+  endLabel?: Partial<LabelProps>;
 
   /**
    * Props forwarded to the error message element.
@@ -74,11 +73,6 @@ export interface FormControlCustomProps {
   invalidated?: Partial<FormControlInvalidated>;
 
   /**
-   * Props forwarded to the main inline label element.
-   */
-  mainLabel?: HTMLAttributes;
-
-  /**
    * Props forwarded to the root wrapper.
    */
   root?: HTMLAttributes;
@@ -89,9 +83,11 @@ export interface FormControlCustomProps {
   row?: HTMLAttributes;
 
   /**
-   * Props forwarded to the inline-start label element.
+   * Props forwarded to the inline-start `Label` (content stays owned by `FormControl`).
+   *
+   * @default undefined
    */
-  startLabel?: HTMLAttributes;
+  startLabel?: Partial<LabelProps>;
 }
 
 export interface FormControlOwnProps {
@@ -111,7 +107,7 @@ export interface FormControlOwnProps {
   controlId?: string;
 
   /**
-   * Extra props for internal parts (`row`, `mainLabel`, `description`, …).
+   * Extra props for internal parts (`row`, `startLabel`, `endLabel`, …).
    *
    * @default undefined
    */
@@ -132,7 +128,7 @@ export interface FormControlOwnProps {
   disabled?: boolean;
 
   /**
-   * Inline-end label text after the main label.
+   * Inline-end label text after the control. Flips to the left in RTL.
    *
    * @default undefined
    */
@@ -161,13 +157,6 @@ export interface FormControlOwnProps {
   field?: UseFormControlReturn;
 
   /**
-   * Main label text next to the control.
-   *
-   * @default undefined
-   */
-  mainLabel?: string;
-
-  /**
    * Whether the control is read-only.
    *
    * @default false
@@ -190,14 +179,15 @@ export interface FormControlOwnProps {
   size?: MergeProps<LabelSize, FormControlSizeOverrides>;
 
   /**
-   * Chrome slots (`mainLabel`, `description`, `errorMessage`, …) and the control.
+   * Chrome slots (`startLabel`, `endLabel`, `description`, `errorMessage`, …)
+   * and the control.
    *
    * @default undefined
    */
   slots?: FormControlSlots;
 
   /**
-   * Inline-start label text before the control.
+   * Inline-start label text before the control. Flips to the right in RTL.
    *
    * @default undefined
    */
@@ -223,7 +213,7 @@ export interface FormControlSlots {
   description?: Slot<undefined>;
 
   /**
-   * Inline-end label after the main label.
+   * Inline-end label after the control (flips with RTL).
    */
   endLabel?: Slot<undefined>;
 
@@ -233,12 +223,7 @@ export interface FormControlSlots {
   errorMessage?: Slot<undefined>;
 
   /**
-   * Main label next to the control.
-   */
-  mainLabel?: Slot<undefined>;
-
-  /**
-   * Inline-start label before the control.
+   * Inline-start label before the control (flips with RTL).
    */
   startLabel?: Slot<undefined>;
 }

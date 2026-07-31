@@ -5,7 +5,7 @@ export interface FormControlInvalidated {
   "errorMessage": string;
 
   /**
-   * Label text color (`startLabel`, `mainLabel`, `endLabel`).
+   * Label text color (`startLabel`, `endLabel`).
    */
   "label": string;
 

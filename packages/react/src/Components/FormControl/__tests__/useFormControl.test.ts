@@ -74,13 +74,15 @@ test("it should set aria-describedby on controlBind when description is provided
   );
 });
 
-test("it should set htmlFor on main label bind to control id", () => {
+test("it should set htmlFor on end label props to control id", () => {
   const { result } = renderUseFormControl({
-    mainLabel: "Label",
+    endLabel: "Label",
     controlId: "form-control-id",
   });
 
-  expect(result.current.mainLabelBind.htmlFor).toBe(result.current.controlId);
+  expect(result.current.fieldLabelProps.endLabel.htmlFor).toBe(
+    result.current.controlId,
+  );
 });
 
 test("it should reserve error message space by default", () => {

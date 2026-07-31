@@ -1,9 +1,9 @@
 // ** Local Imports
 import { Radio } from "@/Components/Radio";
 
-test("it should render with main label", () => {
+test("it should render with end label", () => {
   cy.mount(Radio, {
-    props: { value: "a", mainLabel: "Option A" },
+    props: { value: "a", endLabel: "Option A" },
   });
 
   cy.contains("Option A").should("be.visible");
@@ -15,7 +15,7 @@ test("it should emit update:modelValue when selected", () => {
     props: {
       value: "a",
       modelValue: "b",
-      mainLabel: "Option A",
+      endLabel: "Option A",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
   });
@@ -26,7 +26,7 @@ test("it should emit update:modelValue when selected", () => {
 
 test("it should be checked when modelValue matches value", () => {
   cy.mount(Radio, {
-    props: { value: "a", modelValue: "a", mainLabel: "Option A" },
+    props: { value: "a", modelValue: "a", endLabel: "Option A" },
   });
 
   cy.get('input[type="radio"]').should("be.checked");
@@ -37,7 +37,7 @@ test("it should render error message when error is set", () => {
     props: {
       value: "a",
       error: true,
-      mainLabel: "Option A",
+      endLabel: "Option A",
       errorMessage: "Required",
     },
   });
@@ -48,7 +48,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   cy.mount(Radio, {
-    props: { value: "a", disabled: true, mainLabel: "Option A" },
+    props: { value: "a", disabled: true, endLabel: "Option A" },
   });
 
   cy.get('input[type="radio"]').should("be.disabled");
@@ -56,7 +56,7 @@ test("it should apply disabled attribute when disabled", () => {
 
 test("it should forward name to the native input", () => {
   cy.mount(Radio, {
-    props: { value: "a", name: "plan", mainLabel: "Option A" },
+    props: { value: "a", name: "plan", endLabel: "Option A" },
   });
 
   cy.get('input[type="radio"]').should("have.attr", "name", "plan");

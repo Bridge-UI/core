@@ -7,15 +7,15 @@ import { Radio } from "@/Components/Radio";
 
 test("it should render a radio control", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", mainLabel: "Option A" },
+    props: { value: "a", endLabel: "Option A" },
   });
 
   expect(wrapper.find('input[type="radio"]').exists()).toBe(true);
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
+test("it should render end label when endLabel prop is provided", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", mainLabel: "Option A" },
+    props: { value: "a", endLabel: "Option A" },
   });
 
   expect(wrapper.text()).toContain("Option A");
@@ -23,7 +23,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 
 test("it should be checked when modelValue matches value", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", modelValue: "a", mainLabel: "Option A" },
+    props: { value: "a", modelValue: "a", endLabel: "Option A" },
   });
 
   expect(
@@ -33,7 +33,7 @@ test("it should be checked when modelValue matches value", () => {
 
 test("it should not be checked when modelValue differs from value", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", modelValue: "b", mainLabel: "Option A" },
+    props: { value: "a", modelValue: "b", endLabel: "Option A" },
   });
 
   expect(
@@ -43,7 +43,7 @@ test("it should not be checked when modelValue differs from value", () => {
 
 test("it should emit update:modelValue with option value when selected", async () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", modelValue: "b", mainLabel: "Option A" },
+    props: { value: "a", modelValue: "b", endLabel: "Option A" },
   });
 
   await wrapper.find('input[type="radio"]').trigger("change");
@@ -53,7 +53,7 @@ test("it should emit update:modelValue with option value when selected", async (
 
 test("it should apply disabled on the input when disabled", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", disabled: true, mainLabel: "Option A" },
+    props: { value: "a", disabled: true, endLabel: "Option A" },
   });
 
   expect(
@@ -63,7 +63,7 @@ test("it should apply disabled on the input when disabled", () => {
 
 test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", error: true, mainLabel: "Option A" },
+    props: { value: "a", error: true, endLabel: "Option A" },
   });
 
   expect(wrapper.find('input[type="radio"]').attributes("aria-invalid")).toBe(
@@ -73,7 +73,7 @@ test("it should set aria-invalid when error is set", () => {
 
 test("it should forward name to the native input", () => {
   const wrapper = mount(Radio, {
-    props: { value: "a", name: "plan", mainLabel: "Option A" },
+    props: { value: "a", name: "plan", endLabel: "Option A" },
   });
 
   expect(wrapper.find('input[type="radio"]').attributes("name")).toBe("plan");
@@ -82,7 +82,7 @@ test("it should forward name to the native input", () => {
 test("it should link label to control id", () => {
   const wrapper = mount(Radio, {
     attrs: { controlId: "plan-a" },
-    props: { value: "a", controlId: "plan-a", mainLabel: "Option A" },
+    props: { value: "a", controlId: "plan-a", endLabel: "Option A" },
   });
 
   const inputId = wrapper.find('input[type="radio"]').attributes("id");

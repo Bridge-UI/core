@@ -1,15 +1,15 @@
 // ** Local Imports
 import { Checkbox } from "@/Components/Checkbox";
 
-test("it should render with main label", () => {
-  cy.mount(<Checkbox mainLabel="Accept terms" />);
+test("it should render with end label", () => {
+  cy.mount(<Checkbox endLabel="Accept terms" />);
 
   cy.contains("Accept terms").should("be.visible");
   cy.get('input[type="checkbox"]').should("exist");
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  cy.mount(<Checkbox defaultChecked={false} mainLabel="Accept terms" />);
+  cy.mount(<Checkbox defaultChecked={false} endLabel="Accept terms" />);
 
   cy.get('input[type="checkbox"]')
     .should("not.be.checked")
@@ -19,27 +19,27 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 
 test("it should render description when description prop is provided", () => {
   cy.mount(
-    <Checkbox mainLabel="Accept" description="You must accept to continue" />,
+    <Checkbox endLabel="Accept" description="You must accept to continue" />,
   );
 
   cy.contains("You must accept to continue").should("be.visible");
 });
 
 test("it should render error message when error is set", () => {
-  cy.mount(<Checkbox error mainLabel="Accept" errorMessage="Required" />);
+  cy.mount(<Checkbox error endLabel="Accept" errorMessage="Required" />);
 
   cy.contains("Required").should("be.visible");
   cy.get('input[type="checkbox"]').should("have.attr", "aria-invalid", "true");
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  cy.mount(<Checkbox disabled mainLabel="Accept" />);
+  cy.mount(<Checkbox disabled endLabel="Accept" />);
 
   cy.get('input[type="checkbox"]').should("be.disabled");
 });
 
 test("it should reflect checked state when controlled", () => {
-  cy.mount(<Checkbox checked mainLabel="Accept" />);
+  cy.mount(<Checkbox checked endLabel="Accept" />);
 
   cy.get('input[type="checkbox"]').should("be.checked");
 });

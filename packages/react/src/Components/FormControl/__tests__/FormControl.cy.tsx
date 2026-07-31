@@ -12,18 +12,18 @@ function FormControlHarness({
   error,
   disabled,
   readonly,
+  endLabel,
   controlId,
-  mainLabel,
   description,
   errorMessage,
 }: {
   controlId?: string;
   description?: string;
   disabled?: boolean;
+  endLabel?: string;
   error?: boolean;
   errorMessage?: string;
   id?: string;
-  mainLabel?: string;
   readonly?: boolean;
 }) {
   const field = useFormControl(
@@ -32,8 +32,8 @@ function FormControlHarness({
       error,
       disabled,
       readonly,
+      endLabel,
       controlId,
-      mainLabel,
       description,
       errorMessage,
     },
@@ -59,9 +59,9 @@ test("it should render with default props", () => {
   cy.get(".w-full").should("exist");
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
+test("it should render end label when endLabel prop is provided", () => {
   cy.mount(
-    <FormControlHarness controlId="notify" mainLabel="Email notifications" />,
+    <FormControlHarness controlId="notify" endLabel="Email notifications" />,
   );
 
   cy.contains("Email notifications").should("be.visible");
@@ -70,7 +70,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 
 test("it should link label to inherited input id when id is provided", () => {
   cy.mount(
-    <FormControlHarness id="notify-id" mainLabel="Email notifications" />,
+    <FormControlHarness id="notify-id" endLabel="Email notifications" />,
   );
 
   cy.get('input[id="notify-id"]').should("exist");

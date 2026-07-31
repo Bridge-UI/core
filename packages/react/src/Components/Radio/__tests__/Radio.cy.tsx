@@ -1,15 +1,15 @@
 // ** Local Imports
 import { Radio } from "@/Components/Radio";
 
-test("it should render with main label", () => {
-  cy.mount(<Radio value="a" mainLabel="Option A" />);
+test("it should render with end label", () => {
+  cy.mount(<Radio value="a" endLabel="Option A" />);
 
   cy.contains("Option A").should("be.visible");
   cy.get('input[type="radio"]').should("exist");
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  cy.mount(<Radio value="a" mainLabel="Option A" defaultChecked={false} />);
+  cy.mount(<Radio value="a" endLabel="Option A" defaultChecked={false} />);
 
   cy.get('input[type="radio"]')
     .should("not.be.checked")
@@ -18,14 +18,14 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should be checked when checked prop is true", () => {
-  cy.mount(<Radio checked value="a" mainLabel="Option A" />);
+  cy.mount(<Radio checked value="a" endLabel="Option A" />);
 
   cy.get('input[type="radio"]').should("be.checked");
 });
 
 test("it should render error message when error is set", () => {
   cy.mount(
-    <Radio error value="a" mainLabel="Option A" errorMessage="Required" />,
+    <Radio error value="a" endLabel="Option A" errorMessage="Required" />,
   );
 
   cy.contains("Required").should("be.visible");
@@ -33,13 +33,13 @@ test("it should render error message when error is set", () => {
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  cy.mount(<Radio disabled value="a" mainLabel="Option A" />);
+  cy.mount(<Radio disabled value="a" endLabel="Option A" />);
 
   cy.get('input[type="radio"]').should("be.disabled");
 });
 
 test("it should forward name to the native input", () => {
-  cy.mount(<Radio value="a" name="plan" mainLabel="Option A" />);
+  cy.mount(<Radio value="a" name="plan" endLabel="Option A" />);
 
   cy.get('input[type="radio"]').should("have.attr", "name", "plan");
 });

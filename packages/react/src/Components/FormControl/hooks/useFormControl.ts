@@ -20,9 +20,11 @@ import type {
   FormControlOwnProps,
   FormControlProps,
 } from "@/Components/FormControl/formControl.types";
+import type { LabelProps } from "@/Components/Label/label.types";
 import {
   derived,
   hasSlotOrProp,
+  mergeNestedComponentProps,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -37,7 +39,6 @@ export const formControlBridgeKeys = [
   "readonly",
   "required",
   "controlId",
-  "mainLabel",
   "startLabel",
   "customProps",
   "description",
@@ -111,10 +112,6 @@ export function useFormControl(
     return Boolean(merged.readonly);
   });
 
-  const labelError = derived(() => {
-    return invalidated;
-  });
-
   const controlId = derived(() => {
     return merged.controlId ?? inputInheritedAttrs.id ?? autoId;
   });
@@ -182,52 +179,31 @@ export function useFormControl(
       customProps?.row,
       {},
       cn({
-        "flex items-center gap-x-2": true,
+        "flex flex-row items-center gap-x-2": true,
         [mergedClasses.row ?? ""]: true,
       }),
     );
   });
 
-  const startLabelBind = derived(() => {
-    return mergePartBind(
-      customProps?.startLabel,
-      { htmlFor: controlId },
-      cn({
-        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
-        [textSizeClass ?? ""]: true,
-        "text-gray-700 dark:text-gray-300": !labelError,
-        [invalidatedColors.label ?? ""]: labelError,
-        [mergedClasses.startLabel ?? ""]: true,
-      }),
-    );
-  });
+  const fieldLabelProps = derived(() => {
+    const buildLabelProps = (part: "endLabel" | "startLabel"): LabelProps => {
+      return mergeNestedComponentProps(customProps?.[part], {
+        size: merged.size,
+        error: invalidated,
+        htmlFor: controlId,
+        classes: {
+          root: cn({
+            "cursor-pointer": true,
+            [mergedClasses[part] ?? ""]: true,
+          }),
+        },
+      });
+    };
 
-  const mainLabelBind = derived(() => {
-    return mergePartBind(
-      customProps?.mainLabel,
-      { htmlFor: controlId },
-      cn({
-        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
-        [textSizeClass ?? ""]: true,
-        "text-gray-700 dark:text-gray-300": !labelError,
-        [invalidatedColors.label ?? ""]: labelError,
-        [mergedClasses.mainLabel ?? ""]: true,
-      }),
-    );
-  });
-
-  const endLabelBind = derived(() => {
-    return mergePartBind(
-      customProps?.endLabel,
-      { htmlFor: controlId },
-      cn({
-        "inline-flex cursor-pointer items-center gap-x-0.5 font-medium leading-none": true,
-        [textSizeClass ?? ""]: true,
-        "text-gray-700 dark:text-gray-300": !labelError,
-        [invalidatedColors.label ?? ""]: labelError,
-        [mergedClasses.endLabel ?? ""]: true,
-      }),
-    );
+    return {
+      endLabel: buildLabelProps("endLabel"),
+      startLabel: buildLabelProps("startLabel"),
+    };
   });
 
   const descriptionBind = derived(() => {
@@ -277,9 +253,7 @@ export function useFormControl(
     isReadonly,
     controlBind,
     invalidated,
-    endLabelBind,
-    mainLabelBind,
-    startLabelBind,
+    fieldLabelProps,
     ariaDescribedBy,
     descriptionBind,
     errorMessageBind,

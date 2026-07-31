@@ -10,24 +10,21 @@ afterEach(() => {
 import { Switch } from "@/Components/Switch";
 
 test("it should render a switch control", () => {
-  render(<Switch mainLabel="Notifications" />);
+  render(<Switch endLabel="Notifications" />);
 
   expect(screen.getByRole("switch", { name: "Notifications" })).toBeTruthy();
 });
 
 test("it should render description when description prop is provided", () => {
   render(
-    <Switch
-      mainLabel="Notifications"
-      description="Enable push notifications"
-    />,
+    <Switch endLabel="Notifications" description="Enable push notifications" />,
   );
 
   expect(screen.getByText("Enable push notifications")).toBeTruthy();
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  render(<Switch defaultChecked={false} mainLabel="Notifications" />);
+  render(<Switch defaultChecked={false} endLabel="Notifications" />);
 
   const toggle = screen.getByRole("switch") as HTMLInputElement;
 
@@ -39,25 +36,25 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should reflect checked state when controlled", () => {
-  render(<Switch checked mainLabel="Notifications" />);
+  render(<Switch checked endLabel="Notifications" />);
 
   expect((screen.getByRole("switch") as HTMLInputElement).checked).toBe(true);
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  render(<Switch disabled mainLabel="Notifications" />);
+  render(<Switch disabled endLabel="Notifications" />);
 
   expect((screen.getByRole("switch") as HTMLInputElement).disabled).toBe(true);
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Switch error mainLabel="Notifications" />);
+  render(<Switch error endLabel="Notifications" />);
 
   expect(screen.getByRole("switch").getAttribute("aria-invalid")).toBe("true");
 });
 
 test("it should render track and thumb elements", () => {
-  const { container } = render(<Switch mainLabel="Notifications" />);
+  const { container } = render(<Switch endLabel="Notifications" />);
 
   expect(
     container.querySelectorAll("label span").length,

@@ -10,27 +10,27 @@ afterEach(() => {
 import { Checkbox } from "@/Components/Checkbox";
 
 test("it should render a checkbox control", () => {
-  render(<Checkbox mainLabel="Accept terms" />);
+  render(<Checkbox endLabel="Accept terms" />);
 
   expect(screen.getByRole("checkbox", { name: "Accept terms" })).toBeTruthy();
 });
 
 test("it should render description when description prop is provided", () => {
   render(
-    <Checkbox mainLabel="Accept" description="You must accept to continue" />,
+    <Checkbox endLabel="Accept" description="You must accept to continue" />,
   );
 
   expect(screen.getByText("You must accept to continue")).toBeTruthy();
 });
 
 test("it should render error message when error is set", () => {
-  render(<Checkbox error mainLabel="Accept" errorMessage="Required" />);
+  render(<Checkbox error endLabel="Accept" errorMessage="Required" />);
 
   expect(screen.getByText("Required")).toBeTruthy();
 });
 
 test("it should apply disabled attribute when disabled", () => {
-  render(<Checkbox disabled mainLabel="Accept" />);
+  render(<Checkbox disabled endLabel="Accept" />);
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).disabled).toBe(
     true,
@@ -38,7 +38,7 @@ test("it should apply disabled attribute when disabled", () => {
 });
 
 test("it should set aria-invalid when error is set", () => {
-  render(<Checkbox error mainLabel="Accept" />);
+  render(<Checkbox error endLabel="Accept" />);
 
   expect(screen.getByRole("checkbox").getAttribute("aria-invalid")).toBe(
     "true",
@@ -46,7 +46,7 @@ test("it should set aria-invalid when error is set", () => {
 });
 
 test("it should toggle when clicked in uncontrolled mode", () => {
-  render(<Checkbox mainLabel="Accept" defaultChecked={false} />);
+  render(<Checkbox endLabel="Accept" defaultChecked={false} />);
 
   const checkbox = screen.getByRole("checkbox") as HTMLInputElement;
 
@@ -58,14 +58,14 @@ test("it should toggle when clicked in uncontrolled mode", () => {
 });
 
 test("it should reflect checked state when controlled", () => {
-  render(<Checkbox checked mainLabel="Accept" />);
+  render(<Checkbox checked endLabel="Accept" />);
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).checked).toBe(true);
 });
 
 test("it should set indeterminate on the native input when indeterminate is true", () => {
   render(
-    <Checkbox indeterminate mainLabel="Select all" defaultChecked={false} />,
+    <Checkbox indeterminate endLabel="Select all" defaultChecked={false} />,
   );
 
   expect((screen.getByRole("checkbox") as HTMLInputElement).indeterminate).toBe(
@@ -73,8 +73,8 @@ test("it should set indeterminate on the native input when indeterminate is true
   );
 });
 
-test("it should link main label to control id", () => {
-  render(<Checkbox mainLabel="Accept" controlId="terms-checkbox" />);
+test("it should link end label to control id", () => {
+  render(<Checkbox endLabel="Accept" controlId="terms-checkbox" />);
 
   expect(screen.getByLabelText("Accept").id).toBe("terms-checkbox");
 });

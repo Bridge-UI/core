@@ -50,15 +50,15 @@ test("it should render the control element", () => {
   expect(wrapper.find(".group\\/form-control").exists()).toBe(true);
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
-  const wrapper = mountFormControl({ mainLabel: "Email notifications" });
+test("it should render end label when endLabel prop is provided", () => {
+  const wrapper = mountFormControl({ endLabel: "Email notifications" });
 
   expect(wrapper.text()).toContain("Email notifications");
 });
 
 test("it should link label to inherited input id when id is provided", () => {
   const wrapper = mountFormControl(
-    { mainLabel: "Email notifications" },
+    { endLabel: "Email notifications" },
     { id: "form-control-id" },
   );
 
@@ -72,12 +72,10 @@ test("it should link label to inherited input id when id is provided", () => {
 test("it should render start and end labels when provided", () => {
   const wrapper = mountFormControl({
     endLabel: "End",
-    mainLabel: "Main",
     startLabel: "Start",
   });
 
   expect(wrapper.text()).toContain("End");
-  expect(wrapper.text()).toContain("Main");
   expect(wrapper.text()).toContain("Start");
 });
 
@@ -168,7 +166,7 @@ test("it should set data-invalid on the root when error is set", () => {
 test("it should apply error color on labels when error is set", () => {
   const wrapper = mountFormControl({
     error: true,
-    mainLabel: "Label",
+    endLabel: "Label",
   });
 
   expect(wrapper.find("label").classes()).toContain("text-error-600");
@@ -184,7 +182,7 @@ test("it should not render error region when withoutErrorMessage is true", () =>
   expect(wrapper.find('[id$="-error"]').exists()).toBe(false);
 });
 
-test("it should render main label from slot", () => {
+test("it should render end label from slot", () => {
   const WithSlot = defineComponent({
     inheritAttrs: false,
     setup(_, { slots }) {
@@ -195,7 +193,7 @@ test("it should render main label from slot", () => {
           FormControl,
           { field },
           {
-            mainLabel: slots.mainLabel,
+            endLabel: slots.endLabel,
             default: () =>
               h("input", {
                 ...field.controlBind.value,
@@ -209,7 +207,7 @@ test("it should render main label from slot", () => {
 
   const slotWrapper = mount(WithSlot, {
     slots: {
-      mainLabel: () => h("span", "Slot label"),
+      endLabel: () => h("span", "Slot label"),
     },
   });
 

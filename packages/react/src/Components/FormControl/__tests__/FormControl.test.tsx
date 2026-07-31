@@ -41,15 +41,15 @@ test("it should render the control element", () => {
   expect(screen.getByRole("checkbox", { name: "Control" })).toBeTruthy();
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
-  render(<FormControlHarness mainLabel="Email notifications" />);
+test("it should render end label when endLabel prop is provided", () => {
+  render(<FormControlHarness endLabel="Email notifications" />);
 
   expect(screen.getByText("Email notifications")).toBeTruthy();
 });
 
 test("it should link label to inherited input id when id is provided", () => {
   render(
-    <FormControlHarness id="form-control-id" mainLabel="Email notifications" />,
+    <FormControlHarness id="form-control-id" endLabel="Email notifications" />,
   );
 
   expect(screen.getByLabelText("Email notifications").id).toBe(
@@ -58,12 +58,9 @@ test("it should link label to inherited input id when id is provided", () => {
 });
 
 test("it should render start and end labels when provided", () => {
-  render(
-    <FormControlHarness endLabel="End" mainLabel="Main" startLabel="Start" />,
-  );
+  render(<FormControlHarness endLabel="End" startLabel="Start" />);
 
   expect(screen.getByText("End")).toBeTruthy();
-  expect(screen.getByText("Main")).toBeTruthy();
   expect(screen.getByText("Start")).toBeTruthy();
 });
 
@@ -150,7 +147,7 @@ test("it should set data-invalid on the root when error is set", () => {
 });
 
 test("it should apply error color on labels when error is set", () => {
-  const { container } = render(<FormControlHarness error mainLabel="Label" />);
+  const { container } = render(<FormControlHarness error endLabel="Label" />);
 
   expect(container.querySelector("label")?.className).toContain(
     "text-error-600",
@@ -165,11 +162,11 @@ test("it should not render error region when withoutErrorMessage is true", () =>
   expect(container.querySelector('[id$="-error"]')).toBeNull();
 });
 
-test("it should render main label from slots", () => {
+test("it should render end label from slots", () => {
   render(
     <FormControlHarness
       slots={{
-        mainLabel: <span>Slot label</span>,
+        endLabel: <span>Slot label</span>,
       }}
     />,
   );

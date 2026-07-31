@@ -95,12 +95,12 @@ test("it should set aria-describedby on controlBind when description is provided
 });
 
 test("it should set label for attribute to control id", () => {
-  const { controlId, mainLabelBind } = mountUseFormControl(
-    { mainLabel: "Label" },
+  const { controlId, fieldLabelProps } = mountUseFormControl(
+    { endLabel: "Label" },
     { controlId: "form-control-id" },
   );
 
-  expect(mainLabelBind.value.for).toBe(controlId.value);
+  expect(fieldLabelProps.value.endLabel.for).toBe(controlId.value);
 });
 
 test("it should reserve error message space by default", () => {

@@ -17,7 +17,7 @@ import { Radio } from "@bridge-ui/vue/Components/Radio";
   name="plan"
   v-model="plan"
   value="starter"
-  main-label="Starter"
+  end-label="Starter"
   description="Free tier for individuals."
 />
 
@@ -25,7 +25,7 @@ import { Radio } from "@bridge-ui/vue/Components/Radio";
   name="plan"
   value="pro"
   v-model="plan"
-  main-label="Pro"
+  end-label="Pro"
   description="For growing teams."
 />
 ```
@@ -33,13 +33,13 @@ import { Radio } from "@bridge-ui/vue/Components/Radio";
 ### Required and error
 
 ```vue
-<Radio required value="req" name="required" main-label="Required field" />
+<Radio required value="req" name="required" end-label="Required field" />
 
 <Radio
   error
   value="err"
   name="error"
-  main-label="Invalid option"
+  end-label="Invalid option"
   error-message="Please select a valid option."
 />
 ```
@@ -50,7 +50,7 @@ import { Radio } from "@bridge-ui/vue/Components/Radio";
 <Radio
   name="plan"
   value="pro"
-  main-label="Pro plan"
+  end-label="Pro plan"
   :custom-props="{
     input: { id: 'plan-pro' },
     dot: { 'aria-hidden': true },

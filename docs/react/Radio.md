@@ -16,7 +16,7 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 <Radio
   name="plan"
   value="starter"
-  mainLabel="Starter"
+  endLabel="Starter"
   checked={plan === "starter"}
   onChange={() => setPlan("starter")}
   description="Free tier for individuals."
@@ -25,7 +25,7 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 <Radio
   name="plan"
   value="pro"
-  mainLabel="Pro"
+  endLabel="Pro"
   checked={plan === "pro"}
   onChange={() => setPlan("pro")}
   description="For growing teams."
@@ -39,14 +39,14 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
   required
   value="req"
   name="required"
-  mainLabel="Required field"
+  endLabel="Required field"
 />
 
 <Radio
   error
   value="err"
   name="error"
-  mainLabel="Invalid option"
+  endLabel="Invalid option"
   errorMessage="Please select a valid option."
 />
 ```
@@ -57,7 +57,7 @@ import { Radio } from "@bridge-ui/react/Components/Radio";
 <Radio
   name="plan"
   value="pro"
-  mainLabel="Pro plan"
+  endLabel="Pro plan"
   customProps={{
     input: { id: "plan-pro" },
     dot: { "aria-hidden": true },

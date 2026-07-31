@@ -14,23 +14,23 @@ import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 
 ```vue
 <Checkbox
-  main-label="Accept terms"
+  end-label="Accept terms"
   description="Receive updates about your account."
 />
 
-<Checkbox v-model="terms" main-label="Remember me" />
+<Checkbox v-model="terms" end-label="Remember me" />
 
-<Checkbox indeterminate main-label="Select all" />
+<Checkbox indeterminate end-label="Select all" />
 ```
 
 ### Required and error
 
 ```vue
-<Checkbox required main-label="Required field" />
+<Checkbox required end-label="Required field" />
 
 <Checkbox
   error
-  main-label="Invalid option"
+  end-label="Invalid option"
   error-message="You must accept to continue."
 />
 ```
@@ -38,16 +38,16 @@ import { Checkbox } from "@bridge-ui/vue/Components/Checkbox";
 ### States
 
 ```vue
-<Checkbox disabled :model-value="true" main-label="Disabled" />
+<Checkbox disabled :model-value="true" end-label="Disabled" />
 
-<Checkbox readonly :model-value="true" main-label="Read-only" />
+<Checkbox readonly :model-value="true" end-label="Read-only" />
 ```
 
 ### customProps
 
 ```vue
 <Checkbox
-  main-label="Accept terms"
+  end-label="Accept terms"
   :custom-props="{
     icon: { 'aria-hidden': true },
     input: { name: 'terms', value: 'yes' },
