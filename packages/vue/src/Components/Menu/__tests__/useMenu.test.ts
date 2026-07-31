@@ -59,9 +59,9 @@ test("it should override placement when prop is passed", () => {
 test("it should expose menu semantics on trigger and content binds", () => {
   const { result } = mountUseMenu();
 
-  expect(result.triggerBind.value["aria-haspopup"]).toBe("menu");
-  expect(result.triggerBind.value["aria-expanded"]).toBe(false);
   expect(result.contentBind.value.role).toBe("menu");
+  expect(result.triggerBind.value["aria-expanded"]).toBe(false);
+  expect(result.triggerBind.value["aria-haspopup"]).toBe("menu");
 });
 
 test("it should reflect aria-expanded when show is true", async () => {
@@ -70,8 +70,8 @@ test("it should reflect aria-expanded when show is true", async () => {
 
   await flushPromises();
 
-  expect(result.triggerBind.value["aria-expanded"]).toBe(true);
   expect(result.mounted.value).toBe(true);
+  expect(result.triggerBind.value["aria-expanded"]).toBe(true);
 });
 
 test("it should toggle show when trigger capture handler runs", async () => {
@@ -103,8 +103,8 @@ test("it should close on escape when show is true", async () => {
 test("it should include rounded and shadow classes on content bind", () => {
   const { result } = mountUseMenu({ shadow: "sm", rounded: "lg" });
 
-  expect(result.contentBind.value.class).toContain("rounded-lg");
   expect(result.contentBind.value.class).toContain("shadow-sm");
+  expect(result.contentBind.value.class).toContain("rounded-lg");
 });
 
 test("it should not lock body scroll by default", async () => {

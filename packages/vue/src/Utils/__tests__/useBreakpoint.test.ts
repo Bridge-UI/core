@@ -70,11 +70,11 @@ test("it should report lessThan sm below the sm breakpoint", () => {
 
   const { result, wrapper } = mountUseBreakpoint();
 
+  expect(result.name).toBe("xs");
   expect(result.mobile).toBe(true);
   expect(result.lessThan("sm")).toBe(true);
   expect(result.lessOrEqual("sm")).toBe(true);
   expect(result.greaterOrEqual("sm")).toBe(false);
-  expect(result.name).toBe("xs");
 
   wrapper.unmount();
 });
@@ -84,9 +84,9 @@ test("it should report greaterOrEqual sm at desktop widths", () => {
 
   const { result, wrapper } = mountUseBreakpoint();
 
+  expect(result.name).toBe("md");
   expect(result.mobile).toBe(false);
   expect(result.greaterOrEqual("sm")).toBe(true);
-  expect(result.name).toBe("md");
 
   wrapper.unmount();
 });
@@ -98,8 +98,8 @@ test("it should honor custom breakpoint overrides", () => {
     breakpoints: { sm: "30rem" },
   });
 
-  expect(result.greaterOrEqual("sm")).toBe(true);
   expect(result.thresholds.sm).toBe(480);
+  expect(result.greaterOrEqual("sm")).toBe(true);
 
   wrapper.unmount();
 });

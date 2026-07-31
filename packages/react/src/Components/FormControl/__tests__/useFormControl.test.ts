@@ -74,13 +74,50 @@ test("it should set aria-describedby on controlBind when description is provided
   );
 });
 
-test("it should set htmlFor on main label bind to control id", () => {
+test("it should set htmlFor on end label props to control id", () => {
   const { result } = renderUseFormControl({
-    mainLabel: "Label",
+    endLabel: "Label",
     controlId: "form-control-id",
   });
 
-  expect(result.current.mainLabelBind.htmlFor).toBe(result.current.controlId);
+  expect(result.current.fieldLabelProps.endLabel.htmlFor).toBe(
+    result.current.controlId,
+  );
+});
+
+test("it should set error on end label props when invalidated", () => {
+  const { result } = renderUseFormControl({
+    error: true,
+    endLabel: "Label",
+  });
+
+  expect(result.current.fieldLabelProps.endLabel.error).toBe(true);
+});
+
+test("it should set required on end label props when required is true", () => {
+  const { result } = renderUseFormControl({
+    required: true,
+    endLabel: "Label",
+  });
+
+  expect(result.current.fieldLabelProps.endLabel.required).toBe(true);
+});
+
+test("it should merge customProps.endLabel into fieldLabelProps", () => {
+  const { result } = renderUseFormControl({
+    endLabel: "Label",
+    customProps: {
+      endLabel: {
+        classes: {
+          root: "text-orange-600",
+        },
+      },
+    },
+  });
+
+  expect(result.current.fieldLabelProps.endLabel.classes?.root).toContain(
+    "text-orange-600",
+  );
 });
 
 test("it should reserve error message space by default", () => {

@@ -20,8 +20,8 @@ test("it should apply horizontal orientation by default", () => {
 
   const root = container.querySelector("hr");
 
-  expect(root?.classList.contains("w-full")).toBe(true);
   expect(root?.classList.contains("h-px")).toBe(true);
+  expect(root?.classList.contains("w-full")).toBe(true);
   expect(root?.getAttribute("aria-orientation")).toBe("horizontal");
 });
 

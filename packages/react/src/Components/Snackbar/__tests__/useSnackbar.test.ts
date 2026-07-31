@@ -197,8 +197,8 @@ test("it should freeze progress bar scale when hover pauses the timer", async ()
     );
   });
 
-  expect(result.current.progressBind.style?.transform).toBe("scaleX(0.5)");
   expect(result.current.progressBind.style?.transition).toBe("none");
+  expect(result.current.progressBind.style?.transform).toBe("scaleX(0.5)");
 
   vi.restoreAllMocks();
 });

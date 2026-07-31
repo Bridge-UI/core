@@ -91,10 +91,10 @@ test("it should set show to false when requestClose is invoked", () => {
 test("it should apply fade transition classes on panel when transition is slide", () => {
   const { result } = mountUseSnackbar({ duration: false, transition: "slide" });
 
-  expect(result.panelBind.value["data-state"]).toBeDefined();
   expect(result.panelBind.value.class).toContain(
     "data-[state=open]:translate-y-0",
   );
+  expect(result.panelBind.value["data-state"]).toBeDefined();
 });
 
 test("it should include motion-reduce fallback on slide transition", () => {

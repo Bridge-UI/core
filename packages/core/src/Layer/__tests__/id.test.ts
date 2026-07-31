@@ -11,9 +11,9 @@ test("it should generate unique ids", () => {
   const first = createLayerId();
   const second = createLayerId();
 
+  expect(second).not.toBe(first);
   expect(isString(first)).toBe(true);
   expect(first.length).toBeGreaterThan(0);
-  expect(second).not.toBe(first);
 });
 
 test("it should use assigned id when provided", () => {

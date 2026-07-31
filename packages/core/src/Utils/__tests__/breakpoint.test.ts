@@ -93,8 +93,8 @@ describe("resolveBreakpoints", () => {
 
     resetBreakpointCachesForTests();
 
-    expect(discoverBreakpointKeys()).toContain("3xl");
     expect(resolveBreakpoints()["3xl"]).toBe(1920);
+    expect(discoverBreakpointKeys()).toContain("3xl");
   });
 });
 
@@ -111,24 +111,24 @@ describe("buildBreakpointSnapshot", () => {
     const snapshot = buildBreakpointSnapshot(320, 600, thresholds);
 
     expect(snapshot.name).toBe("xs");
+    expect(snapshot.mobile).toBe(true);
     expect(snapshot.lessThan("sm")).toBe(true);
     expect(snapshot.greaterOrEqual("sm")).toBe(false);
-    expect(snapshot.mobile).toBe(true);
   });
 
   test("it should compare against named thresholds", () => {
     const snapshot = buildBreakpointSnapshot(800, 600, thresholds);
 
     expect(snapshot.name).toBe("md");
+    expect(snapshot.mobile).toBe(false);
+    expect(snapshot.lessThan("lg")).toBe(true);
+    expect(snapshot.lessOrEqual("lg")).toBe(true);
+    expect(snapshot.greaterThan("md")).toBe(true);
+    expect(snapshot.lessOrEqual("md")).toBe(false);
+    expect(snapshot.between("sm", "lg")).toBe(true);
     expect(snapshot.greaterOrEqual("sm")).toBe(true);
     expect(snapshot.greaterOrEqual("md")).toBe(true);
     expect(snapshot.greaterOrEqual("lg")).toBe(false);
-    expect(snapshot.lessThan("lg")).toBe(true);
-    expect(snapshot.lessOrEqual("md")).toBe(false);
-    expect(snapshot.lessOrEqual("lg")).toBe(true);
-    expect(snapshot.greaterThan("md")).toBe(true);
-    expect(snapshot.between("sm", "lg")).toBe(true);
-    expect(snapshot.mobile).toBe(false);
   });
 
   test("it should return false for unknown breakpoint names", () => {
@@ -170,9 +170,9 @@ describe("createBreakpointObserver", () => {
     const snapshot = observer.getSnapshot();
 
     expect(snapshot.width).toBe(900);
+    expect(snapshot.name).toBe("md");
     expect(snapshot.height).toBe(700);
     expect(snapshot.greaterOrEqual("sm")).toBe(true);
-    expect(snapshot.name).toBe("md");
 
     unsubscribe();
   });

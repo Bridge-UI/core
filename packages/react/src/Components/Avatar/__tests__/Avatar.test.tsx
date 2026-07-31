@@ -18,8 +18,8 @@ test("it should render an image when src is passed", () => {
   const image = container.querySelector("img");
 
   expect(image).not.toBeNull();
-  expect(image?.getAttribute("src")).toBe("https://example.com/avatar.jpg");
   expect(image?.getAttribute("alt")).toBe("Jane Doe");
+  expect(image?.getAttribute("src")).toBe("https://example.com/avatar.jpg");
 });
 
 test("it should render fallback text when fallback is passed", () => {

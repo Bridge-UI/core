@@ -95,8 +95,8 @@ test("it should not add body padding when no scrollbar is shown", () => {
 
   const handle = pushLayerStack();
 
-  expect(document.body.style.overflow).toBe("hidden");
   expect(document.body.style.paddingRight).toBe("");
+  expect(document.body.style.overflow).toBe("hidden");
 
   handle.release();
 
@@ -107,8 +107,8 @@ test("it should not add body padding when no scrollbar is shown", () => {
 test("it should release scroll lock before the layer leaves the stack", () => {
   const handle = pushLayerStack();
 
-  expect(document.body.style.overflow).toBe("hidden");
   expect(getLayerStackSnapshot()).toHaveLength(1);
+  expect(document.body.style.overflow).toBe("hidden");
 
   handle.releaseScrollLock();
 
@@ -138,8 +138,8 @@ test("it should reflect highest open order", () => {
   const outer = pushLayerStack({ order: 1 });
   const inner = pushLayerStack({ order: 2 });
 
-  expect(isLayerStackTop(outer.id)).toBe(false);
   expect(isLayerStackTop(inner.id)).toBe(true);
+  expect(isLayerStackTop(outer.id)).toBe(false);
 
   inner.release();
 
@@ -157,9 +157,9 @@ test("it should generate unique ids", () => {
   const first = createLayerId();
   const second = createLayerId();
 
+  expect(second).not.toBe(first);
   expect(isString(first)).toBe(true);
   expect(first.length).toBeGreaterThan(0);
-  expect(second).not.toBe(first);
 });
 
 test("it should use assigned id when provided", () => {

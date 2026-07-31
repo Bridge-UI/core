@@ -85,9 +85,9 @@ test("it should expose bufferBind only for buffer variant", () => {
     variant: "buffer",
   });
 
-  expect(indeterminate.bufferBind.value).toBeNull();
-  expect(buffer.bufferBind.value).not.toBeNull();
   expect(buffer.isBuffer.value).toBe(true);
+  expect(buffer.bufferBind.value).not.toBeNull();
+  expect(indeterminate.bufferBind.value).toBeNull();
 });
 
 test("it should apply bar width style for determinate", () => {

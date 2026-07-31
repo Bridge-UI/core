@@ -129,8 +129,8 @@ test("it should show loading progress bar and text when loading", async () => {
   render(<Host />);
 
   await waitFor(() => {
-    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
     expect(screen.getByText("Loading...")).toBeTruthy();
+    expect(document.body.querySelector('[role="progressbar"]')).not.toBeNull();
   });
 });
 
@@ -339,12 +339,12 @@ test("it should render composed ListSection and ListItem children", async () => 
     expect(screen.getByText("Fruits")).toBeTruthy();
   });
 
-  expect(screen.getByRole("option", { name: "Apple" })).toBeTruthy();
   expect(
     screen
       .getByRole("option", { name: "Banana" })
       .getAttribute("aria-selected"),
   ).toBe("true");
+  expect(screen.getByRole("option", { name: "Apple" })).toBeTruthy();
 
   fireEvent.click(screen.getByRole("option", { name: "Apple" }));
 

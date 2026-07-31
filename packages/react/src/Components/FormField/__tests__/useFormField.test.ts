@@ -157,3 +157,40 @@ test("it should not set aria-describedby when error is true without errorMessage
 
   expect(result.current.inputBind["aria-describedby"]).toBeUndefined();
 });
+
+test("it should set htmlFor on fieldLabelProps to control id", () => {
+  const { result } = renderUseFormField({
+    label: "Email",
+    controlId: "email-field",
+  });
+
+  expect(result.current.fieldLabelProps.htmlFor).toBe(result.current.controlId);
+});
+
+test("it should set error and required on fieldLabelProps", () => {
+  const { result } = renderUseFormField({
+    error: true,
+    label: "Email",
+    required: true,
+  });
+
+  expect(result.current.fieldLabelProps.error).toBe(true);
+  expect(result.current.fieldLabelProps.required).toBe(true);
+});
+
+test("it should merge customProps.label into fieldLabelProps", () => {
+  const { result } = renderUseFormField({
+    label: "Email",
+    customProps: {
+      label: {
+        classes: {
+          root: "text-orange-600",
+        },
+      },
+    },
+  });
+
+  expect(result.current.fieldLabelProps.classes?.root).toContain(
+    "text-orange-600",
+  );
+});

@@ -28,8 +28,8 @@ test("it should set aria-valuenow for determinate variant", () => {
 
   const root = screen.getByRole("progressbar");
 
-  expect(root.getAttribute("aria-valuenow")).toBe("40");
   expect(root.getAttribute("aria-valuemin")).toBe("0");
+  expect(root.getAttribute("aria-valuenow")).toBe("40");
   expect(root.getAttribute("aria-valuemax")).toBe("100");
 });
 

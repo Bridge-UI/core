@@ -17,8 +17,8 @@ describe("hasDrawerTransition", () => {
   });
 
   it("returns true for animated tokens", () => {
-    expect(hasDrawerTransition("slide")).toBe(true);
     expect(hasDrawerTransition("fade")).toBe(true);
+    expect(hasDrawerTransition("slide")).toBe(true);
   });
 });
 

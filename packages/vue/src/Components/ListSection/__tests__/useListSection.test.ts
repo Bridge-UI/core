@@ -41,9 +41,9 @@ test("it should resolve label from title prop", () => {
 test("it should apply section title classes", () => {
   const { titleBind } = mountUseListSection({ title: "Settings" });
 
-  expect(titleBind.value.class).toContain("uppercase");
-  expect(titleBind.value.class).toContain("text-xs");
   expect(titleBind.value.role).toBe("presentation");
+  expect(titleBind.value.class).toContain("text-xs");
+  expect(titleBind.value.class).toContain("uppercase");
 });
 
 test("it should apply sticky classes on root when sticky is true", () => {

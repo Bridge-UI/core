@@ -41,11 +41,11 @@ test("it should report lessThan sm below the sm breakpoint", () => {
 
   const { result, unmount } = renderHook(() => useBreakpoint());
 
+  expect(result.current.name).toBe("xs");
   expect(result.current.mobile).toBe(true);
   expect(result.current.lessThan("sm")).toBe(true);
   expect(result.current.lessOrEqual("sm")).toBe(true);
   expect(result.current.greaterOrEqual("sm")).toBe(false);
-  expect(result.current.name).toBe("xs");
 
   unmount();
 });
@@ -55,9 +55,9 @@ test("it should report greaterOrEqual sm at desktop widths", () => {
 
   const { result, unmount } = renderHook(() => useBreakpoint());
 
+  expect(result.current.name).toBe("md");
   expect(result.current.mobile).toBe(false);
   expect(result.current.greaterOrEqual("sm")).toBe(true);
-  expect(result.current.name).toBe("md");
 
   unmount();
 });
@@ -69,8 +69,8 @@ test("it should honor custom breakpoint overrides", () => {
     useBreakpoint({ breakpoints: { sm: "30rem" } }),
   );
 
-  expect(result.current.greaterOrEqual("sm")).toBe(true);
   expect(result.current.thresholds.sm).toBe(480);
+  expect(result.current.greaterOrEqual("sm")).toBe(true);
 
   unmount();
 });

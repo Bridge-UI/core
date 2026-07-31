@@ -271,12 +271,12 @@ test("it should forward FormField classes and customProps to chrome", () => {
   );
 
   expect(
-    screen.getByTestId("field-label").classList.contains("custom-label-class"),
-  ).toBe(true);
-  expect(
     screen
       .getByTestId("field-corner")
       .classList.contains("custom-corner-class"),
+  ).toBe(true);
+  expect(
+    screen.getByTestId("field-label").classList.contains("custom-label-class"),
   ).toBe(true);
 });
 

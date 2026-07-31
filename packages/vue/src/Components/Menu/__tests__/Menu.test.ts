@@ -63,8 +63,8 @@ test("it should open the menu when the trigger is clicked", async () => {
   await button.trigger("click");
   await flushPromises();
 
-  expect(document.body.querySelector('[role="menu"]')).not.toBeNull();
   expect(document.body.textContent).toContain("Item one");
+  expect(document.body.querySelector('[role="menu"]')).not.toBeNull();
 });
 
 test("it should open when the trigger child also sets modelValue on click", async () => {
@@ -406,8 +406,8 @@ test("it should close other menus with anchorEl when another opens", async () =>
   await buttons[1].trigger("click");
   await flushPromises();
 
-  expect(openA.value).toBe(false);
   expect(openB.value).toBe(true);
+  expect(openA.value).toBe(false);
   expect(document.body.textContent).toContain("Menu B");
   expect(document.body.textContent).not.toContain("Menu A");
 });

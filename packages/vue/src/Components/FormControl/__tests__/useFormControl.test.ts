@@ -95,12 +95,47 @@ test("it should set aria-describedby on controlBind when description is provided
 });
 
 test("it should set label for attribute to control id", () => {
-  const { controlId, mainLabelBind } = mountUseFormControl(
-    { mainLabel: "Label" },
+  const { controlId, fieldLabelProps } = mountUseFormControl(
+    { endLabel: "Label" },
     { controlId: "form-control-id" },
   );
 
-  expect(mainLabelBind.value.for).toBe(controlId.value);
+  expect(fieldLabelProps.value.endLabel.for).toBe(controlId.value);
+});
+
+test("it should set error on end label props when invalidated", () => {
+  const { fieldLabelProps } = mountUseFormControl({
+    error: true,
+    endLabel: "Label",
+  });
+
+  expect(fieldLabelProps.value.endLabel.error).toBe(true);
+});
+
+test("it should set required on end label props when required is true", () => {
+  const { fieldLabelProps } = mountUseFormControl({
+    required: true,
+    endLabel: "Label",
+  });
+
+  expect(fieldLabelProps.value.endLabel.required).toBe(true);
+});
+
+test("it should merge customProps.endLabel into fieldLabelProps", () => {
+  const { fieldLabelProps } = mountUseFormControl({
+    endLabel: "Label",
+    customProps: {
+      endLabel: {
+        classes: {
+          root: "text-orange-600",
+        },
+      },
+    },
+  });
+
+  expect(fieldLabelProps.value.endLabel.classes?.root).toContain(
+    "text-orange-600",
+  );
 });
 
 test("it should reserve error message space by default", () => {

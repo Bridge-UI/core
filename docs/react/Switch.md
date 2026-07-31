@@ -14,13 +14,13 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 
 ```tsx
 <Switch
-  mainLabel="Dark mode"
+  endLabel="Dark mode"
   description="Use dark theme across the app."
 />
 
 <Switch
   checked={enabled}
-  mainLabel="Enable notifications"
+  endLabel="Enable notifications"
   onChange={(event) => setEnabled(event.target.checked)}
 />
 ```
@@ -30,12 +30,12 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 ```tsx
 <Switch
   required
-  mainLabel="Required field"
+  endLabel="Required field"
 />
 
 <Switch
   error
-  mainLabel="Invalid option"
+  endLabel="Invalid option"
   errorMessage="You must enable this setting."
 />
 ```
@@ -44,7 +44,7 @@ import { Switch } from "@bridge-ui/react/Components/Switch";
 
 ```tsx
 <Switch
-  mainLabel="Airplane mode"
+  endLabel="Airplane mode"
   customProps={{
     input: { name: "airplane" },
     control: { "data-testid": "airplane-switch" },

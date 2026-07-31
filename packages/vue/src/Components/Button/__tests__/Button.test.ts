@@ -9,8 +9,8 @@ import { Button } from "@/Components/Button";
 test("it should render a button with default slot content", () => {
   const wrapper = mount(Button, { slots: { default: "Click me" } });
 
-  expect(wrapper.find("button").exists()).toBe(true);
   expect(wrapper.text()).toContain("Click me");
+  expect(wrapper.find("button").exists()).toBe(true);
 });
 
 test("it should apply disabled attribute when disabled", () => {
@@ -55,8 +55,8 @@ test("it should replace text with spinner when loading", () => {
     props: { loading: true, text: "Saving" },
   });
 
-  expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
   expect(wrapper.text()).not.toContain("Saving");
+  expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
 });
 
 test("it should render start icon when startIcon prop is set", () => {

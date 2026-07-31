@@ -36,8 +36,8 @@ test("it should remove the entry and call onClosed", () => {
 
   completeLayerHide(entries, "a", false, removeEntry);
 
-  expect(removeEntry).toHaveBeenCalledWith("a");
   expect(onClosed).toHaveBeenCalledOnce();
+  expect(removeEntry).toHaveBeenCalledWith("a");
 });
 
 test("it should noop when show is true", () => {

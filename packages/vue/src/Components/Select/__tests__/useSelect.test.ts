@@ -47,8 +47,8 @@ test("it should merge default form field size and variant", () => {
   const { result } = mountUseSelect();
 
   expect(result.formField.merged.value.size).toBe("md");
-  expect(result.formField.merged.value.variant).toBe("outline");
   expect(result.formField.merged.value.color).toBe("primary");
+  expect(result.formField.merged.value.variant).toBe("outline");
 });
 
 test("it should expose combobox semantics on trigger bind", () => {

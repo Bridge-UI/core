@@ -149,8 +149,8 @@ test("it should filter options when searchable", async () => {
   fireEvent.input(combobox, { target: { value: "ban" } });
 
   await waitFor(() => {
-    expect(screen.getByText("Banana")).toBeTruthy();
     expect(screen.queryByText("Apple")).toBeNull();
+    expect(screen.getByText("Banana")).toBeTruthy();
   });
 });
 
@@ -214,9 +214,9 @@ test("it should filter within grouped options and drop empty sections", async ()
   fireEvent.input(combobox, { target: { value: "ban" } });
 
   await waitFor(() => {
+    expect(screen.queryByText("Other")).toBeNull();
     expect(screen.getByText("Banana")).toBeTruthy();
     expect(screen.getByText("Fruits")).toBeTruthy();
-    expect(screen.queryByText("Other")).toBeNull();
     expect(screen.queryByText("Carrot")).toBeNull();
   });
 });

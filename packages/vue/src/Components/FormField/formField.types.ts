@@ -12,9 +12,11 @@ import type {
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
+
 // ** Local Imports
 import type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import type { IconProps } from "@/Components/Icon";
+import type { LabelProps } from "@/Components/Label/label.types";
 
 export interface FormFieldSizeOverrides {}
 export interface FormFieldColorOverrides {}
@@ -120,16 +122,18 @@ export interface FormFieldCustomProps {
   input?: Partial<InputHTMLAttributes>;
 
   /**
-   * Error-state field chrome colors (label, container, adornments, …).
+   * Error-state field chrome colors (container, adornments, input, …). Label colors come from `Label` when `error` is set.
    *
    * @default undefined
    */
   invalidated?: Partial<FormFieldInvalidated>;
 
   /**
-   * Props forwarded to the primary label element.
+   * Props forwarded to the primary `Label` (content stays owned by `FormField`).
+   *
+   * @default undefined
    */
-  label?: HTMLAttributes;
+  label?: Partial<LabelProps>;
 
   /**
    * Props forwarded to the root wrapper.

@@ -1,4 +1,5 @@
 // ** Local Imports
+import FormControlLabel from "@/Components/FormControl/FormControlLabel";
 import type { FormControlProps } from "@/Components/FormControl/formControl.types";
 import type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
@@ -18,37 +19,11 @@ function FormControl({ field, children }: FormControlComponentProps) {
       aria-readonly={api.isReadonly || undefined}
     >
       <div {...api.rowBind}>
-        {hasSlotOrProp(api.slots, "startLabel", api.merged.startLabel) && (
-          <label {...api.startLabelBind}>
-            {resolveSlotOrProp({
-              slots: api.slots,
-              name: "startLabel",
-              fallback: api.merged.startLabel,
-            })}
-          </label>
-        )}
+        <FormControlLabel api={api} name="startLabel" />
 
         {children}
 
-        {hasSlotOrProp(api.slots, "mainLabel", api.merged.mainLabel) && (
-          <label {...api.mainLabelBind}>
-            {resolveSlotOrProp({
-              slots: api.slots,
-              name: "mainLabel",
-              fallback: api.merged.mainLabel,
-            })}
-          </label>
-        )}
-
-        {hasSlotOrProp(api.slots, "endLabel", api.merged.endLabel) && (
-          <label {...api.endLabelBind}>
-            {resolveSlotOrProp({
-              name: "endLabel",
-              slots: api.slots,
-              fallback: api.merged.endLabel,
-            })}
-          </label>
-        )}
+        <FormControlLabel api={api} name="endLabel" />
       </div>
 
       {!api.invalidated &&

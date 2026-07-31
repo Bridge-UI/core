@@ -136,15 +136,15 @@ test("it should reflect mounted entries", async () => {
 
   expect(isString(id)).toBe(true);
   expect(id.length).toBeGreaterThan(0);
-  expect(bridgeDrawer.isOpen(id)).toBe(true);
   expect(bridgeDrawer.stackSize).toBe(1);
+  expect(bridgeDrawer.isOpen(id)).toBe(true);
 
   bridgeDrawer.close(id);
   await flushPromises();
 
-  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
-  expect(bridgeDrawer.isOpen(id)).toBe(false);
   expect(bridgeDrawer.stackSize).toBe(0);
+  expect(bridgeDrawer.isOpen(id)).toBe(false);
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });
 
 test("it should close only the topmost imperative drawer", async () => {
@@ -182,10 +182,10 @@ test("it should close only the topmost imperative drawer", async () => {
   bridgeDrawer.closeTop();
   await flushPromises();
 
-  expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(1);
-  expect(bridgeDrawer.isOpen(innerId)).toBe(false);
-  expect(bridgeDrawer.isOpen(outerId)).toBe(true);
   expect(bridgeDrawer.stackSize).toBe(1);
+  expect(bridgeDrawer.isOpen(outerId)).toBe(true);
+  expect(bridgeDrawer.isOpen(innerId)).toBe(false);
+  expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(1);
 });
 
 test("it should run before onClosed when close is called", async () => {
@@ -219,10 +219,10 @@ test("it should run before onClosed when close is called", async () => {
   await flushPromises();
 
   expect(onClose).toHaveBeenCalledOnce();
+  expect(onClosed).toHaveBeenCalledOnce();
   expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
     onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
   );
-  expect(onClosed).toHaveBeenCalledOnce();
 });
 
 test("it should run before onClosed when escape is pressed", async () => {
@@ -254,10 +254,10 @@ test("it should run before onClosed when escape is pressed", async () => {
   await flushPromises();
 
   expect(onClose).toHaveBeenCalledOnce();
+  expect(onClosed).toHaveBeenCalledOnce();
   expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
     onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
   );
-  expect(onClosed).toHaveBeenCalledOnce();
 });
 
 test("it should patch props on an open drawer", async () => {
@@ -419,11 +419,11 @@ test("it should run before onClosed when the overlay is clicked", async () => {
   await flushPromises();
 
   expect(onClose).toHaveBeenCalledOnce();
+  expect(onClosed).toHaveBeenCalledOnce();
+  expect(bridgeDrawer.isOpen(id)).toBe(false);
   expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
     onClosed.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
   );
-  expect(onClosed).toHaveBeenCalledOnce();
-  expect(bridgeDrawer.isOpen(id)).toBe(false);
 });
 
 test("it should not override host-controlled props with drawer shell options", async () => {

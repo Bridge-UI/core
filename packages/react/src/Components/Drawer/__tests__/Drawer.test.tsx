@@ -259,8 +259,8 @@ test("it should render a Card as children", () => {
     </Drawer>,
   );
 
-  expect(document.body.textContent).toContain("In drawer");
   expect(document.body.textContent).toContain("Body");
+  expect(document.body.textContent).toContain("In drawer");
 });
 
 test("it should render nested drawers with separate dialog layers", () => {
@@ -309,8 +309,8 @@ test("it should close only the topmost sibling drawers on escape", () => {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
   });
 
-  expect(onInnerChange).toHaveBeenCalledWith(false);
   expect(onOuterChange).not.toHaveBeenCalled();
+  expect(onInnerChange).toHaveBeenCalledWith(false);
 });
 
 test("it should close only the topmost nested drawer on escape", () => {
@@ -328,8 +328,8 @@ test("it should close only the topmost nested drawer on escape", () => {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
   });
 
-  expect(onInnerChange).toHaveBeenCalledWith(false);
   expect(onOuterChange).not.toHaveBeenCalled();
+  expect(onInnerChange).toHaveBeenCalledWith(false);
 });
 
 test("it should keep body scroll locked when an inner drawer closes", () => {

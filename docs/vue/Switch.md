@@ -13,19 +13,19 @@ import { Switch } from "@bridge-ui/vue/Components/Switch";
 ### Usage
 
 ```vue
-<Switch main-label="Dark mode" description="Use dark theme across the app." />
+<Switch end-label="Dark mode" description="Use dark theme across the app." />
 
-<Switch v-model="enabled" main-label="Enable notifications" />
+<Switch v-model="enabled" end-label="Enable notifications" />
 ```
 
 ### Required and error
 
 ```vue
-<Switch required main-label="Required field" />
+<Switch required end-label="Required field" />
 
 <Switch
   error
-  main-label="Invalid option"
+  end-label="Invalid option"
   error-message="You must enable this setting."
 />
 ```
@@ -34,7 +34,7 @@ import { Switch } from "@bridge-ui/vue/Components/Switch";
 
 ```vue
 <Switch
-  main-label="Airplane mode"
+  end-label="Airplane mode"
   :custom-props="{
     input: { name: 'airplane' },
     control: { 'data-testid': 'airplane-switch' },

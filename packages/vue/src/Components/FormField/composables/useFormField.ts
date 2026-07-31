@@ -32,9 +32,11 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { LabelProps } from "@/Components/Label/label.types";
 import {
   hasNamedSlot,
   hasSlotOrProp,
+  mergeNestedComponentProps,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -400,19 +402,20 @@ export function useFormField(
     );
   });
 
-  const labelBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.label,
-      {},
-      cn({
-        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-gray-700 dark:text-gray-300": !invalidated.value,
-        [invalidatedColors.value?.label ?? ""]: invalidated.value,
-        [sizeClasses.value?.text ?? ""]: true,
-        [variantClasses.value?.label ?? ""]: isNotched.value,
-        [mergedClasses.value.label ?? ""]: true,
-      }),
-    );
+  const fieldLabelProps = computed((): LabelProps => {
+    return mergeNestedComponentProps(customProps.value?.label, {
+      for: controlId.value,
+      size: merged.value.size,
+      error: invalidated.value,
+      required: merged.value.required,
+      classes: {
+        required: mergedClasses.value.required,
+        root: cn({
+          [variantClasses.value?.label ?? ""]: isNotched.value,
+          [mergedClasses.value.label ?? ""]: true,
+        }),
+      },
+    });
   });
 
   const startBind = computed(() => {
@@ -496,17 +499,6 @@ export function useFormField(
         "self-stretch min-h-0 overflow-hidden py-0.5 pe-0.5": isStacked.value,
         "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked.value,
         [mergedClasses.value.end ?? ""]: true,
-      }),
-    );
-  });
-
-  const requiredBind = computed(() => {
-    return mergePartBind(
-      {},
-      {},
-      cn({
-        [invalidatedPalette.value?.required ?? ""]: true,
-        [mergedClasses.value.required ?? ""]: true,
       }),
     );
   });
@@ -613,7 +605,6 @@ export function useFormField(
     inputBind,
     isNotched,
     isStacked,
-    labelBind,
     startBind,
     cornerBind,
     headerBind,
@@ -623,10 +614,10 @@ export function useFormField(
     endIconBind,
     endSlotBind,
     invalidated,
-    requiredBind,
     containerBind,
     startIconBind,
     startSlotBind,
+    fieldLabelProps,
     ariaDescribedBy,
     descriptionBind,
     stackedBodyBind,

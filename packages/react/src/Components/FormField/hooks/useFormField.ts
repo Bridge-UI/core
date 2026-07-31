@@ -27,10 +27,12 @@ import type {
   FormFieldProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { LabelProps } from "@/Components/Label/label.types";
 import {
   derived,
   hasNamedSlot,
   hasSlotOrProp,
+  mergeNestedComponentProps,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -397,19 +399,20 @@ export function useFormField(
     );
   });
 
-  const labelBind = derived(() => {
-    return mergePartBind(
-      customProps?.label,
-      {},
-      cn({
-        "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-gray-700 dark:text-gray-300": !invalidated,
-        [invalidatedColors?.label ?? ""]: invalidated,
-        [sizeClasses?.text ?? ""]: true,
-        [variantClasses?.label ?? ""]: isNotched,
-        [mergedClasses.label ?? ""]: true,
-      }),
-    );
+  const fieldLabelProps = derived((): LabelProps => {
+    return mergeNestedComponentProps(customProps?.label, {
+      size: merged.size,
+      error: invalidated,
+      htmlFor: controlId,
+      required: merged.required,
+      classes: {
+        required: mergedClasses.required,
+        root: cn({
+          [variantClasses?.label ?? ""]: isNotched,
+          [mergedClasses.label ?? ""]: true,
+        }),
+      },
+    });
   });
 
   const startBind = derived(() => {
@@ -473,17 +476,6 @@ export function useFormField(
         "self-stretch min-h-0 overflow-hidden py-0.5 pe-0.5": isStacked,
         "h-full min-h-0 overflow-hidden py-0.5 pe-0.5": !isStacked,
         [mergedClasses.end ?? ""]: true,
-      }),
-    );
-  });
-
-  const requiredBind = derived(() => {
-    return mergePartBind(
-      {},
-      {},
-      cn({
-        [invalidatedPalette?.required ?? ""]: true,
-        [mergedClasses.required ?? ""]: true,
       }),
     );
   });
@@ -607,7 +599,6 @@ export function useFormField(
     inputBind,
     isNotched,
     isStacked,
-    labelBind,
     startBind,
     cornerBind,
     headerBind,
@@ -617,10 +608,10 @@ export function useFormField(
     endIconBind,
     endSlotBind,
     invalidated,
-    requiredBind,
     containerBind,
     startIconBind,
     startSlotBind,
+    fieldLabelProps,
     ariaDescribedBy,
     descriptionBind,
     stackedBodyBind,

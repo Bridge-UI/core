@@ -301,8 +301,8 @@ test("it should close only the topmost nested modal on escape", async () => {
 
   window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
 
-  expect(inner.value).toBe(false);
   expect(outer.value).toBe(true);
+  expect(inner.value).toBe(false);
 });
 
 test("it should keep body scroll locked when an inner modal closes", async () => {

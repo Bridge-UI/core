@@ -1,8 +1,8 @@
 // ** Local Imports
 import { Switch } from "@/Components/Switch";
 
-test("it should render with main label", () => {
-  cy.mount(Switch, { props: { mainLabel: "Notifications" } });
+test("it should render with end label", () => {
+  cy.mount(Switch, { props: { endLabel: "Notifications" } });
 
   cy.contains("Notifications").should("be.visible");
   cy.get('input[role="switch"]').should("exist");
@@ -12,7 +12,7 @@ test("it should emit update:modelValue when toggled", () => {
   cy.mount(Switch, {
     props: {
       modelValue: false,
-      mainLabel: "Notifications",
+      endLabel: "Notifications",
       "onUpdate:modelValue": cy.stub().as("onUpdate"),
     },
   });
@@ -24,7 +24,7 @@ test("it should emit update:modelValue when toggled", () => {
 test("it should render description when description prop is provided", () => {
   cy.mount(Switch, {
     props: {
-      mainLabel: "Notifications",
+      endLabel: "Notifications",
       description: "Enable push notifications",
     },
   });
@@ -37,7 +37,7 @@ test("it should render error message when error is set", () => {
     props: {
       error: true,
       errorMessage: "Required",
-      mainLabel: "Notifications",
+      endLabel: "Notifications",
     },
   });
 
@@ -47,7 +47,7 @@ test("it should render error message when error is set", () => {
 
 test("it should apply disabled attribute when disabled", () => {
   cy.mount(Switch, {
-    props: { disabled: true, mainLabel: "Notifications" },
+    props: { disabled: true, endLabel: "Notifications" },
   });
 
   cy.get('input[role="switch"]').should("be.disabled");
@@ -55,7 +55,7 @@ test("it should apply disabled attribute when disabled", () => {
 
 test("it should reflect checked state from modelValue", () => {
   cy.mount(Switch, {
-    props: { modelValue: true, mainLabel: "Notifications" },
+    props: { modelValue: true, endLabel: "Notifications" },
   });
 
   cy.get('input[role="switch"]').should("be.checked");

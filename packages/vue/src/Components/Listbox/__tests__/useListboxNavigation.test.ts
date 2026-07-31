@@ -19,13 +19,13 @@ const options: ListboxOption[] = [
 ];
 
 test("it should find the first and last enabled option indexes", () => {
-  expect(findFirstEnabledOptionIndex(options)).toBe(1);
   expect(findLastEnabledOptionIndex(options)).toBe(2);
+  expect(findFirstEnabledOptionIndex(options)).toBe(1);
 });
 
 test("it should skip disabled options when moving highlight", () => {
-  expect(moveListboxHighlight(options, 1, -1)).toBe(2);
   expect(moveListboxHighlight(options, 2, 1)).toBe(1);
+  expect(moveListboxHighlight(options, 1, -1)).toBe(2);
 });
 
 test("it should expose the active descendant id", () => {

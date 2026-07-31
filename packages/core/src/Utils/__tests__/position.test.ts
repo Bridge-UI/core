@@ -52,9 +52,9 @@ test("it should position the floating element relative to the reference", async 
 
   await positionable.update();
 
-  expect(floating.style.position).toBe("fixed");
-  expect(floating.style.left).not.toBe("");
   expect(floating.style.top).not.toBe("");
+  expect(floating.style.left).not.toBe("");
+  expect(floating.style.position).toBe("fixed");
 });
 
 test("it should call onReferenceHidden when the reference is off-screen", async () => {

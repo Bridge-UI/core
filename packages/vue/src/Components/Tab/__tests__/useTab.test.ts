@@ -29,8 +29,8 @@ function mountUseTab(value: string) {
 test("it should mark the selected tab", () => {
   const result = mountUseTab("a");
 
-  expect(result.rootBind.value["aria-selected"]).toBe(true);
   expect(result.rootBind.value.role).toBe("tab");
+  expect(result.rootBind.value["aria-selected"]).toBe(true);
 });
 
 test("it should throw when used outside a Tabs provider", () => {

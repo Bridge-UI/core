@@ -7,7 +7,7 @@ import { Switch } from "@/Components/Switch";
 
 test("it should render a switch control", () => {
   const wrapper = mount(Switch, {
-    props: { mainLabel: "Notifications" },
+    props: { endLabel: "Notifications" },
   });
 
   const input = wrapper.find('input[role="switch"]');
@@ -15,9 +15,9 @@ test("it should render a switch control", () => {
   expect(input.exists()).toBe(true);
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
+test("it should render end label when endLabel prop is provided", () => {
   const wrapper = mount(Switch, {
-    props: { mainLabel: "Notifications" },
+    props: { endLabel: "Notifications" },
   });
 
   expect(wrapper.text()).toContain("Notifications");
@@ -25,7 +25,7 @@ test("it should render main label when mainLabel prop is provided", () => {
 
 test("it should emit update:modelValue when toggled", async () => {
   const wrapper = mount(Switch, {
-    props: { modelValue: false, mainLabel: "Notifications" },
+    props: { modelValue: false, endLabel: "Notifications" },
   });
 
   await wrapper.find('input[role="switch"]').setValue(true);
@@ -35,7 +35,7 @@ test("it should emit update:modelValue when toggled", async () => {
 
 test("it should reflect checked state from modelValue", () => {
   const wrapper = mount(Switch, {
-    props: { modelValue: true, mainLabel: "Notifications" },
+    props: { modelValue: true, endLabel: "Notifications" },
   });
 
   expect(
@@ -45,7 +45,7 @@ test("it should reflect checked state from modelValue", () => {
 
 test("it should apply disabled on the input when disabled", () => {
   const wrapper = mount(Switch, {
-    props: { disabled: true, mainLabel: "Notifications" },
+    props: { disabled: true, endLabel: "Notifications" },
   });
 
   expect(
@@ -55,7 +55,7 @@ test("it should apply disabled on the input when disabled", () => {
 
 test("it should set aria-invalid when error is set", () => {
   const wrapper = mount(Switch, {
-    props: { error: true, mainLabel: "Notifications" },
+    props: { error: true, endLabel: "Notifications" },
   });
 
   expect(wrapper.find('input[role="switch"]').attributes("aria-invalid")).toBe(
@@ -65,7 +65,7 @@ test("it should set aria-invalid when error is set", () => {
 
 test("it should render track and thumb elements", () => {
   const wrapper = mount(Switch, {
-    props: { mainLabel: "Notifications" },
+    props: { endLabel: "Notifications" },
   });
 
   expect(wrapper.findAll("label span").length).toBeGreaterThanOrEqual(2);

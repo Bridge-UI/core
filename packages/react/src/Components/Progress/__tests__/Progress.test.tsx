@@ -28,8 +28,8 @@ test("it should set aria-valuenow for determinate variant", () => {
 
   const root = screen.getByRole("progressbar");
 
-  expect(root.getAttribute("aria-valuenow")).toBe("40");
   expect(root.getAttribute("aria-valuemin")).toBe("0");
+  expect(root.getAttribute("aria-valuenow")).toBe("40");
   expect(root.getAttribute("aria-valuemax")).toBe("100");
 });
 
@@ -62,8 +62,8 @@ test("it should render buffer bar with valueBuffer width", () => {
   const buffer = children?.[1] as HTMLElement;
   const bar = children?.[2] as HTMLElement;
 
-  expect(buffer.style.width).toBe("60%");
   expect(bar.style.width).toBe("30%");
+  expect(buffer.style.width).toBe("60%");
 });
 
 test("it should apply query animation class", () => {
@@ -116,8 +116,8 @@ test("it should clamp value above 100", () => {
   const root = screen.getByRole("progressbar");
   const bar = container.querySelector('[role="progressbar"] > div:last-child');
 
-  expect(root.getAttribute("aria-valuenow")).toBe("100");
   expect((bar as HTMLElement).style.width).toBe("100%");
+  expect(root.getAttribute("aria-valuenow")).toBe("100");
 });
 
 test("it should forward aria-label to the root", () => {

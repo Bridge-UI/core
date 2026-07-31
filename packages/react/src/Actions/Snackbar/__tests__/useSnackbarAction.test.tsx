@@ -177,8 +177,8 @@ test("it should grow downward with newest below oldest", async () => {
     const host = document.body.querySelector("[data-snackbar-host]");
     const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-    expect(host?.className).toContain("items-start");
     expect(panels?.length).toBe(2);
+    expect(host?.className).toContain("items-start");
     expect(panels?.[0]?.textContent).toContain("Older");
     expect(panels?.[1]?.textContent).toContain("Newer");
     expect(host?.querySelector(".flex-col")).toBeTruthy();
@@ -210,12 +210,12 @@ test("it should stack upward from the viewport edge", async () => {
     const host = document.body.querySelector("[data-snackbar-host]");
     const panels = host?.querySelectorAll('[data-snackbar-part="panel"]');
 
-    expect(host?.className).toContain("items-end");
     expect(panels?.length).toBe(2);
-    expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
-    expect(host?.querySelector(".flex-col")).toBeFalsy();
+    expect(host?.className).toContain("items-end");
     expect(panels?.[0]?.textContent).toContain("Older");
     expect(panels?.[1]?.textContent).toContain("Newer");
+    expect(host?.querySelector(".flex-col")).toBeFalsy();
+    expect(host?.querySelector(".flex-col-reverse")).toBeTruthy();
   });
 });
 
@@ -350,9 +350,9 @@ test("it should reflect mounted entries", async () => {
     expect(document.body.textContent).toContain("Tracked");
   });
 
+  expect(api.stackSize).toBe(1);
   expect(isString(id)).toBe(true);
   expect(api.isOpen(id)).toBe(true);
-  expect(api.stackSize).toBe(1);
 
   act(() => {
     api.close(id);
@@ -362,8 +362,8 @@ test("it should reflect mounted entries", async () => {
     expect(document.body.textContent).not.toContain("Tracked");
   });
 
-  expect(api.isOpen(id)).toBe(false);
   expect(api.stackSize).toBe(0);
+  expect(api.isOpen(id)).toBe(false);
 });
 
 test("it should close only the topmost snackbar", async () => {
@@ -401,13 +401,13 @@ test("it should close only the topmost snackbar", async () => {
   });
 
   await waitFor(() => {
-    expect(document.body.textContent).not.toContain("Second");
     expect(document.body.textContent).toContain("First");
+    expect(document.body.textContent).not.toContain("Second");
   });
 
-  expect(api.isOpen(secondId)).toBe(false);
-  expect(api.isOpen(firstId)).toBe(true);
   expect(api.stackSize).toBe(1);
+  expect(api.isOpen(firstId)).toBe(true);
+  expect(api.isOpen(secondId)).toBe(false);
 });
 
 test("it should run before onClosed when close is called", async () => {
@@ -518,8 +518,8 @@ test("it should close the oldest snackbar when the limit is exceeded", async () 
   );
 
   await waitFor(() => {
-    expect(document.body.textContent).not.toContain("One");
     expect(document.body.textContent).toContain("Two");
     expect(document.body.textContent).toContain("Three");
+    expect(document.body.textContent).not.toContain("One");
   });
 });

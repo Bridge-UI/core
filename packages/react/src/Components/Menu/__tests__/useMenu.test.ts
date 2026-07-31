@@ -54,9 +54,9 @@ test("it should expose menu semantics on trigger and content binds", () => {
     { show: false },
   );
 
-  expect(result.current.triggerBind["aria-haspopup"]).toBe("menu");
-  expect(result.current.triggerBind["aria-expanded"]).toBe(false);
   expect(result.current.contentBind.role).toBe("menu");
+  expect(result.current.triggerBind["aria-expanded"]).toBe(false);
+  expect(result.current.triggerBind["aria-haspopup"]).toBe("menu");
 });
 
 test("it should reflect aria-expanded when show is true", () => {
@@ -65,8 +65,8 @@ test("it should reflect aria-expanded when show is true", () => {
     { show: true },
   );
 
-  expect(result.current.triggerBind["aria-expanded"]).toBe(true);
   expect(result.current.mounted).toBe(true);
+  expect(result.current.triggerBind["aria-expanded"]).toBe(true);
 });
 
 test("it should call onShowChange when trigger capture handler runs", () => {
@@ -98,8 +98,8 @@ test("it should call onShowChange on escape when show is true", () => {
 test("it should include rounded and shadow classes on content bind", () => {
   const { result } = renderUseMenu({ shadow: "sm", rounded: "lg" });
 
-  expect(result.current.contentBind.className).toContain("rounded-lg");
   expect(result.current.contentBind.className).toContain("shadow-sm");
+  expect(result.current.contentBind.className).toContain("rounded-lg");
 });
 
 test("it should not lock body scroll by default", () => {

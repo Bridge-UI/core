@@ -288,8 +288,8 @@ describe("mapListboxEntriesToRows", () => {
 
 describe("selectValuesEqual", () => {
   test("it should compare values as strings", () => {
-    expect(selectValuesEqual(1, "1")).toBe(true);
     expect(selectValuesEqual(1, 2)).toBe(false);
+    expect(selectValuesEqual(1, "1")).toBe(true);
   });
 });
 
@@ -415,8 +415,8 @@ describe("mergeSelectAsyncOptions", () => {
     );
 
     expect(merged).toHaveLength(2);
-    expect(merged[0]?.label).toBe("Selected A");
     expect(merged[1]?.value).toBe(2);
+    expect(merged[0]?.label).toBe("Selected A");
   });
 
   test("it should respect the results limit", () => {

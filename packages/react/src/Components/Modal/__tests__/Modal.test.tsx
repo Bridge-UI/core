@@ -231,8 +231,8 @@ test("it should render a Card as children", () => {
     </Modal>,
   );
 
-  expect(document.body.textContent).toContain("In modal");
   expect(document.body.textContent).toContain("Body");
+  expect(document.body.textContent).toContain("In modal");
 });
 
 test("it should render nested modals with separate dialog layers", () => {
@@ -281,8 +281,8 @@ test("it should close only the topmost sibling modals on escape", () => {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
   });
 
-  expect(onInnerChange).toHaveBeenCalledWith(false);
   expect(onOuterChange).not.toHaveBeenCalled();
+  expect(onInnerChange).toHaveBeenCalledWith(false);
 });
 
 test("it should close only the topmost nested modal on escape", () => {
@@ -300,8 +300,8 @@ test("it should close only the topmost nested modal on escape", () => {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
   });
 
-  expect(onInnerChange).toHaveBeenCalledWith(false);
   expect(onOuterChange).not.toHaveBeenCalled();
+  expect(onInnerChange).toHaveBeenCalledWith(false);
 });
 
 test("it should keep body scroll locked when an inner modal closes", () => {

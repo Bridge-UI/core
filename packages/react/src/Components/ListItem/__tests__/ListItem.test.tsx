@@ -29,8 +29,8 @@ test("it should inherit dense padding from parent List", () => {
 
   const interactive = container.querySelector('[role="menuitem"]');
 
-  expect(interactive?.classList.contains("py-1.5")).toBe(true);
   expect(interactive?.classList.contains("py-2")).toBe(false);
+  expect(interactive?.classList.contains("py-1.5")).toBe(true);
 });
 
 test("it should apply selected styles when selected is true", () => {

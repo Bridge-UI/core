@@ -14,30 +14,30 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 
 ```tsx
 <Checkbox
-  mainLabel="Accept terms"
+  endLabel="Accept terms"
   description="Receive updates about your account."
 />
 
 <Checkbox
   checked={terms}
-  mainLabel="Remember me"
+  endLabel="Remember me"
   onChange={(event) => setTerms(event.target.checked)}
 />
 
 <Checkbox
   indeterminate
-  mainLabel="Select all"
+  endLabel="Select all"
 />
 ```
 
 ### Required and error
 
 ```tsx
-<Checkbox required mainLabel="Required field" />
+<Checkbox required endLabel="Required field" />
 
 <Checkbox
   error
-  mainLabel="Invalid option"
+  endLabel="Invalid option"
   errorMessage="You must accept to continue."
 />
 ```
@@ -48,13 +48,13 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 <Checkbox
   disabled
   defaultChecked
-  mainLabel="Disabled"
+  endLabel="Disabled"
 />
 
 <Checkbox
   readonly
   defaultChecked
-  mainLabel="Read-only"
+  endLabel="Read-only"
 />
 ```
 
@@ -62,7 +62,7 @@ import { Checkbox } from "@bridge-ui/react/Components/Checkbox";
 
 ```tsx
 <Checkbox
-  mainLabel="Accept terms"
+  endLabel="Accept terms"
   customProps={{
     icon: { "aria-hidden": true },
     input: { name: "terms", value: "yes" },

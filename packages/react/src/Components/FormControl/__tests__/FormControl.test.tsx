@@ -37,19 +37,19 @@ function FormControlHarness(props: Omit<FormControlOwnProps, "field"> = {}) {
 test("it should render the control element", () => {
   const { container } = render(<FormControlHarness />);
 
-  expect(container.querySelector(".group\\/form-control")).not.toBeNull();
   expect(screen.getByRole("checkbox", { name: "Control" })).toBeTruthy();
+  expect(container.querySelector(".group\\/form-control")).not.toBeNull();
 });
 
-test("it should render main label when mainLabel prop is provided", () => {
-  render(<FormControlHarness mainLabel="Email notifications" />);
+test("it should render end label when endLabel prop is provided", () => {
+  render(<FormControlHarness endLabel="Email notifications" />);
 
   expect(screen.getByText("Email notifications")).toBeTruthy();
 });
 
 test("it should link label to inherited input id when id is provided", () => {
   render(
-    <FormControlHarness id="form-control-id" mainLabel="Email notifications" />,
+    <FormControlHarness id="form-control-id" endLabel="Email notifications" />,
   );
 
   expect(screen.getByLabelText("Email notifications").id).toBe(
@@ -58,13 +58,46 @@ test("it should link label to inherited input id when id is provided", () => {
 });
 
 test("it should render start and end labels when provided", () => {
-  render(
-    <FormControlHarness endLabel="End" mainLabel="Main" startLabel="Start" />,
-  );
+  render(<FormControlHarness endLabel="End" startLabel="Start" />);
 
   expect(screen.getByText("End")).toBeTruthy();
-  expect(screen.getByText("Main")).toBeTruthy();
   expect(screen.getByText("Start")).toBeTruthy();
+});
+
+test("it should render start, control, and end in DOM order", () => {
+  const { container } = render(
+    <FormControlHarness endLabel="End" startLabel="Start" />,
+  );
+
+  const row = container.querySelector(".group\\/form-control > div");
+  const children = row ? Array.from(row.children) : [];
+
+  expect(children).toHaveLength(3);
+  expect(row?.className).toContain("flex-row");
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should keep logical DOM order under dir=rtl", () => {
+  const { container } = render(
+    <div dir="rtl">
+      <FormControlHarness endLabel="End" startLabel="Start" />
+    </div>,
+  );
+
+  const row = container.querySelector(".group\\/form-control > div");
+  const children = row ? Array.from(row.children) : [];
+
+  expect(children[2]?.textContent).toContain("End");
+  expect(children[0]?.textContent).toContain("Start");
+  expect(children[1]?.getAttribute("type")).toBe("checkbox");
+});
+
+test("it should render a required asterisk on the end label when required", () => {
+  render(<FormControlHarness required endLabel="Email notifications" />);
+
+  expect(screen.getByText("*")).toBeTruthy();
 });
 
 test("it should render description when description prop is provided", () => {
@@ -150,7 +183,7 @@ test("it should set data-invalid on the root when error is set", () => {
 });
 
 test("it should apply error color on labels when error is set", () => {
-  const { container } = render(<FormControlHarness error mainLabel="Label" />);
+  const { container } = render(<FormControlHarness error endLabel="Label" />);
 
   expect(container.querySelector("label")?.className).toContain(
     "text-error-600",
@@ -165,11 +198,11 @@ test("it should not render error region when withoutErrorMessage is true", () =>
   expect(container.querySelector('[id$="-error"]')).toBeNull();
 });
 
-test("it should render main label from slots", () => {
+test("it should render end label from slots", () => {
   render(
     <FormControlHarness
       slots={{
-        mainLabel: <span>Slot label</span>,
+        endLabel: <span>Slot label</span>,
       }}
     />,
   );

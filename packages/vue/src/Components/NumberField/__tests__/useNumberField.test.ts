@@ -74,14 +74,14 @@ test("it should respect max when incrementing", () => {
   const model = ref(8);
   const { increment } = mountUseNumberField(model, { max: 9, step: 2 });
 
-  expect(increment()).toBe(false);
   expect(model.value).toBe(8);
+  expect(increment()).toBe(false);
 });
 
 test("it should respect min when decrementing", () => {
   const model = ref(1);
   const { decrement } = mountUseNumberField(model, { min: 0, step: 2 });
 
-  expect(decrement()).toBe(false);
   expect(model.value).toBe(1);
+  expect(decrement()).toBe(false);
 });

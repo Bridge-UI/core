@@ -3,6 +3,7 @@
 import { computed } from "vue";
 
 // ** Local Imports
+import FormControlLabel from "@/Components/FormControl/FormControlLabel.vue";
 import type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
 import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
@@ -25,50 +26,11 @@ const api = computed((): UseFormControlReturn => {
     :aria-readonly="api.isReadonly.value || undefined"
   >
     <div v-bind="api.rowBind.value">
-      <label
-        v-bind="api.startLabelBind.value"
-        v-if="
-          hasSlotOrProp(api.slots, 'startLabel', api.merged.value.startLabel)
-        "
-      >
-        <component
-          :is="
-            resolveSlotOrProp(
-              api.slots,
-              'startLabel',
-              api.merged.value.startLabel,
-            )
-          "
-        />
-      </label>
+      <FormControlLabel :api="api" name="startLabel" />
 
       <slot />
 
-      <label
-        v-bind="api.mainLabelBind.value"
-        v-if="hasSlotOrProp(api.slots, 'mainLabel', api.merged.value.mainLabel)"
-      >
-        <component
-          :is="
-            resolveSlotOrProp(
-              api.slots,
-              'mainLabel',
-              api.merged.value.mainLabel,
-            )
-          "
-        />
-      </label>
-
-      <label
-        v-bind="api.endLabelBind.value"
-        v-if="hasSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel)"
-      >
-        <component
-          :is="
-            resolveSlotOrProp(api.slots, 'endLabel', api.merged.value.endLabel)
-          "
-        />
-      </label>
+      <FormControlLabel :api="api" name="endLabel" />
     </div>
 
     <p

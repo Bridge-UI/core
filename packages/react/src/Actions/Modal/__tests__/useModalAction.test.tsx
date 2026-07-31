@@ -140,9 +140,9 @@ test("it should reflect mounted entries", async () => {
     expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
   });
 
+  expect(api.stackSize).toBe(1);
   expect(isString(id)).toBe(true);
   expect(api.isOpen(id)).toBe(true);
-  expect(api.stackSize).toBe(1);
 
   act(() => {
     api.close(id);
@@ -152,8 +152,8 @@ test("it should reflect mounted entries", async () => {
     expect(document.body.querySelector('[role="dialog"]')).toBeNull();
   });
 
-  expect(api.isOpen(id)).toBe(false);
   expect(api.stackSize).toBe(0);
+  expect(api.isOpen(id)).toBe(false);
 });
 
 test("it should close only the topmost imperative modal", async () => {
@@ -193,9 +193,9 @@ test("it should close only the topmost imperative modal", async () => {
     expect(document.body.querySelectorAll('[role="dialog"]')).toHaveLength(1);
   });
 
-  expect(api.isOpen(innerId)).toBe(false);
-  expect(api.isOpen(outerId)).toBe(true);
   expect(api.stackSize).toBe(1);
+  expect(api.isOpen(outerId)).toBe(true);
+  expect(api.isOpen(innerId)).toBe(false);
 });
 
 test("it should run before onClosed when close is called", async () => {
