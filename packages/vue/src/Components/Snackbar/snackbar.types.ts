@@ -253,7 +253,7 @@ export interface SnackbarSlots {
   icon?: Slot<undefined>;
 
   /**
-   * Vertical action column on the right edge (WireUI `rightButtons` layout).
+   * Vertical action column on the right edge.
    */
   right?: Slot<undefined>;
 

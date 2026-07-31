@@ -237,7 +237,7 @@ export interface SnackbarSlots {
   icon?: ReactNode;
 
   /**
-   * Vertical action column on the right edge (WireUI `rightButtons` layout).
+   * Vertical action column on the right edge.
    */
   right?: ReactNode;
 
