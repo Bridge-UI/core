@@ -405,9 +405,9 @@ export function useFormField(
   const fieldLabelProps = computed((): LabelProps => {
     return mergeNestedComponentProps(customProps.value?.label, {
       for: controlId.value,
+      size: merged.value.size,
       error: invalidated.value,
       required: merged.value.required,
-      size: merged.value.size as LabelProps["size"],
       classes: {
         required: mergedClasses.value.required,
         root: cn({

@@ -30,16 +30,6 @@ export interface FormFieldInvalidated {
   "input": string;
 
   /**
-   * Label text color.
-   */
-  "label": string;
-
-  /**
-   * Required asterisk color.
-   */
-  "required": string;
-
-  /**
    * Start adornment text color.
    */
   "start": string;
@@ -56,9 +46,7 @@ export const invalidatedProps: FormFieldInvalidated = {
   "end": "group-focus-within:text-error-500",
   "start": "group-focus-within:text-error-500",
   "underlined": "focus-within:border-error-600",
-  "label": "text-error-600 dark:text-error-400",
   "errorMessage": "text-error-600 dark:text-error-400",
-  "required": "text-error-500 dark:text-error-500 select-none",
   "containerUnderlined":
     "border-error-500 focus-within:border-error-600 dark:border-error-600 dark:focus-within:border-error-600",
   "container":

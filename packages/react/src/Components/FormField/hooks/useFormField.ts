@@ -401,10 +401,10 @@ export function useFormField(
 
   const fieldLabelProps = derived((): LabelProps => {
     return mergeNestedComponentProps(customProps?.label, {
+      size: merged.size,
       error: invalidated,
       htmlFor: controlId,
       required: merged.required,
-      size: merged.size as LabelProps["size"],
       classes: {
         required: mergedClasses.required,
         root: cn({
