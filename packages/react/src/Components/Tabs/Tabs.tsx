@@ -31,14 +31,11 @@ function Tabs(props: TabsProps) {
                 <Tab
                   key={item.value}
                   value={item.value}
+                  slots={item.slots}
                   endIcon={item.endIcon}
                   disabled={item.disabled}
                   startIcon={item.startIcon}
                   {...props.customProps?.tab}
-                  slots={{
-                    ...item.slots,
-                    ...props.customProps?.tab?.slots,
-                  }}
                 >
                   {item.label}
                 </Tab>
