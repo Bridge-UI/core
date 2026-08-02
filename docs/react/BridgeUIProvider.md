@@ -20,14 +20,28 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
     breakpoints: {},
     direction: "ltr",
     mobileBreakpoint: "sm",
-    // icons: createLucideIconAdapter(), // see examples/adapters/react/icon-lucide.ts
   }}
 >
   <App />
 </BridgeUIProvider>
 ```
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …).
+### Icon adapter
+
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Ready samples in `examples/adapters/react/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+
+```ts
+import { BridgeUIProvider } from "@bridge-ui/react";
+import { createLucideIconAdapter } from "@examples/adapters/react/icon-lucide";
+
+const icons = createLucideIconAdapter();
+```
+
+```tsx
+<BridgeUIProvider global={{ icons }}>
+  <App />
+</BridgeUIProvider>
+```
 
 ### Runtime updates
 

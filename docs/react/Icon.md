@@ -2,7 +2,7 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Bridge does not ship a default set — see `examples/adapters/react/icon-lucide.ts`.
+Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Bridge does not ship a default set — copy an example from `examples/adapters/react/`.
 
 ## Import
 
@@ -25,21 +25,39 @@ import { Info } from "lucide-react";
 ### Semantic name + adapter
 
 ```ts
-import { createIconAdapter } from "@bridge-ui/core";
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { Info, X } from "lucide-react";
+import { createLucideIconAdapter } from "@examples/adapters/react/icon-lucide";
 
-const icons = createIconAdapter({
-  // …map every SemanticIconName — see examples/adapters/react/icon-lucide.ts
-  info: Info,
-  clear: X,
-});
+const icons = createLucideIconAdapter();
 ```
 
 ```tsx
 <BridgeUIProvider global={{ icons }}>
-  <Icon icon="info" />
+  <Icon size="md" icon="info" />
 </BridgeUIProvider>
+```
+
+Other ready examples (same `create*IconAdapter()` shape):
+
+| File                  | Library                     |
+| --------------------- | --------------------------- |
+| `icon-lucide.ts`      | Lucide                      |
+| `icon-heroicons.ts`   | Heroicons (24 outline)      |
+| `icon-tabler.ts`      | Tabler Icons                |
+| `icon-phosphor.ts`    | Phosphor Icons              |
+| `icon-fontawesome.ts` | Font Awesome 6 (free solid) |
+
+Font Awesome exports definitions, not components. The example also exports `wrapFaIcon` for ad-hoc icons:
+
+```ts
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { wrapFaIcon } from "@examples/adapters/react/icon-fontawesome";
+
+const CoffeeIcon = wrapFaIcon(faCoffee);
+```
+
+```tsx
+<Icon icon={CoffeeIcon} />
 ```
 
 ## Props
