@@ -6,8 +6,11 @@ export {
   resolveIconSource,
 } from "@/Adapters";
 export type {
+  CreateIconAdapterOptions,
   IconAdapter,
   IconSource,
+  IconSourceValue,
+  IconSourceValueOverrides,
   SemanticIconName,
   SemanticIconNameOverrides,
 } from "@/Adapters";

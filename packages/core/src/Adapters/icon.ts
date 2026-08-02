@@ -6,6 +6,12 @@ import { isNil, isString } from "es-toolkit/compat";
  */
 export interface SemanticIconNameOverrides {}
 
+/**
+ * Augmentable native icon values accepted by {@link IconSource}
+ * (e.g. Font Awesome `IconDefinition` in an app module augmentation).
+ */
+export interface IconSourceValueOverrides {}
+
 /** Default semantic names shipped by Bridge (excludes augmentations). */
 export const SEMANTIC_ICON_NAMES = [
   "eye",
@@ -33,28 +39,58 @@ export type SemanticIconName =
   | (typeof SEMANTIC_ICON_NAMES)[number];
 
 /**
+ * Extra icon values from {@link IconSourceValueOverrides} module augmentation.
+ */
+export type IconSourceValue =
+  IconSourceValueOverrides[keyof IconSourceValueOverrides];
+
+/**
  * Pluggable icon set for Bridge UI.
  * Apps provide an adapter via `BridgeUIProvider` `global.icons`.
  */
 export interface IconAdapter {
   /**
-   * Resolves a semantic icon name to a framework icon component.
+   * Converts library-native icon values into a renderable component.
+   * Called for both semantic resolves and concrete `icon` props.
+   *
+   * @example Font Awesome adapters wrap `IconDefinition` values here.
+   */
+  normalize?: (source: unknown) => unknown;
+
+  /**
+   * Resolves a semantic icon name to a framework icon component
+   * (or a library-native value that {@link normalize} can convert).
    */
   resolve: (name: SemanticIconName) => unknown;
 }
 
 /**
- * Semantic name or a concrete icon component (`TIcon`).
+ * Semantic name, concrete icon component (`TIcon`), or an augmented native value.
  */
-export type IconSource<TIcon = unknown> = TIcon | SemanticIconName;
+export type IconSource<TIcon = unknown> =
+  | TIcon
+  | IconSourceValue
+  | SemanticIconName;
+
+/**
+ * Optional hooks when building an {@link IconAdapter} from a semantic map.
+ */
+export type CreateIconAdapterOptions = {
+  /**
+   * Converts library-native icon values into a renderable component.
+   */
+  normalize?: (source: unknown) => unknown;
+};
 
 /**
  * Creates an {@link IconAdapter} from a complete semantic icon map.
  */
 export function createIconAdapter(
   icons: Record<SemanticIconName, unknown>,
+  options?: CreateIconAdapterOptions,
 ): IconAdapter {
   return {
+    normalize: options?.normalize,
     resolve(name) {
       const icon = icons[name];
 
@@ -78,7 +114,8 @@ export function isSemanticIconName(value: unknown): value is SemanticIconName {
 }
 
 /**
- * Resolves an {@link IconSource}: strings go through the adapter, components pass through.
+ * Resolves an {@link IconSource}: strings go through `resolve`, then optional
+ * `normalize` runs for library-native values (e.g. Font Awesome definitions).
  * Semantic names require an adapter (`BridgeUIProvider` `global.icons`).
  */
 export function resolveIconSource<TIcon = unknown>(
@@ -89,6 +126,8 @@ export function resolveIconSource<TIcon = unknown>(
     return source;
   }
 
+  let resolved: unknown = source;
+
   if (isString(source)) {
     if (isNil(adapter)) {
       throw new Error(
@@ -96,8 +135,12 @@ export function resolveIconSource<TIcon = unknown>(
       );
     }
 
-    return adapter.resolve(source as SemanticIconName) as TIcon;
+    resolved = adapter.resolve(source as SemanticIconName);
   }
 
-  return source;
+  if (!isNil(adapter?.normalize)) {
+    resolved = adapter.normalize(resolved);
+  }
+
+  return resolved as TIcon;
 }
