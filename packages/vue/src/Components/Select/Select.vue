@@ -3,7 +3,11 @@
 import { isUndefined } from "es-toolkit/compat";
 import { computed, provide, ref, useTemplateRef } from "vue";
 
+// ** Core Imports
+import { resolveMessage } from "@bridge-ui/core";
+
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
@@ -34,10 +38,11 @@ const props = withDefaults(defineProps<SelectOwnProps>(), {
   searchable: false,
   withErrorIcon: true,
   minItemsForSearch: 11,
-  emptyMessage: "No options",
 });
 
 const emit = defineEmits<SelectEmits>();
+
+const i18n = useI18nAdapter();
 
 const uncontrolledValue = ref<null | undefined | SelectValue | SelectValue[]>(
   props.defaultValue,
@@ -135,9 +140,9 @@ const {
       <span
         v-bind="clearBind"
         v-on:click="clearValue"
-        aria-label="Clear selection"
         v-on:keydown.enter.prevent="clearValue"
         v-on:keydown.space.prevent="clearValue"
+        :aria-label="resolveMessage('Clear selection', i18n)"
         v-if="clearable && hasValue && !formField.isDisabled.value"
       >
         <Icon

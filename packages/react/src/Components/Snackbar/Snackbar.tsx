@@ -3,9 +3,15 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { cn, hasDocument, resolveModalPortalElement } from "@bridge-ui/core";
+import {
+  cn,
+  hasDocument,
+  resolveMessage,
+  resolveModalPortalElement,
+} from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
 import { useSnackbar } from "@/Components/Snackbar/hooks/useSnackbar";
 import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
@@ -37,6 +43,7 @@ function SnackbarPanel({
   requestClose,
   descriptionBind,
 }: ReturnType<typeof useSnackbar> & { show: boolean }) {
+  const i18n = useI18nAdapter();
   const hasRight = Boolean(slots?.right);
 
   const hasTitle = hasSlotOrProp(slots, "title", merged.title);
@@ -126,8 +133,8 @@ function SnackbarPanel({
             {merged.closeButton !== false && (
               <button
                 type="button"
-                aria-label="Close"
                 onClick={requestClose}
+                aria-label={resolveMessage("Close", i18n)}
                 className="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
               >
                 <Icon size="lg" icon="clear" />

@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, icon adapter, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon/i18n adapters, and component registry defaults.
 
 ## Import
 
@@ -43,6 +43,23 @@ const icons = createLucideIconAdapter();
 </BridgeUIProvider>
 ```
 
+### i18n adapter
+
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without it, the source string is used. Ready samples in `examples/adapters/react/` (dictionary, i18next). See [I18n](./I18n.md).
+
+```ts
+import { BridgeUIProvider } from "@bridge-ui/react";
+import { createDictionaryI18nAdapter } from "@examples/adapters/react/i18n-dictionary";
+
+const i18n = createDictionaryI18nAdapter("pt-BR");
+```
+
+```tsx
+<BridgeUIProvider global={{ i18n, locale: "pt-BR" }}>
+  <App />
+</BridgeUIProvider>
+```
+
 ### Runtime updates
 
 ```ts
@@ -53,11 +70,11 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                |
-| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                      |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                     |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons` |
+| Prop         | Type                       | Default | Description                                                                        |
+| ------------ | -------------------------- | ------- | ---------------------------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                              |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                             |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`
 

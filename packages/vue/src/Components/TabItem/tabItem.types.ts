@@ -2,7 +2,7 @@
 import type { Slot } from "vue";
 
 // ** Local Imports
-import type { IconSource } from "@/Icons";
+import type { IconSource } from "@/Adapters/Icon";
 
 export interface TabItemClasses {
   /**

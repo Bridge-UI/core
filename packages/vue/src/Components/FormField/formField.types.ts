@@ -13,10 +13,10 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelProps } from "@/Components/Label/label.types";
-import type { IconSource } from "@/Icons";
 
 export interface FormFieldSizeOverrides {}
 export interface FormFieldColorOverrides {}

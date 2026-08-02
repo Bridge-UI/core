@@ -5,7 +5,7 @@ import type { SVGAttributes } from "react";
 import type { IconSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { IconSource } from "@/Icons";
+import type { IconSource } from "@/Adapters/Icon";
 
 export interface IconSizeOverrides {}
 

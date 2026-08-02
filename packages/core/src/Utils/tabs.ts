@@ -1,3 +1,6 @@
+// ** External Imports
+import { find, isUndefined, range } from "es-toolkit/compat";
+
 /**
  * Activation mode for keyboard navigation in tabs.
  */
@@ -27,22 +30,25 @@ export function getAdjacentTabValue(
   direction: 1 | -1,
   disabledValues: ReadonlySet<string> = new Set(),
 ): string {
-  if (values.length === 0) {
+  const { length } = values;
+
+  if (length === 0) {
     return current;
   }
 
   const startIndex = values.indexOf(current);
   const from = startIndex === -1 ? 0 : startIndex;
 
-  for (let step = 1; step <= values.length; step += 1) {
-    const index =
-      (from + direction * step + values.length * step) % values.length;
-    const candidate = values[index];
+  const candidate = find(
+    range(1, length + 1).map((step) => {
+      const index = (from + direction * step + length * step) % length;
 
-    if (candidate !== undefined && !disabledValues.has(candidate)) {
-      return candidate;
-    }
-  }
+      return values[index];
+    }),
+    (value) => {
+      return !isUndefined(value) && !disabledValues.has(value);
+    },
+  );
 
-  return current;
+  return candidate ?? current;
 }

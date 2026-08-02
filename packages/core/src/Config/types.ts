@@ -1,4 +1,5 @@
 // ** Local Imports
+import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
 import type {
   AlertColor,
@@ -159,6 +160,16 @@ export interface BridgeUIGlobal {
    * @default "ltr"
    */
   direction: Direction;
+
+  /**
+   * i18n adapter used to translate Bridge chrome strings
+   * (`"Close"`, `"Hide password"`, …). Source English text is the lookup key.
+   * When omitted, `resolveMessage` returns the source string.
+   * See `examples/adapters/{react,vue}` for samples (not shipped as packages).
+   *
+   * @default undefined
+   */
+  i18n?: I18nAdapter;
 
   /**
    * Icon adapter used to resolve semantic icon names.

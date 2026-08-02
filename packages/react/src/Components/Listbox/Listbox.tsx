@@ -8,11 +8,13 @@ import {
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
+  resolveMessage,
   type ListboxOption,
   type ListboxValue,
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
 import type { ListboxProps } from "@/Components/Listbox/listbox.types";
@@ -52,10 +54,15 @@ function Listbox({
   onRegisteredOptionsChange,
   placement = "bottom-start",
   isSelected: isSelectedProp,
-  emptyMessage = "No options",
-  loadingMessage = "Loading...",
+  emptyMessage: emptyMessageProp,
+  loadingMessage: loadingMessageProp,
   ...ownProps
 }: ListboxProps) {
+  const i18n = useI18nAdapter();
+  const emptyMessage = emptyMessageProp ?? resolveMessage("No options", i18n);
+  const loadingMessage =
+    loadingMessageProp ?? resolveMessage("Loading...", i18n);
+
   const resolvedOptions = useMemo(() => {
     return options ?? [];
   }, [options]);

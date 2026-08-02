@@ -33,12 +33,12 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import type {
   SnackbarOwnProps,
   SnackbarProps,
 } from "@/Components/Snackbar/snackbar.types";
 import { snackbarDefaultIcons } from "@/Components/Snackbar/snackbarDefaultIcons";
-import type { IconSource } from "@/Icons";
 import {
   derived,
   mergePartBind,
