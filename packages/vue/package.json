@@ -42,13 +42,17 @@
       "import": "./dist/Provider/index.js",
       "types": "./dist/Provider/index.d.ts"
     },
-    "./Icons": {
-      "import": "./dist/Icons/index.js",
-      "types": "./dist/Icons/index.d.ts"
+    "./Adapters": {
+      "import": "./dist/Adapters/index.js",
+      "types": "./dist/Adapters/index.d.ts"
     },
-    "./I18n": {
-      "import": "./dist/I18n/index.js",
-      "types": "./dist/I18n/index.d.ts"
+    "./Adapters/Icon": {
+      "import": "./dist/Adapters/Icon/index.js",
+      "types": "./dist/Adapters/Icon/index.d.ts"
+    },
+    "./Adapters/I18n": {
+      "import": "./dist/Adapters/I18n/index.js",
+      "types": "./dist/Adapters/I18n/index.d.ts"
     },
     "./Actions": {
       "import": "./dist/Actions/index.js",

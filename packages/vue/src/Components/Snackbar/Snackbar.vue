@@ -6,6 +6,7 @@ import { computed, useSlots } from "vue";
 import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
 import { useSnackbar } from "@/Components/Snackbar/composables/useSnackbar";
 import type {
@@ -13,7 +14,6 @@ import type {
   SnackbarOwnProps,
   SnackbarSlots,
 } from "@/Components/Snackbar/snackbar.types";
-import { useI18nAdapter } from "@/I18n";
 
 defineSlots<SnackbarSlots>();
 

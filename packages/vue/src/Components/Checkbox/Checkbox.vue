@@ -6,13 +6,13 @@ import { computed, ref, useAttrs } from "vue";
 import { cn, resolveIconSource } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useIconAdapter } from "@/Adapters/Icon";
 import type {
   CheckboxOwnProps,
   CheckboxSlots,
 } from "@/Components/Checkbox/checkbox.types";
 import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
 import { FormControl } from "@/Components/FormControl";
-import { useIconAdapter } from "@/Icons";
 
 const attrs = useAttrs();
 

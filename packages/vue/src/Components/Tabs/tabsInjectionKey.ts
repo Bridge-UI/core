@@ -5,7 +5,7 @@ import type { ComputedRef, InjectionKey, VNodeChild } from "vue";
 import type { TabsActivation } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { IconSource } from "@/Icons";
+import type { IconSource } from "@/Adapters/Icon";
 
 /**
  * Merged token classes for triggers / list / panel.

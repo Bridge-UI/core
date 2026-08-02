@@ -7,6 +7,7 @@ import { computed, provide, ref, useTemplateRef } from "vue";
 import { resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
@@ -20,7 +21,6 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
-import { useI18nAdapter } from "@/I18n";
 import {
   hasNamedSlot,
   mergeNestedComponentProps,

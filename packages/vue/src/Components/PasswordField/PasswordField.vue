@@ -7,6 +7,7 @@ import { computed, ref } from "vue";
 import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
@@ -15,7 +16,6 @@ import type {
   PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
-import { useI18nAdapter } from "@/I18n";
 import { mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();

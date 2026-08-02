@@ -18,9 +18,9 @@ import {
 } from "@bridge-ui/core/Tokens/Alert";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
 import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
-import type { IconSource } from "@/Icons";
 import {
   mergePartBind,
   useBridgeUIComponent,

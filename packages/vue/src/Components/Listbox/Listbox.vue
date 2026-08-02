@@ -15,6 +15,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
 import type {
@@ -30,7 +31,6 @@ import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
-import { useI18nAdapter } from "@/I18n";
 import {
   hasNamedSlot,
   mergeNestedComponentProps,
