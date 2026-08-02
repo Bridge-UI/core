@@ -17,7 +17,10 @@ export default defineConfig({
         plugins: [vue(), tailwindcss()],
         cacheDir: resolve(__dirname, ".cache/vite-cypress"),
         resolve: {
-          alias: { "@": resolve(__dirname, "src") },
+          alias: {
+            "@": resolve(__dirname, "src"),
+            "@examples": resolve(__dirname, "../../examples"),
+          },
         },
       },
     },
