@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, icon adapter, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon/i18n adapters, and component registry defaults.
 
 ## Import
 
@@ -43,6 +43,23 @@ app.use(
 );
 ```
 
+### i18n adapter
+
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without it, the source string is used. Ready samples in `examples/adapters/vue/` (dictionary, vue-i18n). See [I18n](./I18n.md).
+
+```ts
+import { createBridgeUI } from "@bridge-ui/vue";
+import { createDictionaryI18nAdapter } from "@examples/adapters/vue/i18n-dictionary";
+
+const i18n = createDictionaryI18nAdapter("pt-BR");
+
+app.use(
+  createBridgeUI({
+    global: { i18n, locale: "pt-BR" },
+  }),
+);
+```
+
 ### Runtime updates
 
 ```ts
@@ -53,10 +70,10 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                |
-| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------- |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                     |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons` |
+| Prop         | Type                       | Default | Description                                                                        |
+| ------------ | -------------------------- | ------- | ---------------------------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                             |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n` |
 
 App content is passed via the **default slot** (see Usage above).
 
