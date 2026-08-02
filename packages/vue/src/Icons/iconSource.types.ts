@@ -4,6 +4,7 @@ import type { Component } from "vue";
 // ** Core Imports
 import type {
   IconSource as CoreIconSource,
+  IconSourceValueOverrides,
   SemanticIconName,
 } from "@bridge-ui/core";
 
@@ -13,8 +14,8 @@ import type {
 export type IconElement = Component;
 
 /**
- * Semantic icon name or a concrete icon component.
+ * Semantic icon name, concrete icon component, or an augmented native value.
  */
 export type IconSource = CoreIconSource<IconElement>;
 
-export type { SemanticIconName };
+export type { IconSourceValueOverrides, SemanticIconName };
