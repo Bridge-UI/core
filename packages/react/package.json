@@ -84,6 +84,12 @@
   },
   "devDependencies": {
     "@bridge-ui/core": "*",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
+    "@heroicons/react": "^2.2.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "@tabler/icons-react": "^3.46.0",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "@testing-library/react": "^16.3.0",

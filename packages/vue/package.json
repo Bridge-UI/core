@@ -83,7 +83,13 @@
   },
   "devDependencies": {
     "@bridge-ui/core": "*",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/vue-fontawesome": "^3.3.3",
+    "@heroicons/vue": "^2.2.0",
     "@lucide/vue": "^1.24.0",
+    "@phosphor-icons/vue": "^2.2.1",
+    "@tabler/icons-vue": "^3.46.0",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^24.0.0",
