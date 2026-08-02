@@ -28,7 +28,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 
 ### Icon adapter
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Ready samples in `examples/adapters/vue/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `examples/adapters/vue/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
