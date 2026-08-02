@@ -1,5 +1,4 @@
 // ** External Imports
-import { Check, type LucideIcon } from "@lucide/vue";
 import { get, isNull, omit } from "es-toolkit/compat";
 import {
   computed,
@@ -30,6 +29,7 @@ import type {
   ListItemOwnProps,
   ListItemProps,
 } from "@/Components/ListItem/listItem.types";
+import type { IconSource } from "@/Icons";
 import {
   hasNamedSlot,
   isPropPresent,
@@ -201,13 +201,13 @@ export function useListItem(
     return hasNamedSlot(slots, "start");
   });
 
-  const resolvedSelectedIcon = computed((): null | LucideIcon => {
+  const resolvedSelectedIcon = computed((): null | IconSource => {
     if (isListboxOption.value) {
       if (!listboxSelected.value || !listboxContext.value?.showCheckmark) {
         return null;
       }
 
-      return Check;
+      return "check";
     }
 
     if (!merged.value.selected) {
@@ -218,7 +218,7 @@ export function useListItem(
       return null;
     }
 
-    return merged.value.selectedIcon ?? Check;
+    return merged.value.selectedIcon ?? "check";
   });
 
   const hasEnd = computed(() => {

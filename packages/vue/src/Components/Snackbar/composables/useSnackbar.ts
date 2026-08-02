@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import { get, isNil, isNull, isObject, omit } from "es-toolkit/compat";
 import {
   computed,
@@ -41,6 +40,7 @@ import type {
   SnackbarProps,
 } from "@/Components/Snackbar/snackbar.types";
 import { snackbarDefaultIcons } from "@/Components/Snackbar/snackbarDefaultIcons";
+import type { IconSource } from "@/Icons";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -236,7 +236,7 @@ export function useSnackbar(
       return merged.value.icon;
     }
 
-    const themeIcon = get(colorClass.value, "icon") as undefined | LucideIcon;
+    const themeIcon = get(colorClass.value, "icon") as undefined | IconSource;
 
     return themeIcon ?? get(snackbarDefaultIcons, merged.value.color);
   });

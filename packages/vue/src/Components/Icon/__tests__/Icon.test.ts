@@ -99,3 +99,9 @@ test("it should swap the rendered icon when the icon prop changes", async () => 
   expect(wrapper.find("svg").classes()).toContain("lucide-eye-off");
   expect(wrapper.find("svg").classes()).not.toContain("lucide-eye");
 });
+
+test("it should resolve a semantic icon name via the default adapter", () => {
+  const wrapper = mount(Icon, { props: { icon: "info" } });
+
+  expect(wrapper.find("svg").exists()).toBe(true);
+});

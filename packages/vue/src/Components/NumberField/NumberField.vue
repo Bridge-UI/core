@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { ChevronDown, ChevronUp } from "@lucide/vue";
 import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
@@ -124,7 +123,7 @@ const decrementBind = computed(() => {
       >
         <button v-bind="incrementBind">
           <Icon
-            :icon="ChevronUp"
+            icon="chevronUp"
             :size="stepperIconSize"
             v-bind="props.customProps?.incrementIcon"
           />
@@ -132,7 +131,7 @@ const decrementBind = computed(() => {
 
         <button v-bind="decrementBind">
           <Icon
-            :icon="ChevronDown"
+            icon="chevronDown"
             :size="stepperIconSize"
             v-bind="props.customProps?.decrementIcon"
           />

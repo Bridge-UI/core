@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { X } from "@lucide/vue";
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
@@ -167,7 +166,7 @@ const teleportTarget = computed(() => {
                   v-if="merged.closeButton !== false"
                   class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
                 >
-                  <X class="w-5 h-5" />
+                  <Icon size="lg" icon="clear" />
                 </button>
               </div>
             </div>
@@ -246,7 +245,7 @@ const teleportTarget = computed(() => {
               v-if="merged.closeButton !== false"
               class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
             >
-              <X class="w-5 h-5" />
+              <Icon size="lg" icon="clear" />
             </button>
           </div>
         </div>

@@ -1,5 +1,4 @@
 // ** External Imports
-import { CircleAlert } from "@lucide/vue";
 import { get, omit } from "es-toolkit/compat";
 import {
   computed,
@@ -158,7 +157,7 @@ export function useFormField(
   });
 
   const errorIcon = computed(() => {
-    return merged.value.errorIcon ?? CircleAlert;
+    return merged.value.errorIcon ?? "alert";
   });
 
   const isNotched = computed(() => {

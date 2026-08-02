@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { HTMLAttributes, InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
@@ -17,6 +16,7 @@ import type {
 import type { UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelProps } from "@/Components/Label/label.types";
+import type { IconSource } from "@/Icons";
 
 export interface FormFieldSizeOverrides {}
 export interface FormFieldColorOverrides {}
@@ -214,7 +214,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * When `true`, applies invalid styling on the label and hides description.
@@ -226,9 +226,9 @@ export interface FormFieldOwnProps {
   /**
    * Icon used when `withErrorIcon` is enabled and the field is invalid.
    *
-   * @default CircleAlert
+   * @default "alert"
    */
-  errorIcon?: LucideIcon;
+  errorIcon?: IconSource;
 
   /**
    * Error message below the control. Shown only when set (or via `#errorMessage`
@@ -300,7 +300,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * The visual variant of the field shell and control.

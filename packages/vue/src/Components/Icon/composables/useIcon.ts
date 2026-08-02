@@ -8,12 +8,15 @@ import {
   LibDefaultsShape,
   mergeBridgeUILayeredClasses,
   MergeLibDefaults,
+  resolveIconSource,
   splitComponentProps,
 } from "@bridge-ui/core";
 import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
 
 // ** Local Imports
 import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";
+import type { IconElement } from "@/Icons";
+import { useIconAdapter } from "@/Icons";
 import { mergePartBind, useBridgeUIComponent } from "@/Utils";
 
 const iconBridgeKeys = [
@@ -44,6 +47,12 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
     props: () => split.value.componentProps,
   });
 
+  const iconAdapter = useIconAdapter();
+
+  const resolvedIcon = computed(() => {
+    return resolveIconSource<IconElement>(merged.value.icon, iconAdapter.value);
+  });
+
   const sizeClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
@@ -66,5 +75,6 @@ export function useIcon(props: IconOwnProps, libDefaults: IconLibDefaults) {
   return {
     merged,
     rootBind,
+    resolvedIcon,
   };
 }

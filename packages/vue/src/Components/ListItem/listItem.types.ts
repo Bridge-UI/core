@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { HTMLAttributes, Slot, VNode } from "vue";
 
 // ** Core Imports
@@ -7,6 +6,7 @@ import type { ListboxValue, MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface ListItemClasses {
   /**
@@ -179,7 +179,7 @@ export interface ListItemOwnProps {
    *
    * @default Check
    */
-  selectedIcon?: null | LucideIcon;
+  selectedIcon?: null | IconSource;
 
   /**
    * When set inside a `Listbox`, registers this row as a selectable option.

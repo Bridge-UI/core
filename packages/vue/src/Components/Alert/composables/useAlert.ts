@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import { get, isNull } from "es-toolkit/compat";
 import { computed, useAttrs, useSlots } from "vue";
 
@@ -21,6 +20,7 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
 import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
+import type { IconSource } from "@/Icons";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -126,7 +126,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       return merged.value.icon;
     }
 
-    const themeIcon = get(colorClass.value, "icon") as undefined | LucideIcon;
+    const themeIcon = get(colorClass.value, "icon") as undefined | IconSource;
 
     return themeIcon ?? get(alertDefaultIcons, merged.value.color);
   });

@@ -1,5 +1,4 @@
 // ** External Imports
-import { User } from "@lucide/vue";
 import { get, isEmpty, isNil } from "es-toolkit/compat";
 import { computed, useAttrs, useSlots } from "vue";
 
@@ -91,7 +90,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   });
 
   const resolvedIcon = computed(() => {
-    return merged.value.icon ?? User;
+    return merged.value.icon ?? "user";
   });
 
   const showFallbackSurface = computed(() => {

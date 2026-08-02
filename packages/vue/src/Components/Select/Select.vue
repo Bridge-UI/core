@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { X } from "@lucide/vue";
 import { isUndefined } from "es-toolkit/compat";
 import { computed, provide, ref, useTemplateRef } from "vue";
 
@@ -142,7 +141,7 @@ const {
         v-if="clearable && hasValue && !formField.isDisabled.value"
       >
         <Icon
-          :icon="X"
+          icon="clear"
           :size="clearIconSize"
           v-bind="props.customProps?.clearIcon"
         />

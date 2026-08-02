@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
@@ -7,6 +6,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface TabClasses {
   /**
@@ -82,14 +82,14 @@ export interface TabOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`). Prefer over the `#start` slot.
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Stable value matching a `TabPanel`.

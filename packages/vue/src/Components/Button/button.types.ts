@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
@@ -20,6 +19,7 @@ import type {
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
@@ -140,7 +140,7 @@ export interface ButtonOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * Whether the button is full width.
@@ -161,7 +161,7 @@ export interface ButtonOwnProps {
    *
    * @default undefined
    */
-  icon?: LucideIcon;
+  icon?: IconSource;
 
   /**
    * Whether the button is loading.
@@ -189,7 +189,7 @@ export interface ButtonOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Label text when the default slot is not used.

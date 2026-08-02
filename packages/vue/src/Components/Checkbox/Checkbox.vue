@@ -1,10 +1,9 @@
 <script setup lang="ts">
 // ** External Imports
-import { Check } from "@lucide/vue";
 import { computed, ref, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, resolveIconSource } from "@bridge-ui/core";
 
 // ** Local Imports
 import type {
@@ -13,6 +12,7 @@ import type {
 } from "@/Components/Checkbox/checkbox.types";
 import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
 import { FormControl } from "@/Components/FormControl";
+import { useIconAdapter } from "@/Icons";
 
 const attrs = useAttrs();
 
@@ -28,6 +28,12 @@ const model = defineModel<boolean | undefined>({ default: undefined });
 
 const checked = computed(() => {
   return model.value ?? uncontrolledChecked.value;
+});
+
+const iconAdapter = useIconAdapter();
+
+const CheckIcon = computed(() => {
+  return resolveIconSource("check", iconAdapter.value);
 });
 
 const {
@@ -68,7 +74,8 @@ function onChange(event: Event) {
       />
 
       <span v-bind="controlBind">
-        <Check
+        <component
+          :is="CheckIcon"
           :stroke-width="3"
           v-if="isChecked && !merged.indeterminate"
           :class="cn('h-[65%] w-[65%]', iconBind.class)"
