@@ -1,3 +1,6 @@
+// ** External Imports
+import { isNil, isString } from "es-toolkit/compat";
+
 /**
  * Augmentable map of extra semantic icon names beyond the Bridge defaults.
  */
@@ -55,7 +58,7 @@ export function createIconAdapter(
     resolve(name) {
       const icon = icons[name];
 
-      if (icon == null) {
+      if (isNil(icon)) {
         throw new Error(`[BridgeUI] Missing icon "${name}" in icon adapter.`);
       }
 
@@ -69,7 +72,7 @@ export function createIconAdapter(
  */
 export function isSemanticIconName(value: unknown): value is SemanticIconName {
   return (
-    typeof value === "string" &&
+    isString(value) &&
     (SEMANTIC_ICON_NAMES as readonly string[]).includes(value)
   );
 }
@@ -82,12 +85,12 @@ export function resolveIconSource<TIcon = unknown>(
   source: null | undefined | IconSource<TIcon>,
   adapter: undefined | IconAdapter,
 ): null | TIcon | undefined {
-  if (source == null) {
+  if (isNil(source)) {
     return source;
   }
 
-  if (typeof source === "string") {
-    if (adapter == null) {
+  if (isString(source)) {
+    if (isNil(adapter)) {
       throw new Error(
         `[BridgeUI] Semantic icon "${source}" requires BridgeUIProvider global.icons. See examples/adapters/{react,vue}.`,
       );

@@ -1,3 +1,6 @@
+// ** External Imports
+import { findLast, isNil, isUndefined, omit } from "es-toolkit/compat";
+
 // ** Local Imports
 import type { IconAdapter } from "@/Adapters/icon";
 import type {
@@ -14,13 +17,11 @@ import { mergeBridgeUILayeredClasses } from "@/Utils";
 function omitGlobalIcons(
   value: undefined | Partial<BridgeUIGlobal>,
 ): undefined | Omit<Partial<BridgeUIGlobal>, "icons"> {
-  if (value == null) {
+  if (isNil(value)) {
     return value;
   }
 
-  const { icons: _icons, ...rest } = value;
-
-  return rest;
+  return omit(value, ["icons"]);
 }
 
 /**
@@ -34,23 +35,22 @@ export function mergeBridgeUIGlobal({
   base: BridgeUIGlobal;
   partials: Array<undefined | Partial<BridgeUIGlobal>>;
 }): BridgeUIGlobal {
-  let icons: undefined | IconAdapter = base.icons;
-
-  for (const partial of partials) {
-    if (partial?.icons !== undefined) {
-      icons = partial.icons;
-    }
-  }
+  const icons = findLast(
+    [base, ...partials],
+    (layer): layer is Partial<BridgeUIGlobal> & { icons: IconAdapter } => {
+      return !isNil(layer) && !isUndefined(layer.icons);
+    },
+  )?.icons;
 
   const merged = mergeBridgeUILayeredClasses(
     omitGlobalIcons(base) as BridgeUIGlobal,
     ...partials.map(omitGlobalIcons),
   ) as BridgeUIGlobal;
 
-  if (icons !== undefined) {
-    merged.icons = icons;
-  } else {
+  if (isUndefined(icons)) {
     delete merged.icons;
+  } else {
+    merged.icons = icons;
   }
 
   return merged;
