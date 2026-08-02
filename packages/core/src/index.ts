@@ -1,13 +1,18 @@
 // ** Exports
 export {
   SEMANTIC_ICON_NAMES,
+  createI18nAdapter,
   createIconAdapter,
   isSemanticIconName,
   resolveIconSource,
+  resolveMessage,
 } from "@/Adapters";
 export type {
+  I18nAdapter,
   IconAdapter,
   IconSource,
+  MessageParams,
+  MessageValue,
   SemanticIconName,
   SemanticIconNameOverrides,
 } from "@/Adapters";

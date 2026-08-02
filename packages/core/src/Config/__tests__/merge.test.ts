@@ -68,6 +68,19 @@ test("it should replace icons adapters instead of deep-merging them", () => {
   expect(result.icons?.resolve("clear" as never)).toBe("second");
 });
 
+test("it should replace i18n adapters instead of deep-merging them", () => {
+  const first = { t: () => "first" };
+  const second = { t: () => "second" };
+
+  const result = mergeBridgeUIGlobal({
+    partials: [{ i18n: second }],
+    base: { ...BRIDGE_UI_DEFAULT_GLOBAL, i18n: first },
+  });
+
+  expect(result.i18n).toBe(second);
+  expect(result.i18n?.t("close" as never)).toBe("second");
+});
+
 test("it should return base when no component partials provided", () => {
   const result = mergeBridgeUIComponents({
     base: {},
