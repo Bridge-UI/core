@@ -2,6 +2,9 @@
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useRef } from "react";
 
+// ** Core Imports
+import { resolveMessage } from "@bridge-ui/core";
+
 // ** Local Imports
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
@@ -9,9 +12,11 @@ import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/hooks/useSelect";
 import type { SelectProps } from "@/Components/Select/select.types";
+import { useI18nAdapter } from "@/I18n";
 import { mergeNestedComponentProps } from "@/Utils";
 
 function Select(props: SelectProps) {
+  const i18n = useI18nAdapter();
   const triggerRef = useRef<null | HTMLInputElement | HTMLTextAreaElement>(
     null,
   );
@@ -86,8 +91,8 @@ function Select(props: SelectProps) {
             {clearable && hasValue && !formField.isDisabled ? (
               <span
                 {...clearBind}
-                aria-label="Clear selection"
                 onClick={() => clearValue()}
+                aria-label={resolveMessage("Clear selection", i18n)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();

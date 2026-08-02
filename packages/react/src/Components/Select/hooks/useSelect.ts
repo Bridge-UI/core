@@ -20,6 +20,7 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -47,6 +48,7 @@ import type {
   SelectProps,
   SelectValue,
 } from "@/Components/Select/select.types";
+import { useI18nAdapter } from "@/I18n";
 import {
   derived,
   hasNamedSlot,
@@ -84,6 +86,7 @@ export function useSelect(
   props: SelectProps,
   triggerRef: RefObject<null | HTMLInputElement | HTMLTextAreaElement>,
 ) {
+  const i18n = useI18nAdapter();
   const listboxId = useId();
 
   const {
@@ -952,8 +955,10 @@ export function useSelect(
     [openMenu, closeMenu],
   );
 
-  const emptyMessage = selectMerged.emptyMessage ?? "No options";
-  const loadingMessage = selectMerged.loadingMessage ?? "Loading...";
+  const emptyMessage =
+    selectMerged.emptyMessage ?? resolveMessage("No options", i18n);
+  const loadingMessage =
+    selectMerged.loadingMessage ?? resolveMessage("Loading...", i18n);
   const hideEmptyMessage = selectMerged.hideEmptyMessage === true;
 
   const listboxProps = useMemo(() => {
