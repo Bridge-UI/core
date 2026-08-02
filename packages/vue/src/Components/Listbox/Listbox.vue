@@ -9,6 +9,7 @@ import {
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
+  resolveMessage,
   type ListboxOption,
   type ListboxValue,
 } from "@bridge-ui/core";
@@ -29,6 +30,7 @@ import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
 import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
+import { useI18nAdapter } from "@/I18n";
 import {
   hasNamedSlot,
   mergeNestedComponentProps,
@@ -57,8 +59,16 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   hideEmptyMessage: false,
   disableAutoFocus: false,
   placement: "bottom-start",
-  emptyMessage: "No options",
-  loadingMessage: "Loading...",
+});
+
+const i18n = useI18nAdapter();
+
+const emptyMessage = computed(() => {
+  return props.emptyMessage ?? resolveMessage("No options", i18n.value);
+});
+
+const loadingMessage = computed(() => {
+  return props.loadingMessage ?? resolveMessage("Loading...", i18n.value);
 });
 
 const {

@@ -4,7 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { FormField } from "@/Components/FormField";
@@ -15,6 +15,7 @@ import type {
   PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
+import { useI18nAdapter } from "@/I18n";
 import { mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
@@ -41,6 +42,8 @@ const value = computed({
   },
 });
 
+const i18n = useI18nAdapter();
+
 const { formField, inputBind, isVisible, mergedClasses, toggleVisibility } =
   usePasswordField(props, {
     onVisibilityChange: (next) => emit("visibility-change", next),
@@ -53,7 +56,9 @@ const toggleBind = computed(() => {
       type: "button" as const,
       disabled: props.disabled,
       onClick: toggleVisibility,
-      "aria-label": isVisible.value ? "Hide password" : "Show password",
+      "aria-label": isVisible.value
+        ? resolveMessage("Hide password", i18n.value)
+        : resolveMessage("Show password", i18n.value),
     },
     cn({
       "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5": true,

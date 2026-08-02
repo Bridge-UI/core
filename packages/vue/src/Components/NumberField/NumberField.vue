@@ -4,7 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { FormField } from "@/Components/FormField";
@@ -15,6 +15,7 @@ import type {
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
+import { useI18nAdapter } from "@/I18n";
 import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
@@ -44,6 +45,8 @@ const value = computed({
     return isUndefined(model.value) ? uncontrolledValue.value : model.value;
   },
 });
+
+const i18n = useI18nAdapter();
 
 const {
   decrement,
@@ -80,10 +83,10 @@ const incrementBind = computed(() => {
     {
       type: "button" as const,
       disabled: props.disabled,
-      "aria-label": "Increment value",
       onClick: incrementHold.onPressClick,
       onPointerup: incrementHold.onPressPointerUp,
       onPointerdown: incrementHold.onPressPointerDown,
+      "aria-label": resolveMessage("Increment value", i18n.value),
       onLostpointercapture: incrementHold.onPressLostPointerCapture,
     },
     cn({
@@ -99,10 +102,10 @@ const decrementBind = computed(() => {
     {
       type: "button" as const,
       disabled: props.disabled,
-      "aria-label": "Decrement value",
       onClick: decrementHold.onPressClick,
       onPointerup: decrementHold.onPressPointerUp,
       onPointerdown: decrementHold.onPressPointerDown,
+      "aria-label": resolveMessage("Decrement value", i18n.value),
       onLostpointercapture: decrementHold.onPressLostPointerCapture,
     },
     cn({

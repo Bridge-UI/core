@@ -46,6 +46,10 @@
       "import": "./dist/Icons/index.js",
       "types": "./dist/Icons/index.d.ts"
     },
+    "./I18n": {
+      "import": "./dist/I18n/index.js",
+      "types": "./dist/I18n/index.d.ts"
+    },
     "./Actions": {
       "import": "./dist/Actions/index.js",
       "types": "./dist/Actions/index.d.ts"

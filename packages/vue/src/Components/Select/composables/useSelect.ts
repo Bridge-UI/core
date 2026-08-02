@@ -26,6 +26,7 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -50,6 +51,7 @@ import type {
   SelectOwnProps,
   SelectValue,
 } from "@/Components/Select/select.types";
+import { useI18nAdapter } from "@/I18n";
 import {
   hasNamedSlot,
   mergePartBind,
@@ -91,6 +93,7 @@ export function useSelect(
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
+  const i18n = useI18nAdapter();
   const listboxId = useId();
 
   const open = ref(false);
@@ -885,9 +888,13 @@ export function useSelect(
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,
-      emptyMessage: selectMerged.value.emptyMessage ?? "No options",
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
-      loadingMessage: selectMerged.value.loadingMessage ?? "Loading...",
+      emptyMessage:
+        selectMerged.value.emptyMessage ??
+        resolveMessage("No options", i18n.value),
+      loadingMessage:
+        selectMerged.value.loadingMessage ??
+        resolveMessage("Loading...", i18n.value),
       ...listboxCustomProps.value,
     };
   });
@@ -933,14 +940,20 @@ export function useSelect(
     hasComposedList,
     highlightedIndex,
     handleRegisteredOptionsChange,
-    emptyMessage: computed(() => {
-      return selectMerged.value.emptyMessage ?? "No options";
-    }),
     hideEmptyMessage: computed(() => {
       return selectMerged.value.hideEmptyMessage === true;
     }),
+    emptyMessage: computed(() => {
+      return (
+        selectMerged.value.emptyMessage ??
+        resolveMessage("No options", i18n.value)
+      );
+    }),
     loadingMessage: computed(() => {
-      return selectMerged.value.loadingMessage ?? "Loading...";
+      return (
+        selectMerged.value.loadingMessage ??
+        resolveMessage("Loading...", i18n.value)
+      );
     }),
   };
 }
