@@ -5,7 +5,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import type { TabsActivation } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { IconSource } from "@/Icons";
+import type { IconSource } from "@/Adapters/Icon";
 
 /**
  * Declarative tab + panel registered by `TabItem`.

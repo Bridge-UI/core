@@ -14,9 +14,9 @@ import {
 import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
 
 // ** Local Imports
+import type { IconElement } from "@/Adapters/Icon";
+import { useIconAdapter } from "@/Adapters/Icon";
 import type { IconOwnProps, IconProps } from "@/Components/Icon/icon.types";
-import type { IconElement } from "@/Icons";
-import { useIconAdapter } from "@/Icons";
 import { derived, mergePartBind, useBridgeUIComponent } from "@/Utils";
 
 const iconBridgeKeys = [

@@ -2,8 +2,8 @@
 import type { ReactNode } from "react";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import type { TabSlots } from "@/Components/Tab/tab.types";
-import type { IconSource } from "@/Icons";
 
 export interface TabItemClasses {
   /**

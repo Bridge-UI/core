@@ -5,11 +5,11 @@ import { Fragment } from "react";
 import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/hooks/usePasswordField";
 import type { PasswordFieldProps } from "@/Components/PasswordField/passwordField.types";
-import { useI18nAdapter } from "@/I18n";
 import { mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
 
 function PasswordField(props: PasswordFieldProps) {

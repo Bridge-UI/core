@@ -31,6 +31,7 @@ import {
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
   formFieldBridgeKeys,
@@ -48,7 +49,6 @@ import type {
   SelectProps,
   SelectValue,
 } from "@/Components/Select/select.types";
-import { useI18nAdapter } from "@/I18n";
 import {
   derived,
   hasNamedSlot,

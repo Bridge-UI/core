@@ -6,13 +6,13 @@ import { useRef } from "react";
 import { resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useI18nAdapter } from "@/Adapters/I18n";
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/hooks/useSelect";
 import type { SelectProps } from "@/Components/Select/select.types";
-import { useI18nAdapter } from "@/I18n";
 import { mergeNestedComponentProps } from "@/Utils";
 
 function Select(props: SelectProps) {

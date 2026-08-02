@@ -12,6 +12,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import { useListContext } from "@/Components/List/ListContext";
 import { getListboxOptionId } from "@/Components/Listbox/hooks/useListboxNavigation";
 import { useListboxContext } from "@/Components/Listbox/ListboxContext";
@@ -19,7 +20,6 @@ import type {
   ListItemOwnProps,
   ListItemProps,
 } from "@/Components/ListItem/listItem.types";
-import type { IconSource } from "@/Icons";
 import {
   derived,
   hasNamedSlot,

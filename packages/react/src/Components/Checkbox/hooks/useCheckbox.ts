@@ -20,14 +20,14 @@ import {
 } from "@bridge-ui/core/Tokens/Checkbox";
 
 // ** Local Imports
+import type { IconElement } from "@/Adapters/Icon";
+import { useIconAdapter } from "@/Adapters/Icon";
 import type {
   CheckboxClasses,
   CheckboxOwnProps,
   CheckboxProps,
 } from "@/Components/Checkbox/checkbox.types";
 import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";
-import type { IconElement } from "@/Icons";
-import { useIconAdapter } from "@/Icons";
 import {
   derived,
   mergePartBind,
