@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
@@ -15,6 +14,7 @@ import type {
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface AlertColorOverrides {}
 export interface AlertShadowOverrides {}
@@ -99,7 +99,7 @@ export interface AlertOwnProps {
    *
    * @default undefined
    */
-  icon?: null | LucideIcon;
+  icon?: null | IconSource;
 
   /**
    * The padding to apply to the alert.

@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon adapter, and component registry defaults.
 
 ## Import
 
@@ -26,6 +26,23 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 </BridgeUIProvider>
 ```
 
+### Icon adapter
+
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `examples/adapters/vue/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+
+```ts
+import { createBridgeUI } from "@bridge-ui/vue";
+import { createLucideIconAdapter } from "@examples/adapters/vue/icon-lucide";
+
+const icons = createLucideIconAdapter();
+
+app.use(
+  createBridgeUI({
+    global: { icons },
+  }),
+);
+```
+
 ### Runtime updates
 
 ```ts
@@ -36,10 +53,10 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                       |
-| ------------ | -------------------------- | ------- | ----------------------------------------------------------------- |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                            |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints` |
+| Prop         | Type                       | Default | Description                                                                |
+| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                     |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons` |
 
 App content is passed via the **default slot** (see Usage above).
 

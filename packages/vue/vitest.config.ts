@@ -9,12 +9,16 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   plugins: [vue()],
   resolve: {
-    alias: { "@": resolve(__dirname, "src") },
+    alias: {
+      "@": resolve(__dirname, "src"),
+      "@examples": resolve(__dirname, "../../examples"),
+    },
   },
   test: {
     name: "vue",
     root: __dirname,
     environment: "happy-dom",
+    setupFiles: [resolve(__dirname, "vitest.setup.ts")],
     include: ["src/**/*.test.ts"],
   },
 });

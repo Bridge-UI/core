@@ -7,9 +7,9 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<IconOwnProps>();
 
-const { merged, rootBind } = useIcon(props, { size: "md" });
+const { rootBind, resolvedIcon } = useIcon(props, { size: "md" });
 </script>
 
 <template>
-  <component :is="merged.icon" v-bind="rootBind" />
+  <component :is="resolvedIcon" v-bind="rootBind" v-if="resolvedIcon" />
 </template>

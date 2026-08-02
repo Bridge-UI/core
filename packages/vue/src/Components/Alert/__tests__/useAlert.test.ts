@@ -1,5 +1,4 @@
 // ** External Imports
-import { CircleX } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
@@ -46,7 +45,7 @@ test("it should override color when prop is passed", () => {
 test("it should resolve the default icon for a given color", () => {
   const { resolvedIcon } = mountUseAlert({ color: "error" });
 
-  expect(resolvedIcon.value).toBe(CircleX);
+  expect(resolvedIcon.value).toBe("error");
 });
 
 test("it should suppress the icon when icon is null", () => {

@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { ChevronsUpDown } from "lucide-react";
 import type { FormEvent, KeyboardEvent, MouseEvent, RefObject } from "react";
 import {
   useCallback,
@@ -741,7 +740,7 @@ export function useSelect(
 
     const endIcon =
       formFieldCustom.endIcon ??
-      (hasNamedSlot(formFieldSlots, "end") ? undefined : ChevronsUpDown);
+      (hasNamedSlot(formFieldSlots, "end") ? undefined : "chevronUpDown");
 
     const { listbox: _listbox, ...formFieldOnlyCustom } =
       (formFieldCustom.customProps ?? {}) as SelectCustomProps;

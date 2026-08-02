@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { X } from "@lucide/vue";
 import { computed, useSlots } from "vue";
 
 // ** Local Imports
@@ -68,7 +67,11 @@ const hasContent = computed(() => {
       v-on:click="handleDismiss"
       v-on:keydown="handleClearKeyDown"
     >
-      <Icon :icon="X" v-bind="clearIconProps" :size="resolvedClearIconSize" />
+      <Icon
+        icon="clear"
+        v-bind="clearIconProps"
+        :size="resolvedClearIconSize"
+      />
     </span>
   </span>
 </template>

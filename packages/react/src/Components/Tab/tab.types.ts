@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -7,6 +6,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface TabClasses {
   /**
@@ -89,10 +89,10 @@ export interface TabOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
-   * Custom start / end adornments when not using Lucide icon props.
+   * Custom start / end adornments when not using Icon props.
    *
    * @default undefined
    */
@@ -103,7 +103,7 @@ export interface TabOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Stable value matching a `TabPanel`.

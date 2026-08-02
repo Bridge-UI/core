@@ -1,5 +1,4 @@
 // ** External Imports
-import { X } from "lucide-react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -131,7 +130,7 @@ function SnackbarPanel({
                 onClick={requestClose}
                 className="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
               >
-                <X className="w-5 h-5" />
+                <Icon size="lg" icon="clear" />
               </button>
             )}
           </div>

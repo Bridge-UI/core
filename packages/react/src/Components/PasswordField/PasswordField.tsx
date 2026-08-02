@@ -1,5 +1,4 @@
 // ** External Imports
-import { Eye, EyeOff } from "lucide-react";
 import { Fragment } from "react";
 
 // ** Core Imports
@@ -43,7 +42,7 @@ function PasswordField(props: PasswordFieldProps) {
                 )}
               >
                 <Icon
-                  icon={isVisible ? EyeOff : Eye}
+                  icon={isVisible ? "eyeOff" : "eye"}
                   size={resolveFieldAdornmentIconSize(props.size)}
                   {...toggleIconProps}
                 />

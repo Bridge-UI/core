@@ -1,6 +1,8 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { Slot } from "vue";
+
+// ** Local Imports
+import type { IconSource } from "@/Icons";
 
 export interface TabItemClasses {
   /**
@@ -32,7 +34,7 @@ export interface TabItemOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
@@ -53,7 +55,7 @@ export interface TabItemOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Stable value for the tab / panel pair.

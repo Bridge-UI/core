@@ -1,17 +1,19 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { SVGAttributes } from "vue";
 
 // ** Core Imports
 import type { IconSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { IconSource } from "@/Icons";
+
 export interface IconSizeOverrides {}
 
 export interface IconOwnProps {
   /**
-   * Lucide icon component.
+   * Semantic icon name, icon component, or adapter-normalized native value.
    */
-  icon: LucideIcon;
+  icon: IconSource;
 
   /**
    * The size of the icon.

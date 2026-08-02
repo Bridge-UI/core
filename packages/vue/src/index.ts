@@ -366,6 +366,8 @@ export type {
   TextFieldProps,
   TextFieldSlots,
 } from "@/Components/TextField";
+export { setIconAdapterForTests, useIconAdapter } from "@/Icons";
+export type { IconElement, IconSource, SemanticIconName } from "@/Icons";
 export { BridgeUIProvider, createBridgeUI, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextApi } from "@/Provider";
 export {
@@ -376,8 +378,11 @@ export {
 export type { UseBreakpointOptions } from "@/Utils";
 export {
   BRIDGE_UI_DEFAULT_GLOBAL,
+  SEMANTIC_ICON_NAMES,
   cn,
+  createIconAdapter,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
 } from "@bridge-ui/core";
+export type { IconAdapter, SemanticIconNameOverrides } from "@bridge-ui/core";

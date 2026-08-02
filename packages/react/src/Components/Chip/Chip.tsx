@@ -1,5 +1,4 @@
 // ** External Imports
-import { X } from "lucide-react";
 
 // ** Local Imports
 import type { ChipProps } from "@/Components/Chip/chip.types";
@@ -32,7 +31,7 @@ function Chip({ children, ...props }: ChipProps) {
           onKeyDown={handleClearKeyDown}
         >
           <Icon
-            icon={X}
+            icon="clear"
             {...merged.customProps?.clearIcon}
             size={clearIconSize as IconProps["size"]}
           />

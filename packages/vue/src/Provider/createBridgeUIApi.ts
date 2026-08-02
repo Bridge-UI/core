@@ -54,7 +54,14 @@ export function createBridgeUIApi(
   });
 
   function setGlobal(patch: Partial<BridgeUIGlobal>) {
-    globalPatch.value = toMerged(globalPatch.value, patch);
+    const { icons, ...rest } = patch;
+    const next = toMerged(globalPatch.value, rest) as Partial<BridgeUIGlobal>;
+
+    if (icons !== undefined) {
+      next.icons = icons;
+    }
+
+    globalPatch.value = next;
   }
 
   function setComponents(patch: BridgeUIComponentsConfig) {

@@ -1,5 +1,5 @@
 // ** External Imports
-import { Check, Star } from "@lucide/vue";
+import { Star } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { computed, defineComponent, h, provide } from "vue";
@@ -132,14 +132,14 @@ test("it should apply selected styles on interactive bind", () => {
   expect(interactiveBind.value?.class).toContain("dark:bg-white/15");
 });
 
-test("it should resolve Check as the default selected icon", () => {
+test("it should resolve check as the default selected icon", () => {
   const { resolvedSelectedIcon } = mountUseListItem({
     selected: true,
     interactive: true,
     primary: "Selected",
   });
 
-  expect(resolvedSelectedIcon.value).toBe(Check);
+  expect(resolvedSelectedIcon.value).toBe("check");
 });
 
 test("it should suppress the selected icon when selectedIcon is null", () => {

@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
-import type { LucideIcon } from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -21,6 +20,7 @@ import {
 // ** Local Imports
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
+import type { IconSource } from "@/Icons";
 import {
   derived,
   mergePartBind,
@@ -135,7 +135,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       return merged.icon;
     }
 
-    const themeIcon = get(colorClass, "icon") as undefined | LucideIcon;
+    const themeIcon = get(colorClass, "icon") as undefined | IconSource;
 
     return themeIcon ?? get(alertDefaultIcons, merged.color);
   }, [colorClass, merged.icon, merged.color]);

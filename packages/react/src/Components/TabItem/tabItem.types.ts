@@ -1,9 +1,9 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 // ** Local Imports
 import type { TabSlots } from "@/Components/Tab/tab.types";
+import type { IconSource } from "@/Icons";
 
 export interface TabItemClasses {
   /**
@@ -43,7 +43,7 @@ export interface TabItemOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
@@ -69,7 +69,7 @@ export interface TabItemOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Stable value for the tab / panel pair.

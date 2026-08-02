@@ -1,9 +1,11 @@
 // ** External Imports
-import type { LucideIcon } from "@lucide/vue";
 import type { ComputedRef, InjectionKey, VNodeChild } from "vue";
 
 // ** Core Imports
 import type { TabsActivation } from "@bridge-ui/core";
+
+// ** Local Imports
+import type { IconSource } from "@/Icons";
 
 /**
  * Merged token classes for triggers / list / panel.
@@ -36,9 +38,9 @@ export type TabsItemEntry = {
   disabled?: boolean;
 
   /**
-   * Optional trailing Lucide icon on the tab trigger.
+   * Optional trailing Icon on the tab trigger.
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * When set, overrides `Tabs` `keepMounted` for this panel.
@@ -64,9 +66,9 @@ export type TabsItemEntry = {
   };
 
   /**
-   * Optional leading Lucide icon on the tab trigger.
+   * Optional leading Icon on the tab trigger.
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * Stable value matching the tab / panel pair.

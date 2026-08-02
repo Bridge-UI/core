@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -17,6 +16,7 @@ import type {
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelProps } from "@/Components/Label/label.types";
+import type { IconSource } from "@/Icons";
 
 export interface FormFieldSizeOverrides {}
 export interface FormFieldColorOverrides {}
@@ -221,7 +221,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  endIcon?: LucideIcon;
+  endIcon?: IconSource;
 
   /**
    * When `true`, applies invalid styling on the label and hides description.
@@ -233,9 +233,9 @@ export interface FormFieldOwnProps {
   /**
    * Icon used when `withErrorIcon` is enabled and the field is invalid.
    *
-   * @default CircleAlert
+   * @default "alert"
    */
-  errorIcon?: LucideIcon;
+  errorIcon?: IconSource;
 
   /**
    * Error message below the control. Shown only when set (or via `errorMessage` slot).
@@ -306,7 +306,7 @@ export interface FormFieldOwnProps {
    *
    * @default undefined
    */
-  startIcon?: LucideIcon;
+  startIcon?: IconSource;
 
   /**
    * The visual variant of the field shell and control.

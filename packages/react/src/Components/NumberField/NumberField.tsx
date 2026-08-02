@@ -1,5 +1,4 @@
 // ** External Imports
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { Fragment } from "react";
 
 // ** Core Imports
@@ -59,7 +58,7 @@ function NumberField(props: NumberFieldProps) {
                   )}
                 >
                   <Icon
-                    icon={ChevronUp}
+                    icon="chevronUp"
                     size={stepperIconSize}
                     {...incrementIconProps}
                   />
@@ -81,7 +80,7 @@ function NumberField(props: NumberFieldProps) {
                   )}
                 >
                   <Icon
-                    icon={ChevronDown}
+                    icon="chevronDown"
                     size={stepperIconSize}
                     {...decrementIconProps}
                   />

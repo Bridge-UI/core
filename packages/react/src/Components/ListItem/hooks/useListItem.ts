@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
-import { Check, type LucideIcon } from "lucide-react";
 import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
@@ -20,6 +19,7 @@ import type {
   ListItemOwnProps,
   ListItemProps,
 } from "@/Components/ListItem/listItem.types";
+import type { IconSource } from "@/Icons";
 import {
   derived,
   hasNamedSlot,
@@ -183,13 +183,13 @@ export function useListItem(
 
   const isListboxOption = listboxOption != null;
 
-  const resolvedSelectedIcon = useMemo((): null | LucideIcon => {
+  const resolvedSelectedIcon = useMemo((): null | IconSource => {
     if (isListboxOption) {
       if (!listboxSelected || !listboxContext?.showCheckmark) {
         return null;
       }
 
-      return Check;
+      return "check";
     }
 
     if (!merged.selected) {
@@ -200,7 +200,7 @@ export function useListItem(
       return null;
     }
 
-    return merged.selectedIcon ?? Check;
+    return merged.selectedIcon ?? "check";
   }, [
     isListboxOption,
     listboxSelected,

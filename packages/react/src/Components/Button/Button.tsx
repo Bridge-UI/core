@@ -1,5 +1,4 @@
 // ** External Imports
-import { Loader2 } from "lucide-react";
 import { createElement, Fragment } from "react";
 
 // ** Local Imports
@@ -48,7 +47,7 @@ function Button(props: ButtonProps) {
     },
     <Fragment>
       {merged.loading && (
-        <Icon icon={Loader2} size={merged.size} {...loadingIconBind} />
+        <Icon icon="loader" size={merged.size} {...loadingIconBind} />
       )}
 
       {!merged.loading && isMini && (

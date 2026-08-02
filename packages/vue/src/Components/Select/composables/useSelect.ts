@@ -1,5 +1,4 @@
 // ** External Imports
-import { ChevronsUpDown } from "@lucide/vue";
 import { get, isNil, omit } from "es-toolkit/compat";
 import {
   Comment,
@@ -415,7 +414,7 @@ export function useSelect(
 
     const endIcon =
       formFieldCustom.endIcon ??
-      (hasNamedSlot(slots, "end") ? undefined : ChevronsUpDown);
+      (hasNamedSlot(slots, "end") ? undefined : "chevronUpDown");
 
     const { listbox: _listbox, ...formFieldOnlyCustom } =
       (formFieldCustom.customProps ?? {}) as SelectCustomProps;

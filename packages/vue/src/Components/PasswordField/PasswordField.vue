@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { Eye, EyeOff } from "@lucide/vue";
 import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
@@ -71,7 +70,7 @@ const toggleBind = computed(() => {
     <template #end>
       <button v-bind="toggleBind">
         <Icon
-          :icon="isVisible ? EyeOff : Eye"
+          :icon="isVisible ? 'eyeOff' : 'eye'"
           :size="resolveFieldAdornmentIconSize(props.size)"
           v-bind="props.customProps?.toggleIcon"
         />

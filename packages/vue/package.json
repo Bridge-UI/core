@@ -42,6 +42,10 @@
       "import": "./dist/Provider/index.js",
       "types": "./dist/Provider/index.d.ts"
     },
+    "./Icons": {
+      "import": "./dist/Icons/index.js",
+      "types": "./dist/Icons/index.d.ts"
+    },
     "./Actions": {
       "import": "./dist/Actions/index.js",
       "types": "./dist/Actions/index.d.ts"
@@ -61,7 +65,6 @@
   ],
   "peerDependencies": {
     "@bridge-ui/core": "^0.0.5",
-    "@lucide/vue": ">=1.0.0",
     "vue": "^3.4.0"
   },
   "dependencies": {
@@ -80,7 +83,13 @@
   },
   "devDependencies": {
     "@bridge-ui/core": "*",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/vue-fontawesome": "^3.3.3",
+    "@heroicons/vue": "^2.2.0",
     "@lucide/vue": "^1.24.0",
+    "@phosphor-icons/vue": "^2.2.1",
+    "@tabler/icons-vue": "^3.46.0",
     "@tailwindcss/cli": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^24.0.0",

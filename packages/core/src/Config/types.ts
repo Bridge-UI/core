@@ -1,4 +1,5 @@
 // ** Local Imports
+import type { IconAdapter } from "@/Adapters/icon";
 import type {
   AlertColor,
   AlertColorItem,
@@ -158,6 +159,15 @@ export interface BridgeUIGlobal {
    * @default "ltr"
    */
   direction: Direction;
+
+  /**
+   * Icon adapter used to resolve semantic icon names.
+   * Required when components use semantic names (`"clear"`, `"check"`, …).
+   * See `examples/adapters/{react,vue}` for samples (not shipped as packages).
+   *
+   * @default undefined
+   */
+  icons?: IconAdapter;
 
   /**
    * Global locale.

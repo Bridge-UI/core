@@ -1,5 +1,4 @@
 // ** External Imports
-import { User } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
@@ -58,10 +57,10 @@ test("it should detect fallback text when fallback is passed", () => {
   expect(hasFallbackText.value).toBe(true);
 });
 
-test("it should default resolved icon to User", () => {
+test("it should default resolved icon to user", () => {
   const { resolvedIcon } = mountUseAvatar();
 
-  expect(resolvedIcon.value).toBe(User);
+  expect(resolvedIcon.value).toBe("user");
 });
 
 test("it should compute root class as a non-empty string", () => {

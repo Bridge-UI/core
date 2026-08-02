@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { Check } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -8,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   cn,
   mergeBridgeUILayeredClasses,
+  resolveIconSource,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -26,6 +26,8 @@ import type {
   CheckboxProps,
 } from "@/Components/Checkbox/checkbox.types";
 import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";
+import type { IconElement } from "@/Icons";
+import { useIconAdapter } from "@/Icons";
 import {
   derived,
   mergePartBind,
@@ -55,6 +57,8 @@ export function useCheckbox(
   props: CheckboxProps,
   libDefaults: CheckboxLibDefaults,
 ) {
+  const iconAdapter = useIconAdapter();
+
   const formControl = useFormControl(props, {
     error: false,
     withoutErrorMessage: false,
@@ -234,6 +238,6 @@ export function useCheckbox(
     inputBind,
     formControl,
     controlBind,
-    CheckIcon: Check,
+    CheckIcon: resolveIconSource<IconElement>("check", iconAdapter)!,
   };
 }
