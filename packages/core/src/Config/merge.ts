@@ -1,4 +1,5 @@
 // ** Local Imports
+import type { IconAdapter } from "@/Adapters/icon";
 import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
@@ -8,7 +9,23 @@ import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 import { mergeBridgeUILayeredClasses } from "@/Utils";
 
 /**
+ * Drops `icons` so deep-merge does not combine adapter objects.
+ */
+function omitGlobalIcons(
+  value: undefined | Partial<BridgeUIGlobal>,
+): undefined | Omit<Partial<BridgeUIGlobal>, "icons"> {
+  if (value == null) {
+    return value;
+  }
+
+  const { icons: _icons, ...rest } = value;
+
+  return rest;
+}
+
+/**
  * Merges the base and partials into a single object.
+ * `icons` is replace-on-write (last defined adapter wins).
  */
 export function mergeBridgeUIGlobal({
   base,
@@ -17,7 +34,26 @@ export function mergeBridgeUIGlobal({
   base: BridgeUIGlobal;
   partials: Array<undefined | Partial<BridgeUIGlobal>>;
 }): BridgeUIGlobal {
-  return mergeBridgeUILayeredClasses(base, ...partials) as BridgeUIGlobal;
+  let icons: undefined | IconAdapter = base.icons;
+
+  for (const partial of partials) {
+    if (partial?.icons !== undefined) {
+      icons = partial.icons;
+    }
+  }
+
+  const merged = mergeBridgeUILayeredClasses(
+    omitGlobalIcons(base) as BridgeUIGlobal,
+    ...partials.map(omitGlobalIcons),
+  ) as BridgeUIGlobal;
+
+  if (icons !== undefined) {
+    merged.icons = icons;
+  } else {
+    delete merged.icons;
+  }
+
+  return merged;
 }
 
 /**

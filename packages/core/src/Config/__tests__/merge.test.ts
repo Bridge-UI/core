@@ -55,6 +55,19 @@ test("it should skip undefined global partials", () => {
   });
 });
 
+test("it should replace icons adapters instead of deep-merging them", () => {
+  const first = { resolve: () => "first" };
+  const second = { resolve: () => "second" };
+
+  const result = mergeBridgeUIGlobal({
+    partials: [{ icons: second }],
+    base: { ...BRIDGE_UI_DEFAULT_GLOBAL, icons: first },
+  });
+
+  expect(result.icons).toBe(second);
+  expect(result.icons?.resolve("clear" as never)).toBe("second");
+});
+
 test("it should return base when no component partials provided", () => {
   const result = mergeBridgeUIComponents({
     base: {},

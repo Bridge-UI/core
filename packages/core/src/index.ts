@@ -1,5 +1,17 @@
 // ** Exports
 export {
+  SEMANTIC_ICON_NAMES,
+  createIconAdapter,
+  isSemanticIconName,
+  resolveIconSource,
+} from "@/Adapters";
+export type {
+  IconAdapter,
+  IconSource,
+  SemanticIconName,
+  SemanticIconNameOverrides,
+} from "@/Adapters";
+export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
