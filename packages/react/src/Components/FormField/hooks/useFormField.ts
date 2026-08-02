@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { CircleAlert } from "lucide-react";
 import type { InputHTMLAttributes } from "react";
 import { useId, useMemo } from "react";
 
@@ -163,7 +162,7 @@ export function useFormField(
   });
 
   const errorIcon = derived(() => {
-    return merged.errorIcon ?? CircleAlert;
+    return merged.errorIcon ?? "alert";
   });
 
   const isNotched = derived(() => {

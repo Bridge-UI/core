@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isEmpty, isNil, omit } from "es-toolkit/compat";
-import { User } from "lucide-react";
 import { useMemo } from "react";
 
 // ** Core Imports
@@ -108,7 +107,7 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
   });
 
   const resolvedIcon = derived(() => {
-    return merged.icon ?? User;
+    return merged.icon ?? "user";
   });
 
   const showFallbackSurface = derived(() => {

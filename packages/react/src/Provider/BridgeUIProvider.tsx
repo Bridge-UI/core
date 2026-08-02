@@ -58,7 +58,14 @@ function useBridgeUIContextValue(
 
   const setGlobal = useCallback((patch: Partial<BridgeUIGlobal>) => {
     setGlobalPatch((prev) => {
-      return toMerged(prev, patch);
+      const { icons, ...rest } = patch;
+      const next = toMerged(prev, rest) as Partial<BridgeUIGlobal>;
+
+      if (icons !== undefined) {
+        next.icons = icons;
+      }
+
+      return next;
     });
   }, []);
 

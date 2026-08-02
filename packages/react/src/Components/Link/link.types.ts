@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -13,6 +12,7 @@ import type {
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface LinkSizeOverrides {}
 export interface LinkColorOverrides {}
@@ -108,14 +108,14 @@ export interface LinkOwnProps {
    *
    * @default undefined
    */
-  leftIcon?: LucideIcon;
+  leftIcon?: IconSource;
 
   /**
    * The icon to display after the link text.
    *
    * @default undefined
    */
-  rightIcon?: LucideIcon;
+  rightIcon?: IconSource;
 
   /**
    * The size of the link.

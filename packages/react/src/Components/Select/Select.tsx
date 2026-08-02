@@ -1,5 +1,4 @@
 // ** External Imports
-import { X } from "lucide-react";
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useRef } from "react";
 
@@ -97,7 +96,7 @@ function Select(props: SelectProps) {
                 }}
               >
                 <Icon
-                  icon={X}
+                  icon="clear"
                   size={clearIconSize}
                   {...selectProps.customProps?.clearIcon}
                 />

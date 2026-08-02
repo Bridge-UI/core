@@ -1,6 +1,5 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
-import { User } from "lucide-react";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
@@ -58,10 +57,10 @@ test("it should detect fallback slot when slots.fallback is passed", () => {
   expect(result.current.hasFallbackSlot).toBe(true);
 });
 
-test("it should default resolved icon to User", () => {
+test("it should default resolved icon to user", () => {
   const { result } = renderUseAvatar();
 
-  expect(result.current.resolvedIcon).toStrictEqual(User);
+  expect(result.current.resolvedIcon).toBe("user");
 });
 
 test("it should compute rootBind className as a non-empty string", () => {

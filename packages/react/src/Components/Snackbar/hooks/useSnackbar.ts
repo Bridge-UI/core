@@ -1,6 +1,5 @@
 // ** External Imports
 import { get, isNull, omit } from "es-toolkit/compat";
-import type { LucideIcon } from "lucide-react";
 import {
   useEffect,
   useLayoutEffect,
@@ -39,6 +38,7 @@ import type {
   SnackbarProps,
 } from "@/Components/Snackbar/snackbar.types";
 import { snackbarDefaultIcons } from "@/Components/Snackbar/snackbarDefaultIcons";
+import type { IconSource } from "@/Icons";
 import {
   derived,
   mergePartBind,
@@ -240,7 +240,7 @@ export function useSnackbar(
       return merged.icon;
     }
 
-    const themeIcon = get(colorClass, "icon") as undefined | LucideIcon;
+    const themeIcon = get(colorClass, "icon") as undefined | IconSource;
 
     return themeIcon ?? get(snackbarDefaultIcons, merged.color);
   }, [colorClass, merged.icon, merged.color]);

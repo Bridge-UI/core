@@ -53,3 +53,11 @@ test("it should compute rootBind with size and className", () => {
   expect(result.current.rootBind.className).toContain("w-3.5");
   expect(result.current.rootBind.className).toContain("text-red-500");
 });
+
+test("it should resolve a semantic icon name to a component", () => {
+  const { result } = renderUseIcon({ icon: "info" });
+
+  expect(result.current.merged.icon).toBe("info");
+  expect(result.current.resolvedIcon).toBeTruthy();
+  expect(result.current.resolvedIcon).not.toBe("info");
+});

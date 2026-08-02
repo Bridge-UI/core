@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -7,6 +6,7 @@ import type { ListboxValue, MergeHtmlProps } from "@bridge-ui/core";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface ListItemClasses {
   /**
@@ -187,7 +187,7 @@ export interface ListItemOwnProps {
    *
    * @default Check
    */
-  selectedIcon?: null | LucideIcon;
+  selectedIcon?: null | IconSource;
 
   /**
    * The slots to apply to the item.

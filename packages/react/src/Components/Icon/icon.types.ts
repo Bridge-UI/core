@@ -1,17 +1,19 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { SVGAttributes } from "react";
 
 // ** Core Imports
 import type { IconSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
 
+// ** Local Imports
+import type { IconSource } from "@/Icons";
+
 export interface IconSizeOverrides {}
 
 export interface IconOwnProps {
   /**
-   * Lucide icon component.
+   * Semantic icon name (resolved via the icon adapter) or an icon component.
    */
-  icon: LucideIcon;
+  icon: IconSource;
 
   /**
    * The size of the icon.

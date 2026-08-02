@@ -6,9 +6,13 @@ import type { IconProps } from "@/Components/Icon";
 import { useIcon } from "@/Components/Icon";
 
 function Icon(props: IconProps) {
-  const { merged, rootBind } = useIcon(props, { size: "md" });
+  const { rootBind, resolvedIcon } = useIcon(props, { size: "md" });
 
-  return createElement(merged.icon, rootBind);
+  if (resolvedIcon == null) {
+    return null;
+  }
+
+  return createElement(resolvedIcon, rootBind);
 }
 
 export default Icon;

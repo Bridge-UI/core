@@ -76,3 +76,9 @@ test("it should apply 2xs size classes", () => {
   expect(svg?.classList.contains("w-2")).toBe(true);
   expect(svg?.classList.contains("h-2")).toBe(true);
 });
+
+test("it should resolve a semantic icon name via the default adapter", () => {
+  const { container } = render(<Icon icon="info" />);
+
+  expect(container.querySelector("svg")).not.toBeNull();
+});

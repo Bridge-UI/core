@@ -1,6 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
-import { Check, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
@@ -106,14 +106,14 @@ test("it should apply selected styles on interactive bind", () => {
   expect(result.current.interactiveBind?.className).toContain("text-dark-900");
 });
 
-test("it should resolve Check as the default selected icon", () => {
+test("it should resolve check as the default selected icon", () => {
   const { result } = renderUseListItem({
     selected: true,
     interactive: true,
     primary: "Selected",
   });
 
-  expect(result.current.resolvedSelectedIcon).toBe(Check);
+  expect(result.current.resolvedSelectedIcon).toBe("check");
 });
 
 test("it should suppress the selected icon when selectedIcon is null", () => {

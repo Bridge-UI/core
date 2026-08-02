@@ -1,5 +1,4 @@
 // ** External Imports
-import type { LucideIcon } from "lucide-react";
 import type { HTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
@@ -13,6 +12,7 @@ import type {
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";
+import type { IconSource } from "@/Icons";
 
 export interface AvatarSizeOverrides {}
 export interface AvatarColorOverrides {}
@@ -113,7 +113,7 @@ export interface AvatarOwnProps {
    *
    * @default undefined
    */
-  icon?: LucideIcon;
+  icon?: IconSource;
 
   /**
    * The roundedness of the avatar.
