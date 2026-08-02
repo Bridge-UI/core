@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon adapter, and component registry defaults.
 
 ## Import
 
@@ -20,11 +20,14 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/react";
     breakpoints: {},
     direction: "ltr",
     mobileBreakpoint: "sm",
+    // icons: createLucideIconAdapter(), // see examples/adapters/react/icon-lucide.ts
   }}
 >
   <App />
 </BridgeUIProvider>
 ```
+
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …).
 
 ### Runtime updates
 
@@ -36,11 +39,11 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                       |
-| ------------ | -------------------------- | ------- | ----------------------------------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                             |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                            |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints` |
+| Prop         | Type                       | Default | Description                                                                |
+| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                      |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                     |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`
 
