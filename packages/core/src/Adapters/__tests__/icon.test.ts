@@ -1,5 +1,5 @@
 // ** External Imports
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
@@ -27,6 +27,18 @@ describe("createIconAdapter", () => {
     expect(() => adapter.resolve("clear")).toThrow(
       '[BridgeUI] Missing icon "clear" in icon adapter.',
     );
+  });
+
+  test("it should attach an optional normalize hook", () => {
+    const normalize = vi.fn((source: unknown) => source);
+    const adapter = createIconAdapter(
+      Object.fromEntries(
+        SEMANTIC_ICON_NAMES.map((name) => [name, null]),
+      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
+      { normalize },
+    );
+
+    expect(adapter.normalize).toBe(normalize);
   });
 });
 
@@ -70,5 +82,46 @@ describe("resolveIconSource", () => {
     expect(() => resolveIconSource("clear", undefined)).toThrow(
       /Semantic icon "clear" requires BridgeUIProvider global\.icons/,
     );
+  });
+
+  test("it should normalize concrete icon values when the adapter defines normalize", () => {
+    const definition = { prefix: "fas", iconName: "coffee" };
+    const Wrapped = () => null;
+    const normalize = vi.fn(() => Wrapped);
+    const normalizingAdapter = createIconAdapter(
+      Object.fromEntries(
+        SEMANTIC_ICON_NAMES.map((name) => [name, Glyph]),
+      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
+      { normalize },
+    );
+
+    expect(resolveIconSource(definition, normalizingAdapter)).toBe(Wrapped);
+    expect(normalize).toHaveBeenCalledWith(definition);
+  });
+
+  test("it should normalize values returned from semantic resolve", () => {
+    const definition = { prefix: "fas", iconName: "user" };
+    const Wrapped = () => null;
+    const normalize = vi.fn((source: unknown) => {
+      return source === definition ? Wrapped : source;
+    });
+    const normalizingAdapter = createIconAdapter(
+      Object.fromEntries(
+        SEMANTIC_ICON_NAMES.map((name) => [
+          name,
+          name === "user" ? definition : Glyph,
+        ]),
+      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
+      { normalize },
+    );
+
+    expect(resolveIconSource("user", normalizingAdapter)).toBe(Wrapped);
+    expect(normalize).toHaveBeenCalledWith(definition);
+  });
+
+  test("it should pass concrete icons through when normalize is omitted", () => {
+    const Custom = () => null;
+
+    expect(resolveIconSource(Custom, undefined)).toBe(Custom);
   });
 });

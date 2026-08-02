@@ -11,7 +11,7 @@ export interface IconSizeOverrides {}
 
 export interface IconOwnProps {
   /**
-   * Semantic icon name (resolved via the icon adapter) or an icon component.
+   * Semantic icon name, icon component, or adapter-normalized native value.
    */
   icon: IconSource;
 

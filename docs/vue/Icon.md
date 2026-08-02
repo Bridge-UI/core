@@ -51,25 +51,37 @@ Other ready examples (same `create*IconAdapter()` shape):
 | `icon-phosphor.ts`    | Phosphor Icons              |
 | `icon-fontawesome.ts` | Font Awesome 6 (free solid) |
 
-Font Awesome exports definitions, not components. The example also exports `wrapFaIcon` for ad-hoc icons:
+### Font Awesome definitions
+
+With the Font Awesome adapter, pass definitions directly — `normalize` wraps them:
 
 ```ts
+import { createBridgeUI } from "@bridge-ui/vue";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { wrapFaIcon } from "@examples/adapters/vue/icon-fontawesome";
+import { createFontAwesomeIconAdapter } from "@examples/adapters/vue/icon-fontawesome";
 
-const CoffeeIcon = wrapFaIcon(faCoffee);
+const icons = createFontAwesomeIconAdapter();
+
+app.use(
+  createBridgeUI({
+    global: { icons },
+  }),
+);
 ```
 
 ```vue
-<Icon :icon="CoffeeIcon" />
+<Icon :icon="faCoffee" />
+<Icon icon="info" />
 ```
+
+The example also exports `wrapFaIcon` if you need a component outside `<Icon />`.
 
 ## Props
 
-| Prop   | Type         | Default | Description                      |
-| ------ | ------------ | ------- | -------------------------------- |
-| `icon` | `IconSource` | —       | Semantic name or icon component. |
-| `size` | `IconSize`   | "md"    | The size of the icon.            |
+| Prop   | Type         | Default | Description                                                                  |
+| ------ | ------------ | ------- | ---------------------------------------------------------------------------- |
+| `icon` | `IconSource` | —       | Semantic name, icon component, or adapter-normalized native value (e.g. FA). |
+| `size` | `IconSize`   | "md"    | The size of the icon.                                                        |
 
 ## Related components
 

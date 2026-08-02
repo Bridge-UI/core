@@ -13,6 +13,9 @@ export type {
   IconSource,
   MessageParams,
   MessageValue,
+  CreateIconAdapterOptions,
+  IconSourceValue,
+  IconSourceValueOverrides,
   SemanticIconName,
   SemanticIconNameOverrides,
 } from "@/Adapters";
