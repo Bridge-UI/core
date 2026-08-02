@@ -27,8 +27,8 @@
     "test:cy": "npm run test:cy:vue && npm run test:cy:react",
     "test:cy:react": "npm run test:cy -w @bridge-ui/react",
     "test:cy:vue": "npm run test:cy -w @bridge-ui/vue",
-    "lint": "eslint packages/core/src packages/react/src packages/vue/src",
-    "lint:fix": "eslint packages/core/src packages/react/src packages/vue/src --fix",
+    "lint": "eslint packages/core/src packages/react/src packages/vue/src examples/adapters",
+    "lint:fix": "eslint packages/core/src packages/react/src packages/vue/src examples/adapters --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "bump-version": "bash scripts/bump-version.sh"

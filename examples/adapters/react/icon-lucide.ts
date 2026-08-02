@@ -32,18 +32,18 @@ import { createIconAdapter, type IconAdapter } from "@bridge-ui/core";
 export function createLucideIconAdapter(): IconAdapter {
   return createIconAdapter({
     eye: Eye,
+    clear: X,
     bell: Bell,
     info: Info,
     user: User,
-    alert: CircleAlert,
     check: Check,
-    clear: X,
     error: CircleX,
     eyeOff: EyeOff,
     loader: Loader2,
+    alert: CircleAlert,
     success: CircleCheck,
-    warning: TriangleAlert,
     chevronUp: ChevronUp,
+    warning: TriangleAlert,
     chevronDown: ChevronDown,
     chevronUpDown: ChevronsUpDown,
   });
