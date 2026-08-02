@@ -10,9 +10,10 @@
     "types": ["node"],
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@examples/*": ["../../examples/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "cypress", "env.d.ts", "vitest.setup.ts"],
   "exclude": ["src/**/__tests__"]
 }

@@ -9,7 +9,10 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { "@": resolve(__dirname, "src") },
+    alias: {
+      "@": resolve(__dirname, "src"),
+      "@examples": resolve(__dirname, "../../examples"),
+    },
   },
   test: {
     name: "react",

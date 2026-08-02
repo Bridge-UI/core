@@ -1,14 +1,16 @@
+// ** External Imports
 import { mount } from "cypress/react";
 
-import { createLucideIconAdapter } from "../../../../examples/adapters/react/icon-lucide";
-import { setIconAdapterForTests } from "../../src/Icons/useIconAdapter";
+// ** Local Imports
+import { setIconAdapterForTests } from "@/Icons/useIconAdapter";
+import { createLucideIconAdapter } from "@examples/adapters/react/icon-lucide";
 import "./component.css";
 
 setIconAdapterForTests(createLucideIconAdapter());
 
 declare global {
-  const test: Mocha.TestFunction;
-
+  // Cypress Chainable is ambient-namespace augmentation only.
+  // eslint-disable-next-line @typescript-eslint/no-namespace -- Cypress API
   namespace Cypress {
     interface Chainable {
       mount: typeof mount;
@@ -19,3 +21,5 @@ declare global {
 globalThis.test = it;
 
 Cypress.Commands.add("mount", mount);
+
+export {};
