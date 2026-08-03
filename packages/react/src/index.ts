@@ -332,6 +332,18 @@ export type {
   TextFieldProps,
   TextFieldSlots,
 } from "@/Components/TextField";
+export { Tooltip, useTooltip } from "@/Components/Tooltip";
+export type {
+  TooltipClasses,
+  TooltipColorOverrides,
+  TooltipCustomProps,
+  TooltipOptions,
+  TooltipOwnProps,
+  TooltipProps,
+  TooltipRoundedOverrides,
+  TooltipSizeOverrides,
+  TooltipSlots,
+} from "@/Components/Tooltip";
 export { BridgeUIContext, BridgeUIProvider, useBridgeUI } from "@/Provider";
 export type { BridgeUIContextValue, BridgeUIProviderProps } from "@/Provider";
 export {

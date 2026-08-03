@@ -50,6 +50,7 @@ export default defineConfig({
     dts({
       entryRoot: srcDir,
       tsconfigPath: "./tsconfig.json",
+      include: ["src/**/*.ts", "src/**/*.tsx"],
       beforeWriteFile: (filePath, content) => ({
         filePath,
         content: content.replace(/\{\n\}/g, "{}"),

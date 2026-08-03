@@ -142,6 +142,13 @@ import type {
   TabsVariantItem,
 } from "@/Tokens/Tabs";
 import type { TextareaResize } from "@/Tokens/Textarea";
+import type {
+  TooltipColor,
+  TooltipColorItem,
+  TooltipRounded,
+  TooltipSize,
+  TooltipSizeItem,
+} from "@/Tokens/Tooltip";
 import type { Overwrite } from "@/Utils/types";
 
 export type Direction = "ltr" | "rtl";
@@ -237,6 +244,7 @@ export interface TabConfigOverrides {}
 export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
 export interface TabItemConfigOverrides {}
+export interface TooltipConfigOverrides {}
 
 export interface AlertConfigBase {
   classes: object;
@@ -654,6 +662,27 @@ export interface TabItemConfigBase {
   }>;
 }
 
+export interface TooltipConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    arrow: boolean;
+    closeDelay: number;
+    color: keyof TooltipColor;
+    offset: number;
+    openDelay: number;
+    placement: string;
+    rounded: keyof TooltipRounded;
+    size: keyof TooltipSize;
+    strategy: "fixed" | "absolute";
+    teleportTo: false | string;
+  }>;
+  tokens: Partial<{
+    color: Record<string, TooltipColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, TooltipSizeItem>;
+  }>;
+}
+
 export type BridgeUIComponentsConfig = Partial<{
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
@@ -698,6 +727,7 @@ export type BridgeUIComponentsConfig = Partial<{
   TabPanel: Partial<Overwrite<TabPanelConfigBase, TabPanelConfigOverrides>>;
   Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
+  Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
 }>;
 
 export interface BridgeUIOptions {
