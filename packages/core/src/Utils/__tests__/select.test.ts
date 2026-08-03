@@ -8,6 +8,7 @@ import type { SelectOption } from "@/Utils/select";
 import {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
+  commitFreeSoloValue,
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
@@ -437,5 +438,31 @@ describe("mergeSelectAsyncOptions", () => {
     const merged = mergeSelectAsyncOptions([], search);
 
     expect(merged).toHaveLength(DEFAULT_SELECT_ASYNC_LIMIT);
+  });
+});
+
+describe("commitFreeSoloValue", () => {
+  test("it should return null for an empty query", () => {
+    expect(commitFreeSoloValue("   ", [], false)).toBeNull();
+    expect(commitFreeSoloValue("", ["a"], true)).toBeNull();
+  });
+
+  test("it should commit a single free-solo value", () => {
+    expect(commitFreeSoloValue("apple", [], false)).toBe("apple");
+  });
+
+  test("it should return null when the single value is unchanged", () => {
+    expect(commitFreeSoloValue("apple", ["apple"], false)).toBeNull();
+  });
+
+  test("it should append a free-solo value in multiple mode", () => {
+    expect(commitFreeSoloValue("banana", ["apple"], true)).toEqual([
+      "apple",
+      "banana",
+    ]);
+  });
+
+  test("it should skip duplicates in multiple mode", () => {
+    expect(commitFreeSoloValue("apple", ["apple"], true)).toBeNull();
   });
 });

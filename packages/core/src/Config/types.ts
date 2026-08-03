@@ -210,6 +210,7 @@ export interface BridgeUIGlobal {
 }
 
 export interface AlertConfigOverrides {}
+export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
 export interface BadgeConfigOverrides {}
 export interface ButtonConfigOverrides {}
@@ -217,6 +218,8 @@ export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface DividerConfigOverrides {}
+export interface DrawerConfigOverrides {}
+export interface FormControlConfigOverrides {}
 export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
@@ -227,7 +230,6 @@ export interface ListItemConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
-export interface DrawerConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
@@ -236,14 +238,13 @@ export interface SelectConfigOverrides {}
 export interface SkeletonConfigOverrides {}
 export interface SnackbarConfigOverrides {}
 export interface SpinnerConfigOverrides {}
-export interface FormControlConfigOverrides {}
-export interface TextareaConfigOverrides {}
 export interface SwitchConfigOverrides {}
-export interface TabsConfigOverrides {}
 export interface TabConfigOverrides {}
+export interface TabItemConfigOverrides {}
 export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
-export interface TabItemConfigOverrides {}
+export interface TabsConfigOverrides {}
+export interface TextareaConfigOverrides {}
 export interface TooltipConfigOverrides {}
 
 export interface AlertConfigBase {
@@ -537,6 +538,10 @@ export interface SnackbarConfigBase {
   }>;
 }
 
+export interface AutocompleteConfigBase {
+  classes: object;
+}
+
 export interface SelectConfigBase {
   classes: object;
 }
@@ -685,6 +690,9 @@ export interface TooltipConfigBase {
 
 export type BridgeUIComponentsConfig = Partial<{
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
+  Autocomplete: Partial<
+    Overwrite<AutocompleteConfigBase, AutocompleteConfigOverrides>
+  >;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
   Badge: Partial<Overwrite<BadgeConfigBase, BadgeConfigOverrides>>;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;

@@ -366,6 +366,7 @@ export {
 } from "@/Utils/progress";
 export type { SpinnerCircleGeometry } from "@/Utils/progress";
 export {
+  commitFreeSoloValue,
   createSelectAsyncSearch,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,

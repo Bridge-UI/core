@@ -27,6 +27,7 @@ export {
 } from "@/Config";
 export type {
   AlertConfigOverrides,
+  AutocompleteConfigOverrides,
   AvatarConfigOverrides,
   BadgeConfigOverrides,
   BridgeUIComponentsConfig,
@@ -266,6 +267,7 @@ export {
   buildBreakpointSnapshot,
   claimOpenMenu,
   cn,
+  commitFreeSoloValue,
   countDrawerTransitionLayers,
   countModalTransitionLayers,
   createBreakpointObserver,
