@@ -9,6 +9,7 @@ import {
   shift,
   type Placement,
 } from "@floating-ui/dom";
+import { constant, isFunction } from "es-toolkit/compat";
 
 // ** Local Imports
 import { hasDocument } from "@/Utils/env";
@@ -22,17 +23,13 @@ export type PositionStrategy = "fixed" | "absolute";
  * Options for the positionable.
  */
 export type PositionOptions = {
-  /**
-   * Optional arrow element. When set, Floating UI `arrow` middleware
-   * positions it along the edge facing the reference.
-   */
-  arrow?: HTMLElement;
-
+  arrow?: HTMLElement | (() => null | undefined | HTMLElement);
   floating: HTMLElement;
   offset?: number;
   onReferenceHidden?: () => void;
   placement?: Placement;
   reference: HTMLElement;
+  shiftCrossAxis?: boolean;
   strategy?: PositionStrategy;
 };
 
@@ -49,33 +46,54 @@ export type PositionHandle = {
 };
 
 /**
+ * Inset for edge-aligned (`-start` / `-end`) arrows. Too large (~12) looks
+ * centered on short tooltips; too small (~4) sits on the corner.
+ */
+const ARROW_EDGE_INSET_PX = 8;
+
+/**
+ * Half of the default 8px arrow (`size-2`) — keeps the tip flush with the panel edge.
+ */
+const ARROW_STATIC_SIDE_OFFSET = "-4px";
+
+/**
  * Anchors a floating element to a reference using Floating UI (Menu, Popover, etc.).
  */
 export function createPositionable(options: PositionOptions): PositionHandle {
   const floating = options.floating;
   const reference = options.reference;
   const onReferenceHidden = options.onReferenceHidden;
+  const shiftCrossAxis = options.shiftCrossAxis ?? true;
 
-  const arrowEl = options.arrow;
   let offsetValue = options.offset ?? 4;
   let cleanup: null | (() => void) = null;
   let strategy: PositionStrategy = options.strategy ?? "fixed";
   let placement: Placement = options.placement ?? "bottom-start";
+
+  const resolveArrow = isFunction(options.arrow)
+    ? options.arrow
+    : constant(options.arrow);
 
   async function computeAndApply() {
     if (!hasDocument()) {
       return;
     }
 
+    const arrowEl = resolveArrow() ?? undefined;
+
     const middleware = [
       offset(offsetValue),
-      flip({ padding: 8 }),
-      shift({ padding: 8 }),
+      flip({ padding: 8, flipAlignment: false }),
+      shift({ padding: 8, crossAxis: shiftCrossAxis }),
       hide({ padding: -100 }),
     ];
 
     if (arrowEl) {
-      middleware.splice(3, 0, arrow({ element: arrowEl }));
+      middleware.splice(
+        3,
+        0,
+        arrow({ element: arrowEl, padding: ARROW_EDGE_INSET_PX }),
+      );
     }
 
     const result = await computePosition(reference, floating, {
@@ -95,26 +113,14 @@ export function createPositionable(options: PositionOptions): PositionHandle {
     });
 
     if (arrowEl && result.middlewareData.arrow) {
-      const { x: arrowX, y: arrowY } = result.middlewareData.arrow;
-      const side = result.placement.split("-")[0] as
-        | "top"
-        | "left"
-        | "right"
-        | "bottom";
-      const staticSide = {
-        top: "bottom",
-        right: "left",
-        bottom: "top",
-        left: "right",
-      }[side];
-
-      Object.assign(arrowEl.style, {
-        right: "",
-        bottom: "",
-        [staticSide]: "-4px",
-        top: arrowY != null ? `${arrowY}px` : "",
-        left: arrowX != null ? `${arrowX}px` : "",
-      });
+      Object.assign(
+        arrowEl.style,
+        getArrowStyles({
+          placement: result.placement,
+          arrowX: result.middlewareData.arrow.x,
+          arrowY: result.middlewareData.arrow.y,
+        }),
+      );
     }
   }
 
@@ -146,6 +152,65 @@ export function createPositionable(options: PositionOptions): PositionHandle {
       });
     },
   };
+}
+
+type ArrowSide = "top" | "left" | "right" | "bottom";
+
+/**
+ * Builds arrow inline styles for the final Floating UI placement.
+ */
+function getArrowStyles(options: {
+  arrowX: number | undefined;
+  arrowY: number | undefined;
+  placement: Placement;
+}) {
+  const { arrowX, arrowY, placement } = options;
+
+  const [side, alignment] = placement.split("-") as [
+    ArrowSide,
+    "end" | "start" | undefined,
+  ];
+
+  const staticSide = {
+    top: "bottom",
+    right: "left",
+    bottom: "top",
+    left: "right",
+  }[side] as ArrowSide;
+
+  const isVertical = side === "top" || side === "bottom";
+
+  const styles: Record<ArrowSide, string> = {
+    top: "",
+    left: "",
+    right: "",
+    bottom: "",
+    [staticSide]: ARROW_STATIC_SIDE_OFFSET,
+  };
+
+  if (alignment) {
+    if (isVertical) {
+      if (alignment === "end") {
+        styles.left = "auto";
+        styles.right = `${ARROW_EDGE_INSET_PX}px`;
+      } else {
+        styles.right = "auto";
+        styles.left = `${ARROW_EDGE_INSET_PX}px`;
+      }
+    } else if (alignment === "end") {
+      styles.top = "auto";
+      styles.bottom = `${ARROW_EDGE_INSET_PX}px`;
+    } else {
+      styles.bottom = "auto";
+      styles.top = `${ARROW_EDGE_INSET_PX}px`;
+    }
+  } else if (isVertical) {
+    styles.left = arrowX != null ? `${arrowX}px` : "";
+  } else {
+    styles.top = arrowY != null ? `${arrowY}px` : "";
+  }
+
+  return styles;
 }
 
 /** Floating UI placement alias re-exported from `@floating-ui/dom`. */
