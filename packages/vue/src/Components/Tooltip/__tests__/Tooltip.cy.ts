@@ -19,18 +19,16 @@ test("it should not show the tooltip by default", () => {
   cy.get('[role="tooltip"]').should("not.exist");
 });
 
-test("it should open on hover when openDelay is 0", () => {
+test("it should render when modelValue is true", () => {
   cy.mount(() =>
     h(
       Tooltip,
-      { openDelay: 0, content: "Save file" },
+      { modelValue: true, content: "Save file" },
       {
         trigger: () => h(Button, null, () => "Save"),
       },
     ),
   );
-
-  cy.contains("Save").parent().trigger("pointerenter");
 
   cy.get('[role="tooltip"]').should("contain.text", "Save file");
 });
@@ -39,14 +37,12 @@ test("it should render the arrow by default", () => {
   cy.mount(() =>
     h(
       Tooltip,
-      { openDelay: 0, content: "With arrow" },
+      { modelValue: true, content: "With arrow" },
       {
         trigger: () => h(Button, null, () => "Save"),
       },
     ),
   );
-
-  cy.contains("Save").parent().trigger("pointerenter");
 
   cy.get('[role="tooltip"] [aria-hidden="true"]').should(
     "have.class",
@@ -58,14 +54,12 @@ test("it should apply dark background by default", () => {
   cy.mount(() =>
     h(
       Tooltip,
-      { openDelay: 0, content: "Dark" },
+      { modelValue: true, content: "Dark" },
       {
         trigger: () => h(Button, null, () => "Save"),
       },
     ),
   );
-
-  cy.contains("Save").parent().trigger("pointerenter");
 
   cy.get('[role="tooltip"]').should("have.class", "bg-dark-900");
 });
@@ -74,15 +68,13 @@ test("it should render custom default slot content", () => {
   cy.mount(() =>
     h(
       Tooltip,
-      { openDelay: 0 },
+      { modelValue: true },
       {
         default: () => h("strong", "Custom"),
         trigger: () => h(Button, null, () => "Save"),
       },
     ),
   );
-
-  cy.contains("Save").parent().trigger("pointerenter");
 
   cy.get('[role="tooltip"] strong').should("contain.text", "Custom");
 });
