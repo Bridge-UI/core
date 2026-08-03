@@ -407,7 +407,11 @@ export function useAutocomplete(
     (options?: { commitFreeSolo?: boolean }) => {
       asyncSearchRef.current?.cancel();
 
-      if (open && options?.commitFreeSolo && autocompleteMerged.freeSolo) {
+      if (
+        open &&
+        options?.commitFreeSolo &&
+        autocompleteMerged.freeSolo !== false
+      ) {
         const next = commitFreeSoloValue(searchQuery, selectedValues, multiple);
 
         if (next != null) {
@@ -525,7 +529,7 @@ export function useAutocomplete(
   );
 
   const commitFreeSolo = useCallback(() => {
-    if (!autocompleteMerged.freeSolo) {
+    if (autocompleteMerged.freeSolo === false) {
       return false;
     }
 

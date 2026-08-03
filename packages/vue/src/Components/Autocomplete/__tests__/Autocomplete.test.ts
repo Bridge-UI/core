@@ -323,9 +323,9 @@ test("it should not forward defaultValue to the trigger input", () => {
   expect(combobox?.getAttribute("defaultvalue")).toBeNull();
 });
 
-test("it should commit free-solo text on Enter when freeSolo is enabled", async () => {
+test("it should commit free-solo text on Enter by default", async () => {
   const wrapper = mountAutocomplete({
-    props: { freeSolo: true, modelValue: undefined },
+    props: { modelValue: undefined },
   });
 
   const combobox = wrapper.find('[role="combobox"]');
@@ -342,7 +342,7 @@ test("it should commit free-solo text on Enter when freeSolo is enabled", async 
 
 test("it should not commit free-solo text when freeSolo is disabled", async () => {
   const wrapper = mountAutocomplete({
-    props: { modelValue: undefined },
+    props: { freeSolo: false, modelValue: undefined },
   });
 
   const combobox = wrapper.find('[role="combobox"]');

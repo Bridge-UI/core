@@ -193,7 +193,7 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * When true, typed text that is not in `options` can be committed as a value
    * (Enter, Tab, or closing the menu).
    *
-   * @default false
+   * @default true
    */
   freeSolo?: boolean;
 
