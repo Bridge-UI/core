@@ -349,6 +349,19 @@ export {
   type LayerStackSnapshotEntry,
 } from "@/Utils/modal";
 export {
+  applyOtpInput,
+  applyOtpKeyNavigation,
+  applyOtpPaste,
+  DEFAULT_OTP_LENGTH,
+  isOtpCharAllowed,
+  isOtpComplete,
+  joinOtpDigits,
+  normalizeOtpValue,
+  resolveOtpLength,
+  splitOtpValue,
+} from "@/Utils/otp";
+export type { OtpDigitsUpdate, OtpInputType } from "@/Utils/otp";
+export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@/Utils/portal";
