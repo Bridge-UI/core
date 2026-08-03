@@ -14,8 +14,9 @@ import { get } from "es-toolkit/compat";
 // ** Core Imports
 import type { I18nAdapter } from "@bridge-ui/core";
 
+// prettier-ignore
 const MESSAGES: Record<string, string> = {
-  Close: "Fechar",
+  "Close": "Fechar",
   "Loading...": "Carregando...",
   "No options": "Nenhuma opção",
   "Hide password": "Ocultar senha",

@@ -5,6 +5,7 @@
  */
 
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import {
   Bell,
   Check,
@@ -50,7 +51,7 @@ const icons = {
 export function createLucideIconAdapter(): IconAdapter {
   return {
     resolve(name) {
-      return icons[name];
+      return get(icons, name);
     },
   };
 }

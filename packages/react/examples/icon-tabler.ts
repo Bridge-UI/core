@@ -22,6 +22,7 @@ import {
   IconUser,
   IconX,
 } from "@tabler/icons-react";
+import { get } from "es-toolkit/compat";
 
 // ** Core Imports
 import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
@@ -50,7 +51,7 @@ const icons = {
 export function createTablerIconAdapter(): IconAdapter {
   return {
     resolve(name) {
-      return icons[name];
+      return get(icons, name);
     },
   };
 }

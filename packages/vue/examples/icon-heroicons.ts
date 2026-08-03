@@ -22,6 +22,7 @@ import {
   XCircleIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
+import { get } from "es-toolkit/compat";
 
 // ** Core Imports
 import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
@@ -50,7 +51,7 @@ const icons = {
 export function createHeroiconsIconAdapter(): IconAdapter {
   return {
     resolve(name) {
-      return icons[name];
+      return get(icons, name);
     },
   };
 }

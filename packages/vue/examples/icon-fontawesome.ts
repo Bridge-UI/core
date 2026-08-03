@@ -27,7 +27,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { isArray, isObject, isString } from "es-toolkit/compat";
+import { get, isArray, isObject, isString } from "es-toolkit/compat";
 import { defineComponent, h, type Component } from "vue";
 
 // ** Core Imports
@@ -103,7 +103,7 @@ const icons = {
 export function createFontAwesomeIconAdapter(): IconAdapter {
   return {
     resolve(name) {
-      return icons[name];
+      return get(icons, name);
     },
     normalize(source) {
       return isIconDefinition(source) ? wrapFaIcon(source) : source;

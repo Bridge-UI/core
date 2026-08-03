@@ -27,7 +27,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { isArray, isObject, isString, omit } from "es-toolkit/compat";
+import { get, isArray, isObject, isString, omit } from "es-toolkit/compat";
 import {
   createElement,
   type ComponentPropsWithoutRef,
@@ -115,7 +115,7 @@ const icons = {
 export function createFontAwesomeIconAdapter(): IconAdapter {
   return {
     resolve(name) {
-      return icons[name];
+      return get(icons, name);
     },
     normalize(source) {
       return isIconDefinition(source) ? wrapFaIcon(source) : source;
