@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/Bridge-UI/docs/main/assets/logo.svg" height="100" alt="Bridge UI logo">
+<img src="https://raw.githubusercontent.com/Bridge-UI/docs/main/assets/logo-main.svg" height="100" alt="Bridge UI logo">
 </p>
 
 <h2><p align="center">BridgeUI</p></h2>
