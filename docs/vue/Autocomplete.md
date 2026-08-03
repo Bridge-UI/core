@@ -47,13 +47,10 @@ import { Autocomplete } from "@bridge-ui/vue/Components/Autocomplete";
 
 ### Free solo
 
+Enabled by default. Type a value that is not in `options` and commit with Enter, Tab, or by closing the menu. Set `:free-solo="false"` to require picking from the list.
+
 ```vue
-<Autocomplete
-  free-solo
-  label="Tag"
-  :options="tags"
-  placeholder="Pick or type a tag"
-/>
+<Autocomplete label="Tag" :options="tags" placeholder="Pick or type a tag" />
 ```
 
 ### Async data
@@ -153,7 +150,7 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 | `disableMaxHeight`  | `boolean`             | `false`       | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
 | `emptyMessage`      | `string`              | "No options"  | Message when the filtered list is empty.                                                                |
 | `flipOptions`       | `boolean`             | `false`       | Inverts the visual order of options.                                                                    |
-| `freeSolo`          | `boolean`             | `false`       | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
+| `freeSolo`          | `boolean`             | `true`        | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
 | `hideEmptyMessage`  | `boolean`             | `false`       | Hides the empty-state message.                                                                          |
 | `loading`           | `boolean`             | —             | External or async loading state.                                                                        |
 | `maxHeight`         | `string`              | "max-h-60"    | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
