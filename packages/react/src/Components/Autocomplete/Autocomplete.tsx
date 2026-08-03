@@ -3,10 +3,10 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useRef } from "react";
 
 // ** Core Imports
-import { cn, resolveMessage } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { AutocompleteProps } from "@/Components/Autocomplete/autocomplete.types";
 import { useAutocomplete } from "@/Components/Autocomplete/hooks/useAutocomplete";
 import { Chip } from "@/Components/Chip";
@@ -16,7 +16,8 @@ import { Listbox } from "@/Components/Listbox";
 import { mergeNestedComponentProps } from "@/Utils";
 
 function Autocomplete(props: AutocompleteProps) {
-  const i18n = useI18nAdapter();
+  const resolveMessage = useResolveMessage();
+
   const triggerRef = useRef<null | HTMLInputElement | HTMLTextAreaElement>(
     null,
   );
@@ -97,7 +98,7 @@ function Autocomplete(props: AutocompleteProps) {
               <span
                 {...clearBind}
                 onClick={() => clearValue()}
-                aria-label={resolveMessage("Clear selection", i18n)}
+                aria-label={resolveMessage("Clear selection")}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();

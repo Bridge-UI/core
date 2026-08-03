@@ -2,10 +2,10 @@
 import { Fragment } from "react";
 
 // ** Core Imports
-import { cn, resolveMessage } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/hooks/useNumberField";
@@ -17,7 +17,8 @@ import {
 } from "@/Utils";
 
 function NumberField(props: NumberFieldProps) {
-  const i18n = useI18nAdapter();
+  const resolveMessage = useResolveMessage();
+
   const { formField, increment, decrement, inputBind, mergedClasses } =
     useNumberField(props);
 
@@ -50,7 +51,7 @@ function NumberField(props: NumberFieldProps) {
                     {
                       type: "button",
                       disabled: props.disabled,
-                      "aria-label": resolveMessage("Increment value", i18n),
+                      "aria-label": resolveMessage("Increment value"),
                       ...incrementHold.handlers,
                     },
                     cn({
@@ -72,7 +73,7 @@ function NumberField(props: NumberFieldProps) {
                     {
                       type: "button",
                       disabled: props.disabled,
-                      "aria-label": resolveMessage("Decrement value", i18n),
+                      "aria-label": resolveMessage("Decrement value"),
                       ...decrementHold.handlers,
                     },
                     cn({

@@ -26,7 +26,6 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -37,7 +36,7 @@ import {
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import {
   formFieldBridgeKeys,
   useFormField,
@@ -93,8 +92,8 @@ export function useSelect(
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
-  const i18n = useI18nAdapter();
   const listboxId = useId();
+  const resolveMessage = useResolveMessage();
 
   const open = ref(false);
   const searchQuery = ref("");
@@ -890,11 +889,9 @@ export function useSelect(
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
       emptyMessage:
-        selectMerged.value.emptyMessage ??
-        resolveMessage("No options", i18n.value),
+        selectMerged.value.emptyMessage ?? resolveMessage("No options"),
       loadingMessage:
-        selectMerged.value.loadingMessage ??
-        resolveMessage("Loading...", i18n.value),
+        selectMerged.value.loadingMessage ?? resolveMessage("Loading..."),
       ...listboxCustomProps.value,
     };
   });
@@ -944,16 +941,10 @@ export function useSelect(
       return selectMerged.value.hideEmptyMessage === true;
     }),
     emptyMessage: computed(() => {
-      return (
-        selectMerged.value.emptyMessage ??
-        resolveMessage("No options", i18n.value)
-      );
+      return selectMerged.value.emptyMessage ?? resolveMessage("No options");
     }),
     loadingMessage: computed(() => {
-      return (
-        selectMerged.value.loadingMessage ??
-        resolveMessage("Loading...", i18n.value)
-      );
+      return selectMerged.value.loadingMessage ?? resolveMessage("Loading...");
     }),
   };
 }

@@ -1,5 +1,9 @@
 // ** Exports
-export { setI18nAdapterForTests, useI18nAdapter } from "@/Adapters/I18n";
+export {
+  setI18nAdapterForTests,
+  useI18nAdapter,
+  useResolveMessage,
+} from "@/Adapters/I18n";
 export { setIconAdapterForTests, useIconAdapter } from "@/Adapters/Icon";
 export type {
   IconElement,

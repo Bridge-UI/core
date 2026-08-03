@@ -15,7 +15,7 @@ export function setIconAdapterForTests(adapter: undefined | IconAdapter) {
 
 /**
  * Returns the active icon adapter from {@link BridgeUIProvider}.
- * Semantic icon names require `global.icons` (see `examples/adapters/react`).
+ * Semantic icon names require `global.icons` (see `packages/react/examples`).
  */
 export function useIconAdapter(): undefined | IconAdapter {
   const bridge = useBridgeUI();

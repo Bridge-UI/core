@@ -21,7 +21,6 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -32,7 +31,7 @@ import {
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   AutocompleteClasses,
   AutocompleteCustomProps,
@@ -88,8 +87,8 @@ export function useAutocomplete(
   props: AutocompleteProps,
   triggerRef: RefObject<null | HTMLInputElement | HTMLTextAreaElement>,
 ) {
-  const i18n = useI18nAdapter();
   const listboxId = useId();
+  const resolveMessage = useResolveMessage();
 
   const {
     slots,
@@ -1035,9 +1034,9 @@ export function useAutocomplete(
   );
 
   const emptyMessage =
-    autocompleteMerged.emptyMessage ?? resolveMessage("No options", i18n);
+    autocompleteMerged.emptyMessage ?? resolveMessage("No options");
   const loadingMessage =
-    autocompleteMerged.loadingMessage ?? resolveMessage("Loading...", i18n);
+    autocompleteMerged.loadingMessage ?? resolveMessage("Loading...");
   const hideEmptyMessage = autocompleteMerged.hideEmptyMessage === true;
 
   const listboxProps = useMemo(() => {

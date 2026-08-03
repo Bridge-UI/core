@@ -9,6 +9,7 @@ import {
   mergeBridgeUIGlobal,
   type BridgeUIComponentsConfig,
   type BridgeUIGlobal,
+  type Direction,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -64,6 +65,19 @@ export function createBridgeUIApi(
     globalPatch.value = next;
   }
 
+  function setTheme(theme: string) {
+    setGlobal({ theme });
+  }
+
+  function setLocale(locale: string) {
+    setGlobal({ locale });
+    global.value.i18n?.setLocale?.(locale);
+  }
+
+  function setDirection(direction: Direction) {
+    setGlobal({ direction });
+  }
+
   function setComponents(patch: BridgeUIComponentsConfig) {
     componentsPatch.value = mergeBridgeUIComponents({
       partials: [patch],
@@ -71,5 +85,13 @@ export function createBridgeUIApi(
     });
   }
 
-  return { global, setGlobal, components, setComponents };
+  return {
+    global,
+    setTheme,
+    setGlobal,
+    setLocale,
+    components,
+    setDirection,
+    setComponents,
+  };
 }
