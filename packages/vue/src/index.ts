@@ -20,6 +20,15 @@ export type {
   AlertSlots,
   AlertVariantOverrides,
 } from "@/Components/Alert";
+export { Autocomplete, AutocompleteOption } from "@/Components/Autocomplete";
+export type {
+  AutocompleteClasses,
+  AutocompleteEmits,
+  AutocompleteOptionData,
+  AutocompleteOptionProps,
+  AutocompleteProps,
+  AutocompleteSlots,
+} from "@/Components/Autocomplete";
 export { Avatar } from "@/Components/Avatar";
 export type {
   AvatarClasses,
