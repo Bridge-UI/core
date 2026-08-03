@@ -113,8 +113,8 @@ export function useAutocomplete(
       AutocompleteOwnProps & Record<string, unknown>,
       typeof autocompleteBridgeKeys
     >({
-      bridgeKeys: autocompleteBridgeKeys,
       props: { ...attrs, ...props },
+      bridgeKeys: autocompleteBridgeKeys,
     });
   });
 
@@ -997,7 +997,6 @@ export function useAutocomplete(
   });
 
   return {
-    open: openModel,
     slots,
     hasValue,
     multiple,
@@ -1017,6 +1016,7 @@ export function useAutocomplete(
     mergedClasses,
     visibleOptions,
     isSearchActive,
+    open: openModel,
     selectedOptions,
     hasComposedList,
     highlightedIndex,
