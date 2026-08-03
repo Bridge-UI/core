@@ -94,6 +94,17 @@ import type {
   ModalTransitionLayer,
 } from "@/Tokens/Modal";
 import type {
+  OtpFieldColor,
+  OtpFieldColorItem,
+  OtpFieldInvalidated,
+  OtpFieldRounded,
+  OtpFieldRoundedItem,
+  OtpFieldSize,
+  OtpFieldSizeItem,
+  OtpFieldVariant,
+  OtpFieldVariantItem,
+} from "@/Tokens/OtpField";
+import type {
   ProgressColor,
   ProgressColorItem,
   ProgressRounded,
@@ -231,6 +242,7 @@ export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
+export interface OtpFieldConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
@@ -497,6 +509,25 @@ export interface NumberFieldConfigBase {
   classes: object;
 }
 
+export interface OtpFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof OtpFieldColor;
+    length: number;
+    rounded: keyof OtpFieldRounded;
+    size: keyof OtpFieldSize;
+    type: "numeric" | "alphanumeric";
+    variant: keyof OtpFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, OtpFieldColorItem>;
+    invalidated: Partial<OtpFieldInvalidated>;
+    rounded: Record<string, OtpFieldRoundedItem>;
+    size: Record<string, OtpFieldSizeItem>;
+    variant: Record<string, OtpFieldVariantItem>;
+  }>;
+}
+
 export interface PasswordFieldConfigBase {
   classes: object;
 }
@@ -719,6 +750,7 @@ export type BridgeUIComponentsConfig = Partial<{
   NumberField: Partial<
     Overwrite<NumberFieldConfigBase, NumberFieldConfigOverrides>
   >;
+  OtpField: Partial<Overwrite<OtpFieldConfigBase, OtpFieldConfigOverrides>>;
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;

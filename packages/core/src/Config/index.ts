@@ -52,6 +52,8 @@ export type {
   ModalConfigOverrides,
   NumberFieldConfigBase,
   NumberFieldConfigOverrides,
+  OtpFieldConfigBase,
+  OtpFieldConfigOverrides,
   PasswordFieldConfigBase,
   PasswordFieldConfigOverrides,
   ProgressConfigBase,
