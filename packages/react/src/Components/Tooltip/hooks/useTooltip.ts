@@ -343,9 +343,10 @@ export function useTooltip(
       floating,
       reference,
       offset: merged.offset,
+      shiftCrossAxis: false,
       strategy: merged.strategy,
       placement: merged.placement,
-      arrow: merged.arrow ? (arrowRef.current ?? undefined) : undefined,
+      arrow: merged.arrow ? () => arrowRef.current : undefined,
       onReferenceHidden: () => {
         if (!allowReferenceHiddenCloseRef.current || !show) {
           return;
