@@ -3,7 +3,7 @@ import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useRef } from "react";
 
 // ** Core Imports
-import { resolveMessage } from "@bridge-ui/core";
+import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useI18nAdapter } from "@/Adapters/I18n";
@@ -69,7 +69,12 @@ function Select(props: SelectProps) {
                 onDismiss={(event) => removeChip(option, event)}
                 {...mergeNestedComponentProps(selectProps.customProps?.chip, {
                   customProps: { clear: clearBind },
-                  classes: { root: mergedClasses.chip },
+                  classes: {
+                    root: cn({
+                      "bg-white ring-1 ring-inset ring-gray-200 dark:bg-gray-700 dark:ring-gray-600": true,
+                      [mergedClasses.chip ?? ""]: true,
+                    }),
+                  },
                 })}
               >
                 {slots?.chip ? slots.chip({ option }) : option.label}

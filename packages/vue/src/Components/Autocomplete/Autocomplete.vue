@@ -4,7 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, provide, ref, useTemplateRef } from "vue";
 
 // ** Core Imports
-import { resolveMessage } from "@bridge-ui/core";
+import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useI18nAdapter } from "@/Adapters/I18n";
@@ -34,7 +34,7 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<null | SelectValue | SelectValue[]>();
 
 const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
-  freeSolo: false,
+  freeSolo: true,
   clearable: true,
   searchable: true,
   withErrorIcon: true,
@@ -122,8 +122,13 @@ const {
         v-on:dismiss="removeChip(option, $event)"
         v-bind="
           mergeNestedComponentProps(props.customProps?.chip, {
-            classes: { root: mergedClasses.chip },
             customProps: { clear: clearBind },
+            classes: {
+              root: cn({
+                'bg-white ring-1 ring-inset ring-gray-200 dark:bg-gray-700 dark:ring-gray-600': true,
+                [mergedClasses.chip ?? '']: true,
+              }),
+            },
           })
         "
       >

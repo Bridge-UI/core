@@ -243,12 +243,11 @@ test("it should select from composed ListSection and ListItem children", async (
   expect(onChange).toHaveBeenCalledWith("apple");
 });
 
-test("it should commit free-solo text on Enter when freeSolo is enabled", async () => {
+test("it should commit free-solo text on Enter by default", async () => {
   const onChange = vi.fn();
 
   render(
     <Autocomplete
-      freeSolo
       value=""
       options={options}
       aria-label="Fruit"
@@ -276,6 +275,7 @@ test("it should not commit free-solo text when freeSolo is disabled", async () =
   render(
     <Autocomplete
       value=""
+      freeSolo={false}
       options={options}
       aria-label="Fruit"
       onChange={onChange}
