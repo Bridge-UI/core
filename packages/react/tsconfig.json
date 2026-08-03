@@ -11,9 +11,9 @@
     "noEmit": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@examples/*": ["../../examples/*"]
+      "@examples/*": ["./examples/*"]
     }
   },
-  "include": ["src", "cypress", "env.d.ts", "vitest.setup.ts"],
+  "include": ["src", "cypress", "env.d.ts", "vitest.setup.ts", "examples"],
   "exclude": ["src/**/__tests__"]
 }

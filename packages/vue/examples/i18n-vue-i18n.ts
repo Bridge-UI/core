@@ -5,24 +5,25 @@
  *
  * Passes Bridge source strings and `params` straight to `i18n.t`
  * (interpolation, pluralization, etc. stay in vue-i18n).
+ * `setLocale` on the adapter is invoked by Bridge `setLocale`.
  */
+
+// ** External Imports
+import type { Composer } from "vue-i18n";
 
 // ** Core Imports
-import { type I18nAdapter, type MessageParams } from "@bridge-ui/core";
-
-/**
- * Minimal vue-i18n-compatible translate surface (`i18n.global` or `useI18n()`).
- */
-export type VueI18nLike = {
-  t: (key: string, ...args: unknown[]) => string;
-};
+import type { I18nAdapter } from "@bridge-ui/core";
 
 /**
  * Builds a vue-i18n-backed {@link I18nAdapter} for Bridge chrome strings.
+ * Pass `vueI18n.global` (composition mode) or the result of `useI18n()`.
  */
-export function createVueI18nAdapter(i18n: VueI18nLike): I18nAdapter {
+export function createVueI18nAdapter(i18n: Composer): I18nAdapter {
   return {
-    t(message, params?: MessageParams) {
+    setLocale(locale) {
+      i18n.locale.value = locale;
+    },
+    t(message, params) {
       if (params) {
         return i18n.t(message, params);
       }

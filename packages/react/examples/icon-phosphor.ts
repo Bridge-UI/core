@@ -24,27 +24,33 @@ import {
 } from "@phosphor-icons/react";
 
 // ** Core Imports
-import { createIconAdapter, type IconAdapter } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
+
+const icons = {
+  eye: EyeIcon,
+  clear: XIcon,
+  bell: BellIcon,
+  info: InfoIcon,
+  user: UserIcon,
+  check: CheckIcon,
+  error: XCircleIcon,
+  eyeOff: EyeSlashIcon,
+  warning: WarningIcon,
+  loader: SpinnerGapIcon,
+  chevronUp: CaretUpIcon,
+  alert: WarningCircleIcon,
+  success: CheckCircleIcon,
+  chevronDown: CaretDownIcon,
+  chevronUpDown: CaretUpDownIcon,
+} satisfies Record<SemanticIconName, unknown>;
 
 /**
  * Builds a Phosphor-backed {@link IconAdapter} for Bridge semantic icon names.
  */
 export function createPhosphorIconAdapter(): IconAdapter {
-  return createIconAdapter({
-    eye: EyeIcon,
-    clear: XIcon,
-    bell: BellIcon,
-    info: InfoIcon,
-    user: UserIcon,
-    check: CheckIcon,
-    error: XCircleIcon,
-    eyeOff: EyeSlashIcon,
-    warning: WarningIcon,
-    loader: SpinnerGapIcon,
-    chevronUp: CaretUpIcon,
-    alert: WarningCircleIcon,
-    success: CheckCircleIcon,
-    chevronDown: CaretDownIcon,
-    chevronUpDown: CaretUpDownIcon,
-  });
+  return {
+    resolve(name) {
+      return icons[name];
+    },
+  };
 }

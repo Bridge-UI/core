@@ -3,7 +3,7 @@ import { mount } from "cypress/vue";
 
 // ** Local Imports
 import { setIconAdapterForTests } from "@/Adapters/Icon/useIconAdapter";
-import { createLucideIconAdapter } from "@examples/adapters/vue/icon-lucide";
+import { createLucideIconAdapter } from "@examples/icon-lucide";
 import "./component.css";
 
 setIconAdapterForTests(createLucideIconAdapter());
