@@ -119,3 +119,67 @@ test("it should register autoUpdate on start and cleanup on destroy", () => {
 
   positionable.destroy();
 });
+
+test("it should position the arrow element when provided", async () => {
+  document.body.innerHTML = `
+    <button id="reference" type="button">Open</button>
+    <div id="floating">
+      Tooltip
+      <div id="arrow"></div>
+    </div>
+  `;
+
+  const reference = document.getElementById("reference") as HTMLElement;
+  const floating = document.getElementById("floating") as HTMLElement;
+  const arrowEl = document.getElementById("arrow") as HTMLElement;
+
+  vi.spyOn(reference, "getBoundingClientRect").mockReturnValue({
+    x: 50,
+    y: 80,
+    top: 80,
+    left: 50,
+    width: 100,
+    height: 40,
+    right: 150,
+    bottom: 120,
+    toJSON: () => ({}),
+  } as DOMRect);
+
+  vi.spyOn(floating, "getBoundingClientRect").mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    width: 80,
+    right: 80,
+    height: 32,
+    bottom: 32,
+    toJSON: () => ({}),
+  } as DOMRect);
+
+  vi.spyOn(arrowEl, "getBoundingClientRect").mockReturnValue({
+    x: 0,
+    y: 0,
+    top: 0,
+    left: 0,
+    width: 8,
+    right: 8,
+    height: 8,
+    bottom: 8,
+    toJSON: () => ({}),
+  } as DOMRect);
+
+  const positionable = createPositionable({
+    floating,
+    reference,
+    offset: 8,
+    arrow: arrowEl,
+    placement: "top",
+  });
+
+  await positionable.update();
+
+  expect(floating.style.top).not.toBe("");
+  expect(floating.style.left).not.toBe("");
+  expect(arrowEl.style.bottom).toBe("-4px");
+});

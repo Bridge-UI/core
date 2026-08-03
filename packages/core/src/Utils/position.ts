@@ -1,5 +1,6 @@
 // ** External Imports
 import {
+  arrow,
   autoUpdate,
   computePosition,
   flip,
@@ -21,6 +22,12 @@ export type PositionStrategy = "fixed" | "absolute";
  * Options for the positionable.
  */
 export type PositionOptions = {
+  /**
+   * Optional arrow element. When set, Floating UI `arrow` middleware
+   * positions it along the edge facing the reference.
+   */
+  arrow?: HTMLElement;
+
   floating: HTMLElement;
   offset?: number;
   onReferenceHidden?: () => void;
@@ -49,6 +56,7 @@ export function createPositionable(options: PositionOptions): PositionHandle {
   const reference = options.reference;
   const onReferenceHidden = options.onReferenceHidden;
 
+  const arrowEl = options.arrow;
   let offsetValue = options.offset ?? 4;
   let cleanup: null | (() => void) = null;
   let strategy: PositionStrategy = options.strategy ?? "fixed";
@@ -59,15 +67,21 @@ export function createPositionable(options: PositionOptions): PositionHandle {
       return;
     }
 
+    const middleware = [
+      offset(offsetValue),
+      flip({ padding: 8 }),
+      shift({ padding: 8 }),
+      hide({ padding: -100 }),
+    ];
+
+    if (arrowEl) {
+      middleware.splice(3, 0, arrow({ element: arrowEl }));
+    }
+
     const result = await computePosition(reference, floating, {
       strategy,
       placement,
-      middleware: [
-        offset(offsetValue),
-        flip({ padding: 8 }),
-        shift({ padding: 8 }),
-        hide({ padding: -100 }),
-      ],
+      middleware,
     });
 
     if (result.middlewareData.hide?.referenceHidden) {
@@ -79,6 +93,29 @@ export function createPositionable(options: PositionOptions): PositionHandle {
       top: `${result.y}px`,
       left: `${result.x}px`,
     });
+
+    if (arrowEl && result.middlewareData.arrow) {
+      const { x: arrowX, y: arrowY } = result.middlewareData.arrow;
+      const side = result.placement.split("-")[0] as
+        | "top"
+        | "left"
+        | "right"
+        | "bottom";
+      const staticSide = {
+        top: "bottom",
+        right: "left",
+        bottom: "top",
+        left: "right",
+      }[side];
+
+      Object.assign(arrowEl.style, {
+        right: "",
+        bottom: "",
+        [staticSide]: "-4px",
+        top: arrowY != null ? `${arrowY}px` : "",
+        left: arrowX != null ? `${arrowX}px` : "",
+      });
+    }
   }
 
   return {

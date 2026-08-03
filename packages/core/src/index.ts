@@ -245,6 +245,13 @@ export type {
   TabsVariantItem,
 } from "@/Tokens/Tabs";
 export type { TextareaResize } from "@/Tokens/Textarea";
+export type {
+  TooltipColor,
+  TooltipColorItem,
+  TooltipRounded,
+  TooltipSize,
+  TooltipSizeItem,
+} from "@/Tokens/Tooltip";
 export {
   DEFAULT_BREAKPOINTS,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
