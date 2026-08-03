@@ -8,39 +8,40 @@ import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useI18nAdapter } from "@/Adapters/I18n";
+import type {
+  AutocompleteEmits,
+  AutocompleteOwnProps,
+  AutocompleteSlots,
+  SelectOption,
+  SelectValue,
+} from "@/Components/Autocomplete/autocomplete.types";
+import { AUTOCOMPLETE_OPTION_KEY } from "@/Components/Autocomplete/autocompleteInjectionKey";
+import { useAutocomplete } from "@/Components/Autocomplete/composables/useAutocomplete";
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
-import { useSelect } from "@/Components/Select/composables/useSelect";
-import type {
-  SelectEmits,
-  SelectOption,
-  SelectOwnProps,
-  SelectSlots,
-  SelectValue,
-} from "@/Components/Select/select.types";
-import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
 import {
   hasNamedSlot,
   mergeNestedComponentProps,
   resolveNamedSlot,
 } from "@/Utils";
 
-defineSlots<SelectSlots>();
+defineSlots<AutocompleteSlots>();
 
 defineOptions({ inheritAttrs: false });
 
 const model = defineModel<null | SelectValue | SelectValue[]>();
 
-const props = withDefaults(defineProps<SelectOwnProps>(), {
+const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
+  freeSolo: true,
   clearable: true,
-  searchable: false,
+  searchable: true,
   withErrorIcon: true,
   minItemsForSearch: 11,
 });
 
-const emit = defineEmits<SelectEmits>();
+const emit = defineEmits<AutocompleteEmits>();
 
 const i18n = useI18nAdapter();
 
@@ -64,7 +65,7 @@ const triggerRef = useTemplateRef<HTMLInputElement | HTMLTextAreaElement>(
 
 const declarativeOptions = ref<SelectOption[]>([]);
 
-provide(SELECT_OPTION_KEY, {
+provide(AUTOCOMPLETE_OPTION_KEY, {
   unregister(value) {
     declarativeOptions.value = declarativeOptions.value.filter(
       (item) => String(item.value) !== String(value),
@@ -102,7 +103,7 @@ const {
   selectedOptions,
   hasComposedList,
   handleRegisteredOptionsChange,
-} = useSelect(props, value, triggerRef, emit, declarativeOptions);
+} = useAutocomplete(props, value, triggerRef, emit, declarativeOptions);
 </script>
 
 <template>
@@ -191,7 +192,7 @@ const {
     </template>
   </Listbox>
 
-  <!-- Declarative `SelectOption` children register here (data-only). -->
+  <!-- Declarative `AutocompleteOption` children register here (data-only). -->
   <div hidden aria-hidden="true" v-if="!hasComposedList">
     <slot />
   </div>

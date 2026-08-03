@@ -548,3 +548,36 @@ export async function resolveSelectAsyncOptions<T extends SelectOption>(
 export function selectValuesEqual(a: SelectValue, b: SelectValue) {
   return String(a) === String(b);
 }
+
+/**
+ * Commits a free-solo query into the current selection.
+ * Returns `null` when the query is empty or already selected (no change).
+ */
+export function commitFreeSoloValue(
+  query: string,
+  selected: SelectValue[],
+  multiple: boolean,
+): null | SelectModel {
+  const trimmed = query.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  if (multiple) {
+    if (selected.some((value) => selectValuesEqual(value, trimmed))) {
+      return null;
+    }
+
+    return [...selected, trimmed];
+  }
+
+  if (
+    selected.length === 1 &&
+    selectValuesEqual(selected[0] as SelectValue, trimmed)
+  ) {
+    return null;
+  }
+
+  return trimmed;
+}

@@ -8,6 +8,8 @@ export { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 export type {
   AlertConfigBase,
   AlertConfigOverrides,
+  AutocompleteConfigBase,
+  AutocompleteConfigOverrides,
   AvatarConfigBase,
   AvatarConfigOverrides,
   BadgeConfigBase,

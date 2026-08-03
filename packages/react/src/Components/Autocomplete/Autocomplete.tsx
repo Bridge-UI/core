@@ -7,15 +7,15 @@ import { cn, resolveMessage } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useI18nAdapter } from "@/Adapters/I18n";
+import type { AutocompleteProps } from "@/Components/Autocomplete/autocomplete.types";
+import { useAutocomplete } from "@/Components/Autocomplete/hooks/useAutocomplete";
 import { Chip } from "@/Components/Chip";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
-import { useSelect } from "@/Components/Select/hooks/useSelect";
-import type { SelectProps } from "@/Components/Select/select.types";
 import { mergeNestedComponentProps } from "@/Utils";
 
-function Select(props: SelectProps) {
+function Autocomplete(props: AutocompleteProps) {
   const i18n = useI18nAdapter();
   const triggerRef = useRef<null | HTMLInputElement | HTMLTextAreaElement>(
     null,
@@ -52,7 +52,7 @@ function Select(props: SelectProps) {
     mergedClasses,
     selectedOptions,
     handleOpenChange,
-  } = useSelect(selectProps, triggerRef);
+  } = useAutocomplete(selectProps, triggerRef);
 
   return (
     <>
@@ -136,4 +136,4 @@ function Select(props: SelectProps) {
   );
 }
 
-export default Select;
+export default Autocomplete;

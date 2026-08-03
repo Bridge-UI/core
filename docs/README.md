@@ -9,6 +9,7 @@ Markdown reference for **React** and **Vue** packages.
 ## React
 
 - [Alert](./react/Alert.md)
+- [Autocomplete](./react/Autocomplete.md)
 - [Avatar](./react/Avatar.md)
 - [Badge](./react/Badge.md)
 - [Button](./react/Button.md)
@@ -48,6 +49,7 @@ Markdown reference for **React** and **Vue** packages.
 ## Vue
 
 - [Alert](./vue/Alert.md)
+- [Autocomplete](./vue/Autocomplete.md)
 - [Avatar](./vue/Avatar.md)
 - [Badge](./vue/Badge.md)
 - [Button](./vue/Button.md)
