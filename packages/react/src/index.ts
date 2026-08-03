@@ -203,6 +203,14 @@ export type {
   NumberFieldProps,
   NumberFieldSlots,
 } from "@/Components/NumberField";
+export { OtpField, useOtpField } from "@/Components/OtpField";
+export type {
+  OtpFieldClasses,
+  OtpFieldCustomProps,
+  OtpFieldOwnProps,
+  OtpFieldProps,
+  OtpFieldSlots,
+} from "@/Components/OtpField";
 export { PasswordField, usePasswordField } from "@/Components/PasswordField";
 export type {
   PasswordFieldClasses,
