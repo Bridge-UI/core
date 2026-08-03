@@ -54,7 +54,7 @@ test("it should apply dark background by default", () => {
   cy.mount(() =>
     h(
       Tooltip,
-      { modelValue: true, content: "Dark" },
+      { content: "Dark", modelValue: true },
       {
         trigger: () => h(Button, null, () => "Save"),
       },

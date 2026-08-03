@@ -112,7 +112,6 @@ export function useTooltip(
   const triggerRef = ref<null | HTMLElement>(null);
 
   let stackOrder: null | number = null;
-
   let allowReferenceHiddenClose = false;
   let stackHandle: null | LayerStackHandle = null;
   let positionHandle: null | PositionHandle = null;
@@ -292,10 +291,11 @@ export function useTooltip(
     positionHandle = createPositionable({
       floating,
       reference,
+      shiftCrossAxis: false,
       offset: merged.value.offset,
       strategy: merged.value.strategy,
       placement: merged.value.placement,
-      arrow: merged.value.arrow ? (arrowRef.value ?? undefined) : undefined,
+      arrow: merged.value.arrow ? () => arrowRef.value : undefined,
       onReferenceHidden: () => {
         if (!allowReferenceHiddenClose || !show.value) {
           return;
