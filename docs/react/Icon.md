@@ -2,7 +2,7 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Bridge does not ship a default set — copy an example from `examples/adapters/react/`.
+Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Bridge only defines the `IconAdapter` interface — copy an example from `packages/react/examples/`.
 
 ## Import
 
@@ -26,7 +26,7 @@ import { Info } from "lucide-react";
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
-import { createLucideIconAdapter } from "@examples/adapters/react/icon-lucide";
+import { createLucideIconAdapter } from "@examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
 ```
@@ -54,7 +54,7 @@ With the Font Awesome adapter, pass definitions directly — `normalize` wraps t
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { createFontAwesomeIconAdapter } from "@examples/adapters/react/icon-fontawesome";
+import { createFontAwesomeIconAdapter } from "@examples/icon-fontawesome";
 
 const icons = createFontAwesomeIconAdapter();
 ```

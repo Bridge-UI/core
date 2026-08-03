@@ -2,7 +2,7 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` / `createBridgeUI` (`global.icons`). Bridge does not ship a default set — copy an example from `examples/adapters/vue/`.
+Semantic names require an icon adapter on `BridgeUIProvider` / `createBridgeUI` (`global.icons`). Bridge only defines the `IconAdapter` interface — copy an example from `packages/vue/examples/`.
 
 ## Import
 
@@ -26,7 +26,7 @@ import { Info } from "@lucide/vue";
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createLucideIconAdapter } from "@examples/adapters/vue/icon-lucide";
+import { createLucideIconAdapter } from "@examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
 
@@ -58,7 +58,7 @@ With the Font Awesome adapter, pass definitions directly — `normalize` wraps t
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { createFontAwesomeIconAdapter } from "@examples/adapters/vue/icon-fontawesome";
+import { createFontAwesomeIconAdapter } from "@examples/icon-fontawesome";
 
 const icons = createFontAwesomeIconAdapter();
 

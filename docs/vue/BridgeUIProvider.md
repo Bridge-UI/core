@@ -28,11 +28,11 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 
 ### Icon adapter
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `examples/adapters/vue/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `packages/vue/examples/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createLucideIconAdapter } from "@examples/adapters/vue/icon-lucide";
+import { createLucideIconAdapter } from "@examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
 
@@ -45,17 +45,17 @@ app.use(
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without it, the source string is used. Ready samples in `examples/adapters/vue/` (dictionary, vue-i18n). See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createDictionaryI18nAdapter } from "@examples/adapters/vue/i18n-dictionary";
+import { createDictionaryI18nAdapter } from "@examples/i18n-dictionary";
 
-const i18n = createDictionaryI18nAdapter("pt-BR");
+const i18n = createDictionaryI18nAdapter();
 
 app.use(
   createBridgeUI({
-    global: { i18n, locale: "pt-BR" },
+    global: { i18n },
   }),
 );
 ```
@@ -63,9 +63,12 @@ app.use(
 ### Runtime updates
 
 ```ts
-const { setGlobal, setComponents } = useBridgeUI();
+const { setLocale, setTheme, setDirection, setGlobal } = useBridgeUI()!;
 
-setGlobal({ locale: "pt-BR", theme: "dark" });
+setTheme("dark");
+setLocale("pt-BR"); // also calls global.i18n.setLocale when present
+setDirection("rtl");
+setGlobal({ mobileBreakpoint: "md" });
 ```
 
 ## Props
@@ -77,7 +80,7 @@ setGlobal({ locale: "pt-BR", theme: "dark" });
 
 App content is passed via the **default slot** (see Usage above).
 
-**useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`
+**useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setDirection`
 
 ## Related components
 
