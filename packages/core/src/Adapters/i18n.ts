@@ -1,5 +1,5 @@
 // ** External Imports
-import { isFunction, isNil, isString } from "es-toolkit/compat";
+import { isNil } from "es-toolkit/compat";
 
 /**
  * Opaque values forwarded to the adapter (`count`, interpolation vars, …).
@@ -11,11 +11,6 @@ export type MessageParams = Record<
 >;
 
 /**
- * Message value for {@link createI18nAdapter}: a static string or a function.
- */
-export type MessageValue = string | ((params?: MessageParams) => string);
-
-/**
  * Pluggable i18n set for Bridge UI.
  * Apps provide an adapter via `BridgeUIProvider` `global.i18n`.
  *
@@ -24,44 +19,23 @@ export type MessageValue = string | ((params?: MessageParams) => string);
  *
  * Interpolation and pluralization are handled by the adapter implementation,
  * not by Bridge core.
+ *
+ * Optional {@link setLocale} is called by Bridge `setLocale` so the app can
+ * sync i18next / vue-i18n in one place. Persistence stays in the app.
+ *
+ * See `packages/{react,vue}/examples` for sample implementations.
  */
 export interface I18nAdapter {
+  /**
+   * Called by Bridge `setLocale` to sync the underlying i18n library.
+   */
+  setLocale?: (locale: string) => void;
+
   /**
    * Translates a source message. Unknown messages should return the source.
    * Adapters may use `params` for replace / pluralization.
    */
   t: (message: string, params?: MessageParams) => string;
-}
-
-/**
- * Creates a simple dictionary {@link I18nAdapter}.
- * Missing entries fall back to the original source message.
- *
- * For replace / pluralization, prefer wrapping i18next, vue-i18n, or a custom
- * `t` that understands those features — see `examples/adapters/{react,vue}`.
- */
-export function createI18nAdapter(
-  messages: Record<string, MessageValue>,
-): I18nAdapter {
-  return {
-    t(message, params) {
-      const translated = messages[message];
-
-      if (isNil(translated)) {
-        return message;
-      }
-
-      if (isFunction(translated)) {
-        return translated(params);
-      }
-
-      if (isString(translated)) {
-        return translated;
-      }
-
-      return message;
-    },
-  };
 }
 
 /**
