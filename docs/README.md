@@ -1,89 +1,33 @@
 # Bridge UI — Component documentation
 
-Markdown reference for **React** and **Vue** packages.
+Markdown reference for **React** and **Vue**. Docs live **inside each package** (published on npm).
 
 ## Maintainers
 
 - [Release guide](./RELEASE.md)
 
-## React
+## React (`@bridge-ui/react`)
 
-- [Alert](./react/Alert.md)
-- [Autocomplete](./react/Autocomplete.md)
-- [Avatar](./react/Avatar.md)
-- [Badge](./react/Badge.md)
-- [Button](./react/Button.md)
-- [Card](./react/Card.md)
-- [Checkbox](./react/Checkbox.md)
-- [Divider](./react/Divider.md)
-- [Drawer](./react/Drawer.md)
-- [FormControl](./react/FormControl.md)
-- [FormField](./react/FormField.md)
-- [Icon](./react/Icon.md)
-- [I18n](./react/I18n.md)
-- [Label](./react/Label.md)
-- [Link](./react/Link.md)
-- [List](./react/List.md)
-- [Menu](./react/Menu.md)
-- [Modal](./react/Modal.md)
-- [NumberField](./react/NumberField.md)
-- [OtpField](./react/OtpField.md)
-- [PasswordField](./react/PasswordField.md)
-- [BridgeUIProvider](./react/BridgeUIProvider.md)
-- [Progress](./react/Progress.md)
-- [Radio](./react/Radio.md)
-- [Select](./react/Select.md)
-- [Skeleton](./react/Skeleton.md)
-- [Snackbar](./react/Snackbar.md)
-- [Spinner](./react/Spinner.md)
-- [Switch](./react/Switch.md)
-- [Tabs](./react/Tabs.md)
-- [Textarea](./react/Textarea.md)
-- [TextField](./react/TextField.md)
-- [Tooltip](./react/Tooltip.md)
-- [useBreakpoint](./react/useBreakpoint.md)
-- [useDialogAction](./react/useDialogAction.md)
-- [useDrawerAction](./react/useDrawerAction.md)
-- [useModalAction](./react/useModalAction.md)
-- [useSnackbarAction](./react/useSnackbarAction.md)
+- Index: [`packages/react/docs/`](../packages/react/docs/)
+- Components: [`packages/react/docs/components/`](../packages/react/docs/components/)
+- Adapter examples: [`packages/react/docs/examples/`](../packages/react/docs/examples/)
 
-## Vue
+```bash
+npm install @bridge-ui/react
+npx bridge-ui-react-ai install
+```
 
-- [Alert](./vue/Alert.md)
-- [Autocomplete](./vue/Autocomplete.md)
-- [Avatar](./vue/Avatar.md)
-- [Badge](./vue/Badge.md)
-- [Button](./vue/Button.md)
-- [Card](./vue/Card.md)
-- [Checkbox](./vue/Checkbox.md)
-- [Divider](./vue/Divider.md)
-- [Drawer](./vue/Drawer.md)
-- [FormControl](./vue/FormControl.md)
-- [FormField](./vue/FormField.md)
-- [Icon](./vue/Icon.md)
-- [I18n](./vue/I18n.md)
-- [Label](./vue/Label.md)
-- [Link](./vue/Link.md)
-- [List](./vue/List.md)
-- [Menu](./vue/Menu.md)
-- [Modal](./vue/Modal.md)
-- [NumberField](./vue/NumberField.md)
-- [OtpField](./vue/OtpField.md)
-- [PasswordField](./vue/PasswordField.md)
-- [BridgeUIProvider](./vue/BridgeUIProvider.md)
-- [Progress](./vue/Progress.md)
-- [Radio](./vue/Radio.md)
-- [Select](./vue/Select.md)
-- [Skeleton](./vue/Skeleton.md)
-- [Snackbar](./vue/Snackbar.md)
-- [Spinner](./vue/Spinner.md)
-- [Switch](./vue/Switch.md)
-- [Tabs](./vue/Tabs.md)
-- [Textarea](./vue/Textarea.md)
-- [TextField](./vue/TextField.md)
-- [Tooltip](./vue/Tooltip.md)
-- [useBreakpoint](./vue/useBreakpoint.md)
-- [useDialogAction](./vue/useDialogAction.md)
-- [useDrawerAction](./vue/useDrawerAction.md)
-- [useModalAction](./vue/useModalAction.md)
-- [useSnackbarAction](./vue/useSnackbarAction.md)
+Docs are linked into the app as `.ai/docs/` (including `components/` and `examples/`).
+
+## Vue (`@bridge-ui/vue`)
+
+- Index: [`packages/vue/docs/`](../packages/vue/docs/)
+- Components: [`packages/vue/docs/components/`](../packages/vue/docs/components/)
+- Adapter examples: [`packages/vue/docs/examples/`](../packages/vue/docs/examples/)
+
+```bash
+npm install @bridge-ui/vue
+npx bridge-ui-vue-ai install
+```
+
+Docs are linked into the app as `.ai/docs/` (including `components/` and `examples/`).

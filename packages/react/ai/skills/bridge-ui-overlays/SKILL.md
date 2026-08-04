@@ -8,67 +8,30 @@ description: >-
 
 # Bridge UI (React) — overlays & actions
 
-## Declarative Modal
+Do **not** invent APIs. Copy examples from `.ai/docs/components/{Component}.md`.
 
-`show` + `onShowChange`. Content: **`Card`** (no `ModalCard`).
+## Binding
 
-```tsx
-import { Modal } from "@bridge-ui/react/Components/Modal";
-import { Card } from "@bridge-ui/react/Components/Card";
-import { Button } from "@bridge-ui/react/Components/Button";
+Overlays: **`show` + `onShowChange`**. Modal/Drawer body: **`Card`** (no `ModalCard`).
 
-<Button onClick={() => setOpen(true)}>Open</Button>
+## Start here
 
-<Modal show={open} onShowChange={setOpen}>
-  <Card title="Confirm" onClose={() => setOpen(false)}>
-    Are you sure?
-  </Card>
-</Modal>
-```
+| Need              | Doc                                        |
+| ----------------- | ------------------------------------------ |
+| Modal             | `.ai/docs/components/Modal.md`             |
+| Drawer            | `.ai/docs/components/Drawer.md`            |
+| Menu              | `.ai/docs/components/Menu.md`              |
+| Tooltip           | `.ai/docs/components/Tooltip.md`           |
+| Snackbar          | `.ai/docs/components/Snackbar.md`          |
+| useModalAction    | `.ai/docs/components/useModalAction.md`    |
+| useDialogAction   | `.ai/docs/components/useDialogAction.md`   |
+| useDrawerAction   | `.ai/docs/components/useDrawerAction.md`   |
+| useSnackbarAction | `.ai/docs/components/useSnackbarAction.md` |
+| Breakpoints       | `.ai/docs/components/useBreakpoint.md`     |
 
-Useful props: `size`, `align`, `blur`, `transition`, `persistent`.
+## Hard rules
 
-```tsx
-const breakpoint = useBreakpoint();
-<Modal
-  show={open}
-  align={breakpoint.mobile ? "bottom-center" : "middle-center"}
-  onShowChange={setOpen}
->
-  …
-</Modal>;
-```
-
-## Drawer / Menu / Tooltip / Snackbar
-
-Import from `Components/{Name}`. For imperative toasts, prefer action hooks.
-
-## Imperative actions
-
-```tsx
-import { BridgeUIHosts } from "@bridge-ui/react/Actions";
-import {
-  useDialogAction,
-  useModalAction,
-  useDrawerAction,
-  useSnackbarAction,
-} from "@bridge-ui/react/Actions";
-
-<BridgeUIProvider>
-  <BridgeUIHosts>
-    <App />
-  </BridgeUIHosts>
-</BridgeUIProvider>;
-```
-
-```ts
-const modal = useModalAction();
-const id = modal.open({
-  component: SettingsForm,
-  modal: { size: "lg", title: "Settings" },
-});
-modal.close(id);
-modal.closeTop();
-```
-
-Match option shapes to docs. Escape closes the top nested layer.
+1. Mount `BridgeUIHosts` inside `BridgeUIProvider` before using action hooks.
+2. `align` on Modal applies on all breakpoints — use `useBreakpoint` for mobile bottom sheets.
+3. Menu panel children are real components (`List` / `ListItem`, etc.). Docs may show a local `MenuContent` helper — that is **not** a Bridge export.
+4. Match action `open` option shapes to the `use*Action` docs. Escape closes the top nested layer only.

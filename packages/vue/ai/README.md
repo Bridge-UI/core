@@ -1,11 +1,11 @@
 # AI resources (Vue)
 
-Consumer guidelines and Agent Skills shipped with `@bridge-ui/vue`.
+Consumer guidelines and Agent Skills for `@bridge-ui/vue`.
 
-Edit files here directly — this folder is what gets published on npm (`AGENTS.md`, `llms.txt`, guidelines, skills).
+Component **examples live in** [`../docs/components/`](../docs/components/). Adapter samples: [`../docs/examples/`](../docs/examples/). Skills only route agents to those pages.
 
 ```bash
 npx bridge-ui-vue-ai install
 ```
 
-That links these files into the consumer app (`AGENTS.md`, `llms.txt`, `.ai/`, `.cursor/skills/`).
+Links into the app: `AGENTS.md`, `llms.txt`, `.ai/guidelines`, `.ai/docs`, `.cursor/skills/`.

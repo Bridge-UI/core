@@ -2,12 +2,14 @@
 name: bridge-ui-setup
 description: >-
   Install and configure Bridge UI Vue — Tailwind v4 theme CSS, createBridgeUI /
-  BridgeUIProvider, component defaults, icon and i18n adapters, BridgeUIHosts.
-  Use when scaffolding Bridge, wiring the provider, or fixing missing theme /
-  hosts / adapters.
+  BridgeUIProvider, component defaults, icon and i18n adapters, BridgeUIHosts,
+  useBridgeUI. Use when scaffolding Bridge, wiring the provider, or fixing
+  missing theme / hosts / adapters.
 ---
 
 # Bridge UI (Vue) — setup
+
+Do **not** invent APIs. Read the package docs (after install: `.ai/docs/`; in this package: `docs/`).
 
 ## Install
 
@@ -16,54 +18,21 @@ npm install @bridge-ui/vue
 npx bridge-ui-vue-ai install
 ```
 
-`@bridge-ui/core` comes as a dependency. Peer: Vue ^3.4. Requires **Tailwind CSS v4**.
+## Required reading
 
-## Theme CSS
+| Topic                                                  | Doc                                       |
+| ------------------------------------------------------ | ----------------------------------------- |
+| Provider / plugin, `global`, `components`, icons, i18n | `.ai/docs/components/BridgeUIProvider.md` |
+| Icon adapter usage                                     | `.ai/docs/components/Icon.md`             |
+| i18n adapter                                           | `.ai/docs/components/I18n.md`             |
+| Breakpoints                                            | `.ai/docs/components/useBreakpoint.md`    |
+| Adapter sample code                                    | `.ai/docs/examples/`                      |
 
-```css
-@import "tailwindcss";
-@import "@bridge-ui/vue/theme.css";
-```
+## Hard rules
 
-## Provider / plugin
-
-```ts
-import { createApp } from "vue";
-import { createBridgeUI } from "@bridge-ui/vue";
-import { BridgeUIHosts } from "@bridge-ui/vue/Actions";
-
-const app = createApp(App);
-app.use(
-  createBridgeUI({
-    global: { theme: "light", locale: "en-US" },
-    components: {
-      Alert: { defaultProps: { color: "success" } },
-    },
-  }),
-);
-```
-
-And/or wrap with `<BridgeUIProvider :global="...">`. Nested providers merge over parents.
-
-Mount `BridgeUIHosts` when using action composables (`useDialogAction`, `useModalAction`, …).
-
-## `global` fields
-
-| Field              | Default   | Notes                                                |
-| ------------------ | --------- | ---------------------------------------------------- |
-| `theme`            | `"light"` | Also toggle document `dark` / color-scheme as needed |
-| `locale`           | `"en-US"` | `setLocale` calls `i18n.setLocale` when set          |
-| `direction`        | `"ltr"`   |                                                      |
-| `mobileBreakpoint` | `"sm"`    | `useBreakpoint().mobile` threshold                   |
-| `breakpoints`      | `{}`      | Optional CSS length overrides                        |
-| `icons`            | —         | `IconAdapter` for semantic names                     |
-| `i18n`             | —         | Chrome strings (`"Close"`, …)                        |
-
-## Checklist
-
-- [ ] `@bridge-ui/vue` installed
-- [ ] Tailwind v4 + `theme.css` imported
-- [ ] `createBridgeUI` and/or `BridgeUIProvider`
-- [ ] `BridgeUIHosts` if using action hooks
-- [ ] Optional: `components` defaults, `icons`, `i18n`
-- [ ] `npx bridge-ui-vue-ai install` for agent guidelines
+1. Tailwind CSS **v4** + `@import "@bridge-ui/vue/theme.css"`.
+2. Use `app.use(createBridgeUI({ ... }))` and/or `<BridgeUIProvider>`.
+3. Mount `BridgeUIHosts` when using action hooks (`useDialogAction`, `useModalAction`, `useDrawerAction`, `useSnackbarAction`).
+4. Semantic icon names and chrome strings need `global.icons` / `global.i18n` — copy samples from `.ai/docs/examples/`.
+5. Prefer deep imports: `@bridge-ui/vue/Components/{Name}`.
+6. Do not destructure `useBreakpoint()` helpers — keep the reactive object.

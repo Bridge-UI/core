@@ -4,27 +4,29 @@ This repository builds `@bridge-ui/core`, `@bridge-ui/react`, and `@bridge-ui/vu
 
 ## Which instructions to follow
 
-| You are…                             | Read                                                                                                                                                                                         |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Building an app that uses Bridge** | Package files: [`packages/react/ai/AGENTS.md`](./packages/react/ai/AGENTS.md) or [`packages/vue/ai/AGENTS.md`](./packages/vue/ai/AGENTS.md) — or run `npx bridge-ui-*-ai install` in the app |
-| **Contributing to this monorepo**    | [`.cursor/rules/`](./.cursor/rules/) (patterns, docs examples, commits)                                                                                                                      |
+| You are…                             | Read                                                                                                                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Building an app that uses Bridge** | Package AI + docs: [`packages/react/ai`](./packages/react/ai/) / [`packages/react/docs`](./packages/react/docs/) (or vue). Or run `npx bridge-ui-*-ai install` in the app |
+| **Contributing to this monorepo**    | [`.cursor/rules/`](./.cursor/rules/) (patterns, docs examples, commits)                                                                                                   |
 
 Do not mix the two.
 
 ## Consumer packages (source of truth)
 
-| Package            | AI entrypoints                                                                             |
-| ------------------ | ------------------------------------------------------------------------------------------ |
-| `@bridge-ui/react` | [`packages/react/ai/`](./packages/react/ai/) (`AGENTS.md`, `llms.txt`, guidelines, skills) |
-| `@bridge-ui/vue`   | [`packages/vue/ai/`](./packages/vue/ai/)                                                   |
+| Package            | AI                                           | Docs                                                                          |
+| ------------------ | -------------------------------------------- | ----------------------------------------------------------------------------- |
+| `@bridge-ui/react` | [`packages/react/ai/`](./packages/react/ai/) | [`packages/react/docs/`](./packages/react/docs/) (`components/`, `examples/`) |
+| `@bridge-ui/vue`   | [`packages/vue/ai/`](./packages/vue/ai/)     | [`packages/vue/docs/`](./packages/vue/docs/) (`components/`, `examples/`)     |
 
 ```bash
 npm install @bridge-ui/react
 npx bridge-ui-react-ai install
 ```
 
-## Documentation
+Skills are thin routers — examples live in package `docs/`.
 
-- Index: [`docs/README.md`](./docs/README.md)
-- Machine-oriented index (monorepo): [`llms.txt`](./llms.txt)
-- Package indexes: `packages/react/ai/llms.txt`, `packages/vue/ai/llms.txt`
+## Documentation index
+
+- Monorepo index: [`docs/README.md`](./docs/README.md)
+- Release guide: [`docs/RELEASE.md`](./docs/RELEASE.md)
+- Machine-oriented: [`llms.txt`](./llms.txt)

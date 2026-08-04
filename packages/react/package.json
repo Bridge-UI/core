@@ -67,7 +67,8 @@
       "import": "./dist/theme.css",
       "default": "./dist/theme.css"
     },
-    "./ai/*": "./ai/*"
+    "./ai/*": "./ai/*",
+    "./docs/*": "./docs/*"
   },
   "bin": {
     "bridge-ui-react-ai": "./bin/ai.mjs"
@@ -75,7 +76,8 @@
   "files": [
     "ai",
     "bin",
-    "dist"
+    "dist",
+    "docs"
   ],
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

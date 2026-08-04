@@ -10,6 +10,7 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   allowCypressEnv: false,
   component: {
+    specPattern: "src/**/*.cy.ts",
     devServer: {
       bundler: "vite",
       framework: "vue",
@@ -19,11 +20,10 @@ export default defineConfig({
         resolve: {
           alias: {
             "@": resolve(__dirname, "src"),
-            "@examples": resolve(__dirname, "examples"),
+            "@examples": resolve(__dirname, "docs/examples"),
           },
         },
       },
     },
-    specPattern: "src/**/*.cy.ts",
   },
 });

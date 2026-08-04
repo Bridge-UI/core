@@ -9,21 +9,22 @@ npm install @bridge-ui/vue
 npx bridge-ui-vue-ai install
 ```
 
-## AI resources (this package)
+## AI + docs (this package)
 
 - ai/AGENTS.md
 - ai/llms.txt
 - ai/guidelines/core.md
-- ai/skills/bridge-ui-setup/SKILL.md
-- ai/skills/bridge-ui-components/SKILL.md
-- ai/skills/bridge-ui-forms/SKILL.md
-- ai/skills/bridge-ui-overlays/SKILL.md
+- ai/skills/*/SKILL.md
+- docs/README.md
+- docs/components/*.md
+- docs/examples/*
 
-After install in an app, these are linked as:
+After install:
 
 - AGENTS.md / .ai/AGENTS.md
 - llms.txt
 - .ai/guidelines/
+- .ai/docs/ (components + examples)
 - .cursor/skills/bridge-ui-*
 
 ## Imports
@@ -33,7 +34,4 @@ After install in an app, these are linked as:
 - `@bridge-ui/vue/Provider`
 - `@bridge-ui/vue/Actions`
 - `@bridge-ui/vue/theme.css`
-
-## Docs (upstream repo)
-
-- https://github.com/Bridge-UI/core/tree/main/docs/vue
+- `@bridge-ui/vue/docs/components/{Name}.md`

@@ -28,6 +28,7 @@ const packageRoot = resolve(__dirname, "..");
 const pkg = JSON.parse(readFileSync(join(packageRoot, "package.json"), "utf8"));
 const packageName = pkg.name;
 const aiRoot = join(packageRoot, "ai");
+const docsRoot = join(packageRoot, "docs");
 const binName = Object.keys(pkg.bin ?? {})[0] ?? "bridge-ui-ai";
 
 const MARK_START = "<!-- bridge-ui-ai:start -->";
@@ -136,6 +137,7 @@ function agentsSnippet(skills) {
 
 This app uses **${packageName}**. Full agent guide: \`.ai/AGENTS.md\` (also see \`llms.txt\`).
 
+- Docs: \`.ai/docs/\` (component API and examples)
 - Guidelines: \`.ai/guidelines/core.md\`
 - Skills (on demand):
 ${skillList}
@@ -253,6 +255,13 @@ function install({ cwd: appRoot, copy }) {
     });
   }
 
+  if (existsSync(docsRoot)) {
+    results.push({
+      dest: ".ai/docs",
+      mode: linkOrCopy(docsRoot, join(appRoot, ".ai", "docs"), { copy }),
+    });
+  }
+
   for (const name of skills) {
     const src = join(aiRoot, "skills", name);
     const dest = join(appRoot, ".cursor", "skills", name);
@@ -280,7 +289,12 @@ function remove({ cwd: appRoot }) {
   const skills = skillNames();
   const removed = [];
 
-  for (const rel of [".ai/AGENTS.md", "llms.txt", ".ai/guidelines"]) {
+  for (const rel of [
+    ".ai/AGENTS.md",
+    ".ai/docs",
+    "llms.txt",
+    ".ai/guidelines",
+  ]) {
     const dest = join(appRoot, rel);
     if (pathExists(dest)) {
       removePath(dest);

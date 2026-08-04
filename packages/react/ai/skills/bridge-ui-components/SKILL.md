@@ -8,90 +8,28 @@ description: >-
 
 # Bridge UI (React) — components
 
-## Imports
+Do **not** invent APIs. Copy examples from `.ai/docs/components/{Component}.md` (package: `docs/components/{Component}.md`).
 
-```ts
-import { Button } from "@bridge-ui/react/Components/Button";
-import { Card } from "@bridge-ui/react/Components/Card";
-```
+## Start here
 
-Prefer `/Components/{Name}` as in the docs.
+| Need                          | Doc                                                            |
+| ----------------------------- | -------------------------------------------------------------- |
+| Actions                       | `.ai/docs/components/Button.md`                                |
+| Surfaces / modal body         | `.ai/docs/components/Card.md`                                  |
+| Avatar                        | `.ai/docs/components/Avatar.md`                                |
+| Badge                         | `.ai/docs/components/Badge.md`                                 |
+| Alert                         | `.ai/docs/components/Alert.md`                                 |
+| Icon                          | `.ai/docs/components/Icon.md`                                  |
+| Lists                         | `.ai/docs/components/List.md`                                  |
+| Tabs                          | `.ai/docs/components/Tabs.md`                                  |
+| Spinner / skeleton / progress | `.ai/docs/components/Spinner.md`, `Skeleton.md`, `Progress.md` |
+| Index                         | `.ai/docs/README.md`                                           |
 
-## Common tokens
+## Hard rules
 
-- `color`, `size`, `variant`, `density` when available
-- `classes` — part → className
-- `customProps` — part → element props
-- `slots` — replace or extend parts
-
-## Button
-
-```tsx
-<Button color="primary">Save</Button>
-<Button startIcon={Plus} variant="outline">Add</Button>
-<Button as="a" href="https://example.com">Docs</Button>
-<Button loading disabled>
-  Saving
-</Button>
-```
-
-`as`: `"button"` (default) | `"a"` | `"span"`.
-
-## Card
-
-Use for surfaces and as **Modal / Drawer content**:
-
-```tsx
-<Card title="Title" onClose={() => setOpen(false)}>
-  Body
-</Card>
-```
-
-## Avatar / Badge / Alert / Icon
-
-```tsx
-<Avatar fallback="JD" />
-<Badge color="primary">New</Badge>
-<Alert color="success">Saved</Alert>
-<Icon icon={Settings} />
-```
-
-Semantic string icons require `global.icons` (see `bridge-ui-setup`).
-
-## classes and customProps
-
-```tsx
-<Button
-  classes={{ root: "shadow-md" }}
-  customProps={{
-    root: { type: "submit", id: "save" },
-    startIcon: { "aria-hidden": true },
-  }}
->
-  Save
-</Button>
-```
-
-Root HTML attributes on the component apply to the root; use `customProps` for inner parts.
-
-## Slots
-
-```tsx
-<Button
-  slots={{
-    start: <span className="text-xs">◀</span>,
-    end: <span className="text-xs">▶</span>,
-  }}
->
-  Label
-</Button>
-```
-
-## Layout / feedback
-
-| Need               | Component                            |
-| ------------------ | ------------------------------------ |
-| Spinner / progress | `Spinner`, `Progress`                |
-| Placeholder        | `Skeleton`                           |
-| Lists              | `List`, `ListItem`, `ListSection`    |
-| Tabs               | `Tabs`, `TabList`, `Tab`, `TabPanel` |
+1. Import from `@bridge-ui/react/Components/{Name}`.
+2. Prefer Bridge tokens (`color`, `size`, `variant`, `density`) when they exist.
+3. `classes` / `customProps` / `slots` follow the shapes in each component doc.
+4. Root HTML attributes stay on the component; use `customProps` for **inner** parts.
+5. Modal/Drawer content uses **`Card`** — there is no `ModalCard` export.
+6. Do not compare Bridge to other UI libraries in generated docs or comments.

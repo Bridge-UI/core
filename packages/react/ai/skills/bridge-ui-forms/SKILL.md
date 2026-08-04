@@ -8,67 +8,27 @@ description: >-
 
 # Bridge UI (React) — forms
 
-## Controlled values
+Do **not** invent APIs. Copy examples from `.ai/docs/components/{Component}.md`.
 
-Use `value` + `onChange`. Do not use Vue `v-model` patterns.
+## Binding
 
-## TextField
+Controlled fields: **`value` + `onChange`**. Never Vue `v-model`.
 
-```tsx
-import { TextField } from "@bridge-ui/react/Components/TextField";
+## Start here
 
-<TextField
-  value={name}
-  label="Display name"
-  description="Shown on your profile."
-  onChange={(e) => setName(e.target.value)}
-/>
+| Need                      | Doc                                                                |
+| ------------------------- | ------------------------------------------------------------------ |
+| Text input                | `.ai/docs/components/TextField.md`                                 |
+| Password                  | `.ai/docs/components/PasswordField.md`                             |
+| Number / OTP / textarea   | `.ai/docs/components/NumberField.md`, `OtpField.md`, `Textarea.md` |
+| Select                    | `.ai/docs/components/Select.md`                                    |
+| Autocomplete              | `.ai/docs/components/Autocomplete.md`                              |
+| Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`         |
+| Chrome wrapper            | `.ai/docs/components/FormField.md`, `FormControl.md`               |
 
-<TextField error label="Email" errorMessage="Enter a valid email." />
-```
+## Hard rules
 
-Adornments: `startIcon` / `endIcon`, or `start` / `end` text.
-
-```tsx
-customProps={{
-  input: { name: "email", autoComplete: "email" },
-}}
-```
-
-Related: `Textarea`, `PasswordField`, `NumberField`, `OtpField`.
-
-## Select / Autocomplete
-
-```tsx
-import { Select } from "@bridge-ui/react/Components/Select";
-
-<Select
-  searchable
-  value={selected}
-  label="Framework"
-  options={frameworks}
-  onChange={setSelected}
-/>;
-```
-
-Prefer documented option shapes — do not invent fields.
-
-## Checkbox / Radio / Switch
-
-```tsx
-<Checkbox
-  checked={ok}
-  label="I agree"
-  onChange={(e) => setOk(e.target.checked)}
-/>
-```
-
-Confirm signatures in component docs.
-
-## FormField / FormControl
-
-Field components already include FormField chrome. Use standalone `FormField` for custom controls.
-
-## Validation UI
-
-Map app validation into `error`, `errorMessage`, `description`, `disabled`, `readOnly`.
+1. Map validation to `error`, `errorMessage`, `description`, `disabled`, `readOnly`.
+2. Native input attrs for the control often go through `customProps.input` — see TextField docs.
+3. Use only documented option shapes for Select/Autocomplete.
+4. Field components already include FormField chrome; use standalone `FormField` for custom controls.

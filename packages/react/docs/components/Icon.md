@@ -2,12 +2,12 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` / `createBridgeUI` (`global.icons`). Bridge only defines the `IconAdapter` interface — copy an example from `packages/vue/examples/`.
+Semantic names require an icon adapter on `BridgeUIProvider` (`global.icons`). Bridge only defines the `IconAdapter` interface — copy an example from `packages/react/docs/examples/`.
 
 ## Import
 
 ```ts
-import { Icon } from "@bridge-ui/vue/Components/Icon";
+import { Icon } from "@bridge-ui/react/Components/Icon";
 ```
 
 ## Examples
@@ -15,30 +15,26 @@ import { Icon } from "@bridge-ui/vue/Components/Icon";
 ### Icon component
 
 ```ts
-import { Info } from "@lucide/vue";
+import { Info } from "lucide-react";
 ```
 
-```vue
-<Icon size="md" :icon="Info" />
+```tsx
+<Icon size="md" icon={Info} />
 ```
 
 ### Semantic name + adapter
 
 ```ts
-import { createBridgeUI } from "@bridge-ui/vue";
+import { BridgeUIProvider } from "@bridge-ui/react";
 import { createLucideIconAdapter } from "@examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
-
-app.use(
-  createBridgeUI({
-    global: { icons },
-  }),
-);
 ```
 
-```vue
-<Icon size="md" icon="info" />
+```tsx
+<BridgeUIProvider global={{ icons }}>
+  <Icon size="md" icon="info" />
+</BridgeUIProvider>
 ```
 
 Other ready examples (same `create*IconAdapter()` shape):
@@ -56,22 +52,18 @@ Other ready examples (same `create*IconAdapter()` shape):
 With the Font Awesome adapter, pass definitions directly — `normalize` wraps them:
 
 ```ts
-import { createBridgeUI } from "@bridge-ui/vue";
+import { BridgeUIProvider } from "@bridge-ui/react";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { createFontAwesomeIconAdapter } from "@examples/icon-fontawesome";
 
 const icons = createFontAwesomeIconAdapter();
-
-app.use(
-  createBridgeUI({
-    global: { icons },
-  }),
-);
 ```
 
-```vue
-<Icon :icon="faCoffee" />
-<Icon icon="info" />
+```tsx
+<BridgeUIProvider global={{ icons }}>
+  <Icon icon={faCoffee} />
+  <Icon icon="info" />
+</BridgeUIProvider>
 ```
 
 The example also exports `wrapFaIcon` if you need a component outside `<Icon />`.

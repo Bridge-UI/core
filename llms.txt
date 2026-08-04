@@ -8,16 +8,19 @@
 - packages/vue — Vue components (+ transitive `@bridge-ui/core`)
 - packages/core — types, tokens, utils
 
-## AI resources (consume the library — live in each package)
+## Docs (per package)
 
-- packages/react/ai/AGENTS.md
-- packages/react/ai/llms.txt
-- packages/react/ai/guidelines/core.md
-- packages/react/ai/skills/*/SKILL.md
-- packages/vue/ai/AGENTS.md
-- packages/vue/ai/llms.txt
-- packages/vue/ai/guidelines/core.md
-- packages/vue/ai/skills/*/SKILL.md
+- packages/react/docs/components/
+- packages/react/docs/examples/
+- packages/vue/docs/components/
+- packages/vue/docs/examples/
+- docs/README.md — monorepo index
+- docs/RELEASE.md — release guide
+
+## AI resources (per package)
+
+- packages/react/ai/
+- packages/vue/ai/
 
 Consumer install:
 
@@ -29,9 +32,3 @@ npx bridge-ui-vue-ai install
 ## Monorepo agent entry
 
 - AGENTS.md
-
-## Human docs
-
-- docs/README.md
-- docs/react/
-- docs/vue/

@@ -39,11 +39,11 @@ npx bridge-ui-react-ai install # optional: agent guidelines/skills
 
 ### 📚 Documentation
 
-Component reference for React and Vue is available in the [`docs/`](./docs/README.md) folder.
+Component reference for React and Vue lives in each package: [`packages/react/docs`](./packages/react/docs/) and [`packages/vue/docs`](./packages/vue/docs/). See the monorepo [docs index](./docs/README.md).
 
 ### 🤖 AI / agents
 
-Consumer guidelines ship inside `@bridge-ui/react` and `@bridge-ui/vue` (`ai/`, including `AGENTS.md` and `llms.txt`). Edit them under [`packages/react/ai`](./packages/react/ai/) and [`packages/vue/ai`](./packages/vue/ai/). The root [`AGENTS.md`](./AGENTS.md) / [`llms.txt`](./llms.txt) are for this monorepo only.
+Consumer guidelines and skills ship inside `@bridge-ui/react` and `@bridge-ui/vue` (`ai/`). Component docs and examples live in each package’s `docs/` folder. Skills point agents at those docs. Root [`AGENTS.md`](./AGENTS.md) / [`llms.txt`](./llms.txt) are for this monorepo only.
 
 ```bash
 npx bridge-ui-react-ai install   # symlink into the app (or --copy)
