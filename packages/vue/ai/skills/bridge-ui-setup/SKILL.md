@@ -49,15 +49,15 @@ Mount `BridgeUIHosts` when using action composables (`useDialogAction`, `useModa
 
 ## `global` fields
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `theme` | `"light"` | Also toggle document `dark` / color-scheme as needed |
-| `locale` | `"en-US"` | `setLocale` calls `i18n.setLocale` when set |
-| `direction` | `"ltr"` | |
-| `mobileBreakpoint` | `"sm"` | `useBreakpoint().mobile` threshold |
-| `breakpoints` | `{}` | Optional CSS length overrides |
-| `icons` | — | `IconAdapter` for semantic names |
-| `i18n` | — | Chrome strings (`"Close"`, …) |
+| Field              | Default   | Notes                                                |
+| ------------------ | --------- | ---------------------------------------------------- |
+| `theme`            | `"light"` | Also toggle document `dark` / color-scheme as needed |
+| `locale`           | `"en-US"` | `setLocale` calls `i18n.setLocale` when set          |
+| `direction`        | `"ltr"`   |                                                      |
+| `mobileBreakpoint` | `"sm"`    | `useBreakpoint().mobile` threshold                   |
+| `breakpoints`      | `{}`      | Optional CSS length overrides                        |
+| `icons`            | —         | `IconAdapter` for semantic names                     |
+| `i18n`             | —         | Chrome strings (`"Close"`, …)                        |
 
 ## Checklist
 

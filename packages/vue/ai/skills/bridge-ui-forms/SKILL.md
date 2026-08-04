@@ -22,9 +22,7 @@ Use `v-model` / `modelValue`. Do not use React `value`/`onChange` patterns.
 Adornments: `start-icon` / `end-icon`, or `start` / `end` text.
 
 ```vue
-:custom-props="{
-  input: { name: 'email', autocomplete: 'email' },
-}"
+:custom-props="{ input: { name: 'email', autocomplete: 'email' }, }"
 ```
 
 Related: `Textarea`, `PasswordField`, `NumberField`, `OtpField`.

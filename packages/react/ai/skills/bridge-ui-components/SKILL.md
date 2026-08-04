@@ -89,9 +89,9 @@ Root HTML attributes on the component apply to the root; use `customProps` for i
 
 ## Layout / feedback
 
-| Need | Component |
-|------|-----------|
-| Spinner / progress | `Spinner`, `Progress` |
-| Placeholder | `Skeleton` |
-| Lists | `List`, `ListItem`, `ListSection` |
-| Tabs | `Tabs`, `TabList`, `Tab`, `TabPanel` |
+| Need               | Component                            |
+| ------------------ | ------------------------------------ |
+| Spinner / progress | `Spinner`, `Progress`                |
+| Placeholder        | `Skeleton`                           |
+| Lists              | `List`, `ListItem`, `ListSection`    |
+| Tabs               | `Tabs`, `TabList`, `Tab`, `TabPanel` |

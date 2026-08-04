@@ -45,13 +45,13 @@ Also valid: package root, `.../Provider`, `.../Actions`, `.../Utils`.
 
 ## Vue patterns
 
-| Concern | Pattern |
-|---------|---------|
-| Fields | `v-model` / `modelValue` |
-| Modal open | `v-model` |
-| Events | emits / `v-on:close` |
-| Slots | `<template #start>` |
-| Templates | kebab-case attrs (`error-message`, `custom-props`) |
+| Concern    | Pattern                                            |
+| ---------- | -------------------------------------------------- |
+| Fields     | `v-model` / `modelValue`                           |
+| Modal open | `v-model`                                          |
+| Events     | emits / `v-on:close`                               |
+| Slots      | `<template #start>`                                |
+| Templates  | kebab-case attrs (`error-message`, `custom-props`) |
 
 Script setup may still use camelCase prop names in objects.
 

@@ -48,7 +48,7 @@ import { Select } from "@bridge-ui/react/Components/Select";
   label="Framework"
   options={frameworks}
   onChange={setSelected}
-/>
+/>;
 ```
 
 Prefer documented option shapes — do not invent fields.

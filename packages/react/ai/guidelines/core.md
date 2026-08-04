@@ -45,12 +45,12 @@ Also valid: package root, `.../Provider`, `.../Actions`, `.../Utils`.
 
 ## React patterns
 
-| Concern | Pattern |
-|---------|---------|
-| Fields | `value` + `onChange` |
+| Concern    | Pattern                 |
+| ---------- | ----------------------- |
+| Fields     | `value` + `onChange`    |
 | Modal open | `show` + `onShowChange` |
-| Events | `onClose`, `onOpen`, … |
-| Slots | `slots={{ start: … }}` |
+| Events     | `onClose`, `onOpen`, …  |
+| Slots      | `slots={{ start: … }}`  |
 
 ## Styling and parts
 

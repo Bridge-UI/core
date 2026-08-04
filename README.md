@@ -26,11 +26,11 @@ Building accessible forms, overlays, and feedback from scratch is slow. Bridge U
 
 ### 📦 Packages
 
-| Package            | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `@bridge-ui/react` | React components (depends on `@bridge-ui/core`)  |
-| `@bridge-ui/vue`   | Vue components (depends on `@bridge-ui/core`)    |
-| `@bridge-ui/core`  | Shared types, tokens, and utilities              |
+| Package            | Description                                     |
+| ------------------ | ----------------------------------------------- |
+| `@bridge-ui/react` | React components (depends on `@bridge-ui/core`) |
+| `@bridge-ui/vue`   | Vue components (depends on `@bridge-ui/core`)   |
+| `@bridge-ui/core`  | Shared types, tokens, and utilities             |
 
 ```bash
 npm install @bridge-ui/react   # or @bridge-ui/vue

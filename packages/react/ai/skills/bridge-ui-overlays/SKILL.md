@@ -36,7 +36,7 @@ const breakpoint = useBreakpoint();
   onShowChange={setOpen}
 >
   …
-</Modal>
+</Modal>;
 ```
 
 ## Drawer / Menu / Tooltip / Snackbar
@@ -58,7 +58,7 @@ import {
   <BridgeUIHosts>
     <App />
   </BridgeUIHosts>
-</BridgeUIProvider>
+</BridgeUIProvider>;
 ```
 
 ```ts

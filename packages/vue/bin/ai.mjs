@@ -172,7 +172,10 @@ function stripAgentsMd(appRoot) {
   const path = join(appRoot, "AGENTS.md");
   if (!pathExists(path)) return null;
 
-  if (resolvesToPackageAi(path, "AGENTS.md") || lstatSync(path).isSymbolicLink()) {
+  if (
+    resolvesToPackageAi(path, "AGENTS.md") ||
+    lstatSync(path).isSymbolicLink()
+  ) {
     if (resolvesToPackageAi(path, "AGENTS.md")) {
       removePath(path);
       return path;
@@ -183,7 +186,10 @@ function stripAgentsMd(appRoot) {
   const prev = readFileSync(path, "utf8");
   if (!prev.includes(MARK_START)) return null;
   const next = prev
-    .replace(new RegExp(`\\n*${MARK_START}[\\s\\S]*?${MARK_END}\\n*`, "m"), "\n")
+    .replace(
+      new RegExp(`\\n*${MARK_START}[\\s\\S]*?${MARK_END}\\n*`, "m"),
+      "\n",
+    )
     .trimEnd();
   if (!next.trim()) {
     rmSync(path, { force: true });
@@ -198,7 +204,10 @@ function installRootAgents(appRoot, skills, { copy }) {
   const dest = join(appRoot, "AGENTS.md");
 
   if (!existsSync(src)) {
-    return { dest: relative(appRoot, dest), mode: upsertAgentsMd(appRoot, skills) && "updated" };
+    return {
+      dest: relative(appRoot, dest),
+      mode: upsertAgentsMd(appRoot, skills) && "updated",
+    };
   }
 
   // Fresh app or previous Bridge-only link → use package AGENTS.md as root file.
