@@ -50,6 +50,19 @@ import { OtpField } from "@bridge-ui/vue/Components/OtpField";
 <OtpField mask label="Secure code" />
 ```
 
+### Adornment slots
+
+```vue
+<OtpField label="Code">
+  <template #start>
+    <Lock aria-hidden="true" />
+  </template>
+  <template #end>
+    <button type="button">Resend</button>
+  </template>
+</OtpField>
+```
+
 ### customProps
 
 ```vue
@@ -85,22 +98,23 @@ import { OtpField } from "@bridge-ui/vue/Components/OtpField";
 
 ### Field chrome
 
-| Prop               | Type      | Default     | Description                              |
-| ------------------ | --------- | ----------- | ---------------------------------------- |
-| `color`            | token     | `"primary"` | Focus color on each pin.                 |
-| `controlId`        | `string`  | auto        | Id for the pin group and related labels. |
-| `corner`           | `string`  | —           | Secondary header text.                   |
-| `customProps`      | object    | —           | Extra props for internal parts.          |
-| `description`      | `string`  | —           | Helper text below the pins.              |
-| `disabled`         | `boolean` | `false`     | Disables all pins.                       |
-| `error`            | `boolean` | `false`     | Invalid styling.                         |
-| `errorMessage`     | `string`  | —           | Error message below the pins.            |
-| `hideErrorMessage` | `boolean` | `false`     | Hides the error message row.             |
-| `label`            | `string`  | —           | Primary label above the pins.            |
-| `readonly`         | `boolean` | `false`     | Makes all pins read-only.                |
-| `required`         | `boolean` | `false`     | Shows a required asterisk on the label.  |
-| `rounded`          | token     | `"md"`      | Border radius of each pin.               |
-| `size`             | token     | `"md"`      | Pin size and label typography.           |
+| Prop               | Type      | Default     | Description                                                             |
+| ------------------ | --------- | ----------- | ----------------------------------------------------------------------- |
+| `color`            | token     | `"primary"` | Focus color on each pin.                                                |
+| `controlId`        | `string`  | auto        | Id for the pin group and related labels.                                |
+| `corner`           | `string`  | —           | Secondary header text.                                                  |
+| `customProps`      | object    | —           | Extra props for internal parts.                                         |
+| `description`      | `string`  | —           | Helper text below the pins.                                             |
+| `disabled`         | `boolean` | `false`     | Disables all pins.                                                      |
+| `error`            | `boolean` | `false`     | Invalid styling.                                                        |
+| `errorMessage`     | `string`  | —           | Error message below the pins.                                           |
+| `hideErrorMessage` | `boolean` | `false`     | Hides the error message row.                                            |
+| `label`            | `string`  | —           | Primary label above the pins.                                           |
+| `readonly`         | `boolean` | `false`     | Makes all pins read-only.                                               |
+| `required`         | `boolean` | `false`     | Shows a required asterisk on the label.                                 |
+| `rounded`          | token     | `"md"`      | Border radius of each pin.                                              |
+| `size`             | token     | `"md"`      | Pin size and label typography.                                          |
+| `slots`            | —         | —           | `#label`, `#corner`, `#description`, `#errorMessage`, `#start`, `#end`. |
 
 ## Events
 

@@ -45,3 +45,19 @@ test("it should resolve numeric input mode by default", () => {
   expect(result.current.inputType).toBe("numeric");
   expect(result.current.inputBind(0).inputMode).toBe("numeric");
 });
+
+test("it should expose start and end slot binds", () => {
+  const { result } = renderHook(() =>
+    useOtpField({
+      slots: {
+        end: "end",
+        start: "start",
+      },
+    }),
+  );
+
+  expect(result.current.startSlotBind.className).toContain(
+    "wrapper-start-slot",
+  );
+  expect(result.current.endSlotBind.className).toContain("wrapper-end-slot");
+});

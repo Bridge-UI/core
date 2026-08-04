@@ -352,6 +352,28 @@ export function useOtpField(
     );
   });
 
+  const startSlotBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.start,
+      {},
+      cn({
+        "group/start wrapper-start-slot shrink-0 flex items-center [&>*]:min-h-0": true,
+        [mergedClasses.value.start ?? ""]: true,
+      }),
+    );
+  });
+
+  const endSlotBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.end,
+      {},
+      cn({
+        "group/end wrapper-end-slot shrink-0 flex items-center [&>*]:min-h-0": true,
+        [mergedClasses.value.end ?? ""]: true,
+      }),
+    );
+  });
+
   const descriptionBind = computed(() => {
     return mergePartBind(
       customProps.value?.description,
@@ -519,7 +541,9 @@ export function useOtpField(
     cornerBind,
     isDisabled,
     isReadonly,
+    endSlotBind,
     invalidated,
+    startSlotBind,
     mergedClasses,
     handlePinInput,
     handlePinFocus,
