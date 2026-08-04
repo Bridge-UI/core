@@ -4,10 +4,10 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import { cn, resolveMessage } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
@@ -42,7 +42,7 @@ const value = computed({
   },
 });
 
-const i18n = useI18nAdapter();
+const resolveMessage = useResolveMessage();
 
 const { formField, inputBind, isVisible, mergedClasses, toggleVisibility } =
   usePasswordField(props, {
@@ -57,8 +57,8 @@ const toggleBind = computed(() => {
       disabled: props.disabled,
       onClick: toggleVisibility,
       "aria-label": isVisible.value
-        ? resolveMessage("Hide password", i18n.value)
-        : resolveMessage("Show password", i18n.value),
+        ? resolveMessage("Hide password")
+        : resolveMessage("Show password"),
     },
     cn({
       "bridge-end-adornment bridge-field-adornment-button inline-flex h-full items-center justify-center px-2.5": true,

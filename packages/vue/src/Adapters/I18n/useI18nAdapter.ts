@@ -2,7 +2,11 @@
 import { computed, type ComputedRef } from "vue";
 
 // ** Core Imports
-import type { I18nAdapter } from "@bridge-ui/core";
+import {
+  resolveMessage,
+  type I18nAdapter,
+  type MessageParams,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";
@@ -18,8 +22,8 @@ export function setI18nAdapterForTests(adapter: undefined | I18nAdapter) {
 
 /**
  * Returns the active i18n adapter from {@link BridgeUIProvider}.
- * When unset, `resolveMessage` returns the English source string
- * (see `examples/adapters/vue`).
+ * When unset, {@link useResolveMessage} returns the English source string
+ * (see `packages/vue/examples`).
  */
 export function useI18nAdapter(): ComputedRef<undefined | I18nAdapter> {
   const bridge = useBridgeUI();
@@ -27,4 +31,15 @@ export function useI18nAdapter(): ComputedRef<undefined | I18nAdapter> {
   return computed(() => {
     return bridge?.global.value.i18n ?? i18nAdapterForTests;
   });
+}
+
+/**
+ * Resolves Bridge chrome strings through the active i18n adapter.
+ */
+export function useResolveMessage() {
+  const i18n = useI18nAdapter();
+
+  return (message: string, params?: MessageParams) => {
+    return resolveMessage(message, i18n.value, params);
+  };
 }

@@ -2,7 +2,11 @@
 import "@/augments";
 
 // ** Exports
-export { setI18nAdapterForTests, useI18nAdapter } from "@/Adapters/I18n";
+export {
+  setI18nAdapterForTests,
+  useI18nAdapter,
+  useResolveMessage,
+} from "@/Adapters/I18n";
 export { setIconAdapterForTests, useIconAdapter } from "@/Adapters/Icon";
 export type {
   IconElement,
@@ -372,8 +376,6 @@ export {
   BRIDGE_UI_DEFAULT_GLOBAL,
   SEMANTIC_ICON_NAMES,
   cn,
-  createI18nAdapter,
-  createIconAdapter,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,

@@ -1,5 +1,5 @@
 // ** External Imports
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { computed, effectScope } from "vue";
 
 // ** Core Imports
@@ -96,6 +96,50 @@ test("it should update global via setGlobal", () => {
 
     expect(api.global.value.theme).toBe("dark");
     expect(api.global.value.locale).toBe("en-US");
+  });
+
+  scope.stop();
+});
+
+test("it should update locale theme and direction via aliases", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const api = createBridgeUIApi(undefined, createDefaultOptionsRef());
+
+    api.setLocale("pt-BR");
+    api.setTheme("dark");
+    api.setDirection("rtl");
+
+    expect(api.global.value.locale).toBe("pt-BR");
+    expect(api.global.value.theme).toBe("dark");
+    expect(api.global.value.direction).toBe("rtl");
+  });
+
+  scope.stop();
+});
+
+test("it should call i18n.setLocale when setLocale is used", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const setLocale = vi.fn();
+    const optionsRef = computed(() => ({
+      components: {},
+      global: {
+        i18n: {
+          setLocale,
+          t: (message: string) => message,
+        },
+      },
+    }));
+
+    const api = createBridgeUIApi(undefined, optionsRef);
+
+    api.setLocale("pt-BR");
+
+    expect(api.global.value.locale).toBe("pt-BR");
+    expect(setLocale).toHaveBeenCalledWith("pt-BR");
   });
 
   scope.stop();

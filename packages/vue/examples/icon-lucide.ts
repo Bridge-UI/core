@@ -22,29 +22,36 @@ import {
   User,
   X,
 } from "@lucide/vue";
+import { get } from "es-toolkit/compat";
 
 // ** Core Imports
-import { createIconAdapter, type IconAdapter } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
+
+const icons = {
+  eye: Eye,
+  clear: X,
+  bell: Bell,
+  info: Info,
+  user: User,
+  check: Check,
+  error: CircleX,
+  eyeOff: EyeOff,
+  loader: Loader2,
+  alert: CircleAlert,
+  success: CircleCheck,
+  chevronUp: ChevronUp,
+  warning: TriangleAlert,
+  chevronDown: ChevronDown,
+  chevronUpDown: ChevronsUpDown,
+} satisfies Record<SemanticIconName, unknown>;
 
 /**
  * Builds a Lucide-backed {@link IconAdapter} for Bridge semantic icon names.
  */
 export function createLucideIconAdapter(): IconAdapter {
-  return createIconAdapter({
-    eye: Eye,
-    clear: X,
-    bell: Bell,
-    info: Info,
-    user: User,
-    check: Check,
-    error: CircleX,
-    eyeOff: EyeOff,
-    loader: Loader2,
-    alert: CircleAlert,
-    success: CircleCheck,
-    chevronUp: ChevronUp,
-    warning: TriangleAlert,
-    chevronDown: ChevronDown,
-    chevronUpDown: ChevronsUpDown,
-  });
+  return {
+    resolve(name) {
+      return get(icons, name);
+    },
+  };
 }

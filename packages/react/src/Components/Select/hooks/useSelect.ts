@@ -20,7 +20,6 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -31,7 +30,7 @@ import {
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
   formFieldBridgeKeys,
@@ -86,8 +85,8 @@ export function useSelect(
   props: SelectProps,
   triggerRef: RefObject<null | HTMLInputElement | HTMLTextAreaElement>,
 ) {
-  const i18n = useI18nAdapter();
   const listboxId = useId();
+  const resolveMessage = useResolveMessage();
 
   const {
     slots,
@@ -956,9 +955,9 @@ export function useSelect(
   );
 
   const emptyMessage =
-    selectMerged.emptyMessage ?? resolveMessage("No options", i18n);
+    selectMerged.emptyMessage ?? resolveMessage("No options");
   const loadingMessage =
-    selectMerged.loadingMessage ?? resolveMessage("Loading...", i18n);
+    selectMerged.loadingMessage ?? resolveMessage("Loading...");
   const hideEmptyMessage = selectMerged.hideEmptyMessage === true;
 
   const listboxProps = useMemo(() => {

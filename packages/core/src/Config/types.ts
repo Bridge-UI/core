@@ -183,7 +183,8 @@ export interface BridgeUIGlobal {
    * i18n adapter used to translate Bridge chrome strings
    * (`"Close"`, `"Hide password"`, …). Source English text is the lookup key.
    * When omitted, `resolveMessage` returns the source string.
-   * See `examples/adapters/{react,vue}` for samples (not shipped as packages).
+   * Optional `setLocale` is invoked by Bridge `setLocale`.
+   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
    *
    * @default undefined
    */
@@ -192,7 +193,7 @@ export interface BridgeUIGlobal {
   /**
    * Icon adapter used to resolve semantic icon names.
    * Required when components use semantic names (`"clear"`, `"check"`, …).
-   * See `examples/adapters/{react,vue}` for samples (not shipped as packages).
+   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
    *
    * @default undefined
    */

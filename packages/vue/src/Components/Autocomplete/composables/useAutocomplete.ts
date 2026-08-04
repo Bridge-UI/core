@@ -27,7 +27,6 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveMessage,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -38,7 +37,7 @@ import {
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   AutocompleteClasses,
   AutocompleteCustomProps,
@@ -95,8 +94,8 @@ export function useAutocomplete(
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
-  const i18n = useI18nAdapter();
   const listboxId = useId();
+  const resolveMessage = useResolveMessage();
 
   const open = ref(false);
   const searchQuery = ref("");
@@ -960,11 +959,9 @@ export function useAutocomplete(
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: autocompleteMerged.value.hideEmptyMessage === true,
       emptyMessage:
-        autocompleteMerged.value.emptyMessage ??
-        resolveMessage("No options", i18n.value),
+        autocompleteMerged.value.emptyMessage ?? resolveMessage("No options"),
       loadingMessage:
-        autocompleteMerged.value.loadingMessage ??
-        resolveMessage("Loading...", i18n.value),
+        autocompleteMerged.value.loadingMessage ?? resolveMessage("Loading..."),
       ...listboxCustomProps.value,
     };
   });
@@ -1026,14 +1023,12 @@ export function useAutocomplete(
     }),
     emptyMessage: computed(() => {
       return (
-        autocompleteMerged.value.emptyMessage ??
-        resolveMessage("No options", i18n.value)
+        autocompleteMerged.value.emptyMessage ?? resolveMessage("No options")
       );
     }),
     loadingMessage: computed(() => {
       return (
-        autocompleteMerged.value.loadingMessage ??
-        resolveMessage("Loading...", i18n.value)
+        autocompleteMerged.value.loadingMessage ?? resolveMessage("Loading...")
       );
     }),
   };

@@ -4,10 +4,10 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, provide, ref, useTemplateRef } from "vue";
 
 // ** Core Imports
-import { cn, resolveMessage } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   AutocompleteEmits,
   AutocompleteOwnProps,
@@ -41,9 +41,9 @@ const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
   minItemsForSearch: 11,
 });
 
-const emit = defineEmits<AutocompleteEmits>();
+const resolveMessage = useResolveMessage();
 
-const i18n = useI18nAdapter();
+const emit = defineEmits<AutocompleteEmits>();
 
 const uncontrolledValue = ref<null | undefined | SelectValue | SelectValue[]>(
   props.defaultValue,
@@ -148,7 +148,7 @@ const {
         v-on:click="clearValue"
         v-on:keydown.enter.prevent="clearValue"
         v-on:keydown.space.prevent="clearValue"
-        :aria-label="resolveMessage('Clear selection', i18n)"
+        :aria-label="resolveMessage('Clear selection')"
         v-if="clearable && hasValue && !formField.isDisabled.value"
       >
         <Icon

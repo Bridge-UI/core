@@ -3,10 +3,10 @@
 import { computed, useSlots } from "vue";
 
 // ** Core Imports
-import { cn, resolveMessage } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
 import { useSnackbar } from "@/Components/Snackbar/composables/useSnackbar";
 import type {
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<SnackbarOwnProps>(), {
   position: "bottom-center",
 });
 
-const i18n = useI18nAdapter();
+const resolveMessage = useResolveMessage();
 
 const model = defineModel<boolean>({ default: false });
 
@@ -166,7 +166,7 @@ const teleportTarget = computed(() => {
                   type="button"
                   v-on:click="requestClose"
                   v-if="merged.closeButton !== false"
-                  :aria-label="resolveMessage('Close', i18n)"
+                  :aria-label="resolveMessage('Close')"
                   class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
                 >
                   <Icon size="lg" icon="clear" />
@@ -245,7 +245,7 @@ const teleportTarget = computed(() => {
               type="button"
               v-on:click="requestClose"
               v-if="merged.closeButton !== false"
-              :aria-label="resolveMessage('Close', i18n)"
+              :aria-label="resolveMessage('Close')"
               class="cursor-pointer inline-flex rounded-md text-dark-400 hover:text-dark-500 focus:outline-hidden"
             >
               <Icon size="lg" icon="clear" />

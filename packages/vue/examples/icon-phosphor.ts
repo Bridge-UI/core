@@ -22,29 +22,36 @@ import {
   PhX,
   PhXCircle,
 } from "@phosphor-icons/vue";
+import { get } from "es-toolkit/compat";
 
 // ** Core Imports
-import { createIconAdapter, type IconAdapter } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
+
+const icons = {
+  eye: PhEye,
+  clear: PhX,
+  bell: PhBell,
+  info: PhInfo,
+  user: PhUser,
+  check: PhCheck,
+  error: PhXCircle,
+  eyeOff: PhEyeSlash,
+  warning: PhWarning,
+  loader: PhSpinnerGap,
+  chevronUp: PhCaretUp,
+  alert: PhWarningCircle,
+  success: PhCheckCircle,
+  chevronDown: PhCaretDown,
+  chevronUpDown: PhCaretUpDown,
+} satisfies Record<SemanticIconName, unknown>;
 
 /**
  * Builds a Phosphor-backed {@link IconAdapter} for Bridge semantic icon names.
  */
 export function createPhosphorIconAdapter(): IconAdapter {
-  return createIconAdapter({
-    eye: PhEye,
-    clear: PhX,
-    bell: PhBell,
-    info: PhInfo,
-    user: PhUser,
-    check: PhCheck,
-    error: PhXCircle,
-    eyeOff: PhEyeSlash,
-    warning: PhWarning,
-    loader: PhSpinnerGap,
-    chevronUp: PhCaretUp,
-    alert: PhWarningCircle,
-    success: PhCheckCircle,
-    chevronDown: PhCaretDown,
-    chevronUpDown: PhCaretUpDown,
-  });
+  return {
+    resolve(name) {
+      return get(icons, name);
+    },
+  };
 }

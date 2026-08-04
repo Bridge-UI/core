@@ -9,6 +9,7 @@ import {
   mergeBridgeUIGlobal,
   type BridgeUIComponentsConfig,
   type BridgeUIGlobal,
+  type Direction,
 } from "@bridge-ui/core";
 
 // ** Local Imports
@@ -69,6 +70,28 @@ function useBridgeUIContextValue(
     });
   }, []);
 
+  const setTheme = useCallback(
+    (theme: string) => {
+      setGlobal({ theme });
+    },
+    [setGlobal],
+  );
+
+  const setLocale = useCallback(
+    (locale: string) => {
+      setGlobal({ locale });
+      global.i18n?.setLocale?.(locale);
+    },
+    [setGlobal, global.i18n],
+  );
+
+  const setDirection = useCallback(
+    (direction: Direction) => {
+      setGlobal({ direction });
+    },
+    [setGlobal],
+  );
+
   const setComponents = useCallback((patch: BridgeUIComponentsConfig) => {
     setComponentsPatch((prev) => {
       return mergeBridgeUIComponents({
@@ -79,8 +102,24 @@ function useBridgeUIContextValue(
   }, []);
 
   return useMemo(() => {
-    return { global, setGlobal, components, setComponents };
-  }, [global, setGlobal, components, setComponents]);
+    return {
+      global,
+      setTheme,
+      setGlobal,
+      setLocale,
+      components,
+      setDirection,
+      setComponents,
+    };
+  }, [
+    global,
+    setTheme,
+    setGlobal,
+    setLocale,
+    components,
+    setDirection,
+    setComponents,
+  ]);
 }
 
 export function BridgeUIProvider({

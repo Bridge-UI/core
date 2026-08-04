@@ -16,7 +16,7 @@ export default defineConfig(
   ...tseslint.configs.recommended,
   ...pluginVue.configs["flat/essential"],
   {
-    files: ["packages/vue/**/*.vue", "examples/adapters/vue/**/*.vue"],
+    files: ["packages/vue/**/*.vue"],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -52,10 +52,7 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      "packages/react/**/*.{tsx,jsx}",
-      "examples/adapters/react/**/*.{tsx,jsx}",
-    ],
+    files: ["packages/react/**/*.{tsx,jsx}"],
     plugins: {
       "react-hooks": reactHooks,
     },
@@ -76,10 +73,7 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      "packages/**/*.{ts,tsx,vue}",
-      "examples/adapters/**/*.{ts,tsx,vue}",
-    ],
+    files: ["packages/**/*.{ts,tsx,vue}"],
     plugins: {
       perfectionist,
     },

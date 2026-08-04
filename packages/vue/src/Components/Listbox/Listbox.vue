@@ -9,13 +9,12 @@ import {
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
-  resolveMessage,
   type ListboxOption,
   type ListboxValue,
 } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useI18nAdapter } from "@/Adapters/I18n";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
 import type {
@@ -61,14 +60,14 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   placement: "bottom-start",
 });
 
-const i18n = useI18nAdapter();
+const resolveMessage = useResolveMessage();
 
 const emptyMessage = computed(() => {
-  return props.emptyMessage ?? resolveMessage("No options", i18n.value);
+  return props.emptyMessage ?? resolveMessage("No options");
 });
 
 const loadingMessage = computed(() => {
-  return props.loadingMessage ?? resolveMessage("Loading...", i18n.value);
+  return props.loadingMessage ?? resolveMessage("Loading...");
 });
 
 const {

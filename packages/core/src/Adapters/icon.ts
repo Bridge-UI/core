@@ -47,6 +47,8 @@ export type IconSourceValue =
 /**
  * Pluggable icon set for Bridge UI.
  * Apps provide an adapter via `BridgeUIProvider` `global.icons`.
+ *
+ * See `packages/{react,vue}/examples` for sample implementations.
  */
 export interface IconAdapter {
   /**
@@ -71,37 +73,6 @@ export type IconSource<TIcon = unknown> =
   | TIcon
   | IconSourceValue
   | SemanticIconName;
-
-/**
- * Optional hooks when building an {@link IconAdapter} from a semantic map.
- */
-export type CreateIconAdapterOptions = {
-  /**
-   * Converts library-native icon values into a renderable component.
-   */
-  normalize?: (source: unknown) => unknown;
-};
-
-/**
- * Creates an {@link IconAdapter} from a complete semantic icon map.
- */
-export function createIconAdapter(
-  icons: Record<SemanticIconName, unknown>,
-  options?: CreateIconAdapterOptions,
-): IconAdapter {
-  return {
-    normalize: options?.normalize,
-    resolve(name) {
-      const icon = icons[name];
-
-      if (isNil(icon)) {
-        throw new Error(`[BridgeUI] Missing icon "${name}" in icon adapter.`);
-      }
-
-      return icon;
-    },
-  };
-}
 
 /**
  * Returns whether `value` is a known default semantic icon name.
@@ -131,7 +102,7 @@ export function resolveIconSource<TIcon = unknown>(
   if (isString(source)) {
     if (isNil(adapter)) {
       throw new Error(
-        `[BridgeUI] Semantic icon "${source}" requires BridgeUIProvider global.icons. See examples/adapters/{react,vue}.`,
+        `[BridgeUI] Semantic icon "${source}" requires BridgeUIProvider global.icons. See packages/{react,vue}/examples.`,
       );
     }
 

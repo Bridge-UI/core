@@ -27,7 +27,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { isArray, isObject, isString, omit } from "es-toolkit/compat";
+import { get, isArray, isObject, isString, omit } from "es-toolkit/compat";
 import {
   createElement,
   type ComponentPropsWithoutRef,
@@ -36,7 +36,7 @@ import {
 } from "react";
 
 // ** Core Imports
-import { createIconAdapter, type IconAdapter } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
 
 declare module "@bridge-ui/core" {
   interface IconSourceValueOverrides {
@@ -90,33 +90,35 @@ export function wrapFaIcon(icon: IconDefinition): FaIconComponent {
   return FaIcon;
 }
 
+const icons = {
+  eye: faEye,
+  bell: faBell,
+  user: faUser,
+  clear: faXmark,
+  check: faCheck,
+  loader: faSpinner,
+  info: faCircleInfo,
+  eyeOff: faEyeSlash,
+  error: faCircleXmark,
+  success: faCircleCheck,
+  chevronUp: faChevronUp,
+  chevronUpDown: faUpDown,
+  alert: faCircleExclamation,
+  chevronDown: faChevronDown,
+  warning: faTriangleExclamation,
+} satisfies Record<SemanticIconName, unknown>;
+
 /**
  * Builds a Font Awesome-backed {@link IconAdapter} for Bridge semantic icon names.
  * Pass raw `fa*` definitions to `<Icon />` — they are normalized automatically.
  */
 export function createFontAwesomeIconAdapter(): IconAdapter {
-  return createIconAdapter(
-    {
-      eye: faEye,
-      bell: faBell,
-      user: faUser,
-      clear: faXmark,
-      check: faCheck,
-      loader: faSpinner,
-      info: faCircleInfo,
-      eyeOff: faEyeSlash,
-      error: faCircleXmark,
-      success: faCircleCheck,
-      chevronUp: faChevronUp,
-      chevronUpDown: faUpDown,
-      alert: faCircleExclamation,
-      chevronDown: faChevronDown,
-      warning: faTriangleExclamation,
+  return {
+    resolve(name) {
+      return get(icons, name);
     },
-    {
-      normalize(source) {
-        return isIconDefinition(source) ? wrapFaIcon(source) : source;
-      },
+    normalize(source) {
+      return isIconDefinition(source) ? wrapFaIcon(source) : source;
     },
-  );
+  };
 }

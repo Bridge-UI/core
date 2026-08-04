@@ -3,44 +3,24 @@ import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
-  createIconAdapter,
   isSemanticIconName,
   resolveIconSource,
   SEMANTIC_ICON_NAMES,
+  type IconAdapter,
+  type SemanticIconName,
 } from "@/Adapters/icon";
 
-describe("createIconAdapter", () => {
-  test("it should resolve icons from the provided map", () => {
-    const Check = () => null;
-    const adapter = createIconAdapter(
-      Object.fromEntries(
-        SEMANTIC_ICON_NAMES.map((name) => [name, Check]),
-      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
-    );
-
-    expect(adapter.resolve("check")).toBe(Check);
-  });
-
-  test("it should throw when a name is missing from the map", () => {
-    const adapter = createIconAdapter({} as never);
-
-    expect(() => adapter.resolve("clear")).toThrow(
-      '[BridgeUI] Missing icon "clear" in icon adapter.',
-    );
-  });
-
-  test("it should attach an optional normalize hook", () => {
-    const normalize = vi.fn((source: unknown) => source);
-    const adapter = createIconAdapter(
-      Object.fromEntries(
-        SEMANTIC_ICON_NAMES.map((name) => [name, null]),
-      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
-      { normalize },
-    );
-
-    expect(adapter.normalize).toBe(normalize);
-  });
-});
+function createTestIconAdapter(
+  icons: Partial<Record<SemanticIconName, unknown>>,
+  normalize?: IconAdapter["normalize"],
+): IconAdapter {
+  return {
+    normalize,
+    resolve(name) {
+      return icons[name];
+    },
+  };
+}
 
 describe("isSemanticIconName", () => {
   test("it should return true for default semantic names", () => {
@@ -57,10 +37,10 @@ describe("isSemanticIconName", () => {
 
 describe("resolveIconSource", () => {
   const Glyph = () => null;
-  const adapter = createIconAdapter(
+  const adapter = createTestIconAdapter(
     Object.fromEntries(
       SEMANTIC_ICON_NAMES.map((name) => [name, Glyph]),
-    ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
+    ) as Record<SemanticIconName, unknown>,
   );
 
   test("it should resolve semantic names via the adapter", () => {
@@ -88,11 +68,11 @@ describe("resolveIconSource", () => {
     const definition = { prefix: "fas", iconName: "coffee" };
     const Wrapped = () => null;
     const normalize = vi.fn(() => Wrapped);
-    const normalizingAdapter = createIconAdapter(
+    const normalizingAdapter = createTestIconAdapter(
       Object.fromEntries(
         SEMANTIC_ICON_NAMES.map((name) => [name, Glyph]),
-      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
-      { normalize },
+      ) as Record<SemanticIconName, unknown>,
+      normalize,
     );
 
     expect(resolveIconSource(definition, normalizingAdapter)).toBe(Wrapped);
@@ -105,14 +85,14 @@ describe("resolveIconSource", () => {
     const normalize = vi.fn((source: unknown) => {
       return source === definition ? Wrapped : source;
     });
-    const normalizingAdapter = createIconAdapter(
+    const normalizingAdapter = createTestIconAdapter(
       Object.fromEntries(
         SEMANTIC_ICON_NAMES.map((name) => [
           name,
           name === "user" ? definition : Glyph,
         ]),
-      ) as Record<(typeof SEMANTIC_ICON_NAMES)[number], unknown>,
-      { normalize },
+      ) as Record<SemanticIconName, unknown>,
+      normalize,
     );
 
     expect(resolveIconSource("user", normalizingAdapter)).toBe(Wrapped);
