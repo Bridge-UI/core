@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Documentation lives in [`docs/`](https://github.com/Bridge-UI/core/tree/main/docs). Component pages follow `docs/react/{Component}.md` and `docs/vue/{Component}.md`. See the [index](https://github.com/Bridge-UI/core/blob/main/docs/README.md).
+        Documentation lives in each package: [`packages/react/docs`](https://github.com/Bridge-UI/core/tree/main/packages/react/docs) and [`packages/vue/docs`](https://github.com/Bridge-UI/core/tree/main/packages/vue/docs). See the [index](https://github.com/Bridge-UI/core/blob/main/docs/README.md).
 
   - type: dropdown
     id: framework
@@ -67,8 +67,8 @@ body:
     id: doc-path
     attributes:
       label: Doc file path (optional)
-      description: Path or section heading, e.g. `docs/react/Button.md` or "## Props".
-      placeholder: docs/react/Button.md
+      description: Path or section heading, e.g. `packages/react/docs/components/Button.md` or "## Props".
+      placeholder: packages/react/docs/components/Button.md
 
   - type: textarea
     id: issue

@@ -16,9 +16,9 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
 <Button onClick={() => setOpen(true)}>Open modal</Button>
 
 <Modal show={open} onShowChange={setOpen}>
-  <ModalCard title="Confirm action" onClose={() => setOpen(false)}>
+  <Card title="Confirm action" onClose={() => setOpen(false)}>
     Are you sure you want to continue?
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 
@@ -26,9 +26,9 @@ import { Modal } from "@bridge-ui/react/Components/Modal";
 
 ```tsx
 <Modal persistent show={open} onShowChange={setOpen}>
-  <ModalCard title="Persistent modal" onClose={() => setOpen(false)}>
+  <Card title="Persistent modal" onClose={() => setOpen(false)}>
     Clicking the backdrop or pressing Escape has no effect.
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 
@@ -44,9 +44,9 @@ const breakpoint = useBreakpoint();
   onShowChange={setOpen}
   align={breakpoint.mobile ? "bottom-center" : "middle-center"}
 >
-  <ModalCard title="Responsive" onClose={() => setOpen(false)}>
+  <Card title="Responsive" onClose={() => setOpen(false)}>
     Bottom sheet on mobile, centered from `sm` up.
-  </ModalCard>
+  </Card>
 </Modal>;
 ```
 
@@ -56,16 +56,16 @@ const breakpoint = useBreakpoint();
 
 ```tsx
 <Modal size="lg" show={outerOpen} onShowChange={setOuterOpen}>
-  <ModalCard title="Outer modal" onClose={() => setOuterOpen(false)}>
+  <Card title="Outer modal" onClose={() => setOuterOpen(false)}>
     <Button size="sm" onClick={() => setInnerOpen(true)}>
       Open nested modal
     </Button>
-  </ModalCard>
+  </Card>
 
   <Modal size="sm" show={innerOpen} onShowChange={setInnerOpen}>
-    <ModalCard title="Nested confirmation" onClose={() => setInnerOpen(false)}>
+    <Card title="Nested confirmation" onClose={() => setInnerOpen(false)}>
       Press Escape to close only this layer.
-    </ModalCard>
+    </Card>
   </Modal>
 </Modal>
 ```
@@ -123,9 +123,9 @@ const breakpoint = useBreakpoint();
     overlay: { id: "modal-overlay" },
   }}
 >
-  <ModalCard title="customProps" onClose={() => setOpen(false)}>
+  <Card title="customProps" onClose={() => setOpen(false)}>
     Inspect the DOM for ids on each modal part.
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 

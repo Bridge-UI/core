@@ -72,12 +72,12 @@ jobs:
             fi
           done
 
-          EXPECTED_PEER="^${VERSION}"
-          REACT_PEER=$(node -p "require('./packages/react/package.json').peerDependencies['@bridge-ui/core']")
-          VUE_PEER=$(node -p "require('./packages/vue/package.json').peerDependencies['@bridge-ui/core']")
+          EXPECTED_DEP="^${VERSION}"
+          REACT_DEP=$(node -p "require('./packages/react/package.json').dependencies['@bridge-ui/core']")
+          VUE_DEP=$(node -p "require('./packages/vue/package.json').dependencies['@bridge-ui/core']")
 
-          if [ "$REACT_PEER" != "$EXPECTED_PEER" ] || [ "$VUE_PEER" != "$EXPECTED_PEER" ]; then
-            echo "peerDependencies.@bridge-ui/core must be ${EXPECTED_PEER} in react and vue"
+          if [ "$REACT_DEP" != "$EXPECTED_DEP" ] || [ "$VUE_DEP" != "$EXPECTED_DEP" ]; then
+            echo "dependencies.@bridge-ui/core must be ${EXPECTED_DEP} in react and vue"
             exit 1
           fi
 

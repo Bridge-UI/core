@@ -4,6 +4,32 @@ How to publish `@bridge-ui/core`, `@bridge-ui/react`, and `@bridge-ui/vue` to np
 
 Releases are created on GitHub. Pushing a version tag triggers the [Bridge UI Release](https://github.com/Bridge-UI/core/actions/workflows/release.yml) workflow, which builds, tests, and publishes all three packages via [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) (OIDC).
 
+## What each package ships
+
+| Package            | Published contents (high level)                                       |
+| ------------------ | --------------------------------------------------------------------- |
+| `@bridge-ui/core`  | Shared types, tokens, utils (`dist/`)                                 |
+| `@bridge-ui/react` | Components (`dist/`), theme CSS, `docs/`, `ai/`, install CLI (`bin/`) |
+| `@bridge-ui/vue`   | Same layout as react for Vue                                          |
+
+`@bridge-ui/core` is a **runtime dependency** of react and vue (not a peer). Apps install one framework package:
+
+```bash
+npm install @bridge-ui/react
+# or
+npm install @bridge-ui/vue
+```
+
+Optional agent setup after install:
+
+```bash
+npx bridge-ui-react-ai install
+# or
+npx bridge-ui-vue-ai install
+```
+
+Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/` (adapter samples in `docs/examples/`). This folder only keeps the [docs index](./README.md) and this release guide.
+
 ## Prerequisites
 
 1. The [release workflow](../.github/workflows/release.yml) is merged on `main`.
@@ -23,7 +49,7 @@ Releases are created on GitHub. Pushing a version tag triggers the [Bridge UI Re
 
 ### 1. Prepare `main`
 
-- Merge all changes for the release.
+- Merge all changes for the release (including docs under `packages/*/docs/components/` when the API changed).
 - Wait for CI to pass (lint, build, tests).
 
 ### 2. Bump versions
@@ -32,9 +58,14 @@ Releases are created on GitHub. Pushing a version tag triggers the [Bridge UI Re
 npm run bump-version -- 0.1.0
 ```
 
+This updates:
+
+- `"version"` on `@bridge-ui/core`, `@bridge-ui/react`, and `@bridge-ui/vue`
+- `dependencies.@bridge-ui/core` on react and vue to `^<version>`
+
 Commit with message: `chore(release): version 0.1.0`, then push to `main`.
 
-The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fails if they differ.
+The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fails if they differ, or if react/vue do not depend on `^` that same core version.
 
 ### 3. Create the release on GitHub
 
@@ -43,7 +74,7 @@ The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fa
    - For a new tag, select **Create new tag on publish**.
    - Target branch: `main`.
 3. **Release title** — e.g. `v0.1.0`.
-4. Add release notes (optional).
+4. Add release notes (optional). Mention consumer-facing changes (API, docs, AI install) when relevant.
 5. For pre-releases, check **Set as a pre-release** (visual only on GitHub).
 6. Click **Publish release**.
 
@@ -51,14 +82,20 @@ The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fa
 
 The tag push starts **Actions → Bridge UI Release**, which:
 
-1. Verifies `package.json` versions and `peerDependencies` match the tag.
+1. Verifies `package.json` versions and `dependencies.@bridge-ui/core` match the tag.
 2. Runs `npm run build` and `npm run test:run`.
-3. Publishes in order: `core` → `react` → `vue`.
+3. Publishes in order: `core` → `react` → `vue` (same npm dist-tag).
 
 ### 5. Verify
 
 - [GitHub Actions](https://github.com/Bridge-UI/core/actions/workflows/release.yml) — job succeeded.
 - [npm](https://www.npmjs.com/org/bridge-ui) — new version on all three packages.
+- Smoke install (optional):
+
+  ```bash
+  npm install @bridge-ui/react@0.1.0
+  npx bridge-ui-react-ai install
+  ```
 
 ## Tag naming and npm dist-tags
 

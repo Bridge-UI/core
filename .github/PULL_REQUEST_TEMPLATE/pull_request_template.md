@@ -29,7 +29,7 @@
 - [ ] React and Vue stay in parity (or this PR is intentionally scoped to one framework)
 - [ ] Types follow project conventions (`*OwnProps`, `*CustomProps`, `MergeHtmlProps`, etc.)
 - [ ] Tests added or updated (`*.test.*` and `*.cy.*` where relevant)
-- [ ] Docs updated in `docs/react/` and/or `docs/vue/` when behavior or API changes
+- [ ] Docs updated in `packages/react/docs/` and/or `packages/vue/docs/` when behavior or API changes
 - [ ] `npm run lint`, `npm run type-check`, and `npm run test:run` pass locally
 
 ## Test plan

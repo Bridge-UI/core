@@ -1,5 +1,7 @@
 // ** External Imports
-import { expect, test } from "vitest";
+import { mount } from "@vue/test-utils";
+import { afterEach, expect, test } from "vitest";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import {
@@ -7,10 +9,28 @@ import {
   useResolveMessage,
 } from "@/Adapters/I18n/useI18nAdapter";
 
-test("it should return the source message when no adapter is set", () => {
+afterEach(() => {
   setI18nAdapterForTests(undefined);
+});
 
-  const resolveMessage = useResolveMessage();
+function mountUseResolveMessage() {
+  let resolveMessage!: ReturnType<typeof useResolveMessage>;
+
+  const Wrapper = defineComponent({
+    setup() {
+      resolveMessage = useResolveMessage();
+
+      return () => h("div");
+    },
+  });
+
+  mount(Wrapper);
+
+  return resolveMessage;
+}
+
+test("it should return the source message when no adapter is set", () => {
+  const resolveMessage = mountUseResolveMessage();
 
   expect(resolveMessage("Hide password")).toBe("Hide password");
 });
@@ -22,12 +42,10 @@ test("it should translate through the test i18n adapter", () => {
     },
   });
 
-  const resolveMessage = useResolveMessage();
+  const resolveMessage = mountUseResolveMessage();
 
   expect(resolveMessage("Close")).toBe("Fechar");
   expect(resolveMessage("Show password")).toBe("Show password");
-
-  setI18nAdapterForTests(undefined);
 });
 
 test("it should forward params to the adapter", () => {
@@ -41,11 +59,9 @@ test("it should forward params to the adapter", () => {
     },
   });
 
-  const resolveMessage = useResolveMessage();
+  const resolveMessage = mountUseResolveMessage();
 
   resolveMessage("{{count}} item", { count: 3 });
 
   expect(seen).toEqual([{ params: { count: 3 }, message: "{{count}} item" }]);
-
-  setI18nAdapterForTests(undefined);
 });

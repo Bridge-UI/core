@@ -1,0 +1,38 @@
+# @bridge-ui/react
+
+> React component library. Design tokens and utils come from transitive `@bridge-ui/core`.
+
+## Setup
+
+```bash
+npm install @bridge-ui/react
+npx bridge-ui-react-ai install
+```
+
+## AI + docs (this package)
+
+- ai/AGENTS.md
+- ai/llms.txt
+- ai/guidelines/core.md
+- ai/skills/*/SKILL.md
+- docs/README.md
+- docs/components/*.md
+- docs/examples/*
+
+After install:
+
+- AGENTS.md (root stub) + CLAUDE.md → AGENTS.md
+- .ai/AGENTS.md (full guide)
+- llms.txt
+- .ai/guidelines/
+- .ai/docs/ (components + examples)
+- .cursor/skills/bridge-ui-*
+
+## Imports
+
+- `@bridge-ui/react`
+- `@bridge-ui/react/Components/{Name}`
+- `@bridge-ui/react/Provider`
+- `@bridge-ui/react/Actions`
+- `@bridge-ui/react/theme.css`
+- `@bridge-ui/react/docs/components/{Name}.md`

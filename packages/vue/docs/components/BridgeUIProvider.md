@@ -28,7 +28,7 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 
 ### Icon adapter
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `packages/vue/examples/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `packages/vue/docs/examples/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
@@ -45,7 +45,7 @@ app.use(
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next / dictionary). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next / dictionary). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/docs/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";

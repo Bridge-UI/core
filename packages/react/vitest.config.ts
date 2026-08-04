@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
-      "@examples": resolve(__dirname, "examples"),
+      "@examples": resolve(__dirname, "docs/examples"),
     },
   },
   test: {
@@ -19,6 +19,6 @@ export default defineConfig({
     root: __dirname,
     environment: "happy-dom",
     setupFiles: [resolve(__dirname, "vitest.setup.ts")],
-    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx", "bin/**/*.test.ts"],
   },
 });
