@@ -55,3 +55,10 @@ test("it should resolve numeric input mode by default", () => {
   expect(api.inputType.value).toBe("numeric");
   expect(api.inputBind(0).inputmode).toBe("numeric");
 });
+
+test("it should expose start and end slot binds", () => {
+  const { api } = mountUseOtpField();
+
+  expect(api.startSlotBind.value.class).toContain("wrapper-start-slot");
+  expect(api.endSlotBind.value.class).toContain("wrapper-end-slot");
+});

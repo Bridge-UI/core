@@ -93,3 +93,25 @@ test("it should show an error message when invalid", () => {
 
   expect(screen.getByText("Invalid code")).toBeTruthy();
 });
+
+test("it should render start slot content", () => {
+  render(
+    <OtpField
+      aria-label="Code"
+      slots={{ start: <span data-testid="start-slot">🔒</span> }}
+    />,
+  );
+
+  expect(screen.getByTestId("start-slot")).toBeTruthy();
+});
+
+test("it should render end slot content", () => {
+  render(
+    <OtpField
+      aria-label="Code"
+      slots={{ end: <span data-testid="end-slot">Resend</span> }}
+    />,
+  );
+
+  expect(screen.getByTestId("end-slot")).toBeTruthy();
+});

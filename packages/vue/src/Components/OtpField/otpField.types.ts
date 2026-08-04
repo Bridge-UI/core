@@ -33,6 +33,11 @@ export interface OtpFieldClasses {
   description?: string;
 
   /**
+   * Classes merged onto the inline-end adornment slot wrapper.
+   */
+  end?: string;
+
+  /**
    * Classes merged onto the error message below the pins.
    */
   errorMessage?: string;
@@ -71,6 +76,11 @@ export interface OtpFieldClasses {
    * Classes merged onto the root wrapper.
    */
   root?: string;
+
+  /**
+   * Classes merged onto the inline-start adornment slot wrapper.
+   */
+  start?: string;
 }
 
 export interface OtpFieldCustomProps {
@@ -83,6 +93,11 @@ export interface OtpFieldCustomProps {
    * Props forwarded to the helper text below the pins.
    */
   description?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-end adornment slot wrapper.
+   */
+  end?: HTMLAttributes;
 
   /**
    * Props forwarded to the error message element.
@@ -128,6 +143,11 @@ export interface OtpFieldCustomProps {
    * Props forwarded to the root wrapper.
    */
   root?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the inline-start adornment slot wrapper.
+   */
+  start?: HTMLAttributes;
 }
 
 export interface OtpFieldEmits {
@@ -312,6 +332,11 @@ export interface OtpFieldSlots {
   description?: Slot;
 
   /**
+   * Inline-end slot beside the pin group (e.g. a button or timer).
+   */
+  end?: Slot;
+
+  /**
    * Error message below the pins.
    */
   errorMessage?: Slot;
@@ -320,6 +345,11 @@ export interface OtpFieldSlots {
    * Primary label content.
    */
   label?: Slot;
+
+  /**
+   * Inline-start slot beside the pin group (e.g. an icon or button).
+   */
+  start?: Slot;
 }
 
 export type OtpFieldProps = MergeHtmlProps<

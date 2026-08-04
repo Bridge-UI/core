@@ -75,3 +75,23 @@ test("it should show an error message when invalid", () => {
 
   expect(wrapper.text()).toContain("Invalid code");
 });
+
+test("it should render start slot content", () => {
+  const wrapper = mount(OtpField, {
+    slots: {
+      start: '<span data-testid="start-slot">lock</span>',
+    },
+  });
+
+  expect(wrapper.find('[data-testid="start-slot"]').exists()).toBe(true);
+});
+
+test("it should render end slot content", () => {
+  const wrapper = mount(OtpField, {
+    slots: {
+      end: '<span data-testid="end-slot">Resend</span>',
+    },
+  });
+
+  expect(wrapper.find('[data-testid="end-slot"]').exists()).toBe(true);
+});

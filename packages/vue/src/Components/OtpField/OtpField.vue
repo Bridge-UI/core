@@ -10,7 +10,12 @@ import type {
   OtpFieldSlots,
 } from "@/Components/OtpField/otpField.types";
 import OtpFieldLabel from "@/Components/OtpField/OtpFieldLabel.vue";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import {
+  hasNamedSlot,
+  hasSlotOrProp,
+  resolveNamedSlot,
+  resolveSlotOrProp,
+} from "@/Utils";
 
 defineSlots<OtpFieldSlots>();
 
@@ -47,7 +52,9 @@ const {
   controlId,
   headerBind,
   cornerBind,
+  endSlotBind,
   invalidated,
+  startSlotBind,
   handlePinInput,
   handlePinFocus,
   handlePinPaste,
@@ -83,6 +90,10 @@ const showHeader = computed(() => {
     </div>
 
     <div v-bind="groupBind">
+      <div v-bind="startSlotBind" v-if="hasNamedSlot(slots, 'start')">
+        <component :is="resolveNamedSlot(slots, 'start')" />
+      </div>
+
       <div
         :key="index"
         v-bind="pinBind(index)"
@@ -97,6 +108,10 @@ const showHeader = computed(() => {
           v-on:keydown="handlePinKeyDown(index, $event)"
           :ref="(el) => setPinRef(index, el as HTMLInputElement | null)"
         />
+      </div>
+
+      <div v-bind="endSlotBind" v-if="hasNamedSlot(slots, 'end')">
+        <component :is="resolveNamedSlot(slots, 'end')" />
       </div>
     </div>
 

@@ -59,6 +59,18 @@ import { OtpField } from "@bridge-ui/react/Components/OtpField";
 <OtpField mask label="Secure code" />
 ```
 
+### Adornment slots
+
+```tsx
+<OtpField
+  label="Code"
+  slots={{
+    start: <Lock aria-hidden />,
+    end: <button type="button">Resend</button>,
+  }}
+/>
+```
+
 ### customProps
 
 ```tsx
@@ -95,23 +107,23 @@ import { OtpField } from "@bridge-ui/react/Components/OtpField";
 
 ### Field chrome
 
-| Prop               | Type      | Default     | Description                                       |
-| ------------------ | --------- | ----------- | ------------------------------------------------- |
-| `color`            | token     | `"primary"` | Focus color on each pin.                          |
-| `controlId`        | `string`  | auto        | Id for the pin group and related labels.          |
-| `corner`           | `string`  | —           | Secondary header text.                            |
-| `customProps`      | object    | —           | Extra props for internal parts.                   |
-| `description`      | `string`  | —           | Helper text below the pins.                       |
-| `disabled`         | `boolean` | `false`     | Disables all pins.                                |
-| `error`            | `boolean` | `false`     | Invalid styling.                                  |
-| `errorMessage`     | `string`  | —           | Error message below the pins.                     |
-| `hideErrorMessage` | `boolean` | `false`     | Hides the error message row.                      |
-| `label`            | `string`  | —           | Primary label above the pins.                     |
-| `readonly`         | `boolean` | `false`     | Makes all pins read-only.                         |
-| `required`         | `boolean` | `false`     | Shows a required asterisk on the label.           |
-| `rounded`          | token     | `"md"`      | Border radius of each pin.                        |
-| `size`             | token     | `"md"`      | Pin size and label typography.                    |
-| `slots`            | object    | —           | `label`, `corner`, `description`, `errorMessage`. |
+| Prop               | Type      | Default     | Description                                                       |
+| ------------------ | --------- | ----------- | ----------------------------------------------------------------- |
+| `color`            | token     | `"primary"` | Focus color on each pin.                                          |
+| `controlId`        | `string`  | auto        | Id for the pin group and related labels.                          |
+| `corner`           | `string`  | —           | Secondary header text.                                            |
+| `customProps`      | object    | —           | Extra props for internal parts.                                   |
+| `description`      | `string`  | —           | Helper text below the pins.                                       |
+| `disabled`         | `boolean` | `false`     | Disables all pins.                                                |
+| `error`            | `boolean` | `false`     | Invalid styling.                                                  |
+| `errorMessage`     | `string`  | —           | Error message below the pins.                                     |
+| `hideErrorMessage` | `boolean` | `false`     | Hides the error message row.                                      |
+| `label`            | `string`  | —           | Primary label above the pins.                                     |
+| `readonly`         | `boolean` | `false`     | Makes all pins read-only.                                         |
+| `required`         | `boolean` | `false`     | Shows a required asterisk on the label.                           |
+| `rounded`          | token     | `"md"`      | Border radius of each pin.                                        |
+| `size`             | token     | `"md"`      | Pin size and label typography.                                    |
+| `slots`            | object    | —           | `label`, `corner`, `description`, `errorMessage`, `start`, `end`. |
 
 ## Related components
 

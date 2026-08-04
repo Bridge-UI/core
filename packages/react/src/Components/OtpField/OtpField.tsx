@@ -2,7 +2,7 @@
 import { useOtpField } from "@/Components/OtpField/hooks/useOtpField";
 import type { OtpFieldProps } from "@/Components/OtpField/otpField.types";
 import OtpFieldLabel from "@/Components/OtpField/OtpFieldLabel";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
 
 function OtpField(props: OtpFieldProps) {
   const api = useOtpField(props);
@@ -21,7 +21,9 @@ function OtpField(props: OtpFieldProps) {
     controlId,
     headerBind,
     cornerBind,
+    endSlotBind,
     invalidated,
+    startSlotBind,
     handlePinInput,
     handlePinFocus,
     handlePinPaste,
@@ -58,6 +60,10 @@ function OtpField(props: OtpFieldProps) {
       )}
 
       <div {...groupBind}>
+        {hasNamedSlot(slots, "start") && (
+          <div {...startSlotBind}>{slots?.start}</div>
+        )}
+
         {Array.from({ length }, (_, index) => (
           <div key={index} {...pinBind(index)}>
             <input
@@ -71,6 +77,8 @@ function OtpField(props: OtpFieldProps) {
             />
           </div>
         ))}
+
+        {hasNamedSlot(slots, "end") && <div {...endSlotBind}>{slots?.end}</div>}
       </div>
 
       {!invalidated &&
