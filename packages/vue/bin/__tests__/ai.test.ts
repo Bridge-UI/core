@@ -242,4 +242,43 @@ describe("bridge-ui-ai CLI", () => {
       existsSync(join(cwd, ".cursor", "skills", "bridge-ui-setup", "SKILL.md")),
     ).toBe(true);
   });
+
+  test("it should remove AGENTS.md after install --copy", () => {
+    const cwd = createAppRoot();
+
+    expect(run(["install", "--copy", "--cwd", cwd]).status).toBe(0);
+    expect(existsSync(join(cwd, "AGENTS.md"))).toBe(true);
+
+    expect(run(["remove", "--cwd", cwd]).status).toBe(0);
+    expect(existsSync(join(cwd, "AGENTS.md"))).toBe(false);
+  });
+
+  test("it should not mutate another package AGENTS.md when installing over its symlink", () => {
+    const cwd = createAppRoot();
+
+    const otherRoot = resolve(packageRoot, "../react");
+    const otherBin = join(otherRoot, "bin", "ai.mjs");
+
+    const otherAgents = join(otherRoot, "ai", "AGENTS.md");
+    const before = readFileSync(otherAgents, "utf8");
+
+    const other = spawnSync(
+      process.execPath,
+      [otherBin, "install", "--cwd", cwd],
+      {
+        encoding: "utf8",
+        env: process.env,
+      },
+    );
+
+    expect(other.status).toBe(0);
+    expect(isSymlink(join(cwd, "AGENTS.md"))).toBe(true);
+
+    const result = run(["install", "--cwd", cwd]);
+
+    expect(result.status).toBe(0);
+    expect(readFileSync(otherAgents, "utf8")).toBe(before);
+    expect(readFileSync(otherAgents, "utf8")).not.toContain(MARK_START);
+    expect(readFileSync(otherAgents, "utf8")).not.toContain(packageName);
+  });
 });

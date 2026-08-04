@@ -150,12 +150,35 @@ function linkOrCopy(target, dest, { copy }) {
   return "copied";
 }
 
+function isSymlink(path) {
+  try {
+    return lstatSync(path).isSymbolicLink();
+  } catch {
+    return false;
+  }
+}
+
 function resolvesUnder(path, root, fileName) {
   if (!pathExists(path)) return false;
   try {
     const real = realpathSync(path);
 
     return real === join(root, fileName) || real.startsWith(`${root}/`);
+  } catch {
+    return false;
+  }
+}
+
+/** True when `path` is a real file whose contents match the package AGENTS.md. */
+function isPackageAgentsCopy(path) {
+  const src = join(aiRoot, "AGENTS.md");
+
+  if (!existsSync(src) || !existsSync(path) || isSymlink(path)) {
+    return false;
+  }
+
+  try {
+    return readFileSync(path, "utf8") === readFileSync(src, "utf8");
   } catch {
     return false;
   }
@@ -205,6 +228,11 @@ function upsertAgentsMd(appRoot, skills) {
   const snippet = agentsSnippet(skills);
   const path = join(appRoot, "AGENTS.md");
 
+  // Never write through a symlink (would mutate package sources under file: installs).
+  if (isSymlink(path)) {
+    removePath(path);
+  }
+
   if (!existsSync(path)) {
     next = `# Agent instructions\n\n${snippet}\n`;
   } else {
@@ -226,7 +254,7 @@ function stripAgentsMd(appRoot) {
 
   if (!pathExists(path)) return null;
 
-  if (resolvesUnder(path, aiRoot, "AGENTS.md")) {
+  if (isPackageAgentsCopy(path) || resolvesUnder(path, aiRoot, "AGENTS.md")) {
     removePath(path);
     return path;
   }
@@ -261,8 +289,14 @@ function installRootAgents(appRoot, skills, { copy }) {
     return { dest: rel, mode: "updated" };
   }
 
-  // Fresh app or previous Bridge-only link → use package AGENTS.md as root file.
-  if (!pathExists(dest) || resolvesUnder(dest, aiRoot, "AGENTS.md")) {
+  // Fresh app, our/foreign Bridge link, or a prior --copy of package AGENTS.md →
+  // replace with this package's file. Never write through a symlink into another package.
+  if (
+    isSymlink(dest) ||
+    !pathExists(dest) ||
+    isPackageAgentsCopy(dest) ||
+    resolvesUnder(dest, aiRoot, "AGENTS.md")
+  ) {
     return { dest: rel, mode: linkOrCopy(src, dest, { copy }) };
   }
 
