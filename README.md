@@ -26,15 +26,30 @@ Building accessible forms, overlays, and feedback from scratch is slow. Bridge U
 
 ### 📦 Packages
 
-| Package            | Description                         |
-| ------------------ | ----------------------------------- |
-| `@bridge-ui/core`  | Shared types, tokens, and utilities |
-| `@bridge-ui/react` | React components and hooks          |
-| `@bridge-ui/vue`   | Vue components and composables      |
+| Package            | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `@bridge-ui/react` | React components (depends on `@bridge-ui/core`)  |
+| `@bridge-ui/vue`   | Vue components (depends on `@bridge-ui/core`)    |
+| `@bridge-ui/core`  | Shared types, tokens, and utilities              |
+
+```bash
+npm install @bridge-ui/react   # or @bridge-ui/vue
+npx bridge-ui-react-ai install # optional: agent guidelines/skills
+```
 
 ### 📚 Documentation
 
 Component reference for React and Vue is available in the [`docs/`](./docs/README.md) folder.
+
+### 🤖 AI / agents
+
+Consumer guidelines ship inside `@bridge-ui/react` and `@bridge-ui/vue` (`ai/`, including `AGENTS.md` and `llms.txt`). Edit them under [`packages/react/ai`](./packages/react/ai/) and [`packages/vue/ai`](./packages/vue/ai/). The root [`AGENTS.md`](./AGENTS.md) / [`llms.txt`](./llms.txt) are for this monorepo only.
+
+```bash
+npx bridge-ui-react-ai install   # symlink into the app (or --copy)
+```
+
+Monorepo contribution rules for Cursor stay in `.cursor/rules/` and are separate from consumer guidance.
 
 ### 🔧 Contributing
 

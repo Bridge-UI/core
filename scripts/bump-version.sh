@@ -6,7 +6,7 @@ usage() {
   cat <<'EOF'
 Usage: npm run bump-version -- <version>
 
-Bump workspace package versions and @bridge-ui/core peer dependency ranges.
+Bump workspace package versions and @bridge-ui/core dependency ranges.
 
 Arguments:
   version    Semver (e.g. 0.1.0, 1.0.0-beta.1). "v" prefix is optional.
@@ -63,8 +63,8 @@ npm version "$VERSION" -w @bridge-ui/core --no-git-tag-version
 npm version "$VERSION" -w @bridge-ui/react --no-git-tag-version
 npm version "$VERSION" -w @bridge-ui/vue --no-git-tag-version
 
-npm pkg set "peerDependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/react
-npm pkg set "peerDependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/vue
+npm pkg set "dependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/react
+npm pkg set "dependencies.@bridge-ui/core=^${VERSION}" -w @bridge-ui/vue
 
 echo ""
 echo "Bumped to $VERSION"

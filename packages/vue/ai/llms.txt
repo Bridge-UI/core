@@ -1,0 +1,39 @@
+# @bridge-ui/vue
+
+> Vue 3 component library. Design tokens and utils come from transitive `@bridge-ui/core`.
+
+## Setup
+
+```bash
+npm install @bridge-ui/vue
+npx bridge-ui-vue-ai install
+```
+
+## AI resources (this package)
+
+- ai/AGENTS.md
+- ai/llms.txt
+- ai/guidelines/core.md
+- ai/skills/bridge-ui-setup/SKILL.md
+- ai/skills/bridge-ui-components/SKILL.md
+- ai/skills/bridge-ui-forms/SKILL.md
+- ai/skills/bridge-ui-overlays/SKILL.md
+
+After install in an app, these are linked as:
+
+- AGENTS.md / .ai/AGENTS.md
+- llms.txt
+- .ai/guidelines/
+- .cursor/skills/bridge-ui-*
+
+## Imports
+
+- `@bridge-ui/vue`
+- `@bridge-ui/vue/Components/{Name}`
+- `@bridge-ui/vue/Provider`
+- `@bridge-ui/vue/Actions`
+- `@bridge-ui/vue/theme.css`
+
+## Docs (upstream repo)
+
+- https://github.com/Bridge-UI/core/tree/main/docs/vue

@@ -66,16 +66,22 @@
       "style": "./dist/theme.css",
       "import": "./dist/theme.css",
       "default": "./dist/theme.css"
-    }
+    },
+    "./ai/*": "./ai/*"
+  },
+  "bin": {
+    "bridge-ui-vue-ai": "./bin/ai.mjs"
   },
   "files": [
+    "ai",
+    "bin",
     "dist"
   ],
   "peerDependencies": {
-    "@bridge-ui/core": "^0.0.7",
     "vue": "^3.4.0"
   },
   "dependencies": {
+    "@bridge-ui/core": "^0.0.7",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^3.6.0"
@@ -90,7 +96,6 @@
     "test:cy:open": "cypress open --component"
   },
   "devDependencies": {
-    "@bridge-ui/core": "*",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/vue-fontawesome": "^3.3.3",

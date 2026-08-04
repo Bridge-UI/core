@@ -1,0 +1,37 @@
+# Bridge UI (monorepo)
+
+> Source repository for `@bridge-ui/core`, `@bridge-ui/react`, and `@bridge-ui/vue`.
+
+## Packages
+
+- packages/react — React components (+ transitive `@bridge-ui/core`)
+- packages/vue — Vue components (+ transitive `@bridge-ui/core`)
+- packages/core — types, tokens, utils
+
+## AI resources (consume the library — live in each package)
+
+- packages/react/ai/AGENTS.md
+- packages/react/ai/llms.txt
+- packages/react/ai/guidelines/core.md
+- packages/react/ai/skills/*/SKILL.md
+- packages/vue/ai/AGENTS.md
+- packages/vue/ai/llms.txt
+- packages/vue/ai/guidelines/core.md
+- packages/vue/ai/skills/*/SKILL.md
+
+Consumer install:
+
+```bash
+npx bridge-ui-react-ai install
+npx bridge-ui-vue-ai install
+```
+
+## Monorepo agent entry
+
+- AGENTS.md
+
+## Human docs
+
+- docs/README.md
+- docs/react/
+- docs/vue/

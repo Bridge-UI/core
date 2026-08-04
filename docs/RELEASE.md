@@ -51,7 +51,7 @@ The git tag must match these versions (`v0.1.0` → `"version": "0.1.0"`). CI fa
 
 The tag push starts **Actions → Bridge UI Release**, which:
 
-1. Verifies `package.json` versions and `peerDependencies` match the tag.
+1. Verifies `package.json` versions and `dependencies.@bridge-ui/core` match the tag.
 2. Runs `npm run build` and `npm run test:run`.
 3. Publishes in order: `core` → `react` → `vue`.
 
