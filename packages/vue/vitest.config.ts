@@ -18,7 +18,7 @@ export default defineConfig({
     name: "vue",
     root: __dirname,
     environment: "happy-dom",
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "bin/**/*.test.ts"],
     setupFiles: [resolve(__dirname, "vitest.setup.ts")],
   },
 });

@@ -18,7 +18,7 @@ export default defineConfig({
     name: "react",
     root: __dirname,
     environment: "happy-dom",
-    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     setupFiles: [resolve(__dirname, "vitest.setup.ts")],
+    include: ["src/**/*.test.ts", "src/**/*.test.tsx", "bin/**/*.test.ts"],
   },
 });
