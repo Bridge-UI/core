@@ -149,7 +149,7 @@ export function useNumberField(props: NumberFieldProps) {
     {
       ...formFieldProps,
       slots,
-      withErrorIcon: false,
+      showErrorIcon: false,
       classes: mergedClasses,
     },
     {
@@ -157,7 +157,7 @@ export function useNumberField(props: NumberFieldProps) {
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: false,
+      showErrorIcon: false,
     },
     {
       reservedSlots: () => ["end"],

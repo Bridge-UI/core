@@ -80,7 +80,7 @@ export const otpFieldBridgeKeys = [
   "placeholder",
   "defaultValue",
   "errorMessage",
-  "withoutErrorMessage",
+  "hideErrorMessage",
 ] as const satisfies readonly (keyof OtpFieldOwnProps)[];
 
 type OtpFieldLibDefaults = LibDefaultsShape<
@@ -258,7 +258,7 @@ export function useOtpField(
   });
 
   const reservesErrorMessageSpace = computed(
-    () => !merged.value.withoutErrorMessage,
+    () => !merged.value.hideErrorMessage,
   );
 
   const showErrorMessageContent = computed(() => {
@@ -280,7 +280,7 @@ export function useOtpField(
 
     if (
       invalidated.value &&
-      !merged.value.withoutErrorMessage &&
+      !merged.value.hideErrorMessage &&
       hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
     ) {
       ids.push(`${controlId.value}-error`);

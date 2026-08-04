@@ -13,7 +13,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   variant: "outline",
-  withErrorIcon: true,
+  showErrorIcon: true,
 } satisfies Partial<FormFieldOwnProps>;
 
 function mountFormField(
@@ -191,10 +191,10 @@ test("it should render error icon instead of end icon when error is set", () => 
   expect(wrapper.findAll("svg").length).toBe(1);
 });
 
-test("it should hide error icon when withErrorIcon is false", () => {
+test("it should hide error icon when showErrorIcon is false", () => {
   const wrapper = mountFormField({
     error: true,
-    withErrorIcon: false,
+    showErrorIcon: false,
   });
 
   expect(wrapper.findAll("svg").length).toBe(0);

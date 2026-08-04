@@ -81,7 +81,7 @@ defineProps<{
           <div
             v-bind="api.endBind.value"
             v-else-if="
-              api.invalidated.value && api.merged.value.withErrorIcon !== false
+              api.invalidated.value && api.merged.value.showErrorIcon !== false
             "
           >
             <Icon
@@ -128,7 +128,7 @@ defineProps<{
     <p
       v-bind="api.errorBind.value"
       :id="`${api.controlId.value}-error`"
-      v-if="!api.merged.value.withoutErrorMessage"
+      v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <component

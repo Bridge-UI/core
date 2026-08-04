@@ -53,7 +53,7 @@ const api = computed((): UseFormControlReturn => {
 
     <p
       v-bind="api.errorMessageBind.value"
-      v-if="!api.merged.value.withoutErrorMessage"
+      v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <template v-if="api.showErrorMessageContent.value">

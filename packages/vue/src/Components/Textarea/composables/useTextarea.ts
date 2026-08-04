@@ -102,7 +102,7 @@ export function useTextarea(
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: true,
+      showErrorIcon: true,
     },
     {
       control: () => "textarea",

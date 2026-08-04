@@ -69,7 +69,7 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
 
             {api.invalidated &&
             !isPropPresent(api.merged.end) &&
-            api.merged.withErrorIcon !== false ? (
+            api.merged.showErrorIcon !== false ? (
               <div {...api.endBind}>
                 <Icon
                   {...api.endIconBind}
@@ -105,7 +105,7 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
           </p>
         )}
 
-      {!api.merged.withoutErrorMessage && (
+      {!api.merged.hideErrorMessage && (
         <p
           {...api.errorBind}
           id={`${api.controlId}-error`}

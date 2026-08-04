@@ -53,7 +53,7 @@ export function usePasswordField(props: PasswordFieldProps) {
     {
       ...formFieldProps,
       slots,
-      withErrorIcon: false,
+      showErrorIcon: false,
       classes: mergedClasses,
     },
     {
@@ -61,7 +61,7 @@ export function usePasswordField(props: PasswordFieldProps) {
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: false,
+      showErrorIcon: false,
     },
     {
       reservedSlots: () => ["end"],

@@ -454,7 +454,7 @@ export function useSelect(
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: true,
+      showErrorIcon: true,
     },
     {
       likeInput: () => multiple.value,

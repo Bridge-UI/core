@@ -95,23 +95,23 @@ import { OtpField } from "@bridge-ui/react/Components/OtpField";
 
 ### Field chrome
 
-| Prop                  | Type      | Default     | Description                                       |
-| --------------------- | --------- | ----------- | ------------------------------------------------- |
-| `color`               | token     | `"primary"` | Focus color on each pin.                          |
-| `controlId`           | `string`  | auto        | Id for the pin group and related labels.          |
-| `corner`              | `string`  | —           | Secondary header text.                            |
-| `customProps`         | object    | —           | Extra props for internal parts.                   |
-| `description`         | `string`  | —           | Helper text below the pins.                       |
-| `disabled`            | `boolean` | `false`     | Disables all pins.                                |
-| `error`               | `boolean` | `false`     | Invalid styling.                                  |
-| `errorMessage`        | `string`  | —           | Error message below the pins.                     |
-| `label`               | `string`  | —           | Primary label above the pins.                     |
-| `readonly`            | `boolean` | `false`     | Makes all pins read-only.                         |
-| `required`            | `boolean` | `false`     | Shows a required asterisk on the label.           |
-| `rounded`             | token     | `"md"`      | Border radius of each pin.                        |
-| `size`                | token     | `"md"`      | Pin size and label typography.                    |
-| `slots`               | object    | —           | `label`, `corner`, `description`, `errorMessage`. |
-| `withoutErrorMessage` | `boolean` | `false`     | Hides the error message row.                      |
+| Prop               | Type      | Default     | Description                                       |
+| ------------------ | --------- | ----------- | ------------------------------------------------- |
+| `color`            | token     | `"primary"` | Focus color on each pin.                          |
+| `controlId`        | `string`  | auto        | Id for the pin group and related labels.          |
+| `corner`           | `string`  | —           | Secondary header text.                            |
+| `customProps`      | object    | —           | Extra props for internal parts.                   |
+| `description`      | `string`  | —           | Helper text below the pins.                       |
+| `disabled`         | `boolean` | `false`     | Disables all pins.                                |
+| `error`            | `boolean` | `false`     | Invalid styling.                                  |
+| `errorMessage`     | `string`  | —           | Error message below the pins.                     |
+| `hideErrorMessage` | `boolean` | `false`     | Hides the error message row.                      |
+| `label`            | `string`  | —           | Primary label above the pins.                     |
+| `readonly`         | `boolean` | `false`     | Makes all pins read-only.                         |
+| `required`         | `boolean` | `false`     | Shows a required asterisk on the label.           |
+| `rounded`          | token     | `"md"`      | Border radius of each pin.                        |
+| `size`             | token     | `"md"`      | Pin size and label typography.                    |
+| `slots`            | object    | —           | `label`, `corner`, `description`, `errorMessage`. |
 
 ## Related components
 

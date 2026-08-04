@@ -13,7 +13,7 @@ import {
 const libDefaults = {
   size: "md",
   error: false,
-  withoutErrorMessage: false,
+  hideErrorMessage: false,
 } satisfies Partial<FormControlOwnProps>;
 
 function mountFormControl(
@@ -229,11 +229,11 @@ test("it should apply error color on labels when error is set", () => {
   expect(wrapper.find("label").classes()).toContain("text-error-600");
 });
 
-test("it should not render error region when withoutErrorMessage is true", () => {
+test("it should not render error region when hideErrorMessage is true", () => {
   const wrapper = mountFormControl({
     error: true,
+    hideErrorMessage: true,
     errorMessage: "Required",
-    withoutErrorMessage: true,
   });
 
   expect(wrapper.find('[id$="-error"]').exists()).toBe(false);

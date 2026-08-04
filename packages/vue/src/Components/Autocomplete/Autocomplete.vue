@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
   freeSolo: true,
   clearable: true,
   searchable: true,
-  withErrorIcon: true,
+  showErrorIcon: true,
   minItemsForSearch: 11,
 });
 

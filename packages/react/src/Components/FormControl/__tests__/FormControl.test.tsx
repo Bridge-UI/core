@@ -16,7 +16,7 @@ import {
 const libDefaults = {
   size: "md",
   error: false,
-  withoutErrorMessage: false,
+  hideErrorMessage: false,
 } satisfies Partial<FormControlOwnProps>;
 
 function FormControlHarness(props: Omit<FormControlOwnProps, "field"> = {}) {
@@ -190,9 +190,9 @@ test("it should apply error color on labels when error is set", () => {
   );
 });
 
-test("it should not render error region when withoutErrorMessage is true", () => {
+test("it should not render error region when hideErrorMessage is true", () => {
   const { container } = render(
-    <FormControlHarness error withoutErrorMessage errorMessage="Required" />,
+    <FormControlHarness error hideErrorMessage errorMessage="Required" />,
   );
 
   expect(container.querySelector('[id$="-error"]')).toBeNull();

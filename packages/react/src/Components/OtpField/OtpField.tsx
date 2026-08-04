@@ -84,7 +84,7 @@ function OtpField(props: OtpFieldProps) {
           </p>
         )}
 
-      {!merged.withoutErrorMessage && (
+      {!merged.hideErrorMessage && (
         <p
           {...errorBind}
           id={`${controlId}-error`}

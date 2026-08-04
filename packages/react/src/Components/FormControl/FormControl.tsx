@@ -37,7 +37,7 @@ function FormControl({ field, children }: FormControlComponentProps) {
           </p>
         )}
 
-      {!api.merged.withoutErrorMessage && (
+      {!api.merged.hideErrorMessage && (
         <p
           {...api.errorMessageBind}
           aria-hidden={api.showErrorMessageContent ? undefined : true}

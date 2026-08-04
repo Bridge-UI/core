@@ -64,7 +64,7 @@ function OutlinedFormField({ api, children }: OutlinedFormFieldProps) {
           <div {...api.endSlotBind}>{api.slots?.end}</div>
         ) : isPropPresent(api.merged.end) ? (
           <div {...api.endBind}>{api.merged.end}</div>
-        ) : api.invalidated && api.merged.withErrorIcon !== false ? (
+        ) : api.invalidated && api.merged.showErrorIcon !== false ? (
           <div {...api.endBind}>
             <Icon
               {...api.endIconBind}
@@ -96,7 +96,7 @@ function OutlinedFormField({ api, children }: OutlinedFormFieldProps) {
           </p>
         )}
 
-      {!api.merged.withoutErrorMessage && (
+      {!api.merged.hideErrorMessage && (
         <p
           {...api.errorBind}
           id={`${api.controlId}-error`}

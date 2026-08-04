@@ -82,13 +82,13 @@ export const formFieldBridgeKeys = [
   "customProps",
   "description",
   "errorMessage",
-  "withErrorIcon",
-  "withoutErrorMessage",
+  "showErrorIcon",
+  "hideErrorMessage",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<
   FormFieldOwnProps,
-  "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
+  "size" | "color" | "rounded" | "variant" | "errorIcon" | "showErrorIcon"
 >;
 
 type FormFieldMerged = MergeLibDefaults<
@@ -190,7 +190,7 @@ export function useFormField(
   });
 
   const reservesErrorMessageSpace = derived(() => {
-    return !merged.withoutErrorMessage;
+    return !merged.hideErrorMessage;
   });
 
   const showErrorMessageContent = derived(() => {
@@ -227,7 +227,7 @@ export function useFormField(
 
     if (
       invalidated &&
-      !merged.withoutErrorMessage &&
+      !merged.hideErrorMessage &&
       hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
     ) {
       ids.push(`${controlId}-error`);

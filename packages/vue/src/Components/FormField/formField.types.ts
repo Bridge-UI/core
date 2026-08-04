@@ -224,7 +224,7 @@ export interface FormFieldOwnProps {
   error?: boolean;
 
   /**
-   * Icon used when `withErrorIcon` is enabled and the field is invalid.
+   * Icon used when `showErrorIcon` is enabled and the field is invalid.
    *
    * @default "alert"
    */
@@ -245,6 +245,13 @@ export interface FormFieldOwnProps {
    * @default undefined
    */
   field?: UseFormFieldReturn;
+
+  /**
+   * When `true`, does not reserve space below the control for error messages.
+   *
+   * @default false
+   */
+  hideErrorMessage?: boolean;
 
   /**
    * The primary label text above the control.
@@ -273,6 +280,14 @@ export interface FormFieldOwnProps {
    * @default "md"
    */
   rounded?: MergeProps<FormFieldRounded, FormFieldRoundedOverrides>;
+
+  /**
+   * When `true` and the field is invalid, shows an error icon at the inline end
+   * when no `endIcon` or `end` slot is present.
+   *
+   * @default true
+   */
+  showErrorIcon?: boolean;
 
   /**
    * Typography scale for label, corner, description, and error message, and
@@ -308,21 +323,6 @@ export interface FormFieldOwnProps {
    * @default "outline"
    */
   variant?: MergeProps<FormFieldVariant, FormFieldVariantOverrides>;
-
-  /**
-   * When `true` and the field is invalid, shows an error icon at the inline end
-   * when no `endIcon` or `end` slot is present.
-   *
-   * @default true
-   */
-  withErrorIcon?: boolean;
-
-  /**
-   * When `true`, does not reserve space below the control for error messages.
-   *
-   * @default false
-   */
-  withoutErrorMessage?: boolean;
 }
 
 export interface FormFieldSlots {

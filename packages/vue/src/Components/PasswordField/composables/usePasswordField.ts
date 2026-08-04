@@ -70,7 +70,7 @@ export function usePasswordField(
       return {
         ...attrs,
         ...rest,
-        withErrorIcon: false,
+        showErrorIcon: false,
         classes: mergedClasses.value,
       };
     },
@@ -79,7 +79,7 @@ export function usePasswordField(
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: false,
+      showErrorIcon: false,
     },
     {
       reservedSlots: () => ["end"],

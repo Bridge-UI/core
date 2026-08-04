@@ -223,6 +223,13 @@ export interface OtpFieldOwnProps {
   errorMessage?: string;
 
   /**
+   * When `true`, does not reserve space below the pins for error messages.
+   *
+   * @default false
+   */
+  hideErrorMessage?: boolean;
+
+  /**
    * The primary label text above the pins.
    *
    * @default undefined
@@ -291,13 +298,6 @@ export interface OtpFieldOwnProps {
    * @default "outline"
    */
   variant?: MergeProps<OtpFieldVariant, OtpFieldVariantOverrides>;
-
-  /**
-   * When `false`, the error message row is not reserved / rendered.
-   *
-   * @default false
-   */
-  withoutErrorMessage?: boolean;
 }
 
 export interface OtpFieldSlots {

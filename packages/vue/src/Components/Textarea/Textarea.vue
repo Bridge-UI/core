@@ -18,7 +18,7 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<null | string | undefined>();
 
 const props = withDefaults(defineProps<TextareaOwnProps>(), {
-  withErrorIcon: true,
+  showErrorIcon: true,
 });
 
 const uncontrolledValue = ref<null | string | undefined>(props.defaultValue);

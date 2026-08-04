@@ -16,7 +16,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   variant: "outline",
-  withErrorIcon: true,
+  showErrorIcon: true,
 } satisfies Partial<FormFieldOwnProps>;
 
 function FormFieldHarness(props: Omit<FormFieldOwnProps, "field"> = {}) {
@@ -148,7 +148,7 @@ test("it should render end icon when endIcon prop is set", () => {
   expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);
 });
 
-test("it should render error icon when invalid and withErrorIcon is enabled", () => {
+test("it should render error icon when invalid and showErrorIcon is enabled", () => {
   const { container } = render(<FormFieldHarness error />);
 
   expect(container.querySelector("svg")).not.toBeNull();
@@ -170,9 +170,9 @@ test("it should render error icon when end slot is empty and error is set", () =
   expect(container.querySelector("svg")).not.toBeNull();
 });
 
-test("it should hide error icon when withErrorIcon is false", () => {
+test("it should hide error icon when showErrorIcon is false", () => {
   const { container } = render(
-    <FormFieldHarness error withErrorIcon={false} />,
+    <FormFieldHarness error showErrorIcon={false} />,
   );
 
   expect(container.querySelector("svg")).toBeNull();

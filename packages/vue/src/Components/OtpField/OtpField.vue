@@ -115,7 +115,7 @@ const showHeader = computed(() => {
     <p
       v-bind="errorBind"
       :id="`${controlId}-error`"
-      v-if="!merged.withoutErrorMessage"
+      v-if="!merged.hideErrorMessage"
       :aria-hidden="showErrorMessageContent ? undefined : true"
     >
       <component

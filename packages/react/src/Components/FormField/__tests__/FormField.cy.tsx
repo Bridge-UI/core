@@ -6,7 +6,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   variant: "outline",
-  withErrorIcon: true,
+  showErrorIcon: true,
 } as const;
 
 function FieldHarness({
