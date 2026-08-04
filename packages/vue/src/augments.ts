@@ -83,7 +83,7 @@ declare module "@bridge-ui/core" {
   interface FormControlConfigOverrides {
     classes: FormControlClasses;
     defaultProps: Partial<
-      Pick<FormControlProps, "size" | "error" | "withoutErrorMessage">
+      Pick<FormControlProps, "size" | "error" | "hideErrorMessage">
     >;
   }
 
@@ -92,7 +92,7 @@ declare module "@bridge-ui/core" {
     defaultProps: Partial<
       Pick<
         FormFieldProps,
-        "size" | "color" | "rounded" | "variant" | "errorIcon" | "withErrorIcon"
+        "size" | "color" | "rounded" | "variant" | "errorIcon" | "showErrorIcon"
       >
     >;
   }

@@ -7,7 +7,7 @@ import { FormControl, useFormControl } from "@/Components/FormControl";
 const libDefaults = {
   size: "md",
   error: false,
-  withoutErrorMessage: false,
+  hideErrorMessage: false,
 } as const;
 
 const FormControlHarness = defineComponent({

@@ -82,7 +82,7 @@ export const otpFieldBridgeKeys = [
   "description",
   "placeholder",
   "errorMessage",
-  "withoutErrorMessage",
+  "hideErrorMessage",
 ] as const satisfies readonly (keyof OtpFieldOwnProps)[];
 
 type OtpFieldLibDefaults = LibDefaultsShape<
@@ -256,7 +256,7 @@ export function useOtpField(
     return get(classes, variantKey);
   }, [variantKey, bridgeOtpField?.tokens?.variant]);
 
-  const reservesErrorMessageSpace = derived(() => !merged.withoutErrorMessage);
+  const reservesErrorMessageSpace = derived(() => !merged.hideErrorMessage);
 
   const showErrorMessageContent = derived(() => {
     return (
@@ -276,7 +276,7 @@ export function useOtpField(
 
     if (
       invalidated &&
-      !merged.withoutErrorMessage &&
+      !merged.hideErrorMessage &&
       hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
     ) {
       ids.push(`${controlId}-error`);

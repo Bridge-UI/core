@@ -11,7 +11,7 @@ import {
 const libDefaults = {
   size: "md",
   error: false,
-  withoutErrorMessage: false,
+  hideErrorMessage: false,
 } as const satisfies Partial<FormControlOwnProps>;
 
 function renderUseFormControl(props: Omit<FormControlOwnProps, "field"> = {}) {
@@ -23,7 +23,7 @@ test("it should merge default size and error flags", () => {
 
   expect(result.current.merged.size).toBe("md");
   expect(result.current.merged.error).toBe(false);
-  expect(result.current.merged.withoutErrorMessage).toBe(false);
+  expect(result.current.merged.hideErrorMessage).toBe(false);
 });
 
 test("it should override size when prop is passed", () => {
@@ -126,8 +126,8 @@ test("it should reserve error message space by default", () => {
   expect(result.current.reservesErrorMessageSpace).toBe(true);
 });
 
-test("it should not reserve error message space when withoutErrorMessage is true", () => {
-  const { result } = renderUseFormControl({ withoutErrorMessage: true });
+test("it should not reserve error message space when hideErrorMessage is true", () => {
+  const { result } = renderUseFormControl({ hideErrorMessage: true });
 
   expect(result.current.reservesErrorMessageSpace).toBe(false);
 });

@@ -144,9 +144,9 @@ test("it should render error icon instead of end icon when error is set", () => 
   expect(wrapper.find(".lucide-circle-alert").exists()).toBe(true);
 });
 
-test("it should hide error icon when withErrorIcon is false", () => {
+test("it should hide error icon when showErrorIcon is false", () => {
   const wrapper = mount(TextField, {
-    props: { error: true, withErrorIcon: false },
+    props: { error: true, showErrorIcon: false },
   });
 
   expect(wrapper.findAll("svg").length).toBe(0);

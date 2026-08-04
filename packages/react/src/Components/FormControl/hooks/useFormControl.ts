@@ -43,12 +43,12 @@ export const formControlBridgeKeys = [
   "customProps",
   "description",
   "errorMessage",
-  "withoutErrorMessage",
+  "hideErrorMessage",
 ] as const satisfies readonly (keyof FormControlOwnProps)[];
 
 type FormControlLibDefaults = LibDefaultsShape<
   FormControlOwnProps,
-  "size" | "error" | "withoutErrorMessage"
+  "size" | "error" | "hideErrorMessage"
 >;
 
 type FormControlMerged = MergeLibDefaults<
@@ -117,7 +117,7 @@ export function useFormControl(
   });
 
   const reservesErrorMessageSpace = derived(() => {
-    return !merged.withoutErrorMessage;
+    return !merged.hideErrorMessage;
   });
 
   const showErrorMessageContent = derived(() => {

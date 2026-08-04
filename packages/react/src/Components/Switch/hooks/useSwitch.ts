@@ -52,7 +52,7 @@ type SwitchMerged = MergeLibDefaults<SwitchOwnProps, SwitchLibDefaults>;
 export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
   const formControl = useFormControl(props, {
     error: false,
-    withoutErrorMessage: false,
+    hideErrorMessage: false,
     size: libDefaults.size ?? "sm",
   });
 

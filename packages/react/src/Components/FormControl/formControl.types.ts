@@ -164,6 +164,13 @@ export interface FormControlOwnProps {
   field?: UseFormControlReturn;
 
   /**
+   * When `true`, does not reserve space below the row for error messages.
+   *
+   * @default false
+   */
+  hideErrorMessage?: boolean;
+
+  /**
    * Whether the control is read-only.
    *
    * @default false
@@ -200,13 +207,6 @@ export interface FormControlOwnProps {
    * @default undefined
    */
   startLabel?: string;
-
-  /**
-   * When `true`, does not reserve space below the row for error messages.
-   *
-   * @default false
-   */
-  withoutErrorMessage?: boolean;
 }
 
 export interface FormControlSlots {

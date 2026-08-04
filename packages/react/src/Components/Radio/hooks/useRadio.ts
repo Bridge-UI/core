@@ -53,7 +53,7 @@ type RadioMerged = MergeLibDefaults<RadioOwnProps, RadioLibDefaults>;
 export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
   const formControl = useFormControl(props, {
     error: false,
-    withoutErrorMessage: false,
+    hideErrorMessage: false,
     size: libDefaults.size ?? "sm",
   });
 

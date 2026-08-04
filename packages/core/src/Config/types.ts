@@ -377,10 +377,8 @@ export interface IconConfigBase {
 export interface FormControlConfigBase {
   classes: object;
   defaultProps: Partial<{
-    errorless: boolean;
+    hideErrorMessage: boolean;
     size: keyof LabelSize;
-    withoutErrorMessage: boolean;
-    withValidationColors: boolean;
   }>;
   tokens: Partial<{
     invalidated: Partial<FormControlInvalidated>;
@@ -393,9 +391,9 @@ export interface FormFieldConfigBase {
   defaultProps: Partial<{
     color: keyof FormFieldColor;
     rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
-    withErrorIcon: boolean;
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;

@@ -128,7 +128,7 @@ test("it should render end icon when endIcon prop is set", () => {
   expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);
 });
 
-test("it should render error icon when invalid and withErrorIcon is enabled", () => {
+test("it should render error icon when invalid and showErrorIcon is enabled", () => {
   const { container } = render(<TextField error aria-label="Field" />);
 
   expect(container.querySelector("svg")).not.toBeNull();
@@ -150,9 +150,9 @@ test("it should render error icon when end slot is empty and error is set", () =
   expect(container.querySelector("svg")).not.toBeNull();
 });
 
-test("it should hide error icon when withErrorIcon is false", () => {
+test("it should hide error icon when showErrorIcon is false", () => {
   const { container } = render(
-    <TextField error aria-label="Field" withErrorIcon={false} />,
+    <TextField error aria-label="Field" showErrorIcon={false} />,
   );
 
   expect(container.querySelector("svg")).toBeNull();

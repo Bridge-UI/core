@@ -8,7 +8,7 @@ export function useTextField(props: TextFieldProps) {
     rounded: "md",
     color: "primary",
     variant: "outline",
-    withErrorIcon: true,
+    showErrorIcon: true,
   });
 
   return {

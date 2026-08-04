@@ -61,7 +61,7 @@ export function useNumberField(
       return {
         ...attrs,
         ...rest,
-        withErrorIcon: false,
+        showErrorIcon: false,
         classes: mergedClasses.value,
       };
     },
@@ -70,7 +70,7 @@ export function useNumberField(
       rounded: "md",
       color: "primary",
       variant: "outline",
-      withErrorIcon: false,
+      showErrorIcon: false,
     },
     {
       reservedSlots: () => ["end"],

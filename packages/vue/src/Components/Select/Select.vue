@@ -36,7 +36,7 @@ const model = defineModel<null | SelectValue | SelectValue[]>();
 const props = withDefaults(defineProps<SelectOwnProps>(), {
   clearable: true,
   searchable: false,
-  withErrorIcon: true,
+  showErrorIcon: true,
   minItemsForSearch: 11,
 });
 

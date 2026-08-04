@@ -61,7 +61,7 @@ export function useCheckbox(
 
   const formControl = useFormControl(props, {
     error: false,
-    withoutErrorMessage: false,
+    hideErrorMessage: false,
     size: libDefaults.size ?? "sm",
   });
 

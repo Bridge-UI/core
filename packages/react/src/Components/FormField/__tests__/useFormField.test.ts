@@ -10,7 +10,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   variant: "outline",
-  withErrorIcon: true,
+  showErrorIcon: true,
 } satisfies Partial<FormFieldOwnProps>;
 
 function renderUseFormField(
