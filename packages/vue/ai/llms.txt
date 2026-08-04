@@ -21,7 +21,8 @@ npx bridge-ui-vue-ai install
 
 After install:
 
-- AGENTS.md / .ai/AGENTS.md
+- AGENTS.md (root stub) + CLAUDE.md → AGENTS.md
+- .ai/AGENTS.md (full guide)
 - llms.txt
 - .ai/guidelines/
 - .ai/docs/ (components + examples)

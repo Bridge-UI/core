@@ -11,9 +11,11 @@ import {
   existsSync,
   lstatSync,
   mkdirSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
+  readlinkSync,
   realpathSync,
+  rmdirSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -184,6 +186,27 @@ function isPackageAgentsCopy(path) {
   }
 }
 
+function removeEmptyDir(path) {
+  try {
+    rmdirSync(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function cleanupEmptyDirs(appRoot) {
+  const cleaned = [];
+
+  for (const rel of [".ai", join(".cursor", "skills"), ".cursor"]) {
+    if (removeEmptyDir(join(appRoot, rel))) {
+      cleaned.push(rel.replaceAll("\\", "/"));
+    }
+  }
+
+  return cleaned;
+}
+
 function assertAiPresent() {
   if (existsSync(aiRoot)) return;
   console.error(`Missing AI resources in ${packageName}: expected ${aiRoot}`);
@@ -200,7 +223,7 @@ function logResults(title, results) {
 }
 
 // ---------------------------------------------------------------------------
-// AGENTS.md
+// AGENTS.md / CLAUDE.md
 // ---------------------------------------------------------------------------
 
 function agentsSnippet(skills) {
@@ -234,7 +257,8 @@ function upsertAgentsMd(appRoot, skills) {
   }
 
   if (!existsSync(path)) {
-    next = `# Agent instructions\n\n${snippet}\n`;
+    // Stub only — strip on remove deletes the file cleanly.
+    next = `${snippet.trimEnd()}\n`;
   } else {
     const prev = readFileSync(path, "utf8");
 
@@ -254,6 +278,7 @@ function stripAgentsMd(appRoot) {
 
   if (!pathExists(path)) return null;
 
+  // Legacy installs that linked/copied the full package guide to the root.
   if (isPackageAgentsCopy(path) || resolvesUnder(path, aiRoot, "AGENTS.md")) {
     removePath(path);
     return path;
@@ -277,33 +302,79 @@ function stripAgentsMd(appRoot) {
   return path;
 }
 
-function installRootAgents(appRoot, skills, { copy }) {
-  const src = join(aiRoot, "AGENTS.md");
+/**
+ * Root AGENTS.md is always a short stub (or inject into the app's own file).
+ * Full guide lives at `.ai/AGENTS.md` only.
+ */
+function installRootAgents(appRoot, skills) {
   const dest = join(appRoot, "AGENTS.md");
-
   const rel = relative(appRoot, dest);
 
-  if (!existsSync(src)) {
-    upsertAgentsMd(appRoot, skills);
-
-    return { dest: rel, mode: "updated" };
-  }
-
-  // Fresh app, our/foreign Bridge link, or a prior --copy of package AGENTS.md →
-  // replace with this package's file. Never write through a symlink into another package.
+  // Legacy full-guide link/copy or foreign Bridge symlink → replace with stub.
   if (
     isSymlink(dest) ||
-    !pathExists(dest) ||
     isPackageAgentsCopy(dest) ||
     resolvesUnder(dest, aiRoot, "AGENTS.md")
   ) {
-    return { dest: rel, mode: linkOrCopy(src, dest, { copy }) };
+    removePath(dest);
   }
 
-  // App already has its own AGENTS.md → keep it and inject a pointer block.
   upsertAgentsMd(appRoot, skills);
 
   return { dest: rel, mode: "updated" };
+}
+
+/** True when CLAUDE.md is our symlink/copy of the root AGENTS.md stub. */
+function isClaudeBridgeManaged(appRoot, claudePath) {
+  const agents = join(appRoot, "AGENTS.md");
+
+  if (!pathExists(claudePath) || !pathExists(agents)) return false;
+
+  if (isSymlink(claudePath)) {
+    try {
+      return realpathSync(claudePath) === realpathSync(agents);
+    } catch {
+      try {
+        const target = readlinkSync(claudePath);
+
+        return resolve(dirname(claudePath), target) === agents;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  try {
+    return readFileSync(claudePath, "utf8") === readFileSync(agents, "utf8");
+  } catch {
+    return false;
+  }
+}
+
+function installClaudeMd(appRoot, { copy }) {
+  const dest = join(appRoot, "CLAUDE.md");
+  const agents = join(appRoot, "AGENTS.md");
+
+  if (!existsSync(agents)) return null;
+
+  // App already has its own CLAUDE.md → leave it alone.
+  if (pathExists(dest) && !isClaudeBridgeManaged(appRoot, dest)) {
+    return null;
+  }
+
+  return {
+    dest: "CLAUDE.md",
+    mode: linkOrCopy(agents, dest, { copy }),
+  };
+}
+
+function stripClaudeMd(appRoot) {
+  const path = join(appRoot, "CLAUDE.md");
+
+  if (!isClaudeBridgeManaged(appRoot, path)) return null;
+
+  removePath(path);
+  return path;
 }
 
 // ---------------------------------------------------------------------------
@@ -323,7 +394,11 @@ function install({ cwd: appRoot, copy }) {
     });
   }
 
-  results.push(installRootAgents(appRoot, skills, { copy }));
+  results.push(installRootAgents(appRoot, skills));
+
+  const claude = installClaudeMd(appRoot, { copy });
+
+  if (claude) results.push(claude);
 
   logResults(`Installed Bridge UI AI resources from ${packageName}`, results);
 
@@ -348,7 +423,10 @@ function remove({ cwd: appRoot }) {
     removed.push(dest);
   }
 
+  // CLAUDE before AGENTS so content/realpath checks still resolve.
+  const claude = stripClaudeMd(appRoot);
   const agents = stripAgentsMd(appRoot);
+  const emptyDirs = cleanupEmptyDirs(appRoot);
 
   console.log(`Removed Bridge UI AI resources for ${packageName}`);
 
@@ -356,8 +434,16 @@ function remove({ cwd: appRoot }) {
     console.log(`  removed ${path}`);
   }
 
+  if (claude) {
+    console.log(`  cleaned ${relative(appRoot, claude)}`);
+  }
+
   if (agents) {
     console.log(`  cleaned ${relative(appRoot, agents)}`);
+  }
+
+  for (const dir of emptyDirs) {
+    console.log(`  removed ${dir}/`);
   }
 }
 

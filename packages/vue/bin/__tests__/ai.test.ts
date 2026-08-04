@@ -10,6 +10,7 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -88,7 +89,7 @@ describe("bridge-ui-ai CLI", () => {
     expect(result.stdout).toContain(`Usage: ${binName}`);
   });
 
-  test("it should symlink AI resources on install", () => {
+  test("it should symlink AI resources and write a root AGENTS.md stub", () => {
     const cwd = createAppRoot();
     const result = run(["install", "--cwd", cwd]);
 
@@ -105,10 +106,17 @@ describe("bridge-ui-ai CLI", () => {
     }
 
     const agents = join(cwd, "AGENTS.md");
+    const content = readFileSync(agents, "utf8");
 
-    expect(isSymlink(agents)).toBe(true);
-    expect(existsSync(agents)).toBe(true);
-    expect(realpathSync(agents)).toBe(realpathSync(join(aiRoot, "AGENTS.md")));
+    expect(isSymlink(agents)).toBe(false);
+    expect(content).toContain(MARK_START);
+    expect(content).toContain(MARK_END);
+    expect(content).toContain(packageName);
+    expect(content).toContain(".ai/AGENTS.md");
+    expect(content).not.toBe(readFileSync(join(aiRoot, "AGENTS.md"), "utf8"));
+    expect(realpathSync(join(cwd, ".ai", "AGENTS.md"))).toBe(
+      realpathSync(join(aiRoot, "AGENTS.md")),
+    );
   });
 
   test("it should copy AI resources when --copy is set", () => {
@@ -126,8 +134,11 @@ describe("bridge-ui-ai CLI", () => {
       expect(existsSync(dest), rel).toBe(true);
     }
 
-    expect(isSymlink(join(cwd, "AGENTS.md"))).toBe(false);
-    expect(readFileSync(join(cwd, "AGENTS.md"), "utf8")).toBe(
+    const agents = join(cwd, "AGENTS.md");
+
+    expect(isSymlink(agents)).toBe(false);
+    expect(readFileSync(agents, "utf8")).toContain(MARK_START);
+    expect(readFileSync(agents, "utf8")).not.toBe(
       readFileSync(join(aiRoot, "AGENTS.md"), "utf8"),
     );
   });
@@ -186,7 +197,7 @@ describe("bridge-ui-ai CLI", () => {
     expect(content).not.toContain("stale block");
   });
 
-  test("it should remove linked resources and root AGENTS.md", () => {
+  test("it should remove linked resources, root stub, and empty dirs", () => {
     const cwd = createAppRoot();
 
     expect(run(["install", "--cwd", cwd]).status).toBe(0);
@@ -203,6 +214,9 @@ describe("bridge-ui-ai CLI", () => {
     }
 
     expect(existsSync(join(cwd, "AGENTS.md"))).toBe(false);
+    expect(existsSync(join(cwd, "CLAUDE.md"))).toBe(false);
+    expect(existsSync(join(cwd, ".ai"))).toBe(false);
+    expect(existsSync(join(cwd, ".cursor"))).toBe(false);
   });
 
   test("it should strip the Bridge block and keep custom AGENTS.md content", () => {
@@ -253,30 +267,51 @@ describe("bridge-ui-ai CLI", () => {
     expect(existsSync(join(cwd, "AGENTS.md"))).toBe(false);
   });
 
-  test("it should not mutate another package AGENTS.md when installing over its symlink", () => {
+  test("it should link CLAUDE.md to the root stub and remove it on uninstall", () => {
+    const cwd = createAppRoot();
+
+    expect(run(["install", "--cwd", cwd]).status).toBe(0);
+
+    const claude = join(cwd, "CLAUDE.md");
+    const agents = join(cwd, "AGENTS.md");
+
+    expect(isSymlink(claude)).toBe(true);
+    expect(realpathSync(claude)).toBe(realpathSync(agents));
+
+    expect(run(["remove", "--cwd", cwd]).status).toBe(0);
+    expect(existsSync(claude)).toBe(false);
+  });
+
+  test("it should not overwrite a custom CLAUDE.md", () => {
+    const cwd = createAppRoot();
+    const claude = join(cwd, "CLAUDE.md");
+
+    writeFileSync(claude, "# My Claude rules\n");
+
+    expect(run(["install", "--cwd", cwd]).status).toBe(0);
+    expect(isSymlink(claude)).toBe(false);
+    expect(readFileSync(claude, "utf8")).toBe("# My Claude rules\n");
+
+    expect(run(["remove", "--cwd", cwd]).status).toBe(0);
+    expect(existsSync(claude)).toBe(true);
+    expect(readFileSync(claude, "utf8")).toBe("# My Claude rules\n");
+  });
+
+  test("it should not mutate another package AGENTS.md when replacing a foreign symlink", () => {
     const cwd = createAppRoot();
 
     const otherRoot = resolve(packageRoot, "../react");
-    const otherBin = join(otherRoot, "bin", "ai.mjs");
-
     const otherAgents = join(otherRoot, "ai", "AGENTS.md");
     const before = readFileSync(otherAgents, "utf8");
 
-    const other = spawnSync(
-      process.execPath,
-      [otherBin, "install", "--cwd", cwd],
-      {
-        encoding: "utf8",
-        env: process.env,
-      },
-    );
-
-    expect(other.status).toBe(0);
-    expect(isSymlink(join(cwd, "AGENTS.md"))).toBe(true);
+    symlinkSync(otherAgents, join(cwd, "AGENTS.md"));
 
     const result = run(["install", "--cwd", cwd]);
 
     expect(result.status).toBe(0);
+    expect(isSymlink(join(cwd, "AGENTS.md"))).toBe(false);
+    expect(readFileSync(join(cwd, "AGENTS.md"), "utf8")).toContain(MARK_START);
+
     expect(readFileSync(otherAgents, "utf8")).toBe(before);
     expect(readFileSync(otherAgents, "utf8")).not.toContain(MARK_START);
     expect(readFileSync(otherAgents, "utf8")).not.toContain(packageName);
