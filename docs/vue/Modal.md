@@ -16,9 +16,9 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 <Button v-on:click="open = true">Open modal</Button>
 
 <Modal v-model="open">
-  <ModalCard title="Confirm action" :on-close="() => (open = false)">
+  <Card title="Confirm action" :on-close="() => (open = false)">
     Are you sure you want to continue?
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 
@@ -26,9 +26,9 @@ import { Modal } from "@bridge-ui/vue/Components/Modal";
 
 ```vue
 <Modal persistent v-model="open">
-  <ModalCard title="Persistent modal" :on-close="() => (open = false)">
+  <Card title="Persistent modal" :on-close="() => (open = false)">
     Clicking the backdrop or pressing Escape has no effect.
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 
@@ -46,9 +46,9 @@ const breakpoint = useBreakpoint();
     v-model="open"
     :align="breakpoint.mobile ? 'bottom-center' : 'middle-center'"
   >
-    <ModalCard title="Responsive" :on-close="() => (open = false)">
+    <Card title="Responsive" :on-close="() => (open = false)">
       Bottom sheet on mobile, centered from `sm` up.
-    </ModalCard>
+    </Card>
   </Modal>
 </template>
 ```
@@ -59,14 +59,14 @@ const breakpoint = useBreakpoint();
 
 ```vue
 <Modal size="lg" v-model="outerOpen">
-  <ModalCard title="Outer modal" :on-close="() => (outerOpen = false)">
+  <Card title="Outer modal" :on-close="() => (outerOpen = false)">
     <Button size="sm" v-on:click="innerOpen = true">Open nested modal</Button>
-  </ModalCard>
+  </Card>
 
   <Modal size="sm" v-model="innerOpen">
-    <ModalCard title="Nested confirmation" :on-close="() => (innerOpen = false)">
+    <Card title="Nested confirmation" :on-close="() => (innerOpen = false)">
       Press Escape to close only this layer.
-    </ModalCard>
+    </Card>
   </Modal>
 </Modal>
 ```
@@ -107,9 +107,9 @@ const breakpoint = useBreakpoint();
     overlay: { id: 'modal-overlay' },
   }"
 >
-  <ModalCard title="customProps" :on-close="() => (open = false)">
+  <Card title="customProps" :on-close="() => (open = false)">
     Inspect the DOM for ids on each modal part.
-  </ModalCard>
+  </Card>
 </Modal>
 ```
 
