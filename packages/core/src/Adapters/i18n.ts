@@ -21,13 +21,15 @@ export type MessageParams = Record<
  * not by Bridge core.
  *
  * Optional {@link setLocale} is called by Bridge `setLocale` so the app can
- * sync i18next / vue-i18n in one place. Persistence stays in the app.
+ * sync i18next / vue-i18n / multi-locale dictionaries in one place. Single-
+ * locale adapters can omit it. Persistence stays in the app.
  *
  * See `packages/{react,vue}/examples` for sample implementations.
  */
 export interface I18nAdapter {
   /**
-   * Called by Bridge `setLocale` to sync the underlying i18n library.
+   * Called by Bridge `setLocale` to sync the adapter’s active locale.
+   * Optional for single-locale adapters.
    */
   setLocale?: (locale: string) => void;
 

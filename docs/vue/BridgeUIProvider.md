@@ -45,7 +45,7 @@ app.use(
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next / dictionary). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";

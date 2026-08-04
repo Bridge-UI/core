@@ -45,7 +45,7 @@ const icons = createLucideIconAdapter();
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (i18next / vue-i18n). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/react/examples/` (dictionary, i18next). See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (i18next / vue-i18n / dictionary). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/react/examples/` (dictionary, i18next). See [I18n](./I18n.md).
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
