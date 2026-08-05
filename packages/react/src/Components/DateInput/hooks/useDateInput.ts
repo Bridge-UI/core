@@ -1,6 +1,6 @@
 // ** External Imports
 import { isArray, isNil, omit } from "es-toolkit/compat";
-import type { ChangeEvent, FocusEvent, KeyboardEvent, RefObject } from "react";
+import type { ChangeEvent, FocusEvent, KeyboardEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
@@ -70,12 +70,9 @@ function formatModel(
   return adapter.format(value, context);
 }
 
-export function useDateInput(
-  props: DateInputProps,
-  triggerRef: RefObject<null | HTMLInputElement>,
-) {
-  const adapter = useDateAdapter();
+export function useDateInput(props: DateInputProps) {
   const bridge = useBridgeUI();
+  const adapter = useDateAdapter();
   const containerRef = useRef<null | HTMLElement>(null);
 
   const {
@@ -248,38 +245,41 @@ export function useDateInput(
   };
 
   const inputBind = derived(() => {
-    return mergePartBind(formField.inputBind, {
-      ref: triggerRef,
-      value: displayText,
-      readOnly: mode !== "single" ? true : formField.inputBind.readOnly,
-      onBlur: (event: FocusEvent<HTMLInputElement>) => {
-        formField.inputBind.onBlur?.(event as never);
-        parseDraft();
-      },
-      onFocus: (event: FocusEvent<HTMLInputElement>) => {
-        formField.inputBind.onFocus?.(event as never);
-        handleOpenChange(true);
-      },
-      onChange: (event: ChangeEvent<HTMLInputElement>) => {
-        if (mode !== "single") {
-          return;
-        }
-
-        setDraftText(event.target.value);
-      },
-      onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
-        formField.inputBind.onKeyDown?.(event as never);
-
-        if (event.key === "Enter") {
+    return mergePartBind(
+      {
+        value: displayText,
+        readOnly: mode !== "single" ? true : formField.inputBind.readOnly,
+        onBlur: (event: FocusEvent<HTMLInputElement>) => {
+          formField.inputBind.onBlur?.(event as never);
           parseDraft();
-        }
+        },
+        onFocus: (event: FocusEvent<HTMLInputElement>) => {
+          formField.inputBind.onFocus?.(event as never);
+          handleOpenChange(true);
+        },
+        onChange: (event: ChangeEvent<HTMLInputElement>) => {
+          if (mode !== "single") {
+            return;
+          }
 
-        if (event.key === "Escape") {
-          setDraftText(null);
-          handleOpenChange(false);
-        }
+          setDraftText(event.target.value);
+        },
+        onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+          formField.inputBind.onKeyDown?.(event as never);
+
+          if (event.key === "Enter") {
+            parseDraft();
+          }
+
+          if (event.key === "Escape") {
+            setDraftText(null);
+            handleOpenChange(false);
+          }
+        },
       },
-    });
+      undefined,
+      formField.inputBind,
+    );
   });
 
   return {

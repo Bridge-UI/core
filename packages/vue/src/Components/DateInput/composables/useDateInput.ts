@@ -247,38 +247,42 @@ export function useDateInput(
   }
 
   const inputBind = computed(() => {
-    return mergePartBind(formField.inputBind.value, {
-      value: displayText.value,
-      readonly:
-        mode.value !== "single" ? true : formField.inputBind.value.readonly,
-      onBlur: (event: FocusEvent) => {
-        formField.inputBind.value.onBlur?.(event);
-        parseDraft();
-      },
-      onFocus: (event: FocusEvent) => {
-        formField.inputBind.value.onFocus?.(event);
-        handleOpenChange(true);
-      },
-      onInput: (event: Event) => {
-        if (mode.value !== "single") {
-          return;
-        }
-
-        draftText.value = (event.target as HTMLInputElement).value;
-      },
-      onKeydown: (event: KeyboardEvent) => {
-        formField.inputBind.value.onKeydown?.(event);
-
-        if (event.key === "Enter") {
+    return mergePartBind(
+      {
+        value: displayText.value,
+        readonly:
+          mode.value !== "single" ? true : formField.inputBind.value.readonly,
+        onBlur: (event: FocusEvent) => {
+          formField.inputBind.value.onBlur?.(event);
           parseDraft();
-        }
+        },
+        onFocus: (event: FocusEvent) => {
+          formField.inputBind.value.onFocus?.(event);
+          handleOpenChange(true);
+        },
+        onInput: (event: Event) => {
+          if (mode.value !== "single") {
+            return;
+          }
 
-        if (event.key === "Escape") {
-          draftText.value = null;
-          handleOpenChange(false);
-        }
+          draftText.value = (event.target as HTMLInputElement).value;
+        },
+        onKeydown: (event: KeyboardEvent) => {
+          formField.inputBind.value.onKeydown?.(event);
+
+          if (event.key === "Enter") {
+            parseDraft();
+          }
+
+          if (event.key === "Escape") {
+            draftText.value = null;
+            handleOpenChange(false);
+          }
+        },
       },
-    });
+      undefined,
+      formField.inputBind.value,
+    );
   });
 
   const menuProps = computed(() => {

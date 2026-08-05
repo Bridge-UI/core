@@ -1,6 +1,3 @@
-// ** External Imports
-import { useRef } from "react";
-
 // ** Local Imports
 import type { DateInputProps } from "@/Components/DateInput/dateInput.types";
 import { useDateInput } from "@/Components/DateInput/hooks/useDateInput";
@@ -9,8 +6,6 @@ import { FormField } from "@/Components/FormField";
 import { Menu } from "@/Components/Menu";
 
 function DateInput(props: DateInputProps) {
-  const triggerRef = useRef<null | HTMLInputElement>(null);
-
   const {
     open,
     dateOnly,
@@ -22,12 +17,12 @@ function DateInput(props: DateInputProps) {
     handleOpenChange,
     handlePickerChange,
     datePickerCustomProps,
-  } = useDateInput(props, triggerRef);
+  } = useDateInput(props);
 
   return (
     <>
       <FormField field={formField}>
-        <input ref={triggerRef} {...inputBind} />
+        <input {...inputBind} />
       </FormField>
 
       <Menu

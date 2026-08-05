@@ -1,15 +1,12 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
-import { createRef } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
 import { useDateInput, type DateInputProps } from "@/Components/DateInput";
 
 function renderUseDateInput(props: DateInputProps = {}) {
-  const triggerRef = createRef<HTMLInputElement>();
-
-  return renderHook(() => useDateInput(props, triggerRef));
+  return renderHook(() => useDateInput(props));
 }
 
 test("it should start closed", () => {
