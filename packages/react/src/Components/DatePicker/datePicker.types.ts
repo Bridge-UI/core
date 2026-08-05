@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
@@ -14,10 +14,20 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
-import type { ButtonProps } from "@/Components/Button";
+import type { ButtonOwnProps } from "@/Components/Button";
 import type { CalendarView } from "@/Components/Calendar";
 
 export interface DatePickerColorOverrides {}
+
+/**
+ * Props accepted by the footer buttons, pinned to the native `button` element.
+ */
+type DatePickerFooterButtonProps = Partial<
+  MergeHtmlProps<
+    Omit<ButtonOwnProps, "as">,
+    ButtonHTMLAttributes<HTMLButtonElement>
+  >
+>;
 
 export interface DatePickerClasses {
   /**
@@ -37,14 +47,14 @@ export interface DatePickerCustomProps {
    *
    * @default undefined
    */
-  applyButton?: Partial<ButtonProps>;
+  applyButton?: DatePickerFooterButtonProps;
 
   /**
    * Props forwarded to the Cancel button.
    *
    * @default undefined
    */
-  cancelButton?: Partial<ButtonProps>;
+  cancelButton?: DatePickerFooterButtonProps;
 
   /**
    * Props forwarded to the footer.

@@ -50,8 +50,8 @@ const {
       :read-only="merged.readOnly"
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"
-      @change="handleCalendarChange"
       :hide-months="merged.hideMonths"
+      v-on:change="handleCalendarChange"
       :default-view="merged.defaultView"
       :start-of-week="merged.startOfWeek"
       :disable-dates="merged.disableDates"
@@ -64,8 +64,8 @@ const {
       <Button
         variant="flat"
         color="secondary"
+        v-on:click="handleCancel"
         v-bind="cancelButtonProps"
-        @click="handleCancel"
       >
         {{ cancelLabel }}
       </Button>
