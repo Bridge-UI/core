@@ -25,8 +25,8 @@ test("it should render label corner and description chrome", () => {
     },
   });
 
-  expect(wrapper.text()).toContain("Opacity");
   expect(wrapper.text()).toContain("%");
+  expect(wrapper.text()).toContain("Opacity");
   expect(wrapper.text()).toContain("Adjust transparency");
 });
 
@@ -82,6 +82,22 @@ test("it should hide tooltip when showTooltip is false", async () => {
   resetLayerStackForTests();
 });
 
+test("it should show tooltip on focus by default", async () => {
+  const wrapper = mount(Slider, {
+    attachTo: document.body,
+    props: { label: "Volume", defaultValue: 50 },
+  });
+
+  await wrapper.find('[role="slider"]').trigger("focus");
+
+  expect(
+    document.body.querySelector('[role="tooltip"]')?.textContent,
+  ).toContain("50");
+
+  wrapper.unmount();
+  resetLayerStackForTests();
+});
+
 test("it should render stop labels", () => {
   const wrapper = mount(Slider, {
     props: {
@@ -119,8 +135,8 @@ test("it should render start and end slots from BaseField", () => {
     },
   });
 
-  expect(wrapper.find("[data-testid='slider-start']").exists()).toBe(true);
   expect(wrapper.find("[data-testid='slider-end']").exists()).toBe(true);
+  expect(wrapper.find("[data-testid='slider-start']").exists()).toBe(true);
 });
 
 test("it should emit update:modelValue when value changes", async () => {

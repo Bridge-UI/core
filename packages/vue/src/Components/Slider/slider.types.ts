@@ -105,7 +105,7 @@ export interface SliderCustomProps extends Omit<
    * Props forwarded to each value `Tooltip` (`content` is owned by the slider).
    */
   tooltip?: Partial<
-    Omit<TooltipOwnProps, "show" | "slots" | "content" | "anchorEl">
+    Omit<TooltipOwnProps, "slots" | "content" | "anchorEl" | "modelValue">
   >;
 
   /**

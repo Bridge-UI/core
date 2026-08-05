@@ -26,7 +26,9 @@ defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<SliderEmits>();
 
-const props = defineProps<SliderOwnProps>();
+const props = withDefaults(defineProps<SliderOwnProps>(), {
+  showTooltip: true,
+});
 
 const model = defineModel<number | undefined | SliderRangeValue>({
   default: undefined,
@@ -86,7 +88,6 @@ const {
   baseField,
   trackBind,
   controlBind,
-  showTooltip,
   getStopBind,
   thumbIndexes,
   tooltipProps,
@@ -96,6 +97,7 @@ const {
   readThumbValue,
   getStopLabelBind,
   getThumbKnobBind,
+  showTooltip: tooltipEnabled,
 } = api;
 
 function setTrackRef(el: null | Element | ComponentPublicInstance) {
@@ -142,7 +144,7 @@ function setThumbRef(
         </button>
       </div>
 
-      <template v-if="showTooltip">
+      <template v-if="tooltipEnabled">
         <Tooltip
           arrow
           size="sm"

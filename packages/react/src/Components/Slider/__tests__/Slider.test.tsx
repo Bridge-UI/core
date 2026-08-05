@@ -27,8 +27,8 @@ test("it should render label corner and description chrome", () => {
     <Slider corner="%" label="Opacity" description="Adjust transparency" />,
   );
 
-  expect(screen.getByText("Opacity")).not.toBeNull();
   expect(screen.getByText("%")).not.toBeNull();
+  expect(screen.getByText("Opacity")).not.toBeNull();
   expect(screen.getByText("Adjust transparency")).not.toBeNull();
 });
 
@@ -75,6 +75,14 @@ test("it should hide tooltip when showTooltip is false", () => {
   expect(screen.queryByRole("tooltip")).toBeNull();
 });
 
+test("it should show tooltip on focus by default", () => {
+  render(<Slider label="Volume" defaultValue={50} />);
+
+  fireEvent.focus(screen.getByRole("slider"));
+
+  expect(screen.getByRole("tooltip").textContent).toContain("50");
+});
+
 test("it should render stop labels", () => {
   render(
     <Slider
@@ -108,6 +116,6 @@ test("it should render start and end slots from BaseField", () => {
     />,
   );
 
-  expect(screen.getByTestId("slider-start")).not.toBeNull();
   expect(screen.getByTestId("slider-end")).not.toBeNull();
+  expect(screen.getByTestId("slider-start")).not.toBeNull();
 });
