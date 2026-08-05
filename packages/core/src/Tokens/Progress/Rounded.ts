@@ -1,5 +1,20 @@
 export interface ProgressRounded {
   /**
+   * Border radius classes for the `2xl` token.
+   */
+  "2xl": string;
+
+  /**
+   * Border radius classes for the `3xl` token.
+   */
+  "3xl": string;
+
+  /**
+   * Border radius classes for the `4xl` token.
+   */
+  "4xl": string;
+
+  /**
    * Full width or fully rounded token.
    */
   "full": string;
@@ -23,12 +38,27 @@ export interface ProgressRounded {
    * Border radius classes for the `sm` token.
    */
   "sm": string;
+
+  /**
+   * Border radius classes for the `xl` token.
+   */
+  "xl": string;
+
+  /**
+   * Border radius classes for the `xs` token.
+   */
+  "xs": string;
 }
 
 export const roundedProps: ProgressRounded = {
+  "xs": "rounded-xs",
   "sm": "rounded-sm",
   "md": "rounded-md",
   "lg": "rounded-lg",
+  "xl": "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
+  "4xl": "rounded-4xl",
   "none": "rounded-none",
   "full": "rounded-full",
 };
