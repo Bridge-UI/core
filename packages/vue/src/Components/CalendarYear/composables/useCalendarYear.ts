@@ -71,8 +71,8 @@ export function useCalendarYear(
   emit: (event: "change", year: number) => void,
 ) {
   const attrs = useAttrs();
-  const adapter = useDateAdapter();
   const bridge = useBridgeUI();
+  const adapter = useDateAdapter();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -214,7 +214,7 @@ export function useCalendarYear(
     return mergePartBind(
       customProps.value?.year,
       {
-        type: "button",
+        type: "button" as const,
         disabled: cell.disabled,
         "aria-pressed": cell.selected,
         onClick: () => selectYear(cell.year),

@@ -68,8 +68,8 @@ export function useCalendarMonth(
   props: CalendarMonthProps,
   libDefaults: CalendarMonthLibDefaults,
 ) {
-  const adapter = useDateAdapter();
   const bridge = useBridgeUI();
+  const adapter = useDateAdapter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarMonthProps,
@@ -197,7 +197,7 @@ export function useCalendarMonth(
     return mergePartBind(
       customProps?.month,
       {
-        type: "button",
+        type: "button" as const,
         disabled: cell.disabled,
         "aria-pressed": cell.selected,
         onClick: () => selectMonth(cell.month),

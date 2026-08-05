@@ -85,8 +85,8 @@ export function useCalendarDate(
   props: CalendarDateProps,
   libDefaults: CalendarDateLibDefaults,
 ) {
-  const adapter = useDateAdapter();
   const bridge = useBridgeUI();
+  const adapter = useDateAdapter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarDateProps,
@@ -333,12 +333,12 @@ export function useCalendarDate(
     return mergePartBind(
       customProps?.day,
       {
-        type: "button",
+        type: "button" as const,
         disabled: cell.disabled,
         "aria-pressed": cell.selected,
         onClick: () => selectDay(cell.date),
         "data-preview": cell.preview ? "" : undefined,
-        "aria-current": cell.today ? "date" : undefined,
+        "aria-current": cell.today ? ("date" as const) : undefined,
         onMouseLeave: () => {
           if (mode === "range") {
             setPreview(null);

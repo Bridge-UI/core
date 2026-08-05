@@ -57,6 +57,7 @@ function Calendar(props: CalendarProps) {
           {showYearSelector && (
             <button {...yearSelectorBind}>
               <span>{yearLabel}</span>
+
               <Icon size="xs" icon="chevronDown" {...navIconBind} />
             </button>
           )}
@@ -66,6 +67,7 @@ function Calendar(props: CalendarProps) {
               <span className="underline decoration-gray-300 underline-offset-4">
                 {monthLabel}
               </span>
+
               <Icon size="xs" icon="chevronDown" {...navIconBind} />
             </button>
           )}

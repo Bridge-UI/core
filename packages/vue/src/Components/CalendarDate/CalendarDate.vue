@@ -8,9 +8,9 @@ import { useCalendarDate } from "@/Components/CalendarDate/composables/useCalend
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<CalendarDateOwnProps>();
-
 const emit = defineEmits<CalendarDateEmits>();
+
+const props = defineProps<CalendarDateOwnProps>();
 
 const {
   days,
@@ -42,8 +42,8 @@ function adapterDayKey(date: Date) {
     <div v-bind="gridBind">
       <button
         v-for="cell in days"
-        :key="`${adapterDayKey(cell.date)}-${cell.label}`"
         v-bind="getDayBind(cell)"
+        :key="`${adapterDayKey(cell.date)}-${cell.label}`"
       >
         {{ cell.label }}
       </button>

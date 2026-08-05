@@ -8,9 +8,9 @@ import { useCalendarYear } from "@/Components/CalendarYear/composables/useCalend
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<CalendarYearOwnProps>();
-
 const emit = defineEmits<CalendarYearEmits>();
+
+const props = defineProps<CalendarYearOwnProps>();
 
 const { years, rootBind, gridBind, getYearBind } = useCalendarYear(
   props,

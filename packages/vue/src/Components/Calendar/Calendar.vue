@@ -54,6 +54,7 @@ const {
       <div class="flex min-w-0 items-center gap-1">
         <button v-if="showYearSelector" v-bind="yearSelectorBind">
           <span>{{ yearLabel }}</span>
+
           <Icon size="xs" icon="chevronDown" v-bind="navIconBind" />
         </button>
 
@@ -61,6 +62,7 @@ const {
           <span class="underline decoration-gray-300 underline-offset-4">
             {{ monthLabel }}
           </span>
+
           <Icon size="xs" icon="chevronDown" v-bind="navIconBind" />
         </button>
       </div>
@@ -88,9 +90,9 @@ const {
       :range="merged.range"
       :view-date="viewDate"
       v-if="view === 'date'"
-      @change="handleChange"
+      v-on:change="handleChange"
       :multiple="merged.multiple"
-      @view-date-change="setViewDate"
+      v-on:view-date-change="setViewDate"
       :start-of-week="merged.startOfWeek"
       :disable-dates="merged.disableDates"
       :hide-weekdays="merged.hideWeekdays"
@@ -100,15 +102,15 @@ const {
       v-bind="shared"
       :year="viewYear"
       :value="viewMonth"
-      @change="handleMonthSelect"
       v-else-if="view === 'month'"
+      v-on:change="handleMonthSelect"
     />
 
     <CalendarYear
       v-bind="shared"
       :value="viewYear"
-      @change="handleYearSelect"
       v-else-if="view === 'year'"
+      v-on:change="handleYearSelect"
     />
   </div>
 </template>

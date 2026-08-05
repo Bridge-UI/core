@@ -309,7 +309,7 @@ export function useCalendar(
     return mergePartBind(
       customProps.value?.selector,
       {
-        type: "button",
+        type: "button" as const,
         disabled: merged.value.disabled,
       },
       cn({
@@ -323,7 +323,7 @@ export function useCalendar(
     return mergePartBind(
       customProps.value?.navButton,
       {
-        type: "button",
+        type: "button" as const,
         disabled: merged.value.disabled,
       },
       cn({
@@ -338,7 +338,7 @@ export function useCalendar(
       customProps.value?.previousButton,
       {
         ...navButtonBind.value,
-        type: "button",
+        type: "button" as const,
         onClick: goToPreviousMonth,
         disabled: merged.value.disabled,
         "aria-label": resolveMessage("Previous month"),
@@ -354,8 +354,8 @@ export function useCalendar(
       customProps.value?.nextButton,
       {
         ...navButtonBind.value,
-        type: "button",
         onClick: goToNextMonth,
+        type: "button" as const,
         disabled: merged.value.disabled,
         "aria-label": resolveMessage("Next month"),
       },
@@ -369,8 +369,8 @@ export function useCalendar(
     return mergePartBind(
       customProps.value?.todayButton,
       {
-        type: "button",
         onClick: goToToday,
+        type: "button" as const,
         disabled: merged.value.disabled,
         "aria-label": resolveMessage("Today"),
       },
@@ -382,9 +382,9 @@ export function useCalendar(
   });
 
   const yearSelectorBind = computed(() => {
-    return mergePartBind(customProps.value?.selector, {
+    return mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
-      type: "button",
+      type: "button" as const,
       onClick: () => setView("year"),
       "aria-label": resolveMessage("Select year"),
       disabled: merged.value.disabled || merged.value.hideYears,
@@ -392,9 +392,9 @@ export function useCalendar(
   });
 
   const monthSelectorBind = computed(() => {
-    return mergePartBind(customProps.value?.selector, {
+    return mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
-      type: "button",
+      type: "button" as const,
       onClick: () => setView("month"),
       "aria-label": resolveMessage("Select month"),
       disabled: merged.value.disabled || merged.value.hideMonths,

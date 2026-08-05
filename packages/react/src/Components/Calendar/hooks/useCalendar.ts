@@ -89,8 +89,8 @@ export function useCalendar(
   props: CalendarProps,
   libDefaults: CalendarLibDefaults,
 ) {
-  const adapter = useDateAdapter();
   const bridge = useBridgeUI();
+  const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -271,7 +271,7 @@ export function useCalendar(
     return mergePartBind(
       customProps?.selector,
       {
-        type: "button",
+        type: "button" as const,
         disabled: merged.disabled,
       },
       cn({
@@ -285,7 +285,7 @@ export function useCalendar(
     return mergePartBind(
       customProps?.navButton,
       {
-        type: "button",
+        type: "button" as const,
         disabled: merged.disabled,
       },
       cn({
@@ -300,7 +300,7 @@ export function useCalendar(
       customProps?.previousButton,
       {
         ...navButtonBind,
-        type: "button",
+        type: "button" as const,
         disabled: merged.disabled,
         onClick: goToPreviousMonth,
         "aria-label": resolveMessage("Previous month"),
@@ -316,8 +316,8 @@ export function useCalendar(
       customProps?.nextButton,
       {
         ...navButtonBind,
-        type: "button",
         onClick: goToNextMonth,
+        type: "button" as const,
         disabled: merged.disabled,
         "aria-label": resolveMessage("Next month"),
       },
@@ -331,8 +331,8 @@ export function useCalendar(
     return mergePartBind(
       customProps?.todayButton,
       {
-        type: "button",
         onClick: goToToday,
+        type: "button" as const,
         disabled: merged.disabled,
         "aria-label": resolveMessage("Today"),
       },
@@ -344,9 +344,9 @@ export function useCalendar(
   });
 
   const yearSelectorBind = derived(() => {
-    return mergePartBind(customProps?.selector, {
+    return mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
-      type: "button",
+      type: "button" as const,
       onClick: () => setView("year"),
       "aria-label": resolveMessage("Select year"),
       disabled: merged.disabled || merged.hideYears,
@@ -354,9 +354,9 @@ export function useCalendar(
   });
 
   const monthSelectorBind = derived(() => {
-    return mergePartBind(customProps?.selector, {
+    return mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
-      type: "button",
+      type: "button" as const,
       onClick: () => setView("month"),
       "aria-label": resolveMessage("Select month"),
       disabled: merged.disabled || merged.hideMonths,

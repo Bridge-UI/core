@@ -8,9 +8,9 @@ import { useCalendarMonth } from "@/Components/CalendarMonth/composables/useCale
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<CalendarMonthOwnProps>();
-
 const emit = defineEmits<CalendarMonthEmits>();
+
+const props = defineProps<CalendarMonthOwnProps>();
 
 const { months, rootBind, gridBind, getMonthBind } = useCalendarMonth(
   props,
