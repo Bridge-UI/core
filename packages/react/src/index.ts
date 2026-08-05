@@ -148,6 +148,16 @@ export type {
   ChipProps,
   ChipSizeOverrides,
 } from "@/Components/Chip";
+export { DatePicker, useDatePicker } from "@/Components/DatePicker";
+export type {
+  DatePickerCallbacks,
+  DatePickerClasses,
+  DatePickerColorOverrides,
+  DatePickerCustomProps,
+  DatePickerOwnProps,
+  DatePickerProps,
+  DatePickerTokens,
+} from "@/Components/DatePicker";
 export { Divider, useDivider } from "@/Components/Divider";
 export type {
   DividerClasses,
