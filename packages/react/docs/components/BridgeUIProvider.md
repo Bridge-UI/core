@@ -60,7 +60,21 @@ const i18n = createDictionaryI18nAdapter();
 </BridgeUIProvider>
 ```
 
-### Runtime updates
+### Form density defaults
+
+Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, …). Does not affect Button, Progress, Modal, etc.
+
+Merge order: instance props → `components.{Name}.defaultProps` → `formDefaults` → library defaults.
+
+```tsx
+<BridgeUIProvider
+  global={{
+    formDefaults: { size: "lg", rounded: "md" },
+  }}
+>
+  <App />
+</BridgeUIProvider>
+```
 
 ```ts
 const { setLocale, setTheme, setDirection, setGlobal } = useBridgeUI()!;
@@ -73,11 +87,11 @@ setGlobal({ mobileBreakpoint: "md" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                        |
-| ------------ | -------------------------- | ------- | ---------------------------------------------------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                              |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                             |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n` |
+| Prop         | Type                       | Default | Description                                                                                        |
+| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                                              |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                             |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `formDefaults` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setDirection`
 

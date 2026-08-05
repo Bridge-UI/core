@@ -60,6 +60,24 @@ app.use(
 );
 ```
 
+### Form density defaults
+
+Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, …). Does not affect Button, Progress, Modal, etc.
+
+Merge order: instance props → `components.{Name}.defaultProps` → `formDefaults` → library defaults.
+
+```ts
+import { createBridgeUI } from "@bridge-ui/vue";
+
+app.use(
+  createBridgeUI({
+    global: {
+      formDefaults: { size: "lg", rounded: "md" },
+    },
+  }),
+);
+```
+
 ### Runtime updates
 
 ```ts
@@ -73,10 +91,10 @@ setGlobal({ mobileBreakpoint: "md" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                        |
-| ------------ | -------------------------- | ------- | ---------------------------------------------------------------------------------- |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                             |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n` |
+| Prop         | Type                       | Default | Description                                                                                        |
+| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                             |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `formDefaults` |
 
 App content is passed via the **default slot** (see Usage above).
 

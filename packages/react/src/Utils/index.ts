@@ -79,8 +79,15 @@ export function useBridgeUIComponent<
       components,
       libDefaults,
       componentName,
+      formDefaults: bridge?.global.formDefaults,
     }) as P;
-  }, [props, components, libDefaults, componentName]);
+  }, [
+    props,
+    components,
+    libDefaults,
+    componentName,
+    bridge?.global.formDefaults,
+  ]);
 
   return {
     entry,

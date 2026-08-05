@@ -174,6 +174,26 @@ import type { Overwrite } from "@/Utils/types";
 
 export type Direction = "ltr" | "rtl";
 
+/**
+ * Shared density defaults for form controls (`size` / `rounded` token keys).
+ * Applied when merging props for form registry components only.
+ */
+export interface BridgeUIFormDefaults {
+  /**
+   * Default `rounded` token key for form controls.
+   *
+   * @default undefined
+   */
+  rounded?: keyof FormFieldRounded;
+
+  /**
+   * Default `size` token key for form controls.
+   *
+   * @default undefined
+   */
+  size?: keyof FormFieldSize;
+}
+
 export interface BridgeUIGlobal {
   /**
    * Global breakpoint CSS length overrides for `useBreakpoint`.
@@ -188,6 +208,15 @@ export interface BridgeUIGlobal {
    * @default "ltr"
    */
   direction: Direction;
+
+  /**
+   * Default `size` / `rounded` for form controls (TextField, Select, Checkbox, …).
+   * Merge order: instance props → component `defaultProps` → `formDefaults` → lib defaults.
+   * Does not apply to non-form components (Button, Progress, Modal, …).
+   *
+   * @default undefined
+   */
+  formDefaults?: BridgeUIFormDefaults;
 
   /**
    * i18n adapter used to translate Bridge chrome strings

@@ -15,6 +15,7 @@ export type {
   BadgeConfigBase,
   BadgeConfigOverrides,
   BridgeUIComponentsConfig,
+  BridgeUIFormDefaults,
   BridgeUIGlobal,
   BridgeUIOptions,
   ButtonConfigBase,

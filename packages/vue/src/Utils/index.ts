@@ -102,6 +102,7 @@ export function useBridgeUIComponent<
       componentName,
       props: toValue(props) as P,
       components: components.value,
+      formDefaults: bridge?.global.value.formDefaults,
     }) as P;
   });
 
