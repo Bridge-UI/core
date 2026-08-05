@@ -46,7 +46,7 @@ test("it should expose digit slots from model value", () => {
 test("it should mark the field as invalidated when error is set", () => {
   const { api } = mountUseOtpField({ error: true });
 
-  expect(api.invalidated.value).toBe(true);
+  expect(api.baseField.invalidated.value).toBe(true);
 });
 
 test("it should resolve numeric input mode by default", () => {
@@ -56,9 +56,17 @@ test("it should resolve numeric input mode by default", () => {
   expect(api.inputBind(0).inputmode).toBe("numeric");
 });
 
-test("it should expose start and end slot binds", () => {
+test("it should expose start and end slot binds on baseField", () => {
   const { api } = mountUseOtpField();
 
-  expect(api.startSlotBind.value.class).toContain("wrapper-start-slot");
-  expect(api.endSlotBind.value.class).toContain("wrapper-end-slot");
+  expect(api.baseField.startSlotBind.value.class).toContain(
+    "wrapper-start-slot",
+  );
+  expect(api.baseField.endSlotBind.value.class).toContain("wrapper-end-slot");
+});
+
+test("it should apply pin row gap on pinsBind", () => {
+  const { api } = mountUseOtpField({ size: "md" });
+
+  expect(api.pinsBind.value.class).toContain("gap-2");
 });

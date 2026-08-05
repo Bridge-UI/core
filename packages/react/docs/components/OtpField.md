@@ -1,7 +1,8 @@
 # OtpField
 
 One-time password / PIN input with individual pin cells. Label, description, and
-error chrome sit above/below the group; variants style each pin.
+error chrome are rendered via the shared `BaseField` layout; variants style each
+pin.
 
 ## Import
 
@@ -107,6 +108,10 @@ import { OtpField } from "@bridge-ui/react/Components/OtpField";
 
 ### Field chrome
 
+Label, corner, description, error message, and start/end adornment slots use the
+same `BaseField` layout as other field components. Pin-specific props (`length`,
+`mask`, `variant`, …) apply only to the pin row.
+
 | Prop               | Type      | Default     | Description                                                       |
 | ------------------ | --------- | ----------- | ----------------------------------------------------------------- |
 | `color`            | token     | `"primary"` | Focus color on each pin.                                          |
@@ -127,4 +132,4 @@ import { OtpField } from "@bridge-ui/react/Components/OtpField";
 
 ## Related components
 
-TextField, FormField, NumberField
+BaseField, TextField, FormField, NumberField

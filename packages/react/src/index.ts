@@ -52,6 +52,16 @@ export type {
   BadgeSizeOverrides,
   BadgeVariantOverrides,
 } from "@/Components/Badge";
+export { BaseField, useBaseField } from "@/Components/BaseField";
+export type {
+  BaseFieldClasses,
+  BaseFieldCustomProps,
+  BaseFieldOwnProps,
+  BaseFieldProps,
+  BaseFieldSizeOverrides,
+  BaseFieldSlots,
+  UseBaseFieldReturn,
+} from "@/Components/BaseField";
 export { Button, useButton, type ButtonProps } from "@/Components/Button";
 export type {
   ButtonClasses,
