@@ -514,6 +514,7 @@ export {
   sortSliderRangeValue,
   stepSliderValue,
   valueToPercent,
+  writeSliderRangeThumb,
 } from "@/Utils/slider";
 export type {
   SliderBarGeometry,

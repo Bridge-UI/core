@@ -24,6 +24,7 @@ import {
   splitComponentProps,
   stepSliderValue,
   valueToPercent,
+  writeSliderRangeThumb,
   type LibDefaultsShape,
   type MergeLibDefaults,
   type SliderRangeValue,
@@ -109,29 +110,26 @@ function writeThumbValue(
   thumbIndex: 0 | 1,
   next: number,
   range: boolean,
-): number | SliderRangeValue {
+): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
   if (!range || !Array.isArray(value)) {
-    return next;
+    return { thumbIndex, value: next };
   }
 
-  const pair: SliderRangeValue = [...value] as SliderRangeValue;
-  pair[thumbIndex] = next;
-
-  return pair;
+  return writeSliderRangeThumb(value, thumbIndex, next);
 }
 
 export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
   const bridge = useBridgeUI();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<null | DragState>(null);
-  const valueRef = useRef<number | SliderRangeValue>(0);
-  const boundsRef = useRef(resolveSliderBounds());
-  const isRangeRef = useRef(false);
   const isRtlRef = useRef(false);
+  const isRangeRef = useRef(false);
   const disabledRef = useRef(false);
   const readonlyRef = useRef(false);
-  const onChangeRef = useRef<SliderOwnProps["onChange"]>(undefined);
   const controlledRef = useRef(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<null | DragState>(null);
+  const boundsRef = useRef(resolveSliderBounds());
+  const valueRef = useRef<number | SliderRangeValue>(0);
+  const onChangeRef = useRef<SliderOwnProps["onChange"]>(undefined);
 
   const [draggingThumb, setDraggingThumb] = useState<0 | 1 | null>(null);
   const [hoveringThumb, setHoveringThumb] = useState<0 | 1 | null>(null);
@@ -257,13 +255,13 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
   });
 
   valueRef.current = value;
+  isRtlRef.current = isRtl;
   boundsRef.current = bounds;
   isRangeRef.current = isRange;
-  isRtlRef.current = isRtl;
   disabledRef.current = isDisabled;
   readonlyRef.current = isReadonly;
-  onChangeRef.current = merged.onChange;
   controlledRef.current = isControlled;
+  onChangeRef.current = merged.onChange;
 
   const resolvedStops = derived((): SliderStop[] =>
     normalizeSliderStops({
@@ -386,6 +384,14 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     onChangeRef.current?.(next);
   };
 
+  const syncDraggingThumb = (thumbIndex: 0 | 1) => {
+    if (dragRef.current) {
+      dragRef.current = { thumbIndex };
+    }
+
+    setDraggingThumb((current) => (current === null ? current : thumbIndex));
+  };
+
   const setThumbFromPercent = (thumbIndex: 0 | 1, percent: number) => {
     if (disabledRef.current || readonlyRef.current) {
       return;
@@ -399,14 +405,18 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       currentBounds.step,
     );
 
-    commitValue(
-      writeThumbValue(
-        valueRef.current,
-        thumbIndex,
-        nextValue,
-        isRangeRef.current,
-      ),
+    const written = writeThumbValue(
+      valueRef.current,
+      thumbIndex,
+      nextValue,
+      isRangeRef.current,
     );
+
+    if (written.thumbIndex !== thumbIndex) {
+      syncDraggingThumb(written.thumbIndex);
+    }
+
+    commitValue(written.value);
   };
 
   const beginDrag = (
@@ -462,15 +472,15 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       );
     }
 
-    commitValue(
-      writeThumbValue(
-        currentValue,
-        thumbIndex,
-        targetValue,
-        isRangeRef.current,
-      ),
+    const written = writeThumbValue(
+      currentValue,
+      thumbIndex,
+      targetValue,
+      isRangeRef.current,
     );
-    beginDrag(event, thumbIndex);
+
+    commitValue(written.value);
+    beginDrag(event, written.thumbIndex);
   }
 
   const handleThumbPointerDown =
@@ -563,9 +573,21 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       }
 
       event.preventDefault();
-      commitValue(
-        writeThumbValue(valueRef.current, thumbIndex, next, isRangeRef.current),
+
+      const written = writeThumbValue(
+        valueRef.current,
+        thumbIndex,
+        next,
+        isRangeRef.current,
       );
+
+      commitValue(written.value);
+
+      if (written.thumbIndex !== thumbIndex) {
+        document
+          .getElementById(`${controlId}-thumb-${written.thumbIndex}`)
+          ?.focus();
+      }
     };
 
   useEffect(() => {

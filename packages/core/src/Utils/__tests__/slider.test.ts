@@ -20,6 +20,7 @@ import {
   sortSliderRangeValue,
   stepSliderValue,
   valueToPercent,
+  writeSliderRangeThumb,
 } from "@/Utils/slider";
 
 describe("resolveSliderBounds", () => {
@@ -85,6 +86,26 @@ describe("sortSliderRangeValue / pickClosestSliderThumb", () => {
   test("it should pick the closest thumb", () => {
     expect(pickClosestSliderThumb(10, 0, 100)).toBe(0);
     expect(pickClosestSliderThumb(90, 0, 100)).toBe(1);
+  });
+});
+
+describe("writeSliderRangeThumb", () => {
+  test("it should keep order when the active thumb stays on its side", () => {
+    expect(writeSliderRangeThumb([20, 80], 1, 70)).toEqual({
+      thumbIndex: 1,
+      value: [20, 70],
+    });
+  });
+
+  test("it should sort and follow the thumb when values cross", () => {
+    expect(writeSliderRangeThumb([20, 80], 1, 10)).toEqual({
+      thumbIndex: 0,
+      value: [10, 20],
+    });
+    expect(writeSliderRangeThumb([20, 80], 0, 90)).toEqual({
+      thumbIndex: 1,
+      value: [80, 90],
+    });
   });
 });
 

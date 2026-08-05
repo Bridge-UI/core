@@ -27,6 +27,7 @@ import {
   splitComponentProps,
   stepSliderValue,
   valueToPercent,
+  writeSliderRangeThumb,
   type LibDefaultsShape,
   type MergeLibDefaults,
   type SliderRangeValue,
@@ -116,15 +117,12 @@ function writeThumbValue(
   thumbIndex: 0 | 1,
   next: number,
   range: boolean,
-): number | SliderRangeValue {
+): { thumbIndex: 0 | 1; value: number | SliderRangeValue } {
   if (!range || !Array.isArray(value)) {
-    return next;
+    return { thumbIndex, value: next };
   }
 
-  const pair: SliderRangeValue = [...value] as SliderRangeValue;
-  pair[thumbIndex] = next;
-
-  return pair;
+  return writeSliderRangeThumb(value, thumbIndex, next);
 }
 
 /**
@@ -138,10 +136,10 @@ export function useSlider(
 ) {
   const attrs = useAttrs();
   const bridge = useBridgeUI();
-  const trackRef = ref<null | HTMLDivElement>(null);
   const dragRef = ref<null | DragState>(null);
   const draggingThumb = ref<0 | 1 | null>(null);
   const hoveringThumb = ref<0 | 1 | null>(null);
+  const trackRef = ref<null | HTMLDivElement>(null);
 
   const split = computed(() => {
     return splitComponentProps<SliderProps, typeof sliderBridgeKeys>({
@@ -338,6 +336,16 @@ export function useSlider(
     options.onChange?.(next);
   };
 
+  const syncDraggingThumb = (thumbIndex: 0 | 1) => {
+    if (dragRef.value) {
+      dragRef.value = { thumbIndex };
+    }
+
+    if (draggingThumb.value !== null) {
+      draggingThumb.value = thumbIndex;
+    }
+  };
+
   const setThumbFromPercent = (thumbIndex: 0 | 1, percent: number) => {
     if (isDisabled.value || isReadonly.value) {
       return;
@@ -351,14 +359,18 @@ export function useSlider(
       currentBounds.step,
     );
 
-    commitValue(
-      writeThumbValue(
-        resolvedValue.value,
-        thumbIndex,
-        nextValue,
-        isRange.value,
-      ),
+    const written = writeThumbValue(
+      resolvedValue.value,
+      thumbIndex,
+      nextValue,
+      isRange.value,
     );
+
+    if (written.thumbIndex !== thumbIndex) {
+      syncDraggingThumb(written.thumbIndex);
+    }
+
+    commitValue(written.value);
   };
 
   const beginDrag = (event: PointerEvent, thumbIndex: 0 | 1) => {
@@ -411,10 +423,15 @@ export function useSlider(
       );
     }
 
-    commitValue(
-      writeThumbValue(currentValue, thumbIndex, targetValue, isRange.value),
+    const written = writeThumbValue(
+      currentValue,
+      thumbIndex,
+      targetValue,
+      isRange.value,
     );
-    beginDrag(event, thumbIndex);
+
+    commitValue(written.value);
+    beginDrag(event, written.thumbIndex);
   };
 
   const handleThumbPointerDown =
@@ -506,9 +523,21 @@ export function useSlider(
     }
 
     event.preventDefault();
-    commitValue(
-      writeThumbValue(resolvedValue.value, thumbIndex, next, isRange.value),
+
+    const written = writeThumbValue(
+      resolvedValue.value,
+      thumbIndex,
+      next,
+      isRange.value,
     );
+
+    commitValue(written.value);
+
+    if (written.thumbIndex !== thumbIndex) {
+      document
+        .getElementById(`${controlId.value}-thumb-${written.thumbIndex}`)
+        ?.focus();
+    }
   };
 
   watch(draggingThumb, (current, _previous, onCleanup) => {

@@ -31,8 +31,8 @@ function renderUseSlider(props: SliderProps = {}) {
 test("it should merge default bounds", () => {
   const { result } = renderUseSlider();
 
-  expect(result.current.bounds).toEqual({ min: 0, step: 1, max: 100 });
   expect(result.current.merged.showTooltip).toBe(true);
+  expect(result.current.bounds).toEqual({ min: 0, step: 1, max: 100 });
 });
 
 test("it should start at min when uncontrolled", () => {
@@ -47,7 +47,7 @@ test("it should use defaultValue when provided", () => {
   expect(result.current.value).toBe(35);
 });
 
-test("it should expose a sorted range value", () => {
+test("it should sort default range value on init", () => {
   const { result } = renderUseSlider({
     range: true,
     defaultValue: [80, 20],
@@ -55,6 +55,17 @@ test("it should expose a sorted range value", () => {
 
   expect(result.current.value).toEqual([20, 80]);
   expect(result.current.thumbIndexes).toEqual([0, 1]);
+});
+
+test("it should sort controlled range values", () => {
+  const { result } = renderUseSlider({
+    range: true,
+    value: [80, 20],
+  });
+
+  expect(result.current.value).toEqual([20, 80]);
+  expect(result.current.readThumbValue(0)).toBe(20);
+  expect(result.current.readThumbValue(1)).toBe(80);
 });
 
 test("it should build thumb bind with role slider", () => {
