@@ -2,6 +2,7 @@
 import { expect, test } from "vitest";
 
 // ** Local Imports
+import { createNativeDateAdapter } from "@/Adapters/date";
 import {
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
@@ -66,6 +67,18 @@ test("it should replace icons adapters instead of deep-merging them", () => {
 
   expect(result.icons).toBe(second);
   expect(result.icons?.resolve("clear" as never)).toBe("second");
+});
+
+test("it should replace dates adapters instead of deep-merging them", () => {
+  const first = createNativeDateAdapter();
+  const second = createNativeDateAdapter({ locale: "pt-BR" });
+
+  const result = mergeBridgeUIGlobal({
+    partials: [{ dates: second }],
+    base: { ...BRIDGE_UI_DEFAULT_GLOBAL, dates: first },
+  });
+
+  expect(result.dates).toBe(second);
 });
 
 test("it should replace i18n adapters instead of deep-merging them", () => {

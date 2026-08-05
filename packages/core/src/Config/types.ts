@@ -1,4 +1,5 @@
 // ** Local Imports
+import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
 import type {
@@ -36,6 +37,11 @@ import type {
   ButtonSize,
   ButtonVariant,
 } from "@/Tokens/Button";
+import type {
+  CalendarColor,
+  CalendarColorItem,
+  CalendarDay,
+} from "@/Tokens/Calendar";
 import type {
   CardPadding,
   CardPaddingItem,
@@ -206,6 +212,15 @@ export interface BridgeUIGlobal {
   breakpoints: Record<string, string>;
 
   /**
+   * Date adapter used by calendars and pickers (`format`, `parse`, calendar math).
+   * When omitted, Bridge falls back to the native `Date` adapter.
+   * See `packages/{react,vue}/examples` for dayjs / luxon samples (not shipped).
+   *
+   * @default undefined
+   */
+  dates?: DateAdapter;
+
+  /**
    * Global text direction.
    *
    * @default "ltr"
@@ -261,6 +276,14 @@ export interface BridgeUIGlobal {
    * @default "light"
    */
   theme: string;
+
+  /**
+   * Default IANA time zone for date adapters and pickers.
+   * Override per component with the `timeZone` prop.
+   *
+   * @default Intl.DateTimeFormat().resolvedOptions().timeZone
+   */
+  timeZone: string;
 }
 
 export interface AlertConfigOverrides {}
@@ -271,6 +294,8 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
+export interface DateInputConfigOverrides {}
+export interface DatePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
 export interface IconConfigOverrides {}
@@ -407,6 +432,65 @@ export interface ChipConfigBase {
   }>;
   tokens: Partial<{
     size: Record<string, ChipSizeItem>;
+  }>;
+}
+
+export interface DateInputConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    multiple: boolean;
+    range: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    startOfWeek: number;
+    timeZone: string;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+    }>;
+    color: Record<string, FormFieldColorItem>;
+    datePicker: Partial<{
+      color: keyof CalendarColor;
+      colorMap: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+    }>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface DatePickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof CalendarColor;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    multiple: boolean;
+    range: boolean;
+    showFooter: boolean;
+    startOfWeek: number;
+    timeZone: string;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+    }>;
+    color: Record<string, CalendarColorItem>;
+    day: Partial<CalendarDay>;
   }>;
 }
 
@@ -869,6 +953,10 @@ export type BridgeUIComponentsConfig = Partial<{
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
+  DateInput: Partial<Overwrite<DateInputConfigBase, DateInputConfigOverrides>>;
+  DatePicker: Partial<
+    Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>
+  >;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
@@ -917,4 +1005,5 @@ export const BRIDGE_UI_DEFAULT_GLOBAL: BridgeUIGlobal = {
   breakpoints: {},
   direction: "ltr",
   mobileBreakpoint: "sm",
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 };

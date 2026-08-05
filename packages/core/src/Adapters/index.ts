@@ -1,4 +1,15 @@
 // ** Exports
+export {
+  createNativeDateAdapter,
+  defaultNativeDateAdapter,
+  isValidDate,
+  resolveDefaultTimeZone,
+} from "@/Adapters/date";
+export type {
+  DateAdapter,
+  DateAdapterContext,
+  NativeDateAdapterOptions,
+} from "@/Adapters/date";
 export { resolveMessage } from "@/Adapters/i18n";
 export type { I18nAdapter, MessageParams } from "@/Adapters/i18n";
 export {

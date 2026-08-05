@@ -54,6 +54,7 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Checkbox",
   "OtpField",
   "Textarea",
+  "DateInput",
   "TextField",
   "NumberField",
   "Autocomplete",
@@ -393,6 +394,30 @@ export type {
   BreakpointObserverOptions,
   BreakpointSnapshot,
 } from "@/Utils/breakpoint";
+export {
+  applyDateSelection,
+  DEFAULT_START_OF_WEEK,
+  isDateDisabled,
+  isDateInRangePreview,
+  isDateRangeEndpoint,
+  isDateRangeValue,
+  isDateSelected,
+  isMonthDisabled,
+  isYearDisabled,
+  resolveCalendarDayInteractionState,
+  resolveDatePickerMode,
+  resolveStartOfWeek,
+  sortDateRangeValue,
+} from "@/Utils/date";
+export type {
+  CalendarDayInteractionState,
+  DatePickerMode,
+  DatePickerModel,
+  DateRangeValue,
+  DisableDatesInput,
+  IsDateDisabledOptions,
+  StartOfWeek,
+} from "@/Utils/date";
 export {
   countDrawerTransitionLayers,
   DRAWER_LEAVE_FALLBACK_MS,

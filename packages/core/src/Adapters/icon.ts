@@ -26,8 +26,11 @@ export const SEMANTIC_ICON_NAMES = [
   "loader",
   "success",
   "warning",
+  "calendar",
   "chevronUp",
   "chevronDown",
+  "chevronLeft",
+  "chevronRight",
   "chevronUpDown",
 ] as const;
 
