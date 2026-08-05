@@ -7,8 +7,11 @@
 // ** External Imports
 import {
   Bell,
+  Calendar,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronsUpDown,
   ChevronUp,
   CircleAlert,
@@ -38,10 +41,13 @@ const icons = {
   eyeOff: EyeOff,
   loader: Loader2,
   alert: CircleAlert,
+  calendar: Calendar,
   success: CircleCheck,
   chevronUp: ChevronUp,
   warning: TriangleAlert,
   chevronDown: ChevronDown,
+  chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
   chevronUpDown: ChevronsUpDown,
 } satisfies Record<SemanticIconName, unknown>;
 
