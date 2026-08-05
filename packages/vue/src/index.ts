@@ -78,6 +78,50 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
+export { Calendar, useCalendar } from "@/Components/Calendar";
+export type {
+  CalendarClasses,
+  CalendarColorOverrides,
+  CalendarCustomProps,
+  CalendarEmits,
+  CalendarOwnProps,
+  CalendarProps,
+  CalendarTokens,
+  CalendarView,
+} from "@/Components/Calendar";
+export { CalendarDate, useCalendarDate } from "@/Components/CalendarDate";
+export type {
+  CalendarDateClasses,
+  CalendarDateColorOverrides,
+  CalendarDateCustomProps,
+  CalendarDateDayCell,
+  CalendarDateEmits,
+  CalendarDateOwnProps,
+  CalendarDateProps,
+  CalendarDateTokens,
+} from "@/Components/CalendarDate";
+export { CalendarMonth, useCalendarMonth } from "@/Components/CalendarMonth";
+export type {
+  CalendarMonthCell,
+  CalendarMonthClasses,
+  CalendarMonthColorOverrides,
+  CalendarMonthCustomProps,
+  CalendarMonthEmits,
+  CalendarMonthOwnProps,
+  CalendarMonthProps,
+  CalendarMonthTokens,
+} from "@/Components/CalendarMonth";
+export { CalendarYear, useCalendarYear } from "@/Components/CalendarYear";
+export type {
+  CalendarYearCell,
+  CalendarYearClasses,
+  CalendarYearColorOverrides,
+  CalendarYearCustomProps,
+  CalendarYearEmits,
+  CalendarYearOwnProps,
+  CalendarYearProps,
+  CalendarYearTokens,
+} from "@/Components/CalendarYear";
 export { Card, useCard } from "@/Components/Card";
 export type {
   CardClasses,
