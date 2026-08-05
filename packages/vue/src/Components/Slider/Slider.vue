@@ -94,7 +94,9 @@ const {
   getThumbBind,
   resolvedStops,
   isTooltipOpen,
+  hasStopLabels,
   readThumbValue,
+  stopLabelsBind,
   getStopLabelBind,
   getThumbKnobBind,
   showTooltip: tooltipEnabled,
@@ -160,11 +162,13 @@ function setThumbRef(
         />
       </template>
 
-      <template :key="`label-${stop.value}`" v-for="stop in resolvedStops">
-        <div v-if="stop.label" v-bind="getStopLabelBind(stop)">
-          {{ stop.label }}
-        </div>
-      </template>
+      <div v-if="hasStopLabels" v-bind="stopLabelsBind">
+        <template :key="`label-${stop.value}`" v-for="stop in resolvedStops">
+          <div v-if="stop.label" v-bind="getStopLabelBind(stop)">
+            {{ stop.label }}
+          </div>
+        </template>
+      </div>
     </div>
   </BaseField>
 </template>

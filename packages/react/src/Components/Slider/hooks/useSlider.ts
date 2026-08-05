@@ -326,14 +326,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
   );
 
   const controlBind = derived(() =>
-    mergePartBind(
-      {},
-      {},
-      cn({
-        "relative w-full min-w-0 flex-1": true,
-        "mb-6": hasStopLabels,
-      }),
-    ),
+    mergePartBind({}, {}, cn("relative w-full min-w-0 flex-1")),
   );
 
   const trackBind = derived(() =>
@@ -681,12 +674,10 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       },
       {},
       cn({
-        "absolute z-10 flex -translate-x-1/2 items-center justify-center bg-transparent leading-none outline-none": true,
+        "group/thumb absolute z-10 flex -translate-x-1/2 items-center justify-center bg-transparent leading-none outline-none": true,
         "cursor-grab": !isDisabled && !isReadonly,
         "cursor-grabbing": isDragging,
         "cursor-not-allowed": isDisabled,
-        "focus-visible:ring-2 focus-visible:ring-offset-2": true,
-        [colorClasses?.focus ?? ""]: true,
         [sizeClasses?.thumb ?? ""]: true,
         [mergedClasses.thumb ?? ""]: true,
       }),
@@ -701,7 +692,9 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       { "aria-hidden": true },
       cn({
         "block rounded-full border-2 shadow-sm transition-transform duration-100": true,
+        "group-focus-visible/thumb:ring-2 group-focus-visible/thumb:ring-offset-2": true,
         "scale-120": isDragging,
+        [colorClasses?.focus ?? ""]: true,
         [sizeClasses?.thumbKnob ?? ""]: true,
         [colorClasses?.thumb ?? ""]: true,
         [mergedClasses.thumbKnob ?? ""]: true,
@@ -736,6 +729,17 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     );
   };
 
+  const stopLabelsBind = derived(() =>
+    mergePartBind(
+      customProps?.stopLabels,
+      { "aria-hidden": true },
+      cn({
+        "relative h-[1lh] w-full text-xs": true,
+        [mergedClasses.stopLabels ?? ""]: true,
+      }),
+    ),
+  );
+
   const getStopLabelBind = (stop: SliderStop) => {
     const percent = valueToPercent(stop.value, bounds.min, bounds.max);
 
@@ -747,9 +751,9 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
           ...customProps?.stopLabel?.style,
         },
       },
-      { "aria-hidden": true },
+      {},
       cn({
-        "absolute mt-5 -translate-x-1/2 text-xs whitespace-nowrap": true,
+        "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
         "text-gray-700 dark:text-gray-400": !invalidated,
         [invalidatedPalette.stopLabel ?? ""]: invalidated,
         [mergedClasses.stopLabel ?? ""]: true,
@@ -778,6 +782,8 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     getThumbBind,
     resolvedStops,
     isTooltipOpen,
+    hasStopLabels,
+    stopLabelsBind,
     getStopLabelBind,
     getThumbKnobBind,
     tooltipProps: customProps?.tooltip,

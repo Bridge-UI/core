@@ -578,14 +578,7 @@ export function useSlider(
   });
 
   const controlBind = computed(() => {
-    return mergePartBind(
-      {},
-      {},
-      cn({
-        "relative w-full min-w-0 flex-1": true,
-        "mb-6": hasStopLabels.value,
-      }),
-    );
+    return mergePartBind({}, {}, cn("relative w-full min-w-0 flex-1"));
   });
 
   const trackBind = computed(() => {
@@ -689,12 +682,10 @@ export function useSlider(
       },
       {},
       cn({
-        "absolute z-10 flex -translate-x-1/2 items-center justify-center bg-transparent leading-none outline-none": true,
+        "group/thumb absolute z-10 flex -translate-x-1/2 items-center justify-center bg-transparent leading-none outline-none": true,
         "cursor-grab": !isDisabled.value && !isReadonly.value,
         "cursor-grabbing": isDragging,
         "cursor-not-allowed": isDisabled.value,
-        "focus-visible:ring-2 focus-visible:ring-offset-2": true,
-        [colorClasses.value?.focus ?? ""]: true,
         [sizeClasses.value?.thumb ?? ""]: true,
         [mergedClasses.value.thumb ?? ""]: true,
       }),
@@ -709,7 +700,9 @@ export function useSlider(
       { "aria-hidden": true },
       cn({
         "block rounded-full border-2 shadow-sm transition-transform duration-100": true,
+        "group-focus-visible/thumb:ring-2 group-focus-visible/thumb:ring-offset-2": true,
         "scale-120": isDragging,
+        [colorClasses.value?.focus ?? ""]: true,
         [sizeClasses.value?.thumbKnob ?? ""]: true,
         [colorClasses.value?.thumb ?? ""]: true,
         [mergedClasses.value.thumbKnob ?? ""]: true,
@@ -747,6 +740,17 @@ export function useSlider(
     );
   };
 
+  const stopLabelsBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.stopLabels,
+      { "aria-hidden": true },
+      cn({
+        "relative h-[1lh] w-full text-xs": true,
+        [mergedClasses.value.stopLabels ?? ""]: true,
+      }),
+    );
+  });
+
   const getStopLabelBind = (stop: SliderStop) => {
     const percent = valueToPercent(
       stop.value,
@@ -757,13 +761,12 @@ export function useSlider(
     return mergePartBind(
       omit(customProps.value?.stopLabel ?? {}, ["style"]),
       {
-        "aria-hidden": true,
         style: {
           insetInlineStart: `${percent}%`,
         },
       },
       cn({
-        "absolute mt-5 -translate-x-1/2 text-xs whitespace-nowrap": true,
+        "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
         "text-gray-700 dark:text-gray-400": !invalidated.value,
         [invalidatedPalette.value.stopLabel ?? ""]: invalidated.value,
         [mergedClasses.value.stopLabel ?? ""]: true,
@@ -798,6 +801,8 @@ export function useSlider(
     resolvedStops,
     resolvedValue,
     isTooltipOpen,
+    hasStopLabels,
+    stopLabelsBind,
     getStopLabelBind,
     getThumbKnobBind,
     tooltipProps: computed(() => {

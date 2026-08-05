@@ -49,6 +49,11 @@ export interface SliderClasses extends BaseFieldClasses {
   stopLabel?: string;
 
   /**
+   * Classes for the row that holds the stop labels.
+   */
+  stopLabels?: string;
+
+  /**
    * Classes for thumb hit-area wrappers.
    */
   thumb?: string;
@@ -90,6 +95,11 @@ export interface SliderCustomProps extends Omit<
    * Props forwarded to stop labels.
    */
   stopLabel?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the row that holds the stop labels.
+   */
+  stopLabels?: HTMLAttributes;
 
   /**
    * Props forwarded to thumb hit-area buttons.

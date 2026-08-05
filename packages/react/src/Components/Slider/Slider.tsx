@@ -37,7 +37,9 @@ function Slider(props: SliderProps) {
     getThumbBind,
     resolvedStops,
     isTooltipOpen,
+    hasStopLabels,
     readThumbValue,
+    stopLabelsBind,
     getStopLabelBind,
     getThumbKnobBind,
   } = api;
@@ -92,12 +94,16 @@ function Slider(props: SliderProps) {
             />
           ))}
 
-        {resolvedStops.map((stop) =>
-          stop.label ? (
-            <div key={`label-${stop.value}`} {...getStopLabelBind(stop)}>
-              {stop.label}
-            </div>
-          ) : null,
+        {hasStopLabels && (
+          <div {...stopLabelsBind}>
+            {resolvedStops.map((stop) =>
+              stop.label ? (
+                <div key={`label-${stop.value}`} {...getStopLabelBind(stop)}>
+                  {stop.label}
+                </div>
+              ) : null,
+            )}
+          </div>
         )}
       </div>
     </BaseField>
