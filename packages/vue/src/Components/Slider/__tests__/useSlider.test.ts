@@ -67,8 +67,8 @@ function mountUseSlider(
 test("it should merge default bounds", () => {
   const { bounds, merged } = mountUseSlider();
 
-  expect(bounds.value).toEqual({ min: 0, step: 1, max: 100 });
   expect(merged.value.showTooltip).toBe(true);
+  expect(bounds.value).toEqual({ min: 0, step: 1, max: 100 });
 });
 
 test("it should start at min when uncontrolled", () => {
@@ -83,14 +83,14 @@ test("it should use defaultValue when provided", () => {
   expect(resolvedValue.value).toBe(35);
 });
 
-test("it should expose a sorted range value", () => {
+test("it should sort range values", () => {
   const { thumbIndexes, resolvedValue } = mountUseSlider(
     { range: true, defaultValue: [80, 20] },
     [80, 20],
   );
 
-  expect(resolvedValue.value).toEqual([20, 80]);
   expect(thumbIndexes.value).toEqual([0, 1]);
+  expect(resolvedValue.value).toEqual([20, 80]);
 });
 
 test("it should build thumb bind with role slider", () => {

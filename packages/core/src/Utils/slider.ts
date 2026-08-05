@@ -1,3 +1,6 @@
+// ** External Imports
+import { clamp, isArray, isNumber, range } from "es-toolkit/compat";
+
 /** Default minimum value for the Slider. */
 export const DEFAULT_SLIDER_MIN = 0;
 
@@ -105,7 +108,7 @@ export function clampSliderValue(value: number, min: number, max: number) {
     return min;
   }
 
-  return Math.min(max, Math.max(min, value));
+  return clamp(value, min, max);
 }
 
 /**
@@ -177,6 +180,32 @@ export function sortSliderRangeValue(
 }
 
 /**
+ * Writes `next` into a range pair at `thumbIndex`, then sorts so `[0]` is lower.
+ * Returns the sorted pair and the index that now holds `next` (for drag/focus follow).
+ */
+export function writeSliderRangeThumb(
+  value: SliderRangeValue,
+  thumbIndex: 0 | 1,
+  next: number,
+): { thumbIndex: 0 | 1; value: SliderRangeValue } {
+  const other = value[thumbIndex === 0 ? 1 : 0];
+  const sorted = sortSliderRangeValue(
+    thumbIndex === 0 ? next : other,
+    thumbIndex === 1 ? next : other,
+  );
+
+  let nextThumbIndex: 0 | 1 = thumbIndex;
+
+  if (next < other) {
+    nextThumbIndex = 0;
+  } else if (next > other) {
+    nextThumbIndex = 1;
+  }
+
+  return { value: sorted, thumbIndex: nextThumbIndex };
+}
+
+/**
  * Picks the thumb closest to `targetValue` (0 = first, 1 = second).
  */
 export function pickClosestSliderThumb(
@@ -208,7 +237,7 @@ export function getSliderBarGeometry({
   range: boolean;
   value: number | SliderRangeValue;
 }): SliderBarGeometry {
-  if (range && Array.isArray(value)) {
+  if (range && isArray(value)) {
     const [low, high] = sortSliderRangeValue(value[0], value[1]);
     const startPercent = valueToPercent(low, min, max);
     const endPercent = valueToPercent(high, min, max);
@@ -219,7 +248,7 @@ export function getSliderBarGeometry({
     };
   }
 
-  const single = Array.isArray(value) ? value[0] : value;
+  const single = isArray(value) ? value[0] : value;
 
   return {
     start: "0%",
@@ -246,7 +275,7 @@ export function normalizeSliderStops({
 }): SliderStop[] {
   if (stops && stops.length > 0) {
     return stops.map((stop) => {
-      if (typeof stop === "number") {
+      if (isNumber(stop)) {
         return { value: stop };
       }
 
@@ -261,15 +290,9 @@ export function normalizeSliderStops({
     return [];
   }
 
-  const generated: SliderStop[] = [];
-
-  for (let value = min + step; value < max; value += step) {
-    generated.push({
-      value: snapSliderValue(value, min, max, step),
-    });
-  }
-
-  return generated;
+  return range(min + step, max, step).map((value) => ({
+    value: snapSliderValue(value, min, max, step),
+  }));
 }
 
 /**
@@ -288,13 +311,13 @@ export function isSliderStopCovered({
   stopValue: number;
   value: number | SliderRangeValue;
 }) {
-  if (range && Array.isArray(value)) {
+  if (range && isArray(value)) {
     const [low, high] = sortSliderRangeValue(value[0], value[1]);
 
     return stopValue >= low && stopValue <= high;
   }
 
-  const single = Array.isArray(value) ? value[0] : value;
+  const single = isArray(value) ? value[0] : value;
 
   return stopValue <= clampSliderValue(single, min, max);
 }
@@ -355,7 +378,7 @@ export function resolveSliderDefaultValue({
   step: number;
 }): number | SliderRangeValue {
   if (range) {
-    if (Array.isArray(defaultValue)) {
+    if (isArray(defaultValue)) {
       return sortSliderRangeValue(
         snapSliderValue(defaultValue[0], min, max, step),
         snapSliderValue(defaultValue[1], min, max, step),
@@ -363,7 +386,7 @@ export function resolveSliderDefaultValue({
     }
 
     const single = snapSliderValue(
-      typeof defaultValue === "number" ? defaultValue : min,
+      isNumber(defaultValue) ? defaultValue : min,
       min,
       max,
       step,
@@ -372,12 +395,12 @@ export function resolveSliderDefaultValue({
     return [single, single];
   }
 
-  if (Array.isArray(defaultValue)) {
+  if (isArray(defaultValue)) {
     return snapSliderValue(defaultValue[0], min, max, step);
   }
 
   return snapSliderValue(
-    typeof defaultValue === "number" ? defaultValue : min,
+    isNumber(defaultValue) ? defaultValue : min,
     min,
     max,
     step,

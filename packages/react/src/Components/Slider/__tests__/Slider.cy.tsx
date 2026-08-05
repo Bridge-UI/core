@@ -22,6 +22,6 @@ test("it should render two thumbs for range", () => {
 test("it should show label chrome", () => {
   cy.mount(<Slider corner="%" label="Opacity" />);
 
-  cy.contains("Opacity").should("be.visible");
   cy.contains("%").should("be.visible");
+  cy.contains("Opacity").should("be.visible");
 });

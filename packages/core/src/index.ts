@@ -378,6 +378,7 @@ export {
   subscribeLayerStack,
   usesTrailingSnackbarActions,
   valueToPercent,
+  writeSliderRangeThumb,
 } from "@/Utils";
 export type {
   BreakpointObserver,
