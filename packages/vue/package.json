@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/vue",
@@ -83,7 +83,7 @@
     "vue": "^3.4.0"
   },
   "dependencies": {
-    "@bridge-ui/core": "^0.0.7",
+    "@bridge-ui/core": "^0.0.8",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.46.1",
     "tailwind-merge": "^3.6.0"
