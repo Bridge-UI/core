@@ -21,23 +21,6 @@ import type {
 import type { ClassPropKey, MergePartBind } from "@/Utils/types";
 
 /**
- * Registry keys that receive `global.formDefaults` (`size` / `rounded`).
- */
-export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
-  "Radio",
-  "Select",
-  "Slider",
-  "Switch",
-  "Checkbox",
-  "OtpField",
-  "Textarea",
-  "TextField",
-  "NumberField",
-  "Autocomplete",
-  "PasswordField",
-] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
-
-/**
  * Form controls whose `rounded` is shape-driven (pill / circle).
  * They receive `formDefaults.size` but keep lib/registry `rounded`.
  */
@@ -59,6 +42,23 @@ const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
   "children",
   "teleportTo",
 ] as const;
+
+/**
+ * Registry keys that receive `global.formDefaults` (`size` / `rounded`).
+ */
+export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
+  "Radio",
+  "Select",
+  "Slider",
+  "Switch",
+  "Checkbox",
+  "OtpField",
+  "Textarea",
+  "TextField",
+  "NumberField",
+  "Autocomplete",
+  "PasswordField",
+] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**
  * Picks density defaults from `formDefaults` when `componentName` is a form control.
