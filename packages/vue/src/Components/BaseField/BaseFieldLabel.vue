@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ** Local Imports
+import type { UseBaseFieldReturn } from "@/Components/BaseField/composables/useBaseField";
 import { Label } from "@/Components/Label";
-import type { UseOtpFieldReturn } from "@/Components/OtpField/composables/useOtpField";
 import {
   hasNamedSlot,
   hasSlotOrProp,
@@ -10,7 +10,7 @@ import {
 } from "@/Utils";
 
 defineProps<{
-  api: UseOtpFieldReturn;
+  api: UseBaseFieldReturn;
 }>();
 </script>
 

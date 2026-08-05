@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isUndefined, omit } from "es-toolkit/compat";
+import { get, isUndefined, omit, pick } from "es-toolkit/compat";
 import {
   computed,
   nextTick,
@@ -7,8 +7,6 @@ import {
   ref,
   toValue,
   useAttrs,
-  useId,
-  useSlots,
   type MaybeRefOrGetter,
   type Ref,
 } from "vue";
@@ -39,15 +37,16 @@ import {
 } from "@bridge-ui/core/Tokens/OtpField";
 
 // ** Local Imports
-import type { LabelProps } from "@/Components/Label/label.types";
+import {
+  baseFieldBridgeKeys,
+  useBaseField,
+} from "@/Components/BaseField/composables/useBaseField";
 import type {
   OtpFieldClasses,
   OtpFieldOwnProps,
   OtpFieldProps,
 } from "@/Components/OtpField/otpField.types";
 import {
-  hasSlotOrProp,
-  mergeNestedComponentProps,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -60,27 +59,15 @@ export type UseOtpFieldOptions = {
 
 export const otpFieldBridgeKeys = [
   "mask",
-  "size",
   "type",
   "color",
-  "error",
-  "label",
-  "corner",
   "length",
-  "classes",
   "rounded",
   "variant",
-  "disabled",
-  "readonly",
-  "required",
   "autoFocus",
-  "controlId",
-  "customProps",
-  "description",
   "placeholder",
   "defaultValue",
-  "errorMessage",
-  "hideErrorMessage",
+  ...baseFieldBridgeKeys,
 ] as const satisfies readonly (keyof OtpFieldOwnProps)[];
 
 type OtpFieldLibDefaults = LibDefaultsShape<
@@ -90,8 +77,25 @@ type OtpFieldLibDefaults = LibDefaultsShape<
 
 type OtpFieldMerged = MergeLibDefaults<OtpFieldOwnProps, OtpFieldLibDefaults>;
 
+function resolveBaseFieldCustomProps(
+  customProps: OtpFieldOwnProps["customProps"],
+) {
+  if (!customProps) {
+    return undefined;
+  }
+
+  const { pin: _pin, invalidated, input: _input, ...chrome } = customProps;
+
+  return {
+    ...chrome,
+    ...(invalidated?.errorMessage
+      ? { invalidated: { errorMessage: invalidated.errorMessage } }
+      : {}),
+  };
+}
+
 /**
- * Composes OTP pin state, field chrome binds, and per-pin input handlers.
+ * Composes OTP pin state, field chrome via {@link useBaseField}, and per-pin input handlers.
  */
 export function useOtpField(
   props: MaybeRefOrGetter<OtpFieldOwnProps>,
@@ -107,8 +111,6 @@ export function useOtpField(
   },
 ) {
   const attrs = useAttrs();
-  const slots = useSlots();
-  const autoId = useId();
   const pinRefs = ref<Array<null | HTMLInputElement>>([]);
 
   const split = computed(() => {
@@ -124,40 +126,71 @@ export function useOtpField(
   >({
     libDefaults,
     componentName: "OtpField",
-    props: () => split.value.componentProps,
+    props: () => {
+      return split.value.componentProps;
+    },
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<OtpFieldClasses>({
     entry: bridgeOtpField,
-    props: () => split.value.componentProps,
+    props: () => {
+      return split.value.componentProps;
+    },
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
-  const length = computed(() => resolveOtpLength(merged.value.length));
+  const baseFieldCustomProps = computed(() => {
+    return resolveBaseFieldCustomProps(merged.value.customProps);
+  });
 
-  const inputType = computed(
-    (): OtpInputType => merged.value.type ?? "numeric",
+  const baseFieldProps = computed(() => {
+    return {
+      ...pick(split.value.componentProps, baseFieldBridgeKeys),
+      customProps: baseFieldCustomProps.value,
+      id: split.value.inheritedAttrs.id as string | undefined,
+      class: split.value.inheritedAttrs.class as string | undefined,
+      ...omit(split.value.inheritedAttrs, ["class", "id"]),
+    };
+  });
+
+  const baseField = useBaseField(
+    () => baseFieldProps.value,
+    {
+      size: "md",
+      hideErrorMessage: false,
+    },
+    {
+      labelHtmlFor: (controlId) => {
+        return `${controlId}-0`;
+      },
+    },
   );
 
-  const invalidated = computed(() => merged.value.error === true);
+  const { controlId, isDisabled, isReadonly, invalidated, ariaDescribedBy } =
+    baseField;
 
-  const isDisabled = computed(() => Boolean(merged.value.disabled));
+  const length = computed(() => {
+    return resolveOtpLength(merged.value.length);
+  });
 
-  const isReadonly = computed(() => Boolean(merged.value.readonly));
+  const inputType = computed((): OtpInputType => {
+    return merged.value.type ?? "numeric";
+  });
 
-  const variantKey = computed(() => merged.value.variant ?? "outline");
+  const variantKey = computed(() => {
+    return merged.value.variant ?? "outline";
+  });
 
-  const isUnderlined = computed(() => variantKey.value === "underlined");
+  const isUnderlined = computed(() => {
+    return variantKey.value === "underlined";
+  });
 
-  const controlId = computed(
-    () =>
-      merged.value.controlId ??
-      (split.value.inheritedAttrs.id as string | undefined) ??
-      autoId,
-  );
-
-  const isControlled = computed(() => !isUndefined(model.value));
+  const isControlled = computed(() => {
+    return !isUndefined(model.value);
+  });
 
   const uncontrolledValue = ref(
     normalizeOtpValue(
@@ -175,7 +208,9 @@ export function useOtpField(
     return uncontrolledValue.value;
   });
 
-  const digits = computed(() => splitOtpValue(value.value, length.value));
+  const digits = computed(() => {
+    return splitOtpValue(value.value, length.value);
+  });
 
   onMounted(() => {
     if (!merged.value.autoFocus || isDisabled.value || isReadonly.value) {
@@ -257,162 +292,15 @@ export function useOtpField(
     return get(classes, variantKey.value);
   });
 
-  const reservesErrorMessageSpace = computed(
-    () => !merged.value.hideErrorMessage,
-  );
-
-  const showErrorMessageContent = computed(() => {
-    return (
-      invalidated.value &&
-      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
-    );
-  });
-
-  const ariaDescribedBy = computed(() => {
-    const ids: string[] = [];
-
-    if (
-      !invalidated.value &&
-      hasSlotOrProp(slots, "description", merged.value.description)
-    ) {
-      ids.push(`${controlId.value}-description`);
-    }
-
-    if (
-      invalidated.value &&
-      !merged.value.hideErrorMessage &&
-      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
-    ) {
-      ids.push(`${controlId.value}-error`);
-    }
-
-    return ids.length > 0 ? ids.join(" ") : undefined;
-  });
-
-  const rootBind = computed(() => {
+  const pinsBind = computed(() => {
     return mergePartBind(
-      customProps.value?.root,
-      {
-        class: cn(split.value.inheritedAttrs.class as string | undefined),
-        ...omit(split.value.inheritedAttrs, ["class", "id"]),
-      },
-      cn({
-        "group w-full relative": true,
-        "aria-disabled:pointer-events-none aria-disabled:select-none aria-disabled:opacity-60": true,
-        "aria-readonly:pointer-events-none aria-readonly:select-none": true,
-        [mergedClasses.value.root ?? ""]: true,
-      }),
-    );
-  });
-
-  const headerBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.header,
       {},
-      cn({
-        "flex w-full gap-x-2 mb-1.5": true,
-        "justify-between items-end": hasSlotOrProp(
-          slots,
-          "label",
-          merged.value.label,
-        ),
-        "justify-end": !hasSlotOrProp(slots, "label", merged.value.label),
-        [mergedClasses.value.header ?? ""]: true,
-      }),
-    );
-  });
-
-  const cornerBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.corner,
       {},
-      cn({
-        "text-gray-500 dark:text-gray-400": true,
-        [sizeClasses.value?.text ?? ""]: true,
-        [mergedClasses.value.corner ?? ""]: true,
-      }),
-    );
-  });
-
-  const groupBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.group,
-      {
-        role: "group",
-        id: controlId.value,
-        "aria-describedby": ariaDescribedBy.value,
-        "aria-disabled": isDisabled.value || undefined,
-        "aria-invalid": invalidated.value || undefined,
-      },
       cn({
         "flex flex-wrap items-center": true,
         [sizeClasses.value?.group ?? ""]: true,
-        [mergedClasses.value.group ?? ""]: true,
       }),
     );
-  });
-
-  const startSlotBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.start,
-      {},
-      cn({
-        "group/start wrapper-start-slot shrink-0 flex items-center [&>*]:min-h-0": true,
-        [mergedClasses.value.start ?? ""]: true,
-      }),
-    );
-  });
-
-  const endSlotBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.end,
-      {},
-      cn({
-        "group/end wrapper-end-slot shrink-0 flex items-center [&>*]:min-h-0": true,
-        [mergedClasses.value.end ?? ""]: true,
-      }),
-    );
-  });
-
-  const descriptionBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.description,
-      {},
-      cn({
-        "mt-2 text-gray-500 dark:text-gray-400": true,
-        [sizeClasses.value?.text ?? ""]: true,
-        [mergedClasses.value.description ?? ""]: true,
-      }),
-    );
-  });
-
-  const errorBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.errorMessage,
-      {},
-      cn({
-        "mt-2": true,
-        "min-h-[1lh]": reservesErrorMessageSpace.value,
-        [invalidatedColors.value?.errorMessage ?? ""]: true,
-        [sizeClasses.value?.text ?? ""]: true,
-        [mergedClasses.value.errorMessage ?? ""]: true,
-      }),
-    );
-  });
-
-  const fieldLabelProps = computed((): LabelProps => {
-    return mergeNestedComponentProps(customProps.value?.label, {
-      size: merged.value.size,
-      error: invalidated.value,
-      for: `${controlId.value}-0`,
-      required: merged.value.required,
-      classes: {
-        required: mergedClasses.value.required,
-        root: cn({
-          [mergedClasses.value.label ?? ""]: true,
-        }),
-      },
-    });
   });
 
   const pinBind = (_index: number) => {
@@ -525,33 +413,19 @@ export function useOtpField(
   };
 
   return {
-    slots,
     merged,
     digits,
     length,
     pinBind,
-    rootBind,
-    errorBind,
-    groupBind,
+    pinsBind,
+    baseField,
     inputBind,
     setPinRef,
-    controlId,
     inputType,
-    headerBind,
-    cornerBind,
-    isDisabled,
-    isReadonly,
-    endSlotBind,
-    invalidated,
-    startSlotBind,
-    mergedClasses,
     handlePinInput,
     handlePinFocus,
     handlePinPaste,
-    fieldLabelProps,
-    descriptionBind,
     handlePinKeyDown,
-    showErrorMessageContent,
   };
 }
 

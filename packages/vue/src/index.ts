@@ -55,6 +55,17 @@ export type {
   BadgeSlots,
   BadgeVariantOverrides,
 } from "@/Components/Badge";
+export { BaseField, useBaseField } from "@/Components/BaseField";
+export type {
+  BaseFieldClasses,
+  BaseFieldCustomProps,
+  BaseFieldOptions,
+  BaseFieldOwnProps,
+  BaseFieldProps,
+  BaseFieldSizeOverrides,
+  BaseFieldSlots,
+  UseBaseFieldReturn,
+} from "@/Components/BaseField";
 export { Button, useButton } from "@/Components/Button";
 export type {
   ButtonClasses,
@@ -300,6 +311,23 @@ export type {
   SkeletonProps,
   SkeletonRoundedOverrides,
 } from "@/Components/Skeleton";
+export { Slider, useSlider } from "@/Components/Slider";
+export type {
+  SliderClasses,
+  SliderColorOverrides,
+  SliderCustomProps,
+  SliderEmits,
+  SliderOwnProps,
+  SliderProps,
+  SliderRangeValue,
+  SliderRoundedOverrides,
+  SliderSizeOverrides,
+  SliderSlots,
+  SliderStop,
+  SliderStopInput,
+  UseSliderOptions,
+  UseSliderReturn,
+} from "@/Components/Slider";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {
   SnackbarClasses,

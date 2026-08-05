@@ -36,7 +36,7 @@ test("it should commit typed digits through onChange", () => {
 test("it should mark the field as invalidated when error is set", () => {
   const { result } = renderHook(() => useOtpField({ error: true }));
 
-  expect(result.current.invalidated).toBe(true);
+  expect(result.current.baseField.invalidated).toBe(true);
 });
 
 test("it should resolve numeric input mode by default", () => {
@@ -46,7 +46,7 @@ test("it should resolve numeric input mode by default", () => {
   expect(result.current.inputBind(0).inputMode).toBe("numeric");
 });
 
-test("it should expose start and end slot binds", () => {
+test("it should expose start and end slot binds on baseField", () => {
   const { result } = renderHook(() =>
     useOtpField({
       slots: {
@@ -56,8 +56,16 @@ test("it should expose start and end slot binds", () => {
     }),
   );
 
-  expect(result.current.startSlotBind.className).toContain(
+  expect(result.current.baseField.startSlotBind.className).toContain(
     "wrapper-start-slot",
   );
-  expect(result.current.endSlotBind.className).toContain("wrapper-end-slot");
+  expect(result.current.baseField.endSlotBind.className).toContain(
+    "wrapper-end-slot",
+  );
+});
+
+test("it should apply pin row gap on pinsBind", () => {
+  const { result } = renderHook(() => useOtpField({ size: "md" }));
+
+  expect(result.current.pinsBind.className).toContain("gap-2");
 });

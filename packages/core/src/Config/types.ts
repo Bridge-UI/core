@@ -25,6 +25,11 @@ import type {
   BadgeVariant,
 } from "@/Tokens/Badge";
 import type {
+  BaseFieldInvalidated,
+  BaseFieldSize,
+  BaseFieldSizeItem,
+} from "@/Tokens/BaseField";
+import type {
   ButtonColor,
   ButtonColorItem,
   ButtonDensity,
@@ -119,6 +124,14 @@ import type {
   RadioSize,
 } from "@/Tokens/Radio";
 import type { SkeletonRounded } from "@/Tokens/Skeleton";
+import type {
+  SliderColor,
+  SliderColorItem,
+  SliderInvalidated,
+  SliderRounded,
+  SliderSize,
+  SliderSizeItem,
+} from "@/Tokens/Slider";
 import type {
   SnackbarColor,
   SnackbarColorItem,
@@ -225,6 +238,7 @@ export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
 export interface BadgeConfigOverrides {}
+export interface BaseFieldConfigOverrides {}
 export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
@@ -249,6 +263,7 @@ export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SkeletonConfigOverrides {}
+export interface SliderConfigOverrides {}
 export interface SnackbarConfigOverrides {}
 export interface SpinnerConfigOverrides {}
 export interface SwitchConfigOverrides {}
@@ -305,6 +320,18 @@ export interface BadgeConfigBase {
     density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
     variant: Record<string, Record<string, BadgeColorItem>>;
+  }>;
+}
+
+export interface BaseFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    hideErrorMessage: boolean;
+    size: keyof BaseFieldSize;
+  }>;
+  tokens: Partial<{
+    invalidated: Partial<BaseFieldInvalidated>;
+    size: Record<string, BaseFieldSizeItem>;
   }>;
 }
 
@@ -614,6 +641,26 @@ export interface SkeletonConfigBase {
   }>;
 }
 
+export interface SliderConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof SliderColor;
+    max: number;
+    min: number;
+    rounded: keyof SliderRounded;
+    showStops: boolean;
+    showTooltip: boolean;
+    size: keyof SliderSize;
+    step: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, SliderColorItem>;
+    invalidated: Partial<SliderInvalidated>;
+    rounded: Record<string, string>;
+    size: Record<string, SliderSizeItem>;
+  }>;
+}
+
 export interface SpinnerConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -725,6 +772,7 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
   Badge: Partial<Overwrite<BadgeConfigBase, BadgeConfigOverrides>>;
+  BaseField: Partial<Overwrite<BaseFieldConfigBase, BaseFieldConfigOverrides>>;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
@@ -757,6 +805,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   Skeleton: Partial<Overwrite<SkeletonConfigBase, SkeletonConfigOverrides>>;
+  Slider: Partial<Overwrite<SliderConfigBase, SliderConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
   Spinner: Partial<Overwrite<SpinnerConfigBase, SpinnerConfigOverrides>>;
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;

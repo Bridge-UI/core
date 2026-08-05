@@ -415,6 +415,33 @@ export type {
   SelectValue,
 } from "@/Utils/select";
 export {
+  clampSliderValue,
+  DEFAULT_SLIDER_MAX,
+  DEFAULT_SLIDER_MIN,
+  DEFAULT_SLIDER_STEP,
+  getSliderBarGeometry,
+  getSliderPointerClientX,
+  getSliderPrecision,
+  isSliderStopCovered,
+  normalizeSliderStops,
+  percentFromSliderPointer,
+  percentToValue,
+  pickClosestSliderThumb,
+  resolveSliderBounds,
+  resolveSliderDefaultValue,
+  snapSliderValue,
+  sortSliderRangeValue,
+  stepSliderValue,
+  valueToPercent,
+} from "@/Utils/slider";
+export type {
+  SliderBarGeometry,
+  SliderBounds,
+  SliderRangeValue,
+  SliderStop,
+  SliderStopInput,
+} from "@/Utils/slider";
+export {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   usesTrailingSnackbarActions,
