@@ -273,6 +273,22 @@ export type {
   SkeletonProps,
   SkeletonRoundedOverrides,
 } from "@/Components/Skeleton";
+export { Slider, useSlider } from "@/Components/Slider";
+export type {
+  SliderCallbacks,
+  SliderClasses,
+  SliderColorOverrides,
+  SliderCustomProps,
+  SliderOwnProps,
+  SliderProps,
+  SliderRangeValue,
+  SliderRoundedOverrides,
+  SliderSizeOverrides,
+  SliderSlots,
+  SliderStop,
+  SliderStopInput,
+  UseSliderReturn,
+} from "@/Components/Slider";
 export { Snackbar, useSnackbar } from "@/Components/Snackbar";
 export type {
   SnackbarClasses,
