@@ -12,4 +12,7 @@ export {
   formControlBridgeKeys,
   useFormControl,
 } from "@/Components/FormControl/hooks/useFormControl";
-export type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";
+export type {
+  FormControlOptions,
+  UseFormControlReturn,
+} from "@/Components/FormControl/hooks/useFormControl";

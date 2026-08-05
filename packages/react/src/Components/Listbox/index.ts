@@ -1,5 +1,6 @@
 // ** Exports
 export { useListbox } from "@/Components/Listbox/hooks/useListbox";
+export type { ListboxOptions } from "@/Components/Listbox/hooks/useListbox";
 export {
   findFirstEnabledOptionIndex,
   findLastEnabledOptionIndex,

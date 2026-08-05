@@ -172,7 +172,7 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 
 ### Inherited from FormField
 
-See [FormField](./FormField.md).
+See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Autocomplete` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens are nested under `components.Autocomplete.tokens.listbox`.
 
 ## Slots
 

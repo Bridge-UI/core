@@ -1,5 +1,9 @@
 // ** Local Imports
 import type { AlertClasses, AlertProps } from "@/Components/Alert";
+import type {
+  AutocompleteClasses,
+  AutocompleteProps,
+} from "@/Components/Autocomplete";
 import type { AvatarClasses, AvatarProps } from "@/Components/Avatar";
 import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonProps } from "@/Components/Button";
@@ -7,11 +11,6 @@ import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
 import type { DividerClasses, DividerProps } from "@/Components/Divider";
-import type {
-  FormControlClasses,
-  FormControlProps,
-} from "@/Components/FormControl";
-import type { FormFieldClasses, FormFieldProps } from "@/Components/FormField";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
@@ -20,22 +19,46 @@ import type { ListItemClasses, ListItemProps } from "@/Components/ListItem";
 import type { ListSectionClasses } from "@/Components/ListSection";
 import type { MenuClasses, MenuProps } from "@/Components/Menu";
 import type { ModalClasses, ModalProps } from "@/Components/Modal";
-import type { NumberFieldClasses } from "@/Components/NumberField";
-import type { PasswordFieldClasses } from "@/Components/PasswordField";
+import type {
+  NumberFieldClasses,
+  NumberFieldProps,
+} from "@/Components/NumberField";
+import type { OtpFieldClasses, OtpFieldProps } from "@/Components/OtpField";
+import type {
+  PasswordFieldClasses,
+  PasswordFieldProps,
+} from "@/Components/PasswordField";
 import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type { SkeletonClasses, SkeletonProps } from "@/Components/Skeleton";
+import type { SliderClasses, SliderProps } from "@/Components/Slider";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
 import type { SpinnerClasses, SpinnerProps } from "@/Components/Spinner";
 import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
+import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 
 declare module "@bridge-ui/core" {
   interface AlertConfigOverrides {
     classes: AlertClasses;
     defaultProps: Partial<
       Pick<AlertProps, "color" | "shadow" | "padding" | "rounded" | "variant">
+    >;
+  }
+
+  interface AutocompleteConfigOverrides {
+    classes: AutocompleteClasses;
+    defaultProps: Partial<
+      Pick<
+        AutocompleteProps,
+        | "size"
+        | "color"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
     >;
   }
 
@@ -67,7 +90,9 @@ declare module "@bridge-ui/core" {
 
   interface CheckboxConfigOverrides {
     classes: CheckboxClasses;
-    defaultProps: Partial<Pick<CheckboxProps, "size" | "color" | "rounded">>;
+    defaultProps: Partial<
+      Pick<CheckboxProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
   }
 
   interface ChipConfigOverrides {
@@ -78,23 +103,6 @@ declare module "@bridge-ui/core" {
   interface DividerConfigOverrides {
     classes: DividerClasses;
     defaultProps: Partial<Pick<DividerProps, "color" | "orientation">>;
-  }
-
-  interface FormControlConfigOverrides {
-    classes: FormControlClasses;
-    defaultProps: Partial<
-      Pick<FormControlProps, "size" | "error" | "hideErrorMessage">
-    >;
-  }
-
-  interface FormFieldConfigOverrides {
-    classes: FormFieldClasses;
-    defaultProps: Partial<
-      Pick<
-        FormFieldProps,
-        "size" | "color" | "rounded" | "variant" | "errorIcon" | "showErrorIcon"
-      >
-    >;
   }
 
   interface IconConfigOverrides {
@@ -138,10 +146,48 @@ declare module "@bridge-ui/core" {
 
   interface NumberFieldConfigOverrides {
     classes: NumberFieldClasses;
+    defaultProps: Partial<
+      Pick<
+        NumberFieldProps,
+        | "size"
+        | "color"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
+    >;
+  }
+
+  interface OtpFieldConfigOverrides {
+    classes: OtpFieldClasses;
+    defaultProps: Partial<
+      Pick<
+        OtpFieldProps,
+        | "size"
+        | "type"
+        | "color"
+        | "length"
+        | "rounded"
+        | "variant"
+        | "hideErrorMessage"
+      >
+    >;
   }
 
   interface PasswordFieldConfigOverrides {
     classes: PasswordFieldClasses;
+    defaultProps: Partial<
+      Pick<
+        PasswordFieldProps,
+        | "size"
+        | "color"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
+    >;
   }
 
   interface ProgressConfigOverrides {
@@ -153,7 +199,9 @@ declare module "@bridge-ui/core" {
 
   interface RadioConfigOverrides {
     classes: RadioClasses;
-    defaultProps: Partial<Pick<RadioProps, "size" | "color" | "rounded">>;
+    defaultProps: Partial<
+      Pick<RadioProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
   }
 
   interface SnackbarConfigOverrides {
@@ -177,13 +225,39 @@ declare module "@bridge-ui/core" {
   interface SelectConfigOverrides {
     classes: SelectClasses;
     defaultProps: Partial<
-      Pick<SelectProps, "size" | "color" | "rounded" | "variant">
+      Pick<
+        SelectProps,
+        | "size"
+        | "color"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
     >;
   }
 
   interface SkeletonConfigOverrides {
     classes: SkeletonClasses;
     defaultProps: Partial<Pick<SkeletonProps, "rounded">>;
+  }
+
+  interface SliderConfigOverrides {
+    classes: SliderClasses;
+    defaultProps: Partial<
+      Pick<
+        SliderProps,
+        | "max"
+        | "min"
+        | "size"
+        | "step"
+        | "color"
+        | "rounded"
+        | "showStops"
+        | "showTooltip"
+        | "hideErrorMessage"
+      >
+    >;
   }
 
   interface SpinnerConfigOverrides {
@@ -203,11 +277,40 @@ declare module "@bridge-ui/core" {
 
   interface SwitchConfigOverrides {
     classes: SwitchClasses;
-    defaultProps: Partial<Pick<SwitchProps, "size" | "color" | "rounded">>;
+    defaultProps: Partial<
+      Pick<SwitchProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
   }
 
   interface TextareaConfigOverrides {
     classes: TextareaClasses;
-    defaultProps: Partial<Pick<TextareaProps, "resize" | "autosize">>;
+    defaultProps: Partial<
+      Pick<
+        TextareaProps,
+        | "size"
+        | "color"
+        | "resize"
+        | "rounded"
+        | "variant"
+        | "autosize"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
+    >;
+  }
+
+  interface TextFieldConfigOverrides {
+    classes: TextFieldClasses;
+    defaultProps: Partial<
+      Pick<
+        TextFieldProps,
+        | "size"
+        | "color"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+      >
+    >;
   }
 }

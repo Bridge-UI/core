@@ -26,7 +26,6 @@ export type {
   AutocompleteConfigOverrides,
   AvatarConfigOverrides,
   BadgeConfigOverrides,
-  BaseFieldConfigOverrides,
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   BridgeUIOptions,
@@ -37,8 +36,6 @@ export type {
   Direction,
   DividerConfigOverrides,
   DrawerConfigOverrides,
-  FormControlConfigOverrides,
-  FormFieldConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
   LinkConfigOverrides,
@@ -59,6 +56,7 @@ export type {
   TabListConfigOverrides,
   TabPanelConfigOverrides,
   TabsConfigOverrides,
+  TextFieldConfigOverrides,
   TextareaConfigOverrides,
 } from "@/Config";
 export {

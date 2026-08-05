@@ -54,11 +54,19 @@ export function useRadio(
 ) {
   const attrs = useAttrs();
 
-  const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
-    error: false,
-    hideErrorMessage: false,
-    size: libDefaults.size ?? "sm",
-  });
+  const formControl = useFormControl(
+    () => {
+      return { ...attrs, ...toValue(props) };
+    },
+    {
+      error: false,
+      hideErrorMessage: false,
+      size: libDefaults.size ?? "sm",
+    },
+    {
+      componentName: "Radio",
+    },
+  );
 
   const split = computed(() => {
     return splitComponentProps<RadioOwnProps, typeof radioBridgeKeys>({

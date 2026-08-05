@@ -163,6 +163,7 @@ export function useOtpField(
       hideErrorMessage: false,
     },
     {
+      componentName: "OtpField",
       labelHtmlFor: (controlId) => {
         return `${controlId}-0`;
       },
@@ -298,7 +299,7 @@ export function useOtpField(
       {},
       cn({
         "flex flex-wrap items-center": true,
-        [sizeClasses.value?.group ?? ""]: true,
+        [baseField.sizeClasses.value?.group ?? ""]: true,
       }),
     );
   });

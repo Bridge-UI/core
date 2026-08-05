@@ -237,21 +237,23 @@ export function createMergeNestedComponentProps(
  */
 export function mergePropsWithBridgeUIDefaults<
   P extends object,
-  K extends keyof BridgeUIComponentsConfig,
+  K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 >({
   props,
   components,
   libDefaults,
   componentName,
 }: {
-  componentName: K;
+  componentName?: K;
   components: null | undefined | BridgeUIComponentsConfig;
   libDefaults?: Partial<P>;
   props: P;
 }): P {
-  const fromRegistry = get(components, [componentName, "defaultProps"]) as
-    | undefined
-    | Partial<P>;
+  const fromRegistry = componentName
+    ? (get(components, [componentName, "defaultProps"]) as
+        | undefined
+        | Partial<P>)
+    : undefined;
 
   const omitNonMergeable = (value: undefined | Partial<P>) => {
     return omit(value ?? {}, [

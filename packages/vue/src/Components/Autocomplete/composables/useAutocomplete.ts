@@ -462,6 +462,7 @@ export function useAutocomplete(
       showErrorIcon: true,
     },
     {
+      componentName: "Autocomplete",
       likeInput: () => multiple.value,
       control: () => (multiple.value ? "textarea" : "input"),
     },
@@ -807,7 +808,7 @@ export function useAutocomplete(
   const listboxPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components.value, ["Listbox", "tokens", "color"]),
+      get(components.value, ["Autocomplete", "tokens", "listbox", "color"]),
     );
     const base = get(classes, formField.merged.value.color ?? "primary");
 
@@ -817,7 +818,12 @@ export function useAutocomplete(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components.value, ["Listbox", "tokens", "invalidated"]),
+      get(components.value, [
+        "Autocomplete",
+        "tokens",
+        "listbox",
+        "invalidated",
+      ]),
     );
   });
 
@@ -953,6 +959,7 @@ export function useAutocomplete(
       size: formField.merged.value.size,
       color: formField.merged.value.color,
       labelledBy: formField.controlId.value,
+      componentName: "Autocomplete" as const,
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,

@@ -61,11 +61,19 @@ export function useCheckbox(
   const attrs = useAttrs();
   const inputRef = ref<null | HTMLInputElement>(null);
 
-  const formControl = useFormControl(() => ({ ...attrs, ...toValue(props) }), {
-    error: false,
-    hideErrorMessage: false,
-    size: libDefaults.size ?? "sm",
-  });
+  const formControl = useFormControl(
+    () => {
+      return { ...attrs, ...toValue(props) };
+    },
+    {
+      error: false,
+      hideErrorMessage: false,
+      size: libDefaults.size ?? "sm",
+    },
+    {
+      componentName: "Checkbox",
+    },
+  );
 
   const split = computed(() => {
     return splitComponentProps<CheckboxOwnProps, typeof checkboxBridgeKeys>({

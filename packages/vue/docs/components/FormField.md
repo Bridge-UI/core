@@ -1,11 +1,13 @@
 # FormField
 
+> Building block for field chrome. Prefer public fields (`TextField`, `Select`, …) in apps; FormField remains exported for advanced composition. Not a `BridgeUIComponentsConfig` key — theme via the public parent (`components.TextField`, `components.Select`, …).
+
 Form field chrome (label, adornments, error) used by TextField, Select, and other inputs.
 
 ## Import
 
 ```ts
-import { FormField } from "@bridge-ui/vue/Components/FormField";
+import { FormField } from "@bridge-ui/vue";
 ```
 
 ## Examples

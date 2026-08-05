@@ -65,6 +65,7 @@ export function usePasswordField(props: PasswordFieldProps) {
     },
     {
       reservedSlots: () => ["end"],
+      componentName: "PasswordField",
     },
   );
 

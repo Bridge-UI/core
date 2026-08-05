@@ -56,9 +56,20 @@ type FormControlMerged = MergeLibDefaults<
   FormControlLibDefaults
 >;
 
+/**
+ * Options for {@link useFormControl}.
+ */
+export type FormControlOptions = {
+  /**
+   * Public registry key that owns FormControl chrome defaults/tokens.
+   */
+  componentName?: "Radio" | "Switch" | "Checkbox";
+};
+
 export function useFormControl(
   props: Omit<FormControlProps, "field">,
   libDefaults: FormControlLibDefaults,
+  options: FormControlOptions = {},
 ) {
   const autoId = useId();
 
@@ -72,11 +83,11 @@ export function useFormControl(
 
   const { merged, entry: bridgeFormControl } = useBridgeUIComponent<
     FormControlMerged,
-    "FormControl"
+    NonNullable<FormControlOptions["componentName"]>
   >({
     libDefaults,
     props: componentProps,
-    componentName: "FormControl",
+    componentName: options.componentName,
   });
 
   const slots = derived(() => {
@@ -154,10 +165,10 @@ export function useFormControl(
   const invalidatedColors = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeFormControl?.tokens?.invalidated,
+      get(bridgeFormControl, ["tokens", "formControl", "invalidated"]),
       merged.customProps?.invalidated,
     );
-  }, [merged.customProps?.invalidated, bridgeFormControl?.tokens?.invalidated]);
+  }, [merged.customProps?.invalidated, bridgeFormControl]);
 
   const rootBind = derived(() => {
     return mergePartBind(

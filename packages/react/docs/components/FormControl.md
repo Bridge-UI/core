@@ -1,11 +1,15 @@
 # FormControl
 
+> Building block for toggle-row chrome. Prefer `Checkbox`, `Radio`, and `Switch` in apps; FormControl remains exported for advanced composition. Not a registry key — theme chrome via `tokens.formControl` on the public parent (e.g. `components.Checkbox.tokens.formControl`).
+
 Low-level form control chrome (labels, description, error) for Checkbox, Radio, and Switch.
+
+Control tokens stay on the parent (`tokens.color`, `tokens.invalidated`, …).
 
 ## Import
 
 ```ts
-import { FormControl } from "@bridge-ui/react/Components/FormControl";
+import { FormControl } from "@bridge-ui/react";
 ```
 
 ## Examples

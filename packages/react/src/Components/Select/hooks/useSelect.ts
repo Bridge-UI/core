@@ -789,6 +789,7 @@ export function useSelect(
       showErrorIcon: true,
     },
     {
+      componentName: "Select",
       likeInput: () => multiple,
       control: () => (multiple ? "textarea" : "input"),
     },
@@ -797,7 +798,7 @@ export function useSelect(
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components, ["Listbox", "tokens", "color"]),
+      get(components, ["Select", "tokens", "listbox", "color"]),
     );
     const base = get(classes, formField.merged.color ?? "primary");
 
@@ -807,7 +808,7 @@ export function useSelect(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components, ["Listbox", "tokens", "invalidated"]),
+      get(components, ["Select", "tokens", "listbox", "invalidated"]),
     );
   }, [components, formField.invalidated, formField.merged.color]);
 
@@ -977,6 +978,7 @@ export function useSelect(
       size: formField.merged.size,
       color: formField.merged.color,
       labelledBy: formField.controlId,
+      componentName: "Select" as const,
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
       disableMaxHeight: props.disableMaxHeight === true,

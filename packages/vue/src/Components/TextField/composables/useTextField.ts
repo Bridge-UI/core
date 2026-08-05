@@ -21,6 +21,9 @@ export function useTextField(props: TextFieldOwnProps) {
       variant: "outline",
       showErrorIcon: true,
     },
+    {
+      componentName: "TextField",
+    },
   );
 
   return {

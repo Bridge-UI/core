@@ -128,6 +128,7 @@ export function useTextarea(props: TextareaProps) {
       showErrorIcon: true,
     },
     {
+      componentName: "Textarea",
       control: () => "textarea",
       likeInput: () => likeInput,
     },

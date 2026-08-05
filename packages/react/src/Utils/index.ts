@@ -24,7 +24,7 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
 
 export type UseBridgeUIComponentReturn<
   P extends object,
-  K extends keyof BridgeUIComponentsConfig,
+  K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 > = {
   bridge: ReturnType<typeof useBridgeUI>;
   components: null | BridgeUIComponentsConfig;
@@ -55,13 +55,13 @@ export const mergeNestedComponentProps =
  */
 export function useBridgeUIComponent<
   P extends object,
-  K extends keyof BridgeUIComponentsConfig,
+  K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 >({
   props,
   libDefaults,
   componentName,
 }: {
-  componentName: K;
+  componentName?: K;
   libDefaults?: Partial<P>;
   props: Partial<P>;
 }): UseBridgeUIComponentReturn<P, K> {
@@ -69,9 +69,9 @@ export function useBridgeUIComponent<
 
   const components = isNil(bridge) ? null : (bridge.components ?? null);
 
-  const entry = get(components, componentName) as
-    | undefined
-    | RegistryEntryFor<K>;
+  const entry = componentName
+    ? (get(components, componentName) as undefined | RegistryEntryFor<K>)
+    : undefined;
 
   const merged = useMemo(() => {
     return mergePropsWithBridgeUIDefaults({

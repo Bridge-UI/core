@@ -869,6 +869,7 @@ export function useAutocomplete(
     },
     {
       likeInput: () => multiple,
+      componentName: "Autocomplete",
       control: () => (multiple ? "textarea" : "input"),
     },
   );
@@ -876,7 +877,7 @@ export function useAutocomplete(
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      get(components, ["Listbox", "tokens", "color"]),
+      get(components, ["Autocomplete", "tokens", "listbox", "color"]),
     );
     const base = get(classes, formField.merged.color ?? "primary");
 
@@ -886,7 +887,7 @@ export function useAutocomplete(
 
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      get(components, ["Listbox", "tokens", "invalidated"]),
+      get(components, ["Autocomplete", "tokens", "listbox", "invalidated"]),
     );
   }, [components, formField.invalidated, formField.merged.color]);
 
@@ -1058,6 +1059,7 @@ export function useAutocomplete(
       labelledBy: formField.controlId,
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
+      componentName: "Autocomplete" as const,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,

@@ -59,11 +59,17 @@ export function useCheckbox(
 ) {
   const iconAdapter = useIconAdapter();
 
-  const formControl = useFormControl(props, {
-    error: false,
-    hideErrorMessage: false,
-    size: libDefaults.size ?? "sm",
-  });
+  const formControl = useFormControl(
+    props,
+    {
+      error: false,
+      hideErrorMessage: false,
+      size: libDefaults.size ?? "sm",
+    },
+    {
+      componentName: "Checkbox",
+    },
+  );
 
   const { componentProps } = splitComponentProps<
     CheckboxProps,

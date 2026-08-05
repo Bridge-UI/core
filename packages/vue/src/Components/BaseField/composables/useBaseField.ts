@@ -36,6 +36,11 @@ import {
 
 export type BaseFieldOptions = {
   /**
+   * Public registry key that owns BaseField chrome defaults/tokens.
+   */
+  componentName?: "Slider" | "OtpField";
+
+  /**
    * Resolve `Label` `for` from `controlId`. Defaults to the control id itself.
    */
   labelHtmlFor?: (controlId: string) => string;
@@ -96,10 +101,10 @@ export function useBaseField(
 
   const { merged, entry: bridgeBaseField } = useBridgeUIComponent<
     BaseFieldMerged,
-    "BaseField"
+    NonNullable<BaseFieldOptions["componentName"]>
   >({
     libDefaults,
-    componentName: "BaseField",
+    componentName: options.componentName,
     props: () => {
       return split.value.componentProps;
     },
@@ -139,7 +144,7 @@ export function useBaseField(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeBaseField.value?.tokens?.size,
+      get(bridgeBaseField.value, ["tokens", "baseField", "size"]),
     );
 
     return get(classes, merged.value.size ?? "md");
@@ -148,7 +153,7 @@ export function useBaseField(
   const invalidatedPalette = computed(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeBaseField.value?.tokens?.invalidated,
+      get(bridgeBaseField.value, ["tokens", "baseField", "invalidated"]),
       merged.value.customProps?.invalidated,
     );
   });
@@ -332,6 +337,7 @@ export function useBaseField(
     cornerBind,
     isDisabled,
     isReadonly,
+    sizeClasses,
     endSlotBind,
     invalidated,
     startSlotBind,

@@ -83,6 +83,7 @@ export function usePasswordField(
     },
     {
       reservedSlots: () => ["end"],
+      componentName: "PasswordField",
     },
   );
 
