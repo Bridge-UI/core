@@ -148,6 +148,14 @@ export type {
   ChipProps,
   ChipSizeOverrides,
 } from "@/Components/Chip";
+export { DateInput, useDateInput } from "@/Components/DateInput";
+export type {
+  DateInputCallbacks,
+  DateInputClasses,
+  DateInputCustomProps,
+  DateInputOwnProps,
+  DateInputProps,
+} from "@/Components/DateInput";
 export { DatePicker, useDatePicker } from "@/Components/DatePicker";
 export type {
   DatePickerCallbacks,
