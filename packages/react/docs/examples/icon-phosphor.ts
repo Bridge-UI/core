@@ -7,7 +7,10 @@
 // ** External Imports
 import {
   BellIcon,
+  CalendarDotsIcon,
   CaretDownIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
   CaretUpDownIcon,
   CaretUpIcon,
   CheckCircleIcon,
@@ -41,7 +44,10 @@ const icons = {
   chevronUp: CaretUpIcon,
   alert: WarningCircleIcon,
   success: CheckCircleIcon,
+  chevronLeft: CaretLeftIcon,
   chevronDown: CaretDownIcon,
+  calendar: CalendarDotsIcon,
+  chevronRight: CaretRightIcon,
   chevronUpDown: CaretUpDownIcon,
 } satisfies Record<SemanticIconName, unknown>;
 

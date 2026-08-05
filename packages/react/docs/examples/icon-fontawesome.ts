@@ -11,8 +11,11 @@
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
   faBell,
+  faCalendarDays,
   faCheck,
   faChevronDown,
+  faChevronLeft,
+  faChevronRight,
   faChevronUp,
   faCircleCheck,
   faCircleExclamation,
@@ -103,8 +106,11 @@ const icons = {
   success: faCircleCheck,
   chevronUp: faChevronUp,
   chevronUpDown: faUpDown,
+  calendar: faCalendarDays,
   alert: faCircleExclamation,
   chevronDown: faChevronDown,
+  chevronLeft: faChevronLeft,
+  chevronRight: faChevronRight,
   warning: faTriangleExclamation,
 } satisfies Record<SemanticIconName, unknown>;
 

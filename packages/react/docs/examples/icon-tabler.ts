@@ -9,8 +9,11 @@ import {
   IconAlertCircle,
   IconAlertTriangle,
   IconBell,
+  IconCalendarMonth,
   IconCheck,
   IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
   IconChevronUp,
   IconCircleCheck,
   IconCircleX,
@@ -42,7 +45,10 @@ const icons = {
   chevronUp: IconChevronUp,
   warning: IconAlertTriangle,
   chevronUpDown: IconSelector,
+  calendar: IconCalendarMonth,
   chevronDown: IconChevronDown,
+  chevronLeft: IconChevronLeft,
+  chevronRight: IconChevronRight,
 } satisfies Record<SemanticIconName, unknown>;
 
 /**
