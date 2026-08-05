@@ -50,11 +50,17 @@ type SwitchLibDefaults = LibDefaultsShape<
 type SwitchMerged = MergeLibDefaults<SwitchOwnProps, SwitchLibDefaults>;
 
 export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
-  const formControl = useFormControl(props, {
-    error: false,
-    hideErrorMessage: false,
-    size: libDefaults.size ?? "sm",
-  });
+  const formControl = useFormControl(
+    props,
+    {
+      error: false,
+      hideErrorMessage: false,
+      size: libDefaults.size ?? "sm",
+    },
+    {
+      componentName: "Switch",
+    },
+  );
 
   const { componentProps } = splitComponentProps<
     SwitchProps,

@@ -59,6 +59,11 @@ type BaseFieldMerged = MergeLibDefaults<
  * Options for {@link useBaseField}.
  */
 export type BaseFieldOptions = {
+  /**
+   * Public registry key that owns BaseField chrome defaults/tokens.
+   */
+  componentName?: "Slider" | "OtpField";
+
   /** Resolve Label htmlFor from controlId. Default: identity. */
   labelHtmlFor?: (controlId: string) => string;
 };
@@ -77,7 +82,10 @@ export function useBaseField(
 ) {
   const autoId = useId();
   const labelHtmlFor =
-    options.labelHtmlFor ?? ((controlId: string) => controlId);
+    options.labelHtmlFor ??
+    ((controlId: string) => {
+      return controlId;
+    });
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     Omit<BaseFieldProps, "field" | "children">,
@@ -89,11 +97,11 @@ export function useBaseField(
 
   const { merged, entry: bridgeBaseField } = useBridgeUIComponent<
     BaseFieldMerged,
-    "BaseField"
+    NonNullable<BaseFieldOptions["componentName"]>
   >({
     libDefaults,
     props: componentProps,
-    componentName: "BaseField",
+    componentName: options.componentName,
   });
 
   const slots = derived(() => {
@@ -130,19 +138,19 @@ export function useBaseField(
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeBaseField?.tokens?.size,
+      get(bridgeBaseField, ["tokens", "baseField", "size"]),
     );
 
     return get(classes, merged.size ?? "md");
-  }, [merged.size, bridgeBaseField?.tokens?.size]);
+  }, [merged.size, bridgeBaseField]);
 
   const invalidatedPalette = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeBaseField?.tokens?.invalidated,
+      get(bridgeBaseField, ["tokens", "baseField", "invalidated"]),
       merged.customProps?.invalidated,
     );
-  }, [merged.customProps?.invalidated, bridgeBaseField?.tokens?.invalidated]);
+  }, [merged.customProps?.invalidated, bridgeBaseField]);
 
   const invalidatedColors = useMemo(() => {
     return invalidated ? invalidatedPalette : undefined;
@@ -316,6 +324,7 @@ export function useBaseField(
     cornerBind,
     isDisabled,
     isReadonly,
+    sizeClasses,
     endSlotBind,
     invalidated,
     startSlotBind,

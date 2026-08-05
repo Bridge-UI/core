@@ -156,7 +156,10 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       size: libDefaults.size ?? "md",
     },
     {
-      labelHtmlFor: (controlId) => `${controlId}-thumb-0`,
+      componentName: "Slider",
+      labelHtmlFor: (controlId) => {
+        return `${controlId}-thumb-0`;
+      },
     },
   );
 

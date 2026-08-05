@@ -48,6 +48,17 @@ export type FormFieldReservedSlotName = Exclude<
 
 export type FormFieldOptions = {
   /**
+   * Public registry key that owns FormField chrome defaults/tokens.
+   */
+  componentName?:
+    | "Select"
+    | "Textarea"
+    | "TextField"
+    | "NumberField"
+    | "Autocomplete"
+    | "PasswordField";
+
+  /**
    * Native control rendered by the field composable (`<input>` vs `<textarea>`).
    *
    * @default "input"
@@ -120,11 +131,13 @@ export function useFormField(
 
   const { merged, entry: bridgeFormField } = useBridgeUIComponent<
     FormFieldMerged,
-    "FormField"
+    NonNullable<FormFieldOptions["componentName"]>
   >({
     libDefaults,
-    componentName: "FormField",
-    props: () => split.value.componentProps,
+    componentName: options.componentName,
+    props: () => {
+      return split.value.componentProps;
+    },
   });
 
   const customProps = computed(() => {

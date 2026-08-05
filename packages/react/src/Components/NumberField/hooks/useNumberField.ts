@@ -160,6 +160,7 @@ export function useNumberField(props: NumberFieldProps) {
       showErrorIcon: false,
     },
     {
+      componentName: "NumberField",
       reservedSlots: () => ["end"],
     },
   );

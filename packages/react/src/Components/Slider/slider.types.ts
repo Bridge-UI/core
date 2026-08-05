@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  BaseFieldInvalidated,
   MergeHtmlProps,
   MergeProps,
   SliderColor,
@@ -80,11 +81,12 @@ export interface SliderCustomProps extends Omit<
   bar?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Error-state chrome colors. Label colors come from `Label` when `error` is set.
+   * Control error chrome (`bar`, `thumb`, `track`, …). Error message color comes
+   * from {@link BaseField}; pass `errorMessage` here to override.
    *
    * @default undefined
    */
-  invalidated?: Partial<SliderInvalidated>;
+  invalidated?: Partial<SliderInvalidated & BaseFieldInvalidated>;
 
   /**
    * Props forwarded to stop markers.

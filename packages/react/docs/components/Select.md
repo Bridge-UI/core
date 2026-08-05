@@ -168,7 +168,7 @@ Pass `ListSection` / `ListItem` as children to build the dropdown list manually.
 
 ### Inherited from FormField
 
-See [FormField](./FormField.md).
+See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Select` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens are nested under `components.Select.tokens.listbox`.
 
 ## Events
 

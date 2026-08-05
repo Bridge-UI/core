@@ -26,8 +26,8 @@ export type {
   AutocompleteConfigOverrides,
   AvatarConfigOverrides,
   BadgeConfigOverrides,
-  BaseFieldConfigOverrides,
   BridgeUIComponentsConfig,
+  BridgeUIFormDefaults,
   BridgeUIGlobal,
   BridgeUIOptions,
   ButtonConfigOverrides,
@@ -37,8 +37,6 @@ export type {
   Direction,
   DividerConfigOverrides,
   DrawerConfigOverrides,
-  FormControlConfigOverrides,
-  FormFieldConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
   LinkConfigOverrides,
@@ -59,6 +57,7 @@ export type {
   TabListConfigOverrides,
   TabPanelConfigOverrides,
   TabsConfigOverrides,
+  TextFieldConfigOverrides,
   TextareaConfigOverrides,
 } from "@/Config";
 export {
@@ -277,6 +276,8 @@ export type {
   TooltipSizeItem,
 } from "@/Tokens/Tooltip";
 export {
+  BRIDGE_UI_FORM_COMPONENT_NAMES,
+  BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES,
   DEFAULT_BREAKPOINTS,
   DEFAULT_OTP_LENGTH,
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
@@ -358,6 +359,7 @@ export {
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
   resolveBreakpoints,
+  resolveBridgeUIFormDefaults,
   resolveEffectiveDrawerTransition,
   resolveEffectiveModalTransition,
   resolveModalPortalElement,

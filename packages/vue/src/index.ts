@@ -198,6 +198,7 @@ export type {
   ListboxColorOverrides,
   ListboxCustomProps,
   ListboxEmits,
+  ListboxEntry,
   ListboxOption,
   ListboxOwnProps,
   ListboxProps,

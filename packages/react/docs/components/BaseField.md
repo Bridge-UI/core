@@ -1,11 +1,15 @@
 # BaseField
 
+> Building block for composite field chrome. Prefer `OtpField` / `Slider` in apps; BaseField remains exported for advanced composition. Not a registry key — theme chrome via `tokens.baseField` on the public parent (e.g. `components.Slider.tokens.baseField`).
+
 Shared field chrome (label, corner, start/end slots, description, error) for composite inputs such as `OtpField` and `Slider`.
+
+Control tokens stay on the parent (`tokens.size`, `tokens.invalidated`, …).
 
 ## Import
 
 ```ts
-import { BaseField, useBaseField } from "@bridge-ui/react/Components/BaseField";
+import { BaseField, useBaseField } from "@bridge-ui/react";
 ```
 
 ## Examples

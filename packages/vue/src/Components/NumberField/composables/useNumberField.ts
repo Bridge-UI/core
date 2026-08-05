@@ -73,6 +73,7 @@ export function useNumberField(
       showErrorIcon: false,
     },
     {
+      componentName: "NumberField",
       reservedSlots: () => ["end"],
     },
   );

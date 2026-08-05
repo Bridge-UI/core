@@ -18,16 +18,16 @@ test("it should return base when no partials provided", () => {
   expect(result).toEqual(BRIDGE_UI_DEFAULT_GLOBAL);
 });
 
-test("it should override specific global fields from partials", () => {
+test("it should deep-merge formDefaults from partials", () => {
   const result = mergeBridgeUIGlobal({
-    partials: [{ theme: "dark" }],
     base: BRIDGE_UI_DEFAULT_GLOBAL,
+    partials: [
+      { formDefaults: { size: "lg" } },
+      { formDefaults: { rounded: "xl" } },
+    ],
   });
 
-  expect(result).toEqual({
-    ...BRIDGE_UI_DEFAULT_GLOBAL,
-    theme: "dark",
-  });
+  expect(result.formDefaults).toEqual({ size: "lg", rounded: "xl" });
 });
 
 test("it should apply multiple global partials in order", () => {

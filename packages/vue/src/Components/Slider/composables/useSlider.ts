@@ -162,6 +162,7 @@ export function useSlider(
       size: libDefaults.size ?? "md",
     },
     {
+      componentName: "Slider",
       labelHtmlFor: (controlId) => {
         return `${controlId}-thumb-0`;
       },

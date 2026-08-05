@@ -127,7 +127,7 @@ same `BaseField` layout as other field components. Pin-specific props (`length`,
 | `readonly`         | `boolean` | `false`     | Makes all pins read-only.                                         |
 | `required`         | `boolean` | `false`     | Shows a required asterisk on the label.                           |
 | `rounded`          | token     | `"md"`      | Border radius of each pin.                                        |
-| `size`             | token     | `"md"`      | Pin size and label typography.                                    |
+| `size`             | token     | `"md"`      | Pin size and label typography (`2xs` … `2xl`).                    |
 | `slots`            | object    | —           | `label`, `corner`, `description`, `errorMessage`, `start`, `end`. |
 
 ## Related components

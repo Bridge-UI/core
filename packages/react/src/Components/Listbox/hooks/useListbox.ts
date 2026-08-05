@@ -42,9 +42,20 @@ type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "size" | "color">;
 
 type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
 
+/**
+ * Options for {@link useListbox}.
+ */
+export type ListboxOptions = {
+  /**
+   * Public registry key that owns nested `tokens.listbox` defaults.
+   */
+  componentName?: "Select" | "Autocomplete";
+};
+
 export function useListbox(
   props: ListboxOwnProps,
   libDefaults: ListboxLibDefaults,
+  options: ListboxOptions = {},
 ) {
   const { componentProps } = splitComponentProps<
     ListboxProps,
@@ -56,11 +67,11 @@ export function useListbox(
 
   const { merged, entry: bridgeListbox } = useBridgeUIComponent<
     ListboxMerged,
-    "Listbox"
+    NonNullable<ListboxOptions["componentName"]>
   >({
     libDefaults,
     props: componentProps,
-    componentName: "Listbox",
+    componentName: options.componentName,
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
@@ -68,10 +79,20 @@ export function useListbox(
     props: componentProps,
   });
 
+  const listboxTokens = derived(() => {
+    return get(bridgeListbox, ["tokens", "listbox"]) as
+      | undefined
+      | {
+          color?: object;
+          invalidated?: object;
+          size?: object;
+        };
+  });
+
   const colorPalette = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeListbox?.tokens?.color,
+      listboxTokens?.color,
     );
 
     return get(classes, merged.color ?? "primary");
@@ -80,7 +101,7 @@ export function useListbox(
   const invalidatedPalette = derived(() => {
     return mergeBridgeUILayeredClasses(
       invalidatedProps,
-      bridgeListbox?.tokens?.invalidated,
+      listboxTokens?.invalidated,
     );
   });
 
@@ -89,10 +110,7 @@ export function useListbox(
   });
 
   const sizeClasses = derived(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeListbox?.tokens?.size,
-    );
+    const classes = mergeBridgeUILayeredClasses(sizeProps, listboxTokens?.size);
 
     return get(classes, merged.size ?? "md");
   });

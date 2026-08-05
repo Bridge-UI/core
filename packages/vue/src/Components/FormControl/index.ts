@@ -3,7 +3,10 @@ export {
   formControlBridgeKeys,
   useFormControl,
 } from "@/Components/FormControl/composables/useFormControl";
-export type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
+export type {
+  FormControlOptions,
+  UseFormControlReturn,
+} from "@/Components/FormControl/composables/useFormControl";
 export type {
   FormControlClasses,
   FormControlCustomProps,

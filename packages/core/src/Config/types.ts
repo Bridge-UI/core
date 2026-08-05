@@ -26,7 +26,6 @@ import type {
 } from "@/Tokens/Badge";
 import type {
   BaseFieldInvalidated,
-  BaseFieldSize,
   BaseFieldSizeItem,
 } from "@/Tokens/BaseField";
 import type {
@@ -84,10 +83,8 @@ import type {
   LinkUnderline,
 } from "@/Tokens/Link";
 import type {
-  ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
-  ListboxSize,
   ListboxSizeItem,
 } from "@/Tokens/Listbox";
 import type { MenuRounded, MenuShadow } from "@/Tokens/Menu";
@@ -177,6 +174,29 @@ import type { Overwrite } from "@/Utils/types";
 
 export type Direction = "ltr" | "rtl";
 
+/**
+ * Shared density defaults for form controls (`size` / `rounded` token keys).
+ * Keys follow the canonical FormField scales (`2xs`…`2xl`, `none`/`xs`…`4xl`/`full`),
+ * which form controls share after token alignment.
+ * Applied when merging props for form registry components only.
+ * Radio and Switch ignore `rounded` (shape-driven `full` stays from lib / registry).
+ */
+export interface BridgeUIFormDefaults {
+  /**
+   * Default `rounded` token key for form controls (not applied to Radio / Switch).
+   *
+   * @default undefined
+   */
+  rounded?: keyof FormFieldRounded;
+
+  /**
+   * Default `size` token key for form controls (`2xs` … `2xl`).
+   *
+   * @default undefined
+   */
+  size?: keyof FormFieldSize;
+}
+
 export interface BridgeUIGlobal {
   /**
    * Global breakpoint CSS length overrides for `useBreakpoint`.
@@ -191,6 +211,15 @@ export interface BridgeUIGlobal {
    * @default "ltr"
    */
   direction: Direction;
+
+  /**
+   * Default `size` / `rounded` for form controls (TextField, Select, Checkbox, …).
+   * Merge order: instance props → component `defaultProps` → `formDefaults` → lib defaults.
+   * Does not apply to non-form components (Button, Progress, Modal, …).
+   *
+   * @default undefined
+   */
+  formDefaults?: BridgeUIFormDefaults;
 
   /**
    * i18n adapter used to translate Bridge chrome strings
@@ -238,20 +267,16 @@ export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
 export interface BadgeConfigOverrides {}
-export interface BaseFieldConfigOverrides {}
 export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
-export interface FormControlConfigOverrides {}
-export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface ListConfigOverrides {}
-export interface ListboxConfigOverrides {}
 export interface ListItemConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
@@ -273,6 +298,7 @@ export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
 export interface TabsConfigOverrides {}
 export interface TextareaConfigOverrides {}
+export interface TextFieldConfigOverrides {}
 export interface TooltipConfigOverrides {}
 
 export interface AlertConfigBase {
@@ -323,18 +349,6 @@ export interface BadgeConfigBase {
   }>;
 }
 
-export interface BaseFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    hideErrorMessage: boolean;
-    size: keyof BaseFieldSize;
-  }>;
-  tokens: Partial<{
-    invalidated: Partial<BaseFieldInvalidated>;
-    size: Record<string, BaseFieldSizeItem>;
-  }>;
-}
-
 export interface ButtonConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -371,11 +385,15 @@ export interface CheckboxConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof CheckboxColor;
+    hideErrorMessage: boolean;
     rounded: keyof CheckboxRounded;
     size: keyof CheckboxSize;
   }>;
   tokens: Partial<{
     color: Record<string, CheckboxColorItem>;
+    formControl: Partial<{
+      invalidated: Partial<FormControlInvalidated>;
+    }>;
     invalidated: Partial<CheckboxInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
@@ -398,36 +416,6 @@ export interface IconConfigBase {
   }>;
   tokens: Partial<{
     size: Record<string, string>;
-  }>;
-}
-
-export interface FormControlConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    hideErrorMessage: boolean;
-    size: keyof LabelSize;
-  }>;
-  tokens: Partial<{
-    invalidated: Partial<FormControlInvalidated>;
-    size: Record<string, string>;
-  }>;
-}
-
-export interface FormFieldConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof FormFieldColor;
-    rounded: keyof FormFieldRounded;
-    showErrorIcon: boolean;
-    size: keyof FormFieldSize;
-    variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
-    rounded: Record<string, FormFieldRoundedItem>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -458,19 +446,6 @@ export interface LinkConfigBase {
 
 export interface ListConfigBase {
   classes: object;
-}
-
-export interface ListboxConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    color: keyof ListboxColor;
-    size: keyof ListboxSize;
-  }>;
-  tokens: Partial<{
-    color: Record<string, ListboxColorItem>;
-    invalidated: Partial<ListboxInvalidated>;
-    size: Record<string, ListboxSizeItem>;
-  }>;
 }
 
 export interface ListItemConfigBase {
@@ -533,12 +508,28 @@ export interface DrawerConfigBase {
 
 export interface NumberFieldConfigBase {
   classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
 }
 
 export interface OtpFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof OtpFieldColor;
+    hideErrorMessage: boolean;
     length: number;
     rounded: keyof OtpFieldRounded;
     size: keyof OtpFieldSize;
@@ -546,6 +537,10 @@ export interface OtpFieldConfigBase {
     variant: keyof OtpFieldVariant;
   }>;
   tokens: Partial<{
+    baseField: Partial<{
+      invalidated: Partial<BaseFieldInvalidated>;
+      size: Record<string, BaseFieldSizeItem>;
+    }>;
     color: Record<string, OtpFieldColorItem>;
     invalidated: Partial<OtpFieldInvalidated>;
     rounded: Record<string, OtpFieldRoundedItem>;
@@ -556,17 +551,36 @@ export interface OtpFieldConfigBase {
 
 export interface PasswordFieldConfigBase {
   classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
 }
 
 export interface RadioConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof RadioColor;
+    hideErrorMessage: boolean;
     rounded: keyof RadioRounded;
     size: keyof RadioSize;
   }>;
   tokens: Partial<{
     color: Record<string, RadioColorItem>;
+    formControl: Partial<{
+      invalidated: Partial<FormControlInvalidated>;
+    }>;
     invalidated: Partial<RadioInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
@@ -597,10 +611,50 @@ export interface SnackbarConfigBase {
 
 export interface AutocompleteConfigBase {
   classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    listbox: Partial<{
+      color: Record<string, ListboxColorItem>;
+      invalidated: Partial<ListboxInvalidated>;
+      size: Record<string, ListboxSizeItem>;
+    }>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
 }
 
 export interface SelectConfigBase {
   classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    listbox: Partial<{
+      color: Record<string, ListboxColorItem>;
+      invalidated: Partial<ListboxInvalidated>;
+      size: Record<string, ListboxSizeItem>;
+    }>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
 }
 
 export interface DividerConfigBase {
@@ -645,6 +699,7 @@ export interface SliderConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof SliderColor;
+    hideErrorMessage: boolean;
     max: number;
     min: number;
     rounded: keyof SliderRounded;
@@ -654,6 +709,10 @@ export interface SliderConfigBase {
     step: number;
   }>;
   tokens: Partial<{
+    baseField: Partial<{
+      invalidated: Partial<BaseFieldInvalidated>;
+      size: Record<string, BaseFieldSizeItem>;
+    }>;
     color: Record<string, SliderColorItem>;
     invalidated: Partial<SliderInvalidated>;
     rounded: Record<string, string>;
@@ -682,11 +741,15 @@ export interface SwitchConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof SwitchColor;
+    hideErrorMessage: boolean;
     rounded: keyof SwitchRounded;
     size: keyof SwitchSize;
   }>;
   tokens: Partial<{
     color: Record<string, SwitchColorItem>;
+    formControl: Partial<{
+      invalidated: Partial<FormControlInvalidated>;
+    }>;
     invalidated: Partial<SwitchInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
@@ -697,10 +760,40 @@ export interface TextareaConfigBase {
   classes: object;
   defaultProps: Partial<{
     autosize: boolean;
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
     resize: keyof TextareaResize;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
     resize: Record<string, string>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface TextFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -772,22 +865,16 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
   Badge: Partial<Overwrite<BadgeConfigBase, BadgeConfigOverrides>>;
-  BaseField: Partial<Overwrite<BaseFieldConfigBase, BaseFieldConfigOverrides>>;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
-  FormControl: Partial<
-    Overwrite<FormControlConfigBase, FormControlConfigOverrides>
-  >;
-  FormField: Partial<Overwrite<FormFieldConfigBase, FormFieldConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   List: Partial<Overwrite<ListConfigBase, ListConfigOverrides>>;
-  Listbox: Partial<Overwrite<ListboxConfigBase, ListboxConfigOverrides>>;
   ListItem: Partial<Overwrite<ListItemConfigBase, ListItemConfigOverrides>>;
   ListSection: Partial<
     Overwrite<ListSectionConfigBase, ListSectionConfigOverrides>
@@ -815,6 +902,7 @@ export type BridgeUIComponentsConfig = Partial<{
   TabPanel: Partial<Overwrite<TabPanelConfigBase, TabPanelConfigOverrides>>;
   Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
+  TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
   Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
 }>;
 

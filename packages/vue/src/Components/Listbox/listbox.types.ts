@@ -141,6 +141,13 @@ export interface ListboxOwnProps {
   color?: MergeProps<ListboxColor, ListboxColorOverrides>;
 
   /**
+   * Public parent registry key for nested `tokens.listbox`.
+   *
+   * @internal
+   */
+  componentName?: "Select" | "Autocomplete";
+
+  /**
    * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
    * `progress`, `scroll`).
    *

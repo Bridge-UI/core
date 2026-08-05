@@ -79,10 +79,16 @@ const {
   mergedClasses,
   optionSelectedClass,
   optionHighlightedClass,
-} = useListbox(props, {
-  size: "md",
-  color: "primary",
-});
+} = useListbox(
+  props,
+  {
+    size: "md",
+    color: "primary",
+  },
+  {
+    componentName: props.componentName,
+  },
+);
 
 const resolvedOptions = computed(() => {
   return props.options ?? [];

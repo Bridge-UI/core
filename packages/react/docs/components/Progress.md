@@ -38,7 +38,10 @@ import { Progress } from "@bridge-ui/react/Components/Progress";
 
 ```tsx
 <Progress size="lg" color="success" aria-label="Saving…" />
+<Progress size="2xs" rounded="md" aria-label="Syncing…" />
 ```
+
+`size` uses the shared scale (`2xs` … `2xl`). `rounded` uses the shared radius scale (`none` / `xs` … `4xl` / `full`).
 
 ## Props
 

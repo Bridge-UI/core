@@ -3,6 +3,7 @@ import type { HTMLAttributes, InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  BaseFieldInvalidated,
   MergeHtmlProps,
   MergeProps,
   OtpFieldColor,
@@ -47,12 +48,12 @@ export interface OtpFieldCustomProps extends Omit<
   input?: Partial<InputHTMLAttributes>;
 
   /**
-   * Error-state pin chrome colors. Label and error message colors come from
-   * {@link BaseField} when `error` is set.
+   * Pin error chrome (`pin` / `pinUnderlined`). Error message color comes from
+   * {@link BaseField} (`Tokens/BaseField`); pass `errorMessage` here to override.
    *
    * @default undefined
    */
-  invalidated?: Partial<OtpFieldInvalidated>;
+  invalidated?: Partial<OtpFieldInvalidated & BaseFieldInvalidated>;
 
   /**
    * Props forwarded to each pin cell wrapper.

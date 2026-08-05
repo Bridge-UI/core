@@ -14,8 +14,22 @@ import { toMerged } from "es-toolkit/object";
 import { twMerge } from "tailwind-merge";
 
 // ** Local Imports
-import type { BridgeUIComponentsConfig } from "@/Config/types";
+import type {
+  BridgeUIComponentsConfig,
+  BridgeUIFormDefaults,
+} from "@/Config/types";
 import type { ClassPropKey, MergePartBind } from "@/Utils/types";
+
+/**
+ * Form controls whose `rounded` is shape-driven (pill / circle).
+ * They receive `formDefaults.size` but keep lib/registry `rounded`.
+ */
+export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
+  "Radio",
+  "Switch",
+] as const satisfies ReadonlyArray<
+  (typeof BRIDGE_UI_FORM_COMPONENT_NAMES)[number]
+>;
 
 /**
  * Props that must not be deep-merged (`toMerged` / `es-toolkit`).
@@ -28,6 +42,59 @@ const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
   "children",
   "teleportTo",
 ] as const;
+
+/**
+ * Registry keys that receive `global.formDefaults` (`size` / `rounded`).
+ */
+export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
+  "Radio",
+  "Select",
+  "Slider",
+  "Switch",
+  "Checkbox",
+  "OtpField",
+  "Textarea",
+  "TextField",
+  "NumberField",
+  "Autocomplete",
+  "PasswordField",
+] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
+
+/**
+ * Picks density defaults from `formDefaults` when `componentName` is a form control.
+ * Radio / Switch omit `rounded` so pill/circle shapes stay intact.
+ */
+export function resolveBridgeUIFormDefaults<
+  K extends keyof BridgeUIComponentsConfig,
+>({
+  formDefaults,
+  componentName,
+}: {
+  componentName?: K;
+  formDefaults?: BridgeUIFormDefaults;
+}): undefined | BridgeUIFormDefaults {
+  if (isNil(formDefaults) || isNil(componentName)) {
+    return undefined;
+  }
+
+  if (
+    !(BRIDGE_UI_FORM_COMPONENT_NAMES as ReadonlyArray<string>).includes(
+      componentName,
+    )
+  ) {
+    return undefined;
+  }
+
+  if (
+    (BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES as ReadonlyArray<string>).includes(
+      componentName,
+    )
+  ) {
+    return pick(formDefaults, ["size"]);
+  }
+
+  return pick(formDefaults, ["size", "rounded"]);
+}
 
 /**
  * Converts a string or object to a record of strings.
@@ -234,24 +301,36 @@ export function createMergeNestedComponentProps(
 
 /**
  * Merges props with Bridge UI defaults and registry defaults.
+ *
+ * Order (later wins): `libDefaults` → `formDefaults` (form components only) →
+ * registry `defaultProps` → instance `props`.
  */
 export function mergePropsWithBridgeUIDefaults<
   P extends object,
-  K extends keyof BridgeUIComponentsConfig,
+  K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 >({
   props,
   components,
   libDefaults,
+  formDefaults,
   componentName,
 }: {
-  componentName: K;
+  componentName?: K;
   components: null | undefined | BridgeUIComponentsConfig;
+  formDefaults?: BridgeUIFormDefaults;
   libDefaults?: Partial<P>;
   props: P;
 }): P {
-  const fromRegistry = get(components, [componentName, "defaultProps"]) as
-    | undefined
-    | Partial<P>;
+  const fromRegistry = componentName
+    ? (get(components, [componentName, "defaultProps"]) as
+        | undefined
+        | Partial<P>)
+    : undefined;
+
+  const fromFormDefaults = resolveBridgeUIFormDefaults({
+    formDefaults,
+    componentName,
+  }) as undefined | Partial<P>;
 
   const omitNonMergeable = (value: undefined | Partial<P>) => {
     return omit(value ?? {}, [
@@ -261,6 +340,7 @@ export function mergePropsWithBridgeUIDefaults<
 
   const merged = mergeBridgeUILayeredClasses<P>(
     omitNonMergeable(libDefaults),
+    omitNonMergeable(fromFormDefaults),
     omitNonMergeable(fromRegistry),
     omitNonMergeable(props),
   );
@@ -268,6 +348,7 @@ export function mergePropsWithBridgeUIDefaults<
   return {
     ...merged,
     ...pick(libDefaults ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
+    ...pick(fromFormDefaults ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
     ...pick(fromRegistry ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
     ...pick(props, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
   } as P;

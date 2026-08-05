@@ -143,6 +143,80 @@ test("it should let instance props override everything", () => {
   expect(result).toEqual({ color: "error" });
 });
 
+test("it should apply formDefaults between libDefaults and registry for form components", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "TextField",
+    formDefaults: { size: "lg", rounded: "xl" },
+    libDefaults: { size: "sm" as never, rounded: "sm" as never },
+  });
+
+  expect(result).toEqual({ size: "lg", rounded: "xl" });
+});
+
+test("it should let registry defaultProps override formDefaults", () => {
+  const components: BridgeUIComponentsConfig = {
+    TextField: { defaultProps: { size: "2xl" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "TextField",
+    formDefaults: { size: "lg" },
+    libDefaults: { size: "sm" as never },
+  });
+
+  expect(result).toEqual({ size: "2xl" });
+});
+
+test("it should ignore formDefaults for non-form components", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Progress",
+    formDefaults: { size: "lg", rounded: "xl" },
+    libDefaults: { size: "md" as never, rounded: "full" as never },
+  });
+
+  expect(result).toEqual({ size: "md", rounded: "full" });
+});
+
+test("it should apply formDefaults size but not rounded for Radio and Switch", () => {
+  const radio = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Radio",
+    formDefaults: { size: "lg", rounded: "md" },
+    libDefaults: { size: "md" as never, rounded: "full" as never },
+  });
+
+  expect(radio).toEqual({ size: "lg", rounded: "full" });
+
+  const sw = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Switch",
+    formDefaults: { size: "2xs", rounded: "xl" },
+    libDefaults: { size: "md" as never, rounded: "full" as never },
+  });
+
+  expect(sw).toEqual({ size: "2xs", rounded: "full" });
+});
+
+test("it should apply formDefaults size 2xs to OtpField", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "OtpField",
+    formDefaults: { size: "2xs", rounded: "lg" },
+    libDefaults: { size: "md" as never, rounded: "md" as never },
+  });
+
+  expect(result).toEqual({ size: "2xs", rounded: "lg" });
+});
+
 test("it should handle undefined components gracefully", () => {
   const result = mergePropsWithBridgeUIDefaults({
     components: undefined,
