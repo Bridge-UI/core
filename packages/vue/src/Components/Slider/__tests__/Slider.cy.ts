@@ -30,6 +30,6 @@ test("it should show label chrome", () => {
     props: { corner: "%", label: "Opacity" },
   });
 
-  cy.contains("Opacity").should("be.visible");
   cy.contains("%").should("be.visible");
+  cy.contains("Opacity").should("be.visible");
 });

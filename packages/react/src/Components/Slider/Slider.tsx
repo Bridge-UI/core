@@ -42,8 +42,9 @@ function Slider(props: SliderProps) {
     getThumbKnobBind,
   } = api;
 
-  const thumbRefs = [thumb0Ref, thumb1Ref] as const;
   const { slots } = baseField;
+
+  const thumbRefs = [thumb0Ref, thumb1Ref] as const;
 
   return (
     <BaseField field={baseField}>
