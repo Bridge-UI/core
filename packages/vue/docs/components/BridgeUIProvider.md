@@ -62,9 +62,11 @@ app.use(
 
 ### Form density defaults
 
-Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, …). Does not affect Button, Progress, Modal, etc.
+Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.
 
 Merge order: instance props → `components.{Name}.defaultProps` → `formDefaults` → library defaults.
+
+Radio and Switch receive `size` only — their `rounded` stays shape-driven (`full`) unless overridden per component.
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
@@ -73,6 +75,50 @@ app.use(
   createBridgeUI({
     global: {
       formDefaults: { size: "lg", rounded: "md" },
+    },
+  }),
+);
+```
+
+### Nested chrome tokens
+
+Building blocks (`FormField`, `FormControl`, `BaseField`, `Listbox`) are not registry keys. Theme chrome under the public parent:
+
+```ts
+app.use(
+  createBridgeUI({
+    components: {
+      Slider: {
+        tokens: {
+          baseField: {
+            size: { md: { text: "text-base", group: "gap-3" } },
+          },
+        },
+      },
+      Checkbox: {
+        tokens: {
+          formControl: {
+            invalidated: {
+              errorMessage: "text-error-700 dark:text-error-300",
+            },
+          },
+        },
+      },
+      Select: {
+        tokens: {
+          listbox: {
+            size: {
+              md: {
+                option: "px-3 py-2 text-sm",
+                check: "size-4",
+                message: "text-xs",
+                primary: "font-medium",
+                secondary: "text-xs opacity-70",
+              },
+            },
+          },
+        },
+      },
     },
   }),
 );

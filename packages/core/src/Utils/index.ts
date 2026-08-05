@@ -38,6 +38,17 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**
+ * Form controls whose `rounded` is shape-driven (pill / circle).
+ * They receive `formDefaults.size` but keep lib/registry `rounded`.
+ */
+export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
+  "Radio",
+  "Switch",
+] as const satisfies ReadonlyArray<
+  (typeof BRIDGE_UI_FORM_COMPONENT_NAMES)[number]
+>;
+
+/**
  * Props that must not be deep-merged (`toMerged` / `es-toolkit`).
  * React nodes, DOM nodes, and refs can be plain objects with cycles
  * (e.g. fiber `_owner`) and would throw RangeError on merge.
@@ -50,7 +61,8 @@ const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
 ] as const;
 
 /**
- * Picks `size` / `rounded` from `formDefaults` when `componentName` is a form control.
+ * Picks density defaults from `formDefaults` when `componentName` is a form control.
+ * Radio / Switch omit `rounded` so pill/circle shapes stay intact.
  */
 export function resolveBridgeUIFormDefaults<
   K extends keyof BridgeUIComponentsConfig,
@@ -71,6 +83,14 @@ export function resolveBridgeUIFormDefaults<
     )
   ) {
     return undefined;
+  }
+
+  if (
+    (BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES as ReadonlyArray<string>).includes(
+      componentName,
+    )
+  ) {
+    return pick(formDefaults, ["size"]);
   }
 
   return pick(formDefaults, ["size", "rounded"]);

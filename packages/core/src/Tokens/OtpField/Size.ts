@@ -11,11 +11,39 @@ export interface OtpFieldSizeItem {
 }
 
 export interface OtpFieldSize {
+  /**
+   * Size scale token `2xl`.
+   */
   "2xl": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `2xs`.
+   */
+  "2xs": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `lg`.
+   */
   "lg": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `md`.
+   */
   "md": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `sm`.
+   */
   "sm": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `xl`.
+   */
   "xl": OtpFieldSizeItem;
+
+  /**
+   * Size scale token `xs`.
+   */
   "xs": OtpFieldSizeItem;
 }
 
@@ -27,6 +55,10 @@ export const sizeProps: OtpFieldSize = {
   "sm": {
     "pin": "h-8 w-8",
     "input": "text-xs leading-normal",
+  },
+  "2xs": {
+    "pin": "h-6 w-6",
+    "input": "text-2xs leading-tight",
   },
   "md": {
     "pin": "h-10 w-10",

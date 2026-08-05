@@ -176,18 +176,21 @@ export type Direction = "ltr" | "rtl";
 
 /**
  * Shared density defaults for form controls (`size` / `rounded` token keys).
+ * Keys follow the canonical FormField scales (`2xs`…`2xl`, `none`/`xs`…`4xl`/`full`),
+ * which form controls share after token alignment.
  * Applied when merging props for form registry components only.
+ * Radio and Switch ignore `rounded` (shape-driven `full` stays from lib / registry).
  */
 export interface BridgeUIFormDefaults {
   /**
-   * Default `rounded` token key for form controls.
+   * Default `rounded` token key for form controls (not applied to Radio / Switch).
    *
    * @default undefined
    */
   rounded?: keyof FormFieldRounded;
 
   /**
-   * Default `size` token key for form controls.
+   * Default `size` token key for form controls (`2xs` … `2xl`).
    *
    * @default undefined
    */

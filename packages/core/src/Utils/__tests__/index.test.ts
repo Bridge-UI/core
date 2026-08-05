@@ -183,6 +183,40 @@ test("it should ignore formDefaults for non-form components", () => {
   expect(result).toEqual({ size: "md", rounded: "full" });
 });
 
+test("it should apply formDefaults size but not rounded for Radio and Switch", () => {
+  const radio = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Radio",
+    formDefaults: { size: "lg", rounded: "md" },
+    libDefaults: { size: "md" as never, rounded: "full" as never },
+  });
+
+  expect(radio).toEqual({ size: "lg", rounded: "full" });
+
+  const sw = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "Switch",
+    formDefaults: { size: "2xs", rounded: "xl" },
+    libDefaults: { size: "md" as never, rounded: "full" as never },
+  });
+
+  expect(sw).toEqual({ size: "2xs", rounded: "full" });
+});
+
+test("it should apply formDefaults size 2xs to OtpField", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "OtpField",
+    formDefaults: { size: "2xs", rounded: "lg" },
+    libDefaults: { size: "md" as never, rounded: "md" as never },
+  });
+
+  expect(result).toEqual({ size: "2xs", rounded: "lg" });
+});
+
 test("it should handle undefined components gracefully", () => {
   const result = mergePropsWithBridgeUIDefaults({
     components: undefined,
