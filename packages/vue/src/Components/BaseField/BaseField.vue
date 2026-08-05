@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 
 // ** Local Imports
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel.vue";
+import type { BaseFieldSlots } from "@/Components/BaseField/baseField.types";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/composables/useBaseField";
 import {
   hasNamedSlot,
@@ -12,14 +13,24 @@ import {
   resolveSlotOrProp,
 } from "@/Utils";
 
+defineSlots<BaseFieldSlots>();
+
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   field: UseBaseFieldReturn;
 }>();
 
+const localSlots = useSlots();
+
 const api = computed((): UseBaseFieldReturn => {
-  return props.field;
+  return {
+    ...props.field,
+    slots: {
+      ...props.field.slots,
+      ...localSlots,
+    },
+  };
 });
 
 const showHeader = computed(() => {
