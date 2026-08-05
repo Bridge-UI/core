@@ -1,0 +1,103 @@
+export interface SliderSizeItem {
+  /**
+   * Typography for label, corner, description, and error message.
+   */
+  "text": string;
+
+  /**
+   * Hit-area wrapper around the thumb.
+   */
+  "thumb": string;
+
+  /**
+   * Visible thumb knob classes.
+   */
+  "thumbKnob": string;
+
+  /**
+   * Track height and vertical spacing classes.
+   */
+  "track": string;
+}
+
+export interface SliderSize {
+  /**
+   * Size scale token `2xl`.
+   */
+  "2xl": SliderSizeItem;
+
+  /**
+   * Size scale token `2xs`.
+   */
+  "2xs": SliderSizeItem;
+
+  /**
+   * Size scale token `lg`.
+   */
+  "lg": SliderSizeItem;
+
+  /**
+   * Size scale token `md`.
+   */
+  "md": SliderSizeItem;
+
+  /**
+   * Size scale token `sm`.
+   */
+  "sm": SliderSizeItem;
+
+  /**
+   * Size scale token `xl`.
+   */
+  "xl": SliderSizeItem;
+
+  /**
+   * Size scale token `xs`.
+   */
+  "xs": SliderSizeItem;
+}
+
+export const sizeProps: SliderSize = {
+  "xs": {
+    "text": "text-xs",
+    "track": "h-1 my-3.5",
+    "thumbKnob": "h-3 w-3",
+    "thumb": "h-8 w-8 -top-3.5",
+  },
+  "md": {
+    "text": "text-sm",
+    "track": "h-2 my-4.5",
+    "thumbKnob": "h-4 w-4",
+    "thumb": "h-9 w-9 -top-3.5",
+  },
+  "2xs": {
+    "text": "text-xs",
+    "track": "h-1 my-3",
+    "thumb": "h-7 w-7 -top-3",
+    "thumbKnob": "h-2.5 w-2.5",
+  },
+  "sm": {
+    "text": "text-xs",
+    "track": "h-1.5 my-4",
+    "thumb": "h-9 w-9 -top-4",
+    "thumbKnob": "h-3.5 w-3.5",
+  },
+  "xl": {
+    "text": "text-base",
+    "track": "h-3 my-5.5",
+    "thumbKnob": "h-5 w-5",
+    "thumb": "h-11 w-11 -top-4",
+  },
+  "2xl": {
+    "text": "text-lg",
+    "track": "h-3.5 my-6",
+    "thumbKnob": "h-6 w-6",
+    "thumb": "h-12 w-12 -top-4.5",
+  },
+  "lg": {
+    "text": "text-base",
+    "track": "h-2.5 my-5",
+    "thumbKnob": "h-4.5 w-4.5",
+    "thumb": "h-10 w-10 -top-4",
+  },
+};
