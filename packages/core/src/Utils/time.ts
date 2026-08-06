@@ -192,3 +192,37 @@ export function combineDateAndTime<TDate>(
 
   return next;
 }
+
+/**
+ * Inclusive time-of-day range tuple (`[start, end]`).
+ */
+export type TimeRangeValue<TDate = Date> = [TDate, TDate];
+
+/**
+ * Sorts a time range so the earlier wall-clock time comes first.
+ */
+export function sortTimeRangeValue<TDate>(
+  value: TimeRangeValue<TDate>,
+  adapter: DateAdapter<TDate>,
+  context?: DateAdapterContext,
+): TimeRangeValue<TDate> {
+  const [start, end] = value;
+
+  if (
+    timeToMinutes(start, adapter, context) <=
+    timeToMinutes(end, adapter, context)
+  ) {
+    return value;
+  }
+
+  return [end, start];
+}
+
+/**
+ * Whether `value` is a two-element time range tuple.
+ */
+export function isTimeRangeValue<TDate>(
+  value: unknown,
+): value is TimeRangeValue<TDate> {
+  return isArray(value) && value.length === 2;
+}

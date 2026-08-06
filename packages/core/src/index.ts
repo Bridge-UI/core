@@ -48,6 +48,8 @@ export type {
   DateRangePickerConfigOverrides,
   DateTimeFieldConfigOverrides,
   DateTimePickerConfigOverrides,
+  DateTimeRangeFieldConfigOverrides,
+  DateTimeRangePickerConfigOverrides,
   Direction,
   DividerConfigOverrides,
   DrawerConfigOverrides,
@@ -75,6 +77,8 @@ export type {
   TextareaConfigOverrides,
   TimeFieldConfigOverrides,
   TimePickerConfigOverrides,
+  TimeRangeFieldConfigOverrides,
+  TimeRangePickerConfigOverrides,
 } from "@/Config";
 export {
   closeAllLayers,
@@ -376,6 +380,7 @@ export {
   isOtpComplete,
   isSliderStopCovered,
   isTimeDisabled,
+  isTimeRangeValue,
   isYearDisabled,
   joinOtpDigits,
   mapListboxEntriesToRows,
@@ -414,6 +419,7 @@ export {
   snapSliderValue,
   sortDateRangeValue,
   sortSliderRangeValue,
+  sortTimeRangeValue,
   splitComponentProps,
   splitOtpValue,
   stepSliderValue,
@@ -481,6 +487,7 @@ export type {
   StartOfWeek,
   TabsActivation,
   TimeInterval,
+  TimeRangeValue,
   TimeValue,
   UnionProps,
 } from "@/Utils";

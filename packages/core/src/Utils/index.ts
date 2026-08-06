@@ -62,6 +62,8 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "DateTimeField",
   "PasswordField",
   "DateRangeField",
+  "TimeRangeField",
+  "DateTimeRangeField",
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**
@@ -563,8 +565,10 @@ export {
   buildMinuteOptions,
   combineDateAndTime,
   isTimeDisabled,
+  isTimeRangeValue,
   normalizeTimeValue,
   snapMinutes,
+  sortTimeRangeValue,
   timeToMinutes,
   to12Hour,
   to24Hour,
@@ -574,6 +578,7 @@ export type {
   DisableTimesInput,
   IsTimeDisabledOptions,
   TimeInterval,
+  TimeRangeValue,
   TimeValue,
 } from "@/Utils/time";
 export type {
