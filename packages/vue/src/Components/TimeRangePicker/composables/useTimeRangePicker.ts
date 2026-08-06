@@ -1,0 +1,294 @@
+// ** External Imports
+import { isNil, omit } from "es-toolkit/compat";
+import {
+  computed,
+  ref,
+  toValue,
+  useAttrs,
+  watch,
+  type MaybeRefOrGetter,
+} from "vue";
+
+// ** Core Imports
+import {
+  cn,
+  sortTimeRangeValue,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+  type TimeRangeValue,
+  type TimeValue,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useResolveMessage } from "@/Adapters/I18n";
+import type {
+  TimeRangePickerClasses,
+  TimeRangePickerOwnProps,
+} from "@/Components/TimeRangePicker/timeRangePicker.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const timeRangePickerBridgeKeys = [
+  "ampm",
+  "color",
+  "value",
+  "tokens",
+  "classes",
+  "maxTime",
+  "minTime",
+  "rounded",
+  "disabled",
+  "interval",
+  "readOnly",
+  "timeZone",
+  "showFooter",
+  "customProps",
+  "defaultValue",
+  "disableTimes",
+] as const satisfies readonly (keyof TimeRangePickerOwnProps)[];
+
+type TimeRangePickerLibDefaults = LibDefaultsShape<
+  TimeRangePickerOwnProps,
+  "ampm" | "color" | "rounded" | "interval" | "showFooter"
+>;
+
+type TimeRangePickerMerged = MergeLibDefaults<
+  TimeRangePickerOwnProps,
+  TimeRangePickerLibDefaults
+>;
+
+/**
+ * Owns controlled/uncontrolled range value, optional footer draft, and dual panel binds.
+ */
+export function useTimeRangePicker(
+  props: MaybeRefOrGetter<TimeRangePickerOwnProps>,
+  libDefaults: TimeRangePickerLibDefaults,
+  emit: {
+    (event: "change", value: null | TimeRangeValue): void;
+    (event: "cancel"): void;
+  },
+) {
+  const attrs = useAttrs();
+  const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
+  const resolveMessage = useResolveMessage();
+
+  const split = computed(() => {
+    return splitComponentProps<
+      TimeRangePickerOwnProps,
+      typeof timeRangePickerBridgeKeys
+    >({
+      bridgeKeys: timeRangePickerBridgeKeys,
+      props: { ...attrs, ...toValue(props) },
+    });
+  });
+
+  const { merged, entry: bridgeTimeRangePicker } = useBridgeUIComponent<
+    TimeRangePickerMerged,
+    "TimeRangePicker"
+  >({
+    libDefaults,
+    componentName: "TimeRangePicker",
+    props: () => split.value.componentProps,
+  });
+
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
+
+  const rootInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+  });
+
+  const mergedClasses =
+    useBridgeUIMergedRegistryClasses<TimeRangePickerClasses>({
+      entry: bridgeTimeRangePicker,
+      props: () => split.value.componentProps,
+    });
+
+  const propsValue = computed(() => {
+    return toValue(props);
+  });
+
+  const context = computed(() => {
+    return resolveContext(merged.value.timeZone);
+  });
+
+  const isControlled = computed(() => {
+    return !isNil(propsValue.value.value);
+  });
+
+  const uncontrolledValue = ref<null | TimeRangeValue>(
+    merged.value.defaultValue ?? null,
+  );
+
+  const committedValue = computed((): null | TimeRangeValue => {
+    return isControlled.value
+      ? (propsValue.value.value ?? null)
+      : uncontrolledValue.value;
+  });
+
+  const draftValue = ref<null | TimeRangeValue>(committedValue.value);
+
+  watch(
+    () => [committedValue.value, merged.value.showFooter] as const,
+    ([committed, showFooter]) => {
+      if (showFooter) {
+        draftValue.value = committed;
+      }
+    },
+  );
+
+  const displayValue = computed(() => {
+    return merged.value.showFooter ? draftValue.value : committedValue.value;
+  });
+
+  const startDisplayValue = computed((): TimeValue => {
+    return displayValue.value?.[0] ?? adapter.value.now(context.value);
+  });
+
+  const endDisplayValue = computed((): TimeValue => {
+    return displayValue.value?.[1] ?? adapter.value.now(context.value);
+  });
+
+  const timeTokens = computed(() => {
+    return {
+      color: merged.value.tokens?.time?.color ?? merged.value.tokens?.color,
+      rounded:
+        merged.value.tokens?.time?.rounded ?? merged.value.tokens?.rounded,
+    };
+  });
+
+  const commitValue = (next: null | TimeRangeValue) => {
+    if (!isControlled.value) {
+      uncontrolledValue.value = next;
+    }
+
+    emit("change", next);
+  };
+
+  const applyRange = (next: TimeRangeValue) => {
+    const sorted = sortTimeRangeValue(next, adapter.value, context.value);
+
+    if (merged.value.showFooter) {
+      draftValue.value = sorted;
+
+      return;
+    }
+
+    commitValue(sorted);
+  };
+
+  const handleStartChange = (next: null | TimeValue) => {
+    if (isNil(next)) {
+      return;
+    }
+
+    const end = displayValue.value?.[1] ?? adapter.value.now(context.value);
+
+    applyRange([next, end]);
+  };
+
+  const handleEndChange = (next: null | TimeValue) => {
+    if (isNil(next)) {
+      return;
+    }
+
+    const start = displayValue.value?.[0] ?? adapter.value.now(context.value);
+
+    applyRange([start, next]);
+  };
+
+  const handleApply = () => {
+    commitValue(draftValue.value);
+  };
+
+  const handleCancel = () => {
+    draftValue.value = committedValue.value;
+    emit("cancel");
+  };
+
+  const rootBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
+        "flex flex-col overflow-hidden rounded-lg bg-white p-2 shadow-lg dark:bg-gray-900": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
+  });
+
+  const panelsBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.panels,
+      {},
+      cn({
+        "flex flex-row gap-2": true,
+        [mergedClasses.value.panels ?? ""]: true,
+      }),
+    );
+  });
+
+  const startBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.start,
+      {},
+      cn({
+        [mergedClasses.value.start ?? ""]: true,
+      }),
+    );
+  });
+
+  const endBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.end,
+      {},
+      cn({
+        [mergedClasses.value.end ?? ""]: true,
+      }),
+    );
+  });
+
+  const footerBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.value.footer ?? ""]: true,
+      }),
+    );
+  });
+
+  const showFooter = computed(() => {
+    return Boolean(merged.value.showFooter);
+  });
+
+  return {
+    merged,
+    endBind,
+    rootBind,
+    startBind,
+    footerBind,
+    panelsBind,
+    showFooter,
+    timeTokens,
+    handleApply,
+    displayValue,
+    handleCancel,
+    endDisplayValue,
+    handleEndChange,
+    startDisplayValue,
+    handleStartChange,
+    applyLabel: computed(() => resolveMessage("Apply")),
+    cancelLabel: computed(() => resolveMessage("Cancel")),
+    applyButtonProps: computed(() => customProps.value?.applyButton),
+    cancelButtonProps: computed(() => customProps.value?.cancelButton),
+  };
+}
