@@ -17,11 +17,7 @@ import { CalendarRange } from "@bridge-ui/vue/Components/CalendarRange";
 
 <CalendarRange v-model="range" />
 
-<CalendarRange
-  v-model="range"
-  :min-date="min"
-  :max-date="max"
-/>
+<CalendarRange v-model="range" :min-date="min" :max-date="max" />
 ```
 
 ### customProps
@@ -37,45 +33,45 @@ import { CalendarRange } from "@bridge-ui/vue/Components/CalendarRange";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `classes` | `CalendarRangeClasses` | — | Classes for calendar range regions. |
-| `color` | `CalendarColor` | `"primary"` | Accent color for tiles. |
-| `customProps` | `CalendarRangeCustomProps` | — | Extra props for internal parts. |
-| `defaultValue` | `DateRangeValue \| null` | `null` | Uncontrolled initial value. |
-| `disabled` | `boolean` | `false` | Disables the calendar range. |
-| `disableDates` | `Date[]` | — | Dates that cannot be selected. |
-| `disableMonths` | `number[]` | — | Month indexes that cannot be selected. |
-| `disableYears` | `number[]` | — | Years that cannot be selected. |
-| `hideMonths` | `boolean` | `false` | Hides the shared month selector and month panel. |
-| `hideWeekdays` | `boolean` | `false` | Hides weekday labels on both date panels. |
-| `hideYears` | `boolean` | `false` | Hides the shared year selector and year panel. |
-| `maxDate` | `Date` | — | Latest selectable date. |
-| `minDate` | `Date` | — | Earliest selectable date. |
-| `previewDate` | `Date \| null` | — | Controlled range-preview hover date. |
-| `readOnly` | `boolean` | `false` | Prevents selection. |
-| `rounded` | `CalendarRounded` | `"md"` | Border radius of tiles and chrome. |
-| `slots` | `CalendarDateSlots` | — | Named slots forwarded to both date panels (`day`). |
-| `startOfWeek` | `StartOfWeek` | `0` | First day of the week. |
-| `timeZone` | `string` | — | IANA time zone. |
-| `tokens` | `CalendarRangeTokens` | — | Token overrides. |
-| `value` | `DateRangeValue \| null` | — | Controlled range value (`[start, end]`). |
-| `viewDate` | `Date` | — | Controlled start (left) displayed month. |
+| Prop            | Type                       | Default     | Description                                        |
+| --------------- | -------------------------- | ----------- | -------------------------------------------------- |
+| `classes`       | `CalendarRangeClasses`     | —           | Classes for calendar range regions.                |
+| `color`         | `CalendarColor`            | `"primary"` | Accent color for tiles.                            |
+| `customProps`   | `CalendarRangeCustomProps` | —           | Extra props for internal parts.                    |
+| `defaultValue`  | `DateRangeValue \| null`   | `null`      | Uncontrolled initial value.                        |
+| `disabled`      | `boolean`                  | `false`     | Disables the calendar range.                       |
+| `disableDates`  | `Date[]`                   | —           | Dates that cannot be selected.                     |
+| `disableMonths` | `number[]`                 | —           | Month indexes that cannot be selected.             |
+| `disableYears`  | `number[]`                 | —           | Years that cannot be selected.                     |
+| `hideMonths`    | `boolean`                  | `false`     | Hides the shared month selector and month panel.   |
+| `hideWeekdays`  | `boolean`                  | `false`     | Hides weekday labels on both date panels.          |
+| `hideYears`     | `boolean`                  | `false`     | Hides the shared year selector and year panel.     |
+| `maxDate`       | `Date`                     | —           | Latest selectable date.                            |
+| `minDate`       | `Date`                     | —           | Earliest selectable date.                          |
+| `previewDate`   | `Date \| null`             | —           | Controlled range-preview hover date.               |
+| `readOnly`      | `boolean`                  | `false`     | Prevents selection.                                |
+| `rounded`       | `CalendarRounded`          | `"md"`      | Border radius of tiles and chrome.                 |
+| `slots`         | `CalendarDateSlots`        | —           | Named slots forwarded to both date panels (`day`). |
+| `startOfWeek`   | `StartOfWeek`              | `0`         | First day of the week.                             |
+| `timeZone`      | `string`                   | —           | IANA time zone.                                    |
+| `tokens`        | `CalendarRangeTokens`      | —           | Token overrides.                                   |
+| `value`         | `DateRangeValue \| null`   | —           | Controlled range value (`[start, end]`).           |
+| `viewDate`      | `Date`                     | —           | Controlled start (left) displayed month.           |
 
 ### v-model
 
-| Prop / Event | Type | Default | Description |
-| ------------ | ---- | ------- | ----------- |
-| `modelValue` | `DateRangeValue \| null` | — | Bound with `v-model`. |
-| `update:modelValue` | `(value: DateRangeValue \| null) => void` | — | Emitted when `v-model` should update. |
+| Prop / Event        | Type                                      | Default | Description                           |
+| ------------------- | ----------------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `DateRangeValue \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: DateRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
 
 ## Events
 
-| Event | Payload | Description |
-| ----- | ------- | ----------- |
-| `v-on:change` | `(value: DateRangeValue \| null)` | Emitted when the range changes. |
-| `v-on:preview-date-change` | `(date: Date \| null)` | Emitted when the range preview hover date changes. |
-| `v-on:view-date-change` | `(date: Date)` | Emitted when the start displayed month changes. |
+| Event                      | Payload                           | Description                                        |
+| -------------------------- | --------------------------------- | -------------------------------------------------- |
+| `v-on:change`              | `(value: DateRangeValue \| null)` | Emitted when the range changes.                    |
+| `v-on:preview-date-change` | `(date: Date \| null)`            | Emitted when the range preview hover date changes. |
+| `v-on:view-date-change`    | `(date: Date)`                    | Emitted when the start displayed month changes.    |
 
 ## Related components
 

@@ -1,6 +1,7 @@
 # DateRangePicker
 
-Inline dual-month picker for an inclusive date range (`[start, end]`).
+Inline dual-month picker for an inclusive date range (`[start, end]`). The header
+exposes year, start month, and end month selectors in one row.
 
 ## Import
 
@@ -22,42 +23,42 @@ import { DateRangePicker } from "@bridge-ui/vue/Components/DateRangePicker";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `classes` | `DateRangePickerClasses` | — | Classes for picker regions. |
-| `color` | `CalendarColor` | `"primary"` | Accent color. |
-| `customProps` | `DateRangePickerCustomProps` | — | Extra props for internal parts. |
-| `defaultValue` | `DateRangeValue \| null` | `null` | Uncontrolled initial value. |
-| `disabled` | `boolean` | `false` | Disables the picker. |
-| `disableDates` | `Date[]` | — | Dates that cannot be selected. |
-| `disableMonths` | `number[]` | — | Month indexes that cannot be selected. |
-| `disableYears` | `number[]` | — | Years that cannot be selected. |
-| `hideMonths` | `boolean` | `false` | Hides month navigation / panel. |
-| `hideWeekdays` | `boolean` | `false` | Hides weekday labels. |
-| `hideYears` | `boolean` | `false` | Hides year navigation / panel. |
-| `maxDate` | `Date` | — | Latest selectable date. |
-| `minDate` | `Date` | — | Earliest selectable date. |
-| `readOnly` | `boolean` | `false` | Prevents selection. |
-| `rounded` | `CalendarRounded` | `"md"` | Border radius of calendar tiles and chrome. |
-| `showFooter` | `boolean` | `false` | Shows Cancel / Apply. Selection is draft until Apply. |
-| `slots` | `CalendarDateSlots` | — | Named slots forwarded to `CalendarRange` (`day`). |
-| `startOfWeek` | `StartOfWeek` | `0` | First day of the week. |
-| `timeZone` | `string` | — | IANA time zone. |
-| `tokens` | `DateRangePickerTokens` | — | Token overrides. |
-| `value` | `DateRangeValue \| null` | — | Controlled value (`[start, end]`). |
+| Prop            | Type                         | Default     | Description                                           |
+| --------------- | ---------------------------- | ----------- | ----------------------------------------------------- |
+| `classes`       | `DateRangePickerClasses`     | —           | Classes for picker regions.                           |
+| `color`         | `CalendarColor`              | `"primary"` | Accent color.                                         |
+| `customProps`   | `DateRangePickerCustomProps` | —           | Extra props for internal parts.                       |
+| `defaultValue`  | `DateRangeValue \| null`     | `null`      | Uncontrolled initial value.                           |
+| `disabled`      | `boolean`                    | `false`     | Disables the picker.                                  |
+| `disableDates`  | `Date[]`                     | —           | Dates that cannot be selected.                        |
+| `disableMonths` | `number[]`                   | —           | Month indexes that cannot be selected.                |
+| `disableYears`  | `number[]`                   | —           | Years that cannot be selected.                        |
+| `hideMonths`    | `boolean`                    | `false`     | Hides month navigation / panel.                       |
+| `hideWeekdays`  | `boolean`                    | `false`     | Hides weekday labels.                                 |
+| `hideYears`     | `boolean`                    | `false`     | Hides year navigation / panel.                        |
+| `maxDate`       | `Date`                       | —           | Latest selectable date.                               |
+| `minDate`       | `Date`                       | —           | Earliest selectable date.                             |
+| `readOnly`      | `boolean`                    | `false`     | Prevents selection.                                   |
+| `rounded`       | `CalendarRounded`            | `"md"`      | Border radius of calendar tiles and chrome.           |
+| `showFooter`    | `boolean`                    | `false`     | Shows Cancel / Apply. Selection is draft until Apply. |
+| `slots`         | `CalendarDateSlots`          | —           | Named slots forwarded to `CalendarRange` (`day`).     |
+| `startOfWeek`   | `StartOfWeek`                | `0`         | First day of the week.                                |
+| `timeZone`      | `string`                     | —           | IANA time zone.                                       |
+| `tokens`        | `DateRangePickerTokens`      | —           | Token overrides.                                      |
+| `value`         | `DateRangeValue \| null`     | —           | Controlled value (`[start, end]`).                    |
 
 ### v-model
 
-| Prop / Event | Type | Default | Description |
-| ------------ | ---- | ------- | ----------- |
-| `modelValue` | `DateRangeValue \| null` | — | Bound with `v-model`. |
-| `update:modelValue` | `(value: DateRangeValue \| null) => void` | — | Emitted when `v-model` should update. |
+| Prop / Event        | Type                                      | Default | Description                           |
+| ------------------- | ----------------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `DateRangeValue \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: DateRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
 
 ## Events
 
-| Event | Payload | Description |
-| ----- | ------- | ----------- |
-| `v-on:cancel` | `()` | Emitted when Cancel is pressed. |
+| Event         | Payload                           | Description                                                             |
+| ------------- | --------------------------------- | ----------------------------------------------------------------------- |
+| `v-on:cancel` | `()`                              | Emitted when Cancel is pressed.                                         |
 | `v-on:change` | `(value: DateRangeValue \| null)` | Emitted when Apply is pressed (`showFooter`) or when the value commits. |
 
 ## Related components

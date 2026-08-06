@@ -17,11 +17,7 @@ import { DateRangeField } from "@bridge-ui/vue/Components/DateRangeField";
 
 <DateRangeField label="Trip" v-model="range" />
 
-<DateRangeField
-  error
-  label="Dates"
-  error-message="Select a valid range."
-/>
+<DateRangeField error label="Dates" error-message="Select a valid range." />
 ```
 
 ### customProps
@@ -40,31 +36,31 @@ import { DateRangeField } from "@bridge-ui/vue/Components/DateRangeField";
 
 ### DateRangeField-specific
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `classes` | `DateRangeFieldClasses` | — | Classes for field / input regions. |
-| `customProps` | `DateRangeFieldCustomProps` | — | Extra props for internal parts. |
-| `defaultValue` | `DateRangeValue \| null` | `null` | Uncontrolled initial value. |
-| `disableDates` | `Date[]` | — | Dates that cannot be selected. |
-| `disableMonths` | `number[]` | — | Month indexes that cannot be selected. |
-| `disableYears` | `number[]` | — | Years that cannot be selected. |
-| `hideMonths` | `boolean` | `false` | Hides month navigation / panel. |
-| `hideWeekdays` | `boolean` | `false` | Hides weekday labels. |
-| `hideYears` | `boolean` | `false` | Hides year navigation / panel. |
-| `maxDate` | `Date` | — | Latest selectable date. |
-| `minDate` | `Date` | — | Earliest selectable date. |
-| `showFooter` | `boolean` | `false` | Shows Cancel / Apply on the nested picker. |
-| `slots` | `DateRangeFieldSlots` | — | Named slots (`FormField` slots + calendar `day`). |
-| `startOfWeek` | `StartOfWeek` | `0` | First day of the week. |
-| `timeZone` | `string` | — | IANA time zone. |
-| `value` | `DateRangeValue \| null` | — | Controlled value. |
+| Prop            | Type                        | Default | Description                                       |
+| --------------- | --------------------------- | ------- | ------------------------------------------------- |
+| `classes`       | `DateRangeFieldClasses`     | —       | Classes for field / input regions.                |
+| `customProps`   | `DateRangeFieldCustomProps` | —       | Extra props for internal parts.                   |
+| `defaultValue`  | `DateRangeValue \| null`    | `null`  | Uncontrolled initial value.                       |
+| `disableDates`  | `Date[]`                    | —       | Dates that cannot be selected.                    |
+| `disableMonths` | `number[]`                  | —       | Month indexes that cannot be selected.            |
+| `disableYears`  | `number[]`                  | —       | Years that cannot be selected.                    |
+| `hideMonths`    | `boolean`                   | `false` | Hides month navigation / panel.                   |
+| `hideWeekdays`  | `boolean`                   | `false` | Hides weekday labels.                             |
+| `hideYears`     | `boolean`                   | `false` | Hides year navigation / panel.                    |
+| `maxDate`       | `Date`                      | —       | Latest selectable date.                           |
+| `minDate`       | `Date`                      | —       | Earliest selectable date.                         |
+| `showFooter`    | `boolean`                   | `false` | Shows Cancel / Apply on the nested picker.        |
+| `slots`         | `DateRangeFieldSlots`       | —       | Named slots (`FormField` slots + calendar `day`). |
+| `startOfWeek`   | `StartOfWeek`               | `0`     | First day of the week.                            |
+| `timeZone`      | `string`                    | —       | IANA time zone.                                   |
+| `value`         | `DateRangeValue \| null`    | —       | Controlled value.                                 |
 
 ### v-model
 
-| Prop / Event | Type | Default | Description |
-| ------------ | ---- | ------- | ----------- |
-| `modelValue` | `DateRangeValue \| null` | — | Bound with `v-model`. |
-| `update:modelValue` | `(value: DateRangeValue \| null) => void` | — | Emitted when `v-model` should update. |
+| Prop / Event        | Type                                      | Default | Description                           |
+| ------------------- | ----------------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `DateRangeValue \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: DateRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
 
 ### Inherited from FormField
 
@@ -72,11 +68,11 @@ See [FormField](./FormField.md).
 
 ## Events
 
-| Event | Payload | Description |
-| ----- | ------- | ----------- |
+| Event         | Payload                           | Description                     |
+| ------------- | --------------------------------- | ------------------------------- |
 | `v-on:change` | `(value: DateRangeValue \| null)` | Emitted when the range changes. |
-| `v-on:close` | `()` | Emitted when the menu closes. |
-| `v-on:open` | `()` | Emitted when the menu opens. |
+| `v-on:close`  | `()`                              | Emitted when the menu closes.   |
+| `v-on:open`   | `()`                              | Emitted when the menu opens.    |
 
 ## Related components
 

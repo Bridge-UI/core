@@ -25,27 +25,27 @@ import { TimePanel } from "@bridge-ui/react/Components/TimePanel";
 
 ## Props
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `ampm` | `boolean` | `false` | Uses a 12-hour clock with an AM/PM column. |
-| `classes` | `TimePanelClasses` | — | Classes for panel regions. |
-| `color` | `CalendarColor` | `"primary"` | Accent color for time tiles. |
-| `customProps` | `TimePanelCustomProps` | — | Extra props for internal parts. |
-| `disabled` | `boolean` | `false` | Disables the entire panel. |
-| `disableTimes` | `Date[]` | — | Times that cannot be selected. |
-| `interval` | `number` | `1` | Minute step between options. |
-| `maxTime` | `Date` | — | Latest selectable time. |
-| `minTime` | `Date` | — | Earliest selectable time. |
-| `readOnly` | `boolean` | `false` | Prevents selection. |
-| `rounded` | `CalendarRounded` | `"md"` | Border radius of time tiles. |
-| `timeZone` | `string` | — | IANA time zone. |
-| `tokens` | `TimePanelTokens` | — | Token overrides. |
-| `value` | `Date \| null` | — | Selected time (`Date` wall clock). |
+| Prop           | Type                   | Default     | Description                                |
+| -------------- | ---------------------- | ----------- | ------------------------------------------ |
+| `ampm`         | `boolean`              | `false`     | Uses a 12-hour clock with an AM/PM column. |
+| `classes`      | `TimePanelClasses`     | —           | Classes for panel regions.                 |
+| `color`        | `CalendarColor`        | `"primary"` | Accent color for time tiles.               |
+| `customProps`  | `TimePanelCustomProps` | —           | Extra props for internal parts.            |
+| `disabled`     | `boolean`              | `false`     | Disables the entire panel.                 |
+| `disableTimes` | `Date[]`               | —           | Times that cannot be selected.             |
+| `interval`     | `number`               | `1`         | Minute step between options.               |
+| `maxTime`      | `Date`                 | —           | Latest selectable time.                    |
+| `minTime`      | `Date`                 | —           | Earliest selectable time.                  |
+| `readOnly`     | `boolean`              | `false`     | Prevents selection.                        |
+| `rounded`      | `CalendarRounded`      | `"md"`      | Border radius of time tiles.               |
+| `timeZone`     | `string`               | —           | IANA time zone.                            |
+| `tokens`       | `TimePanelTokens`      | —           | Token overrides.                           |
+| `value`        | `Date \| null`         | —           | Selected time (`Date` wall clock).         |
 
 ## Events
 
-| Callback | Type | Description |
-| -------- | ---- | ----------- |
+| Callback   | Type                            | Description                   |
+| ---------- | ------------------------------- | ----------------------------- |
 | `onChange` | `(value: Date \| null) => void` | Called when the time changes. |
 
 ## Related components

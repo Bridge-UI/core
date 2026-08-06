@@ -15,18 +15,9 @@ import { TimeField } from "@bridge-ui/vue/Components/TimeField";
 ```vue
 <TimeField label="Start time" />
 
-<TimeField
-  ampm
-  label="Meeting"
-  :interval="5"
-  v-model="time"
-/>
+<TimeField ampm label="Meeting" :interval="5" v-model="time" />
 
-<TimeField
-  error
-  label="Time"
-  error-message="Pick a valid time."
-/>
+<TimeField error label="Time" error-message="Pick a valid time." />
 ```
 
 ### customProps
@@ -45,27 +36,27 @@ import { TimeField } from "@bridge-ui/vue/Components/TimeField";
 
 ### TimeField-specific
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `ampm` | `boolean` | `false` | Uses a 12-hour clock with an AM/PM column. |
-| `classes` | `TimeFieldClasses` | — | Classes for field / input regions. |
-| `customProps` | `TimeFieldCustomProps` | — | Extra props for internal parts. |
-| `defaultValue` | `Date \| null` | `null` | Uncontrolled initial value. |
-| `disableTimes` | `Date[]` | — | Times that cannot be selected. |
-| `interval` | `number` | `1` | Minute step between options. |
-| `maxTime` | `Date` | — | Latest selectable time. |
-| `minTime` | `Date` | — | Earliest selectable time. |
-| `showFooter` | `boolean` | `false` | Shows Cancel / Apply on the nested picker. |
-| `slots` | `TimeFieldSlots` | — | Named slots (`FormField` slots). |
-| `timeZone` | `string` | — | IANA time zone. |
-| `value` | `Date \| null` | — | Controlled value. |
+| Prop           | Type                   | Default | Description                                |
+| -------------- | ---------------------- | ------- | ------------------------------------------ |
+| `ampm`         | `boolean`              | `false` | Uses a 12-hour clock with an AM/PM column. |
+| `classes`      | `TimeFieldClasses`     | —       | Classes for field / input regions.         |
+| `customProps`  | `TimeFieldCustomProps` | —       | Extra props for internal parts.            |
+| `defaultValue` | `Date \| null`         | `null`  | Uncontrolled initial value.                |
+| `disableTimes` | `Date[]`               | —       | Times that cannot be selected.             |
+| `interval`     | `number`               | `1`     | Minute step between options.               |
+| `maxTime`      | `Date`                 | —       | Latest selectable time.                    |
+| `minTime`      | `Date`                 | —       | Earliest selectable time.                  |
+| `showFooter`   | `boolean`              | `false` | Shows Cancel / Apply on the nested picker. |
+| `slots`        | `TimeFieldSlots`       | —       | Named slots (`FormField` slots).           |
+| `timeZone`     | `string`               | —       | IANA time zone.                            |
+| `value`        | `Date \| null`         | —       | Controlled value.                          |
 
 ### v-model
 
-| Prop / Event | Type | Default | Description |
-| ------------ | ---- | ------- | ----------- |
-| `modelValue` | `Date \| null` | — | Bound with `v-model`. |
-| `update:modelValue` | `(value: Date \| null) => void` | — | Emitted when `v-model` should update. |
+| Prop / Event        | Type                            | Default | Description                           |
+| ------------------- | ------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `Date \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: Date \| null) => void` | —       | Emitted when `v-model` should update. |
 
 ### Inherited from FormField
 
@@ -73,11 +64,11 @@ See [FormField](./FormField.md).
 
 ## Events
 
-| Event | Payload | Description |
-| ----- | ------- | ----------- |
+| Event         | Payload                 | Description                    |
+| ------------- | ----------------------- | ------------------------------ |
 | `v-on:change` | `(value: Date \| null)` | Emitted when the time changes. |
-| `v-on:close` | `()` | Emitted when the menu closes. |
-| `v-on:open` | `()` | Emitted when the menu opens. |
+| `v-on:close`  | `()`                    | Emitted when the menu closes.  |
+| `v-on:open`   | `()`                    | Emitted when the menu opens.   |
 
 ## Related components
 

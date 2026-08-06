@@ -19,24 +19,24 @@ Controlled fields: **`v-model` / `modelValue`**. Never React `value`/`onChange`.
 
 ## Start here
 
-| Need                      | Doc                                                                |
-| ------------------------- | ------------------------------------------------------------------ |
-| Text input                | `.ai/docs/components/TextField.md`                                 |
-| Password                  | `.ai/docs/components/PasswordField.md`                             |
-| Number / OTP / textarea   | `.ai/docs/components/NumberField.md`, `OtpField.md`, `Textarea.md` |
-| Slider                    | `.ai/docs/components/Slider.md`                                    |
-| Select                    | `.ai/docs/components/Select.md`                                    |
-| Autocomplete              | `.ai/docs/components/Autocomplete.md`                              |
-| Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`         |
-| Date                      | `.ai/docs/components/DateField.md`, `DatePicker.md`                |
-| Date range                | `.ai/docs/components/DateRangeField.md`, `DateRangePicker.md`      |
-| Time                      | `.ai/docs/components/TimeField.md`, `TimePicker.md`                |
-| Time range                | `.ai/docs/components/TimeRangeField.md`, `TimeRangePicker.md`      |
-| Date-time                 | `.ai/docs/components/DateTimeField.md`, `DateTimePicker.md`        |
+| Need                      | Doc                                                                   |
+| ------------------------- | --------------------------------------------------------------------- |
+| Text input                | `.ai/docs/components/TextField.md`                                    |
+| Password                  | `.ai/docs/components/PasswordField.md`                                |
+| Number / OTP / textarea   | `.ai/docs/components/NumberField.md`, `OtpField.md`, `Textarea.md`    |
+| Slider                    | `.ai/docs/components/Slider.md`                                       |
+| Select                    | `.ai/docs/components/Select.md`                                       |
+| Autocomplete              | `.ai/docs/components/Autocomplete.md`                                 |
+| Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`            |
+| Date                      | `.ai/docs/components/DateField.md`, `DatePicker.md`                   |
+| Date range                | `.ai/docs/components/DateRangeField.md`, `DateRangePicker.md`         |
+| Time                      | `.ai/docs/components/TimeField.md`, `TimePicker.md`                   |
+| Time range                | `.ai/docs/components/TimeRangeField.md`, `TimeRangePicker.md`         |
+| Date-time                 | `.ai/docs/components/DateTimeField.md`, `DateTimePicker.md`           |
 | Date-time range           | `.ai/docs/components/DateTimeRangeField.md`, `DateTimeRangePicker.md` |
-| Input chrome              | `.ai/docs/components/FormField.md`                                 |
-| Toggle row chrome         | `.ai/docs/components/FormControl.md`                               |
-| Custom control chrome     | `.ai/docs/components/BaseField.md`                                 |
+| Input chrome              | `.ai/docs/components/FormField.md`                                    |
+| Toggle row chrome         | `.ai/docs/components/FormControl.md`                                  |
+| Custom control chrome     | `.ai/docs/components/BaseField.md`                                    |
 
 ## Hard rules
 
