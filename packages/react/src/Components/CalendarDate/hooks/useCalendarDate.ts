@@ -19,16 +19,20 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, dayProps } from "@bridge-ui/core/Tokens/Calendar";
+import {
+  colorProps,
+  dayProps,
+  roundedProps,
+} from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
+  CalendarDateDayCell,
   CalendarDateOwnProps,
   CalendarDateProps,
 } from "@/Components/CalendarDate/calendarDate.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   derived,
   mergePartBind,
@@ -40,11 +44,11 @@ const calendarDateBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -62,7 +66,7 @@ const calendarDateBridgeKeys = [
 
 type CalendarDateLibDefaults = LibDefaultsShape<
   CalendarDateOwnProps,
-  "color" | "startOfWeek"
+  "color" | "rounded" | "startOfWeek"
 >;
 
 type CalendarDateMerged = MergeLibDefaults<
@@ -70,23 +74,14 @@ type CalendarDateMerged = MergeLibDefaults<
   CalendarDateLibDefaults
 >;
 
-export type CalendarDateDayCell = {
-  date: Date;
-  disabled: boolean;
-  label: string;
-  outside: boolean;
-  preview: boolean;
-  selected: boolean;
-  state: ReturnType<typeof resolveCalendarDayInteractionState>;
-  today: boolean;
-};
+export type { CalendarDateDayCell };
 
 export function useCalendarDate(
   props: CalendarDateProps,
   libDefaults: CalendarDateLibDefaults,
 ) {
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarDateProps,
@@ -105,9 +100,10 @@ export function useCalendarDate(
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
+      "slots",
       "onChange",
-      "onPreviewDateChange",
       "onViewDateChange",
+      "onPreviewDateChange",
     ]);
   });
 
@@ -116,10 +112,7 @@ export function useCalendarDate(
   });
 
   const context = derived((): DateAdapterContext => {
-    return {
-      locale: merged.locale ?? bridge?.global.locale,
-      timeZone: merged.timeZone ?? bridge?.global.timeZone,
-    };
+    return resolveContext(merged.timeZone);
   });
 
   const mode = derived(() => {
@@ -168,6 +161,15 @@ export function useCalendarDate(
   const dayTokens = useMemo(() => {
     return mergeBridgeUILayeredClasses(dayProps, merged.tokens?.day);
   }, [merged.tokens?.day]);
+
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.tokens?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, merged.tokens?.rounded]);
 
   const colorClass = derived(() => get(colorTokens, merged.color));
 
@@ -351,7 +353,8 @@ export function useCalendarDate(
         },
       },
       cn({
-        "flex h-9 w-9 items-center justify-center rounded-md text-sm transition-colors": true,
+        "flex h-9 w-9 items-center justify-center text-sm transition-colors": true,
+        [roundedClass ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",

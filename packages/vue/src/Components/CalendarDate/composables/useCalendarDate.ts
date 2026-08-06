@@ -19,16 +19,20 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps, dayProps } from "@bridge-ui/core/Tokens/Calendar";
+import {
+  colorProps,
+  dayProps,
+  roundedProps,
+} from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
+  CalendarDateDayCell,
   CalendarDateEmits,
   CalendarDateOwnProps,
 } from "@/Components/CalendarDate/calendarDate.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -39,11 +43,11 @@ const calendarDateBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -61,24 +65,13 @@ const calendarDateBridgeKeys = [
 
 type CalendarDateLibDefaults = LibDefaultsShape<
   CalendarDateOwnProps,
-  "color" | "startOfWeek"
+  "color" | "rounded" | "startOfWeek"
 >;
 
 type CalendarDateMerged = MergeLibDefaults<
   CalendarDateOwnProps,
   CalendarDateLibDefaults
 >;
-
-export type CalendarDateDayCell = {
-  date: Date;
-  disabled: boolean;
-  label: string;
-  outside: boolean;
-  preview: boolean;
-  selected: boolean;
-  state: ReturnType<typeof resolveCalendarDayInteractionState>;
-  today: boolean;
-};
 
 export function useCalendarDate(
   props: MaybeRefOrGetter<CalendarDateOwnProps>,
@@ -90,8 +83,8 @@ export function useCalendarDate(
   },
 ) {
   const attrs = useAttrs();
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -126,10 +119,7 @@ export function useCalendarDate(
   });
 
   const context = computed((): DateAdapterContext => {
-    return {
-      locale: merged.value.locale ?? bridge?.global.value.locale,
-      timeZone: merged.value.timeZone ?? bridge?.global.value.timeZone,
-    };
+    return resolveContext(merged.value.timeZone);
   });
 
   const mode = computed(() => {
@@ -195,6 +185,15 @@ export function useCalendarDate(
 
   const dayTokens = computed(() => {
     return mergeBridgeUILayeredClasses(dayProps, merged.value.tokens?.day);
+  });
+
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.value.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
   });
 
   const colorClass = computed(() => get(colorTokens.value, merged.value.color));
@@ -387,7 +386,8 @@ export function useCalendarDate(
         },
       },
       cn({
-        "flex h-9 w-9 items-center justify-center rounded-md text-sm transition-colors": true,
+        "flex h-9 w-9 items-center justify-center text-sm transition-colors": true,
+        [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",

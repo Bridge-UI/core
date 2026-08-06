@@ -13,16 +13,15 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps } from "@bridge-ui/core/Tokens/Calendar";
+import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   CalendarYearClasses,
   CalendarYearOwnProps,
   CalendarYearProps,
 } from "@/Components/CalendarYear/calendarYear.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   derived,
   mergePartBind,
@@ -35,11 +34,11 @@ const DEFAULT_PAGE_SIZE = 15;
 const calendarYearBridgeKeys = [
   "color",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "pageSize",
   "readOnly",
@@ -51,7 +50,7 @@ const calendarYearBridgeKeys = [
 
 type CalendarYearLibDefaults = LibDefaultsShape<
   CalendarYearOwnProps,
-  "color" | "pageSize"
+  "color" | "rounded" | "pageSize"
 >;
 
 type CalendarYearMerged = MergeLibDefaults<
@@ -71,8 +70,8 @@ export function useCalendarYear(
   props: CalendarYearProps,
   libDefaults: CalendarYearLibDefaults,
 ) {
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarYearProps,
@@ -98,10 +97,7 @@ export function useCalendarYear(
   });
 
   const context = derived((): DateAdapterContext => {
-    return {
-      locale: merged.locale ?? bridge?.global.locale,
-      timeZone: merged.timeZone ?? bridge?.global.timeZone,
-    };
+    return resolveContext(merged.timeZone);
   });
 
   const pageSize = derived(() => merged.pageSize ?? DEFAULT_PAGE_SIZE);
@@ -121,6 +117,15 @@ export function useCalendarYear(
   const colorTokens = useMemo(() => {
     return mergeBridgeUILayeredClasses(colorProps, merged.tokens?.color);
   }, [merged.tokens?.color]);
+
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.tokens?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, merged.tokens?.rounded]);
 
   const colorClass = derived(() => get(colorTokens, merged.color));
 
@@ -213,7 +218,8 @@ export function useCalendarYear(
         onClick: () => selectYear(cell.year),
       },
       cn({
-        "flex h-10 items-center justify-center rounded-md px-2 text-sm transition-colors": true,
+        "flex h-10 items-center justify-center px-2 text-sm transition-colors": true,
+        [roundedClass ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",

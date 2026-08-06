@@ -10,6 +10,7 @@ import {
 } from "@/Components/Calendar";
 
 const libDefaults = {
+  rounded: "md",
   startOfWeek: 0,
   color: "primary",
   defaultView: "date",

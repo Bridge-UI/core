@@ -1,11 +1,13 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarDayInteractionState,
+  CalendarRounded,
   DatePickerModel,
   DisableDatesInput,
   MergeHtmlProps,
@@ -14,6 +16,7 @@ import type {
 } from "@bridge-ui/core";
 
 export interface CalendarDateColorOverrides {}
+export interface CalendarDateRoundedOverrides {}
 
 export interface CalendarDateClasses {
   /**
@@ -84,6 +87,60 @@ export interface CalendarDateCallbacks {
   onViewDateChange?: (date: Date) => void;
 }
 
+/**
+ * Context passed to the `day` slot for each calendar cell.
+ */
+export interface CalendarDateDayCell {
+  /**
+   * Calendar date for this cell.
+   */
+  date: Date;
+
+  /**
+   * Whether the cell cannot be selected.
+   */
+  disabled: boolean;
+
+  /**
+   * Visible day-of-month label.
+   */
+  label: string;
+
+  /**
+   * Whether the cell is outside the displayed month.
+   */
+  outside: boolean;
+
+  /**
+   * Whether the cell is in an incomplete range preview.
+   */
+  preview: boolean;
+
+  /**
+   * Whether the cell is part of the selection model.
+   */
+  selected: boolean;
+
+  /**
+   * Resolved interactive visual state.
+   */
+  state: CalendarDayInteractionState;
+
+  /**
+   * Whether the cell is today.
+   */
+  today: boolean;
+}
+
+export interface CalendarDateSlots {
+  /**
+   * Custom content inside each day button. The button chrome stays managed.
+   *
+   * @default undefined
+   */
+  day?: (ctx: CalendarDateDayCell) => ReactNode;
+}
+
 export interface CalendarDateTokens {
   /**
    * Color token map overrides (`base` / `hover` / `selected` / `disabled`).
@@ -94,6 +151,11 @@ export interface CalendarDateTokens {
    * Day chrome overrides (`outside` / `today` / `weekday`).
    */
   day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface CalendarDateOwnProps {
@@ -161,13 +223,6 @@ export interface CalendarDateOwnProps {
   hideWeekdays?: boolean;
 
   /**
-   * Locale for weekday labels (falls back to Bridge `global.locale`).
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date (inclusive).
    *
    * @default undefined
@@ -209,6 +264,20 @@ export interface CalendarDateOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of day tiles.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, CalendarDateRoundedOverrides>;
+
+  /**
+   * Named slots (`day`).
+   *
+   * @default undefined
+   */
+  slots?: CalendarDateSlots;
 
   /**
    * First day of the week (`0` = Sunday … `6` = Saturday).

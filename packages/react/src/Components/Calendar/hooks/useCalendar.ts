@@ -1,11 +1,12 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
-import { useState } from "react";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
+import { useMemo, useState } from "react";
 
 // ** Core Imports
 import {
   cn,
   isDateRangeValue,
+  mergeBridgeUILayeredClasses,
   resolveDatePickerMode,
   splitComponentProps,
   type DateAdapterContext,
@@ -13,9 +14,10 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarClasses,
@@ -23,7 +25,6 @@ import type {
   CalendarProps,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   derived,
   mergePartBind,
@@ -36,11 +37,11 @@ const calendarBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -60,7 +61,7 @@ const calendarBridgeKeys = [
 
 type CalendarLibDefaults = LibDefaultsShape<
   CalendarOwnProps,
-  "color" | "defaultView" | "startOfWeek"
+  "color" | "rounded" | "defaultView" | "startOfWeek"
 >;
 
 type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
@@ -89,8 +90,8 @@ export function useCalendar(
   props: CalendarProps,
   libDefaults: CalendarLibDefaults,
 ) {
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -110,6 +111,7 @@ export function useCalendar(
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
+      "slots",
       "onChange",
       "onViewChange",
       "onViewDateChange",
@@ -121,10 +123,7 @@ export function useCalendar(
   });
 
   const context = derived((): DateAdapterContext => {
-    return {
-      locale: merged.locale ?? bridge?.global.locale,
-      timeZone: merged.timeZone ?? bridge?.global.timeZone,
-    };
+    return resolveContext(merged.timeZone);
   });
 
   const mode = derived(() => {
@@ -179,6 +178,15 @@ export function useCalendar(
       ? (props.viewDate as Date)
       : uncontrolledViewDate;
   });
+
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.tokens?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, merged.tokens?.rounded]);
 
   const yearLabel = derived(() => {
     return String(adapter.getYear(viewDate, context));
@@ -275,7 +283,8 @@ export function useCalendar(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800": true,
+        "inline-flex items-center gap-1 px-1.5 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800": true,
+        [roundedClass ?? ""]: true,
         [mergedClasses.selector ?? ""]: true,
       }),
     );
@@ -289,7 +298,8 @@ export function useCalendar(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800": true,
+        "inline-flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800": true,
+        [roundedClass ?? ""]: true,
         [mergedClasses.navButton ?? ""]: true,
       }),
     );
@@ -337,7 +347,8 @@ export function useCalendar(
         "aria-label": resolveMessage("Today"),
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800": true,
+        "inline-flex h-8 w-8 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800": true,
+        [roundedClass ?? ""]: true,
         [mergedClasses.navButton ?? ""]: true,
       }),
     );

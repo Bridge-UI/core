@@ -32,6 +32,7 @@ function Calendar(props: CalendarProps) {
     showMonthSelector,
     previousButtonBind,
   } = useCalendar(props, {
+    rounded: "md",
     startOfWeek: 0,
     color: "primary",
     defaultView: "date",
@@ -39,8 +40,8 @@ function Calendar(props: CalendarProps) {
 
   const shared = {
     color: merged.color,
-    locale: merged.locale,
     tokens: merged.tokens,
+    rounded: merged.rounded,
     maxDate: merged.maxDate,
     minDate: merged.minDate,
     disabled: merged.disabled,
@@ -95,6 +96,7 @@ function Calendar(props: CalendarProps) {
           {...shared}
           value={value}
           viewDate={viewDate}
+          slots={props.slots}
           range={merged.range}
           onChange={handleChange}
           multiple={merged.multiple}

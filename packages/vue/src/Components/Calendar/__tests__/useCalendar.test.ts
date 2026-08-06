@@ -7,6 +7,7 @@ import { defineComponent, h } from "vue";
 import { useCalendar, type CalendarOwnProps } from "@/Components/Calendar";
 
 const libDefaults = {
+  rounded: "md",
   startOfWeek: 0,
   color: "primary",
   defaultView: "date",

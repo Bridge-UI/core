@@ -14,7 +14,7 @@ const props = defineProps<CalendarMonthOwnProps>();
 
 const { months, rootBind, gridBind, getMonthBind } = useCalendarMonth(
   props,
-  { color: "primary" },
+  { rounded: "md", color: "primary" },
   emit,
 );
 </script>

@@ -1,11 +1,12 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "vue";
+import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
   DatePickerModel,
   DisableDatesInput,
   MergeHtmlProps,
@@ -14,9 +15,11 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 import type { IconProps } from "@/Components/Icon/icon.types";
 
 export interface CalendarColorOverrides {}
+export interface CalendarRoundedOverrides {}
 
 export type CalendarView = "date" | "year" | "month";
 
@@ -117,6 +120,15 @@ export interface CalendarEmits {
   viewDateChange: [date: Date];
 }
 
+export interface CalendarSlots {
+  /**
+   * Custom content inside each day button on the date panel.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+}
+
 export interface CalendarTokens {
   /**
    * Color token map overrides.
@@ -127,6 +139,11 @@ export interface CalendarTokens {
    * Day chrome overrides.
    */
   day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface CalendarOwnProps {
@@ -215,13 +232,6 @@ export interface CalendarOwnProps {
   hideYears?: boolean;
 
   /**
-   * Locale for labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -255,6 +265,13 @@ export interface CalendarOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of tiles and header chrome.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, CalendarRoundedOverrides>;
 
   /**
    * First day of the week.

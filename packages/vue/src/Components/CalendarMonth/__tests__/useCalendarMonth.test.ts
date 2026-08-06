@@ -10,6 +10,7 @@ import {
 } from "@/Components/CalendarMonth";
 
 const libDefaults = {
+  rounded: "md",
   color: "primary",
 } satisfies Partial<CalendarMonthOwnProps>;
 

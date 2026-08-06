@@ -10,6 +10,7 @@ import {
 } from "@/Components/CalendarDate";
 
 const libDefaults = {
+  rounded: "md",
   startOfWeek: 0,
   color: "primary",
 } as const satisfies Partial<CalendarDateOwnProps>;

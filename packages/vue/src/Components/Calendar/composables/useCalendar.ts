@@ -1,11 +1,12 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
 import {
   cn,
   isDateRangeValue,
+  mergeBridgeUILayeredClasses,
   resolveDatePickerMode,
   splitComponentProps,
   type DateAdapter,
@@ -14,16 +15,16 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarClasses,
   CalendarOwnProps,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -35,11 +36,11 @@ const calendarBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -59,7 +60,7 @@ const calendarBridgeKeys = [
 
 type CalendarLibDefaults = LibDefaultsShape<
   CalendarOwnProps,
-  "color" | "defaultView" | "startOfWeek"
+  "color" | "rounded" | "defaultView" | "startOfWeek"
 >;
 
 type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
@@ -95,7 +96,7 @@ export function useCalendar(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const bridge = useBridgeUI();
+  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -128,10 +129,7 @@ export function useCalendar(
   });
 
   const context = computed((): DateAdapterContext => {
-    return {
-      locale: merged.value.locale ?? bridge?.global.value.locale,
-      timeZone: merged.value.timeZone ?? bridge?.global.value.timeZone,
-    };
+    return resolveContext(merged.value.timeZone);
   });
 
   const mode = computed(() => {
@@ -216,6 +214,15 @@ export function useCalendar(
     adapter.value.getMonth(viewDate.value, context.value),
   );
 
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.value.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
+  });
+
   const setView = (next: CalendarView) => {
     if (!isViewControlled.value) {
       uncontrolledView.value = next;
@@ -272,8 +279,8 @@ export function useCalendar(
 
   const shared = computed(() => ({
     color: merged.value.color,
-    locale: merged.value.locale,
     tokens: merged.value.tokens,
+    rounded: merged.value.rounded,
     maxDate: merged.value.maxDate,
     minDate: merged.value.minDate,
     disabled: merged.value.disabled,
@@ -313,7 +320,8 @@ export function useCalendar(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800": true,
+        "inline-flex items-center gap-1 px-1.5 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800": true,
+        [roundedClass.value ?? ""]: true,
         [mergedClasses.value.selector ?? ""]: true,
       }),
     );
@@ -327,7 +335,8 @@ export function useCalendar(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800": true,
+        "inline-flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800": true,
+        [roundedClass.value ?? ""]: true,
         [mergedClasses.value.navButton ?? ""]: true,
       }),
     );
@@ -375,7 +384,8 @@ export function useCalendar(
         "aria-label": resolveMessage("Today"),
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800": true,
+        "inline-flex h-8 w-8 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800": true,
+        [roundedClass.value ?? ""]: true,
         [mergedClasses.value.navButton ?? ""]: true,
       }),
     );

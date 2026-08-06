@@ -3,10 +3,13 @@
 import type {
   CalendarDateEmits,
   CalendarDateOwnProps,
+  CalendarDateSlots,
 } from "@/Components/CalendarDate/calendarDate.types";
 import { useCalendarDate } from "@/Components/CalendarDate/composables/useCalendarDate";
 
 defineOptions({ inheritAttrs: false });
+
+defineSlots<CalendarDateSlots>();
 
 const emit = defineEmits<CalendarDateEmits>();
 
@@ -20,7 +23,11 @@ const {
   getDayBind,
   hideWeekdays,
   getWeekdayBind,
-} = useCalendarDate(props, { startOfWeek: 0, color: "primary" }, emit);
+} = useCalendarDate(
+  props,
+  { rounded: "md", startOfWeek: 0, color: "primary" },
+  emit,
+);
 
 function adapterDayKey(date: Date) {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -45,7 +52,7 @@ function adapterDayKey(date: Date) {
         v-bind="getDayBind(cell)"
         :key="`${adapterDayKey(cell.date)}-${cell.label}`"
       >
-        {{ cell.label }}
+        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
       </button>
     </div>
   </div>

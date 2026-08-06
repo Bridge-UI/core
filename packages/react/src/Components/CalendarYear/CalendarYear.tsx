@@ -5,6 +5,7 @@ import { useCalendarYear } from "@/Components/CalendarYear/hooks/useCalendarYear
 function CalendarYear(props: CalendarYearProps) {
   const { years, rootBind, gridBind, getYearBind } = useCalendarYear(props, {
     pageSize: 15,
+    rounded: "md",
     color: "primary",
   });
 

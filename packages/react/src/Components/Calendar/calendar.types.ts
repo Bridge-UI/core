@@ -6,6 +6,7 @@ import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
   DatePickerModel,
   DisableDatesInput,
   MergeHtmlProps,
@@ -14,9 +15,11 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { CalendarDateSlots } from "@/Components/CalendarDate";
 import type { IconProps } from "@/Components/Icon";
 
 export interface CalendarColorOverrides {}
+export interface CalendarRoundedOverrides {}
 
 export type CalendarView = "date" | "year" | "month";
 
@@ -127,6 +130,11 @@ export interface CalendarTokens {
    * Day chrome overrides.
    */
   day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface CalendarOwnProps {
@@ -215,13 +223,6 @@ export interface CalendarOwnProps {
   hideYears?: boolean;
 
   /**
-   * Locale for labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -255,6 +256,20 @@ export interface CalendarOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of tiles and chrome controls.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, CalendarRoundedOverrides>;
+
+  /**
+   * Named slots forwarded to `CalendarDate` (`day`).
+   *
+   * @default undefined
+   */
+  slots?: Pick<CalendarDateSlots, "day">;
 
   /**
    * First day of the week.

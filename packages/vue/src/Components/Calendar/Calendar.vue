@@ -3,6 +3,7 @@
 import type {
   CalendarEmits,
   CalendarOwnProps,
+  CalendarSlots,
 } from "@/Components/Calendar/calendar.types";
 import { useCalendar } from "@/Components/Calendar/composables/useCalendar";
 import CalendarDate from "@/Components/CalendarDate/CalendarDate.vue";
@@ -11,6 +12,8 @@ import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
 import { Icon } from "@/Components/Icon";
 
 defineOptions({ inheritAttrs: false });
+
+defineSlots<CalendarSlots>();
 
 const props = defineProps<CalendarOwnProps>();
 
@@ -43,7 +46,12 @@ const {
   previousButtonBind,
 } = useCalendar(
   props,
-  { startOfWeek: 0, color: "primary", defaultView: "date" },
+  {
+    rounded: "md",
+    startOfWeek: 0,
+    color: "primary",
+    defaultView: "date",
+  },
   emit,
 );
 </script>
@@ -96,7 +104,11 @@ const {
       :start-of-week="merged.startOfWeek"
       :disable-dates="merged.disableDates"
       :hide-weekdays="merged.hideWeekdays"
-    />
+    >
+      <template #day="cell">
+        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+      </template>
+    </CalendarDate>
 
     <CalendarMonth
       v-bind="shared"

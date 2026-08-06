@@ -13,15 +13,14 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
-import { colorProps } from "@bridge-ui/core/Tokens/Calendar";
+import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
   CalendarMonthOwnProps,
 } from "@/Components/CalendarMonth/calendarMonth.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -32,11 +31,11 @@ const calendarMonthBridgeKeys = [
   "year",
   "color",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "readOnly",
   "timeZone",
@@ -46,7 +45,7 @@ const calendarMonthBridgeKeys = [
 
 type CalendarMonthLibDefaults = LibDefaultsShape<
   CalendarMonthOwnProps,
-  "color"
+  "color" | "rounded"
 >;
 
 type CalendarMonthMerged = MergeLibDefaults<
@@ -68,8 +67,8 @@ export function useCalendarMonth(
   emit: (event: "change", month: number) => void,
 ) {
   const attrs = useAttrs();
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -100,10 +99,7 @@ export function useCalendarMonth(
   });
 
   const context = computed((): DateAdapterContext => {
-    return {
-      locale: merged.value.locale ?? bridge?.global.value.locale,
-      timeZone: merged.value.timeZone ?? bridge?.global.value.timeZone,
-    };
+    return resolveContext(merged.value.timeZone);
   });
 
   const year = computed(() => {
@@ -115,6 +111,15 @@ export function useCalendarMonth(
 
   const colorTokens = computed(() => {
     return mergeBridgeUILayeredClasses(colorProps, merged.value.tokens?.color);
+  });
+
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.value.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
   });
 
   const colorClass = computed(() => get(colorTokens.value, merged.value.color));
@@ -212,7 +217,8 @@ export function useCalendarMonth(
         onClick: () => selectMonth(cell.month),
       },
       cn({
-        "flex h-10 items-center justify-center rounded-md px-2 text-sm uppercase transition-colors": true,
+        "flex h-10 items-center justify-center px-2 text-sm uppercase transition-colors": true,
+        [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",

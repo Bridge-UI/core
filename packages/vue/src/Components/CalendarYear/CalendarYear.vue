@@ -14,7 +14,7 @@ const props = defineProps<CalendarYearOwnProps>();
 
 const { years, rootBind, gridBind, getYearBind } = useCalendarYear(
   props,
-  { pageSize: 15, color: "primary" },
+  { pageSize: 15, rounded: "md", color: "primary" },
   emit,
 );
 </script>

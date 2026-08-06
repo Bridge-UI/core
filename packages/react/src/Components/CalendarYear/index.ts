@@ -7,6 +7,7 @@ export type {
   CalendarYearCustomProps,
   CalendarYearOwnProps,
   CalendarYearProps,
+  CalendarYearRoundedOverrides,
   CalendarYearTokens,
 } from "@/Components/CalendarYear/calendarYear.types";
 export {

@@ -64,3 +64,16 @@ test("it should disable dates before minDate", () => {
     (screen.getByRole("button", { name: "21" }) as HTMLButtonElement).disabled,
   ).toBe(false);
 });
+
+test("it should render custom day slot content", () => {
+  render(
+    <CalendarDate
+      viewDate={new Date(2021, 4, 1)}
+      slots={{
+        day: (cell) => `D${cell.label}`,
+      }}
+    />,
+  );
+
+  expect(screen.getByRole("button", { name: "D21" })).toBeTruthy();
+});

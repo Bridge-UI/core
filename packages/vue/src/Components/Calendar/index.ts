@@ -6,6 +6,8 @@ export type {
   CalendarEmits,
   CalendarOwnProps,
   CalendarProps,
+  CalendarRoundedOverrides,
+  CalendarSlots,
   CalendarTokens,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";

@@ -4,6 +4,7 @@ import { useCalendarMonth } from "@/Components/CalendarMonth/hooks/useCalendarMo
 
 function CalendarMonth(props: CalendarMonthProps) {
   const { months, rootBind, gridBind, getMonthBind } = useCalendarMonth(props, {
+    rounded: "md",
     color: "primary",
   });
 

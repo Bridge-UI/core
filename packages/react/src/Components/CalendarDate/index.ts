@@ -5,11 +5,11 @@ export type {
   CalendarDateClasses,
   CalendarDateColorOverrides,
   CalendarDateCustomProps,
+  CalendarDateDayCell,
   CalendarDateOwnProps,
   CalendarDateProps,
+  CalendarDateRoundedOverrides,
+  CalendarDateSlots,
   CalendarDateTokens,
 } from "@/Components/CalendarDate/calendarDate.types";
-export {
-  useCalendarDate,
-  type CalendarDateDayCell,
-} from "@/Components/CalendarDate/hooks/useCalendarDate";
+export { useCalendarDate } from "@/Components/CalendarDate/hooks/useCalendarDate";

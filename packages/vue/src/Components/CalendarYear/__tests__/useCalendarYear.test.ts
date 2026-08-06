@@ -11,6 +11,7 @@ import {
 
 const libDefaults = {
   pageSize: 15,
+  rounded: "md",
   color: "primary",
 } satisfies Partial<CalendarYearOwnProps>;
 

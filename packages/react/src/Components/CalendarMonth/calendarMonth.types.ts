@@ -5,11 +5,13 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 import type {
   CalendarColor,
   CalendarColorItem,
+  CalendarRounded,
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
 export interface CalendarMonthColorOverrides {}
+export interface CalendarMonthRoundedOverrides {}
 
 export interface CalendarMonthClasses {
   /**
@@ -63,6 +65,11 @@ export interface CalendarMonthTokens {
    * Color token map overrides.
    */
   color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface CalendarMonthOwnProps {
@@ -102,13 +109,6 @@ export interface CalendarMonthOwnProps {
   disableMonths?: number[];
 
   /**
-   * Locale for month names.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date (bounds month availability for `year`).
    *
    * @default undefined
@@ -128,6 +128,13 @@ export interface CalendarMonthOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of month tiles.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, CalendarMonthRoundedOverrides>;
 
   /**
    * IANA time zone.

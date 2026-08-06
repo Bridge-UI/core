@@ -7,6 +7,7 @@ export type {
   CalendarCustomProps,
   CalendarOwnProps,
   CalendarProps,
+  CalendarRoundedOverrides,
   CalendarTokens,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";

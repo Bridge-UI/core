@@ -5,11 +5,13 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "vue";
 import type {
   CalendarColor,
   CalendarColorItem,
+  CalendarRounded,
   MergeHtmlProps,
   MergeProps,
 } from "@bridge-ui/core";
 
 export interface CalendarYearColorOverrides {}
+export interface CalendarYearRoundedOverrides {}
 
 export interface CalendarYearClasses {
   /**
@@ -63,6 +65,11 @@ export interface CalendarYearTokens {
    * Color token map overrides.
    */
   color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface CalendarYearOwnProps {
@@ -102,13 +109,6 @@ export interface CalendarYearOwnProps {
   disableYears?: number[];
 
   /**
-   * Locale forwarded to the date adapter context.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date (bounds year availability).
    *
    * @default undefined
@@ -135,6 +135,13 @@ export interface CalendarYearOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of year tiles.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, CalendarYearRoundedOverrides>;
 
   /**
    * First year of the visible page. Defaults around `value` / current year.

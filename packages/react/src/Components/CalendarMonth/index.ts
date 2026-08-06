@@ -7,6 +7,7 @@ export type {
   CalendarMonthCustomProps,
   CalendarMonthOwnProps,
   CalendarMonthProps,
+  CalendarMonthRoundedOverrides,
   CalendarMonthTokens,
 } from "@/Components/CalendarMonth/calendarMonth.types";
 export {

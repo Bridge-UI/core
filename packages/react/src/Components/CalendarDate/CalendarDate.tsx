@@ -16,6 +16,7 @@ function CalendarDate(props: CalendarDateProps) {
     hideWeekdays,
     getWeekdayBind,
   } = useCalendarDate(props, {
+    rounded: "md",
     startOfWeek: 0,
     color: "primary",
   });
@@ -38,7 +39,7 @@ function CalendarDate(props: CalendarDateProps) {
             key={`${adapterDayKey(cell.date)}-${cell.label}`}
             {...getDayBind(cell)}
           >
-            {cell.label}
+            {props.slots?.day?.(cell) ?? cell.label}
           </button>
         ))}
       </div>
