@@ -61,7 +61,8 @@ export type FormFieldOptions = {
     | "DateTimeField"
     | "PasswordField"
     | "DateRangeField"
-    | "TimeRangeField";
+    | "TimeRangeField"
+    | "DateTimeRangeField";
 
   /**
    * Native control rendered by the field composable (`<input>` vs `<textarea>`).
