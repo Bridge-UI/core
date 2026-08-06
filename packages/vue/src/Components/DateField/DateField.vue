@@ -69,7 +69,6 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DatePicker
-      color="primary"
       :value="modelValue"
       :range="dateOnly.range"
       :read-only="props.readonly"
@@ -82,6 +81,7 @@ const {
       :show-footer="dateOnly.showFooter"
       :hide-months="dateOnly.hideMonths"
       :default-view="dateOnly.defaultView"
+      :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"
       :custom-props="datePickerCustomProps"
       :disabled="formField.isDisabled.value"

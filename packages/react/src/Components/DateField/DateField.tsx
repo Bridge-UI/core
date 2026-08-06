@@ -35,7 +35,6 @@ function DateField(props: DateFieldProps) {
         {...menuProps}
       >
         <DatePicker
-          color="primary"
           value={modelValue}
           range={dateOnly.range}
           readOnly={props.readonly}
@@ -45,6 +44,7 @@ function DateField(props: DateFieldProps) {
           timeZone={dateOnly.timeZone}
           onChange={handlePickerChange}
           hideYears={dateOnly.hideYears}
+          color={formField.merged.color}
           disabled={formField.isDisabled}
           showFooter={dateOnly.showFooter}
           hideMonths={dateOnly.hideMonths}

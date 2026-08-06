@@ -85,3 +85,24 @@ test("it should call change when a day is selected", async () => {
 
   expect(onChange).toHaveBeenCalled();
 });
+
+test("it should pass color to the nested DatePicker", async () => {
+  mountDateField({
+    props: {
+      color: "secondary",
+      defaultValue: new Date(2021, 4, 21),
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "15",
+  );
+
+  expect(day).toBeTruthy();
+  expect(String(day?.className)).toMatch(/secondary/);
+});

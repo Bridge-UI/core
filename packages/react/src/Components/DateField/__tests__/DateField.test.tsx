@@ -33,3 +33,13 @@ test("it should call onChange when a day is selected", () => {
 
   expect(onChange).toHaveBeenCalled();
 });
+
+test("it should pass color to the nested DatePicker", () => {
+  render(<DateField color="secondary" defaultValue={new Date(2021, 4, 21)} />);
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const day = screen.getByRole("button", { name: "15" });
+
+  expect(day.className).toMatch(/secondary/);
+});
