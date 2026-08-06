@@ -21,9 +21,9 @@ import type {
 } from "@/Components/FormField/formField.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 
-export interface DateInputClasses extends FormFieldClasses {}
+export interface DateFieldClasses extends FormFieldClasses {}
 
-export interface DateInputCustomProps extends FormFieldCustomProps {
+export interface DateFieldCustomProps extends FormFieldCustomProps {
   /**
    * Props forwarded to the nested `DatePicker`.
    *
@@ -44,7 +44,7 @@ export interface DateInputCustomProps extends FormFieldCustomProps {
   >;
 }
 
-export interface DateInputCallbacks {
+export interface DateFieldCallbacks {
   /**
    * Called when the selection model changes.
    */
@@ -61,7 +61,7 @@ export interface DateInputCallbacks {
   onOpen?: () => void;
 }
 
-export interface DateInputOwnProps extends Omit<
+export interface DateFieldOwnProps extends Omit<
   FormFieldOwnProps,
   "field" | "slots" | "classes" | "customProps"
 > {
@@ -77,14 +77,14 @@ export interface DateInputOwnProps extends Omit<
    *
    * @default undefined
    */
-  classes?: DateInputClasses;
+  classes?: DateFieldClasses;
 
   /**
    * Extra props for internal parts.
    *
    * @default undefined
    */
-  customProps?: DateInputCustomProps;
+  customProps?: DateFieldCustomProps;
 
   /**
    * Uncontrolled initial value.
@@ -206,7 +206,7 @@ export interface DateInputOwnProps extends Omit<
   value?: DatePickerModel;
 }
 
-export type DateInputProps = MergeHtmlProps<
-  DateInputOwnProps & DateInputCallbacks,
+export type DateFieldProps = MergeHtmlProps<
+  DateFieldOwnProps & DateFieldCallbacks,
   InputHTMLAttributes<HTMLInputElement>
 >;

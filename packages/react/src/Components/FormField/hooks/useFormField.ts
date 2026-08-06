@@ -49,7 +49,7 @@ export type FormFieldOptions = {
   componentName?:
     | "Select"
     | "Textarea"
-    | "DateInput"
+    | "DateField"
     | "TextField"
     | "NumberField"
     | "Autocomplete"

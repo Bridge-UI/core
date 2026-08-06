@@ -294,7 +294,7 @@ export interface CalendarDateOwnProps {
   timeZone?: string;
 
   /**
-   * Token overrides (usually passed from `DatePicker` / `DateInput` registry).
+   * Token overrides (usually passed from `DatePicker` / `DateField` registry).
    *
    * @default undefined
    */

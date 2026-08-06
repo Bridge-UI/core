@@ -7,27 +7,27 @@ import { computed, ref } from "vue";
 import type { DatePickerModel } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useDateInput } from "@/Components/DateInput/composables/useDateInput";
+import { useDateField } from "@/Components/DateField/composables/useDateField";
 import type {
-  DateInputEmits,
-  DateInputOwnProps,
-  DateInputSlots,
-} from "@/Components/DateInput/dateInput.types";
+  DateFieldEmits,
+  DateFieldOwnProps,
+  DateFieldSlots,
+} from "@/Components/DateField/dateField.types";
 import { DatePicker } from "@/Components/DatePicker";
 import { FormField } from "@/Components/FormField";
 import { Menu } from "@/Components/Menu";
 
-defineSlots<DateInputSlots>();
+defineSlots<DateFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
 const model = defineModel<DatePickerModel>();
 
-const props = withDefaults(defineProps<DateInputOwnProps>(), {
+const props = withDefaults(defineProps<DateFieldOwnProps>(), {
   showErrorIcon: true,
 });
 
-const emit = defineEmits<DateInputEmits>();
+const emit = defineEmits<DateFieldEmits>();
 
 const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
 
@@ -52,7 +52,7 @@ const {
   handleOpenChange,
   handlePickerChange,
   datePickerCustomProps,
-} = useDateInput(props, value, emit);
+} = useDateField(props, value, emit);
 </script>
 
 <template>

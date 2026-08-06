@@ -54,7 +54,7 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Checkbox",
   "OtpField",
   "Textarea",
-  "DateInput",
+  "DateField",
   "TextField",
   "NumberField",
   "Autocomplete",

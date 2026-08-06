@@ -21,9 +21,9 @@ import type {
 } from "@/Components/FormField/formField.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 
-export interface DateInputClasses extends FormFieldClasses {}
+export interface DateFieldClasses extends FormFieldClasses {}
 
-export interface DateInputCustomProps extends FormFieldCustomProps {
+export interface DateFieldCustomProps extends FormFieldCustomProps {
   /**
    * Props forwarded to the nested `DatePicker`.
    *
@@ -44,7 +44,7 @@ export interface DateInputCustomProps extends FormFieldCustomProps {
   >;
 }
 
-export interface DateInputEmits {
+export interface DateFieldEmits {
   /**
    * Emitted when the selection model changes.
    */
@@ -61,7 +61,7 @@ export interface DateInputEmits {
   open: [];
 }
 
-export interface DateInputOwnProps extends Omit<
+export interface DateFieldOwnProps extends Omit<
   FormFieldOwnProps,
   "field" | "classes" | "customProps"
 > {
@@ -70,14 +70,14 @@ export interface DateInputOwnProps extends Omit<
    *
    * @default undefined
    */
-  classes?: DateInputClasses;
+  classes?: DateFieldClasses;
 
   /**
    * Extra props for internal parts.
    *
    * @default undefined
    */
-  customProps?: DateInputCustomProps;
+  customProps?: DateFieldCustomProps;
 
   /**
    * Uncontrolled initial value.
@@ -185,7 +185,7 @@ export interface DateInputOwnProps extends Omit<
   timeZone?: string;
 }
 
-export interface DateInputSlots extends FormFieldSlots {
+export interface DateFieldSlots extends FormFieldSlots {
   /**
    * Custom content inside each day button on the nested calendar.
    *
@@ -194,8 +194,8 @@ export interface DateInputSlots extends FormFieldSlots {
   day?: Slot<CalendarDateDayCell>;
 }
 
-export type DateInputProps = MergeHtmlProps<
-  DateInputOwnProps,
+export type DateFieldProps = MergeHtmlProps<
+  DateFieldOwnProps,
   InputHTMLAttributes
 > & {
   /**

@@ -53,7 +53,7 @@ export interface DateAdapter<TDate = Date> {
   endOfMonth: (date: TDate, context?: DateAdapterContext) => TDate;
 
   /**
-   * Formats `date` for display (e.g. DateInput text).
+   * Formats `date` for display (e.g. DateField text).
    */
   format: (date: TDate, context?: DateAdapterContext) => string;
 

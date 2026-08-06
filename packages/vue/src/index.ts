@@ -165,15 +165,15 @@ export type {
   ChipSizeOverrides,
   ChipSlots,
 } from "@/Components/Chip";
-export { DateInput, useDateInput } from "@/Components/DateInput";
+export { DateField, useDateField } from "@/Components/DateField";
 export type {
-  DateInputClasses,
-  DateInputCustomProps,
-  DateInputEmits,
-  DateInputOwnProps,
-  DateInputProps,
-  DateInputSlots,
-} from "@/Components/DateInput";
+  DateFieldClasses,
+  DateFieldCustomProps,
+  DateFieldEmits,
+  DateFieldOwnProps,
+  DateFieldProps,
+  DateFieldSlots,
+} from "@/Components/DateField";
 export { DatePicker, useDatePicker } from "@/Components/DatePicker";
 export type {
   DatePickerClasses,

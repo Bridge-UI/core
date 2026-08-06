@@ -1,11 +1,11 @@
 // ** Local Imports
-import type { DateInputProps } from "@/Components/DateInput/dateInput.types";
-import { useDateInput } from "@/Components/DateInput/hooks/useDateInput";
+import type { DateFieldProps } from "@/Components/DateField/dateField.types";
+import { useDateField } from "@/Components/DateField/hooks/useDateField";
 import { DatePicker } from "@/Components/DatePicker";
 import { FormField } from "@/Components/FormField";
 import { Menu } from "@/Components/Menu";
 
-function DateInput(props: DateInputProps) {
+function DateField(props: DateFieldProps) {
   const {
     open,
     daySlot,
@@ -18,7 +18,7 @@ function DateInput(props: DateInputProps) {
     handleOpenChange,
     handlePickerChange,
     datePickerCustomProps,
-  } = useDateInput(props);
+  } = useDateField(props);
 
   return (
     <>
@@ -63,4 +63,4 @@ function DateInput(props: DateInputProps) {
   );
 }
 
-export default DateInput;
+export default DateField;

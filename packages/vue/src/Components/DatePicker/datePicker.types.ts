@@ -234,7 +234,7 @@ export interface DatePickerOwnProps {
   /**
    * Border radius of calendar tiles and chrome.
    *
-   * `DateInput` always forwards its own `rounded` here so the picker matches the
+   * `DateField` always forwards its own `rounded` here so the picker matches the
    * field, independent of `DatePicker.defaultProps`.
    *
    * @default "md"

@@ -41,7 +41,7 @@ export type {
   CardConfigOverrides,
   CheckboxConfigOverrides,
   ChipConfigOverrides,
-  DateInputConfigOverrides,
+  DateFieldConfigOverrides,
   DatePickerConfigOverrides,
   Direction,
   DividerConfigOverrides,

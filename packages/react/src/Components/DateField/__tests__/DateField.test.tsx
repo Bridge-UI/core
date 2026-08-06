@@ -7,16 +7,16 @@ afterEach(() => {
 });
 
 // ** Local Imports
-import { DateInput } from "@/Components/DateInput";
+import { DateField } from "@/Components/DateField";
 
 test("it should render a text input", () => {
-  const { container } = render(<DateInput />);
+  const { container } = render(<DateField />);
 
   expect(container.querySelector("input")).not.toBeNull();
 });
 
 test("it should open the picker on focus", () => {
-  render(<DateInput defaultValue={new Date(2021, 4, 21)} />);
+  render(<DateField defaultValue={new Date(2021, 4, 21)} />);
 
   fireEvent.focus(screen.getByRole("textbox"));
 
@@ -26,7 +26,7 @@ test("it should open the picker on focus", () => {
 test("it should call onChange when a day is selected", () => {
   const onChange = vi.fn();
 
-  render(<DateInput onChange={onChange} defaultValue={new Date(2021, 4, 1)} />);
+  render(<DateField onChange={onChange} defaultValue={new Date(2021, 4, 1)} />);
 
   fireEvent.focus(screen.getByRole("textbox"));
   fireEvent.click(screen.getByRole("button", { name: "21" }));

@@ -16,10 +16,10 @@ import {
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
-  DateInputCustomProps,
-  DateInputOwnProps,
-  DateInputProps,
-} from "@/Components/DateInput/dateInput.types";
+  DateFieldCustomProps,
+  DateFieldOwnProps,
+  DateFieldProps,
+} from "@/Components/DateField/dateField.types";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
   formFieldBridgeKeys,
@@ -27,7 +27,7 @@ import {
 } from "@/Components/FormField/hooks/useFormField";
 import { derived, mergePartBind } from "@/Utils";
 
-const dateInputBridgeKeys = [
+const dateFieldBridgeKeys = [
   "range",
   "value",
   "classes",
@@ -46,7 +46,7 @@ const dateInputBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
-] as const satisfies readonly (keyof DateInputOwnProps)[];
+] as const satisfies readonly (keyof DateFieldOwnProps)[];
 
 function formatModel(
   value: DatePickerModel,
@@ -68,7 +68,7 @@ function formatModel(
   return adapter.format(value, context);
 }
 
-export function useDateInput(props: DateInputProps) {
+export function useDateField(props: DateFieldProps) {
   const adapter = useDateAdapter();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
@@ -95,11 +95,11 @@ export function useDateInput(props: DateInputProps) {
   const modelValue = isControlled ? (valueProp ?? null) : uncontrolledValue;
 
   const { inheritedAttrs, componentProps: dateOnly } = splitComponentProps<
-    DateInputProps,
-    typeof dateInputBridgeKeys
+    DateFieldProps,
+    typeof dateFieldBridgeKeys
   >({
-    bridgeKeys: dateInputBridgeKeys,
-    props: propsForSplit as DateInputProps,
+    bridgeKeys: dateFieldBridgeKeys,
+    props: propsForSplit as DateFieldProps,
   });
 
   const context = derived((): DateAdapterContext => {
@@ -150,7 +150,7 @@ export function useDateInput(props: DateInputProps) {
     menu: _menu,
     datePicker: _datePicker,
     ...formFieldOnlyCustom
-  } = (dateOnly.customProps ?? {}) as DateInputCustomProps;
+  } = (dateOnly.customProps ?? {}) as DateFieldCustomProps;
 
   const formField = useFormField(
     {
@@ -185,7 +185,7 @@ export function useDateInput(props: DateInputProps) {
       showErrorIcon: true,
     },
     {
-      componentName: "DateInput",
+      componentName: "DateField",
     },
   );
 

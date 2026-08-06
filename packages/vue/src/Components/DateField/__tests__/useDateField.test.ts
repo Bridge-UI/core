@@ -7,10 +7,10 @@ import { defineComponent, h, ref } from "vue";
 import type { DatePickerModel } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useDateInput, type DateInputOwnProps } from "@/Components/DateInput";
+import { useDateField, type DateFieldOwnProps } from "@/Components/DateField";
 
-function mountUseDateInput(props: Partial<DateInputOwnProps> = {}) {
-  let result!: ReturnType<typeof useDateInput>;
+function mountUseDateField(props: Partial<DateFieldOwnProps> = {}) {
+  let result!: ReturnType<typeof useDateField>;
 
   const model = ref<null | undefined | DatePickerModel>(null);
   const emit = vi.fn();
@@ -18,7 +18,7 @@ function mountUseDateInput(props: Partial<DateInputOwnProps> = {}) {
   const Wrapper = defineComponent({
     props: {} as Record<string, never>,
     setup() {
-      result = useDateInput(props, model, emit);
+      result = useDateField(props, model, emit);
 
       return () => h("div");
     },
@@ -30,13 +30,13 @@ function mountUseDateInput(props: Partial<DateInputOwnProps> = {}) {
 }
 
 test("it should start closed", () => {
-  const { open } = mountUseDateInput();
+  const { open } = mountUseDateField();
 
   expect(open.value).toBe(false);
 });
 
 test("it should default to single mode", () => {
-  const { mode } = mountUseDateInput();
+  const { mode } = mountUseDateField();
 
   expect(mode.value).toBe("single");
 });

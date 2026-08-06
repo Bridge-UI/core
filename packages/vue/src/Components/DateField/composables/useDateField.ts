@@ -23,10 +23,10 @@ import {
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
-  DateInputCustomProps,
-  DateInputEmits,
-  DateInputOwnProps,
-} from "@/Components/DateInput/dateInput.types";
+  DateFieldCustomProps,
+  DateFieldEmits,
+  DateFieldOwnProps,
+} from "@/Components/DateField/dateField.types";
 import {
   formFieldBridgeKeys,
   useFormField,
@@ -34,7 +34,7 @@ import {
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
 
-const dateInputBridgeKeys = [
+const dateFieldBridgeKeys = [
   "range",
   "classes",
   "maxDate",
@@ -52,7 +52,7 @@ const dateInputBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
-] as const satisfies readonly (keyof DateInputOwnProps)[];
+] as const satisfies readonly (keyof DateFieldOwnProps)[];
 
 function formatModel(
   value: DatePickerModel,
@@ -74,10 +74,10 @@ function formatModel(
   return adapter.format(value, context);
 }
 
-export function useDateInput(
-  props: DateInputOwnProps,
+export function useDateField(
+  props: DateFieldOwnProps,
   model: Ref<null | undefined | DatePickerModel>,
-  emit: SetupContext<DateInputEmits>["emit"],
+  emit: SetupContext<DateFieldEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
@@ -90,11 +90,11 @@ export function useDateInput(
 
   const split = computed(() => {
     return splitComponentProps<
-      DateInputOwnProps & Record<string, unknown>,
-      typeof dateInputBridgeKeys
+      DateFieldOwnProps & Record<string, unknown>,
+      typeof dateFieldBridgeKeys
     >({
       props: { ...attrs, ...props },
-      bridgeKeys: dateInputBridgeKeys,
+      bridgeKeys: dateFieldBridgeKeys,
     });
   });
 
@@ -150,7 +150,7 @@ export function useDateInput(
       menu: _menu,
       datePicker: _datePicker,
       ...formFieldOnlyCustom
-    } = (dateOnly.value.customProps ?? {}) as DateInputCustomProps;
+    } = (dateOnly.value.customProps ?? {}) as DateFieldCustomProps;
 
     return {
       ...formFieldCustom,
@@ -187,7 +187,7 @@ export function useDateInput(
       showErrorIcon: true,
     },
     {
-      componentName: "DateInput",
+      componentName: "DateField",
     },
   );
 

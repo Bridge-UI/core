@@ -6,7 +6,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { resetLayerStackForTests } from "@bridge-ui/core";
 
 // ** Local Imports
-import { DateInput } from "@/Components/DateInput";
+import { DateField } from "@/Components/DateField";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -21,8 +21,8 @@ afterEach(async () => {
 
 const mountedWrappers: Array<ReturnType<typeof mount>> = [];
 
-function mountDateInput(optionsArg: Parameters<typeof mount>[1] = {}) {
-  const wrapper = mount(DateInput, {
+function mountDateField(optionsArg: Parameters<typeof mount>[1] = {}) {
+  const wrapper = mount(DateField, {
     attachTo: document.body,
     ...optionsArg,
     props: {
@@ -39,13 +39,13 @@ function mountDateInput(optionsArg: Parameters<typeof mount>[1] = {}) {
 }
 
 test("it should render a text input", () => {
-  const wrapper = mountDateInput();
+  const wrapper = mountDateField();
 
   expect(wrapper.find("input").exists()).toBe(true);
 });
 
 test("it should open the picker on focus", async () => {
-  mountDateInput({
+  mountDateField({
     props: { defaultValue: new Date(2021, 4, 21) },
   });
 
@@ -64,7 +64,7 @@ test("it should open the picker on focus", async () => {
 test("it should call change when a day is selected", async () => {
   const onChange = vi.fn();
 
-  mountDateInput({
+  mountDateField({
     props: {
       onChange,
       defaultValue: new Date(2021, 4, 1),

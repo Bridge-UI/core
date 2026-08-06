@@ -295,7 +295,7 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
-export interface DateInputConfigOverrides {}
+export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
@@ -436,7 +436,7 @@ export interface ChipConfigBase {
   }>;
 }
 
-export interface DateInputConfigBase {
+export interface DateFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
@@ -960,7 +960,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
-  DateInput: Partial<Overwrite<DateInputConfigBase, DateInputConfigOverrides>>;
+  DateField: Partial<Overwrite<DateFieldConfigBase, DateFieldConfigOverrides>>;
   DatePicker: Partial<
     Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>
   >;
