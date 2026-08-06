@@ -9,7 +9,9 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     merged,
     endBind,
     rootBind,
+    endTitle,
     startBind,
+    startTitle,
     footerBind,
     panelsBind,
     showFooter,
@@ -17,7 +19,9 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     timeTokens,
     handleApply,
     cancelLabel,
+    endTitleBind,
     handleCancel,
+    startTitleBind,
     endDisplayValue,
     handleEndChange,
     applyButtonProps,
@@ -36,6 +40,8 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     <div {...rootBind}>
       <div {...panelsBind}>
         <div {...startBind}>
+          <p className={startTitleBind}>{startTitle}</p>
+
           <TimePanel
             ampm={merged.ampm}
             tokens={timeTokens}
@@ -54,6 +60,8 @@ function TimeRangePicker(props: TimeRangePickerProps) {
         </div>
 
         <div {...endBind}>
+          <p className={endTitleBind}>{endTitle}</p>
+
           <TimePanel
             ampm={merged.ampm}
             tokens={timeTokens}

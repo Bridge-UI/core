@@ -16,6 +16,7 @@ function DateTimePicker(props: DateTimePickerProps) {
     timeTokens,
     handleApply,
     cancelLabel,
+    contentBind,
     displayValue,
     handleCancel,
     calendarBind,
@@ -36,46 +37,48 @@ function DateTimePicker(props: DateTimePickerProps) {
 
   return (
     <div {...rootBind}>
-      <div className={calendarBind}>
-        <Calendar
-          slots={props.slots}
-          color={merged.color}
-          value={displayValue}
-          tokens={calendarTokens}
-          maxDate={merged.maxDate}
-          minDate={merged.minDate}
-          rounded={merged.rounded}
-          disabled={merged.disabled}
-          readOnly={merged.readOnly}
-          timeZone={merged.timeZone}
-          hideYears={merged.hideYears}
-          hideMonths={merged.hideMonths}
-          onChange={handleCalendarChange}
-          defaultView={merged.defaultView}
-          startOfWeek={merged.startOfWeek}
-          disableDates={merged.disableDates}
-          hideWeekdays={merged.hideWeekdays}
-          disableYears={merged.disableYears}
-          disableMonths={merged.disableMonths}
-        />
-      </div>
+      <div className={contentBind}>
+        <div className={calendarBind}>
+          <Calendar
+            slots={props.slots}
+            color={merged.color}
+            value={displayValue}
+            tokens={calendarTokens}
+            maxDate={merged.maxDate}
+            minDate={merged.minDate}
+            rounded={merged.rounded}
+            disabled={merged.disabled}
+            readOnly={merged.readOnly}
+            timeZone={merged.timeZone}
+            hideYears={merged.hideYears}
+            hideMonths={merged.hideMonths}
+            onChange={handleCalendarChange}
+            defaultView={merged.defaultView}
+            startOfWeek={merged.startOfWeek}
+            disableDates={merged.disableDates}
+            hideWeekdays={merged.hideWeekdays}
+            disableYears={merged.disableYears}
+            disableMonths={merged.disableMonths}
+          />
+        </div>
 
-      <div className={timeBind}>
-        <TimePanel
-          ampm={merged.ampm}
-          tokens={timeTokens}
-          color={merged.color}
-          value={displayValue}
-          maxTime={merged.maxTime}
-          minTime={merged.minTime}
-          rounded={merged.rounded}
-          disabled={merged.disabled}
-          interval={merged.interval}
-          readOnly={merged.readOnly}
-          timeZone={merged.timeZone}
-          onChange={handlePanelChange}
-          disableTimes={merged.disableTimes}
-        />
+        <div className={timeBind}>
+          <TimePanel
+            ampm={merged.ampm}
+            tokens={timeTokens}
+            color={merged.color}
+            value={displayValue}
+            maxTime={merged.maxTime}
+            minTime={merged.minTime}
+            rounded={merged.rounded}
+            disabled={merged.disabled}
+            interval={merged.interval}
+            readOnly={merged.readOnly}
+            timeZone={merged.timeZone}
+            onChange={handlePanelChange}
+            disableTimes={merged.disableTimes}
+          />
+        </div>
       </div>
 
       {showFooter && (

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
@@ -309,6 +309,19 @@ export function useCalendarDate(
     props.onPreviewDateChange?.(date);
   };
 
+  const previewFrameRef = useRef<null | number>(null);
+
+  const schedulePreview = (date: Date | null) => {
+    if (previewFrameRef.current !== null) {
+      cancelAnimationFrame(previewFrameRef.current);
+    }
+
+    previewFrameRef.current = requestAnimationFrame(() => {
+      previewFrameRef.current = null;
+      setPreview(date);
+    });
+  };
+
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
@@ -356,19 +369,24 @@ export function useCalendarDate(
         onClick: () => selectDay(cell.date),
         "data-preview": cell.preview ? "" : undefined,
         "aria-current": cell.today ? ("date" as const) : undefined,
-        onMouseLeave: () => {
-          if (mode === "range") {
-            setPreview(null);
-          }
-        },
         onMouseEnter: () => {
           if (mode === "range" && !cell.disabled) {
-            setPreview(cell.date);
+            schedulePreview(cell.date);
+          }
+        },
+        onMouseLeave: () => {
+          if (mode === "range") {
+            if (previewFrameRef.current !== null) {
+              cancelAnimationFrame(previewFrameRef.current);
+              previewFrameRef.current = null;
+            }
+
+            setPreview(null);
           }
         },
       },
       cn({
-        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm transition-all duration-150 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
+        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",

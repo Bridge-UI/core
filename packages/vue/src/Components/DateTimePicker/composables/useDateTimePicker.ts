@@ -254,6 +254,19 @@ export function useDateTimePicker(
     );
   });
 
+  const contentBind = computed(() => {
+    return cn({
+      "flex flex-row items-stretch": true,
+    });
+  });
+
+  const calendarBind = computed(() => {
+    return cn({
+      "shrink-0": true,
+      [mergedClasses.value.calendar ?? ""]: true,
+    });
+  });
+
   const footerBind = computed(() => {
     return mergePartBind(
       customProps.value?.footer,
@@ -267,7 +280,8 @@ export function useDateTimePicker(
 
   const timePanelBind = computed(() => {
     return cn({
-      "border-t border-gray-100 p-2 dark:border-gray-800": true,
+      "flex flex-col border-l border-gray-100 dark:border-gray-800": true,
+      [mergedClasses.value.time ?? ""]: true,
     });
   });
 
@@ -282,8 +296,10 @@ export function useDateTimePicker(
     showFooter,
     timeTokens,
     handleApply,
+    contentBind,
     displayValue,
     handleCancel,
+    calendarBind,
     timePanelBind,
     calendarTokens,
     handlePanelChange,

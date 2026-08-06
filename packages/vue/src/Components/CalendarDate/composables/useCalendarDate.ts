@@ -338,6 +338,19 @@ export function useCalendarDate(
     emit("previewDateChange", date);
   };
 
+  let previewFrame: null | number = null;
+
+  const schedulePreview = (date: Date | null) => {
+    if (previewFrame !== null) {
+      cancelAnimationFrame(previewFrame);
+    }
+
+    previewFrame = requestAnimationFrame(() => {
+      previewFrame = null;
+      setPreview(date);
+    });
+  };
+
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
@@ -385,19 +398,24 @@ export function useCalendarDate(
         onClick: () => selectDay(cell.date),
         "data-preview": cell.preview ? "" : undefined,
         "aria-current": cell.today ? ("date" as const) : undefined,
-        onMouseleave: () => {
-          if (mode.value === "range") {
-            setPreview(null);
-          }
-        },
         onMouseenter: () => {
           if (mode.value === "range" && !cell.disabled) {
-            setPreview(cell.date);
+            schedulePreview(cell.date);
+          }
+        },
+        onMouseleave: () => {
+          if (mode.value === "range") {
+            if (previewFrame !== null) {
+              cancelAnimationFrame(previewFrame);
+              previewFrame = null;
+            }
+
+            setPreview(null);
           }
         },
       },
       cn({
-        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm transition-all duration-150 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
+        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",

@@ -348,7 +348,7 @@ export function useTimePanel(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-row gap-1": true,
+        "flex flex-row gap-2": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -359,7 +359,7 @@ export function useTimePanel(
       customProps.value?.column,
       {},
       cn({
-        "flex h-48 flex-col gap-1 overflow-y-auto": true,
+        "flex h-72 flex-col gap-1 overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
         [mergedClasses.value.column ?? ""]: true,
       }),
     );
@@ -380,7 +380,7 @@ export function useTimePanel(
         onClick: () => onSelect(item.value),
       },
       cn({
-        "min-w-10 cursor-pointer px-3 py-1.5 text-sm transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
+        "min-w-12 cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: item.state === "base" || item.state === "hover",
         [color?.hover ?? ""]: item.state === "base" || item.state === "hover",

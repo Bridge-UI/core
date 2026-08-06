@@ -16,6 +16,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     timeTokens,
     handleApply,
     cancelLabel,
+    contentBind,
     displayValue,
     handleCancel,
     calendarBind,
@@ -38,64 +39,66 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
 
   return (
     <div {...rootBind}>
-      <div className={calendarBind}>
-        <CalendarRange
-          slots={props.slots}
-          color={merged.color}
-          value={displayValue}
-          tokens={calendarTokens}
-          maxDate={merged.maxDate}
-          minDate={merged.minDate}
-          rounded={merged.rounded}
-          disabled={merged.disabled}
-          readOnly={merged.readOnly}
-          timeZone={merged.timeZone}
-          hideYears={merged.hideYears}
-          hideMonths={merged.hideMonths}
-          onChange={handleCalendarChange}
-          startOfWeek={merged.startOfWeek}
-          disableDates={merged.disableDates}
-          hideWeekdays={merged.hideWeekdays}
-          disableYears={merged.disableYears}
-          disableMonths={merged.disableMonths}
-        />
-      </div>
-
-      <div className={timeBind}>
-        <div className="flex-1 p-2">
-          <TimePanel
-            ampm={merged.ampm}
-            tokens={timeTokens}
+      <div className={contentBind}>
+        <div className={calendarBind}>
+          <CalendarRange
+            slots={props.slots}
             color={merged.color}
-            value={startTimeValue}
-            maxTime={merged.maxTime}
-            minTime={merged.minTime}
+            value={displayValue}
+            tokens={calendarTokens}
+            maxDate={merged.maxDate}
+            minDate={merged.minDate}
             rounded={merged.rounded}
             disabled={merged.disabled}
-            interval={merged.interval}
             readOnly={merged.readOnly}
             timeZone={merged.timeZone}
-            onChange={handleStartPanelChange}
-            disableTimes={merged.disableTimes}
+            hideYears={merged.hideYears}
+            hideMonths={merged.hideMonths}
+            onChange={handleCalendarChange}
+            startOfWeek={merged.startOfWeek}
+            disableDates={merged.disableDates}
+            hideWeekdays={merged.hideWeekdays}
+            disableYears={merged.disableYears}
+            disableMonths={merged.disableMonths}
           />
         </div>
 
-        <div className="flex-1 border-l border-gray-100 p-2 dark:border-gray-800">
-          <TimePanel
-            ampm={merged.ampm}
-            tokens={timeTokens}
-            color={merged.color}
-            value={endTimeValue}
-            maxTime={merged.maxTime}
-            minTime={merged.minTime}
-            rounded={merged.rounded}
-            disabled={merged.disabled}
-            interval={merged.interval}
-            readOnly={merged.readOnly}
-            timeZone={merged.timeZone}
-            onChange={handleEndPanelChange}
-            disableTimes={merged.disableTimes}
-          />
+        <div className={timeBind}>
+          <div className="flex flex-1 flex-col">
+            <TimePanel
+              ampm={merged.ampm}
+              tokens={timeTokens}
+              color={merged.color}
+              value={startTimeValue}
+              maxTime={merged.maxTime}
+              minTime={merged.minTime}
+              rounded={merged.rounded}
+              disabled={merged.disabled}
+              interval={merged.interval}
+              readOnly={merged.readOnly}
+              timeZone={merged.timeZone}
+              onChange={handleStartPanelChange}
+              disableTimes={merged.disableTimes}
+            />
+          </div>
+
+          <div className="flex flex-1 flex-col border-l border-gray-100 dark:border-gray-800">
+            <TimePanel
+              ampm={merged.ampm}
+              tokens={timeTokens}
+              color={merged.color}
+              value={endTimeValue}
+              maxTime={merged.maxTime}
+              minTime={merged.minTime}
+              rounded={merged.rounded}
+              disabled={merged.disabled}
+              interval={merged.interval}
+              readOnly={merged.readOnly}
+              timeZone={merged.timeZone}
+              onChange={handleEndPanelChange}
+              disableTimes={merged.disableTimes}
+            />
+          </div>
         </div>
       </div>
 

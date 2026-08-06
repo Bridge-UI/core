@@ -46,3 +46,10 @@ test("it should default end view one month after start", () => {
   expect(viewDate.value.getMonth()).toBe(4);
   expect(endViewDate.value.getMonth()).toBe(5);
 });
+
+test("it should expose end month selector bind", () => {
+  const { endMonthLabel, endMonthSelectorBind } = mountUseCalendarRange();
+
+  expect(endMonthLabel.value).toBe("June");
+  expect(endMonthSelectorBind.value["aria-label"]).toBe("Select end month");
+});

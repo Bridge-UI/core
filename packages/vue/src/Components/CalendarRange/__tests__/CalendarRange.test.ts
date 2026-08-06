@@ -37,6 +37,12 @@ test("it should render a shared year selector and dual date panels", () => {
   expect(
     document.body.querySelectorAll('[aria-label="Select year"]'),
   ).toHaveLength(1);
+  expect(
+    document.body.querySelectorAll('[aria-label="Select month"]'),
+  ).toHaveLength(1);
+  expect(
+    document.body.querySelectorAll('[aria-label="Select end month"]'),
+  ).toHaveLength(1);
 });
 
 test("it should keep end month one month ahead of start", () => {
@@ -47,8 +53,12 @@ test("it should keep end month one month ahead of start", () => {
     },
   });
 
-  expect(document.body.textContent).toContain("May");
-  expect(document.body.textContent).toContain("June");
+  expect(
+    document.body.querySelector('[aria-label="Select month"]')?.textContent,
+  ).toContain("May");
+  expect(
+    document.body.querySelector('[aria-label="Select end month"]')?.textContent,
+  ).toContain("June");
 });
 
 test("it should emit change when a range is selected", async () => {
@@ -77,4 +87,56 @@ test("it should emit change when a range is selected", async () => {
   await flushPromises();
 
   expect(onChange).toHaveBeenCalled();
+});
+
+test("it should highlight the end month when opening from the end month selector", async () => {
+  mountCalendarRange({
+    props: {
+      onViewDateChange: () => {},
+      viewDate: new Date(2021, 4, 1),
+    },
+  });
+
+  document.body
+    .querySelector('[aria-label="Select end month"]')
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const monthButtons = Array.from(
+    document.body.querySelectorAll("button[aria-pressed]"),
+  );
+  const june = monthButtons.find((node) =>
+    /june/i.test(node.textContent ?? ""),
+  );
+  const may = monthButtons.find((node) => /may/i.test(node.textContent ?? ""));
+
+  expect(june?.getAttribute("aria-pressed")).toBe("true");
+  expect(may?.getAttribute("aria-pressed")).toBe("false");
+});
+
+test("it should move the end panel when selecting a month from the end selector", async () => {
+  const onViewDateChange = vi.fn();
+
+  mountCalendarRange({
+    props: {
+      onViewDateChange,
+      viewDate: new Date(2021, 4, 1),
+    },
+  });
+
+  document.body
+    .querySelector('[aria-label="Select end month"]')
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const august = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => /august/i.test(node.textContent ?? ""),
+  );
+
+  august?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onViewDateChange).toHaveBeenCalled();
+  const next = onViewDateChange.mock.calls.at(-1)?.[0] as Date;
+  expect(next.getMonth()).toBe(6);
 });

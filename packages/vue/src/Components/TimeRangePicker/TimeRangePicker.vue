@@ -18,7 +18,9 @@ const {
   merged,
   endBind,
   rootBind,
+  endTitle,
   startBind,
+  startTitle,
   footerBind,
   panelsBind,
   showFooter,
@@ -26,7 +28,9 @@ const {
   timeTokens,
   handleApply,
   cancelLabel,
+  endTitleBind,
   handleCancel,
+  startTitleBind,
   endDisplayValue,
   handleEndChange,
   applyButtonProps,
@@ -50,6 +54,8 @@ const {
   <div v-bind="rootBind">
     <div v-bind="panelsBind">
       <div v-bind="startBind">
+        <p :class="startTitleBind">{{ startTitle }}</p>
+
         <TimePanel
           :ampm="merged.ampm"
           :tokens="timeTokens"
@@ -68,6 +74,8 @@ const {
       </div>
 
       <div v-bind="endBind">
+        <p :class="endTitleBind">{{ endTitle }}</p>
+
         <TimePanel
           :ampm="merged.ampm"
           :tokens="timeTokens"

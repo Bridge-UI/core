@@ -25,6 +25,11 @@ export interface TimeRangePickerClasses {
   end?: string;
 
   /**
+   * Classes for the end panel title.
+   */
+  endTitle?: string;
+
+  /**
    * Classes for the footer.
    */
   footer?: string;
@@ -43,6 +48,11 @@ export interface TimeRangePickerClasses {
    * Classes for the start time panel wrapper.
    */
   start?: string;
+
+  /**
+   * Classes for the start panel title.
+   */
+  startTitle?: string;
 }
 
 export interface TimeRangePickerCustomProps {
@@ -159,6 +169,13 @@ export interface TimeRangePickerOwnProps {
   disableTimes?: DisableTimesInput;
 
   /**
+   * Label above the end time panel.
+   *
+   * @default "End time"
+   */
+  endTitle?: string;
+
+  /**
    * Minute step between options.
    *
    * @default 1
@@ -202,6 +219,13 @@ export interface TimeRangePickerOwnProps {
    * @default false
    */
   showFooter?: boolean;
+
+  /**
+   * Label above the start time panel.
+   *
+   * @default "Start time"
+   */
+  startTitle?: string;
 
   /**
    * IANA time zone.

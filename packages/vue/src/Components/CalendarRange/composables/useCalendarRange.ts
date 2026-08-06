@@ -189,6 +189,7 @@ export function useCalendarRange(
 
   const yearPageSize = 15;
   const yearPageStart = ref<null | number>(null);
+  const monthTarget = ref<"end" | "start">("start");
 
   const value = computed((): null | DateRangeValue => {
     if (isValueControlled.value) {
@@ -358,14 +359,53 @@ export function useCalendarRange(
 
   const handleYearSelect = (year: number) => {
     yearPageStart.value = null;
+    monthTarget.value = "start";
     setViewDate(adapter.value.setYear(viewDate.value, year, context.value));
     setView(merged.value.hideMonths ? "date" : "month");
   };
 
+  const openStartMonthView = () => {
+    monthTarget.value = "start";
+    setView("month");
+  };
+
+  const openEndMonthView = () => {
+    monthTarget.value = "end";
+    setView("month");
+  };
+
   const handleMonthSelect = (month: number) => {
-    setViewDate(adapter.value.setMonth(viewDate.value, month, context.value));
+    if (monthTarget.value === "end") {
+      const endYear = adapter.value.getYear(endViewDate.value, context.value);
+      const endBase = adapter.value.setMonth(
+        adapter.value.setYear(viewDate.value, endYear, context.value),
+        month,
+        context.value,
+      );
+
+      setViewDate(adapter.value.addMonths(endBase, -1, context.value));
+    } else {
+      setViewDate(adapter.value.setMonth(viewDate.value, month, context.value));
+    }
+
     setView("date");
   };
+
+  const monthPanelYear = computed(() => {
+    if (monthTarget.value === "end") {
+      return adapter.value.getYear(endViewDate.value, context.value);
+    }
+
+    return viewYear.value;
+  });
+
+  const monthPanelValue = computed(() => {
+    if (monthTarget.value === "end") {
+      return adapter.value.getMonth(endViewDate.value, context.value);
+    }
+
+    return viewMonth.value;
+  });
 
   const shared = computed(() => {
     return {
@@ -385,7 +425,7 @@ export function useCalendarRange(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col overflow-hidden": true,
+        "flex min-w-[38rem] flex-col overflow-hidden": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -396,7 +436,7 @@ export function useCalendarRange(
       customProps.value?.header,
       {},
       cn({
-        "flex items-center justify-between p-2.5": true,
+        "flex items-center justify-between gap-x-2 p-2.5": true,
         [mergedClasses.value.header ?? ""]: true,
       }),
     );
@@ -407,7 +447,7 @@ export function useCalendarRange(
       customProps.value?.body,
       {},
       cn({
-        "flex flex-col p-2.5": true,
+        "flex min-h-64 flex-col p-2.5": true,
         [mergedClasses.value.body ?? ""]: true,
       }),
     );
@@ -418,7 +458,7 @@ export function useCalendarRange(
       customProps.value?.panels,
       {},
       cn({
-        "flex flex-row gap-2": true,
+        "flex flex-row gap-4": true,
         [mergedClasses.value.panels ?? ""]: true,
       }),
     );
@@ -429,7 +469,7 @@ export function useCalendarRange(
       customProps.value?.start,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col": true,
+        "flex w-72 shrink-0 flex-col": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -440,10 +480,16 @@ export function useCalendarRange(
       customProps.value?.end,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col": true,
+        "flex w-72 shrink-0 flex-col": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
+  });
+
+  const pickerFillBind = computed(() => {
+    return cn({
+      "flex min-h-64 flex-1 flex-col": true,
+    });
   });
 
   const selectorBind = computed(() => {
@@ -552,13 +598,31 @@ export function useCalendarRange(
   });
 
   const monthSelectorBind = computed(() => {
-    return mergePartBind(customProps.value?.selector, undefined, {
+    const bind = mergePartBind(customProps.value?.selector, undefined, {
       ...selectorBind.value,
       type: "button" as const,
-      onClick: () => setView("month"),
       "aria-label": resolveMessage("Select month"),
       disabled: merged.value.disabled || merged.value.hideMonths,
     });
+
+    return {
+      ...bind,
+      onClick: openStartMonthView,
+    };
+  });
+
+  const endMonthSelectorBind = computed(() => {
+    const bind = mergePartBind(customProps.value?.selector, undefined, {
+      ...selectorBind.value,
+      type: "button" as const,
+      "aria-label": resolveMessage("Select end month"),
+      disabled: merged.value.disabled || merged.value.hideMonths,
+    });
+
+    return {
+      ...bind,
+      onClick: openEndMonthView,
+    };
   });
 
   const showYearSelector = computed(() => {
@@ -598,11 +662,15 @@ export function useCalendarRange(
     previewDate,
     setViewDate,
     navIconBind,
+    monthTarget,
     handleChange,
     yearPageSize,
     endMonthLabel,
     nextButtonBind,
+    pickerFillBind,
+    monthPanelYear,
     todayButtonBind,
+    monthPanelValue,
     yearSelectorBind,
     handleYearSelect,
     showYearSelector,
@@ -610,6 +678,7 @@ export function useCalendarRange(
     handleMonthSelect,
     showMonthSelector,
     previousButtonBind,
+    endMonthSelectorBind,
     handleEndViewDateChange,
     handlePreviewDateChange,
     handleStartViewDateChange,

@@ -278,15 +278,22 @@ export function useDateTimeRangePicker(
     );
   });
 
+  const contentBind = derived(() => {
+    return cn({
+      "flex flex-row items-stretch": true,
+    });
+  });
+
   const calendarBind = derived(() => {
     return cn({
+      "min-w-0 shrink": true,
       [mergedClasses.calendar ?? ""]: true,
     });
   });
 
   const timeBind = derived(() => {
     return cn({
-      "flex flex-row border-t border-gray-100 dark:border-gray-800": true,
+      "flex flex-row border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.time ?? ""]: true,
     });
   });
@@ -308,6 +315,7 @@ export function useDateTimeRangePicker(
     timeBind,
     timeTokens,
     footerBind,
+    contentBind,
     handleApply,
     displayValue,
     handleCancel,

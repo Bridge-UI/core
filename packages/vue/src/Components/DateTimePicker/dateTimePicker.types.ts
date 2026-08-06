@@ -25,6 +25,11 @@ export interface DateTimePickerRoundedOverrides {}
 
 export interface DateTimePickerClasses {
   /**
+   * Classes for the calendar region.
+   */
+  calendar?: string;
+
+  /**
    * Classes for the footer.
    */
   footer?: string;
@@ -33,6 +38,11 @@ export interface DateTimePickerClasses {
    * Classes for the root element.
    */
   root?: string;
+
+  /**
+   * Classes for the time panel region.
+   */
+  time?: string;
 }
 
 export interface DateTimePickerCustomProps {

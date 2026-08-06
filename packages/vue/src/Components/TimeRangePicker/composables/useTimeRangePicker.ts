@@ -43,10 +43,12 @@ const timeRangePickerBridgeKeys = [
   "minTime",
   "rounded",
   "disabled",
+  "endTitle",
   "interval",
   "readOnly",
   "timeZone",
   "showFooter",
+  "startTitle",
   "customProps",
   "defaultValue",
   "disableTimes",
@@ -218,7 +220,7 @@ export function useTimeRangePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col overflow-hidden rounded-lg bg-white p-2 shadow-lg dark:bg-gray-900": true,
+        "flex flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -240,6 +242,7 @@ export function useTimeRangePicker(
       customProps.value?.start,
       {},
       cn({
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -250,9 +253,30 @@ export function useTimeRangePicker(
       customProps.value?.end,
       {},
       cn({
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
+  });
+
+  const titleClass = computed(() => {
+    return cn({
+      "px-2 pt-2 text-center text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400": true,
+    });
+  });
+
+  const startTitleBind = computed(() => {
+    return cn({
+      [titleClass.value]: true,
+      [mergedClasses.value.startTitle ?? ""]: true,
+    });
+  });
+
+  const endTitleBind = computed(() => {
+    return cn({
+      [titleClass.value]: true,
+      [mergedClasses.value.endTitle ?? ""]: true,
+    });
   });
 
   const footerBind = computed(() => {
@@ -282,6 +306,8 @@ export function useTimeRangePicker(
     handleApply,
     displayValue,
     handleCancel,
+    endTitleBind,
+    startTitleBind,
     endDisplayValue,
     handleEndChange,
     startDisplayValue,
@@ -290,5 +316,11 @@ export function useTimeRangePicker(
     cancelLabel: computed(() => resolveMessage("Cancel")),
     applyButtonProps: computed(() => customProps.value?.applyButton),
     cancelButtonProps: computed(() => customProps.value?.cancelButton),
+    endTitle: computed(
+      () => merged.value.endTitle ?? resolveMessage("End time"),
+    ),
+    startTitle: computed(
+      () => merged.value.startTitle ?? resolveMessage("Start time"),
+    ),
   };
 }

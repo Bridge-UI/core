@@ -21,7 +21,6 @@ function CalendarRange(props: CalendarRangeProps) {
     viewDate,
     viewYear,
     startBind,
-    viewMonth,
     yearLabel,
     monthLabel,
     headerBind,
@@ -29,12 +28,16 @@ function CalendarRange(props: CalendarRangeProps) {
     endViewDate,
     previewDate,
     navIconBind,
+    monthTarget,
     handleChange,
     yearPageSize,
     endMonthLabel,
     yearPageStart,
     nextButtonBind,
+    pickerFillBind,
+    monthPanelYear,
     todayButtonBind,
+    monthPanelValue,
     yearSelectorBind,
     handleYearSelect,
     showYearSelector,
@@ -42,6 +45,7 @@ function CalendarRange(props: CalendarRangeProps) {
     handleMonthSelect,
     showMonthSelector,
     previousButtonBind,
+    endMonthSelectorBind,
     handleEndViewDateChange,
     handlePreviewDateChange,
     handleStartViewDateChange,
@@ -62,35 +66,50 @@ function CalendarRange(props: CalendarRangeProps) {
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        <div className="flex w-full min-w-0 items-center gap-x-2">
-          {showYearSelector && (
-            <button {...yearSelectorBind}>
-              <span>{yearLabel}</span>
+        {showYearSelector && (
+          <button {...yearSelectorBind}>
+            <span>{yearLabel}</span>
 
-              <Icon
-                size="2xs"
-                icon="chevronDown"
-                {...navIconBind}
-                className={chevronClass(view === "year")}
-              />
-            </button>
-          )}
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              {...navIconBind}
+              className={chevronClass(view === "year")}
+            />
+          </button>
+        )}
 
-          {showMonthSelector && (
-            <button {...monthSelectorBind}>
-              <span>{monthLabel}</span>
+        {showMonthSelector && (
+          <button {...monthSelectorBind}>
+            <span>{monthLabel}</span>
 
-              <Icon
-                size="2xs"
-                icon="chevronDown"
-                {...navIconBind}
-                className={chevronClass(view === "month")}
-              />
-            </button>
-          )}
-        </div>
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              {...navIconBind}
+              className={chevronClass(
+                view === "month" && monthTarget === "start",
+              )}
+            />
+          </button>
+        )}
 
-        <div className="flex items-center">
+        {showMonthSelector && (
+          <button {...endMonthSelectorBind}>
+            <span>{endMonthLabel}</span>
+
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              {...navIconBind}
+              className={chevronClass(
+                view === "month" && monthTarget === "end",
+              )}
+            />
+          </button>
+        )}
+
+        <div className="flex shrink-0 items-center">
           <button {...previousButtonBind}>
             <Icon size="sm" icon="chevronLeft" {...navIconBind} />
           </button>
@@ -128,10 +147,6 @@ function CalendarRange(props: CalendarRangeProps) {
             </div>
 
             <div {...endBind}>
-              <p className="mb-1 px-1 text-center text-sm font-medium text-gray-600 dark:text-gray-300">
-                {endMonthLabel}
-              </p>
-
               <CalendarDate
                 {...shared}
                 range
@@ -153,24 +168,39 @@ function CalendarRange(props: CalendarRangeProps) {
         )}
 
         {view === "month" && (
-          <CalendarMonth
-            {...shared}
-            year={viewYear}
-            value={viewMonth}
-            onChange={handleMonthSelect}
-            disableMonths={merged.disableMonths}
-          />
+          <div className={pickerFillBind}>
+            <CalendarMonth
+              {...shared}
+              key={monthTarget}
+              year={monthPanelYear}
+              value={monthPanelValue}
+              onChange={handleMonthSelect}
+              disableMonths={merged.disableMonths}
+              classes={{
+                root: "h-full",
+                month: "min-h-16",
+                grid: "h-full auto-rows-fr",
+              }}
+            />
+          </div>
         )}
 
         {view === "year" && (
-          <CalendarYear
-            {...shared}
-            value={viewYear}
-            pageSize={yearPageSize}
-            startYear={yearPageStart}
-            onChange={handleYearSelect}
-            disableYears={merged.disableYears}
-          />
+          <div className={pickerFillBind}>
+            <CalendarYear
+              {...shared}
+              value={viewYear}
+              pageSize={yearPageSize}
+              startYear={yearPageStart}
+              onChange={handleYearSelect}
+              disableYears={merged.disableYears}
+              classes={{
+                root: "h-full",
+                year: "min-h-16",
+                grid: "h-full auto-rows-fr",
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

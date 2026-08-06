@@ -229,15 +229,22 @@ export function useDateTimePicker(
     );
   });
 
+  const contentBind = derived(() => {
+    return cn({
+      "flex flex-row items-stretch": true,
+    });
+  });
+
   const calendarBind = derived(() => {
     return cn({
+      "shrink-0": true,
       [mergedClasses.calendar ?? ""]: true,
     });
   });
 
   const timeBind = derived(() => {
     return cn({
-      "p-2": true,
+      "flex flex-col border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.time ?? ""]: true,
     });
   });
@@ -259,6 +266,7 @@ export function useDateTimePicker(
     timeBind,
     timeTokens,
     footerBind,
+    contentBind,
     handleApply,
     displayValue,
     handleCancel,

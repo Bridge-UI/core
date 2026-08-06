@@ -38,10 +38,12 @@ const timeRangePickerBridgeKeys = [
   "minTime",
   "rounded",
   "disabled",
+  "endTitle",
   "interval",
   "readOnly",
   "timeZone",
   "showFooter",
+  "startTitle",
   "customProps",
   "defaultValue",
   "disableTimes",
@@ -194,7 +196,7 @@ export function useTimeRangePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex flex-col overflow-hidden rounded-lg bg-white p-2 shadow-lg dark:bg-gray-900": true,
+        "flex flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -216,6 +218,7 @@ export function useTimeRangePicker(
       customProps?.start,
       {},
       cn({
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -226,9 +229,30 @@ export function useTimeRangePicker(
       customProps?.end,
       {},
       cn({
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.end ?? ""]: true,
       }),
     );
+  });
+
+  const titleClass = derived(() => {
+    return cn({
+      "px-2 pt-2 text-center text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400": true,
+    });
+  });
+
+  const startTitleBind = derived(() => {
+    return cn({
+      [titleClass]: true,
+      [mergedClasses.startTitle ?? ""]: true,
+    });
+  });
+
+  const endTitleBind = derived(() => {
+    return cn({
+      [titleClass]: true,
+      [mergedClasses.endTitle ?? ""]: true,
+    });
   });
 
   const footerBind = derived(() => {
@@ -253,6 +277,8 @@ export function useTimeRangePicker(
     handleApply,
     displayValue,
     handleCancel,
+    endTitleBind,
+    startTitleBind,
     endDisplayValue,
     handleEndChange,
     startDisplayValue,
@@ -262,5 +288,7 @@ export function useTimeRangePicker(
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,
+    endTitle: merged.endTitle ?? resolveMessage("End time"),
+    startTitle: merged.startTitle ?? resolveMessage("Start time"),
   };
 }

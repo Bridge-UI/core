@@ -27,8 +27,10 @@ const {
   timeTokens,
   handleApply,
   cancelLabel,
+  contentBind,
   displayValue,
   handleCancel,
+  calendarBind,
   timePanelBind,
   calendarTokens,
   applyButtonProps,
@@ -52,47 +54,51 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <Calendar
-      :color="merged.color"
-      :value="displayValue"
-      :tokens="calendarTokens"
-      :rounded="merged.rounded"
-      :max-date="merged.maxDate"
-      :min-date="merged.minDate"
-      :disabled="merged.disabled"
-      :read-only="merged.readOnly"
-      :time-zone="merged.timeZone"
-      :hide-years="merged.hideYears"
-      :hide-months="merged.hideMonths"
-      v-on:change="handleCalendarChange"
-      :default-view="merged.defaultView"
-      :start-of-week="merged.startOfWeek"
-      :disable-dates="merged.disableDates"
-      :hide-weekdays="merged.hideWeekdays"
-      :disable-years="merged.disableYears"
-      :disable-months="merged.disableMonths"
-    >
-      <template #day="cell">
-        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
-      </template>
-    </Calendar>
+    <div :class="contentBind">
+      <div :class="calendarBind">
+        <Calendar
+          :color="merged.color"
+          :value="displayValue"
+          :tokens="calendarTokens"
+          :rounded="merged.rounded"
+          :max-date="merged.maxDate"
+          :min-date="merged.minDate"
+          :disabled="merged.disabled"
+          :read-only="merged.readOnly"
+          :time-zone="merged.timeZone"
+          :hide-years="merged.hideYears"
+          :hide-months="merged.hideMonths"
+          v-on:change="handleCalendarChange"
+          :default-view="merged.defaultView"
+          :start-of-week="merged.startOfWeek"
+          :disable-dates="merged.disableDates"
+          :hide-weekdays="merged.hideWeekdays"
+          :disable-years="merged.disableYears"
+          :disable-months="merged.disableMonths"
+        >
+          <template #day="cell">
+            <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+          </template>
+        </Calendar>
+      </div>
 
-    <div :class="timePanelBind">
-      <TimePanel
-        :ampm="merged.ampm"
-        :tokens="timeTokens"
-        :color="merged.color"
-        :value="displayValue"
-        :rounded="merged.rounded"
-        :max-time="merged.maxTime"
-        :min-time="merged.minTime"
-        :disabled="merged.disabled"
-        :interval="merged.interval"
-        :read-only="merged.readOnly"
-        :time-zone="merged.timeZone"
-        v-on:change="handlePanelChange"
-        :disable-times="merged.disableTimes"
-      />
+      <div :class="timePanelBind">
+        <TimePanel
+          :ampm="merged.ampm"
+          :tokens="timeTokens"
+          :color="merged.color"
+          :value="displayValue"
+          :rounded="merged.rounded"
+          :max-time="merged.maxTime"
+          :min-time="merged.minTime"
+          :disabled="merged.disabled"
+          :interval="merged.interval"
+          :read-only="merged.readOnly"
+          :time-zone="merged.timeZone"
+          v-on:change="handlePanelChange"
+          :disable-times="merged.disableTimes"
+        />
+      </div>
     </div>
 
     <div v-if="showFooter" v-bind="footerBind">
