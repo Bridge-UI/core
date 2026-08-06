@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, isString } from "es-toolkit/compat";
+import { clamp, isNil, isString, range } from "es-toolkit/compat";
 
 /**
  * Locale / time zone context forwarded to adapter methods.
@@ -363,7 +363,7 @@ export function createNativeDateAdapter(
       const locale = resolveLocale(context);
       const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
 
-      return Array.from({ length: 12 }, (_, month) => {
+      return range(12).map((month) => {
         return formatter.format(new Date(2021, month, 1));
       });
     },
@@ -413,7 +413,7 @@ export function createNativeDateAdapter(
       // 2021-01-03 is a known Sunday in local construction.
       const sunday = new Date(2021, 0, 3);
 
-      return Array.from({ length: 7 }, (_, index) => {
+      return range(7).map((index) => {
         const day = new Date(sunday);
 
         day.setDate(sunday.getDate() + index);
@@ -430,7 +430,7 @@ export function createNativeDateAdapter(
       const year = cursor.getUTCFullYear();
       const month = cursor.getUTCMonth();
       const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-      const day = Math.min(parts.day, daysInMonth);
+      const day = clamp(parts.day, 1, daysInMonth);
 
       return fromParts(year, month, day, context);
     },
@@ -441,13 +441,10 @@ export function createNativeDateAdapter(
       const normalizedStart = ((startOfWeek % 7) + 7) % 7;
       const leading = (weekday - normalizedStart + 7) % 7;
       const gridStart = adapter.addDays(monthStart, -leading, context);
-      const days: Date[] = [];
 
-      for (let index = 0; index < 42; index += 1) {
-        days.push(adapter.addDays(gridStart, index, context));
-      }
-
-      return days;
+      return range(42).map((index) => {
+        return adapter.addDays(gridStart, index, context);
+      });
     },
 
     parse: (value, context) => {
