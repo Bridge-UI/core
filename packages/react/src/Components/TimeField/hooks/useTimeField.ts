@@ -210,6 +210,8 @@ export function useTimeField(props: TimeFieldProps) {
     );
   });
 
+  const menuFromProps = timeOnly.customProps?.menu;
+
   return {
     open,
     timeOnly,
@@ -219,7 +221,14 @@ export function useTimeField(props: TimeFieldProps) {
     containerRef,
     handleOpenChange,
     handlePickerChange,
-    menuProps: timeOnly.customProps?.menu,
     timePickerCustomProps: timeOnly.customProps?.timePicker,
+    // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
+    menuProps: {
+      ...menuFromProps,
+      classes: {
+        ...menuFromProps?.classes,
+        content: cn("min-w-0", menuFromProps?.classes?.content),
+      },
+    },
   };
 }

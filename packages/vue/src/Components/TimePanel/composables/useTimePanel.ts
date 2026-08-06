@@ -348,7 +348,7 @@ export function useTimePanel(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex h-full min-h-72 w-fit flex-row gap-2": true,
+        "flex h-72 w-fit flex-row gap-2": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

@@ -217,7 +217,16 @@ export function useTimeField(
   });
 
   const menuProps = computed(() => {
-    return timeOnly.value.customProps?.menu;
+    const menuFromProps = timeOnly.value.customProps?.menu;
+
+    // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
+    return {
+      ...menuFromProps,
+      classes: {
+        ...menuFromProps?.classes,
+        content: cn("min-w-0", menuFromProps?.classes?.content),
+      },
+    };
   });
 
   const timePickerCustomProps = computed(() => {
