@@ -3,8 +3,10 @@ name: bridge-ui-forms
 description: >-
   Build forms with Bridge UI React — TextField, Textarea, PasswordField,
   NumberField, OtpField, Select, Autocomplete, Slider, Checkbox, Radio,
-  Switch, FormField, FormControl, BaseField. Use when wiring inputs,
-  validation chrome, or select.
+  Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
+  TimePicker, TimeRangeField, TimeRangePicker, DateTimeField, DateTimePicker,
+  DateTimeRangeField, DateTimeRangePicker, FormField, FormControl, BaseField.
+  Use when wiring inputs, date/time pickers, validation chrome, or select.
 ---
 
 # Bridge UI (React) — forms
@@ -26,6 +28,12 @@ Controlled fields: **`value` + `onChange`**. Never Vue `v-model`.
 | Select                    | `.ai/docs/components/Select.md`                                    |
 | Autocomplete              | `.ai/docs/components/Autocomplete.md`                              |
 | Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`         |
+| Date                      | `.ai/docs/components/DateField.md`, `DatePicker.md`                |
+| Date range                | `.ai/docs/components/DateRangeField.md`, `DateRangePicker.md`      |
+| Time                      | `.ai/docs/components/TimeField.md`, `TimePicker.md`                |
+| Time range                | `.ai/docs/components/TimeRangeField.md`, `TimeRangePicker.md`      |
+| Date-time                 | `.ai/docs/components/DateTimeField.md`, `DateTimePicker.md`        |
+| Date-time range           | `.ai/docs/components/DateTimeRangeField.md`, `DateTimeRangePicker.md` |
 | Input chrome              | `.ai/docs/components/FormField.md`                                 |
 | Toggle row chrome         | `.ai/docs/components/FormControl.md`                               |
 | Custom control chrome     | `.ai/docs/components/BaseField.md`                                 |
