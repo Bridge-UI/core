@@ -35,14 +35,54 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   });
+
+  const startTimeAside = (
+    <div className={timeBind}>
+      <TimePanel
+        ampm={merged.ampm}
+        tokens={timeTokens}
+        color={merged.color}
+        value={startTimeValue}
+        maxTime={merged.maxTime}
+        minTime={merged.minTime}
+        rounded={merged.rounded}
+        disabled={merged.disabled}
+        interval={merged.interval}
+        readOnly={merged.readOnly}
+        timeZone={merged.timeZone}
+        onChange={handleStartPanelChange}
+        disableTimes={merged.disableTimes}
+      />
+    </div>
+  );
+
+  const endTimeAside = (
+    <div className={timeBind}>
+      <TimePanel
+        ampm={merged.ampm}
+        tokens={timeTokens}
+        color={merged.color}
+        value={endTimeValue}
+        maxTime={merged.maxTime}
+        minTime={merged.minTime}
+        rounded={merged.rounded}
+        disabled={merged.disabled}
+        interval={merged.interval}
+        readOnly={merged.readOnly}
+        timeZone={merged.timeZone}
+        onChange={handleEndPanelChange}
+        disableTimes={merged.disableTimes}
+      />
+    </div>
+  );
 
   return (
     <div {...rootBind}>
       <div className={contentBind}>
         <div className={calendarBind}>
           <CalendarRange
-            slots={props.slots}
             color={merged.color}
             value={displayValue}
             tokens={calendarTokens}
@@ -55,50 +95,18 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             hideYears={merged.hideYears}
             hideMonths={merged.hideMonths}
             onChange={handleCalendarChange}
+            orientation={merged.orientation}
             startOfWeek={merged.startOfWeek}
             disableDates={merged.disableDates}
             hideWeekdays={merged.hideWeekdays}
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
+            slots={{
+              day: props.slots?.day,
+              endAside: endTimeAside,
+              startAside: startTimeAside,
+            }}
           />
-        </div>
-
-        <div className={timeBind}>
-          <div className="flex flex-1 flex-col">
-            <TimePanel
-              ampm={merged.ampm}
-              tokens={timeTokens}
-              color={merged.color}
-              value={startTimeValue}
-              maxTime={merged.maxTime}
-              minTime={merged.minTime}
-              rounded={merged.rounded}
-              disabled={merged.disabled}
-              interval={merged.interval}
-              readOnly={merged.readOnly}
-              timeZone={merged.timeZone}
-              onChange={handleStartPanelChange}
-              disableTimes={merged.disableTimes}
-            />
-          </div>
-
-          <div className="flex flex-1 flex-col border-l border-gray-100 dark:border-gray-800">
-            <TimePanel
-              ampm={merged.ampm}
-              tokens={timeTokens}
-              color={merged.color}
-              value={endTimeValue}
-              maxTime={merged.maxTime}
-              minTime={merged.minTime}
-              rounded={merged.rounded}
-              disabled={merged.disabled}
-              interval={merged.interval}
-              readOnly={merged.readOnly}
-              timeZone={merged.timeZone}
-              onChange={handleEndPanelChange}
-              disableTimes={merged.disableTimes}
-            />
-          </div>
         </div>
       </div>
 

@@ -140,3 +140,26 @@ test("it should move the end panel when selecting a month from the end selector"
   const next = onViewDateChange.mock.calls.at(-1)?.[0] as Date;
   expect(next.getMonth()).toBe(6);
 });
+
+test("it should keep end month in the header when horizontal", () => {
+  const wrapper = mountCalendarRange({
+    props: { orientation: "horizontal" },
+  });
+
+  const header = wrapper.element.firstElementChild;
+  expect(
+    header?.querySelector('[aria-label="Select end month"]'),
+  ).not.toBeNull();
+});
+
+test("it should move end month below the start panel when vertical", () => {
+  const wrapper = mountCalendarRange({
+    props: { orientation: "vertical" },
+  });
+
+  const header = wrapper.element.firstElementChild;
+  expect(header?.querySelector('[aria-label="Select end month"]')).toBeNull();
+  expect(
+    document.body.querySelectorAll('[aria-label="Select end month"]'),
+  ).toHaveLength(1);
+});

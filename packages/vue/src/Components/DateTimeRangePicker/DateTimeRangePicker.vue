@@ -49,6 +49,7 @@ const {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   },
   emit,
 );
@@ -70,6 +71,7 @@ const {
           :time-zone="merged.timeZone"
           :hide-years="merged.hideYears"
           :hide-months="merged.hideMonths"
+          :orientation="merged.orientation"
           v-on:change="handleCalendarChange"
           :start-of-week="merged.startOfWeek"
           :disable-dates="merged.disableDates"
@@ -80,47 +82,47 @@ const {
           <template #day="cell">
             <slot name="day" v-bind="cell">{{ cell.label }}</slot>
           </template>
+
+          <template #startAside>
+            <div :class="timeBind">
+              <TimePanel
+                :ampm="merged.ampm"
+                :tokens="timeTokens"
+                :color="merged.color"
+                :value="startTimeValue"
+                :rounded="merged.rounded"
+                :max-time="merged.maxTime"
+                :min-time="merged.minTime"
+                :disabled="merged.disabled"
+                :interval="merged.interval"
+                :read-only="merged.readOnly"
+                :time-zone="merged.timeZone"
+                v-on:change="handleStartPanelChange"
+                :disable-times="merged.disableTimes"
+              />
+            </div>
+          </template>
+
+          <template #endAside>
+            <div :class="timeBind">
+              <TimePanel
+                :ampm="merged.ampm"
+                :tokens="timeTokens"
+                :color="merged.color"
+                :value="endTimeValue"
+                :rounded="merged.rounded"
+                :max-time="merged.maxTime"
+                :min-time="merged.minTime"
+                :disabled="merged.disabled"
+                :interval="merged.interval"
+                :read-only="merged.readOnly"
+                :time-zone="merged.timeZone"
+                v-on:change="handleEndPanelChange"
+                :disable-times="merged.disableTimes"
+              />
+            </div>
+          </template>
         </CalendarRange>
-      </div>
-
-      <div :class="timeBind">
-        <div class="flex flex-1 flex-col">
-          <TimePanel
-            :ampm="merged.ampm"
-            :tokens="timeTokens"
-            :color="merged.color"
-            :value="startTimeValue"
-            :rounded="merged.rounded"
-            :max-time="merged.maxTime"
-            :min-time="merged.minTime"
-            :disabled="merged.disabled"
-            :interval="merged.interval"
-            :read-only="merged.readOnly"
-            :time-zone="merged.timeZone"
-            v-on:change="handleStartPanelChange"
-            :disable-times="merged.disableTimes"
-          />
-        </div>
-
-        <div
-          class="flex flex-1 flex-col border-l border-gray-100 dark:border-gray-800"
-        >
-          <TimePanel
-            :ampm="merged.ampm"
-            :tokens="timeTokens"
-            :color="merged.color"
-            :value="endTimeValue"
-            :rounded="merged.rounded"
-            :max-time="merged.maxTime"
-            :min-time="merged.minTime"
-            :disabled="merged.disabled"
-            :interval="merged.interval"
-            :read-only="merged.readOnly"
-            :time-zone="merged.timeZone"
-            v-on:change="handleEndPanelChange"
-            :disable-times="merged.disableTimes"
-          />
-        </div>
       </div>
     </div>
 

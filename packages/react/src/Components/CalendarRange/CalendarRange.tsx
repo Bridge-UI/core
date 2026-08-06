@@ -24,7 +24,9 @@ function CalendarRange(props: CalendarRangeProps) {
     yearLabel,
     monthLabel,
     headerBind,
+    monthsBind,
     panelsBind,
+    isVertical,
     endViewDate,
     previewDate,
     navIconBind,
@@ -33,6 +35,7 @@ function CalendarRange(props: CalendarRangeProps) {
     yearPageSize,
     endMonthLabel,
     yearPageStart,
+    endHeaderBind,
     nextButtonBind,
     pickerFillBind,
     monthPanelYear,
@@ -53,6 +56,7 @@ function CalendarRange(props: CalendarRangeProps) {
     rounded: "md",
     startOfWeek: 0,
     color: "primary",
+    orientation: "horizontal",
   });
 
   const chevronClass = (open: boolean) => {
@@ -63,106 +67,133 @@ function CalendarRange(props: CalendarRangeProps) {
     });
   };
 
+  const navButtons = (
+    <div className="flex shrink-0 items-center">
+      <button {...previousButtonBind}>
+        <Icon size="sm" icon="chevronLeft" {...navIconBind} />
+      </button>
+
+      <button {...todayButtonBind}>
+        <span className="size-2 rounded-full bg-slate-600 dark:bg-slate-300" />
+      </button>
+
+      <button {...nextButtonBind}>
+        <Icon size="sm" icon="chevronRight" {...navIconBind} />
+      </button>
+    </div>
+  );
+
+  const startMonthButton = showMonthSelector ? (
+    <button {...monthSelectorBind}>
+      <span>{monthLabel}</span>
+
+      <Icon
+        size="2xs"
+        icon="chevronDown"
+        {...navIconBind}
+        className={chevronClass(view === "month" && monthTarget === "start")}
+      />
+    </button>
+  ) : null;
+
+  const endMonthButton = showMonthSelector ? (
+    <button {...endMonthSelectorBind}>
+      <span>{endMonthLabel}</span>
+
+      <Icon
+        size="2xs"
+        icon="chevronDown"
+        {...navIconBind}
+        className={chevronClass(view === "month" && monthTarget === "end")}
+      />
+    </button>
+  ) : null;
+
+  const yearButton = showYearSelector ? (
+    <button {...yearSelectorBind}>
+      <span>{yearLabel}</span>
+
+      <Icon
+        size="2xs"
+        icon="chevronDown"
+        {...navIconBind}
+        className={chevronClass(view === "year")}
+      />
+    </button>
+  ) : null;
+
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        {showYearSelector && (
-          <button {...yearSelectorBind}>
-            <span>{yearLabel}</span>
+        <div className="flex min-w-0 flex-1 items-center justify-start">
+          {yearButton}
+        </div>
 
-            <Icon
-              size="2xs"
-              icon="chevronDown"
-              {...navIconBind}
-              className={chevronClass(view === "year")}
-            />
-          </button>
-        )}
+        <div {...monthsBind}>
+          {startMonthButton}
+          {!isVertical && endMonthButton}
+        </div>
 
-        {showMonthSelector && (
-          <button {...monthSelectorBind}>
-            <span>{monthLabel}</span>
-
-            <Icon
-              size="2xs"
-              icon="chevronDown"
-              {...navIconBind}
-              className={chevronClass(
-                view === "month" && monthTarget === "start",
-              )}
-            />
-          </button>
-        )}
-
-        {showMonthSelector && (
-          <button {...endMonthSelectorBind}>
-            <span>{endMonthLabel}</span>
-
-            <Icon
-              size="2xs"
-              icon="chevronDown"
-              {...navIconBind}
-              className={chevronClass(
-                view === "month" && monthTarget === "end",
-              )}
-            />
-          </button>
-        )}
-
-        <div className="flex shrink-0 items-center">
-          <button {...previousButtonBind}>
-            <Icon size="sm" icon="chevronLeft" {...navIconBind} />
-          </button>
-
-          <button {...todayButtonBind}>
-            <span className="size-2 rounded-full bg-slate-600 dark:bg-slate-300" />
-          </button>
-
-          <button {...nextButtonBind}>
-            <Icon size="sm" icon="chevronRight" {...navIconBind} />
-          </button>
+        <div className="flex min-w-0 flex-1 items-center justify-end">
+          {navButtons}
         </div>
       </div>
 
       <div {...bodyBind}>
         {view === "date" && (
           <div {...panelsBind}>
-            <div {...startBind}>
-              <CalendarDate
-                {...shared}
-                range
-                value={value}
-                viewDate={viewDate}
-                slots={props.slots}
-                onChange={handleChange}
-                previewDate={previewDate}
-                startOfWeek={merged.startOfWeek}
-                disableDates={merged.disableDates}
-                disableYears={merged.disableYears}
-                hideWeekdays={merged.hideWeekdays}
-                disableMonths={merged.disableMonths}
-                onViewDateChange={handleStartViewDateChange}
-                onPreviewDateChange={handlePreviewDateChange}
-              />
+            <div className="flex shrink-0 items-stretch">
+              <div {...startBind}>
+                <CalendarDate
+                  {...shared}
+                  range
+                  value={value}
+                  viewDate={viewDate}
+                  onChange={handleChange}
+                  previewDate={previewDate}
+                  startOfWeek={merged.startOfWeek}
+                  disableDates={merged.disableDates}
+                  disableYears={merged.disableYears}
+                  hideWeekdays={merged.hideWeekdays}
+                  disableMonths={merged.disableMonths}
+                  onViewDateChange={handleStartViewDateChange}
+                  onPreviewDateChange={handlePreviewDateChange}
+                  slots={
+                    props.slots?.day ? { day: props.slots.day } : undefined
+                  }
+                />
+              </div>
+
+              {props.slots?.startAside}
             </div>
 
-            <div {...endBind}>
-              <CalendarDate
-                {...shared}
-                range
-                value={value}
-                slots={props.slots}
-                viewDate={endViewDate}
-                onChange={handleChange}
-                previewDate={previewDate}
-                startOfWeek={merged.startOfWeek}
-                disableDates={merged.disableDates}
-                disableYears={merged.disableYears}
-                hideWeekdays={merged.hideWeekdays}
-                disableMonths={merged.disableMonths}
-                onViewDateChange={handleEndViewDateChange}
-                onPreviewDateChange={handlePreviewDateChange}
-              />
+            <div className="flex shrink-0 items-stretch">
+              <div {...endBind}>
+                {isVertical && endMonthButton ? (
+                  <div {...endHeaderBind}>{endMonthButton}</div>
+                ) : null}
+
+                <CalendarDate
+                  {...shared}
+                  range
+                  value={value}
+                  viewDate={endViewDate}
+                  onChange={handleChange}
+                  previewDate={previewDate}
+                  startOfWeek={merged.startOfWeek}
+                  disableDates={merged.disableDates}
+                  disableYears={merged.disableYears}
+                  hideWeekdays={merged.hideWeekdays}
+                  disableMonths={merged.disableMonths}
+                  onViewDateChange={handleEndViewDateChange}
+                  onPreviewDateChange={handlePreviewDateChange}
+                  slots={
+                    props.slots?.day ? { day: props.slots.day } : undefined
+                  }
+                />
+              </div>
+
+              {props.slots?.endAside}
             </div>
           </div>
         )}

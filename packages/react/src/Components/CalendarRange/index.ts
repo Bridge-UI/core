@@ -5,9 +5,11 @@ export type {
   CalendarRangeClasses,
   CalendarRangeColorOverrides,
   CalendarRangeCustomProps,
+  CalendarRangeOrientation,
   CalendarRangeOwnProps,
   CalendarRangeProps,
   CalendarRangeRoundedOverrides,
+  CalendarRangeSlots,
   CalendarRangeTokens,
   CalendarRangeView,
 } from "@/Components/CalendarRange/calendarRange.types";

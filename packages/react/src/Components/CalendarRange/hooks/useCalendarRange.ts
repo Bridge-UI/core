@@ -47,6 +47,7 @@ const calendarRangeBridgeKeys = [
   "hideYears",
   "hideMonths",
   "customProps",
+  "orientation",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -58,7 +59,7 @@ const calendarRangeBridgeKeys = [
 
 type CalendarRangeLibDefaults = LibDefaultsShape<
   CalendarRangeOwnProps,
-  "color" | "rounded" | "startOfWeek"
+  "color" | "rounded" | "orientation" | "startOfWeek"
 >;
 
 type CalendarRangeMerged = MergeLibDefaults<
@@ -393,12 +394,18 @@ export function useCalendarRange(
     };
   });
 
+  const isVertical = derived(() => {
+    return merged.orientation === "vertical";
+  });
+
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex min-w-[38rem] flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "min-w-[38rem]": !isVertical,
+        "min-w-72": isVertical,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -409,8 +416,30 @@ export function useCalendarRange(
       customProps?.header,
       {},
       cn({
-        "flex items-center justify-between gap-x-2 p-2.5": true,
+        "flex items-center p-2.5": true,
         [mergedClasses.header ?? ""]: true,
+      }),
+    );
+  });
+
+  const monthsBind = derived(() => {
+    return mergePartBind(
+      customProps?.months,
+      {},
+      cn({
+        "flex shrink-0 items-center gap-x-10": true,
+        [mergedClasses.months ?? ""]: true,
+      }),
+    );
+  });
+
+  const endHeaderBind = derived(() => {
+    return mergePartBind(
+      customProps?.endHeader,
+      {},
+      cn({
+        "flex items-center justify-center px-2.5 pb-1 pt-2": true,
+        [mergedClasses.endHeader ?? ""]: true,
       }),
     );
   });
@@ -431,7 +460,9 @@ export function useCalendarRange(
       customProps?.panels,
       {},
       cn({
-        "flex flex-row gap-4": true,
+        "flex gap-4": true,
+        "flex-row": !isVertical,
+        "flex-col": isVertical,
         [mergedClasses.panels ?? ""]: true,
       }),
     );
@@ -613,7 +644,9 @@ export function useCalendarRange(
     yearLabel,
     monthLabel,
     headerBind,
+    monthsBind,
     panelsBind,
+    isVertical,
     endViewDate,
     previewDate,
     setViewDate,
@@ -622,6 +655,7 @@ export function useCalendarRange(
     yearPageSize,
     endMonthLabel,
     showNav: true,
+    endHeaderBind,
     nextButtonBind,
     pickerFillBind,
     monthPanelYear,

@@ -38,6 +38,7 @@ const {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   },
   emit,
 );
@@ -57,6 +58,7 @@ const {
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"
       :hide-months="merged.hideMonths"
+      :orientation="merged.orientation"
       v-on:change="handleCalendarChange"
       :start-of-week="merged.startOfWeek"
       :disable-dates="merged.disableDates"

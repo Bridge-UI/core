@@ -17,6 +17,7 @@ import type {
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";
 import type { CalendarDateSlots } from "@/Components/CalendarDate";
+import type { CalendarRangeOrientation } from "@/Components/CalendarRange";
 
 export interface DateRangePickerColorOverrides {}
 export interface DateRangePickerRoundedOverrides {}
@@ -202,6 +203,13 @@ export interface DateRangePickerOwnProps {
    * @default undefined
    */
   minDate?: Date;
+
+  /**
+   * Dual calendar arrangement forwarded to `CalendarRange`.
+   *
+   * @default "horizontal"
+   */
+  orientation?: CalendarRangeOrientation;
 
   /**
    * Prevents selection.

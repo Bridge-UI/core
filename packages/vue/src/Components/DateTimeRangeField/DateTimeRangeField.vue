@@ -86,6 +86,7 @@ const {
       :show-footer="dateTimeOnly.showFooter"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
+      :orientation="dateTimeOnly.orientation"
       :start-of-week="dateTimeOnly.startOfWeek"
       :rounded="formField.merged.value.rounded"
       :disable-dates="dateTimeOnly.disableDates"

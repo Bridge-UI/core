@@ -1,5 +1,5 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
@@ -23,6 +23,11 @@ export interface CalendarRangeRoundedOverrides {}
 
 export type CalendarRangeView = "date" | "year" | "month";
 
+/**
+ * Dual calendar arrangement for date range panels.
+ */
+export type CalendarRangeOrientation = "vertical" | "horizontal";
+
 export interface CalendarRangeClasses {
   /**
    * Classes for the date / month / year body.
@@ -30,9 +35,14 @@ export interface CalendarRangeClasses {
   body?: string;
 
   /**
-   * Classes for the end (right) date panel wrapper.
+   * Classes for the end (right / bottom) date panel wrapper.
    */
   end?: string;
+
+  /**
+   * Classes for the end-month header (vertical orientation).
+   */
+  endHeader?: string;
 
   /**
    * Classes for the shared header.
@@ -40,12 +50,17 @@ export interface CalendarRangeClasses {
   header?: string;
 
   /**
+   * Classes for the centered month selectors group.
+   */
+  months?: string;
+
+  /**
    * Classes for navigation icon buttons.
    */
   navButton?: string;
 
   /**
-   * Classes for the dual date panels row.
+   * Classes for the dual date panels row / column.
    */
   panels?: string;
 
@@ -60,7 +75,7 @@ export interface CalendarRangeClasses {
   selector?: string;
 
   /**
-   * Classes for the start (left) date panel wrapper.
+   * Classes for the start (left / top) date panel wrapper.
    */
   start?: string;
 }
@@ -74,11 +89,18 @@ export interface CalendarRangeCustomProps {
   body?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the end (right) panel wrapper.
+   * Props forwarded to the end (right / bottom) panel wrapper.
    *
    * @default undefined
    */
   end?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the end-month header (vertical orientation).
+   *
+   * @default undefined
+   */
+  endHeader?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the header.
@@ -86,6 +108,13 @@ export interface CalendarRangeCustomProps {
    * @default undefined
    */
   header?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the centered month selectors group.
+   *
+   * @default undefined
+   */
+  months?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to navigation icon buttons.
@@ -166,6 +195,29 @@ export interface CalendarRangeCallbacks {
    * Called when the start (left) displayed month changes.
    */
   onViewDateChange?: (date: Date) => void;
+}
+
+export interface CalendarRangeSlots {
+  /**
+   * Custom content inside each day button. The button chrome stays managed.
+   *
+   * @default undefined
+   */
+  day?: CalendarDateSlots["day"];
+
+  /**
+   * Content rendered beside the end (right / bottom) date panel.
+   *
+   * @default undefined
+   */
+  endAside?: ReactNode;
+
+  /**
+   * Content rendered beside the start (left / top) date panel.
+   *
+   * @default undefined
+   */
+  startAside?: ReactNode;
 }
 
 export interface CalendarRangeTokens {
@@ -278,6 +330,16 @@ export interface CalendarRangeOwnProps {
   minDate?: Date;
 
   /**
+   * Dual calendar arrangement.
+   *
+   * - `horizontal`: shared header with year, both months, and nav; panels side by side
+   * - `vertical`: top header with year, start month, and nav; end month header above the bottom panel
+   *
+   * @default "horizontal"
+   */
+  orientation?: CalendarRangeOrientation;
+
+  /**
    * Controlled range-preview hover date shared across both panels.
    *
    * @default undefined
@@ -299,11 +361,11 @@ export interface CalendarRangeOwnProps {
   rounded?: MergeProps<CalendarRounded, CalendarRangeRoundedOverrides>;
 
   /**
-   * Named slots forwarded to both date panels (`day`).
+   * Named slots (`day` on both panels, optional asides beside each panel).
    *
    * @default undefined
    */
-  slots?: Pick<CalendarDateSlots, "day">;
+  slots?: CalendarRangeSlots;
 
   /**
    * First day of the week.

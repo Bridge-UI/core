@@ -11,6 +11,7 @@ import type {
 
 // ** Local Imports
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
+import type { CalendarRangeOrientation } from "@/Components/CalendarRange";
 import type { DateRangePickerCustomProps } from "@/Components/DateRangePicker/dateRangePicker.types";
 import type {
   FormFieldClasses,
@@ -140,6 +141,13 @@ export interface DateRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   minDate?: Date;
+
+  /**
+   * Dual calendar arrangement forwarded to `DateRangePicker`.
+   *
+   * @default "horizontal"
+   */
+  orientation?: CalendarRangeOrientation;
 
   /**
    * Shows Cancel / Apply on the nested picker.

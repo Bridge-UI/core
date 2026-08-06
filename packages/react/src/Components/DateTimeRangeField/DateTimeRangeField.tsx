@@ -51,6 +51,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           rounded={formField.merged.rounded}
           showFooter={dateTimeOnly.showFooter}
           hideMonths={dateTimeOnly.hideMonths}
+          orientation={dateTimeOnly.orientation}
           startOfWeek={dateTimeOnly.startOfWeek}
           disableDates={dateTimeOnly.disableDates}
           hideWeekdays={dateTimeOnly.hideWeekdays}

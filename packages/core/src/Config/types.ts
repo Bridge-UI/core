@@ -520,6 +520,7 @@ export interface DateRangeFieldConfigBase {
     hideMonths: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
+    orientation: "vertical" | "horizontal";
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
@@ -556,6 +557,7 @@ export interface DateRangePickerConfigBase {
     hideMonths: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
+    orientation: "vertical" | "horizontal";
     rounded: keyof CalendarRounded;
     showFooter: boolean;
     startOfWeek: number;
@@ -766,6 +768,7 @@ export interface DateTimeRangeFieldConfigBase {
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
+    orientation: "vertical" | "horizontal";
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
@@ -812,6 +815,7 @@ export interface DateTimeRangePickerConfigBase {
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
+    orientation: "vertical" | "horizontal";
     rounded: keyof CalendarRounded;
     showFooter: boolean;
     startOfWeek: number;

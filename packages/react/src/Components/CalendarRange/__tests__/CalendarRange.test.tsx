@@ -160,3 +160,43 @@ test("it should update uncontrolled start month from the start selector", () => 
     screen.getByRole("button", { name: "Select end month" }).textContent,
   ).toContain("September");
 });
+
+test("it should keep end month in the header when horizontal", () => {
+  const { container } = render(<CalendarRange orientation="horizontal" />);
+
+  const header = container.firstElementChild?.firstElementChild;
+  expect(
+    header?.querySelector('[aria-label="Select end month"]'),
+  ).not.toBeNull();
+});
+
+test("it should move end month below the start panel when vertical", () => {
+  const { container } = render(<CalendarRange orientation="vertical" />);
+
+  const header = container.firstElementChild?.firstElementChild;
+  expect(header?.querySelector('[aria-label="Select end month"]')).toBeNull();
+  expect(screen.getByRole("button", { name: "Select end month" })).toBeTruthy();
+});
+
+test("it should navigate when an outside day is selected on the start panel", () => {
+  render(<CalendarRange />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.click(screen.getByRole("button", { name: "2021" }));
+  fireEvent.click(screen.getByRole("button", { name: /may/i }));
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/may/i);
+
+  const aprilThirtieth = screen
+    .getAllByRole("button", { name: "30" })
+    .find((node) => node.className.includes("text-gray-400"));
+
+  expect(aprilThirtieth).toBeTruthy();
+  fireEvent.click(aprilThirtieth!);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/april/i);
+});

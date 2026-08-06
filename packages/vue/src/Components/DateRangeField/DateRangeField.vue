@@ -80,6 +80,7 @@ const {
       :hide-years="dateOnly.hideYears"
       :show-footer="dateOnly.showFooter"
       :hide-months="dateOnly.hideMonths"
+      :orientation="dateOnly.orientation"
       :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"
       :disabled="formField.isDisabled.value"

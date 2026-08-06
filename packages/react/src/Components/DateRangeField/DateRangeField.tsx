@@ -46,6 +46,7 @@ function DateRangeField(props: DateRangeFieldProps) {
           disabled={formField.isDisabled}
           showFooter={dateOnly.showFooter}
           hideMonths={dateOnly.hideMonths}
+          orientation={dateOnly.orientation}
           startOfWeek={dateOnly.startOfWeek}
           rounded={formField.merged.rounded}
           disableDates={dateOnly.disableDates}

@@ -36,6 +36,7 @@ const dateRangeFieldBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "orientation",
   "startOfWeek",
   "defaultValue",
   "disableDates",

@@ -13,6 +13,7 @@ const libDefaults = {
   rounded: "md",
   startOfWeek: 0,
   color: "primary",
+  orientation: "horizontal",
 } as const satisfies Partial<CalendarRangeOwnProps>;
 
 function renderUseCalendarRange(props: CalendarRangeProps = {}) {
@@ -44,4 +45,21 @@ test("it should expose end month selector bind", () => {
   expect(result.current.endMonthSelectorBind["aria-label"]).toBe(
     "Select end month",
   );
+});
+
+test("it should default to horizontal orientation", () => {
+  const { result } = renderUseCalendarRange();
+
+  expect(result.current.merged.orientation).toBe("horizontal");
+  expect(result.current.isVertical).toBe(false);
+  expect(result.current.rootBind.className).toContain("min-w-[38rem]");
+  expect(result.current.panelsBind.className).toContain("flex-row");
+});
+
+test("it should stack panels when orientation is vertical", () => {
+  const { result } = renderUseCalendarRange({ orientation: "vertical" });
+
+  expect(result.current.isVertical).toBe(true);
+  expect(result.current.rootBind.className).toContain("min-w-72");
+  expect(result.current.panelsBind.className).toContain("flex-col");
 });

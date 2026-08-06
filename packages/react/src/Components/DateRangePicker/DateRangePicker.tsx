@@ -24,6 +24,7 @@ function DateRangePicker(props: DateRangePickerProps) {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   });
 
   return (
@@ -42,6 +43,7 @@ function DateRangePicker(props: DateRangePickerProps) {
         hideYears={merged.hideYears}
         hideMonths={merged.hideMonths}
         onChange={handleCalendarChange}
+        orientation={merged.orientation}
         startOfWeek={merged.startOfWeek}
         disableDates={merged.disableDates}
         hideWeekdays={merged.hideWeekdays}

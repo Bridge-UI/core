@@ -4,6 +4,7 @@ export type {
   CalendarRangeColorOverrides,
   CalendarRangeCustomProps,
   CalendarRangeEmits,
+  CalendarRangeOrientation,
   CalendarRangeOwnProps,
   CalendarRangeProps,
   CalendarRangeRoundedOverrides,

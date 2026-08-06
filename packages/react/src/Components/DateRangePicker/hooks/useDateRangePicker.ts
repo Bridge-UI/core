@@ -40,6 +40,7 @@ const dateRangePickerBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "orientation",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -50,7 +51,7 @@ const dateRangePickerBridgeKeys = [
 
 type DateRangePickerLibDefaults = LibDefaultsShape<
   DateRangePickerOwnProps,
-  "color" | "rounded" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "showFooter" | "orientation" | "startOfWeek"
 >;
 
 type DateRangePickerMerged = MergeLibDefaults<

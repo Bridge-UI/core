@@ -53,6 +53,7 @@ const calendarRangeBridgeKeys = [
   "hideYears",
   "hideMonths",
   "customProps",
+  "orientation",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -64,7 +65,7 @@ const calendarRangeBridgeKeys = [
 
 type CalendarRangeLibDefaults = LibDefaultsShape<
   CalendarRangeOwnProps,
-  "color" | "rounded" | "startOfWeek"
+  "color" | "rounded" | "orientation" | "startOfWeek"
 >;
 
 type CalendarRangeMerged = MergeLibDefaults<
@@ -420,12 +421,18 @@ export function useCalendarRange(
     };
   });
 
+  const isVertical = computed(() => {
+    return merged.value.orientation === "vertical";
+  });
+
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex min-w-[38rem] flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "min-w-[38rem]": !isVertical.value,
+        "min-w-72": isVertical.value,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -436,8 +443,30 @@ export function useCalendarRange(
       customProps.value?.header,
       {},
       cn({
-        "flex items-center justify-between gap-x-2 p-2.5": true,
+        "flex items-center p-2.5": true,
         [mergedClasses.value.header ?? ""]: true,
+      }),
+    );
+  });
+
+  const monthsBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.months,
+      {},
+      cn({
+        "flex shrink-0 items-center gap-x-10": true,
+        [mergedClasses.value.months ?? ""]: true,
+      }),
+    );
+  });
+
+  const endHeaderBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.endHeader,
+      {},
+      cn({
+        "flex items-center justify-center px-2.5 pb-1 pt-2": true,
+        [mergedClasses.value.endHeader ?? ""]: true,
       }),
     );
   });
@@ -458,7 +487,9 @@ export function useCalendarRange(
       customProps.value?.panels,
       {},
       cn({
-        "flex flex-row gap-4": true,
+        "flex gap-4": true,
+        "flex-row": !isVertical.value,
+        "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
       }),
     );
@@ -657,7 +688,9 @@ export function useCalendarRange(
     yearLabel,
     monthLabel,
     headerBind,
+    monthsBind,
     panelsBind,
+    isVertical,
     endViewDate,
     previewDate,
     setViewDate,
@@ -666,6 +699,7 @@ export function useCalendarRange(
     handleChange,
     yearPageSize,
     endMonthLabel,
+    endHeaderBind,
     nextButtonBind,
     pickerFillBind,
     monthPanelYear,

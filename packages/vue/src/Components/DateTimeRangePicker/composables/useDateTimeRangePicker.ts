@@ -54,6 +54,7 @@ const dateTimeRangePickerBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "orientation",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -65,7 +66,13 @@ const dateTimeRangePickerBridgeKeys = [
 
 type DateTimeRangePickerLibDefaults = LibDefaultsShape<
   DateTimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "startOfWeek"
+  | "ampm"
+  | "color"
+  | "rounded"
+  | "interval"
+  | "showFooter"
+  | "orientation"
+  | "startOfWeek"
 >;
 
 type DateTimeRangePickerMerged = MergeLibDefaults<
@@ -309,20 +316,20 @@ export function useDateTimeRangePicker(
 
   const contentBind = computed(() => {
     return cn({
-      "flex flex-row items-stretch": true,
+      "flex min-w-0 flex-col": true,
     });
   });
 
   const calendarBind = computed(() => {
     return cn({
-      "min-w-0 shrink": true,
+      "min-w-0": true,
       [mergedClasses.value.calendar ?? ""]: true,
     });
   });
 
   const timeBind = computed(() => {
     return cn({
-      "flex flex-row border-l border-gray-100 dark:border-gray-800": true,
+      "flex self-stretch flex-col border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.value.time ?? ""]: true,
     });
   });
