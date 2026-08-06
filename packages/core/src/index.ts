@@ -130,6 +130,7 @@ export type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
 } from "@/Tokens/Calendar";
 export type {
   CardPadding,

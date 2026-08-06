@@ -41,6 +41,7 @@ import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
 } from "@/Tokens/Calendar";
 import type {
   CardPadding,
@@ -457,12 +458,15 @@ export interface DateInputConfigBase {
     calendar: Partial<{
       color: Record<string, CalendarColorItem>;
       day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
     }>;
     color: Record<string, FormFieldColorItem>;
     datePicker: Partial<{
       color: keyof CalendarColor;
       colorMap: Record<string, CalendarColorItem>;
       day: Partial<CalendarDay>;
+      rounded: keyof CalendarRounded;
+      roundedMap: Record<string, string>;
     }>;
     invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
@@ -480,6 +484,7 @@ export interface DatePickerConfigBase {
     hideYears: boolean;
     multiple: boolean;
     range: boolean;
+    rounded: keyof CalendarRounded;
     showFooter: boolean;
     startOfWeek: number;
     timeZone: string;
@@ -488,9 +493,11 @@ export interface DatePickerConfigBase {
     calendar: Partial<{
       color: Record<string, CalendarColorItem>;
       day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
     }>;
     color: Record<string, CalendarColorItem>;
     day: Partial<CalendarDay>;
+    rounded: Record<string, string>;
   }>;
 }
 
