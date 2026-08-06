@@ -1,5 +1,9 @@
 // ** Exports
-export { setDateAdapterForTests, useDateAdapter } from "@/Adapters/Date";
+export {
+  setDateAdapterForTests,
+  useDateAdapter,
+  useDateAdapterContext,
+} from "@/Adapters/Date";
 export {
   setI18nAdapterForTests,
   useI18nAdapter,

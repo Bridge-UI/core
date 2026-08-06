@@ -2,7 +2,11 @@
 import "@/augments";
 
 // ** Exports
-export { setDateAdapterForTests, useDateAdapter } from "@/Adapters/Date";
+export {
+  setDateAdapterForTests,
+  useDateAdapter,
+  useDateAdapterContext,
+} from "@/Adapters/Date";
 export {
   setI18nAdapterForTests,
   useI18nAdapter,
@@ -81,6 +85,7 @@ export type {
   CalendarCustomProps,
   CalendarOwnProps,
   CalendarProps,
+  CalendarRoundedOverrides,
   CalendarTokens,
   CalendarView,
 } from "@/Components/Calendar";
@@ -93,6 +98,8 @@ export type {
   CalendarDateDayCell,
   CalendarDateOwnProps,
   CalendarDateProps,
+  CalendarDateRoundedOverrides,
+  CalendarDateSlots,
   CalendarDateTokens,
 } from "@/Components/CalendarDate";
 export { CalendarMonth, useCalendarMonth } from "@/Components/CalendarMonth";
@@ -104,6 +111,7 @@ export type {
   CalendarMonthCustomProps,
   CalendarMonthOwnProps,
   CalendarMonthProps,
+  CalendarMonthRoundedOverrides,
   CalendarMonthTokens,
 } from "@/Components/CalendarMonth";
 export { CalendarYear, useCalendarYear } from "@/Components/CalendarYear";
@@ -115,6 +123,7 @@ export type {
   CalendarYearCustomProps,
   CalendarYearOwnProps,
   CalendarYearProps,
+  CalendarYearRoundedOverrides,
   CalendarYearTokens,
 } from "@/Components/CalendarYear";
 export { Card, useCard } from "@/Components/Card";
@@ -164,6 +173,7 @@ export type {
   DatePickerCustomProps,
   DatePickerOwnProps,
   DatePickerProps,
+  DatePickerRoundedOverrides,
   DatePickerTokens,
 } from "@/Components/DatePicker";
 export { Divider, useDivider } from "@/Components/Divider";
