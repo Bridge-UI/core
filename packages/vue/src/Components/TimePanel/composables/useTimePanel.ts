@@ -1,0 +1,435 @@
+// ** External Imports
+import { get, omit } from "es-toolkit/compat";
+import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
+
+// ** Core Imports
+import {
+  buildHourOptions,
+  buildMinuteOptions,
+  cn,
+  isTimeDisabled,
+  mergeBridgeUILayeredClasses,
+  resolveCalendarDayInteractionState,
+  snapMinutes,
+  splitComponentProps,
+  to12Hour,
+  to24Hour,
+  toMeridiem,
+  type DateAdapterContext,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
+import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Time";
+
+// ** Local Imports
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import type {
+  TimePanelClasses,
+  TimePanelOwnProps,
+} from "@/Components/TimePanel/timePanel.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const timePanelBridgeKeys = [
+  "ampm",
+  "color",
+  "value",
+  "tokens",
+  "classes",
+  "maxTime",
+  "minTime",
+  "rounded",
+  "disabled",
+  "interval",
+  "readOnly",
+  "timeZone",
+  "customProps",
+  "disableTimes",
+] as const satisfies readonly (keyof TimePanelOwnProps)[];
+
+type TimePanelLibDefaults = LibDefaultsShape<
+  TimePanelOwnProps,
+  "ampm" | "color" | "rounded" | "interval"
+>;
+
+type TimePanelMerged = MergeLibDefaults<
+  TimePanelOwnProps,
+  TimePanelLibDefaults
+>;
+
+/**
+ * A selectable hour, minute, or meridiem tile in the time panel.
+ */
+export type TimePanelItem = {
+  disabled: boolean;
+  label: string;
+  selected: boolean;
+  state: ReturnType<typeof resolveCalendarDayInteractionState>;
+  value: "AM" | "PM" | number;
+};
+
+/**
+ * Builds hour / minute / AM-PM columns and tile binds for `TimePanel`.
+ */
+export function useTimePanel(
+  props: MaybeRefOrGetter<TimePanelOwnProps>,
+  libDefaults: TimePanelLibDefaults,
+  emit: (event: "change", value: Date | null) => void,
+) {
+  const attrs = useAttrs();
+  const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
+
+  const split = computed(() => {
+    return splitComponentProps<TimePanelOwnProps, typeof timePanelBridgeKeys>({
+      bridgeKeys: timePanelBridgeKeys,
+      props: { ...attrs, ...toValue(props) },
+    });
+  });
+
+  const { merged } = useBridgeUIComponent<TimePanelMerged>({
+    libDefaults,
+    props: () => split.value.componentProps,
+  });
+
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
+
+  const rootInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["onChange"]);
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses<TimePanelClasses>({
+    props: () => split.value.componentProps,
+    entry: computed(() => {
+      return undefined;
+    }),
+  });
+
+  const context = computed((): DateAdapterContext => {
+    return resolveContext(merged.value.timeZone);
+  });
+
+  const colorTokens = computed(() => {
+    return mergeBridgeUILayeredClasses(colorProps, merged.value.tokens?.color);
+  });
+
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      merged.value.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
+  });
+
+  const colorClass = computed(() => {
+    return get(colorTokens.value, merged.value.color);
+  });
+
+  const displayDate = computed(() => {
+    const base = merged.value.value ?? adapter.value.now(context.value);
+    const minutes = snapMinutes(
+      adapter.value.getMinutes(base, context.value),
+      merged.value.interval,
+    );
+    let next = adapter.value.setHours(
+      base,
+      adapter.value.getHours(base, context.value),
+      context.value,
+    );
+
+    next = adapter.value.setMinutes(next, minutes, context.value);
+
+    return next;
+  });
+
+  const hours = computed(() => {
+    return buildHourOptions({ ampm: merged.value.ampm });
+  });
+
+  const minutes = computed(() => {
+    return buildMinuteOptions({ interval: merged.value.interval });
+  });
+
+  const meridiem = computed(() => {
+    return toMeridiem(adapter.value.getHours(displayDate.value, context.value));
+  });
+
+  const isItemDisabled = (candidate: Date) => {
+    return (
+      Boolean(merged.value.disabled) ||
+      isTimeDisabled(candidate, {
+        adapter: adapter.value,
+        context: context.value,
+        maxTime: merged.value.maxTime,
+        minTime: merged.value.minTime,
+        disableTimes: merged.value.disableTimes,
+      })
+    );
+  };
+
+  const commitTime = (next: Date) => {
+    if (merged.value.disabled || merged.value.readOnly) {
+      return;
+    }
+
+    if (isItemDisabled(next)) {
+      return;
+    }
+
+    emit("change", next);
+  };
+
+  const selectHour = (hour: number) => {
+    const hours24 = merged.value.ampm ? to24Hour(hour, meridiem.value) : hour;
+    let next = adapter.value.setHours(
+      displayDate.value,
+      hours24,
+      context.value,
+    );
+
+    next = adapter.value.setMinutes(
+      next,
+      adapter.value.getMinutes(displayDate.value, context.value),
+      context.value,
+    );
+
+    commitTime(next);
+  };
+
+  const selectMinute = (minute: number) => {
+    const next = adapter.value.setMinutes(
+      displayDate.value,
+      minute,
+      context.value,
+    );
+
+    commitTime(next);
+  };
+
+  const selectMeridiem = (nextMeridiem: "AM" | "PM") => {
+    const hour12 = to12Hour(
+      adapter.value.getHours(displayDate.value, context.value),
+    );
+    const hours24 = to24Hour(hour12, nextMeridiem);
+    let next = adapter.value.setHours(
+      displayDate.value,
+      hours24,
+      context.value,
+    );
+
+    next = adapter.value.setMinutes(
+      next,
+      adapter.value.getMinutes(displayDate.value, context.value),
+      context.value,
+    );
+
+    commitTime(next);
+  };
+
+  const hourItems = computed((): TimePanelItem[] => {
+    const selectedHour24 = adapter.value.getHours(
+      displayDate.value,
+      context.value,
+    );
+    const selectedHour = merged.value.ampm
+      ? to12Hour(selectedHour24)
+      : selectedHour24;
+
+    return hours.value.map((hour) => {
+      const hours24 = merged.value.ampm ? to24Hour(hour, meridiem.value) : hour;
+      let candidate = adapter.value.setHours(
+        displayDate.value,
+        hours24,
+        context.value,
+      );
+
+      candidate = adapter.value.setMinutes(
+        candidate,
+        adapter.value.getMinutes(displayDate.value, context.value),
+        context.value,
+      );
+
+      const disabled = isItemDisabled(candidate);
+      const selected = hour === selectedHour;
+      const state = resolveCalendarDayInteractionState({
+        disabled,
+        selected,
+        readOnly: merged.value.readOnly,
+      });
+
+      return {
+        state,
+        selected,
+        value: hour,
+        disabled: disabled || Boolean(merged.value.readOnly),
+        label: merged.value.ampm ? String(hour) : String(hour).padStart(2, "0"),
+      };
+    });
+  });
+
+  const minuteItems = computed((): TimePanelItem[] => {
+    const selectedMinute = adapter.value.getMinutes(
+      displayDate.value,
+      context.value,
+    );
+
+    return minutes.value.map((minute) => {
+      const candidate = adapter.value.setMinutes(
+        displayDate.value,
+        minute,
+        context.value,
+      );
+      const disabled = isItemDisabled(candidate);
+      const selected = minute === selectedMinute;
+      const state = resolveCalendarDayInteractionState({
+        disabled,
+        selected,
+        readOnly: merged.value.readOnly,
+      });
+
+      return {
+        state,
+        selected,
+        value: minute,
+        label: String(minute).padStart(2, "0"),
+        disabled: disabled || Boolean(merged.value.readOnly),
+      };
+    });
+  });
+
+  const meridiemItems = computed((): TimePanelItem[] => {
+    if (!merged.value.ampm) {
+      return [];
+    }
+
+    return (["AM", "PM"] as const).map((entry) => {
+      const hour12 = to12Hour(
+        adapter.value.getHours(displayDate.value, context.value),
+      );
+      const hours24 = to24Hour(hour12, entry);
+      let candidate = adapter.value.setHours(
+        displayDate.value,
+        hours24,
+        context.value,
+      );
+
+      candidate = adapter.value.setMinutes(
+        candidate,
+        adapter.value.getMinutes(displayDate.value, context.value),
+        context.value,
+      );
+
+      const disabled = isItemDisabled(candidate);
+      const selected = entry === meridiem.value;
+      const state = resolveCalendarDayInteractionState({
+        disabled,
+        selected,
+        readOnly: merged.value.readOnly,
+      });
+
+      return {
+        state,
+        selected,
+        label: entry,
+        value: entry,
+        disabled: disabled || Boolean(merged.value.readOnly),
+      };
+    });
+  });
+
+  const rootBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
+        "flex flex-row gap-1": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
+  });
+
+  const columnBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.column,
+      {},
+      cn({
+        "flex h-48 flex-col gap-1 overflow-y-auto": true,
+        [mergedClasses.value.column ?? ""]: true,
+      }),
+    );
+  });
+
+  const getItemBind = (
+    item: TimePanelItem,
+    onSelect: (value: TimePanelItem["value"]) => void,
+  ) => {
+    const color = colorClass.value;
+
+    return mergePartBind(
+      customProps.value?.item,
+      {
+        type: "button" as const,
+        disabled: item.disabled,
+        "aria-pressed": item.selected,
+        onClick: () => onSelect(item.value),
+      },
+      cn({
+        "min-w-10 cursor-pointer px-3 py-1.5 text-sm transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
+        [roundedClass.value ?? ""]: true,
+        [color?.base ?? ""]: item.state === "base" || item.state === "hover",
+        [color?.hover ?? ""]: item.state === "base" || item.state === "hover",
+        [color?.selected ?? ""]: item.state === "selected",
+        [color?.disabled ?? ""]: item.state === "disabled",
+        [mergedClasses.value.item ?? ""]: true,
+      }),
+    );
+  };
+
+  const getHourBind = (item: TimePanelItem) => {
+    return getItemBind(item, (value) => {
+      if (typeof value === "number") {
+        selectHour(value);
+      }
+    });
+  };
+
+  const getMinuteBind = (item: TimePanelItem) => {
+    return getItemBind(item, (value) => {
+      if (typeof value === "number") {
+        selectMinute(value);
+      }
+    });
+  };
+
+  const getMeridiemBind = (item: TimePanelItem) => {
+    return getItemBind(item, (value) => {
+      if (value === "AM" || value === "PM") {
+        selectMeridiem(value);
+      }
+    });
+  };
+
+  const showMeridiem = computed(() => {
+    return Boolean(merged.value.ampm);
+  });
+
+  return {
+    merged,
+    rootBind,
+    hourItems,
+    columnBind,
+    getHourBind,
+    minuteItems,
+    displayDate,
+    showMeridiem,
+    getMinuteBind,
+    meridiemItems,
+    getMeridiemBind,
+  };
+}

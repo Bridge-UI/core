@@ -55,6 +55,7 @@ export type FormFieldOptions = {
     | "Textarea"
     | "DateField"
     | "TextField"
+    | "TimeField"
     | "NumberField"
     | "Autocomplete"
     | "PasswordField"

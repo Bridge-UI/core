@@ -1,0 +1,215 @@
+// ** External Imports
+import type { HTMLAttributes } from "vue";
+
+// ** Core Imports
+import type {
+  DisableTimesInput,
+  MergeHtmlProps,
+  MergeProps,
+  TimeColor,
+  TimeColorItem,
+  TimeRounded,
+  TimeValue,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type { ButtonProps } from "@/Components/Button/button.types";
+
+export interface TimePickerColorOverrides {}
+export interface TimePickerRoundedOverrides {}
+
+export interface TimePickerClasses {
+  /**
+   * Classes for the footer.
+   */
+  footer?: string;
+
+  /**
+   * Classes for the root element.
+   */
+  root?: string;
+}
+
+export interface TimePickerCustomProps {
+  /**
+   * Props forwarded to the Apply button.
+   *
+   * @default undefined
+   */
+  applyButton?: Partial<ButtonProps>;
+
+  /**
+   * Props forwarded to the Cancel button.
+   *
+   * @default undefined
+   */
+  cancelButton?: Partial<ButtonProps>;
+
+  /**
+   * Props forwarded to the footer.
+   *
+   * @default undefined
+   */
+  footer?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the root element.
+   *
+   * @default undefined
+   */
+  root?: HTMLAttributes;
+}
+
+export interface TimePickerEmits {
+  /**
+   * Emitted when Cancel is pressed.
+   */
+  cancel: [];
+
+  /**
+   * Emitted when Apply is pressed (`showFooter`) or when the value commits.
+   */
+  change: [value: null | TimeValue];
+}
+
+export interface TimePickerTokens {
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<TimeColorItem>>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
+
+  /**
+   * Nested time panel token overrides.
+   */
+  time?: {
+    color?: Record<string, Partial<TimeColorItem>>;
+    rounded?: Record<string, string>;
+  };
+}
+
+export interface TimePickerOwnProps {
+  /**
+   * Uses a 12-hour clock with an AM/PM column.
+   *
+   * @default false
+   */
+  ampm?: boolean;
+
+  /**
+   * Classes for picker regions.
+   *
+   * @default undefined
+   */
+  classes?: TimePickerClasses;
+
+  /**
+   * Accent color.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<TimeColor, TimePickerColorOverrides>;
+
+  /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
+  customProps?: TimePickerCustomProps;
+
+  /**
+   * Uncontrolled initial value.
+   *
+   * @default null
+   */
+  defaultValue?: null | TimeValue;
+
+  /**
+   * Disables the picker.
+   *
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Times that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableTimes?: DisableTimesInput;
+
+  /**
+   * Minute step between options.
+   *
+   * @default 1
+   */
+  interval?: number;
+
+  /**
+   * Latest selectable time.
+   *
+   * @default undefined
+   */
+  maxTime?: Date;
+
+  /**
+   * Earliest selectable time.
+   *
+   * @default undefined
+   */
+  minTime?: Date;
+
+  /**
+   * Prevents selection.
+   *
+   * @default false
+   */
+  readOnly?: boolean;
+
+  /**
+   * Border radius of time tiles and chrome.
+   *
+   * `TimeField` always forwards its own `rounded` here so the picker matches the
+   * field, independent of `TimePicker.defaultProps`.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<TimeRounded, TimePickerRoundedOverrides>;
+
+  /**
+   * Shows Cancel / Apply footer. Selection is draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
+
+  /**
+   * IANA time zone.
+   *
+   * @default undefined
+   */
+  timeZone?: string;
+
+  /**
+   * Token overrides.
+   *
+   * @default undefined
+   */
+  tokens?: TimePickerTokens;
+
+  /**
+   * Controlled value.
+   *
+   * @default undefined
+   */
+  value?: null | TimeValue;
+}
+
+export type TimePickerProps = MergeHtmlProps<
+  TimePickerOwnProps,
+  HTMLAttributes
+>;
