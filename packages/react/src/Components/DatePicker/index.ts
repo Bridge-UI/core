@@ -7,6 +7,7 @@ export type {
   DatePickerCustomProps,
   DatePickerOwnProps,
   DatePickerProps,
+  DatePickerRoundedOverrides,
   DatePickerTokens,
 } from "@/Components/DatePicker/datePicker.types";
 export { useDatePicker } from "@/Components/DatePicker/hooks/useDatePicker";

@@ -20,6 +20,7 @@ function DatePicker(props: DatePickerProps) {
     cancelButtonProps,
     handleCalendarChange,
   } = useDatePicker(props, {
+    rounded: "md",
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
@@ -28,13 +29,14 @@ function DatePicker(props: DatePickerProps) {
   return (
     <div {...rootBind}>
       <Calendar
+        slots={props.slots}
         color={merged.color}
         range={merged.range}
         value={displayValue}
-        locale={merged.locale}
         tokens={calendarTokens}
         maxDate={merged.maxDate}
         minDate={merged.minDate}
+        rounded={merged.rounded}
         disabled={merged.disabled}
         multiple={merged.multiple}
         readOnly={merged.readOnly}

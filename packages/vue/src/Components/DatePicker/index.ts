@@ -7,6 +7,8 @@ export type {
   DatePickerEmits,
   DatePickerOwnProps,
   DatePickerProps,
+  DatePickerRoundedOverrides,
+  DatePickerSlots,
   DatePickerTokens,
 } from "@/Components/DatePicker/datePicker.types";
 export { default as DatePicker } from "@/Components/DatePicker/DatePicker.vue";

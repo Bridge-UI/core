@@ -10,6 +10,7 @@ import {
 } from "@/Components/DatePicker";
 
 const libDefaults = {
+  rounded: "md",
   startOfWeek: 0,
   color: "primary",
   showFooter: false,

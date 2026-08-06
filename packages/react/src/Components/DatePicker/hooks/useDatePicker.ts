@@ -29,11 +29,11 @@ const datePickerBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -53,7 +53,7 @@ const datePickerBridgeKeys = [
 
 type DatePickerLibDefaults = LibDefaultsShape<
   DatePickerOwnProps,
-  "color" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "showFooter" | "startOfWeek"
 >;
 
 type DatePickerMerged = MergeLibDefaults<
@@ -87,7 +87,7 @@ export function useDatePicker(
   const customProps = derived(() => merged.customProps);
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DatePickerClasses>({
@@ -121,6 +121,7 @@ export function useDatePicker(
     return {
       day: merged.tokens?.calendar?.day ?? merged.tokens?.day,
       color: merged.tokens?.calendar?.color ?? merged.tokens?.color,
+      rounded: merged.tokens?.calendar?.rounded ?? merged.tokens?.rounded,
     };
   });
 

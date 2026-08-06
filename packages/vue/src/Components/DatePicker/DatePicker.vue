@@ -6,9 +6,12 @@ import { useDatePicker } from "@/Components/DatePicker/composables/useDatePicker
 import type {
   DatePickerEmits,
   DatePickerOwnProps,
+  DatePickerSlots,
 } from "@/Components/DatePicker/datePicker.types";
 
 defineOptions({ inheritAttrs: false });
+
+defineSlots<DatePickerSlots>();
 
 const props = defineProps<DatePickerOwnProps>();
 
@@ -30,7 +33,12 @@ const {
   handleCalendarChange,
 } = useDatePicker(
   props,
-  { startOfWeek: 0, color: "primary", showFooter: false },
+  {
+    rounded: "md",
+    startOfWeek: 0,
+    color: "primary",
+    showFooter: false,
+  },
   emit,
 );
 </script>
@@ -41,8 +49,8 @@ const {
       :color="merged.color"
       :range="merged.range"
       :value="displayValue"
-      :locale="merged.locale"
       :tokens="calendarTokens"
+      :rounded="merged.rounded"
       :max-date="merged.maxDate"
       :min-date="merged.minDate"
       :disabled="merged.disabled"
@@ -58,7 +66,11 @@ const {
       :hide-weekdays="merged.hideWeekdays"
       :disable-years="merged.disableYears"
       :disable-months="merged.disableMonths"
-    />
+    >
+      <template #day="cell">
+        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+      </template>
+    </Calendar>
 
     <div v-if="showFooter" v-bind="footerBind">
       <Button

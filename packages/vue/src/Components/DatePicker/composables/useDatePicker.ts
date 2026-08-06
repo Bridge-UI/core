@@ -34,11 +34,11 @@ const datePickerBridgeKeys = [
   "color",
   "range",
   "value",
-  "locale",
   "tokens",
   "classes",
   "maxDate",
   "minDate",
+  "rounded",
   "disabled",
   "multiple",
   "readOnly",
@@ -58,7 +58,7 @@ const datePickerBridgeKeys = [
 
 type DatePickerLibDefaults = LibDefaultsShape<
   DatePickerOwnProps,
-  "color" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "showFooter" | "startOfWeek"
 >;
 
 type DatePickerMerged = MergeLibDefaults<
@@ -143,6 +143,8 @@ export function useDatePicker(
     return {
       day: merged.value.tokens?.calendar?.day ?? merged.value.tokens?.day,
       color: merged.value.tokens?.calendar?.color ?? merged.value.tokens?.color,
+      rounded:
+        merged.value.tokens?.calendar?.rounded ?? merged.value.tokens?.rounded,
     };
   });
 

@@ -6,6 +6,7 @@ import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
   DatePickerModel,
   DisableDatesInput,
   MergeHtmlProps,
@@ -16,8 +17,10 @@ import type {
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";
 import type { CalendarView } from "@/Components/Calendar";
+import type { CalendarDateSlots } from "@/Components/CalendarDate";
 
 export interface DatePickerColorOverrides {}
+export interface DatePickerRoundedOverrides {}
 
 /**
  * Props accepted by the footer buttons, pinned to the native `button` element.
@@ -90,6 +93,7 @@ export interface DatePickerTokens {
   calendar?: {
     color?: Record<string, Partial<CalendarColorItem>>;
     day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
   };
 
   /**
@@ -101,6 +105,11 @@ export interface DatePickerTokens {
    * Day chrome overrides.
    */
   day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface DatePickerOwnProps {
@@ -189,13 +198,6 @@ export interface DatePickerOwnProps {
   hideYears?: boolean;
 
   /**
-   * Locale for labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -231,11 +233,28 @@ export interface DatePickerOwnProps {
   readOnly?: boolean;
 
   /**
+   * Border radius of calendar tiles and chrome.
+   *
+   * `DateInput` always forwards its own `rounded` here so the picker matches the
+   * field, independent of `DatePicker.defaultProps`.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, DatePickerRoundedOverrides>;
+
+  /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
    *
    * @default false
    */
   showFooter?: boolean;
+
+  /**
+   * Named slots forwarded to `Calendar` (`day`).
+   *
+   * @default undefined
+   */
+  slots?: Pick<CalendarDateSlots, "day">;
 
   /**
    * First day of the week.

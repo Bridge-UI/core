@@ -1,11 +1,12 @@
 // ** External Imports
-import type { HTMLAttributes } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
+  CalendarRounded,
   DatePickerModel,
   DisableDatesInput,
   MergeHtmlProps,
@@ -16,8 +17,10 @@ import type {
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button/button.types";
 import type { CalendarView } from "@/Components/Calendar/calendar.types";
+import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 
 export interface DatePickerColorOverrides {}
+export interface DatePickerRoundedOverrides {}
 
 export interface DatePickerClasses {
   /**
@@ -73,6 +76,15 @@ export interface DatePickerEmits {
   change: [value: DatePickerModel];
 }
 
+export interface DatePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+}
+
 export interface DatePickerTokens {
   /**
    * Nested calendar token overrides.
@@ -80,6 +92,7 @@ export interface DatePickerTokens {
   calendar?: {
     color?: Record<string, Partial<CalendarColorItem>>;
     day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
   };
 
   /**
@@ -91,6 +104,11 @@ export interface DatePickerTokens {
    * Day chrome overrides.
    */
   day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export interface DatePickerOwnProps {
@@ -179,13 +197,6 @@ export interface DatePickerOwnProps {
   hideYears?: boolean;
 
   /**
-   * Locale for labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -219,6 +230,16 @@ export interface DatePickerOwnProps {
    * @default false
    */
   readOnly?: boolean;
+
+  /**
+   * Border radius of calendar tiles and chrome.
+   *
+   * `DateInput` always forwards its own `rounded` here so the picker matches the
+   * field, independent of `DatePicker.defaultProps`.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, DatePickerRoundedOverrides>;
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
