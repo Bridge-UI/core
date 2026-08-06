@@ -63,6 +63,12 @@ type TimePanelMerged = MergeLibDefaults<
 /**
  * A selectable hour, minute, or meridiem tile in the time panel.
  */
+/**
+ * Outer width of one TimePanel scroll column (`w-12` tiles + scrollbar track).
+ * Keep DateTime width sizers in sync with this class.
+ */
+export const TIME_PANEL_COLUMN_WIDTH_CLASS = "w-[3.75rem]";
+
 export type TimePanelItem = {
   disabled: boolean;
   label: string;
@@ -359,7 +365,8 @@ export function useTimePanel(
       customProps.value?.column,
       {},
       cn({
-        "flex h-full min-h-0 flex-col gap-1 overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
+        "box-border flex h-full shrink-0 flex-col items-start gap-1 overflow-x-hidden overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
+        [TIME_PANEL_COLUMN_WIDTH_CLASS]: true,
         [mergedClasses.value.column ?? ""]: true,
       }),
     );
@@ -380,7 +387,7 @@ export function useTimePanel(
         onClick: () => onSelect(item.value),
       },
       cn({
-        "min-w-12 cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
+        "w-12 cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: item.state === "base" || item.state === "hover",
         [color?.hover ?? ""]: item.state === "base" || item.state === "hover",

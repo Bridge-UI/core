@@ -330,8 +330,28 @@ export function useDateTimeRangePicker(
 
   const timeBind = computed(() => {
     return cn({
-      "flex self-stretch flex-col border-l border-gray-100 dark:border-gray-800": true,
+      "relative isolate shrink-0 self-stretch overflow-hidden border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.value.time ?? ""]: true,
+    });
+  });
+
+  const timePanelCustomProps = computed(() => {
+    return {
+      root: { class: "h-full max-h-full overflow-hidden" },
+    };
+  });
+
+  /** Invisible in-flow sizer so the shell keeps TimePanel's content width. */
+  const timeSizerBind = computed(() => {
+    return cn({
+      "invisible flex h-px w-fit gap-2 overflow-hidden px-2.5": true,
+    });
+  });
+
+  /** Absolutely fills the stretched shell; hosts the real TimePanel. */
+  const timeFillBind = computed(() => {
+    return cn({
+      "absolute inset-0 flex px-2.5": true,
     });
   });
 
@@ -362,11 +382,14 @@ export function useDateTimeRangePicker(
     displayValue,
     handleCancel,
     calendarBind,
+    timeFillBind,
     endTimeValue,
+    timeSizerBind,
     calendarTokens,
     startTimeValue,
     handleCalendarChange,
     handleEndPanelChange,
+    timePanelCustomProps,
     handleStartPanelChange,
     applyLabel: computed(() => resolveMessage("Apply")),
     cancelLabel: computed(() => resolveMessage("Cancel")),

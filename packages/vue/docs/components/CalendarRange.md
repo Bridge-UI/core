@@ -28,8 +28,8 @@ import { CalendarRange } from "@bridge-ui/vue/Components/CalendarRange";
 ```vue
 <CalendarRange
   :custom-props="{
-    root: { 'data-testid': 'calendar-range' },
     panels: { class: 'gap-4' },
+    root: { 'data-testid': 'calendar-range' },
   }"
 />
 ```

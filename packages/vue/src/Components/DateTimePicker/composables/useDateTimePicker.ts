@@ -279,10 +279,34 @@ export function useDateTimePicker(
     );
   });
 
+  /**
+   * Time column shell: stretches to the calendar height without letting
+   * TimePanel content contribute to the row's intrinsic height.
+   */
   const timePanelBind = computed(() => {
     return cn({
-      "flex self-stretch flex-col border-l border-gray-100 dark:border-gray-800": true,
+      "relative isolate shrink-0 self-stretch overflow-hidden border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.value.time ?? ""]: true,
+    });
+  });
+
+  const timePanelCustomProps = computed(() => {
+    return {
+      root: { class: "h-full max-h-full overflow-hidden" },
+    };
+  });
+
+  /** Invisible in-flow sizer so the shell keeps TimePanel's content width. */
+  const timeSizerBind = computed(() => {
+    return cn({
+      "invisible flex h-px w-fit gap-2 overflow-hidden px-2.5": true,
+    });
+  });
+
+  /** Absolutely fills the stretched shell; hosts the real TimePanel. */
+  const timeFillBind = computed(() => {
+    return cn({
+      "absolute inset-0 flex px-2.5": true,
     });
   });
 
@@ -301,10 +325,13 @@ export function useDateTimePicker(
     displayValue,
     handleCancel,
     calendarBind,
+    timeFillBind,
+    timeSizerBind,
     timePanelBind,
     calendarTokens,
     handlePanelChange,
     handleCalendarChange,
+    timePanelCustomProps,
     applyLabel: computed(() => resolveMessage("Apply")),
     cancelLabel: computed(() => resolveMessage("Cancel")),
     applyButtonProps: computed(() => customProps.value?.applyButton),

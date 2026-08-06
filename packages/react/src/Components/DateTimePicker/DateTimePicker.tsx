@@ -3,7 +3,10 @@ import { Button } from "@/Components/Button";
 import { Calendar } from "@/Components/Calendar";
 import type { DateTimePickerProps } from "@/Components/DateTimePicker/dateTimePicker.types";
 import { useDateTimePicker } from "@/Components/DateTimePicker/hooks/useDateTimePicker";
-import { TimePanel } from "@/Components/TimePanel";
+import {
+  TIME_PANEL_COLUMN_WIDTH_CLASS,
+  TimePanel,
+} from "@/Components/TimePanel";
 
 function DateTimePicker(props: DateTimePickerProps) {
   const {
@@ -20,11 +23,14 @@ function DateTimePicker(props: DateTimePickerProps) {
     displayValue,
     handleCancel,
     calendarBind,
+    timeFillBind,
+    timeSizerBind,
     calendarTokens,
     applyButtonProps,
     cancelButtonProps,
     handlePanelChange,
     handleCalendarChange,
+    timePanelCustomProps,
   } = useDateTimePicker(props, {
     ampm: false,
     interval: 1,
@@ -64,21 +70,32 @@ function DateTimePicker(props: DateTimePickerProps) {
         </div>
 
         <div className={timeBind}>
-          <TimePanel
-            ampm={merged.ampm}
-            tokens={timeTokens}
-            color={merged.color}
-            value={displayValue}
-            maxTime={merged.maxTime}
-            minTime={merged.minTime}
-            rounded={merged.rounded}
-            disabled={merged.disabled}
-            interval={merged.interval}
-            readOnly={merged.readOnly}
-            timeZone={merged.timeZone}
-            onChange={handlePanelChange}
-            disableTimes={merged.disableTimes}
-          />
+          <div aria-hidden className={timeSizerBind}>
+            <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+            <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+            {merged.ampm ? (
+              <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+            ) : null}
+          </div>
+
+          <div className={timeFillBind}>
+            <TimePanel
+              ampm={merged.ampm}
+              tokens={timeTokens}
+              color={merged.color}
+              value={displayValue}
+              maxTime={merged.maxTime}
+              minTime={merged.minTime}
+              rounded={merged.rounded}
+              disabled={merged.disabled}
+              interval={merged.interval}
+              readOnly={merged.readOnly}
+              timeZone={merged.timeZone}
+              onChange={handlePanelChange}
+              disableTimes={merged.disableTimes}
+              customProps={timePanelCustomProps}
+            />
+          </div>
         </div>
       </div>
 

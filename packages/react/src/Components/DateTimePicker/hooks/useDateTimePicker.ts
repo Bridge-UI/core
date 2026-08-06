@@ -243,10 +243,34 @@ export function useDateTimePicker(
     });
   });
 
+  /**
+   * Time column shell: stretches to the calendar height without letting
+   * TimePanel content contribute to the row's intrinsic height.
+   */
   const timeBind = derived(() => {
     return cn({
-      "flex self-stretch flex-col border-l border-gray-100 dark:border-gray-800": true,
+      "relative isolate shrink-0 self-stretch overflow-hidden border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.time ?? ""]: true,
+    });
+  });
+
+  const timePanelCustomProps = derived(() => {
+    return {
+      root: { className: "h-full max-h-full overflow-hidden" },
+    };
+  });
+
+  /** Invisible in-flow sizer so the shell keeps TimePanel's content width. */
+  const timeSizerBind = derived(() => {
+    return cn({
+      "invisible flex h-px w-fit gap-2 overflow-hidden px-2.5": true,
+    });
+  });
+
+  /** Absolutely fills the stretched shell; hosts the real TimePanel. */
+  const timeFillBind = derived(() => {
+    return cn({
+      "absolute inset-0 flex px-2.5": true,
     });
   });
 
@@ -272,9 +296,12 @@ export function useDateTimePicker(
     displayValue,
     handleCancel,
     calendarBind,
+    timeFillBind,
+    timeSizerBind,
     calendarTokens,
     handlePanelChange,
     handleCalendarChange,
+    timePanelCustomProps,
     applyLabel: resolveMessage("Apply"),
     cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),

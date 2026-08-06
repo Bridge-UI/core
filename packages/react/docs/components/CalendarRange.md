@@ -36,8 +36,8 @@ import { CalendarRange } from "@bridge-ui/react/Components/CalendarRange";
 ```tsx
 <CalendarRange
   customProps={{
-    root: { "data-testid": "calendar-range" },
     panels: { className: "gap-4" },
+    root: { "data-testid": "calendar-range" },
   }}
 />
 ```

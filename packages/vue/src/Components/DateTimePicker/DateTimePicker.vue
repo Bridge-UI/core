@@ -8,7 +8,10 @@ import type {
   DateTimePickerOwnProps,
   DateTimePickerSlots,
 } from "@/Components/DateTimePicker/dateTimePicker.types";
-import { TimePanel } from "@/Components/TimePanel";
+import {
+  TIME_PANEL_COLUMN_WIDTH_CLASS,
+  TimePanel,
+} from "@/Components/TimePanel";
 
 defineOptions({ inheritAttrs: false });
 
@@ -31,12 +34,15 @@ const {
   displayValue,
   handleCancel,
   calendarBind,
+  timeFillBind,
+  timeSizerBind,
   timePanelBind,
   calendarTokens,
   applyButtonProps,
   cancelButtonProps,
   handlePanelChange,
   handleCalendarChange,
+  timePanelCustomProps,
 } = useDateTimePicker(
   props,
   {
@@ -84,21 +90,30 @@ const {
       </div>
 
       <div :class="timePanelBind">
-        <TimePanel
-          :ampm="merged.ampm"
-          :tokens="timeTokens"
-          :color="merged.color"
-          :value="displayValue"
-          :rounded="merged.rounded"
-          :max-time="merged.maxTime"
-          :min-time="merged.minTime"
-          :disabled="merged.disabled"
-          :interval="merged.interval"
-          :read-only="merged.readOnly"
-          :time-zone="merged.timeZone"
-          v-on:change="handlePanelChange"
-          :disable-times="merged.disableTimes"
-        />
+        <div aria-hidden="true" :class="timeSizerBind">
+          <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
+          <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
+          <div v-if="merged.ampm" :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
+        </div>
+
+        <div :class="timeFillBind">
+          <TimePanel
+            :ampm="merged.ampm"
+            :tokens="timeTokens"
+            :color="merged.color"
+            :value="displayValue"
+            :rounded="merged.rounded"
+            :max-time="merged.maxTime"
+            :min-time="merged.minTime"
+            :disabled="merged.disabled"
+            :interval="merged.interval"
+            :read-only="merged.readOnly"
+            :time-zone="merged.timeZone"
+            v-on:change="handlePanelChange"
+            :disable-times="merged.disableTimes"
+            :custom-props="timePanelCustomProps"
+          />
+        </div>
       </div>
     </div>
 

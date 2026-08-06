@@ -1,5 +1,6 @@
 // ** Exports
 export {
+  TIME_PANEL_COLUMN_WIDTH_CLASS,
   useTimePanel,
   type TimePanelItem,
 } from "@/Components/TimePanel/composables/useTimePanel";

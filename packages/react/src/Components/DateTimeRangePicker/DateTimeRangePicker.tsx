@@ -3,7 +3,10 @@ import { Button } from "@/Components/Button";
 import { CalendarRange } from "@/Components/CalendarRange";
 import type { DateTimeRangePickerProps } from "@/Components/DateTimeRangePicker/dateTimeRangePicker.types";
 import { useDateTimeRangePicker } from "@/Components/DateTimeRangePicker/hooks/useDateTimeRangePicker";
-import { TimePanel } from "@/Components/TimePanel";
+import {
+  TIME_PANEL_COLUMN_WIDTH_CLASS,
+  TimePanel,
+} from "@/Components/TimePanel";
 
 function DateTimeRangePicker(props: DateTimeRangePickerProps) {
   const {
@@ -20,13 +23,16 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     displayValue,
     handleCancel,
     calendarBind,
+    timeFillBind,
     endTimeValue,
+    timeSizerBind,
     calendarTokens,
     startTimeValue,
     applyButtonProps,
     cancelButtonProps,
     handleCalendarChange,
     handleEndPanelChange,
+    timePanelCustomProps,
     handleStartPanelChange,
   } = useDateTimeRangePicker(props, {
     ampm: false,
@@ -38,43 +44,35 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     orientation: "horizontal",
   });
 
-  const startTimeAside = (
+  const timeAside = (
+    value: Date | null,
+    onChange: (next: Date | null) => void,
+  ) => (
     <div className={timeBind}>
-      <TimePanel
-        ampm={merged.ampm}
-        tokens={timeTokens}
-        color={merged.color}
-        value={startTimeValue}
-        maxTime={merged.maxTime}
-        minTime={merged.minTime}
-        rounded={merged.rounded}
-        disabled={merged.disabled}
-        interval={merged.interval}
-        readOnly={merged.readOnly}
-        timeZone={merged.timeZone}
-        onChange={handleStartPanelChange}
-        disableTimes={merged.disableTimes}
-      />
-    </div>
-  );
+      <div aria-hidden className={timeSizerBind}>
+        <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+        <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+        {merged.ampm ? <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} /> : null}
+      </div>
 
-  const endTimeAside = (
-    <div className={timeBind}>
-      <TimePanel
-        ampm={merged.ampm}
-        tokens={timeTokens}
-        color={merged.color}
-        value={endTimeValue}
-        maxTime={merged.maxTime}
-        minTime={merged.minTime}
-        rounded={merged.rounded}
-        disabled={merged.disabled}
-        interval={merged.interval}
-        readOnly={merged.readOnly}
-        timeZone={merged.timeZone}
-        onChange={handleEndPanelChange}
-        disableTimes={merged.disableTimes}
-      />
+      <div className={timeFillBind}>
+        <TimePanel
+          value={value}
+          ampm={merged.ampm}
+          tokens={timeTokens}
+          onChange={onChange}
+          color={merged.color}
+          maxTime={merged.maxTime}
+          minTime={merged.minTime}
+          rounded={merged.rounded}
+          disabled={merged.disabled}
+          interval={merged.interval}
+          readOnly={merged.readOnly}
+          timeZone={merged.timeZone}
+          disableTimes={merged.disableTimes}
+          customProps={timePanelCustomProps}
+        />
+      </div>
     </div>
   );
 
@@ -102,10 +100,15 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
             hideOutsideDays={merged.hideOutsideDays}
+            customProps={{
+              end: { className: "pr-2.5" },
+              start: { className: "pr-2.5" },
+              panels: { className: "gap-0" },
+            }}
             slots={{
               day: props.slots?.day,
-              endAside: endTimeAside,
-              startAside: startTimeAside,
+              endAside: timeAside(endTimeValue, handleEndPanelChange),
+              startAside: timeAside(startTimeValue, handleStartPanelChange),
             }}
           />
         </div>
