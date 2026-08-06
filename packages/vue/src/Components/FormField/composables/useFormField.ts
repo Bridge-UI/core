@@ -58,6 +58,7 @@ export type FormFieldOptions = {
     | "TimeField"
     | "NumberField"
     | "Autocomplete"
+    | "DateTimeField"
     | "PasswordField"
     | "DateRangeField";
 

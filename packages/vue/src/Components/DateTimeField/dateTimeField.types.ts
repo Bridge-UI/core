@@ -1,0 +1,228 @@
+// ** External Imports
+import type { InputHTMLAttributes, Slot } from "vue";
+
+// ** Core Imports
+import type {
+  DisableDatesInput,
+  DisableTimesInput,
+  MergeHtmlProps,
+  StartOfWeek,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type { CalendarView } from "@/Components/Calendar/calendar.types";
+import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
+import type { DateTimePickerCustomProps } from "@/Components/DateTimePicker/dateTimePicker.types";
+import type {
+  FormFieldClasses,
+  FormFieldCustomProps,
+  FormFieldOwnProps,
+  FormFieldSlots,
+} from "@/Components/FormField/formField.types";
+import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+
+export interface DateTimeFieldClasses extends FormFieldClasses {}
+
+export interface DateTimeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the nested `DateTimePicker`.
+   *
+   * @default undefined
+   */
+  dateTimePicker?: DateTimePickerCustomProps;
+
+  /**
+   * Props forwarded to the floating `Menu`.
+   *
+   * @default undefined
+   */
+  menu?: Partial<
+    Pick<
+      MenuOwnProps,
+      "shadow" | "classes" | "rounded" | "placement" | "customProps"
+    >
+  >;
+}
+
+export interface DateTimeFieldEmits {
+  /**
+   * Emitted when the selected date-time changes.
+   */
+  change: [value: Date | null];
+
+  /**
+   * Emitted when the menu closes.
+   */
+  close: [];
+
+  /**
+   * Emitted when the menu opens.
+   */
+  open: [];
+}
+
+export interface DateTimeFieldOwnProps extends Omit<
+  FormFieldOwnProps,
+  "field" | "classes" | "customProps"
+> {
+  /**
+   * Uses a 12-hour clock with an AM/PM column.
+   *
+   * @default false
+   */
+  ampm?: boolean;
+
+  /**
+   * Classes for field / input regions.
+   *
+   * @default undefined
+   */
+  classes?: DateTimeFieldClasses;
+
+  /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
+  customProps?: DateTimeFieldCustomProps;
+
+  /**
+   * Uncontrolled initial value.
+   *
+   * @default null
+   */
+  defaultValue?: Date | null;
+
+  /**
+   * Initial calendar panel view.
+   *
+   * @default "date"
+   */
+  defaultView?: CalendarView;
+
+  /**
+   * Dates that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableDates?: DisableDatesInput;
+
+  /**
+   * Month indexes that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableMonths?: number[];
+
+  /**
+   * Times that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableTimes?: DisableTimesInput;
+
+  /**
+   * Years that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableYears?: number[];
+
+  /**
+   * Hides month navigation / panel.
+   *
+   * @default false
+   */
+  hideMonths?: boolean;
+
+  /**
+   * Hides weekday labels.
+   *
+   * @default false
+   */
+  hideWeekdays?: boolean;
+
+  /**
+   * Hides year navigation / panel.
+   *
+   * @default false
+   */
+  hideYears?: boolean;
+
+  /**
+   * Minute step between options.
+   *
+   * @default 1
+   */
+  interval?: number;
+
+  /**
+   * Latest selectable date.
+   *
+   * @default undefined
+   */
+  maxDate?: Date;
+
+  /**
+   * Latest selectable time.
+   *
+   * @default undefined
+   */
+  maxTime?: Date;
+
+  /**
+   * Earliest selectable date.
+   *
+   * @default undefined
+   */
+  minDate?: Date;
+
+  /**
+   * Earliest selectable time.
+   *
+   * @default undefined
+   */
+  minTime?: Date;
+
+  /**
+   * Shows Cancel / Apply on the nested picker.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
+
+  /**
+   * First day of the week.
+   *
+   * @default 0
+   */
+  startOfWeek?: number | StartOfWeek;
+
+  /**
+   * IANA time zone.
+   *
+   * @default undefined
+   */
+  timeZone?: string;
+}
+
+export interface DateTimeFieldSlots extends FormFieldSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+}
+
+export type DateTimeFieldProps = MergeHtmlProps<
+  DateTimeFieldOwnProps,
+  InputHTMLAttributes
+> & {
+  /**
+   * Bound with `v-model` on the component (`defineModel` internally).
+   *
+   * @default undefined
+   */
+  modelValue?: Date | null;
+};
