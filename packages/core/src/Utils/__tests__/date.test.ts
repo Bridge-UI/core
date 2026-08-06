@@ -175,7 +175,6 @@ describe("resolveCalendarDayInteractionState / isDateInRangePreview", () => {
   test("it should resolve interaction priority", () => {
     expect(
       resolveCalendarDayInteractionState({
-        preview: true,
         disabled: true,
         selected: true,
       }),
@@ -190,12 +189,9 @@ describe("resolveCalendarDayInteractionState / isDateInRangePreview", () => {
 
     expect(
       resolveCalendarDayInteractionState({
-        preview: true,
         selected: true,
       }),
     ).toBe("selected");
-
-    expect(resolveCalendarDayInteractionState({ preview: true })).toBe("hover");
 
     expect(resolveCalendarDayInteractionState()).toBe("base");
   });

@@ -15,6 +15,7 @@ import {
   cn,
   isDateDisabled,
   isDateInRangePreview,
+  isDateRangeValue,
   isDateSelected,
   mergeBridgeUILayeredClasses,
   resolveCalendarDayInteractionState,
@@ -274,7 +275,6 @@ export function useCalendarDate(
         });
 
       const state = resolveCalendarDayInteractionState({
-        preview,
         disabled,
         selected,
         readOnly: merged.value.readOnly,
@@ -343,18 +343,15 @@ export function useCalendarDate(
     emit("previewDateChange", date);
   };
 
-  let previewFrame: null | number = null;
-
-  const schedulePreview = (date: Date | null) => {
-    if (previewFrame !== null) {
-      cancelAnimationFrame(previewFrame);
+  const canPreviewRange = computed(() => {
+    if (mode.value !== "range" || !isDateRangeValue(value.value)) {
+      return false;
     }
 
-    previewFrame = requestAnimationFrame(() => {
-      previewFrame = null;
-      setPreview(date);
-    });
-  };
+    const [start, end] = value.value;
+
+    return adapter.value.isSameDay(start, end, context.value);
+  });
 
   const rootBind = computed(() => {
     return mergePartBind(
@@ -372,6 +369,11 @@ export function useCalendarDate(
       customProps.value?.grid,
       {
         role: "grid",
+        onMouseleave: () => {
+          if (canPreviewRange.value) {
+            setPreview(null);
+          }
+        },
       },
       cn({
         "grid grid-cols-7 gap-1": true,
@@ -404,26 +406,16 @@ export function useCalendarDate(
         "data-preview": cell.preview ? "" : undefined,
         "aria-current": cell.today ? ("date" as const) : undefined,
         onMouseenter: () => {
-          if (mode.value === "range" && !cell.disabled) {
-            schedulePreview(cell.date);
-          }
-        },
-        onMouseleave: () => {
-          if (mode.value === "range") {
-            if (previewFrame !== null) {
-              cancelAnimationFrame(previewFrame);
-              previewFrame = null;
-            }
-
-            setPreview(null);
+          if (canPreviewRange.value && !cell.disabled) {
+            setPreview(cell.date);
           }
         },
       },
       cn({
         "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass.value ?? ""]: true,
-        [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
-        [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.base ?? ""]: cell.state === "base",
+        [color?.hover ?? ""]: cell.state === "base",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",
         [dayTokens.value.outside ?? ""]:

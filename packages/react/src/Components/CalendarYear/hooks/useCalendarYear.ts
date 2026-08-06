@@ -226,8 +226,8 @@ export function useCalendarYear(
       cn({
         "cursor-pointer p-2.5 text-xs uppercase transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass ?? ""]: true,
-        [color?.soft ?? ""]: cell.state === "base" || cell.state === "hover",
-        [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.soft ?? ""]: cell.state === "base",
+        [color?.hover ?? ""]: cell.state === "base",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",
         [mergedClasses.year ?? ""]: true,

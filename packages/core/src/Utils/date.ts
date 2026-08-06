@@ -342,7 +342,10 @@ export function isDateRangeEndpoint<TDate>({
 
 /**
  * Interactive tile state for calendar day / month / year buttons.
- * Priority: `disabled` / `readOnly` → `selected` → range `preview` (hover look) → `base`.
+ * Priority: `disabled` / `readOnly` → `selected` → `base`.
+ *
+ * Pointer hover is CSS (`hover:` on the color token). Incomplete range fill
+ * uses `data-preview` on the tile — not this state union.
  */
 export type CalendarDayInteractionState =
   | "base"
@@ -352,17 +355,15 @@ export type CalendarDayInteractionState =
 
 /**
  * Resolves the visual interaction state for a calendar tile.
- * Pointer CSS hover still comes from the `hover` token’s `hover:` classes when
- * the resolved state is `base`; set `data-preview` when this returns `hover`.
+ * Pointer hover comes from the `hover` token’s `hover:` classes when the
+ * resolved state is `base`. Range preview uses `data-preview`, not `"hover"`.
  */
 export function resolveCalendarDayInteractionState({
-  preview = false,
   disabled = false,
   readOnly = false,
   selected = false,
 }: {
   disabled?: boolean;
-  preview?: boolean;
   readOnly?: boolean;
   selected?: boolean;
 } = {}): CalendarDayInteractionState {
@@ -372,10 +373,6 @@ export function resolveCalendarDayInteractionState({
 
   if (selected) {
     return "selected";
-  }
-
-  if (preview) {
-    return "hover";
   }
 
   return "base";

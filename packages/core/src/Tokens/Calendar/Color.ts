@@ -1,9 +1,9 @@
 /**
  * Interactive states for calendar day / month / year tiles.
  *
- * `hover` covers both pointer hover and range preview (first date chosen,
- * previewing toward the second). Use `data-preview` on the tile for the
- * in-between days so the same classes apply without a real pointer hover.
+ * Pointer hover is pure CSS (`hover:` on the `hover` token). Incomplete range
+ * preview uses `data-preview` so the same token’s `data-[preview]:` classes
+ * apply without JS-driven hover state.
  *
  * Layout / spacing follows WireUI's datetime-picker calendar chrome.
  */

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 // ** Core Imports
 import {
@@ -8,6 +8,7 @@ import {
   cn,
   isDateDisabled,
   isDateInRangePreview,
+  isDateRangeValue,
   isDateSelected,
   mergeBridgeUILayeredClasses,
   resolveCalendarDayInteractionState,
@@ -245,7 +246,6 @@ export function useCalendarDate(
         });
 
       const state = resolveCalendarDayInteractionState({
-        preview,
         disabled,
         selected,
         readOnly: merged.readOnly,
@@ -310,18 +310,15 @@ export function useCalendarDate(
     props.onPreviewDateChange?.(date);
   };
 
-  const previewFrameRef = useRef<null | number>(null);
-
-  const schedulePreview = (date: Date | null) => {
-    if (previewFrameRef.current !== null) {
-      cancelAnimationFrame(previewFrameRef.current);
+  const canPreviewRange = derived(() => {
+    if (mode !== "range" || !isDateRangeValue(value)) {
+      return false;
     }
 
-    previewFrameRef.current = requestAnimationFrame(() => {
-      previewFrameRef.current = null;
-      setPreview(date);
-    });
-  };
+    const [start, end] = value;
+
+    return adapter.isSameDay(start, end, context);
+  });
 
   const rootBind = derived(() => {
     return mergePartBind(
@@ -339,6 +336,11 @@ export function useCalendarDate(
       customProps?.grid,
       {
         role: "grid",
+        onMouseLeave: () => {
+          if (canPreviewRange) {
+            setPreview(null);
+          }
+        },
       },
       cn({
         "grid grid-cols-7 gap-1": true,
@@ -371,26 +373,16 @@ export function useCalendarDate(
         "data-preview": cell.preview ? "" : undefined,
         "aria-current": cell.today ? ("date" as const) : undefined,
         onMouseEnter: () => {
-          if (mode === "range" && !cell.disabled) {
-            schedulePreview(cell.date);
-          }
-        },
-        onMouseLeave: () => {
-          if (mode === "range") {
-            if (previewFrameRef.current !== null) {
-              cancelAnimationFrame(previewFrameRef.current);
-              previewFrameRef.current = null;
-            }
-
-            setPreview(null);
+          if (canPreviewRange && !cell.disabled) {
+            setPreview(cell.date);
           }
         },
       },
       cn({
         "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass ?? ""]: true,
-        [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
-        [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.base ?? ""]: cell.state === "base",
+        [color?.hover ?? ""]: cell.state === "base",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",
         [dayTokens.outside ?? ""]: cell.outside && cell.state !== "selected",
