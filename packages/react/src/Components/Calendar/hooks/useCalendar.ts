@@ -91,8 +91,8 @@ export function useCalendar(
   libDefaults: CalendarLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
+  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarProps,
@@ -107,7 +107,9 @@ export function useCalendar(
     props: componentProps,
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
@@ -133,30 +135,45 @@ export function useCalendar(
     });
   });
 
-  const isValueControlled = derived(() => !isNil(props.value));
-  const isViewControlled = derived(() => !isNil(props.view));
-  const isViewDateControlled = derived(() => !isNil(props.viewDate));
+  const isValueControlled = derived(() => {
+    return !isNil(props.value);
+  });
+
+  const isViewControlled = derived(() => {
+    return !isNil(props.view) && !isNil(props.onViewChange);
+  });
+  const isViewDateControlled = derived(() => {
+    return !isNil(props.viewDate) && !isNil(props.onViewDateChange);
+  });
 
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
-    () => merged.defaultValue ?? null,
+    () => {
+      return merged.defaultValue ?? null;
+    },
   );
 
-  const [uncontrolledView, setUncontrolledView] = useState<CalendarView>(
-    () => merged.defaultView ?? "date",
-  );
+  const [uncontrolledView, setUncontrolledView] = useState<CalendarView>(() => {
+    return props.view ?? merged.defaultView ?? "date";
+  });
 
   const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
-    const focus = resolveFocusDate(
-      merged.defaultValue ?? null,
-      adapter,
-      context,
-    );
+    const focus = !isNil(props.viewDate)
+      ? (props.viewDate as Date)
+      : resolveFocusDate(merged.defaultValue ?? null, adapter, context);
 
     return adapter.startOfMonth(focus, context);
   });
 
+  const yearPageSize = 15;
+
+  const [yearPageStart, setYearPageStart] = useState<null | number>(null);
+
   const value = derived((): DatePickerModel => {
-    return isValueControlled ? (props.value ?? null) : uncontrolledValue;
+    if (isValueControlled) {
+      return props.value ?? null;
+    }
+
+    return uncontrolledValue;
   });
 
   const view = derived((): CalendarView => {
@@ -174,9 +191,11 @@ export function useCalendar(
   });
 
   const viewDate = derived(() => {
-    return isViewDateControlled
-      ? (props.viewDate as Date)
-      : uncontrolledViewDate;
+    if (isViewDateControlled) {
+      return props.viewDate as Date;
+    }
+
+    return uncontrolledViewDate;
   });
 
   const roundedClass = useMemo(() => {
@@ -198,9 +217,21 @@ export function useCalendar(
     return names[adapter.getMonth(viewDate, context)] ?? "";
   });
 
-  const viewYear = derived(() => adapter.getYear(viewDate, context));
+  const viewYear = derived(() => {
+    return adapter.getYear(viewDate, context);
+  });
 
-  const viewMonth = derived(() => adapter.getMonth(viewDate, context));
+  const viewMonth = derived(() => {
+    return adapter.getMonth(viewDate, context);
+  });
+
+  const resolvedYearPageStart = derived(() => {
+    if (!isNil(yearPageStart)) {
+      return yearPageStart;
+    }
+
+    return Math.max(1, viewYear - Math.floor(yearPageSize / 2));
+  });
 
   const setView = (next: CalendarView) => {
     if (!isViewControlled) {
@@ -208,6 +239,11 @@ export function useCalendar(
     }
 
     props.onViewChange?.(next);
+  };
+
+  const openYearView = () => {
+    setYearPageStart(Math.max(1, viewYear - Math.floor(yearPageSize / 2)));
+    setView("year");
   };
 
   const setViewDate = (next: Date) => {
@@ -228,22 +264,37 @@ export function useCalendar(
     props.onChange?.(next);
   };
 
-  const goToPreviousMonth = () => {
+  const goToPrevious = () => {
+    if (view === "year") {
+      setYearPageStart(Math.max(1, resolvedYearPageStart - yearPageSize));
+      return;
+    }
+
     setViewDate(adapter.addMonths(viewDate, -1, context));
   };
 
-  const goToNextMonth = () => {
+  const goToNext = () => {
+    if (view === "year") {
+      setYearPageStart(resolvedYearPageStart + yearPageSize);
+      return;
+    }
+
     setViewDate(adapter.addMonths(viewDate, 1, context));
   };
 
+  /**
+   * Jumps to the date panel on today's month without changing the selection.
+   */
   const goToToday = () => {
     const today = adapter.startOfMonth(adapter.now(context), context);
 
+    setYearPageStart(null);
     setViewDate(today);
     setView("date");
   };
 
   const handleYearSelect = (year: number) => {
+    setYearPageStart(null);
     setViewDate(adapter.setYear(viewDate, year, context));
     setView(merged.hideMonths ? "date" : "month");
   };
@@ -258,7 +309,7 @@ export function useCalendar(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-72 flex-col gap-3 p-3": true,
+        "flex w-72 flex-col overflow-hidden": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -269,8 +320,22 @@ export function useCalendar(
       customProps?.header,
       {},
       cn({
-        "flex items-center justify-between gap-2": true,
+        "flex items-center justify-between p-2.5": true,
         [mergedClasses.header ?? ""]: true,
+      }),
+    );
+  });
+
+  /**
+   * Panel hosting date / month / year. Padding matches WireUI picker body.
+   */
+  const bodyBind = derived(() => {
+    return mergePartBind(
+      customProps?.body,
+      {},
+      cn({
+        "flex flex-col p-2.5": true,
+        [mergedClasses.body ?? ""]: true,
       }),
     );
   });
@@ -283,8 +348,7 @@ export function useCalendar(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex items-center gap-1 px-1.5 py-1 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-800": true,
-        [roundedClass ?? ""]: true,
+        "flex cursor-pointer items-center gap-x-2 text-sm text-gray-600 focus:outline-none disabled:cursor-not-allowed dark:text-gray-400": true,
         [mergedClasses.selector ?? ""]: true,
       }),
     );
@@ -298,11 +362,27 @@ export function useCalendar(
         disabled: merged.disabled,
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800": true,
+        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center text-gray-600 hover:bg-gray-100 disabled:cursor-not-allowed dark:text-gray-300 dark:hover:bg-gray-800": true,
         [roundedClass ?? ""]: true,
         [mergedClasses.navButton ?? ""]: true,
       }),
     );
+  });
+
+  const previousNavLabel = derived(() => {
+    if (view === "year") {
+      return resolveMessage("Previous years");
+    }
+
+    return resolveMessage("Previous month");
+  });
+
+  const nextNavLabel = derived(() => {
+    if (view === "year") {
+      return resolveMessage("Next years");
+    }
+
+    return resolveMessage("Next month");
   });
 
   const previousButtonBind = derived(() => {
@@ -310,10 +390,10 @@ export function useCalendar(
       customProps?.previousButton,
       {
         ...navButtonBind,
+        onClick: goToPrevious,
         type: "button" as const,
         disabled: merged.disabled,
-        onClick: goToPreviousMonth,
-        "aria-label": resolveMessage("Previous month"),
+        "aria-label": previousNavLabel,
       },
       cn({
         [mergedClasses.navButton ?? ""]: true,
@@ -326,10 +406,10 @@ export function useCalendar(
       customProps?.nextButton,
       {
         ...navButtonBind,
-        onClick: goToNextMonth,
+        onClick: goToNext,
         type: "button" as const,
         disabled: merged.disabled,
-        "aria-label": resolveMessage("Next month"),
+        "aria-label": nextNavLabel,
       },
       cn({
         [mergedClasses.navButton ?? ""]: true,
@@ -347,7 +427,7 @@ export function useCalendar(
         "aria-label": resolveMessage("Today"),
       },
       cn({
-        "inline-flex h-8 w-8 items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800": true,
+        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center hover:bg-gray-100 disabled:cursor-not-allowed dark:hover:bg-gray-800": true,
         [roundedClass ?? ""]: true,
         [mergedClasses.navButton ?? ""]: true,
       }),
@@ -357,8 +437,8 @@ export function useCalendar(
   const yearSelectorBind = derived(() => {
     return mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
+      onClick: openYearView,
       type: "button" as const,
-      onClick: () => setView("year"),
       "aria-label": resolveMessage("Select year"),
       disabled: merged.disabled || merged.hideYears,
     });
@@ -383,12 +463,15 @@ export function useCalendar(
     rootBind,
     viewDate,
     viewYear,
+    bodyBind,
     viewMonth,
     yearLabel,
     monthLabel,
     headerBind,
     setViewDate,
     handleChange,
+    yearPageSize,
+    showNav: true,
     nextButtonBind,
     todayButtonBind,
     yearSelectorBind,
@@ -396,9 +479,9 @@ export function useCalendar(
     monthSelectorBind,
     handleMonthSelect,
     previousButtonBind,
-    showDateNav: view === "date",
     navIconBind: customProps?.navIcon,
     showYearSelector: !merged.hideYears,
+    yearPageStart: resolvedYearPageStart,
     showMonthSelector: !merged.hideMonths,
   };
 }

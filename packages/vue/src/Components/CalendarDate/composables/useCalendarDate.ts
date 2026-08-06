@@ -108,14 +108,16 @@ export function useCalendarDate(
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, [
       "onChange",
-      "onPreviewDateChange",
       "onViewDateChange",
+      "onPreviewDateChange",
     ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarDateClasses>({
-    entry: computed(() => undefined),
     props: () => split.value.componentProps,
+    entry: computed(() => {
+      return undefined;
+    }),
   });
 
   const context = computed((): DateAdapterContext => {
@@ -133,15 +135,17 @@ export function useCalendarDate(
     return toValue(props);
   });
 
-  const isControlled = computed(() => !isNil(propsValue.value.value));
+  const isControlled = computed(() => {
+    return !isNil(propsValue.value.value);
+  });
 
-  const isPreviewControlled = computed(
-    () => !isNil(propsValue.value.previewDate),
-  );
+  const isPreviewControlled = computed(() => {
+    return !isNil(propsValue.value.previewDate);
+  });
 
-  const isViewDateControlled = computed(
-    () => !isNil(propsValue.value.viewDate),
-  );
+  const isViewDateControlled = computed(() => {
+    return !isNil(propsValue.value.viewDate);
+  });
 
   const uncontrolledValue = ref<DatePickerModel>(
     merged.value.defaultValue ?? null,
@@ -158,21 +162,27 @@ export function useCalendarDate(
   );
 
   const value = computed((): DatePickerModel => {
-    return isControlled.value
-      ? (propsValue.value.value ?? null)
-      : uncontrolledValue.value;
+    if (isControlled.value) {
+      return propsValue.value.value ?? null;
+    }
+
+    return uncontrolledValue.value;
   });
 
   const previewDate = computed(() => {
-    return isPreviewControlled.value
-      ? propsValue.value.previewDate
-      : uncontrolledPreview.value;
+    if (isPreviewControlled.value) {
+      return propsValue.value.previewDate;
+    }
+
+    return uncontrolledPreview.value;
   });
 
   const viewDate = computed(() => {
-    return isViewDateControlled.value
-      ? (propsValue.value.viewDate as Date)
-      : uncontrolledViewDate.value;
+    if (isViewDateControlled.value) {
+      return propsValue.value.viewDate as Date;
+    }
+
+    return uncontrolledViewDate.value;
   });
 
   const startOfWeek = computed(() => {
@@ -196,7 +206,9 @@ export function useCalendarDate(
     return get(classes, merged.value.rounded);
   });
 
-  const colorClass = computed(() => get(colorTokens.value, merged.value.color));
+  const colorClass = computed(() => {
+    return get(colorTokens.value, merged.value.color);
+  });
 
   const weekdays = computed(() => {
     const names = adapter.value.getWeekdayNames(context.value);
@@ -331,7 +343,7 @@ export function useCalendarDate(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col gap-2": true,
+        "flex flex-col": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -355,7 +367,6 @@ export function useCalendarDate(
       customProps.value?.weekday,
       {},
       cn({
-        "flex items-center justify-center py-1": true,
         [dayTokens.value.weekday ?? ""]: true,
         [mergedClasses.value.weekday ?? ""]: true,
       }),
@@ -386,7 +397,7 @@ export function useCalendarDate(
         },
       },
       cn({
-        "flex h-9 w-9 items-center justify-center text-sm transition-colors": true,
+        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm transition-all duration-150 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass.value ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
@@ -401,7 +412,9 @@ export function useCalendarDate(
     );
   };
 
-  const hideWeekdays = computed(() => Boolean(merged.value.hideWeekdays));
+  const hideWeekdays = computed(() => {
+    return Boolean(merged.value.hideWeekdays);
+  });
 
   return {
     days,

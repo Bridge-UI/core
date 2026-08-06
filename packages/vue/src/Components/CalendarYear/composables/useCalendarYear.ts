@@ -97,15 +97,19 @@ export function useCalendarYear(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarYearClasses>({
-    entry: computed(() => undefined),
     props: () => split.value.componentProps,
+    entry: computed(() => {
+      return undefined;
+    }),
   });
 
   const context = computed((): DateAdapterContext => {
     return resolveContext(merged.value.timeZone);
   });
 
-  const pageSize = computed(() => merged.value.pageSize ?? DEFAULT_PAGE_SIZE);
+  const pageSize = computed(() => {
+    return merged.value.pageSize ?? DEFAULT_PAGE_SIZE;
+  });
 
   const startYear = computed(() => {
     if (!isNil(merged.value.startYear)) {
@@ -117,7 +121,7 @@ export function useCalendarYear(
       adapter.value.getYear(adapter.value.now(context.value), context.value);
     const offset = Math.floor(pageSize.value / 2);
 
-    return focusYear - offset;
+    return Math.max(1, focusYear - offset);
   });
 
   const colorTokens = computed(() => {
@@ -133,7 +137,9 @@ export function useCalendarYear(
     return get(classes, merged.value.rounded);
   });
 
-  const colorClass = computed(() => get(colorTokens.value, merged.value.color));
+  const colorClass = computed(() => {
+    return get(colorTokens.value, merged.value.color);
+  });
 
   const years = computed((): CalendarYearCell[] => {
     return Array.from({ length: pageSize.value }, (_, index) => {
@@ -225,9 +231,9 @@ export function useCalendarYear(
         onClick: () => selectYear(cell.year),
       },
       cn({
-        "flex h-10 items-center justify-center px-2 text-sm transition-colors": true,
+        "cursor-pointer p-2.5 text-xs uppercase transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass.value ?? ""]: true,
-        [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.soft ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",

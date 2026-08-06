@@ -1,5 +1,5 @@
 // ** External Imports
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -37,4 +37,20 @@ test("it should expose month and year labels", () => {
   expect(result.current.viewYear).toBe(2021);
   expect(result.current.viewMonth).toBe(4);
   expect(result.current.monthLabel.toLowerCase()).toContain("may");
+});
+
+test("it should update viewDate when selecting year and month without onViewDateChange", () => {
+  const { result } = renderUseCalendar();
+
+  act(() => {
+    result.current.handleYearSelect(2018);
+  });
+
+  act(() => {
+    result.current.handleMonthSelect(2);
+  });
+
+  expect(result.current.viewYear).toBe(2018);
+  expect(result.current.viewMonth).toBe(2);
+  expect(result.current.view).toBe("date");
 });

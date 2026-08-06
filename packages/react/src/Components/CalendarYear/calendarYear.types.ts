@@ -123,7 +123,7 @@ export interface CalendarYearOwnProps {
   minDate?: Date;
 
   /**
-   * How many years to show in the grid.
+   * How many years to show per page.
    *
    * @default 15
    */

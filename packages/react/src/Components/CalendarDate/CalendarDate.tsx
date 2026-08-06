@@ -16,24 +16,21 @@ function CalendarDate(props: CalendarDateProps) {
     hideWeekdays,
     getWeekdayBind,
   } = useCalendarDate(props, {
-    rounded: "md",
+    rounded: "sm",
     startOfWeek: 0,
     color: "primary",
   });
 
   return (
     <div {...rootBind}>
-      {!hideWeekdays && (
-        <div role="row" className="grid grid-cols-7 gap-1">
-          {weekdays.map((label, index) => (
+      <div {...gridBind}>
+        {!hideWeekdays &&
+          weekdays.map((label, index) => (
             <span key={`${label}-${index}`} {...getWeekdayBind(label)}>
               {label}
             </span>
           ))}
-        </div>
-      )}
 
-      <div {...gridBind}>
         {days.map((cell) => (
           <button
             key={`${adapterDayKey(cell.date)}-${cell.label}`}

@@ -1,7 +1,9 @@
 /**
  * Non-interactive calendar chrome and day modifiers.
  * Interactive tile states live on {@link CalendarColorItem} (`base` / `hover` /
- * `selected` / `disabled`).
+ * `selected` / `disabled` / `soft`).
+ *
+ * Spacing and type scale follow WireUI's datetime-picker calendar.
  */
 export interface CalendarDay {
   /**
@@ -21,7 +23,8 @@ export interface CalendarDay {
 }
 
 export const dayProps: CalendarDay = {
-  "outside": "opacity-50",
-  "today": "font-semibold text-primary-600 dark:text-primary-400",
-  "weekday": "text-xs font-medium uppercase text-gray-400 dark:text-gray-500",
+  "outside": "text-gray-400 dark:text-gray-500",
+  "today": "font-medium text-primary-600 dark:text-primary-400",
+  "weekday":
+    "pointer-events-none text-center text-[0.65rem] font-medium uppercase text-gray-400 dark:text-gray-500",
 };

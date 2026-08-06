@@ -83,7 +83,9 @@ export function useCalendarMonth(
     props: componentProps,
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, ["onChange"]);
@@ -114,7 +116,9 @@ export function useCalendarMonth(
     return get(classes, merged.rounded);
   }, [merged.rounded, merged.tokens?.rounded]);
 
-  const colorClass = derived(() => get(colorTokens, merged.color));
+  const colorClass = derived(() => {
+    return get(colorTokens, merged.color);
+  });
 
   const months = derived((): CalendarMonthCell[] => {
     const names = adapter.getMonthNames(context);
@@ -208,9 +212,9 @@ export function useCalendarMonth(
         onClick: () => selectMonth(cell.month),
       },
       cn({
-        "flex h-10 items-center justify-center px-2 text-sm uppercase transition-colors": true,
+        "cursor-pointer px-2 py-4 text-xs uppercase transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass ?? ""]: true,
-        [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.soft ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",

@@ -1,3 +1,6 @@
+// ** Core Imports
+import { cn } from "@bridge-ui/core";
+
 // ** Local Imports
 import type { CalendarProps } from "@/Components/Calendar/calendar.types";
 import { useCalendar } from "@/Components/Calendar/hooks/useCalendar";
@@ -11,17 +14,20 @@ function Calendar(props: CalendarProps) {
     view,
     value,
     merged,
+    showNav,
     rootBind,
     viewDate,
     viewYear,
+    bodyBind,
     viewMonth,
     yearLabel,
     monthLabel,
     headerBind,
     navIconBind,
     setViewDate,
-    showDateNav,
     handleChange,
+    yearPageSize,
+    yearPageStart,
     nextButtonBind,
     todayButtonBind,
     yearSelectorBind,
@@ -47,41 +53,55 @@ function Calendar(props: CalendarProps) {
     disabled: merged.disabled,
     readOnly: merged.readOnly,
     timeZone: merged.timeZone,
-    disableYears: merged.disableYears,
-    disableMonths: merged.disableMonths,
+  };
+
+  const chevronClass = (open: boolean) => {
+    return cn(
+      "size-3 transition-all duration-200 ease-in-out",
+      navIconBind?.className,
+      { "rotate-180": open },
+    );
   };
 
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        <div className="flex min-w-0 items-center gap-1">
+        <div className="flex w-full min-w-0 items-center gap-x-2">
           {showYearSelector && (
             <button {...yearSelectorBind}>
               <span>{yearLabel}</span>
 
-              <Icon size="xs" icon="chevronDown" {...navIconBind} />
+              <Icon
+                size="2xs"
+                icon="chevronDown"
+                {...navIconBind}
+                className={chevronClass(view === "year")}
+              />
             </button>
           )}
 
           {showMonthSelector && (
             <button {...monthSelectorBind}>
-              <span className="underline decoration-gray-300 underline-offset-4">
-                {monthLabel}
-              </span>
+              <span>{monthLabel}</span>
 
-              <Icon size="xs" icon="chevronDown" {...navIconBind} />
+              <Icon
+                size="2xs"
+                icon="chevronDown"
+                {...navIconBind}
+                className={chevronClass(view === "month")}
+              />
             </button>
           )}
         </div>
 
-        {showDateNav && (
-          <div className="flex items-center gap-0.5">
+        {showNav && (
+          <div className="flex items-center">
             <button {...previousButtonBind}>
               <Icon size="sm" icon="chevronLeft" {...navIconBind} />
             </button>
 
             <button {...todayButtonBind}>
-              <span className="block h-2.5 w-2.5 rounded-full bg-gray-700 dark:bg-gray-200" />
+              <span className="size-2 rounded-full bg-slate-600 dark:bg-slate-300" />
             </button>
 
             <button {...nextButtonBind}>
@@ -91,38 +111,46 @@ function Calendar(props: CalendarProps) {
         )}
       </div>
 
-      {view === "date" && (
-        <CalendarDate
-          {...shared}
-          value={value}
-          viewDate={viewDate}
-          slots={props.slots}
-          range={merged.range}
-          onChange={handleChange}
-          multiple={merged.multiple}
-          onViewDateChange={setViewDate}
-          startOfWeek={merged.startOfWeek}
-          disableDates={merged.disableDates}
-          hideWeekdays={merged.hideWeekdays}
-        />
-      )}
+      <div {...bodyBind}>
+        {view === "date" && (
+          <CalendarDate
+            {...shared}
+            value={value}
+            viewDate={viewDate}
+            slots={props.slots}
+            range={merged.range}
+            onChange={handleChange}
+            multiple={merged.multiple}
+            onViewDateChange={setViewDate}
+            startOfWeek={merged.startOfWeek}
+            disableDates={merged.disableDates}
+            disableYears={merged.disableYears}
+            hideWeekdays={merged.hideWeekdays}
+            disableMonths={merged.disableMonths}
+          />
+        )}
 
-      {view === "month" && (
-        <CalendarMonth
-          {...shared}
-          year={viewYear}
-          value={viewMonth}
-          onChange={handleMonthSelect}
-        />
-      )}
+        {view === "month" && (
+          <CalendarMonth
+            {...shared}
+            year={viewYear}
+            value={viewMonth}
+            onChange={handleMonthSelect}
+            disableMonths={merged.disableMonths}
+          />
+        )}
 
-      {view === "year" && (
-        <CalendarYear
-          {...shared}
-          value={viewYear}
-          onChange={handleYearSelect}
-        />
-      )}
+        {view === "year" && (
+          <CalendarYear
+            {...shared}
+            value={viewYear}
+            pageSize={yearPageSize}
+            startYear={yearPageStart}
+            onChange={handleYearSelect}
+            disableYears={merged.disableYears}
+          />
+        )}
+      </div>
     </div>
   );
 }

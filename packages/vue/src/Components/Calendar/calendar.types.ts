@@ -25,6 +25,11 @@ export type CalendarView = "date" | "year" | "month";
 
 export interface CalendarClasses {
   /**
+   * Classes for the fixed-height date / month / year panel.
+   */
+  body?: string;
+
+  /**
    * Classes for the header.
    */
   header?: string;
@@ -46,6 +51,13 @@ export interface CalendarClasses {
 }
 
 export interface CalendarCustomProps {
+  /**
+   * Props forwarded to the fixed-height panel that hosts date / month / year.
+   *
+   * @default undefined
+   */
+  body?: HTMLAttributes;
+
   /**
    * Props forwarded to the header.
    *
@@ -302,14 +314,17 @@ export interface CalendarOwnProps {
   value?: DatePickerModel;
 
   /**
-   * Controlled panel view (`date` / `month` / `year`).
+   * Controlled panel view (`date` / `month` / `year`). Pair with `viewChange` /
+   * `v-model:view`. Without a change listener, the prop is used as the initial
+   * view only.
    *
    * @default undefined
    */
   view?: CalendarView;
 
   /**
-   * Controlled displayed month.
+   * Controlled displayed month. Pair with `viewDateChange` / `v-model:viewDate`.
+   * Without a change listener, the prop is used as the initial month only.
    *
    * @default undefined
    */

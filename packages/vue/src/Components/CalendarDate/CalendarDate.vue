@@ -25,7 +25,7 @@ const {
   getWeekdayBind,
 } = useCalendarDate(
   props,
-  { rounded: "md", startOfWeek: 0, color: "primary" },
+  { rounded: "sm", startOfWeek: 0, color: "primary" },
   emit,
 );
 
@@ -36,17 +36,17 @@ function adapterDayKey(date: Date) {
 
 <template>
   <div v-bind="rootBind">
-    <div role="row" v-if="!hideWeekdays" class="grid grid-cols-7 gap-1">
-      <span
-        :key="`${label}-${index}`"
-        v-bind="getWeekdayBind(label)"
-        v-for="(label, index) in weekdays"
-      >
-        {{ label }}
-      </span>
-    </div>
-
     <div v-bind="gridBind">
+      <template v-if="!hideWeekdays">
+        <span
+          :key="`${label}-${index}`"
+          v-bind="getWeekdayBind(label)"
+          v-for="(label, index) in weekdays"
+        >
+          {{ label }}
+        </span>
+      </template>
+
       <button
         v-for="cell in days"
         v-bind="getDayBind(cell)"

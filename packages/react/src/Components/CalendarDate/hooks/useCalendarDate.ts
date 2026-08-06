@@ -96,7 +96,9 @@ export function useCalendarDate(
     props: componentProps,
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [
@@ -122,10 +124,14 @@ export function useCalendarDate(
     });
   });
 
-  const isControlled = derived(() => !isNil(props.value));
+  const isControlled = derived(() => {
+    return !isNil(props.value);
+  });
 
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
-    () => merged.defaultValue ?? null,
+    () => {
+      return merged.defaultValue ?? null;
+    },
   );
 
   const [uncontrolledPreview, setUncontrolledPreview] = useState<Date | null>(
@@ -139,11 +145,19 @@ export function useCalendarDate(
   });
 
   const value = derived((): DatePickerModel => {
-    return isControlled ? (props.value ?? null) : uncontrolledValue;
+    if (isControlled) {
+      return props.value ?? null;
+    }
+
+    return uncontrolledValue;
   });
 
   const previewDate = derived(() => {
-    return !isNil(props.previewDate) ? props.previewDate : uncontrolledPreview;
+    if (!isNil(props.previewDate)) {
+      return props.previewDate;
+    }
+
+    return uncontrolledPreview;
   });
 
   const viewDate = derived(() => {
@@ -171,7 +185,9 @@ export function useCalendarDate(
     return get(classes, merged.rounded);
   }, [merged.rounded, merged.tokens?.rounded]);
 
-  const colorClass = derived(() => get(colorTokens, merged.color));
+  const colorClass = derived(() => {
+    return get(colorTokens, merged.color);
+  });
 
   const weekdays = derived(() => {
     const names = adapter.getWeekdayNames(context);
@@ -298,7 +314,7 @@ export function useCalendarDate(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex flex-col gap-2": true,
+        "flex flex-col": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -322,7 +338,6 @@ export function useCalendarDate(
       customProps?.weekday,
       {},
       cn({
-        "flex items-center justify-center py-1": true,
         [dayTokens.weekday ?? ""]: true,
         [mergedClasses.weekday ?? ""]: true,
       }),
@@ -353,7 +368,7 @@ export function useCalendarDate(
         },
       },
       cn({
-        "flex h-9 w-9 items-center justify-center text-sm transition-colors": true,
+        "relative flex h-8 w-full cursor-pointer items-center justify-center text-sm transition-all duration-150 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:opacity-50": true,
         [roundedClass ?? ""]: true,
         [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",

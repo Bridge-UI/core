@@ -94,8 +94,10 @@ export function useCalendarMonth(
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarMonthClasses>({
-    entry: computed(() => undefined),
     props: () => split.value.componentProps,
+    entry: computed(() => {
+      return undefined;
+    }),
   });
 
   const context = computed((): DateAdapterContext => {
@@ -122,7 +124,9 @@ export function useCalendarMonth(
     return get(classes, merged.value.rounded);
   });
 
-  const colorClass = computed(() => get(colorTokens.value, merged.value.color));
+  const colorClass = computed(() => {
+    return get(colorTokens.value, merged.value.color);
+  });
 
   const months = computed((): CalendarMonthCell[] => {
     const names = adapter.value.getMonthNames(context.value);
@@ -217,9 +221,9 @@ export function useCalendarMonth(
         onClick: () => selectMonth(cell.month),
       },
       cn({
-        "flex h-10 items-center justify-center px-2 text-sm uppercase transition-colors": true,
+        "cursor-pointer px-2 py-4 text-xs uppercase transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass.value ?? ""]: true,
-        [color?.base ?? ""]: cell.state === "base" || cell.state === "hover",
+        [color?.soft ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.hover ?? ""]: cell.state === "base" || cell.state === "hover",
         [color?.selected ?? ""]: cell.state === "selected",
         [color?.disabled ?? ""]: cell.state === "disabled",
