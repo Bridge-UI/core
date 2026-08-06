@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
@@ -7,10 +7,10 @@ import {
   cn,
   isDateRangeValue,
   mergeBridgeUILayeredClasses,
-  resolveDatePickerMode,
   splitComponentProps,
   type DateAdapterContext,
   type DatePickerModel,
+  type DateRangeValue,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
@@ -20,11 +20,11 @@ import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
-  CalendarClasses,
-  CalendarOwnProps,
-  CalendarProps,
-  CalendarView,
-} from "@/Components/Calendar/calendar.types";
+  CalendarRangeClasses,
+  CalendarRangeOwnProps,
+  CalendarRangeProps,
+  CalendarRangeView,
+} from "@/Components/CalendarRange/calendarRange.types";
 import {
   derived,
   mergePartBind,
@@ -32,10 +32,8 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const calendarBridgeKeys = [
-  "view",
+const calendarRangeBridgeKeys = [
   "color",
-  "range",
   "value",
   "tokens",
   "classes",
@@ -43,14 +41,12 @@ const calendarBridgeKeys = [
   "minDate",
   "rounded",
   "disabled",
-  "multiple",
   "readOnly",
   "timeZone",
   "viewDate",
   "hideYears",
   "hideMonths",
   "customProps",
-  "defaultView",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -58,17 +54,20 @@ const calendarBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
-] as const satisfies readonly (keyof CalendarOwnProps)[];
+] as const satisfies readonly (keyof CalendarRangeOwnProps)[];
 
-type CalendarLibDefaults = LibDefaultsShape<
-  CalendarOwnProps,
-  "color" | "rounded" | "defaultView" | "startOfWeek"
+type CalendarRangeLibDefaults = LibDefaultsShape<
+  CalendarRangeOwnProps,
+  "color" | "rounded" | "startOfWeek"
 >;
 
-type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
+type CalendarRangeMerged = MergeLibDefaults<
+  CalendarRangeOwnProps,
+  CalendarRangeLibDefaults
+>;
 
 function resolveFocusDate(
-  value: DatePickerModel,
+  value: null | DateRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
   context: DateAdapterContext,
 ): Date {
@@ -76,34 +75,34 @@ function resolveFocusDate(
     return adapter.now(context);
   }
 
-  if (isDateRangeValue(value)) {
-    return value[0];
-  }
-
-  if (isArray(value)) {
-    return value[0] ?? adapter.now(context);
-  }
-
-  return value;
+  return value[0];
 }
 
-export function useCalendar(
-  props: CalendarProps,
-  libDefaults: CalendarLibDefaults,
+function toRangeValue(value: DatePickerModel): null | DateRangeValue {
+  if (isDateRangeValue(value)) {
+    return value;
+  }
+
+  return null;
+}
+
+export function useCalendarRange(
+  props: CalendarRangeProps,
+  libDefaults: CalendarRangeLibDefaults,
 ) {
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
   const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    CalendarProps,
-    typeof calendarBridgeKeys
+    CalendarRangeProps,
+    typeof calendarRangeBridgeKeys
   >({
     props,
-    bridgeKeys: calendarBridgeKeys,
+    bridgeKeys: calendarRangeBridgeKeys,
   });
 
-  const { merged } = useBridgeUIComponent<CalendarMerged>({
+  const { merged } = useBridgeUIComponent<CalendarRangeMerged>({
     libDefaults,
     props: componentProps,
   });
@@ -116,13 +115,12 @@ export function useCalendar(
     return omit(inheritedAttrs, [
       "slots",
       "onChange",
-      "onViewChange",
       "onViewDateChange",
       "onPreviewDateChange",
     ]);
   });
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarClasses>({
+  const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarRangeClasses>({
     props: componentProps,
   });
 
@@ -130,47 +128,48 @@ export function useCalendar(
     return resolveContext(merged.timeZone);
   });
 
-  const mode = derived(() => {
-    return resolveDatePickerMode({
-      range: merged.range,
-      multiple: merged.multiple,
-    });
-  });
-
   const isValueControlled = derived(() => {
     return !isNil(props.value);
   });
 
-  const isViewControlled = derived(() => {
-    return !isNil(props.view) && !isNil(props.onViewChange);
-  });
   const isViewDateControlled = derived(() => {
     return !isNil(props.viewDate) && !isNil(props.onViewDateChange);
   });
 
-  const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
-    () => {
-      return merged.defaultValue ?? null;
-    },
-  );
-
-  const [uncontrolledView, setUncontrolledView] = useState<CalendarView>(() => {
-    return props.view ?? merged.defaultView ?? "date";
+  const isPreviewControlled = derived(() => {
+    return !isNil(props.previewDate);
   });
+
+  const [uncontrolledValue, setUncontrolledValue] =
+    useState<null | DateRangeValue>(() => {
+      return merged.defaultValue ?? null;
+    });
+
+  const [uncontrolledView, setUncontrolledView] =
+    useState<CalendarRangeView>("date");
 
   const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
-    const focus = !isNil(props.viewDate)
-      ? (props.viewDate as Date)
-      : resolveFocusDate(merged.defaultValue ?? null, adapter, context);
-
-    return adapter.startOfMonth(focus, context);
+    return adapter.startOfMonth(
+      !isNil(props.viewDate)
+        ? props.viewDate
+        : resolveFocusDate(
+            merged.defaultValue ?? null,
+            adapter,
+            resolveContext(merged.timeZone),
+          ),
+      resolveContext(merged.timeZone),
+    );
   });
+
+  const [uncontrolledPreview, setUncontrolledPreview] = useState<Date | null>(
+    null,
+  );
 
   const yearPageSize = 15;
 
   const [yearPageStart, setYearPageStart] = useState<null | number>(null);
 
-  const value = derived((): DatePickerModel => {
+  const value = derived((): null | DateRangeValue => {
     if (isValueControlled) {
       return props.value ?? null;
     }
@@ -178,18 +177,16 @@ export function useCalendar(
     return uncontrolledValue;
   });
 
-  const view = derived((): CalendarView => {
-    const next = isViewControlled ? (props.view ?? "date") : uncontrolledView;
-
-    if (next === "year" && merged.hideYears) {
+  const view = derived((): CalendarRangeView => {
+    if (uncontrolledView === "year" && merged.hideYears) {
       return "date";
     }
 
-    if (next === "month" && merged.hideMonths) {
+    if (uncontrolledView === "month" && merged.hideMonths) {
       return "date";
     }
 
-    return next;
+    return uncontrolledView;
   });
 
   const viewDate = derived(() => {
@@ -198,6 +195,18 @@ export function useCalendar(
     }
 
     return uncontrolledViewDate;
+  });
+
+  const endViewDate = derived(() => {
+    return adapter.addMonths(viewDate, 1, context);
+  });
+
+  const previewDate = derived(() => {
+    if (isPreviewControlled) {
+      return props.previewDate ?? null;
+    }
+
+    return uncontrolledPreview;
   });
 
   const roundedClass = useMemo(() => {
@@ -219,6 +228,12 @@ export function useCalendar(
     return names[adapter.getMonth(viewDate, context)] ?? "";
   });
 
+  const endMonthLabel = derived(() => {
+    const names = adapter.getMonthNames(context);
+
+    return names[adapter.getMonth(endViewDate, context)] ?? "";
+  });
+
   const viewYear = derived(() => {
     return adapter.getYear(viewDate, context);
   });
@@ -235,12 +250,8 @@ export function useCalendar(
     return Math.max(1, viewYear - Math.floor(yearPageSize / 2));
   });
 
-  const setView = (next: CalendarView) => {
-    if (!isViewControlled) {
-      setUncontrolledView(next);
-    }
-
-    props.onViewChange?.(next);
+  const setView = (next: CalendarRangeView) => {
+    setUncontrolledView(next);
   };
 
   const openYearView = () => {
@@ -258,12 +269,30 @@ export function useCalendar(
     props.onViewDateChange?.(normalized);
   };
 
+  const handleStartViewDateChange = (next: Date) => {
+    setViewDate(next);
+  };
+
+  const handleEndViewDateChange = (next: Date) => {
+    setViewDate(adapter.addMonths(next, -1, context));
+  };
+
   const handleChange = (next: DatePickerModel) => {
+    const rangeValue = toRangeValue(next);
+
     if (!isValueControlled) {
-      setUncontrolledValue(next);
+      setUncontrolledValue(rangeValue);
     }
 
-    props.onChange?.(next);
+    props.onChange?.(rangeValue);
+  };
+
+  const handlePreviewDateChange = (next: Date | null) => {
+    if (!isPreviewControlled) {
+      setUncontrolledPreview(next);
+    }
+
+    props.onPreviewDateChange?.(next);
   };
 
   const goToPrevious = () => {
@@ -285,7 +314,7 @@ export function useCalendar(
   };
 
   /**
-   * Jumps to the date panel on today's month without changing the selection.
+   * Jumps to the date panels on today's month without changing the selection.
    */
   const goToToday = () => {
     const today = adapter.startOfMonth(adapter.now(context), context);
@@ -306,12 +335,25 @@ export function useCalendar(
     setView("date");
   };
 
+  const shared = derived(() => {
+    return {
+      color: merged.color,
+      tokens: merged.tokens,
+      rounded: merged.rounded,
+      maxDate: merged.maxDate,
+      minDate: merged.minDate,
+      disabled: merged.disabled,
+      readOnly: merged.readOnly,
+      timeZone: merged.timeZone,
+    };
+  });
+
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-72 flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -328,9 +370,6 @@ export function useCalendar(
     );
   });
 
-  /**
-   * Panel hosting date / month / year. Padding matches WireUI picker body.
-   */
   const bodyBind = derived(() => {
     return mergePartBind(
       customProps?.body,
@@ -338,6 +377,39 @@ export function useCalendar(
       cn({
         "flex flex-col p-2.5": true,
         [mergedClasses.body ?? ""]: true,
+      }),
+    );
+  });
+
+  const panelsBind = derived(() => {
+    return mergePartBind(
+      customProps?.panels,
+      {},
+      cn({
+        "flex flex-row gap-2": true,
+        [mergedClasses.panels ?? ""]: true,
+      }),
+    );
+  });
+
+  const startBind = derived(() => {
+    return mergePartBind(
+      customProps?.start,
+      {},
+      cn({
+        "flex min-w-0 flex-1 flex-col": true,
+        [mergedClasses.start ?? ""]: true,
+      }),
+    );
+  });
+
+  const endBind = derived(() => {
+    return mergePartBind(
+      customProps?.end,
+      {},
+      cn({
+        "flex min-w-0 flex-1 flex-col": true,
+        [mergedClasses.end ?? ""]: true,
       }),
     );
   });
@@ -459,21 +531,26 @@ export function useCalendar(
 
   return {
     view,
-    mode,
     value,
+    shared,
     merged,
-    context,
+    endBind,
     rootBind,
+    bodyBind,
     viewDate,
     viewYear,
-    bodyBind,
+    startBind,
     viewMonth,
     yearLabel,
     monthLabel,
     headerBind,
+    panelsBind,
+    endViewDate,
+    previewDate,
     setViewDate,
     handleChange,
     yearPageSize,
+    endMonthLabel,
     showNav: true,
     nextButtonBind,
     todayButtonBind,
@@ -482,6 +559,9 @@ export function useCalendar(
     monthSelectorBind,
     handleMonthSelect,
     previousButtonBind,
+    handleEndViewDateChange,
+    handlePreviewDateChange,
+    handleStartViewDateChange,
     navIconBind: customProps?.navIcon,
     showYearSelector: !merged.hideYears,
     yearPageStart: resolvedYearPageStart,

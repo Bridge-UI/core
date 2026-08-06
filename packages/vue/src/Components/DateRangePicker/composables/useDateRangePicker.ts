@@ -1,0 +1,226 @@
+// ** External Imports
+import { isNil, omit } from "es-toolkit/compat";
+import {
+  computed,
+  ref,
+  toValue,
+  useAttrs,
+  watch,
+  type MaybeRefOrGetter,
+} from "vue";
+
+// ** Core Imports
+import {
+  cn,
+  splitComponentProps,
+  type DateRangeValue,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
+import type {
+  DateRangePickerClasses,
+  DateRangePickerOwnProps,
+} from "@/Components/DateRangePicker/dateRangePicker.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const dateRangePickerBridgeKeys = [
+  "color",
+  "value",
+  "tokens",
+  "classes",
+  "maxDate",
+  "minDate",
+  "rounded",
+  "disabled",
+  "readOnly",
+  "timeZone",
+  "hideYears",
+  "hideMonths",
+  "showFooter",
+  "customProps",
+  "startOfWeek",
+  "defaultValue",
+  "disableDates",
+  "disableYears",
+  "hideWeekdays",
+  "disableMonths",
+] as const satisfies readonly (keyof DateRangePickerOwnProps)[];
+
+type DateRangePickerLibDefaults = LibDefaultsShape<
+  DateRangePickerOwnProps,
+  "color" | "rounded" | "showFooter" | "startOfWeek"
+>;
+
+type DateRangePickerMerged = MergeLibDefaults<
+  DateRangePickerOwnProps,
+  DateRangePickerLibDefaults
+>;
+
+export function useDateRangePicker(
+  props: MaybeRefOrGetter<DateRangePickerOwnProps>,
+  libDefaults: DateRangePickerLibDefaults,
+  emit: {
+    (event: "change", value: null | DateRangeValue): void;
+    (event: "cancel"): void;
+  },
+) {
+  const attrs = useAttrs();
+  const resolveMessage = useResolveMessage();
+
+  const split = computed(() => {
+    return splitComponentProps<
+      DateRangePickerOwnProps,
+      typeof dateRangePickerBridgeKeys
+    >({
+      bridgeKeys: dateRangePickerBridgeKeys,
+      props: { ...attrs, ...toValue(props) },
+    });
+  });
+
+  const { merged, entry: bridgeDateRangePicker } = useBridgeUIComponent<
+    DateRangePickerMerged,
+    "DateRangePicker"
+  >({
+    libDefaults,
+    componentName: "DateRangePicker",
+    props: () => split.value.componentProps,
+  });
+
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
+
+  const rootInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+  });
+
+  const mergedClasses =
+    useBridgeUIMergedRegistryClasses<DateRangePickerClasses>({
+      entry: bridgeDateRangePicker,
+      props: () => split.value.componentProps,
+    });
+
+  const propsValue = computed(() => {
+    return toValue(props);
+  });
+
+  const isControlled = computed(() => {
+    return !isNil(propsValue.value.value);
+  });
+
+  const uncontrolledValue = ref<null | DateRangeValue>(
+    merged.value.defaultValue ?? null,
+  );
+
+  const committedValue = computed((): null | DateRangeValue => {
+    if (isControlled.value) {
+      return propsValue.value.value ?? null;
+    }
+
+    return uncontrolledValue.value;
+  });
+
+  const draftValue = ref<null | DateRangeValue>(committedValue.value);
+
+  watch(
+    () => [committedValue.value, merged.value.showFooter] as const,
+    ([committed, showFooter]) => {
+      if (showFooter) {
+        draftValue.value = committed;
+      }
+    },
+  );
+
+  const displayValue = computed(() => {
+    if (merged.value.showFooter) {
+      return draftValue.value;
+    }
+
+    return committedValue.value;
+  });
+
+  const calendarTokens = computed(() => {
+    return {
+      day: merged.value.tokens?.calendar?.day ?? merged.value.tokens?.day,
+      color: merged.value.tokens?.calendar?.color ?? merged.value.tokens?.color,
+      rounded:
+        merged.value.tokens?.calendar?.rounded ?? merged.value.tokens?.rounded,
+    };
+  });
+
+  const commitValue = (next: null | DateRangeValue) => {
+    if (!isControlled.value) {
+      uncontrolledValue.value = next;
+    }
+
+    emit("change", next);
+  };
+
+  const handleCalendarChange = (next: null | DateRangeValue) => {
+    if (merged.value.showFooter) {
+      draftValue.value = next;
+
+      return;
+    }
+
+    commitValue(next);
+  };
+
+  const handleApply = () => {
+    commitValue(draftValue.value);
+  };
+
+  const handleCancel = () => {
+    draftValue.value = committedValue.value;
+    emit("cancel");
+  };
+
+  const rootBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.root,
+      rootInheritedAttrs.value,
+      cn({
+        "flex flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
+        [mergedClasses.value.root ?? ""]: true,
+      }),
+    );
+  });
+
+  const footerBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.value.footer ?? ""]: true,
+      }),
+    );
+  });
+
+  const showFooter = computed(() => {
+    return Boolean(merged.value.showFooter);
+  });
+
+  return {
+    merged,
+    rootBind,
+    footerBind,
+    showFooter,
+    handleApply,
+    displayValue,
+    handleCancel,
+    calendarTokens,
+    handleCalendarChange,
+    applyLabel: computed(() => resolveMessage("Apply")),
+    cancelLabel: computed(() => resolveMessage("Cancel")),
+    applyButtonProps: computed(() => customProps.value?.applyButton),
+    cancelButtonProps: computed(() => customProps.value?.cancelButton),
+  };
+}

@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isArray, isFunction, isNil, omit } from "es-toolkit/compat";
+import { get, isFunction, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   getCurrentInstance,
@@ -14,11 +14,11 @@ import {
   cn,
   isDateRangeValue,
   mergeBridgeUILayeredClasses,
-  resolveDatePickerMode,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
   type DatePickerModel,
+  type DateRangeValue,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
@@ -28,20 +28,18 @@ import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
-  CalendarClasses,
-  CalendarOwnProps,
-  CalendarView,
-} from "@/Components/Calendar/calendar.types";
+  CalendarRangeClasses,
+  CalendarRangeOwnProps,
+  CalendarRangeView,
+} from "@/Components/CalendarRange/calendarRange.types";
 import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const calendarBridgeKeys = [
-  "view",
+const calendarRangeBridgeKeys = [
   "color",
-  "range",
   "value",
   "tokens",
   "classes",
@@ -49,14 +47,12 @@ const calendarBridgeKeys = [
   "minDate",
   "rounded",
   "disabled",
-  "multiple",
   "readOnly",
   "timeZone",
   "viewDate",
   "hideYears",
   "hideMonths",
   "customProps",
-  "defaultView",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -64,17 +60,20 @@ const calendarBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
-] as const satisfies readonly (keyof CalendarOwnProps)[];
+] as const satisfies readonly (keyof CalendarRangeOwnProps)[];
 
-type CalendarLibDefaults = LibDefaultsShape<
-  CalendarOwnProps,
-  "color" | "rounded" | "defaultView" | "startOfWeek"
+type CalendarRangeLibDefaults = LibDefaultsShape<
+  CalendarRangeOwnProps,
+  "color" | "rounded" | "startOfWeek"
 >;
 
-type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
+type CalendarRangeMerged = MergeLibDefaults<
+  CalendarRangeOwnProps,
+  CalendarRangeLibDefaults
+>;
 
 function resolveFocusDate(
-  value: DatePickerModel,
+  value: null | DateRangeValue,
   adapter: DateAdapter,
   context: DateAdapterContext,
 ): Date {
@@ -82,24 +81,24 @@ function resolveFocusDate(
     return adapter.now(context);
   }
 
-  if (isDateRangeValue(value)) {
-    return value[0];
-  }
-
-  if (isArray(value)) {
-    return value[0] ?? adapter.now(context);
-  }
-
-  return value;
+  return value[0];
 }
 
-export function useCalendar(
-  props: MaybeRefOrGetter<CalendarOwnProps>,
-  libDefaults: CalendarLibDefaults,
+function toRangeValue(value: DatePickerModel): null | DateRangeValue {
+  if (isDateRangeValue(value)) {
+    return value;
+  }
+
+  return null;
+}
+
+export function useCalendarRange(
+  props: MaybeRefOrGetter<CalendarRangeOwnProps>,
+  libDefaults: CalendarRangeLibDefaults,
   emit: {
-    (event: "change", value: DatePickerModel): void;
-    (event: "viewChange", view: CalendarView): void;
+    (event: "change", value: null | DateRangeValue): void;
     (event: "viewDateChange", date: Date): void;
+    (event: "previewDateChange", date: Date | null): void;
   },
 ) {
   const attrs = useAttrs();
@@ -108,13 +107,16 @@ export function useCalendar(
   const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
-    return splitComponentProps<CalendarOwnProps, typeof calendarBridgeKeys>({
-      bridgeKeys: calendarBridgeKeys,
+    return splitComponentProps<
+      CalendarRangeOwnProps,
+      typeof calendarRangeBridgeKeys
+    >({
+      bridgeKeys: calendarRangeBridgeKeys,
       props: { ...attrs, ...toValue(props) },
     });
   });
 
-  const { merged } = useBridgeUIComponent<CalendarMerged>({
+  const { merged } = useBridgeUIComponent<CalendarRangeMerged>({
     libDefaults,
     props: () => split.value.componentProps,
   });
@@ -126,13 +128,12 @@ export function useCalendar(
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, [
       "onChange",
-      "onViewChange",
       "onViewDateChange",
       "onPreviewDateChange",
     ]);
   });
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarClasses>({
+  const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarRangeClasses>({
     props: () => split.value.componentProps,
     entry: computed(() => {
       return undefined;
@@ -143,13 +144,6 @@ export function useCalendar(
     return resolveContext(merged.value.timeZone);
   });
 
-  const mode = computed(() => {
-    return resolveDatePickerMode({
-      range: merged.value.range,
-      multiple: merged.value.multiple,
-    });
-  });
-
   const propsValue = computed(() => {
     return toValue(props);
   });
@@ -158,15 +152,6 @@ export function useCalendar(
     return !isNil(propsValue.value.value);
   });
 
-  const isViewControlled = computed(() => {
-    const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
-
-    const hasListener =
-      isFunction(vnodeProps.onViewChange) ||
-      isFunction(vnodeProps["onUpdate:view"]);
-
-    return !isNil(propsValue.value.view) && hasListener;
-  });
   const isViewDateControlled = computed(() => {
     const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
 
@@ -177,13 +162,15 @@ export function useCalendar(
     return !isNil(propsValue.value.viewDate) && hasListener;
   });
 
-  const uncontrolledValue = ref<DatePickerModel>(
+  const isPreviewControlled = computed(() => {
+    return !isNil(propsValue.value.previewDate);
+  });
+
+  const uncontrolledValue = ref<null | DateRangeValue>(
     merged.value.defaultValue ?? null,
   );
 
-  const uncontrolledView = ref<CalendarView>(
-    propsValue.value.view ?? merged.value.defaultView ?? "date",
-  );
+  const uncontrolledView = ref<CalendarRangeView>("date");
 
   const uncontrolledViewDate = ref<Date>(
     adapter.value.startOfMonth(
@@ -198,10 +185,12 @@ export function useCalendar(
     ),
   );
 
+  const uncontrolledPreview = ref<Date | null>(null);
+
   const yearPageSize = 15;
   const yearPageStart = ref<null | number>(null);
 
-  const value = computed((): DatePickerModel => {
+  const value = computed((): null | DateRangeValue => {
     if (isValueControlled.value) {
       return propsValue.value.value ?? null;
     }
@@ -209,20 +198,16 @@ export function useCalendar(
     return uncontrolledValue.value;
   });
 
-  const view = computed((): CalendarView => {
-    const next = isViewControlled.value
-      ? (propsValue.value.view ?? "date")
-      : uncontrolledView.value;
-
-    if (next === "year" && merged.value.hideYears) {
+  const view = computed((): CalendarRangeView => {
+    if (uncontrolledView.value === "year" && merged.value.hideYears) {
       return "date";
     }
 
-    if (next === "month" && merged.value.hideMonths) {
+    if (uncontrolledView.value === "month" && merged.value.hideMonths) {
       return "date";
     }
 
-    return next;
+    return uncontrolledView.value;
   });
 
   const viewDate = computed(() => {
@@ -233,6 +218,18 @@ export function useCalendar(
     return uncontrolledViewDate.value;
   });
 
+  const endViewDate = computed(() => {
+    return adapter.value.addMonths(viewDate.value, 1, context.value);
+  });
+
+  const previewDate = computed(() => {
+    if (isPreviewControlled.value) {
+      return propsValue.value.previewDate ?? null;
+    }
+
+    return uncontrolledPreview.value;
+  });
+
   const yearLabel = computed(() => {
     return String(adapter.value.getYear(viewDate.value, context.value));
   });
@@ -241,6 +238,14 @@ export function useCalendar(
     const names = adapter.value.getMonthNames(context.value);
 
     return names[adapter.value.getMonth(viewDate.value, context.value)] ?? "";
+  });
+
+  const endMonthLabel = computed(() => {
+    const names = adapter.value.getMonthNames(context.value);
+
+    return (
+      names[adapter.value.getMonth(endViewDate.value, context.value)] ?? ""
+    );
   });
 
   const viewYear = computed(() => {
@@ -268,12 +273,8 @@ export function useCalendar(
     return get(classes, merged.value.rounded);
   });
 
-  const setView = (next: CalendarView) => {
-    if (!isViewControlled.value) {
-      uncontrolledView.value = next;
-    }
-
-    emit("viewChange", next);
+  const setView = (next: CalendarRangeView) => {
+    uncontrolledView.value = next;
   };
 
   const openYearView = () => {
@@ -294,12 +295,30 @@ export function useCalendar(
     emit("viewDateChange", normalized);
   };
 
+  const handleStartViewDateChange = (next: Date) => {
+    setViewDate(next);
+  };
+
+  const handleEndViewDateChange = (next: Date) => {
+    setViewDate(adapter.value.addMonths(next, -1, context.value));
+  };
+
   const handleChange = (next: DatePickerModel) => {
+    const rangeValue = toRangeValue(next);
+
     if (!isValueControlled.value) {
-      uncontrolledValue.value = next;
+      uncontrolledValue.value = rangeValue;
     }
 
-    emit("change", next);
+    emit("change", rangeValue);
+  };
+
+  const handlePreviewDateChange = (next: Date | null) => {
+    if (!isPreviewControlled.value) {
+      uncontrolledPreview.value = next;
+    }
+
+    emit("previewDateChange", next);
   };
 
   const goToPrevious = () => {
@@ -324,7 +343,7 @@ export function useCalendar(
   };
 
   /**
-   * Jumps to the date panel on today's month without changing the selection.
+   * Jumps to the date panels on today's month without changing the selection.
    */
   const goToToday = () => {
     const today = adapter.value.startOfMonth(
@@ -366,7 +385,7 @@ export function useCalendar(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-72 flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -383,9 +402,6 @@ export function useCalendar(
     );
   });
 
-  /**
-   * Panel hosting date / month / year. Padding matches WireUI picker body.
-   */
   const bodyBind = computed(() => {
     return mergePartBind(
       customProps.value?.body,
@@ -393,6 +409,39 @@ export function useCalendar(
       cn({
         "flex flex-col p-2.5": true,
         [mergedClasses.value.body ?? ""]: true,
+      }),
+    );
+  });
+
+  const panelsBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.panels,
+      {},
+      cn({
+        "flex flex-row gap-2": true,
+        [mergedClasses.value.panels ?? ""]: true,
+      }),
+    );
+  });
+
+  const startBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.start,
+      {},
+      cn({
+        "flex min-w-0 flex-1 flex-col": true,
+        [mergedClasses.value.start ?? ""]: true,
+      }),
+    );
+  });
+
+  const endBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.end,
+      {},
+      cn({
+        "flex min-w-0 flex-1 flex-col": true,
+        [mergedClasses.value.end ?? ""]: true,
       }),
     );
   });
@@ -515,9 +564,11 @@ export function useCalendar(
   const showYearSelector = computed(() => {
     return !merged.value.hideYears;
   });
+
   const showMonthSelector = computed(() => {
     return !merged.value.hideMonths;
   });
+
   const showNav = computed(() => {
     return true;
   });
@@ -528,24 +579,28 @@ export function useCalendar(
 
   return {
     view,
-    mode,
     value,
-    merged,
     shared,
-    context,
+    merged,
     showNav,
+    endBind,
     rootBind,
+    bodyBind,
     viewDate,
     viewYear,
-    bodyBind,
+    startBind,
     viewMonth,
     yearLabel,
     monthLabel,
     headerBind,
+    panelsBind,
+    endViewDate,
+    previewDate,
     setViewDate,
     navIconBind,
     handleChange,
     yearPageSize,
+    endMonthLabel,
     nextButtonBind,
     todayButtonBind,
     yearSelectorBind,
@@ -555,6 +610,9 @@ export function useCalendar(
     handleMonthSelect,
     showMonthSelector,
     previousButtonBind,
+    handleEndViewDateChange,
+    handlePreviewDateChange,
+    handleStartViewDateChange,
     yearPageStart: resolvedYearPageStart,
   };
 }

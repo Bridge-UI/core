@@ -7,7 +7,7 @@ import type {
   CalendarColorItem,
   CalendarDay,
   CalendarRounded,
-  DatePickerModel,
+  DateRangeValue,
   DisableDatesInput,
   MergeHtmlProps,
   MergeProps,
@@ -18,19 +18,24 @@ import type {
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 import type { IconProps } from "@/Components/Icon/icon.types";
 
-export interface CalendarColorOverrides {}
-export interface CalendarRoundedOverrides {}
+export interface CalendarRangeColorOverrides {}
+export interface CalendarRangeRoundedOverrides {}
 
-export type CalendarView = "date" | "year" | "month";
+export type CalendarRangeView = "date" | "year" | "month";
 
-export interface CalendarClasses {
+export interface CalendarRangeClasses {
   /**
-   * Classes for the fixed-height date / month / year panel.
+   * Classes for the date / month / year body.
    */
   body?: string;
 
   /**
-   * Classes for the header.
+   * Classes for the end (right) date panel wrapper.
+   */
+  end?: string;
+
+  /**
+   * Classes for the shared header.
    */
   header?: string;
 
@@ -40,23 +45,40 @@ export interface CalendarClasses {
   navButton?: string;
 
   /**
+   * Classes for the dual date panels row.
+   */
+  panels?: string;
+
+  /**
    * Classes for the root element.
    */
   root?: string;
 
   /**
-   * Classes for the month / year selector buttons.
+   * Classes for month / year selector buttons.
    */
   selector?: string;
+
+  /**
+   * Classes for the start (left) date panel wrapper.
+   */
+  start?: string;
 }
 
-export interface CalendarCustomProps {
+export interface CalendarRangeCustomProps {
   /**
-   * Props forwarded to the fixed-height panel that hosts date / month / year.
+   * Props forwarded to the body.
    *
    * @default undefined
    */
   body?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the end (right) panel wrapper.
+   *
+   * @default undefined
+   */
+  end?: HTMLAttributes;
 
   /**
    * Props forwarded to the header.
@@ -80,14 +102,21 @@ export interface CalendarCustomProps {
   navIcon?: Partial<Omit<IconProps, "icon">>;
 
   /**
-   * Props forwarded to the next-month control.
+   * Props forwarded to the next control.
    *
    * @default undefined
    */
   nextButton?: ButtonHTMLAttributes;
 
   /**
-   * Props forwarded to the previous-month control.
+   * Props forwarded to the dual date panels row.
+   *
+   * @default undefined
+   */
+  panels?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the previous control.
    *
    * @default undefined
    */
@@ -108,6 +137,13 @@ export interface CalendarCustomProps {
   selector?: ButtonHTMLAttributes;
 
   /**
+   * Props forwarded to the start (left) panel wrapper.
+   *
+   * @default undefined
+   */
+  start?: HTMLAttributes;
+
+  /**
    * Props forwarded to the today control.
    *
    * @default undefined
@@ -115,11 +151,11 @@ export interface CalendarCustomProps {
   todayButton?: ButtonHTMLAttributes;
 }
 
-export interface CalendarEmits {
+export interface CalendarRangeEmits {
   /**
-   * Emitted when the selection model changes.
+   * Emitted when the range selection changes.
    */
-  change: [value: DatePickerModel];
+  change: [value: null | DateRangeValue];
 
   /**
    * Emitted when the range preview hover date changes.
@@ -127,26 +163,12 @@ export interface CalendarEmits {
   previewDateChange: [date: Date | null];
 
   /**
-   * Emitted when the active panel view changes.
-   */
-  viewChange: [view: CalendarView];
-
-  /**
-   * Emitted when the displayed month changes.
+   * Emitted when the start (left) displayed month changes.
    */
   viewDateChange: [date: Date];
 }
 
-export interface CalendarSlots {
-  /**
-   * Custom content inside each day button on the date panel.
-   *
-   * @default undefined
-   */
-  day?: Slot<CalendarDateDayCell>;
-}
-
-export interface CalendarTokens {
+export interface CalendarRangeTokens {
   /**
    * Color token map overrides.
    */
@@ -163,44 +185,37 @@ export interface CalendarTokens {
   rounded?: Record<string, string>;
 }
 
-export interface CalendarOwnProps {
+export interface CalendarRangeOwnProps {
   /**
-   * Classes for calendar regions.
+   * Classes for calendar range regions.
    *
    * @default undefined
    */
-  classes?: CalendarClasses;
+  classes?: CalendarRangeClasses;
 
   /**
    * Accent color for tiles.
    *
    * @default "primary"
    */
-  color?: MergeProps<CalendarColor, CalendarColorOverrides>;
+  color?: MergeProps<CalendarColor, CalendarRangeColorOverrides>;
 
   /**
    * Extra props for internal parts.
    *
    * @default undefined
    */
-  customProps?: CalendarCustomProps;
+  customProps?: CalendarRangeCustomProps;
 
   /**
    * Uncontrolled initial value.
    *
    * @default null
    */
-  defaultValue?: DatePickerModel;
+  defaultValue?: null | DateRangeValue;
 
   /**
-   * Uncontrolled initial panel view.
-   *
-   * @default "date"
-   */
-  defaultView?: CalendarView;
-
-  /**
-   * Disables the calendar.
+   * Disables the calendar range.
    *
    * @default false
    */
@@ -228,21 +243,21 @@ export interface CalendarOwnProps {
   disableYears?: number[];
 
   /**
-   * Hides the month selector and month panel.
+   * Hides the shared month selector and month panel.
    *
    * @default false
    */
   hideMonths?: boolean;
 
   /**
-   * Hides weekday labels on the date panel.
+   * Hides weekday labels on both date panels.
    *
    * @default false
    */
   hideWeekdays?: boolean;
 
   /**
-   * Hides the year selector and year panel.
+   * Hides the shared year selector and year panel.
    *
    * @default false
    */
@@ -263,25 +278,11 @@ export interface CalendarOwnProps {
   minDate?: Date;
 
   /**
-   * Allows selecting multiple dates.
-   *
-   * @default false
-   */
-  multiple?: boolean;
-
-  /**
-   * Controlled range-preview hover date (shared across panels when needed).
+   * Controlled range-preview hover date shared across both panels.
    *
    * @default undefined
    */
   previewDate?: Date | null;
-
-  /**
-   * Selects a date range.
-   *
-   * @default false
-   */
-  range?: boolean;
 
   /**
    * Prevents selection (disabled tile styles).
@@ -291,11 +292,11 @@ export interface CalendarOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of tiles and header chrome.
+   * Border radius of tiles and chrome controls.
    *
    * @default "md"
    */
-  rounded?: MergeProps<CalendarRounded, CalendarRoundedOverrides>;
+  rounded?: MergeProps<CalendarRounded, CalendarRangeRoundedOverrides>;
 
   /**
    * First day of the week.
@@ -316,31 +317,35 @@ export interface CalendarOwnProps {
    *
    * @default undefined
    */
-  tokens?: CalendarTokens;
+  tokens?: CalendarRangeTokens;
 
   /**
-   * Controlled selection model.
+   * Controlled range value.
    *
    * @default undefined
    */
-  value?: DatePickerModel;
+  value?: null | DateRangeValue;
 
   /**
-   * Controlled panel view (`date` / `month` / `year`). Pair with `viewChange` /
-   * `v-model:view`. Without a change listener, the prop is used as the initial
-   * view only.
-   *
-   * @default undefined
-   */
-  view?: CalendarView;
-
-  /**
-   * Controlled displayed month. Pair with `viewDateChange` / `v-model:viewDate`.
-   * Without a change listener, the prop is used as the initial month only.
+   * Controlled start (left) displayed month. Pair with `viewDateChange` /
+   * `v-model:viewDate`. Without a change listener, the prop is used as the
+   * initial month only.
    *
    * @default undefined
    */
   viewDate?: Date;
 }
 
-export type CalendarProps = MergeHtmlProps<CalendarOwnProps, HTMLAttributes>;
+export interface CalendarRangeSlots {
+  /**
+   * Custom content inside each day button on both date panels.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+}
+
+export type CalendarRangeProps = MergeHtmlProps<
+  CalendarRangeOwnProps,
+  HTMLAttributes
+>;

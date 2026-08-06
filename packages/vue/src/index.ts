@@ -120,6 +120,18 @@ export type {
   CalendarMonthRoundedOverrides,
   CalendarMonthTokens,
 } from "@/Components/CalendarMonth";
+export { CalendarRange, useCalendarRange } from "@/Components/CalendarRange";
+export type {
+  CalendarRangeClasses,
+  CalendarRangeColorOverrides,
+  CalendarRangeCustomProps,
+  CalendarRangeEmits,
+  CalendarRangeOwnProps,
+  CalendarRangeProps,
+  CalendarRangeRoundedOverrides,
+  CalendarRangeSlots,
+  CalendarRangeTokens,
+} from "@/Components/CalendarRange";
 export { CalendarYear, useCalendarYear } from "@/Components/CalendarYear";
 export type {
   CalendarYearCell,
@@ -186,6 +198,30 @@ export type {
   DatePickerSlots,
   DatePickerTokens,
 } from "@/Components/DatePicker";
+export { DateRangeField, useDateRangeField } from "@/Components/DateRangeField";
+export type {
+  DateRangeFieldClasses,
+  DateRangeFieldCustomProps,
+  DateRangeFieldEmits,
+  DateRangeFieldOwnProps,
+  DateRangeFieldProps,
+  DateRangeFieldSlots,
+} from "@/Components/DateRangeField";
+export {
+  DateRangePicker,
+  useDateRangePicker,
+} from "@/Components/DateRangePicker";
+export type {
+  DateRangePickerClasses,
+  DateRangePickerColorOverrides,
+  DateRangePickerCustomProps,
+  DateRangePickerEmits,
+  DateRangePickerOwnProps,
+  DateRangePickerProps,
+  DateRangePickerRoundedOverrides,
+  DateRangePickerSlots,
+  DateRangePickerTokens,
+} from "@/Components/DateRangePicker";
 export { Divider, useDivider } from "@/Components/Divider";
 export type {
   DividerClasses,

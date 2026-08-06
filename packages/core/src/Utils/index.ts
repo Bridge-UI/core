@@ -59,6 +59,7 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "NumberField",
   "Autocomplete",
   "PasswordField",
+  "DateRangeField",
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**

@@ -297,6 +297,8 @@ export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
+export interface DateRangeFieldConfigOverrides {}
+export interface DateRangePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
 export interface IconConfigOverrides {}
@@ -484,6 +486,67 @@ export interface DatePickerConfigBase {
     hideYears: boolean;
     multiple: boolean;
     range: boolean;
+    rounded: keyof CalendarRounded;
+    showFooter: boolean;
+    startOfWeek: number;
+    timeZone: string;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
+    }>;
+    color: Record<string, CalendarColorItem>;
+    day: Partial<CalendarDay>;
+    rounded: Record<string, string>;
+  }>;
+}
+
+export interface DateRangeFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    startOfWeek: number;
+    timeZone: string;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
+    }>;
+    color: Record<string, FormFieldColorItem>;
+    dateRangePicker: Partial<{
+      color: keyof CalendarColor;
+      colorMap: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: keyof CalendarRounded;
+      roundedMap: Record<string, string>;
+    }>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface DateRangePickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof CalendarColor;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
     rounded: keyof CalendarRounded;
     showFooter: boolean;
     startOfWeek: number;
@@ -963,6 +1026,12 @@ export type BridgeUIComponentsConfig = Partial<{
   DateField: Partial<Overwrite<DateFieldConfigBase, DateFieldConfigOverrides>>;
   DatePicker: Partial<
     Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>
+  >;
+  DateRangeField: Partial<
+    Overwrite<DateRangeFieldConfigBase, DateRangeFieldConfigOverrides>
+  >;
+  DateRangePicker: Partial<
+    Overwrite<DateRangePickerConfigBase, DateRangePickerConfigOverrides>
   >;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;

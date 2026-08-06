@@ -43,6 +43,8 @@ export type {
   ChipConfigOverrides,
   DateFieldConfigOverrides,
   DatePickerConfigOverrides,
+  DateRangeFieldConfigOverrides,
+  DateRangePickerConfigOverrides,
   Direction,
   DividerConfigOverrides,
   DrawerConfigOverrides,

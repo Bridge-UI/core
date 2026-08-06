@@ -7,43 +7,47 @@ import { toValue } from "vue";
 import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
-import type {
-  CalendarEmits,
-  CalendarOwnProps,
-  CalendarSlots,
-} from "@/Components/Calendar/calendar.types";
-import { useCalendar } from "@/Components/Calendar/composables/useCalendar";
 import CalendarDate from "@/Components/CalendarDate/CalendarDate.vue";
 import CalendarMonth from "@/Components/CalendarMonth/CalendarMonth.vue";
+import type {
+  CalendarRangeEmits,
+  CalendarRangeOwnProps,
+  CalendarRangeSlots,
+} from "@/Components/CalendarRange/calendarRange.types";
+import { useCalendarRange } from "@/Components/CalendarRange/composables/useCalendarRange";
 import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
 import { Icon } from "@/Components/Icon";
 
 defineOptions({ inheritAttrs: false });
 
-defineSlots<CalendarSlots>();
+defineSlots<CalendarRangeSlots>();
 
-const props = defineProps<CalendarOwnProps>();
+const props = defineProps<CalendarRangeOwnProps>();
 
-const emit = defineEmits<CalendarEmits>();
+const emit = defineEmits<CalendarRangeEmits>();
 
 const {
   view,
   value,
-  merged,
   shared,
-  showNav,
+  merged,
+  endBind,
   rootBind,
+  bodyBind,
   viewDate,
   viewYear,
-  bodyBind,
+  startBind,
   viewMonth,
   yearLabel,
   monthLabel,
   headerBind,
+  panelsBind,
+  endViewDate,
+  previewDate,
   navIconBind,
-  setViewDate,
   handleChange,
   yearPageSize,
+  endMonthLabel,
   yearPageStart,
   nextButtonBind,
   todayButtonBind,
@@ -54,13 +58,15 @@ const {
   handleMonthSelect,
   showMonthSelector,
   previousButtonBind,
-} = useCalendar(
+  handleEndViewDateChange,
+  handlePreviewDateChange,
+  handleStartViewDateChange,
+} = useCalendarRange(
   props,
   {
     rounded: "md",
     startOfWeek: 0,
     color: "primary",
-    defaultView: "date",
   },
   emit,
 );
@@ -103,7 +109,7 @@ function chevronClass(open: boolean) {
         </button>
       </div>
 
-      <div v-if="showNav" class="flex items-center">
+      <div class="flex items-center">
         <button v-bind="previousButtonBind">
           <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
         </button>
@@ -119,27 +125,57 @@ function chevronClass(open: boolean) {
     </div>
 
     <div v-bind="bodyBind">
-      <CalendarDate
-        v-bind="shared"
-        :value="value"
-        :range="merged.range"
-        :view-date="viewDate"
-        v-if="view === 'date'"
-        v-on:change="handleChange"
-        :multiple="merged.multiple"
-        :preview-date="props.previewDate"
-        v-on:view-date-change="setViewDate"
-        :start-of-week="merged.startOfWeek"
-        :disable-dates="merged.disableDates"
-        :disable-years="merged.disableYears"
-        :hide-weekdays="merged.hideWeekdays"
-        :disable-months="merged.disableMonths"
-        v-on:preview-date-change="emit('previewDateChange', $event)"
-      >
-        <template #day="cell">
-          <slot name="day" v-bind="cell">{{ cell.label }}</slot>
-        </template>
-      </CalendarDate>
+      <div v-bind="panelsBind" v-if="view === 'date'">
+        <div v-bind="startBind">
+          <CalendarDate
+            v-bind="shared"
+            range
+            :value="value"
+            :view-date="viewDate"
+            v-on:change="handleChange"
+            :preview-date="previewDate"
+            :start-of-week="merged.startOfWeek"
+            :disable-dates="merged.disableDates"
+            :disable-years="merged.disableYears"
+            :hide-weekdays="merged.hideWeekdays"
+            :disable-months="merged.disableMonths"
+            v-on:view-date-change="handleStartViewDateChange"
+            v-on:preview-date-change="handlePreviewDateChange"
+          >
+            <template #day="cell">
+              <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+            </template>
+          </CalendarDate>
+        </div>
+
+        <div v-bind="endBind">
+          <p
+            class="mb-1 px-1 text-center text-sm font-medium text-gray-600 dark:text-gray-300"
+          >
+            {{ endMonthLabel }}
+          </p>
+
+          <CalendarDate
+            v-bind="shared"
+            range
+            :value="value"
+            :view-date="endViewDate"
+            v-on:change="handleChange"
+            :preview-date="previewDate"
+            :start-of-week="merged.startOfWeek"
+            :disable-dates="merged.disableDates"
+            :disable-years="merged.disableYears"
+            :hide-weekdays="merged.hideWeekdays"
+            :disable-months="merged.disableMonths"
+            v-on:view-date-change="handleEndViewDateChange"
+            v-on:preview-date-change="handlePreviewDateChange"
+          >
+            <template #day="cell">
+              <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+            </template>
+          </CalendarDate>
+        </div>
+      </div>
 
       <CalendarMonth
         v-bind="shared"

@@ -122,11 +122,13 @@ function Calendar(props: CalendarProps) {
             onChange={handleChange}
             multiple={merged.multiple}
             onViewDateChange={setViewDate}
+            previewDate={props.previewDate}
             startOfWeek={merged.startOfWeek}
             disableDates={merged.disableDates}
             disableYears={merged.disableYears}
             hideWeekdays={merged.hideWeekdays}
             disableMonths={merged.disableMonths}
+            onPreviewDateChange={props.onPreviewDateChange}
           />
         )}
 

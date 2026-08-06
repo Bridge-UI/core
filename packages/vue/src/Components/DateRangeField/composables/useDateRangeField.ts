@@ -1,5 +1,5 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
+import { isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -13,20 +13,19 @@ import {
 import {
   cn,
   isDateRangeValue,
-  resolveDatePickerMode,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
-  type DatePickerModel,
+  type DateRangeValue,
 } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
-  DateFieldCustomProps,
-  DateFieldEmits,
-  DateFieldOwnProps,
-} from "@/Components/DateField/dateField.types";
+  DateRangeFieldCustomProps,
+  DateRangeFieldEmits,
+  DateRangeFieldOwnProps,
+} from "@/Components/DateRangeField/dateRangeField.types";
 import {
   formFieldBridgeKeys,
   useFormField,
@@ -34,50 +33,39 @@ import {
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
 
-const dateFieldBridgeKeys = [
-  "range",
+const dateRangeFieldBridgeKeys = [
   "classes",
   "maxDate",
   "minDate",
-  "multiple",
   "timeZone",
   "hideYears",
   "hideMonths",
   "showFooter",
   "customProps",
-  "defaultView",
   "startOfWeek",
   "defaultValue",
   "disableDates",
   "disableYears",
   "hideWeekdays",
   "disableMonths",
-] as const satisfies readonly (keyof DateFieldOwnProps)[];
+] as const satisfies readonly (keyof DateRangeFieldOwnProps)[];
 
-function formatModel(
-  value: DatePickerModel,
+function formatRange(
+  value: null | DateRangeValue,
   adapter: DateAdapter,
   context: DateAdapterContext,
 ): string {
-  if (isNil(value)) {
+  if (isNil(value) || !isDateRangeValue(value)) {
     return "";
   }
 
-  if (isDateRangeValue(value)) {
-    return `${adapter.format(value[0], context)} – ${adapter.format(value[1], context)}`;
-  }
-
-  if (isArray(value)) {
-    return value.map((entry) => adapter.format(entry, context)).join(", ");
-  }
-
-  return adapter.format(value, context);
+  return `${adapter.format(value[0], context)} – ${adapter.format(value[1], context)}`;
 }
 
-export function useDateField(
-  props: DateFieldOwnProps,
-  model: Ref<null | undefined | DatePickerModel>,
-  emit: SetupContext<DateFieldEmits>["emit"],
+export function useDateRangeField(
+  props: DateRangeFieldOwnProps,
+  model: Ref<null | undefined | DateRangeValue>,
+  emit: SetupContext<DateRangeFieldEmits>["emit"],
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
@@ -85,16 +73,15 @@ export function useDateField(
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
-  const draftText = ref<null | string>(null);
   const containerRef = ref<null | HTMLElement>(null);
 
   const split = computed(() => {
     return splitComponentProps<
-      DateFieldOwnProps & Record<string, unknown>,
-      typeof dateFieldBridgeKeys
+      DateRangeFieldOwnProps & Record<string, unknown>,
+      typeof dateRangeFieldBridgeKeys
     >({
       props: { ...attrs, ...props },
-      bridgeKeys: dateFieldBridgeKeys,
+      bridgeKeys: dateRangeFieldBridgeKeys,
     });
   });
 
@@ -104,12 +91,6 @@ export function useDateField(
 
   const context = computed((): DateAdapterContext => {
     return resolveContext(dateOnly.value.timeZone);
-  });
-  const mode = computed(() => {
-    return resolveDatePickerMode({
-      range: dateOnly.value.range,
-      multiple: dateOnly.value.multiple,
-    });
   });
 
   const modelValue = computed(() => {
@@ -127,7 +108,6 @@ export function useDateField(
       emit("open");
     } else {
       emit("close");
-      draftText.value = null;
     }
   }
 
@@ -150,9 +130,9 @@ export function useDateField(
 
     const {
       menu: _menu,
-      datePicker: _datePicker,
+      dateRangePicker: _dateRangePicker,
       ...formFieldOnlyCustom
-    } = (dateOnly.value.customProps ?? {}) as DateFieldCustomProps;
+    } = (dateOnly.value.customProps ?? {}) as DateRangeFieldCustomProps;
 
     return {
       ...formFieldCustom,
@@ -189,89 +169,36 @@ export function useDateField(
       showErrorIcon: true,
     },
     {
-      componentName: "DateField",
+      componentName: "DateRangeField",
     },
   );
 
   const displayText = computed(() => {
-    if (!isNil(draftText.value)) {
-      return draftText.value;
-    }
-
-    return formatModel(modelValue.value, adapter.value, context.value);
+    return formatRange(modelValue.value, adapter.value, context.value);
   });
 
-  function commitValue(next: DatePickerModel) {
+  function commitValue(next: null | DateRangeValue) {
     model.value = next;
     emit("change", next);
   }
 
-  function handlePickerChange(next: DatePickerModel) {
+  function handlePickerChange(next: null | DateRangeValue) {
     commitValue(next);
-    draftText.value = null;
-
-    if (mode.value === "single" && !dateOnly.value.showFooter) {
-      handleOpenChange(false);
-    }
-  }
-
-  function parseDraft() {
-    if (isNil(draftText.value)) {
-      return;
-    }
-
-    if (draftText.value.trim() === "") {
-      commitValue(null);
-      draftText.value = null;
-
-      return;
-    }
-
-    if (mode.value !== "single") {
-      draftText.value = null;
-
-      return;
-    }
-
-    const parsed = adapter.value.parse(draftText.value, context.value);
-
-    if (!isNil(parsed)) {
-      commitValue(parsed);
-    }
-
-    draftText.value = null;
   }
 
   const inputBind = computed(() => {
     return mergePartBind(
       {
+        readonly: true,
         value: displayText.value,
-        readonly:
-          mode.value !== "single" ? true : formField.inputBind.value.readonly,
-        onBlur: (event: FocusEvent) => {
-          formField.inputBind.value.onBlur?.(event);
-          parseDraft();
-        },
         onFocus: (event: FocusEvent) => {
           formField.inputBind.value.onFocus?.(event);
           handleOpenChange(true);
         },
-        onInput: (event: Event) => {
-          if (mode.value !== "single") {
-            return;
-          }
-
-          draftText.value = (event.target as HTMLInputElement).value;
-        },
         onKeydown: (event: KeyboardEvent) => {
           formField.inputBind.value.onKeydown?.(event);
 
-          if (event.key === "Enter") {
-            parseDraft();
-          }
-
           if (event.key === "Escape") {
-            draftText.value = null;
             handleOpenChange(false);
           }
         },
@@ -285,13 +212,12 @@ export function useDateField(
     return dateOnly.value.customProps?.menu;
   });
 
-  const datePickerCustomProps = computed(() => {
-    return dateOnly.value.customProps?.datePicker;
+  const dateRangePickerCustomProps = computed(() => {
+    return dateOnly.value.customProps?.dateRangePicker;
   });
 
   return {
     open,
-    mode,
     dateOnly,
     formField,
     inputBind,
@@ -300,6 +226,6 @@ export function useDateField(
     containerRef,
     handleOpenChange,
     handlePickerChange,
-    datePickerCustomProps,
+    dateRangePickerCustomProps,
   };
 }

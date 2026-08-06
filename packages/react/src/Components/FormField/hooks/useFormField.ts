@@ -53,7 +53,8 @@ export type FormFieldOptions = {
     | "TextField"
     | "NumberField"
     | "Autocomplete"
-    | "PasswordField";
+    | "PasswordField"
+    | "DateRangeField";
 
   /**
    * Native control rendered by the field composable (`<input>` vs `<textarea>`).
