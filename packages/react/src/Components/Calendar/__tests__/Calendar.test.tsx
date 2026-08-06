@@ -42,6 +42,30 @@ test("it should call onChange when a day is selected", () => {
   expect(onChange).toHaveBeenCalled();
 });
 
+test("it should navigate to the outside day month when selected", () => {
+  render(<Calendar />);
+
+  // Force May 2021 (Sat start → leading April days include 30)
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.click(screen.getByRole("button", { name: "2021" }));
+  fireEvent.click(screen.getByRole("button", { name: /may/i }));
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/may/i);
+
+  const aprilThirtieth = screen
+    .getAllByRole("button", { name: "30" })
+    .find((node) => node.className.includes("text-gray-400"));
+
+  expect(aprilThirtieth).toBeTruthy();
+  fireEvent.click(aprilThirtieth!);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/april/i);
+});
+
 test("it should hide year selector when hideYears is set", () => {
   render(<Calendar hideYears viewDate={new Date(2021, 4, 1)} />);
 

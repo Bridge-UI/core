@@ -280,7 +280,7 @@ export function useDateTimePicker(
 
   const timePanelBind = computed(() => {
     return cn({
-      "flex flex-col border-l border-gray-100 dark:border-gray-800": true,
+      "flex self-stretch flex-col border-l border-gray-100 dark:border-gray-800": true,
       [mergedClasses.value.time ?? ""]: true,
     });
   });

@@ -128,6 +128,10 @@ export function useCalendarDate(
     return !isNil(props.value);
   });
 
+  const isViewDateControlled = derived(() => {
+    return !isNil(props.viewDate) && !isNil(props.onViewDateChange);
+  });
+
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
     () => {
       return merged.defaultValue ?? null;
@@ -140,7 +144,9 @@ export function useCalendarDate(
 
   const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
     return (
-      merged.viewDate ?? adapter.startOfMonth(adapter.now(context), context)
+      props.viewDate ??
+      merged.viewDate ??
+      adapter.startOfMonth(adapter.now(context), context)
     );
   });
 
@@ -161,7 +167,11 @@ export function useCalendarDate(
   });
 
   const viewDate = derived(() => {
-    return merged.viewDate ?? uncontrolledViewDate;
+    if (isViewDateControlled) {
+      return props.viewDate as Date;
+    }
+
+    return uncontrolledViewDate;
   });
 
   const startOfWeek = derived(() => {
@@ -275,7 +285,7 @@ export function useCalendarDate(
     if (!adapter.isSameMonth(date, viewDate, context)) {
       const nextView = adapter.startOfMonth(date, context);
 
-      if (isNil(merged.viewDate)) {
+      if (!isViewDateControlled) {
         setUncontrolledViewDate(nextView);
       }
 

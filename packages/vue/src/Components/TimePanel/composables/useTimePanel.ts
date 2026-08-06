@@ -348,7 +348,7 @@ export function useTimePanel(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-row gap-2": true,
+        "flex h-full min-h-72 w-fit flex-row gap-2": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -359,7 +359,7 @@ export function useTimePanel(
       customProps.value?.column,
       {},
       cn({
-        "flex h-72 flex-col gap-1 overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
+        "flex h-full min-h-0 flex-col gap-1 overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
         [mergedClasses.value.column ?? ""]: true,
       }),
     );

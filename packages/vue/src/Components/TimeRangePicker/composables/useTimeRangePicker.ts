@@ -261,7 +261,7 @@ export function useTimeRangePicker(
 
   const titleClass = computed(() => {
     return cn({
-      "px-2 pt-2 text-center text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400": true,
+      "px-2 py-2 text-center text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400": true,
     });
   });
 

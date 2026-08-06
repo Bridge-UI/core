@@ -1,6 +1,13 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
-import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
+import { get, isFunction, isNil, omit } from "es-toolkit/compat";
+import {
+  computed,
+  getCurrentInstance,
+  ref,
+  toValue,
+  useAttrs,
+  type MaybeRefOrGetter,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -144,7 +151,13 @@ export function useCalendarDate(
   });
 
   const isViewDateControlled = computed(() => {
-    return !isNil(propsValue.value.viewDate);
+    const vnodeProps = getCurrentInstance()?.vnode.props ?? {};
+
+    const hasListener =
+      isFunction(vnodeProps.onViewDateChange) ||
+      isFunction(vnodeProps["onUpdate:viewDate"]);
+
+    return !isNil(propsValue.value.viewDate) && hasListener;
   });
 
   const uncontrolledValue = ref<DatePickerModel>(
@@ -154,7 +167,8 @@ export function useCalendarDate(
   const uncontrolledPreview = ref<Date | null>(null);
 
   const uncontrolledViewDate = ref<Date>(
-    merged.value.viewDate ??
+    propsValue.value.viewDate ??
+      merged.value.viewDate ??
       adapter.value.startOfMonth(
         adapter.value.now(context.value),
         context.value,
@@ -304,7 +318,7 @@ export function useCalendarDate(
     if (!adapter.value.isSameMonth(date, viewDate.value, context.value)) {
       const nextView = adapter.value.startOfMonth(date, context.value);
 
-      if (isNil(merged.value.viewDate)) {
+      if (!isViewDateControlled.value) {
         uncontrolledViewDate.value = nextView;
       }
 

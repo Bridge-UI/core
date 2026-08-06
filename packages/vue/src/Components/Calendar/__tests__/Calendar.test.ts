@@ -182,3 +182,36 @@ test("it should return to today's month without selecting a date", async () => {
   expect(todayCell).toBeTruthy();
   expect(wrapper.emitted("change")).toBeUndefined();
 });
+
+test("it should navigate to the outside day month when selected", async () => {
+  const wrapper = mount(Calendar, {
+    attachTo: document.body,
+  });
+
+  await wrapper.find('[aria-label="Select year"]').trigger("click");
+  await wrapper
+    .findAll("button")
+    .find((n) => n.text() === "2021")!
+    .trigger("click");
+  await wrapper
+    .findAll("button")
+    .find((n) => /may/i.test(n.text()))!
+    .trigger("click");
+
+  expect(
+    wrapper.find('[aria-label="Select month"]').text().toLowerCase(),
+  ).toContain("may");
+
+  const aprilThirtieth = wrapper
+    .findAll("button")
+    .find((n) => n.text() === "30" && n.classes().includes("text-gray-400"));
+
+  expect(aprilThirtieth).toBeTruthy();
+  await aprilThirtieth!.trigger("click");
+
+  expect(
+    wrapper.find('[aria-label="Select month"]').text().toLowerCase(),
+  ).toContain("april");
+
+  wrapper.unmount();
+});
