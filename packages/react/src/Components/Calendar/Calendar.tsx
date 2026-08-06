@@ -56,11 +56,11 @@ function Calendar(props: CalendarProps) {
   };
 
   const chevronClass = (open: boolean) => {
-    return cn(
-      "size-3 transition-all duration-200 ease-in-out",
-      navIconBind?.className,
-      { "rotate-180": open },
-    );
+    return cn({
+      "size-3 transition-all duration-200 ease-in-out": true,
+      [navIconBind?.className ?? ""]: true,
+      "rotate-180": open,
+    });
   };
 
   return (
