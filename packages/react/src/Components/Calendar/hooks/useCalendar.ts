@@ -348,7 +348,8 @@ export function useCalendar(
         disabled: merged.disabled,
       },
       cn({
-        "flex cursor-pointer items-center gap-x-2 text-sm text-gray-600 focus:outline-none disabled:cursor-not-allowed dark:text-gray-400": true,
+        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 focus:outline-none disabled:cursor-not-allowed dark:text-gray-300 dark:hover:bg-gray-800": true,
+        [roundedClass ?? ""]: true,
         [mergedClasses.selector ?? ""]: true,
       }),
     );

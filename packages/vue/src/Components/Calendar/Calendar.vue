@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
+import { isString } from "es-toolkit/compat";
 import { toValue } from "vue";
 
 // ** Core Imports
@@ -65,9 +66,11 @@ const {
 );
 
 function chevronClass(open: boolean) {
+  const navIconClass = toValue(navIconBind)?.class;
+
   return cn({
     "size-3 transition-all duration-200 ease-in-out": true,
-    [toValue(navIconBind)?.class ?? ""]: true,
+    [isString(navIconClass) ? navIconClass : ""]: true,
     "rotate-180": open,
   });
 }
