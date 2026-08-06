@@ -95,6 +95,7 @@ const {
       :disable-years="dateTimeOnly.disableYears"
       :disable-months="dateTimeOnly.disableMonths"
       :custom-props="dateTimeRangePickerCustomProps"
+      :hide-outside-days="dateTimeOnly.hideOutsideDays"
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>

@@ -178,7 +178,7 @@ test("it should move end month below the start panel when vertical", () => {
   expect(screen.getByRole("button", { name: "Select end month" })).toBeTruthy();
 });
 
-test("it should navigate when an outside day is selected on the start panel", () => {
+test("it should not change month when selecting an outside day on the start panel", () => {
   render(<CalendarRange />);
 
   fireEvent.click(screen.getByRole("button", { name: "Select year" }));
@@ -198,5 +198,31 @@ test("it should navigate when an outside day is selected on the start panel", ()
 
   expect(
     screen.getByRole("button", { name: "Select month" }).textContent,
-  ).toMatch(/april/i);
+  ).toMatch(/may/i);
+  expect(
+    screen.getByRole("button", { name: "Select end month" }).textContent,
+  ).toMatch(/june/i);
+});
+
+test("it should not change month when selecting an outside day on the end panel", () => {
+  render(<CalendarRange />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
+  fireEvent.click(screen.getByRole("button", { name: "2021" }));
+  fireEvent.click(screen.getByRole("button", { name: /may/i }));
+
+  const julyFirst = screen
+    .getAllByRole("button", { name: "1" })
+    .filter((node) => node.className.includes("text-gray-400"))
+    .at(-1);
+
+  expect(julyFirst).toBeTruthy();
+  fireEvent.click(julyFirst!);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/may/i);
+  expect(
+    screen.getByRole("button", { name: "Select end month" }).textContent,
+  ).toMatch(/june/i);
 });

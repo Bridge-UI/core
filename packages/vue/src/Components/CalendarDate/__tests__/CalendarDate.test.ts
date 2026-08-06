@@ -21,6 +21,24 @@ test("it should hide weekdays when hideWeekdays is set", () => {
   expect(wrapper.text().toLowerCase()).not.toMatch(/sun/);
 });
 
+test("it should hide outside days when hideOutsideDays is set", () => {
+  const wrapper = mount(CalendarDate, {
+    props: { hideOutsideDays: true, viewDate: new Date(2021, 4, 1) },
+  });
+
+  const grayOutside = wrapper
+    .findAll("button")
+    .filter((node) => node.classes().includes("text-gray-400"));
+
+  expect(grayOutside).toHaveLength(0);
+  expect(wrapper.findAll("button").some((node) => node.text() === "1")).toBe(
+    true,
+  );
+  expect(wrapper.findAll("button").some((node) => node.text() === "31")).toBe(
+    true,
+  );
+});
+
 test("it should emit change when a day is selected", async () => {
   const wrapper = mount(CalendarDate, {
     props: { viewDate: new Date(2021, 4, 1) },

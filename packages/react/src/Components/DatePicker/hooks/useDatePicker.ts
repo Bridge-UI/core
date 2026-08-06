@@ -49,6 +49,7 @@ const datePickerBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof DatePickerOwnProps)[];
 
 type DatePickerLibDefaults = LibDefaultsShape<

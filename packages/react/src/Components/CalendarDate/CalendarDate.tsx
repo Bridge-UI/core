@@ -15,6 +15,7 @@ function CalendarDate(props: CalendarDateProps) {
     getDayBind,
     hideWeekdays,
     getWeekdayBind,
+    hideOutsideDays,
   } = useCalendarDate(props, {
     rounded: "sm",
     startOfWeek: 0,
@@ -31,14 +32,22 @@ function CalendarDate(props: CalendarDateProps) {
             </span>
           ))}
 
-        {days.map((cell) => (
-          <button
-            key={`${adapterDayKey(cell.date)}-${cell.label}`}
-            {...getDayBind(cell)}
-          >
-            {props.slots?.day?.(cell) ?? cell.label}
-          </button>
-        ))}
+        {days.map((cell) =>
+          hideOutsideDays && cell.outside ? (
+            <span
+              aria-hidden
+              className="h-8 w-full"
+              key={`${adapterDayKey(cell.date)}-${cell.label}`}
+            />
+          ) : (
+            <button
+              key={`${adapterDayKey(cell.date)}-${cell.label}`}
+              {...getDayBind(cell)}
+            >
+              {props.slots?.day?.(cell) ?? cell.label}
+            </button>
+          ),
+        )}
       </div>
     </div>
   );

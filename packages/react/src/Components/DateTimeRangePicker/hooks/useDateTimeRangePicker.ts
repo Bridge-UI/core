@@ -57,6 +57,7 @@ const dateTimeRangePickerBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof DateTimeRangePickerOwnProps)[];
 
 type DateTimeRangePickerLibDefaults = LibDefaultsShape<

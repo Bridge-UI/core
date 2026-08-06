@@ -177,6 +177,13 @@ export interface DateRangePickerOwnProps {
   hideMonths?: boolean;
 
   /**
+   * Hides days that fall outside the displayed month.
+   *
+   * @default false
+   */
+  hideOutsideDays?: boolean;
+
+  /**
    * Hides weekday labels.
    *
    * @default false

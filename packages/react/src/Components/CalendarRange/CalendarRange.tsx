@@ -156,6 +156,7 @@ function CalendarRange(props: CalendarRangeProps) {
                   disableYears={merged.disableYears}
                   hideWeekdays={merged.hideWeekdays}
                   disableMonths={merged.disableMonths}
+                  hideOutsideDays={merged.hideOutsideDays}
                   onViewDateChange={handleStartViewDateChange}
                   onPreviewDateChange={handlePreviewDateChange}
                   slots={
@@ -185,6 +186,7 @@ function CalendarRange(props: CalendarRangeProps) {
                   disableYears={merged.disableYears}
                   hideWeekdays={merged.hideWeekdays}
                   disableMonths={merged.disableMonths}
+                  hideOutsideDays={merged.hideOutsideDays}
                   onViewDateChange={handleEndViewDateChange}
                   onPreviewDateChange={handlePreviewDateChange}
                   slots={

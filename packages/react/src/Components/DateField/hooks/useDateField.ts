@@ -46,6 +46,7 @@ const dateFieldBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof DateFieldOwnProps)[];
 
 function formatModel(

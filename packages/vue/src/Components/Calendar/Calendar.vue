@@ -134,6 +134,7 @@ function chevronClass(open: boolean) {
         :disable-years="merged.disableYears"
         :hide-weekdays="merged.hideWeekdays"
         :disable-months="merged.disableMonths"
+        :hide-outside-days="merged.hideOutsideDays"
         v-on:preview-date-change="emit('previewDateChange', $event)"
       >
         <template #day="cell">

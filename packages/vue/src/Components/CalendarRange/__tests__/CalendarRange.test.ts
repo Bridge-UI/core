@@ -163,3 +163,50 @@ test("it should move end month below the start panel when vertical", () => {
     document.body.querySelectorAll('[aria-label="Select end month"]'),
   ).toHaveLength(1);
 });
+
+test("it should not change month when selecting an outside day on the start panel", async () => {
+  mountCalendarRange();
+
+  document.body
+    .querySelector('[aria-label="Select year"]')
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  Array.from(document.body.querySelectorAll("button"))
+    .find((node) => node.textContent === "2021")
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  Array.from(document.body.querySelectorAll("button"))
+    .find((node) => /may/i.test(node.textContent ?? ""))
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(
+    document.body
+      .querySelector('[aria-label="Select month"]')
+      ?.textContent?.toLowerCase(),
+  ).toContain("may");
+
+  const aprilThirtieth = Array.from(
+    document.body.querySelectorAll("button"),
+  ).find(
+    (node) =>
+      node.textContent === "30" && node.className.includes("text-gray-400"),
+  );
+
+  expect(aprilThirtieth).toBeTruthy();
+  aprilThirtieth?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(
+    document.body
+      .querySelector('[aria-label="Select month"]')
+      ?.textContent?.toLowerCase(),
+  ).toContain("may");
+  expect(
+    document.body
+      .querySelector('[aria-label="Select end month"]')
+      ?.textContent?.toLowerCase(),
+  ).toContain("june");
+});

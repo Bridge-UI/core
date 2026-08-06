@@ -50,6 +50,7 @@ function DatePicker(props: DatePickerProps) {
         hideWeekdays={merged.hideWeekdays}
         disableYears={merged.disableYears}
         disableMonths={merged.disableMonths}
+        hideOutsideDays={merged.hideOutsideDays}
       />
 
       {showFooter && (

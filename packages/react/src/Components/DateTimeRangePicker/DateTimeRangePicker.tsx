@@ -101,6 +101,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             hideWeekdays={merged.hideWeekdays}
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
+            hideOutsideDays={merged.hideOutsideDays}
             slots={{
               day: props.slots?.day,
               endAside: endTimeAside,

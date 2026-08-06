@@ -453,6 +453,7 @@ export interface DateFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     multiple: boolean;
@@ -491,6 +492,7 @@ export interface DatePickerConfigBase {
   defaultProps: Partial<{
     color: keyof CalendarColor;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     multiple: boolean;
@@ -518,6 +520,7 @@ export interface DateRangeFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     orientation: "vertical" | "horizontal";
@@ -555,6 +558,7 @@ export interface DateRangePickerConfigBase {
   defaultProps: Partial<{
     color: keyof CalendarColor;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     orientation: "vertical" | "horizontal";
@@ -582,6 +586,7 @@ export interface DateTimeFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
@@ -628,6 +633,7 @@ export interface DateTimePickerConfigBase {
     ampm: boolean;
     color: keyof CalendarColor;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
@@ -765,6 +771,7 @@ export interface DateTimeRangeFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
@@ -812,6 +819,7 @@ export interface DateTimeRangePickerConfigBase {
     ampm: boolean;
     color: keyof CalendarColor;
     hideMonths: boolean;
+    hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;

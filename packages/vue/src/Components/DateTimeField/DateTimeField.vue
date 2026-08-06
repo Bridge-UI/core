@@ -90,6 +90,7 @@ const {
       :disable-times="dateTimeOnly.disableTimes"
       :disable-years="dateTimeOnly.disableYears"
       :disable-months="dateTimeOnly.disableMonths"
+      :hide-outside-days="dateTimeOnly.hideOutsideDays"
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>

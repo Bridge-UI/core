@@ -43,6 +43,7 @@ const dateRangeFieldBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof DateRangeFieldOwnProps)[];
 
 function formatRange(

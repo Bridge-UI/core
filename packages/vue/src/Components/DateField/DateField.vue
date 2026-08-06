@@ -90,6 +90,7 @@ const {
       :disable-years="dateOnly.disableYears"
       :disable-months="dateOnly.disableMonths"
       :rounded="formField.merged.value.rounded"
+      :hide-outside-days="dateOnly.hideOutsideDays"
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>

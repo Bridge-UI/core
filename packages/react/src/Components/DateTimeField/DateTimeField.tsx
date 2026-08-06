@@ -59,6 +59,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           disableTimes={dateTimeOnly.disableTimes}
           disableYears={dateTimeOnly.disableYears}
           disableMonths={dateTimeOnly.disableMonths}
+          hideOutsideDays={dateTimeOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
       </Menu>

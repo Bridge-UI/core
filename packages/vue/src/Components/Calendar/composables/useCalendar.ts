@@ -64,6 +64,7 @@ const calendarBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof CalendarOwnProps)[];
 
 type CalendarLibDefaults = LibDefaultsShape<
@@ -190,7 +191,7 @@ export function useCalendar(
       !isNil(propsValue.value.viewDate)
         ? (propsValue.value.viewDate as Date)
         : resolveFocusDate(
-            merged.value.defaultValue ?? null,
+            propsValue.value.value ?? merged.value.defaultValue ?? null,
             adapter.value,
             context.value,
           ),

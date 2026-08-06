@@ -127,7 +127,7 @@ export interface CalendarDateEmits {
   previewDateChange: [date: Date | null];
 
   /**
-   * Emitted when the displayed month should change (outside-day click).
+   * Emitted when the displayed month should change.
    */
   viewDateChange: [date: Date];
 }
@@ -214,6 +214,13 @@ export interface CalendarDateOwnProps {
    * @default undefined
    */
   disableYears?: number[];
+
+  /**
+   * Hides days that fall outside the displayed month.
+   *
+   * @default false
+   */
+  hideOutsideDays?: boolean;
 
   /**
    * Hides the weekday header row.

@@ -42,30 +42,6 @@ test("it should call onChange when a day is selected", () => {
   expect(onChange).toHaveBeenCalled();
 });
 
-test("it should navigate to the outside day month when selected", () => {
-  render(<Calendar />);
-
-  // Force May 2021 (Sat start → leading April days include 30)
-  fireEvent.click(screen.getByRole("button", { name: "Select year" }));
-  fireEvent.click(screen.getByRole("button", { name: "2021" }));
-  fireEvent.click(screen.getByRole("button", { name: /may/i }));
-
-  expect(
-    screen.getByRole("button", { name: "Select month" }).textContent,
-  ).toMatch(/may/i);
-
-  const aprilThirtieth = screen
-    .getAllByRole("button", { name: "30" })
-    .find((node) => node.className.includes("text-gray-400"));
-
-  expect(aprilThirtieth).toBeTruthy();
-  fireEvent.click(aprilThirtieth!);
-
-  expect(
-    screen.getByRole("button", { name: "Select month" }).textContent,
-  ).toMatch(/april/i);
-});
-
 test("it should hide year selector when hideYears is set", () => {
   render(<Calendar hideYears viewDate={new Date(2021, 4, 1)} />);
 
@@ -182,4 +158,82 @@ test("it should return to today's month without selecting a date", () => {
       .getAttribute("aria-current"),
   ).toBe("date");
   expect(onChange).not.toHaveBeenCalled();
+});
+
+test("it should open on the controlled value month when remounted", () => {
+  const { unmount } = render(
+    <Calendar onChange={() => {}} value={new Date(2026, 6, 29)} />,
+  );
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/july/i);
+
+  unmount();
+
+  render(<Calendar onChange={() => {}} value={new Date(2026, 6, 29)} />);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/july/i);
+  expect(
+    screen
+      .getAllByRole("button", { name: "29" })
+      .some((node) => node.getAttribute("aria-pressed") === "true"),
+  ).toBe(true);
+});
+
+test("it should open on the selected value month after menu remount", () => {
+  function Demo({
+    open,
+    value,
+    onChange,
+  }: {
+    onChange: (next: Date | null) => void;
+    open: boolean;
+    value: Date | null;
+  }) {
+    if (!open) {
+      return null;
+    }
+
+    return (
+      <Calendar
+        value={value}
+        onChange={(next) => onChange((next as Date) ?? null)}
+      />
+    );
+  }
+
+  let value: Date | null = new Date(2026, 7, 6);
+  const onChange = (next: Date | null) => {
+    value = next;
+  };
+
+  const { rerender } = render(<Demo open value={value} onChange={onChange} />);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/august/i);
+
+  const julyTwentyNinth = screen
+    .getAllByRole("button", { name: "29" })
+    .find((node) => node.className.includes("text-gray-400"));
+
+  expect(julyTwentyNinth).toBeTruthy();
+  fireEvent.click(julyTwentyNinth!);
+
+  expect(value?.getMonth()).toBe(6);
+  // Outside-day click keeps the current view month
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/august/i);
+
+  // DateField closes the menu (unmount) then reopens focused on the value month
+  rerender(<Demo open={false} value={value} onChange={onChange} />);
+  rerender(<Demo open value={value} onChange={onChange} />);
+
+  expect(
+    screen.getByRole("button", { name: "Select month" }).textContent,
+  ).toMatch(/july/i);
 });

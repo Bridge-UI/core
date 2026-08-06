@@ -166,6 +166,7 @@ function chevronClass(open: boolean) {
               :disable-years="merged.disableYears"
               :hide-weekdays="merged.hideWeekdays"
               :disable-months="merged.disableMonths"
+              :hide-outside-days="merged.hideOutsideDays"
               v-on:view-date-change="handleStartViewDateChange"
               v-on:preview-date-change="handlePreviewDateChange"
             >
@@ -188,9 +189,7 @@ function chevronClass(open: boolean) {
                   size="2xs"
                   icon="chevronDown"
                   v-bind="navIconBind"
-                  :class="
-                    chevronClass(view === 'month' && monthTarget === 'end')
-                  "
+                  :class="chevronClass(false)"
                 />
               </button>
             </div>
@@ -207,6 +206,7 @@ function chevronClass(open: boolean) {
               :disable-years="merged.disableYears"
               :hide-weekdays="merged.hideWeekdays"
               :disable-months="merged.disableMonths"
+              :hide-outside-days="merged.hideOutsideDays"
               v-on:view-date-change="handleEndViewDateChange"
               v-on:preview-date-change="handlePreviewDateChange"
             >

@@ -56,6 +56,7 @@ function DateField(props: DateFieldProps) {
           hideWeekdays={dateOnly.hideWeekdays}
           disableYears={dateOnly.disableYears}
           disableMonths={dateOnly.disableMonths}
+          hideOutsideDays={dateOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
       </Menu>

@@ -55,6 +55,7 @@ const calendarRangeBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof CalendarRangeOwnProps)[];
 
 type CalendarRangeLibDefaults = LibDefaultsShape<
@@ -157,7 +158,7 @@ export function useCalendarRange(
       !isNil(props.viewDate)
         ? props.viewDate
         : resolveFocusDate(
-            merged.defaultValue ?? null,
+            props.value ?? merged.defaultValue ?? null,
             adapter,
             resolveContext(merged.timeZone),
           ),

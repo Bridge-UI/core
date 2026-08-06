@@ -59,6 +59,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           disableYears={dateTimeOnly.disableYears}
           disableMonths={dateTimeOnly.disableMonths}
           customProps={dateTimeRangePickerCustomProps}
+          hideOutsideDays={dateTimeOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
       </Menu>

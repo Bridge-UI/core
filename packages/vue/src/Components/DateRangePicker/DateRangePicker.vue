@@ -65,6 +65,7 @@ const {
       :hide-weekdays="merged.hideWeekdays"
       :disable-years="merged.disableYears"
       :disable-months="merged.disableMonths"
+      :hide-outside-days="merged.hideOutsideDays"
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>

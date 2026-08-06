@@ -21,6 +21,18 @@ test("it should hide weekdays when hideWeekdays is set", () => {
   expect(screen.queryByText(/sun/i)).toBeNull();
 });
 
+test("it should hide outside days when hideOutsideDays is set", () => {
+  render(<CalendarDate hideOutsideDays viewDate={new Date(2021, 4, 1)} />);
+
+  const grayOutside = screen
+    .queryAllByRole("button")
+    .filter((node) => node.className.includes("text-gray-400"));
+
+  expect(grayOutside).toHaveLength(0);
+  expect(screen.getByRole("button", { name: "1" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "31" })).toBeTruthy();
+});
+
 test("it should call onChange when a day is selected", () => {
   const onChange = vi.fn();
 
@@ -34,47 +46,6 @@ test("it should call onChange when a day is selected", () => {
   expect(value.getFullYear()).toBe(2021);
   expect(value.getMonth()).toBe(4);
   expect(value.getDate()).toBe(21);
-});
-
-test("it should change month when an outside day is selected", () => {
-  const onViewDateChange = vi.fn();
-
-  render(
-    <CalendarDate
-      viewDate={new Date(2021, 4, 1)}
-      onViewDateChange={onViewDateChange}
-    />,
-  );
-
-  const aprilThirtieth = screen
-    .getAllByRole("button", { name: "30" })
-    .find((node) => node.className.includes("text-gray-400"));
-
-  expect(aprilThirtieth).toBeTruthy();
-  fireEvent.click(aprilThirtieth!);
-
-  expect(onViewDateChange).toHaveBeenCalled();
-  const next = onViewDateChange.mock.calls[0]?.[0] as Date;
-
-  expect(next.getFullYear()).toBe(2021);
-  expect(next.getMonth()).toBe(3);
-});
-
-test("it should navigate locally when viewDate has no change handler", () => {
-  render(<CalendarDate viewDate={new Date(2021, 4, 1)} />);
-
-  const aprilThirtieth = screen
-    .getAllByRole("button", { name: "30" })
-    .find((node) => node.className.includes("text-gray-400"));
-
-  expect(aprilThirtieth).toBeTruthy();
-  fireEvent.click(aprilThirtieth!);
-
-  const inMonthThirtieth = screen
-    .getAllByRole("button", { name: "30" })
-    .find((node) => !node.className.includes("text-gray-400"));
-
-  expect(inMonthThirtieth).toBeTruthy();
 });
 
 test("it should mark the selected day", () => {

@@ -23,6 +23,7 @@ const {
   getDayBind,
   hideWeekdays,
   getWeekdayBind,
+  hideOutsideDays,
 } = useCalendarDate(
   props,
   { rounded: "sm", startOfWeek: 0, color: "primary" },
@@ -47,13 +48,20 @@ function adapterDayKey(date: Date) {
         </span>
       </template>
 
-      <button
+      <template
         v-for="cell in days"
-        v-bind="getDayBind(cell)"
         :key="`${adapterDayKey(cell.date)}-${cell.label}`"
       >
-        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
-      </button>
+        <span
+          aria-hidden="true"
+          class="h-8 w-full"
+          v-if="hideOutsideDays && cell.outside"
+        />
+
+        <button v-else v-bind="getDayBind(cell)">
+          <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+        </button>
+      </template>
     </div>
   </div>
 </template>

@@ -62,6 +62,7 @@ const calendarDateBridgeKeys = [
   "disableYears",
   "hideWeekdays",
   "disableMonths",
+  "hideOutsideDays",
 ] as const satisfies readonly (keyof CalendarDateOwnProps)[];
 
 type CalendarDateLibDefaults = LibDefaultsShape<
@@ -142,7 +143,7 @@ export function useCalendarDate(
     null,
   );
 
-  const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
+  const [uncontrolledViewDate] = useState(() => {
     return (
       props.viewDate ??
       merged.viewDate ??
@@ -282,16 +283,6 @@ export function useCalendarDate(
       return;
     }
 
-    if (!adapter.isSameMonth(date, viewDate, context)) {
-      const nextView = adapter.startOfMonth(date, context);
-
-      if (!isViewDateControlled) {
-        setUncontrolledViewDate(nextView);
-      }
-
-      props.onViewDateChange?.(nextView);
-    }
-
     const next = applyDateSelection({
       mode,
       value,
@@ -425,5 +416,6 @@ export function useCalendarDate(
     previewDate,
     getWeekdayBind,
     hideWeekdays: Boolean(merged.hideWeekdays),
+    hideOutsideDays: Boolean(merged.hideOutsideDays),
   };
 }

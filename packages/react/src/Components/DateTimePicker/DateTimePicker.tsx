@@ -59,6 +59,7 @@ function DateTimePicker(props: DateTimePickerProps) {
             hideWeekdays={merged.hideWeekdays}
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
+            hideOutsideDays={merged.hideOutsideDays}
           />
         </div>
 

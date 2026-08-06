@@ -128,6 +128,7 @@ function Calendar(props: CalendarProps) {
             disableYears={merged.disableYears}
             hideWeekdays={merged.hideWeekdays}
             disableMonths={merged.disableMonths}
+            hideOutsideDays={merged.hideOutsideDays}
             onPreviewDateChange={props.onPreviewDateChange}
           />
         )}

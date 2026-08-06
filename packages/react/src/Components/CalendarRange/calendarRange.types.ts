@@ -302,6 +302,13 @@ export interface CalendarRangeOwnProps {
   hideMonths?: boolean;
 
   /**
+   * Hides days that fall outside the displayed month.
+   *
+   * @default false
+   */
+  hideOutsideDays?: boolean;
+
+  /**
    * Hides weekday labels on both date panels.
    *
    * @default false
