@@ -8,6 +8,7 @@ import { Menu } from "@/Components/Menu";
 function DateInput(props: DateInputProps) {
   const {
     open,
+    daySlot,
     dateOnly,
     formField,
     inputBind,
@@ -37,7 +38,6 @@ function DateInput(props: DateInputProps) {
           color="primary"
           value={modelValue}
           range={dateOnly.range}
-          locale={dateOnly.locale}
           readOnly={props.readonly}
           maxDate={dateOnly.maxDate}
           minDate={dateOnly.minDate}
@@ -50,11 +50,13 @@ function DateInput(props: DateInputProps) {
           hideMonths={dateOnly.hideMonths}
           defaultView={dateOnly.defaultView}
           startOfWeek={dateOnly.startOfWeek}
+          rounded={formField.merged.rounded}
           customProps={datePickerCustomProps}
           disableDates={dateOnly.disableDates}
           hideWeekdays={dateOnly.hideWeekdays}
           disableYears={dateOnly.disableYears}
           disableMonths={dateOnly.disableMonths}
+          slots={daySlot ? { day: daySlot } : undefined}
         />
       </Menu>
     </>

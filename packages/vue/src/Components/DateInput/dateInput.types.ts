@@ -1,5 +1,5 @@
 // ** External Imports
-import type { InputHTMLAttributes } from "vue";
+import type { InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -11,6 +11,7 @@ import type {
 
 // ** Local Imports
 import type { CalendarView } from "@/Components/Calendar/calendar.types";
+import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 import type { DatePickerCustomProps } from "@/Components/DatePicker/datePicker.types";
 import type {
   FormFieldClasses,
@@ -135,13 +136,6 @@ export interface DateInputOwnProps extends Omit<
   hideYears?: boolean;
 
   /**
-   * Locale for formatting / labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -191,7 +185,14 @@ export interface DateInputOwnProps extends Omit<
   timeZone?: string;
 }
 
-export interface DateInputSlots extends FormFieldSlots {}
+export interface DateInputSlots extends FormFieldSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+}
 
 export type DateInputProps = MergeHtmlProps<
   DateInputOwnProps,

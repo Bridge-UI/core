@@ -14,7 +14,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   DateInputCustomProps,
   DateInputOwnProps,
@@ -25,13 +25,11 @@ import {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import { derived, mergePartBind } from "@/Utils";
 
 const dateInputBridgeKeys = [
   "range",
   "value",
-  "locale",
   "classes",
   "maxDate",
   "minDate",
@@ -71,8 +69,8 @@ function formatModel(
 }
 
 export function useDateInput(props: DateInputProps) {
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
   const {
@@ -84,6 +82,8 @@ export function useDateInput(props: DateInputProps) {
     value: valueProp,
     ...propsForSplit
   } = props;
+
+  const { day: daySlot, ...formFieldSlots } = slots ?? {};
 
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
@@ -103,10 +103,7 @@ export function useDateInput(props: DateInputProps) {
   });
 
   const context = derived((): DateAdapterContext => {
-    return {
-      locale: dateOnly.locale ?? bridge?.global.locale,
-      timeZone: dateOnly.timeZone ?? bridge?.global.timeZone,
-    };
+    return resolveContext(dateOnly.timeZone);
   });
 
   const mode = derived(() => {
@@ -158,7 +155,7 @@ export function useDateInput(props: DateInputProps) {
   const formField = useFormField(
     {
       ...formFieldCustom,
-      slots,
+      slots: formFieldSlots,
       classes: dateOnly.classes,
       endIcon: formFieldCustom.endIcon ?? (slots?.end ? undefined : "calendar"),
       customProps: {
@@ -285,6 +282,7 @@ export function useDateInput(props: DateInputProps) {
   return {
     open,
     mode,
+    daySlot,
     dateOnly,
     formField,
     inputBind,

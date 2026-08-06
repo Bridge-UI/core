@@ -21,7 +21,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
-import { useDateAdapter } from "@/Adapters/Date";
+import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import type {
   DateInputCustomProps,
   DateInputEmits,
@@ -32,12 +32,10 @@ import {
   useFormField,
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
-import { useBridgeUI } from "@/Provider/useBridgeUI";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
 
 const dateInputBridgeKeys = [
   "range",
-  "locale",
   "classes",
   "maxDate",
   "minDate",
@@ -83,8 +81,8 @@ export function useDateInput(
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
-  const bridge = useBridgeUI();
   const adapter = useDateAdapter();
+  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const draftText = ref<null | string>(null);
@@ -105,12 +103,8 @@ export function useDateInput(
   });
 
   const context = computed((): DateAdapterContext => {
-    return {
-      locale: dateOnly.value.locale ?? bridge?.global.value.locale,
-      timeZone: dateOnly.value.timeZone ?? bridge?.global.value.timeZone,
-    };
+    return resolveContext(dateOnly.value.timeZone);
   });
-
   const mode = computed(() => {
     return resolveDatePickerMode({
       range: dateOnly.value.range,

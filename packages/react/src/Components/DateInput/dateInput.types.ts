@@ -11,6 +11,7 @@ import type {
 
 // ** Local Imports
 import type { CalendarView } from "@/Components/Calendar";
+import type { CalendarDateSlots } from "@/Components/CalendarDate";
 import type { DatePickerCustomProps } from "@/Components/DatePicker";
 import type {
   FormFieldClasses,
@@ -142,13 +143,6 @@ export interface DateInputOwnProps extends Omit<
   hideYears?: boolean;
 
   /**
-   * Locale for formatting / labels.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
    * Latest selectable date.
    *
    * @default undefined
@@ -184,11 +178,11 @@ export interface DateInputOwnProps extends Omit<
   showFooter?: boolean;
 
   /**
-   * Named slots (FormField slots).
+   * Named slots (`FormField` slots + calendar `day`).
    *
    * @default undefined
    */
-  slots?: FormFieldSlots;
+  slots?: FormFieldSlots & Pick<CalendarDateSlots, "day">;
 
   /**
    * First day of the week.

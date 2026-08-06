@@ -72,7 +72,6 @@ const {
       color="primary"
       :value="modelValue"
       :range="dateOnly.range"
-      :locale="dateOnly.locale"
       :read-only="props.readonly"
       :max-date="dateOnly.maxDate"
       :min-date="dateOnly.minDate"
@@ -90,6 +89,11 @@ const {
       :hide-weekdays="dateOnly.hideWeekdays"
       :disable-years="dateOnly.disableYears"
       :disable-months="dateOnly.disableMonths"
-    />
+      :rounded="formField.merged.value.rounded"
+    >
+      <template #day="cell">
+        <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+      </template>
+    </DatePicker>
   </Menu>
 </template>
