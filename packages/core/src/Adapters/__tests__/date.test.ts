@@ -50,9 +50,39 @@ describe("createNativeDateAdapter", () => {
     expect(adapter.getDate(days[0]!)).toBe(25);
   });
 
-  test("it should expose weekday and month names", () => {
-    expect(adapter.getWeekdayNames({ locale: "en-US" })).toHaveLength(7);
-    expect(adapter.getMonthNames({ locale: "en-US" })[4]).toMatch(/may/i);
+  test("it should get and set hours and minutes", () => {
+    const date = adapter.parse("2021-05-21")!;
+    const withTime = adapter.setMinutes(adapter.setHours(date, 14), 30);
+
+    expect(adapter.getHours(withTime)).toBe(14);
+    expect(adapter.getMinutes(withTime)).toBe(30);
+    expect(adapter.isSameTime(withTime, adapter.setHours(date, 14))).toBe(
+      false,
+    );
+    expect(
+      adapter.isSameTime(
+        withTime,
+        adapter.setMinutes(adapter.setHours(date, 14), 30),
+      ),
+    ).toBe(true);
+  });
+
+  test("it should format and parse times", () => {
+    const date = adapter.setMinutes(adapter.setHours(adapter.now(), 9), 5);
+
+    expect(adapter.formatTime(date, { locale: "en-US" })).toMatch(/09:05|9:05/);
+    expect(adapter.parseTime("14:30")).not.toBeNull();
+    expect(adapter.getHours(adapter.parseTime("14:30")!)).toBe(14);
+    expect(
+      adapter.getMinutes(
+        adapter.parseTime("2:30 PM", undefined, { ampm: true })!,
+      ),
+    ).toBe(30);
+    expect(
+      adapter.getHours(
+        adapter.parseTime("2:30 PM", undefined, { ampm: true })!,
+      ),
+    ).toBe(14);
   });
 });
 

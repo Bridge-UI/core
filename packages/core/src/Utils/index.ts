@@ -56,8 +56,10 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Textarea",
   "DateField",
   "TextField",
+  "TimeField",
   "NumberField",
   "Autocomplete",
+  "DateTimeField",
   "PasswordField",
   "DateRangeField",
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
@@ -556,6 +558,24 @@ export {
 } from "@/Utils/snackbar";
 export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Utils/tabs";
 export type { TabsActivation } from "@/Utils/tabs";
+export {
+  buildHourOptions,
+  buildMinuteOptions,
+  combineDateAndTime,
+  isTimeDisabled,
+  normalizeTimeValue,
+  snapMinutes,
+  timeToMinutes,
+  to12Hour,
+  to24Hour,
+  toMeridiem,
+} from "@/Utils/time";
+export type {
+  DisableTimesInput,
+  IsTimeDisabledOptions,
+  TimeInterval,
+  TimeValue,
+} from "@/Utils/time";
 export type {
   ClassPropKey,
   LibDefaultsShape,

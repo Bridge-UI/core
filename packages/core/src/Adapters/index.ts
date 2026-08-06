@@ -8,6 +8,7 @@ export {
 export type {
   DateAdapter,
   DateAdapterContext,
+  DateAdapterTimeOptions,
   NativeDateAdapterOptions,
 } from "@/Adapters/date";
 export { resolveMessage } from "@/Adapters/i18n";

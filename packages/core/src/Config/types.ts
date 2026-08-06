@@ -170,6 +170,7 @@ import type {
   TabsVariantItem,
 } from "@/Tokens/Tabs";
 import type { TextareaResize } from "@/Tokens/Textarea";
+import type { TimeColor, TimeColorItem, TimeRounded } from "@/Tokens/Time";
 import type {
   TooltipColor,
   TooltipColorItem,
@@ -299,6 +300,8 @@ export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
 export interface DateRangeFieldConfigOverrides {}
 export interface DateRangePickerConfigOverrides {}
+export interface DateTimeFieldConfigOverrides {}
+export interface DateTimePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
 export interface IconConfigOverrides {}
@@ -327,6 +330,8 @@ export interface TabPanelConfigOverrides {}
 export interface TabsConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface TextFieldConfigOverrides {}
+export interface TimeFieldConfigOverrides {}
+export interface TimePickerConfigOverrides {}
 export interface TooltipConfigOverrides {}
 
 export interface AlertConfigBase {
@@ -561,6 +566,136 @@ export interface DateRangePickerConfigBase {
     color: Record<string, CalendarColorItem>;
     day: Partial<CalendarDay>;
     rounded: Record<string, string>;
+  }>;
+}
+
+export interface DateTimeFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    interval: number;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    startOfWeek: number;
+    timeZone: string;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
+    }>;
+    color: Record<string, FormFieldColorItem>;
+    dateTimePicker: Partial<{
+      color: keyof CalendarColor;
+      colorMap: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: keyof CalendarRounded;
+      roundedMap: Record<string, string>;
+      timeColor: keyof TimeColor;
+      timeColorMap: Record<string, TimeColorItem>;
+      timeRounded: keyof TimeRounded;
+      timeRoundedMap: Record<string, string>;
+    }>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    time: Partial<{
+      color: Record<string, TimeColorItem>;
+      rounded: Record<string, string>;
+    }>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface DateTimePickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof CalendarColor;
+    hideMonths: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    interval: number;
+    rounded: keyof CalendarRounded;
+    showFooter: boolean;
+    startOfWeek: number;
+    timeZone: string;
+  }>;
+  tokens: Partial<{
+    calendar: Partial<{
+      color: Record<string, CalendarColorItem>;
+      day: Partial<CalendarDay>;
+      rounded: Record<string, string>;
+    }>;
+    color: Record<string, CalendarColorItem>;
+    day: Partial<CalendarDay>;
+    rounded: Record<string, string>;
+    time: Partial<{
+      color: Record<string, TimeColorItem>;
+      rounded: Record<string, string>;
+    }>;
+  }>;
+}
+
+export interface TimeFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    interval: number;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    size: keyof FormFieldSize;
+    timeZone: string;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    invalidated: Partial<FormFieldInvalidated>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    time: Partial<{
+      color: Record<string, TimeColorItem>;
+      rounded: Record<string, string>;
+    }>;
+    timePicker: Partial<{
+      color: keyof TimeColor;
+      colorMap: Record<string, TimeColorItem>;
+      rounded: keyof TimeRounded;
+      roundedMap: Record<string, string>;
+    }>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface TimePickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof TimeColor;
+    interval: number;
+    rounded: keyof TimeRounded;
+    showFooter: boolean;
+    timeZone: string;
+  }>;
+  tokens: Partial<{
+    color: Record<string, TimeColorItem>;
+    rounded: Record<string, string>;
+    time: Partial<{
+      color: Record<string, TimeColorItem>;
+      rounded: Record<string, string>;
+    }>;
   }>;
 }
 
@@ -1033,6 +1168,12 @@ export type BridgeUIComponentsConfig = Partial<{
   DateRangePicker: Partial<
     Overwrite<DateRangePickerConfigBase, DateRangePickerConfigOverrides>
   >;
+  DateTimeField: Partial<
+    Overwrite<DateTimeFieldConfigBase, DateTimeFieldConfigOverrides>
+  >;
+  DateTimePicker: Partial<
+    Overwrite<DateTimePickerConfigBase, DateTimePickerConfigOverrides>
+  >;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
@@ -1067,6 +1208,10 @@ export type BridgeUIComponentsConfig = Partial<{
   Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
+  TimeField: Partial<Overwrite<TimeFieldConfigBase, TimeFieldConfigOverrides>>;
+  TimePicker: Partial<
+    Overwrite<TimePickerConfigBase, TimePickerConfigOverrides>
+  >;
   Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
 }>;
 
