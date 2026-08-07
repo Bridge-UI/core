@@ -10,10 +10,9 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   allowCypressEnv: false,
   component: {
-    specPattern: "src/**/*.cy.ts",
-    // Dual calendar + time layouts need more than Cypress's default 500px width.
     viewportWidth: 1280,
     viewportHeight: 720,
+    specPattern: "src/**/*.cy.ts",
     devServer: {
       bundler: "vite",
       framework: "vue",
