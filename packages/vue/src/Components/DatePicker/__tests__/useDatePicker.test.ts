@@ -45,3 +45,9 @@ test("it should enable footer when showFooter is set", () => {
 
   expect(showFooter.value).toBe(true);
 });
+
+test("it should size the root to its content", () => {
+  const { rootBind } = mountUseDatePicker();
+
+  expect(rootBind.value.class).toContain("w-fit");
+});

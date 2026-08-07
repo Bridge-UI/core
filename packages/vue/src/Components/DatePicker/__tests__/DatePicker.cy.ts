@@ -7,6 +7,16 @@ test("it should render the calendar header", () => {
   cy.get('[aria-label="Select year"]').should("be.visible");
 });
 
+test("it should size the root to its content", () => {
+  cy.mount(DatePicker, { props: { defaultValue: new Date(2021, 4, 21) } });
+
+  cy.get('[aria-label="Select year"]')
+    .closest(".w-fit")
+    .should(($root) => {
+      expect($root[0].getBoundingClientRect().width).to.be.lessThan(400);
+    });
+});
+
 test("it should show footer when showFooter is set", () => {
   cy.mount(DatePicker, { props: { showFooter: true } });
 
