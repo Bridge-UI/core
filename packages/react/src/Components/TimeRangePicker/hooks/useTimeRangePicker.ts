@@ -196,7 +196,7 @@ export function useTimeRangePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -218,7 +218,7 @@ export function useTimeRangePicker(
       customProps?.start,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex w-fit shrink-0 flex-col gap-1": true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -229,7 +229,7 @@ export function useTimeRangePicker(
       customProps?.end,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex w-fit shrink-0 flex-col gap-1": true,
         [mergedClasses.end ?? ""]: true,
       }),
     );

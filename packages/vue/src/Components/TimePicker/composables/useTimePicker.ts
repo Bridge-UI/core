@@ -177,7 +177,7 @@ export function useTimePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
