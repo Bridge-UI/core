@@ -1,6 +1,6 @@
 // ** External Imports
 import { toMerged } from "es-toolkit/object";
-import { computed, type Ref } from "vue";
+import { computed } from "vue";
 
 // ** Core Imports
 import {
@@ -11,10 +11,7 @@ import {
 
 // ** Local Imports
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
-import type {
-  FieldOverlayEmits,
-  FieldOverlayOwnProps,
-} from "@/Components/FieldOverlay/fieldOverlay.types";
+import type { FieldOverlayOwnProps } from "@/Components/FieldOverlay/fieldOverlay.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
@@ -40,11 +37,7 @@ function withDialogPanelPadding<T extends ModalOwnProps | DrawerOwnProps>(
 /**
  * Resolves the field overlay shell and builds Menu / Modal / Drawer binds.
  */
-export function useFieldOverlay(
-  props: FieldOverlayOwnProps,
-  _show: Ref<boolean>,
-  _emit: (event: keyof FieldOverlayEmits, ...args: never[]) => void,
-) {
+export function useFieldOverlay(props: FieldOverlayOwnProps) {
   const breakpoint = useBreakpoint();
 
   const resolvedOverlay = computed((): ResolvedFieldOverlay => {

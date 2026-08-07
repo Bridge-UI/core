@@ -1,7 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h } from "vue";
 
 // ** Core Imports
 import { resetBreakpointCachesForTests } from "@bridge-ui/core";
@@ -41,12 +41,10 @@ afterEach(() => {
 
 function mountUseFieldOverlay(props: FieldOverlayOwnProps = {}) {
   let result!: ReturnType<typeof useFieldOverlay>;
-  const show = ref(true);
-  const emit = vi.fn();
 
   const Wrapper = defineComponent({
     setup() {
-      result = useFieldOverlay(props, show, emit);
+      result = useFieldOverlay(props);
 
       return () => h("div");
     },

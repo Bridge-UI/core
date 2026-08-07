@@ -22,11 +22,8 @@ const props = withDefaults(defineProps<FieldOverlayOwnProps>(), {
 
 const model = defineModel<boolean>({ default: false });
 
-const { menuBind, modalBind, drawerBind, resolvedOverlay } = useFieldOverlay(
-  props,
-  model,
-  emit,
-);
+const { menuBind, modalBind, drawerBind, resolvedOverlay } =
+  useFieldOverlay(props);
 
 function handleShowChange(show: boolean) {
   emit("show-change", show);
