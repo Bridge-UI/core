@@ -13,6 +13,9 @@ import {
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveRangePickerOrientation,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
@@ -32,6 +35,7 @@ import {
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateRangeFieldBridgeKeys = [
   "classes",
@@ -73,6 +77,7 @@ export function useDateRangeField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -240,6 +245,24 @@ export function useDateRangeField(
     return dateOnly.value.customProps?.dateRangePicker;
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const orientation = computed(() => {
+    return resolveRangePickerOrientation(
+      dateOnly.value.orientation,
+      resolvedOverlay.value,
+      breakpoint.mobile,
+    );
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     overlay,
@@ -247,6 +270,8 @@ export function useDateRangeField(
     formField,
     inputBind,
     modelValue,
+    orientation,
+    pickerClass,
     containerRef,
     handleOpenChange,
     handlePickerChange,

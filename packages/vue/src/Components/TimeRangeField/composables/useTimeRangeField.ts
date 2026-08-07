@@ -12,7 +12,9 @@ import {
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   isTimeRangeValue,
+  resolveFieldOverlay,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
@@ -32,6 +34,7 @@ import type {
   TimeRangeFieldOwnProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
@@ -71,6 +74,7 @@ export function useTimeRangeField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -240,6 +244,16 @@ export function useTimeRangeField(
     return timeOnly.value.customProps?.timeRangePicker;
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     overlay,
@@ -247,6 +261,7 @@ export function useTimeRangeField(
     formField,
     inputBind,
     modelValue,
+    pickerClass,
     containerRef,
     handleOpenChange,
     handlePickerChange,

@@ -73,17 +73,33 @@ test("it should resolve auto to drawer on mobile", () => {
   expect(result.current.resolvedOverlay).toBe("drawer");
 });
 
-test("it should apply panel padding on drawer and modal", () => {
+test("it should apply panel padding and layout on drawer and modal", () => {
   const { result } = renderHook(() =>
     useFieldOverlay({ show: true, overlay: "drawer" }),
   );
 
-  expect(result.current.drawerProps.customProps?.panel?.className).toContain(
-    "p-2",
+  const drawerPanel = result.current.drawerProps.customProps?.panel?.className;
+  const modalPanel = result.current.modalProps.customProps?.panel?.className;
+
+  expect(drawerPanel).toContain("p-2");
+  expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("flex-col");
+  expect(drawerPanel).toContain("items-center");
+  expect(drawerPanel).toContain("justify-center");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(modalPanel).toContain("p-2");
+  expect(modalPanel).toContain("items-center");
+  expect(modalPanel).toContain("justify-center");
+});
+
+test("it should scroll modal content inside the paper panel", () => {
+  const { result } = renderHook(() =>
+    useFieldOverlay({ show: true, overlay: "modal" }),
   );
-  expect(result.current.modalProps.customProps?.panel?.className).toContain(
-    "p-2",
-  );
+
+  expect(result.current.modalProps.scroll).toBe("paper");
+  expect(result.current.modalProps.align).toBe("middle-center");
 });
 
 test("it should forward customProps.menu onto menuProps", () => {

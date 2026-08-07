@@ -1,6 +1,9 @@
 # FieldOverlay
 
 Switches between `Menu`, `Modal`, and `Drawer` shells for field pickers and listboxes.
+Dialog shells (`modal` / `drawer`) always center the picker and size the drawer
+panel to its content (up to `90dvh`) so dual-month and dual-time pickers are not
+clipped.
 
 ## Import
 

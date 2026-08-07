@@ -50,6 +50,7 @@ const {
   formField,
   inputBind,
   modelValue,
+  pickerClass,
   handleOpenChange,
   handlePickerChange,
   handlePickerCancel,
@@ -71,6 +72,7 @@ const {
   >
     <TimeRangePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="timeOnly.ampm"
       :read-only="props.readonly"
       :max-time="timeOnly.maxTime"

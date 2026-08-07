@@ -750,6 +750,7 @@ export interface TimeRangePickerConfigBase {
     ampm: boolean;
     color: keyof TimeColor;
     interval: number;
+    orientation: "vertical" | "horizontal";
     rounded: keyof TimeRounded;
     showFooter: boolean;
     timeZone: string;

@@ -91,13 +91,33 @@ test("it should resolve auto to drawer on mobile", () => {
   expect(resolvedOverlay.value).toBe("drawer");
 });
 
-test("it should apply panel padding on drawer and modal", () => {
+test("it should apply panel padding and layout on drawer and modal", () => {
   const { modalBind, drawerBind } = mountUseFieldOverlay({
     overlay: "drawer",
   });
 
-  expect(drawerBind.value.customProps?.panel?.class).toContain("p-2");
-  expect(modalBind.value.customProps?.panel?.class).toContain("p-2");
+  const drawerPanel = drawerBind.value.customProps?.panel?.class;
+  const modalPanel = modalBind.value.customProps?.panel?.class;
+
+  expect(drawerPanel).toContain("p-2");
+  expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("flex-col");
+  expect(drawerPanel).toContain("items-center");
+  expect(drawerPanel).toContain("justify-center");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(modalPanel).toContain("p-2");
+  expect(modalPanel).toContain("items-center");
+  expect(modalPanel).toContain("justify-center");
+});
+
+test("it should scroll modal content inside the paper panel", () => {
+  const { modalBind } = mountUseFieldOverlay({
+    overlay: "modal",
+  });
+
+  expect(modalBind.value.scroll).toBe("paper");
+  expect(modalBind.value.align).toBe("middle-center");
 });
 
 test("it should forward customProps.menu onto menuBind", () => {

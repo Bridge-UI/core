@@ -16,19 +16,17 @@ import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
-const PANEL_PADDING_CLASS = "p-2";
-
-function withDialogPanelPadding<T extends ModalOwnProps | DrawerOwnProps>(
+function withDialogPanelClasses<T extends ModalOwnProps | DrawerOwnProps>(
   props: T,
+  panelClass: string,
 ): T {
   const panel = props.customProps?.panel;
-  const className = cn(PANEL_PADDING_CLASS, panel?.class);
 
   return toMerged(props, {
     customProps: {
       panel: {
         ...panel,
-        class: className,
+        class: cn(panelClass, panel?.class),
       },
     },
   }) as T;
@@ -53,19 +51,26 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
   });
 
   const modalBind = computed((): ModalOwnProps => {
-    return withDialogPanelPadding({
-      size: "md",
-      align: "middle-center",
-      ...props.customProps?.modal,
-    });
+    return withDialogPanelClasses(
+      {
+        size: "md",
+        scroll: "paper",
+        align: "middle-center",
+        ...props.customProps?.modal,
+      },
+      "flex flex-col items-center justify-center p-2",
+    );
   });
 
   const drawerBind = computed((): DrawerOwnProps => {
-    return withDialogPanelPadding({
-      size: "md",
-      placement: "bottom",
-      ...props.customProps?.drawer,
-    });
+    return withDialogPanelClasses(
+      {
+        size: "md",
+        placement: "bottom",
+        ...props.customProps?.drawer,
+      },
+      "flex h-auto max-h-[90dvh] flex-col items-center justify-center p-2",
+    );
   });
 
   return {

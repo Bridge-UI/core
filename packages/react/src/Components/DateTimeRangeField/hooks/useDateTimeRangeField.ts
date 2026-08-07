@@ -7,6 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveRangePickerOrientation,
   splitComponentProps,
   type DateAdapterContext,
   type DateRangeValue,
@@ -25,6 +28,7 @@ import {
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
 import { derived, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateTimeRangeFieldBridgeKeys = [
   "ampm",
@@ -72,6 +76,7 @@ function formatDateTimeRange(
 
 export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -236,14 +241,34 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     );
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateTimeOnly.overlay, breakpoint.mobile);
+  });
+
+  const orientation = derived(() => {
+    return resolveRangePickerOrientation(
+      dateTimeOnly.orientation,
+      resolvedOverlay,
+      breakpoint.mobile,
+    );
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     daySlot,
     formField,
     inputBind,
     modelValue,
+    orientation,
     dateTimeOnly,
     containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

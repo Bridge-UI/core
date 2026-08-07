@@ -6,6 +6,7 @@ import type {
   DisableTimesInput,
   MergeHtmlProps,
   MergeProps,
+  RangePickerOrientation,
   TimeColor,
   TimeColorItem,
   TimeRangeValue,
@@ -205,6 +206,13 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   minTime?: Date;
+
+  /**
+   * Layout of start / end time panels.
+   *
+   * @default "horizontal"
+   */
+  orientation?: RangePickerOrientation;
 
   /**
    * Prevents selection.

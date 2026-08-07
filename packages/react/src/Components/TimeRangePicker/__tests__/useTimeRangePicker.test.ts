@@ -15,6 +15,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   showFooter: false,
+  orientation: "horizontal",
 } as const satisfies Partial<TimeRangePickerOwnProps>;
 
 function renderUseTimeRangePicker(props: TimeRangePickerProps = {}) {
@@ -46,4 +47,13 @@ test("it should size the root and panels to their content", () => {
   expect(result.current.startBind.className).toContain("w-fit");
   expect(result.current.endBind.className).not.toContain("flex-1");
   expect(result.current.startBind.className).not.toContain("flex-1");
+  expect(result.current.panelsBind.className).toContain("flex-row");
+});
+
+test("it should stack panels when orientation is vertical", () => {
+  const { result } = renderUseTimeRangePicker({ orientation: "vertical" });
+
+  expect(result.current.panelsBind.className).toContain("flex-col");
+  expect(result.current.startBind.className).toContain("w-full");
+  expect(result.current.endBind.className).toContain("w-full");
 });

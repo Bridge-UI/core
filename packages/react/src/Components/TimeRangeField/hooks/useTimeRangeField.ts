@@ -6,7 +6,9 @@ import { useCallback, useRef, useState } from "react";
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   isTimeRangeValue,
+  resolveFieldOverlay,
   splitComponentProps,
   type DateAdapterContext,
   type TimeRangeValue,
@@ -25,6 +27,7 @@ import type {
   TimeRangeFieldProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
 import { derived, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
@@ -56,6 +59,7 @@ function formatTimeRange(
 
 export function useTimeRangeField(props: TimeRangeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -213,6 +217,16 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     );
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     timeOnly,
@@ -220,6 +234,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     inputBind,
     modelValue,
     containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

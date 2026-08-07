@@ -34,6 +34,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   });
 
   return (

@@ -221,6 +221,7 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
 
   /**
    * Dual calendar arrangement forwarded to `DateTimeRangePicker`.
+   * On mobile, `drawer` / `modal` overlays default to `vertical` when unset.
    *
    * @default "horizontal"
    */

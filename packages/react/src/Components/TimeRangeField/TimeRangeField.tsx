@@ -13,6 +13,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
     formField,
     inputBind,
     modelValue,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -38,6 +39,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
           readOnly={props.readonly}
           maxTime={timeOnly.maxTime}
           minTime={timeOnly.minTime}
+          className={pickerClassName}
           timeZone={timeOnly.timeZone}
           interval={timeOnly.interval}
           onChange={handlePickerChange}

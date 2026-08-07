@@ -49,6 +49,8 @@ const {
   formField,
   inputBind,
   modelValue,
+  orientation,
+  pickerClass,
   dateTimeOnly,
   handleOpenChange,
   handlePickerChange,
@@ -71,7 +73,9 @@ const {
   >
     <DateTimeRangePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="dateTimeOnly.ampm"
+      :orientation="orientation"
       :read-only="props.readonly"
       :max-date="dateTimeOnly.maxDate"
       :min-date="dateTimeOnly.minDate"
@@ -86,7 +90,6 @@ const {
       :show-footer="dateTimeOnly.showFooter"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
-      :orientation="dateTimeOnly.orientation"
       :start-of-week="dateTimeOnly.startOfWeek"
       :rounded="formField.merged.value.rounded"
       :disable-dates="dateTimeOnly.disableDates"

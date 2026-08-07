@@ -13,7 +13,9 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
     formField,
     inputBind,
     modelValue,
+    orientation,
     dateTimeOnly,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -37,6 +39,8 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           value={modelValue}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
+          orientation={orientation}
+          className={pickerClassName}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}
@@ -51,7 +55,6 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           rounded={formField.merged.rounded}
           showFooter={dateTimeOnly.showFooter}
           hideMonths={dateTimeOnly.hideMonths}
-          orientation={dateTimeOnly.orientation}
           startOfWeek={dateTimeOnly.startOfWeek}
           disableDates={dateTimeOnly.disableDates}
           hideWeekdays={dateTimeOnly.hideWeekdays}

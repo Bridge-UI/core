@@ -14,6 +14,11 @@ export type FieldOverlayMode = "auto" | "menu" | "modal" | "drawer";
 export type ResolvedFieldOverlay = "menu" | "modal" | "drawer";
 
 /**
+ * Layout direction for dual-panel range pickers (date / time).
+ */
+export type RangePickerOrientation = "vertical" | "horizontal";
+
+/**
  * Resolves a field overlay mode into a concrete shell.
  * `undefined` and `"menu"` map to `menu`. `"auto"` uses `drawer` when `mobile`.
  */
@@ -30,4 +35,32 @@ export function resolveFieldOverlay(
   }
 
   return "menu";
+}
+
+/**
+ * Picks range-picker orientation. Explicit `orientation` wins.
+ * On mobile, drawer / modal shells default to vertical so dual panels stack
+ * instead of forcing horizontal scroll.
+ */
+export function resolveRangePickerOrientation(
+  orientation: undefined | RangePickerOrientation,
+  overlay: ResolvedFieldOverlay,
+  mobile: boolean,
+): RangePickerOrientation {
+  if (orientation) {
+    return orientation;
+  }
+
+  if (mobile && (overlay === "drawer" || overlay === "modal")) {
+    return "vertical";
+  }
+
+  return "horizontal";
+}
+
+/**
+ * Whether the resolved overlay is a dialog shell (`modal` / `drawer`).
+ */
+export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
+  return overlay === "modal" || overlay === "drawer";
 }
