@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  FieldOverlayMode,
   ListboxOptionsInput,
   MergeHtmlProps,
   SelectAsyncData,
@@ -264,6 +265,14 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default "value"
    */
   optionValue?: string;
+
+  /**
+   * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
+   * and `drawer` (bottom) on mobile. Forwarded to the internal `Listbox`.
+   *
+   * @default "menu"
+   */
+  overlay?: FieldOverlayMode;
 
   /**
    * Placeholder shown when no value is selected.

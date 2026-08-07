@@ -1,6 +1,6 @@
 // ** Local Imports
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 import { useTimeField } from "@/Components/TimeField/hooks/useTimeField";
 import type { TimeFieldProps } from "@/Components/TimeField/timeField.types";
 import { TimePicker } from "@/Components/TimePicker";
@@ -8,14 +8,15 @@ import { TimePicker } from "@/Components/TimePicker";
 function TimeField(props: TimeFieldProps) {
   const {
     open,
+    overlay,
     timeOnly,
     formField,
     inputBind,
-    menuProps,
     modelValue,
-    containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     timePickerCustomProps,
   } = useTimeField(props);
 
@@ -25,13 +26,11 @@ function TimeField(props: TimeFieldProps) {
         <input {...inputBind} />
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <TimePicker
           value={modelValue}
@@ -42,6 +41,7 @@ function TimeField(props: TimeFieldProps) {
           timeZone={timeOnly.timeZone}
           interval={timeOnly.interval}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           color={formField.merged.color}
           disabled={formField.isDisabled}
           showFooter={timeOnly.showFooter}
@@ -49,7 +49,7 @@ function TimeField(props: TimeFieldProps) {
           customProps={timePickerCustomProps}
           disableTimes={timeOnly.disableTimes}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

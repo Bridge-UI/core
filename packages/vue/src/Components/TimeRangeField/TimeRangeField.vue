@@ -7,8 +7,8 @@ import { computed, ref } from "vue";
 import type { TimeRangeValue } from "@bridge-ui/core";
 
 // ** Local Imports
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 import { useTimeRangeField } from "@/Components/TimeRangeField/composables/useTimeRangeField";
 import type {
   TimeRangeFieldEmits,
@@ -45,14 +45,15 @@ const value = computed({
 
 const {
   open,
+  overlay,
   timeOnly,
   formField,
   inputBind,
-  menuProps,
   modelValue,
-  containerRef,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   timeRangePickerCustomProps,
 } = useTimeRangeField(props, value, emit);
 </script>
@@ -62,12 +63,10 @@ const {
     <input v-bind="inputBind" />
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <TimeRangePicker
@@ -79,6 +78,7 @@ const {
       :interval="timeOnly.interval"
       :time-zone="timeOnly.timeZone"
       v-on:change="handlePickerChange"
+      v-on:cancel="handlePickerCancel"
       :show-footer="timeOnly.showFooter"
       :color="formField.merged.value.color"
       :disabled="formField.isDisabled.value"
@@ -86,5 +86,5 @@ const {
       :rounded="formField.merged.value.rounded"
       :custom-props="timeRangePickerCustomProps"
     />
-  </Menu>
+  </FieldOverlay>
 </template>

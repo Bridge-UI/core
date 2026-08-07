@@ -33,6 +33,7 @@ const dateFieldBridgeKeys = [
   "classes",
   "maxDate",
   "minDate",
+  "overlay",
   "multiple",
   "timeZone",
   "hideYears",
@@ -216,9 +217,14 @@ export function useDateField(props: DateFieldProps) {
     commitValue(next);
     setDraftText(null);
 
-    if (mode === "single" && !dateOnly.showFooter) {
+    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
+    if (mode === "single" || dateOnly.showFooter) {
       handleOpenChange(false);
     }
+  };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const parseDraft = () => {
@@ -297,7 +303,17 @@ export function useDateField(props: DateFieldProps) {
     containerRef,
     handleOpenChange,
     handlePickerChange,
-    menuProps: dateOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: dateOnly.overlay,
     datePickerCustomProps: dateOnly.customProps?.datePicker,
+    overlayCustomProps: {
+      modal: dateOnly.customProps?.modal,
+      drawer: dateOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateOnly.customProps?.menu,
+      },
+    },
   };
 }

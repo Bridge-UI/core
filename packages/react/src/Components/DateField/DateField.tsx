@@ -2,21 +2,22 @@
 import type { DateFieldProps } from "@/Components/DateField/dateField.types";
 import { useDateField } from "@/Components/DateField/hooks/useDateField";
 import { DatePicker } from "@/Components/DatePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 
 function DateField(props: DateFieldProps) {
   const {
     open,
     daySlot,
+    overlay,
     dateOnly,
     formField,
     inputBind,
-    menuProps,
     modelValue,
-    containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     datePickerCustomProps,
   } = useDateField(props);
 
@@ -26,13 +27,11 @@ function DateField(props: DateFieldProps) {
         <input {...inputBind} />
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <DatePicker
           value={modelValue}
@@ -43,6 +42,7 @@ function DateField(props: DateFieldProps) {
           multiple={dateOnly.multiple}
           timeZone={dateOnly.timeZone}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           hideYears={dateOnly.hideYears}
           color={formField.merged.color}
           disabled={formField.isDisabled}
@@ -59,7 +59,7 @@ function DateField(props: DateFieldProps) {
           hideOutsideDays={dateOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

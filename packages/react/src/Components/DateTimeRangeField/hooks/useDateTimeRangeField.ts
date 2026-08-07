@@ -34,6 +34,7 @@ const dateTimeRangeFieldBridgeKeys = [
   "maxTime",
   "minDate",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "hideYears",
@@ -202,6 +203,15 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
 
   const handlePickerChange = (next: null | DateRangeValue) => {
     commitValue(next);
+
+    // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
+    if (dateTimeOnly.showFooter) {
+      handleOpenChange(false);
+    }
+  };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const inputBind = derived(() => {
@@ -236,8 +246,18 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     containerRef,
     handleOpenChange,
     handlePickerChange,
-    menuProps: dateTimeOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: dateTimeOnly.overlay,
     dateTimeRangePickerCustomProps:
       dateTimeOnly.customProps?.dateTimeRangePicker,
+    overlayCustomProps: {
+      modal: dateTimeOnly.customProps?.modal,
+      drawer: dateTimeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateTimeOnly.customProps?.menu,
+      },
+    },
   };
 }

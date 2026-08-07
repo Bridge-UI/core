@@ -14,6 +14,7 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
 import type { ListboxProps } from "@/Components/Listbox/listbox.types";
@@ -23,7 +24,6 @@ import {
 } from "@/Components/Listbox/ListboxContext";
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
-import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
 import { mergeNestedComponentProps } from "@/Utils";
 
@@ -37,6 +37,7 @@ function Listbox({
   options,
   entries,
   rounded,
+  overlay,
   children,
   onSelect,
   anchorEl,
@@ -225,20 +226,28 @@ function Listbox({
 
   const menuProps = merged.customProps?.menu;
   const listProps = merged.customProps?.list;
+  const modalProps = merged.customProps?.modal;
+  const drawerProps = merged.customProps?.drawer;
   const listItemProps = merged.customProps?.listItem;
   const progressProps = merged.customProps?.progress;
   const listSectionProps = merged.customProps?.listSection;
 
   return (
-    <Menu
+    <FieldOverlay
       show={show}
-      closeOnClickAway
-      anchorEl={anchorEl}
-      placement={placement}
+      overlay={overlay}
       onShowChange={onShowChange}
-      disableAutoFocus={disableAutoFocus}
-      {...(!isNil(rounded) ? { rounded } : {})}
-      {...menuProps}
+      customProps={{
+        modal: modalProps,
+        drawer: drawerProps,
+        menu: {
+          anchorEl,
+          placement,
+          disableAutoFocus,
+          ...(!isNil(rounded) ? { rounded } : {}),
+          ...menuProps,
+        },
+      }}
     >
       {slots?.beforeOptions}
 
@@ -311,7 +320,7 @@ function Listbox({
       {showEmptyState && slots?.empty ? slots.empty : null}
 
       {slots?.afterOptions}
-    </Menu>
+    </FieldOverlay>
   );
 }
 
