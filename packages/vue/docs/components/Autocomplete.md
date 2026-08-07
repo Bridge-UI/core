@@ -124,6 +124,16 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 </Autocomplete>
 ```
 
+### Overlay
+
+```vue
+<Autocomplete overlay="auto" label="Country" :options="countries" />
+
+<Autocomplete label="Country" overlay="drawer" :options="countries" />
+```
+
+Use `overlay="auto"` for `menu` on desktop and bottom `drawer` on mobile.
+
 ### customProps
 
 ```vue
@@ -160,6 +170,7 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 | `optionLabel`       | `string`              | "label"       | Key used to read the label from option objects.                                                         |
 | `options`           | `ListboxOptionsInput` | —             | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
 | `optionValue`       | `string`              | "value"       | Key used to read the value from option objects.                                                         |
+| `overlay`           | `FieldOverlayMode`    | `"menu"`      | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
 | `placeholder`       | `string`              | —             | Placeholder shown when no value is selected.                                                            |
 | `searchable`        | `boolean`             | `true`        | Whether options can be filtered via the trigger input.                                                  |
 
@@ -195,4 +206,4 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 
 ## Related components
 
-Menu, List, ListItem, ListSection, FormField
+Menu, Modal, Drawer, FieldOverlay, List, ListItem, ListSection, FormField

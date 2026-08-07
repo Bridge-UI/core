@@ -472,6 +472,8 @@ export {
   splitOtpValue,
 } from "@/Utils/otp";
 export type { OtpDigitsUpdate, OtpInputType } from "@/Utils/otp";
+export { resolveFieldOverlay } from "@/Utils/overlay";
+export type { FieldOverlayMode, ResolvedFieldOverlay } from "@/Utils/overlay";
 export {
   isModalBackdropClick,
   resolveModalPortalElement,

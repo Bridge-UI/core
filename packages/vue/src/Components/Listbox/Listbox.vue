@@ -15,6 +15,7 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
 import type {
@@ -28,7 +29,6 @@ import {
 } from "@/Components/Listbox/listboxInjectionKey";
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
-import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
 import {
   hasNamedSlot,
@@ -52,6 +52,7 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   size: "md",
   loading: false,
   multiple: false,
+  overlay: "menu",
   color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,
@@ -203,6 +204,14 @@ const menuProps = computed(() => {
   return merged.value.customProps?.menu;
 });
 
+const modalProps = computed(() => {
+  return merged.value.customProps?.modal;
+});
+
+const drawerProps = computed(() => {
+  return merged.value.customProps?.drawer;
+});
+
 const listProps = computed(() => {
   return merged.value.customProps?.list;
 });
@@ -219,10 +228,17 @@ const listSectionProps = computed(() => {
   return merged.value.customProps?.listSection;
 });
 
-const menuBind = computed(() => {
+const overlayCustomProps = computed(() => {
   return {
-    ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
-    ...menuProps.value,
+    modal: modalProps.value,
+    drawer: drawerProps.value,
+    menu: {
+      anchorEl: props.anchorEl,
+      placement: props.placement,
+      disableAutoFocus: props.disableAutoFocus,
+      ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
+      ...menuProps.value,
+    },
   };
 });
 
@@ -253,13 +269,10 @@ const listBind = computed(() => {
 </script>
 
 <template>
-  <Menu
+  <FieldOverlay
     v-model="open"
-    :anchor-el="anchorEl"
-    :placement="placement"
-    :close-on-click-away="true"
-    :disable-auto-focus="disableAutoFocus"
-    v-bind="menuBind"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
   >
     <component
       v-if="hasNamedSlot(slots, 'beforeOptions')"
@@ -330,5 +343,5 @@ const listBind = computed(() => {
       v-if="hasNamedSlot(slots, 'afterOptions')"
       :is="resolveNamedSlot(slots, 'afterOptions')"
     />
-  </Menu>
+  </FieldOverlay>
 </template>

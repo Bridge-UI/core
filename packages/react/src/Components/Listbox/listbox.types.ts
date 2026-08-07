@@ -3,6 +3,7 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 
 // ** Core Imports
 import type {
+  FieldOverlayMode,
   ListboxColor,
   ListboxEntry,
   ListboxOption,
@@ -15,10 +16,12 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type { ListOwnProps } from "@/Components/List/list.types";
 import type { ListItemOwnProps } from "@/Components/ListItem/listItem.types";
 import type { ListSectionOwnProps } from "@/Components/ListSection/listSection.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
 
 export interface ListboxSizeOverrides {}
@@ -81,6 +84,13 @@ export interface ListboxControlledProps {
 
 export interface ListboxCustomProps {
   /**
+   * Props forwarded to the nested `Drawer` when `overlay` resolves to `drawer`.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<Omit<DrawerOwnProps, "show" | "children" | "onShowChange">>;
+
+  /**
    * Props forwarded to the internal `List`.
    *
    * @default undefined
@@ -103,12 +113,19 @@ export interface ListboxCustomProps {
   listSection?: Partial<Omit<ListSectionOwnProps, "title" | "children">>;
 
   /**
-   * Props forwarded to the floating `Menu`.
+   * Props forwarded to the floating `Menu` when `overlay` resolves to `menu`.
    * Merged last so they override Listbox defaults.
    *
    * @default undefined
    */
-  menu?: Partial<MenuOwnProps>;
+  menu?: Partial<Omit<MenuOwnProps, "show" | "children" | "onShowChange">>;
+
+  /**
+   * Props forwarded to the nested `Modal` when `overlay` resolves to `modal`.
+   *
+   * @default undefined
+   */
+  modal?: Partial<Omit<ModalOwnProps, "show" | "children" | "onShowChange">>;
 
   /**
    * Props forwarded to the loading `Progress`.
@@ -164,7 +181,7 @@ export interface ListboxOwnProps {
 
   /**
    * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
-   * `progress`, `scroll`).
+   * `modal`, `drawer`, `progress`, `scroll`).
    *
    * @default undefined
    */
@@ -270,6 +287,14 @@ export interface ListboxOwnProps {
    * @default []
    */
   options?: ListboxOption[];
+
+  /**
+   * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
+   * and `drawer` (bottom) on mobile.
+   *
+   * @default "menu"
+   */
+  overlay?: FieldOverlayMode;
 
   /**
    * Preferred placement of the panel relative to the anchor.

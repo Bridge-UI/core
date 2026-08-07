@@ -1,6 +1,6 @@
 // ** Local Imports
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 import { useTimeRangeField } from "@/Components/TimeRangeField/hooks/useTimeRangeField";
 import type { TimeRangeFieldProps } from "@/Components/TimeRangeField/timeRangeField.types";
 import { TimeRangePicker } from "@/Components/TimeRangePicker";
@@ -8,14 +8,15 @@ import { TimeRangePicker } from "@/Components/TimeRangePicker";
 function TimeRangeField(props: TimeRangeFieldProps) {
   const {
     open,
+    overlay,
     timeOnly,
     formField,
     inputBind,
-    menuProps,
     modelValue,
-    containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     timeRangePickerCustomProps,
   } = useTimeRangeField(props);
 
@@ -25,13 +26,11 @@ function TimeRangeField(props: TimeRangeFieldProps) {
         <input {...inputBind} />
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <TimeRangePicker
           value={modelValue}
@@ -42,6 +41,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
           timeZone={timeOnly.timeZone}
           interval={timeOnly.interval}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           color={formField.merged.color}
           disabled={formField.isDisabled}
           showFooter={timeOnly.showFooter}
@@ -49,7 +49,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
           disableTimes={timeOnly.disableTimes}
           customProps={timeRangePickerCustomProps}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

@@ -32,6 +32,7 @@ const timeRangeFieldBridgeKeys = [
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "showFooter",
@@ -182,10 +183,12 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const handlePickerChange = (next: null | TimeRangeValue) => {
     commitValue(next);
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
+  };
 
-    if (!timeOnly.showFooter) {
-      handleOpenChange(false);
-    }
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const inputBind = derived(() => {
@@ -219,7 +222,17 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     containerRef,
     handleOpenChange,
     handlePickerChange,
-    menuProps: timeOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: timeOnly.overlay,
     timeRangePickerCustomProps: timeOnly.customProps?.timeRangePicker,
+    overlayCustomProps: {
+      modal: timeOnly.customProps?.modal,
+      drawer: timeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...timeOnly.customProps?.menu,
+      },
+    },
   };
 }

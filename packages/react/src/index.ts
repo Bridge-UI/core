@@ -273,6 +273,12 @@ export type {
   DrawerSizeOverrides,
   DrawerTransitionOverrides,
 } from "@/Components/Drawer";
+export { FieldOverlay, useFieldOverlay } from "@/Components/FieldOverlay";
+export type {
+  FieldOverlayCustomProps,
+  FieldOverlayOwnProps,
+  FieldOverlayProps,
+} from "@/Components/FieldOverlay";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,
