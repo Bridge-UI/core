@@ -85,7 +85,7 @@
   "dependencies": {
     "@bridge-ui/core": "^0.0.8",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.46.1",
+    "es-toolkit": "^1.50.0",
     "tailwind-merge": "^3.6.0"
   },
   "scripts": {
@@ -102,18 +102,18 @@
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@fortawesome/vue-fontawesome": "^3.3.3",
     "@heroicons/vue": "^2.2.0",
-    "@lucide/vue": "^1.24.0",
+    "@lucide/vue": "^1.30.0",
     "@phosphor-icons/vue": "^2.2.1",
     "@tabler/icons-vue": "^3.46.0",
-    "@tailwindcss/cli": "^4.3.0",
-    "@tailwindcss/vite": "^4.3.0",
-    "@types/node": "^24.0.0",
-    "@vue/language-core": "^3.2.9",
-    "@vue/test-utils": "^2.4.10",
-    "tailwindcss": "^4.3.0",
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@vue/language-core": "^3.3.9",
+    "@vue/test-utils": "^2.4.11",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vue": "^3.5.34",
+    "vue": "^3.5.41",
     "vue-i18n": "^11.4.8",
-    "vue-tsc": "^3.2.9"
+    "vue-tsc": "^3.3.9"
   }
 }
