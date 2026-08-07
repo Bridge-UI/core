@@ -7,8 +7,8 @@ import { computed, ref } from "vue";
 import type { TimeValue } from "@bridge-ui/core";
 
 // ** Local Imports
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 import { useTimeField } from "@/Components/TimeField/composables/useTimeField";
 import type {
   TimeFieldEmits,
@@ -43,14 +43,15 @@ const value = computed({
 
 const {
   open,
+  overlay,
   timeOnly,
   formField,
   inputBind,
-  menuProps,
   modelValue,
-  containerRef,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   timePickerCustomProps,
 } = useTimeField(props, value, emit);
 </script>
@@ -60,12 +61,10 @@ const {
     <input v-bind="inputBind" />
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <TimePicker
@@ -77,6 +76,7 @@ const {
       :interval="timeOnly.interval"
       :time-zone="timeOnly.timeZone"
       v-on:change="handlePickerChange"
+      v-on:cancel="handlePickerCancel"
       :show-footer="timeOnly.showFooter"
       :color="formField.merged.value.color"
       :custom-props="timePickerCustomProps"
@@ -84,5 +84,5 @@ const {
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
     />
-  </Menu>
+  </FieldOverlay>
 </template>

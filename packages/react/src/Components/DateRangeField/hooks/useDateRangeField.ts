@@ -7,6 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveRangePickerOrientation,
   splitComponentProps,
   type DateAdapterContext,
   type DateRangeValue,
@@ -25,12 +28,14 @@ import {
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
 import { derived, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateRangeFieldBridgeKeys = [
   "value",
   "classes",
   "maxDate",
   "minDate",
+  "overlay",
   "timeZone",
   "hideYears",
   "hideMonths",
@@ -60,6 +65,7 @@ function formatRange(
 
 export function useDateRangeField(props: DateRangeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -191,6 +197,15 @@ export function useDateRangeField(props: DateRangeFieldProps) {
 
   const handlePickerChange = (next: null | DateRangeValue) => {
     commitValue(next);
+
+    // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
+    if (dateOnly.showFooter) {
+      handleOpenChange(false);
+    }
+  };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const inputBind = derived(() => {
@@ -215,6 +230,24 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     );
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
+  });
+
+  const orientation = derived(() => {
+    return resolveRangePickerOrientation(
+      dateOnly.orientation,
+      resolvedOverlay,
+      breakpoint.mobile,
+    );
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     daySlot,
@@ -222,10 +255,22 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     formField,
     inputBind,
     modelValue,
+    orientation,
     containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
-    menuProps: dateOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: dateOnly.overlay,
     dateRangePickerCustomProps: dateOnly.customProps?.dateRangePicker,
+    overlayCustomProps: {
+      modal: dateOnly.customProps?.modal,
+      drawer: dateOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateOnly.customProps?.menu,
+      },
+    },
   };
 }

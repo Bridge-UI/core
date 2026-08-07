@@ -2,21 +2,22 @@
 import type { DateTimeFieldProps } from "@/Components/DateTimeField/dateTimeField.types";
 import { useDateTimeField } from "@/Components/DateTimeField/hooks/useDateTimeField";
 import { DateTimePicker } from "@/Components/DateTimePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 
 function DateTimeField(props: DateTimeFieldProps) {
   const {
     open,
     daySlot,
+    overlay,
     formField,
     inputBind,
-    menuProps,
     modelValue,
     dateTimeOnly,
-    containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     dateTimePickerCustomProps,
   } = useDateTimeField(props);
 
@@ -26,19 +27,18 @@ function DateTimeField(props: DateTimeFieldProps) {
         <input {...inputBind} />
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <DateTimePicker
           value={modelValue}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}
           maxTime={dateTimeOnly.maxTime}
           minDate={dateTimeOnly.minDate}
@@ -62,7 +62,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           hideOutsideDays={dateTimeOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

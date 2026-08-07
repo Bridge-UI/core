@@ -50,13 +50,14 @@ const timeRangePickerBridgeKeys = [
   "showFooter",
   "startTitle",
   "customProps",
+  "orientation",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeRangePickerOwnProps)[];
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter"
+  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "orientation"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -226,12 +227,18 @@ export function useTimeRangePicker(
     );
   });
 
+  const isVertical = computed(() => {
+    return merged.value.orientation === "vertical";
+  });
+
   const panelsBind = computed(() => {
     return mergePartBind(
       customProps.value?.panels,
       {},
       cn({
-        "flex flex-row gap-2": true,
+        "flex gap-2": true,
+        "flex-row": !isVertical.value,
+        "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
       }),
     );
@@ -242,7 +249,9 @@ export function useTimeRangePicker(
       customProps.value?.start,
       {},
       cn({
-        "flex w-fit shrink-0 flex-col gap-1": true,
+        "flex shrink-0 flex-col gap-1": true,
+        "w-fit": !isVertical.value,
+        "w-full items-center": isVertical.value,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -253,7 +262,9 @@ export function useTimeRangePicker(
       customProps.value?.end,
       {},
       cn({
-        "flex w-fit shrink-0 flex-col gap-1": true,
+        "flex shrink-0 flex-col gap-1": true,
+        "w-fit": !isVertical.value,
+        "w-full items-center": isVertical.value,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );

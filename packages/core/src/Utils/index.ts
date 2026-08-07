@@ -473,6 +473,16 @@ export {
 } from "@/Utils/otp";
 export type { OtpDigitsUpdate, OtpInputType } from "@/Utils/otp";
 export {
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveRangePickerOrientation,
+} from "@/Utils/overlay";
+export type {
+  FieldOverlayMode,
+  RangePickerOrientation,
+  ResolvedFieldOverlay,
+} from "@/Utils/overlay";
+export {
   isModalBackdropClick,
   resolveModalPortalElement,
 } from "@/Utils/portal";

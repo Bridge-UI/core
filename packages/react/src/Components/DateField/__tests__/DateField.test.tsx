@@ -2,8 +2,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core";
+
 afterEach(() => {
   cleanup();
+  resetLayerStackForTests();
 });
 
 // ** Local Imports
@@ -32,6 +36,39 @@ test("it should call onChange when a day is selected", () => {
   fireEvent.click(screen.getByRole("button", { name: "21" }));
 
   expect(onChange).toHaveBeenCalled();
+});
+
+test("it should close the overlay after Apply when showFooter is set", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DateField
+      showFooter
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+
+  expect(onChange).toHaveBeenCalled();
+  expect(screen.queryByRole("button", { name: "Apply" })).toBeNull();
+});
+
+test("it should close the overlay after Cancel when showFooter is set", () => {
+  render(<DateField showFooter defaultValue={new Date(2021, 4, 1)} />);
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
 });
 
 test("it should pass color to the nested DatePicker", () => {

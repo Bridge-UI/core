@@ -6,7 +6,9 @@ import { useCallback, useRef, useState } from "react";
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   isTimeRangeValue,
+  resolveFieldOverlay,
   splitComponentProps,
   type DateAdapterContext,
   type TimeRangeValue,
@@ -25,6 +27,7 @@ import type {
   TimeRangeFieldProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
 import { derived, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
@@ -32,6 +35,7 @@ const timeRangeFieldBridgeKeys = [
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "showFooter",
@@ -55,6 +59,7 @@ function formatTimeRange(
 
 export function useTimeRangeField(props: TimeRangeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -182,10 +187,12 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const handlePickerChange = (next: null | TimeRangeValue) => {
     commitValue(next);
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
+  };
 
-    if (!timeOnly.showFooter) {
-      handleOpenChange(false);
-    }
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const inputBind = derived(() => {
@@ -210,6 +217,16 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     );
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     timeOnly,
@@ -217,9 +234,20 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     inputBind,
     modelValue,
     containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
-    menuProps: timeOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: timeOnly.overlay,
     timeRangePickerCustomProps: timeOnly.customProps?.timeRangePicker,
+    overlayCustomProps: {
+      modal: timeOnly.customProps?.modal,
+      drawer: timeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...timeOnly.customProps?.menu,
+      },
+    },
   };
 }

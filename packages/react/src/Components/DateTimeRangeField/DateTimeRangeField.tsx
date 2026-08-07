@@ -2,21 +2,24 @@
 import type { DateTimeRangeFieldProps } from "@/Components/DateTimeRangeField/dateTimeRangeField.types";
 import { useDateTimeRangeField } from "@/Components/DateTimeRangeField/hooks/useDateTimeRangeField";
 import { DateTimeRangePicker } from "@/Components/DateTimeRangePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 
 function DateTimeRangeField(props: DateTimeRangeFieldProps) {
   const {
     open,
     daySlot,
+    overlay,
     formField,
     inputBind,
-    menuProps,
     modelValue,
+    orientation,
     dateTimeOnly,
-    containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     dateTimeRangePickerCustomProps,
   } = useDateTimeRangeField(props);
 
@@ -26,19 +29,20 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
         <input {...inputBind} />
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <DateTimeRangePicker
           value={modelValue}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
+          orientation={orientation}
+          className={pickerClassName}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}
           maxTime={dateTimeOnly.maxTime}
           minDate={dateTimeOnly.minDate}
@@ -51,7 +55,6 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           rounded={formField.merged.rounded}
           showFooter={dateTimeOnly.showFooter}
           hideMonths={dateTimeOnly.hideMonths}
-          orientation={dateTimeOnly.orientation}
           startOfWeek={dateTimeOnly.startOfWeek}
           disableDates={dateTimeOnly.disableDates}
           hideWeekdays={dateTimeOnly.hideWeekdays}
@@ -62,7 +65,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           hideOutsideDays={dateTimeOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

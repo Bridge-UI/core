@@ -12,7 +12,9 @@ import {
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   isTimeRangeValue,
+  resolveFieldOverlay,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
@@ -32,12 +34,14 @@ import type {
   TimeRangeFieldOwnProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
 import { hasNamedSlot, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "showFooter",
@@ -70,6 +74,7 @@ export function useTimeRangeField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -189,10 +194,12 @@ export function useTimeRangeField(
 
   function handlePickerChange(next: null | TimeRangeValue) {
     commitValue(next);
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
+  }
 
-    if (!timeOnly.value.showFooter) {
-      handleOpenChange(false);
-    }
+  function handlePickerCancel() {
+    handleOpenChange(false);
   }
 
   const inputBind = computed(() => {
@@ -217,24 +224,49 @@ export function useTimeRangeField(
     );
   });
 
-  const menuProps = computed(() => {
-    return timeOnly.value.customProps?.menu;
+  const overlay = computed(() => {
+    return timeOnly.value.overlay;
+  });
+
+  const overlayCustomProps = computed(() => {
+    return {
+      modal: timeOnly.value.customProps?.modal,
+      drawer: timeOnly.value.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef.value,
+        placement: "bottom-start" as const,
+        ...timeOnly.value.customProps?.menu,
+      },
+    };
   });
 
   const timeRangePickerCustomProps = computed(() => {
     return timeOnly.value.customProps?.timeRangePicker;
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
+    overlay,
     timeOnly,
     formField,
     inputBind,
-    menuProps,
     modelValue,
+    pickerClass,
     containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     timeRangePickerCustomProps,
   };
 }

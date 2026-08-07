@@ -1,6 +1,6 @@
 # DateRangeField
 
-Form field that opens a `DateRangePicker` in a menu. Extends FormField props.
+Form field that opens a `DateRangePicker` in an overlay (`Menu` by default). Extends FormField props.
 
 ## Import
 
@@ -28,6 +28,10 @@ import { DateRangeField } from "@bridge-ui/react/Components/DateRangeField";
 />
 ```
 
+Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `auto`).
+On mobile, `drawer` / `modal` overlays use vertical dual-calendar layout when
+`orientation` is unset.
+
 ### customProps
 
 ```tsx
@@ -44,26 +48,27 @@ import { DateRangeField } from "@bridge-ui/react/Components/DateRangeField";
 
 ### DateRangeField-specific
 
-| Prop              | Type                         | Default        | Description                                       |
-| ----------------- | ---------------------------- | -------------- | ------------------------------------------------- |
-| `classes`         | `DateRangeFieldClasses`      | —              | Classes for field / input regions.                |
-| `customProps`     | `DateRangeFieldCustomProps`  | —              | Extra props for internal parts.                   |
-| `defaultValue`    | `DateRangeValue \| null`     | `null`         | Uncontrolled initial value.                       |
-| `disableDates`    | `Date[]`                     | —              | Dates that cannot be selected.                    |
-| `disableMonths`   | `number[]`                   | —              | Month indexes that cannot be selected.            |
-| `disableYears`    | `number[]`                   | —              | Years that cannot be selected.                    |
-| `hideMonths`      | `boolean`                    | `false`        | Hides month navigation / panel.                   |
-| `hideOutsideDays` | `boolean`                    | `false`        | Hides days that fall outside the displayed month. |
-| `hideWeekdays`    | `boolean`                    | `false`        | Hides weekday labels.                             |
-| `hideYears`       | `boolean`                    | `false`        | Hides year navigation / panel.                    |
-| `maxDate`         | `Date`                       | —              | Latest selectable date.                           |
-| `minDate`         | `Date`                       | —              | Earliest selectable date.                         |
-| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"` | Dual calendar layout forwarded to the picker.     |
-| `showFooter`      | `boolean`                    | `false`        | Shows Cancel / Apply on the nested picker.        |
-| `slots`           | `DateRangeFieldSlots`        | —              | Named slots (`FormField` slots + calendar `day`). |
-| `startOfWeek`     | `StartOfWeek`                | `0`            | First day of the week.                            |
-| `timeZone`        | `string`                     | —              | IANA time zone.                                   |
-| `value`           | `DateRangeValue \| null`     | —              | Controlled value.                                 |
+| Prop              | Type                         | Default        | Description                                                                       |
+| ----------------- | ---------------------------- | -------------- | --------------------------------------------------------------------------------- |
+| `classes`         | `DateRangeFieldClasses`      | —              | Classes for field / input regions.                                                |
+| `customProps`     | `DateRangeFieldCustomProps`  | —              | Extra props for internal parts.                                                   |
+| `defaultValue`    | `DateRangeValue \| null`     | `null`         | Uncontrolled initial value.                                                       |
+| `disableDates`    | `Date[]`                     | —              | Dates that cannot be selected.                                                    |
+| `disableMonths`   | `number[]`                   | —              | Month indexes that cannot be selected.                                            |
+| `disableYears`    | `number[]`                   | —              | Years that cannot be selected.                                                    |
+| `hideMonths`      | `boolean`                    | `false`        | Hides month navigation / panel.                                                   |
+| `hideOutsideDays` | `boolean`                    | `false`        | Hides days that fall outside the displayed month.                                 |
+| `hideWeekdays`    | `boolean`                    | `false`        | Hides weekday labels.                                                             |
+| `hideYears`       | `boolean`                    | `false`        | Hides year navigation / panel.                                                    |
+| `maxDate`         | `Date`                       | —              | Latest selectable date.                                                           |
+| `minDate`         | `Date`                       | —              | Earliest selectable date.                                                         |
+| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"` | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
+| `overlay`         | `FieldOverlayMode`           | `"menu"`       | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                              |
+| `showFooter`      | `boolean`                    | `false`        | Shows Cancel / Apply on the nested picker.                                        |
+| `slots`           | `DateRangeFieldSlots`        | —              | Named slots (`FormField` slots + calendar `day`).                                 |
+| `startOfWeek`     | `StartOfWeek`                | `0`            | First day of the week.                                                            |
+| `timeZone`        | `string`                     | —              | IANA time zone.                                                                   |
+| `value`           | `DateRangeValue \| null`     | —              | Controlled value.                                                                 |
 
 ### Binding
 

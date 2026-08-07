@@ -37,6 +37,7 @@ const timeFieldBridgeKeys = [
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "showFooter",
@@ -188,10 +189,12 @@ export function useTimeField(
 
   function handlePickerChange(next: null | TimeValue) {
     commitValue(next);
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
+  }
 
-    if (!timeOnly.value.showFooter) {
-      handleOpenChange(false);
-    }
+  function handlePickerCancel() {
+    handleOpenChange(false);
   }
 
   const inputBind = computed(() => {
@@ -216,15 +219,25 @@ export function useTimeField(
     );
   });
 
-  const menuProps = computed(() => {
+  const overlay = computed(() => {
+    return timeOnly.value.overlay;
+  });
+
+  const overlayCustomProps = computed(() => {
     const menuFromProps = timeOnly.value.customProps?.menu;
 
     // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
     return {
-      ...menuFromProps,
-      classes: {
-        ...menuFromProps?.classes,
-        content: cn("min-w-0", menuFromProps?.classes?.content),
+      modal: timeOnly.value.customProps?.modal,
+      drawer: timeOnly.value.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef.value,
+        placement: "bottom-start" as const,
+        ...menuFromProps,
+        classes: {
+          ...menuFromProps?.classes,
+          content: cn("min-w-0", menuFromProps?.classes?.content),
+        },
       },
     };
   });
@@ -235,14 +248,16 @@ export function useTimeField(
 
   return {
     open,
+    overlay,
     timeOnly,
     formField,
     inputBind,
-    menuProps,
     modelValue,
     containerRef,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     timePickerCustomProps,
   };
 }

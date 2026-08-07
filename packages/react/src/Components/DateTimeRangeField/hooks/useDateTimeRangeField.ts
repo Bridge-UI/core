@@ -7,6 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveRangePickerOrientation,
   splitComponentProps,
   type DateAdapterContext,
   type DateRangeValue,
@@ -25,6 +28,7 @@ import {
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
 import { derived, mergePartBind } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateTimeRangeFieldBridgeKeys = [
   "ampm",
@@ -34,6 +38,7 @@ const dateTimeRangeFieldBridgeKeys = [
   "maxTime",
   "minDate",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
   "hideYears",
@@ -71,6 +76,7 @@ function formatDateTimeRange(
 
 export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -202,6 +208,15 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
 
   const handlePickerChange = (next: null | DateRangeValue) => {
     commitValue(next);
+
+    // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
+    if (dateTimeOnly.showFooter) {
+      handleOpenChange(false);
+    }
+  };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const inputBind = derived(() => {
@@ -226,18 +241,48 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     );
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateTimeOnly.overlay, breakpoint.mobile);
+  });
+
+  const orientation = derived(() => {
+    return resolveRangePickerOrientation(
+      dateTimeOnly.orientation,
+      resolvedOverlay,
+      breakpoint.mobile,
+    );
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "mx-auto shadow-none"
+      : undefined;
+  });
+
   return {
     open,
     daySlot,
     formField,
     inputBind,
     modelValue,
+    orientation,
     dateTimeOnly,
     containerRef,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
-    menuProps: dateTimeOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: dateTimeOnly.overlay,
     dateTimeRangePickerCustomProps:
       dateTimeOnly.customProps?.dateTimeRangePicker,
+    overlayCustomProps: {
+      modal: dateTimeOnly.customProps?.modal,
+      drawer: dateTimeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateTimeOnly.customProps?.menu,
+      },
+    },
   };
 }

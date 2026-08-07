@@ -4,11 +4,13 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayMode,
   MergeHtmlProps,
   TimeRangeValue,
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type {
   FormFieldClasses,
   FormFieldCustomProps,
@@ -16,6 +18,7 @@ import type {
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { TimeRangePickerCustomProps } from "@/Components/TimeRangePicker";
 
 export interface TimeRangeFieldClasses extends FormFieldClasses {}
@@ -39,7 +42,19 @@ export interface TimeRangeFieldCallbacks {
 
 export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
   /**
-   * Props forwarded to the floating `Menu`.
+   * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<
+    Pick<
+      DrawerOwnProps,
+      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the floating `Menu` when overlay resolves to menu.
    *
    * @default undefined
    */
@@ -47,6 +62,18 @@ export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
     Pick<
       MenuOwnProps,
       "shadow" | "classes" | "rounded" | "placement" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the nested `Modal` when overlay resolves to modal.
+   *
+   * @default undefined
+   */
+  modal?: Partial<
+    Pick<
+      ModalOwnProps,
+      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
     >
   >;
 
@@ -124,6 +151,14 @@ export interface TimeRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   minTime?: Date;
+
+  /**
+   * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
+   * `drawer` (bottom) on mobile.
+   *
+   * @default "menu"
+   */
+  overlay?: FieldOverlayMode;
 
   /**
    * Shows Cancel / Apply on the nested picker.

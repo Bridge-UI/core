@@ -11,8 +11,8 @@ import type {
   DateTimeFieldSlots,
 } from "@/Components/DateTimeField/dateTimeField.types";
 import { DateTimePicker } from "@/Components/DateTimePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 
 defineSlots<DateTimeFieldSlots>();
 
@@ -40,14 +40,15 @@ const value = computed({
 
 const {
   open,
+  overlay,
   formField,
   inputBind,
-  menuProps,
   modelValue,
   dateTimeOnly,
-  containerRef,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   dateTimePickerCustomProps,
 } = useDateTimeField(props, value, emit);
 </script>
@@ -57,12 +58,10 @@ const {
     <input v-bind="inputBind" />
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <DateTimePicker
@@ -74,6 +73,7 @@ const {
       :max-time="dateTimeOnly.maxTime"
       :min-time="dateTimeOnly.minTime"
       v-on:change="handlePickerChange"
+      v-on:cancel="handlePickerCancel"
       :interval="dateTimeOnly.interval"
       :time-zone="dateTimeOnly.timeZone"
       :hide-years="dateTimeOnly.hideYears"
@@ -96,5 +96,5 @@ const {
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
       </template>
     </DateTimePicker>
-  </Menu>
+  </FieldOverlay>
 </template>

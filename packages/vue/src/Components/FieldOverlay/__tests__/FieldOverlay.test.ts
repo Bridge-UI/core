@@ -1,0 +1,143 @@
+// ** External Imports
+import { flushPromises, mount } from "@vue/test-utils";
+import { afterEach, expect, test, vi } from "vitest";
+import { h } from "vue";
+
+// ** Core Imports
+import {
+  resetBreakpointCachesForTests,
+  resetLayerStackForTests,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import { FieldOverlay } from "@/Components/FieldOverlay";
+
+function mockViewport(width: number) {
+  Object.defineProperty(window, "innerWidth", {
+    value: width,
+    configurable: true,
+  });
+  Object.defineProperty(window, "innerHeight", {
+    value: 800,
+    configurable: true,
+  });
+
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    media: query,
+    matches: false,
+    onchange: null,
+    addListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }));
+}
+
+afterEach(async () => {
+  while (mountedWrappers.length > 0) {
+    mountedWrappers.pop()?.unmount();
+  }
+
+  await flushPromises();
+  resetLayerStackForTests();
+  resetBreakpointCachesForTests();
+  vi.restoreAllMocks();
+  document.body.innerHTML = "";
+  document.body.style.overflow = "";
+});
+
+const mountedWrappers: Array<ReturnType<typeof mount>> = [];
+
+function mountFieldOverlay(options: Parameters<typeof mount>[1] = {}) {
+  const wrapper = mount(FieldOverlay, {
+    attachTo: document.body,
+    ...options,
+    props: {
+      ...(options.props ?? {}),
+      "onUpdate:modelValue": (value: boolean) => {
+        wrapper.setProps({ modelValue: value });
+      },
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  return wrapper;
+}
+
+test("it should render menu content when overlay is menu", () => {
+  mountFieldOverlay({
+    props: { overlay: "menu", modelValue: true },
+    slots: { default: () => h("span", "Picker") },
+  });
+
+  expect(document.body.textContent).toContain("Picker");
+  expect(document.querySelector('[role="menu"]')).not.toBeNull();
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should render modal dialog when overlay is modal", () => {
+  mountFieldOverlay({
+    slots: { default: () => h("span", "Modal picker") },
+    props: {
+      modelValue: true,
+      overlay: "modal",
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  expect(document.body.textContent).toContain("Modal picker");
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should render drawer dialog when overlay is drawer", () => {
+  mountFieldOverlay({
+    slots: { default: () => h("span", "Drawer picker") },
+    props: {
+      modelValue: true,
+      overlay: "drawer",
+      customProps: { drawer: { transition: "none" } },
+    },
+  });
+
+  expect(document.body.textContent).toContain("Drawer picker");
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should resolve auto to menu on desktop", () => {
+  mockViewport(1280);
+
+  mountFieldOverlay({
+    props: { overlay: "auto", modelValue: true },
+    slots: { default: () => h("span", "Auto desktop") },
+  });
+
+  expect(document.body.textContent).toContain("Auto desktop");
+  expect(document.querySelector('[role="menu"]')).not.toBeNull();
+});
+
+test("it should resolve auto to drawer on mobile", () => {
+  mockViewport(500);
+
+  mountFieldOverlay({
+    slots: { default: () => h("span", "Auto mobile") },
+    props: {
+      overlay: "auto",
+      modelValue: true,
+      customProps: { drawer: { transition: "none" } },
+    },
+  });
+
+  expect(document.body.textContent).toContain("Auto mobile");
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should not render content when modelValue is false", () => {
+  mountFieldOverlay({
+    props: { overlay: "menu", modelValue: false },
+    slots: { default: () => h("span", "Hidden") },
+  });
+
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+});

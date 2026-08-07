@@ -14,8 +14,8 @@ import type {
   DateRangeFieldSlots,
 } from "@/Components/DateRangeField/dateRangeField.types";
 import DateRangePicker from "@/Components/DateRangePicker/DateRangePicker.vue";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
 
 defineSlots<DateRangeFieldSlots>();
 
@@ -45,14 +45,17 @@ const value = computed({
 
 const {
   open,
+  overlay,
   dateOnly,
   formField,
   inputBind,
-  menuProps,
   modelValue,
-  containerRef,
+  orientation,
+  pickerClass,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   dateRangePickerCustomProps,
 } = useDateRangeField(props, value, emit);
 </script>
@@ -62,25 +65,25 @@ const {
     <input v-bind="inputBind" />
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <DateRangePicker
       :value="modelValue"
+      :class="pickerClass"
+      :orientation="orientation"
       :read-only="props.readonly"
       :max-date="dateOnly.maxDate"
       :min-date="dateOnly.minDate"
       :time-zone="dateOnly.timeZone"
       v-on:change="handlePickerChange"
+      v-on:cancel="handlePickerCancel"
       :hide-years="dateOnly.hideYears"
       :show-footer="dateOnly.showFooter"
       :hide-months="dateOnly.hideMonths"
-      :orientation="dateOnly.orientation"
       :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"
       :disabled="formField.isDisabled.value"
@@ -96,5 +99,5 @@ const {
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
       </template>
     </DateRangePicker>
-  </Menu>
+  </FieldOverlay>
 </template>

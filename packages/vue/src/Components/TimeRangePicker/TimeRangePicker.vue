@@ -45,6 +45,7 @@ const {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    orientation: "horizontal",
   },
   emit,
 );
