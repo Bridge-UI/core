@@ -15,5 +15,5 @@ test("it should open dual calendars on focus", () => {
   );
 
   cy.get("input").focus();
-  cy.contains("button", "Select year").should("be.visible");
+  cy.get('[aria-label="Select year"]').should("be.visible");
 });

@@ -15,6 +15,6 @@ test("it should open picker on focus", () => {
   );
 
   cy.get("input").focus();
-  cy.contains("button", "Select year").should("be.visible");
   cy.get('button[aria-label="Hour 09"]').should("exist");
+  cy.get('[aria-label="Select year"]').should("be.visible");
 });
