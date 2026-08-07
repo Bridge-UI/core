@@ -56,7 +56,7 @@ test("it should enable footer when showFooter is set", () => {
 });
 
 test("it should size the root and panels to their content", () => {
-  const { rootBind, startBind, endBind } = mountUseTimeRangePicker();
+  const { endBind, rootBind, startBind } = mountUseTimeRangePicker();
 
   expect(endBind.value.class).toContain("w-fit");
   expect(rootBind.value.class).toContain("w-fit");
