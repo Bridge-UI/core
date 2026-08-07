@@ -25,6 +25,10 @@ test("it should open the picker on click", () => {
   );
 
   cy.get("input").click();
-  cy.get('button[aria-label="Hour 09"]').should("be.visible");
-  cy.get('button[aria-label="Hour 17"]').should("be.visible");
+  cy.get('button[aria-label="Hour 09"][aria-pressed="true"]').should(
+    "be.visible",
+  );
+  cy.get('button[aria-label="Hour 17"][aria-pressed="true"]').should(
+    "be.visible",
+  );
 });

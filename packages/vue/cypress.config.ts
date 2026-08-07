@@ -11,6 +11,9 @@ export default defineConfig({
   allowCypressEnv: false,
   component: {
     specPattern: "src/**/*.cy.ts",
+    // Dual calendar + time layouts need more than Cypress's default 500px width.
+    viewportWidth: 1280,
+    viewportHeight: 720,
     devServer: {
       bundler: "vite",
       framework: "vue",
