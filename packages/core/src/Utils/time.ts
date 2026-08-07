@@ -1,5 +1,13 @@
 // ** External Imports
-import { isArray, isFunction, isNil, isNumber, range } from "es-toolkit/compat";
+import {
+  clamp,
+  forEach,
+  isArray,
+  isFunction,
+  isNil,
+  isNumber,
+  range,
+} from "es-toolkit/compat";
 
 // ** Local Imports
 import type { DateAdapter, DateAdapterContext } from "@/Adapters/date";
@@ -225,4 +233,56 @@ export function isTimeRangeValue<TDate>(
   value: unknown,
 ): value is TimeRangeValue<TDate> {
   return isArray(value) && value.length === 2;
+}
+
+/**
+ * Centers `[aria-pressed="true"]` tiles in their overflow columns.
+ * Uses bounding rects so ancestors with `position: absolute` (DateTime shells)
+ * do not break `offsetTop` math.
+ */
+export function scrollSelectedTimeItemsIntoView(root: HTMLElement) {
+  forEach(root.querySelectorAll<HTMLElement>('[aria-pressed="true"]'), (el) => {
+    const column = el.parentElement;
+
+    if (!column || column.clientHeight <= 0) {
+      return;
+    }
+
+    const elementRect = el.getBoundingClientRect();
+    const columnRect = column.getBoundingClientRect();
+
+    const columnCenter = columnRect.top + column.clientHeight / 2;
+    const elementCenter = elementRect.top + elementRect.height / 2;
+    const nextScrollTop = column.scrollTop + (elementCenter - columnCenter);
+
+    column.scrollTop = clamp(
+      nextScrollTop,
+      0,
+      Math.max(0, column.scrollHeight - column.clientHeight),
+    );
+  });
+}
+
+/**
+ * Scrolls selected TimePanel tiles into view and re-syncs when the root or
+ * columns resize (e.g. DateTime `h-full` resolving after the first paint).
+ * Returns a disconnect callback.
+ */
+export function observeTimePanelSelectedScroll(root: HTMLElement): () => void {
+  const syncScroll = () => {
+    scrollSelectedTimeItemsIntoView(root);
+  };
+
+  syncScroll();
+
+  const observer = new ResizeObserver(syncScroll);
+
+  observer.observe(root);
+  forEach(root.children, (column) => {
+    observer.observe(column);
+  });
+
+  return () => {
+    observer.disconnect();
+  };
 }

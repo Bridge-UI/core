@@ -1,3 +1,5 @@
+// @vitest-environment happy-dom
+
 // ** External Imports
 import { describe, expect, test } from "vitest";
 
@@ -8,6 +10,8 @@ import {
   buildMinuteOptions,
   combineDateAndTime,
   isTimeDisabled,
+  observeTimePanelSelectedScroll,
+  scrollSelectedTimeItemsIntoView,
   snapMinutes,
   to12Hour,
   to24Hour,
@@ -82,5 +86,83 @@ describe("combineDateAndTime", () => {
     expect(adapter.getMonth(merged)).toBe(4);
     expect(adapter.getHours(merged)).toBe(14);
     expect(adapter.getMinutes(merged)).toBe(30);
+  });
+});
+
+describe("scrollSelectedTimeItemsIntoView", () => {
+  test("it should center the pressed item in its column", () => {
+    const root = document.createElement("div");
+    const column = document.createElement("div");
+    const selected = document.createElement("button");
+
+    Object.defineProperty(column, "clientHeight", { value: 100 });
+    Object.defineProperty(column, "scrollHeight", { value: 400 });
+    column.scrollTop = 0;
+    selected.setAttribute("aria-pressed", "true");
+
+    selected.getBoundingClientRect = () =>
+      ({
+        x: 0,
+        y: 200,
+        left: 0,
+        top: 200,
+        right: 0,
+        width: 0,
+        height: 20,
+        bottom: 220,
+        toJSON: () => ({}),
+      }) as DOMRect;
+
+    column.getBoundingClientRect = () =>
+      ({
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        width: 0,
+        height: 100,
+        bottom: 100,
+        toJSON: () => ({}),
+      }) as DOMRect;
+
+    column.append(selected);
+    root.append(column);
+
+    scrollSelectedTimeItemsIntoView(root);
+
+    // Centers: element at 200+10=210, column at 0+50=50 → delta 160
+    expect(column.scrollTop).toBe(160);
+  });
+
+  test("it should skip columns without a laid-out height", () => {
+    const root = document.createElement("div");
+    const column = document.createElement("div");
+    const selected = document.createElement("button");
+
+    Object.defineProperty(column, "clientHeight", { value: 0 });
+    column.scrollTop = 0;
+    selected.setAttribute("aria-pressed", "true");
+    column.append(selected);
+    root.append(column);
+
+    scrollSelectedTimeItemsIntoView(root);
+
+    expect(column.scrollTop).toBe(0);
+  });
+});
+
+describe("observeTimePanelSelectedScroll", () => {
+  test("it should return a disconnect callback", () => {
+    const root = document.createElement("div");
+    const column = document.createElement("div");
+
+    Object.defineProperty(column, "clientHeight", { value: 100 });
+    root.append(column);
+
+    const disconnect = observeTimePanelSelectedScroll(root);
+
+    expect(typeof disconnect).toBe("function");
+    disconnect();
   });
 });

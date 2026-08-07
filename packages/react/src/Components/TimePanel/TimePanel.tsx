@@ -1,27 +1,12 @@
 // ** External Imports
 import { useLayoutEffect, useRef } from "react";
 
+// ** Core Imports
+import { observeTimePanelSelectedScroll } from "@bridge-ui/core";
+
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/hooks/useTimePanel";
 import type { TimePanelProps } from "@/Components/TimePanel/timePanel.types";
-
-/**
- * Centers a selected tile in its overflow column without scrolling the page.
- */
-function scrollSelectedTimeItemsIntoView(root: HTMLElement) {
-  root.querySelectorAll<HTMLElement>('[aria-pressed="true"]').forEach((el) => {
-    const column = el.parentElement;
-
-    if (!column) {
-      return;
-    }
-
-    column.scrollTop = Math.max(
-      0,
-      el.offsetTop - column.clientHeight / 2 + el.offsetHeight / 2,
-    );
-  });
-}
 
 function TimePanel(props: TimePanelProps) {
   const {
@@ -50,7 +35,7 @@ function TimePanel(props: TimePanelProps) {
       return;
     }
 
-    scrollSelectedTimeItemsIntoView(root);
+    return observeTimePanelSelectedScroll(root);
   }, [hourItems, minuteItems, meridiemItems]);
 
   return (

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // ** External Imports
-import { nextTick, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+
+// ** Core Imports
+import { observeTimePanelSelectedScroll } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/composables/useTimePanel";
@@ -38,38 +41,34 @@ const {
   emit,
 );
 
-/**
- * Centers a selected tile in its overflow column without scrolling the page.
- */
-function scrollSelectedTimeItemsIntoView() {
+let disconnectScrollSync: null | (() => void) = null;
+
+function bindScrollSync() {
+  disconnectScrollSync?.();
+  disconnectScrollSync = null;
+
   const root = rootRef.value;
 
   if (!root) {
     return;
   }
 
-  root.querySelectorAll<HTMLElement>('[aria-pressed="true"]').forEach((el) => {
-    const column = el.parentElement;
-
-    if (!column) {
-      return;
-    }
-
-    column.scrollTop = Math.max(
-      0,
-      el.offsetTop - column.clientHeight / 2 + el.offsetHeight / 2,
-    );
-  });
+  disconnectScrollSync = observeTimePanelSelectedScroll(root);
 }
 
 onMounted(() => {
-  void nextTick(scrollSelectedTimeItemsIntoView);
+  void nextTick(bindScrollSync);
+});
+
+onBeforeUnmount(() => {
+  disconnectScrollSync?.();
+  disconnectScrollSync = null;
 });
 
 watch(
   () => [hourItems.value, minuteItems.value, meridiemItems.value] as const,
   () => {
-    void nextTick(scrollSelectedTimeItemsIntoView);
+    void nextTick(bindScrollSync);
   },
 );
 </script>

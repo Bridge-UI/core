@@ -567,6 +567,8 @@ export {
   isTimeDisabled,
   isTimeRangeValue,
   normalizeTimeValue,
+  observeTimePanelSelectedScroll,
+  scrollSelectedTimeItemsIntoView,
   snapMinutes,
   sortTimeRangeValue,
   timeToMinutes,
