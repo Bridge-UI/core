@@ -7,11 +7,15 @@
 // ** External Imports
 import {
   PhBell,
+  PhCalendarDots,
   PhCaretDown,
+  PhCaretLeft,
+  PhCaretRight,
   PhCaretUp,
   PhCaretUpDown,
   PhCheck,
   PhCheckCircle,
+  PhClock,
   PhEye,
   PhEyeSlash,
   PhInfo,
@@ -34,6 +38,7 @@ const icons = {
   info: PhInfo,
   user: PhUser,
   check: PhCheck,
+  clock: PhClock,
   error: PhXCircle,
   eyeOff: PhEyeSlash,
   warning: PhWarning,
@@ -42,6 +47,9 @@ const icons = {
   alert: PhWarningCircle,
   success: PhCheckCircle,
   chevronDown: PhCaretDown,
+  chevronLeft: PhCaretLeft,
+  calendar: PhCalendarDots,
+  chevronRight: PhCaretRight,
   chevronUpDown: PhCaretUpDown,
 } satisfies Record<SemanticIconName, unknown>;
 

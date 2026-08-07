@@ -2,6 +2,7 @@
 import { findLast, isNil, isUndefined, omit } from "es-toolkit/compat";
 
 // ** Local Imports
+import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
 import type {
@@ -13,14 +14,14 @@ import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 import { mergeBridgeUILayeredClasses } from "@/Utils";
 
 /** Adapter keys that must replace-on-write instead of deep-merging. */
-const GLOBAL_ADAPTER_KEYS = ["i18n", "icons"] as const;
+const GLOBAL_ADAPTER_KEYS = ["i18n", "dates", "icons"] as const;
 
 /**
  * Drops adapter fields so deep-merge does not combine adapter objects.
  */
 function omitGlobalAdapters(
   value: undefined | Partial<BridgeUIGlobal>,
-): undefined | Omit<Partial<BridgeUIGlobal>, "i18n" | "icons"> {
+): undefined | Omit<Partial<BridgeUIGlobal>, "i18n" | "dates" | "icons"> {
   if (isNil(value)) {
     return value;
   }
@@ -30,7 +31,7 @@ function omitGlobalAdapters(
 
 /**
  * Merges the base and partials into a single object.
- * `icons` and `i18n` are replace-on-write (last defined adapter wins).
+ * `dates`, `icons`, and `i18n` are replace-on-write (last defined adapter wins).
  */
 export function mergeBridgeUIGlobal({
   base,
@@ -40,6 +41,13 @@ export function mergeBridgeUIGlobal({
   partials: Array<undefined | Partial<BridgeUIGlobal>>;
 }): BridgeUIGlobal {
   const layers = [base, ...partials];
+
+  const dates = findLast(
+    layers,
+    (layer): layer is Partial<BridgeUIGlobal> & { dates: DateAdapter } => {
+      return !isNil(layer) && !isUndefined(layer.dates);
+    },
+  )?.dates;
 
   const icons = findLast(
     layers,
@@ -59,6 +67,12 @@ export function mergeBridgeUIGlobal({
     omitGlobalAdapters(base) as BridgeUIGlobal,
     ...partials.map(omitGlobalAdapters),
   ) as BridgeUIGlobal;
+
+  if (isUndefined(dates)) {
+    delete merged.dates;
+  } else {
+    merged.dates = dates;
+  }
 
   if (isUndefined(icons)) {
     delete merged.icons;

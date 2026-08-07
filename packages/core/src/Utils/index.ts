@@ -54,10 +54,16 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Checkbox",
   "OtpField",
   "Textarea",
+  "DateField",
   "TextField",
+  "TimeField",
   "NumberField",
   "Autocomplete",
+  "DateTimeField",
   "PasswordField",
+  "DateRangeField",
+  "TimeRangeField",
+  "DateTimeRangeField",
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**
@@ -394,6 +400,30 @@ export type {
   BreakpointSnapshot,
 } from "@/Utils/breakpoint";
 export {
+  applyDateSelection,
+  DEFAULT_START_OF_WEEK,
+  isDateDisabled,
+  isDateInRangePreview,
+  isDateRangeEndpoint,
+  isDateRangeValue,
+  isDateSelected,
+  isMonthDisabled,
+  isYearDisabled,
+  resolveCalendarDayInteractionState,
+  resolveDatePickerMode,
+  resolveStartOfWeek,
+  sortDateRangeValue,
+} from "@/Utils/date";
+export type {
+  CalendarDayInteractionState,
+  DatePickerMode,
+  DatePickerModel,
+  DateRangeValue,
+  DisableDatesInput,
+  IsDateDisabledOptions,
+  StartOfWeek,
+} from "@/Utils/date";
+export {
   countDrawerTransitionLayers,
   DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
@@ -530,6 +560,29 @@ export {
 } from "@/Utils/snackbar";
 export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Utils/tabs";
 export type { TabsActivation } from "@/Utils/tabs";
+export {
+  buildHourOptions,
+  buildMinuteOptions,
+  combineDateAndTime,
+  isTimeDisabled,
+  isTimeRangeValue,
+  normalizeTimeValue,
+  observeTimePanelSelectedScroll,
+  scrollSelectedTimeItemsIntoView,
+  snapMinutes,
+  sortTimeRangeValue,
+  timeToMinutes,
+  to12Hour,
+  to24Hour,
+  toMeridiem,
+} from "@/Utils/time";
+export type {
+  DisableTimesInput,
+  IsTimeDisabledOptions,
+  TimeInterval,
+  TimeRangeValue,
+  TimeValue,
+} from "@/Utils/time";
 export type {
   ClassPropKey,
   LibDefaultsShape,

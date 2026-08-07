@@ -21,13 +21,17 @@ export const SEMANTIC_ICON_NAMES = [
   "alert",
   "check",
   "clear",
+  "clock",
   "error",
   "eyeOff",
   "loader",
   "success",
   "warning",
+  "calendar",
   "chevronUp",
   "chevronDown",
+  "chevronLeft",
+  "chevronRight",
   "chevronUpDown",
 ] as const;
 

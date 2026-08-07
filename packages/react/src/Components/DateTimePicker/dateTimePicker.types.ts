@@ -1,0 +1,338 @@
+// ** External Imports
+import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+
+// ** Core Imports
+import type {
+  CalendarColor,
+  CalendarColorItem,
+  CalendarDay,
+  CalendarRounded,
+  DisableDatesInput,
+  DisableTimesInput,
+  MergeHtmlProps,
+  MergeProps,
+  StartOfWeek,
+  TimeColorItem,
+} from "@bridge-ui/core";
+
+// ** Local Imports
+import type { ButtonOwnProps } from "@/Components/Button";
+import type { CalendarView } from "@/Components/Calendar";
+import type { CalendarDateSlots } from "@/Components/CalendarDate";
+
+export interface DateTimePickerColorOverrides {}
+export interface DateTimePickerRoundedOverrides {}
+
+/**
+ * Props accepted by the footer buttons, pinned to the native `button` element.
+ */
+type DateTimePickerFooterButtonProps = Partial<
+  MergeHtmlProps<
+    Omit<ButtonOwnProps, "as">,
+    ButtonHTMLAttributes<HTMLButtonElement>
+  >
+>;
+
+export interface DateTimePickerClasses {
+  /**
+   * Classes for the calendar region.
+   */
+  calendar?: string;
+
+  /**
+   * Classes for the footer.
+   */
+  footer?: string;
+
+  /**
+   * Classes for the root element.
+   */
+  root?: string;
+
+  /**
+   * Classes for the time panel region.
+   */
+  time?: string;
+}
+
+export interface DateTimePickerCallbacks {
+  /**
+   * Called when Cancel is pressed.
+   */
+  onCancel?: () => void;
+
+  /**
+   * Called when Apply is pressed (`showFooter`) or when the value commits.
+   */
+  onChange?: (value: Date | null) => void;
+}
+
+export interface DateTimePickerCustomProps {
+  /**
+   * Props forwarded to the Apply button.
+   *
+   * @default undefined
+   */
+  applyButton?: DateTimePickerFooterButtonProps;
+
+  /**
+   * Props forwarded to the Cancel button.
+   *
+   * @default undefined
+   */
+  cancelButton?: DateTimePickerFooterButtonProps;
+
+  /**
+   * Props forwarded to the footer.
+   *
+   * @default undefined
+   */
+  footer?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the root element.
+   *
+   * @default undefined
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
+}
+
+export interface DateTimePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
+
+  /**
+   * Nested time panel token overrides.
+   */
+  time?: {
+    color?: Record<string, Partial<TimeColorItem>>;
+    rounded?: Record<string, string>;
+  };
+}
+
+export interface DateTimePickerOwnProps {
+  /**
+   * Uses a 12-hour clock with an AM/PM column.
+   *
+   * @default false
+   */
+  ampm?: boolean;
+
+  /**
+   * Classes for picker regions.
+   *
+   * @default undefined
+   */
+  classes?: DateTimePickerClasses;
+
+  /**
+   * Accent color.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<CalendarColor, DateTimePickerColorOverrides>;
+
+  /**
+   * Extra props for internal parts.
+   *
+   * @default undefined
+   */
+  customProps?: DateTimePickerCustomProps;
+
+  /**
+   * Uncontrolled initial value.
+   *
+   * @default null
+   */
+  defaultValue?: Date | null;
+
+  /**
+   * Initial calendar panel view.
+   *
+   * @default "date"
+   */
+  defaultView?: CalendarView;
+
+  /**
+   * Disables the picker.
+   *
+   * @default false
+   */
+  disabled?: boolean;
+
+  /**
+   * Dates that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableDates?: DisableDatesInput;
+
+  /**
+   * Month indexes that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableMonths?: number[];
+
+  /**
+   * Times that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableTimes?: DisableTimesInput;
+
+  /**
+   * Years that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableYears?: number[];
+
+  /**
+   * Hides month navigation / panel.
+   *
+   * @default false
+   */
+  hideMonths?: boolean;
+
+  /**
+   * Hides days that fall outside the displayed month.
+   *
+   * @default false
+   */
+  hideOutsideDays?: boolean;
+
+  /**
+   * Hides weekday labels.
+   *
+   * @default false
+   */
+  hideWeekdays?: boolean;
+
+  /**
+   * Hides year navigation / panel.
+   *
+   * @default false
+   */
+  hideYears?: boolean;
+
+  /**
+   * Minute step between time options.
+   *
+   * @default 1
+   */
+  interval?: number;
+
+  /**
+   * Latest selectable date.
+   *
+   * @default undefined
+   */
+  maxDate?: Date;
+
+  /**
+   * Latest selectable time.
+   *
+   * @default undefined
+   */
+  maxTime?: Date;
+
+  /**
+   * Earliest selectable date.
+   *
+   * @default undefined
+   */
+  minDate?: Date;
+
+  /**
+   * Earliest selectable time.
+   *
+   * @default undefined
+   */
+  minTime?: Date;
+
+  /**
+   * Prevents selection.
+   *
+   * @default false
+   */
+  readOnly?: boolean;
+
+  /**
+   * Border radius of calendar / time tiles and chrome.
+   *
+   * `DateTimeField` always forwards its own `rounded` here so the picker matches
+   * the field, independent of `DateTimePicker.defaultProps`.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<CalendarRounded, DateTimePickerRoundedOverrides>;
+
+  /**
+   * Shows Cancel / Apply footer. Selection is draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
+
+  /**
+   * Named slots forwarded to `Calendar` (`day`).
+   *
+   * @default undefined
+   */
+  slots?: Pick<CalendarDateSlots, "day">;
+
+  /**
+   * First day of the week.
+   *
+   * @default 0
+   */
+  startOfWeek?: number | StartOfWeek;
+
+  /**
+   * IANA time zone.
+   *
+   * @default undefined
+   */
+  timeZone?: string;
+
+  /**
+   * Token overrides.
+   *
+   * @default undefined
+   */
+  tokens?: DateTimePickerTokens;
+
+  /**
+   * Controlled value.
+   *
+   * @default undefined
+   */
+  value?: Date | null;
+}
+
+export type DateTimePickerProps = MergeHtmlProps<
+  DateTimePickerOwnProps & DateTimePickerCallbacks,
+  HTMLAttributes<HTMLDivElement>
+>;

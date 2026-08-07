@@ -1,0 +1,73 @@
+# TimeRangeField
+
+Form field that opens a `TimeRangePicker` in a menu. Extends FormField props.
+
+## Import
+
+```ts
+import { TimeRangeField } from "@bridge-ui/vue/Components/TimeRangeField";
+```
+
+## Examples
+
+### Usage
+
+```vue
+<TimeRangeField label="Hours" />
+
+<TimeRangeField ampm label="Shift" v-model="range" />
+```
+
+### customProps
+
+```vue
+<TimeRangeField
+  label="Hours"
+  :custom-props="{
+    input: { name: 'hours' },
+    timeRangePicker: { root: { 'data-testid': 'tr-picker' } },
+  }"
+/>
+```
+
+## Props
+
+### TimeRangeField-specific
+
+| Prop           | Type                        | Default | Description                                |
+| -------------- | --------------------------- | ------- | ------------------------------------------ |
+| `ampm`         | `boolean`                   | `false` | Uses a 12-hour clock with an AM/PM column. |
+| `classes`      | `TimeRangeFieldClasses`     | —       | Classes for field / input regions.         |
+| `customProps`  | `TimeRangeFieldCustomProps` | —       | Extra props for internal parts.            |
+| `defaultValue` | `TimeRangeValue \| null`    | `null`  | Uncontrolled initial value.                |
+| `disableTimes` | `Date[]`                    | —       | Times that cannot be selected.             |
+| `interval`     | `number`                    | `1`     | Minute step between options.               |
+| `maxTime`      | `Date`                      | —       | Latest selectable time.                    |
+| `minTime`      | `Date`                      | —       | Earliest selectable time.                  |
+| `showFooter`   | `boolean`                   | `false` | Shows Cancel / Apply on the nested picker. |
+| `slots`        | `TimeRangeFieldSlots`       | —       | Named slots (`FormField` slots).           |
+| `timeZone`     | `string`                    | —       | IANA time zone.                            |
+| `value`        | `TimeRangeValue \| null`    | —       | Controlled value.                          |
+
+### v-model
+
+| Prop / Event        | Type                                      | Default | Description                           |
+| ------------------- | ----------------------------------------- | ------- | ------------------------------------- |
+| `modelValue`        | `TimeRangeValue \| null`                  | —       | Bound with `v-model`.                 |
+| `update:modelValue` | `(value: TimeRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
+
+### Inherited from FormField
+
+See [FormField](./FormField.md).
+
+## Events
+
+| Event         | Payload                           | Description                     |
+| ------------- | --------------------------------- | ------------------------------- |
+| `v-on:change` | `(value: TimeRangeValue \| null)` | Emitted when the range changes. |
+| `v-on:close`  | `()`                              | Emitted when the menu closes.   |
+| `v-on:open`   | `()`                              | Emitted when the menu opens.    |
+
+## Related components
+
+TimeRangePicker, FormField, TimeField

@@ -10,6 +10,8 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   allowCypressEnv: false,
   component: {
+    viewportWidth: 1280,
+    viewportHeight: 720,
     specPattern: "src/**/*.cy.ts",
     devServer: {
       bundler: "vite",

@@ -1,5 +1,10 @@
 // ** Exports
 export {
+  setDateAdapterForTests,
+  useDateAdapter,
+  useDateAdapterContext,
+} from "@/Adapters/Date";
+export {
   setI18nAdapterForTests,
   useI18nAdapter,
   useResolveMessage,

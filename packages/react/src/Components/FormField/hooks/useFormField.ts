@@ -49,10 +49,16 @@ export type FormFieldOptions = {
   componentName?:
     | "Select"
     | "Textarea"
+    | "DateField"
     | "TextField"
+    | "TimeField"
     | "NumberField"
     | "Autocomplete"
-    | "PasswordField";
+    | "DateTimeField"
+    | "PasswordField"
+    | "DateRangeField"
+    | "TimeRangeField"
+    | "DateTimeRangeField";
 
   /**
    * Native control rendered by the field composable (`<input>` vs `<textarea>`).
