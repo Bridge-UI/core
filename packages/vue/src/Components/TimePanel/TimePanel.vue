@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { nextTick, onMounted, ref, watch } from "vue";
+
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/composables/useTimePanel";
 import type {
@@ -9,6 +12,8 @@ import type {
 defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<TimePanelEmits>();
+
+const rootRef = ref<null | HTMLElement>(null);
 
 const props = defineProps<TimePanelOwnProps>();
 
@@ -32,10 +37,45 @@ const {
   },
   emit,
 );
+
+/**
+ * Centers a selected tile in its overflow column without scrolling the page.
+ */
+function scrollSelectedTimeItemsIntoView() {
+  const root = rootRef.value;
+
+  if (!root) {
+    return;
+  }
+
+  root.querySelectorAll<HTMLElement>('[aria-pressed="true"]').forEach((el) => {
+    const column = el.parentElement;
+
+    if (!column) {
+      return;
+    }
+
+    column.scrollTop = Math.max(
+      0,
+      el.offsetTop - column.clientHeight / 2 + el.offsetHeight / 2,
+    );
+  });
+}
+
+onMounted(() => {
+  void nextTick(scrollSelectedTimeItemsIntoView);
+});
+
+watch(
+  () => [hourItems.value, minuteItems.value, meridiemItems.value] as const,
+  () => {
+    void nextTick(scrollSelectedTimeItemsIntoView);
+  },
+);
 </script>
 
 <template>
-  <div v-bind="rootBind">
+  <div ref="rootRef" v-bind="rootBind">
     <div v-bind="columnBind">
       <button
         v-for="item in hourItems"
