@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, icon/i18n adapters, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon/i18n/date adapters, and component registry defaults.
 
 ## Import
 
@@ -56,6 +56,23 @@ const i18n = createDictionaryI18nAdapter();
 
 ```tsx
 <BridgeUIProvider global={{ i18n }}>
+  <App />
+</BridgeUIProvider>
+```
+
+### Date adapter
+
+Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, Bridge uses `createNativeDateAdapter`. Ready samples in `packages/react/docs/examples/` (Day.js, date-fns, Luxon, Moment).
+
+```ts
+import { BridgeUIProvider } from "@bridge-ui/react";
+import { createDayjsDateAdapter } from "@examples/date-dayjs";
+
+const dates = createDayjsDateAdapter();
+```
+
+```tsx
+<BridgeUIProvider global={{ dates }}>
   <App />
 </BridgeUIProvider>
 ```
@@ -135,11 +152,11 @@ setGlobal({ mobileBreakpoint: "md" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                                        |
-| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
-| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                                              |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                             |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `formDefaults` |
+| Prop         | Type                       | Default | Description                                                                                                 |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `children`   | `ReactNode`                | —       | App tree rendered inside the provider                                                                       |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                      |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults` |
 
 **useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setDirection`
 
