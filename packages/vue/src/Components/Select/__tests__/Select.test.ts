@@ -106,6 +106,85 @@ test("it should open the menu and select an option", async () => {
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
 });
 
+test("it should keep selection draft until Apply when showFooter is set", async () => {
+  const wrapper = mountSelect({
+    props: { showFooter: true, modelValue: undefined },
+  });
+
+  await wrapper.find('[role="combobox"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Apply");
+  expect(document.body.textContent).toContain("Cancel");
+
+  const option = document.body.querySelector('[role="option"]');
+
+  await option?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  expect(document.body.querySelector('[role="listbox"]')).not.toBeNull();
+
+  const apply = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.includes("Apply"),
+  );
+
+  await apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["active"]);
+});
+
+test("it should discard draft selection on Cancel when showFooter is set", async () => {
+  const wrapper = mountSelect({
+    props: { showFooter: true, modelValue: "active" },
+  });
+
+  await wrapper.find('[role="combobox"]').trigger("click");
+  await flushPromises();
+
+  const pending = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Pending"));
+
+  await pending?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+
+  const cancel = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.includes("Cancel"),
+  );
+
+  await cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  expect(wrapper.emitted("cancel")).toHaveLength(1);
+});
+
+test("it should open a dialog when overlay is modal", async () => {
+  mountSelect({
+    props: {
+      overlay: "modal",
+      modelValue: undefined,
+      customProps: {
+        listbox: {
+          customProps: { modal: { transition: "none" } },
+        },
+      },
+    },
+  });
+
+  const combobox = document.body.querySelector('[role="combobox"]');
+
+  await combobox?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.textContent).toContain("Active");
+});
+
 test("it should clear the selected value", async () => {
   const wrapper = mountSelect({
     props: { clearable: true, modelValue: "active" },
@@ -119,6 +198,14 @@ test("it should clear the selected value", async () => {
 
   expect(wrapper.emitted("clear")).toHaveLength(1);
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
+});
+
+test("it should not show the clear control when readonly", () => {
+  const wrapper = mountSelect({
+    props: { readonly: true, clearable: true, modelValue: "active" },
+  });
+
+  expect(wrapper.find('[aria-label="Clear selection"]').exists()).toBe(false);
 });
 
 test("it should collect declarative SelectOption children", async () => {

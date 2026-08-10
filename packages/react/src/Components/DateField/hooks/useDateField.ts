@@ -1,17 +1,21 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
-import type { ChangeEvent, FocusEvent, KeyboardEvent } from "react";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
+import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
   resolveDatePickerMode,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapterContext,
   type DatePickerModel,
 } from "@bridge-ui/core";
+import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
@@ -25,7 +29,12 @@ import {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
-import { derived, mergePartBind } from "@/Utils";
+import {
+  derived,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+  useBreakpoint,
+} from "@/Utils";
 
 const dateFieldBridgeKeys = [
   "range",
@@ -33,8 +42,10 @@ const dateFieldBridgeKeys = [
   "classes",
   "maxDate",
   "minDate",
+  "overlay",
   "multiple",
   "timeZone",
+  "clearable",
   "hideYears",
   "hideMonths",
   "showFooter",
@@ -69,8 +80,21 @@ function formatModel(
   return adapter.format(value, context);
 }
 
+function hasDateFieldValue(value: DatePickerModel): boolean {
+  if (isNil(value)) {
+    return false;
+  }
+
+  if (isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+}
+
 export function useDateField(props: DateFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -78,6 +102,7 @@ export function useDateField(props: DateFieldProps) {
     slots,
     onOpen,
     onClose,
+    onClear,
     onChange,
     defaultValue,
     value: valueProp,
@@ -123,6 +148,28 @@ export function useDateField(props: DateFieldProps) {
     });
   });
 
+  const showFooter = derived(() => {
+    return resolveFieldShowFooter(dateOnly.showFooter, breakpoint.mobile);
+  });
+
+  const clearable = derived(() => {
+    return dateOnly.clearable !== false;
+  });
+
+  const hasValue = derived(() => {
+    return hasDateFieldValue(modelValue);
+  });
+
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "w-full shadow-none"
+      : undefined;
+  });
+
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
     containerRef.current = element;
   }, []);
@@ -142,7 +189,13 @@ export function useDateField(props: DateFieldProps) {
   );
 
   const inherited = derived(() => {
-    return omit(inheritedAttrs, ["className", "onChange", "onOpen", "onClose"]);
+    return omit(inheritedAttrs, [
+      "className",
+      "onChange",
+      "onClear",
+      "onOpen",
+      "onClose",
+    ]);
   });
 
   const { componentProps: formFieldCustom } = splitComponentProps<
@@ -155,6 +208,7 @@ export function useDateField(props: DateFieldProps) {
 
   const {
     menu: _menu,
+    clearIcon: _clearIcon,
     datePicker: _datePicker,
     ...formFieldOnlyCustom
   } = (dateOnly.customProps ?? {}) as DateFieldCustomProps;
@@ -175,10 +229,16 @@ export function useDateField(props: DateFieldProps) {
             className: cn({
               "cursor-pointer": !props.disabled && !props.readonly,
             }),
-            onClick: () => {
-              if (!props.disabled && !props.readonly) {
-                handleOpenChange(true);
+            onClick: (event: MouseEvent<HTMLElement>) => {
+              if (props.disabled || props.readonly) {
+                return;
               }
+
+              if ((event.target as HTMLElement).closest("[data-field-clear]")) {
+                return;
+              }
+
+              handleOpenChange(true);
             },
           },
         ),
@@ -196,6 +256,10 @@ export function useDateField(props: DateFieldProps) {
     },
   );
 
+  const showClearIcon = derived(() => {
+    return hasValue && clearable && !props.readonly && !formField.isDisabled;
+  });
+
   const displayText = derived(() => {
     if (!isNil(draftText)) {
       return draftText;
@@ -204,21 +268,50 @@ export function useDateField(props: DateFieldProps) {
     return formatModel(modelValue, adapter, context);
   });
 
-  const commitValue = (next: DatePickerModel) => {
-    if (!isControlled) {
-      setUncontrolledValue(next);
-    }
+  const commitValue = useCallback(
+    (next: DatePickerModel) => {
+      if (!isControlled) {
+        setUncontrolledValue(next);
+      }
 
-    onChange?.(next);
-  };
+      onChange?.(next);
+    },
+    [isControlled, onChange],
+  );
+
+  const clearValue = useCallback(
+    (event?: { preventDefault: () => void; stopPropagation: () => void }) => {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      if (props.disabled || props.readonly) {
+        return;
+      }
+
+      commitValue(null);
+      setDraftText(null);
+      onClear?.();
+      handleOpenChange(false);
+    },
+    [onClear, commitValue, handleOpenChange, props.disabled, props.readonly],
+  );
+
+  const handleClearPointer = useCallback((event: MouseEvent) => {
+    event.preventDefault();
+  }, []);
 
   const handlePickerChange = (next: DatePickerModel) => {
     commitValue(next);
     setDraftText(null);
 
-    if (mode === "single" && !dateOnly.showFooter) {
+    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
+    if (mode === "single" || showFooter) {
       handleOpenChange(false);
     }
+  };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
   };
 
   const parseDraft = () => {
@@ -286,18 +379,63 @@ export function useDateField(props: DateFieldProps) {
     );
   });
 
+  const clearIconSize = resolveFieldAdornmentIconSize(formField.merged.size);
+
+  const clearTone = derived(() => {
+    return (
+      get(listboxColorProps, [formField.merged.color ?? "primary", "clear"]) ??
+      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    );
+  });
+
+  const clearBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabIndex: 0,
+        role: "button",
+        "data-field-clear": true,
+        onMouseDown: handleClearPointer,
+        className: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [clearTone]: true,
+          [dateOnly.classes?.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
     mode,
     daySlot,
+    hasValue,
     dateOnly,
     formField,
     inputBind,
+    clearable,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
     containerRef,
+    clearIconSize,
+    showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
-    menuProps: dateOnly.customProps?.menu,
+    handlePickerCancel,
+    overlay: dateOnly.overlay,
     datePickerCustomProps: dateOnly.customProps?.datePicker,
+    overlayCustomProps: {
+      modal: dateOnly.customProps?.modal,
+      drawer: dateOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateOnly.customProps?.menu,
+      },
+    },
   };
 }

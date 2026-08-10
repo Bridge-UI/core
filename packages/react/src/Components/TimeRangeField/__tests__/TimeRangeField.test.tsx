@@ -1,6 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 afterEach(() => {
   cleanup();
@@ -33,4 +33,25 @@ test("it should open the picker on focus and show dual time panels", () => {
   expect(
     screen.getAllByRole("button", { name: "Hour 17" }).length,
   ).toBeGreaterThan(0);
+});
+
+test("it should call onChange and onClear when the clear control is clicked", () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  render(
+    <TimeRangeField
+      onClear={onClear}
+      onChange={onChange}
+      defaultValue={[
+        new Date(2021, 4, 21, 9, 30),
+        new Date(2021, 4, 21, 17, 0),
+      ]}
+    />,
+  );
+
+  fireEvent.click(screen.getByLabelText("Clear"));
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
 });

@@ -55,3 +55,21 @@ test("it should pass color to the nested DateTimeRangePicker", () => {
 
   expect(day.className).toMatch(/secondary/);
 });
+
+test("it should call onChange and onClear when the clear control is clicked", () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  render(
+    <DateTimeRangeField
+      onClear={onClear}
+      onChange={onChange}
+      defaultValue={[new Date(2021, 4, 1, 9, 30), new Date(2021, 4, 10, 17, 0)]}
+    />,
+  );
+
+  fireEvent.click(screen.getByLabelText("Clear"));
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});

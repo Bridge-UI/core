@@ -7,8 +7,10 @@ import { computed, ref } from "vue";
 import type { TimeRangeValue } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
+import { Icon } from "@/Components/Icon";
 import { useTimeRangeField } from "@/Components/TimeRangeField/composables/useTimeRangeField";
 import type {
   TimeRangeFieldEmits,
@@ -24,10 +26,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<null | TimeRangeValue>();
 
 const props = withDefaults(defineProps<TimeRangeFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<TimeRangeFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<null | TimeRangeValue>(
   props.defaultValue ?? null,
@@ -45,46 +50,70 @@ const value = computed({
 
 const {
   open,
+  overlay,
   timeOnly,
   formField,
   inputBind,
-  menuProps,
+  clearBind,
+  clearValue,
   modelValue,
-  containerRef,
+  showFooter,
+  pickerClass,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   timeRangePickerCustomProps,
 } = useTimeRangeField(props, value, emit);
 </script>
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <TimeRangePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="timeOnly.ampm"
+      :show-footer="showFooter"
       :read-only="props.readonly"
       :max-time="timeOnly.maxTime"
       :min-time="timeOnly.minTime"
       :interval="timeOnly.interval"
       :time-zone="timeOnly.timeZone"
       v-on:change="handlePickerChange"
-      :show-footer="timeOnly.showFooter"
+      v-on:cancel="handlePickerCancel"
       :color="formField.merged.value.color"
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
       :custom-props="timeRangePickerCustomProps"
     />
-  </Menu>
+  </FieldOverlay>
 </template>

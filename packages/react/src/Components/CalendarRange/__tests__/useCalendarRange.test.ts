@@ -52,14 +52,21 @@ test("it should default to horizontal orientation", () => {
 
   expect(result.current.merged.orientation).toBe("horizontal");
   expect(result.current.isVertical).toBe(false);
+  expect(result.current.rootBind.className).toContain("w-full");
   expect(result.current.rootBind.className).toContain("min-w-[38rem]");
+  expect(result.current.panelsBind.className).toContain("w-full");
   expect(result.current.panelsBind.className).toContain("flex-row");
+  expect(result.current.startBind.className).toContain("w-72");
 });
 
 test("it should stack panels when orientation is vertical", () => {
   const { result } = renderUseCalendarRange({ orientation: "vertical" });
 
   expect(result.current.isVertical).toBe(true);
+  expect(result.current.rootBind.className).toContain("w-full");
   expect(result.current.rootBind.className).toContain("min-w-72");
   expect(result.current.panelsBind.className).toContain("flex-col");
+  expect(result.current.startBind.className).toContain("flex-1");
+  expect(result.current.startBind.className).toContain("min-w-0");
+  expect(result.current.endBind.className).toContain("flex-1");
 });

@@ -31,6 +31,13 @@ test("it should default to the date view", () => {
   expect(result.current.view).toBe("date");
 });
 
+test("it should size the root to fill available width", () => {
+  const { result } = renderUseCalendar();
+
+  expect(result.current.rootBind.className).toContain("w-full");
+  expect(result.current.rootBind.className).toContain("min-w-72");
+});
+
 test("it should expose month and year labels", () => {
   const { result } = renderUseCalendar();
 

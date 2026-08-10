@@ -1,8 +1,14 @@
 // ** External Imports
-import type { HTMLAttributes, ReactNode, RefObject } from "react";
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+  RefObject,
+} from "react";
 
 // ** Core Imports
 import type {
+  FieldOverlayMode,
   ListboxColor,
   ListboxEntry,
   ListboxOption,
@@ -15,21 +21,39 @@ import type {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { ButtonOwnProps } from "@/Components/Button";
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type { ListOwnProps } from "@/Components/List/list.types";
 import type { ListItemOwnProps } from "@/Components/ListItem/listItem.types";
 import type { ListSectionOwnProps } from "@/Components/ListSection/listSection.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
 
 export interface ListboxSizeOverrides {}
 export interface ListboxColorOverrides {}
 export interface ListboxRoundedOverrides {}
 
+/**
+ * Props accepted by the footer buttons, pinned to the native `button` element.
+ */
+type ListboxFooterButtonProps = Partial<
+  MergeHtmlProps<
+    Omit<ButtonOwnProps, "as">,
+    ButtonHTMLAttributes<HTMLButtonElement>
+  >
+>;
+
 export interface ListboxClasses {
   /**
    * Classes merged onto the check icon.
    */
   check?: string;
+
+  /**
+   * Classes merged onto the Cancel / Apply footer.
+   */
+  footer?: string;
 
   /**
    * Classes forwarded to the loading `Progress` bar.
@@ -53,6 +77,16 @@ export interface ListboxClasses {
 }
 
 export interface ListboxControlledProps {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed (`showFooter`).
+   */
+  onCancel?: () => void;
+
   /**
    * Called when composed `ListItem` options register or unregister.
    */
@@ -81,6 +115,34 @@ export interface ListboxControlledProps {
 
 export interface ListboxCustomProps {
   /**
+   * Props forwarded to the Apply button.
+   *
+   * @default undefined
+   */
+  applyButton?: ListboxFooterButtonProps;
+
+  /**
+   * Props forwarded to the Cancel button.
+   *
+   * @default undefined
+   */
+  cancelButton?: ListboxFooterButtonProps;
+
+  /**
+   * Props forwarded to the nested `Drawer` when `overlay` resolves to `drawer`.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<Omit<DrawerOwnProps, "show" | "children" | "onShowChange">>;
+
+  /**
+   * Props forwarded to the Cancel / Apply footer.
+   *
+   * @default undefined
+   */
+  footer?: HTMLAttributes<HTMLDivElement>;
+
+  /**
    * Props forwarded to the internal `List`.
    *
    * @default undefined
@@ -103,12 +165,19 @@ export interface ListboxCustomProps {
   listSection?: Partial<Omit<ListSectionOwnProps, "title" | "children">>;
 
   /**
-   * Props forwarded to the floating `Menu`.
+   * Props forwarded to the floating `Menu` when `overlay` resolves to `menu`.
    * Merged last so they override Listbox defaults.
    *
    * @default undefined
    */
-  menu?: Partial<MenuOwnProps>;
+  menu?: Partial<Omit<MenuOwnProps, "show" | "children" | "onShowChange">>;
+
+  /**
+   * Props forwarded to the nested `Modal` when `overlay` resolves to `modal`.
+   *
+   * @default undefined
+   */
+  modal?: Partial<Omit<ModalOwnProps, "show" | "children" | "onShowChange">>;
 
   /**
    * Props forwarded to the loading `Progress`.
@@ -164,7 +233,8 @@ export interface ListboxOwnProps {
 
   /**
    * Extra props for internal parts (`list`, `listItem`, `listSection`, `menu`,
-   * `progress`, `scroll`).
+   * `modal`, `drawer`, `progress`, `scroll`, `footer`, `applyButton`,
+   * `cancelButton`).
    *
    * @default undefined
    */
@@ -272,6 +342,14 @@ export interface ListboxOwnProps {
   options?: ListboxOption[];
 
   /**
+   * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
+   * and `drawer` (bottom) on mobile.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
    * Preferred placement of the panel relative to the anchor.
    *
    * @default "bottom-start"
@@ -293,6 +371,14 @@ export interface ListboxOwnProps {
    * @default true
    */
   showCheckmark?: boolean;
+
+  /**
+   * Shows Cancel / Apply footer. When unset, defaults to `true` on mobile.
+   * Parents (e.g. Select) typically keep selection as draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
 
   /**
    * Typography and option padding scale, aligned with `FormField` / `Select`.

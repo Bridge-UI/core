@@ -89,6 +89,85 @@ test("it should select an option and update the value", async () => {
   expect(onChange).toHaveBeenCalledWith("banana");
 });
 
+test("it should keep selection draft until Apply when showFooter is set", async () => {
+  const onChange = vi.fn();
+
+  render(
+    <Select
+      value=""
+      showFooter
+      options={options}
+      aria-label="Fruit"
+      onChange={onChange}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByText("Banana")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByText("Banana"));
+  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.getByRole("listbox")).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+  expect(onChange).toHaveBeenCalledWith("banana");
+});
+
+test("it should discard draft selection on Cancel when showFooter is set", async () => {
+  const onChange = vi.fn();
+  const onCancel = vi.fn();
+
+  render(
+    <Select
+      showFooter
+      value="apple"
+      options={options}
+      aria-label="Fruit"
+      onCancel={onCancel}
+      onChange={onChange}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByText("Banana")).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByText("Banana"));
+  expect(onChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  expect(onChange).not.toHaveBeenCalled();
+  expect(onCancel).toHaveBeenCalled();
+});
+
+test("it should open a dialog when overlay is modal", async () => {
+  render(
+    <Select
+      overlay="modal"
+      options={options}
+      aria-label="Fruit"
+      customProps={{
+        listbox: {
+          customProps: { modal: { transition: "none" } },
+        },
+      }}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(screen.getByText("Apple")).toBeTruthy();
+  });
+});
+
 test("it should display the selected option label in single mode", () => {
   render(
     <ControlledSelect
@@ -118,6 +197,14 @@ test("it should clear the value when clear control is clicked", () => {
   fireEvent.click(screen.getByLabelText("Clear selection"));
 
   expect(onChange).toHaveBeenCalledWith("");
+});
+
+test("it should not show the clear control when readonly", () => {
+  render(
+    <Select readonly value="apple" options={options} aria-label="Fruit" />,
+  );
+
+  expect(screen.queryByLabelText("Clear selection")).toBeNull();
 });
 
 test("it should expose combobox aria attributes when open", async () => {

@@ -7,6 +7,7 @@ import { computed, ref } from "vue";
 import type { DatePickerModel } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { useDateField } from "@/Components/DateField/composables/useDateField";
 import type {
   DateFieldEmits,
@@ -14,8 +15,9 @@ import type {
   DateFieldSlots,
 } from "@/Components/DateField/dateField.types";
 import { DatePicker } from "@/Components/DatePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<DateFieldSlots>();
 
@@ -24,10 +26,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<DatePickerModel>();
 
 const props = withDefaults(defineProps<DateFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<DateFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
 
@@ -43,34 +48,58 @@ const value = computed({
 
 const {
   open,
+  overlay,
   dateOnly,
   formField,
   inputBind,
-  menuProps,
+  clearBind,
+  clearValue,
   modelValue,
-  containerRef,
+  showFooter,
+  pickerClass,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   datePickerCustomProps,
 } = useDateField(props, value, emit);
 </script>
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <DatePicker
       :value="modelValue"
+      :class="pickerClass"
       :range="dateOnly.range"
+      :show-footer="showFooter"
       :read-only="props.readonly"
       :max-date="dateOnly.maxDate"
       :min-date="dateOnly.minDate"
@@ -78,7 +107,7 @@ const {
       :time-zone="dateOnly.timeZone"
       :hide-years="dateOnly.hideYears"
       v-on:change="handlePickerChange"
-      :show-footer="dateOnly.showFooter"
+      v-on:cancel="handlePickerCancel"
       :hide-months="dateOnly.hideMonths"
       :default-view="dateOnly.defaultView"
       :color="formField.merged.value.color"
@@ -96,5 +125,5 @@ const {
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
       </template>
     </DatePicker>
-  </Menu>
+  </FieldOverlay>
 </template>

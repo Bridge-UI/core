@@ -352,3 +352,63 @@ test("it should render composed ListSection and ListItem children", async () => 
     expect.objectContaining({ label: "Apple", value: "apple" }),
   );
 });
+
+test("it should show footer actions when showFooter is set", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          showFooter
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="footer-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+  });
+});
+
+test("it should call onApply and onCancel from the footer", async () => {
+  const onApply = vi.fn();
+  const onCancel = vi.fn();
+
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          showFooter
+          options={options}
+          onApply={onApply}
+          onCancel={onCancel}
+          anchorEl={anchorRef}
+          listboxId="footer-actions-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+  expect(onApply).toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  expect(onCancel).toHaveBeenCalled();
+});

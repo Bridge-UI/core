@@ -91,3 +91,27 @@ test("it should call change when a time is selected", async () => {
 
   expect(onChange).toHaveBeenCalled();
 });
+
+test("it should emit change and clear when the clear control is clicked", async () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  mountTimeRangeField({
+    props: {
+      onClear,
+      onChange,
+      defaultValue: [
+        new Date(2021, 4, 21, 9, 30),
+        new Date(2021, 4, 21, 17, 0),
+      ],
+    },
+  });
+
+  const clearControl = document.body.querySelector('[aria-label="Clear"]');
+
+  clearControl?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});

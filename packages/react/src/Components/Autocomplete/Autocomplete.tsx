@@ -37,11 +37,9 @@ function Autocomplete(props: AutocompleteProps) {
   const {
     open,
     slots,
-    hasValue,
     multiple,
     children,
     formField,
-    clearable,
     clearBind,
     clearValue,
     removeChip,
@@ -51,6 +49,7 @@ function Autocomplete(props: AutocompleteProps) {
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     selectedOptions,
     handleOpenChange,
   } = useAutocomplete(selectProps, triggerRef);
@@ -94,7 +93,7 @@ function Autocomplete(props: AutocompleteProps) {
               {...(triggerBind as InputHTMLAttributes<HTMLInputElement>)}
             />
 
-            {clearable && hasValue && !formField.isDisabled ? (
+            {showClearIcon ? (
               <span
                 {...clearBind}
                 onClick={() => clearValue()}

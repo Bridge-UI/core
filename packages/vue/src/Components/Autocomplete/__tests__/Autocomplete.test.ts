@@ -121,6 +121,35 @@ test("it should clear the selected value", async () => {
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
 });
 
+test("it should not show the clear control when readonly", () => {
+  const wrapper = mountAutocomplete({
+    props: { readonly: true, clearable: true, modelValue: "active" },
+  });
+
+  expect(wrapper.find('[aria-label="Clear selection"]').exists()).toBe(false);
+});
+
+test("it should open a dialog when overlay is modal", async () => {
+  mountAutocomplete({
+    props: {
+      overlay: "modal",
+      modelValue: undefined,
+      customProps: {
+        listbox: {
+          customProps: { modal: { transition: "none" } },
+        },
+      },
+    },
+  });
+
+  const combobox = document.body.querySelector('[role="combobox"]');
+
+  await combobox?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
 test("it should collect declarative AutocompleteOption children", async () => {
   const value = ref("pending");
 

@@ -15,6 +15,8 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { Button } from "@/Components/Button";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
 import type {
@@ -28,7 +30,6 @@ import {
 } from "@/Components/Listbox/listboxInjectionKey";
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
-import { Menu } from "@/Components/Menu";
 import { Progress } from "@/Components/Progress";
 import {
   hasNamedSlot,
@@ -52,6 +53,7 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   size: "md",
   loading: false,
   multiple: false,
+  overlay: "auto",
   color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,
@@ -74,9 +76,16 @@ const {
   merged,
   checkClass,
   scrollBind,
+  footerBind,
+  showFooter,
+  applyLabel,
+  cancelLabel,
   messageBind,
+  surfaceBind,
   sizeClasses,
   mergedClasses,
+  applyButtonProps,
+  cancelButtonProps,
   optionSelectedClass,
   optionHighlightedClass,
 } = useListbox(
@@ -203,6 +212,14 @@ const menuProps = computed(() => {
   return merged.value.customProps?.menu;
 });
 
+const modalProps = computed(() => {
+  return merged.value.customProps?.modal;
+});
+
+const drawerProps = computed(() => {
+  return merged.value.customProps?.drawer;
+});
+
 const listProps = computed(() => {
   return merged.value.customProps?.list;
 });
@@ -219,10 +236,17 @@ const listSectionProps = computed(() => {
   return merged.value.customProps?.listSection;
 });
 
-const menuBind = computed(() => {
+const overlayCustomProps = computed(() => {
   return {
-    ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
-    ...menuProps.value,
+    modal: modalProps.value,
+    drawer: drawerProps.value,
+    menu: {
+      anchorEl: props.anchorEl,
+      placement: props.placement,
+      disableAutoFocus: props.disableAutoFocus,
+      ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
+      ...menuProps.value,
+    },
   };
 });
 
@@ -253,82 +277,100 @@ const listBind = computed(() => {
 </script>
 
 <template>
-  <Menu
+  <FieldOverlay
     v-model="open"
-    :anchor-el="anchorEl"
-    :placement="placement"
-    :close-on-click-away="true"
-    :disable-auto-focus="disableAutoFocus"
-    v-bind="menuBind"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
   >
-    <component
-      v-if="hasNamedSlot(slots, 'beforeOptions')"
-      :is="resolveNamedSlot(slots, 'beforeOptions')"
-    />
+    <div :class="surfaceBind">
+      <component
+        v-if="hasNamedSlot(slots, 'beforeOptions')"
+        :is="resolveNamedSlot(slots, 'beforeOptions')"
+      />
 
-    <template v-if="loading">
-      <Progress v-bind="progressBind" />
+      <template v-if="loading">
+        <Progress v-bind="progressBind" />
 
-      <div v-bind="messageBind">
-        <component
-          v-if="hasNamedSlot(slots, 'loading')"
-          :is="resolveNamedSlot(slots, 'loading')"
-        />
-
-        <span v-else>{{ loadingMessage }}</span>
-      </div>
-    </template>
-
-    <div v-else v-bind="scrollBind">
-      <List v-bind="listBind">
-        <slot v-if="hasComposedChildren" />
-
-        <template v-else :key="row.key" v-for="row in mappedRows">
-          <ListSection
-            :title="row.title"
-            :sticky="row.sticky"
-            v-bind="listSectionProps"
-            v-if="row.kind === 'section'"
+        <div v-bind="messageBind">
+          <component
+            v-if="hasNamedSlot(slots, 'loading')"
+            :is="resolveNamedSlot(slots, 'loading')"
           />
 
-          <ListItem
-            v-else
-            interactive
-            :value="row.option.value"
-            :disabled="row.option.disabled"
-            :secondary="row.option.description"
-            :primary="
-              hasNamedSlot(slots, 'option') ? undefined : row.option.label
-            "
-            v-bind="listItemProps"
-          >
-            <template #default v-if="hasNamedSlot(slots, 'option')">
-              <slot
-                name="option"
-                :option="row.option"
-                :selected="row.selected"
-              />
-            </template>
-          </ListItem>
-        </template>
-      </List>
+          <span v-else>{{ loadingMessage }}</span>
+        </div>
+      </template>
+
+      <div v-else v-bind="scrollBind">
+        <List v-bind="listBind">
+          <slot v-if="hasComposedChildren" />
+
+          <template v-else :key="row.key" v-for="row in mappedRows">
+            <ListSection
+              :title="row.title"
+              :sticky="row.sticky"
+              v-bind="listSectionProps"
+              v-if="row.kind === 'section'"
+            />
+
+            <ListItem
+              v-else
+              interactive
+              :value="row.option.value"
+              :disabled="row.option.disabled"
+              :secondary="row.option.description"
+              :primary="
+                hasNamedSlot(slots, 'option') ? undefined : row.option.label
+              "
+              v-bind="listItemProps"
+            >
+              <template #default v-if="hasNamedSlot(slots, 'option')">
+                <slot
+                  name="option"
+                  :option="row.option"
+                  :selected="row.selected"
+                />
+              </template>
+            </ListItem>
+          </template>
+        </List>
+      </div>
+
+      <div
+        v-bind="messageBind"
+        v-if="showEmptyState && !hasNamedSlot(slots, 'empty')"
+      >
+        {{ emptyMessage }}
+      </div>
+
+      <component
+        :is="resolveNamedSlot(slots, 'empty')"
+        v-else-if="showEmptyState && hasNamedSlot(slots, 'empty')"
+      />
+
+      <component
+        v-if="hasNamedSlot(slots, 'afterOptions')"
+        :is="resolveNamedSlot(slots, 'afterOptions')"
+      />
+
+      <div v-if="showFooter" v-bind="footerBind">
+        <Button
+          variant="flat"
+          color="secondary"
+          v-bind="cancelButtonProps"
+          @click="emit('cancel')"
+        >
+          {{ cancelLabel }}
+        </Button>
+
+        <Button
+          color="primary"
+          v-bind="applyButtonProps"
+          @click="emit('apply')"
+        >
+          {{ applyLabel }}
+        </Button>
+      </div>
     </div>
-
-    <div
-      v-bind="messageBind"
-      v-if="showEmptyState && !hasNamedSlot(slots, 'empty')"
-    >
-      {{ emptyMessage }}
-    </div>
-
-    <component
-      :is="resolveNamedSlot(slots, 'empty')"
-      v-else-if="showEmptyState && hasNamedSlot(slots, 'empty')"
-    />
-
-    <component
-      v-if="hasNamedSlot(slots, 'afterOptions')"
-      :is="resolveNamedSlot(slots, 'afterOptions')"
-    />
-  </Menu>
+  </FieldOverlay>
 </template>

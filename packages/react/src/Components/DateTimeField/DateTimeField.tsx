@@ -1,44 +1,78 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { DateTimeFieldProps } from "@/Components/DateTimeField/dateTimeField.types";
 import { useDateTimeField } from "@/Components/DateTimeField/hooks/useDateTimeField";
 import { DateTimePicker } from "@/Components/DateTimePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
+import { Icon } from "@/Components/Icon";
 
 function DateTimeField(props: DateTimeFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     daySlot,
+    overlay,
     formField,
     inputBind,
-    menuProps,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
     dateTimeOnly,
-    containerRef,
+    clearIconSize,
+    showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     dateTimePickerCustomProps,
   } = useDateTimeField(props);
 
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <DateTimePicker
           value={modelValue}
+          showFooter={showFooter}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
+          className={pickerClassName}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}
           maxTime={dateTimeOnly.maxTime}
           minDate={dateTimeOnly.minDate}
@@ -49,7 +83,6 @@ function DateTimeField(props: DateTimeFieldProps) {
           interval={dateTimeOnly.interval}
           hideYears={dateTimeOnly.hideYears}
           rounded={formField.merged.rounded}
-          showFooter={dateTimeOnly.showFooter}
           hideMonths={dateTimeOnly.hideMonths}
           defaultView={dateTimeOnly.defaultView}
           startOfWeek={dateTimeOnly.startOfWeek}
@@ -62,7 +95,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           hideOutsideDays={dateTimeOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

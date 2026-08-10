@@ -431,7 +431,7 @@ export function useCalendarRange(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex flex-col overflow-hidden": true,
+        "flex w-full flex-col overflow-hidden": true,
         "min-w-[38rem]": !isVertical.value,
         "min-w-72": isVertical.value,
         [mergedClasses.value.root ?? ""]: true,
@@ -488,7 +488,7 @@ export function useCalendarRange(
       customProps.value?.panels,
       {},
       cn({
-        "flex gap-4": true,
+        "flex w-full gap-4": true,
         "flex-row": !isVertical.value,
         "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
@@ -501,7 +501,9 @@ export function useCalendarRange(
       customProps.value?.start,
       {},
       cn({
-        "flex w-72 shrink-0 flex-col": true,
+        "flex flex-col": true,
+        "min-w-0 flex-1": isVertical.value,
+        "w-72 shrink-0": !isVertical.value,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -512,7 +514,9 @@ export function useCalendarRange(
       customProps.value?.end,
       {},
       cn({
-        "flex w-72 shrink-0 flex-col": true,
+        "flex flex-col": true,
+        "min-w-0 flex-1": isVertical.value,
+        "w-72 shrink-0": !isVertical.value,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );

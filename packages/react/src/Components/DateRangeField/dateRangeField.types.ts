@@ -5,6 +5,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import type {
   DateRangeValue,
   DisableDatesInput,
+  FieldOverlayMode,
   MergeHtmlProps,
   StartOfWeek,
 } from "@bridge-ui/core";
@@ -13,17 +14,32 @@ import type {
 import type { CalendarDateSlots } from "@/Components/CalendarDate";
 import type { CalendarRangeOrientation } from "@/Components/CalendarRange";
 import type { DateRangePickerCustomProps } from "@/Components/DateRangePicker";
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type {
   FormFieldClasses,
   FormFieldCustomProps,
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
-export interface DateRangeFieldClasses extends FormFieldClasses {}
+export interface DateRangeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `DateRangeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `DateRangePicker`.
    *
@@ -32,7 +48,19 @@ export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
   dateRangePicker?: DateRangePickerCustomProps;
 
   /**
-   * Props forwarded to the floating `Menu`.
+   * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<
+    Pick<
+      DrawerOwnProps,
+      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the floating `Menu` when overlay resolves to menu.
    *
    * @default undefined
    */
@@ -42,6 +70,18 @@ export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
       "shadow" | "classes" | "rounded" | "placement" | "customProps"
     >
   >;
+
+  /**
+   * Props forwarded to the nested `Modal` when overlay resolves to modal.
+   *
+   * @default undefined
+   */
+  modal?: Partial<
+    Pick<
+      ModalOwnProps,
+      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
+    >
+  >;
 }
 
 export interface DateRangeFieldCallbacks {
@@ -49,6 +89,11 @@ export interface DateRangeFieldCallbacks {
    * Called when the range selection changes.
    */
   onChange?: (value: null | DateRangeValue) => void;
+
+  /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
 
   /**
    * Called when the menu closes.
@@ -78,6 +123,13 @@ export interface DateRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: DateRangeFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -158,13 +210,23 @@ export interface DateRangeFieldOwnProps extends Omit<
 
   /**
    * Dual calendar arrangement forwarded to `DateRangePicker`.
+   * On mobile, `drawer` / `modal` overlays default to `vertical` when unset.
    *
    * @default "horizontal"
    */
   orientation?: CalendarRangeOrientation;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
+   * `drawer` (bottom) on mobile.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

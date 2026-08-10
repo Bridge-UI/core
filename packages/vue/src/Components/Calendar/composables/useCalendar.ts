@@ -367,7 +367,7 @@ export function useCalendar(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-72 flex-col overflow-hidden": true,
+        "flex w-full min-w-72 flex-col overflow-hidden": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

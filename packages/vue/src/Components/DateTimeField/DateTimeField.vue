@@ -4,6 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { useDateTimeField } from "@/Components/DateTimeField/composables/useDateTimeField";
 import type {
   DateTimeFieldEmits,
@@ -11,8 +12,9 @@ import type {
   DateTimeFieldSlots,
 } from "@/Components/DateTimeField/dateTimeField.types";
 import { DateTimePicker } from "@/Components/DateTimePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<DateTimeFieldSlots>();
 
@@ -21,10 +23,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<Date | null>();
 
 const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<DateTimeFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<Date | null>(props.defaultValue ?? null);
 
@@ -40,45 +45,69 @@ const value = computed({
 
 const {
   open,
+  overlay,
   formField,
   inputBind,
-  menuProps,
+  clearBind,
+  clearValue,
   modelValue,
+  showFooter,
+  pickerClass,
   dateTimeOnly,
-  containerRef,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
+  handlePickerCancel,
+  overlayCustomProps,
   dateTimePickerCustomProps,
 } = useDateTimeField(props, value, emit);
 </script>
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
-  <Menu
+  <FieldOverlay
     v-model="open"
-    close-on-click-away
-    placement="bottom-start"
-    :anchor-el="containerRef"
-    v-bind="menuProps"
+    :overlay="overlay"
+    :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
     <DateTimePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="dateTimeOnly.ampm"
+      :show-footer="showFooter"
       :read-only="props.readonly"
       :max-date="dateTimeOnly.maxDate"
       :min-date="dateTimeOnly.minDate"
       :max-time="dateTimeOnly.maxTime"
       :min-time="dateTimeOnly.minTime"
       v-on:change="handlePickerChange"
+      v-on:cancel="handlePickerCancel"
       :interval="dateTimeOnly.interval"
       :time-zone="dateTimeOnly.timeZone"
       :hide-years="dateTimeOnly.hideYears"
       :color="formField.merged.value.color"
-      :show-footer="dateTimeOnly.showFooter"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
       :default-view="dateTimeOnly.defaultView"
@@ -96,5 +125,5 @@ const {
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
       </template>
     </DateTimePicker>
-  </Menu>
+  </FieldOverlay>
 </template>

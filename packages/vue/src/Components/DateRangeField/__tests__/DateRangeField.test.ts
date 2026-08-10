@@ -102,3 +102,24 @@ test("it should pass color to the nested DateRangePicker", async () => {
 
   expect(String(day?.className)).toMatch(/secondary/);
 });
+
+test("it should emit change and clear when the clear control is clicked", async () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  mountDateRangeField({
+    props: {
+      onClear,
+      onChange,
+      defaultValue: [new Date(2021, 4, 1), new Date(2021, 4, 10)],
+    },
+  });
+
+  const clearControl = document.body.querySelector('[aria-label="Clear"]');
+
+  clearControl?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});

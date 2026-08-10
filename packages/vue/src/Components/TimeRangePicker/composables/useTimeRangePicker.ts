@@ -50,13 +50,14 @@ const timeRangePickerBridgeKeys = [
   "showFooter",
   "startTitle",
   "customProps",
+  "orientation",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeRangePickerOwnProps)[];
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter"
+  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "orientation"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -220,10 +221,14 @@ export function useTimeRangePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
+  });
+
+  const isVertical = computed(() => {
+    return merged.value.orientation === "vertical";
   });
 
   const panelsBind = computed(() => {
@@ -231,7 +236,9 @@ export function useTimeRangePicker(
       customProps.value?.panels,
       {},
       cn({
-        "flex flex-row gap-2": true,
+        "flex w-full gap-2 px-2.5": true,
+        "flex-row": !isVertical.value,
+        "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
       }),
     );
@@ -242,7 +249,7 @@ export function useTimeRangePicker(
       customProps.value?.start,
       {},
       cn({
-        "flex w-fit shrink-0 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -253,7 +260,7 @@ export function useTimeRangePicker(
       customProps.value?.end,
       {},
       cn({
-        "flex w-fit shrink-0 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );

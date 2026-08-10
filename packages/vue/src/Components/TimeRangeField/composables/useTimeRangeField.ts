@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -12,12 +12,16 @@ import {
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   isTimeRangeValue,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
   type TimeRangeValue,
 } from "@bridge-ui/core";
+import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
@@ -31,15 +35,22 @@ import type {
   TimeRangeFieldEmits,
   TimeRangeFieldOwnProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
-import { hasNamedSlot, mergePartBind } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+} from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
+  "clearable",
   "showFooter",
   "customProps",
   "defaultValue",
@@ -70,6 +81,7 @@ export function useTimeRangeField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -95,6 +107,14 @@ export function useTimeRangeField(
 
   const modelValue = computed(() => {
     return model.value ?? null;
+  });
+
+  const clearable = computed(() => {
+    return timeOnly.value.clearable !== false;
+  });
+
+  const hasValue = computed(() => {
+    return !isNil(modelValue.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -130,6 +150,7 @@ export function useTimeRangeField(
 
     const {
       menu: _menu,
+      clearIcon: _clearIcon,
       timeRangePicker: _timeRangePicker,
       ...formFieldOnlyCustom
     } = (timeOnly.value.customProps ?? {}) as TimeRangeFieldCustomProps;
@@ -148,10 +169,16 @@ export function useTimeRangeField(
             class: cn({
               "cursor-pointer": !props.disabled && !props.readonly,
             }),
-            onClick: () => {
-              if (!props.disabled && !props.readonly) {
-                handleOpenChange(true);
+            onClick: (event: MouseEvent) => {
+              if (props.disabled || props.readonly) {
+                return;
               }
+
+              if ((event.target as HTMLElement).closest("[data-field-clear]")) {
+                return;
+              }
+
+              handleOpenChange(true);
             },
           },
         ),
@@ -173,6 +200,15 @@ export function useTimeRangeField(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const displayText = computed(() => {
     return formatTimeRange(
       modelValue.value,
@@ -187,12 +223,35 @@ export function useTimeRangeField(
     emit("change", next);
   }
 
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(timeOnly.value.showFooter, breakpoint.mobile);
+  });
+
   function handlePickerChange(next: null | TimeRangeValue) {
     commitValue(next);
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
+  }
 
-    if (!timeOnly.value.showFooter) {
-      handleOpenChange(false);
+  function handlePickerCancel() {
+    handleOpenChange(false);
+  }
+
+  function clearValue(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
     }
+
+    commitValue(null);
+    emit("clear");
+    handleOpenChange(false);
+  }
+
+  function handleClearPointer(event: MouseEvent) {
+    event.preventDefault();
   }
 
   const inputBind = computed(() => {
@@ -217,24 +276,88 @@ export function useTimeRangeField(
     );
   });
 
-  const menuProps = computed(() => {
-    return timeOnly.value.customProps?.menu;
+  const overlay = computed(() => {
+    return timeOnly.value.overlay;
+  });
+
+  const overlayCustomProps = computed(() => {
+    return {
+      modal: timeOnly.value.customProps?.modal,
+      drawer: timeOnly.value.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef.value,
+        placement: "bottom-start" as const,
+        ...timeOnly.value.customProps?.menu,
+      },
+    };
   });
 
   const timeRangePickerCustomProps = computed(() => {
     return timeOnly.value.customProps?.timeRangePicker;
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "w-full shadow-none"
+      : undefined;
+  });
+
+  const clearIconSize = computed(() => {
+    return resolveFieldAdornmentIconSize(formField.merged.value.size);
+  });
+
+  const clearTone = computed(() => {
+    return (
+      get(listboxColorProps, [
+        formField.merged.value.color ?? "primary",
+        "clear",
+      ]) ??
+      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    );
+  });
+
+  const clearBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabindex: 0,
+        role: "button",
+        "data-field-clear": true,
+        onMousedown: handleClearPointer,
+        class: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [clearTone.value]: true,
+          [timeOnly.value.classes?.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
+    overlay,
+    hasValue,
     timeOnly,
     formField,
     inputBind,
-    menuProps,
+    clearable,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
+    pickerClass,
     containerRef,
+    clearIconSize,
+    showClearIcon,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     timeRangePickerCustomProps,
   };
 }

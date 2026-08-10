@@ -41,6 +41,14 @@ test("it should expose hour items", () => {
   expect(hourItems.value).toHaveLength(24);
 });
 
+test("it should fill available width with flexible columns", () => {
+  const { rootBind, columnBind } = mountUseTimePanel();
+
+  expect(rootBind.value.class).toContain("w-full");
+  expect(columnBind.value.class).toContain("flex-1");
+  expect(columnBind.value.class).toContain("min-w-[3.75rem]");
+});
+
 test("it should mark the selected hour", () => {
   const { hourItems } = mountUseTimePanel();
 

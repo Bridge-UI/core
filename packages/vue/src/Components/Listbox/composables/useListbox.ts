@@ -5,7 +5,10 @@ import { computed, useAttrs } from "vue";
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -17,6 +20,7 @@ import {
 } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -27,12 +31,14 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 export const listboxBridgeKeys = [
   "size",
   "color",
   "classes",
   "maxHeight",
+  "showFooter",
   "customProps",
   "invalidated",
   "disableMaxHeight",
@@ -58,6 +64,8 @@ export function useListbox(
   options: ListboxOptions = {},
 ) {
   const attrs = useAttrs();
+  const breakpoint = useBreakpoint();
+  const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
     return splitComponentProps<ListboxProps, typeof listboxBridgeKeys>({
@@ -82,6 +90,18 @@ export function useListbox(
     props: () => {
       return split.value.componentProps;
     },
+  });
+
+  const customProps = computed(() => merged.value.customProps);
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(merged.value.showFooter, breakpoint.mobile);
+  });
+
+  const isDialogOverlay = computed(() => {
+    return isFieldOverlayDialog(
+      resolveFieldOverlay(props.overlay, breakpoint.mobile),
+    );
   });
 
   const listboxTokens = computed(() => {
@@ -163,13 +183,46 @@ export function useListbox(
     );
   });
 
+  const surfaceBind = computed(() => {
+    return cn({
+      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+        isDialogOverlay.value,
+      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
+        isDialogOverlay.value,
+    });
+  });
+
+  const footerBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.value.footer ?? ""]: true,
+      }),
+    );
+  });
+
+  const applyLabel = computed(() => resolveMessage("Apply"));
+  const cancelLabel = computed(() => resolveMessage("Cancel"));
+
+  const applyButtonProps = computed(() => customProps.value?.applyButton);
+  const cancelButtonProps = computed(() => customProps.value?.cancelButton);
+
   return {
     merged,
     checkClass,
     scrollBind,
+    footerBind,
+    showFooter,
+    applyLabel,
+    cancelLabel,
     messageBind,
+    surfaceBind,
     sizeClasses,
     mergedClasses,
+    applyButtonProps,
+    cancelButtonProps,
     optionSelectedClass,
     optionHighlightedClass,
   };

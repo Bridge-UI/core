@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, Slot, TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  FieldOverlayMode,
   ListboxOptionsInput,
   MergeHtmlProps,
   SelectAsyncData,
@@ -91,6 +92,11 @@ export interface SelectCustomProps extends FormFieldCustomProps {
 }
 
 export interface SelectEmits {
+  /**
+   * Emitted when Cancel is pressed on the listbox footer (`showFooter`).
+   */
+  cancel: [];
+
   /**
    * Emitted when the selection changes.
    */
@@ -274,6 +280,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   optionValue?: string;
 
   /**
+   * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
+   * and `drawer` (bottom) on mobile. Forwarded to the internal `Listbox`.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
    * Placeholder shown when no value is selected.
    */
   placeholder?: string;
@@ -284,6 +298,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default false
    */
   searchable?: boolean;
+
+  /**
+   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true`
+   * on mobile. Selection stays draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
 }
 
 export interface SelectSlots extends FormFieldSlots {

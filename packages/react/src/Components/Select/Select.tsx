@@ -37,11 +37,9 @@ function Select(props: SelectProps) {
   const {
     open,
     slots,
-    hasValue,
     multiple,
     children,
     formField,
-    clearable,
     clearBind,
     clearValue,
     removeChip,
@@ -51,6 +49,7 @@ function Select(props: SelectProps) {
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     selectedOptions,
     handleOpenChange,
   } = useSelect(selectProps, triggerRef);
@@ -94,7 +93,7 @@ function Select(props: SelectProps) {
               {...(triggerBind as InputHTMLAttributes<HTMLInputElement>)}
             />
 
-            {clearable && hasValue && !formField.isDisabled ? (
+            {showClearIcon ? (
               <span
                 {...clearBind}
                 onClick={() => clearValue()}

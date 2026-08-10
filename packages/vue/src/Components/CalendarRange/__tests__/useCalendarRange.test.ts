@@ -56,20 +56,29 @@ test("it should expose end month selector bind", () => {
 });
 
 test("it should default to horizontal orientation", () => {
-  const { merged, rootBind, isVertical, panelsBind } = mountUseCalendarRange();
+  const { merged, rootBind, startBind, isVertical, panelsBind } =
+    mountUseCalendarRange();
 
   expect(merged.value.orientation).toBe("horizontal");
   expect(isVertical.value).toBe(false);
+  expect(rootBind.value.class).toContain("w-full");
   expect(rootBind.value.class).toContain("min-w-[38rem]");
+  expect(panelsBind.value.class).toContain("w-full");
   expect(panelsBind.value.class).toContain("flex-row");
+  expect(startBind.value.class).toContain("w-72");
 });
 
 test("it should stack panels when orientation is vertical", () => {
-  const { rootBind, isVertical, panelsBind } = mountUseCalendarRange({
-    orientation: "vertical",
-  });
+  const { endBind, rootBind, startBind, isVertical, panelsBind } =
+    mountUseCalendarRange({
+      orientation: "vertical",
+    });
 
   expect(isVertical.value).toBe(true);
+  expect(rootBind.value.class).toContain("w-full");
   expect(rootBind.value.class).toContain("min-w-72");
   expect(panelsBind.value.class).toContain("flex-col");
+  expect(startBind.value.class).toContain("flex-1");
+  expect(startBind.value.class).toContain("min-w-0");
+  expect(endBind.value.class).toContain("flex-1");
 });

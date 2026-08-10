@@ -4,25 +4,53 @@ import type { InputHTMLAttributes } from "vue";
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayMode,
   MergeHtmlProps,
   TimeValue,
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type {
   FormFieldClasses,
   FormFieldCustomProps,
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { TimePickerCustomProps } from "@/Components/TimePicker/timePicker.types";
 
-export interface TimeFieldClasses extends FormFieldClasses {}
+export interface TimeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface TimeFieldCustomProps extends FormFieldCustomProps {
   /**
-   * Props forwarded to the floating `Menu`.
+   * Props forwarded to the clear `Icon` (`icon` is set by `TimeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<
+    Pick<
+      DrawerOwnProps,
+      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the floating `Menu` when overlay resolves to menu.
    *
    * @default undefined
    */
@@ -30,6 +58,18 @@ export interface TimeFieldCustomProps extends FormFieldCustomProps {
     Pick<
       MenuOwnProps,
       "shadow" | "classes" | "rounded" | "placement" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the nested `Modal` when overlay resolves to modal.
+   *
+   * @default undefined
+   */
+  modal?: Partial<
+    Pick<
+      ModalOwnProps,
+      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
     >
   >;
 
@@ -46,6 +86,11 @@ export interface TimeFieldEmits {
    * Emitted when the selected time changes.
    */
   change: [value: null | TimeValue];
+
+  /**
+   * Emitted when the value is cleared.
+   */
+  clear: [];
 
   /**
    * Emitted when the menu closes.
@@ -75,6 +120,13 @@ export interface TimeFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: TimeFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -119,7 +171,16 @@ export interface TimeFieldOwnProps extends Omit<
   minTime?: Date;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
+   * `drawer` (bottom) on mobile.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

@@ -5,6 +5,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import type {
   DatePickerModel,
   DisableDatesInput,
+  FieldOverlayMode,
   MergeHtmlProps,
   StartOfWeek,
 } from "@bridge-ui/core";
@@ -13,42 +14,27 @@ import type {
 import type { CalendarView } from "@/Components/Calendar";
 import type { CalendarDateSlots } from "@/Components/CalendarDate";
 import type { DatePickerCustomProps } from "@/Components/DatePicker";
+import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type {
   FormFieldClasses,
   FormFieldCustomProps,
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
-
-export interface DateFieldClasses extends FormFieldClasses {}
-
-export interface DateFieldCustomProps extends FormFieldCustomProps {
-  /**
-   * Props forwarded to the nested `DatePicker`.
-   *
-   * @default undefined
-   */
-  datePicker?: DatePickerCustomProps;
-
-  /**
-   * Props forwarded to the floating `Menu`.
-   *
-   * @default undefined
-   */
-  menu?: Partial<
-    Pick<
-      MenuOwnProps,
-      "shadow" | "classes" | "rounded" | "placement" | "customProps"
-    >
-  >;
-}
+import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
 export interface DateFieldCallbacks {
   /**
    * Called when the selection model changes.
    */
   onChange?: (value: DatePickerModel) => void;
+
+  /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
 
   /**
    * Called when the menu closes.
@@ -59,6 +45,65 @@ export interface DateFieldCallbacks {
    * Called when the menu opens.
    */
   onOpen?: () => void;
+}
+
+export interface DateFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
+
+export interface DateFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `DateField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the nested `DatePicker`.
+   *
+   * @default undefined
+   */
+  datePicker?: DatePickerCustomProps;
+
+  /**
+   * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
+   *
+   * @default undefined
+   */
+  drawer?: Partial<
+    Pick<
+      DrawerOwnProps,
+      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the floating `Menu` when overlay resolves to menu.
+   *
+   * @default undefined
+   */
+  menu?: Partial<
+    Pick<
+      MenuOwnProps,
+      "shadow" | "classes" | "rounded" | "placement" | "customProps"
+    >
+  >;
+
+  /**
+   * Props forwarded to the nested `Modal` when overlay resolves to modal.
+   *
+   * @default undefined
+   */
+  modal?: Partial<
+    Pick<
+      ModalOwnProps,
+      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
+    >
+  >;
 }
 
 export interface DateFieldOwnProps extends Omit<
@@ -78,6 +123,13 @@ export interface DateFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: DateFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -171,6 +223,14 @@ export interface DateFieldOwnProps extends Omit<
   multiple?: boolean;
 
   /**
+   * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
+   * `drawer` (bottom) on mobile.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
    * Selects a date range.
    *
    * @default false
@@ -178,7 +238,8 @@ export interface DateFieldOwnProps extends Omit<
   range?: boolean;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

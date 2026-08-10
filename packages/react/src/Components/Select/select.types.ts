@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  FieldOverlayMode,
   ListboxOptionsInput,
   MergeHtmlProps,
   SelectAsyncData,
@@ -36,6 +37,11 @@ export type {
 } from "@bridge-ui/core";
 
 export interface SelectCallbacks {
+  /**
+   * Callback when Cancel is pressed on the listbox footer (`showFooter`).
+   */
+  onCancel?: () => void;
+
   /**
    * Callback when the selection changes.
    */
@@ -258,6 +264,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   optionValue?: string;
 
   /**
+   * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
+   * and `drawer` (bottom) on mobile. Forwarded to the internal `Listbox`.
+   *
+   * @default "auto"
+   */
+  overlay?: FieldOverlayMode;
+
+  /**
    * Placeholder shown when no value is selected.
    */
   placeholder?: string;
@@ -268,6 +282,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default false
    */
   searchable?: boolean;
+
+  /**
+   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true`
+   * on mobile. Selection stays draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
 
   /**
    * The selected value (controlled).

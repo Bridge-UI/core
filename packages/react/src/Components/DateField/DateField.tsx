@@ -1,52 +1,85 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { DateFieldProps } from "@/Components/DateField/dateField.types";
 import { useDateField } from "@/Components/DateField/hooks/useDateField";
 import { DatePicker } from "@/Components/DatePicker";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
-import { Menu } from "@/Components/Menu";
+import { Icon } from "@/Components/Icon";
 
 function DateField(props: DateFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     daySlot,
+    overlay,
     dateOnly,
     formField,
     inputBind,
-    menuProps,
+    clearBind,
+    clearValue,
     modelValue,
-    containerRef,
+    showFooter,
+    clearIconSize,
+    showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlayCustomProps,
     datePickerCustomProps,
   } = useDateField(props);
 
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
-      <Menu
+      <FieldOverlay
         show={open}
-        closeOnClickAway
-        anchorEl={containerRef}
-        placement="bottom-start"
+        overlay={overlay}
         onShowChange={handleOpenChange}
-        {...menuProps}
+        customProps={overlayCustomProps}
       >
         <DatePicker
           value={modelValue}
           range={dateOnly.range}
+          showFooter={showFooter}
           readOnly={props.readonly}
           maxDate={dateOnly.maxDate}
           minDate={dateOnly.minDate}
+          className={pickerClassName}
           multiple={dateOnly.multiple}
           timeZone={dateOnly.timeZone}
           onChange={handlePickerChange}
+          onCancel={handlePickerCancel}
           hideYears={dateOnly.hideYears}
           color={formField.merged.color}
           disabled={formField.isDisabled}
-          showFooter={dateOnly.showFooter}
           hideMonths={dateOnly.hideMonths}
           defaultView={dateOnly.defaultView}
           startOfWeek={dateOnly.startOfWeek}
@@ -59,7 +92,7 @@ function DateField(props: DateFieldProps) {
           hideOutsideDays={dateOnly.hideOutsideDays}
           slots={daySlot ? { day: daySlot } : undefined}
         />
-      </Menu>
+      </FieldOverlay>
     </>
   );
 }

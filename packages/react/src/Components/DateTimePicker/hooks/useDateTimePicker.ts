@@ -232,13 +232,13 @@ export function useDateTimePicker(
 
   const contentBind = derived(() => {
     return cn({
-      "flex flex-row items-stretch": true,
+      "flex w-full flex-row items-stretch": true,
     });
   });
 
   const calendarBind = derived(() => {
     return cn({
-      "shrink-0": true,
+      "min-w-0 flex-1": true,
       [mergedClasses.calendar ?? ""]: true,
     });
   });
@@ -270,7 +270,7 @@ export function useDateTimePicker(
   /** Absolutely fills the stretched shell; hosts the real TimePanel. */
   const timeFillBind = derived(() => {
     return cn({
-      "absolute inset-0 flex px-2.5": true,
+      "absolute inset-0 flex w-full px-2.5": true,
     });
   });
 

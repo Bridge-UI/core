@@ -1,15 +1,19 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
-import type { FocusEvent, KeyboardEvent } from "react";
+import { get, isNil, omit } from "es-toolkit/compat";
+import type { FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapterContext,
   type TimeValue,
 } from "@bridge-ui/core";
+import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
@@ -23,7 +27,12 @@ import type {
   TimeFieldOwnProps,
   TimeFieldProps,
 } from "@/Components/TimeField/timeField.types";
-import { derived, mergePartBind } from "@/Utils";
+import {
+  derived,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+  useBreakpoint,
+} from "@/Utils";
 
 const timeFieldBridgeKeys = [
   "ampm",
@@ -31,8 +40,10 @@ const timeFieldBridgeKeys = [
   "classes",
   "maxTime",
   "minTime",
+  "overlay",
   "interval",
   "timeZone",
+  "clearable",
   "showFooter",
   "customProps",
   "defaultValue",
@@ -54,6 +65,7 @@ function formatTimeValue(
 
 export function useTimeField(props: TimeFieldProps) {
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
@@ -61,6 +73,7 @@ export function useTimeField(props: TimeFieldProps) {
     slots,
     onOpen,
     onClose,
+    onClear,
     onChange,
     defaultValue,
     value: valueProp,
@@ -96,6 +109,24 @@ export function useTimeField(props: TimeFieldProps) {
     return resolveContext(timeOnly.timeZone);
   });
 
+  const clearable = derived(() => {
+    return timeOnly.clearable !== false;
+  });
+
+  const hasValue = derived(() => {
+    return !isNil(modelValue);
+  });
+
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "w-full shadow-none"
+      : undefined;
+  });
+
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
     containerRef.current = element;
   }, []);
@@ -114,7 +145,13 @@ export function useTimeField(props: TimeFieldProps) {
   );
 
   const inherited = derived(() => {
-    return omit(inheritedAttrs, ["onOpen", "onClose", "onChange", "className"]);
+    return omit(inheritedAttrs, [
+      "onOpen",
+      "onClose",
+      "onClear",
+      "onChange",
+      "className",
+    ]);
   });
 
   const { componentProps: formFieldCustom } = splitComponentProps<
@@ -127,6 +164,7 @@ export function useTimeField(props: TimeFieldProps) {
 
   const {
     menu: _menu,
+    clearIcon: _clearIcon,
     timePicker: _timePicker,
     ...formFieldOnlyCustom
   } = (timeOnly.customProps ?? {}) as TimeFieldCustomProps;
@@ -147,10 +185,16 @@ export function useTimeField(props: TimeFieldProps) {
             className: cn({
               "cursor-pointer": !props.disabled && !props.readonly,
             }),
-            onClick: () => {
-              if (!props.disabled && !props.readonly) {
-                handleOpenChange(true);
+            onClick: (event: MouseEvent<HTMLElement>) => {
+              if (props.disabled || props.readonly) {
+                return;
               }
+
+              if ((event.target as HTMLElement).closest("[data-field-clear]")) {
+                return;
+              }
+
+              handleOpenChange(true);
             },
           },
         ),
@@ -172,6 +216,14 @@ export function useTimeField(props: TimeFieldProps) {
     return formatTimeValue(modelValue, adapter, context, timeOnly.ampm);
   });
 
+  const showFooter = derived(() => {
+    return resolveFieldShowFooter(timeOnly.showFooter, breakpoint.mobile);
+  });
+
+  const showClearIcon = derived(() => {
+    return hasValue && clearable && !props.readonly && !formField.isDisabled;
+  });
+
   const commitValue = (next: null | TimeValue) => {
     if (!isControlled) {
       setUncontrolledValue(next);
@@ -182,11 +234,33 @@ export function useTimeField(props: TimeFieldProps) {
 
   const handlePickerChange = (next: null | TimeValue) => {
     commitValue(next);
-
-    if (!timeOnly.showFooter) {
-      handleOpenChange(false);
-    }
+    // Close on immediate select or when Apply commits (`showFooter`).
+    handleOpenChange(false);
   };
+
+  const handlePickerCancel = () => {
+    handleOpenChange(false);
+  };
+
+  const clearValue = useCallback(
+    (event?: { preventDefault: () => void; stopPropagation: () => void }) => {
+      event?.preventDefault();
+      event?.stopPropagation();
+
+      if (props.disabled || props.readonly) {
+        return;
+      }
+
+      commitValue(null);
+      onClear?.();
+      handleOpenChange(false);
+    },
+    [onClear, commitValue, handleOpenChange, props.disabled, props.readonly],
+  );
+
+  const handleClearPointer = useCallback((event: MouseEvent) => {
+    event.preventDefault();
+  }, []);
 
   const inputBind = derived(() => {
     return mergePartBind(
@@ -212,22 +286,65 @@ export function useTimeField(props: TimeFieldProps) {
 
   const menuFromProps = timeOnly.customProps?.menu;
 
+  const clearIconSize = resolveFieldAdornmentIconSize(formField.merged.size);
+
+  const clearTone = derived(() => {
+    return (
+      get(listboxColorProps, [formField.merged.color ?? "primary", "clear"]) ??
+      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    );
+  });
+
+  const clearBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabIndex: 0,
+        role: "button",
+        "data-field-clear": true,
+        onMouseDown: handleClearPointer,
+        className: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [clearTone]: true,
+          [timeOnly.classes?.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
     timeOnly,
+    hasValue,
     formField,
     inputBind,
+    clearable,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
     containerRef,
+    clearIconSize,
+    showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
+    handlePickerCancel,
+    overlay: timeOnly.overlay,
     timePickerCustomProps: timeOnly.customProps?.timePicker,
     // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
-    menuProps: {
-      ...menuFromProps,
-      classes: {
-        ...menuFromProps?.classes,
-        content: cn("min-w-0", menuFromProps?.classes?.content),
+    overlayCustomProps: {
+      modal: timeOnly.customProps?.modal,
+      drawer: timeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...menuFromProps,
+        classes: {
+          ...menuFromProps?.classes,
+          content: cn("min-w-0", menuFromProps?.classes?.content),
+        },
       },
     },
   };
