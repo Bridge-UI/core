@@ -229,6 +229,13 @@ export interface TimeRangePickerOwnProps {
   showFooter?: boolean;
 
   /**
+   * Shows seconds in the panel and formatted value.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
+
+  /**
    * Label above the start time panel.
    *
    * @default "Start time"

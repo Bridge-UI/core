@@ -15,6 +15,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   showFooter: false,
+  showSeconds: false,
   orientation: "horizontal",
 } as const satisfies Partial<TimeRangePickerOwnProps>;
 

@@ -27,6 +27,13 @@ export type DateAdapterTimeOptions = {
    * @default false
    */
   ampm?: boolean;
+
+  /**
+   * When `true`, include seconds in formatted / parsed times.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
 };
 
 /**
@@ -119,6 +126,11 @@ export interface DateAdapter<TDate = Date> {
   getMonthNames: (context?: DateAdapterContext) => string[];
 
   /**
+   * Seconds `0`–`59`.
+   */
+  getSeconds: (date: TDate, context?: DateAdapterContext) => number;
+
+  /**
    * Localized short weekday names, ordered Sunday → Saturday.
    */
   getWeekdayNames: (context?: DateAdapterContext) => string[];
@@ -149,7 +161,7 @@ export interface DateAdapter<TDate = Date> {
   isSameMonth: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
 
   /**
-   * Whether `a` and `b` share the same hour and minute.
+   * Whether `a` and `b` share the same hour, minute, and second.
    */
   isSameTime: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
 
@@ -169,8 +181,9 @@ export interface DateAdapter<TDate = Date> {
   parse: (value: string, context?: DateAdapterContext) => null | TDate;
 
   /**
-   * Parses a time string (`HH:mm` or `h:mm a`) into a date anchored on today,
-   * or `null` when invalid.
+   * Parses a time string (`HH:mm`, `HH:mm:ss`, `h:mm a`, or `h:mm:ss a`) into a
+   * date anchored on today, or `null` when invalid. Seconds require
+   * `options.showSeconds`.
    */
   parseTime: (
     value: string,
@@ -184,12 +197,12 @@ export interface DateAdapter<TDate = Date> {
   setDate: (date: TDate, day: number, context?: DateAdapterContext) => TDate;
 
   /**
-   * Sets the hour (`0`–`23`), preserving calendar day and minutes.
+   * Sets the hour (`0`–`23`), preserving calendar day, minutes, and seconds.
    */
   setHours: (date: TDate, hours: number, context?: DateAdapterContext) => TDate;
 
   /**
-   * Sets the minute (`0`–`59`), preserving calendar day and hours.
+   * Sets the minute (`0`–`59`), preserving calendar day, hours, and seconds.
    */
   setMinutes: (
     date: TDate,
@@ -201,6 +214,15 @@ export interface DateAdapter<TDate = Date> {
    * Sets the month (`0`–`11`).
    */
   setMonth: (date: TDate, month: number, context?: DateAdapterContext) => TDate;
+
+  /**
+   * Sets the second (`0`–`59`), preserving calendar day, hours, and minutes.
+   */
+  setSeconds: (
+    date: TDate,
+    seconds: number,
+    context?: DateAdapterContext,
+  ) => TDate;
 
   /**
    * Sets the full year.
@@ -242,6 +264,7 @@ type DateParts = {
   hours: number;
   minutes: number;
   month: number;
+  seconds: number;
   weekday: number;
   year: number;
 };
@@ -288,6 +311,7 @@ export function createNativeDateAdapter(
         weekday: date.getDay(),
         year: date.getFullYear(),
         minutes: date.getMinutes(),
+        seconds: date.getSeconds(),
       };
     }
 
@@ -300,6 +324,7 @@ export function createNativeDateAdapter(
       weekday: "short",
       hourCycle: "h23",
       minute: "numeric",
+      second: "numeric",
     }).formatToParts(date);
 
     const year = Number(parts.find((part) => part.type === "year")?.value);
@@ -308,10 +333,11 @@ export function createNativeDateAdapter(
     const day = Number(parts.find((part) => part.type === "day")?.value);
     const hours = Number(parts.find((part) => part.type === "hour")?.value);
     const minutes = Number(parts.find((part) => part.type === "minute")?.value);
+    const seconds = Number(parts.find((part) => part.type === "second")?.value);
     const weekdayLabel = parts.find((part) => part.type === "weekday")?.value;
     const weekday = weekdayLabelToIndex(weekdayLabel);
 
-    return { day, year, hours, month, minutes, weekday };
+    return { day, year, hours, month, minutes, seconds, weekday };
   };
 
   const fromParts = (
@@ -321,14 +347,15 @@ export function createNativeDateAdapter(
     context?: DateAdapterContext,
     hours = 0,
     minutes = 0,
+    seconds = 0,
   ): Date => {
     const timeZone = resolveTimeZone(context);
 
     if (isNil(timeZone)) {
-      return new Date(year, month, day, hours, minutes, 0, 0);
+      return new Date(year, month, day, hours, minutes, seconds, 0);
     }
 
-    return zonedDateTime(year, month, day, hours, minutes, timeZone);
+    return zonedDateTime(year, month, day, hours, minutes, seconds, timeZone);
   };
 
   const adapter: DateAdapter<Date> = {
@@ -353,6 +380,10 @@ export function createNativeDateAdapter(
       return getParts(date, context).minutes;
     },
 
+    getSeconds: (date, context) => {
+      return getParts(date, context).seconds;
+    },
+
     addYears: (date, amount, context) => {
       return adapter.addMonths(date, amount * 12, context);
     },
@@ -370,7 +401,7 @@ export function createNativeDateAdapter(
     startOfDay: (date, context) => {
       const parts = getParts(date, context);
 
-      return fromParts(parts.year, parts.month, parts.day, context, 0, 0);
+      return fromParts(parts.year, parts.month, parts.day, context, 0, 0, 0);
     },
 
     isSameMonth: (a, b, context) => {
@@ -378,52 +409,6 @@ export function createNativeDateAdapter(
       const right = getParts(b, context);
 
       return left.year === right.year && left.month === right.month;
-    },
-
-    isSameTime: (a, b, context) => {
-      const left = getParts(a, context);
-      const right = getParts(b, context);
-
-      return left.hours === right.hours && left.minutes === right.minutes;
-    },
-
-    setDate: (date, day, context) => {
-      const parts = getParts(date, context);
-
-      return fromParts(
-        parts.year,
-        parts.month,
-        day,
-        context,
-        parts.hours,
-        parts.minutes,
-      );
-    },
-
-    setYear: (date, year, context) => {
-      const parts = getParts(date, context);
-
-      return fromParts(
-        year,
-        parts.month,
-        parts.day,
-        context,
-        parts.hours,
-        parts.minutes,
-      );
-    },
-
-    setMonth: (date, month, context) => {
-      const parts = getParts(date, context);
-
-      return fromParts(
-        parts.year,
-        month,
-        parts.day,
-        context,
-        parts.hours,
-        parts.minutes,
-      );
     },
 
     isSameDay: (a, b, context) => {
@@ -437,6 +422,59 @@ export function createNativeDateAdapter(
       );
     },
 
+    setDate: (date, day, context) => {
+      const parts = getParts(date, context);
+
+      return fromParts(
+        parts.year,
+        parts.month,
+        day,
+        context,
+        parts.hours,
+        parts.minutes,
+        parts.seconds,
+      );
+    },
+
+    setYear: (date, year, context) => {
+      const parts = getParts(date, context);
+
+      return fromParts(
+        year,
+        parts.month,
+        parts.day,
+        context,
+        parts.hours,
+        parts.minutes,
+        parts.seconds,
+      );
+    },
+
+    setMonth: (date, month, context) => {
+      const parts = getParts(date, context);
+
+      return fromParts(
+        parts.year,
+        month,
+        parts.day,
+        context,
+        parts.hours,
+        parts.minutes,
+        parts.seconds,
+      );
+    },
+
+    isSameTime: (a, b, context) => {
+      const left = getParts(a, context);
+      const right = getParts(b, context);
+
+      return (
+        left.hours === right.hours &&
+        left.minutes === right.minutes &&
+        left.seconds === right.seconds
+      );
+    },
+
     getMonthNames: (context) => {
       const locale = resolveLocale(context);
       const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
@@ -444,6 +482,15 @@ export function createNativeDateAdapter(
       return range(12).map((month) => {
         return formatter.format(new Date(2021, month, 1));
       });
+    },
+
+    isBefore: (a, b, context) => {
+      const left = getParts(a, context);
+      const right = getParts(b, context);
+      const leftKey = left.year * 10_000 + left.month * 100 + left.day;
+      const rightKey = right.year * 10_000 + right.month * 100 + right.day;
+
+      return leftKey < rightKey;
     },
 
     setHours: (date, hours, context) => {
@@ -457,6 +504,7 @@ export function createNativeDateAdapter(
         context,
         nextHours,
         parts.minutes,
+        parts.seconds,
       );
     },
 
@@ -471,31 +519,22 @@ export function createNativeDateAdapter(
         context,
         parts.hours,
         nextMinutes,
+        parts.seconds,
       );
     },
 
-    isBefore: (a, b, context) => {
-      const left = getParts(a, context);
-      const right = getParts(b, context);
-      const leftKey = left.year * 10_000 + left.month * 100 + left.day;
-      const rightKey = right.year * 10_000 + right.month * 100 + right.day;
-
-      return leftKey < rightKey;
-    },
-
-    endOfMonth: (date, context) => {
+    setSeconds: (date, seconds, context) => {
       const parts = getParts(date, context);
-      const daysInMonth = new Date(
-        Date.UTC(parts.year, parts.month + 1, 0),
-      ).getUTCDate();
+      const nextSeconds = clamp(seconds, 0, 59);
 
       return fromParts(
         parts.year,
         parts.month,
-        daysInMonth,
+        parts.day,
         context,
         parts.hours,
         parts.minutes,
+        nextSeconds,
       );
     },
 
@@ -515,6 +554,23 @@ export function createNativeDateAdapter(
       }).format(date);
     },
 
+    endOfMonth: (date, context) => {
+      const parts = getParts(date, context);
+      const daysInMonth = new Date(
+        Date.UTC(parts.year, parts.month + 1, 0),
+      ).getUTCDate();
+
+      return fromParts(
+        parts.year,
+        parts.month,
+        daysInMonth,
+        context,
+        parts.hours,
+        parts.minutes,
+        parts.seconds,
+      );
+    },
+
     addDays: (date, amount, context) => {
       const parts = getParts(date, context);
       const cursor = new Date(
@@ -528,24 +584,8 @@ export function createNativeDateAdapter(
         context,
         parts.hours,
         parts.minutes,
+        parts.seconds,
       );
-    },
-
-    formatTime: (date, context, timeOptions) => {
-      if (!isValidDate(date)) {
-        return "";
-      }
-
-      const locale = resolveLocale(context);
-      const timeZone = resolveTimeZone(context);
-      const ampm = timeOptions?.ampm === true;
-
-      return new Intl.DateTimeFormat(locale, {
-        timeZone,
-        hour12: ampm,
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(date);
     },
 
     getWeekdayNames: (context) => {
@@ -575,6 +615,25 @@ export function createNativeDateAdapter(
       });
     },
 
+    formatTime: (date, context, timeOptions) => {
+      if (!isValidDate(date)) {
+        return "";
+      }
+
+      const locale = resolveLocale(context);
+      const timeZone = resolveTimeZone(context);
+      const ampm = timeOptions?.ampm === true;
+      const showSeconds = timeOptions?.showSeconds === true;
+
+      return new Intl.DateTimeFormat(locale, {
+        timeZone,
+        hour12: ampm,
+        hour: "2-digit",
+        minute: "2-digit",
+        ...(showSeconds ? { second: "2-digit" as const } : {}),
+      }).format(date);
+    },
+
     addMonths: (date, amount, context) => {
       const parts = getParts(date, context);
       const cursor = new Date(
@@ -585,7 +644,15 @@ export function createNativeDateAdapter(
       const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
       const day = clamp(parts.day, 1, daysInMonth);
 
-      return fromParts(year, month, day, context, parts.hours, parts.minutes);
+      return fromParts(
+        year,
+        month,
+        day,
+        context,
+        parts.hours,
+        parts.minutes,
+        parts.seconds,
+      );
     },
 
     parse: (value, context) => {
@@ -623,19 +690,27 @@ export function createNativeDateAdapter(
 
       const trimmed = value.trim();
       const ampm = timeOptions?.ampm === true;
-      const twentyFour = /^(\d{1,2}):(\d{2})$/.exec(trimmed);
-      const twelve = /^(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)$/.exec(trimmed);
+      const showSeconds = timeOptions?.showSeconds === true;
+      const twentyFour = showSeconds
+        ? /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(trimmed)
+        : /^(\d{1,2}):(\d{2})$/.exec(trimmed);
+      const twelve = showSeconds
+        ? /^(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM|am|pm)$/.exec(trimmed)
+        : /^(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)$/.exec(trimmed);
 
       let hours: number;
       let minutes: number;
+      let seconds: number;
 
       if (!isNil(twentyFour) && !ampm) {
         hours = Number(twentyFour[1]);
         minutes = Number(twentyFour[2]);
+        seconds = showSeconds ? Number(twentyFour[3]) : 0;
       } else if (!isNil(twelve)) {
         hours = Number(twelve[1]);
         minutes = Number(twelve[2]);
-        const meridiem = twelve[3]!.toUpperCase();
+        seconds = showSeconds ? Number(twelve[3]) : 0;
+        const meridiem = (showSeconds ? twelve[4] : twelve[3])!.toUpperCase();
 
         if (hours < 1 || hours > 12) {
           return null;
@@ -650,7 +725,14 @@ export function createNativeDateAdapter(
         return null;
       }
 
-      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+      if (
+        hours < 0 ||
+        hours > 23 ||
+        minutes < 0 ||
+        minutes > 59 ||
+        seconds < 0 ||
+        seconds > 59
+      ) {
         return null;
       }
 
@@ -664,6 +746,7 @@ export function createNativeDateAdapter(
         context,
         hours,
         minutes,
+        seconds,
       );
     },
   };
@@ -700,8 +783,8 @@ function weekdayLabelToIndex(label: string | undefined): number {
 
 /**
  * Builds a `Date` whose wall clock in `timeZone` is `year`/`month`/`day`
- * `hours`:`minutes`. Uses iterative UTC anchoring (good enough for picker UI;
- * prefer luxon/dayjs adapters for exact offsets).
+ * `hours`:`minutes`:`seconds`. Uses iterative UTC anchoring (good enough for
+ * picker UI; prefer luxon/dayjs adapters for exact offsets).
  */
 function zonedDateTime(
   year: number,
@@ -709,9 +792,10 @@ function zonedDateTime(
   day: number,
   hours: number,
   minutes: number,
+  seconds: number,
   timeZone: string,
 ): Date {
-  let utc = Date.UTC(year, month, day, hours, minutes, 0);
+  let utc = Date.UTC(year, month, day, hours, minutes, seconds);
 
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const parts = new Intl.DateTimeFormat("en-US", {
@@ -722,6 +806,7 @@ function zonedDateTime(
       month: "numeric",
       hourCycle: "h23",
       minute: "numeric",
+      second: "numeric",
     }).formatToParts(new Date(utc));
 
     const seenYear = Number(parts.find((part) => part.type === "year")?.value);
@@ -732,8 +817,18 @@ function zonedDateTime(
     const seenMinute = Number(
       parts.find((part) => part.type === "minute")?.value,
     );
-    const target = Date.UTC(year, month, day, hours, minutes);
-    const seen = Date.UTC(seenYear, seenMonth, seenDay, seenHour, seenMinute);
+    const seenSecond = Number(
+      parts.find((part) => part.type === "second")?.value,
+    );
+    const target = Date.UTC(year, month, day, hours, minutes, seconds);
+    const seen = Date.UTC(
+      seenYear,
+      seenMonth,
+      seenDay,
+      seenHour,
+      seenMinute,
+      seenSecond,
+    );
     const delta = target - seen;
 
     if (delta === 0) {

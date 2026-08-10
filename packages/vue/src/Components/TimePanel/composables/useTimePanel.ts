@@ -6,6 +6,7 @@ import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 import {
   buildHourOptions,
   buildMinuteOptions,
+  buildSecondOptions,
   cn,
   isTimeDisabled,
   mergeBridgeUILayeredClasses,
@@ -47,12 +48,13 @@ const timePanelBridgeKeys = [
   "readOnly",
   "timeZone",
   "customProps",
+  "showSeconds",
   "disableTimes",
 ] as const satisfies readonly (keyof TimePanelOwnProps)[];
 
 type TimePanelLibDefaults = LibDefaultsShape<
   TimePanelOwnProps,
-  "ampm" | "color" | "rounded" | "interval"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimePanelMerged = MergeLibDefaults<
@@ -76,7 +78,7 @@ export type TimePanelItem = {
 };
 
 /**
- * Builds hour / minute / AM-PM columns and tile binds for `TimePanel`.
+ * Builds hour / minute / second / AM-PM columns and tile binds for `TimePanel`.
  */
 export function useTimePanel(
   props: MaybeRefOrGetter<TimePanelOwnProps>,
@@ -141,6 +143,9 @@ export function useTimePanel(
       adapter.value.getMinutes(base, context.value),
       merged.value.interval,
     );
+    const seconds = merged.value.showSeconds
+      ? adapter.value.getSeconds(base, context.value)
+      : 0;
     let next = adapter.value.setHours(
       base,
       adapter.value.getHours(base, context.value),
@@ -148,6 +153,7 @@ export function useTimePanel(
     );
 
     next = adapter.value.setMinutes(next, minutes, context.value);
+    next = adapter.value.setSeconds(next, seconds, context.value);
 
     return next;
   });
@@ -158,6 +164,10 @@ export function useTimePanel(
 
   const minutes = computed(() => {
     return buildMinuteOptions({ interval: merged.value.interval });
+  });
+
+  const seconds = computed(() => {
+    return buildSecondOptions();
   });
 
   const meridiem = computed(() => {
@@ -210,6 +220,16 @@ export function useTimePanel(
     const next = adapter.value.setMinutes(
       displayDate.value,
       minute,
+      context.value,
+    );
+
+    commitTime(next);
+  };
+
+  const selectSecond = (second: number) => {
+    const next = adapter.value.setSeconds(
+      displayDate.value,
+      second,
       context.value,
     );
 
@@ -302,6 +322,40 @@ export function useTimePanel(
         selected,
         value: minute,
         label: String(minute).padStart(2, "0"),
+        disabled: disabled || Boolean(merged.value.readOnly),
+      };
+    });
+  });
+
+  const secondItems = computed((): TimePanelItem[] => {
+    if (!merged.value.showSeconds) {
+      return [];
+    }
+
+    const selectedSecond = adapter.value.getSeconds(
+      displayDate.value,
+      context.value,
+    );
+
+    return seconds.value.map((second) => {
+      const candidate = adapter.value.setSeconds(
+        displayDate.value,
+        second,
+        context.value,
+      );
+      const disabled = isItemDisabled(candidate);
+      const selected = second === selectedSecond;
+      const state = resolveCalendarDayInteractionState({
+        disabled,
+        selected,
+        readOnly: merged.value.readOnly,
+      });
+
+      return {
+        state,
+        selected,
+        value: second,
+        label: String(second).padStart(2, "0"),
         disabled: disabled || Boolean(merged.value.readOnly),
       };
     });
@@ -412,6 +466,14 @@ export function useTimePanel(
     });
   };
 
+  const getSecondBind = (item: TimePanelItem) => {
+    return getItemBind(item, (value) => {
+      if (typeof value === "number") {
+        selectSecond(value);
+      }
+    });
+  };
+
   const getMeridiemBind = (item: TimePanelItem) => {
     return getItemBind(item, (value) => {
       if (value === "AM" || value === "PM") {
@@ -424,6 +486,10 @@ export function useTimePanel(
     return Boolean(merged.value.ampm);
   });
 
+  const showSeconds = computed(() => {
+    return Boolean(merged.value.showSeconds);
+  });
+
   return {
     merged,
     rootBind,
@@ -431,9 +497,12 @@ export function useTimePanel(
     columnBind,
     getHourBind,
     minuteItems,
+    secondItems,
     displayDate,
+    showSeconds,
     showMeridiem,
     getMinuteBind,
+    getSecondBind,
     meridiemItems,
     getMeridiemBind,
   };

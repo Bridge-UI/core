@@ -37,6 +37,7 @@ const {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    showSeconds: false,
   },
   emit,
 );
@@ -58,6 +59,7 @@ const {
         :read-only="merged.readOnly"
         :time-zone="merged.timeZone"
         v-on:change="handlePanelChange"
+        :show-seconds="merged.showSeconds"
         :disable-times="merged.disableTimes"
       />
     </div>

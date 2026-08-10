@@ -52,6 +52,7 @@ const {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    showSeconds: false,
     defaultView: "date",
   },
   emit,
@@ -93,6 +94,10 @@ const {
         <div aria-hidden="true" :class="timeSizerBind">
           <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
           <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
+          <div
+            v-if="merged.showSeconds"
+            :class="TIME_PANEL_COLUMN_WIDTH_CLASS"
+          />
           <div v-if="merged.ampm" :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
         </div>
 
@@ -110,6 +115,7 @@ const {
             :read-only="merged.readOnly"
             :time-zone="merged.timeZone"
             v-on:change="handlePanelChange"
+            :show-seconds="merged.showSeconds"
             :disable-times="merged.disableTimes"
             :custom-props="timePanelCustomProps"
           />

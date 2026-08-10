@@ -107,6 +107,7 @@ const {
       :time-zone="timeOnly.timeZone"
       v-on:change="handlePickerChange"
       v-on:cancel="handlePickerCancel"
+      :show-seconds="timeOnly.showSeconds"
       :color="formField.merged.value.color"
       :custom-props="timePickerCustomProps"
       :disabled="formField.isDisabled.value"

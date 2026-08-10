@@ -49,6 +49,7 @@ const dateTimeRangeFieldBridgeKeys = [
   "showFooter",
   "customProps",
   "orientation",
+  "showSeconds",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -64,15 +65,16 @@ function formatDateTimeRange(
   adapter: ReturnType<typeof useDateAdapter>,
   context: DateAdapterContext,
   ampm?: boolean,
+  showSeconds?: boolean,
 ): string {
   if (isNil(value) || !isDateRangeValue(value)) {
     return "";
   }
 
   const start =
-    `${adapter.format(value[0], context)} ${adapter.formatTime(value[0], context, { ampm })}`.trim();
+    `${adapter.format(value[0], context)} ${adapter.formatTime(value[0], context, { ampm, showSeconds })}`.trim();
   const end =
-    `${adapter.format(value[1], context)} ${adapter.formatTime(value[1], context, { ampm })}`.trim();
+    `${adapter.format(value[1], context)} ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`.trim();
 
   return `${start} – ${end}`;
 }
@@ -224,7 +226,13 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
   });
 
   const displayText = derived(() => {
-    return formatDateTimeRange(modelValue, adapter, context, dateTimeOnly.ampm);
+    return formatDateTimeRange(
+      modelValue,
+      adapter,
+      context,
+      dateTimeOnly.ampm,
+      dateTimeOnly.showSeconds,
+    );
   });
 
   const commitValue = (next: null | DateRangeValue) => {

@@ -44,6 +44,7 @@ import { TimeRangePicker } from "@bridge-ui/react/Components/TimeRangePicker";
 | `readOnly`     | `boolean`                    | `false`        | Prevents selection.                                   |
 | `rounded`      | `CalendarRounded`            | `"md"`         | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`                    | `false`        | Shows Cancel / Apply. Selection is draft until Apply. |
+| `showSeconds`  | `boolean`                    | `false`        | Shows seconds in the panel and formatted value.       |
 | `startTitle`   | `string`                     | `"Start time"` | Label above the start time panel.                     |
 | `timeZone`     | `string`                     | —              | IANA time zone.                                       |
 | `tokens`       | `TimeRangePickerTokens`      | —              | Token overrides.                                      |

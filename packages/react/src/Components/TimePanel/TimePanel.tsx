@@ -15,8 +15,11 @@ function TimePanel(props: TimePanelProps) {
     columnBind,
     getHourBind,
     minuteItems,
+    secondItems,
+    showSeconds,
     showMeridiem,
     getMinuteBind,
+    getSecondBind,
     meridiemItems,
     getMeridiemBind,
   } = useTimePanel(props, {
@@ -24,6 +27,7 @@ function TimePanel(props: TimePanelProps) {
     interval: 1,
     rounded: "md",
     color: "primary",
+    showSeconds: false,
   });
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -36,7 +40,7 @@ function TimePanel(props: TimePanelProps) {
     }
 
     return observeTimePanelSelectedScroll(root);
-  }, [hourItems, minuteItems, meridiemItems]);
+  }, [hourItems, minuteItems, secondItems, meridiemItems]);
 
   return (
     <div
@@ -60,6 +64,16 @@ function TimePanel(props: TimePanelProps) {
           </button>
         ))}
       </div>
+
+      {showSeconds && (
+        <div {...columnBind}>
+          {secondItems.map((item) => (
+            <button key={`second-${item.value}`} {...getSecondBind(item)}>
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {showMeridiem && (
         <div {...columnBind}>

@@ -46,6 +46,7 @@ const timeFieldBridgeKeys = [
   "clearable",
   "showFooter",
   "customProps",
+  "showSeconds",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeFieldOwnProps)[];
@@ -55,12 +56,13 @@ function formatTimeValue(
   adapter: ReturnType<typeof useDateAdapter>,
   context: DateAdapterContext,
   ampm?: boolean,
+  showSeconds?: boolean,
 ): string {
   if (isNil(value)) {
     return "";
   }
 
-  return adapter.formatTime(value, context, { ampm });
+  return adapter.formatTime(value, context, { ampm, showSeconds });
 }
 
 export function useTimeField(props: TimeFieldProps) {
@@ -213,7 +215,13 @@ export function useTimeField(props: TimeFieldProps) {
   );
 
   const displayText = derived(() => {
-    return formatTimeValue(modelValue, adapter, context, timeOnly.ampm);
+    return formatTimeValue(
+      modelValue,
+      adapter,
+      context,
+      timeOnly.ampm,
+      timeOnly.showSeconds,
+    );
   });
 
   const showFooter = derived(() => {

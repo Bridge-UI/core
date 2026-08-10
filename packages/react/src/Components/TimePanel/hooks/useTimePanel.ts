@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import {
   buildHourOptions,
   buildMinuteOptions,
+  buildSecondOptions,
   cn,
   isTimeDisabled,
   mergeBridgeUILayeredClasses,
@@ -49,12 +50,13 @@ const timePanelBridgeKeys = [
   "readOnly",
   "timeZone",
   "customProps",
+  "showSeconds",
   "disableTimes",
 ] as const satisfies readonly (keyof TimePanelOwnProps)[];
 
 type TimePanelLibDefaults = LibDefaultsShape<
   TimePanelOwnProps,
-  "ampm" | "color" | "rounded" | "interval"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimePanelMerged = MergeLibDefaults<
@@ -136,9 +138,11 @@ export function useTimePanel(
       adapter.getMinutes(base, context),
       merged.interval,
     );
+    const seconds = merged.showSeconds ? adapter.getSeconds(base, context) : 0;
     let next = adapter.setHours(base, adapter.getHours(base, context), context);
 
     next = adapter.setMinutes(next, minutes, context);
+    next = adapter.setSeconds(next, seconds, context);
 
     return next;
   });
@@ -149,6 +153,10 @@ export function useTimePanel(
 
   const minutes = derived(() => {
     return buildMinuteOptions({ interval: merged.interval });
+  });
+
+  const seconds = derived(() => {
+    return buildSecondOptions();
   });
 
   const meridiem = derived(() => {
@@ -195,6 +203,12 @@ export function useTimePanel(
 
   const selectMinute = (minute: number) => {
     const next = adapter.setMinutes(displayDate, minute, context);
+
+    commitTime(next);
+  };
+
+  const selectSecond = (second: number) => {
+    const next = adapter.setSeconds(displayDate, second, context);
 
     commitTime(next);
   };
@@ -265,6 +279,33 @@ export function useTimePanel(
         selected,
         value: minute,
         label: String(minute).padStart(2, "0"),
+        disabled: disabled || Boolean(merged.readOnly),
+      };
+    });
+  });
+
+  const secondItems = derived((): TimePanelItem[] => {
+    if (!merged.showSeconds) {
+      return [];
+    }
+
+    const selectedSecond = adapter.getSeconds(displayDate, context);
+
+    return seconds.map((second) => {
+      const candidate = adapter.setSeconds(displayDate, second, context);
+      const disabled = isItemDisabled(candidate);
+      const selected = second === selectedSecond;
+      const state = resolveCalendarDayInteractionState({
+        disabled,
+        selected,
+        readOnly: merged.readOnly,
+      });
+
+      return {
+        state,
+        selected,
+        value: second,
+        label: String(second).padStart(2, "0"),
         disabled: disabled || Boolean(merged.readOnly),
       };
     });
@@ -379,6 +420,18 @@ export function useTimePanel(
     );
   };
 
+  const getSecondBind = (item: TimePanelItem) => {
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectSecond(value);
+        }
+      },
+      `Second ${item.label}`,
+    );
+  };
+
   const getMeridiemBind = (item: TimePanelItem) => {
     return getItemBind(
       item,
@@ -398,10 +451,13 @@ export function useTimePanel(
     columnBind,
     getHourBind,
     minuteItems,
+    secondItems,
     displayDate,
     getMinuteBind,
+    getSecondBind,
     meridiemItems,
     getMeridiemBind,
     showMeridiem: Boolean(merged.ampm),
+    showSeconds: Boolean(merged.showSeconds),
   };
 }

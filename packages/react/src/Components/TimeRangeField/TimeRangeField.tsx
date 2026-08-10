@@ -78,6 +78,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
           onCancel={handlePickerCancel}
           color={formField.merged.color}
           disabled={formField.isDisabled}
+          showSeconds={timeOnly.showSeconds}
           rounded={formField.merged.rounded}
           disableTimes={timeOnly.disableTimes}
           customProps={timeRangePickerCustomProps}

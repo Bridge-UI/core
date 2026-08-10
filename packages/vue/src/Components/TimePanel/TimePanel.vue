@@ -26,8 +26,11 @@ const {
   columnBind,
   getHourBind,
   minuteItems,
+  secondItems,
+  showSeconds,
   showMeridiem,
   getMinuteBind,
+  getSecondBind,
   meridiemItems,
   getMeridiemBind,
 } = useTimePanel(
@@ -37,6 +40,7 @@ const {
     interval: 1,
     rounded: "md",
     color: "primary",
+    showSeconds: false,
   },
   emit,
 );
@@ -66,7 +70,13 @@ onBeforeUnmount(() => {
 });
 
 watch(
-  () => [hourItems.value, minuteItems.value, meridiemItems.value] as const,
+  () =>
+    [
+      hourItems.value,
+      minuteItems.value,
+      secondItems.value,
+      meridiemItems.value,
+    ] as const,
   () => {
     void nextTick(bindScrollSync);
   },
@@ -90,6 +100,16 @@ watch(
         v-for="item in minuteItems"
         :key="`minute-${item.value}`"
         v-bind="getMinuteBind(item)"
+      >
+        {{ item.label }}
+      </button>
+    </div>
+
+    <div v-if="showSeconds" v-bind="columnBind">
+      <button
+        v-for="item in secondItems"
+        :key="`second-${item.value}`"
+        v-bind="getSecondBind(item)"
       >
         {{ item.label }}
       </button>

@@ -110,6 +110,7 @@ const {
       :color="formField.merged.value.color"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
+      :show-seconds="dateTimeOnly.showSeconds"
       :default-view="dateTimeOnly.defaultView"
       :start-of-week="dateTimeOnly.startOfWeek"
       :custom-props="dateTimePickerCustomProps"

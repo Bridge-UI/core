@@ -54,6 +54,7 @@ import { DateTimePicker } from "@bridge-ui/react/Components/DateTimePicker";
 | `readOnly`        | `boolean`                   | `false`     | Prevents selection.                                   |
 | `rounded`         | `CalendarRounded`           | `"md"`      | Border radius of calendar / time tiles and chrome.    |
 | `showFooter`      | `boolean`                   | `false`     | Shows Cancel / Apply. Selection is draft until Apply. |
+| `showSeconds`     | `boolean`                   | `false`     | Shows seconds in the panel and formatted value.       |
 | `slots`           | `CalendarDateSlots`         | —           | Named slots forwarded to `Calendar` (`day`).          |
 | `startOfWeek`     | `StartOfWeek`               | `0`         | First day of the week.                                |
 | `timeZone`        | `string`                    | —           | IANA time zone.                                       |

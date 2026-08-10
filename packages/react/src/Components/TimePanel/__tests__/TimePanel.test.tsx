@@ -34,3 +34,9 @@ test("it should render AM/PM when ampm is set", () => {
   expect(screen.getByRole("button", { name: "AM" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "PM" })).toBeTruthy();
 });
+
+test("it should render seconds when showSeconds is set", () => {
+  render(<TimePanel showSeconds value={new Date(2021, 4, 21, 9, 30, 45)} />);
+
+  expect(screen.getByRole("button", { name: "Second 45" })).toBeTruthy();
+});

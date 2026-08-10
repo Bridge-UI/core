@@ -41,6 +41,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    showSeconds: false,
     orientation: "horizontal",
   });
 
@@ -52,6 +53,9 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
       <div aria-hidden className={timeSizerBind}>
         <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
         <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+        {merged.showSeconds ? (
+          <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} />
+        ) : null}
         {merged.ampm ? <div className={TIME_PANEL_COLUMN_WIDTH_CLASS} /> : null}
       </div>
 
@@ -69,6 +73,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           interval={merged.interval}
           readOnly={merged.readOnly}
           timeZone={merged.timeZone}
+          showSeconds={merged.showSeconds}
           disableTimes={merged.disableTimes}
           customProps={timePanelCustomProps}
         />

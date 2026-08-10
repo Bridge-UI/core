@@ -298,6 +298,13 @@ export interface DateTimeRangePickerOwnProps {
   showFooter?: boolean;
 
   /**
+   * Shows seconds in the panel and formatted value.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
+
+  /**
    * Named slots forwarded to `CalendarRange` (`day`).
    *
    * @default undefined

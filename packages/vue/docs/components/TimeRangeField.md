@@ -49,6 +49,7 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 | `minTime`      | `Date`                      | —                                     | Earliest selectable time.                            |
 | `overlay`      | `FieldOverlayMode`          | `"auto"`                              | Overlay shell: `menu`, `modal`, `drawer`, or `auto`. |
 | `showFooter`   | `boolean`                   | `false` (`true` on mobile when unset) | Shows Cancel / Apply on the nested picker.           |
+| `showSeconds`  | `boolean`                   | `false`                               | Shows seconds in the panel and formatted value.      |
 | `slots`        | `TimeRangeFieldSlots`       | —                                     | Named slots (`FormField` slots).                     |
 | `timeZone`     | `string`                    | —                                     | IANA time zone.                                      |
 | `value`        | `TimeRangeValue \| null`    | —                                     | Controlled value.                                    |

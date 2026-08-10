@@ -56,6 +56,7 @@ const dateTimeFieldBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "showSeconds",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -71,12 +72,13 @@ function formatDateTimeValue(
   adapter: DateAdapter,
   context: DateAdapterContext,
   ampm?: boolean,
+  showSeconds?: boolean,
 ): string {
   if (isNil(value)) {
     return "";
   }
 
-  return `${adapter.format(value, context)} ${adapter.formatTime(value, context, { ampm })}`.trim();
+  return `${adapter.format(value, context)} ${adapter.formatTime(value, context, { ampm, showSeconds })}`.trim();
 }
 
 /**
@@ -234,6 +236,7 @@ export function useDateTimeField(
       adapter.value,
       context.value,
       dateTimeOnly.value.ampm,
+      dateTimeOnly.value.showSeconds,
     );
   });
 

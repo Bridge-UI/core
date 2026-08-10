@@ -51,13 +51,20 @@ const timeRangePickerBridgeKeys = [
   "startTitle",
   "customProps",
   "orientation",
+  "showSeconds",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeRangePickerOwnProps)[];
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "orientation"
+  | "ampm"
+  | "color"
+  | "rounded"
+  | "interval"
+  | "showFooter"
+  | "orientation"
+  | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<

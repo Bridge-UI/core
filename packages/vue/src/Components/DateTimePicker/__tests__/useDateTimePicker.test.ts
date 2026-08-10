@@ -16,6 +16,7 @@ const libDefaults = {
   startOfWeek: 0,
   color: "primary",
   showFooter: false,
+  showSeconds: false,
   defaultView: "date",
 } as const satisfies Partial<DateTimePickerOwnProps>;
 
