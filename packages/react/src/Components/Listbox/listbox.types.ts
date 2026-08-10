@@ -292,7 +292,7 @@ export interface ListboxOwnProps {
    * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
    * and `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 

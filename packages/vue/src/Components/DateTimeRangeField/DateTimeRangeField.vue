@@ -7,6 +7,7 @@ import { computed, ref } from "vue";
 import type { DateRangeValue } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { useDateTimeRangeField } from "@/Components/DateTimeRangeField/composables/useDateTimeRangeField";
 import type {
   DateTimeRangeFieldEmits,
@@ -16,6 +17,7 @@ import type {
 import { DateTimeRangePicker } from "@/Components/DateTimeRangePicker";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<DateTimeRangeFieldSlots>();
 
@@ -24,10 +26,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<null | DateRangeValue>();
 
 const props = withDefaults(defineProps<DateTimeRangeFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<DateTimeRangeFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<null | DateRangeValue>(
   props.defaultValue ?? null,
@@ -48,10 +53,15 @@ const {
   overlay,
   formField,
   inputBind,
+  clearBind,
+  clearValue,
   modelValue,
+  showFooter,
   orientation,
   pickerClass,
   dateTimeOnly,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
   handlePickerCancel,
@@ -62,7 +72,24 @@ const {
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
   <FieldOverlay
@@ -75,6 +102,7 @@ const {
       :value="modelValue"
       :class="pickerClass"
       :ampm="dateTimeOnly.ampm"
+      :show-footer="showFooter"
       :orientation="orientation"
       :read-only="props.readonly"
       :max-date="dateTimeOnly.maxDate"
@@ -87,7 +115,6 @@ const {
       :time-zone="dateTimeOnly.timeZone"
       :hide-years="dateTimeOnly.hideYears"
       :color="formField.merged.value.color"
-      :show-footer="dateTimeOnly.showFooter"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
       :start-of-week="dateTimeOnly.startOfWeek"

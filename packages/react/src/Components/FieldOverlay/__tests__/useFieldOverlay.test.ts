@@ -35,12 +35,20 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-test("it should resolve menu by default", () => {
+test("it should resolve menu by default on desktop", () => {
   mockViewport(1280);
 
   const { result } = renderHook(() => useFieldOverlay({ show: true }));
 
   expect(result.current.resolvedOverlay).toBe("menu");
+});
+
+test("it should resolve drawer by default on mobile", () => {
+  mockViewport(500);
+
+  const { result } = renderHook(() => useFieldOverlay({ show: true }));
+
+  expect(result.current.resolvedOverlay).toBe("drawer");
 });
 
 test("it should resolve explicit drawer", () => {

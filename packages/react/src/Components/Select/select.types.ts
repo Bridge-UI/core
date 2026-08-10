@@ -262,7 +262,7 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
    * and `drawer` (bottom) on mobile. Forwarded to the internal `Listbox`.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 

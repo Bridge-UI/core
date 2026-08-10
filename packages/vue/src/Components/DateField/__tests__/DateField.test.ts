@@ -106,3 +106,46 @@ test("it should pass color to the nested DatePicker", async () => {
   expect(day).toBeTruthy();
   expect(String(day?.className)).toMatch(/secondary/);
 });
+
+test("it should show the clear control when a value is present", () => {
+  mountDateField({
+    props: { defaultValue: new Date(2021, 4, 21) },
+  });
+
+  expect(document.body.querySelector('[aria-label="Clear"]')).not.toBeNull();
+});
+
+test("it should not show the clear control when there is no value", () => {
+  mountDateField();
+
+  expect(document.body.querySelector('[aria-label="Clear"]')).toBeNull();
+});
+
+test("it should emit change and clear when the clear control is clicked", async () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  mountDateField({
+    props: {
+      onClear,
+      onChange,
+      defaultValue: new Date(2021, 4, 21),
+    },
+  });
+
+  const clearControl = document.body.querySelector('[aria-label="Clear"]');
+
+  clearControl?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});
+
+test("it should not show the clear control when clearable is false", () => {
+  mountDateField({
+    props: { clearable: false, defaultValue: new Date(2021, 4, 21) },
+  });
+
+  expect(document.body.querySelector('[aria-label="Clear"]')).toBeNull();
+});

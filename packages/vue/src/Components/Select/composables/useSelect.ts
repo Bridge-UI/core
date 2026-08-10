@@ -464,6 +464,15 @@ export function useSelect(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !multiple.value) {
       return;
@@ -562,6 +571,10 @@ export function useSelect(
   function clearValue(event?: Event) {
     event?.preventDefault();
     event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
 
     if (multiple.value) {
       setModel([]);
@@ -935,6 +948,7 @@ export function useSelect(
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     visibleOptions,
     isSearchActive,
     selectedOptions,

@@ -23,7 +23,7 @@ import { FieldOverlay } from "@bridge-ui/react/Components/FieldOverlay";
 
 ### Overlay modes
 
-`overlay` accepts `menu` | `modal` | `drawer` | `auto`. Default is `menu`. Use `auto` for `menu` on desktop and bottom `drawer` on mobile.
+`overlay` accepts `menu` | `modal` | `drawer` | `auto`. Default is `auto` (`menu` on desktop, bottom `drawer` on mobile).
 
 ```tsx
 <FieldOverlay show={open} overlay="auto" onShowChange={setOpen}>
@@ -73,7 +73,7 @@ Forward props to the active shell via `customProps.menu`, `customProps.modal`, o
 | -------------- | ------------------------- | -------- | ---------------------------------------------------------- |
 | `children`     | `ReactNode`               | —        | Content rendered inside the active overlay shell.          |
 | `customProps`  | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`). |
-| `overlay`      | `FieldOverlayMode`        | `"menu"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
+| `overlay`      | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
 | `show`         | `boolean`                 | `false`  | Whether the overlay is open.                               |
 | `onShowChange` | `(show: boolean) => void` | —        | Called when open state should change.                      |
 

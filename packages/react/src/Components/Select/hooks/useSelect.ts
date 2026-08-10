@@ -499,6 +499,10 @@ export function useSelect(
       event?.preventDefault();
       event?.stopPropagation();
 
+      if (props.disabled || props.readonly) {
+        return;
+      }
+
       if (multiple) {
         setModel([]);
         emitChange([]);
@@ -510,7 +514,15 @@ export function useSelect(
       onClear?.();
       closeMenu();
     },
-    [onClear, multiple, setModel, closeMenu, emitChange],
+    [
+      onClear,
+      multiple,
+      setModel,
+      closeMenu,
+      emitChange,
+      props.disabled,
+      props.readonly,
+    ],
   );
 
   const removeChip = useCallback(
@@ -796,6 +808,10 @@ export function useSelect(
     },
   );
 
+  const showClearIcon = derived(() => {
+    return hasValue && clearable && !props.readonly && !formField.isDisabled;
+  });
+
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
@@ -1030,6 +1046,7 @@ export function useSelect(
     emptyMessage,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     loadingMessage,
     visibleOptions,
     isSearchActive,

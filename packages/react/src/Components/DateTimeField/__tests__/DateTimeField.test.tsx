@@ -1,6 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 afterEach(() => {
   cleanup();
@@ -22,4 +22,22 @@ test("it should open the picker on focus", () => {
 
   expect(screen.getByRole("button", { name: "Select year" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Hour 09" })).toBeTruthy();
+});
+
+test("it should call onChange and onClear when the clear control is clicked", () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  render(
+    <DateTimeField
+      onClear={onClear}
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 21, 9, 30)}
+    />,
+  );
+
+  fireEvent.click(screen.getByLabelText("Clear"));
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
 });

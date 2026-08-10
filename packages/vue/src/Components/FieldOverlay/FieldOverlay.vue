@@ -17,7 +17,7 @@ defineOptions({ inheritAttrs: false });
 const emit = defineEmits<FieldOverlayEmits>();
 
 const props = withDefaults(defineProps<FieldOverlayOwnProps>(), {
-  overlay: "menu",
+  overlay: "auto",
 });
 
 const model = defineModel<boolean>({ default: false });

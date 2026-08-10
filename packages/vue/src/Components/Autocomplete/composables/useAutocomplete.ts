@@ -469,6 +469,15 @@ export function useAutocomplete(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !multiple.value) {
       return;
@@ -628,6 +637,10 @@ export function useAutocomplete(
   function clearValue(event?: Event) {
     event?.preventDefault();
     event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
 
     if (multiple.value) {
       setModel([]);
@@ -1020,6 +1033,7 @@ export function useAutocomplete(
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     visibleOptions,
     isSearchActive,
     open: openModel,

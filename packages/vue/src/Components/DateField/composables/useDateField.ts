@@ -1,5 +1,5 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -14,11 +14,13 @@ import {
   cn,
   isDateRangeValue,
   resolveDatePickerMode,
+  resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
   type DatePickerModel,
 } from "@bridge-ui/core";
+import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
@@ -32,7 +34,12 @@ import {
   useFormField,
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
-import { hasNamedSlot, mergePartBind } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+} from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateFieldBridgeKeys = [
   "range",
@@ -42,6 +49,7 @@ const dateFieldBridgeKeys = [
   "overlay",
   "multiple",
   "timeZone",
+  "clearable",
   "hideYears",
   "hideMonths",
   "showFooter",
@@ -76,6 +84,18 @@ function formatModel(
   return adapter.format(value, context);
 }
 
+function hasDateFieldValue(value: DatePickerModel): boolean {
+  if (isNil(value)) {
+    return false;
+  }
+
+  if (isArray(value)) {
+    return value.length > 0;
+  }
+
+  return true;
+}
+
 export function useDateField(
   props: DateFieldOwnProps,
   model: Ref<null | undefined | DatePickerModel>,
@@ -84,6 +104,7 @@ export function useDateField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -114,8 +135,20 @@ export function useDateField(
     });
   });
 
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(dateOnly.value.showFooter, breakpoint.mobile);
+  });
+
   const modelValue = computed(() => {
     return model.value ?? null;
+  });
+
+  const clearable = computed(() => {
+    return dateOnly.value.clearable !== false;
+  });
+
+  const hasValue = computed(() => {
+    return hasDateFieldValue(modelValue.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -152,6 +185,7 @@ export function useDateField(
 
     const {
       menu: _menu,
+      clearIcon: _clearIcon,
       datePicker: _datePicker,
       ...formFieldOnlyCustom
     } = (dateOnly.value.customProps ?? {}) as DateFieldCustomProps;
@@ -170,10 +204,16 @@ export function useDateField(
             class: cn({
               "cursor-pointer": !props.disabled && !props.readonly,
             }),
-            onClick: () => {
-              if (!props.disabled && !props.readonly) {
-                handleOpenChange(true);
+            onClick: (event: MouseEvent) => {
+              if (props.disabled || props.readonly) {
+                return;
               }
+
+              if ((event.target as HTMLElement).closest("[data-field-clear]")) {
+                return;
+              }
+
+              handleOpenChange(true);
             },
           },
         ),
@@ -195,6 +235,15 @@ export function useDateField(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const displayText = computed(() => {
     if (!isNil(draftText.value)) {
       return draftText.value;
@@ -213,13 +262,31 @@ export function useDateField(
     draftText.value = null;
 
     // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
-    if (mode.value === "single" || dateOnly.value.showFooter) {
+    if (mode.value === "single" || showFooter.value) {
       handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
     handleOpenChange(false);
+  }
+
+  function clearValue(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
+
+    commitValue(null);
+    draftText.value = null;
+    emit("clear");
+    handleOpenChange(false);
+  }
+
+  function handleClearPointer(event: MouseEvent) {
+    event.preventDefault();
   }
 
   function parseDraft() {
@@ -308,15 +375,54 @@ export function useDateField(
     return dateOnly.value.customProps?.datePicker;
   });
 
+  const clearIconSize = computed(() => {
+    return resolveFieldAdornmentIconSize(formField.merged.value.size);
+  });
+
+  const clearTone = computed(() => {
+    return (
+      get(listboxColorProps, [
+        formField.merged.value.color ?? "primary",
+        "clear",
+      ]) ??
+      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    );
+  });
+
+  const clearBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabindex: 0,
+        role: "button",
+        "data-field-clear": true,
+        onMousedown: handleClearPointer,
+        class: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [clearTone.value]: true,
+          [dateOnly.value.classes?.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
     mode,
     overlay,
+    hasValue,
     dateOnly,
     formField,
     inputBind,
+    clearable,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
     containerRef,
+    clearIconSize,
+    showClearIcon,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

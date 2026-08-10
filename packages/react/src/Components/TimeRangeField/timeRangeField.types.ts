@@ -17,17 +17,28 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { TimeRangePickerCustomProps } from "@/Components/TimeRangePicker";
 
-export interface TimeRangeFieldClasses extends FormFieldClasses {}
+export interface TimeRangeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface TimeRangeFieldCallbacks {
   /**
    * Called when the selected range changes.
    */
   onChange?: (value: null | TimeRangeValue) => void;
+
+  /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
 
   /**
    * Called when the menu closes.
@@ -41,6 +52,13 @@ export interface TimeRangeFieldCallbacks {
 }
 
 export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `TimeRangeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
    *
@@ -111,6 +129,13 @@ export interface TimeRangeFieldOwnProps extends Omit<
   classes?: TimeRangeFieldClasses;
 
   /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
+
+  /**
    * Extra props for internal parts.
    *
    * @default undefined
@@ -156,12 +181,13 @@ export interface TimeRangeFieldOwnProps extends Omit<
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
    * `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

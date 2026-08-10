@@ -1,11 +1,15 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { DateFieldProps } from "@/Components/DateField/dateField.types";
 import { useDateField } from "@/Components/DateField/hooks/useDateField";
 import { DatePicker } from "@/Components/DatePicker";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 
 function DateField(props: DateFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     daySlot,
@@ -13,7 +17,12 @@ function DateField(props: DateFieldProps) {
     dateOnly,
     formField,
     inputBind,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
+    clearIconSize,
+    showClearIcon,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -24,7 +33,29 @@ function DateField(props: DateFieldProps) {
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
       <FieldOverlay
@@ -36,6 +67,7 @@ function DateField(props: DateFieldProps) {
         <DatePicker
           value={modelValue}
           range={dateOnly.range}
+          showFooter={showFooter}
           readOnly={props.readonly}
           maxDate={dateOnly.maxDate}
           minDate={dateOnly.minDate}
@@ -46,7 +78,6 @@ function DateField(props: DateFieldProps) {
           hideYears={dateOnly.hideYears}
           color={formField.merged.color}
           disabled={formField.isDisabled}
-          showFooter={dateOnly.showFooter}
           hideMonths={dateOnly.hideMonths}
           defaultView={dateOnly.defaultView}
           startOfWeek={dateOnly.startOfWeek}

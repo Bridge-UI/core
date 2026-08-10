@@ -475,6 +475,7 @@ export type { OtpDigitsUpdate, OtpInputType } from "@/Utils/otp";
 export {
   isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldShowFooter,
   resolveRangePickerOrientation,
 } from "@/Utils/overlay";
 export type {

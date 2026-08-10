@@ -409,6 +409,7 @@ export {
   resolveEffectiveDrawerTransition,
   resolveEffectiveModalTransition,
   resolveFieldOverlay,
+  resolveFieldShowFooter,
   resolveModalPortalElement,
   resolveOtpLength,
   resolveRangePickerOrientation,

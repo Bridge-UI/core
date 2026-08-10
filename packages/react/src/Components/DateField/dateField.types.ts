@@ -21,12 +21,47 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
-export interface DateFieldClasses extends FormFieldClasses {}
+export interface DateFieldCallbacks {
+  /**
+   * Called when the selection model changes.
+   */
+  onChange?: (value: DatePickerModel) => void;
+
+  /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
+
+  /**
+   * Called when the menu closes.
+   */
+  onClose?: () => void;
+
+  /**
+   * Called when the menu opens.
+   */
+  onOpen?: () => void;
+}
+
+export interface DateFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface DateFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `DateField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `DatePicker`.
    *
@@ -71,23 +106,6 @@ export interface DateFieldCustomProps extends FormFieldCustomProps {
   >;
 }
 
-export interface DateFieldCallbacks {
-  /**
-   * Called when the selection model changes.
-   */
-  onChange?: (value: DatePickerModel) => void;
-
-  /**
-   * Called when the menu closes.
-   */
-  onClose?: () => void;
-
-  /**
-   * Called when the menu opens.
-   */
-  onOpen?: () => void;
-}
-
 export interface DateFieldOwnProps extends Omit<
   FormFieldOwnProps,
   "field" | "slots" | "classes" | "customProps"
@@ -105,6 +123,13 @@ export interface DateFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: DateFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -201,7 +226,7 @@ export interface DateFieldOwnProps extends Omit<
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
    * `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
@@ -213,7 +238,8 @@ export interface DateFieldOwnProps extends Omit<
   range?: boolean;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

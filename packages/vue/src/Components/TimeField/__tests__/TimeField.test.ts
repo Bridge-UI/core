@@ -104,3 +104,24 @@ test("it should pass color to the nested TimePicker", async () => {
   expect(hour).toBeTruthy();
   expect(String(hour?.className)).toMatch(/secondary/);
 });
+
+test("it should emit change and clear when the clear control is clicked", async () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  mountTimeField({
+    props: {
+      onClear,
+      onChange,
+      defaultValue: new Date(2021, 4, 21, 14, 30),
+    },
+  });
+
+  const clearControl = document.body.querySelector('[aria-label="Clear"]');
+
+  clearControl?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});

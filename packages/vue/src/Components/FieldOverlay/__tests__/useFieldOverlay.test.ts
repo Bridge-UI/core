@@ -55,12 +55,20 @@ function mountUseFieldOverlay(props: FieldOverlayOwnProps = {}) {
   return result;
 }
 
-test("it should resolve menu by default", () => {
+test("it should resolve menu by default on desktop", () => {
   mockViewport(1280);
 
   const { resolvedOverlay } = mountUseFieldOverlay();
 
   expect(resolvedOverlay.value).toBe("menu");
+});
+
+test("it should resolve drawer by default on mobile", () => {
+  mockViewport(500);
+
+  const { resolvedOverlay } = mountUseFieldOverlay();
+
+  expect(resolvedOverlay.value).toBe("drawer");
 });
 
 test("it should resolve explicit drawer", () => {

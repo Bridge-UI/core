@@ -5,13 +5,14 @@ import { describe, expect, test } from "vitest";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldShowFooter,
   resolveRangePickerOrientation,
 } from "@/Utils/overlay";
 
 describe("resolveFieldOverlay", () => {
-  test("it should default to menu when mode is undefined", () => {
+  test("it should default like auto when mode is undefined", () => {
     expect(resolveFieldOverlay(undefined, false)).toBe("menu");
-    expect(resolveFieldOverlay(undefined, true)).toBe("menu");
+    expect(resolveFieldOverlay(undefined, true)).toBe("drawer");
   });
 
   test("it should keep menu when mode is menu", () => {
@@ -81,5 +82,20 @@ describe("isFieldOverlayDialog", () => {
     expect(isFieldOverlayDialog("modal")).toBe(true);
     expect(isFieldOverlayDialog("drawer")).toBe(true);
     expect(isFieldOverlayDialog("menu")).toBe(false);
+  });
+});
+
+describe("resolveFieldShowFooter", () => {
+  test("it should keep an explicit showFooter", () => {
+    expect(resolveFieldShowFooter(true, false)).toBe(true);
+    expect(resolveFieldShowFooter(false, true)).toBe(false);
+  });
+
+  test("it should default to true on mobile when unset", () => {
+    expect(resolveFieldShowFooter(undefined, true)).toBe(true);
+  });
+
+  test("it should default to false on desktop when unset", () => {
+    expect(resolveFieldShowFooter(undefined, false)).toBe(false);
   });
 });

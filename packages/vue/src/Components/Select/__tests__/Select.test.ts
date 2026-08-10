@@ -121,6 +121,14 @@ test("it should clear the selected value", async () => {
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null]);
 });
 
+test("it should not show the clear control when readonly", () => {
+  const wrapper = mountSelect({
+    props: { readonly: true, clearable: true, modelValue: "active" },
+  });
+
+  expect(wrapper.find('[aria-label="Clear selection"]').exists()).toBe(false);
+});
+
 test("it should collect declarative SelectOption children", async () => {
   const value = ref("pending");
 

@@ -573,6 +573,10 @@ export function useAutocomplete(
       event?.preventDefault();
       event?.stopPropagation();
 
+      if (props.disabled || props.readonly) {
+        return;
+      }
+
       if (multiple) {
         setModel([]);
         emitChange([]);
@@ -584,7 +588,15 @@ export function useAutocomplete(
       onClear?.();
       closeMenu();
     },
-    [onClear, multiple, setModel, closeMenu, emitChange],
+    [
+      onClear,
+      multiple,
+      setModel,
+      closeMenu,
+      emitChange,
+      props.disabled,
+      props.readonly,
+    ],
   );
 
   const removeChip = useCallback(
@@ -875,6 +887,10 @@ export function useAutocomplete(
     },
   );
 
+  const showClearIcon = derived(() => {
+    return hasValue && clearable && !props.readonly && !formField.isDisabled;
+  });
+
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
@@ -1109,6 +1125,7 @@ export function useAutocomplete(
     emptyMessage,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     loadingMessage,
     visibleOptions,
     isSearchActive,

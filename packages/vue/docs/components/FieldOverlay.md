@@ -23,7 +23,7 @@ import { FieldOverlay } from "@bridge-ui/vue/Components/FieldOverlay";
 
 ### Overlay modes
 
-`overlay` accepts `menu` | `modal` | `drawer` | `auto`. Default is `menu`. Use `auto` for `menu` on desktop and bottom `drawer` on mobile.
+`overlay` accepts `menu` | `modal` | `drawer` | `auto`. Default is `auto` (`menu` on desktop, bottom `drawer` on mobile).
 
 ```vue
 <FieldOverlay v-model="open" overlay="auto">
@@ -70,7 +70,7 @@ Forward props to the active shell via `customProps.menu`, `customProps.modal`, o
 | Prop          | Type                      | Default  | Description                                                |
 | ------------- | ------------------------- | -------- | ---------------------------------------------------------- |
 | `customProps` | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`). |
-| `overlay`     | `FieldOverlayMode`        | `"menu"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
+| `overlay`     | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
 
 ### v-model
 

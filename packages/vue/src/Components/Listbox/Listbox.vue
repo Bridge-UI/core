@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   size: "md",
   loading: false,
   multiple: false,
-  overlay: "menu",
+  overlay: "auto",
   color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,

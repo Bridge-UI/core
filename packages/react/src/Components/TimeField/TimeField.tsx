@@ -1,18 +1,27 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 import { useTimeField } from "@/Components/TimeField/hooks/useTimeField";
 import type { TimeFieldProps } from "@/Components/TimeField/timeField.types";
 import { TimePicker } from "@/Components/TimePicker";
 
 function TimeField(props: TimeFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     overlay,
     timeOnly,
     formField,
     inputBind,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
+    clearIconSize,
+    showClearIcon,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -23,7 +32,29 @@ function TimeField(props: TimeFieldProps) {
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
       <FieldOverlay
@@ -35,6 +66,7 @@ function TimeField(props: TimeFieldProps) {
         <TimePicker
           value={modelValue}
           ampm={timeOnly.ampm}
+          showFooter={showFooter}
           readOnly={props.readonly}
           maxTime={timeOnly.maxTime}
           minTime={timeOnly.minTime}
@@ -44,7 +76,6 @@ function TimeField(props: TimeFieldProps) {
           onCancel={handlePickerCancel}
           color={formField.merged.color}
           disabled={formField.isDisabled}
-          showFooter={timeOnly.showFooter}
           rounded={formField.merged.rounded}
           customProps={timePickerCustomProps}
           disableTimes={timeOnly.disableTimes}

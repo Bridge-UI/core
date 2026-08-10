@@ -120,6 +120,14 @@ test("it should clear the value when clear control is clicked", () => {
   expect(onChange).toHaveBeenCalledWith("");
 });
 
+test("it should not show the clear control when readonly", () => {
+  render(
+    <Select readonly value="apple" options={options} aria-label="Fruit" />,
+  );
+
+  expect(screen.queryByLabelText("Clear selection")).toBeNull();
+});
+
 test("it should expose combobox aria attributes when open", async () => {
   render(<Select options={options} aria-label="Fruit" />);
 

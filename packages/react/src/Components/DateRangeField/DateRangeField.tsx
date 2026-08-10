@@ -1,11 +1,15 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { DateRangeFieldProps } from "@/Components/DateRangeField/dateRangeField.types";
 import { useDateRangeField } from "@/Components/DateRangeField/hooks/useDateRangeField";
 import { DateRangePicker } from "@/Components/DateRangePicker";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 
 function DateRangeField(props: DateRangeFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     daySlot,
@@ -13,8 +17,13 @@ function DateRangeField(props: DateRangeFieldProps) {
     dateOnly,
     formField,
     inputBind,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
     orientation,
+    clearIconSize,
+    showClearIcon,
     pickerClassName,
     handleOpenChange,
     handlePickerChange,
@@ -26,7 +35,29 @@ function DateRangeField(props: DateRangeFieldProps) {
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
       <FieldOverlay
@@ -37,6 +68,7 @@ function DateRangeField(props: DateRangeFieldProps) {
       >
         <DateRangePicker
           value={modelValue}
+          showFooter={showFooter}
           readOnly={props.readonly}
           orientation={orientation}
           maxDate={dateOnly.maxDate}
@@ -48,7 +80,6 @@ function DateRangeField(props: DateRangeFieldProps) {
           hideYears={dateOnly.hideYears}
           color={formField.merged.color}
           disabled={formField.isDisabled}
-          showFooter={dateOnly.showFooter}
           hideMonths={dateOnly.hideMonths}
           startOfWeek={dateOnly.startOfWeek}
           rounded={formField.merged.rounded}

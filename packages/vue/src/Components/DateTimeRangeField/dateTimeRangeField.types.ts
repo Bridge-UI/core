@@ -22,12 +22,25 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
-export interface DateTimeRangeFieldClasses extends FormFieldClasses {}
+export interface DateTimeRangeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface DateTimeRangeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `DateTimeRangeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `DateTimeRangePicker`.
    *
@@ -79,6 +92,11 @@ export interface DateTimeRangeFieldEmits {
   change: [value: null | DateRangeValue];
 
   /**
+   * Emitted when the value is cleared.
+   */
+  clear: [];
+
+  /**
    * Emitted when the menu closes.
    */
   close: [];
@@ -106,6 +124,13 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: DateTimeRangeFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -224,12 +249,13 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
    * `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */
