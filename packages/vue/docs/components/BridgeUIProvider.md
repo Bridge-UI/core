@@ -1,6 +1,6 @@
 # BridgeUIProvider
 
-Root provider for theme, locale, direction, breakpoints, icon/i18n adapters, and component registry defaults.
+Root provider for theme, locale, direction, breakpoints, icon/i18n/date adapters, and component registry defaults.
 
 ## Import
 
@@ -56,6 +56,23 @@ const i18n = createDictionaryI18nAdapter();
 app.use(
   createBridgeUI({
     global: { i18n },
+  }),
+);
+```
+
+### Date adapter
+
+Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, Bridge uses `createNativeDateAdapter`. Ready samples in `packages/vue/docs/examples/` (Day.js, date-fns, Luxon, Moment).
+
+```ts
+import { createBridgeUI } from "@bridge-ui/vue";
+import { createDayjsDateAdapter } from "@examples/date-dayjs";
+
+const dates = createDayjsDateAdapter();
+
+app.use(
+  createBridgeUI({
+    global: { dates },
   }),
 );
 ```
@@ -137,10 +154,10 @@ setGlobal({ mobileBreakpoint: "md" });
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                                        |
-| ------------ | -------------------------- | ------- | -------------------------------------------------------------------------------------------------- |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                             |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `formDefaults` |
+| Prop         | Type                       | Default | Description                                                                                                 |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                      |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults` |
 
 App content is passed via the **default slot** (see Usage above).
 
