@@ -137,19 +137,25 @@ export function createMomentDateAdapter(
 
     setHours: (date, hours, context) => {
       return fromMoment(
-        toMoment(date, context).clone().hour(clamp(hours, 0, 23)),
+        toMoment(date, context)
+          .clone()
+          .hour(clamp(hours, 0, 23)),
       );
     },
 
     setMinutes: (date, minutes, context) => {
       return fromMoment(
-        toMoment(date, context).clone().minute(clamp(minutes, 0, 59)),
+        toMoment(date, context)
+          .clone()
+          .minute(clamp(minutes, 0, 59)),
       );
     },
 
     setSeconds: (date, seconds, context) => {
       return fromMoment(
-        toMoment(date, context).clone().second(clamp(seconds, 0, 59)),
+        toMoment(date, context)
+          .clone()
+          .second(clamp(seconds, 0, 59)),
       );
     },
 

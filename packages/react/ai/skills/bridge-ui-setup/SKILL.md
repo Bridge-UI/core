@@ -19,13 +19,13 @@ npx bridge-ui-react-ai install
 
 ## Required reading
 
-| Topic                                         | Doc                                       |
-| --------------------------------------------- | ----------------------------------------- |
+| Topic                                                | Doc                                       |
+| ---------------------------------------------------- | ----------------------------------------- |
 | Provider, `global`, `components`, icons, i18n, dates | `.ai/docs/components/BridgeUIProvider.md` |
-| Icon adapter usage                            | `.ai/docs/components/Icon.md`             |
-| i18n adapter                                  | `.ai/docs/components/I18n.md`             |
-| Breakpoints                                   | `.ai/docs/components/useBreakpoint.md`    |
-| Adapter sample code                           | `.ai/docs/examples/`                      |
+| Icon adapter usage                                   | `.ai/docs/components/Icon.md`             |
+| i18n adapter                                         | `.ai/docs/components/I18n.md`             |
+| Breakpoints                                          | `.ai/docs/components/useBreakpoint.md`    |
+| Adapter sample code                                  | `.ai/docs/examples/`                      |
 
 ## Hard rules
 

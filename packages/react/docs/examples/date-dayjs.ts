@@ -7,11 +7,11 @@
  */
 
 // ** External Imports
-import { clamp, isNil, isString, range } from "es-toolkit/compat";
 import dayjs, { type Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { clamp, isNil, isString, range } from "es-toolkit/compat";
 
 // ** Core Imports
 import type {
@@ -241,9 +241,7 @@ export function createDayjsDateAdapter(
 
       const trimmed = value.trim();
       const zone = resolveZone(context);
-      const parsed = isNil(zone)
-        ? dayjs(trimmed)
-        : dayjs.tz(trimmed, zone);
+      const parsed = isNil(zone) ? dayjs(trimmed) : dayjs.tz(trimmed, zone);
 
       if (!parsed.isValid()) {
         return null;

@@ -135,23 +135,28 @@ export function createLuxonDateAdapter(
       return fromDateTime(toDateTime(date, context).plus({ months: amount }));
     },
 
-    endOfMonth: (date, context) => {
-      return fromDateTime(toDateTime(date, context).endOf("month").startOf("second"));
-    },
-
-    isBefore: (a, b, context) => {
-      return toDateTime(a, context).startOf("day") < toDateTime(b, context).startOf("day");
-    },
-
     getMonthNames: (context) => {
       const locale = resolveLocale(context) ?? "en-US";
 
       return Info.months("long", { locale });
     },
 
+    endOfMonth: (date, context) => {
+      return fromDateTime(
+        toDateTime(date, context).endOf("month").startOf("second"),
+      );
+    },
+
     setHours: (date, hours, context) => {
       return fromDateTime(
         toDateTime(date, context).set({ hour: clamp(hours, 0, 23) }),
+      );
+    },
+
+    isBefore: (a, b, context) => {
+      return (
+        toDateTime(a, context).startOf("day") <
+        toDateTime(b, context).startOf("day")
       );
     },
 

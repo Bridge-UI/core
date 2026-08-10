@@ -280,10 +280,7 @@ function parseTimeWithDateFns(input: {
   const base = adapter.now(context);
 
   return setSeconds(
-    setMinutes(
-      setHours(base, getHours(parsed)),
-      getMinutes(parsed),
-    ),
+    setMinutes(setHours(base, getHours(parsed)), getMinutes(parsed)),
     showSeconds ? getSeconds(parsed) : 0,
   );
 }
