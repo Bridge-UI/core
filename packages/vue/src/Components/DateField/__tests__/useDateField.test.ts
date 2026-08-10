@@ -106,3 +106,35 @@ test("it should keep explicit showFooter true on desktop", () => {
 
   expect(showFooter.value).toBe(true);
 });
+
+test("it should leave picker class empty for auto overlay on desktop", () => {
+  mockViewport(1280);
+
+  const { pickerClass } = mountUseDateField();
+
+  expect(pickerClass.value).toBeUndefined();
+});
+
+test("it should stretch the picker when overlay is a dialog", () => {
+  mockViewport(1280);
+
+  const { pickerClass } = mountUseDateField({ overlay: "modal" });
+
+  expect(pickerClass.value).toBe("w-full shadow-none");
+});
+
+test("it should stretch the picker for auto overlay on mobile", () => {
+  mockViewport(500);
+
+  const { pickerClass } = mountUseDateField();
+
+  expect(pickerClass.value).toBe("w-full shadow-none");
+});
+
+test("it should keep menu overlay without dialog picker classes", () => {
+  mockViewport(500);
+
+  const { pickerClass } = mountUseDateField({ overlay: "menu" });
+
+  expect(pickerClass.value).toBeUndefined();
+});

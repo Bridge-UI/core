@@ -116,3 +116,20 @@ test("it should not show the clear control when clearable is false", () => {
 
   expect(screen.queryByLabelText("Clear")).toBeNull();
 });
+
+test("it should open a dialog when overlay is modal", () => {
+  render(
+    <DateField
+      overlay="modal"
+      defaultValue={new Date(2021, 4, 21)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const dialog = document.body.querySelector('[role="dialog"]');
+
+  expect(dialog).not.toBeNull();
+  expect(dialog?.className).toMatch(/w-full|sm:max-w/);
+});

@@ -30,6 +30,16 @@ test("it should expose twenty-four hour items by default", () => {
   expect(result.current.hourItems).toHaveLength(24);
 });
 
+test("it should fill available width with flexible columns", () => {
+  const { result } = renderUseTimePanel({
+    value: new Date(2021, 4, 21, 9, 30),
+  });
+
+  expect(result.current.rootBind.className).toContain("w-full");
+  expect(result.current.columnBind.className).toContain("flex-1");
+  expect(result.current.columnBind.className).toContain("min-w-[3.75rem]");
+});
+
 test("it should expose twelve hour items when ampm is set", () => {
   const { result } = renderUseTimePanel({
     ampm: true,

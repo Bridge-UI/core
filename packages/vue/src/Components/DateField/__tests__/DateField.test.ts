@@ -149,3 +149,20 @@ test("it should not show the clear control when clearable is false", () => {
 
   expect(document.body.querySelector('[aria-label="Clear"]')).toBeNull();
 });
+
+test("it should open a dialog when overlay is modal", async () => {
+  mountDateField({
+    props: {
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 21),
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
