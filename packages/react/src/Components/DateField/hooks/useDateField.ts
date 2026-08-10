@@ -7,7 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
   resolveDatePickerMode,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapterContext,
@@ -156,6 +158,16 @@ export function useDateField(props: DateFieldProps) {
 
   const hasValue = derived(() => {
     return hasDateFieldValue(modelValue);
+  });
+
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "w-full shadow-none"
+      : undefined;
   });
 
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
@@ -410,6 +422,7 @@ export function useDateField(props: DateFieldProps) {
     containerRef,
     clearIconSize,
     showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

@@ -56,6 +56,7 @@ const {
   clearValue,
   modelValue,
   showFooter,
+  pickerClass,
   clearIconSize,
   showClearIcon,
   handleOpenChange,
@@ -96,6 +97,7 @@ const {
   >
     <DatePicker
       :value="modelValue"
+      :class="pickerClass"
       :range="dateOnly.range"
       :show-footer="showFooter"
       :read-only="props.readonly"

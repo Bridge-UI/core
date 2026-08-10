@@ -56,15 +56,14 @@ test("it should enable footer when showFooter is set", () => {
   expect(showFooter.value).toBe(true);
 });
 
-test("it should size the root and panels to their content", () => {
+test("it should size the root to content and let panels grow", () => {
   const { endBind, rootBind, startBind, panelsBind } =
     mountUseTimeRangePicker();
 
-  expect(endBind.value.class).toContain("w-fit");
   expect(rootBind.value.class).toContain("w-fit");
-  expect(startBind.value.class).toContain("w-fit");
-  expect(endBind.value.class).not.toContain("flex-1");
-  expect(startBind.value.class).not.toContain("flex-1");
+  expect(endBind.value.class).toContain("flex-1");
+  expect(startBind.value.class).toContain("flex-1");
+  expect(panelsBind.value.class).toContain("w-full");
   expect(panelsBind.value.class).toContain("flex-row");
 });
 
@@ -74,6 +73,6 @@ test("it should stack panels when orientation is vertical", () => {
   });
 
   expect(panelsBind.value.class).toContain("flex-col");
-  expect(startBind.value.class).toContain("w-full");
-  expect(endBind.value.class).toContain("w-full");
+  expect(startBind.value.class).toContain("flex-1");
+  expect(endBind.value.class).toContain("flex-1");
 });

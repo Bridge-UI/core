@@ -13,7 +13,9 @@ import {
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
   resolveDatePickerMode,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapter,
@@ -149,6 +151,16 @@ export function useDateField(
 
   const hasValue = computed(() => {
     return hasDateFieldValue(modelValue.value);
+  });
+
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "w-full shadow-none"
+      : undefined;
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -420,6 +432,7 @@ export function useDateField(
     clearValue,
     modelValue,
     showFooter,
+    pickerClass,
     containerRef,
     clearIconSize,
     showClearIcon,

@@ -12,6 +12,8 @@ import {
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapter,
@@ -112,6 +114,16 @@ export function useTimeField(
 
   const hasValue = computed(() => {
     return !isNil(modelValue.value);
+  });
+
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "w-full shadow-none"
+      : undefined;
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -344,6 +356,7 @@ export function useTimeField(
     clearValue,
     modelValue,
     showFooter,
+    pickerClass,
     containerRef,
     clearIconSize,
     showClearIcon,

@@ -23,6 +23,7 @@ function DateTimeField(props: DateTimeFieldProps) {
     dateTimeOnly,
     clearIconSize,
     showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -69,6 +70,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           showFooter={showFooter}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
+          className={pickerClassName}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}

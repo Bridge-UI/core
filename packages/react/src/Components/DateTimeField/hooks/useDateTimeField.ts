@@ -6,6 +6,8 @@ import { useCallback, useRef, useState } from "react";
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   splitComponentProps,
   type DateAdapterContext,
@@ -125,6 +127,16 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const hasValue = derived(() => {
     return !isNil(modelValue);
+  });
+
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateTimeOnly.overlay, breakpoint.mobile);
+  });
+
+  const pickerClassName = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay)
+      ? "w-full shadow-none"
+      : undefined;
   });
 
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
@@ -326,6 +338,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     containerRef,
     clearIconSize,
     showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

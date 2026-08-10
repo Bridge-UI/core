@@ -236,7 +236,7 @@ export function useTimeRangePicker(
       customProps.value?.panels,
       {},
       cn({
-        "flex gap-2": true,
+        "flex w-full gap-2": true,
         "flex-row": !isVertical.value,
         "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
@@ -249,9 +249,7 @@ export function useTimeRangePicker(
       customProps.value?.start,
       {},
       cn({
-        "flex shrink-0 flex-col gap-1": true,
-        "w-fit": !isVertical.value,
-        "w-full items-center": isVertical.value,
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -262,9 +260,7 @@ export function useTimeRangePicker(
       customProps.value?.end,
       {},
       cn({
-        "flex shrink-0 flex-col gap-1": true,
-        "w-fit": !isVertical.value,
-        "w-full items-center": isVertical.value,
+        "flex min-w-0 flex-1 flex-col gap-1": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );

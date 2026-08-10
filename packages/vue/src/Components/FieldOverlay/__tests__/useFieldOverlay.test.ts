@@ -107,16 +107,14 @@ test("it should apply panel padding and layout on drawer and modal", () => {
   const drawerPanel = drawerBind.value.customProps?.panel?.class;
   const modalPanel = modalBind.value.customProps?.panel?.class;
 
-  expect(drawerPanel).toContain("p-2");
+  expect(drawerPanel).toContain("p-0");
   expect(drawerPanel).toContain("flex");
   expect(drawerPanel).toContain("flex-col");
-  expect(drawerPanel).toContain("items-center");
-  expect(drawerPanel).toContain("justify-center");
+  expect(drawerPanel).toContain("items-stretch");
   expect(drawerPanel).toContain("h-auto");
   expect(drawerPanel).toContain("max-h-[90dvh]");
-  expect(modalPanel).toContain("p-2");
-  expect(modalPanel).toContain("items-center");
-  expect(modalPanel).toContain("justify-center");
+  expect(modalPanel).toContain("p-0");
+  expect(modalPanel).toContain("items-stretch");
 });
 
 test("it should scroll modal content inside the paper panel", () => {

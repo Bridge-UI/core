@@ -52,6 +52,7 @@ const {
   clearValue,
   modelValue,
   showFooter,
+  pickerClass,
   dateTimeOnly,
   clearIconSize,
   showClearIcon,
@@ -93,6 +94,7 @@ const {
   >
     <DateTimePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="dateTimeOnly.ampm"
       :show-footer="showFooter"
       :read-only="props.readonly"

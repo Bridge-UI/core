@@ -276,7 +276,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const pickerClassName = derived(() => {
     return isFieldOverlayDialog(resolvedOverlay)
-      ? "mx-auto shadow-none"
+      ? "w-full shadow-none"
       : undefined;
   });
 

@@ -308,7 +308,7 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
 
   const pickerClassName = derived(() => {
     return isFieldOverlayDialog(resolvedOverlay)
-      ? "mx-auto shadow-none"
+      ? "w-full shadow-none"
       : undefined;
   });
 

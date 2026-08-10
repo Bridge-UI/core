@@ -351,7 +351,7 @@ export function useDateTimeRangePicker(
   /** Absolutely fills the stretched shell; hosts the real TimePanel. */
   const timeFillBind = computed(() => {
     return cn({
-      "absolute inset-0 flex px-2.5": true,
+      "absolute inset-0 flex w-full px-2.5": true,
     });
   });
 

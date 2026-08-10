@@ -23,6 +23,7 @@ function DateField(props: DateFieldProps) {
     showFooter,
     clearIconSize,
     showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -71,6 +72,7 @@ function DateField(props: DateFieldProps) {
           readOnly={props.readonly}
           maxDate={dateOnly.maxDate}
           minDate={dateOnly.minDate}
+          className={pickerClassName}
           multiple={dateOnly.multiple}
           timeZone={dateOnly.timeZone}
           onChange={handlePickerChange}

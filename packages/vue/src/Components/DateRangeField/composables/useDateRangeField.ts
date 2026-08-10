@@ -311,7 +311,7 @@ export function useDateRangeField(
 
   const pickerClass = computed(() => {
     return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "mx-auto shadow-none"
+      ? "w-full shadow-none"
       : undefined;
   });
 

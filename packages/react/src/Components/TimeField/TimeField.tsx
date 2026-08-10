@@ -22,6 +22,7 @@ function TimeField(props: TimeFieldProps) {
     showFooter,
     clearIconSize,
     showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -70,6 +71,7 @@ function TimeField(props: TimeFieldProps) {
           readOnly={props.readonly}
           maxTime={timeOnly.maxTime}
           minTime={timeOnly.minTime}
+          className={pickerClassName}
           timeZone={timeOnly.timeZone}
           interval={timeOnly.interval}
           onChange={handlePickerChange}

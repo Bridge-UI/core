@@ -63,10 +63,11 @@ type TimePanelMerged = MergeLibDefaults<
 >;
 
 /**
- * Outer width of one TimePanel scroll column (`w-12` tiles + scrollbar track).
+ * Minimum outer width of one TimePanel scroll column (`w-12` tiles + scrollbar).
  * Keep DateTime width sizers in sync with this class.
  */
 export const TIME_PANEL_COLUMN_WIDTH_CLASS = "w-[3.75rem]";
+export const TIME_PANEL_COLUMN_MIN_WIDTH_CLASS = "min-w-[3.75rem]";
 
 export type TimePanelItem = {
   disabled: boolean;
@@ -308,7 +309,7 @@ export function useTimePanel(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex h-72 w-fit flex-row gap-2": true,
+        "flex h-72 w-full min-w-fit flex-row gap-2": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -319,8 +320,8 @@ export function useTimePanel(
       customProps?.column,
       {},
       cn({
-        "box-border flex h-full shrink-0 flex-col items-start gap-1 overflow-x-hidden overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
-        [TIME_PANEL_COLUMN_WIDTH_CLASS]: true,
+        "box-border flex h-full min-w-0 flex-1 flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600": true,
+        [TIME_PANEL_COLUMN_MIN_WIDTH_CLASS]: true,
         [mergedClasses.column ?? ""]: true,
       }),
     );
@@ -343,7 +344,7 @@ export function useTimePanel(
         onClick: () => onSelect(item.value),
       },
       cn({
-        "w-12 cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
+        "w-full cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass ?? ""]: true,
         [color?.base ?? ""]: item.state === "base" || item.state === "hover",
         [color?.hover ?? ""]: item.state === "base" || item.state === "hover",

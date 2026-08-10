@@ -70,7 +70,7 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         align: "middle-center",
         ...customProps?.modal,
       },
-      "flex flex-col items-center justify-center p-2",
+      "flex flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.modal]);
 
@@ -83,7 +83,7 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         placement: "bottom",
         ...customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] flex-col items-center justify-center p-2",
+      "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);
 
