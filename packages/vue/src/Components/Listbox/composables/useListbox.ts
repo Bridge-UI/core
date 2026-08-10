@@ -8,6 +8,7 @@ import {
   isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
   resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -19,6 +20,7 @@ import {
 } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -36,6 +38,7 @@ export const listboxBridgeKeys = [
   "color",
   "classes",
   "maxHeight",
+  "showFooter",
   "customProps",
   "invalidated",
   "disableMaxHeight",
@@ -62,6 +65,7 @@ export function useListbox(
 ) {
   const attrs = useAttrs();
   const breakpoint = useBreakpoint();
+  const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
     return splitComponentProps<ListboxProps, typeof listboxBridgeKeys>({
@@ -86,6 +90,12 @@ export function useListbox(
     props: () => {
       return split.value.componentProps;
     },
+  });
+
+  const customProps = computed(() => merged.value.customProps);
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(merged.value.showFooter, breakpoint.mobile);
   });
 
   const isDialogOverlay = computed(() => {
@@ -182,14 +192,37 @@ export function useListbox(
     });
   });
 
+  const footerBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.value.footer ?? ""]: true,
+      }),
+    );
+  });
+
+  const applyLabel = computed(() => resolveMessage("Apply"));
+  const cancelLabel = computed(() => resolveMessage("Cancel"));
+
+  const applyButtonProps = computed(() => customProps.value?.applyButton);
+  const cancelButtonProps = computed(() => customProps.value?.cancelButton);
+
   return {
     merged,
     checkClass,
     scrollBind,
+    footerBind,
+    showFooter,
+    applyLabel,
+    cancelLabel,
     messageBind,
     surfaceBind,
     sizeClasses,
     mergedClasses,
+    applyButtonProps,
+    cancelButtonProps,
     optionSelectedClass,
     optionHighlightedClass,
   };

@@ -14,6 +14,7 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { Button } from "@/Components/Button";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
@@ -38,7 +39,9 @@ function Listbox({
   entries,
   rounded,
   overlay,
+  onApply,
   children,
+  onCancel,
   onSelect,
   anchorEl,
   listboxId,
@@ -71,10 +74,16 @@ function Listbox({
     merged,
     checkClass,
     scrollBind,
+    footerBind,
+    showFooter,
+    applyLabel,
+    cancelLabel,
     messageBind,
     surfaceBind,
     sizeClasses,
     mergedClasses,
+    applyButtonProps,
+    cancelButtonProps,
     optionSelectedClass,
     optionHighlightedClass,
   } = useListbox(
@@ -322,6 +331,27 @@ function Listbox({
         {showEmptyState && slots?.empty ? slots.empty : null}
 
         {slots?.afterOptions}
+
+        {showFooter ? (
+          <div {...footerBind}>
+            <Button
+              variant="flat"
+              color="secondary"
+              onClick={() => onCancel?.()}
+              {...cancelButtonProps}
+            >
+              {cancelLabel}
+            </Button>
+
+            <Button
+              color="primary"
+              onClick={() => onApply?.()}
+              {...applyButtonProps}
+            >
+              {applyLabel}
+            </Button>
+          </div>
+        ) : null}
       </div>
     </FieldOverlay>
   );

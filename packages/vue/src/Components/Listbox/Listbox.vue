@@ -15,6 +15,7 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { Button } from "@/Components/Button";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
@@ -75,10 +76,16 @@ const {
   merged,
   checkClass,
   scrollBind,
+  footerBind,
+  showFooter,
+  applyLabel,
+  cancelLabel,
   messageBind,
   surfaceBind,
   sizeClasses,
   mergedClasses,
+  applyButtonProps,
+  cancelButtonProps,
   optionSelectedClass,
   optionHighlightedClass,
 } = useListbox(
@@ -345,6 +352,25 @@ const listBind = computed(() => {
         v-if="hasNamedSlot(slots, 'afterOptions')"
         :is="resolveNamedSlot(slots, 'afterOptions')"
       />
+
+      <div v-if="showFooter" v-bind="footerBind">
+        <Button
+          variant="flat"
+          color="secondary"
+          v-bind="cancelButtonProps"
+          @click="emit('cancel')"
+        >
+          {{ cancelLabel }}
+        </Button>
+
+        <Button
+          color="primary"
+          v-bind="applyButtonProps"
+          @click="emit('apply')"
+        >
+          {{ applyLabel }}
+        </Button>
+      </div>
     </div>
   </FieldOverlay>
 </template>

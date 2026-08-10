@@ -133,6 +133,28 @@ test("it should not show the clear control when readonly", () => {
   expect(screen.queryByLabelText("Clear selection")).toBeNull();
 });
 
+test("it should open a dialog when overlay is modal", async () => {
+  render(
+    <Autocomplete
+      overlay="modal"
+      options={options}
+      aria-label="Fruit"
+      customProps={{
+        listbox: {
+          customProps: { modal: { transition: "none" } },
+        },
+      }}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(screen.getByText("Apple")).toBeTruthy();
+  });
+});
+
 test("it should expose combobox aria attributes when open", async () => {
   render(<Autocomplete options={options} aria-label="Fruit" />);
 

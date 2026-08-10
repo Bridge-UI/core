@@ -117,6 +117,7 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 ```
 
 Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
+When unset, `showFooter` defaults to `true` on mobile (`false` on desktop). Selection stays draft until Apply.
 
 ### customProps
 
@@ -136,26 +137,27 @@ Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
 
 ### Select-specific
 
-| Prop                | Type                  | Default       | Description                                                                                             |
-| ------------------- | --------------------- | ------------- | ------------------------------------------------------------------------------------------------------- |
-| `asyncData`         | `SelectAsyncData`     | —             | Remote data source. Implies `searchable`.                                                               |
-| `clearable`         | `boolean`             | `true`        | Whether the value can be cleared.                                                                       |
-| `defaultValue`      | `SelectModel`         | —             | Initial value when uncontrolled.                                                                        |
-| `disableMaxHeight`  | `boolean`             | `false`       | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
-| `emptyMessage`      | `string`              | "No options"  | Message when the filtered list is empty.                                                                |
-| `flipOptions`       | `boolean`             | `false`       | Inverts the visual order of options.                                                                    |
-| `hideEmptyMessage`  | `boolean`             | `false`       | Hides the empty-state message.                                                                          |
-| `loading`           | `boolean`             | —             | External or async loading state.                                                                        |
-| `maxHeight`         | `string`              | "max-h-60"    | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
-| `minItemsForSearch` | `number`              | 11            | Minimum option count before search UI is enabled.                                                       |
-| `multiple`          | `boolean`             | `false`       | Whether multiple values can be selected.                                                                |
-| `optionDescription` | `string`              | "description" | Key used to read the description from option objects.                                                   |
-| `optionLabel`       | `string`              | "label"       | Key used to read the label from option objects.                                                         |
-| `options`           | `ListboxOptionsInput` | —             | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
-| `optionValue`       | `string`              | "value"       | Key used to read the value from option objects.                                                         |
-| `overlay`           | `FieldOverlayMode`    | `"auto"`      | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
-| `placeholder`       | `string`              | —             | Placeholder shown when no value is selected.                                                            |
-| `searchable`        | `boolean`             | `false`       | Whether options can be filtered via the trigger input.                                                  |
+| Prop                | Type                  | Default                               | Description                                                                                             |
+| ------------------- | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `asyncData`         | `SelectAsyncData`     | —                                     | Remote data source. Implies `searchable`.                                                               |
+| `clearable`         | `boolean`             | `true`                                | Whether the value can be cleared.                                                                       |
+| `defaultValue`      | `SelectModel`         | —                                     | Initial value when uncontrolled.                                                                        |
+| `disableMaxHeight`  | `boolean`             | `false`                               | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
+| `emptyMessage`      | `string`              | "No options"                          | Message when the filtered list is empty.                                                                |
+| `flipOptions`       | `boolean`             | `false`                               | Inverts the visual order of options.                                                                    |
+| `hideEmptyMessage`  | `boolean`             | `false`                               | Hides the empty-state message.                                                                          |
+| `loading`           | `boolean`             | —                                     | External or async loading state.                                                                        |
+| `maxHeight`         | `string`              | "max-h-60"                            | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
+| `minItemsForSearch` | `number`              | 11                                    | Minimum option count before search UI is enabled.                                                       |
+| `multiple`          | `boolean`             | `false`                               | Whether multiple values can be selected.                                                                |
+| `optionDescription` | `string`              | "description"                         | Key used to read the description from option objects.                                                   |
+| `optionLabel`       | `string`              | "label"                               | Key used to read the label from option objects.                                                         |
+| `options`           | `ListboxOptionsInput` | —                                     | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
+| `optionValue`       | `string`              | "value"                               | Key used to read the value from option objects.                                                         |
+| `overlay`           | `FieldOverlayMode`    | `"auto"`                              | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
+| `placeholder`       | `string`              | —                                     | Placeholder shown when no value is selected.                                                            |
+| `searchable`        | `boolean`             | `false`                               | Whether options can be filtered via the trigger input.                                                  |
+| `showFooter`        | `boolean`             | `false` (`true` on mobile when unset) | Shows Cancel / Apply on the nested listbox. Selection stays draft until Apply.                          |
 
 ### v-model
 
@@ -177,15 +179,16 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 
 ## Events
 
-| Event           | Payload                  | Description                                           |
-| --------------- | ------------------------ | ----------------------------------------------------- |
-| `v-on:change`   | `(value: SelectModel)`   | Emitted when the selection changes.                   |
-| `v-on:clear`    | —                        | Emitted when the value is cleared.                    |
-| `v-on:close`    | —                        | Emitted when the menu closes.                         |
-| `v-on:deselect` | `(option: SelectOption)` | Emitted when an option is deselected (multiple mode). |
-| `v-on:open`     | —                        | Emitted when the menu opens.                          |
-| `v-on:search`   | `(query: string)`        | Emitted when the search query changes.                |
-| `v-on:select`   | `(option: SelectOption)` | Emitted when an option is selected.                   |
+| Event           | Payload                  | Description                                                          |
+| --------------- | ------------------------ | -------------------------------------------------------------------- |
+| `v-on:cancel`   | —                        | Emitted when Cancel is pressed on the listbox footer (`showFooter`). |
+| `v-on:change`   | `(value: SelectModel)`   | Emitted when the selection changes.                                  |
+| `v-on:clear`    | —                        | Emitted when the value is cleared.                                   |
+| `v-on:close`    | —                        | Emitted when the menu closes.                                        |
+| `v-on:deselect` | `(option: SelectOption)` | Emitted when an option is deselected (multiple mode).                |
+| `v-on:open`     | —                        | Emitted when the menu opens.                                         |
+| `v-on:search`   | `(query: string)`        | Emitted when the search query changes.                               |
+| `v-on:select`   | `(option: SelectOption)` | Emitted when an option is selected.                                  |
 
 ## Related components
 

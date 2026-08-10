@@ -8,6 +8,7 @@ import {
   isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
   resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
   type FieldOverlayMode,
   type LibDefaultsShape,
@@ -20,6 +21,7 @@ import {
 } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -38,6 +40,7 @@ export const listboxBridgeKeys = [
   "color",
   "classes",
   "maxHeight",
+  "showFooter",
   "customProps",
   "invalidated",
   "disableMaxHeight",
@@ -68,6 +71,7 @@ export function useListbox(
   options: ListboxOptions = {},
 ) {
   const breakpoint = useBreakpoint();
+  const resolveMessage = useResolveMessage();
 
   const { componentProps } = splitComponentProps<
     ListboxProps,
@@ -89,6 +93,12 @@ export function useListbox(
   const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
     entry: bridgeListbox,
     props: componentProps,
+  });
+
+  const customProps = derived(() => merged.customProps);
+
+  const showFooter = derived(() => {
+    return resolveFieldShowFooter(merged.showFooter, breakpoint.mobile);
   });
 
   const isDialogOverlay = useMemo(() => {
@@ -180,15 +190,32 @@ export function useListbox(
     });
   });
 
+  const footerBind = derived(() => {
+    return mergePartBind(
+      customProps?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.footer ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
+    footerBind,
+    showFooter,
     messageBind,
     surfaceBind,
     sizeClasses,
     mergedClasses,
     optionSelectedClass,
     optionHighlightedClass,
+    applyLabel: resolveMessage("Apply"),
+    cancelLabel: resolveMessage("Cancel"),
+    applyButtonProps: customProps?.applyButton,
+    cancelButtonProps: customProps?.cancelButton,
   };
 }

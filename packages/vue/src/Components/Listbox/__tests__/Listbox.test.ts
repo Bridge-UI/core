@@ -258,3 +258,17 @@ test("it should render composed ListSection and ListItem children", async () => 
 
   expect(onSelect).toHaveBeenCalled();
 });
+
+test("it should show footer actions when showFooter is set", async () => {
+  mountListbox({
+    props: {
+      modelValue: true,
+      showFooter: true,
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Cancel");
+  expect(document.body.textContent).toContain("Apply");
+});

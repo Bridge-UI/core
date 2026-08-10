@@ -92,7 +92,9 @@ const {
   clearValue,
   removeChip,
   triggerBind,
+  handleApply,
   selectOption,
+  handleCancel,
   containerRef,
   listboxProps,
   clearIconSize,
@@ -161,7 +163,9 @@ const {
   <Listbox
     v-model="open"
     v-bind="listboxProps"
+    v-on:apply="handleApply"
     :anchor-el="containerRef"
+    v-on:cancel="handleCancel"
     v-on:select="selectOption"
     v-on:registered-options-change="handleRegisteredOptionsChange"
   >

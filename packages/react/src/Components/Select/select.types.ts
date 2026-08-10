@@ -38,6 +38,11 @@ export type {
 
 export interface SelectCallbacks {
   /**
+   * Callback when Cancel is pressed on the listbox footer (`showFooter`).
+   */
+  onCancel?: () => void;
+
+  /**
    * Callback when the selection changes.
    */
   onChange?: (value: SelectModel) => void;
@@ -277,6 +282,14 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default false
    */
   searchable?: boolean;
+
+  /**
+   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true`
+   * on mobile. Selection stays draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
 
   /**
    * The selected value (controlled).
