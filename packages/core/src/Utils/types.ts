@@ -52,8 +52,7 @@ export type MergeProps<
  * @internal
  */
 export type UnionProps<Base extends PropertyKey, Overrides extends object> =
-  | Base
-  | keyof Overrides;
+  Base | keyof Overrides;
 
 /**
  * Own props plus native HTML attributes for the root element.

@@ -57,10 +57,7 @@ export type BridgeSnackbarShellProps = Partial<
 >;
 
 export type SnackbarActionLayout =
-  | "inline"
-  | "trailing"
-  | "right-accept"
-  | "right-reject";
+  "inline" | "trailing" | "right-accept" | "right-reject";
 
 export type SnackbarActionColor = keyof SnackbarColor;
 

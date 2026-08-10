@@ -98,10 +98,7 @@ export type SelectOption = ListboxOption;
  * Flat option input (not a section group).
  */
 export type SelectOptionInput =
-  | number
-  | string
-  | SelectOption
-  | Record<string, unknown>;
+  number | string | SelectOption | Record<string, unknown>;
 
 /**
  * Grouped options rendered as a `ListSection` in Listbox / Select.

@@ -329,8 +329,7 @@ export function mergePropsWithBridgeUIDefaults<
 }): P {
   const fromRegistry = componentName
     ? (get(components, [componentName, "defaultProps"]) as
-        | undefined
-        | Partial<P>)
+        undefined | Partial<P>)
     : undefined;
 
   const fromFormDefaults = resolveBridgeUIFormDefaults({

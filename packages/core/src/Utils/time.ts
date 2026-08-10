@@ -26,10 +26,7 @@ export type TimeInterval = number;
  * Input for disabling specific times.
  */
 export type DisableTimesInput<TDate = Date> =
-  | null
-  | TDate[]
-  | undefined
-  | ((date: TDate) => boolean);
+  null | TDate[] | undefined | ((date: TDate) => boolean);
 
 /**
  * Options for {@link isTimeDisabled}.
