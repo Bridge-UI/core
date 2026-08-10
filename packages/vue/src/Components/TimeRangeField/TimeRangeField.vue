@@ -7,8 +7,10 @@ import { computed, ref } from "vue";
 import type { TimeRangeValue } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 import { useTimeRangeField } from "@/Components/TimeRangeField/composables/useTimeRangeField";
 import type {
   TimeRangeFieldEmits,
@@ -24,10 +26,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<null | TimeRangeValue>();
 
 const props = withDefaults(defineProps<TimeRangeFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<TimeRangeFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<null | TimeRangeValue>(
   props.defaultValue ?? null,
@@ -49,7 +54,13 @@ const {
   timeOnly,
   formField,
   inputBind,
+  clearBind,
+  clearValue,
   modelValue,
+  showFooter,
+  pickerClass,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
   handlePickerCancel,
@@ -60,7 +71,24 @@ const {
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
   <FieldOverlay
@@ -71,7 +99,9 @@ const {
   >
     <TimeRangePicker
       :value="modelValue"
+      :class="pickerClass"
       :ampm="timeOnly.ampm"
+      :show-footer="showFooter"
       :read-only="props.readonly"
       :max-time="timeOnly.maxTime"
       :min-time="timeOnly.minTime"
@@ -79,7 +109,6 @@ const {
       :time-zone="timeOnly.timeZone"
       v-on:change="handlePickerChange"
       v-on:cancel="handlePickerCancel"
-      :show-footer="timeOnly.showFooter"
       :color="formField.merged.value.color"
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"

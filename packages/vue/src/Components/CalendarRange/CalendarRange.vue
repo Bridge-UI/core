@@ -152,7 +152,7 @@ function chevronClass(open: boolean) {
 
     <div v-bind="bodyBind">
       <div v-bind="panelsBind" v-if="view === 'date'">
-        <div class="flex shrink-0 items-stretch">
+        <div class="flex w-full min-w-0 items-stretch">
           <div v-bind="startBind">
             <CalendarDate
               v-bind="shared"
@@ -179,7 +179,7 @@ function chevronClass(open: boolean) {
           <slot name="startAside" />
         </div>
 
-        <div class="flex shrink-0 items-stretch">
+        <div class="flex w-full min-w-0 items-stretch">
           <div v-bind="endBind">
             <div v-bind="endHeaderBind" v-if="isVertical && showMonthSelector">
               <button v-bind="endMonthSelectorBind">

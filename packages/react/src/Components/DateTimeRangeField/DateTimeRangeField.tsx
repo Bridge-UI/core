@@ -1,19 +1,30 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type { DateTimeRangeFieldProps } from "@/Components/DateTimeRangeField/dateTimeRangeField.types";
 import { useDateTimeRangeField } from "@/Components/DateTimeRangeField/hooks/useDateTimeRangeField";
 import { DateTimeRangePicker } from "@/Components/DateTimeRangePicker";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 
 function DateTimeRangeField(props: DateTimeRangeFieldProps) {
+  const resolveMessage = useResolveMessage();
+
   const {
     open,
     daySlot,
     overlay,
     formField,
     inputBind,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
+    orientation,
     dateTimeOnly,
+    clearIconSize,
+    showClearIcon,
+    pickerClassName,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
@@ -24,7 +35,29 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
   return (
     <>
       <FormField field={formField}>
-        <input {...inputBind} />
+        <div className="flex min-w-0 flex-1 items-center gap-1">
+          <input {...inputBind} />
+
+          {showClearIcon ? (
+            <span
+              {...clearBind}
+              onClick={() => clearValue()}
+              aria-label={resolveMessage("Clear")}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  clearValue();
+                }
+              }}
+            >
+              <Icon
+                icon="clear"
+                size={clearIconSize}
+                {...props.customProps?.clearIcon}
+              />
+            </span>
+          ) : null}
+        </div>
       </FormField>
 
       <FieldOverlay
@@ -35,8 +68,11 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
       >
         <DateTimeRangePicker
           value={modelValue}
+          showFooter={showFooter}
           ampm={dateTimeOnly.ampm}
           readOnly={props.readonly}
+          orientation={orientation}
+          className={pickerClassName}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
           maxDate={dateTimeOnly.maxDate}
@@ -49,9 +85,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           interval={dateTimeOnly.interval}
           hideYears={dateTimeOnly.hideYears}
           rounded={formField.merged.rounded}
-          showFooter={dateTimeOnly.showFooter}
           hideMonths={dateTimeOnly.hideMonths}
-          orientation={dateTimeOnly.orientation}
           startOfWeek={dateTimeOnly.startOfWeek}
           disableDates={dateTimeOnly.disableDates}
           hideWeekdays={dateTimeOnly.hideWeekdays}

@@ -17,13 +17,26 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import type { TimeRangePickerCustomProps } from "@/Components/TimeRangePicker/timeRangePicker.types";
 
-export interface TimeRangeFieldClasses extends FormFieldClasses {}
+export interface TimeRangeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `TimeRangeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `Drawer` when overlay resolves to drawer.
    *
@@ -75,6 +88,11 @@ export interface TimeRangeFieldEmits {
   change: [value: null | TimeRangeValue];
 
   /**
+   * Emitted when the value is cleared.
+   */
+  clear: [];
+
+  /**
    * Emitted when the menu closes.
    */
   close: [];
@@ -102,6 +120,13 @@ export interface TimeRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: TimeRangeFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -149,12 +174,13 @@ export interface TimeRangeFieldOwnProps extends Omit<
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
    * `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

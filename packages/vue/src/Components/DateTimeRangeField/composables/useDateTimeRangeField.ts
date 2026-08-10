@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -13,11 +13,16 @@ import {
 import {
   cn,
   isDateRangeValue,
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
+  resolveRangePickerOrientation,
   splitComponentProps,
   type DateAdapter,
   type DateAdapterContext,
   type DateRangeValue,
 } from "@bridge-ui/core";
+import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
@@ -31,7 +36,12 @@ import {
   useFormField,
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
-import { hasNamedSlot, mergePartBind } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+} from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateTimeRangeFieldBridgeKeys = [
   "ampm",
@@ -43,6 +53,7 @@ const dateTimeRangeFieldBridgeKeys = [
   "overlay",
   "interval",
   "timeZone",
+  "clearable",
   "hideYears",
   "hideMonths",
   "showFooter",
@@ -87,6 +98,7 @@ export function useDateTimeRangeField(
   const attrs = useAttrs();
   const slots = useSlots();
   const adapter = useDateAdapter();
+  const breakpoint = useBreakpoint();
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
@@ -112,6 +124,14 @@ export function useDateTimeRangeField(
 
   const modelValue = computed(() => {
     return model.value ?? null;
+  });
+
+  const clearable = computed(() => {
+    return dateTimeOnly.value.clearable !== false;
+  });
+
+  const hasValue = computed(() => {
+    return !isNil(modelValue.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -147,6 +167,7 @@ export function useDateTimeRangeField(
 
     const {
       menu: _menu,
+      clearIcon: _clearIcon,
       dateTimeRangePicker: _dateTimeRangePicker,
       ...formFieldOnlyCustom
     } = (dateTimeOnly.value.customProps ?? {}) as DateTimeRangeFieldCustomProps;
@@ -165,10 +186,16 @@ export function useDateTimeRangeField(
             class: cn({
               "cursor-pointer": !props.disabled && !props.readonly,
             }),
-            onClick: () => {
-              if (!props.disabled && !props.readonly) {
-                handleOpenChange(true);
+            onClick: (event: MouseEvent) => {
+              if (props.disabled || props.readonly) {
+                return;
               }
+
+              if ((event.target as HTMLElement).closest("[data-field-clear]")) {
+                return;
+              }
+
+              handleOpenChange(true);
             },
           },
         ),
@@ -190,6 +217,15 @@ export function useDateTimeRangeField(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const displayText = computed(() => {
     return formatDateTimeRange(
       modelValue.value,
@@ -204,17 +240,53 @@ export function useDateTimeRangeField(
     emit("change", next);
   }
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(dateTimeOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const orientation = computed(() => {
+    return resolveRangePickerOrientation(
+      dateTimeOnly.value.orientation,
+      resolvedOverlay.value,
+      breakpoint.mobile,
+    );
+  });
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(
+      dateTimeOnly.value.showFooter,
+      breakpoint.mobile,
+    );
+  });
+
   function handlePickerChange(next: null | DateRangeValue) {
     commitValue(next);
 
     // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
-    if (dateTimeOnly.value.showFooter) {
+    if (showFooter.value) {
       handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
     handleOpenChange(false);
+  }
+
+  function clearValue(event?: Event) {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
+
+    commitValue(null);
+    emit("clear");
+    handleOpenChange(false);
+  }
+
+  function handleClearPointer(event: MouseEvent) {
+    event.preventDefault();
   }
 
   const inputBind = computed(() => {
@@ -259,14 +331,61 @@ export function useDateTimeRangeField(
     return dateTimeOnly.value.customProps?.dateTimeRangePicker;
   });
 
+  const pickerClass = computed(() => {
+    return isFieldOverlayDialog(resolvedOverlay.value)
+      ? "w-full shadow-none"
+      : undefined;
+  });
+
+  const clearIconSize = computed(() => {
+    return resolveFieldAdornmentIconSize(formField.merged.value.size);
+  });
+
+  const clearTone = computed(() => {
+    return (
+      get(listboxColorProps, [
+        formField.merged.value.color ?? "primary",
+        "clear",
+      ]) ??
+      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    );
+  });
+
+  const clearBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        tabindex: 0,
+        role: "button",
+        "data-field-clear": true,
+        onMousedown: handleClearPointer,
+        class: cn({
+          "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors duration-150": true,
+          [clearTone.value]: true,
+          [dateTimeOnly.value.classes?.clear ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   return {
     open,
     overlay,
+    hasValue,
     formField,
     inputBind,
+    clearable,
+    clearBind,
+    clearValue,
     modelValue,
+    showFooter,
+    orientation,
+    pickerClass,
     dateTimeOnly,
     containerRef,
+    clearIconSize,
+    showClearIcon,
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,

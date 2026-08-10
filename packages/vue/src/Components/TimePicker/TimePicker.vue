@@ -21,6 +21,7 @@ const {
   showFooter,
   applyLabel,
   timeTokens,
+  contentBind,
   handleApply,
   cancelLabel,
   displayValue,
@@ -43,21 +44,23 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <TimePanel
-      :ampm="merged.ampm"
-      :tokens="timeTokens"
-      :color="merged.color"
-      :value="displayValue"
-      :rounded="merged.rounded"
-      :max-time="merged.maxTime"
-      :min-time="merged.minTime"
-      :disabled="merged.disabled"
-      :interval="merged.interval"
-      :read-only="merged.readOnly"
-      :time-zone="merged.timeZone"
-      v-on:change="handlePanelChange"
-      :disable-times="merged.disableTimes"
-    />
+    <div :class="contentBind">
+      <TimePanel
+        :ampm="merged.ampm"
+        :tokens="timeTokens"
+        :color="merged.color"
+        :value="displayValue"
+        :rounded="merged.rounded"
+        :max-time="merged.maxTime"
+        :min-time="merged.minTime"
+        :disabled="merged.disabled"
+        :interval="merged.interval"
+        :read-only="merged.readOnly"
+        :time-zone="merged.timeZone"
+        v-on:change="handlePanelChange"
+        :disable-times="merged.disableTimes"
+      />
+    </div>
 
     <div v-if="showFooter" v-bind="footerBind">
       <Button

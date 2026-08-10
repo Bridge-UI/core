@@ -12,6 +12,7 @@ function TimePicker(props: TimePickerProps) {
     showFooter,
     applyLabel,
     timeTokens,
+    contentBind,
     handleApply,
     cancelLabel,
     displayValue,
@@ -29,21 +30,23 @@ function TimePicker(props: TimePickerProps) {
 
   return (
     <div {...rootBind}>
-      <TimePanel
-        ampm={merged.ampm}
-        tokens={timeTokens}
-        color={merged.color}
-        value={displayValue}
-        maxTime={merged.maxTime}
-        minTime={merged.minTime}
-        rounded={merged.rounded}
-        disabled={merged.disabled}
-        interval={merged.interval}
-        readOnly={merged.readOnly}
-        timeZone={merged.timeZone}
-        onChange={handlePanelChange}
-        disableTimes={merged.disableTimes}
-      />
+      <div className={contentBind}>
+        <TimePanel
+          ampm={merged.ampm}
+          tokens={timeTokens}
+          color={merged.color}
+          value={displayValue}
+          maxTime={merged.maxTime}
+          minTime={merged.minTime}
+          rounded={merged.rounded}
+          disabled={merged.disabled}
+          interval={merged.interval}
+          readOnly={merged.readOnly}
+          timeZone={merged.timeZone}
+          onChange={handlePanelChange}
+          disableTimes={merged.disableTimes}
+        />
+      </div>
 
       {showFooter && (
         <div {...footerBind}>

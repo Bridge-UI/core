@@ -35,12 +35,20 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-test("it should resolve menu by default", () => {
+test("it should resolve menu by default on desktop", () => {
   mockViewport(1280);
 
   const { result } = renderHook(() => useFieldOverlay({ show: true }));
 
   expect(result.current.resolvedOverlay).toBe("menu");
+});
+
+test("it should resolve drawer by default on mobile", () => {
+  mockViewport(500);
+
+  const { result } = renderHook(() => useFieldOverlay({ show: true }));
+
+  expect(result.current.resolvedOverlay).toBe("drawer");
 });
 
 test("it should resolve explicit drawer", () => {
@@ -73,17 +81,31 @@ test("it should resolve auto to drawer on mobile", () => {
   expect(result.current.resolvedOverlay).toBe("drawer");
 });
 
-test("it should apply panel padding on drawer and modal", () => {
+test("it should apply panel padding and layout on drawer and modal", () => {
   const { result } = renderHook(() =>
     useFieldOverlay({ show: true, overlay: "drawer" }),
   );
 
-  expect(result.current.drawerProps.customProps?.panel?.className).toContain(
-    "p-2",
+  const drawerPanel = result.current.drawerProps.customProps?.panel?.className;
+  const modalPanel = result.current.modalProps.customProps?.panel?.className;
+
+  expect(drawerPanel).toContain("p-0");
+  expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("flex-col");
+  expect(drawerPanel).toContain("items-stretch");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(modalPanel).toContain("p-0");
+  expect(modalPanel).toContain("items-stretch");
+});
+
+test("it should scroll modal content inside the paper panel", () => {
+  const { result } = renderHook(() =>
+    useFieldOverlay({ show: true, overlay: "modal" }),
   );
-  expect(result.current.modalProps.customProps?.panel?.className).toContain(
-    "p-2",
-  );
+
+  expect(result.current.modalProps.scroll).toBe("paper");
+  expect(result.current.modalProps.align).toBe("middle-center");
 });
 
 test("it should forward customProps.menu onto menuProps", () => {

@@ -21,6 +21,7 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -57,6 +58,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const autocompleteBridgeKeys = [
   "classes",
@@ -70,6 +72,7 @@ const autocompleteBridgeKeys = [
   "clearable",
   "maxHeight",
   "searchable",
+  "showFooter",
   "flipOptions",
   "optionLabel",
   "optionValue",
@@ -98,6 +101,7 @@ export function useAutocomplete(
     onClose,
     onChange,
     onSearch,
+    onCancel,
     onDeselect,
     defaultValue,
     value: valueProp,
@@ -105,9 +109,11 @@ export function useAutocomplete(
     ...propsForSplit
   } = props;
 
+  const breakpoint = useBreakpoint();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [draftValues, setDraftValues] = useState<SelectValue[]>([]);
   const containerRef = useRef<null | HTMLElement>(null);
 
   const [asyncLoading, setAsyncLoading] = useState(false);
@@ -238,6 +244,17 @@ export function useAutocomplete(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   }, [multiple, modelValue]);
 
+  const showFooter = derived(() => {
+    return resolveFieldShowFooter(
+      autocompleteMerged.showFooter,
+      breakpoint.mobile,
+    );
+  });
+
+  const activeValues = derived(() => {
+    return showFooter ? draftValues : selectedValues;
+  });
+
   const selectedOptions = useMemo(() => {
     const map = new Map<SelectValue, SelectOption>();
 
@@ -356,9 +373,9 @@ export function useAutocomplete(
 
   const isSelected = useCallback(
     (value: SelectValue) => {
-      return selectedValues.some((item) => selectValuesEqual(item, value));
+      return activeValues.some((item) => selectValuesEqual(item, value));
     },
-    [selectedValues],
+    [activeValues],
   );
 
   const adjustHeight = useCallback(
@@ -458,9 +475,14 @@ export function useAutocomplete(
       return;
     }
 
+    setDraftValues(selectedValues);
     setOpen(true);
     setSearchQuery("");
-    setHighlightedIndex(highlightCurrentSelection(resolvedOptions, isSelected));
+    setHighlightedIndex(
+      highlightCurrentSelection(resolvedOptions, (value) =>
+        selectedValues.some((item) => selectValuesEqual(item, value)),
+      ),
+    );
     onOpen?.();
 
     if (isAsync && autocompleteMerged.asyncData) {
@@ -470,9 +492,9 @@ export function useAutocomplete(
     open,
     onOpen,
     isAsync,
-    isSelected,
     props.disabled,
     props.readonly,
+    selectedValues,
     resolvedOptions,
     autocompleteMerged.asyncData,
   ]);
@@ -480,6 +502,40 @@ export function useAutocomplete(
   const selectOption = useCallback(
     (option: SelectOption) => {
       if (option.disabled) {
+        return;
+      }
+
+      if (showFooter) {
+        if (multiple) {
+          const current = [...draftValues];
+          const index = current.findIndex((value) =>
+            selectValuesEqual(value, option.value),
+          );
+
+          if (index >= 0) {
+            current.splice(index, 1);
+            onDeselect?.(option);
+          } else {
+            current.push(option.value);
+            onSelectCallback?.(option);
+          }
+
+          setDraftValues(current);
+          setSearchQuery("");
+          setHighlightedIndex(-1);
+
+          requestAnimationFrame(() => {
+            triggerRef.current?.focus({ preventScroll: true });
+          });
+
+          return;
+        }
+
+        setDraftValues([option.value]);
+        onSelectCallback?.(option);
+        setSearchQuery("");
+        setHighlightedIndex(-1);
+
         return;
       }
 
@@ -522,11 +578,32 @@ export function useAutocomplete(
       emitChange,
       onDeselect,
       triggerRef,
+      showFooter,
+      draftValues,
       adjustHeight,
       selectedValues,
       onSelectCallback,
     ],
   );
+
+  const handleApply = useCallback(() => {
+    if (multiple) {
+      setModel(draftValues);
+      emitChange(draftValues);
+    } else {
+      const next = draftValues[0] ?? null;
+      setModel(next);
+      emitChange(next);
+    }
+
+    closeMenu();
+  }, [multiple, draftValues, setModel, emitChange, closeMenu]);
+
+  const handleCancel = useCallback(() => {
+    setDraftValues(selectedValues);
+    closeMenu();
+    onCancel?.();
+  }, [selectedValues, closeMenu, onCancel]);
 
   const commitFreeSolo = useCallback(() => {
     if (autocompleteMerged.freeSolo === false) {
@@ -573,6 +650,10 @@ export function useAutocomplete(
       event?.preventDefault();
       event?.stopPropagation();
 
+      if (props.disabled || props.readonly) {
+        return;
+      }
+
       if (multiple) {
         setModel([]);
         emitChange([]);
@@ -584,7 +665,15 @@ export function useAutocomplete(
       onClear?.();
       closeMenu();
     },
-    [onClear, multiple, setModel, closeMenu, emitChange],
+    [
+      onClear,
+      multiple,
+      setModel,
+      closeMenu,
+      emitChange,
+      props.disabled,
+      props.readonly,
+    ],
   );
 
   const removeChip = useCallback(
@@ -875,6 +964,10 @@ export function useAutocomplete(
     },
   );
 
+  const showClearIcon = derived(() => {
+    return hasValue && clearable && !props.readonly && !formField.isDisabled;
+  });
+
   const listboxPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
@@ -1051,6 +1144,8 @@ export function useAutocomplete(
       hideEmptyMessage,
       highlightedIndex,
       loading: isLoading,
+      onApply: handleApply,
+      onCancel: handleCancel,
       disableAutoFocus: true,
       overlay: props.overlay,
       entries: visibleEntries,
@@ -1062,6 +1157,7 @@ export function useAutocomplete(
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
       componentName: "Autocomplete" as const,
+      showFooter: autocompleteMerged.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,
@@ -1072,6 +1168,8 @@ export function useAutocomplete(
     listboxId,
     isSelected,
     emptyMessage,
+    handleApply,
+    handleCancel,
     loadingMessage,
     visibleEntries,
     visibleOptions,
@@ -1086,6 +1184,7 @@ export function useAutocomplete(
     props.disableMaxHeight,
     formField.merged.rounded,
     props.customProps?.listbox,
+    autocompleteMerged.showFooter,
     handleRegisteredOptionsChange,
   ]);
 
@@ -1109,6 +1208,7 @@ export function useAutocomplete(
     emptyMessage,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     loadingMessage,
     visibleOptions,
     isSearchActive,

@@ -93,6 +93,11 @@ export interface AutocompleteCustomProps extends FormFieldCustomProps {
 
 export interface AutocompleteEmits {
   /**
+   * Emitted when Cancel is pressed on the listbox footer (`showFooter`).
+   */
+  cancel: [];
+
+  /**
    * Emitted when the selection changes.
    */
   change: [value: SelectModel];
@@ -286,7 +291,7 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * Which overlay shell opens the options panel. `auto` uses `menu` on desktop
    * and `drawer` (bottom) on mobile. Forwarded to the internal `Listbox`.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
@@ -301,6 +306,14 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * @default true
    */
   searchable?: boolean;
+
+  /**
+   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true`
+   * on mobile. Selection stays draft until Apply.
+   *
+   * @default false
+   */
+  showFooter?: boolean;
 }
 
 export interface AutocompleteSlots extends FormFieldSlots {

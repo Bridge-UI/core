@@ -43,6 +43,14 @@ test("it should default showFooter to false", () => {
   expect(showFooter.value).toBe(false);
 });
 
+test("it should let the calendar flex beside the time panel", () => {
+  const { contentBind, calendarBind } = mountUseDateTimePicker();
+
+  expect(contentBind.value).toContain("w-full");
+  expect(calendarBind.value).toContain("flex-1");
+  expect(calendarBind.value).toContain("min-w-0");
+});
+
 test("it should enable footer when showFooter is set", () => {
   const { showFooter } = mountUseDateTimePicker({ showFooter: true });
 

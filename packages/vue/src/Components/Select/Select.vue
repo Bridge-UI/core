@@ -86,19 +86,20 @@ provide(SELECT_OPTION_KEY, {
 const {
   open,
   slots,
-  hasValue,
   multiple,
   formField,
-  clearable,
   clearBind,
   clearValue,
   removeChip,
   triggerBind,
+  handleApply,
   selectOption,
+  handleCancel,
   containerRef,
   listboxProps,
   clearIconSize,
   mergedClasses,
+  showClearIcon,
   selectedOptions,
   hasComposedList,
   handleRegisteredOptionsChange,
@@ -144,11 +145,11 @@ const {
 
       <span
         v-bind="clearBind"
+        v-if="showClearIcon"
         v-on:click="clearValue"
         v-on:keydown.enter.prevent="clearValue"
         v-on:keydown.space.prevent="clearValue"
         :aria-label="resolveMessage('Clear selection')"
-        v-if="clearable && hasValue && !formField.isDisabled.value"
       >
         <Icon
           icon="clear"
@@ -162,7 +163,9 @@ const {
   <Listbox
     v-model="open"
     v-bind="listboxProps"
+    v-on:apply="handleApply"
     :anchor-el="containerRef"
+    v-on:cancel="handleCancel"
     v-on:select="selectOption"
     v-on:registered-options-change="handleRegisteredOptionsChange"
   >

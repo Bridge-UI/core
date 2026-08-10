@@ -1,11 +1,16 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
+import { useMemo } from "react";
 
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
   splitComponentProps,
+  type FieldOverlayMode,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
@@ -16,6 +21,7 @@ import {
 } from "@bridge-ui/core/Tokens/Listbox";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -27,12 +33,14 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 export const listboxBridgeKeys = [
   "size",
   "color",
   "classes",
   "maxHeight",
+  "showFooter",
   "customProps",
   "invalidated",
   "disableMaxHeight",
@@ -50,6 +58,11 @@ export type ListboxOptions = {
    * Public registry key that owns nested `tokens.listbox` defaults.
    */
   componentName?: "Select" | "Autocomplete";
+
+  /**
+   * Overlay mode forwarded from `Listbox` — dialogs need Listbox surface chrome.
+   */
+  overlay?: FieldOverlayMode;
 };
 
 export function useListbox(
@@ -57,6 +70,9 @@ export function useListbox(
   libDefaults: ListboxLibDefaults,
   options: ListboxOptions = {},
 ) {
+  const breakpoint = useBreakpoint();
+  const resolveMessage = useResolveMessage();
+
   const { componentProps } = splitComponentProps<
     ListboxProps,
     typeof listboxBridgeKeys
@@ -78,6 +94,18 @@ export function useListbox(
     entry: bridgeListbox,
     props: componentProps,
   });
+
+  const customProps = derived(() => merged.customProps);
+
+  const showFooter = derived(() => {
+    return resolveFieldShowFooter(merged.showFooter, breakpoint.mobile);
+  });
+
+  const isDialogOverlay = useMemo(() => {
+    return isFieldOverlayDialog(
+      resolveFieldOverlay(options.overlay, breakpoint.mobile),
+    );
+  }, [options.overlay, breakpoint.mobile]);
 
   const listboxTokens = derived(() => {
     return get(bridgeListbox, ["tokens", "listbox"]) as
@@ -153,14 +181,41 @@ export function useListbox(
     );
   });
 
+  const surfaceBind = derived(() => {
+    return cn({
+      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+        isDialogOverlay,
+      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
+        isDialogOverlay,
+    });
+  });
+
+  const footerBind = derived(() => {
+    return mergePartBind(
+      customProps?.footer,
+      {},
+      cn({
+        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        [mergedClasses.footer ?? ""]: true,
+      }),
+    );
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
+    footerBind,
+    showFooter,
     messageBind,
+    surfaceBind,
     sizeClasses,
     mergedClasses,
     optionSelectedClass,
     optionHighlightedClass,
+    applyLabel: resolveMessage("Apply"),
+    cancelLabel: resolveMessage("Cancel"),
+    applyButtonProps: customProps?.applyButton,
+    cancelButtonProps: customProps?.cancelButton,
   };
 }

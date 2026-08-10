@@ -27,6 +27,7 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -59,6 +60,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const autocompleteBridgeKeys = [
   "classes",
@@ -71,6 +73,7 @@ const autocompleteBridgeKeys = [
   "clearable",
   "maxHeight",
   "searchable",
+  "showFooter",
   "flipOptions",
   "optionLabel",
   "optionValue",
@@ -96,11 +99,13 @@ export function useAutocomplete(
   const attrs = useAttrs();
   const slots = useSlots();
   const listboxId = useId();
+  const breakpoint = useBreakpoint();
   const resolveMessage = useResolveMessage();
 
   const open = ref(false);
   const searchQuery = ref("");
   const highlightedIndex = ref(-1);
+  const draftValues = ref<SelectValue[]>([]);
   const containerRef = ref<null | HTMLElement>(null);
 
   const asyncLoading = ref(false);
@@ -270,6 +275,17 @@ export function useAutocomplete(
     }
 
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
+  });
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(
+      autocompleteMerged.value.showFooter,
+      breakpoint.mobile,
+    );
+  });
+
+  const activeValues = computed(() => {
+    return showFooter.value ? draftValues.value : selectedValues.value;
   });
 
   const selectedOptions = computed(() => {
@@ -469,6 +485,15 @@ export function useAutocomplete(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !multiple.value) {
       return;
@@ -478,7 +503,7 @@ export function useAutocomplete(
   };
 
   function isSelected(value: SelectValue) {
-    return selectedValues.value.some((item) => selectValuesEqual(item, value));
+    return activeValues.value.some((item) => selectValuesEqual(item, value));
   }
 
   function setModel(next: null | undefined | SelectValue | SelectValue[]) {
@@ -504,9 +529,12 @@ export function useAutocomplete(
       return;
     }
 
+    draftValues.value = [...selectedValues.value];
     open.value = true;
     searchQuery.value = "";
-    navigation.highlightCurrentSelection(isSelected);
+    navigation.highlightCurrentSelection((value) =>
+      selectedValues.value.some((item) => selectValuesEqual(item, value)),
+    );
     emit("open");
 
     if (isAsync.value && autocompleteMerged.value.asyncData) {
@@ -559,6 +587,39 @@ export function useAutocomplete(
       return;
     }
 
+    if (showFooter.value) {
+      if (multiple.value) {
+        const current = [...draftValues.value];
+        const index = current.findIndex((value) =>
+          selectValuesEqual(value, option.value),
+        );
+
+        if (index >= 0) {
+          current.splice(index, 1);
+          emit("deselect", option);
+        } else {
+          current.push(option.value);
+          emit("select", option);
+        }
+
+        draftValues.value = current;
+        searchQuery.value = "";
+        highlightedIndex.value = -1;
+        void nextTick(() => {
+          triggerRef.value?.focus({ preventScroll: true });
+        });
+
+        return;
+      }
+
+      draftValues.value = [option.value];
+      emit("select", option);
+      searchQuery.value = "";
+      highlightedIndex.value = -1;
+
+      return;
+    }
+
     if (multiple.value) {
       const current = [...selectedValues.value];
       const index = current.findIndex((value) =>
@@ -589,6 +650,25 @@ export function useAutocomplete(
     emitChange(option.value);
     emit("select", option);
     closeMenu();
+  }
+
+  function handleApply() {
+    if (multiple.value) {
+      setModel(draftValues.value);
+      emitChange(draftValues.value);
+    } else {
+      const next = draftValues.value[0] ?? null;
+      setModel(next);
+      emitChange(next);
+    }
+
+    closeMenu();
+  }
+
+  function handleCancel() {
+    draftValues.value = [...selectedValues.value];
+    closeMenu();
+    emit("cancel");
   }
 
   function commitFreeSolo() {
@@ -628,6 +708,10 @@ export function useAutocomplete(
   function clearValue(event?: Event) {
     event?.preventDefault();
     event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
 
     if (multiple.value) {
       setModel([]);
@@ -965,6 +1049,7 @@ export function useAutocomplete(
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
+      showFooter: autocompleteMerged.value.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: autocompleteMerged.value.hideEmptyMessage === true,
       emptyMessage:
@@ -1015,11 +1100,14 @@ export function useAutocomplete(
     clearValue,
     removeChip,
     triggerBind,
+    handleApply,
     selectOption,
+    handleCancel,
     containerRef,
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     visibleOptions,
     isSearchActive,
     open: openModel,

@@ -19,23 +19,20 @@ import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
-const PANEL_PADDING_CLASS = "p-2";
-
-function withDialogPanelPadding<
+function withDialogPanelClasses<
   T extends {
     customProps?: {
       panel?: { className?: string };
     };
   },
->(props: T): T {
+>(props: T, panelClass: string): T {
   const panel = props.customProps?.panel;
-  const className = cn(PANEL_PADDING_CLASS, panel?.className);
 
   return toMerged(props, {
     customProps: {
       panel: {
         ...panel,
-        className,
+        className: cn(panelClass, panel?.className),
       },
     },
   }) as T;
@@ -64,23 +61,30 @@ export function useFieldOverlay(props: FieldOverlayProps) {
   }, [show, onShowChange, customProps?.menu]);
 
   const modalProps = useMemo((): Omit<ModalOwnProps, "children"> => {
-    return withDialogPanelPadding({
-      show,
-      size: "md",
-      onShowChange,
-      align: "middle-center",
-      ...customProps?.modal,
-    });
+    return withDialogPanelClasses(
+      {
+        show,
+        size: "md",
+        onShowChange,
+        scroll: "paper",
+        align: "middle-center",
+        ...customProps?.modal,
+      },
+      "flex flex-col items-stretch p-0",
+    );
   }, [show, onShowChange, customProps?.modal]);
 
   const drawerProps = useMemo((): Omit<DrawerOwnProps, "children"> => {
-    return withDialogPanelPadding({
-      show,
-      size: "md",
-      onShowChange,
-      placement: "bottom",
-      ...customProps?.drawer,
-    });
+    return withDialogPanelClasses(
+      {
+        show,
+        size: "md",
+        onShowChange,
+        placement: "bottom",
+        ...customProps?.drawer,
+      },
+      "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",
+    );
   }, [show, onShowChange, customProps?.drawer]);
 
   return {

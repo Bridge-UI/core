@@ -21,12 +21,25 @@ import type {
   FormFieldOwnProps,
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
+import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
-export interface DateRangeFieldClasses extends FormFieldClasses {}
+export interface DateRangeFieldClasses extends FormFieldClasses {
+  /**
+   * Classes merged onto the clear control.
+   */
+  clear?: string;
+}
 
 export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
+  /**
+   * Props forwarded to the clear `Icon` (`icon` is set by `DateRangeField`).
+   *
+   * @default undefined
+   */
+  clearIcon?: Partial<Omit<IconProps, "icon">>;
+
   /**
    * Props forwarded to the nested `DateRangePicker`.
    *
@@ -78,6 +91,11 @@ export interface DateRangeFieldCallbacks {
   onChange?: (value: null | DateRangeValue) => void;
 
   /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
+
+  /**
    * Called when the menu closes.
    */
   onClose?: () => void;
@@ -105,6 +123,13 @@ export interface DateRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   classes?: DateRangeFieldClasses;
+
+  /**
+   * Whether the value can be cleared.
+   *
+   * @default true
+   */
+  clearable?: boolean;
 
   /**
    * Extra props for internal parts.
@@ -185,6 +210,7 @@ export interface DateRangeFieldOwnProps extends Omit<
 
   /**
    * Dual calendar arrangement forwarded to `DateRangePicker`.
+   * On mobile, `drawer` / `modal` overlays default to `vertical` when unset.
    *
    * @default "horizontal"
    */
@@ -194,12 +220,13 @@ export interface DateRangeFieldOwnProps extends Omit<
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and
    * `drawer` (bottom) on mobile.
    *
-   * @default "menu"
+   * @default "auto"
    */
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
+   * on mobile.
    *
    * @default false
    */

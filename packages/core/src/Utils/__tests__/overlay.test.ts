@@ -2,12 +2,17 @@
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
-import { resolveFieldOverlay } from "@/Utils/overlay";
+import {
+  isFieldOverlayDialog,
+  resolveFieldOverlay,
+  resolveFieldShowFooter,
+  resolveRangePickerOrientation,
+} from "@/Utils/overlay";
 
 describe("resolveFieldOverlay", () => {
-  test("it should default to menu when mode is undefined", () => {
+  test("it should default like auto when mode is undefined", () => {
     expect(resolveFieldOverlay(undefined, false)).toBe("menu");
-    expect(resolveFieldOverlay(undefined, true)).toBe("menu");
+    expect(resolveFieldOverlay(undefined, true)).toBe("drawer");
   });
 
   test("it should keep menu when mode is menu", () => {
@@ -31,5 +36,66 @@ describe("resolveFieldOverlay", () => {
 
   test("it should resolve auto to drawer on mobile", () => {
     expect(resolveFieldOverlay("auto", true)).toBe("drawer");
+  });
+});
+
+describe("resolveRangePickerOrientation", () => {
+  test("it should keep an explicit orientation", () => {
+    expect(resolveRangePickerOrientation("horizontal", "drawer", true)).toBe(
+      "horizontal",
+    );
+    expect(resolveRangePickerOrientation("vertical", "menu", false)).toBe(
+      "vertical",
+    );
+  });
+
+  test("it should default to horizontal for menu shells", () => {
+    expect(resolveRangePickerOrientation(undefined, "menu", true)).toBe(
+      "horizontal",
+    );
+    expect(resolveRangePickerOrientation(undefined, "menu", false)).toBe(
+      "horizontal",
+    );
+  });
+
+  test("it should use vertical on mobile drawer and modal", () => {
+    expect(resolveRangePickerOrientation(undefined, "drawer", true)).toBe(
+      "vertical",
+    );
+    expect(resolveRangePickerOrientation(undefined, "modal", true)).toBe(
+      "vertical",
+    );
+  });
+
+  test("it should keep horizontal on desktop drawer and modal", () => {
+    expect(resolveRangePickerOrientation(undefined, "drawer", false)).toBe(
+      "horizontal",
+    );
+    expect(resolveRangePickerOrientation(undefined, "modal", false)).toBe(
+      "horizontal",
+    );
+  });
+});
+
+describe("isFieldOverlayDialog", () => {
+  test("it should be true for modal and drawer", () => {
+    expect(isFieldOverlayDialog("modal")).toBe(true);
+    expect(isFieldOverlayDialog("drawer")).toBe(true);
+    expect(isFieldOverlayDialog("menu")).toBe(false);
+  });
+});
+
+describe("resolveFieldShowFooter", () => {
+  test("it should keep an explicit showFooter", () => {
+    expect(resolveFieldShowFooter(true, false)).toBe(true);
+    expect(resolveFieldShowFooter(false, true)).toBe(false);
+  });
+
+  test("it should default to true on mobile when unset", () => {
+    expect(resolveFieldShowFooter(undefined, true)).toBe(true);
+  });
+
+  test("it should default to false on desktop when unset", () => {
+    expect(resolveFieldShowFooter(undefined, false)).toBe(false);
   });
 });

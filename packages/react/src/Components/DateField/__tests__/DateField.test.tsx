@@ -80,3 +80,56 @@ test("it should pass color to the nested DatePicker", () => {
 
   expect(day.className).toMatch(/secondary/);
 });
+
+test("it should show the clear control when a value is present", () => {
+  render(<DateField defaultValue={new Date(2021, 4, 21)} />);
+
+  expect(screen.getByLabelText("Clear")).toBeTruthy();
+});
+
+test("it should not show the clear control when there is no value", () => {
+  render(<DateField />);
+
+  expect(screen.queryByLabelText("Clear")).toBeNull();
+});
+
+test("it should call onChange and onClear when the clear control is clicked", () => {
+  const onChange = vi.fn();
+  const onClear = vi.fn();
+
+  render(
+    <DateField
+      onClear={onClear}
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 21)}
+    />,
+  );
+
+  fireEvent.click(screen.getByLabelText("Clear"));
+
+  expect(onChange).toHaveBeenCalledWith(null);
+  expect(onClear).toHaveBeenCalled();
+});
+
+test("it should not show the clear control when clearable is false", () => {
+  render(<DateField clearable={false} defaultValue={new Date(2021, 4, 21)} />);
+
+  expect(screen.queryByLabelText("Clear")).toBeNull();
+});
+
+test("it should open a dialog when overlay is modal", () => {
+  render(
+    <DateField
+      overlay="modal"
+      defaultValue={new Date(2021, 4, 21)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const dialog = document.body.querySelector('[role="dialog"]');
+
+  expect(dialog).not.toBeNull();
+  expect(dialog?.className).toMatch(/w-full|sm:max-w/);
+});

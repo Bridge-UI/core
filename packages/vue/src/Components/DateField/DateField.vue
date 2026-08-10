@@ -7,6 +7,7 @@ import { computed, ref } from "vue";
 import type { DatePickerModel } from "@bridge-ui/core";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { useDateField } from "@/Components/DateField/composables/useDateField";
 import type {
   DateFieldEmits,
@@ -16,6 +17,7 @@ import type {
 import { DatePicker } from "@/Components/DatePicker";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { FormField } from "@/Components/FormField";
+import { Icon } from "@/Components/Icon";
 
 defineSlots<DateFieldSlots>();
 
@@ -24,10 +26,13 @@ defineOptions({ inheritAttrs: false });
 const model = defineModel<DatePickerModel>();
 
 const props = withDefaults(defineProps<DateFieldOwnProps>(), {
+  clearable: true,
   showErrorIcon: true,
 });
 
 const emit = defineEmits<DateFieldEmits>();
+
+const resolveMessage = useResolveMessage();
 
 const uncontrolledValue = ref<DatePickerModel>(props.defaultValue ?? null);
 
@@ -47,7 +52,13 @@ const {
   dateOnly,
   formField,
   inputBind,
+  clearBind,
+  clearValue,
   modelValue,
+  showFooter,
+  pickerClass,
+  clearIconSize,
+  showClearIcon,
   handleOpenChange,
   handlePickerChange,
   handlePickerCancel,
@@ -58,7 +69,24 @@ const {
 
 <template>
   <FormField :field="formField">
-    <input v-bind="inputBind" />
+    <div class="flex min-w-0 flex-1 items-center gap-1">
+      <input v-bind="inputBind" />
+
+      <span
+        v-bind="clearBind"
+        v-if="showClearIcon"
+        v-on:click="clearValue"
+        :aria-label="resolveMessage('Clear')"
+        v-on:keydown.enter.prevent="clearValue"
+        v-on:keydown.space.prevent="clearValue"
+      >
+        <Icon
+          icon="clear"
+          :size="clearIconSize"
+          v-bind="props.customProps?.clearIcon"
+        />
+      </span>
+    </div>
   </FormField>
 
   <FieldOverlay
@@ -69,7 +97,9 @@ const {
   >
     <DatePicker
       :value="modelValue"
+      :class="pickerClass"
       :range="dateOnly.range"
+      :show-footer="showFooter"
       :read-only="props.readonly"
       :max-date="dateOnly.maxDate"
       :min-date="dateOnly.minDate"
@@ -78,7 +108,6 @@ const {
       :hide-years="dateOnly.hideYears"
       v-on:change="handlePickerChange"
       v-on:cancel="handlePickerCancel"
-      :show-footer="dateOnly.showFooter"
       :hide-months="dateOnly.hideMonths"
       :default-view="dateOnly.defaultView"
       :color="formField.merged.value.color"

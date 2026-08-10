@@ -55,12 +55,20 @@ function mountUseFieldOverlay(props: FieldOverlayOwnProps = {}) {
   return result;
 }
 
-test("it should resolve menu by default", () => {
+test("it should resolve menu by default on desktop", () => {
   mockViewport(1280);
 
   const { resolvedOverlay } = mountUseFieldOverlay();
 
   expect(resolvedOverlay.value).toBe("menu");
+});
+
+test("it should resolve drawer by default on mobile", () => {
+  mockViewport(500);
+
+  const { resolvedOverlay } = mountUseFieldOverlay();
+
+  expect(resolvedOverlay.value).toBe("drawer");
 });
 
 test("it should resolve explicit drawer", () => {
@@ -91,13 +99,31 @@ test("it should resolve auto to drawer on mobile", () => {
   expect(resolvedOverlay.value).toBe("drawer");
 });
 
-test("it should apply panel padding on drawer and modal", () => {
+test("it should apply panel padding and layout on drawer and modal", () => {
   const { modalBind, drawerBind } = mountUseFieldOverlay({
     overlay: "drawer",
   });
 
-  expect(drawerBind.value.customProps?.panel?.class).toContain("p-2");
-  expect(modalBind.value.customProps?.panel?.class).toContain("p-2");
+  const drawerPanel = drawerBind.value.customProps?.panel?.class;
+  const modalPanel = modalBind.value.customProps?.panel?.class;
+
+  expect(drawerPanel).toContain("p-0");
+  expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("flex-col");
+  expect(drawerPanel).toContain("items-stretch");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(modalPanel).toContain("p-0");
+  expect(modalPanel).toContain("items-stretch");
+});
+
+test("it should scroll modal content inside the paper panel", () => {
+  const { modalBind } = mountUseFieldOverlay({
+    overlay: "modal",
+  });
+
+  expect(modalBind.value.scroll).toBe("paper");
+  expect(modalBind.value.align).toBe("middle-center");
 });
 
 test("it should forward customProps.menu onto menuBind", () => {

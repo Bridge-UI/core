@@ -26,6 +26,7 @@ import {
   mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -58,6 +59,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const selectBridgeKeys = [
   "classes",
@@ -69,6 +71,7 @@ const selectBridgeKeys = [
   "clearable",
   "maxHeight",
   "searchable",
+  "showFooter",
   "flipOptions",
   "optionLabel",
   "optionValue",
@@ -94,11 +97,13 @@ export function useSelect(
   const attrs = useAttrs();
   const slots = useSlots();
   const listboxId = useId();
+  const breakpoint = useBreakpoint();
   const resolveMessage = useResolveMessage();
 
   const open = ref(false);
   const searchQuery = ref("");
   const highlightedIndex = ref(-1);
+  const draftValues = ref<SelectValue[]>([]);
   const containerRef = ref<null | HTMLElement>(null);
 
   const asyncLoading = ref(false);
@@ -265,6 +270,17 @@ export function useSelect(
     }
 
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
+  });
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(
+      selectMerged.value.showFooter,
+      breakpoint.mobile,
+    );
+  });
+
+  const activeValues = computed(() => {
+    return showFooter.value ? draftValues.value : selectedValues.value;
   });
 
   const selectedOptions = computed(() => {
@@ -464,6 +480,15 @@ export function useSelect(
     },
   );
 
+  const showClearIcon = computed(() => {
+    return (
+      hasValue.value &&
+      clearable.value &&
+      !props.readonly &&
+      !formField.isDisabled.value
+    );
+  });
+
   const adjustHeight = (element: null | HTMLTextAreaElement) => {
     if (!element || !multiple.value) {
       return;
@@ -473,7 +498,7 @@ export function useSelect(
   };
 
   function isSelected(value: SelectValue) {
-    return selectedValues.value.some((item) => selectValuesEqual(item, value));
+    return activeValues.value.some((item) => selectValuesEqual(item, value));
   }
 
   function setModel(next: null | undefined | SelectValue | SelectValue[]) {
@@ -499,9 +524,12 @@ export function useSelect(
       return;
     }
 
+    draftValues.value = [...selectedValues.value];
     open.value = true;
     searchQuery.value = "";
-    navigation.highlightCurrentSelection(isSelected);
+    navigation.highlightCurrentSelection((value) =>
+      selectedValues.value.some((item) => selectValuesEqual(item, value)),
+    );
     emit("open");
 
     if (isAsync.value && selectMerged.value.asyncData) {
@@ -524,6 +552,39 @@ export function useSelect(
 
   function selectOption(option: SelectOption) {
     if (option.disabled) {
+      return;
+    }
+
+    if (showFooter.value) {
+      if (multiple.value) {
+        const current = [...draftValues.value];
+        const index = current.findIndex((value) =>
+          selectValuesEqual(value, option.value),
+        );
+
+        if (index >= 0) {
+          current.splice(index, 1);
+          emit("deselect", option);
+        } else {
+          current.push(option.value);
+          emit("select", option);
+        }
+
+        draftValues.value = current;
+        searchQuery.value = "";
+        highlightedIndex.value = -1;
+        void nextTick(() => {
+          triggerRef.value?.focus({ preventScroll: true });
+        });
+
+        return;
+      }
+
+      draftValues.value = [option.value];
+      emit("select", option);
+      searchQuery.value = "";
+      highlightedIndex.value = -1;
+
       return;
     }
 
@@ -559,9 +620,32 @@ export function useSelect(
     closeMenu();
   }
 
+  function handleApply() {
+    if (multiple.value) {
+      setModel(draftValues.value);
+      emitChange(draftValues.value);
+    } else {
+      const next = draftValues.value[0] ?? null;
+      setModel(next);
+      emitChange(next);
+    }
+
+    closeMenu();
+  }
+
+  function handleCancel() {
+    draftValues.value = [...selectedValues.value];
+    closeMenu();
+    emit("cancel");
+  }
+
   function clearValue(event?: Event) {
     event?.preventDefault();
     event?.stopPropagation();
+
+    if (props.disabled || props.readonly) {
+      return;
+    }
 
     if (multiple.value) {
       setModel([]);
@@ -890,6 +974,7 @@ export function useSelect(
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
+      showFooter: selectMerged.value.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
       emptyMessage:
@@ -930,11 +1015,14 @@ export function useSelect(
     clearValue,
     removeChip,
     triggerBind,
+    handleApply,
     selectOption,
+    handleCancel,
     containerRef,
     listboxProps,
     clearIconSize,
     mergedClasses,
+    showClearIcon,
     visibleOptions,
     isSearchActive,
     selectedOptions,

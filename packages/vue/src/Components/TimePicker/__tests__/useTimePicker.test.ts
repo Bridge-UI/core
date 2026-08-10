@@ -41,6 +41,13 @@ test("it should default showFooter to false", () => {
   expect(showFooter.value).toBe(false);
 });
 
+test("it should keep horizontal padding on the panel content, not the root", () => {
+  const { rootBind, contentBind } = mountUseTimePicker();
+
+  expect(contentBind.value).toContain("px-2.5");
+  expect(rootBind.value.class).not.toContain("px-2.5");
+});
+
 test("it should enable footer when showFooter is set", () => {
   const { showFooter } = mountUseTimePicker({ showFooter: true });
 
