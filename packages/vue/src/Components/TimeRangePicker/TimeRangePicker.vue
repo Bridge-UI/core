@@ -45,6 +45,7 @@ const {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    showSeconds: false,
     orientation: "horizontal",
   },
   emit,
@@ -70,6 +71,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleStartChange"
+          :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />
       </div>
@@ -90,6 +92,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleEndChange"
+          :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />
       </div>

@@ -52,6 +52,7 @@ const timeFieldBridgeKeys = [
   "clearable",
   "showFooter",
   "customProps",
+  "showSeconds",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeFieldOwnProps)[];
@@ -61,12 +62,13 @@ function formatTimeValue(
   adapter: DateAdapter,
   context: DateAdapterContext,
   ampm?: boolean,
+  showSeconds?: boolean,
 ): string {
   if (isNil(value)) {
     return "";
   }
 
-  return adapter.formatTime(value, context, { ampm });
+  return adapter.formatTime(value, context, { ampm, showSeconds });
 }
 
 /**
@@ -224,6 +226,7 @@ export function useTimeField(
       adapter.value,
       context.value,
       timeOnly.value.ampm,
+      timeOnly.value.showSeconds,
     );
   });
 

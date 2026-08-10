@@ -117,6 +117,7 @@ const {
       :color="formField.merged.value.color"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"
+      :show-seconds="dateTimeOnly.showSeconds"
       :start-of-week="dateTimeOnly.startOfWeek"
       :rounded="formField.merged.value.rounded"
       :disable-dates="dateTimeOnly.disableDates"

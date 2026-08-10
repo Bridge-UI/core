@@ -53,6 +53,7 @@ const timeRangeFieldBridgeKeys = [
   "clearable",
   "showFooter",
   "customProps",
+  "showSeconds",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimeRangeFieldOwnProps)[];
@@ -62,12 +63,13 @@ function formatTimeRange(
   adapter: DateAdapter,
   context: DateAdapterContext,
   ampm?: boolean,
+  showSeconds?: boolean,
 ): string {
   if (isNil(value) || !isTimeRangeValue(value)) {
     return "";
   }
 
-  return `${adapter.formatTime(value[0], context, { ampm })} – ${adapter.formatTime(value[1], context, { ampm })}`;
+  return `${adapter.formatTime(value[0], context, { ampm, showSeconds })} – ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`;
 }
 
 /**
@@ -215,6 +217,7 @@ export function useTimeRangeField(
       adapter.value,
       context.value,
       timeOnly.value.ampm,
+      timeOnly.value.showSeconds,
     );
   });
 

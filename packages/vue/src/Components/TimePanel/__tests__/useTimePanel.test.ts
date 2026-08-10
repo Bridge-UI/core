@@ -11,6 +11,7 @@ const libDefaults = {
   interval: 1,
   rounded: "md",
   color: "primary",
+  showSeconds: false,
 } satisfies Partial<TimePanelOwnProps>;
 
 function mountUseTimePanel(props: Partial<TimePanelOwnProps> = {}) {

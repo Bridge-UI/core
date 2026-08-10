@@ -43,6 +43,7 @@ import { TimePicker } from "@bridge-ui/react/Components/TimePicker";
 | `readOnly`     | `boolean`               | `false`     | Prevents selection.                                   |
 | `rounded`      | `CalendarRounded`       | `"md"`      | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`               | `false`     | Shows Cancel / Apply. Selection is draft until Apply. |
+| `showSeconds`  | `boolean`               | `false`     | Shows seconds in the panel and formatted value.       |
 | `timeZone`     | `string`                | —           | IANA time zone.                                       |
 | `tokens`       | `TimePickerTokens`      | —           | Token overrides.                                      |
 | `value`        | `Date \| null`          | —           | Controlled value.                                     |

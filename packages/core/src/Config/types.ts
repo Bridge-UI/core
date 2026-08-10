@@ -593,6 +593,7 @@ export interface DateTimeFieldConfigBase {
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
+    showSeconds: boolean;
     size: keyof FormFieldSize;
     startOfWeek: number;
     timeZone: string;
@@ -639,6 +640,7 @@ export interface DateTimePickerConfigBase {
     interval: number;
     rounded: keyof CalendarRounded;
     showFooter: boolean;
+    showSeconds: boolean;
     startOfWeek: number;
     timeZone: string;
   }>;
@@ -668,6 +670,7 @@ export interface TimeFieldConfigBase {
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
+    showSeconds: boolean;
     size: keyof FormFieldSize;
     timeZone: string;
     variant: keyof FormFieldVariant;
@@ -699,6 +702,7 @@ export interface TimePickerConfigBase {
     interval: number;
     rounded: keyof TimeRounded;
     showFooter: boolean;
+    showSeconds: boolean;
     timeZone: string;
   }>;
   tokens: Partial<{
@@ -721,6 +725,7 @@ export interface TimeRangeFieldConfigBase {
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
+    showSeconds: boolean;
     size: keyof FormFieldSize;
     timeZone: string;
     variant: keyof FormFieldVariant;
@@ -753,6 +758,7 @@ export interface TimeRangePickerConfigBase {
     orientation: "vertical" | "horizontal";
     rounded: keyof TimeRounded;
     showFooter: boolean;
+    showSeconds: boolean;
     timeZone: string;
   }>;
   tokens: Partial<{
@@ -780,6 +786,7 @@ export interface DateTimeRangeFieldConfigBase {
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
+    showSeconds: boolean;
     size: keyof FormFieldSize;
     startOfWeek: number;
     timeZone: string;
@@ -827,6 +834,7 @@ export interface DateTimeRangePickerConfigBase {
     orientation: "vertical" | "horizontal";
     rounded: keyof CalendarRounded;
     showFooter: boolean;
+    showSeconds: boolean;
     startOfWeek: number;
     timeZone: string;
   }>;

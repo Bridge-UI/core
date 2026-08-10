@@ -269,6 +269,13 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
   showFooter?: boolean;
 
   /**
+   * Shows seconds in the panel and formatted value.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
+
+  /**
    * Named slots (`FormField` slots + calendar `day`).
    *
    * @default undefined

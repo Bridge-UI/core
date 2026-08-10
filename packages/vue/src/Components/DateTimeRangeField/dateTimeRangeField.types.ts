@@ -262,6 +262,13 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
   showFooter?: boolean;
 
   /**
+   * Shows seconds in the panel and formatted value.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
+
+  /**
    * First day of the week.
    *
    * @default 0

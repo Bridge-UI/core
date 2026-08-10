@@ -45,13 +45,14 @@ const timePickerBridgeKeys = [
   "timeZone",
   "showFooter",
   "customProps",
+  "showSeconds",
   "defaultValue",
   "disableTimes",
 ] as const satisfies readonly (keyof TimePickerOwnProps)[];
 
 type TimePickerLibDefaults = LibDefaultsShape<
   TimePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter"
+  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "showSeconds"
 >;
 
 type TimePickerMerged = MergeLibDefaults<

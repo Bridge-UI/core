@@ -573,6 +573,7 @@ export type { TabsActivation } from "@/Utils/tabs";
 export {
   buildHourOptions,
   buildMinuteOptions,
+  buildSecondOptions,
   combineDateAndTime,
   isTimeDisabled,
   isTimeRangeValue,
@@ -582,6 +583,7 @@ export {
   snapMinutes,
   sortTimeRangeValue,
   timeToMinutes,
+  timeToSeconds,
   to12Hour,
   to24Hour,
   toMeridiem,

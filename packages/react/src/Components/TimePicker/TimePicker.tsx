@@ -26,6 +26,7 @@ function TimePicker(props: TimePickerProps) {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    showSeconds: false,
   });
 
   return (
@@ -44,6 +45,7 @@ function TimePicker(props: TimePickerProps) {
           readOnly={merged.readOnly}
           timeZone={merged.timeZone}
           onChange={handlePanelChange}
+          showSeconds={merged.showSeconds}
           disableTimes={merged.disableTimes}
         />
       </div>

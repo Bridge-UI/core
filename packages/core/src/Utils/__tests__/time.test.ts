@@ -8,6 +8,7 @@ import { createNativeDateAdapter } from "@/Adapters/date";
 import {
   buildHourOptions,
   buildMinuteOptions,
+  buildSecondOptions,
   combineDateAndTime,
   isTimeDisabled,
   observeTimePanelSelectedScroll,
@@ -34,6 +35,14 @@ describe("buildHourOptions", () => {
 describe("buildMinuteOptions", () => {
   test("it should step by interval", () => {
     expect(buildMinuteOptions({ interval: 15 })).toEqual([0, 15, 30, 45]);
+  });
+});
+
+describe("buildSecondOptions", () => {
+  test("it should return 0-59", () => {
+    expect(buildSecondOptions()).toHaveLength(60);
+    expect(buildSecondOptions()[0]).toBe(0);
+    expect(buildSecondOptions()[59]).toBe(59);
   });
 });
 
@@ -79,13 +88,17 @@ describe("combineDateAndTime", () => {
 
   test("it should merge day and time parts", () => {
     const day = adapter.parse("2021-05-21")!;
-    const time = adapter.setMinutes(adapter.setHours(adapter.now(), 14), 30);
+    const time = adapter.setSeconds(
+      adapter.setMinutes(adapter.setHours(adapter.now(), 14), 30),
+      45,
+    );
     const merged = combineDateAndTime(day, time, adapter);
 
     expect(adapter.getDate(merged)).toBe(21);
     expect(adapter.getMonth(merged)).toBe(4);
     expect(adapter.getHours(merged)).toBe(14);
     expect(adapter.getMinutes(merged)).toBe(30);
+    expect(adapter.getSeconds(merged)).toBe(45);
   });
 });
 

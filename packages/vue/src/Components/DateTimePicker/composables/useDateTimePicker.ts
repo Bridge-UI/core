@@ -55,6 +55,7 @@ const dateTimePickerBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "showSeconds",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -73,6 +74,7 @@ type DateTimePickerLibDefaults = LibDefaultsShape<
   | "interval"
   | "showFooter"
   | "defaultView"
+  | "showSeconds"
   | "startOfWeek"
 >;
 

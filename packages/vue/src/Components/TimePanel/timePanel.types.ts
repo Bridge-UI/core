@@ -153,6 +153,13 @@ export interface TimePanelOwnProps {
   rounded?: MergeProps<TimeRounded, TimePanelRoundedOverrides>;
 
   /**
+   * Shows a seconds column and includes seconds in the selected value.
+   *
+   * @default false
+   */
+  showSeconds?: boolean;
+
+  /**
    * IANA time zone.
    *
    * @default undefined

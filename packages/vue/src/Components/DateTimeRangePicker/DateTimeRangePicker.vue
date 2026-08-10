@@ -55,6 +55,7 @@ const {
     startOfWeek: 0,
     color: "primary",
     showFooter: false,
+    showSeconds: false,
     orientation: "horizontal",
   },
   emit,
@@ -101,6 +102,10 @@ const {
                 <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
                 <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
                 <div
+                  v-if="merged.showSeconds"
+                  :class="TIME_PANEL_COLUMN_WIDTH_CLASS"
+                />
+                <div
                   v-if="merged.ampm"
                   :class="TIME_PANEL_COLUMN_WIDTH_CLASS"
                 />
@@ -119,6 +124,7 @@ const {
                   :interval="merged.interval"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
+                  :show-seconds="merged.showSeconds"
                   v-on:change="handleStartPanelChange"
                   :disable-times="merged.disableTimes"
                   :custom-props="timePanelCustomProps"
@@ -132,6 +138,10 @@ const {
               <div aria-hidden="true" :class="timeSizerBind">
                 <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
                 <div :class="TIME_PANEL_COLUMN_WIDTH_CLASS" />
+                <div
+                  v-if="merged.showSeconds"
+                  :class="TIME_PANEL_COLUMN_WIDTH_CLASS"
+                />
                 <div
                   v-if="merged.ampm"
                   :class="TIME_PANEL_COLUMN_WIDTH_CLASS"
@@ -151,6 +161,7 @@ const {
                   :interval="merged.interval"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
+                  :show-seconds="merged.showSeconds"
                   v-on:change="handleEndPanelChange"
                   :disable-times="merged.disableTimes"
                   :custom-props="timePanelCustomProps"

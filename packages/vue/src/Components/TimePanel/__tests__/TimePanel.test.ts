@@ -46,3 +46,20 @@ test("it should render AM/PM when ampm is set", () => {
   expect(wrapper.text()).toContain("AM");
   expect(wrapper.text()).toContain("PM");
 });
+
+test("it should render seconds when showSeconds is set", () => {
+  const withoutSeconds = mount(TimePanel, {
+    props: { value: new Date(2021, 4, 21, 14, 30, 45) },
+  });
+
+  const withSeconds = mount(TimePanel, {
+    props: {
+      showSeconds: true,
+      value: new Date(2021, 4, 21, 14, 30, 45),
+    },
+  });
+
+  expect(withSeconds.findAll("button").length).toBe(
+    withoutSeconds.findAll("button").length + 60,
+  );
+});

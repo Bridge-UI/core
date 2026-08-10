@@ -84,6 +84,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           hideYears={dateTimeOnly.hideYears}
           rounded={formField.merged.rounded}
           hideMonths={dateTimeOnly.hideMonths}
+          showSeconds={dateTimeOnly.showSeconds}
           defaultView={dateTimeOnly.defaultView}
           startOfWeek={dateTimeOnly.startOfWeek}
           customProps={dateTimePickerCustomProps}

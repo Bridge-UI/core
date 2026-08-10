@@ -34,6 +34,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     rounded: "md",
     color: "primary",
     showFooter: false,
+    showSeconds: false,
     orientation: "horizontal",
   });
 
@@ -56,6 +57,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             readOnly={merged.readOnly}
             timeZone={merged.timeZone}
             onChange={handleStartChange}
+            showSeconds={merged.showSeconds}
             disableTimes={merged.disableTimes}
           />
         </div>
@@ -76,6 +78,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             readOnly={merged.readOnly}
             timeZone={merged.timeZone}
             onChange={handleEndChange}
+            showSeconds={merged.showSeconds}
             disableTimes={merged.disableTimes}
           />
         </div>

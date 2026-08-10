@@ -64,6 +64,7 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 | `orientation`     | `"horizontal" \| "vertical"`    | `"horizontal"`                        | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
 | `overlay`         | `FieldOverlayMode`              | `"auto"`                              | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                              |
 | `showFooter`      | `boolean`                       | `false` (`true` on mobile when unset) | Shows Cancel / Apply on the nested picker.                                        |
+| `showSeconds`     | `boolean`                       | `false`                               | Shows seconds in the panel and formatted value.                                   |
 | `slots`           | `DateTimeRangeFieldSlots`       | —                                     | Named slots (`FormField` slots + calendar `day`).                                 |
 | `startOfWeek`     | `StartOfWeek`                   | `0`                                   | First day of the week.                                                            |
 | `timeZone`        | `string`                        | —                                     | IANA time zone.                                                                   |

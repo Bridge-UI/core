@@ -16,6 +16,7 @@ const libDefaults = {
   startOfWeek: 0,
   color: "primary",
   showFooter: false,
+  showSeconds: false,
 } as const satisfies Partial<DateTimeRangePickerOwnProps>;
 
 function mountUseDateTimeRangePicker(

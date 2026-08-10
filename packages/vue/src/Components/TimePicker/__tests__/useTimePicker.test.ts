@@ -15,6 +15,7 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   showFooter: false,
+  showSeconds: false,
 } as const satisfies Partial<TimePickerOwnProps>;
 
 function mountUseTimePicker(props: Partial<TimePickerOwnProps> = {}) {

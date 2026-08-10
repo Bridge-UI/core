@@ -64,6 +64,13 @@ export function buildMinuteOptions(
 }
 
 /**
+ * Builds second option values (`0`–`59`).
+ */
+export function buildSecondOptions(): number[] {
+  return range(0, 60);
+}
+
+/**
  * Converts a 12-hour clock hour + meridiem into `0`–`23`.
  */
 export function to24Hour(hour12: number, meridiem: "AM" | "PM"): number {
@@ -104,20 +111,34 @@ export function timeToMinutes<TDate>(
 }
 
 /**
- * Whether `candidate` is disabled by min/max/disableTimes (minute precision).
+ * Seconds since midnight for comparison within a day.
+ */
+export function timeToSeconds<TDate>(
+  value: TDate,
+  adapter: DateAdapter<TDate>,
+  context?: DateAdapterContext,
+): number {
+  return (
+    timeToMinutes(value, adapter, context) * 60 +
+    adapter.getSeconds(value, context)
+  );
+}
+
+/**
+ * Whether `candidate` is disabled by min/max/disableTimes (second precision).
  */
 export function isTimeDisabled<TDate>(
   candidate: TDate,
   options: IsTimeDisabledOptions<TDate>,
 ): boolean {
   const { adapter, context, minTime, maxTime, disableTimes } = options;
-  const minutes = timeToMinutes(candidate, adapter, context);
+  const seconds = timeToSeconds(candidate, adapter, context);
 
-  if (!isNil(minTime) && minutes < timeToMinutes(minTime, adapter, context)) {
+  if (!isNil(minTime) && seconds < timeToSeconds(minTime, adapter, context)) {
     return true;
   }
 
-  if (!isNil(maxTime) && minutes > timeToMinutes(maxTime, adapter, context)) {
+  if (!isNil(maxTime) && seconds > timeToSeconds(maxTime, adapter, context)) {
     return true;
   }
 
@@ -153,6 +174,7 @@ export function snapMinutes(minutes: number, interval: TimeInterval): number {
 
 /**
  * Normalizes a time value onto `base` calendar day with snapped minutes.
+ * Seconds are preserved when `showSeconds` is true; otherwise zeroed.
  */
 export function normalizeTimeValue<TDate>(
   value: null | TDate | undefined,
@@ -162,9 +184,10 @@ export function normalizeTimeValue<TDate>(
     base?: TDate;
     context?: DateAdapterContext;
     interval?: TimeInterval;
+    showSeconds?: boolean;
   },
 ): null | TDate {
-  const { adapter, context, interval = 1 } = options;
+  const { adapter, context, interval = 1, showSeconds = false } = options;
 
   if (isNil(value)) {
     return null;
@@ -173,15 +196,18 @@ export function normalizeTimeValue<TDate>(
   const base = options.base ?? adapter.now(context);
   const hours = adapter.getHours(value, context);
   const minutes = snapMinutes(adapter.getMinutes(value, context), interval);
+  const seconds = showSeconds ? adapter.getSeconds(value, context) : 0;
   let next = adapter.setHours(base, hours, context);
 
   next = adapter.setMinutes(next, minutes, context);
+  next = adapter.setSeconds(next, seconds, context);
 
   return next;
 }
 
 /**
- * Merges the calendar day from `datePart` with the hour/minute from `timePart`.
+ * Merges the calendar day from `datePart` with the hour/minute/second from
+ * `timePart`.
  */
 export function combineDateAndTime<TDate>(
   datePart: TDate,
@@ -191,9 +217,11 @@ export function combineDateAndTime<TDate>(
 ): TDate {
   const hours = adapter.getHours(timePart, context);
   const minutes = adapter.getMinutes(timePart, context);
+  const seconds = adapter.getSeconds(timePart, context);
   let next = adapter.setHours(datePart, hours, context);
 
   next = adapter.setMinutes(next, minutes, context);
+  next = adapter.setSeconds(next, seconds, context);
 
   return next;
 }
@@ -214,8 +242,8 @@ export function sortTimeRangeValue<TDate>(
   const [start, end] = value;
 
   if (
-    timeToMinutes(start, adapter, context) <=
-    timeToMinutes(end, adapter, context)
+    timeToSeconds(start, adapter, context) <=
+    timeToSeconds(end, adapter, context)
   ) {
     return value;
   }
