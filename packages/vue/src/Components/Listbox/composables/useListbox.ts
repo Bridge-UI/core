@@ -5,7 +5,9 @@ import { computed, useAttrs } from "vue";
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
+  resolveFieldOverlay,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -27,6 +29,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 export const listboxBridgeKeys = [
   "size",
@@ -58,6 +61,7 @@ export function useListbox(
   options: ListboxOptions = {},
 ) {
   const attrs = useAttrs();
+  const breakpoint = useBreakpoint();
 
   const split = computed(() => {
     return splitComponentProps<ListboxProps, typeof listboxBridgeKeys>({
@@ -82,6 +86,12 @@ export function useListbox(
     props: () => {
       return split.value.componentProps;
     },
+  });
+
+  const isDialogOverlay = computed(() => {
+    return isFieldOverlayDialog(
+      resolveFieldOverlay(props.overlay, breakpoint.mobile),
+    );
   });
 
   const listboxTokens = computed(() => {
@@ -163,11 +173,21 @@ export function useListbox(
     );
   });
 
+  const surfaceBind = computed(() => {
+    return cn({
+      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+        isDialogOverlay.value,
+      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
+        isDialogOverlay.value,
+    });
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
     messageBind,
+    surfaceBind,
     sizeClasses,
     mergedClasses,
     optionSelectedClass,

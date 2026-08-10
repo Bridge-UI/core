@@ -35,12 +35,7 @@ export function resolveFieldOverlay(
     return "menu";
   }
 
-  // undefined | "auto"
-  if (mobile) {
-    return "drawer";
-  }
-
-  return "menu";
+  return mobile ? "drawer" : "menu";
 }
 
 /**

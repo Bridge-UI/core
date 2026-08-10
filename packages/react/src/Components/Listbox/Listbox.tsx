@@ -72,6 +72,7 @@ function Listbox({
     checkClass,
     scrollBind,
     messageBind,
+    surfaceBind,
     sizeClasses,
     mergedClasses,
     optionSelectedClass,
@@ -94,7 +95,7 @@ function Listbox({
       isSelected: isSelectedProp,
     },
     listboxLibDefaults,
-    { componentName },
+    { overlay, componentName },
   );
 
   const resolvedEntries = useMemo(() => {
@@ -249,77 +250,79 @@ function Listbox({
         },
       }}
     >
-      {slots?.beforeOptions}
+      <div className={surfaceBind}>
+        {slots?.beforeOptions}
 
-      {loading ? (
-        <>
-          <Progress
-            size="xs"
-            aria-hidden
-            color={merged.color}
-            {...mergeNestedComponentProps(progressProps, {
-              className: "shrink-0",
-              classes: { bar: mergedClasses.loading },
-            })}
-          />
-
-          <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
-        </>
-      ) : (
-        <div {...scrollBind}>
-          <ListboxContext.Provider value={listboxContext}>
-            <List
-              dense
-              role="listbox"
-              id={listboxId}
-              aria-labelledby={labelledBy}
-              aria-multiselectable={multiple || undefined}
-              {...mergeNestedComponentProps(listProps, {
-                className: "p-0",
+        {loading ? (
+          <>
+            <Progress
+              size="xs"
+              aria-hidden
+              color={merged.color}
+              {...mergeNestedComponentProps(progressProps, {
+                className: "shrink-0",
+                classes: { bar: mergedClasses.loading },
               })}
-            >
-              {hasComposedChildren
-                ? children
-                : mappedRows.map((row) => {
-                    if (row.kind === "section") {
+            />
+
+            <div {...messageBind}>{slots?.loading ?? loadingMessage}</div>
+          </>
+        ) : (
+          <div {...scrollBind}>
+            <ListboxContext.Provider value={listboxContext}>
+              <List
+                dense
+                role="listbox"
+                id={listboxId}
+                aria-labelledby={labelledBy}
+                aria-multiselectable={multiple || undefined}
+                {...mergeNestedComponentProps(listProps, {
+                  className: "p-0",
+                })}
+              >
+                {hasComposedChildren
+                  ? children
+                  : mappedRows.map((row) => {
+                      if (row.kind === "section") {
+                        return (
+                          <ListSection
+                            key={row.key}
+                            title={row.title}
+                            sticky={row.sticky}
+                            {...listSectionProps}
+                          />
+                        );
+                      }
+
+                      const { option, selected } = row;
+
                       return (
-                        <ListSection
+                        <ListItem
+                          interactive
                           key={row.key}
-                          title={row.title}
-                          sticky={row.sticky}
-                          {...listSectionProps}
-                        />
+                          value={option.value}
+                          disabled={option.disabled}
+                          secondary={option.description}
+                          primary={slots?.option ? undefined : option.label}
+                          {...listItemProps}
+                        >
+                          {slots?.option?.({ option, selected })}
+                        </ListItem>
                       );
-                    }
+                    })}
+              </List>
+            </ListboxContext.Provider>
+          </div>
+        )}
 
-                    const { option, selected } = row;
+        {showEmptyState && !slots?.empty ? (
+          <div {...messageBind}>{emptyMessage}</div>
+        ) : null}
 
-                    return (
-                      <ListItem
-                        interactive
-                        key={row.key}
-                        value={option.value}
-                        disabled={option.disabled}
-                        secondary={option.description}
-                        primary={slots?.option ? undefined : option.label}
-                        {...listItemProps}
-                      >
-                        {slots?.option?.({ option, selected })}
-                      </ListItem>
-                    );
-                  })}
-            </List>
-          </ListboxContext.Provider>
-        </div>
-      )}
+        {showEmptyState && slots?.empty ? slots.empty : null}
 
-      {showEmptyState && !slots?.empty ? (
-        <div {...messageBind}>{emptyMessage}</div>
-      ) : null}
-
-      {showEmptyState && slots?.empty ? slots.empty : null}
-
-      {slots?.afterOptions}
+        {slots?.afterOptions}
+      </div>
     </FieldOverlay>
   );
 }

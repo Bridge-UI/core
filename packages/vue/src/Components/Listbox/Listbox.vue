@@ -76,6 +76,7 @@ const {
   checkClass,
   scrollBind,
   messageBind,
+  surfaceBind,
   sizeClasses,
   mergedClasses,
   optionSelectedClass,
@@ -274,74 +275,76 @@ const listBind = computed(() => {
     :overlay="overlay"
     :custom-props="overlayCustomProps"
   >
-    <component
-      v-if="hasNamedSlot(slots, 'beforeOptions')"
-      :is="resolveNamedSlot(slots, 'beforeOptions')"
-    />
+    <div :class="surfaceBind">
+      <component
+        v-if="hasNamedSlot(slots, 'beforeOptions')"
+        :is="resolveNamedSlot(slots, 'beforeOptions')"
+      />
 
-    <template v-if="loading">
-      <Progress v-bind="progressBind" />
+      <template v-if="loading">
+        <Progress v-bind="progressBind" />
 
-      <div v-bind="messageBind">
-        <component
-          v-if="hasNamedSlot(slots, 'loading')"
-          :is="resolveNamedSlot(slots, 'loading')"
-        />
-
-        <span v-else>{{ loadingMessage }}</span>
-      </div>
-    </template>
-
-    <div v-else v-bind="scrollBind">
-      <List v-bind="listBind">
-        <slot v-if="hasComposedChildren" />
-
-        <template v-else :key="row.key" v-for="row in mappedRows">
-          <ListSection
-            :title="row.title"
-            :sticky="row.sticky"
-            v-bind="listSectionProps"
-            v-if="row.kind === 'section'"
+        <div v-bind="messageBind">
+          <component
+            v-if="hasNamedSlot(slots, 'loading')"
+            :is="resolveNamedSlot(slots, 'loading')"
           />
 
-          <ListItem
-            v-else
-            interactive
-            :value="row.option.value"
-            :disabled="row.option.disabled"
-            :secondary="row.option.description"
-            :primary="
-              hasNamedSlot(slots, 'option') ? undefined : row.option.label
-            "
-            v-bind="listItemProps"
-          >
-            <template #default v-if="hasNamedSlot(slots, 'option')">
-              <slot
-                name="option"
-                :option="row.option"
-                :selected="row.selected"
-              />
-            </template>
-          </ListItem>
-        </template>
-      </List>
+          <span v-else>{{ loadingMessage }}</span>
+        </div>
+      </template>
+
+      <div v-else v-bind="scrollBind">
+        <List v-bind="listBind">
+          <slot v-if="hasComposedChildren" />
+
+          <template v-else :key="row.key" v-for="row in mappedRows">
+            <ListSection
+              :title="row.title"
+              :sticky="row.sticky"
+              v-bind="listSectionProps"
+              v-if="row.kind === 'section'"
+            />
+
+            <ListItem
+              v-else
+              interactive
+              :value="row.option.value"
+              :disabled="row.option.disabled"
+              :secondary="row.option.description"
+              :primary="
+                hasNamedSlot(slots, 'option') ? undefined : row.option.label
+              "
+              v-bind="listItemProps"
+            >
+              <template #default v-if="hasNamedSlot(slots, 'option')">
+                <slot
+                  name="option"
+                  :option="row.option"
+                  :selected="row.selected"
+                />
+              </template>
+            </ListItem>
+          </template>
+        </List>
+      </div>
+
+      <div
+        v-bind="messageBind"
+        v-if="showEmptyState && !hasNamedSlot(slots, 'empty')"
+      >
+        {{ emptyMessage }}
+      </div>
+
+      <component
+        :is="resolveNamedSlot(slots, 'empty')"
+        v-else-if="showEmptyState && hasNamedSlot(slots, 'empty')"
+      />
+
+      <component
+        v-if="hasNamedSlot(slots, 'afterOptions')"
+        :is="resolveNamedSlot(slots, 'afterOptions')"
+      />
     </div>
-
-    <div
-      v-bind="messageBind"
-      v-if="showEmptyState && !hasNamedSlot(slots, 'empty')"
-    >
-      {{ emptyMessage }}
-    </div>
-
-    <component
-      :is="resolveNamedSlot(slots, 'empty')"
-      v-else-if="showEmptyState && hasNamedSlot(slots, 'empty')"
-    />
-
-    <component
-      v-if="hasNamedSlot(slots, 'afterOptions')"
-      :is="resolveNamedSlot(slots, 'afterOptions')"
-    />
   </FieldOverlay>
 </template>

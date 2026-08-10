@@ -1,11 +1,15 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
+import { useMemo } from "react";
 
 // ** Core Imports
 import {
   cn,
+  isFieldOverlayDialog,
   mergeBridgeUILayeredClasses,
+  resolveFieldOverlay,
   splitComponentProps,
+  type FieldOverlayMode,
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
@@ -27,6 +31,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 export const listboxBridgeKeys = [
   "size",
@@ -50,6 +55,11 @@ export type ListboxOptions = {
    * Public registry key that owns nested `tokens.listbox` defaults.
    */
   componentName?: "Select" | "Autocomplete";
+
+  /**
+   * Overlay mode forwarded from `Listbox` — dialogs need Listbox surface chrome.
+   */
+  overlay?: FieldOverlayMode;
 };
 
 export function useListbox(
@@ -57,6 +67,8 @@ export function useListbox(
   libDefaults: ListboxLibDefaults,
   options: ListboxOptions = {},
 ) {
+  const breakpoint = useBreakpoint();
+
   const { componentProps } = splitComponentProps<
     ListboxProps,
     typeof listboxBridgeKeys
@@ -78,6 +90,12 @@ export function useListbox(
     entry: bridgeListbox,
     props: componentProps,
   });
+
+  const isDialogOverlay = useMemo(() => {
+    return isFieldOverlayDialog(
+      resolveFieldOverlay(options.overlay, breakpoint.mobile),
+    );
+  }, [options.overlay, breakpoint.mobile]);
 
   const listboxTokens = derived(() => {
     return get(bridgeListbox, ["tokens", "listbox"]) as
@@ -153,11 +171,21 @@ export function useListbox(
     );
   });
 
+  const surfaceBind = derived(() => {
+    return cn({
+      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+        isDialogOverlay,
+      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
+        isDialogOverlay,
+    });
+  });
+
   return {
     merged,
     checkClass,
     scrollBind,
     messageBind,
+    surfaceBind,
     sizeClasses,
     mergedClasses,
     optionSelectedClass,
