@@ -130,8 +130,7 @@ export function useTextarea(
 
   const inheritedOnInput = computed(() => {
     return (attrs as Record<string, unknown>).onInput as
-      | undefined
-      | ((event: Event) => void);
+      undefined | ((event: Event) => void);
   });
 
   const adjustHeight = (element: null | HTMLTextAreaElement) => {

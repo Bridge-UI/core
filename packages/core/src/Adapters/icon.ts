@@ -39,8 +39,7 @@ export const SEMANTIC_ICON_NAMES = [
  * Semantic icon names used by Bridge chrome and public `IconSource` props.
  */
 export type SemanticIconName =
-  | keyof SemanticIconNameOverrides
-  | (typeof SEMANTIC_ICON_NAMES)[number];
+  keyof SemanticIconNameOverrides | (typeof SEMANTIC_ICON_NAMES)[number];
 
 /**
  * Extra icon values from {@link IconSourceValueOverrides} module augmentation.
@@ -74,9 +73,7 @@ export interface IconAdapter {
  * Semantic name, concrete icon component (`TIcon`), or an augmented native value.
  */
 export type IconSource<TIcon = unknown> =
-  | TIcon
-  | IconSourceValue
-  | SemanticIconName;
+  TIcon | IconSourceValue | SemanticIconName;
 
 /**
  * Returns whether `value` is a known default semantic icon name.

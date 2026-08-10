@@ -328,8 +328,7 @@ export function useOtpField(
 
   const inputBind = (index: number) => {
     const inputMode = (inputType.value === "numeric" ? "numeric" : "text") as
-      | "text"
-      | "numeric";
+      "text" | "numeric";
 
     return mergePartBind(
       {

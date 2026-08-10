@@ -390,5 +390,4 @@ export type AutocompleteMultipleProps = MergeHtmlProps<
 };
 
 export type AutocompleteProps =
-  | AutocompleteSingleProps
-  | AutocompleteMultipleProps;
+  AutocompleteSingleProps | AutocompleteMultipleProps;

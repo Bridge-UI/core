@@ -13,10 +13,7 @@ export type DateRangeValue<TDate = Date> = [TDate, TDate];
  * Public model for date pickers (single, multiple, or range).
  */
 export type DatePickerModel<TDate = Date> =
-  | null
-  | TDate
-  | TDate[]
-  | DateRangeValue<TDate>;
+  null | TDate | TDate[] | DateRangeValue<TDate>;
 
 /**
  * Selection mode resolved from `multiple` / `range` flags.
@@ -82,9 +79,7 @@ export function sortDateRangeValue<TDate>(
  * Predicate / list inputs for disabling calendar days.
  */
 export type DisableDatesInput<TDate = Date> =
-  | TDate
-  | TDate[]
-  | ((date: TDate) => boolean);
+  TDate | TDate[] | ((date: TDate) => boolean);
 
 /**
  * Options for {@link isDateDisabled}.
@@ -348,10 +343,7 @@ export function isDateRangeEndpoint<TDate>({
  * uses `data-preview` on the tile — not this state union.
  */
 export type CalendarDayInteractionState =
-  | "base"
-  | "hover"
-  | "disabled"
-  | "selected";
+  "base" | "hover" | "disabled" | "selected";
 
 /**
  * Resolves the visual interaction state for a calendar tile.

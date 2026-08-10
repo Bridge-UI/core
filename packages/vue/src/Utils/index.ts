@@ -92,8 +92,7 @@ export function useBridgeUIComponent<
     }
 
     return get(components.value, componentName) as
-      | undefined
-      | RegistryEntryFor<K>;
+      undefined | RegistryEntryFor<K>;
   });
 
   const merged = computed(() => {
