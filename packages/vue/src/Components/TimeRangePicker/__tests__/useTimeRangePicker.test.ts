@@ -64,7 +64,9 @@ test("it should size the root to content and let panels grow", () => {
   expect(endBind.value.class).toContain("flex-1");
   expect(startBind.value.class).toContain("flex-1");
   expect(panelsBind.value.class).toContain("w-full");
+  expect(panelsBind.value.class).toContain("px-2.5");
   expect(panelsBind.value.class).toContain("flex-row");
+  expect(rootBind.value.class).not.toContain("px-2.5");
 });
 
 test("it should stack panels when orientation is vertical", () => {

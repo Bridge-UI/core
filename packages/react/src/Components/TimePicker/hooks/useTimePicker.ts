@@ -155,10 +155,16 @@ export function useTimePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
+  });
+
+  const contentBind = derived(() => {
+    return cn({
+      "px-2.5": true,
+    });
   });
 
   const footerBind = derived(() => {
@@ -177,6 +183,7 @@ export function useTimePicker(
     rootBind,
     footerBind,
     timeTokens,
+    contentBind,
     handleApply,
     displayValue,
     handleCancel,

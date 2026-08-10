@@ -221,7 +221,7 @@ export function useTimeRangePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white px-2.5 shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -236,7 +236,7 @@ export function useTimeRangePicker(
       customProps.value?.panels,
       {},
       cn({
-        "flex w-full gap-2": true,
+        "flex w-full gap-2 px-2.5": true,
         "flex-row": !isVertical.value,
         "flex-col": isVertical.value,
         [mergedClasses.value.panels ?? ""]: true,
