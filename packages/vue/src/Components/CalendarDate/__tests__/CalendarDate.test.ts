@@ -26,11 +26,11 @@ test("it should hide outside days when hideOutsideDays is set", () => {
     props: { hideOutsideDays: true, viewDate: new Date(2021, 4, 1) },
   });
 
-  const grayOutside = wrapper
+  const darkOutside = wrapper
     .findAll("button")
     .filter((node) => node.classes().includes("text-dark-400"));
 
-  expect(grayOutside).toHaveLength(0);
+  expect(darkOutside).toHaveLength(0);
   expect(wrapper.findAll("button").some((node) => node.text() === "1")).toBe(
     true,
   );

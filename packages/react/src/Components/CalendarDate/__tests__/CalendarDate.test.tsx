@@ -24,11 +24,11 @@ test("it should hide weekdays when hideWeekdays is set", () => {
 test("it should hide outside days when hideOutsideDays is set", () => {
   render(<CalendarDate hideOutsideDays viewDate={new Date(2021, 4, 1)} />);
 
-  const grayOutside = screen
+  const darkOutside = screen
     .queryAllByRole("button")
     .filter((node) => node.className.includes("text-dark-400"));
 
-  expect(grayOutside).toHaveLength(0);
+  expect(darkOutside).toHaveLength(0);
   expect(screen.getByRole("button", { name: "1" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "31" })).toBeTruthy();
 });
