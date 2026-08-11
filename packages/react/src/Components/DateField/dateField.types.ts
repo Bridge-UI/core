@@ -74,36 +74,21 @@ export interface DateFieldCustomProps extends FormFieldCustomProps {
    *
    * @default undefined
    */
-  drawer?: Partial<
-    Pick<
-      DrawerOwnProps,
-      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
-    >
-  >;
+  drawer?: Partial<Omit<DrawerOwnProps, "show" | "children" | "onShowChange">>;
 
   /**
    * Props forwarded to the floating `Menu` when overlay resolves to menu.
    *
    * @default undefined
    */
-  menu?: Partial<
-    Pick<
-      MenuOwnProps,
-      "shadow" | "classes" | "rounded" | "placement" | "customProps"
-    >
-  >;
+  menu?: Partial<Omit<MenuOwnProps, "show" | "children" | "onShowChange">>;
 
   /**
    * Props forwarded to the nested `Modal` when overlay resolves to modal.
    *
    * @default undefined
    */
-  modal?: Partial<
-    Pick<
-      ModalOwnProps,
-      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
-    >
-  >;
+  modal?: Partial<Omit<ModalOwnProps, "show" | "children" | "onShowChange">>;
 }
 
 export interface DateFieldOwnProps extends Omit<

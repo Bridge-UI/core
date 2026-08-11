@@ -42,36 +42,21 @@ export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
    *
    * @default undefined
    */
-  drawer?: Partial<
-    Pick<
-      DrawerOwnProps,
-      "blur" | "size" | "classes" | "placement" | "transition" | "customProps"
-    >
-  >;
+  drawer?: Partial<DrawerOwnProps>;
 
   /**
    * Props forwarded to the floating `Menu` when overlay resolves to menu.
    *
    * @default undefined
    */
-  menu?: Partial<
-    Pick<
-      MenuOwnProps,
-      "shadow" | "classes" | "rounded" | "placement" | "customProps"
-    >
-  >;
+  menu?: Partial<MenuOwnProps>;
 
   /**
    * Props forwarded to the nested `Modal` when overlay resolves to modal.
    *
    * @default undefined
    */
-  modal?: Partial<
-    Pick<
-      ModalOwnProps,
-      "blur" | "size" | "align" | "classes" | "transition" | "customProps"
-    >
-  >;
+  modal?: Partial<ModalOwnProps>;
 
   /**
    * Props forwarded to the nested `TimeRangePicker`.
