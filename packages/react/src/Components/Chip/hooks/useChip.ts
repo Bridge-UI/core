@@ -85,7 +85,7 @@ export function useChip(props: ChipOwnProps, libDefaults: ChipLibDefaults) {
       customProps?.root,
       inheritedAttrs,
       cn({
-        "inline-flex max-w-full items-center bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100": true,
+        "inline-flex max-w-full items-center bg-dark-100 text-dark-800 dark:bg-dark-700 dark:text-dark-100": true,
         "opacity-50 pointer-events-none": merged.disabled === true,
         [sizeClasses?.root ?? ""]: true,
         [mergedClasses.root ?? ""]: true,
@@ -115,7 +115,7 @@ export function useChip(props: ChipOwnProps, libDefaults: ChipLibDefaults) {
         "aria-disabled": merged.disabled ? true : undefined,
       },
       cn({
-        "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm text-gray-400 transition-colors duration-150 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-200": true,
+        "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-sm text-dark-400 transition-colors duration-150 hover:text-dark-700 dark:text-dark-500 dark:hover:text-dark-200": true,
         [mergedClasses.clear ?? ""]: true,
       }),
     );

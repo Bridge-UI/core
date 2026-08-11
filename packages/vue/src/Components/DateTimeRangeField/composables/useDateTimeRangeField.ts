@@ -350,7 +350,7 @@ export function useDateTimeRangeField(
         formField.merged.value.color ?? "primary",
         "clear",
       ]) ??
-      "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+      "text-dark-400 hover:text-dark-600 dark:text-dark-500 dark:hover:text-dark-300"
     );
   });
 

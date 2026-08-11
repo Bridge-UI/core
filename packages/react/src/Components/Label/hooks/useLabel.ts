@@ -100,7 +100,7 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
       rootInheritedAttrs,
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
-        "text-gray-700 dark:text-gray-300": !merged.error,
+        "text-dark-700 dark:text-dark-300": !merged.error,
         [invalidatedColors.label ?? ""]: merged.error,
         [sizeClass ?? ""]: true,
         [mergedClasses.root ?? ""]: true,

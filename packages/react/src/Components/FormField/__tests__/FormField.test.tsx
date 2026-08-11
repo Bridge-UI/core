@@ -352,7 +352,7 @@ test("it should render filled variant container styles", () => {
     <FormFieldHarness label="Email" variant="filled" />,
   );
 
-  expect(container.querySelector(".bg-gray-100")).not.toBeNull();
+  expect(container.querySelector(".bg-dark-100")).not.toBeNull();
 });
 
 test("it should render notched variant with floating label row", () => {

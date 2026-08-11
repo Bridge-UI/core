@@ -723,7 +723,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       },
       { "aria-hidden": true },
       cn({
-        "absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-400": true,
+        "absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-dark-400": true,
         [mergedClasses.stop ?? ""]: true,
       }),
     );
@@ -754,7 +754,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       {},
       cn({
         "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
-        "text-gray-700 dark:text-gray-400": !invalidated,
+        "text-dark-700 dark:text-dark-400": !invalidated,
         [invalidatedPalette.stopLabel ?? ""]: invalidated,
         [mergedClasses.stopLabel ?? ""]: true,
       }),

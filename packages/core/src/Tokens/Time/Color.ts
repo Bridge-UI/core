@@ -68,7 +68,7 @@ export interface TimeColor {
  */
 export const colorProps: TimeColor = {
   "dark": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-dark-100 hover:text-dark-900 dark:hover:bg-dark-800/40 dark:hover:text-dark-100",
     "selected":
@@ -77,7 +77,7 @@ export const colorProps: TimeColor = {
       "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
   },
   "info": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-info-100 hover:text-info-900 dark:hover:bg-info-900/40 dark:hover:text-info-100",
     "selected":
@@ -86,7 +86,7 @@ export const colorProps: TimeColor = {
       "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
   },
   "error": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-error-100 hover:text-error-900 dark:hover:bg-error-900/40 dark:hover:text-error-100",
     "selected":
@@ -95,7 +95,7 @@ export const colorProps: TimeColor = {
       "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
   },
   "primary": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-primary-100 hover:text-primary-900 dark:hover:bg-primary-900/40 dark:hover:text-primary-100",
     "disabled":
@@ -104,7 +104,7 @@ export const colorProps: TimeColor = {
       "bg-primary-500 font-semibold text-white hover:bg-primary-400 dark:bg-primary-500 dark:hover:bg-primary-400",
   },
   "success": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-success-100 hover:text-success-900 dark:hover:bg-success-900/40 dark:hover:text-success-100",
     "disabled":
@@ -113,7 +113,7 @@ export const colorProps: TimeColor = {
       "bg-success-500 font-semibold text-white hover:bg-success-400 dark:bg-success-500 dark:hover:bg-success-400",
   },
   "warning": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-warning-100 hover:text-warning-900 dark:hover:bg-warning-900/40 dark:hover:text-warning-100",
     "disabled":
@@ -122,7 +122,7 @@ export const colorProps: TimeColor = {
       "bg-warning-500 font-semibold text-white hover:bg-warning-400 dark:bg-warning-500 dark:hover:bg-warning-400",
   },
   "secondary": {
-    "base": "bg-transparent text-gray-700 dark:text-gray-100",
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "hover":
       "hover:bg-secondary-100 hover:text-secondary-900 dark:hover:bg-secondary-900/40 dark:hover:text-secondary-100",
     "disabled":

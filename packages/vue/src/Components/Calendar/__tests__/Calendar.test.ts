@@ -84,7 +84,7 @@ test("it should update the date grid after year and month selection", async () =
     .findAll("button")
     .find(
       (node) =>
-        node.text() === "15" && !node.classes().includes("text-gray-400"),
+        node.text() === "15" && !node.classes().includes("text-dark-400"),
     );
 
   await fifteenth?.trigger("click");

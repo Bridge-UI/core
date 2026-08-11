@@ -344,7 +344,7 @@ export function useOtpField(
         {},
         cn({
           "h-full w-full min-w-0 bg-transparent border-0 shadow-none text-center": true,
-          "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+          "text-dark-900 dark:text-dark-100 placeholder:text-dark-400": true,
           "outline-none ring-0 focus:outline-none focus:ring-0": true,
           "disabled:cursor-not-allowed": true,
           [sizeClasses?.input ?? ""]: true,

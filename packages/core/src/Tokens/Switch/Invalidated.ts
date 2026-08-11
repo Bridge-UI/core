@@ -24,5 +24,5 @@ export const invalidatedProps: SwitchInvalidated = {
   "thumb": "bg-white",
   "focus": "ring-error-500/30",
   "trackChecked": "bg-error-600",
-  "track": "bg-gray-200 dark:bg-gray-700",
+  "track": "bg-dark-200 dark:bg-dark-700",
 };

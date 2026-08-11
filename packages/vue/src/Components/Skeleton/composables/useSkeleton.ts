@@ -74,7 +74,7 @@ export function useSkeleton(
       {},
       split.value.inheritedAttrs,
       cn({
-        "block animate-pulse bg-gray-200 dark:bg-gray-700": true,
+        "block animate-pulse bg-dark-200 dark:bg-dark-700": true,
         [roundedClass.value ?? ""]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),

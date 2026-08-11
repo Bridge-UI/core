@@ -28,7 +28,7 @@ export interface SliderInvalidated {
 export const invalidatedProps: SliderInvalidated = {
   "focus": "ring-error-500/30",
   "bar": "bg-error-600 dark:bg-error-400",
-  "track": "bg-gray-200 dark:bg-gray-700",
+  "track": "bg-dark-200 dark:bg-dark-700",
   "stopLabel": "text-error-600 dark:text-error-400",
   "thumb": "border-error-600 dark:border-error-400 bg-white",
 };

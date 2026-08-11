@@ -536,7 +536,7 @@ export function useCalendarRange(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 text-sm font-medium text-gray-600 hover:bg-gray-100 focus:outline-none disabled:cursor-not-allowed dark:text-gray-300 dark:hover:bg-gray-800": true,
+        "inline-flex cursor-pointer items-center gap-x-2 px-1.5 py-1 text-sm font-medium text-dark-600 hover:bg-dark-100 focus:outline-none disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
         [mergedClasses.value.selector ?? ""]: true,
       }),
@@ -551,7 +551,7 @@ export function useCalendarRange(
         disabled: merged.value.disabled,
       },
       cn({
-        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center text-gray-600 hover:bg-gray-100 disabled:cursor-not-allowed dark:text-gray-300 dark:hover:bg-gray-800": true,
+        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center text-dark-600 hover:bg-dark-100 disabled:cursor-not-allowed dark:text-dark-300 dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
         [mergedClasses.value.navButton ?? ""]: true,
       }),
@@ -616,7 +616,7 @@ export function useCalendarRange(
         "aria-label": resolveMessage("Today"),
       },
       cn({
-        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center hover:bg-gray-100 disabled:cursor-not-allowed dark:hover:bg-gray-800": true,
+        "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center hover:bg-dark-100 disabled:cursor-not-allowed dark:hover:bg-dark-800": true,
         [roundedClass.value ?? ""]: true,
         [mergedClasses.value.navButton ?? ""]: true,
       }),

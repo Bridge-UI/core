@@ -191,7 +191,7 @@ test("it should not change month when selecting an outside day on the start pane
 
   const aprilThirtieth = screen
     .getAllByRole("button", { name: "30" })
-    .find((node) => node.className.includes("text-gray-400"));
+    .find((node) => node.className.includes("text-dark-400"));
 
   expect(aprilThirtieth).toBeTruthy();
   fireEvent.click(aprilThirtieth!);
@@ -213,7 +213,7 @@ test("it should not change month when selecting an outside day on the end panel"
 
   const julyFirst = screen
     .getAllByRole("button", { name: "1" })
-    .filter((node) => node.className.includes("text-gray-400"))
+    .filter((node) => node.className.includes("text-dark-400"))
     .at(-1);
 
   expect(julyFirst).toBeTruthy();

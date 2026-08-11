@@ -162,7 +162,7 @@ test("it should apply size classes to empty message", async () => {
 
   await flushPromises();
 
-  const empty = document.body.querySelector(".text-gray-500");
+  const empty = document.body.querySelector(".text-dark-500");
 
   expect(empty?.className).toContain("text-xs");
   expect(empty?.textContent).toContain("No options");
