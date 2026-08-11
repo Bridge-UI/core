@@ -192,7 +192,7 @@ test("it should not change month when selecting an outside day on the start pane
     document.body.querySelectorAll("button"),
   ).find(
     (node) =>
-      node.textContent === "30" && node.className.includes("text-gray-400"),
+      node.textContent === "30" && node.className.includes("text-dark-400"),
   );
 
   expect(aprilThirtieth).toBeTruthy();

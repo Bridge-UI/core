@@ -223,7 +223,7 @@ export function useFormControl(
       customProps?.description,
       { id: `${controlId}-description` },
       cn({
-        "mt-2 text-gray-500 dark:text-gray-400": true,
+        "mt-2 text-dark-500 dark:text-dark-400": true,
         [textSizeClass ?? ""]: true,
         [mergedClasses.description ?? ""]: true,
       }),

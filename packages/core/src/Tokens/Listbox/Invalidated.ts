@@ -32,5 +32,5 @@ export const invalidatedProps: ListboxInvalidated = {
   "selected":
     "bg-error-50 text-error-700 dark:bg-error-950/40 dark:text-error-300",
   "clear":
-    "text-gray-400 hover:text-error-600 dark:text-gray-500 dark:hover:text-error-400",
+    "text-dark-400 hover:text-error-600 dark:text-dark-500 dark:hover:text-error-400",
 };

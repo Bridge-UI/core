@@ -225,7 +225,7 @@ export function useBaseField(
       customProps?.corner,
       {},
       cn({
-        "text-gray-500 dark:text-gray-400": true,
+        "text-dark-500 dark:text-dark-400": true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.corner ?? ""]: true,
       }),
@@ -277,7 +277,7 @@ export function useBaseField(
       customProps?.description,
       {},
       cn({
-        "mt-2 text-gray-500 dark:text-gray-400": true,
+        "mt-2 text-dark-500 dark:text-dark-400": true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.description ?? ""]: true,
       }),

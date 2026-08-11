@@ -106,7 +106,7 @@ test("it should render filled variant shell", () => {
     props: { label: "Email", variant: "filled" },
   });
 
-  cy.get(".bg-gray-100").should("exist");
+  cy.get(".bg-dark-100").should("exist");
 });
 
 test("it should render stacked variant shell", () => {

@@ -26,7 +26,7 @@ test("it should hide outside days when hideOutsideDays is set", () => {
 
   const grayOutside = screen
     .queryAllByRole("button")
-    .filter((node) => node.className.includes("text-gray-400"));
+    .filter((node) => node.className.includes("text-dark-400"));
 
   expect(grayOutside).toHaveLength(0);
   expect(screen.getByRole("button", { name: "1" })).toBeTruthy();

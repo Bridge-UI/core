@@ -181,7 +181,7 @@ export function useDatePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-900": true,
+        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -192,7 +192,7 @@ export function useDatePicker(
       customProps.value?.footer,
       {},
       cn({
-        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        "flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40": true,
         [mergedClasses.value.footer ?? ""]: true,
       }),
     );

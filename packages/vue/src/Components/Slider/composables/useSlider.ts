@@ -734,7 +734,7 @@ export function useSlider(
         },
       },
       cn({
-        "absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-gray-400": true,
+        "absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white dark:bg-dark-400": true,
         [mergedClasses.value.stop ?? ""]: true,
       }),
     );
@@ -767,7 +767,7 @@ export function useSlider(
       },
       cn({
         "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
-        "text-gray-700 dark:text-gray-400": !invalidated.value,
+        "text-dark-700 dark:text-dark-400": !invalidated.value,
         [invalidatedPalette.value.stopLabel ?? ""]: invalidated.value,
         [mergedClasses.value.stopLabel ?? ""]: true,
       }),

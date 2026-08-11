@@ -71,7 +71,7 @@ function Select(props: SelectProps) {
                   customProps: { clear: clearBind },
                   classes: {
                     root: cn({
-                      "bg-white ring-1 ring-inset ring-gray-200 dark:bg-gray-700 dark:ring-gray-600": true,
+                      "bg-white ring-1 ring-inset ring-dark-200 dark:bg-dark-700 dark:ring-dark-600": true,
                       [mergedClasses.chip ?? ""]: true,
                     }),
                   },

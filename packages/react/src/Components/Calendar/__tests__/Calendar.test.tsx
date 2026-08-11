@@ -68,7 +68,7 @@ test("it should update the date grid after year and month selection", () => {
 
   const fifteenth = screen
     .getAllByRole("button", { name: "15" })
-    .find((node) => !node.className.includes("text-gray-400"));
+    .find((node) => !node.className.includes("text-dark-400"));
 
   expect(fifteenth).toBeTruthy();
   fireEvent.click(fifteenth!);
@@ -218,7 +218,7 @@ test("it should open on the selected value month after menu remount", () => {
 
   const julyTwentyNinth = screen
     .getAllByRole("button", { name: "29" })
-    .find((node) => node.className.includes("text-gray-400"));
+    .find((node) => node.className.includes("text-dark-400"));
 
   expect(julyTwentyNinth).toBeTruthy();
   fireEvent.click(julyTwentyNinth!);

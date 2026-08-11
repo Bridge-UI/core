@@ -107,7 +107,7 @@ test("it should set data-invalid on the root when error is set", () => {
 test("it should render filled variant shell", () => {
   cy.mount(<FieldHarness label="Email" variant="filled" />);
 
-  cy.get(".bg-gray-100").should("exist");
+  cy.get(".bg-dark-100").should("exist");
 });
 
 test("it should render stacked variant shell", () => {

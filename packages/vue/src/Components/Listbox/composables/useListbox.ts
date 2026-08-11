@@ -177,7 +177,7 @@ export function useListbox(
       {},
       {},
       cn({
-        "text-gray-500": true,
+        "text-dark-500": true,
         [sizeClasses.value?.message ?? ""]: true,
       }),
     );
@@ -197,7 +197,7 @@ export function useListbox(
       customProps.value?.footer,
       {},
       cn({
-        "flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50 px-3 py-2 dark:border-gray-800 dark:bg-gray-950/40": true,
+        "flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40": true,
         [mergedClasses.value.footer ?? ""]: true,
       }),
     );

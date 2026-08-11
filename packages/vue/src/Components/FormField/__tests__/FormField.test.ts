@@ -410,7 +410,7 @@ test("it should render filled variant container styles", () => {
     variant: "filled",
   });
 
-  expect(wrapper.find(".bg-gray-100").exists()).toBe(true);
+  expect(wrapper.find(".bg-dark-100").exists()).toBe(true);
 });
 
 test("it should render notched variant with floating label row", () => {

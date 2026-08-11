@@ -350,7 +350,7 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-gray-500": !invalidated,
+        "text-dark-500": !invalidated,
         [roundedClasses?.end ?? ""]: !isUnderlined && !isStacked,
         [colorPalette?.end ?? ""]: !invalidated,
         [invalidatedColors?.adornment ?? ""]: invalidated,
@@ -404,7 +404,7 @@ export function useFormField(
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl && !isStacked,
         "max-h-none": isTextareaControl,
-        "text-gray-900 dark:text-gray-100 placeholder:text-gray-400": true,
+        "text-dark-900 dark:text-dark-100 placeholder:text-dark-400": true,
         "outline-none ring-0 focus:outline-none focus:ring-0": true,
         "disabled:cursor-not-allowed": true,
         [sizeClasses?.input ?? ""]: !isTextareaControl,
@@ -437,7 +437,7 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-gray-400": !invalidated,
+        "text-dark-400": !invalidated,
         [roundedClasses?.start ?? ""]: !isUnderlined && !isStacked,
         [colorPalette?.start ?? ""]: !invalidated,
         [invalidatedColors?.adornment ?? ""]: invalidated,
@@ -451,7 +451,7 @@ export function useFormField(
       customProps?.corner,
       {},
       cn({
-        "text-gray-500 dark:text-gray-400": !isNotched,
+        "text-dark-500 dark:text-dark-400": !isNotched,
         [sizeClasses?.text ?? ""]: true,
         [variantClasses?.corner ?? ""]: isNotched,
         [mergedClasses.corner ?? ""]: true,
@@ -530,7 +530,7 @@ export function useFormField(
         "group/field relative flex justify-start gap-x-2 items-stretch":
           !isStacked,
         "transition-all ease-in-out duration-150 outline-none": true,
-        "bg-gray-100 dark:bg-gray-800": isDisabled && !invalidated,
+        "bg-dark-100 dark:bg-dark-800": isDisabled && !invalidated,
         [sizeClasses?.container ?? ""]: !isTextareaControl,
         [sizeClasses?.containerTextareaLikeInput ?? ""]: isTextareaLikeInput,
         [sizeClasses?.containerTextarea ?? ""]:
@@ -577,7 +577,7 @@ export function useFormField(
       customProps?.description,
       {},
       cn({
-        "mt-2 text-gray-500 dark:text-gray-400": true,
+        "mt-2 text-dark-500 dark:text-dark-400": true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.description ?? ""]: true,
       }),
