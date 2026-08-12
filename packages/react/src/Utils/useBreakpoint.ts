@@ -23,10 +23,6 @@ export type UseBreakpointOptions = BreakpointObserverOptions;
  * `global.breakpoints`. Hook options win when passed.
  *
  * On the server (and before hydration), `mobile` is `true` at width `0`.
- *
- * @example
- * const breakpoint = useBreakpoint();
- * <Modal align={breakpoint.mobile ? "bottom-center" : "middle-center"} />
  */
 export function useBreakpoint(
   options?: UseBreakpointOptions,

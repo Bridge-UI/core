@@ -34,10 +34,6 @@ export type UseBreakpointOptions = BreakpointObserverOptions;
  * `global.breakpoints`. Composable options win when passed.
  *
  * On the server (and before mount), `mobile` is `true` at width `0`.
- *
- * @example
- * const breakpoint = useBreakpoint();
- * // :align="breakpoint.mobile ? 'bottom-center' : 'middle-center'"
  */
 export function useBreakpoint(
   options?: MaybeRefOrGetter<undefined | UseBreakpointOptions>,
