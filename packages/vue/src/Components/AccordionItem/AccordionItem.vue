@@ -24,7 +24,6 @@ const {
   collapseBind,
   indicatorBind,
   panelInnerBind,
-  hasIndicatorSlot,
 } = useAccordionItem(props);
 </script>
 
@@ -39,7 +38,7 @@ const {
         </template>
       </span>
 
-      <slot name="indicator" v-if="hasIndicatorSlot" />
+      <slot name="indicator" v-if="hasNamedSlot(slots, 'indicator')" />
 
       <Icon v-else icon="chevronDown" v-bind="indicatorBind" />
     </button>

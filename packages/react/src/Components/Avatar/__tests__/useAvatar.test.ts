@@ -54,7 +54,7 @@ test("it should detect fallback slot when slots.fallback is passed", () => {
     slots: { fallback: createElement("span", null, "Custom") },
   });
 
-  expect(result.current.hasFallbackSlot).toBe(true);
+  expect(result.current.slots?.fallback).toBeTruthy();
 });
 
 test("it should default resolved icon to user", () => {

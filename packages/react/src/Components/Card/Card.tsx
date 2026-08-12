@@ -10,7 +10,6 @@ function Card(props: CardProps) {
     bodyBind,
     children,
     rootBind,
-    hasFooter,
     titleBind,
     footerBind,
     headerBind,
@@ -38,7 +37,9 @@ function Card(props: CardProps) {
 
       {hasDefaultBody && <div {...bodyBind}>{children}</div>}
 
-      {hasFooter && <div {...footerBind}>{slots?.footer}</div>}
+      {hasNamedSlot(slots, "footer") && (
+        <div {...footerBind}>{slots?.footer}</div>
+      )}
     </div>
   );
 }

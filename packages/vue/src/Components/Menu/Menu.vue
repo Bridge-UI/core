@@ -65,10 +65,6 @@ const {
   },
 );
 
-const hasTrigger = computed(() => {
-  return hasNamedSlot(slots, "trigger");
-});
-
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
 });
@@ -83,7 +79,7 @@ const teleportTarget = computed(() => {
 </script>
 
 <template>
-  <div v-if="hasTrigger" v-bind="rootBind">
+  <div v-bind="rootBind" v-if="hasNamedSlot(slots, 'trigger')">
     <div :ref="setTriggerRef" v-bind="triggerBind">
       <slot name="trigger" />
     </div>

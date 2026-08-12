@@ -32,7 +32,6 @@ const {
   endBind,
   rootBind,
   rowClass,
-  hasStart,
   startBind,
   hasPrimary,
   contentBind,
@@ -47,17 +46,13 @@ const {
 const rootTag = computed(() => {
   return merged.value.as ?? "li";
 });
-
-const hasEndSlot = computed(() => {
-  return hasNamedSlot(slots, "end");
-});
 </script>
 
 <template>
   <component :is="rootTag" v-bind="rootBind">
     <div v-if="interactiveBind" v-bind="interactiveBind">
       <div :class="rowClass">
-        <div v-if="hasStart" v-bind="startBind">
+        <div v-bind="startBind" v-if="hasNamedSlot(slots, 'start')">
           <slot name="start" />
         </div>
 
@@ -82,7 +77,7 @@ const hasEndSlot = computed(() => {
         </div>
 
         <div v-if="hasEnd" v-bind="endBind">
-          <slot name="end" v-if="hasEndSlot" />
+          <slot name="end" v-if="hasNamedSlot(slots, 'end')" />
 
           <Icon
             v-bind="selectedIconBind"
@@ -94,7 +89,7 @@ const hasEndSlot = computed(() => {
     </div>
 
     <div v-else :class="rowClass">
-      <div v-if="hasStart" v-bind="startBind">
+      <div v-bind="startBind" v-if="hasNamedSlot(slots, 'start')">
         <slot name="start" />
       </div>
 
@@ -119,7 +114,7 @@ const hasEndSlot = computed(() => {
       </div>
 
       <div v-if="hasEnd" v-bind="endBind">
-        <slot name="end" v-if="hasEndSlot" />
+        <slot name="end" v-if="hasNamedSlot(slots, 'end')" />
 
         <Icon
           v-bind="selectedIconBind"

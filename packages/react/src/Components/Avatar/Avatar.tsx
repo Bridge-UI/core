@@ -2,6 +2,7 @@
 import type { AvatarProps } from "@/Components/Avatar";
 import { useAvatar } from "@/Components/Avatar";
 import { Icon } from "@/Components/Icon";
+import { hasNamedSlot } from "@/Utils";
 
 function Avatar(props: AvatarProps) {
   const {
@@ -14,7 +15,6 @@ function Avatar(props: AvatarProps) {
     imageBind,
     fallbackBind,
     resolvedIcon,
-    hasFallbackSlot,
     hasFallbackText,
     hasCustomContent,
   } = useAvatar(props, {
@@ -22,6 +22,8 @@ function Avatar(props: AvatarProps) {
     rounded: "full",
     color: "secondary",
   });
+
+  const hasFallbackSlot = hasNamedSlot(slots, "fallback");
 
   return (
     <div {...rootBind}>

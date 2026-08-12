@@ -81,10 +81,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     return !isNil(merged.value.src) && !isEmpty(merged.value.src);
   });
 
-  const hasFallbackSlot = computed(() => {
-    return hasNamedSlot(slots, "fallback");
-  });
-
   const hasFallbackText = computed(() => {
     return !isNil(merged.value.fallback) && !isEmpty(merged.value.fallback);
   });
@@ -203,7 +199,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     imageBind,
     fallbackBind,
     resolvedIcon,
-    hasFallbackSlot,
     hasFallbackText,
     hasCustomContent,
   };

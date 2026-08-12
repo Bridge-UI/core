@@ -2,28 +2,30 @@
 import type { AccordionItemProps } from "@/Components/AccordionItem/accordionItem.types";
 import { useAccordionItem } from "@/Components/AccordionItem/hooks/useAccordionItem";
 import { Icon } from "@/Components/Icon";
+import { hasNamedSlot } from "@/Utils";
 
 function AccordionItem(props: AccordionItemProps) {
   const {
     slots,
+    merged,
     children,
     rootBind,
     titleBind,
     panelBind,
     triggerBind,
-    titleContent,
     collapseBind,
     indicatorBind,
     panelInnerBind,
-    hasIndicatorSlot,
   } = useAccordionItem(props);
 
   return (
     <div {...rootBind}>
       <button {...triggerBind}>
-        <span {...titleBind}>{titleContent}</span>
+        <span {...titleBind}>
+          {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
+        </span>
 
-        {hasIndicatorSlot ? (
+        {hasNamedSlot(slots, "indicator") ? (
           slots?.indicator
         ) : (
           <Icon icon="chevronDown" {...indicatorBind} />

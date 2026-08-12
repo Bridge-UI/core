@@ -194,10 +194,6 @@ export function useListItem(
     return hasNamedSlot(slots, "secondary") || Boolean(merged.value.secondary);
   });
 
-  const hasStart = computed(() => {
-    return hasNamedSlot(slots, "start");
-  });
-
   const resolvedSelectedIcon = computed((): null | IconSource => {
     if (isListboxOption.value) {
       if (!listboxSelected.value || !listboxContext.value?.showCheckmark) {
@@ -396,7 +392,6 @@ export function useListItem(
     endBind,
     rootBind,
     rowClass,
-    hasStart,
     startBind,
     hasPrimary,
     contentBind,

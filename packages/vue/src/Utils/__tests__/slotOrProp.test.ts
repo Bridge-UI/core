@@ -40,7 +40,7 @@ test("it should return only passed names from presentSlotNames", () => {
   expect(presentSlotNames(names, {})).toEqual([]);
 
   expect(presentSlotNames(names, { end: () => "y", label: () => "x" })).toEqual(
-    ["label", "end"],
+    ["end", "label"],
   );
 });
 

@@ -15,7 +15,6 @@ const {
   merged,
   bodyBind,
   rootBind,
-  hasFooter,
   titleBind,
   footerBind,
   headerBind,
@@ -51,7 +50,7 @@ const {
       <slot />
     </div>
 
-    <div v-if="hasFooter" v-bind="footerBind">
+    <div v-bind="footerBind" v-if="hasNamedSlot(slots, 'footer')">
       <slot name="footer" />
     </div>
   </div>

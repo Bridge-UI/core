@@ -176,10 +176,6 @@ export function useListItem(
     return hasSlotOrProp(slots, "secondary", merged.secondary);
   });
 
-  const hasStart = derived(() => {
-    return hasNamedSlot(slots, "start");
-  });
-
   const isListboxOption = listboxOption != null;
 
   const resolvedSelectedIcon = useMemo((): null | IconSource => {
@@ -395,7 +391,6 @@ export function useListItem(
     hasEnd,
     endBind,
     rootBind,
-    hasStart,
     startBind,
     hasPrimary,
     contentBind,

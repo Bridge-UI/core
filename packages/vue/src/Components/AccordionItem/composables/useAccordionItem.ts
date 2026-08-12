@@ -28,7 +28,6 @@ import type {
   AccordionItemProps,
 } from "@/Components/AccordionItem/accordionItem.types";
 import {
-  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -91,14 +90,6 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
   const iconSize = computed(() => {
     return (accordionContextRef.value.tokenClasses.iconSize ??
       "md") as keyof IconSize;
-  });
-
-  const hasIndicatorSlot = computed(() => {
-    return hasNamedSlot(slots, "indicator");
-  });
-
-  const hasTitleSlot = computed(() => {
-    return hasNamedSlot(slots, "title");
   });
 
   let unregister: null | (() => void) = null;
@@ -305,6 +296,7 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
   });
 
   return {
+    slots,
     merged,
     expanded,
     rootBind,
@@ -313,9 +305,7 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
     panelBind,
     triggerBind,
     collapseBind,
-    hasTitleSlot,
     indicatorBind,
     panelInnerBind,
-    hasIndicatorSlot,
   };
 }
