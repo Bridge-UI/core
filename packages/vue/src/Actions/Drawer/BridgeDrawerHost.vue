@@ -26,7 +26,9 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 
 const api = createBridgeDrawerApi();
 
-const drawerEntries = computed(() => api.entries.value);
+const drawerEntries = computed(() => {
+  return api.entries.value;
+});
 
 provide(BRIDGE_DRAWER_INJECTION_KEY, api);
 </script>

@@ -85,7 +85,9 @@ export function useDatePicker(
     componentName: "DatePicker",
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
@@ -96,7 +98,9 @@ export function useDatePicker(
     entry: bridgeDatePicker,
   });
 
-  const isControlled = derived(() => !isNil(props.value));
+  const isControlled = derived(() => {
+    return !isNil(props.value);
+  });
 
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
     () => merged.defaultValue ?? null,

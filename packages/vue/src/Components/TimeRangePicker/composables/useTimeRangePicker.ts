@@ -326,15 +326,23 @@ export function useTimeRangePicker(
     handleEndChange,
     startDisplayValue,
     handleStartChange,
-    applyLabel: computed(() => resolveMessage("Apply")),
-    cancelLabel: computed(() => resolveMessage("Cancel")),
-    applyButtonProps: computed(() => customProps.value?.applyButton),
-    cancelButtonProps: computed(() => customProps.value?.cancelButton),
-    endTitle: computed(
-      () => merged.value.endTitle ?? resolveMessage("End time"),
-    ),
-    startTitle: computed(
-      () => merged.value.startTitle ?? resolveMessage("Start time"),
-    ),
+    applyLabel: computed(() => {
+      return resolveMessage("Apply");
+    }),
+    cancelLabel: computed(() => {
+      return resolveMessage("Cancel");
+    }),
+    applyButtonProps: computed(() => {
+      return customProps.value?.applyButton;
+    }),
+    cancelButtonProps: computed(() => {
+      return customProps.value?.cancelButton;
+    }),
+    endTitle: computed(() => {
+      return merged.value.endTitle ?? resolveMessage("End time");
+    }),
+    startTitle: computed(() => {
+      return merged.value.startTitle ?? resolveMessage("Start time");
+    }),
   };
 }

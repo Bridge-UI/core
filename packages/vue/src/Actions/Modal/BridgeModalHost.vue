@@ -26,7 +26,9 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 
 const api = createBridgeModalApi();
 
-const modalEntries = computed(() => api.entries.value);
+const modalEntries = computed(() => {
+  return api.entries.value;
+});
 
 provide(BRIDGE_MODAL_INJECTION_KEY, api);
 </script>

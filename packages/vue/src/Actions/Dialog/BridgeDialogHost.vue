@@ -21,7 +21,9 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 
 const api = createBridgeDialogApi();
 
-const dialogEntries = computed(() => api.entries.value);
+const dialogEntries = computed(() => {
+  return api.entries.value;
+});
 
 provide(BRIDGE_DIALOG_INJECTION_KEY, api);
 </script>
