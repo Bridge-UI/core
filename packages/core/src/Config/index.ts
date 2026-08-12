@@ -6,6 +6,10 @@ export {
 } from "@/Config/merge";
 export { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 export type {
+  AccordionConfigBase,
+  AccordionConfigOverrides,
+  AccordionItemConfigBase,
+  AccordionItemConfigOverrides,
   AlertConfigBase,
   AlertConfigOverrides,
   AutocompleteConfigBase,
