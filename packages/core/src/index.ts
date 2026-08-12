@@ -30,6 +30,8 @@ export {
   resolveBridgeUIOptions,
 } from "@/Config";
 export type {
+  AccordionConfigOverrides,
+  AccordionItemConfigOverrides,
   AlertConfigOverrides,
   AutocompleteConfigOverrides,
   AvatarConfigOverrides,
@@ -100,6 +102,19 @@ export {
   updateLayerMerged,
 } from "@/Layer";
 export type { LayerId } from "@/Layer";
+export {
+  colorProps as accordionColorProps,
+  sizeProps as accordionSizeProps,
+  variantProps as accordionVariantProps,
+} from "@/Tokens/Accordion";
+export type {
+  AccordionColor,
+  AccordionColorItem,
+  AccordionSize,
+  AccordionSizeItem,
+  AccordionVariant,
+  AccordionVariantItem,
+} from "@/Tokens/Accordion";
 export type {
   AlertColor,
   AlertColorItem,
@@ -348,6 +363,9 @@ export {
   fetchSelectAsyncData,
   filterListboxEntries,
   flattenListboxOptions,
+  getAccordionPanelId,
+  getAccordionTriggerId,
+  getAdjacentAccordionValue,
   getAdjacentTabValue,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
@@ -368,6 +386,7 @@ export {
   hasModalTransition,
   hasSnackbarTransition,
   hasWindow,
+  isAccordionItemExpanded,
   isDateDisabled,
   isDateInRangePreview,
   isDateRangeEndpoint,
@@ -389,6 +408,7 @@ export {
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
   mergeSelectAsyncOptions,
+  normalizeAccordionValue,
   normalizeListboxEntries,
   normalizeOtpValue,
   normalizeSelectOption,
@@ -436,11 +456,13 @@ export {
   to12Hour,
   to24Hour,
   toMeridiem,
+  toggleAccordionItem,
   usesTrailingSnackbarActions,
   valueToPercent,
   writeSliderRangeThumb,
 } from "@/Utils";
 export type {
+  AccordionValue,
   BreakpointObserver,
   BreakpointObserverOptions,
   BreakpointSnapshot,

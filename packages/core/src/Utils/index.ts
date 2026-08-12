@@ -384,6 +384,15 @@ export function splitComponentProps<
 }
 
 export {
+  getAccordionPanelId,
+  getAccordionTriggerId,
+  getAdjacentAccordionValue,
+  isAccordionItemExpanded,
+  normalizeAccordionValue,
+  toggleAccordionItem,
+} from "@/Utils/accordion";
+export type { AccordionValue } from "@/Utils/accordion";
+export {
   breakpointObserverOptionsKey,
   buildBreakpointSnapshot,
   createBreakpointObserver,

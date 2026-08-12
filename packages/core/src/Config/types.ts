@@ -3,6 +3,14 @@ import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
 import type {
+  AccordionColor,
+  AccordionColorItem,
+  AccordionSize,
+  AccordionSizeItem,
+  AccordionVariant,
+  AccordionVariantItem,
+} from "@/Tokens/Accordion";
+import type {
   AlertColor,
   AlertColorItem,
   AlertPadding,
@@ -289,6 +297,8 @@ export interface BridgeUIGlobal {
   timeZone: string;
 }
 
+export interface AccordionConfigOverrides {}
+export interface AccordionItemConfigOverrides {}
 export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
@@ -338,6 +348,29 @@ export interface TimePickerConfigOverrides {}
 export interface TimeRangeFieldConfigOverrides {}
 export interface TimeRangePickerConfigOverrides {}
 export interface TooltipConfigOverrides {}
+
+export interface AccordionConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof AccordionColor;
+    disabled: boolean;
+    multiple: boolean;
+    size: keyof AccordionSize;
+    variant: keyof AccordionVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, AccordionColorItem>;
+    size: Record<string, AccordionSizeItem>;
+    variant: Record<string, AccordionVariantItem>;
+  }>;
+}
+
+export interface AccordionItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+  }>;
+}
 
 export interface AlertConfigBase {
   classes: object;
@@ -1304,6 +1337,10 @@ export interface TooltipConfigBase {
 }
 
 export type BridgeUIComponentsConfig = Partial<{
+  Accordion: Partial<Overwrite<AccordionConfigBase, AccordionConfigOverrides>>;
+  AccordionItem: Partial<
+    Overwrite<AccordionItemConfigBase, AccordionItemConfigOverrides>
+  >;
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
   Autocomplete: Partial<
     Overwrite<AutocompleteConfigBase, AutocompleteConfigOverrides>
