@@ -8,6 +8,7 @@ import type {
   OtpFieldOwnProps,
   OtpFieldSlots,
 } from "@/Components/OtpField/otpField.types";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<OtpFieldSlots>();
 
@@ -49,9 +50,7 @@ const {
   <BaseField :field="baseField">
     <template
       #[name]="slotData"
-      v-for="name in BASE_FIELD_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(BASE_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

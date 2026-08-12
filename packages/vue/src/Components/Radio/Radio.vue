@@ -10,6 +10,7 @@ import {
 } from "@/Components/FormControl";
 import { useRadio } from "@/Components/Radio/composables/useRadio";
 import type { RadioOwnProps, RadioSlots } from "@/Components/Radio/radio.types";
+import { presentSlotNames } from "@/Utils";
 
 const attrs = useAttrs();
 
@@ -62,9 +63,7 @@ function onChange() {
   <FormControl :field="formControl">
     <template
       #[name]="slotData"
-      v-for="name in FORM_CONTROL_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(FORM_CONTROL_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

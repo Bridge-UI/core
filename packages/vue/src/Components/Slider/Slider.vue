@@ -20,6 +20,7 @@ import type {
   SliderSlots,
 } from "@/Components/Slider/slider.types";
 import { Tooltip } from "@/Components/Tooltip";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<SliderSlots>();
 
@@ -127,9 +128,7 @@ function setThumbRef(
   <BaseField :field="baseField">
     <template
       #[name]="slotData"
-      v-for="name in BASE_FIELD_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(BASE_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

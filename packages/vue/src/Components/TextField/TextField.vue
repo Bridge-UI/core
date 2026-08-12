@@ -13,6 +13,7 @@ import type {
   TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<TextFieldSlots>();
 
@@ -43,9 +44,7 @@ const { formField, inputBind } = useTextField(props);
   <FormField :field="formField">
     <template
       #[name]="slotData"
-      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

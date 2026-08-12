@@ -12,6 +12,7 @@ import type {
   SwitchOwnProps,
   SwitchSlots,
 } from "@/Components/Switch/switch.types";
+import { presentSlotNames } from "@/Utils";
 
 const attrs = useAttrs();
 
@@ -52,9 +53,7 @@ function onChange(event: Event) {
   <FormControl :field="formControl">
     <template
       #[name]="slotData"
-      v-for="name in FORM_CONTROL_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(FORM_CONTROL_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

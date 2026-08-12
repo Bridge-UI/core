@@ -38,13 +38,19 @@ export function hasSlotOrProp(
 }
 
 /**
+ * Slot names from `names` that were actually passed.
+ * Use when forwarding chrome slots so empty outlets are not treated as present.
+ */
+export function presentSlotNames<T extends string>(
+  names: ReadonlyArray<T>,
+  slots: VueSlots,
+): T[] {
+  return names.filter((name) => hasNamedSlot(slots, name));
+}
+
+/**
  * Stable host for programmatic render functions (e.g. Tabs `items` API).
  * Prefer native `<slot>` everywhere else.
- *
- * @example
- * ```vue
- * <RenderFn :fn="item.panel" />
- * ```
  */
 export const RenderFn = defineComponent({
   name: "RenderFn",

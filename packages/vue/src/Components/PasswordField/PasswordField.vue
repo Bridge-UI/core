@@ -19,7 +19,11 @@ import type {
   PasswordFieldOwnProps,
   PasswordFieldSlots,
 } from "@/Components/PasswordField/passwordField.types";
-import { mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
+import {
+  mergePartBind,
+  presentSlotNames,
+  resolveFieldAdornmentIconSize,
+} from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
 
@@ -75,8 +79,9 @@ const toggleBind = computed(() => {
   <FormField :field="formField">
     <template
       #[name]="slotData"
-      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter(
-        (n) => n !== 'end' && Boolean($slots[n]),
+      v-for="name in presentSlotNames(
+        FORM_FIELD_CHROME_SLOT_NAMES.filter((n) => n !== 'end'),
+        $slots,
       )"
     >
       <slot :name="name" v-bind="slotData || {}" />

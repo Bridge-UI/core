@@ -8,6 +8,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
+  presentSlotNames,
   RenderFn,
 } from "@/Utils/slotOrProp";
 
@@ -31,6 +32,16 @@ test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp({}, "label", "Name")).toBe(true);
 
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
+});
+
+test("it should return only passed names from presentSlotNames", () => {
+  const names = ["end", "label", "start"] as const;
+
+  expect(presentSlotNames(names, {})).toEqual([]);
+
+  expect(presentSlotNames(names, { end: () => "y", label: () => "x" })).toEqual(
+    ["label", "end"],
+  );
 });
 
 test("it should keep child instance across RenderFn fn identity churn", async () => {

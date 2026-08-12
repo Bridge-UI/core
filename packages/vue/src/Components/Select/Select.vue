@@ -24,7 +24,11 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
-import { hasNamedSlot, mergeNestedComponentProps } from "@/Utils";
+import {
+  hasNamedSlot,
+  mergeNestedComponentProps,
+  presentSlotNames,
+} from "@/Utils";
 
 defineSlots<SelectSlots>();
 
@@ -109,9 +113,7 @@ const {
   <FormField :field="formField">
     <template
       #[name]="slotData"
-      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>

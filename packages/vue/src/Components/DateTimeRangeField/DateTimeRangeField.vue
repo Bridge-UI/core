@@ -21,6 +21,7 @@ import {
   FormField,
 } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<DateTimeRangeFieldSlots>();
 
@@ -77,9 +78,7 @@ const {
   <FormField :field="formField">
     <template
       #[name]="slotData"
-      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
-        Boolean($slots[n]),
-      )"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
