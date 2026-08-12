@@ -49,6 +49,7 @@ const { formField, inputBind } = useTextField(props);
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <input v-model="value" v-bind="inputBind" />
   </FormField>
 </template>

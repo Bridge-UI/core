@@ -76,6 +76,7 @@ function onChange(event: Event) {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <label v-bind="fieldBind" :for="formControl.controlId.value">
       <input
         ref="inputRef"

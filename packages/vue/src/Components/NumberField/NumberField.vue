@@ -129,6 +129,7 @@ const decrementBind = computed(() => {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <input v-model="stringModel" v-bind="inputBind" />
 
     <template #end>

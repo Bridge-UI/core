@@ -58,6 +58,7 @@ watch(value, () => {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <textarea ref="textarea" v-model="value" v-bind="textareaBind" />
   </FormField>
 </template>

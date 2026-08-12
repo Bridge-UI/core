@@ -81,6 +81,7 @@ const toggleBind = computed(() => {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <input v-model="value" v-bind="inputBind" />
 
     <template #end>

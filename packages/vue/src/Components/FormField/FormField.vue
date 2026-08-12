@@ -10,7 +10,10 @@ import OutlinedFormField from "@/Components/FormField/OutlinedFormField.vue";
 import StackedFormField from "@/Components/FormField/StackedFormField.vue";
 import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
-import type { FormFieldSlots } from "@/Components/FormField/formField.types";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  type FormFieldSlots,
+} from "@/Components/FormField/formField.types";
 
 defineSlots<FormFieldSlots>();
 
@@ -49,7 +52,14 @@ const shell = computed(() => {
 
 <template>
   <component :api="api" :is="shell">
-    <template #[name]="slotData" v-for="(_, name) in $slots">
+    <slot />
+
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
   </component>

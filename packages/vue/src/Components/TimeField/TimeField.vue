@@ -80,6 +80,7 @@ const {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <div class="flex min-w-0 flex-1 items-center gap-1">
       <input v-bind="inputBind" />
 

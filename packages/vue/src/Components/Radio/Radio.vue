@@ -68,6 +68,7 @@ function onChange() {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <label v-bind="fieldBind" :for="formControl.controlId.value">
       <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 

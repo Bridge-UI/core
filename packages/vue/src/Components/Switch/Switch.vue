@@ -58,6 +58,7 @@ function onChange(event: Event) {
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
+
     <label v-bind="fieldBind">
       <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 
