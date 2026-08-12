@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 function Alert(props: AlertProps) {
   const {
@@ -44,11 +44,7 @@ function Alert(props: AlertProps) {
             )}
 
             <div {...titleBind}>
-              {resolveSlotOrProp({
-                slots,
-                name: "title",
-                fallback: merged.title,
-              })}
+              {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
             </div>
           </div>
 

@@ -2,7 +2,7 @@
 import FormControlLabel from "@/Components/FormControl/FormControlLabel";
 import type { FormControlProps } from "@/Components/FormControl/formControl.types";
 import type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 type FormControlComponentProps = Required<
   Pick<FormControlProps, "field" | "children">
@@ -29,11 +29,9 @@ function FormControl({ field, children }: FormControlComponentProps) {
       {!api.invalidated &&
         hasSlotOrProp(api.slots, "description", api.merged.description) && (
           <p {...api.descriptionBind}>
-            {resolveSlotOrProp({
-              slots: api.slots,
-              name: "description",
-              fallback: api.merged.description,
-            })}
+            {hasNamedSlot(api.slots, "description")
+              ? api.slots?.description
+              : api.merged.description}
           </p>
         )}
 
@@ -43,11 +41,9 @@ function FormControl({ field, children }: FormControlComponentProps) {
           aria-hidden={api.showErrorMessageContent ? undefined : true}
         >
           {api.showErrorMessageContent &&
-            resolveSlotOrProp({
-              slots: api.slots,
-              name: "errorMessage",
-              fallback: api.merged.errorMessage,
-            })}
+            (hasNamedSlot(api.slots, "errorMessage")
+              ? api.slots?.errorMessage
+              : api.merged.errorMessage)}
         </p>
       )}
     </div>

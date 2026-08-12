@@ -229,6 +229,16 @@ export interface FormControlSlots {
   startLabel?: Slot<undefined>;
 }
 
+/**
+ * Named FormControl chrome slots (excludes the `default` control slot).
+ */
+export const FORM_CONTROL_CHROME_SLOT_NAMES = [
+  "endLabel",
+  "startLabel",
+  "description",
+  "errorMessage",
+] as const satisfies ReadonlyArray<Exclude<keyof FormControlSlots, "default">>;
+
 export type FormControlProps = MergeHtmlProps<
   FormControlOwnProps,
   HTMLAttributes

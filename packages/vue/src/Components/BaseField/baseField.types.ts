@@ -273,6 +273,19 @@ export interface BaseFieldSlots {
   start?: Slot;
 }
 
+/**
+ * Named BaseField chrome slots (excludes the `default` control slot).
+ * Field wrappers forward only these into `<BaseField>`.
+ */
+export const BASE_FIELD_CHROME_SLOT_NAMES = [
+  "end",
+  "label",
+  "start",
+  "corner",
+  "description",
+  "errorMessage",
+] as const satisfies ReadonlyArray<Exclude<keyof BaseFieldSlots, "default">>;
+
 export type BaseFieldProps = MergeHtmlProps<
   BaseFieldOwnProps,
   Omit<HTMLAttributes, "color">

@@ -9,7 +9,7 @@ import type {
   TooltipOwnProps,
   TooltipSlots,
 } from "@/Components/Tooltip/tooltip.types";
-import { hasNamedSlot, resolveNamedSlot, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<TooltipSlots>();
 
@@ -69,14 +69,6 @@ const {
   },
 );
 
-const hasTrigger = computed(() => {
-  return hasNamedSlot(slots, "trigger");
-});
-
-const panelBody = computed(() => {
-  return resolveSlotOrProp(slots, "default", merged.value.content);
-});
-
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
 });
@@ -91,15 +83,20 @@ const teleportTarget = computed(() => {
 </script>
 
 <template>
-  <div v-if="hasTrigger" v-bind="rootBind">
+  <div v-bind="rootBind" v-if="hasNamedSlot(slots, 'trigger')">
     <div :ref="setTriggerRef" v-bind="triggerBind">
-      <component :is="resolveNamedSlot(slots, 'trigger')" />
+      <slot name="trigger" />
     </div>
   </div>
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <component :is="panelBody" />
+      <slot v-if="hasNamedSlot(slots, 'default')" />
+
+      <template v-else-if="isPropPresent(merged.content)">
+        {{ merged.content }}
+      </template>
+
       <div v-if="arrowBind" :ref="setArrowRef" v-bind="arrowBind" />
     </div>
   </Teleport>

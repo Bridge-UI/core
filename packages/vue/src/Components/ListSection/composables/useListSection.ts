@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, inject, toValue, useAttrs, useSlots } from "vue";
+import { computed, inject, toValue, useAttrs } from "vue";
 
 // ** Core Imports
 import { cn, splitComponentProps } from "@bridge-ui/core";
@@ -13,7 +13,6 @@ import type {
 } from "@/Components/ListSection/listSection.types";
 import {
   mergePartBind,
-  resolveSlotOrProp,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -27,10 +26,7 @@ const listSectionBridgeKeys = [
   "customProps",
 ] as const satisfies readonly (keyof ListSectionOwnProps)[];
 
-export function useListSection(
-  props: ListSectionOwnProps,
-  slots: ReturnType<typeof useSlots>,
-) {
+export function useListSection(props: ListSectionOwnProps) {
   const attrs = useAttrs();
 
   const listContext = inject(LIST_INJECTION_KEY, null);
@@ -61,10 +57,6 @@ export function useListSection(
 
   const isDense = computed(() => {
     return listContext ? toValue(listContext).dense : false;
-  });
-
-  const label = computed(() => {
-    return resolveSlotOrProp(slots, "default", merged.value.title);
   });
 
   const rootInheritedAttrs = computed(() => {
@@ -107,7 +99,6 @@ export function useListSection(
   });
 
   return {
-    label,
     merged,
     rootBind,
     titleBind,

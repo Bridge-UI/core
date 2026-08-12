@@ -10,18 +10,12 @@ import {
   type ListSectionOwnProps,
 } from "@/Components/ListSection";
 
-function mountUseListSection(
-  props: Partial<ListSectionOwnProps> = {},
-  slots: Record<string, () => unknown> = {},
-) {
+function mountUseListSection(props: Partial<ListSectionOwnProps> = {}) {
   let result!: ReturnType<typeof useListSection>;
 
   const Wrapper = defineComponent({
     setup() {
-      result = useListSection(
-        props,
-        slots as Parameters<typeof useListSection>[1],
-      );
+      result = useListSection(props);
 
       return () => h("div");
     },
@@ -31,12 +25,6 @@ function mountUseListSection(
 
   return result;
 }
-
-test("it should resolve label from title prop", () => {
-  const { label } = mountUseListSection({ title: "Settings" });
-
-  expect(typeof label.value).toBe("function");
-});
 
 test("it should apply section title classes", () => {
   const { titleBind } = mountUseListSection({ title: "Settings" });
@@ -77,7 +65,7 @@ test("it should inherit dense padding from parent List context", () => {
 
   const Consumer = defineComponent({
     setup() {
-      result = useListSection({ title: "Dense section" }, {});
+      result = useListSection({ title: "Dense section" });
 
       return () => h("div");
     },
@@ -87,7 +75,9 @@ test("it should inherit dense padding from parent List context", () => {
     setup() {
       provide(
         LIST_INJECTION_KEY,
-        computed(() => ({ dense: true })),
+        computed(() => {
+          return { dense: true };
+        }),
       );
 
       return () => h(Consumer);
@@ -97,11 +87,4 @@ test("it should inherit dense padding from parent List context", () => {
   mount(Wrapper);
 
   expect(result.titleBind.value.class).toContain("py-1.5");
-  expect(result.titleBind.value.class).not.toContain("py-2");
-});
-
-test("it should apply list-none on root bind", () => {
-  const { rootBind } = mountUseListSection({ title: "Section" });
-
-  expect(rootBind.value.class).toContain("list-none");
 });

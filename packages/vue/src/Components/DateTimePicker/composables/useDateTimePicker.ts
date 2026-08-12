@@ -334,9 +334,17 @@ export function useDateTimePicker(
     handlePanelChange,
     handleCalendarChange,
     timePanelCustomProps,
-    applyLabel: computed(() => resolveMessage("Apply")),
-    cancelLabel: computed(() => resolveMessage("Cancel")),
-    applyButtonProps: computed(() => customProps.value?.applyButton),
-    cancelButtonProps: computed(() => customProps.value?.cancelButton),
+    applyLabel: computed(() => {
+      return resolveMessage("Apply");
+    }),
+    cancelLabel: computed(() => {
+      return resolveMessage("Cancel");
+    }),
+    applyButtonProps: computed(() => {
+      return customProps.value?.applyButton;
+    }),
+    cancelButtonProps: computed(() => {
+      return customProps.value?.cancelButton;
+    }),
   };
 }

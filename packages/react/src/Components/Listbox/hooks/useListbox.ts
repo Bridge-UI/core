@@ -95,7 +95,9 @@ export function useListbox(
     props: componentProps,
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const showFooter = derived(() => {
     return resolveFieldShowFooter(merged.showFooter, breakpoint.mobile);

@@ -92,7 +92,9 @@ export function useListbox(
     },
   });
 
-  const customProps = computed(() => merged.value.customProps);
+  const customProps = computed(() => {
+    return merged.value.customProps;
+  });
 
   const showFooter = computed(() => {
     return resolveFieldShowFooter(merged.value.showFooter, breakpoint.mobile);
@@ -203,11 +205,19 @@ export function useListbox(
     );
   });
 
-  const applyLabel = computed(() => resolveMessage("Apply"));
-  const cancelLabel = computed(() => resolveMessage("Cancel"));
+  const applyLabel = computed(() => {
+    return resolveMessage("Apply");
+  });
+  const cancelLabel = computed(() => {
+    return resolveMessage("Cancel");
+  });
 
-  const applyButtonProps = computed(() => customProps.value?.applyButton);
-  const cancelButtonProps = computed(() => customProps.value?.cancelButton);
+  const applyButtonProps = computed(() => {
+    return customProps.value?.applyButton;
+  });
+  const cancelButtonProps = computed(() => {
+    return customProps.value?.cancelButton;
+  });
 
   return {
     merged,

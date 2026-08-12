@@ -9,7 +9,7 @@ import type {
   MenuOwnProps,
   MenuSlots,
 } from "@/Components/Menu/menu.types";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<MenuSlots>();
 
@@ -65,10 +65,6 @@ const {
   },
 );
 
-const hasTrigger = computed(() => {
-  return hasNamedSlot(slots, "trigger");
-});
-
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
 });
@@ -83,15 +79,15 @@ const teleportTarget = computed(() => {
 </script>
 
 <template>
-  <div v-if="hasTrigger" v-bind="rootBind">
+  <div v-bind="rootBind" v-if="hasNamedSlot(slots, 'trigger')">
     <div :ref="setTriggerRef" v-bind="triggerBind">
-      <component :is="resolveNamedSlot(slots, 'trigger')" />
+      <slot name="trigger" />
     </div>
   </div>
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <component :is="resolveNamedSlot(slots, 'default')" />
+      <slot />
     </div>
   </Teleport>
 </template>

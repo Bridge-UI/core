@@ -1,13 +1,7 @@
 <script setup lang="ts">
-// ** External Imports
-import { useSlots } from "vue";
-
 // ** Local Imports
 import type { BadgeOwnProps } from "@/Components/Badge/badge.types";
 import { useBadge } from "@/Components/Badge/composables/useBadge";
-import { resolveNamedSlot } from "@/Utils";
-
-const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
@@ -24,6 +18,6 @@ const { rootBind } = useBadge(props, {
 
 <template>
   <span v-bind="rootBind">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <slot />
   </span>
 </template>

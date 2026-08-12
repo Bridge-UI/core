@@ -175,26 +175,34 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     },
   });
 
-  const customProps = derived(() => merged.customProps);
+  const customProps = derived(() => {
+    return merged.customProps;
+  });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<SliderClasses>({
     entry: bridgeSlider,
     props: componentProps,
   });
 
-  const bounds = derived(() =>
-    resolveSliderBounds({
+  const bounds = derived(() => {
+    return resolveSliderBounds({
       min: merged.min,
       max: merged.max,
       step: merged.step,
-    }),
-  );
+    });
+  });
 
-  const isRange = derived(() => Boolean(merged.range));
+  const isRange = derived(() => {
+    return Boolean(merged.range);
+  });
 
-  const showTooltip = derived(() => merged.showTooltip !== false);
+  const showTooltip = derived(() => {
+    return merged.showTooltip !== false;
+  });
 
-  const isRtl = derived(() => bridge?.global.direction === "rtl");
+  const isRtl = derived(() => {
+    return bridge?.global.direction === "rtl";
+  });
 
   const { controlId, isDisabled, isReadonly, invalidated, ariaDescribedBy } =
     baseField;
@@ -215,7 +223,9 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     });
   });
 
-  const isControlled = derived(() => !isNil(componentProps.value));
+  const isControlled = derived(() => {
+    return !isNil(componentProps.value);
+  });
 
   const value = derived((): number | SliderRangeValue => {
     if (isControlled) {
@@ -263,24 +273,24 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
   controlledRef.current = isControlled;
   onChangeRef.current = merged.onChange;
 
-  const resolvedStops = derived((): SliderStop[] =>
-    normalizeSliderStops({
+  const resolvedStops = derived((): SliderStop[] => {
+    return normalizeSliderStops({
       min: bounds.min,
       max: bounds.max,
       step: bounds.step,
       stops: merged.stops,
       showStops: merged.showStops,
-    }),
-  );
+    });
+  });
 
-  const barGeometry = derived(() =>
-    getSliderBarGeometry({
+  const barGeometry = derived(() => {
+    return getSliderBarGeometry({
       value,
       range: isRange,
       min: bounds.min,
       max: bounds.max,
-    }),
-  );
+    });
+  });
 
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -299,9 +309,9 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     );
   }, [merged.customProps?.invalidated, bridgeSlider?.tokens?.invalidated]);
 
-  const colorClasses = derived(() =>
-    invalidated ? invalidatedPalette : colorPalette,
-  );
+  const colorClasses = derived(() => {
+    return invalidated ? invalidatedPalette : colorPalette;
+  });
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -321,16 +331,16 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     return get(classes, merged.rounded ?? "full");
   }, [merged.rounded, bridgeSlider?.tokens?.rounded]);
 
-  const hasStopLabels = derived(() =>
-    resolvedStops.some((stop) => Boolean(stop.label)),
-  );
+  const hasStopLabels = derived(() => {
+    return resolvedStops.some((stop) => Boolean(stop.label));
+  });
 
-  const controlBind = derived(() =>
-    mergePartBind({}, {}, cn("relative w-full min-w-0 flex-1")),
-  );
+  const controlBind = derived(() => {
+    return mergePartBind({}, {}, cn("relative w-full min-w-0 flex-1"));
+  });
 
-  const trackBind = derived(() =>
-    mergePartBind(
+  const trackBind = derived(() => {
+    return mergePartBind(
       {
         ...customProps?.track,
         ref: trackRef,
@@ -346,11 +356,11 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
         [colorClasses?.track ?? ""]: true,
         [mergedClasses.track ?? ""]: true,
       }),
-    ),
-  );
+    );
+  });
 
-  const barBind = derived(() =>
-    mergePartBind(
+  const barBind = derived(() => {
+    return mergePartBind(
       {
         ...customProps?.bar,
         style: {
@@ -366,8 +376,8 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
         [colorClasses?.bar ?? ""]: true,
         [mergedClasses.bar ?? ""]: true,
       }),
-    ),
-  );
+    );
+  });
 
   const commitValue = (next: number | SliderRangeValue) => {
     if (!controlledRef.current) {
@@ -729,16 +739,16 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     );
   };
 
-  const stopLabelsBind = derived(() =>
-    mergePartBind(
+  const stopLabelsBind = derived(() => {
+    return mergePartBind(
       customProps?.stopLabels,
       { "aria-hidden": true },
       cn({
         "relative h-[1lh] w-full text-xs": true,
         [mergedClasses.stopLabels ?? ""]: true,
       }),
-    ),
-  );
+    );
+  });
 
   const getStopLabelBind = (stop: SliderStop) => {
     const percent = valueToPercent(stop.value, bounds.min, bounds.max);
@@ -761,7 +771,9 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     );
   };
 
-  const thumbIndexes = derived((): Array<0 | 1> => (isRange ? [0, 1] : [0]));
+  const thumbIndexes = derived((): Array<0 | 1> => {
+    return isRange ? [0, 1] : [0];
+  });
 
   const isTooltipOpen = (thumbIndex: 0 | 1) =>
     showTooltip &&

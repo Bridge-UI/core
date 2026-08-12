@@ -4,12 +4,7 @@ import type { ReactNode } from "react";
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Icon } from "@/Components/Icon";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 type StackedFormFieldProps = {
   api: UseFormFieldReturn;
@@ -36,11 +31,9 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
 
               {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
                 <span {...api.cornerBind}>
-                  {resolveSlotOrProp({
-                    name: "corner",
-                    slots: api.slots,
-                    fallback: api.merged.corner,
-                  })}
+                  {hasNamedSlot(api.slots, "corner")
+                    ? api.slots?.corner
+                    : api.merged.corner}
                 </span>
               )}
             </div>
@@ -97,11 +90,9 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
       {!api.invalidated &&
         hasSlotOrProp(api.slots, "description", api.merged.description) && (
           <p {...api.descriptionBind} id={`${api.controlId}-description`}>
-            {resolveSlotOrProp({
-              slots: api.slots,
-              name: "description",
-              fallback: api.merged.description,
-            })}
+            {hasNamedSlot(api.slots, "description")
+              ? api.slots?.description
+              : api.merged.description}
           </p>
         )}
 
@@ -112,11 +103,9 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
           aria-hidden={api.showErrorMessageContent ? undefined : true}
         >
           {api.showErrorMessageContent &&
-            resolveSlotOrProp({
-              slots: api.slots,
-              name: "errorMessage",
-              fallback: api.merged.errorMessage,
-            })}
+            (hasNamedSlot(api.slots, "errorMessage")
+              ? api.slots?.errorMessage
+              : api.merged.errorMessage)}
         </p>
       )}
     </div>

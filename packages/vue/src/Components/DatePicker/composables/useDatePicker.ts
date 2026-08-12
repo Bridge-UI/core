@@ -113,7 +113,9 @@ export function useDatePicker(
     return toValue(props);
   });
 
-  const isControlled = computed(() => !isNil(propsValue.value.value));
+  const isControlled = computed(() => {
+    return !isNil(propsValue.value.value);
+  });
 
   const uncontrolledValue = ref<DatePickerModel>(
     merged.value.defaultValue ?? null,
@@ -198,7 +200,9 @@ export function useDatePicker(
     );
   });
 
-  const showFooter = computed(() => Boolean(merged.value.showFooter));
+  const showFooter = computed(() => {
+    return Boolean(merged.value.showFooter);
+  });
 
   return {
     merged,
@@ -210,9 +214,17 @@ export function useDatePicker(
     handleCancel,
     calendarTokens,
     handleCalendarChange,
-    applyLabel: computed(() => resolveMessage("Apply")),
-    cancelLabel: computed(() => resolveMessage("Cancel")),
-    applyButtonProps: computed(() => customProps.value?.applyButton),
-    cancelButtonProps: computed(() => customProps.value?.cancelButton),
+    applyLabel: computed(() => {
+      return resolveMessage("Apply");
+    }),
+    cancelLabel: computed(() => {
+      return resolveMessage("Cancel");
+    }),
+    applyButtonProps: computed(() => {
+      return customProps.value?.applyButton;
+    }),
+    cancelButtonProps: computed(() => {
+      return customProps.value?.cancelButton;
+    }),
   };
 }

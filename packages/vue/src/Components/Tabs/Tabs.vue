@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots } from "vue";
+import { computed } from "vue";
 
 // ** Local Imports
 import Tab from "@/Components/Tab/Tab.vue";
@@ -12,11 +12,9 @@ import type {
   TabsOwnProps,
   TabsSlots,
 } from "@/Components/Tabs/tabs.types";
-import { resolveNamedSlot } from "@/Utils";
+import { RenderFn } from "@/Utils";
 
 defineSlots<TabsSlots>();
-
-const slots = useSlots();
 
 const emit = defineEmits<TabsEmits>();
 
@@ -61,17 +59,17 @@ const hasTabItems = computed(() => {
           v-bind="props.customProps?.tab"
         >
           <template #start v-if="item.slots?.start">
-            <component :is="item.slots.start" />
+            <RenderFn :fn="item.slots.start" />
           </template>
 
           <template v-if="typeof item.label === 'string'">
             {{ item.label }}
           </template>
 
-          <component v-else :is="item.label" />
+          <RenderFn v-else :fn="item.label" />
 
           <template #end v-if="item.slots?.end">
-            <component :is="item.slots.end" />
+            <RenderFn :fn="item.slots.end" />
           </template>
         </Tab>
       </TabList>
@@ -83,10 +81,10 @@ const hasTabItems = computed(() => {
         :keep-mounted="item.keepMounted"
         v-bind="props.customProps?.tabPanel"
       >
-        <component :is="item.panel" />
+        <RenderFn :fn="item.panel" />
       </TabPanel>
     </template>
 
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <slot />
   </div>
 </template>

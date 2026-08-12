@@ -8,7 +8,10 @@ import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/composables/useNumberField";
 import type {
@@ -18,6 +21,7 @@ import type {
 } from "@/Components/NumberField/numberField.types";
 import {
   mergePartBind,
+  presentSlotNames,
   resolveFieldAdornmentIconSize,
   useHoldRepeat,
 } from "@/Utils";
@@ -118,6 +122,16 @@ const decrementBind = computed(() => {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(
+        FORM_FIELD_CHROME_SLOT_NAMES.filter((n) => n !== 'end'),
+        $slots,
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <input v-model="stringModel" v-bind="inputBind" />
 
     <template #end>

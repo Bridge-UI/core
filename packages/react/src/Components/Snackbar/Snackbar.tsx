@@ -10,7 +10,7 @@ import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
 import { useSnackbar } from "@/Components/Snackbar/hooks/useSnackbar";
 import type { SnackbarProps } from "@/Components/Snackbar/snackbar.types";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 const snackbarLibDefaults = {
   rounded: "lg",
@@ -96,21 +96,15 @@ function SnackbarPanel({
           >
             {hasTitle && (
               <p {...titleBind}>
-                {resolveSlotOrProp({
-                  slots,
-                  name: "title",
-                  fallback: merged.title,
-                })}
+                {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
               </p>
             )}
 
             {hasDescription && (
               <p {...descriptionBind}>
-                {resolveSlotOrProp({
-                  slots,
-                  name: "description",
-                  fallback: merged.description,
-                })}
+                {hasNamedSlot(slots, "description")
+                  ? slots?.description
+                  : merged.description}
               </p>
             )}
 

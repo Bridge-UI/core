@@ -83,12 +83,12 @@ test("it should apply outlined border on root", () => {
   expect(result.current.rootBind.className).toContain("border");
 });
 
-test("it should set hasFooter when footer slot is provided", () => {
+test("it should expose footer slot when provided", () => {
   const { result } = renderUseCard({
     slots: { footer: "Footer" },
   });
 
-  expect(result.current.hasFooter).toBe(true);
+  expect(result.current.slots?.footer).toBe("Footer");
 });
 
 test("it should expose children from props", () => {

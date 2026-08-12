@@ -21,9 +21,7 @@ import type {
 } from "@/Components/AccordionItem/accordionItem.types";
 import {
   derived,
-  hasNamedSlot,
   mergePartBind,
-  resolveSlotOrProp,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -86,18 +84,6 @@ export function useAccordionItem(props: AccordionItemProps) {
 
   const iconSize = derived(() => {
     return (accordion.tokenClasses.iconSize ?? "md") as keyof IconSize;
-  });
-
-  const titleContent = derived(() => {
-    return resolveSlotOrProp({
-      slots,
-      name: "title",
-      fallback: merged.title,
-    });
-  });
-
-  const hasIndicatorSlot = derived(() => {
-    return hasNamedSlot(slots, "indicator");
   });
 
   const rootInheritedAttrs = derived(() => {
@@ -283,10 +269,8 @@ export function useAccordionItem(props: AccordionItemProps) {
     titleBind,
     panelBind,
     triggerBind,
-    titleContent,
     collapseBind,
     indicatorBind,
     panelInnerBind,
-    hasIndicatorSlot,
   };
 }

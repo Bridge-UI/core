@@ -9,10 +9,12 @@ import { BRIDGE_UI_DEFAULT_GLOBAL } from "@bridge-ui/core";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
 
 function createDefaultOptionsRef() {
-  return computed(() => ({
-    global: {},
-    components: {},
-  }));
+  return computed(() => {
+    return {
+      global: {},
+      components: {},
+    };
+  });
 }
 
 test("it should return global defaults when no parent and no options", () => {
@@ -32,10 +34,12 @@ test("it should merge options into global defaults", () => {
   const scope = effectScope();
 
   scope.run(() => {
-    const optionsRef = computed(() => ({
-      components: {},
-      global: { theme: "dark" },
-    }));
+    const optionsRef = computed(() => {
+      return {
+        components: {},
+        global: { theme: "dark" },
+      };
+    });
 
     const api = createBridgeUIApi(undefined, optionsRef);
 
@@ -50,10 +54,12 @@ test("it should merge component config from options", () => {
   const scope = effectScope();
 
   scope.run(() => {
-    const optionsRef = computed(() => ({
-      global: {},
-      components: { Alert: { defaultProps: { color: "error" as const } } },
-    }));
+    const optionsRef = computed(() => {
+      return {
+        global: {},
+        components: { Alert: { defaultProps: { color: "error" as const } } },
+      };
+    });
 
     const api = createBridgeUIApi(undefined, optionsRef);
 
@@ -70,10 +76,12 @@ test("it should inherit from parent and merge child options", () => {
     const parentApi = createBridgeUIApi(undefined, createDefaultOptionsRef());
     parentApi.setGlobal({ theme: "dark" });
 
-    const childOptions = computed(() => ({
-      components: {},
-      global: { locale: "pt-BR" },
-    }));
+    const childOptions = computed(() => {
+      return {
+        components: {},
+        global: { locale: "pt-BR" },
+      };
+    });
 
     const childApi = createBridgeUIApi(parentApi, childOptions);
 
@@ -124,15 +132,17 @@ test("it should call i18n.setLocale when setLocale is used", () => {
 
   scope.run(() => {
     const setLocale = vi.fn();
-    const optionsRef = computed(() => ({
-      components: {},
-      global: {
-        i18n: {
-          setLocale,
-          t: (message: string) => message,
+    const optionsRef = computed(() => {
+      return {
+        components: {},
+        global: {
+          i18n: {
+            setLocale,
+            t: (message: string) => message,
+          },
         },
-      },
-    }));
+      };
+    });
 
     const api = createBridgeUIApi(undefined, optionsRef);
 

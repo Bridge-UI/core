@@ -9,7 +9,6 @@ import {
   useAttrs,
   useSlots,
   watch,
-  type Slot,
 } from "vue";
 
 // ** Core Imports
@@ -32,9 +31,7 @@ import type {
 } from "@/Components/ListItem/listItem.types";
 import {
   hasNamedSlot,
-  isPropPresent,
   mergePartBind,
-  resolveNamedSlot,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -195,10 +192,6 @@ export function useListItem(
 
   const hasSecondary = computed(() => {
     return hasNamedSlot(slots, "secondary") || Boolean(merged.value.secondary);
-  });
-
-  const hasStart = computed(() => {
-    return hasNamedSlot(slots, "start");
   });
 
   const resolvedSelectedIcon = computed((): null | IconSource => {
@@ -399,7 +392,6 @@ export function useListItem(
     endBind,
     rootBind,
     rowClass,
-    hasStart,
     startBind,
     hasPrimary,
     contentBind,
@@ -410,25 +402,4 @@ export function useListItem(
     selectedIconBind,
     resolvedSelectedIcon,
   };
-}
-
-export function resolveListItemPrimary(
-  slots: ReturnType<typeof useSlots>,
-  primary?: string,
-): Slot | (() => null | string) {
-  if (hasNamedSlot(slots, "primary")) {
-    return resolveNamedSlot(slots, "primary")!;
-  }
-
-  if (hasNamedSlot(slots, "default")) {
-    return resolveNamedSlot(slots, "default")!;
-  }
-
-  if (!isPropPresent(primary)) {
-    return () => null;
-  }
-
-  const text = String(primary);
-
-  return () => text;
 }

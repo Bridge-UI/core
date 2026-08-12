@@ -1,12 +1,7 @@
 // ** Local Imports
 import type { UseBaseFieldReturn } from "@/Components/BaseField/hooks/useBaseField";
 import { Label } from "@/Components/Label";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 type BaseFieldLabelProps = {
   field: UseBaseFieldReturn;
@@ -21,18 +16,8 @@ function BaseFieldLabel({ field }: BaseFieldLabelProps) {
   }
 
   const content = hasNamedSlot(field.slots, "label")
-    ? resolveSlotOrProp({
-        name: "label",
-        slots: field.slots,
-        fallback: field.merged.label,
-      })
-    : isPropPresent(field.merged.label)
-      ? field.merged.label
-      : null;
-
-  if (content === null) {
-    return null;
-  }
+    ? field.slots?.label
+    : field.merged.label;
 
   return <Label {...field.fieldLabelProps}>{content}</Label>;
 }

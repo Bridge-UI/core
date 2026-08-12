@@ -20,7 +20,6 @@ import {
 // ** Local Imports
 import type { CardOwnProps, CardProps } from "@/Components/Card/card.types";
 import {
-  hasNamedSlot,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -77,10 +76,6 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
     const content = slots.default?.();
 
     return Boolean(content && content.length > 0);
-  });
-
-  const hasFooter = computed(() => {
-    return hasNamedSlot(slots, "footer");
   });
 
   const variantClass = computed(() => {
@@ -205,7 +200,6 @@ export function useCard(props: CardOwnProps, libDefaults: CardLibDefaults) {
     merged,
     bodyBind,
     rootBind,
-    hasFooter,
     titleBind,
     footerBind,
     headerBind,

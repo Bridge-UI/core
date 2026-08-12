@@ -6,7 +6,7 @@ import BaseField from "@/Components/BaseField/BaseField";
 import { useSlider } from "@/Components/Slider/hooks/useSlider";
 import type { SliderProps } from "@/Components/Slider/slider.types";
 import { Tooltip } from "@/Components/Tooltip";
-import { resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot } from "@/Utils";
 
 const sliderLibDefaults = {
   min: 0,
@@ -44,8 +44,6 @@ function Slider(props: SliderProps) {
     getThumbKnobBind,
   } = api;
 
-  const { slots } = baseField;
-
   const thumbRefs = [thumb0Ref, thumb1Ref] as const;
 
   return (
@@ -68,11 +66,11 @@ function Slider(props: SliderProps) {
                 {...thumbBind}
                 ref={thumbRefs[thumbIndex]}
               >
-                {resolveSlotOrProp({
-                  slots,
-                  name: "thumb",
-                  fallback: <span {...knobBind} />,
-                })}
+                {hasNamedSlot(props.slots, "thumb") ? (
+                  props.slots?.thumb
+                ) : (
+                  <span {...knobBind} />
+                )}
               </button>
             );
           })}

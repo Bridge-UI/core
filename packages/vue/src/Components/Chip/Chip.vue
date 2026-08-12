@@ -10,7 +10,7 @@ import type {
 } from "@/Components/Chip/chip.types";
 import { useChip } from "@/Components/Chip/composables/useChip";
 import { Icon, type IconProps } from "@/Components/Icon";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ChipSlots>();
 
@@ -53,12 +53,11 @@ const hasContent = computed(() => {
 <template>
   <span v-bind="rootBind">
     <span v-if="hasContent" v-bind="labelBind">
-      <component
-        v-if="hasNamedSlot(slots, 'default')"
-        :is="resolveNamedSlot(slots, 'default')"
-      />
+      <slot v-if="hasNamedSlot(slots, 'default')" />
 
-      <template v-else>{{ label }}</template>
+      <template v-else-if="isPropPresent(merged.label)">
+        {{ merged.label }}
+      </template>
     </span>
 
     <span

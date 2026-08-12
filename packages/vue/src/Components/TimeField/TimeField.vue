@@ -9,7 +9,10 @@ import type { TimeValue } from "@bridge-ui/core";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { FieldOverlay } from "@/Components/FieldOverlay";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { useTimeField } from "@/Components/TimeField/composables/useTimeField";
 import type {
@@ -18,6 +21,7 @@ import type {
   TimeFieldSlots,
 } from "@/Components/TimeField/timeField.types";
 import { TimePicker } from "@/Components/TimePicker";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<TimeFieldSlots>();
 
@@ -69,6 +73,13 @@ const {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div class="flex min-w-0 flex-1 items-center gap-1">
       <input v-bind="inputBind" />
 

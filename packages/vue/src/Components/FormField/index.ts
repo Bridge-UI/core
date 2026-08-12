@@ -5,6 +5,7 @@ export type {
   FormFieldReservedSlotName,
   UseFormFieldReturn,
 } from "@/Components/FormField/composables/useFormField";
+export { FORM_FIELD_CHROME_SLOT_NAMES } from "@/Components/FormField/formField.types";
 export type {
   FormFieldClasses,
   FormFieldColorOverrides,

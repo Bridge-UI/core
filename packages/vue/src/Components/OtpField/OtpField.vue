@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
+import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";
 import BaseField from "@/Components/BaseField/BaseField.vue";
 import { useOtpField } from "@/Components/OtpField/composables/useOtpField";
 import type {
@@ -7,6 +8,7 @@ import type {
   OtpFieldOwnProps,
   OtpFieldSlots,
 } from "@/Components/OtpField/otpField.types";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<OtpFieldSlots>();
 
@@ -46,6 +48,13 @@ const {
 
 <template>
   <BaseField :field="baseField">
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(BASE_FIELD_CHROME_SLOT_NAMES, $slots)"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div v-bind="pinsBind">
       <div
         :key="index"

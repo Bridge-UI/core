@@ -11,6 +11,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";
 import BaseField from "@/Components/BaseField/BaseField.vue";
 import { useSlider } from "@/Components/Slider/composables/useSlider";
 import type {
@@ -19,6 +20,7 @@ import type {
   SliderSlots,
 } from "@/Components/Slider/slider.types";
 import { Tooltip } from "@/Components/Tooltip";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<SliderSlots>();
 
@@ -124,6 +126,13 @@ function setThumbRef(
 
 <template>
   <BaseField :field="baseField">
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(BASE_FIELD_CHROME_SLOT_NAMES, $slots)"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div v-bind="controlBind">
       <div :ref="setTrackRef" v-bind="trackBind">
         <div v-bind="barBind" />

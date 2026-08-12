@@ -8,8 +8,8 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  resolveNamedSlot,
-  resolveSlotOrProp,
+  presentSlotNames,
+  RenderFn,
 } from "@/Utils/slotOrProp";
 
 test("it should treat empty string as absent in isPropPresent", () => {
@@ -34,56 +34,64 @@ test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
 });
 
-test("it should return the stable slot function reference from resolveNamedSlot", () => {
-  const slotFn = () => h("span", "From slot");
+test("it should return only passed names from presentSlotNames", () => {
+  const names = ["end", "label", "start"] as const;
 
-  expect(resolveNamedSlot({}, "label")).toBeUndefined();
+  expect(presentSlotNames(names, {})).toEqual([]);
 
-  expect(resolveNamedSlot({ label: slotFn }, "label")).toBe(slotFn);
+  expect(presentSlotNames(names, { end: () => "y", label: () => "x" })).toEqual(
+    ["end", "label"],
+  );
 });
 
-test("it should return the stable slot function when present from resolveSlotOrProp", () => {
-  const slotFn = () => h("span", "From slot");
+test("it should keep child instance across RenderFn fn identity churn", async () => {
+  let mountCount = 0;
 
-  expect(
-    resolveSlotOrProp({ description: slotFn }, "description", "From prop"),
-  ).toBe(slotFn);
-});
+  const Inner = defineComponent({
+    props: {
+      label: {
+        type: String,
+        required: true,
+      },
+    },
+    setup(props) {
+      mountCount += 1;
 
-test("it should render fallback when slot is absent from resolveSlotOrProp", () => {
-  const Comp = defineComponent({
-    setup() {
-      return () =>
-        h(resolveSlotOrProp({}, "description", "Inform your full name"));
+      return () => h("span", props.label);
     },
   });
 
-  expect(mount(Comp).text()).toBe("Inform your full name");
-});
-
-test("it should prefer slot over fallback in resolveSlotOrProp", () => {
-  const Comp = defineComponent({
-    setup() {
-      return () =>
-        h(
-          resolveSlotOrProp(
-            {
-              description: () => h("span", "From slot"),
-            },
-            "description",
-            "From prop",
-          ),
-        );
+  const Host = defineComponent({
+    props: {
+      render: {
+        type: Function,
+        required: true,
+      },
+    },
+    setup(props) {
+      return () => h(RenderFn, { fn: props.render as () => unknown });
     },
   });
 
-  expect(mount(Comp).text()).toBe("From slot");
+  const wrapper = mount(Host, {
+    props: { render: () => h(Inner, { label: "A" }) },
+  });
+
+  expect(wrapper.text()).toBe("A");
+  expect(mountCount).toBe(1);
+
+  await wrapper.setProps({
+    render: () => h(Inner, { label: "B" }),
+  });
+
+  expect(wrapper.text()).toBe("B");
+  expect(mountCount).toBe(1);
 });
 
-test("it should render nothing when both slot and fallback are absent", () => {
+test("it should render nothing when RenderFn has no fn", () => {
   const Comp = defineComponent({
     setup() {
-      return () => h(resolveSlotOrProp({}, "description", ""));
+      return () => h(RenderFn, {});
     },
   });
 

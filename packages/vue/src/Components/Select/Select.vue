@@ -9,7 +9,10 @@ import { cn } from "@bridge-ui/core";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Chip } from "@/Components/Chip";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/composables/useSelect";
@@ -24,7 +27,7 @@ import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
 import {
   hasNamedSlot,
   mergeNestedComponentProps,
-  resolveNamedSlot,
+  presentSlotNames,
 } from "@/Utils";
 
 defineSlots<SelectSlots>();
@@ -108,6 +111,13 @@ const {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div
       v-if="multiple"
       class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
@@ -174,11 +184,11 @@ const {
     </template>
 
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
-      <component :is="resolveNamedSlot(slots, 'beforeOptions')" />
+      <slot name="beforeOptions" />
     </template>
 
     <template #loading v-if="hasNamedSlot(slots, 'loading')">
-      <component :is="resolveNamedSlot(slots, 'loading')" />
+      <slot name="loading" />
     </template>
 
     <template #option="slotProps" v-if="hasNamedSlot(slots, 'option')">
@@ -186,11 +196,11 @@ const {
     </template>
 
     <template #empty v-if="hasNamedSlot(slots, 'empty')">
-      <component :is="resolveNamedSlot(slots, 'empty')" />
+      <slot name="empty" />
     </template>
 
     <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">
-      <component :is="resolveNamedSlot(slots, 'afterOptions')" />
+      <slot name="afterOptions" />
     </template>
   </Listbox>
 

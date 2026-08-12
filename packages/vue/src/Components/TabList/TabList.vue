@@ -1,18 +1,12 @@
 <script setup lang="ts">
-// ** External Imports
-import { useSlots } from "vue";
-
 // ** Local Imports
 import { useTabList } from "@/Components/TabList/composables/useTabList";
 import type {
   TabListOwnProps,
   TabListSlots,
 } from "@/Components/TabList/tabList.types";
-import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<TabListSlots>();
-
-const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
@@ -23,6 +17,6 @@ const { rootBind } = useTabList(props);
 
 <template>
   <div v-bind="rootBind">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <slot />
   </div>
 </template>

@@ -10,7 +10,11 @@ import OutlinedFormField from "@/Components/FormField/OutlinedFormField.vue";
 import StackedFormField from "@/Components/FormField/StackedFormField.vue";
 import UnderlinedFormField from "@/Components/FormField/UnderlinedFormField.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
-import type { FormFieldSlots } from "@/Components/FormField/formField.types";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  type FormFieldSlots,
+} from "@/Components/FormField/formField.types";
+import { presentSlotNames } from "@/Utils";
 
 defineSlots<FormFieldSlots>();
 
@@ -20,14 +24,14 @@ const props = defineProps<{
   field: UseFormFieldReturn;
 }>();
 
-const localSlots = useSlots();
+const slots = useSlots();
 
 const api = computed((): UseFormFieldReturn => {
   return {
     ...props.field,
     slots: {
       ...props.field.slots,
-      ...localSlots,
+      ...slots,
     },
   };
 });
@@ -50,5 +54,12 @@ const shell = computed(() => {
 <template>
   <component :api="api" :is="shell">
     <slot />
+
+    <template
+      #[name]="slotData"
+      v-for="name in presentSlotNames(FORM_FIELD_CHROME_SLOT_NAMES, $slots)"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
   </component>
 </template>

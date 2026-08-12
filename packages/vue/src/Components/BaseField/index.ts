@@ -1,4 +1,5 @@
 // ** Exports
+export { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField/baseField.types";
 export type {
   BaseFieldClasses,
   BaseFieldCustomProps,

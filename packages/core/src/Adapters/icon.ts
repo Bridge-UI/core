@@ -57,8 +57,6 @@ export interface IconAdapter {
   /**
    * Converts library-native icon values into a renderable component.
    * Called for both semantic resolves and concrete `icon` props.
-   *
-   * @example Font Awesome adapters wrap `IconDefinition` values here.
    */
   normalize?: (source: unknown) => unknown;
 

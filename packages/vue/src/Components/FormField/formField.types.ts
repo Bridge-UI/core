@@ -364,4 +364,17 @@ export interface FormFieldSlots {
   start?: Slot<undefined>;
 }
 
+/**
+ * Named FormField chrome slots (excludes the `default` control slot).
+ * Field wrappers forward only these into `<FormField>`.
+ */
+export const FORM_FIELD_CHROME_SLOT_NAMES = [
+  "end",
+  "label",
+  "start",
+  "corner",
+  "description",
+  "errorMessage",
+] as const satisfies ReadonlyArray<Exclude<keyof FormFieldSlots, "default">>;
+
 export type FormFieldProps = MergeHtmlProps<FormFieldOwnProps, HTMLAttributes>;

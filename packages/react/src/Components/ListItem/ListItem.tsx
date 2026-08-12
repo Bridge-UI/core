@@ -5,12 +5,12 @@ import { createElement } from "react";
 import { Icon } from "@/Components/Icon";
 import { useListItem } from "@/Components/ListItem/hooks/useListItem";
 import type { ListItemProps } from "@/Components/ListItem/listItem.types";
+import { hasNamedSlot } from "@/Utils";
 
 function ListItemRow({
   slots,
   hasEnd,
   endBind,
-  hasStart,
   startBind,
   hasPrimary,
   contentBind,
@@ -25,7 +25,9 @@ function ListItemRow({
 }: ReturnType<typeof useListItem>) {
   return (
     <div className={rowClassName}>
-      {hasStart ? <div {...startBind}>{slots?.start}</div> : null}
+      {hasNamedSlot(slots, "start") ? (
+        <div {...startBind}>{slots?.start}</div>
+      ) : null}
 
       <div {...contentBind}>
         {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}

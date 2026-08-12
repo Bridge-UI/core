@@ -25,7 +25,6 @@ import type {
 } from "@/Components/Avatar/avatar.types";
 import {
   derived,
-  hasNamedSlot,
   isPropPresent,
   mergePartBind,
   useBridgeUIComponent,
@@ -96,10 +95,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
 
   const hasImage = derived(() => {
     return !isNil(merged.src) && !isEmpty(merged.src);
-  });
-
-  const hasFallbackSlot = derived(() => {
-    return hasNamedSlot(slots, "fallback");
   });
 
   const hasFallbackText = derived(() => {
@@ -216,7 +211,6 @@ export function useAvatar(props: AvatarProps, libDefaults: AvatarLibDefaults) {
     imageBind,
     fallbackBind,
     resolvedIcon,
-    hasFallbackSlot,
     hasFallbackText,
     hasCustomContent,
   };
