@@ -2,6 +2,7 @@ dist
 .fleet
 .cursor
 node_modules
+docs/roadmap
 
 # Vite cache for Cypress component tests
 **/.cache/vite-cypress/
