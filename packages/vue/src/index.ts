@@ -18,6 +18,32 @@ export type {
   IconSource,
   SemanticIconName,
 } from "@/Adapters/Icon";
+export {
+  ACCORDION_INJECTION_KEY,
+  Accordion,
+  useAccordion,
+} from "@/Components/Accordion";
+export type {
+  AccordionClasses,
+  AccordionColorOverrides,
+  AccordionContextValue,
+  AccordionCustomProps,
+  AccordionEmits,
+  AccordionOwnProps,
+  AccordionProps,
+  AccordionSizeOverrides,
+  AccordionSlots,
+  AccordionTokenClasses,
+  AccordionVariantOverrides,
+} from "@/Components/Accordion";
+export { AccordionItem, useAccordionItem } from "@/Components/AccordionItem";
+export type {
+  AccordionItemClasses,
+  AccordionItemCustomProps,
+  AccordionItemOwnProps,
+  AccordionItemProps,
+  AccordionItemSlots,
+} from "@/Components/AccordionItem";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
