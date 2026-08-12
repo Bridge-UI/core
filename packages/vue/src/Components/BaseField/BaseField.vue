@@ -6,12 +6,7 @@ import { computed, useSlots } from "vue";
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel.vue";
 import type { BaseFieldSlots } from "@/Components/BaseField/baseField.types";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/composables/useBaseField";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  resolveNamedSlot,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, SlotOrProp } from "@/Utils";
 
 defineSlots<BaseFieldSlots>();
 
@@ -55,8 +50,10 @@ const showHeader = computed(() => {
         v-bind="api.cornerBind.value"
         v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
       >
-        <component
-          :is="resolveSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
+        <SlotOrProp
+          name="corner"
+          :slots="api.slots"
+          :fallback="api.merged.value.corner"
         />
       </span>
     </div>
@@ -66,13 +63,13 @@ const showHeader = computed(() => {
         v-bind="api.startSlotBind.value"
         v-if="hasNamedSlot(api.slots, 'start')"
       >
-        <component :is="resolveNamedSlot(api.slots, 'start')" />
+        <SlotOrProp name="start" :slots="api.slots" />
       </div>
 
       <slot />
 
       <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <component :is="resolveNamedSlot(api.slots, 'end')" />
+        <SlotOrProp name="end" :slots="api.slots" />
       </div>
     </div>
 
@@ -84,14 +81,10 @@ const showHeader = computed(() => {
         hasSlotOrProp(api.slots, 'description', api.merged.value.description)
       "
     >
-      <component
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'description',
-            api.merged.value.description,
-          )
-        "
+      <SlotOrProp
+        name="description"
+        :slots="api.slots"
+        :fallback="api.merged.value.description"
       />
     </p>
 
@@ -101,15 +94,11 @@ const showHeader = computed(() => {
       v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
-      <component
+      <SlotOrProp
+        :slots="api.slots"
+        name="errorMessage"
         v-if="api.showErrorMessageContent.value"
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'errorMessage',
-            api.merged.value.errorMessage,
-          )
-        "
+        :fallback="api.merged.value.errorMessage"
       />
     </p>
   </div>

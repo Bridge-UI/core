@@ -5,7 +5,7 @@ import { computed } from "vue";
 // ** Local Imports
 import FormControlLabel from "@/Components/FormControl/FormControlLabel.vue";
 import type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasSlotOrProp, SlotOrProp } from "@/Utils";
 
 defineOptions({ inheritAttrs: false });
 
@@ -40,14 +40,10 @@ const api = computed((): UseFormControlReturn => {
         hasSlotOrProp(api.slots, 'description', api.merged.value.description)
       "
     >
-      <component
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'description',
-            api.merged.value.description,
-          )
-        "
+      <SlotOrProp
+        name="description"
+        :slots="api.slots"
+        :fallback="api.merged.value.description"
       />
     </p>
 
@@ -57,14 +53,10 @@ const api = computed((): UseFormControlReturn => {
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <template v-if="api.showErrorMessageContent.value">
-        <component
-          :is="
-            resolveSlotOrProp(
-              api.slots,
-              'errorMessage',
-              api.merged.value.errorMessage,
-            )
-          "
+        <SlotOrProp
+          :slots="api.slots"
+          name="errorMessage"
+          :fallback="api.merged.value.errorMessage"
         />
       </template>
     </p>

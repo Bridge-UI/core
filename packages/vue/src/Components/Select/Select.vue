@@ -21,11 +21,7 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
-import {
-  hasNamedSlot,
-  mergeNestedComponentProps,
-  resolveNamedSlot,
-} from "@/Utils";
+import { hasNamedSlot, mergeNestedComponentProps, SlotOrProp } from "@/Utils";
 
 defineSlots<SelectSlots>();
 
@@ -174,11 +170,11 @@ const {
     </template>
 
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
-      <component :is="resolveNamedSlot(slots, 'beforeOptions')" />
+      <SlotOrProp :slots="slots" name="beforeOptions" />
     </template>
 
     <template #loading v-if="hasNamedSlot(slots, 'loading')">
-      <component :is="resolveNamedSlot(slots, 'loading')" />
+      <SlotOrProp name="loading" :slots="slots" />
     </template>
 
     <template #option="slotProps" v-if="hasNamedSlot(slots, 'option')">
@@ -186,11 +182,11 @@ const {
     </template>
 
     <template #empty v-if="hasNamedSlot(slots, 'empty')">
-      <component :is="resolveNamedSlot(slots, 'empty')" />
+      <SlotOrProp name="empty" :slots="slots" />
     </template>
 
     <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">
-      <component :is="resolveNamedSlot(slots, 'afterOptions')" />
+      <SlotOrProp :slots="slots" name="afterOptions" />
     </template>
   </Listbox>
 

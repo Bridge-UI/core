@@ -9,7 +9,7 @@ import type {
   TooltipOwnProps,
   TooltipSlots,
 } from "@/Components/Tooltip/tooltip.types";
-import { hasNamedSlot, resolveNamedSlot, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, SlotOrProp } from "@/Utils";
 
 defineSlots<TooltipSlots>();
 
@@ -73,10 +73,6 @@ const hasTrigger = computed(() => {
   return hasNamedSlot(slots, "trigger");
 });
 
-const panelBody = computed(() => {
-  return resolveSlotOrProp(slots, "default", merged.value.content);
-});
-
 const teleportDisabled = computed(() => {
   return merged.value.teleportTo === false;
 });
@@ -93,13 +89,14 @@ const teleportTarget = computed(() => {
 <template>
   <div v-if="hasTrigger" v-bind="rootBind">
     <div :ref="setTriggerRef" v-bind="triggerBind">
-      <component :is="resolveNamedSlot(slots, 'trigger')" />
+      <SlotOrProp name="trigger" :slots="slots" />
     </div>
   </div>
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <component :is="panelBody" />
+      <SlotOrProp name="default" :slots="slots" :fallback="merged.content" />
+
       <div v-if="arrowBind" :ref="setArrowRef" v-bind="arrowBind" />
     </div>
   </Teleport>

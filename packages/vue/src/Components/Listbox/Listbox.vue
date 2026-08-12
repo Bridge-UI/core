@@ -31,11 +31,7 @@ import {
 import { ListItem } from "@/Components/ListItem";
 import { ListSection } from "@/Components/ListSection";
 import { Progress } from "@/Components/Progress";
-import {
-  hasNamedSlot,
-  mergeNestedComponentProps,
-  resolveNamedSlot,
-} from "@/Utils";
+import { hasNamedSlot, mergeNestedComponentProps, SlotOrProp } from "@/Utils";
 
 defineSlots<ListboxSlots>();
 
@@ -283,18 +279,20 @@ const listBind = computed(() => {
     :custom-props="overlayCustomProps"
   >
     <div :class="surfaceBind">
-      <component
+      <SlotOrProp
+        :slots="slots"
+        name="beforeOptions"
         v-if="hasNamedSlot(slots, 'beforeOptions')"
-        :is="resolveNamedSlot(slots, 'beforeOptions')"
       />
 
       <template v-if="loading">
         <Progress v-bind="progressBind" />
 
         <div v-bind="messageBind">
-          <component
+          <SlotOrProp
+            name="loading"
+            :slots="slots"
             v-if="hasNamedSlot(slots, 'loading')"
-            :is="resolveNamedSlot(slots, 'loading')"
           />
 
           <span v-else>{{ loadingMessage }}</span>
@@ -343,14 +341,16 @@ const listBind = computed(() => {
         {{ emptyMessage }}
       </div>
 
-      <component
-        :is="resolveNamedSlot(slots, 'empty')"
+      <SlotOrProp
+        name="empty"
+        :slots="slots"
         v-else-if="showEmptyState && hasNamedSlot(slots, 'empty')"
       />
 
-      <component
+      <SlotOrProp
+        :slots="slots"
+        name="afterOptions"
         v-if="hasNamedSlot(slots, 'afterOptions')"
-        :is="resolveNamedSlot(slots, 'afterOptions')"
       />
 
       <div v-if="showFooter" v-bind="footerBind">

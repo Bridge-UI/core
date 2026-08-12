@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isEmpty, isNil, isString } from "es-toolkit/compat";
-import type { Slot, Slots, VNodeChild } from "vue";
+import { defineComponent, type PropType, type Slot, type Slots } from "vue";
 
 type VueSlots = Slots | undefined | Readonly<Slots>;
 
@@ -38,41 +38,43 @@ export function hasSlotOrProp(
 }
 
 /**
- * Slot render function for `<component :is="resolveNamedSlot(slots, name)" />`.
- * Returns the slot function itself so `:is` keeps a stable identity across parent
- * re-renders (wrapping in a new render function would remount slot content and drop
- * native states such as `:hover` / `:active` during hold-repeat).
+ * Renders `slots[name]()` when present, otherwise a text `fallback`.
+ * Stable component identity — avoids remounts when Vue recreates slot functions.
+ *
+ * @example
+ * ```vue
+ * <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
+ * ```
  */
-export function resolveNamedSlot(
-  slots: VueSlots,
-  name: string,
-): Slot | undefined {
-  return get(slots, name) as Slot | undefined;
-}
+export const SlotOrProp = defineComponent({
+  name: "SlotOrProp",
+  props: {
+    name: {
+      type: String,
+      required: true,
+    },
+    slots: {
+      default: undefined,
+      type: Object as PropType<VueSlots>,
+    },
+    fallback: {
+      default: undefined,
+      type: [Number, String] as PropType<null | number | string | undefined>,
+    },
+  },
+  setup(props) {
+    return () => {
+      const slotFn = get(props.slots, props.name) as Slot | undefined;
 
-/**
- * Render target for `<component :is="resolveSlotOrProp(slots, name, fallback)" />`.
- * Returns the named slot function when present; otherwise a render function for the
- * fallback prop.
- */
-export function resolveSlotOrProp(
-  slots: VueSlots,
-  name: string,
-  fallback?: null | number | string,
-): Slot | (() => null | VNodeChild) {
-  const slotFn = get(slots, name) as Slot | undefined;
+      if (!isNil(slotFn)) {
+        return slotFn();
+      }
 
-  if (!isNil(slotFn)) {
-    return slotFn;
-  }
+      if (!isPropPresent(props.fallback)) {
+        return null;
+      }
 
-  if (!isPropPresent(fallback)) {
-    return () => null;
-  }
-
-  const text = String(fallback);
-
-  return () => text;
-}
-
-export type { Slot };
+      return String(props.fallback);
+    };
+  },
+});

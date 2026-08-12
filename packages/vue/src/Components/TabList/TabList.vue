@@ -8,7 +8,7 @@ import type {
   TabListOwnProps,
   TabListSlots,
 } from "@/Components/TabList/tabList.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<TabListSlots>();
 
@@ -23,6 +23,6 @@ const { rootBind } = useTabList(props);
 
 <template>
   <div v-bind="rootBind">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <SlotOrProp name="default" :slots="slots" />
   </div>
 </template>

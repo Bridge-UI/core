@@ -8,6 +8,7 @@ import type {
   ListSectionOwnProps,
   ListSectionSlots,
 } from "@/Components/ListSection/listSection.types";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<ListSectionSlots>();
 
@@ -21,7 +22,7 @@ const props = withDefaults(defineProps<ListSectionOwnProps>(), {
   sticky: false,
 });
 
-const { label, merged, rootBind, titleBind } = useListSection(props, slots);
+const { merged, rootBind, titleBind } = useListSection(props);
 
 const rootTag = computed(() => {
   return merged.value.as ?? "li";
@@ -30,12 +31,12 @@ const rootTag = computed(() => {
 
 <template>
   <div v-bind="titleBind" v-if="rootTag === 'div'">
-    <component :is="label" />
+    <SlotOrProp name="default" :slots="slots" :fallback="merged.title" />
   </div>
 
   <component v-else :is="rootTag" v-bind="rootBind">
     <div v-bind="titleBind">
-      <component :is="label" />
+      <SlotOrProp name="default" :slots="slots" :fallback="merged.title" />
     </div>
   </component>
 </template>

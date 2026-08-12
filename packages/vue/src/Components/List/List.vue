@@ -5,7 +5,7 @@ import { computed, useSlots } from "vue";
 // ** Local Imports
 import { useList } from "@/Components/List/composables/useList";
 import type { ListOwnProps } from "@/Components/List/list.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 const slots = useSlots();
 
@@ -26,6 +26,6 @@ const rootTag = computed(() => {
 
 <template>
   <component :is="rootTag" v-bind="rootBind">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <SlotOrProp name="default" :slots="slots" />
   </component>
 </template>

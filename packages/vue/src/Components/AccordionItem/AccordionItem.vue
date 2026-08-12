@@ -9,7 +9,7 @@ import type {
 } from "@/Components/AccordionItem/accordionItem.types";
 import { useAccordionItem } from "@/Components/AccordionItem/composables/useAccordionItem";
 import { Icon } from "@/Components/Icon";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<AccordionItemSlots>();
 
@@ -26,7 +26,6 @@ const {
   panelBind,
   triggerBind,
   collapseBind,
-  hasTitleSlot,
   indicatorBind,
   panelInnerBind,
   hasIndicatorSlot,
@@ -37,17 +36,10 @@ const {
   <div v-bind="rootBind">
     <button v-bind="triggerBind">
       <span v-bind="titleBind">
-        <component v-if="hasTitleSlot" :is="resolveNamedSlot(slots, 'title')" />
-
-        <template v-else>
-          {{ merged.title }}
-        </template>
+        <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
       </span>
 
-      <component
-        v-if="hasIndicatorSlot"
-        :is="resolveNamedSlot(slots, 'indicator')"
-      />
+      <SlotOrProp :slots="slots" name="indicator" v-if="hasIndicatorSlot" />
 
       <Icon v-else icon="chevronDown" v-bind="indicatorBind" />
     </button>
@@ -55,7 +47,7 @@ const {
     <div v-bind="collapseBind">
       <div v-bind="panelInnerBind">
         <div v-bind="panelBind">
-          <component :is="resolveNamedSlot(slots, 'default')" />
+          <SlotOrProp name="default" :slots="slots" />
         </div>
       </div>
     </div>

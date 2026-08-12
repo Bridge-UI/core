@@ -8,7 +8,7 @@ import type {
   TabPanelOwnProps,
   TabPanelSlots,
 } from "@/Components/TabPanel/tabPanel.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<TabPanelSlots>();
 
@@ -23,6 +23,6 @@ const { rootBind, selected, keepMounted } = useTabPanel(props);
 
 <template>
   <div v-bind="rootBind" v-if="selected || keepMounted">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <SlotOrProp name="default" :slots="slots" />
   </div>
 </template>

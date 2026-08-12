@@ -7,8 +7,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  resolveNamedSlot,
-  resolveSlotOrProp,
+  SlotOrProp,
 } from "@/Utils";
 
 defineProps<{
@@ -28,7 +27,7 @@ defineProps<{
         v-bind="api.startSlotBind.value"
         v-if="hasNamedSlot(api.slots, 'start')"
       >
-        <component :is="resolveNamedSlot(api.slots, 'start')" />
+        <SlotOrProp name="start" :slots="api.slots" />
       </div>
 
       <div v-bind="api.stackedBodyBind.value">
@@ -42,10 +41,10 @@ defineProps<{
             v-bind="api.cornerBind.value"
             v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
           >
-            <component
-              :is="
-                resolveSlotOrProp(api.slots, 'corner', api.merged.value.corner)
-              "
+            <SlotOrProp
+              name="corner"
+              :slots="api.slots"
+              :fallback="api.merged.value.corner"
             />
           </span>
         </div>
@@ -102,7 +101,7 @@ defineProps<{
       </div>
 
       <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <component :is="resolveNamedSlot(api.slots, 'end')" />
+        <SlotOrProp name="end" :slots="api.slots" />
       </div>
     </div>
 
@@ -114,14 +113,10 @@ defineProps<{
         hasSlotOrProp(api.slots, 'description', api.merged.value.description)
       "
     >
-      <component
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'description',
-            api.merged.value.description,
-          )
-        "
+      <SlotOrProp
+        name="description"
+        :slots="api.slots"
+        :fallback="api.merged.value.description"
       />
     </p>
 
@@ -131,15 +126,11 @@ defineProps<{
       v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
-      <component
+      <SlotOrProp
+        :slots="api.slots"
+        name="errorMessage"
         v-if="api.showErrorMessageContent.value"
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'errorMessage',
-            api.merged.value.errorMessage,
-          )
-        "
+        :fallback="api.merged.value.errorMessage"
       />
     </p>
   </div>

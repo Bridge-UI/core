@@ -12,7 +12,7 @@ import type {
   AccordionSlots,
 } from "@/Components/Accordion/accordion.types";
 import { useAccordion } from "@/Components/Accordion/composables/useAccordion";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<AccordionSlots>();
 
@@ -45,6 +45,6 @@ const { rootBind } = useAccordion(
 
 <template>
   <div v-bind="rootBind">
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <SlotOrProp name="default" :slots="slots" />
   </div>
 </template>

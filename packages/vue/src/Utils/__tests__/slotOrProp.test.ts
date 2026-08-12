@@ -8,8 +8,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  resolveNamedSlot,
-  resolveSlotOrProp,
+  SlotOrProp,
 } from "@/Utils/slotOrProp";
 
 test("it should treat empty string as absent in isPropPresent", () => {
@@ -34,46 +33,61 @@ test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
 });
 
-test("it should return the stable slot function reference from resolveNamedSlot", () => {
-  const slotFn = () => h("span", "From slot");
+test("it should render SlotOrProp fallback without remounting on slot identity churn", async () => {
+  const slotA = () => h("span", "A");
+  const slotB = () => h("span", "B");
 
-  expect(resolveNamedSlot({}, "label")).toBeUndefined();
+  const Host = defineComponent({
+    props: {
+      slotFn: {
+        type: Function,
+        required: true,
+      },
+    },
+    setup(props) {
+      return () =>
+        h(SlotOrProp, {
+          name: "label",
+          slots: { label: props.slotFn as () => unknown },
+        });
+    },
+  });
 
-  expect(resolveNamedSlot({ label: slotFn }, "label")).toBe(slotFn);
+  const wrapper = mount(Host, { props: { slotFn: slotA } });
+
+  expect(wrapper.text()).toBe("A");
+
+  await wrapper.setProps({ slotFn: slotB });
+
+  expect(wrapper.text()).toBe("B");
 });
 
-test("it should return the stable slot function when present from resolveSlotOrProp", () => {
-  const slotFn = () => h("span", "From slot");
-
-  expect(
-    resolveSlotOrProp({ description: slotFn }, "description", "From prop"),
-  ).toBe(slotFn);
-});
-
-test("it should render fallback when slot is absent from resolveSlotOrProp", () => {
+test("it should render SlotOrProp text fallback when slot is absent", () => {
   const Comp = defineComponent({
     setup() {
       return () =>
-        h(resolveSlotOrProp({}, "description", "Inform your full name"));
+        h(SlotOrProp, {
+          slots: {},
+          name: "description",
+          fallback: "Inform your full name",
+        });
     },
   });
 
   expect(mount(Comp).text()).toBe("Inform your full name");
 });
 
-test("it should prefer slot over fallback in resolveSlotOrProp", () => {
+test("it should prefer slot over fallback in SlotOrProp", () => {
   const Comp = defineComponent({
     setup() {
       return () =>
-        h(
-          resolveSlotOrProp(
-            {
-              description: () => h("span", "From slot"),
-            },
-            "description",
-            "From prop",
-          ),
-        );
+        h(SlotOrProp, {
+          name: "description",
+          fallback: "From prop",
+          slots: {
+            description: () => h("span", "From slot"),
+          },
+        });
     },
   });
 
@@ -83,7 +97,12 @@ test("it should prefer slot over fallback in resolveSlotOrProp", () => {
 test("it should render nothing when both slot and fallback are absent", () => {
   const Comp = defineComponent({
     setup() {
-      return () => h(resolveSlotOrProp({}, "description", ""));
+      return () =>
+        h(SlotOrProp, {
+          slots: {},
+          fallback: "",
+          name: "description",
+        });
     },
   });
 

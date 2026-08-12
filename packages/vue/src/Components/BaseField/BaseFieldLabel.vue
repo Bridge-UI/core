@@ -6,7 +6,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  resolveNamedSlot,
+  SlotOrProp,
 } from "@/Utils";
 
 defineProps<{
@@ -19,9 +19,10 @@ defineProps<{
     v-bind="api.fieldLabelProps.value"
     v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
   >
-    <component
+    <SlotOrProp
+      name="label"
+      :slots="api.slots"
       v-if="hasNamedSlot(api.slots, 'label')"
-      :is="resolveNamedSlot(api.slots, 'label')"
     />
 
     <template v-else-if="isPropPresent(api.merged.value.label)">

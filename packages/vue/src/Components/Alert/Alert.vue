@@ -3,12 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  resolveNamedSlot,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, SlotOrProp } from "@/Utils";
 
 defineSlots<AlertSlots>();
 
@@ -36,9 +31,10 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <component
+    <SlotOrProp
+      name="header"
+      :slots="slots"
       v-if="hasNamedSlot(slots, 'header')"
-      :is="resolveNamedSlot(slots, 'header')"
     />
 
     <div
@@ -46,31 +42,26 @@ const {
       v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
     >
       <div class="flex items-start gap-x-3">
-        <template v-if="hasNamedSlot(slots, 'icon') || resolvedIcon">
-          <component
-            v-if="hasNamedSlot(slots, 'icon')"
-            :is="resolveNamedSlot(slots, 'icon')"
-          />
+        <SlotOrProp
+          name="icon"
+          :slots="slots"
+          v-if="hasNamedSlot(slots, 'icon')"
+        />
 
-          <Icon
-            v-bind="iconBind"
-            :icon="resolvedIcon"
-            v-else-if="resolvedIcon"
-          />
-        </template>
+        <Icon v-bind="iconBind" :icon="resolvedIcon" v-else-if="resolvedIcon" />
 
         <div v-bind="titleBind">
-          <component :is="resolveSlotOrProp(slots, 'title', merged.title)" />
+          <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
         </div>
       </div>
 
-      <component :is="resolveNamedSlot(slots, 'action')" />
+      <SlotOrProp name="action" :slots="slots" />
     </div>
 
     <div v-bind="bodyBind" v-if="hasDefaultBody">
-      <component :is="resolveNamedSlot(slots, 'default')" />
+      <SlotOrProp name="default" :slots="slots" />
     </div>
 
-    <component :is="resolveNamedSlot(slots, 'footer')" />
+    <SlotOrProp name="footer" :slots="slots" />
   </div>
 </template>

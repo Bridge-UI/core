@@ -9,7 +9,7 @@ import type {
   ModalOwnProps,
   ModalSlots,
 } from "@/Components/Modal/modal.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<ModalSlots>();
 
@@ -95,7 +95,7 @@ const showBackdrop = computed(() => {
 
       <div v-bind="wrapperBind">
         <div :ref="setPanelRef" v-bind="panelBind">
-          <component :is="resolveNamedSlot(slots, 'default')" />
+          <SlotOrProp name="default" :slots="slots" />
         </div>
       </div>
     </div>

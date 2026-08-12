@@ -12,7 +12,7 @@ import type {
   TabsOwnProps,
   TabsSlots,
 } from "@/Components/Tabs/tabs.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<TabsSlots>();
 
@@ -61,17 +61,17 @@ const hasTabItems = computed(() => {
           v-bind="props.customProps?.tab"
         >
           <template #start v-if="item.slots?.start">
-            <component :is="item.slots.start" />
+            <SlotOrProp name="start" :slots="item.slots" />
           </template>
 
           <template v-if="typeof item.label === 'string'">
             {{ item.label }}
           </template>
 
-          <component v-else :is="item.label" />
+          <SlotOrProp v-else name="default" :slots="{ default: item.label }" />
 
           <template #end v-if="item.slots?.end">
-            <component :is="item.slots.end" />
+            <SlotOrProp name="end" :slots="item.slots" />
           </template>
         </Tab>
       </TabList>
@@ -83,10 +83,10 @@ const hasTabItems = computed(() => {
         :keep-mounted="item.keepMounted"
         v-bind="props.customProps?.tabPanel"
       >
-        <component :is="item.panel" />
+        <SlotOrProp name="default" :slots="{ default: item.panel }" />
       </TabPanel>
     </template>
 
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <SlotOrProp name="default" :slots="slots" />
   </div>
 </template>

@@ -9,7 +9,7 @@ import type {
   DrawerOwnProps,
   DrawerSlots,
 } from "@/Components/Drawer/drawer.types";
-import { resolveNamedSlot } from "@/Utils";
+import { SlotOrProp } from "@/Utils";
 
 defineSlots<DrawerSlots>();
 
@@ -96,7 +96,7 @@ const showBackdrop = computed(() => {
 
       <div v-bind="wrapperBind">
         <div :ref="setPanelRef" v-bind="panelBind">
-          <component :is="resolveNamedSlot(slots, 'default')" />
+          <SlotOrProp name="default" :slots="slots" />
         </div>
       </div>
     </div>
