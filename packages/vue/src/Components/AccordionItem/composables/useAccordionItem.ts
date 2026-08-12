@@ -218,8 +218,8 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
       merged.value.customProps?.trigger,
       {},
       {
-        type: "button",
         onClick: handleClick,
+        type: "button" as const,
         disabled: disabled.value,
         onKeydown: handleKeyDown,
         "aria-expanded": expanded.value,
