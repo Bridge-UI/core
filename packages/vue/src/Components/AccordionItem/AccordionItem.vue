@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// ** External Imports
-import { useSlots } from "vue";
-
 // ** Local Imports
 import type {
   AccordionItemOwnProps,
@@ -9,17 +6,16 @@ import type {
 } from "@/Components/AccordionItem/accordionItem.types";
 import { useAccordionItem } from "@/Components/AccordionItem/composables/useAccordionItem";
 import { Icon } from "@/Components/Icon";
-import { SlotOrProp } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<AccordionItemSlots>();
-
-const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
 const props = defineProps<AccordionItemOwnProps>();
 
 const {
+  slots,
   merged,
   rootBind,
   titleBind,
@@ -36,10 +32,14 @@ const {
   <div v-bind="rootBind">
     <button v-bind="triggerBind">
       <span v-bind="titleBind">
-        <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
+        <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
+
+        <template v-else-if="isPropPresent(merged.title)">
+          {{ merged.title }}
+        </template>
       </span>
 
-      <SlotOrProp :slots="slots" name="indicator" v-if="hasIndicatorSlot" />
+      <slot name="indicator" v-if="hasIndicatorSlot" />
 
       <Icon v-else icon="chevronDown" v-bind="indicatorBind" />
     </button>
@@ -47,7 +47,7 @@ const {
     <div v-bind="collapseBind">
       <div v-bind="panelInnerBind">
         <div v-bind="panelBind">
-          <SlotOrProp name="default" :slots="slots" />
+          <slot />
         </div>
       </div>
     </div>

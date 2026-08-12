@@ -26,7 +26,6 @@ import {
   hasSlotOrProp,
   isPropPresent,
   mergePartBind,
-  resolveSlotOrProp,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -365,19 +364,29 @@ export function useListItem(
   });
 
   const primaryContent = derived(() => {
-    return resolveSlotOrProp({
-      slots,
-      name: "primary",
-      fallback: merged.primary ?? children,
-    });
+    if (hasNamedSlot(slots, "primary")) {
+      return slots?.primary;
+    }
+
+    const fallback = merged.primary ?? children;
+
+    if (isPropPresent(fallback)) {
+      return fallback;
+    }
+
+    return null;
   });
 
   const secondaryContent = derived(() => {
-    return resolveSlotOrProp({
-      slots,
-      name: "secondary",
-      fallback: merged.secondary,
-    });
+    if (hasNamedSlot(slots, "secondary")) {
+      return slots?.secondary;
+    }
+
+    if (isPropPresent(merged.secondary)) {
+      return merged.secondary;
+    }
+
+    return null;
   });
 
   return {

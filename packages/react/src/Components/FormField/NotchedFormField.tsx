@@ -4,12 +4,7 @@ import type { ReactNode } from "react";
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Icon } from "@/Components/Icon";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 type NotchedFormFieldProps = {
   api: UseFormFieldReturn;
@@ -31,11 +26,9 @@ function NotchedFormField({ api, children }: NotchedFormFieldProps) {
 
             {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
               <span {...api.cornerBind}>
-                {resolveSlotOrProp({
-                  name: "corner",
-                  slots: api.slots,
-                  fallback: api.merged.corner,
-                })}
+                {hasNamedSlot(api.slots, "corner")
+                  ? api.slots?.corner
+                  : api.merged.corner}
               </span>
             )}
           </div>
@@ -89,11 +82,9 @@ function NotchedFormField({ api, children }: NotchedFormFieldProps) {
       {!api.invalidated &&
         hasSlotOrProp(api.slots, "description", api.merged.description) && (
           <p {...api.descriptionBind} id={`${api.controlId}-description`}>
-            {resolveSlotOrProp({
-              slots: api.slots,
-              name: "description",
-              fallback: api.merged.description,
-            })}
+            {hasNamedSlot(api.slots, "description")
+              ? api.slots?.description
+              : api.merged.description}
           </p>
         )}
 
@@ -104,11 +95,11 @@ function NotchedFormField({ api, children }: NotchedFormFieldProps) {
           aria-hidden={api.showErrorMessageContent ? undefined : true}
         >
           {api.showErrorMessageContent &&
-            resolveSlotOrProp({
-              slots: api.slots,
-              name: "errorMessage",
-              fallback: api.merged.errorMessage,
-            })}
+            (hasNamedSlot(api.slots, "errorMessage")
+              ? api.slots?.errorMessage
+              : isPropPresent(api.merged.errorMessage)
+                ? api.merged.errorMessage
+                : null)}
         </p>
       )}
     </div>

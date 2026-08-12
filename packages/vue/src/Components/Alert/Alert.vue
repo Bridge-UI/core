@@ -3,7 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import { hasNamedSlot, hasSlotOrProp, SlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<AlertSlots>();
 
@@ -31,37 +31,33 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <SlotOrProp
-      name="header"
-      :slots="slots"
-      v-if="hasNamedSlot(slots, 'header')"
-    />
+    <slot name="header" v-if="hasNamedSlot(slots, 'header')" />
 
     <div
       class="flex justify-between items-start"
       v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
     >
       <div class="flex items-start gap-x-3">
-        <SlotOrProp
-          name="icon"
-          :slots="slots"
-          v-if="hasNamedSlot(slots, 'icon')"
-        />
+        <slot name="icon" v-if="hasNamedSlot(slots, 'icon')" />
 
         <Icon v-bind="iconBind" :icon="resolvedIcon" v-else-if="resolvedIcon" />
 
         <div v-bind="titleBind">
-          <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
+          <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
+
+          <template v-else-if="isPropPresent(merged.title)">
+            {{ merged.title }}
+          </template>
         </div>
       </div>
 
-      <SlotOrProp name="action" :slots="slots" />
+      <slot name="action" />
     </div>
 
     <div v-bind="bodyBind" v-if="hasDefaultBody">
-      <SlotOrProp name="default" :slots="slots" />
+      <slot />
     </div>
 
-    <SlotOrProp name="footer" :slots="slots" />
+    <slot name="footer" />
   </div>
 </template>

@@ -18,10 +18,13 @@ import type {
 import { AUTOCOMPLETE_OPTION_KEY } from "@/Components/Autocomplete/autocompleteInjectionKey";
 import { useAutocomplete } from "@/Components/Autocomplete/composables/useAutocomplete";
 import { Chip } from "@/Components/Chip";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
-import { hasNamedSlot, mergeNestedComponentProps, SlotOrProp } from "@/Utils";
+import { hasNamedSlot, mergeNestedComponentProps } from "@/Utils";
 
 defineSlots<AutocompleteSlots>();
 
@@ -105,6 +108,15 @@ const {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div
       v-if="multiple"
       class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
@@ -171,11 +183,11 @@ const {
     </template>
 
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
-      <SlotOrProp :slots="slots" name="beforeOptions" />
+      <slot name="beforeOptions" />
     </template>
 
     <template #loading v-if="hasNamedSlot(slots, 'loading')">
-      <SlotOrProp name="loading" :slots="slots" />
+      <slot name="loading" />
     </template>
 
     <template #option="slotProps" v-if="hasNamedSlot(slots, 'option')">
@@ -183,11 +195,11 @@ const {
     </template>
 
     <template #empty v-if="hasNamedSlot(slots, 'empty')">
-      <SlotOrProp name="empty" :slots="slots" />
+      <slot name="empty" />
     </template>
 
     <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">
-      <SlotOrProp :slots="slots" name="afterOptions" />
+      <slot name="afterOptions" />
     </template>
   </Listbox>
 

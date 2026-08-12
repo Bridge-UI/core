@@ -3,7 +3,10 @@
 import { computed, ref, useAttrs } from "vue";
 
 // ** Local Imports
-import { FormControl } from "@/Components/FormControl";
+import {
+  FORM_CONTROL_CHROME_SLOT_NAMES,
+  FormControl,
+} from "@/Components/FormControl";
 import { useSwitch } from "@/Components/Switch/composables/useSwitch";
 import type {
   SwitchOwnProps,
@@ -47,6 +50,14 @@ function onChange(event: Event) {
 
 <template>
   <FormControl :field="formControl">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_CONTROL_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <label v-bind="fieldBind">
       <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 

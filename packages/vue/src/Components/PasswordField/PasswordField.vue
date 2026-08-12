@@ -8,7 +8,10 @@ import { cn } from "@bridge-ui/core";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { usePasswordField } from "@/Components/PasswordField/composables/usePasswordField";
 import type {
@@ -70,6 +73,14 @@ const toggleBind = computed(() => {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter(
+        (n) => n !== 'end' && Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <input v-model="value" v-bind="inputBind" />
 
     <template #end>

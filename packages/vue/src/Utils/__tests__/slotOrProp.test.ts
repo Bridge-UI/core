@@ -8,7 +8,7 @@ import {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  SlotOrProp,
+  RenderFn,
 } from "@/Utils/slotOrProp";
 
 test("it should treat empty string as absent in isPropPresent", () => {
@@ -33,76 +33,35 @@ test("it should be true when slot or prop is present in hasSlotOrProp", () => {
   expect(hasSlotOrProp({ label: () => "x" }, "label", "")).toBe(true);
 });
 
-test("it should render SlotOrProp fallback without remounting on slot identity churn", async () => {
-  const slotA = () => h("span", "A");
-  const slotB = () => h("span", "B");
+test("it should render RenderFn without remounting on fn identity churn", async () => {
+  const fnA = () => h("span", "A");
+  const fnB = () => h("span", "B");
 
   const Host = defineComponent({
     props: {
-      slotFn: {
+      render: {
         type: Function,
         required: true,
       },
     },
     setup(props) {
-      return () =>
-        h(SlotOrProp, {
-          name: "label",
-          slots: { label: props.slotFn as () => unknown },
-        });
+      return () => h(RenderFn, { fn: props.render as () => unknown });
     },
   });
 
-  const wrapper = mount(Host, { props: { slotFn: slotA } });
+  const wrapper = mount(Host, { props: { render: fnA } });
 
   expect(wrapper.text()).toBe("A");
 
-  await wrapper.setProps({ slotFn: slotB });
+  await wrapper.setProps({ render: fnB });
 
   expect(wrapper.text()).toBe("B");
 });
 
-test("it should render SlotOrProp text fallback when slot is absent", () => {
+test("it should render nothing when RenderFn has no fn", () => {
   const Comp = defineComponent({
     setup() {
-      return () =>
-        h(SlotOrProp, {
-          slots: {},
-          name: "description",
-          fallback: "Inform your full name",
-        });
-    },
-  });
-
-  expect(mount(Comp).text()).toBe("Inform your full name");
-});
-
-test("it should prefer slot over fallback in SlotOrProp", () => {
-  const Comp = defineComponent({
-    setup() {
-      return () =>
-        h(SlotOrProp, {
-          name: "description",
-          fallback: "From prop",
-          slots: {
-            description: () => h("span", "From slot"),
-          },
-        });
-    },
-  });
-
-  expect(mount(Comp).text()).toBe("From slot");
-});
-
-test("it should render nothing when both slot and fallback are absent", () => {
-  const Comp = defineComponent({
-    setup() {
-      return () =>
-        h(SlotOrProp, {
-          slots: {},
-          fallback: "",
-          name: "description",
-        });
+      return () => h(RenderFn, {});
     },
   });
 

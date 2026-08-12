@@ -1,11 +1,14 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 
 // ** Local Imports
 import FormControlLabel from "@/Components/FormControl/FormControlLabel.vue";
 import type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";
-import { hasSlotOrProp, SlotOrProp } from "@/Utils";
+import type { FormControlSlots } from "@/Components/FormControl/formControl.types";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
+
+defineSlots<FormControlSlots>();
 
 defineOptions({ inheritAttrs: false });
 
@@ -13,8 +16,16 @@ const props = defineProps<{
   field: UseFormControlReturn;
 }>();
 
+const slots = useSlots();
+
 const api = computed((): UseFormControlReturn => {
-  return props.field;
+  return {
+    ...props.field,
+    slots: {
+      ...props.field.slots,
+      ...slots,
+    },
+  };
 });
 </script>
 
@@ -26,25 +37,29 @@ const api = computed((): UseFormControlReturn => {
     :aria-readonly="api.isReadonly.value || undefined"
   >
     <div v-bind="api.rowBind.value">
-      <FormControlLabel :api="api" name="startLabel" />
+      <FormControlLabel :api="api" name="startLabel">
+        <slot name="startLabel" />
+      </FormControlLabel>
 
       <slot />
 
-      <FormControlLabel :api="api" name="endLabel" />
+      <FormControlLabel :api="api" name="endLabel">
+        <slot name="endLabel" />
+      </FormControlLabel>
     </div>
 
     <p
       v-bind="api.descriptionBind.value"
       v-if="
         !api.invalidated.value &&
-        hasSlotOrProp(api.slots, 'description', api.merged.value.description)
+        hasSlotOrProp(slots, 'description', api.merged.value.description)
       "
     >
-      <SlotOrProp
-        name="description"
-        :slots="api.slots"
-        :fallback="api.merged.value.description"
-      />
+      <slot name="description" v-if="hasNamedSlot(slots, 'description')" />
+
+      <template v-else-if="isPropPresent(api.merged.value.description)">
+        {{ api.merged.value.description }}
+      </template>
     </p>
 
     <p
@@ -53,11 +68,11 @@ const api = computed((): UseFormControlReturn => {
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <template v-if="api.showErrorMessageContent.value">
-        <SlotOrProp
-          :slots="api.slots"
-          name="errorMessage"
-          :fallback="api.merged.value.errorMessage"
-        />
+        <slot name="errorMessage" v-if="hasNamedSlot(slots, 'errorMessage')" />
+
+        <template v-else-if="isPropPresent(api.merged.value.errorMessage)">
+          {{ api.merged.value.errorMessage }}
+        </template>
       </template>
     </p>
   </div>

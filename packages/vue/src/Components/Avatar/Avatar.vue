@@ -3,7 +3,6 @@
 import type { AvatarOwnProps, AvatarSlots } from "@/Components/Avatar";
 import { useAvatar } from "@/Components/Avatar";
 import { Icon } from "@/Components/Icon";
-import { SlotOrProp } from "@/Utils";
 
 defineOptions({ inheritAttrs: false });
 
@@ -12,7 +11,6 @@ defineSlots<AvatarSlots>();
 const props = defineProps<AvatarOwnProps>();
 
 const {
-  slots,
   merged,
   rootBind,
   iconBind,
@@ -32,11 +30,11 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <SlotOrProp name="default" :slots="slots" v-if="hasCustomContent" />
+    <slot v-if="hasCustomContent" />
 
     <img v-bind="imageBind" v-else-if="hasImage" />
 
-    <SlotOrProp :slots="slots" name="fallback" v-else-if="hasFallbackSlot" />
+    <slot name="fallback" v-else-if="hasFallbackSlot" />
 
     <span v-bind="fallbackBind" v-else-if="hasFallbackText">
       {{ merged.fallback }}

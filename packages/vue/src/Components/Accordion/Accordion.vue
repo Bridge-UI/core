@@ -1,7 +1,4 @@
 <script setup lang="ts">
-// ** External Imports
-import { useSlots } from "vue";
-
 // ** Core Imports
 import type { AccordionValue } from "@bridge-ui/core";
 
@@ -12,11 +9,8 @@ import type {
   AccordionSlots,
 } from "@/Components/Accordion/accordion.types";
 import { useAccordion } from "@/Components/Accordion/composables/useAccordion";
-import { SlotOrProp } from "@/Utils";
 
 defineSlots<AccordionSlots>();
-
-const slots = useSlots();
 
 const emit = defineEmits<AccordionEmits>();
 
@@ -45,6 +39,6 @@ const { rootBind } = useAccordion(
 
 <template>
   <div v-bind="rootBind">
-    <SlotOrProp name="default" :slots="slots" />
+    <slot />
   </div>
 </template>

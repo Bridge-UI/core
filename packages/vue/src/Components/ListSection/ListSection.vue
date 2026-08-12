@@ -8,7 +8,7 @@ import type {
   ListSectionOwnProps,
   ListSectionSlots,
 } from "@/Components/ListSection/listSection.types";
-import { SlotOrProp } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ListSectionSlots>();
 
@@ -31,12 +31,20 @@ const rootTag = computed(() => {
 
 <template>
   <div v-bind="titleBind" v-if="rootTag === 'div'">
-    <SlotOrProp name="default" :slots="slots" :fallback="merged.title" />
+    <slot v-if="hasNamedSlot(slots, 'default')" />
+
+    <template v-else-if="isPropPresent(merged.title)">
+      {{ merged.title }}
+    </template>
   </div>
 
   <component v-else :is="rootTag" v-bind="rootBind">
     <div v-bind="titleBind">
-      <SlotOrProp name="default" :slots="slots" :fallback="merged.title" />
+      <slot v-if="hasNamedSlot(slots, 'default')" />
+
+      <template v-else-if="isPropPresent(merged.title)">
+        {{ merged.title }}
+      </template>
     </div>
   </component>
 </template>

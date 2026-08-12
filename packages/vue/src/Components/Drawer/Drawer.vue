@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots } from "vue";
+import { computed } from "vue";
 
 // ** Local Imports
 import { useDrawer } from "@/Components/Drawer/composables/useDrawer";
@@ -9,11 +9,8 @@ import type {
   DrawerOwnProps,
   DrawerSlots,
 } from "@/Components/Drawer/drawer.types";
-import { SlotOrProp } from "@/Utils";
 
 defineSlots<DrawerSlots>();
-
-const slots = useSlots();
 
 const emit = defineEmits<DrawerEmits>();
 
@@ -96,7 +93,7 @@ const showBackdrop = computed(() => {
 
       <div v-bind="wrapperBind">
         <div :ref="setPanelRef" v-bind="panelBind">
-          <SlotOrProp name="default" :slots="slots" />
+          <slot />
         </div>
       </div>
     </div>

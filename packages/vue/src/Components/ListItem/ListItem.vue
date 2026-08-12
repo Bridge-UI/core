@@ -9,7 +9,7 @@ import type {
   ListItemOwnProps,
   ListItemSlots,
 } from "@/Components/ListItem/listItem.types";
-import { hasNamedSlot, SlotOrProp } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ListItemSlots>();
 
@@ -58,36 +58,31 @@ const hasEndSlot = computed(() => {
     <div v-if="interactiveBind" v-bind="interactiveBind">
       <div :class="rowClass">
         <div v-if="hasStart" v-bind="startBind">
-          <SlotOrProp name="start" :slots="slots" />
+          <slot name="start" />
         </div>
 
         <div v-bind="contentBind">
           <span v-if="hasPrimary" v-bind="primaryBind">
-            <SlotOrProp
-              name="primary"
-              :slots="slots"
-              v-if="hasNamedSlot(slots, 'primary')"
-            />
+            <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 
-            <SlotOrProp
-              v-else
-              name="default"
-              :slots="slots"
-              :fallback="merged.primary"
-            />
+            <slot v-else-if="hasNamedSlot(slots, 'default')" />
+
+            <template v-else-if="isPropPresent(merged.primary)">
+              {{ merged.primary }}
+            </template>
           </span>
 
           <span v-if="hasSecondary" v-bind="secondaryBind">
-            <SlotOrProp
-              :slots="slots"
-              name="secondary"
-              :fallback="merged.secondary"
-            />
+            <slot name="secondary" v-if="hasNamedSlot(slots, 'secondary')" />
+
+            <template v-else-if="isPropPresent(merged.secondary)">
+              {{ merged.secondary }}
+            </template>
           </span>
         </div>
 
         <div v-if="hasEnd" v-bind="endBind">
-          <SlotOrProp name="end" :slots="slots" v-if="hasEndSlot" />
+          <slot name="end" v-if="hasEndSlot" />
 
           <Icon
             v-bind="selectedIconBind"
@@ -100,36 +95,31 @@ const hasEndSlot = computed(() => {
 
     <div v-else :class="rowClass">
       <div v-if="hasStart" v-bind="startBind">
-        <SlotOrProp name="start" :slots="slots" />
+        <slot name="start" />
       </div>
 
       <div v-bind="contentBind">
         <span v-if="hasPrimary" v-bind="primaryBind">
-          <SlotOrProp
-            name="primary"
-            :slots="slots"
-            v-if="hasNamedSlot(slots, 'primary')"
-          />
+          <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 
-          <SlotOrProp
-            v-else
-            name="default"
-            :slots="slots"
-            :fallback="merged.primary"
-          />
+          <slot v-else-if="hasNamedSlot(slots, 'default')" />
+
+          <template v-else-if="isPropPresent(merged.primary)">
+            {{ merged.primary }}
+          </template>
         </span>
 
         <span v-if="hasSecondary" v-bind="secondaryBind">
-          <SlotOrProp
-            :slots="slots"
-            name="secondary"
-            :fallback="merged.secondary"
-          />
+          <slot name="secondary" v-if="hasNamedSlot(slots, 'secondary')" />
+
+          <template v-else-if="isPropPresent(merged.secondary)">
+            {{ merged.secondary }}
+          </template>
         </span>
       </div>
 
       <div v-if="hasEnd" v-bind="endBind">
-        <SlotOrProp name="end" :slots="slots" v-if="hasEndSlot" />
+        <slot name="end" v-if="hasEndSlot" />
 
         <Icon
           v-bind="selectedIconBind"

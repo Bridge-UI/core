@@ -1,13 +1,10 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots } from "vue";
+import { computed } from "vue";
 
 // ** Local Imports
 import { useList } from "@/Components/List/composables/useList";
 import type { ListOwnProps } from "@/Components/List/list.types";
-import { SlotOrProp } from "@/Utils";
-
-const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
@@ -26,6 +23,6 @@ const rootTag = computed(() => {
 
 <template>
   <component :is="rootTag" v-bind="rootBind">
-    <SlotOrProp name="default" :slots="slots" />
+    <slot />
   </component>
 </template>

@@ -11,6 +11,7 @@ import {
 } from "@bridge-ui/core";
 
 // ** Local Imports
+import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";
 import BaseField from "@/Components/BaseField/BaseField.vue";
 import { useSlider } from "@/Components/Slider/composables/useSlider";
 import type {
@@ -124,6 +125,15 @@ function setThumbRef(
 
 <template>
   <BaseField :field="baseField">
+    <template
+      #[name]="slotData"
+      v-for="name in BASE_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div v-bind="controlBind">
       <div :ref="setTrackRef" v-bind="trackBind">
         <div v-bind="barBind" />

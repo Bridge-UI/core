@@ -172,7 +172,7 @@ export {
   hasNamedSlot,
   hasSlotOrProp,
   isPropPresent,
-  SlotOrProp,
+  RenderFn,
 } from "@/Utils/slotOrProp";
 export { useBreakpoint } from "@/Utils/useBreakpoint";
 export type { UseBreakpointOptions } from "@/Utils/useBreakpoint";

@@ -6,7 +6,7 @@ import { useSlots } from "vue";
 import { Icon } from "@/Components/Icon";
 import { useTab } from "@/Components/Tab/composables/useTab";
 import type { TabOwnProps, TabSlots } from "@/Components/Tab/tab.types";
-import { hasNamedSlot, SlotOrProp } from "@/Utils";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<TabSlots>();
 
@@ -37,10 +37,10 @@ const {
     />
 
     <div v-bind="startSlotBind" v-else-if="hasNamedSlot(slots, 'start')">
-      <SlotOrProp name="start" :slots="slots" />
+      <slot name="start" />
     </div>
 
-    <SlotOrProp name="default" :slots="slots" />
+    <slot />
 
     <Icon
       :size="iconSize"
@@ -50,7 +50,7 @@ const {
     />
 
     <div v-bind="endSlotBind" v-else-if="hasNamedSlot(slots, 'end')">
-      <SlotOrProp name="end" :slots="slots" />
+      <slot name="end" />
     </div>
   </button>
 </template>

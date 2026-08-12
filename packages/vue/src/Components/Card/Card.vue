@@ -2,7 +2,7 @@
 // ** Local Imports
 import type { CardOwnProps, CardSlots } from "@/Components/Card/card.types";
 import { useCard } from "@/Components/Card/composables/useCard";
-import { hasNamedSlot, hasSlotOrProp, SlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<CardSlots>();
 
@@ -30,29 +30,29 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <SlotOrProp
-      name="header"
-      :slots="slots"
-      v-if="hasNamedSlot(slots, 'header')"
-    />
+    <slot name="header" v-if="hasNamedSlot(slots, 'header')" />
 
     <div
       v-bind="headerBind"
       v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
     >
       <div v-bind="titleBind">
-        <SlotOrProp name="title" :slots="slots" :fallback="merged.title" />
+        <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
+
+        <template v-else-if="isPropPresent(merged.title)">
+          {{ merged.title }}
+        </template>
       </div>
 
-      <SlotOrProp name="action" :slots="slots" />
+      <slot name="action" />
     </div>
 
     <div v-bind="bodyBind" v-if="hasDefaultBody">
-      <SlotOrProp name="default" :slots="slots" />
+      <slot />
     </div>
 
     <div v-if="hasFooter" v-bind="footerBind">
-      <SlotOrProp name="footer" :slots="slots" />
+      <slot name="footer" />
     </div>
   </div>
 </template>

@@ -6,27 +6,17 @@ import type { ReactNode } from "react";
 export type SlotMap = object;
 
 /**
- * Reads a named slot from the slot map.
- */
-function readSlot(
-  slots: SlotMap | undefined,
-  name: string,
-): ReactNode | undefined {
-  if (isNil(slots)) {
-    return undefined;
-  }
-
-  return get(slots as Record<string, ReactNode | undefined>, name);
-}
-
-/**
  * Whether a named slot was passed to the component.
  */
 export function hasNamedSlot(
   slots: SlotMap | undefined,
   name: string,
 ): boolean {
-  return !isNil(readSlot(slots, name));
+  if (isNil(slots)) {
+    return false;
+  }
+
+  return !isNil(get(slots as Record<string, ReactNode | undefined>, name));
 }
 
 /**
@@ -53,29 +43,4 @@ export function hasSlotOrProp(
   prop: unknown,
 ): boolean {
   return hasNamedSlot(slots, name) || isPropPresent(prop);
-}
-
-/**
- * Renders the named slot when present; otherwise the fallback prop.
- */
-export function resolveSlotOrProp({
-  name,
-  slots,
-  fallback,
-}: {
-  fallback?: ReactNode;
-  name: string;
-  slots?: SlotMap;
-}): ReactNode {
-  const slot = readSlot(slots, name);
-
-  if (!isNil(slot)) {
-    return slot;
-  }
-
-  if (!isPropPresent(fallback)) {
-    return null;
-  }
-
-  return fallback;
 }

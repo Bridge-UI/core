@@ -9,7 +9,7 @@ import type {
   MenuOwnProps,
   MenuSlots,
 } from "@/Components/Menu/menu.types";
-import { hasNamedSlot, SlotOrProp } from "@/Utils";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<MenuSlots>();
 
@@ -85,13 +85,13 @@ const teleportTarget = computed(() => {
 <template>
   <div v-if="hasTrigger" v-bind="rootBind">
     <div :ref="setTriggerRef" v-bind="triggerBind">
-      <SlotOrProp name="trigger" :slots="slots" />
+      <slot name="trigger" />
     </div>
   </div>
 
   <Teleport :to="teleportTarget" :disabled="teleportDisabled">
     <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
-      <SlotOrProp name="default" :slots="slots" />
+      <slot />
     </div>
   </Teleport>
 </template>

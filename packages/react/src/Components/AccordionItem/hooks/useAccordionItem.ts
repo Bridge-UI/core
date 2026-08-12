@@ -22,8 +22,8 @@ import type {
 import {
   derived,
   hasNamedSlot,
+  isPropPresent,
   mergePartBind,
-  resolveSlotOrProp,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -89,11 +89,15 @@ export function useAccordionItem(props: AccordionItemProps) {
   });
 
   const titleContent = derived(() => {
-    return resolveSlotOrProp({
-      slots,
-      name: "title",
-      fallback: merged.title,
-    });
+    if (hasNamedSlot(slots, "title")) {
+      return slots?.title;
+    }
+
+    if (isPropPresent(merged.title)) {
+      return merged.title;
+    }
+
+    return null;
   });
 
   const hasIndicatorSlot = derived(() => {

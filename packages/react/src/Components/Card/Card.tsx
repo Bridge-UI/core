@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { CardProps } from "@/Components/Card";
 import { useCard } from "@/Components/Card";
-import { hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 function Card(props: CardProps) {
   const {
@@ -29,11 +29,7 @@ function Card(props: CardProps) {
       {!slots?.header && hasSlotOrProp(slots, "title", merged.title) && (
         <div {...headerBind}>
           <div {...titleBind}>
-            {resolveSlotOrProp({
-              slots,
-              name: "title",
-              fallback: merged.title,
-            })}
+            {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
           </div>
 
           {slots?.action}

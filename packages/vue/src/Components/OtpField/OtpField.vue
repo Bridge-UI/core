@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
+import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";
 import BaseField from "@/Components/BaseField/BaseField.vue";
 import { useOtpField } from "@/Components/OtpField/composables/useOtpField";
 import type {
@@ -46,6 +47,15 @@ const {
 
 <template>
   <BaseField :field="baseField">
+    <template
+      #[name]="slotData"
+      v-for="name in BASE_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div v-bind="pinsBind">
       <div
         :key="index"

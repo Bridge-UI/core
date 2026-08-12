@@ -1,18 +1,18 @@
 <script setup lang="ts">
+// ** External Imports
+import { useSlots } from "vue";
+
 // ** Local Imports
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import { Icon } from "@/Components/Icon";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  SlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineProps<{
   api: UseFormFieldReturn;
 }>();
+
+const slots = useSlots();
 </script>
 
 <template>
@@ -23,11 +23,8 @@ defineProps<{
     :aria-readonly="api.isReadonly.value || undefined"
   >
     <div v-bind="api.containerBind.value">
-      <div
-        v-bind="api.startSlotBind.value"
-        v-if="hasNamedSlot(api.slots, 'start')"
-      >
-        <SlotOrProp name="start" :slots="api.slots" />
+      <div v-bind="api.startSlotBind.value" v-if="hasNamedSlot(slots, 'start')">
+        <slot name="start" />
       </div>
 
       <div v-bind="api.stackedBodyBind.value">
@@ -35,17 +32,19 @@ defineProps<{
           v-if="api.hasInsetLabelRow.value"
           v-bind="api.insetLabelRowBind.value"
         >
-          <FormFieldLabel :api="api" />
+          <FormFieldLabel :api="api">
+            <slot name="label" />
+          </FormFieldLabel>
 
           <span
             v-bind="api.cornerBind.value"
-            v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
+            v-if="hasSlotOrProp(slots, 'corner', api.merged.value.corner)"
           >
-            <SlotOrProp
-              name="corner"
-              :slots="api.slots"
-              :fallback="api.merged.value.corner"
-            />
+            <slot name="corner" v-if="hasNamedSlot(slots, 'corner')" />
+
+            <template v-else-if="isPropPresent(api.merged.value.corner)">
+              {{ api.merged.value.corner }}
+            </template>
           </span>
         </div>
 
@@ -100,8 +99,8 @@ defineProps<{
         </div>
       </div>
 
-      <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <SlotOrProp name="end" :slots="api.slots" />
+      <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(slots, 'end')">
+        <slot name="end" />
       </div>
     </div>
 
@@ -110,14 +109,14 @@ defineProps<{
       :id="`${api.controlId.value}-description`"
       v-if="
         !api.invalidated.value &&
-        hasSlotOrProp(api.slots, 'description', api.merged.value.description)
+        hasSlotOrProp(slots, 'description', api.merged.value.description)
       "
     >
-      <SlotOrProp
-        name="description"
-        :slots="api.slots"
-        :fallback="api.merged.value.description"
-      />
+      <slot name="description" v-if="hasNamedSlot(slots, 'description')" />
+
+      <template v-else-if="isPropPresent(api.merged.value.description)">
+        {{ api.merged.value.description }}
+      </template>
     </p>
 
     <p
@@ -126,12 +125,13 @@ defineProps<{
       v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
-      <SlotOrProp
-        :slots="api.slots"
-        name="errorMessage"
-        v-if="api.showErrorMessageContent.value"
-        :fallback="api.merged.value.errorMessage"
-      />
+      <template v-if="api.showErrorMessageContent.value">
+        <slot name="errorMessage" v-if="hasNamedSlot(slots, 'errorMessage')" />
+
+        <template v-else-if="isPropPresent(api.merged.value.errorMessage)">
+          {{ api.merged.value.errorMessage }}
+        </template>
+      </template>
     </p>
   </div>
 </template>
