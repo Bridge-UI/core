@@ -20,12 +20,25 @@ export interface AccordionVariantItem {
 
 /**
  * Accordion visual variants.
+ *
+ * Structural axis: flush (`default`) → boxed (`outlined`) → cards (`separated`).
+ * Quiet option: `plain` (spacing + hover, no borders).
  */
 export interface AccordionVariant {
   /**
    * Flush stacked sections with shared dividers. Default.
    */
   "default": AccordionVariantItem;
+
+  /**
+   * Boxed group: single outer border + internal dividers, no gap.
+   */
+  "outlined": AccordionVariantItem;
+
+  /**
+   * Quiet layout: soft spacing and hover, no borders.
+   */
+  "plain": AccordionVariantItem;
 
   /**
    * Separated cards with gap and individual borders.
@@ -37,6 +50,12 @@ export interface AccordionVariant {
  * Default accordion variant class maps.
  */
 export const variantProps: AccordionVariant = {
+  "plain": {
+    "root": "flex flex-col gap-1",
+    "item": "overflow-hidden rounded-lg",
+    "trigger":
+      "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
+  },
   "default": {
     "item": "",
     "trigger":
@@ -50,5 +69,12 @@ export const variantProps: AccordionVariant = {
       "overflow-hidden rounded-lg border border-dark-200 dark:border-dark-700",
     "trigger":
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
+  },
+  "outlined": {
+    "item": "",
+    "trigger":
+      "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
+    "root":
+      "overflow-hidden rounded-lg border border-dark-200 divide-y divide-dark-200 dark:border-dark-700 dark:divide-dark-700",
   },
 };

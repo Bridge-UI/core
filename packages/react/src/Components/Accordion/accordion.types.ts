@@ -106,7 +106,7 @@ export interface AccordionOwnProps {
   value?: AccordionValue;
 
   /**
-   * Visual layout (flush vs gap/borders).
+   * Visual layout: flush (`default`), boxed (`outlined`), quiet (`plain`), or cards (`separated`).
    *
    * @default "default"
    */

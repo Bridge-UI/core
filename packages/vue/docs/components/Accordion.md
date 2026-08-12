@@ -37,10 +37,36 @@ import { AccordionItem } from "@bridge-ui/vue/Components/AccordionItem";
 </Accordion>
 ```
 
+### Outlined variant
+
+```vue
+<Accordion model-value="a" variant="outlined">
+  <AccordionItem title="Shipping" value="a">
+    Delivery in 2–5 business days.
+  </AccordionItem>
+  <AccordionItem title="Returns" value="b">
+    Free returns within 30 days.
+  </AccordionItem>
+</Accordion>
+```
+
 ### Separated variant
 
 ```vue
-<Accordion variant="separated" model-value="a">
+<Accordion model-value="a" variant="separated">
+  <AccordionItem title="Shipping" value="a">
+    Delivery in 2–5 business days.
+  </AccordionItem>
+  <AccordionItem title="Returns" value="b">
+    Free returns within 30 days.
+  </AccordionItem>
+</Accordion>
+```
+
+### Plain variant
+
+```vue
+<Accordion model-value="a" variant="plain">
   <AccordionItem title="Shipping" value="a">
     Delivery in 2–5 business days.
   </AccordionItem>
