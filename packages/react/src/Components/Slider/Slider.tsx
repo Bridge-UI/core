@@ -44,8 +44,6 @@ function Slider(props: SliderProps) {
     getThumbKnobBind,
   } = api;
 
-  const { slots } = baseField;
-
   const thumbRefs = [thumb0Ref, thumb1Ref] as const;
 
   return (
@@ -68,8 +66,8 @@ function Slider(props: SliderProps) {
                 {...thumbBind}
                 ref={thumbRefs[thumbIndex]}
               >
-                {hasNamedSlot(slots, "thumb") ? (
-                  slots?.thumb
+                {hasNamedSlot(props.slots, "thumb") ? (
+                  props.slots?.thumb
                 ) : (
                   <span {...knobBind} />
                 )}
