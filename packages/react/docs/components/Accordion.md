@@ -39,10 +39,36 @@ const [open, setOpen] = useState<string | string[]>("a");
 </Accordion>
 ```
 
+### Outlined variant
+
+```tsx
+<Accordion defaultValue="a" variant="outlined">
+  <AccordionItem title="Shipping" value="a">
+    Delivery in 2–5 business days.
+  </AccordionItem>
+  <AccordionItem title="Returns" value="b">
+    Free returns within 30 days.
+  </AccordionItem>
+</Accordion>
+```
+
 ### Separated variant
 
 ```tsx
-<Accordion variant="separated" defaultValue="a">
+<Accordion defaultValue="a" variant="separated">
+  <AccordionItem title="Shipping" value="a">
+    Delivery in 2–5 business days.
+  </AccordionItem>
+  <AccordionItem title="Returns" value="b">
+    Free returns within 30 days.
+  </AccordionItem>
+</Accordion>
+```
+
+### Plain variant
+
+```tsx
+<Accordion defaultValue="a" variant="plain">
   <AccordionItem title="Shipping" value="a">
     Delivery in 2–5 business days.
   </AccordionItem>

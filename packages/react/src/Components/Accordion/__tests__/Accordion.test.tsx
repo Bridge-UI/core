@@ -121,6 +121,39 @@ test("it should move focus with arrow keys", () => {
   );
 });
 
+test("it should apply outlined variant classes on the root", () => {
+  const { container } = render(
+    <Accordion defaultValue="a" variant="outlined">
+      <AccordionItem value="a" title="One">
+        First
+      </AccordionItem>
+    </Accordion>,
+  );
+
+  const className = container.firstElementChild?.className ?? "";
+
+  expect(className).toContain("border");
+  expect(className).toContain("divide-y");
+  expect(className).not.toContain("gap-2");
+  expect(className).toContain("rounded-lg");
+});
+
+test("it should apply plain variant classes on the root", () => {
+  const { container } = render(
+    <Accordion variant="plain" defaultValue="a">
+      <AccordionItem value="a" title="One">
+        First
+      </AccordionItem>
+    </Accordion>,
+  );
+
+  const className = container.firstElementChild?.className ?? "";
+
+  expect(className).toContain("gap-1");
+  expect(className).not.toContain("border");
+  expect(className).not.toContain("divide-y");
+});
+
 test("it should apply separated variant classes on the root", () => {
   const { container } = render(
     <Accordion defaultValue="a" variant="separated">

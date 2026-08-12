@@ -144,6 +144,53 @@ test("it should allow multiple expanded items when multiple is true", async () =
   expect(wrapper.emitted("update:modelValue")?.at(-1)?.[0]).toEqual(["a", "b"]);
 });
 
+test("it should apply outlined variant classes on the root", () => {
+  const wrapper = mountAccordion({
+    props: { modelValue: "a", variant: "outlined" },
+    slots: {
+      default: () => [
+        h(
+          AccordionItem,
+          { value: "a", title: "One" },
+          {
+            default: () => "First",
+          },
+        ),
+      ],
+    },
+  });
+
+  const className = wrapper.classes().join(" ");
+
+  expect(className).toContain("border");
+  expect(className).toContain("divide-y");
+  expect(className).not.toContain("gap-2");
+  expect(className).toContain("rounded-lg");
+});
+
+test("it should apply plain variant classes on the root", () => {
+  const wrapper = mountAccordion({
+    props: { modelValue: "a", variant: "plain" },
+    slots: {
+      default: () => [
+        h(
+          AccordionItem,
+          { value: "a", title: "One" },
+          {
+            default: () => "First",
+          },
+        ),
+      ],
+    },
+  });
+
+  const className = wrapper.classes().join(" ");
+
+  expect(className).toContain("gap-1");
+  expect(className).not.toContain("border");
+  expect(className).not.toContain("divide-y");
+});
+
 test("it should apply separated variant classes on the root", () => {
   const wrapper = mountAccordion({
     props: { modelValue: "a", variant: "separated" },
