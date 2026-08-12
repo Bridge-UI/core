@@ -219,41 +219,55 @@ test("it should apply error color on the label when error is set", () => {
 });
 
 test("it should render start slot content", () => {
-  const wrapper = mount(
-    defineComponent({
-      setup() {
-        const field = useFormField({}, libDefaults);
+  const Host = defineComponent({
+    inheritAttrs: false,
+    setup(_, { slots }) {
+      const field = useFormField({}, libDefaults);
 
-        return () =>
-          h(FormField, { field }, () => h("input", field.inputBind.value));
-      },
-    }),
-    {
-      slots: {
-        start: () => h("span", { "data-testid": "start-slot" }, "$"),
-      },
+      return () =>
+        h(
+          FormField,
+          { field },
+          {
+            ...slots,
+            default: () => h("input", field.inputBind.value),
+          },
+        );
     },
-  );
+  });
+
+  const wrapper = mount(Host, {
+    slots: {
+      start: () => h("span", { "data-testid": "start-slot" }, "$"),
+    },
+  });
 
   expect(wrapper.find('[data-testid="start-slot"]').exists()).toBe(true);
 });
 
 test("it should render end slot content", () => {
-  const wrapper = mount(
-    defineComponent({
-      setup() {
-        const field = useFormField({}, libDefaults);
+  const Host = defineComponent({
+    inheritAttrs: false,
+    setup(_, { slots }) {
+      const field = useFormField({}, libDefaults);
 
-        return () =>
-          h(FormField, { field }, () => h("input", field.inputBind.value));
-      },
-    }),
-    {
-      slots: {
-        end: () => h("span", { "data-testid": "end-slot" }, "€"),
-      },
+      return () =>
+        h(
+          FormField,
+          { field },
+          {
+            ...slots,
+            default: () => h("input", field.inputBind.value),
+          },
+        );
     },
-  );
+  });
+
+  const wrapper = mount(Host, {
+    slots: {
+      end: () => h("span", { "data-testid": "end-slot" }, "€"),
+    },
+  });
 
   expect(wrapper.find('[data-testid="end-slot"]').exists()).toBe(true);
 });
@@ -344,22 +358,29 @@ test("it should merge classes.input onto the control", () => {
 });
 
 test("it should render errorMessage slot as the error region", () => {
-  const wrapper = mount(
-    defineComponent({
-      setup() {
-        const field = useFormField({ error: true }, libDefaults);
+  const Host = defineComponent({
+    inheritAttrs: false,
+    setup(_, { slots }) {
+      const field = useFormField({ error: true }, libDefaults);
 
-        return () =>
-          h(FormField, { field }, () => h("input", field.inputBind.value));
-      },
-    }),
-    {
-      slots: {
-        errorMessage: () =>
-          h("span", { "data-testid": "custom-error" }, "Validation failed"),
-      },
+      return () =>
+        h(
+          FormField,
+          { field },
+          {
+            ...slots,
+            default: () => h("input", field.inputBind.value),
+          },
+        );
     },
-  );
+  });
+
+  const wrapper = mount(Host, {
+    slots: {
+      errorMessage: () =>
+        h("span", { "data-testid": "custom-error" }, "Validation failed"),
+    },
+  });
 
   expect(wrapper.find('[data-testid="custom-error"]').exists()).toBe(true);
 });

@@ -1,12 +1,7 @@
 // ** Local Imports
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Label } from "@/Components/Label";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 type FormFieldLabelProps = {
   api: UseFormFieldReturn;
@@ -21,18 +16,8 @@ function FormFieldLabel({ api }: FormFieldLabelProps) {
   }
 
   const content = hasNamedSlot(api.slots, "label")
-    ? resolveSlotOrProp({
-        name: "label",
-        slots: api.slots,
-        fallback: api.merged.label,
-      })
-    : isPropPresent(api.merged.label)
-      ? api.merged.label
-      : null;
-
-  if (content === null) {
-    return null;
-  }
+    ? api.slots?.label
+    : api.merged.label;
 
   return <Label {...api.fieldLabelProps}>{content}</Label>;
 }

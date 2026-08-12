@@ -4,7 +4,10 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref, useTemplateRef, watch } from "vue";
 
 // ** Local Imports
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { useTextarea } from "@/Components/Textarea/composables/useTextarea";
 import type {
   TextareaOwnProps,
@@ -47,6 +50,14 @@ watch(value, () => {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <textarea ref="textarea" v-model="value" v-bind="textareaBind" />
   </FormField>
 </template>

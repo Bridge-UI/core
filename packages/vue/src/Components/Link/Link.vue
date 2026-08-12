@@ -3,7 +3,7 @@
 import { Icon } from "@/Components/Icon";
 import { useLink } from "@/Components/Link/composables/useLink";
 import type { LinkOwnProps, LinkSlots } from "@/Components/Link/link.types";
-import { hasNamedSlot, resolveNamedSlot } from "@/Utils";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<LinkSlots>();
 
@@ -36,10 +36,7 @@ const {
     :target="rootTarget"
     :aria-disabled="rootAriaDisabled"
   >
-    <component
-      v-if="hasNamedSlot(slots, 'prepend')"
-      :is="resolveNamedSlot(slots, 'prepend')"
-    />
+    <slot name="prepend" v-if="hasNamedSlot(slots, 'prepend')" />
 
     <Icon
       :size="merged.size"
@@ -48,12 +45,9 @@ const {
       v-else-if="merged.leftIcon"
     />
 
-    <component :is="resolveNamedSlot(slots, 'default')" />
+    <slot />
 
-    <component
-      v-if="hasNamedSlot(slots, 'append')"
-      :is="resolveNamedSlot(slots, 'append')"
-    />
+    <slot name="append" v-if="hasNamedSlot(slots, 'append')" />
 
     <Icon
       :size="merged.size"

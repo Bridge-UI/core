@@ -3,12 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  resolveNamedSlot,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<AlertSlots>();
 
@@ -36,41 +31,33 @@ const {
 
 <template>
   <div v-bind="rootBind">
-    <component
-      v-if="hasNamedSlot(slots, 'header')"
-      :is="resolveNamedSlot(slots, 'header')"
-    />
+    <slot name="header" v-if="hasNamedSlot(slots, 'header')" />
 
     <div
       class="flex justify-between items-start"
       v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
     >
       <div class="flex items-start gap-x-3">
-        <template v-if="hasNamedSlot(slots, 'icon') || resolvedIcon">
-          <component
-            v-if="hasNamedSlot(slots, 'icon')"
-            :is="resolveNamedSlot(slots, 'icon')"
-          />
+        <slot name="icon" v-if="hasNamedSlot(slots, 'icon')" />
 
-          <Icon
-            v-bind="iconBind"
-            :icon="resolvedIcon"
-            v-else-if="resolvedIcon"
-          />
-        </template>
+        <Icon v-bind="iconBind" :icon="resolvedIcon" v-else-if="resolvedIcon" />
 
         <div v-bind="titleBind">
-          <component :is="resolveSlotOrProp(slots, 'title', merged.title)" />
+          <slot name="title" v-if="hasNamedSlot(slots, 'title')" />
+
+          <template v-else-if="isPropPresent(merged.title)">
+            {{ merged.title }}
+          </template>
         </div>
       </div>
 
-      <component :is="resolveNamedSlot(slots, 'action')" />
+      <slot name="action" />
     </div>
 
     <div v-bind="bodyBind" v-if="hasDefaultBody">
-      <component :is="resolveNamedSlot(slots, 'default')" />
+      <slot />
     </div>
 
-    <component :is="resolveNamedSlot(slots, 'footer')" />
+    <slot name="footer" />
   </div>
 </template>

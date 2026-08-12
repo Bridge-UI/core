@@ -1,31 +1,26 @@
 <script setup lang="ts">
+// ** External Imports
+import { useSlots } from "vue";
+
 // ** Local Imports
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import { Label } from "@/Components/Label";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveNamedSlot,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 defineProps<{
   api: UseFormFieldReturn;
 }>();
+
+const slots = useSlots();
 </script>
 
 <template>
   <Label
     v-bind="api.fieldLabelProps.value"
-    v-if="hasSlotOrProp(api.slots, 'label', api.merged.value.label)"
+    v-if="hasSlotOrProp(slots, 'label', api.merged.value.label)"
   >
-    <component
-      v-if="hasNamedSlot(api.slots, 'label')"
-      :is="resolveNamedSlot(api.slots, 'label')"
-    />
+    <slot name="label" v-if="hasNamedSlot(slots, 'label')" />
 
-    <template v-else-if="isPropPresent(api.merged.value.label)">
-      {{ api.merged.value.label }}
-    </template>
+    <template v-else>{{ api.merged.value.label }}</template>
   </Label>
 </template>

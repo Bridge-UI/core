@@ -6,12 +6,7 @@ import { computed, useSlots } from "vue";
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel.vue";
 import type { BaseFieldSlots } from "@/Components/BaseField/baseField.types";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/composables/useBaseField";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  resolveNamedSlot,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<BaseFieldSlots>();
 
@@ -21,22 +16,22 @@ const props = defineProps<{
   field: UseBaseFieldReturn;
 }>();
 
-const localSlots = useSlots();
+const slots = useSlots();
 
 const api = computed((): UseBaseFieldReturn => {
   return {
     ...props.field,
     slots: {
       ...props.field.slots,
-      ...localSlots,
+      ...slots,
     },
   };
 });
 
 const showHeader = computed(() => {
   return (
-    hasSlotOrProp(api.value.slots, "label", api.value.merged.value.label) ||
-    hasSlotOrProp(api.value.slots, "corner", api.value.merged.value.corner)
+    hasSlotOrProp(slots, "label", api.value.merged.value.label) ||
+    hasSlotOrProp(slots, "corner", api.value.merged.value.corner)
   );
 });
 </script>
@@ -49,30 +44,33 @@ const showHeader = computed(() => {
     :aria-readonly="api.isReadonly.value || undefined"
   >
     <div v-if="showHeader" v-bind="api.headerBind.value">
-      <BaseFieldLabel :api="api" />
+      <BaseFieldLabel :api="api">
+        <template #label v-if="hasNamedSlot(slots, 'label')">
+          <slot name="label" />
+        </template>
+      </BaseFieldLabel>
 
       <span
         v-bind="api.cornerBind.value"
-        v-if="hasSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
+        v-if="hasSlotOrProp(slots, 'corner', api.merged.value.corner)"
       >
-        <component
-          :is="resolveSlotOrProp(api.slots, 'corner', api.merged.value.corner)"
-        />
+        <slot name="corner" v-if="hasNamedSlot(slots, 'corner')" />
+
+        <template v-else-if="isPropPresent(api.merged.value.corner)">
+          {{ api.merged.value.corner }}
+        </template>
       </span>
     </div>
 
     <div v-bind="api.groupBind.value">
-      <div
-        v-bind="api.startSlotBind.value"
-        v-if="hasNamedSlot(api.slots, 'start')"
-      >
-        <component :is="resolveNamedSlot(api.slots, 'start')" />
+      <div v-bind="api.startSlotBind.value" v-if="hasNamedSlot(slots, 'start')">
+        <slot name="start" />
       </div>
 
       <slot />
 
-      <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(api.slots, 'end')">
-        <component :is="resolveNamedSlot(api.slots, 'end')" />
+      <div v-bind="api.endSlotBind.value" v-if="hasNamedSlot(slots, 'end')">
+        <slot name="end" />
       </div>
     </div>
 
@@ -81,18 +79,14 @@ const showHeader = computed(() => {
       :id="`${api.controlId.value}-description`"
       v-if="
         !api.invalidated.value &&
-        hasSlotOrProp(api.slots, 'description', api.merged.value.description)
+        hasSlotOrProp(slots, 'description', api.merged.value.description)
       "
     >
-      <component
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'description',
-            api.merged.value.description,
-          )
-        "
-      />
+      <slot name="description" v-if="hasNamedSlot(slots, 'description')" />
+
+      <template v-else-if="isPropPresent(api.merged.value.description)">
+        {{ api.merged.value.description }}
+      </template>
     </p>
 
     <p
@@ -101,16 +95,13 @@ const showHeader = computed(() => {
       v-if="!api.merged.value.hideErrorMessage"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
-      <component
-        v-if="api.showErrorMessageContent.value"
-        :is="
-          resolveSlotOrProp(
-            api.slots,
-            'errorMessage',
-            api.merged.value.errorMessage,
-          )
-        "
-      />
+      <template v-if="api.showErrorMessageContent.value">
+        <slot name="errorMessage" v-if="hasNamedSlot(slots, 'errorMessage')" />
+
+        <template v-else-if="isPropPresent(api.merged.value.errorMessage)">
+          {{ api.merged.value.errorMessage }}
+        </template>
+      </template>
     </p>
   </div>
 </template>

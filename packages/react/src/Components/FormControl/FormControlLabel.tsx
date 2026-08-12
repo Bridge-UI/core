@@ -1,12 +1,7 @@
 // ** Local Imports
 import type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";
 import { Label } from "@/Components/Label";
-import {
-  hasNamedSlot,
-  hasSlotOrProp,
-  isPropPresent,
-  resolveSlotOrProp,
-} from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 type FormControlLabelPart = "endLabel" | "startLabel";
 
@@ -25,19 +20,7 @@ function FormControlLabel({ api, name }: FormControlLabelProps) {
     return null;
   }
 
-  const content = hasNamedSlot(api.slots, name)
-    ? resolveSlotOrProp({
-        name,
-        fallback: value,
-        slots: api.slots,
-      })
-    : isPropPresent(value)
-      ? value
-      : null;
-
-  if (content === null) {
-    return null;
-  }
+  const content = hasNamedSlot(api.slots, name) ? api.slots?.[name] : value;
 
   return <Label {...api.fieldLabelProps[name]}>{content}</Label>;
 }

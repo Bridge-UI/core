@@ -9,7 +9,10 @@ import { cn } from "@bridge-ui/core";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Chip } from "@/Components/Chip";
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { Listbox } from "@/Components/Listbox";
 import { useSelect } from "@/Components/Select/composables/useSelect";
@@ -21,11 +24,7 @@ import type {
   SelectValue,
 } from "@/Components/Select/select.types";
 import { SELECT_OPTION_KEY } from "@/Components/Select/selectInjectionKey";
-import {
-  hasNamedSlot,
-  mergeNestedComponentProps,
-  resolveNamedSlot,
-} from "@/Utils";
+import { hasNamedSlot, mergeNestedComponentProps } from "@/Utils";
 
 defineSlots<SelectSlots>();
 
@@ -108,6 +107,15 @@ const {
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
+
     <div
       v-if="multiple"
       class="flex min-w-0 flex-1 flex-wrap items-center gap-0.5"
@@ -174,11 +182,11 @@ const {
     </template>
 
     <template #beforeOptions v-if="hasNamedSlot(slots, 'beforeOptions')">
-      <component :is="resolveNamedSlot(slots, 'beforeOptions')" />
+      <slot name="beforeOptions" />
     </template>
 
     <template #loading v-if="hasNamedSlot(slots, 'loading')">
-      <component :is="resolveNamedSlot(slots, 'loading')" />
+      <slot name="loading" />
     </template>
 
     <template #option="slotProps" v-if="hasNamedSlot(slots, 'option')">
@@ -186,11 +194,11 @@ const {
     </template>
 
     <template #empty v-if="hasNamedSlot(slots, 'empty')">
-      <component :is="resolveNamedSlot(slots, 'empty')" />
+      <slot name="empty" />
     </template>
 
     <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">
-      <component :is="resolveNamedSlot(slots, 'afterOptions')" />
+      <slot name="afterOptions" />
     </template>
   </Listbox>
 

@@ -4,7 +4,10 @@ import { isNil } from "es-toolkit/compat";
 import { computed, ref, useAttrs } from "vue";
 
 // ** Local Imports
-import { FormControl } from "@/Components/FormControl";
+import {
+  FORM_CONTROL_CHROME_SLOT_NAMES,
+  FormControl,
+} from "@/Components/FormControl";
 import { useRadio } from "@/Components/Radio/composables/useRadio";
 import type { RadioOwnProps, RadioSlots } from "@/Components/Radio/radio.types";
 
@@ -57,6 +60,14 @@ function onChange() {
 
 <template>
   <FormControl :field="formControl">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_CONTROL_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <label v-bind="fieldBind" :for="formControl.controlId.value">
       <input v-bind="inputBind" :checked="isChecked" v-on:change="onChange" />
 

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isEmpty, isNil, isString } from "es-toolkit/compat";
-import type { Slot, Slots, VNodeChild } from "vue";
+import { defineComponent, type PropType, type Slots } from "vue";
 
 type VueSlots = Slots | undefined | Readonly<Slots>;
 
@@ -38,41 +38,25 @@ export function hasSlotOrProp(
 }
 
 /**
- * Slot render function for `<component :is="resolveNamedSlot(slots, name)" />`.
- * Returns the slot function itself so `:is` keeps a stable identity across parent
- * re-renders (wrapping in a new render function would remount slot content and drop
- * native states such as `:hover` / `:active` during hold-repeat).
+ * Stable host for programmatic render functions (e.g. Tabs `items` API).
+ * Prefer native `<slot>` everywhere else.
+ *
+ * @example
+ * ```vue
+ * <RenderFn :fn="item.panel" />
+ * ```
  */
-export function resolveNamedSlot(
-  slots: VueSlots,
-  name: string,
-): Slot | undefined {
-  return get(slots, name) as Slot | undefined;
-}
-
-/**
- * Render target for `<component :is="resolveSlotOrProp(slots, name, fallback)" />`.
- * Returns the named slot function when present; otherwise a render function for the
- * fallback prop.
- */
-export function resolveSlotOrProp(
-  slots: VueSlots,
-  name: string,
-  fallback?: null | number | string,
-): Slot | (() => null | VNodeChild) {
-  const slotFn = get(slots, name) as Slot | undefined;
-
-  if (!isNil(slotFn)) {
-    return slotFn;
-  }
-
-  if (!isPropPresent(fallback)) {
-    return () => null;
-  }
-
-  const text = String(fallback);
-
-  return () => text;
-}
-
-export type { Slot };
+export const RenderFn = defineComponent({
+  name: "RenderFn",
+  setup(props) {
+    return () => {
+      return props.fn?.() ?? null;
+    };
+  },
+  props: {
+    fn: {
+      default: undefined,
+      type: Function as PropType<undefined | (() => unknown)>,
+    },
+  },
+});

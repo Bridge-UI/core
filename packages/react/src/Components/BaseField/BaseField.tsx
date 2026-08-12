@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 // ** Local Imports
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/hooks/useBaseField";
-import { hasNamedSlot, hasSlotOrProp, resolveSlotOrProp } from "@/Utils";
+import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 type BaseFieldComponentProps = {
   children?: ReactNode;
@@ -45,11 +45,7 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
 
           {hasSlotOrProp(slots, "corner", merged.corner) && (
             <span {...cornerBind}>
-              {resolveSlotOrProp({
-                slots,
-                name: "corner",
-                fallback: merged.corner,
-              })}
+              {hasNamedSlot(slots, "corner") ? slots?.corner : merged.corner}
             </span>
           )}
         </div>
@@ -68,11 +64,9 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
       {!invalidated &&
         hasSlotOrProp(slots, "description", merged.description) && (
           <p {...descriptionBind} id={`${controlId}-description`}>
-            {resolveSlotOrProp({
-              slots,
-              name: "description",
-              fallback: merged.description,
-            })}
+            {hasNamedSlot(slots, "description")
+              ? slots?.description
+              : merged.description}
           </p>
         )}
 
@@ -83,11 +77,9 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
           aria-hidden={showErrorMessageContent ? undefined : true}
         >
           {showErrorMessageContent &&
-            resolveSlotOrProp({
-              slots,
-              name: "errorMessage",
-              fallback: merged.errorMessage,
-            })}
+            (hasNamedSlot(slots, "errorMessage")
+              ? slots?.errorMessage
+              : merged.errorMessage)}
         </p>
       )}
     </div>

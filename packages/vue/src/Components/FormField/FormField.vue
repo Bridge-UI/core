@@ -20,14 +20,14 @@ const props = defineProps<{
   field: UseFormFieldReturn;
 }>();
 
-const localSlots = useSlots();
+const slots = useSlots();
 
 const api = computed((): UseFormFieldReturn => {
   return {
     ...props.field,
     slots: {
       ...props.field.slots,
-      ...localSlots,
+      ...slots,
     },
   };
 });
@@ -49,6 +49,8 @@ const shell = computed(() => {
 
 <template>
   <component :api="api" :is="shell">
-    <slot />
+    <template #[name]="slotData" v-for="(_, name) in $slots">
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
   </component>
 </template>

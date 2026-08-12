@@ -9,7 +9,7 @@ import type {
 } from "@/Components/Button/button.types";
 import { useButton } from "@/Components/Button/composables/useButton";
 import { Icon } from "@/Components/Icon";
-import { hasNamedSlot, isPropPresent, resolveNamedSlot } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ButtonSlots>();
 
@@ -63,10 +63,7 @@ const {
     />
 
     <template v-else-if="isMini">
-      <component
-        v-if="hasNamedSlot(slots, 'default')"
-        :is="resolveNamedSlot(slots, 'default')"
-      />
+      <slot v-if="hasNamedSlot(slots, 'default')" />
 
       <Icon
         v-bind="iconBind"
@@ -85,15 +82,12 @@ const {
       />
 
       <div v-bind="startSlotBind" v-else-if="hasNamedSlot(slots, 'start')">
-        <component :is="resolveNamedSlot(slots, 'start')" />
+        <slot name="start" />
       </div>
 
       <template v-if="isPropPresent(merged.text)">{{ merged.text }}</template>
 
-      <component
-        :is="resolveNamedSlot(slots, 'default')"
-        v-else-if="hasNamedSlot(slots, 'default')"
-      />
+      <slot v-else-if="hasNamedSlot(slots, 'default')" />
 
       <Icon
         :size="merged.size"
@@ -103,7 +97,7 @@ const {
       />
 
       <div v-bind="endSlotBind" v-else-if="hasNamedSlot(slots, 'end')">
-        <component :is="resolveNamedSlot(slots, 'end')" />
+        <slot name="end" />
       </div>
     </template>
   </component>

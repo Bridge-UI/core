@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { computed, useSlots } from "vue";
+import { computed } from "vue";
 
 // ** Local Imports
 import { useModal } from "@/Components/Modal/composables/useModal";
@@ -9,11 +9,8 @@ import type {
   ModalOwnProps,
   ModalSlots,
 } from "@/Components/Modal/modal.types";
-import { resolveNamedSlot } from "@/Utils";
 
 defineSlots<ModalSlots>();
-
-const slots = useSlots();
 
 const emit = defineEmits<ModalEmits>();
 
@@ -95,7 +92,7 @@ const showBackdrop = computed(() => {
 
       <div v-bind="wrapperBind">
         <div :ref="setPanelRef" v-bind="panelBind">
-          <component :is="resolveNamedSlot(slots, 'default')" />
+          <slot />
         </div>
       </div>
     </div>

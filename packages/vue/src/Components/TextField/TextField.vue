@@ -4,7 +4,10 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Local Imports
-import { FormField } from "@/Components/FormField";
+import {
+  FORM_FIELD_CHROME_SLOT_NAMES,
+  FormField,
+} from "@/Components/FormField";
 import { useTextField } from "@/Components/TextField/composables/useTextField";
 import type {
   TextFieldOwnProps,
@@ -38,6 +41,14 @@ const { formField, inputBind } = useTextField(props);
 
 <template>
   <FormField :field="formField">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_FIELD_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <input v-model="value" v-bind="inputBind" />
   </FormField>
 </template>

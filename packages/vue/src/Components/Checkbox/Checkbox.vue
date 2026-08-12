@@ -12,7 +12,10 @@ import type {
   CheckboxSlots,
 } from "@/Components/Checkbox/checkbox.types";
 import { useCheckbox } from "@/Components/Checkbox/composables/useCheckbox";
-import { FormControl } from "@/Components/FormControl";
+import {
+  FORM_CONTROL_CHROME_SLOT_NAMES,
+  FormControl,
+} from "@/Components/FormControl";
 
 const attrs = useAttrs();
 
@@ -65,6 +68,14 @@ function onChange(event: Event) {
 
 <template>
   <FormControl :field="formControl">
+    <template
+      #[name]="slotData"
+      v-for="name in FORM_CONTROL_CHROME_SLOT_NAMES.filter((n) =>
+        Boolean($slots[n]),
+      )"
+    >
+      <slot :name="name" v-bind="slotData || {}" />
+    </template>
     <label v-bind="fieldBind" :for="formControl.controlId.value">
       <input
         ref="inputRef"
