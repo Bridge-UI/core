@@ -392,6 +392,8 @@ export {
   toggleAccordionItem,
 } from "@/Utils/accordion";
 export type { AccordionValue } from "@/Utils/accordion";
+export { collapseBreadcrumbItems } from "@/Utils/breadcrumb";
+export type { CollapsedBreadcrumbEntry } from "@/Utils/breadcrumb";
 export {
   breakpointObserverOptionsKey,
   buildBreakpointSnapshot,
