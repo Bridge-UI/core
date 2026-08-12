@@ -4,6 +4,7 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 
 ## Components
 
+- [Accordion](./components/Accordion.md)
 - [Alert](./components/Alert.md)
 - [Autocomplete](./components/Autocomplete.md)
 - [Avatar](./components/Avatar.md)
