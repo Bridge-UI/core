@@ -15,7 +15,6 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
     children,
     rootBind,
     linkBind,
-    labelBind,
     endIconBind,
     startIconBind,
     separatorBind,
@@ -47,11 +46,7 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
             </Fragment>
           )}
 
-          {merged.iconOnly && children != null ? (
-            <span {...labelBind}>{children}</span>
-          ) : (
-            children
-          )}
+          {children}
 
           {hasNamedSlot(slots, "end") ? (
             slots?.end

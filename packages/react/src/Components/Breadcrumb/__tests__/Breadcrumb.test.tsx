@@ -65,20 +65,16 @@ test("it should collapse middle items when maxItems is set", () => {
   expect(screen.getByText("Page")).toBeTruthy();
 });
 
-test("it should hide the label visually when iconOnly is set", () => {
+test("it should render an icon-only crumb with aria-label", () => {
   render(
     <Breadcrumb>
-      <BreadcrumbItem iconOnly href="/" startIcon="user">
-        Home
-      </BreadcrumbItem>
+      <BreadcrumbItem href="/" startIcon="user" aria-label="Home" />
       <BreadcrumbItem current>Page</BreadcrumbItem>
     </Breadcrumb>,
   );
 
-  const label = screen.getByText("Home");
-
-  expect(label.className).toContain("sr-only");
   expect(screen.getByRole("link", { name: "Home" })).toBeTruthy();
+  expect(screen.queryByText("Home")).toBeNull();
 });
 
 test("it should use a custom separator slot", () => {

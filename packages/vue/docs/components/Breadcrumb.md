@@ -1,6 +1,6 @@
 # Breadcrumb
 
-Navigation trail for hierarchy (home → section → page). Compose with `BreadcrumbItem`, or pass `items` for a data-driven list. Supports icon-only crumbs and a custom separator icon.
+Navigation trail for hierarchy (home → section → page). Compose with `BreadcrumbItem`, or pass `items` for a data-driven list. Supports icon crumbs and a custom separator icon.
 
 ## Import
 
@@ -37,11 +37,11 @@ const crumbs = [
 
 ### Icon only
 
+Omit the label and set `aria-label` for assistive tech.
+
 ```vue
 <Breadcrumb>
-  <BreadcrumbItem icon-only href="/" :start-icon="Home">
-    Home
-  </BreadcrumbItem>
+  <BreadcrumbItem href="/" :start-icon="Home" aria-label="Home" />
   <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
   <BreadcrumbItem current>Project Nero</BreadcrumbItem>
 </Breadcrumb>

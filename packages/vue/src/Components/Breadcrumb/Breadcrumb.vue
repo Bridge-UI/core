@@ -43,7 +43,6 @@ const { rootBind, listBind, collapsedItems, hasDefaultSlot } = useBreadcrumb(
             :current="entry.item.current"
             :end-icon="entry.item.endIcon"
             :disabled="entry.item.disabled"
-            :icon-only="entry.item.iconOnly"
             :start-icon="entry.item.startIcon"
           >
             {{ entry.item.label }}

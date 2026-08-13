@@ -15,7 +15,6 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<BreadcrumbItemOwnProps>(), {
   current: false,
   disabled: false,
-  iconOnly: false,
 });
 
 const {
@@ -24,7 +23,6 @@ const {
   crumbAs,
   rootBind,
   linkBind,
-  labelBind,
   endIconBind,
   startIconBind,
   separatorBind,
@@ -50,11 +48,7 @@ const {
         v-else-if="merged.startIcon"
       />
 
-      <span v-bind="labelBind" v-if="merged.iconOnly">
-        <slot />
-      </span>
-
-      <slot v-else />
+      <slot />
 
       <slot name="end" v-if="hasNamedSlot(slots, 'end')" />
 

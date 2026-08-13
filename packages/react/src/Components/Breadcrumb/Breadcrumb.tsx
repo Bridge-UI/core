@@ -40,7 +40,6 @@ function Breadcrumb(props: BreadcrumbProps) {
                     current={item.current}
                     endIcon={item.endIcon}
                     disabled={item.disabled}
-                    iconOnly={item.iconOnly}
                     startIcon={item.startIcon}
                   >
                     {item.label}

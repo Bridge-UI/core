@@ -60,12 +60,12 @@ export interface BreadcrumbCustomProps {
  */
 export type BreadcrumbItemData = Pick<
   BreadcrumbItemOwnProps,
-  "as" | "href" | "current" | "endIcon" | "disabled" | "iconOnly" | "startIcon"
+  "as" | "href" | "current" | "endIcon" | "disabled" | "startIcon"
 > & {
   /**
    * Accessible / visible crumb label.
    */
-  label: ReactNode;
+  label?: ReactNode;
 };
 
 export interface BreadcrumbSlots {

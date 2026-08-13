@@ -78,19 +78,20 @@ test("it should collapse middle items when maxItems is set", () => {
   expect(wrapper.text()).not.toContain("A");
 });
 
-test("it should hide the label visually when iconOnly is set", () => {
+test("it should render an icon-only crumb with aria-label", () => {
   const wrapper = mountBreadcrumb({
     slots: {
       default: () => [
-        h(
-          BreadcrumbItem,
-          { href: "/", iconOnly: true, startIcon: "user" },
-          () => "Home",
-        ),
+        h(BreadcrumbItem, {
+          href: "/",
+          startIcon: "user",
+          "aria-label": "Home",
+        }),
         h(BreadcrumbItem, { current: true }, () => "Page"),
       ],
     },
   });
 
-  expect(wrapper.find("a .sr-only").text()).toBe("Home");
+  expect(wrapper.find("a[aria-label='Home']").exists()).toBe(true);
+  expect(wrapper.find("a[aria-label='Home']").text()).toBe("");
 });

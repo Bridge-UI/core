@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, omit, pick } from "es-toolkit/compat";
 import { computed, inject, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
@@ -24,7 +24,6 @@ const breadcrumbItemBridgeKeys = [
   "current",
   "endIcon",
   "disabled",
-  "iconOnly",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof BreadcrumbItemOwnProps)[];
@@ -71,10 +70,6 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
     return merged.value.disabled === true;
   });
 
-  const iconOnly = computed(() => {
-    return merged.value.iconOnly === true;
-  });
-
   const iconSize = computed(() => {
     return (breadcrumb.value.tokenClasses.iconSize ?? "md") as keyof IconSize;
   });
@@ -96,8 +91,16 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
     props: () => split.value.componentProps,
   });
 
+  const linkInheritedAttrs = computed(() => {
+    return pick(split.value.inheritedAttrs, ["aria-label", "aria-labelledby"]);
+  });
+
+  const rootInheritedAttrs = computed(() => {
+    return omit(split.value.inheritedAttrs, ["aria-label", "aria-labelledby"]);
+  });
+
   const rootBind = computed(() => {
-    return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
         [breadcrumb.value.tokenClasses.item ?? ""]: true,
         [get(mergedClasses.value, "root") ?? ""]: true,
@@ -122,37 +125,24 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
     );
   });
 
-  const labelBind = computed(() => {
-    return {
-      class: cn({
-        "sr-only": iconOnly.value,
-      }),
-    };
-  });
-
   const linkBind = computed(() => {
     const isCurrent = current.value;
     const partProps = isCurrent
       ? customProps.value?.current
       : customProps.value?.link;
 
-    return mergePartBind(
-      partProps,
-      {},
-      {
-        "aria-disabled": disabled.value || undefined,
-        "aria-current": isCurrent ? ("page" as const) : undefined,
-        href: !isCurrent && !disabled.value ? merged.value.href : undefined,
-        class: cn({
-          [isCurrent
-            ? (breadcrumb.value.tokenClasses.current ?? "")
-            : (breadcrumb.value.tokenClasses.link ?? "")]: true,
-          [get(mergedClasses.value, isCurrent ? "current" : "link") ?? ""]:
-            true,
-          "pointer-events-none opacity-50": disabled.value && !isCurrent,
-        }),
-      },
-    );
+    return mergePartBind(partProps, linkInheritedAttrs.value, {
+      "aria-disabled": disabled.value || undefined,
+      "aria-current": isCurrent ? ("page" as const) : undefined,
+      href: !isCurrent && !disabled.value ? merged.value.href : undefined,
+      class: cn({
+        [isCurrent
+          ? (breadcrumb.value.tokenClasses.current ?? "")
+          : (breadcrumb.value.tokenClasses.link ?? "")]: true,
+        [get(mergedClasses.value, isCurrent ? "current" : "link") ?? ""]: true,
+        "pointer-events-none opacity-50": disabled.value && !isCurrent,
+      }),
+    });
   });
 
   const startIconBind = computed(() => {
@@ -202,7 +192,6 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
     rootBind,
     linkBind,
     iconSize,
-    labelBind,
     endIconBind,
     startIconBind,
     separatorBind,

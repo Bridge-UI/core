@@ -438,7 +438,6 @@ export interface BreadcrumbItemConfigBase {
   defaultProps: Partial<{
     current: boolean;
     disabled: boolean;
-    iconOnly: boolean;
   }>;
 }
 

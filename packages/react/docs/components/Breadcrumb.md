@@ -1,6 +1,6 @@
 # Breadcrumb
 
-Navigation trail for hierarchy (home → section → page). Compose with `BreadcrumbItem`, or pass `items` for a data-driven list. Supports icon-only crumbs and a custom separator icon.
+Navigation trail for hierarchy (home → section → page). Compose with `BreadcrumbItem`, or pass `items` for a data-driven list. Supports icon crumbs and a custom separator icon.
 
 ## Import
 
@@ -35,11 +35,11 @@ import { BreadcrumbItem } from "@bridge-ui/react/Components/BreadcrumbItem";
 
 ### Icon only
 
+Omit the label and set `aria-label` for assistive tech.
+
 ```tsx
 <Breadcrumb>
-  <BreadcrumbItem iconOnly href="/" startIcon={Home}>
-    Home
-  </BreadcrumbItem>
+  <BreadcrumbItem href="/" startIcon={Home} aria-label="Home" />
   <BreadcrumbItem href="/projects">Projects</BreadcrumbItem>
   <BreadcrumbItem current>Project Nero</BreadcrumbItem>
 </Breadcrumb>

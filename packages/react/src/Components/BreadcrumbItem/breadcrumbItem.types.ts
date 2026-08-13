@@ -170,14 +170,6 @@ export interface BreadcrumbItemOwnProps {
   href?: string;
 
   /**
-   * Hide the label visually and keep it for assistive tech (`sr-only`).
-   * Useful for icon-only crumbs (e.g. home).
-   *
-   * @default false
-   */
-  iconOnly?: boolean;
-
-  /**
    * Custom start / end / separator adornments.
    *
    * @default undefined
