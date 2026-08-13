@@ -34,9 +34,9 @@ function mountUseBreadcrumb(props: Partial<BreadcrumbOwnProps> = {}) {
 test("it should expose defaults from useBreadcrumb", () => {
   const { result } = mountUseBreadcrumb();
 
-  expect(result.contextValue.value.separator).toBe("chevronRight");
-  expect(result.contextValue.value.tokenClasses.iconSize).toBe("md");
   expect(result.rootBind.value["aria-label"]).toBe("Breadcrumb");
+  expect(result.contextValue.value.separator).toBe("chevronRight");
+  expect(result.contextValue.value.tokenClasses.iconSize).toBe("sm");
 });
 
 test("it should collapse items when maxItems is set", () => {

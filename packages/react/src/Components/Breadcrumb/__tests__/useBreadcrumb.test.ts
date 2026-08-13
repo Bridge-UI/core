@@ -20,9 +20,9 @@ test("it should expose defaults from useBreadcrumb", () => {
     ),
   );
 
-  expect(result.current.contextValue.separator).toBe("chevronRight");
-  expect(result.current.contextValue.tokenClasses.iconSize).toBe("md");
   expect(result.current.rootBind["aria-label"]).toBe("Breadcrumb");
+  expect(result.current.contextValue.separator).toBe("chevronRight");
+  expect(result.current.contextValue.tokenClasses.iconSize).toBe("sm");
 });
 
 test("it should collapse items when maxItems is set", () => {

@@ -28,16 +28,17 @@ const {
   separatorBind,
   separatorIcon,
   separatorContent,
+  separatorIconBind,
 } = useBreadcrumbItem(props);
 </script>
 
 <template>
   <li v-bind="rootBind">
-    <span aria-hidden="true" data-slot="separator" v-if="separatorContent">
-      <component :is="separatorContent" />
-    </span>
+    <span v-bind="separatorBind">
+      <component :is="separatorContent" v-if="separatorContent" />
 
-    <Icon v-else :icon="separatorIcon" v-bind="separatorBind" />
+      <Icon v-else :icon="separatorIcon" v-bind="separatorIconBind" />
+    </span>
 
     <component :is="crumbAs" v-bind="linkBind">
       <slot name="start" v-if="hasNamedSlot(slots, 'start')" />

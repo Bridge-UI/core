@@ -113,16 +113,28 @@ export function useBreadcrumbItem(props: BreadcrumbItemProps) {
 
   const separatorBind = derived(() => {
     return mergePartBind(
-      customProps?.separator ?? breadcrumb.separatorIconProps,
+      {},
       {},
       {
-        size: iconSize,
         "aria-hidden": true,
         "data-slot": "separator",
         className: cn({
           [breadcrumb.tokenClasses.separator ?? ""]: true,
           [breadcrumb.separatorClass ?? ""]: true,
           [get(mergedClasses, "separator") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const separatorIconBind = derived(() => {
+    return mergePartBind(
+      customProps?.separator ?? breadcrumb.separatorIconProps,
+      {},
+      {
+        size: iconSize,
+        className: cn({
+          "shrink-0": true,
         }),
       },
     );
@@ -194,5 +206,6 @@ export function useBreadcrumbItem(props: BreadcrumbItemProps) {
     separatorBind,
     separatorIcon,
     separatorContent,
+    separatorIconBind,
   };
 }

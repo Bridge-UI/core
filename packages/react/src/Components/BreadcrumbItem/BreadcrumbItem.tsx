@@ -20,17 +20,18 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
     separatorBind,
     separatorIcon,
     separatorContent,
+    separatorIconBind,
   } = useBreadcrumbItem(props);
 
   return (
     <li {...rootBind}>
-      {separatorContent != null ? (
-        <span aria-hidden="true" data-slot="separator">
-          {separatorContent}
-        </span>
-      ) : (
-        <Icon icon={separatorIcon} {...separatorBind} />
-      )}
+      <span {...separatorBind}>
+        {separatorContent != null ? (
+          separatorContent
+        ) : (
+          <Icon icon={separatorIcon} {...separatorIconBind} />
+        )}
+      </span>
 
       {createElement(
         crumbAs,

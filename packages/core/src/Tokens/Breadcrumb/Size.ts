@@ -63,36 +63,39 @@ export interface BreadcrumbSize {
  */
 export const sizeProps: BreadcrumbSize = {
   "sm": {
-    "icon": "sm",
+    "icon": "xs",
     "root": "flex",
-    "list": "flex items-center",
-    "item": "flex items-center gap-3",
-    "separator": "size-4 shrink-0 text-dark-400 dark:text-dark-500",
+    "list": "flex items-center gap-2",
+    "item": "flex items-center gap-2",
+    "separator":
+      "inline-flex shrink-0 items-center justify-center text-dark-400 dark:text-dark-500",
     "current":
       "inline-flex items-center gap-1 text-xs font-medium text-dark-700 dark:text-dark-200",
     "link":
       "inline-flex items-center gap-1 text-xs font-medium text-dark-500 transition-colors hover:text-dark-700 dark:text-dark-400 dark:hover:text-dark-200",
   },
-  "md": {
+  "lg": {
     "icon": "md",
     "root": "flex",
-    "list": "flex items-center",
-    "item": "flex items-center gap-4",
-    "separator": "size-5 shrink-0 text-dark-400 dark:text-dark-500",
-    "current":
-      "inline-flex items-center gap-1.5 text-sm font-medium text-dark-700 dark:text-dark-200",
-    "link":
-      "inline-flex items-center gap-1.5 text-sm font-medium text-dark-500 transition-colors hover:text-dark-700 dark:text-dark-400 dark:hover:text-dark-200",
-  },
-  "lg": {
-    "icon": "lg",
-    "root": "flex",
-    "list": "flex items-center",
-    "item": "flex items-center gap-5",
-    "separator": "size-6 shrink-0 text-dark-400 dark:text-dark-500",
+    "list": "flex items-center gap-3",
+    "item": "flex items-center gap-3",
+    "separator":
+      "inline-flex shrink-0 items-center justify-center text-dark-400 dark:text-dark-500",
     "current":
       "inline-flex items-center gap-2 text-base font-medium text-dark-700 dark:text-dark-200",
     "link":
       "inline-flex items-center gap-2 text-base font-medium text-dark-500 transition-colors hover:text-dark-700 dark:text-dark-400 dark:hover:text-dark-200",
+  },
+  "md": {
+    "icon": "sm",
+    "root": "flex",
+    "list": "flex items-center gap-2.5",
+    "item": "flex items-center gap-2.5",
+    "separator":
+      "inline-flex shrink-0 items-center justify-center text-dark-400 dark:text-dark-500",
+    "current":
+      "inline-flex items-center gap-1.5 text-sm font-medium text-dark-700 dark:text-dark-200",
+    "link":
+      "inline-flex items-center gap-1.5 text-sm font-medium text-dark-500 transition-colors hover:text-dark-700 dark:text-dark-400 dark:hover:text-dark-200",
   },
 };
