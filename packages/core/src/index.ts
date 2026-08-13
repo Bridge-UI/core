@@ -36,6 +36,8 @@ export type {
   AutocompleteConfigOverrides,
   AvatarConfigOverrides,
   BadgeConfigOverrides,
+  BreadcrumbConfigOverrides,
+  BreadcrumbItemConfigOverrides,
   BridgeUIComponentsConfig,
   BridgeUIFormDefaults,
   BridgeUIGlobal,
@@ -144,6 +146,8 @@ export type {
   BaseFieldSize,
   BaseFieldSizeItem,
 } from "@/Tokens/BaseField";
+export { sizeProps as breadcrumbSizeProps } from "@/Tokens/Breadcrumb";
+export type { BreadcrumbSize, BreadcrumbSizeItem } from "@/Tokens/Breadcrumb";
 export type {
   ButtonColor,
   ButtonColorItem,
@@ -346,6 +350,7 @@ export {
   claimOpenMenu,
   clampSliderValue,
   cn,
+  collapseBreadcrumbItems,
   combineDateAndTime,
   commitFreeSoloValue,
   countDrawerTransitionLayers,
@@ -468,6 +473,7 @@ export type {
   BreakpointSnapshot,
   CalendarDayInteractionState,
   ClassPropKey,
+  CollapsedBreadcrumbEntry,
   DatePickerMode,
   DatePickerModel,
   DateRangeValue,

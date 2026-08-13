@@ -97,6 +97,25 @@ export type {
   BaseFieldSlots,
   UseBaseFieldReturn,
 } from "@/Components/BaseField";
+export { Breadcrumb, useBreadcrumb } from "@/Components/Breadcrumb";
+export type {
+  BreadcrumbClasses,
+  BreadcrumbContextValue,
+  BreadcrumbCustomProps,
+  BreadcrumbItemData,
+  BreadcrumbOwnProps,
+  BreadcrumbProps,
+  BreadcrumbSizeOverrides,
+  BreadcrumbSlots,
+} from "@/Components/Breadcrumb";
+export { BreadcrumbItem, useBreadcrumbItem } from "@/Components/BreadcrumbItem";
+export type {
+  BreadcrumbItemClasses,
+  BreadcrumbItemCustomProps,
+  BreadcrumbItemOwnProps,
+  BreadcrumbItemProps,
+  BreadcrumbItemSlots,
+} from "@/Components/BreadcrumbItem";
 export { Button, useButton } from "@/Components/Button";
 export type {
   ButtonClasses,

@@ -37,6 +37,7 @@ import type {
   BaseFieldInvalidated,
   BaseFieldSizeItem,
 } from "@/Tokens/BaseField";
+import type { BreadcrumbSize, BreadcrumbSizeItem } from "@/Tokens/Breadcrumb";
 import type {
   ButtonColor,
   ButtonColorItem,
@@ -303,6 +304,8 @@ export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
 export interface BadgeConfigOverrides {}
+export interface BreadcrumbConfigOverrides {}
+export interface BreadcrumbItemConfigOverrides {}
 export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
@@ -417,6 +420,24 @@ export interface BadgeConfigBase {
     density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
     variant: Record<string, Record<string, BadgeColorItem>>;
+  }>;
+}
+
+export interface BreadcrumbConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    size: keyof BreadcrumbSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, BreadcrumbSizeItem>;
+  }>;
+}
+
+export interface BreadcrumbItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    current: boolean;
+    disabled: boolean;
   }>;
 }
 
@@ -1347,6 +1368,12 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
   Badge: Partial<Overwrite<BadgeConfigBase, BadgeConfigOverrides>>;
+  Breadcrumb: Partial<
+    Overwrite<BreadcrumbConfigBase, BreadcrumbConfigOverrides>
+  >;
+  BreadcrumbItem: Partial<
+    Overwrite<BreadcrumbItemConfigBase, BreadcrumbItemConfigOverrides>
+  >;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
