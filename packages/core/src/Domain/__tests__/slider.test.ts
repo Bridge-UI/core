@@ -21,7 +21,7 @@ import {
   stepSliderValue,
   valueToPercent,
   writeSliderRangeThumb,
-} from "@/Utils/slider";
+} from "@/Domain/slider";
 
 describe("resolveSliderBounds", () => {
   test("it should apply defaults", () => {

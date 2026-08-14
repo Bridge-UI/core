@@ -7,7 +7,7 @@ import {
   resolveFieldOverlay,
   resolveFieldShowFooter,
   resolveRangePickerOrientation,
-} from "@/Utils/overlay";
+} from "@/Domain/overlay";
 
 describe("resolveFieldOverlay", () => {
   test("it should default like auto when mode is undefined", () => {

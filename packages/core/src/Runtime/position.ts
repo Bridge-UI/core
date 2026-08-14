@@ -12,7 +12,7 @@ import {
 import { constant, isFunction } from "es-toolkit/compat";
 
 // ** Local Imports
-import { hasDocument } from "@/Utils/env";
+import { hasDocument } from "@/Runtime/env";
 
 /**
  * The strategy to use for the positionable.

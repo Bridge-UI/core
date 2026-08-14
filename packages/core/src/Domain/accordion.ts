@@ -9,7 +9,7 @@ import {
 } from "es-toolkit/compat";
 
 // ** Local Imports
-import { getAdjacentTabValue } from "@/Utils/tabs";
+import { getAdjacentTabValue } from "@/Domain/tabs";
 
 /**
  * Controlled / uncontrolled expanded value for accordion.

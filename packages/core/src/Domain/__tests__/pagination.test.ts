@@ -2,7 +2,7 @@
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
-import { getPaginationItems } from "@/Utils/pagination";
+import { getPaginationItems } from "@/Domain/pagination";
 
 describe("getPaginationItems", () => {
   test("it should return every page when the range fits", () => {

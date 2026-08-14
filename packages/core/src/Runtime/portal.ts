@@ -1,5 +1,5 @@
 // ** Local Imports
-import { hasDocument } from "@/Utils/env";
+import { hasDocument } from "@/Runtime/env";
 
 /**
  * Resolves where a portal should mount.

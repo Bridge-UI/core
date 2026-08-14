@@ -12,7 +12,7 @@ import {
   discoverBreakpointKeys,
   resetBreakpointCachesForTests,
   resolveBreakpoints,
-} from "@/Utils/breakpoint";
+} from "@/Runtime/breakpoint";
 
 afterEach(() => {
   document.documentElement.removeAttribute("style");

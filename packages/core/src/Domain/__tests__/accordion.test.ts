@@ -9,7 +9,7 @@ import {
   isAccordionItemExpanded,
   normalizeAccordionValue,
   toggleAccordionItem,
-} from "@/Utils/accordion";
+} from "@/Domain/accordion";
 
 describe("getAccordionTriggerId", () => {
   it("builds a stable trigger id", () => {

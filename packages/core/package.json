@@ -42,6 +42,18 @@
       "import": "./dist/Config/index.js",
       "types": "./dist/Config/index.d.ts"
     },
+    "./Domain": {
+      "import": "./dist/Domain/index.js",
+      "types": "./dist/Domain/index.d.ts"
+    },
+    "./Layer": {
+      "import": "./dist/Layer/index.js",
+      "types": "./dist/Layer/index.d.ts"
+    },
+    "./Runtime": {
+      "import": "./dist/Runtime/index.js",
+      "types": "./dist/Runtime/index.d.ts"
+    },
     "./Utils": {
       "import": "./dist/Utils/index.js",
       "types": "./dist/Utils/index.d.ts"
