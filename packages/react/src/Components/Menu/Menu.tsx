@@ -3,7 +3,10 @@ import { Fragment } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { hasDocument, resolveModalPortalElement } from "@bridge-ui/core/Utils";
+import {
+  hasDocument,
+  resolveModalPortalElement,
+} from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useMenu } from "@/Components/Menu/hooks/useMenu";
