@@ -84,6 +84,8 @@ export type {
   TimePickerConfigOverrides,
   TimeRangeFieldConfigOverrides,
   TimeRangePickerConfigOverrides,
+  ToggleConfigOverrides,
+  ToggleGroupConfigOverrides,
 } from "@/Config";
 export {
   DEFAULT_OTP_LENGTH,
@@ -531,6 +533,25 @@ export type {
 } from "@/Tokens/Tabs";
 export type { TextareaResize } from "@/Tokens/Textarea";
 export type { TimeColor, TimeColorItem, TimeRounded } from "@/Tokens/Time";
+export {
+  colorProps as toggleGroupColorProps,
+  orientationProps as toggleGroupOrientationProps,
+  roundedProps as toggleGroupRoundedProps,
+  sizeProps as toggleGroupSizeProps,
+  variantProps as toggleGroupVariantProps,
+} from "@/Tokens/ToggleGroup";
+export type {
+  ToggleGroupColor,
+  ToggleGroupColorItem,
+  ToggleGroupOrientation,
+  ToggleGroupOrientationItem,
+  ToggleGroupRounded,
+  ToggleGroupRoundedItem,
+  ToggleGroupSize,
+  ToggleGroupSizeItem,
+  ToggleGroupVariant,
+  ToggleGroupVariantItem,
+} from "@/Tokens/ToggleGroup";
 export type {
   TooltipColor,
   TooltipColorItem,
