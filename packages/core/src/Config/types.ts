@@ -123,6 +123,16 @@ import type {
   OtpFieldVariantItem,
 } from "@/Tokens/OtpField";
 import type {
+  PaginationColor,
+  PaginationColorItem,
+  PaginationRounded,
+  PaginationRoundedItem,
+  PaginationSize,
+  PaginationSizeItem,
+  PaginationVariant,
+  PaginationVariantItem,
+} from "@/Tokens/Pagination";
+import type {
   ProgressColor,
   ProgressColorItem,
   ProgressRounded,
@@ -330,6 +340,7 @@ export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
 export interface NumberFieldConfigOverrides {}
 export interface OtpFieldConfigOverrides {}
+export interface PaginationConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
@@ -1048,6 +1059,28 @@ export interface OtpFieldConfigBase {
   }>;
 }
 
+export interface PaginationConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    boundaryCount: number;
+    color: keyof PaginationColor;
+    disabled: boolean;
+    hideNextButton: boolean;
+    hidePrevButton: boolean;
+    mode: "simple" | "numbered";
+    rounded: keyof PaginationRounded;
+    siblingCount: number;
+    size: keyof PaginationSize;
+    variant: keyof PaginationVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, PaginationColorItem>;
+    rounded: Record<string, PaginationRoundedItem>;
+    size: Record<string, PaginationSizeItem>;
+    variant: Record<string, PaginationVariantItem>;
+  }>;
+}
+
 export interface PasswordFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1416,6 +1449,9 @@ export type BridgeUIComponentsConfig = Partial<{
     Overwrite<NumberFieldConfigBase, NumberFieldConfigOverrides>
   >;
   OtpField: Partial<Overwrite<OtpFieldConfigBase, OtpFieldConfigOverrides>>;
+  Pagination: Partial<
+    Overwrite<PaginationConfigBase, PaginationConfigOverrides>
+  >;
   PasswordField: Partial<
     Overwrite<PasswordFieldConfigBase, PasswordFieldConfigOverrides>
   >;

@@ -476,6 +476,19 @@ export type {
   OtpFieldSlots,
   UseOtpFieldOptions,
 } from "@/Components/OtpField";
+export { Pagination, usePagination } from "@/Components/Pagination";
+export type {
+  PaginationClasses,
+  PaginationColorOverrides,
+  PaginationCustomProps,
+  PaginationEmits,
+  PaginationOwnProps,
+  PaginationProps,
+  PaginationRoundedOverrides,
+  PaginationSizeOverrides,
+  PaginationSlots,
+  PaginationVariantOverrides,
+} from "@/Components/Pagination";
 export { PasswordField, usePasswordField } from "@/Components/PasswordField";
 export type {
   PasswordFieldClasses,

@@ -493,6 +493,11 @@ export type {
   RangePickerOrientation,
   ResolvedFieldOverlay,
 } from "@/Utils/overlay";
+export { getPaginationItems } from "@/Utils/pagination";
+export type {
+  GetPaginationItemsOptions,
+  PaginationEntry,
+} from "@/Utils/pagination";
 export {
   isModalBackdropClick,
   resolveModalPortalElement,
