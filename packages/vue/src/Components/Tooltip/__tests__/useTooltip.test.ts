@@ -4,7 +4,7 @@ import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { useTooltip, type TooltipOwnProps } from "@/Components/Tooltip";

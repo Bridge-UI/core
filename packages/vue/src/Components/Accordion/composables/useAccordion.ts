@@ -12,21 +12,23 @@ import {
 
 // ** Core Imports
 import {
-  cn,
   getAccordionTriggerId,
-  mergeBridgeUILayeredClasses,
   normalizeAccordionValue,
-  splitComponentProps,
   toggleAccordionItem,
   type AccordionValue,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 import {
   colorProps,
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/Accordion";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

@@ -6,7 +6,7 @@ import type {
   IconSource as CoreIconSource,
   IconSourceValueOverrides,
   SemanticIconName,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Adapters";
 
 /**
  * Renderable icon component accepted by Bridge Icon props.

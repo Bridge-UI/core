@@ -8,7 +8,7 @@ import {
   type ModalOwnProps,
   type ModalProps,
 } from "@/Components/Modal";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();

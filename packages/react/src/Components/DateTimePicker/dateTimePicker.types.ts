@@ -3,17 +3,18 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
+  DisableDatesInput,
+  DisableTimesInput,
+  StartOfWeek,
+} from "@bridge-ui/core/Domain";
+import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
   CalendarRounded,
-  DisableDatesInput,
-  DisableTimesInput,
-  MergeHtmlProps,
-  MergeProps,
-  StartOfWeek,
-  TimeColorItem,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Calendar";
+import type { TimeColorItem } from "@bridge-ui/core/Tokens/Time";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";

@@ -12,15 +12,15 @@ import {
 } from "vue";
 
 // ** Core Imports
+import { invalidatedProps } from "@bridge-ui/core/Tokens/FormControl";
+import { sizeProps as labelSizeProps } from "@bridge-ui/core/Tokens/Label";
 import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps } from "@bridge-ui/core/Tokens/FormControl";
-import { sizeProps as labelSizeProps } from "@bridge-ui/core/Tokens/Label";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

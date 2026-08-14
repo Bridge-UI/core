@@ -12,14 +12,13 @@ import {
 
 // ** Core Imports
 import {
-  cn,
   getAccordionPanelId,
   getAccordionTriggerId,
   getAdjacentAccordionValue,
   isAccordionItemExpanded,
-  splitComponentProps,
-  type IconSize,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { ACCORDION_INJECTION_KEY } from "@/Components/Accordion/accordionInjectionKey";

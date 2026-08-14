@@ -691,16 +691,16 @@ export {
 } from "@/Utils";
 export type { UseBreakpointOptions } from "@/Utils";
 export {
-  BRIDGE_UI_DEFAULT_GLOBAL,
   SEMANTIC_ICON_NAMES,
-  cn,
+  resolveMessage,
+  type I18nAdapter,
+  type IconAdapter,
+  type SemanticIconNameOverrides,
+} from "@bridge-ui/core/Adapters";
+export {
+  BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
   mergeBridgeUIGlobal,
   resolveBridgeUIOptions,
-  resolveMessage,
-} from "@bridge-ui/core";
-export type {
-  I18nAdapter,
-  IconAdapter,
-  SemanticIconNameOverrides,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Config";
+export { cn } from "@bridge-ui/core/Utils";

@@ -2,11 +2,8 @@
 import type { ComputedRef, InjectionKey } from "vue";
 
 // ** Core Imports
-import type {
-  ListboxOption,
-  ListboxSizeItem,
-  ListboxValue,
-} from "@bridge-ui/core";
+import type { ListboxOption, ListboxValue } from "@bridge-ui/core/Domain";
+import type { ListboxSizeItem } from "@bridge-ui/core/Tokens/Listbox";
 
 /**
  * Shared listbox state for composed `ListItem` children with `value`.

@@ -3,7 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { computed, inject, toValue, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn, splitComponentProps } from "@bridge-ui/core";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { LIST_INJECTION_KEY } from "@/Components/List/listInjectionKey";

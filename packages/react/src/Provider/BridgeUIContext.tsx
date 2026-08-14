@@ -6,7 +6,7 @@ import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
   Direction,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Config";
 
 export interface BridgeUIContextValue {
   components: BridgeUIComponentsConfig;

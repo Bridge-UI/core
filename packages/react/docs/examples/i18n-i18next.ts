@@ -12,7 +12,7 @@
 import i18n from "i18next";
 
 // ** Core Imports
-import type { I18nAdapter } from "@bridge-ui/core";
+import type { I18nAdapter } from "@bridge-ui/core/Adapters";
 
 /**
  * Builds an i18next-backed {@link I18nAdapter} for Bridge chrome strings.

@@ -1,5 +1,5 @@
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CalendarProps } from "@/Components/Calendar/calendar.types";

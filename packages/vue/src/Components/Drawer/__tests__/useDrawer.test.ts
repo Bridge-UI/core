@@ -5,7 +5,7 @@ import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useDrawer, type DrawerOwnProps } from "@/Components/Drawer";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();

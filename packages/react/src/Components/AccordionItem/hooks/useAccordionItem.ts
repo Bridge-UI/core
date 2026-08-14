@@ -4,14 +4,13 @@ import { useEffect, type KeyboardEvent, type MouseEvent } from "react";
 
 // ** Core Imports
 import {
-  cn,
   getAccordionPanelId,
   getAccordionTriggerId,
   getAdjacentAccordionValue,
   isAccordionItemExpanded,
-  splitComponentProps,
-  type IconSize,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useAccordionContext } from "@/Components/Accordion/AccordionContext";

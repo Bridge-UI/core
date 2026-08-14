@@ -2,14 +2,13 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
+import type { AccordionValue } from "@bridge-ui/core/Domain";
 import type {
   AccordionColor,
   AccordionSize,
-  AccordionValue,
   AccordionVariant,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Accordion";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface AccordionSizeOverrides {}
 export interface AccordionColorOverrides {}

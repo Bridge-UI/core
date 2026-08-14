@@ -3,7 +3,9 @@ import { get } from "es-toolkit/compat";
 import type { MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, snackbarRoundedProps, type LinkColor } from "@bridge-ui/core";
+import type { LinkColor } from "@bridge-ui/core/Tokens/Link";
+import { roundedProps as snackbarRoundedProps } from "@bridge-ui/core/Tokens/Snackbar";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

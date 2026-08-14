@@ -4,7 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

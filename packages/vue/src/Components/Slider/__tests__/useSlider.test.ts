@@ -7,7 +7,7 @@ import { defineComponent, h, ref } from "vue";
 import {
   resolveSliderBounds,
   resolveSliderDefaultValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useSlider, type SliderOwnProps } from "@/Components/Slider";

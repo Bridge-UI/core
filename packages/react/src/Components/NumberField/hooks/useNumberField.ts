@@ -4,7 +4,7 @@ import type { ChangeEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/hooks/useFormField";

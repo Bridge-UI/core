@@ -3,7 +3,7 @@ import type { App, Plugin } from "vue";
 import { computed } from "vue";
 
 // ** Core Imports
-import type { BridgeUIOptions } from "@bridge-ui/core";
+import type { BridgeUIOptions } from "@bridge-ui/core/Config";
 
 // ** Local Imports
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";

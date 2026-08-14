@@ -9,7 +9,7 @@ import { useDialogAction } from "@/Actions/Dialog";
 import { useDrawerAction } from "@/Actions/Drawer";
 import { useModalAction } from "@/Actions/Modal";
 import { useSnackbarAction } from "@/Actions/Snackbar";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   document.body.innerHTML = "";

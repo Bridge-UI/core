@@ -15,7 +15,7 @@ import type {
   DateAdapter,
   DateAdapterContext,
   DateAdapterTimeOptions,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Adapters";
 
 /**
  * Options for {@link createMomentDateAdapter}.

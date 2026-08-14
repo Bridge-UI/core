@@ -17,7 +17,7 @@ import {
   type BreakpointObserver,
   type BreakpointObserverOptions,
   type BreakpointSnapshot,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";

@@ -16,18 +16,13 @@ import {
   applyOtpInput,
   applyOtpKeyNavigation,
   applyOtpPaste,
-  cn,
   isOtpComplete,
   joinOtpDigits,
-  mergeBridgeUILayeredClasses,
   normalizeOtpValue,
   resolveOtpLength,
-  splitComponentProps,
   splitOtpValue,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
   type OtpInputType,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 import {
   colorProps,
   invalidatedProps,
@@ -35,6 +30,13 @@ import {
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/OtpField";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import {

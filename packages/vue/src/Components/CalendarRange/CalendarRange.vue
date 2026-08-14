@@ -4,7 +4,7 @@ import { isString } from "es-toolkit/compat";
 import { toValue } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import CalendarDate from "@/Components/CalendarDate/CalendarDate.vue";

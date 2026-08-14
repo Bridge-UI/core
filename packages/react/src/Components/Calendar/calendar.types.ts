@@ -3,16 +3,17 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
+  DatePickerModel,
+  DisableDatesInput,
+  StartOfWeek,
+} from "@bridge-ui/core/Domain";
+import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
   CalendarRounded,
-  DatePickerModel,
-  DisableDatesInput,
-  MergeHtmlProps,
-  MergeProps,
-  StartOfWeek,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Calendar";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CalendarDateSlots } from "@/Components/CalendarDate";

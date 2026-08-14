@@ -3,7 +3,7 @@ import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
 import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports

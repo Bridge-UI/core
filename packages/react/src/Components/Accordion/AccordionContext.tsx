@@ -2,7 +2,7 @@
 import { createContext, useContext } from "react";
 
 // ** Core Imports
-import type { AccordionValue } from "@bridge-ui/core";
+import type { AccordionValue } from "@bridge-ui/core/Domain";
 
 /**
  * Shared accordion state for `AccordionItem` children.

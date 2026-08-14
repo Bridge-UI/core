@@ -2,12 +2,9 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type {
-  FormControlInvalidated,
-  LabelSize,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+import type { FormControlInvalidated } from "@bridge-ui/core/Tokens/FormControl";
+import type { LabelSize } from "@bridge-ui/core/Tokens/Label";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { UseFormControlReturn } from "@/Components/FormControl/composables/useFormControl";

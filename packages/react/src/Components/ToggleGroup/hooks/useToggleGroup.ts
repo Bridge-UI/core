@@ -9,14 +9,7 @@ import {
 } from "react";
 
 // ** Core Imports
-import {
-  cn,
-  getAdjacentTabValue,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
-} from "@bridge-ui/core";
+import { getAdjacentTabValue } from "@bridge-ui/core/Domain";
 import {
   colorProps,
   orientationProps,
@@ -24,6 +17,13 @@ import {
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/ToggleGroup";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ToggleGroupContextValue } from "@/Components/ToggleGroup/ToggleGroupContext";

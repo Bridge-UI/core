@@ -8,9 +8,8 @@ import type {
   BadgeRounded,
   BadgeSize,
   BadgeVariant,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Badge";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface BadgeSizeOverrides {}
 export interface BadgeColorOverrides {}

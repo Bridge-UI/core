@@ -3,7 +3,8 @@ import { get, omit } from "es-toolkit/compat";
 import { useEffect, type MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

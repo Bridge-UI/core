@@ -40,9 +40,9 @@ import {
 } from "react";
 
 // ** Core Imports
-import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";
 
-declare module "@bridge-ui/core" {
+declare module "@bridge-ui/core/Adapters" {
   interface IconSourceValueOverrides {
     fontAwesome: IconDefinition;
   }

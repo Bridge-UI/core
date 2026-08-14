@@ -5,9 +5,8 @@ import type { HTMLAttributes } from "react";
 import type {
   DividerColor,
   DividerOrientation,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Divider";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface DividerColorOverrides {}
 export interface DividerOrientationOverrides {}

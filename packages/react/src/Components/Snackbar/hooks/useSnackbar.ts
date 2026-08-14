@@ -12,25 +12,29 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
-  cn,
   getLayerStackEntry,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   LAYER_STACK_BASE_Z_INDEX,
-  mergeBridgeUILayeredClasses,
   pushLayerStack,
-  snackbarColorProps,
-  snackbarPaddingProps,
-  snackbarPositionProps,
-  snackbarRoundedProps,
-  snackbarTransitionProps,
-  splitComponentProps,
   subscribeLayerStack,
   type LayerStackHandle,
+} from "@bridge-ui/core/Layer";
+import {
+  colorProps as snackbarColorProps,
+  paddingProps as snackbarPaddingProps,
+  positionProps as snackbarPositionProps,
+  roundedProps as snackbarRoundedProps,
+  transitionProps as snackbarTransitionProps,
+  type SnackbarTransition,
+} from "@bridge-ui/core/Tokens/Snackbar";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type SnackbarTransition,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

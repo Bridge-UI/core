@@ -10,19 +10,20 @@ import {
 } from "vue";
 
 // ** Core Imports
+import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  cn,
   isDateRangeValue,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type DateAdapter,
-  type DateAdapterContext,
   type DatePickerModel,
   type DateRangeValue,
+} from "@bridge-ui/core/Domain";
+import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";

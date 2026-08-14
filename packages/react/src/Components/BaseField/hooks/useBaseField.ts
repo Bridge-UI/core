@@ -3,14 +3,14 @@ import { get, omit } from "es-toolkit/compat";
 import { useId, useMemo } from "react";
 
 // ** Core Imports
+import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/BaseField";
 import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/BaseField";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

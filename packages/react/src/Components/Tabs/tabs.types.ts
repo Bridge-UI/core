@@ -2,15 +2,14 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
+import type { TabsActivation } from "@bridge-ui/core/Domain";
 import type {
-  MergeHtmlProps,
-  MergeProps,
-  TabsActivation,
   TabsColor,
   TabsOrientation,
   TabsSize,
   TabsVariant,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Tabs";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { TabOwnProps } from "@/Components/Tab/tab.types";

@@ -4,7 +4,7 @@ import { expect, test, vi } from "vitest";
 import { defineComponent, h, ref, type Ref } from "vue";
 
 // ** Core Imports
-import type { AccordionValue } from "@bridge-ui/core";
+import type { AccordionValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type { AccordionOwnProps } from "@/Components/Accordion/accordion.types";

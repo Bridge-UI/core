@@ -4,11 +4,8 @@ import { get } from "es-toolkit/compat";
 import { computed, inject, provide } from "vue";
 
 // ** Core Imports
-import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  snackbarPositionProps,
-} from "@bridge-ui/core";
+import { positionProps as snackbarPositionProps } from "@bridge-ui/core/Tokens/Snackbar";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";

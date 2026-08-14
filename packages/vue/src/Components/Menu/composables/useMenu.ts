@@ -17,21 +17,25 @@ import {
 import {
   acquireLayerStackOrder,
   claimOpenMenu,
-  cn,
-  createFocusable,
-  createPositionable,
   getLayerStackEntry,
   LAYER_STACK_BASE_Z_INDEX,
-  mergeBridgeUILayeredClasses,
   pushLayerStack,
-  splitComponentProps,
   subscribeLayerStack,
   type LayerStackHandle,
+} from "@bridge-ui/core/Layer";
+import {
+  createFocusable,
+  createPositionable,
+  type PositionHandle,
+} from "@bridge-ui/core/Runtime";
+import { roundedProps, shadowProps } from "@bridge-ui/core/Tokens/Menu";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type PositionHandle,
-} from "@bridge-ui/core";
-import { roundedProps, shadowProps } from "@bridge-ui/core/Tokens/Menu";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { MenuOwnProps, MenuProps } from "@/Components/Menu/menu.types";

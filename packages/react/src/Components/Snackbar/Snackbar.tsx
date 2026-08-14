@@ -3,7 +3,11 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { cn, hasDocument, resolveModalPortalElement } from "@bridge-ui/core";
+import {
+  hasDocument,
+  resolveModalPortalElement,
+} from "@bridge-ui/core/Runtime";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

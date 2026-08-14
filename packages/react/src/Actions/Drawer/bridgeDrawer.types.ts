@@ -1,5 +1,5 @@
 // ** External Imports
-import type { LayerId } from "@bridge-ui/core";
+import type { LayerId } from "@bridge-ui/core/Layer";
 import type { ComponentType, ReactNode } from "react";
 
 // ** Local Imports

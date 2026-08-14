@@ -11,14 +11,12 @@ import {
 } from "vue";
 
 // ** Core Imports
-import {
-  createMergeNestedComponentProps,
-  createMergePartBind,
-} from "@bridge-ui/core";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import type { FormFieldSize } from "@bridge-ui/core/Tokens/FormField";
 import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
 import {
+  createMergeNestedComponentProps,
+  createMergePartBind,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";

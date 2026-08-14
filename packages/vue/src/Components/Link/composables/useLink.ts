@@ -4,17 +4,17 @@ import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
+  colorProps,
+  sizeProps,
+  underlineProps,
+} from "@bridge-ui/core/Tokens/Link";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  sizeProps,
-  underlineProps,
-} from "@bridge-ui/core/Tokens/Link";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

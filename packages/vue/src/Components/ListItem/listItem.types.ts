@@ -2,7 +2,8 @@
 import type { HTMLAttributes, Slot, VNode } from "vue";
 
 // ** Core Imports
-import type { ListboxValue, MergeHtmlProps } from "@bridge-ui/core";
+import type { ListboxValue } from "@bridge-ui/core/Domain";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

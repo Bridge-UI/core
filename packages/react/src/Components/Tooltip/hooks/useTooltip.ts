@@ -15,22 +15,26 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
-  cn,
-  createPositionable,
   LAYER_STACK_BASE_Z_INDEX,
-  mergeBridgeUILayeredClasses,
   pushLayerStack,
-  splitComponentProps,
   type LayerStackHandle,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
+} from "@bridge-ui/core/Layer";
+import {
+  createPositionable,
   type PositionHandle,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Runtime";
 import {
   colorProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Tokens/Tooltip";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

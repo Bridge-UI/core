@@ -4,7 +4,7 @@ import { expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import type { TimeValue } from "@bridge-ui/core";
+import type { TimeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useTimeField, type TimeFieldOwnProps } from "@/Components/TimeField";

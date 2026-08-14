@@ -4,10 +4,8 @@ import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import {
-  resetBreakpointCachesForTests,
-  type DatePickerModel,
-} from "@bridge-ui/core";
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
+import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useDateField, type DateFieldOwnProps } from "@/Components/DateField";

@@ -2,16 +2,15 @@
 import type { HTMLAttributes, InputHTMLAttributes } from "vue";
 
 // ** Core Imports
+import type { OtpInputType } from "@bridge-ui/core/Domain";
+import type { BaseFieldInvalidated } from "@bridge-ui/core/Tokens/BaseField";
 import type {
-  BaseFieldInvalidated,
-  MergeHtmlProps,
-  MergeProps,
   OtpFieldColor,
   OtpFieldInvalidated,
   OtpFieldRounded,
   OtpFieldVariant,
-  OtpInputType,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/OtpField";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

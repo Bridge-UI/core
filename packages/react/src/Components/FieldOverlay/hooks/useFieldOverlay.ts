@@ -4,10 +4,10 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  cn,
   resolveFieldOverlay,
   type ResolvedFieldOverlay,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";

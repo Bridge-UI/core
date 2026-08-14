@@ -3,14 +3,14 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
+import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
 import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

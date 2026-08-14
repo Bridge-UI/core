@@ -3,14 +3,13 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   ToggleGroupColor,
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
   ToggleGroupVariant,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/ToggleGroup";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ToggleGroupSizeOverrides {}
 export interface ToggleGroupColorOverrides {}

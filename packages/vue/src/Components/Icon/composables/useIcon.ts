@@ -3,15 +3,15 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
+import { resolveIconSource } from "@bridge-ui/core/Adapters";
+import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
 import {
   cn,
-  LibDefaultsShape,
   mergeBridgeUILayeredClasses,
-  MergeLibDefaults,
-  resolveIconSource,
   splitComponentProps,
-} from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconElement } from "@/Adapters/Icon";

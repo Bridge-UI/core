@@ -4,7 +4,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Core Imports
-import { resetBreakpointCachesForTests } from "@bridge-ui/core";
+import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";

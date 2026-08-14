@@ -10,13 +10,13 @@ import {
 } from "vue";
 
 // ** Core Imports
+import type { TimeValue } from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type TimeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

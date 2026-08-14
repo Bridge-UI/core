@@ -3,14 +3,14 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
+import { resizeProps } from "@bridge-ui/core/Tokens/Textarea";
 import {
   adjustAutosizeTextareaHeight,
   cn,
   mergeBridgeUILayeredClasses,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { resizeProps } from "@bridge-ui/core/Tokens/Textarea";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";

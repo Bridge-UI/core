@@ -4,7 +4,9 @@ import { get } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Core Imports
-import { cn, snackbarRoundedProps, type LinkColor } from "@bridge-ui/core";
+import type { LinkColor } from "@bridge-ui/core/Tokens/Link";
+import { roundedProps as snackbarRoundedProps } from "@bridge-ui/core/Tokens/Snackbar";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { BridgeSnackbarActionProps } from "@/Actions/Snackbar/bridgeSnackbar.types";

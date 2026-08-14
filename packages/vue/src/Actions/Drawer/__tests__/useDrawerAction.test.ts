@@ -15,7 +15,7 @@ import {
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
 
 afterEach(async () => {
   await flushPromises();

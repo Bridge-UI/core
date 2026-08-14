@@ -3,13 +3,9 @@ import { get, omit } from "es-toolkit/compat";
 import { useEffect, type KeyboardEvent, type MouseEvent } from "react";
 
 // ** Core Imports
-import {
-  cn,
-  getTabId,
-  getTabPanelId,
-  splitComponentProps,
-  type IconSize,
-} from "@bridge-ui/core";
+import { getTabId, getTabPanelId } from "@bridge-ui/core/Domain";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { TabOwnProps, TabProps } from "@/Components/Tab/tab.types";

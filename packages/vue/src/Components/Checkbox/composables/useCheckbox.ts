@@ -11,18 +11,18 @@ import {
 
 // ** Core Imports
 import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
   colorProps,
   invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Tokens/Checkbox";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

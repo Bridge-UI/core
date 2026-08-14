@@ -2,7 +2,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 export interface ListClasses {
   /**

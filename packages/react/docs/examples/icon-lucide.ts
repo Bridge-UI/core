@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 
 // ** Core Imports
-import type { IconAdapter, SemanticIconName } from "@bridge-ui/core";
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";
 
 const icons = {
   eye: Eye,

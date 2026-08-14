@@ -5,18 +5,18 @@ import { useMemo, useState } from "react";
 
 // ** Core Imports
 import {
-  cn,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
   colorProps,
   invalidatedProps,
   roundedProps,
   sizeProps,
 } from "@bridge-ui/core/Tokens/Switch";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";

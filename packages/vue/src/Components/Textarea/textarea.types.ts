@@ -2,11 +2,8 @@
 import type { TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
-import type {
-  MergeHtmlProps,
-  MergeProps,
-  TextareaResize,
-} from "@bridge-ui/core";
+import type { TextareaResize } from "@bridge-ui/core/Tokens/Textarea";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

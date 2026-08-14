@@ -3,7 +3,7 @@
 import { computed } from "vue";
 
 // ** Core Imports
-import { type LinkColor } from "@bridge-ui/core";
+import type { LinkColor } from "@bridge-ui/core/Tokens/Link";
 
 // ** Local Imports
 import type { BridgeDialogActionProps } from "@/Actions/Dialog/bridgeDialog.types";

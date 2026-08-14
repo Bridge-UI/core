@@ -3,12 +3,11 @@ import type { HTMLAttributes, SVGAttributes } from "vue";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   SpinnerColor,
   SpinnerSize,
   SpinnerVariant,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Spinner";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface SpinnerSizeOverrides {}
 export interface SpinnerColorOverrides {}

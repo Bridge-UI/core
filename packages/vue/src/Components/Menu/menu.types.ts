@@ -3,13 +3,11 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
-  MenuRounded,
-  MenuShadow,
-  MergeHtmlProps,
-  MergeProps,
   PositionPlacement,
   PositionStrategy,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Runtime";
+import type { MenuRounded, MenuShadow } from "@bridge-ui/core/Tokens/Menu";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface MenuShadowOverrides {}
 export interface MenuRoundedOverrides {}

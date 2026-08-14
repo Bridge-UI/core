@@ -4,14 +4,15 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 // ** Core Imports
 import type {
   DisableTimesInput,
-  MergeHtmlProps,
-  MergeProps,
   RangePickerOrientation,
+  TimeRangeValue,
+} from "@bridge-ui/core/Domain";
+import type {
   TimeColor,
   TimeColorItem,
-  TimeRangeValue,
   TimeRounded,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Time";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";

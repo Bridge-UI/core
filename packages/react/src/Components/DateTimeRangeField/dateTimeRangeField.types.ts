@@ -7,9 +7,9 @@ import type {
   DisableDatesInput,
   DisableTimesInput,
   FieldOverlayMode,
-  MergeHtmlProps,
   StartOfWeek,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CalendarDateSlots } from "@/Components/CalendarDate";

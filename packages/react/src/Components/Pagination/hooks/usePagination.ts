@@ -4,21 +4,23 @@ import { useCallback, useMemo, useState } from "react";
 
 // ** Core Imports
 import {
-  cn,
   getPaginationItems,
-  mergeBridgeUILayeredClasses,
-  splitComponentProps,
-  type IconSize,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
   type PaginationEntry,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
 import {
   colorProps,
   roundedProps,
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/Pagination";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

@@ -8,7 +8,7 @@ import {
   resolveSliderBounds,
   resolveSliderDefaultValue,
   type SliderRangeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { BASE_FIELD_CHROME_SLOT_NAMES } from "@/Components/BaseField";

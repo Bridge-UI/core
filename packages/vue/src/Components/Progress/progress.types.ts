@@ -3,13 +3,12 @@ import type { HTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   ProgressColor,
   ProgressRounded,
   ProgressSize,
   ProgressVariant,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens/Progress";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ProgressSizeOverrides {}
 export interface ProgressColorOverrides {}

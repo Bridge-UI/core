@@ -3,15 +3,15 @@ import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
+import { collapseBreadcrumbItems } from "@bridge-ui/core/Domain";
+import { sizeProps } from "@bridge-ui/core/Tokens/Breadcrumb";
 import {
   cn,
-  collapseBreadcrumbItems,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Tokens/Breadcrumb";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { BreadcrumbContextValue } from "@/Components/Breadcrumb/BreadcrumbContext";

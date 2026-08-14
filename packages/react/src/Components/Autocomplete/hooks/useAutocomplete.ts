@@ -12,24 +12,26 @@ import {
 
 // ** Core Imports
 import {
-  adjustAutosizeTextareaHeight,
-  cn,
   commitFreeSoloValue,
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
-  mergeBridgeUILayeredClasses,
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
-  splitComponentProps,
   type ListboxEntry,
   type SelectAsyncSearch,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
+import {
+  adjustAutosizeTextareaHeight,
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

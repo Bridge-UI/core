@@ -3,7 +3,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 // ** Core Imports
-import { observeTimePanelSelectedScroll } from "@bridge-ui/core";
+import { observeTimePanelSelectedScroll } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/composables/useTimePanel";

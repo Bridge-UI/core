@@ -4,10 +4,8 @@ import { afterEach, expect, test, vi } from "vitest";
 import { h } from "vue";
 
 // ** Core Imports
-import {
-  resetBreakpointCachesForTests,
-  resetLayerStackForTests,
-} from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { FieldOverlay } from "@/Components/FieldOverlay";

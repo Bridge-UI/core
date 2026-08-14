@@ -5,9 +5,9 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import type {
   DisableTimesInput,
   FieldOverlayMode,
-  MergeHtmlProps,
   TimeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
