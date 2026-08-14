@@ -16,7 +16,7 @@ test("it should expose context defaults from useToggleGroup", () => {
       {
         size: "md",
         full: false,
-        rounded: "full",
+        rounded: "md",
         disabled: false,
         variant: "solid",
         color: "primary",

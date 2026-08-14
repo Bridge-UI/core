@@ -10,7 +10,7 @@ import type { ToggleGroupOwnProps } from "@/Components/ToggleGroup/toggleGroup.t
 const libDefaults = {
   size: "md",
   full: false,
-  rounded: "full",
+  rounded: "md",
   disabled: false,
   variant: "solid",
   color: "primary",

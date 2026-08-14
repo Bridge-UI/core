@@ -98,7 +98,7 @@ export interface ToggleGroupOwnProps {
   /**
    * Track and segment roundness.
    *
-   * @default "full"
+   * @default "md"
    */
   rounded?: MergeProps<ToggleGroupRounded, ToggleGroupRoundedOverrides>;
 

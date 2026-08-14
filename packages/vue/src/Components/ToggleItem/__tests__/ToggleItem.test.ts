@@ -68,8 +68,21 @@ test("it should render a leading icon when startIcon is set", () => {
   expect(wrapper.find('[role="radio"]').classes().join(" ")).toContain("gap-");
 });
 
-test("it should stretch when the group is full", () => {
-  const wrapper = mountToggleGroup({
+test("it should fit content by default and stretch when full", () => {
+  const fitted = mountToggleGroup({
+    props: { modelValue: "a" },
+    slots: {
+      default: () => [
+        h(ToggleItem, { value: "a" }, { default: () => "Alpha" }),
+        h(ToggleItem, { value: "b" }, { default: () => "Beta" }),
+      ],
+    },
+  });
+
+  expect(fitted.find('[role="radiogroup"]').classes()).toContain("w-fit");
+  expect(fitted.find('[role="radiogroup"]').classes()).not.toContain("w-full");
+
+  const full = mountToggleGroup({
     props: { full: true, modelValue: "a" },
     slots: {
       default: () => [
@@ -79,6 +92,6 @@ test("it should stretch when the group is full", () => {
     },
   });
 
-  expect(wrapper.find('[role="radiogroup"]').classes()).toContain("w-full");
-  expect(wrapper.find('[role="radio"]').classes()).toContain("flex-1");
+  expect(full.find('[role="radiogroup"]').classes()).toContain("w-full");
+  expect(full.find('[role="radio"]').classes()).toContain("flex-1");
 });

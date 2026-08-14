@@ -34,8 +34,8 @@ const lib = ref("vue");
 
 ```vue
 <ToggleGroup v-model="view" aria-label="View">
-  <ToggleItem value="list" :start-icon="List" aria-label="List" />
-  <ToggleItem value="grid" :start-icon="LayoutGrid" aria-label="Grid" />
+  <ToggleItem value="list" aria-label="List" :start-icon="List" />
+  <ToggleItem value="grid" aria-label="Grid" :start-icon="LayoutGrid" />
 </ToggleGroup>
 ```
 

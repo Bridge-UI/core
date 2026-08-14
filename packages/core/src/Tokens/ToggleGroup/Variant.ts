@@ -41,14 +41,14 @@ export const variantProps: ToggleGroupVariant = {
   "solid": {
     "itemSelected": "",
     "root":
-      "inline-flex items-center border border-dark-200 bg-white dark:border-dark-700 dark:bg-dark-900",
+      "inline-flex w-fit items-center border border-dark-200 bg-white dark:border-dark-700 dark:bg-dark-900",
     "item":
       "text-dark-600 aria-[checked=false]:hover:text-dark-800 aria-[checked=false]:hover:bg-dark-500/10 dark:text-dark-400 dark:aria-[checked=false]:hover:text-dark-200 dark:aria-[checked=false]:hover:bg-dark-500/15",
   },
   "outline": {
     "itemSelected": "ring-1 ring-inset ring-current",
     "root":
-      "inline-flex items-center border border-dark-200 bg-white dark:border-dark-700 dark:bg-dark-900",
+      "inline-flex w-fit items-center border border-dark-200 bg-white dark:border-dark-700 dark:bg-dark-900",
     "item":
       "text-dark-600 aria-[checked=false]:hover:text-dark-800 aria-[checked=false]:hover:bg-dark-500/10 dark:text-dark-400 dark:aria-[checked=false]:hover:text-dark-200 dark:aria-[checked=false]:hover:bg-dark-500/15",
   },

@@ -37,8 +37,18 @@ test("it should render a leading icon when startIcon is set", () => {
   );
 });
 
-test("it should stretch when the group is full", () => {
-  render(
+test("it should fit content by default and stretch when full", () => {
+  const { rerender } = render(
+    <ToggleGroup defaultValue="a" aria-label="Options">
+      <ToggleItem value="a">Alpha</ToggleItem>
+      <ToggleItem value="b">Beta</ToggleItem>
+    </ToggleGroup>,
+  );
+
+  expect(screen.getByRole("radiogroup").className).toContain("w-fit");
+  expect(screen.getByRole("radiogroup").className).not.toContain("w-full");
+
+  rerender(
     <ToggleGroup full defaultValue="a" aria-label="Options">
       <ToggleItem value="a">Alpha</ToggleItem>
       <ToggleItem value="b">Beta</ToggleItem>
