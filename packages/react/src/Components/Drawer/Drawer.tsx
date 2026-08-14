@@ -2,7 +2,10 @@
 import { createPortal } from "react-dom";
 
 // ** Core Imports
-import { hasDocument, resolveModalPortalElement } from "@bridge-ui/core/Utils";
+import {
+  hasDocument,
+  resolveModalPortalElement,
+} from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import type { DrawerProps } from "@/Components/Drawer/drawer.types";

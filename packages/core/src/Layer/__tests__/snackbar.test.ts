@@ -6,7 +6,7 @@ import {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
   usesTrailingSnackbarActions,
-} from "@/Utils/snackbar";
+} from "@/Layer/snackbar";
 
 describe("getSnackbarTransitionClass", () => {
   test("it should return a transition class for slide", () => {

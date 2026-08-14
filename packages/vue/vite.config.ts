@@ -66,6 +66,7 @@ export default defineConfig({
       entry: collectLibEntries(srcDir),
     },
     rollupOptions: {
+      checks: { pluginTimings: false },
       preserveEntrySignatures: "strict",
       output: {
         preserveModules: true,

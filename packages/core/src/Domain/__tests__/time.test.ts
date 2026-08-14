@@ -17,7 +17,7 @@ import {
   to12Hour,
   to24Hour,
   toMeridiem,
-} from "@/Utils/time";
+} from "@/Domain/time";
 
 describe("buildHourOptions", () => {
   test("it should return 24 hours by default", () => {

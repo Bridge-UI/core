@@ -2,13 +2,13 @@
 import { get, isNil, isString } from "es-toolkit/compat";
 
 // ** Local Imports
+import { hasWindow } from "@/Runtime/env";
 import {
   transitionProps,
   type DrawerPlacement,
   type DrawerSlidePanel,
   type DrawerTransition,
 } from "@/Tokens/Drawer";
-import { hasWindow } from "@/Utils/env";
 
 /**
  * Fallback ms to finish leave when `transitionend` never fires.

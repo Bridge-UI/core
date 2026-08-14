@@ -3,14 +3,14 @@ import { maxBy, remove } from "es-toolkit/array";
 import { get, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
+import { resetOpenMenuLayersForTests } from "@/Layer/menu";
 import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
+import { hasDocument, hasWindow } from "@/Runtime/env";
 import {
   transitionProps,
   type ModalTransition,
 } from "@/Tokens/Modal/Transition";
-import { hasDocument, hasWindow } from "@/Utils/env";
-import { resetOpenMenuLayersForTests } from "@/Utils/menu";
 
 /** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
 export const LAYER_STACK_BASE_Z_INDEX = 50;

@@ -5,7 +5,6 @@ import { isString } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
-import { createLayerId } from "@/Layer/registry";
 import {
   getLayerStackEntry,
   getLayerStackSnapshot,
@@ -15,7 +14,8 @@ import {
   resetLayerStackForTests,
   SCROLLBAR_COMPENSATION_VAR,
   subscribeLayerStack,
-} from "@/Utils/modal";
+} from "@/Layer/modal";
+import { createLayerId } from "@/Layer/registry";
 
 afterEach(() => {
   resetLayerStackForTests();

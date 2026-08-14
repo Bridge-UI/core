@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 
 // ** Local Imports
-import { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Utils/tabs";
+import { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Domain/tabs";
 
 describe("getTabId", () => {
   it("builds a stable tab id", () => {

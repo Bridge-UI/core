@@ -4,7 +4,7 @@
 import { describe, expect, test, vi } from "vitest";
 
 // ** Local Imports
-import type { SelectOption } from "@/Utils/select";
+import type { SelectOption } from "@/Domain/select";
 import {
   DEFAULT_SELECT_ASYNC_DEBOUNCE,
   DEFAULT_SELECT_ASYNC_LIMIT,
@@ -22,7 +22,7 @@ import {
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
-} from "@/Utils/select";
+} from "@/Domain/select";
 
 const keys = {
   optionValue: "id",

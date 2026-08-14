@@ -8,7 +8,7 @@ import {
   getDrawerPanelTransitionClass,
   hasDrawerTransition,
   resolveEffectiveDrawerTransition,
-} from "@/Utils/drawer";
+} from "@/Layer/drawer";
 
 describe("hasDrawerTransition", () => {
   it("returns false for none and undefined", () => {

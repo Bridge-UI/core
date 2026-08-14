@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 
 // ** Local Imports
-import { collapseBreadcrumbItems } from "@/Utils/breadcrumb";
+import { collapseBreadcrumbItems } from "@/Domain/breadcrumb";
 
 describe("collapseBreadcrumbItems", () => {
   it("returns all items when under the max", () => {

@@ -7,7 +7,7 @@ import { afterEach, expect, test } from "vitest";
 import {
   isModalBackdropClick,
   resolveModalPortalElement,
-} from "@/Utils/portal";
+} from "@/Runtime/portal";
 
 afterEach(() => {
   document.body.innerHTML = "";

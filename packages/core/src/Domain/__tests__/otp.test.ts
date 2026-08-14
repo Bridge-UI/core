@@ -15,7 +15,7 @@ import {
   normalizeOtpValue,
   resolveOtpLength,
   splitOtpValue,
-} from "@/Utils/otp";
+} from "@/Domain/otp";
 
 describe("resolveOtpLength", () => {
   test("it should default to DEFAULT_OTP_LENGTH", () => {
