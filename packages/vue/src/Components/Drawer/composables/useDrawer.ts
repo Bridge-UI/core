@@ -35,13 +35,13 @@ import {
   type LibDefaultsShape,
   type MergeLibDefaults,
 } from "@bridge-ui/core";
+import { isModalBackdropClick } from "@bridge-ui/core/Runtime";
 import {
   blurProps,
   placementPanelProps,
   placementProps,
   sizeProps,
 } from "@bridge-ui/core/Tokens/Drawer";
-import { isModalBackdropClick } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {
