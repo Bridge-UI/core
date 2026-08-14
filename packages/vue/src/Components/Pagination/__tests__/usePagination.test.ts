@@ -9,6 +9,7 @@ import type { PaginationOwnProps } from "@/Components/Pagination/pagination.type
 
 const libDefaults = {
   size: "md",
+  rounded: "md",
   variant: "text",
   disabled: false,
   siblingCount: 1,
@@ -48,10 +49,10 @@ function mountUsePagination(
 test("it should expose defaults from usePagination", () => {
   const { result } = mountUsePagination();
 
-  expect(result.rootBind.value["aria-label"]).toBe("Pagination");
   expect(result.page.value).toBe(1);
-  expect(result.showPrev.value).toBe(true);
   expect(result.showNext.value).toBe(true);
+  expect(result.showPrev.value).toBe(true);
+  expect(result.rootBind.value["aria-label"]).toBe("Pagination");
 });
 
 test("it should build page entries for numbered mode", () => {

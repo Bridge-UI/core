@@ -5,6 +5,7 @@ import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 
 const paginationLibDefaults = {
   size: "md",
+  rounded: "md",
   defaultPage: 1,
   variant: "text",
   disabled: false,

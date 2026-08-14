@@ -31,8 +31,8 @@ test("it should render numbered pages with a current page", () => {
     attrs: { "aria-label": "Pagination" },
   });
 
-  expect(wrapper.find("nav[aria-label='Pagination']").exists()).toBe(true);
   expect(wrapper.find("button[aria-label='Page 1']").exists()).toBe(true);
+  expect(wrapper.find("nav[aria-label='Pagination']").exists()).toBe(true);
   expect(
     wrapper.find("button[aria-label='Page 2']").attributes("aria-current"),
   ).toBe("page");
@@ -93,8 +93,8 @@ test("it should apply visual variants", async () => {
     props: { count: 3, modelValue: 1, variant: "outlined" },
   });
 
-  expect(wrapper.find("ul").classes()).toContain("rounded-md");
   expect(wrapper.find("li").classes()).toContain("contents");
+  expect(wrapper.find("ul").classes()).toContain("rounded-md");
   expect(wrapper.find("button[aria-label='Previous']").classes()).toContain(
     "ml-0",
   );
@@ -114,6 +114,14 @@ test("it should apply visual variants", async () => {
   await wrapper.setProps({ variant: "ghost" });
   expect(wrapper.find("ul").classes()).toContain("gap-1");
   expect(wrapper.find("button[aria-label='Next']").classes()).toContain("w-9");
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "rounded-md",
+  );
+
+  await wrapper.setProps({ rounded: "lg", variant: "ghost" });
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "rounded-lg",
+  );
 
   await wrapper.setProps({ variant: "text" });
   expect(wrapper.find("ul").classes()).toContain("border-t");

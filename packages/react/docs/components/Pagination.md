@@ -31,6 +31,20 @@ const [page, setPage] = useState(1);
 <Pagination count={12} page={page} variant="outlined" onChange={setPage} />
 ```
 
+### Rounded
+
+Applies to `ghost` item corners and the `outlined` group / edge controls.
+
+```tsx
+<Pagination
+  count={12}
+  page={page}
+  rounded="lg"
+  variant="ghost"
+  onChange={setPage}
+/>
+```
+
 ### With siblings and boundaries
 
 ```tsx
@@ -50,9 +64,9 @@ For APIs that do not expose a total page count:
 ```tsx
 <Pagination
   mode="simple"
+  aria-label="Pagination"
   hasNext={Boolean(nextCursor)}
   hasPrevious={Boolean(prevCursor)}
-  aria-label="Pagination"
   onNext={() => fetchPage(nextCursor)}
   onPrevious={() => fetchPage(prevCursor)}
 />

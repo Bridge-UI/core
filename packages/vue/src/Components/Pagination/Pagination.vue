@@ -38,6 +38,7 @@ const {
   props,
   {
     size: "md",
+    rounded: "md",
     variant: "text",
     disabled: false,
     siblingCount: 1,

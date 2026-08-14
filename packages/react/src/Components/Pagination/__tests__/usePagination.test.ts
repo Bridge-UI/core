@@ -7,6 +7,7 @@ import { usePagination } from "@/Components/Pagination/hooks/usePagination";
 
 const libDefaults = {
   size: "md",
+  rounded: "md",
   defaultPage: 1,
   variant: "text",
   disabled: false,
@@ -25,10 +26,10 @@ afterEach(() => {
 test("it should expose defaults from usePagination", () => {
   const { result } = renderHook(() => usePagination({}, libDefaults));
 
-  expect(result.current.rootBind["aria-label"]).toBe("Pagination");
   expect(result.current.page).toBe(1);
-  expect(result.current.showPrev).toBe(true);
   expect(result.current.showNext).toBe(true);
+  expect(result.current.showPrev).toBe(true);
+  expect(result.current.rootBind["aria-label"]).toBe("Pagination");
 });
 
 test("it should build page entries for numbered mode", () => {

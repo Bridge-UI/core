@@ -94,6 +94,14 @@ test("it should apply visual variants", () => {
   expect(screen.getByRole("button", { name: "Next" }).className).toContain(
     "w-9",
   );
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "rounded-md",
+  );
+
+  rerender(<Pagination page={1} count={3} rounded="lg" variant="ghost" />);
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "rounded-lg",
+  );
 
   rerender(<Pagination page={1} count={3} variant="text" />);
   expect(screen.getByRole("list").className).toContain("border-t");

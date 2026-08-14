@@ -1,6 +1,7 @@
 /**
  * Per-variant structural classes for the pagination list and controls.
  * Inactive text uses `dark-*`; selected accents come from color tokens.
+ * Corner radius comes from the `rounded` token (not hardcoded here).
  */
 export interface PaginationVariantItem {
   /**
@@ -54,11 +55,11 @@ export interface PaginationVariant {
  */
 export const variantProps: PaginationVariant = {
   "ghost": {
+    "ellipsis": "",
     "list": "gap-1",
     "itemSelected": "",
-    "ellipsis": "rounded-md",
     "item":
-      "rounded-md text-dark-600 hover:bg-dark-500/10 hover:text-dark-800 dark:text-dark-400 dark:hover:bg-dark-500/15 dark:hover:text-dark-200",
+      "text-dark-600 hover:bg-dark-500/10 hover:text-dark-800 dark:text-dark-400 dark:hover:bg-dark-500/15 dark:hover:text-dark-200",
   },
   "text": {
     "itemSelected": "",
@@ -69,9 +70,9 @@ export const variantProps: PaginationVariant = {
   },
   "outlined": {
     "itemSelected": "z-10",
-    "list": "isolate rounded-md shadow-sm",
+    "list": "isolate shadow-sm",
     "ellipsis":
-      "relative -ml-px ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
+      "relative -ml-px rounded-none ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
     "item":
       "relative -ml-px rounded-none ring-1 ring-inset ring-dark-300 text-dark-700 hover:bg-dark-500/5 dark:ring-dark-600 dark:text-dark-200 dark:hover:bg-dark-500/10",
   },

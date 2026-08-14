@@ -15,6 +15,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  roundedProps,
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/Pagination";
@@ -41,6 +42,7 @@ const paginationBridgeKeys = [
   "onNext",
   "classes",
   "hasNext",
+  "rounded",
   "variant",
   "disabled",
   "onChange",
@@ -61,6 +63,7 @@ type PaginationLibDefaults = LibDefaultsShape<
   | "mode"
   | "size"
   | "color"
+  | "rounded"
   | "variant"
   | "disabled"
   | "defaultPage"
@@ -164,6 +167,13 @@ export function usePagination(
     );
   }, [bridgePagination?.tokens?.color]);
 
+  const roundedClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgePagination?.tokens?.rounded,
+    );
+  }, [bridgePagination?.tokens?.rounded]);
+
   const sizeItem = derived(() => {
     return get(sizeClasses, merged.size);
   });
@@ -174,6 +184,10 @@ export function usePagination(
 
   const colorItem = derived(() => {
     return get(colorClasses, merged.color);
+  });
+
+  const roundedItem = derived(() => {
+    return get(roundedClasses, merged.rounded);
   });
 
   const setPage = useCallback(
@@ -209,7 +223,7 @@ export function usePagination(
     }
 
     setPage(page - 1);
-  }, [merged, page, setPage]);
+  }, [page, merged, setPage]);
 
   const goNext = useCallback(() => {
     if (merged.disabled) {
@@ -226,7 +240,7 @@ export function usePagination(
     }
 
     setPage(page + 1);
-  }, [merged, page, setPage]);
+  }, [page, merged, setPage]);
 
   const prevDisabled = derived(() => {
     if (merged.disabled) {
@@ -264,10 +278,15 @@ export function usePagination(
     return merged.variant === "outlined";
   });
 
+  const isGhost = derived(() => {
+    return merged.variant === "ghost";
+  });
+
   const itemClassName = derived(() => {
     return cn({
       [get(sizeItem, "item") ?? ""]: true,
       [get(variantItem, "item") ?? ""]: true,
+      [get(roundedItem, "item") ?? ""]: isGhost,
     });
   });
 
@@ -275,6 +294,7 @@ export function usePagination(
     return cn({
       [get(sizeItem, "itemIcon") ?? ""]: true,
       [get(variantItem, "item") ?? ""]: true,
+      [get(roundedItem, "item") ?? ""]: isGhost,
     });
   });
 
@@ -351,6 +371,7 @@ export function usePagination(
         className: cn({
           [get(sizeItem, "list") ?? ""]: true,
           [get(variantItem, "list") ?? ""]: true,
+          [get(roundedItem, "list") ?? ""]: isOutlined,
           [get(mergedClasses, "list") ?? ""]: true,
         }),
       },
@@ -360,6 +381,8 @@ export function usePagination(
   const getItemBind = useCallback(
     (pageNumber: number) => {
       const selected = pageNumber === page;
+      const isStart = isOutlined && !showPrev && pageNumber === edgePages.first;
+      const isEnd = isOutlined && !showNext && pageNumber === edgePages.last;
 
       return mergePartBind(
         customProps?.item,
@@ -379,10 +402,8 @@ export function usePagination(
             [selectedClassName]: selected,
             [get(mergedClasses, "item") ?? ""]: true,
             "ml-0": isFirstOutlinedControl("page", pageNumber),
-            "rounded-l-md":
-              isOutlined && !showPrev && pageNumber === edgePages.first,
-            "rounded-r-md":
-              isOutlined && !showNext && pageNumber === edgePages.last,
+            [get(roundedItem, "itemStart") ?? ""]: isStart,
+            [get(roundedItem, "itemEnd") ?? ""]: isEnd,
           }),
         },
       );
@@ -390,10 +411,11 @@ export function usePagination(
     [
       page,
       setPage,
-      showPrev,
       showNext,
-      isOutlined,
+      showPrev,
       edgePages,
+      isOutlined,
+      roundedItem,
       itemClassName,
       mergedClasses,
       merged.disabled,
@@ -414,6 +436,7 @@ export function usePagination(
           className: cn({
             [get(sizeItem, "ellipsis") ?? ""]: true,
             [get(variantItem, "ellipsis") ?? ""]: true,
+            [get(roundedItem, "item") ?? ""]: isGhost,
             [get(mergedClasses, "ellipsis") ?? ""]: true,
             "ml-0": isFirstOutlinedControl("ellipsis", index),
           }),
@@ -421,7 +444,9 @@ export function usePagination(
       );
     },
     [
+      isGhost,
       sizeItem,
+      roundedItem,
       variantItem,
       mergedClasses,
       customProps?.ellipsis,
@@ -447,7 +472,7 @@ export function usePagination(
           [get(mergedClasses, "prev") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
           "ml-0": isOutlined,
-          "rounded-l-md": isOutlined,
+          [get(roundedItem, "itemStart") ?? ""]: isOutlined,
         }),
       },
     );
@@ -466,7 +491,7 @@ export function usePagination(
           [itemIconClassName]: true,
           [get(mergedClasses, "next") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
-          "rounded-r-md": isOutlined,
+          [get(roundedItem, "itemEnd") ?? ""]: isOutlined,
         }),
       },
     );

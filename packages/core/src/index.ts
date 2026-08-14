@@ -248,12 +248,15 @@ export type {
 } from "@/Tokens/OtpField";
 export {
   colorProps as paginationColorProps,
+  roundedProps as paginationRoundedProps,
   sizeProps as paginationSizeProps,
   variantProps as paginationVariantProps,
 } from "@/Tokens/Pagination";
 export type {
   PaginationColor,
   PaginationColorItem,
+  PaginationRounded,
+  PaginationRoundedItem,
   PaginationSize,
   PaginationSizeItem,
   PaginationVariant,
