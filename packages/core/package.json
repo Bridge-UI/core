@@ -62,10 +62,6 @@
       "import": "./dist/Tokens/index.js",
       "types": "./dist/Tokens/index.d.ts"
     },
-    "./Tokens/*/*": {
-      "import": "./dist/Tokens/*/*.js",
-      "types": "./dist/Tokens/*/*.d.ts"
-    },
     "./Tokens/*": {
       "import": "./dist/Tokens/*/index.js",
       "types": "./dist/Tokens/*/index.d.ts"
