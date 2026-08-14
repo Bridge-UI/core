@@ -11,6 +11,7 @@ import type {
   MergeHtmlProps,
   MergeProps,
   PaginationColor,
+  PaginationRounded,
   PaginationSize,
   PaginationVariant,
 } from "@bridge-ui/core";
@@ -20,6 +21,7 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface PaginationSizeOverrides {}
 export interface PaginationColorOverrides {}
+export interface PaginationRoundedOverrides {}
 export interface PaginationVariantOverrides {}
 
 export interface PaginationClasses {
@@ -221,6 +223,13 @@ export interface PaginationOwnProps {
    * @default 1
    */
   modelValue?: number;
+
+  /**
+   * Control corner radius (`ghost` items / `outlined` group edges).
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<PaginationRounded, PaginationRoundedOverrides>;
 
   /**
    * Pages shown on each side of the current page (numbered mode).

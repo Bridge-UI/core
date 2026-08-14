@@ -15,6 +15,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  roundedProps,
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/Pagination";
@@ -38,6 +39,7 @@ const paginationBridgeKeys = [
   "count",
   "classes",
   "hasNext",
+  "rounded",
   "variant",
   "disabled",
   "modelValue",
@@ -54,6 +56,7 @@ type PaginationLibDefaults = LibDefaultsShape<
   | "mode"
   | "size"
   | "color"
+  | "rounded"
   | "variant"
   | "disabled"
   | "siblingCount"
@@ -143,6 +146,13 @@ export function usePagination(
     );
   });
 
+  const roundedClasses = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgePagination.value?.tokens?.rounded,
+    );
+  });
+
   const sizeItem = computed(() => {
     return get(sizeClasses.value, merged.value.size);
   });
@@ -153,6 +163,10 @@ export function usePagination(
 
   const colorItem = computed(() => {
     return get(colorClasses.value, merged.value.color);
+  });
+
+  const roundedItem = computed(() => {
+    return get(roundedClasses.value, merged.value.rounded);
   });
 
   const setPage = (next: number) => {
@@ -234,10 +248,27 @@ export function usePagination(
     return !merged.value.hideNextButton;
   });
 
-  const controlClass = computed(() => {
+  const isOutlined = computed(() => {
+    return merged.value.variant === "outlined";
+  });
+
+  const isGhost = computed(() => {
+    return merged.value.variant === "ghost";
+  });
+
+  const itemClass = computed(() => {
     return cn({
       [get(sizeItem.value, "item") ?? ""]: true,
       [get(variantItem.value, "item") ?? ""]: true,
+      [get(roundedItem.value, "item") ?? ""]: isGhost.value,
+    });
+  });
+
+  const itemIconClass = computed(() => {
+    return cn({
+      [get(sizeItem.value, "itemIcon") ?? ""]: true,
+      [get(variantItem.value, "item") ?? ""]: true,
+      [get(roundedItem.value, "item") ?? ""]: isGhost.value,
     });
   });
 
@@ -253,6 +284,48 @@ export function usePagination(
       [get(colorItem.value, "itemSelectedSoft") ?? ""]: variant === "ghost",
     });
   });
+
+  const edgePages = computed(() => {
+    const pages = entries.value.filter(
+      (entry): entry is Extract<PaginationEntry, { type: "page" }> => {
+        return entry.type === "page";
+      },
+    );
+
+    return {
+      first: pages[0]?.page,
+      last: pages[pages.length - 1]?.page,
+    };
+  });
+
+  const isFirstOutlinedControl = (
+    kind: "next" | "page" | "prev" | "ellipsis",
+    key?: number,
+  ) => {
+    if (!isOutlined.value) {
+      return false;
+    }
+
+    if (kind === "prev") {
+      return true;
+    }
+
+    if (showPrev.value) {
+      return false;
+    }
+
+    const first = entries.value[0];
+
+    if (kind === "page") {
+      return first?.type === "page" && first.page === key;
+    }
+
+    if (kind === "ellipsis") {
+      return first?.type === "ellipsis" && key === 0;
+    }
+
+    return false;
+  };
 
   const rootBind = computed(() => {
     const inherited = split.value.inheritedAttrs;
@@ -275,6 +348,7 @@ export function usePagination(
         class: cn({
           [get(sizeItem.value, "list") ?? ""]: true,
           [get(variantItem.value, "list") ?? ""]: true,
+          [get(roundedItem.value, "list") ?? ""]: isOutlined.value,
           [get(mergedClasses.value, "list") ?? ""]: true,
         }),
       },
@@ -283,6 +357,14 @@ export function usePagination(
 
   const getItemBind = (pageNumber: number) => {
     const selected = pageNumber === page.value;
+    const isStart =
+      isOutlined.value &&
+      !showPrev.value &&
+      pageNumber === edgePages.value.first;
+    const isEnd =
+      isOutlined.value &&
+      !showNext.value &&
+      pageNumber === edgePages.value.last;
 
     return mergePartBind(
       customProps.value?.item,
@@ -298,9 +380,12 @@ export function usePagination(
           }
         },
         class: cn({
-          [controlClass.value]: true,
+          [itemClass.value]: true,
           [selectedClass.value]: selected,
           [get(mergedClasses.value, "item") ?? ""]: true,
+          "ml-0": isFirstOutlinedControl("page", pageNumber),
+          [get(roundedItem.value, "itemStart") ?? ""]: isStart,
+          [get(roundedItem.value, "itemEnd") ?? ""]: isEnd,
         }),
       },
     );
@@ -316,7 +401,9 @@ export function usePagination(
         class: cn({
           [get(sizeItem.value, "ellipsis") ?? ""]: true,
           [get(variantItem.value, "ellipsis") ?? ""]: true,
+          [get(roundedItem.value, "item") ?? ""]: isGhost.value,
           [get(mergedClasses.value, "ellipsis") ?? ""]: true,
+          "ml-0": isFirstOutlinedControl("ellipsis", index),
         }),
       },
     );
@@ -336,9 +423,11 @@ export function usePagination(
         "aria-label": "Previous",
         disabled: prevDisabled.value,
         class: cn({
-          [controlClass.value]: true,
+          [itemIconClass.value]: true,
           [get(mergedClasses.value, "prev") ?? ""]: true,
           [get(mergedClasses.value, "item") ?? ""]: true,
+          "ml-0": isOutlined.value,
+          [get(roundedItem.value, "itemStart") ?? ""]: isOutlined.value,
         }),
       },
     );
@@ -354,9 +443,10 @@ export function usePagination(
         type: "button" as const,
         disabled: nextDisabled.value,
         class: cn({
-          [controlClass.value]: true,
+          [itemIconClass.value]: true,
           [get(mergedClasses.value, "next") ?? ""]: true,
           [get(mergedClasses.value, "item") ?? ""]: true,
+          [get(roundedItem.value, "itemEnd") ?? ""]: isOutlined.value,
         }),
       },
     );
@@ -369,6 +459,7 @@ export function usePagination(
       {
         "aria-hidden": true,
         size: iconSize.value,
+        class: "shrink-0 pointer-events-none",
       },
     );
   });
@@ -380,6 +471,7 @@ export function usePagination(
       {
         "aria-hidden": true,
         size: iconSize.value,
+        class: "shrink-0 pointer-events-none",
       },
     );
   });

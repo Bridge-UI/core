@@ -7,6 +7,7 @@ export type {
   PaginationEmits,
   PaginationOwnProps,
   PaginationProps,
+  PaginationRoundedOverrides,
   PaginationSizeOverrides,
   PaginationSlots,
   PaginationVariantOverrides,

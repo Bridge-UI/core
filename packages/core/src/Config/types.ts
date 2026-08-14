@@ -125,6 +125,8 @@ import type {
 import type {
   PaginationColor,
   PaginationColorItem,
+  PaginationRounded,
+  PaginationRoundedItem,
   PaginationSize,
   PaginationSizeItem,
   PaginationVariant,
@@ -1066,12 +1068,14 @@ export interface PaginationConfigBase {
     hideNextButton: boolean;
     hidePrevButton: boolean;
     mode: "simple" | "numbered";
+    rounded: keyof PaginationRounded;
     siblingCount: number;
     size: keyof PaginationSize;
     variant: keyof PaginationVariant;
   }>;
   tokens: Partial<{
     color: Record<string, PaginationColorItem>;
+    rounded: Record<string, PaginationRoundedItem>;
     size: Record<string, PaginationSizeItem>;
     variant: Record<string, PaginationVariantItem>;
   }>;

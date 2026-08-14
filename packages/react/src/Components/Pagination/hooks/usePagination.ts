@@ -15,6 +15,7 @@ import {
 } from "@bridge-ui/core";
 import {
   colorProps,
+  roundedProps,
   sizeProps,
   variantProps,
 } from "@bridge-ui/core/Tokens/Pagination";
@@ -41,6 +42,7 @@ const paginationBridgeKeys = [
   "onNext",
   "classes",
   "hasNext",
+  "rounded",
   "variant",
   "disabled",
   "onChange",
@@ -61,6 +63,7 @@ type PaginationLibDefaults = LibDefaultsShape<
   | "mode"
   | "size"
   | "color"
+  | "rounded"
   | "variant"
   | "disabled"
   | "defaultPage"
@@ -164,6 +167,13 @@ export function usePagination(
     );
   }, [bridgePagination?.tokens?.color]);
 
+  const roundedClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgePagination?.tokens?.rounded,
+    );
+  }, [bridgePagination?.tokens?.rounded]);
+
   const sizeItem = derived(() => {
     return get(sizeClasses, merged.size);
   });
@@ -174,6 +184,10 @@ export function usePagination(
 
   const colorItem = derived(() => {
     return get(colorClasses, merged.color);
+  });
+
+  const roundedItem = derived(() => {
+    return get(roundedClasses, merged.rounded);
   });
 
   const setPage = useCallback(
@@ -209,7 +223,7 @@ export function usePagination(
     }
 
     setPage(page - 1);
-  }, [merged, page, setPage]);
+  }, [page, merged, setPage]);
 
   const goNext = useCallback(() => {
     if (merged.disabled) {
@@ -226,7 +240,7 @@ export function usePagination(
     }
 
     setPage(page + 1);
-  }, [merged, page, setPage]);
+  }, [page, merged, setPage]);
 
   const prevDisabled = derived(() => {
     if (merged.disabled) {
@@ -260,10 +274,27 @@ export function usePagination(
     return !merged.hideNextButton;
   });
 
-  const controlClassName = derived(() => {
+  const isOutlined = derived(() => {
+    return merged.variant === "outlined";
+  });
+
+  const isGhost = derived(() => {
+    return merged.variant === "ghost";
+  });
+
+  const itemClassName = derived(() => {
     return cn({
       [get(sizeItem, "item") ?? ""]: true,
       [get(variantItem, "item") ?? ""]: true,
+      [get(roundedItem, "item") ?? ""]: isGhost,
+    });
+  });
+
+  const itemIconClassName = derived(() => {
+    return cn({
+      [get(sizeItem, "itemIcon") ?? ""]: true,
+      [get(variantItem, "item") ?? ""]: true,
+      [get(roundedItem, "item") ?? ""]: isGhost,
     });
   });
 
@@ -277,6 +308,47 @@ export function usePagination(
         variant === "text" || variant === "ghost",
       [get(colorItem, "itemSelectedSoft") ?? ""]: variant === "ghost",
     });
+  });
+
+  const edgePages = derived(() => {
+    const pages = entries.filter(
+      (entry): entry is Extract<PaginationEntry, { type: "page" }> => {
+        return entry.type === "page";
+      },
+    );
+
+    return {
+      first: pages[0]?.page,
+      last: pages[pages.length - 1]?.page,
+    };
+  });
+
+  const isFirstOutlinedControl = derived(() => {
+    return (kind: "next" | "page" | "prev" | "ellipsis", key?: number) => {
+      if (!isOutlined) {
+        return false;
+      }
+
+      if (kind === "prev") {
+        return true;
+      }
+
+      if (showPrev) {
+        return false;
+      }
+
+      const first = entries[0];
+
+      if (kind === "page") {
+        return first?.type === "page" && first.page === key;
+      }
+
+      if (kind === "ellipsis") {
+        return first?.type === "ellipsis" && key === 0;
+      }
+
+      return false;
+    };
   });
 
   const rootBind = derived(() => {
@@ -299,6 +371,7 @@ export function usePagination(
         className: cn({
           [get(sizeItem, "list") ?? ""]: true,
           [get(variantItem, "list") ?? ""]: true,
+          [get(roundedItem, "list") ?? ""]: isOutlined,
           [get(mergedClasses, "list") ?? ""]: true,
         }),
       },
@@ -308,6 +381,8 @@ export function usePagination(
   const getItemBind = useCallback(
     (pageNumber: number) => {
       const selected = pageNumber === page;
+      const isStart = isOutlined && !showPrev && pageNumber === edgePages.first;
+      const isEnd = isOutlined && !showNext && pageNumber === edgePages.last;
 
       return mergePartBind(
         customProps?.item,
@@ -323,9 +398,12 @@ export function usePagination(
             }
           },
           className: cn({
-            [controlClassName]: true,
+            [itemClassName]: true,
             [selectedClassName]: selected,
             [get(mergedClasses, "item") ?? ""]: true,
+            "ml-0": isFirstOutlinedControl("page", pageNumber),
+            [get(roundedItem, "itemStart") ?? ""]: isStart,
+            [get(roundedItem, "itemEnd") ?? ""]: isEnd,
           }),
         },
       );
@@ -333,11 +411,17 @@ export function usePagination(
     [
       page,
       setPage,
+      showNext,
+      showPrev,
+      edgePages,
+      isOutlined,
+      roundedItem,
+      itemClassName,
+      mergedClasses,
       merged.disabled,
       customProps?.item,
-      controlClassName,
       selectedClassName,
-      mergedClasses,
+      isFirstOutlinedControl,
     ],
   );
 
@@ -352,12 +436,22 @@ export function usePagination(
           className: cn({
             [get(sizeItem, "ellipsis") ?? ""]: true,
             [get(variantItem, "ellipsis") ?? ""]: true,
+            [get(roundedItem, "item") ?? ""]: isGhost,
             [get(mergedClasses, "ellipsis") ?? ""]: true,
+            "ml-0": isFirstOutlinedControl("ellipsis", index),
           }),
         },
       );
     },
-    [customProps?.ellipsis, sizeItem, variantItem, mergedClasses],
+    [
+      isGhost,
+      sizeItem,
+      roundedItem,
+      variantItem,
+      mergedClasses,
+      customProps?.ellipsis,
+      isFirstOutlinedControl,
+    ],
   );
 
   const iconSize = derived(() => {
@@ -374,9 +468,11 @@ export function usePagination(
         type: "button" as const,
         "aria-label": "Previous",
         className: cn({
-          [controlClassName]: true,
+          [itemIconClassName]: true,
           [get(mergedClasses, "prev") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
+          "ml-0": isOutlined,
+          [get(roundedItem, "itemStart") ?? ""]: isOutlined,
         }),
       },
     );
@@ -392,9 +488,10 @@ export function usePagination(
         disabled: nextDisabled,
         type: "button" as const,
         className: cn({
-          [controlClassName]: true,
+          [itemIconClassName]: true,
           [get(mergedClasses, "next") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
+          [get(roundedItem, "itemEnd") ?? ""]: isOutlined,
         }),
       },
     );
@@ -407,6 +504,7 @@ export function usePagination(
       {
         size: iconSize,
         "aria-hidden": true,
+        className: "shrink-0 pointer-events-none",
       },
     );
   });
@@ -418,6 +516,7 @@ export function usePagination(
       {
         size: iconSize,
         "aria-hidden": true,
+        className: "shrink-0 pointer-events-none",
       },
     );
   });

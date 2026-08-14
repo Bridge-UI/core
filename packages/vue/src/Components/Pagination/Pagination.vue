@@ -38,6 +38,7 @@ const {
   props,
   {
     size: "md",
+    rounded: "md",
     variant: "text",
     disabled: false,
     siblingCount: 1,
@@ -55,7 +56,7 @@ const {
 <template>
   <nav v-bind="rootBind">
     <ul v-bind="listBind">
-      <li v-if="showPrev">
+      <li v-if="showPrev" class="contents">
         <button v-bind="prevBind">
           <slot name="prev">
             <Icon icon="chevronLeft" v-bind="prevIconBind" />
@@ -64,21 +65,21 @@ const {
       </li>
 
       <template
+        :key="`${entry.type}-${index}`"
         v-for="(entry, index) in entries"
-        :key="entry.type === 'ellipsis' ? `ellipsis-${index}` : entry.page"
       >
         <li v-bind="getEllipsisBind(index)" v-if="entry.type === 'ellipsis'">
           <slot name="ellipsis">…</slot>
         </li>
 
-        <li v-else>
+        <li v-else class="contents">
           <button v-bind="getItemBind(entry.page)">
             {{ entry.page }}
           </button>
         </li>
       </template>
 
-      <li v-if="showNext">
+      <li v-if="showNext" class="contents">
         <button v-bind="nextBind">
           <slot name="next">
             <Icon icon="chevronRight" v-bind="nextIconBind" />

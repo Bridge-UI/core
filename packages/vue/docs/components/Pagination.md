@@ -33,6 +33,14 @@ const page = ref(1);
 <Pagination :count="12" v-model="page" variant="outlined" />
 ```
 
+### Rounded
+
+Applies to `ghost` item corners and the `outlined` group / edge controls.
+
+```vue
+<Pagination :count="12" rounded="lg" v-model="page" variant="ghost" />
+```
+
 ### With siblings and boundaries
 
 ```vue
@@ -46,10 +54,10 @@ For APIs that do not expose a total page count:
 ```vue
 <Pagination
   mode="simple"
-  :has-next="Boolean(nextCursor)"
-  :has-previous="Boolean(prevCursor)"
   aria-label="Pagination"
   @next="fetchPage(nextCursor)"
+  :has-next="Boolean(nextCursor)"
   @previous="fetchPage(prevCursor)"
+  :has-previous="Boolean(prevCursor)"
 />
 ```

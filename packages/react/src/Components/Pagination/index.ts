@@ -8,6 +8,7 @@ export type {
   PaginationCustomProps,
   PaginationOwnProps,
   PaginationProps,
+  PaginationRoundedOverrides,
   PaginationSizeOverrides,
   PaginationSlots,
   PaginationVariantOverrides,

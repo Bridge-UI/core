@@ -5,6 +5,7 @@ import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 
 const paginationLibDefaults = {
   size: "md",
+  rounded: "md",
   defaultPage: 1,
   variant: "text",
   disabled: false,
@@ -36,7 +37,7 @@ function Pagination(props: PaginationProps) {
     <nav {...rootBind}>
       <ul {...listBind}>
         {showPrev ? (
-          <li>
+          <li className="contents">
             <button {...prevBind}>
               {slots?.prev ?? <Icon icon="chevronLeft" {...prevIconBind} />}
             </button>
@@ -53,14 +54,14 @@ function Pagination(props: PaginationProps) {
           }
 
           return (
-            <li key={entry.page}>
+            <li className="contents" key={`page-${index}`}>
               <button {...getItemBind(entry.page)}>{entry.page}</button>
             </li>
           );
         })}
 
         {showNext ? (
-          <li>
+          <li className="contents">
             <button {...nextBind}>
               {slots?.next ?? <Icon icon="chevronRight" {...nextIconBind} />}
             </button>
