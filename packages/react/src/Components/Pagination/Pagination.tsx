@@ -54,7 +54,7 @@ function Pagination(props: PaginationProps) {
           }
 
           return (
-            <li key={entry.page} className="contents">
+            <li className="contents" key={`page-${index}`}>
               <button {...getItemBind(entry.page)}>{entry.page}</button>
             </li>
           );

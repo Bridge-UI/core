@@ -65,8 +65,8 @@ const {
       </li>
 
       <template
+        :key="`${entry.type}-${index}`"
         v-for="(entry, index) in entries"
-        :key="entry.type === 'ellipsis' ? `ellipsis-${index}` : entry.page"
       >
         <li v-bind="getEllipsisBind(index)" v-if="entry.type === 'ellipsis'">
           <slot name="ellipsis">…</slot>
