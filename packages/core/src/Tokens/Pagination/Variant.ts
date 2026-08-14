@@ -69,11 +69,10 @@ export const variantProps: PaginationVariant = {
   },
   "outlined": {
     "itemSelected": "z-10",
+    "list": "isolate rounded-md shadow-sm",
     "ellipsis":
-      "ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
-    "list":
-      "isolate -space-x-px overflow-hidden rounded-md shadow-sm ring-1 ring-dark-300 dark:ring-dark-600",
+      "relative -ml-px ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
     "item":
-      "rounded-none ring-1 ring-inset ring-dark-300 text-dark-700 hover:bg-dark-500/5 dark:ring-dark-600 dark:text-dark-200 dark:hover:bg-dark-500/10",
+      "relative -ml-px rounded-none ring-1 ring-inset ring-dark-300 text-dark-700 hover:bg-dark-500/5 dark:ring-dark-600 dark:text-dark-200 dark:hover:bg-dark-500/10",
   },
 };

@@ -32,10 +32,10 @@ test("it should render numbered pages with a current page", () => {
   });
 
   expect(wrapper.find("nav[aria-label='Pagination']").exists()).toBe(true);
+  expect(wrapper.find("button[aria-label='Page 1']").exists()).toBe(true);
   expect(
     wrapper.find("button[aria-label='Page 2']").attributes("aria-current"),
   ).toBe("page");
-  expect(wrapper.find("button[aria-label='Page 1']").exists()).toBe(true);
 });
 
 test("it should emit change and update:modelValue when a page is clicked", async () => {
@@ -94,10 +94,30 @@ test("it should apply visual variants", async () => {
   });
 
   expect(wrapper.find("ul").classes()).toContain("rounded-md");
+  expect(wrapper.find("li").classes()).toContain("contents");
+  expect(wrapper.find("button[aria-label='Previous']").classes()).toContain(
+    "ml-0",
+  );
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "-ml-px",
+  );
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "rounded-r-md",
+  );
+  expect(wrapper.find("button[aria-label='Previous']").classes()).toContain(
+    "rounded-l-md",
+  );
+  expect(wrapper.find("button[aria-label='Previous']").classes()).toContain(
+    "cursor-pointer",
+  );
 
   await wrapper.setProps({ variant: "ghost" });
   expect(wrapper.find("ul").classes()).toContain("gap-1");
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain("w-9");
 
   await wrapper.setProps({ variant: "text" });
   expect(wrapper.find("ul").classes()).toContain("border-t");
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "border-t-2",
+  );
 });

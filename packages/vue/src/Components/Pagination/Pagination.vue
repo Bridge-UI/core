@@ -55,7 +55,7 @@ const {
 <template>
   <nav v-bind="rootBind">
     <ul v-bind="listBind">
-      <li v-if="showPrev">
+      <li v-if="showPrev" class="contents">
         <button v-bind="prevBind">
           <slot name="prev">
             <Icon icon="chevronLeft" v-bind="prevIconBind" />
@@ -71,14 +71,14 @@ const {
           <slot name="ellipsis">…</slot>
         </li>
 
-        <li v-else>
+        <li v-else class="contents">
           <button v-bind="getItemBind(entry.page)">
             {{ entry.page }}
           </button>
         </li>
       </template>
 
-      <li v-if="showNext">
+      <li v-if="showNext" class="contents">
         <button v-bind="nextBind">
           <slot name="next">
             <Icon icon="chevronRight" v-bind="nextIconBind" />

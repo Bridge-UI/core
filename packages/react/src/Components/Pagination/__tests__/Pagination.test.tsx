@@ -34,8 +34,8 @@ test("it should collapse long ranges with ellipsis", () => {
 
   expect(screen.getAllByText("…").length).toBeGreaterThan(0);
   expect(screen.getByRole("button", { name: "Page 1" })).toBeTruthy();
-  expect(screen.getByRole("button", { name: "Page 12" })).toBeTruthy();
   expect(screen.queryByRole("button", { name: "Page 2" })).toBeNull();
+  expect(screen.getByRole("button", { name: "Page 12" })).toBeTruthy();
 });
 
 test("it should support simple prev/next mode", () => {
@@ -67,15 +67,37 @@ test("it should support simple prev/next mode", () => {
 });
 
 test("it should apply visual variants", () => {
-  const { rerender } = render(
+  const { rerender, container } = render(
     <Pagination page={1} count={3} variant="outlined" />,
   );
 
   expect(screen.getByRole("list").className).toContain("rounded-md");
+  expect(container.querySelector("li")?.className).toContain("contents");
+  expect(screen.getByRole("button", { name: "Previous" }).className).toContain(
+    "ml-0",
+  );
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "-ml-px",
+  );
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "rounded-r-md",
+  );
+  expect(screen.getByRole("button", { name: "Previous" }).className).toContain(
+    "rounded-l-md",
+  );
+  expect(screen.getByRole("button", { name: "Previous" }).className).toContain(
+    "cursor-pointer",
+  );
 
   rerender(<Pagination page={1} count={3} variant="ghost" />);
   expect(screen.getByRole("list").className).toContain("gap-1");
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "w-9",
+  );
 
   rerender(<Pagination page={1} count={3} variant="text" />);
   expect(screen.getByRole("list").className).toContain("border-t");
+  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
+    "border-t-2",
+  );
 });

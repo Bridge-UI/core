@@ -36,7 +36,7 @@ function Pagination(props: PaginationProps) {
     <nav {...rootBind}>
       <ul {...listBind}>
         {showPrev ? (
-          <li>
+          <li className="contents">
             <button {...prevBind}>
               {slots?.prev ?? <Icon icon="chevronLeft" {...prevIconBind} />}
             </button>
@@ -53,14 +53,14 @@ function Pagination(props: PaginationProps) {
           }
 
           return (
-            <li key={entry.page}>
+            <li key={entry.page} className="contents">
               <button {...getItemBind(entry.page)}>{entry.page}</button>
             </li>
           );
         })}
 
         {showNext ? (
-          <li>
+          <li className="contents">
             <button {...nextBind}>
               {slots?.next ?? <Icon icon="chevronRight" {...nextIconBind} />}
             </button>

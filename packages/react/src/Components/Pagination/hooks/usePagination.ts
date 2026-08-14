@@ -260,9 +260,20 @@ export function usePagination(
     return !merged.hideNextButton;
   });
 
-  const controlClassName = derived(() => {
+  const isOutlined = derived(() => {
+    return merged.variant === "outlined";
+  });
+
+  const itemClassName = derived(() => {
     return cn({
       [get(sizeItem, "item") ?? ""]: true,
+      [get(variantItem, "item") ?? ""]: true,
+    });
+  });
+
+  const itemIconClassName = derived(() => {
+    return cn({
+      [get(sizeItem, "itemIcon") ?? ""]: true,
       [get(variantItem, "item") ?? ""]: true,
     });
   });
@@ -277,6 +288,47 @@ export function usePagination(
         variant === "text" || variant === "ghost",
       [get(colorItem, "itemSelectedSoft") ?? ""]: variant === "ghost",
     });
+  });
+
+  const edgePages = derived(() => {
+    const pages = entries.filter(
+      (entry): entry is Extract<PaginationEntry, { type: "page" }> => {
+        return entry.type === "page";
+      },
+    );
+
+    return {
+      first: pages[0]?.page,
+      last: pages[pages.length - 1]?.page,
+    };
+  });
+
+  const isFirstOutlinedControl = derived(() => {
+    return (kind: "next" | "page" | "prev" | "ellipsis", key?: number) => {
+      if (!isOutlined) {
+        return false;
+      }
+
+      if (kind === "prev") {
+        return true;
+      }
+
+      if (showPrev) {
+        return false;
+      }
+
+      const first = entries[0];
+
+      if (kind === "page") {
+        return first?.type === "page" && first.page === key;
+      }
+
+      if (kind === "ellipsis") {
+        return first?.type === "ellipsis" && key === 0;
+      }
+
+      return false;
+    };
   });
 
   const rootBind = derived(() => {
@@ -323,9 +375,14 @@ export function usePagination(
             }
           },
           className: cn({
-            [controlClassName]: true,
+            [itemClassName]: true,
             [selectedClassName]: selected,
             [get(mergedClasses, "item") ?? ""]: true,
+            "ml-0": isFirstOutlinedControl("page", pageNumber),
+            "rounded-l-md":
+              isOutlined && !showPrev && pageNumber === edgePages.first,
+            "rounded-r-md":
+              isOutlined && !showNext && pageNumber === edgePages.last,
           }),
         },
       );
@@ -333,11 +390,16 @@ export function usePagination(
     [
       page,
       setPage,
+      showPrev,
+      showNext,
+      isOutlined,
+      edgePages,
+      itemClassName,
+      mergedClasses,
       merged.disabled,
       customProps?.item,
-      controlClassName,
       selectedClassName,
-      mergedClasses,
+      isFirstOutlinedControl,
     ],
   );
 
@@ -353,11 +415,18 @@ export function usePagination(
             [get(sizeItem, "ellipsis") ?? ""]: true,
             [get(variantItem, "ellipsis") ?? ""]: true,
             [get(mergedClasses, "ellipsis") ?? ""]: true,
+            "ml-0": isFirstOutlinedControl("ellipsis", index),
           }),
         },
       );
     },
-    [customProps?.ellipsis, sizeItem, variantItem, mergedClasses],
+    [
+      sizeItem,
+      variantItem,
+      mergedClasses,
+      customProps?.ellipsis,
+      isFirstOutlinedControl,
+    ],
   );
 
   const iconSize = derived(() => {
@@ -374,9 +443,11 @@ export function usePagination(
         type: "button" as const,
         "aria-label": "Previous",
         className: cn({
-          [controlClassName]: true,
+          [itemIconClassName]: true,
           [get(mergedClasses, "prev") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
+          "ml-0": isOutlined,
+          "rounded-l-md": isOutlined,
         }),
       },
     );
@@ -392,9 +463,10 @@ export function usePagination(
         disabled: nextDisabled,
         type: "button" as const,
         className: cn({
-          [controlClassName]: true,
+          [itemIconClassName]: true,
           [get(mergedClasses, "next") ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
+          "rounded-r-md": isOutlined,
         }),
       },
     );
@@ -407,6 +479,7 @@ export function usePagination(
       {
         size: iconSize,
         "aria-hidden": true,
+        className: "shrink-0 pointer-events-none",
       },
     );
   });
@@ -418,6 +491,7 @@ export function usePagination(
       {
         size: iconSize,
         "aria-hidden": true,
+        className: "shrink-0 pointer-events-none",
       },
     );
   });
