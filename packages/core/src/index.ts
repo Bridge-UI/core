@@ -84,8 +84,8 @@ export type {
   TimePickerConfigOverrides,
   TimeRangeFieldConfigOverrides,
   TimeRangePickerConfigOverrides,
-  ToggleConfigOverrides,
   ToggleGroupConfigOverrides,
+  ToggleItemConfigOverrides,
 } from "@/Config";
 export {
   DEFAULT_OTP_LENGTH,

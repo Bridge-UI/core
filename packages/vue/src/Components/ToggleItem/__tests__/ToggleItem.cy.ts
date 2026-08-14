@@ -2,16 +2,16 @@
 import { h } from "vue";
 
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
-test("it should render a toggle in the browser", () => {
+test("it should render a toggle item in the browser", () => {
   cy.mount(ToggleGroup, {
     props: { modelValue: "a", "aria-label": "Options" },
     slots: {
       default: () => [
-        h(Toggle, { value: "a" }, { default: () => "Alpha" }),
-        h(Toggle, { value: "b" }, { default: () => "Beta" }),
+        h(ToggleItem, { value: "a" }, { default: () => "Alpha" }),
+        h(ToggleItem, { value: "b" }, { default: () => "Beta" }),
       ],
     },
   });

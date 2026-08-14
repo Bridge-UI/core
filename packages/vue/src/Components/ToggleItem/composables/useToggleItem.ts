@@ -13,49 +13,49 @@ import {
 import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
 
 // ** Local Imports
-import type {
-  ToggleOwnProps,
-  ToggleProps,
-} from "@/Components/Toggle/toggle.types";
-import { getToggleId } from "@/Components/ToggleGroup/composables/useToggleGroup";
+import { getToggleItemId } from "@/Components/ToggleGroup/composables/useToggleGroup";
 import { TOGGLE_GROUP_INJECTION_KEY } from "@/Components/ToggleGroup/toggleGroupInjectionKey";
+import type {
+  ToggleItemOwnProps,
+  ToggleItemProps,
+} from "@/Components/ToggleItem/toggleItem.types";
 import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const toggleBridgeKeys = [
+const toggleItemBridgeKeys = [
   "value",
   "classes",
   "disabled",
   "startIcon",
   "customProps",
-] as const satisfies readonly (keyof ToggleOwnProps)[];
+] as const satisfies readonly (keyof ToggleItemOwnProps)[];
 
-export function useToggle(props: ToggleOwnProps) {
+export function useToggleItem(props: ToggleItemOwnProps) {
   const attrs = useAttrs();
 
   const injectedToggleGroupContext = inject(TOGGLE_GROUP_INJECTION_KEY, null);
 
   if (!injectedToggleGroupContext) {
-    throw new Error("Toggle must be used within a ToggleGroup provider");
+    throw new Error("ToggleItem must be used within a ToggleGroup provider");
   }
 
   const groupContextRef = injectedToggleGroupContext;
 
   const split = computed(() => {
-    return splitComponentProps<ToggleProps, typeof toggleBridgeKeys>({
-      bridgeKeys: toggleBridgeKeys,
+    return splitComponentProps<ToggleItemProps, typeof toggleItemBridgeKeys>({
       props: { ...attrs, ...props },
+      bridgeKeys: toggleItemBridgeKeys,
     });
   });
 
-  const { merged, entry: bridgeToggle } = useBridgeUIComponent<
-    ToggleOwnProps,
-    "Toggle"
+  const { merged, entry: bridgeToggleItem } = useBridgeUIComponent<
+    ToggleItemOwnProps,
+    "ToggleItem"
   >({
-    componentName: "Toggle",
+    componentName: "ToggleItem",
     props: () => split.value.componentProps,
   });
 
@@ -75,7 +75,7 @@ export function useToggle(props: ToggleOwnProps) {
 
   function syncRegistration() {
     unregister?.();
-    unregister = groupContextRef.value.registerToggle(
+    unregister = groupContextRef.value.registerToggleItem(
       value.value,
       merged.value.disabled === true,
     );
@@ -91,7 +91,7 @@ export function useToggle(props: ToggleOwnProps) {
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    entry: bridgeToggle,
+    entry: bridgeToggleItem,
     props: () => split.value.componentProps,
   });
 
@@ -123,7 +123,7 @@ export function useToggle(props: ToggleOwnProps) {
       disabled: disabled.value,
       "aria-checked": selected.value,
       tabindex: selected.value ? 0 : -1,
-      id: getToggleId(group.id, value.value),
+      id: getToggleItemId(group.id, value.value),
       class: cn({
         "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
         [group.tokenClasses.iconGap ?? ""]: true,

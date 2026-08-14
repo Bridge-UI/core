@@ -22,7 +22,7 @@ export type ToggleGroupTokenClasses = {
 };
 
 /**
- * Shared toggle group state for `Toggle` descendants.
+ * Shared toggle group state for `ToggleItem` descendants.
  */
 export type ToggleGroupContextValue = {
   /**
@@ -38,7 +38,7 @@ export type ToggleGroupContextValue = {
   /**
    * Focus a segment by value (roving tabindex).
    */
-  focusToggle: (value: string) => void;
+  focusToggleItem: (value: string) => void;
 
   /**
    * Whether segments stretch to fill the track width.
@@ -58,7 +58,7 @@ export type ToggleGroupContextValue = {
   /**
    * Registers a segment and returns unregister.
    */
-  registerToggle: (value: string, disabled?: boolean) => () => void;
+  registerToggleItem: (value: string, disabled?: boolean) => () => void;
 
   /**
    * Currently selected value.

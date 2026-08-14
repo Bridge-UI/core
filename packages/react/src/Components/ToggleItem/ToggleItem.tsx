@@ -1,11 +1,11 @@
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
-import { useToggle } from "@/Components/Toggle/hooks/useToggle";
-import type { ToggleProps } from "@/Components/Toggle/toggle.types";
+import { useToggleItem } from "@/Components/ToggleItem/hooks/useToggleItem";
+import type { ToggleItemProps } from "@/Components/ToggleItem/toggleItem.types";
 
-function Toggle(props: ToggleProps) {
+function ToggleItem(props: ToggleItemProps) {
   const { merged, children, iconSize, rootBind, startIconBind } =
-    useToggle(props);
+    useToggleItem(props);
 
   return (
     <button {...rootBind}>
@@ -18,4 +18,4 @@ function Toggle(props: ToggleProps) {
   );
 }
 
-export default Toggle;
+export default ToggleItem;

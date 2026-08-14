@@ -54,8 +54,8 @@ test("it should register toggles and auto-select the first enabled one", () => {
   const model = ref<string | undefined>("");
   const { result } = mountUseToggleGroup({}, model);
 
-  result.contextValue.value.registerToggle("a");
-  result.contextValue.value.registerToggle("b");
+  result.contextValue.value.registerToggleItem("a");
+  result.contextValue.value.registerToggleItem("b");
 
   expect(model.value).toBe("a");
   expect(result.contextValue.value.toggleValues).toEqual(["a", "b"]);
@@ -64,8 +64,8 @@ test("it should register toggles and auto-select the first enabled one", () => {
 test("it should emit change and update:modelValue when selecting", () => {
   const { emit, model, result } = mountUseToggleGroup({}, ref("a"));
 
-  result.contextValue.value.registerToggle("a");
-  result.contextValue.value.registerToggle("b");
+  result.contextValue.value.registerToggleItem("a");
+  result.contextValue.value.registerToggleItem("b");
   result.contextValue.value.setSelected("b");
 
   expect(model.value).toBe("b");
@@ -76,8 +76,8 @@ test("it should emit change and update:modelValue when selecting", () => {
 test("it should not select a disabled toggle", () => {
   const { emit, model, result } = mountUseToggleGroup({}, ref("a"));
 
-  result.contextValue.value.registerToggle("a");
-  result.contextValue.value.registerToggle("b", true);
+  result.contextValue.value.registerToggleItem("a");
+  result.contextValue.value.registerToggleItem("b", true);
   result.contextValue.value.setSelected("b");
 
   expect(model.value).toBe("a");

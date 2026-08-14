@@ -5,8 +5,8 @@ import { afterEach, expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -38,7 +38,9 @@ test("it should render a radio button with aria attributes", () => {
   const wrapper = mountToggleGroup({
     props: { modelValue: "a" },
     slots: {
-      default: () => [h(Toggle, { value: "a" }, { default: () => "Alpha" })],
+      default: () => [
+        h(ToggleItem, { value: "a" }, { default: () => "Alpha" }),
+      ],
     },
   });
 
@@ -53,7 +55,7 @@ test("it should render a leading icon when startIcon is set", () => {
     props: { modelValue: "a" },
     slots: {
       default: () => [
-        h(Toggle, {
+        h(ToggleItem, {
           value: "a",
           startIcon: User,
           "aria-label": "User",
@@ -71,8 +73,8 @@ test("it should stretch when the group is full", () => {
     props: { full: true, modelValue: "a" },
     slots: {
       default: () => [
-        h(Toggle, { value: "a" }, { default: () => "Alpha" }),
-        h(Toggle, { value: "b" }, { default: () => "Beta" }),
+        h(ToggleItem, { value: "a" }, { default: () => "Alpha" }),
+        h(ToggleItem, { value: "b" }, { default: () => "Beta" }),
       ],
     },
   });

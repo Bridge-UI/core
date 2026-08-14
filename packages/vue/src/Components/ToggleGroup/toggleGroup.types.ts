@@ -47,7 +47,7 @@ export interface ToggleGroupEmits {
 }
 
 /**
- * Segmented control root. Compose with `Toggle` children.
+ * Segmented control root. Compose with `ToggleItem` children.
  */
 export interface ToggleGroupOwnProps {
   /**
@@ -119,7 +119,7 @@ export interface ToggleGroupOwnProps {
 
 export interface ToggleGroupSlots {
   /**
-   * The children to render (`Toggle` segments).
+   * The children to render (`ToggleItem` segments).
    */
   default?: Slot<undefined>;
 }

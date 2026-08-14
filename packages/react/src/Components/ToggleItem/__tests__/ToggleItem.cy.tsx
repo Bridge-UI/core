@@ -1,12 +1,12 @@
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
-test("it should render a toggle in the browser", () => {
+test("it should render a toggle item in the browser", () => {
   cy.mount(
     <ToggleGroup defaultValue="a" aria-label="Options">
-      <Toggle value="a">Alpha</Toggle>
-      <Toggle value="b">Beta</Toggle>
+      <ToggleItem value="a">Alpha</ToggleItem>
+      <ToggleItem value="b">Beta</ToggleItem>
     </ToggleGroup>,
   );
 

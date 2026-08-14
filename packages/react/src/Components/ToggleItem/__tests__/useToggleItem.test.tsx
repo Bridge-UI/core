@@ -4,14 +4,14 @@ import type { ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { useToggle } from "@/Components/Toggle/hooks/useToggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { useToggleItem } from "@/Components/ToggleItem/hooks/useToggleItem";
 
 afterEach(() => {
   cleanup();
 });
 
-test("it should mark the selected toggle", () => {
+test("it should mark the selected toggle item", () => {
   function Wrapper({ children }: { children: ReactNode }) {
     return (
       <ToggleGroup defaultValue="a" aria-label="Options">
@@ -21,7 +21,7 @@ test("it should mark the selected toggle", () => {
   }
 
   const { result } = renderHook(
-    () => useToggle({ value: "a", children: "A" }),
+    () => useToggleItem({ value: "a", children: "A" }),
     {
       wrapper: Wrapper,
     },
@@ -33,6 +33,6 @@ test("it should mark the selected toggle", () => {
 
 test("it should throw when used outside ToggleGroup", () => {
   expect(() => {
-    renderHook(() => useToggle({ value: "a" }));
-  }).toThrow("Toggle must be used within a ToggleGroup provider");
+    renderHook(() => useToggleItem({ value: "a" }));
+  }).toThrow("ToggleItem must be used within a ToggleGroup provider");
 });

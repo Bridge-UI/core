@@ -4,15 +4,15 @@ import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
 // ** Local Imports
-import { useToggle } from "@/Components/Toggle/composables/useToggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { useToggleItem } from "@/Components/ToggleItem/composables/useToggleItem";
 
-function mountUseToggle(value: string) {
-  let result!: ReturnType<typeof useToggle>;
+function mountUseToggleItem(value: string) {
+  let result!: ReturnType<typeof useToggleItem>;
 
   const Probe = defineComponent({
     setup() {
-      result = useToggle({ value });
+      result = useToggleItem({ value });
 
       return () => h("div");
     },
@@ -26,8 +26,8 @@ function mountUseToggle(value: string) {
   return result;
 }
 
-test("it should mark the selected toggle", () => {
-  const result = mountUseToggle("a");
+test("it should mark the selected toggle item", () => {
+  const result = mountUseToggleItem("a");
 
   expect(result.rootBind.value.role).toBe("radio");
   expect(result.rootBind.value["aria-checked"]).toBe(true);
@@ -36,7 +36,7 @@ test("it should mark the selected toggle", () => {
 test("it should throw when used outside a ToggleGroup provider", () => {
   const Standalone = defineComponent({
     setup() {
-      useToggle({ value: "a" });
+      useToggleItem({ value: "a" });
 
       return () => h("div");
     },
@@ -46,5 +46,5 @@ test("it should throw when used outside a ToggleGroup provider", () => {
     mount(Standalone, {
       global: { config: { warnHandler: () => undefined } },
     }),
-  ).toThrow("Toggle must be used within a ToggleGroup provider");
+  ).toThrow("ToggleItem must be used within a ToggleGroup provider");
 });

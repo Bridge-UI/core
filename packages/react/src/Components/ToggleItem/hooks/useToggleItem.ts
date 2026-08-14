@@ -6,12 +6,12 @@ import { useEffect, type MouseEvent } from "react";
 import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
 
 // ** Local Imports
-import type {
-  ToggleOwnProps,
-  ToggleProps,
-} from "@/Components/Toggle/toggle.types";
 import { useToggleGroupContext } from "@/Components/ToggleGroup/ToggleGroupContext";
-import { getToggleId } from "@/Components/ToggleGroup/hooks/useToggleGroup";
+import { getToggleItemId } from "@/Components/ToggleGroup/hooks/useToggleGroup";
+import type {
+  ToggleItemOwnProps,
+  ToggleItemProps,
+} from "@/Components/ToggleItem/toggleItem.types";
 import {
   derived,
   mergePartBind,
@@ -19,31 +19,31 @@ import {
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
 
-const toggleBridgeKeys = [
+const toggleItemBridgeKeys = [
   "value",
   "classes",
   "disabled",
   "startIcon",
   "customProps",
-] as const satisfies readonly (keyof ToggleOwnProps)[];
+] as const satisfies readonly (keyof ToggleItemOwnProps)[];
 
-export function useToggle(props: ToggleProps) {
+export function useToggleItem(props: ToggleItemProps) {
   const group = useToggleGroupContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    ToggleProps,
-    typeof toggleBridgeKeys
+    ToggleItemProps,
+    typeof toggleItemBridgeKeys
   >({
     props,
-    bridgeKeys: toggleBridgeKeys,
+    bridgeKeys: toggleItemBridgeKeys,
   });
 
-  const { merged, entry: bridgeToggle } = useBridgeUIComponent<
-    ToggleOwnProps,
-    "Toggle"
+  const { merged, entry: bridgeToggleItem } = useBridgeUIComponent<
+    ToggleItemOwnProps,
+    "ToggleItem"
   >({
     props: componentProps,
-    componentName: "Toggle",
+    componentName: "ToggleItem",
   });
 
   const children = derived(() => {
@@ -75,12 +75,12 @@ export function useToggle(props: ToggleProps) {
   });
 
   useEffect(() => {
-    return group.registerToggle(value, merged.disabled === true);
-  }, [value, merged.disabled, group.registerToggle]);
+    return group.registerToggleItem(value, merged.disabled === true);
+  }, [value, merged.disabled, group.registerToggleItem]);
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
-    entry: bridgeToggle,
     props: componentProps,
+    entry: bridgeToggleItem,
   });
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
@@ -100,7 +100,7 @@ export function useToggle(props: ToggleProps) {
       onClick: handleClick,
       "aria-checked": selected,
       tabIndex: selected ? 0 : -1,
-      id: getToggleId(group.id, value),
+      id: getToggleItemId(group.id, value),
       className: cn({
         "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
         [group.tokenClasses.iconGap ?? ""]: true,

@@ -373,8 +373,8 @@ export interface TimeFieldConfigOverrides {}
 export interface TimePickerConfigOverrides {}
 export interface TimeRangeFieldConfigOverrides {}
 export interface TimeRangePickerConfigOverrides {}
-export interface ToggleConfigOverrides {}
 export interface ToggleGroupConfigOverrides {}
+export interface ToggleItemConfigOverrides {}
 export interface TooltipConfigOverrides {}
 
 export interface AccordionConfigBase {
@@ -1403,7 +1403,7 @@ export interface ToggleGroupConfigBase {
   }>;
 }
 
-export interface ToggleConfigBase {
+export interface ToggleItemConfigBase {
   classes: object;
   defaultProps: Partial<{
     disabled: boolean;
@@ -1521,9 +1521,11 @@ export type BridgeUIComponentsConfig = Partial<{
   TimeRangePicker: Partial<
     Overwrite<TimeRangePickerConfigBase, TimeRangePickerConfigOverrides>
   >;
-  Toggle: Partial<Overwrite<ToggleConfigBase, ToggleConfigOverrides>>;
   ToggleGroup: Partial<
     Overwrite<ToggleGroupConfigBase, ToggleGroupConfigOverrides>
+  >;
+  ToggleItem: Partial<
+    Overwrite<ToggleItemConfigBase, ToggleItemConfigOverrides>
   >;
   Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
 }>;

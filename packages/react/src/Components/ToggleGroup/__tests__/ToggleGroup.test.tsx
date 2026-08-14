@@ -4,8 +4,8 @@ import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
 afterEach(() => {
   cleanup();
@@ -29,11 +29,11 @@ function BasicToggleGroup({
         onChange?.(next);
       }}
     >
-      <Toggle value="react">React</Toggle>
-      <Toggle value="vue">Vue</Toggle>
-      <Toggle disabled value="svelte">
+      <ToggleItem value="react">React</ToggleItem>
+      <ToggleItem value="vue">Vue</ToggleItem>
+      <ToggleItem disabled value="svelte">
         Svelte
-      </Toggle>
+      </ToggleItem>
     </ToggleGroup>
   );
 }
@@ -84,8 +84,8 @@ test("it should apply soft selected classes for solid success color", () => {
       onChange={() => {}}
       aria-label="Library"
     >
-      <Toggle value="react">React</Toggle>
-      <Toggle value="vue">Vue</Toggle>
+      <ToggleItem value="react">React</ToggleItem>
+      <ToggleItem value="vue">Vue</ToggleItem>
     </ToggleGroup>,
   );
 

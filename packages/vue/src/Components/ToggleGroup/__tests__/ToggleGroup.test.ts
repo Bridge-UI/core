@@ -4,8 +4,8 @@ import { afterEach, expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -19,9 +19,13 @@ const mountedWrappers: Array<ReturnType<typeof mount<typeof ToggleGroup>>> = [];
 
 function basicToggleSlots() {
   return [
-    h(Toggle, { value: "react" }, { default: () => "React" }),
-    h(Toggle, { value: "vue" }, { default: () => "Vue" }),
-    h(Toggle, { disabled: true, value: "svelte" }, { default: () => "Svelte" }),
+    h(ToggleItem, { value: "react" }, { default: () => "React" }),
+    h(ToggleItem, { value: "vue" }, { default: () => "Vue" }),
+    h(
+      ToggleItem,
+      { disabled: true, value: "svelte" },
+      { default: () => "Svelte" },
+    ),
   ];
 }
 
@@ -105,8 +109,8 @@ test("it should apply soft selected classes for solid success color", () => {
     props: { color: "success", modelValue: "vue" },
     slots: {
       default: () => [
-        h(Toggle, { value: "react" }, { default: () => "React" }),
-        h(Toggle, { value: "vue" }, { default: () => "Vue" }),
+        h(ToggleItem, { value: "react" }, { default: () => "React" }),
+        h(ToggleItem, { value: "vue" }, { default: () => "Vue" }),
       ],
     },
   });

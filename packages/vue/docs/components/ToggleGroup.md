@@ -1,12 +1,12 @@
 # ToggleGroup
 
-Segmented control for mutually exclusive options. Use `Switch` for on/off; use `ToggleGroup` to pick among labeled segments in a shared track. Compose with `Toggle`.
+Segmented control for mutually exclusive options. Use `Switch` for on/off; use `ToggleGroup` to pick among labeled segments in a shared track. Compose with `ToggleItem`.
 
 ## Import
 
 ```ts
 import { ToggleGroup } from "@bridge-ui/vue/Components/ToggleGroup";
-import { Toggle } from "@bridge-ui/vue/Components/Toggle";
+import { ToggleItem } from "@bridge-ui/vue/Components/ToggleItem";
 ```
 
 ## Examples
@@ -16,16 +16,16 @@ import { Toggle } from "@bridge-ui/vue/Components/Toggle";
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
-import { Toggle } from "@bridge-ui/vue/Components/Toggle";
 import { ToggleGroup } from "@bridge-ui/vue/Components/ToggleGroup";
+import { ToggleItem } from "@bridge-ui/vue/Components/ToggleItem";
 
 const lib = ref("vue");
 </script>
 
 <template>
   <ToggleGroup v-model="lib" color="success" aria-label="Library">
-    <Toggle value="react">React</Toggle>
-    <Toggle value="vue">Vue</Toggle>
+    <ToggleItem value="react">React</ToggleItem>
+    <ToggleItem value="vue">Vue</ToggleItem>
   </ToggleGroup>
 </template>
 ```
@@ -34,8 +34,8 @@ const lib = ref("vue");
 
 ```vue
 <ToggleGroup v-model="view" aria-label="View">
-  <Toggle value="list" :start-icon="List" aria-label="List" />
-  <Toggle value="grid" :start-icon="LayoutGrid" aria-label="Grid" />
+  <ToggleItem value="list" :start-icon="List" aria-label="List" />
+  <ToggleItem value="grid" :start-icon="LayoutGrid" aria-label="Grid" />
 </ToggleGroup>
 ```
 
@@ -52,8 +52,8 @@ const lib = ref("vue");
 
 ```vue
 <ToggleGroup size="sm" v-model="lib" aria-label="Small">
-  <Toggle value="react">React</Toggle>
-  <Toggle value="vue">Vue</Toggle>
+  <ToggleItem value="react">React</ToggleItem>
+  <ToggleItem value="vue">Vue</ToggleItem>
 </ToggleGroup>
 ```
 
@@ -61,7 +61,7 @@ const lib = ref("vue");
 
 ```vue
 <ToggleGroup full v-model="lib" aria-label="Library">
-  <Toggle value="react">React</Toggle>
-  <Toggle value="vue">Vue</Toggle>
+  <ToggleItem value="react">React</ToggleItem>
+  <ToggleItem value="vue">Vue</ToggleItem>
 </ToggleGroup>
 ```

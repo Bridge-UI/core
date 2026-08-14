@@ -4,8 +4,8 @@ import { User } from "lucide-react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
 afterEach(() => {
   cleanup();
@@ -14,7 +14,7 @@ afterEach(() => {
 test("it should render a radio button with aria attributes", () => {
   render(
     <ToggleGroup defaultValue="a" aria-label="Options">
-      <Toggle value="a">Alpha</Toggle>
+      <ToggleItem value="a">Alpha</ToggleItem>
     </ToggleGroup>,
   );
 
@@ -27,7 +27,7 @@ test("it should render a radio button with aria attributes", () => {
 test("it should render a leading icon when startIcon is set", () => {
   const { container } = render(
     <ToggleGroup defaultValue="a" aria-label="Options">
-      <Toggle value="a" startIcon={User} aria-label="User" />
+      <ToggleItem value="a" startIcon={User} aria-label="User" />
     </ToggleGroup>,
   );
 
@@ -40,8 +40,8 @@ test("it should render a leading icon when startIcon is set", () => {
 test("it should stretch when the group is full", () => {
   render(
     <ToggleGroup full defaultValue="a" aria-label="Options">
-      <Toggle value="a">Alpha</Toggle>
-      <Toggle value="b">Beta</Toggle>
+      <ToggleItem value="a">Alpha</ToggleItem>
+      <ToggleItem value="b">Beta</ToggleItem>
     </ToggleGroup>,
   );
 

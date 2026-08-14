@@ -68,7 +68,7 @@ type ToggleGroupMerged = MergeLibDefaults<
 /**
  * Builds a stable DOM id for a toggle segment.
  */
-function getToggleId(groupId: string, value: string) {
+function getToggleItemId(groupId: string, value: string) {
   return `${groupId}-toggle-${value}`;
 }
 
@@ -115,7 +115,7 @@ export function useToggleGroup(
     emit("change", next);
   }
 
-  function registerToggle(value: string, disabled = false) {
+  function registerToggleItem(value: string, disabled = false) {
     if (!toggleValues.value.includes(value)) {
       toggleValues.value = [...toggleValues.value, value];
     }
@@ -142,8 +142,8 @@ export function useToggleGroup(
     };
   }
 
-  function focusToggle(value: string) {
-    document.getElementById(getToggleId(groupId, value))?.focus();
+  function focusToggleItem(value: string) {
+    document.getElementById(getToggleItemId(groupId, value))?.focus();
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -156,7 +156,7 @@ export function useToggleGroup(
       typeof document !== "undefined" ? document.activeElement?.id : undefined;
     const focused =
       toggleValues.value.find(
-        (value) => getToggleId(groupId, value) === activeId,
+        (value) => getToggleItemId(groupId, value) === activeId,
       ) ?? selected.value;
 
     if (event.key === nextKey || event.key === prevKey) {
@@ -170,7 +170,7 @@ export function useToggleGroup(
         new Set(disabledValues.value),
       );
 
-      focusToggle(next);
+      focusToggleItem(next);
       setSelected(next);
 
       return;
@@ -183,7 +183,7 @@ export function useToggleGroup(
           (value) => !disabledValues.value.includes(value),
         ) ?? selected.value;
 
-      focusToggle(first);
+      focusToggleItem(first);
       setSelected(first);
 
       return;
@@ -197,7 +197,7 @@ export function useToggleGroup(
           .find((value) => !disabledValues.value.includes(value)) ??
         selected.value;
 
-      focusToggle(last);
+      focusToggleItem(last);
       setSelected(last);
     }
   }
@@ -264,10 +264,10 @@ export function useToggleGroup(
 
   const contextValue = computed((): ToggleGroupContextValue => {
     return {
-      focusToggle,
       id: groupId,
       setSelected,
-      registerToggle,
+      focusToggleItem,
+      registerToggleItem,
       selected: selected.value,
       toggleValues: toggleValues.value,
       full: merged.value.full === true,
@@ -326,4 +326,4 @@ export function useToggleGroup(
   };
 }
 
-export { getToggleId };
+export { getToggleItemId };

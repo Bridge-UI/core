@@ -8,7 +8,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core";
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
 
-export interface ToggleClasses {
+export interface ToggleItemClasses {
   /**
    * Classes merged onto the segment button.
    */
@@ -20,7 +20,7 @@ export interface ToggleClasses {
   startIcon?: string;
 }
 
-export interface ToggleCustomProps {
+export interface ToggleItemCustomProps {
   /**
    * Props forwarded to the segment button.
    */
@@ -33,9 +33,9 @@ export interface ToggleCustomProps {
 }
 
 /**
- * Toggle segment (`role="radio"`). Must be used inside `ToggleGroup`.
+ * Toggle group segment (`role="radio"`). Must be used inside `ToggleGroup`.
  */
-export interface ToggleOwnProps {
+export interface ToggleItemOwnProps {
   /**
    * The label content.
    *
@@ -44,18 +44,18 @@ export interface ToggleOwnProps {
   children?: ReactNode;
 
   /**
-   * Classes for toggle parts.
+   * Classes for toggle item parts.
    *
    * @default undefined
    */
-  classes?: ToggleClasses;
+  classes?: ToggleItemClasses;
 
   /**
-   * Props forwarded to each toggle part.
+   * Props forwarded to each toggle item part.
    *
    * @default undefined
    */
-  customProps?: ToggleCustomProps;
+  customProps?: ToggleItemCustomProps;
 
   /**
    * Whether this segment is disabled.
@@ -77,7 +77,7 @@ export interface ToggleOwnProps {
   value: string;
 }
 
-export type ToggleProps = MergeHtmlProps<
-  ToggleOwnProps,
+export type ToggleItemProps = MergeHtmlProps<
+  ToggleItemOwnProps,
   ButtonHTMLAttributes<HTMLButtonElement>
 >;
