@@ -64,6 +64,7 @@ export type {
   ModalConfigOverrides,
   NumberFieldConfigOverrides,
   OtpFieldConfigOverrides,
+  PaginationConfigOverrides,
   PasswordFieldConfigOverrides,
   ProgressConfigOverrides,
   RadioConfigOverrides,
@@ -245,6 +246,19 @@ export type {
   OtpFieldVariant,
   OtpFieldVariantItem,
 } from "@/Tokens/OtpField";
+export {
+  colorProps as paginationColorProps,
+  sizeProps as paginationSizeProps,
+  variantProps as paginationVariantProps,
+} from "@/Tokens/Pagination";
+export type {
+  PaginationColor,
+  PaginationColorItem,
+  PaginationSize,
+  PaginationSizeItem,
+  PaginationVariant,
+  PaginationVariantItem,
+} from "@/Tokens/Pagination";
 export type {
   ProgressColor,
   ProgressColorItem,
@@ -379,6 +393,7 @@ export {
   getLayerStackSnapshot,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
+  getPaginationItems,
   getSliderBarGeometry,
   getSliderPointerClientX,
   getSliderPrecision,
@@ -483,6 +498,7 @@ export type {
   FocusTrap,
   FocusTrapOptions,
   FocusableHandle,
+  GetPaginationItemsOptions,
   IsDateDisabledOptions,
   IsTimeDisabledOptions,
   LayerStackHandle,
@@ -503,6 +519,7 @@ export type {
   OtpDigitsUpdate,
   OtpInputType,
   Overwrite,
+  PaginationEntry,
   PositionHandle,
   PositionOptions,
   PositionPlacement,

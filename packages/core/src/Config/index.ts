@@ -75,6 +75,8 @@ export type {
   NumberFieldConfigOverrides,
   OtpFieldConfigBase,
   OtpFieldConfigOverrides,
+  PaginationConfigBase,
+  PaginationConfigOverrides,
   PasswordFieldConfigBase,
   PasswordFieldConfigOverrides,
   ProgressConfigBase,
