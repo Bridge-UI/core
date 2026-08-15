@@ -18,6 +18,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
@@ -249,10 +250,14 @@ export function useAutocomplete(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   }, [multiple, modelValue]);
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(autocompleteMerged.overlay, breakpoint.mobile);
+  });
+
   const showFooter = derived(() => {
     return resolveFieldShowFooter(
       autocompleteMerged.showFooter,
-      breakpoint.mobile,
+      resolvedOverlay,
     );
   });
 

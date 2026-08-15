@@ -508,12 +508,15 @@ export type {
 export {
   colorProps as listboxColorProps,
   invalidatedProps as listboxInvalidatedProps,
+  roundedProps as listboxRoundedProps,
   sizeProps as listboxSizeProps,
 } from "@/Tokens/Listbox";
 export type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
+  ListboxRounded,
+  ListboxRoundedItem,
   ListboxSize,
   ListboxSizeItem,
 } from "@/Tokens/Listbox";

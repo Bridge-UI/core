@@ -222,7 +222,10 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
   };
 
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(timeOnly.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(
+      timeOnly.showFooter,
+      resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
+    );
   });
 
   const handlePickerChange = (next: null | TimeRangeValue) => {

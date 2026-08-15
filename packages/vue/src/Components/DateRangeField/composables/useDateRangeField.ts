@@ -232,7 +232,10 @@ export function useDateRangeField(
   });
 
   const showFooter = computed(() => {
-    return resolveFieldShowFooter(dateOnly.value.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(
+      dateOnly.value.showFooter,
+      resolvedOverlay.value,
+    );
   });
 
   function handlePickerChange(next: null | DateRangeValue) {

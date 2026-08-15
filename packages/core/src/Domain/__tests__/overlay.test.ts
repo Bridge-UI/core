@@ -87,15 +87,16 @@ describe("isFieldOverlayDialog", () => {
 
 describe("resolveFieldShowFooter", () => {
   test("it should keep an explicit showFooter", () => {
-    expect(resolveFieldShowFooter(true, false)).toBe(true);
-    expect(resolveFieldShowFooter(false, true)).toBe(false);
+    expect(resolveFieldShowFooter(true, "menu")).toBe(true);
+    expect(resolveFieldShowFooter(false, "drawer")).toBe(false);
   });
 
-  test("it should default to true on mobile when unset", () => {
-    expect(resolveFieldShowFooter(undefined, true)).toBe(true);
+  test("it should default to true for drawer and modal when unset", () => {
+    expect(resolveFieldShowFooter(undefined, "drawer")).toBe(true);
+    expect(resolveFieldShowFooter(undefined, "modal")).toBe(true);
   });
 
-  test("it should default to false on desktop when unset", () => {
-    expect(resolveFieldShowFooter(undefined, false)).toBe(false);
+  test("it should default to false for menu when unset", () => {
+    expect(resolveFieldShowFooter(undefined, "menu")).toBe(false);
   });
 });

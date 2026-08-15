@@ -135,8 +135,15 @@ export function useDateField(
     });
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
+  });
+
   const showFooter = computed(() => {
-    return resolveFieldShowFooter(dateOnly.value.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(
+      dateOnly.value.showFooter,
+      resolvedOverlay.value,
+    );
   });
 
   const modelValue = computed(() => {
@@ -149,10 +156,6 @@ export function useDateField(
 
   const hasValue = computed(() => {
     return hasDateFieldValue(modelValue.value);
-  });
-
-  const resolvedOverlay = computed(() => {
-    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
   });
 
   const pickerClass = computed(() => {

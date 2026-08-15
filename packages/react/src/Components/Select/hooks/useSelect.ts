@@ -17,6 +17,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
@@ -249,8 +250,12 @@ export function useSelect(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   }, [multiple, modelValue]);
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(selectMerged.overlay, breakpoint.mobile);
+  });
+
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(selectMerged.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(selectMerged.showFooter, resolvedOverlay);
   });
 
   const activeValues = derived(() => {

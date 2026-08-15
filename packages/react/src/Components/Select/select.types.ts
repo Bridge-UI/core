@@ -284,8 +284,8 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   searchable?: boolean;
 
   /**
-   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true`
-   * on mobile. Selection stays draft until Apply.
+   * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`). Selection stays draft until Apply.
    *
    * @default false
    */

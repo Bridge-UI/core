@@ -236,7 +236,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
   });
 
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateOnly.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(dateOnly.showFooter, resolvedOverlay);
   });
 
   const handlePickerChange = (next: null | DateRangeValue) => {

@@ -230,7 +230,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
   });
 
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateTimeOnly.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(dateTimeOnly.showFooter, resolvedOverlay);
   });
 
   const displayText = derived(() => {

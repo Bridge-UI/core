@@ -16,10 +16,12 @@ export type ListboxContextValue = {
   listboxId?: string;
   mergedClasses: {
     optionHighlighted?: string;
+    optionHover?: string;
     optionSelected?: string;
   };
   onSelect: (option: ListboxOption) => void;
   optionHighlightedClass?: string;
+  optionHoverClass?: string;
   optionSelectedClass?: string;
   registerOption: (option: ListboxOption) => () => void;
   showCheckmark: boolean;

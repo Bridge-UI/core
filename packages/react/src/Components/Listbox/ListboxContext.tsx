@@ -35,10 +35,11 @@ export type ListboxContextValue = {
   listboxId?: string;
 
   /**
-   * Registry classes for selected / highlighted options.
+   * Registry classes for selected / highlighted / hovered options.
    */
   mergedClasses: {
     optionHighlighted?: string;
+    optionHover?: string;
     optionSelected?: string;
   };
 
@@ -51,6 +52,11 @@ export type ListboxContextValue = {
    * Classes for keyboard-highlighted options.
    */
   optionHighlightedClass?: string;
+
+  /**
+   * Classes for pointer-hovered options.
+   */
+  optionHoverClass?: string;
 
   /**
    * Classes for selected options.

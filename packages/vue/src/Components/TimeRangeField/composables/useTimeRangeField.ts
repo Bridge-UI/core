@@ -225,7 +225,10 @@ export function useTimeRangeField(
   }
 
   const showFooter = computed(() => {
-    return resolveFieldShowFooter(timeOnly.value.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(
+      timeOnly.value.showFooter,
+      resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile),
+    );
   });
 
   function handlePickerChange(next: null | TimeRangeValue) {

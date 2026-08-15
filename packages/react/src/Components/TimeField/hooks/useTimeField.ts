@@ -224,7 +224,7 @@ export function useTimeField(props: TimeFieldProps) {
   });
 
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(timeOnly.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(timeOnly.showFooter, resolvedOverlay);
   });
 
   const showClearIcon = derived(() => {

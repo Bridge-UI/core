@@ -11,6 +11,7 @@ import {
 import {
   listboxColorProps as colorProps,
   listboxInvalidatedProps as invalidatedProps,
+  listboxRoundedProps as roundedProps,
   listboxSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
@@ -98,13 +99,22 @@ export function useListbox(
     return merged.value.customProps;
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(merged.value.showFooter, breakpoint.mobile);
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(props.overlay, breakpoint.mobile);
   });
 
   const isDialogOverlay = computed(() => {
-    return isFieldOverlayDialog(
-      resolveFieldOverlay(props.overlay, breakpoint.mobile),
+    return isFieldOverlayDialog(resolvedOverlay.value);
+  });
+
+  const isDrawerOverlay = computed(() => {
+    return resolvedOverlay.value === "drawer";
+  });
+
+  const showFooter = computed(() => {
+    return resolveFieldShowFooter(
+      merged.value.showFooter,
+      resolvedOverlay.value,
     );
   });
 
@@ -114,6 +124,7 @@ export function useListbox(
       | {
           color?: object;
           invalidated?: object;
+          rounded?: object;
           size?: object;
         };
   });
@@ -125,6 +136,15 @@ export function useListbox(
     );
 
     return get(classes, merged.value.color ?? "primary");
+  });
+
+  const roundedToken = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      listboxTokens.value?.rounded,
+    );
+
+    return get(classes, props.rounded ?? "md");
   });
 
   const invalidatedPalette = computed(() => {
@@ -157,19 +177,25 @@ export function useListbox(
     return colorClasses.value?.highlighted;
   });
 
+  const optionHoverClass = computed(() => {
+    return colorClasses.value?.hover;
+  });
+
   const checkClass = computed(() => {
     return cn(sizeClasses.value?.check, colorClasses.value?.check);
   });
 
   const scrollBind = computed(() => {
-    const maxHeightClass = merged.value.maxHeight ?? "max-h-60";
+    const maxHeightClass =
+      merged.value.maxHeight ??
+      (isDialogOverlay.value ? "max-h-[min(60dvh,28rem)]" : "max-h-60");
     const disableMaxHeight = merged.value.disableMaxHeight === true;
 
     return mergePartBind(
       merged.value.customProps?.scroll,
       {},
       cn({
-        "overflow-y-auto overscroll-contain": !disableMaxHeight,
+        "min-h-0 overflow-y-auto overscroll-contain": !disableMaxHeight,
         [maxHeightClass]: !disableMaxHeight,
         [mergedClasses.value.scroll ?? ""]: true,
       }),
@@ -187,12 +213,21 @@ export function useListbox(
     );
   });
 
+  const surfaceRoundedClass = computed(() => {
+    if (!isDialogOverlay.value) {
+      return undefined;
+    }
+
+    return isDrawerOverlay.value
+      ? roundedToken.value?.drawer
+      : roundedToken.value?.panel;
+  });
+
   const surfaceBind = computed(() => {
     return cn({
-      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+      "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10":
         isDialogOverlay.value,
-      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
-        isDialogOverlay.value,
+      [surfaceRoundedClass.value ?? ""]: Boolean(surfaceRoundedClass.value),
     });
   });
 
@@ -234,6 +269,7 @@ export function useListbox(
     sizeClasses,
     mergedClasses,
     applyButtonProps,
+    optionHoverClass,
     cancelButtonProps,
     optionSelectedClass,
     optionHighlightedClass,

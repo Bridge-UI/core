@@ -23,6 +23,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
+  resolveFieldOverlay,
   resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
@@ -277,10 +278,14 @@ export function useSelect(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   });
 
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(selectMerged.value.overlay, breakpoint.mobile);
+  });
+
   const showFooter = computed(() => {
     return resolveFieldShowFooter(
       selectMerged.value.showFooter,
-      breakpoint.mobile,
+      resolvedOverlay.value,
     );
   });
 

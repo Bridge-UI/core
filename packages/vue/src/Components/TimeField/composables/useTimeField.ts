@@ -234,7 +234,10 @@ export function useTimeField(
   }
 
   const showFooter = computed(() => {
-    return resolveFieldShowFooter(timeOnly.value.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(
+      timeOnly.value.showFooter,
+      resolvedOverlay.value,
+    );
   });
 
   function handlePickerChange(next: null | TimeValue) {

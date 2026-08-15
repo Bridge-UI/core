@@ -58,6 +58,7 @@ function mountUseListbox(props: Partial<ListboxOwnProps> = {}) {
 }
 
 afterEach(() => {
+  mockViewport(1280);
   resetBreakpointCachesForTests();
   vi.restoreAllMocks();
 });
@@ -75,12 +76,17 @@ test("it should override color when prop is passed", () => {
 });
 
 test("it should expose color classes for options", () => {
-  const { checkClass, optionSelectedClass, optionHighlightedClass } =
-    mountUseListbox({ color: "primary" });
+  const {
+    checkClass,
+    optionHoverClass,
+    optionSelectedClass,
+    optionHighlightedClass,
+  } = mountUseListbox({ color: "primary" });
 
   expect(checkClass.value).toBeTruthy();
   expect(optionSelectedClass.value).toBeTruthy();
   expect(optionHighlightedClass.value).toBeTruthy();
+  expect(optionHoverClass.value).toContain("hover:bg-black/5");
 });
 
 test("it should merge registry classes", () => {
@@ -201,7 +207,45 @@ test("it should apply size classes when size is overridden", () => {
   expect(sizeClasses.value?.primary).toContain("text-xs");
 });
 
-test("it should default showFooter to false on desktop when unset", () => {
+test("it should round only the top of the surface when overlay is drawer", () => {
+  const { surfaceBind } = mountUseListbox({ overlay: "drawer" });
+
+  expect(surfaceBind.value).toContain("rounded-t-md");
+  expect(surfaceBind.value).toContain("rounded-b-none");
+  expect(surfaceBind.value).not.toMatch(/(?:^|\s)rounded-md(?:\s|$)/);
+});
+
+test("it should round all corners when overlay is modal", () => {
+  const { surfaceBind } = mountUseListbox({ overlay: "modal" });
+
+  expect(surfaceBind.value).toContain("rounded-md");
+  expect(surfaceBind.value).not.toContain("rounded-t-md");
+});
+
+test("it should follow the rounded prop on dialog surfaces", () => {
+  const { surfaceBind } = mountUseListbox({ rounded: "xl", overlay: "modal" });
+
+  expect(surfaceBind.value).toContain("rounded-xl");
+});
+
+test("it should follow the rounded prop with top-only corners on drawer", () => {
+  const { surfaceBind } = mountUseListbox({
+    rounded: "xl",
+    overlay: "drawer",
+  });
+
+  expect(surfaceBind.value).toContain("rounded-t-xl");
+  expect(surfaceBind.value).toContain("rounded-b-none");
+});
+
+test("it should use a taller scroll max-height for dialog overlays", () => {
+  const { scrollBind } = mountUseListbox({ overlay: "drawer" });
+
+  expect(scrollBind.value.class).toContain("max-h-[min(60dvh,28rem)]");
+  expect(scrollBind.value.class).not.toContain("max-h-60");
+});
+
+test("it should default showFooter to false on desktop menu when unset", () => {
   mockViewport(1280);
 
   const { showFooter } = mountUseListbox();
@@ -209,7 +253,7 @@ test("it should default showFooter to false on desktop when unset", () => {
   expect(showFooter.value).toBe(false);
 });
 
-test("it should default showFooter to true on mobile when unset", () => {
+test("it should default showFooter to true on mobile drawer when unset", () => {
   mockViewport(500);
 
   const { showFooter } = mountUseListbox();
@@ -217,10 +261,21 @@ test("it should default showFooter to true on mobile when unset", () => {
   expect(showFooter.value).toBe(true);
 });
 
-test("it should keep explicit showFooter false on mobile", () => {
+test("it should default showFooter to true for explicit modal on desktop", () => {
+  mockViewport(1280);
+
+  const { showFooter } = mountUseListbox({ overlay: "modal" });
+
+  expect(showFooter.value).toBe(true);
+});
+
+test("it should keep explicit showFooter false on dialog overlays", () => {
   mockViewport(500);
 
-  const { showFooter } = mountUseListbox({ showFooter: false });
+  const { showFooter } = mountUseListbox({
+    showFooter: false,
+    overlay: "drawer",
+  });
 
   expect(showFooter.value).toBe(false);
 });

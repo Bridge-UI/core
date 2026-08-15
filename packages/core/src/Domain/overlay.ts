@@ -68,15 +68,16 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 
 /**
  * Resolves whether a field picker shows Cancel / Apply.
- * Explicit `showFooter` wins. When unset, defaults to `true` on mobile.
+ * Explicit `showFooter` wins. When unset, defaults to `true` for dialog
+ * shells (`modal` / `drawer`).
  */
 export function resolveFieldShowFooter(
   showFooter: boolean | undefined,
-  mobile: boolean,
+  overlay: ResolvedFieldOverlay,
 ): boolean {
   if (showFooter !== undefined) {
     return showFooter;
   }
 
-  return mobile;
+  return isFieldOverlayDialog(overlay);
 }

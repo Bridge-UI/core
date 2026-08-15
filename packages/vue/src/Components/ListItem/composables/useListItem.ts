@@ -283,6 +283,14 @@ export function useListItem(
             !merged.value.disabled && !isListboxOption.value,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
             merged.value.selected && !isListboxOption.value,
+          [listboxContext.value?.optionHoverClass ?? ""]:
+            isListboxOption.value &&
+            !merged.value.disabled &&
+            !listboxSelected.value,
+          [listboxContext.value?.mergedClasses.optionHover ?? ""]:
+            isListboxOption.value &&
+            !merged.value.disabled &&
+            !listboxSelected.value,
           [listboxContext.value?.optionSelectedClass ?? ""]:
             isListboxOption.value && listboxSelected.value,
           [listboxContext.value?.mergedClasses.optionSelected ?? ""]:

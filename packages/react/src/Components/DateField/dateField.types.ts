@@ -223,8 +223,8 @@ export interface DateFieldOwnProps extends Omit<
   range?: boolean;
 
   /**
-   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
-   * on mobile.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`).
    *
    * @default false
    */

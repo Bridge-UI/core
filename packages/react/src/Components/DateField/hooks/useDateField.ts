@@ -147,8 +147,12 @@ export function useDateField(props: DateFieldProps) {
     });
   });
 
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
+  });
+
   const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateOnly.showFooter, breakpoint.mobile);
+    return resolveFieldShowFooter(dateOnly.showFooter, resolvedOverlay);
   });
 
   const clearable = derived(() => {
@@ -157,10 +161,6 @@ export function useDateField(props: DateFieldProps) {
 
   const hasValue = derived(() => {
     return hasDateFieldValue(modelValue);
-  });
-
-  const resolvedOverlay = derived(() => {
-    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
   });
 
   const pickerClassName = derived(() => {

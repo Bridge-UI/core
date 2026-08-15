@@ -246,7 +246,7 @@ export function useDateTimeField(
   const showFooter = computed(() => {
     return resolveFieldShowFooter(
       dateTimeOnly.value.showFooter,
-      breakpoint.mobile,
+      resolvedOverlay.value,
     );
   });
 
