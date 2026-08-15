@@ -1,5 +1,5 @@
 // ** Core Imports
-import { usesTrailingSnackbarActions } from "@bridge-ui/core";
+import { usesTrailingSnackbarActions } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import type {

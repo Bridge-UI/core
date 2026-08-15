@@ -8,7 +8,7 @@ import {
   type DrawerOwnProps,
   type DrawerProps,
 } from "@/Components/Drawer";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();

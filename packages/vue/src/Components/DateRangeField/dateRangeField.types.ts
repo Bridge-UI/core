@@ -6,9 +6,9 @@ import type {
   DateRangeValue,
   DisableDatesInput,
   FieldOverlayMode,
-  MergeHtmlProps,
   StartOfWeek,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";

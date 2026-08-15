@@ -1,5 +1,6 @@
 // ** External Imports
-import type { ButtonColor, LayerId } from "@bridge-ui/core";
+import type { LayerId } from "@bridge-ui/core/Layer";
+import type { ButtonColor } from "@bridge-ui/core/Tokens";
 import type { ReactNode } from "react";
 
 // ** Local Imports

@@ -2,12 +2,8 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  FormControlInvalidated,
-  LabelSize,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+import type { FormControlInvalidated, LabelSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { UseFormControlReturn } from "@/Components/FormControl/hooks/useFormControl";

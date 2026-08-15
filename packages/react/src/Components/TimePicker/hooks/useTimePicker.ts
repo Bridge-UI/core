@@ -3,13 +3,13 @@ import { isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
+import type { TimeValue } from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type TimeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

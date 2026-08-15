@@ -18,7 +18,7 @@ import type {
   DateAdapter,
   DateAdapterContext,
   DateAdapterTimeOptions,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Adapters";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

@@ -8,11 +8,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
-  cn,
   getSliderBarGeometry,
   getSliderPointerClientX,
   isSliderStopCovered,
-  mergeBridgeUILayeredClasses,
   normalizeSliderStops,
   percentFromSliderPointer,
   percentToValue,
@@ -21,21 +19,25 @@ import {
   resolveSliderDefaultValue,
   snapSliderValue,
   sortSliderRangeValue,
-  splitComponentProps,
   stepSliderValue,
   valueToPercent,
   writeSliderRangeThumb,
-  type LibDefaultsShape,
-  type MergeLibDefaults,
   type SliderRangeValue,
   type SliderStop,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Slider";
+  sliderColorProps as colorProps,
+  sliderInvalidatedProps as invalidatedProps,
+  sliderRoundedProps as roundedProps,
+  sliderSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import {

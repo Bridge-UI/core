@@ -3,14 +3,13 @@ import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   ModalAlign,
   ModalBlur,
   ModalScroll,
   ModalSize,
   ModalTransition,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ModalBlurOverrides {}
 export interface ModalSizeOverrides {}

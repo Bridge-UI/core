@@ -4,18 +4,18 @@ import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
+  alertPaddingProps as paddingProps,
+  alertRoundedProps as roundedProps,
+  alertShadowProps as shadowProps,
+  alertVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  paddingProps,
-  roundedProps,
-  shadowProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Alert";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

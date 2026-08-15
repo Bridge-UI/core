@@ -3,18 +3,19 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  DateRangeValue,
+  DisableDatesInput,
+  DisableTimesInput,
+  StartOfWeek,
+} from "@bridge-ui/core/Domain";
+import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
   CalendarRounded,
-  DateRangeValue,
-  DisableDatesInput,
-  DisableTimesInput,
-  MergeHtmlProps,
-  MergeProps,
-  StartOfWeek,
   TimeColorItem,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button/button.types";

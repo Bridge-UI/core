@@ -2,28 +2,28 @@
 import { get, omit } from "es-toolkit/compat";
 import {
   computed,
-  type HTMLAttributes,
-  type MaybeRefOrGetter,
   toValue,
   useId,
   useSlots,
+  type HTMLAttributes,
+  type MaybeRefOrGetter,
 } from "vue";
 
 // ** Core Imports
 import {
-  cn,
-  type LibDefaultsShape,
-  mergeBridgeUILayeredClasses,
-  type MergeLibDefaults,
-  splitComponentProps,
-} from "@bridge-ui/core";
+  formFieldColorProps as colorProps,
+  formFieldInvalidatedProps as invalidatedProps,
+  formFieldRoundedProps as roundedProps,
+  formFieldSizeProps as sizeProps,
+  formFieldVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/FormField";
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

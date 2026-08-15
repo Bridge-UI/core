@@ -3,17 +3,18 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  CalendarDayInteractionState,
+  DatePickerModel,
+  DisableDatesInput,
+  StartOfWeek,
+} from "@bridge-ui/core/Domain";
+import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
-  CalendarDayInteractionState,
   CalendarRounded,
-  DatePickerModel,
-  DisableDatesInput,
-  MergeHtmlProps,
-  MergeProps,
-  StartOfWeek,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface CalendarDateColorOverrides {}
 export interface CalendarDateRoundedOverrides {}

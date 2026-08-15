@@ -2,7 +2,7 @@
 import type { ComputedRef, InjectionKey, VNodeChild } from "vue";
 
 // ** Core Imports
-import type { TabsActivation } from "@bridge-ui/core";
+import type { TabsActivation } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

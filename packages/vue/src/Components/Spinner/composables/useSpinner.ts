@@ -4,20 +4,22 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
-  cn,
   DEFAULT_SPINNER_THICKNESS,
   getSpinnerCircleGeometry,
-  mergeBridgeUILayeredClasses,
   SPINNER_VIEWBOX_SIZE,
+} from "@bridge-ui/core/Domain";
+import {
+  spinnerColorProps as colorProps,
+  spinnerSizeProps as sizeProps,
+  spinnerVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Spinner";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

@@ -4,7 +4,7 @@ import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports

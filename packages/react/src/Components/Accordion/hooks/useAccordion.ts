@@ -4,21 +4,23 @@ import { useCallback, useId, useMemo, useState } from "react";
 
 // ** Core Imports
 import {
-  cn,
   getAccordionTriggerId,
-  mergeBridgeUILayeredClasses,
   normalizeAccordionValue,
-  splitComponentProps,
   toggleAccordionItem,
   type AccordionValue,
+} from "@bridge-ui/core/Domain";
+import {
+  accordionColorProps as colorProps,
+  accordionSizeProps as sizeProps,
+  accordionVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Accordion";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { AccordionContextValue } from "@/Components/Accordion/AccordionContext";

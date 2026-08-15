@@ -2,7 +2,7 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 export interface TabPanelClasses {
   /**

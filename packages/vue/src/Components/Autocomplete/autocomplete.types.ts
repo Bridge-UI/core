@@ -5,12 +5,12 @@ import type { InputHTMLAttributes, Slot, TextareaHTMLAttributes } from "vue";
 import type {
   FieldOverlayMode,
   ListboxOptionsInput,
-  MergeHtmlProps,
   SelectAsyncData,
   SelectModel,
   SelectOption,
   SelectValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ChipOwnProps } from "@/Components/Chip/chip.types";
@@ -32,7 +32,7 @@ export type {
   SelectOptionInput,
   SelectOptionLike,
   SelectValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 
 export interface AutocompleteClasses extends FormFieldClasses {
   /**

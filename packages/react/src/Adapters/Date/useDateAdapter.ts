@@ -3,7 +3,7 @@ import {
   defaultNativeDateAdapter,
   type DateAdapter,
   type DateAdapterContext,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";

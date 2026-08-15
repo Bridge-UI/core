@@ -3,13 +3,13 @@ import { get, isNull, omit } from "es-toolkit/compat";
 import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
+import type { ListboxOption } from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
   type LibDefaultsShape,
-  type ListboxOption,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

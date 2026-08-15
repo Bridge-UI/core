@@ -12,13 +12,16 @@ import {
 
 // ** Core Imports
 import {
+  baseFieldInvalidatedProps as invalidatedProps,
+  baseFieldSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/BaseField";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

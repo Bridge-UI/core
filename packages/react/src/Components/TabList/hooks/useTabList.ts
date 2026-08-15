@@ -3,12 +3,8 @@ import { get, omit } from "es-toolkit/compat";
 import type { KeyboardEvent } from "react";
 
 // ** Core Imports
-import {
-  cn,
-  getAdjacentTabValue,
-  getTabId,
-  splitComponentProps,
-} from "@bridge-ui/core";
+import { getAdjacentTabValue, getTabId } from "@bridge-ui/core/Domain";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

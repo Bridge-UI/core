@@ -10,7 +10,7 @@ import { Fragment, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();

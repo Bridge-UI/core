@@ -3,12 +3,8 @@ import { get } from "es-toolkit/compat";
 import { computed, inject, useAttrs } from "vue";
 
 // ** Core Imports
-import {
-  cn,
-  getAdjacentTabValue,
-  getTabId,
-  splitComponentProps,
-} from "@bridge-ui/core";
+import { getAdjacentTabValue, getTabId } from "@bridge-ui/core/Domain";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

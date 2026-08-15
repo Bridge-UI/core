@@ -13,27 +13,35 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
-  cn,
   countModalTransitionLayers,
-  createFocusTrap,
   getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
   hasModalTransition,
   LAYER_STACK_BASE_Z_INDEX,
-  mergeBridgeUILayeredClasses,
   pushLayerStack,
   resolveEffectiveModalTransition,
-  splitComponentProps,
   subscribeLayerStack,
-  type FocusTrap,
   type LayerStackHandle,
+} from "@bridge-ui/core/Layer";
+import {
+  createFocusTrap,
+  isModalBackdropClick,
+  type FocusTrap,
+} from "@bridge-ui/core/Runtime";
+import {
+  modalAlignProps as alignProps,
+  modalBlurProps as blurProps,
+  modalSizeProps as sizeProps,
+  type ModalTransition,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type ModalTransition,
-} from "@bridge-ui/core";
-import { isModalBackdropClick } from "@bridge-ui/core/Runtime";
-import { alignProps, blurProps, sizeProps } from "@bridge-ui/core/Tokens/Modal";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ModalOwnProps, ModalProps } from "@/Components/Modal/modal.types";

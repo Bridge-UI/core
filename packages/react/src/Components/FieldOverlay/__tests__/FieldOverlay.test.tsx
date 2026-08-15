@@ -3,10 +3,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
-import {
-  resetBreakpointCachesForTests,
-  resetLayerStackForTests,
-} from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { FieldOverlay } from "@/Components/FieldOverlay";

@@ -2,7 +2,8 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { LabelSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
+import type { LabelSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface LabelSizeOverrides {}
 

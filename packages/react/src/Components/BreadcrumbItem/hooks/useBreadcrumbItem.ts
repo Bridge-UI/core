@@ -2,7 +2,8 @@
 import { get, omit, pick } from "es-toolkit/compat";
 
 // ** Core Imports
-import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
+import type { IconSize } from "@bridge-ui/core/Tokens";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useBreadcrumbContext } from "@/Components/Breadcrumb/BreadcrumbContext";

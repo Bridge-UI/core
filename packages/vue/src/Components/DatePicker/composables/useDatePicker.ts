@@ -10,13 +10,13 @@ import {
 } from "vue";
 
 // ** Core Imports
+import type { DatePickerModel } from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
-  type DatePickerModel,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

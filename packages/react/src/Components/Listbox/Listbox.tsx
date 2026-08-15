@@ -4,13 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
 import {
-  cn,
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
   type ListboxOption,
   type ListboxValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

@@ -2,11 +2,8 @@
 import type { TextareaHTMLAttributes } from "react";
 
 // ** Core Imports
-import type {
-  MergeHtmlProps,
-  MergeProps,
-  TextareaResize,
-} from "@bridge-ui/core";
+import type { TextareaResize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

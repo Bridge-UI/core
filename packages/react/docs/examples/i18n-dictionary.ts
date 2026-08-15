@@ -13,7 +13,7 @@
 import { get } from "es-toolkit/compat";
 
 // ** Core Imports
-import type { I18nAdapter } from "@bridge-ui/core";
+import type { I18nAdapter } from "@bridge-ui/core/Adapters";
 
 // prettier-ignore
 const MESSAGES: Record<string, Record<string, string>> = {

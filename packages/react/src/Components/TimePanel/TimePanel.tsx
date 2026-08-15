@@ -2,7 +2,7 @@
 import { useLayoutEffect, useRef } from "react";
 
 // ** Core Imports
-import { observeTimePanelSelectedScroll } from "@bridge-ui/core";
+import { observeTimePanelSelectedScroll } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useTimePanel } from "@/Components/TimePanel/hooks/useTimePanel";

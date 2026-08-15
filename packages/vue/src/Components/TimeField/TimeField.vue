@@ -4,7 +4,7 @@ import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import type { TimeValue } from "@bridge-ui/core";
+import type { TimeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

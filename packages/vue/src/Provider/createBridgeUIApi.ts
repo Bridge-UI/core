@@ -10,7 +10,7 @@ import {
   type BridgeUIComponentsConfig,
   type BridgeUIGlobal,
   type Direction,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Config";
 
 // ** Local Imports
 import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";

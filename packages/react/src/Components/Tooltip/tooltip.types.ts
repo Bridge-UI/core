@@ -3,14 +3,15 @@ import type { HTMLAttributes, ReactNode, RefObject } from "react";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   PositionPlacement,
   PositionStrategy,
+} from "@bridge-ui/core/Runtime";
+import type {
   TooltipColor,
   TooltipRounded,
   TooltipSize,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface TooltipSizeOverrides {}
 export interface TooltipColorOverrides {}

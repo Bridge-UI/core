@@ -8,7 +8,7 @@ import { Button } from "@/Components/Button";
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
 import { Menu } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {

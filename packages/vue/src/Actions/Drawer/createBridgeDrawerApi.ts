@@ -12,7 +12,7 @@ import {
   syncLayerShow,
   updateLayer,
   type LayerId,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import type {

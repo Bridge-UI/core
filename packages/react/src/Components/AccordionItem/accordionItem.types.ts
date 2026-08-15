@@ -2,7 +2,7 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";

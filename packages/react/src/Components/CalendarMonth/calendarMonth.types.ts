@@ -6,9 +6,8 @@ import type {
   CalendarColor,
   CalendarColorItem,
   CalendarRounded,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface CalendarMonthColorOverrides {}
 export interface CalendarMonthRoundedOverrides {}

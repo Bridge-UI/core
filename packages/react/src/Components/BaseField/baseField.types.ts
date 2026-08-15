@@ -5,9 +5,8 @@ import type { HTMLAttributes, ReactNode } from "react";
 import type {
   BaseFieldInvalidated,
   BaseFieldSize,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { UseBaseFieldReturn } from "@/Components/BaseField/hooks/useBaseField";

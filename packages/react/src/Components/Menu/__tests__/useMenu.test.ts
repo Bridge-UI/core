@@ -4,7 +4,7 @@ import { createElement, type MouseEvent } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { useMenu, type MenuOwnProps, type MenuProps } from "@/Components/Menu";

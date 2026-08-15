@@ -7,7 +7,7 @@ afterEach(() => {
 });
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { Slider } from "@/Components/Slider";

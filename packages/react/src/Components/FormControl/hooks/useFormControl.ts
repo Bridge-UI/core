@@ -5,14 +5,16 @@ import { useId, useMemo } from "react";
 
 // ** Core Imports
 import {
+  formControlInvalidatedProps as invalidatedProps,
+  labelSizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps } from "@bridge-ui/core/Tokens/FormControl";
-import { sizeProps as labelSizeProps } from "@bridge-ui/core/Tokens/Label";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

@@ -4,18 +4,18 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
+  progressColorProps as colorProps,
+  progressRoundedProps as roundedProps,
+  progressSizeProps as sizeProps,
+  progressVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Progress";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

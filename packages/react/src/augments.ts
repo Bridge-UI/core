@@ -39,7 +39,7 @@ import type { SwitchClasses, SwitchProps } from "@/Components/Switch";
 import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 
-declare module "@bridge-ui/core" {
+declare module "@bridge-ui/core/Config" {
   interface AlertConfigOverrides {
     classes: AlertClasses;
     defaultProps: Partial<

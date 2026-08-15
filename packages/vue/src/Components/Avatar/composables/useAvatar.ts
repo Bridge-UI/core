@@ -4,18 +4,18 @@ import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
+  avatarColorProps as colorProps,
+  avatarIconSizeProps as iconSizeProps,
+  avatarRoundedProps as roundedProps,
+  avatarSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  iconSizeProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Avatar";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

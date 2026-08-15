@@ -3,7 +3,10 @@
 import { computed, inject, provide } from "vue";
 
 // ** Core Imports
-import type { BridgeUIComponentsConfig, BridgeUIGlobal } from "@bridge-ui/core";
+import type {
+  BridgeUIComponentsConfig,
+  BridgeUIGlobal,
+} from "@bridge-ui/core/Config";
 
 // ** Local Imports
 import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";

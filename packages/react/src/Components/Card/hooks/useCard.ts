@@ -4,18 +4,18 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
+  cardPaddingProps as paddingProps,
+  cardRoundedProps as roundedProps,
+  cardShadowProps as shadowProps,
+  cardVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  paddingProps,
-  roundedProps,
-  shadowProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Card";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CardOwnProps, CardProps } from "@/Components/Card/card.types";

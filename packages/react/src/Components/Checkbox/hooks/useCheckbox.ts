@@ -4,20 +4,20 @@ import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
+import { resolveIconSource } from "@bridge-ui/core/Adapters";
+import {
+  checkboxColorProps as colorProps,
+  checkboxInvalidatedProps as invalidatedProps,
+  checkboxRoundedProps as roundedProps,
+  checkboxSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
-  resolveIconSource,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Checkbox";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconElement } from "@/Adapters/Icon";

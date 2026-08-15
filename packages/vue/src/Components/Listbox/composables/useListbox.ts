@@ -4,20 +4,22 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
-  cn,
   isFieldOverlayDialog,
-  mergeBridgeUILayeredClasses,
   resolveFieldOverlay,
   resolveFieldShowFooter,
+} from "@bridge-ui/core/Domain";
+import {
+  listboxColorProps as colorProps,
+  listboxInvalidatedProps as invalidatedProps,
+  listboxSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Listbox";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";

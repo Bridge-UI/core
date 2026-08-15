@@ -2,7 +2,7 @@
 import { createContext, useContext, type ReactNode } from "react";
 
 // ** Core Imports
-import type { TabsActivation } from "@bridge-ui/core";
+import type { TabsActivation } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

@@ -2,11 +2,8 @@
 import type { HTMLAttributes, OlHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type {
-  BreadcrumbSize,
-  MergeHtmlProps,
-  MergeProps,
-} from "@bridge-ui/core";
+import type { BreadcrumbSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

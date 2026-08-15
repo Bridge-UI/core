@@ -7,7 +7,8 @@ import type {
 } from "react";
 
 // ** Core Imports
-import type { ChipSize, MergeHtmlProps, MergeProps } from "@bridge-ui/core";
+import type { ChipSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";

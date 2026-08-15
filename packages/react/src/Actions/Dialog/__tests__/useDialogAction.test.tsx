@@ -9,7 +9,7 @@ import {
   BridgeDialogHostMissingError,
   useDialogAction,
 } from "@/Actions/Dialog";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();

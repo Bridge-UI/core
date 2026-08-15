@@ -3,15 +3,15 @@ import { get } from "es-toolkit/compat";
 import { computed, provide, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
+import { collapseBreadcrumbItems } from "@bridge-ui/core/Domain";
+import { breadcrumbSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
-  collapseBreadcrumbItems,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Tokens/Breadcrumb";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

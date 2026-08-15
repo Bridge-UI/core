@@ -3,7 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { computed, provide, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn, splitComponentProps } from "@bridge-ui/core";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ListOwnProps, ListProps } from "@/Components/List/list.types";

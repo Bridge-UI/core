@@ -11,22 +11,24 @@ import {
 // ** Core Imports
 import {
   applyToggleGroupSelection,
-  cn,
   getAdjacentTabValue,
-  mergeBridgeUILayeredClasses,
   normalizeToggleGroupValue,
+  ToggleGroupValue,
+} from "@bridge-ui/core/Domain";
+import {
+  toggleGroupColorProps as colorProps,
+  toggleGroupOrientationProps as orientationProps,
+  toggleGroupRoundedProps as roundedProps,
+  toggleGroupSizeProps as sizeProps,
+  toggleGroupVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type ToggleGroupValue,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  orientationProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/ToggleGroup";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ToggleGroupContextValue } from "@/Components/ToggleGroup/ToggleGroupContext";

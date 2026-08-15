@@ -2,16 +2,14 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
+import type { SliderRangeValue, SliderStopInput } from "@bridge-ui/core/Domain";
 import type {
   BaseFieldInvalidated,
-  MergeHtmlProps,
-  MergeProps,
   SliderColor,
   SliderInvalidated,
-  SliderRangeValue,
   SliderRounded,
-  SliderStopInput,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {
@@ -26,7 +24,7 @@ export type {
   SliderRangeValue,
   SliderStop,
   SliderStopInput,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 
 export interface SliderSizeOverrides {}
 export interface SliderColorOverrides {}

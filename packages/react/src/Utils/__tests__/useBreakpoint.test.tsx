@@ -3,7 +3,7 @@ import { renderHook } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
-import { resetBreakpointCachesForTests } from "@bridge-ui/core";
+import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { BridgeUIProvider } from "@/Provider";

@@ -5,19 +5,19 @@ import { useId, useMemo } from "react";
 
 // ** Core Imports
 import {
+  formFieldColorProps as colorProps,
+  formFieldInvalidatedProps as invalidatedProps,
+  formFieldRoundedProps as roundedProps,
+  formFieldSizeProps as sizeProps,
+  formFieldVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/FormField";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

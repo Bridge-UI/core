@@ -5,18 +5,18 @@ import { useMemo, useState } from "react";
 
 // ** Core Imports
 import {
+  radioColorProps as colorProps,
+  radioInvalidatedProps as invalidatedProps,
+  radioRoundedProps as roundedProps,
+  radioSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Radio";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormControl } from "@/Components/FormControl/hooks/useFormControl";

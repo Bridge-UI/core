@@ -3,12 +3,11 @@ import type { InputHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   SwitchColor,
   SwitchRounded,
   SwitchSize,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

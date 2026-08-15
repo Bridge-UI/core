@@ -3,7 +3,7 @@ import { expect, test, vi } from "vitest";
 import { computed, effectScope } from "vue";
 
 // ** Core Imports
-import { BRIDGE_UI_DEFAULT_GLOBAL } from "@bridge-ui/core";
+import { BRIDGE_UI_DEFAULT_GLOBAL } from "@bridge-ui/core/Config";
 
 // ** Local Imports
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";

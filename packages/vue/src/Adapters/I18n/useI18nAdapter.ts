@@ -6,7 +6,7 @@ import {
   resolveMessage,
   type I18nAdapter,
   type MessageParams,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";

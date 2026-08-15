@@ -12,7 +12,7 @@
 import type { Composer } from "vue-i18n";
 
 // ** Core Imports
-import type { I18nAdapter } from "@bridge-ui/core";
+import type { I18nAdapter } from "@bridge-ui/core/Adapters";
 
 /**
  * Builds a vue-i18n-backed {@link I18nAdapter} for Bridge chrome strings.

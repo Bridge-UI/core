@@ -5,7 +5,7 @@ import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
 import { useMenu, type MenuOwnProps } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(async () => {
   await flushPromises();

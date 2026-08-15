@@ -11,18 +11,18 @@ import {
 
 // ** Core Imports
 import {
+  checkboxColorProps as colorProps,
+  checkboxInvalidatedProps as invalidatedProps,
+  checkboxRoundedProps as roundedProps,
+  checkboxSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Checkbox";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

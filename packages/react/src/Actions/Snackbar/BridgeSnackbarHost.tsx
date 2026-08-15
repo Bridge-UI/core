@@ -3,19 +3,18 @@ import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
 import { get } from "es-toolkit/compat";
 import { useContext, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
 import {
-  cn,
   hasDocument,
-  mergeBridgeUILayeredClasses,
   resolveModalPortalElement,
-  snackbarPositionProps,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Runtime";
+import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
+import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";

@@ -8,13 +8,12 @@ import type {
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   PaginationColor,
   PaginationRounded,
   PaginationSize,
   PaginationVariant,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconProps } from "@/Components/Icon";

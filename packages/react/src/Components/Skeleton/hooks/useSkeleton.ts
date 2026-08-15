@@ -3,14 +3,14 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
+import { skeletonRoundedProps as roundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { roundedProps } from "@bridge-ui/core/Tokens/Skeleton";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

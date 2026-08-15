@@ -2,7 +2,7 @@
 import { createContext, useContext } from "react";
 
 // ** Core Imports
-import type { ToggleGroupValue } from "@bridge-ui/core";
+import type { ToggleGroupValue } from "@bridge-ui/core/Domain";
 
 /**
  * Shared toggle group state for `ToggleItem` children.

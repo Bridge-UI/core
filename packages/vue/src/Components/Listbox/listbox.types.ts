@@ -4,16 +4,17 @@ import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 // ** Core Imports
 import type {
   FieldOverlayMode,
-  ListboxColor,
   ListboxEntry,
   ListboxOption,
-  ListboxSize,
   ListboxValue,
+} from "@bridge-ui/core/Domain";
+import type { PositionPlacement } from "@bridge-ui/core/Runtime";
+import type {
+  ListboxColor,
+  ListboxSize,
   MenuRounded,
-  MergeHtmlProps,
-  MergeProps,
-  PositionPlacement,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";
@@ -153,7 +154,7 @@ export type {
   ListboxEntry,
   ListboxOption,
   ListboxValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Domain";
 
 export interface ListboxEmits {
   /**

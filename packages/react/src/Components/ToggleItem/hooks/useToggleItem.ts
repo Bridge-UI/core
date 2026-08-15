@@ -3,12 +3,8 @@ import { get, omit } from "es-toolkit/compat";
 import { useEffect, type MouseEvent } from "react";
 
 // ** Core Imports
-import {
-  cn,
-  isToggleGroupItemSelected,
-  splitComponentProps,
-  type IconSize,
-} from "@bridge-ui/core";
+import type { IconSize } from "@bridge-ui/core/Tokens";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useToggleGroupContext } from "@/Components/ToggleGroup/ToggleGroupContext";
@@ -23,6 +19,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { isToggleGroupItemSelected } from "@bridge-ui/core/Domain";
 
 const toggleItemBridgeKeys = [
   "value",

@@ -2,7 +2,7 @@
 import type { Slot } from "vue";
 
 // ** Core Imports
-import type { FieldOverlayMode } from "@bridge-ui/core";
+import type { FieldOverlayMode } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";

@@ -2,7 +2,7 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core";
+import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

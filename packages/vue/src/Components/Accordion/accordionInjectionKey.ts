@@ -2,7 +2,7 @@
 import type { ComputedRef, InjectionKey } from "vue";
 
 // ** Core Imports
-import type { AccordionValue } from "@bridge-ui/core";
+import type { AccordionValue } from "@bridge-ui/core/Domain";
 
 /**
  * Merged token classes for items / triggers / panels.

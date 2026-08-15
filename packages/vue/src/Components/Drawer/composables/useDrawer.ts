@@ -15,33 +15,37 @@ import {
 // ** Core Imports
 import {
   acquireLayerStackOrder,
-  cn,
   countDrawerTransitionLayers,
-  createFocusTrap,
   DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
   getLayerStackEntry,
   hasDrawerTransition,
   LAYER_STACK_BASE_Z_INDEX,
-  mergeBridgeUILayeredClasses,
   pushLayerStack,
   resolveEffectiveDrawerTransition,
-  splitComponentProps,
   subscribeLayerStack,
-  type DrawerTransition,
-  type FocusTrap,
   type LayerStackHandle,
+} from "@bridge-ui/core/Layer";
+import {
+  createFocusTrap,
+  isModalBackdropClick,
+  type FocusTrap,
+} from "@bridge-ui/core/Runtime";
+import {
+  drawerBlurProps as blurProps,
+  drawerPlacementPanelProps as placementPanelProps,
+  drawerPlacementProps as placementProps,
+  drawerSizeProps as sizeProps,
+  type DrawerTransition,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { isModalBackdropClick } from "@bridge-ui/core/Runtime";
-import {
-  blurProps,
-  placementPanelProps,
-  placementProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Drawer";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

@@ -10,28 +10,30 @@ import {
 } from "vue";
 
 // ** Core Imports
+import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
-  cn,
   isDateDisabled,
   isDateInRangePreview,
   isDateRangeValue,
   isDateSelected,
-  mergeBridgeUILayeredClasses,
   resolveCalendarDayInteractionState,
   resolveDatePickerMode,
   resolveStartOfWeek,
-  splitComponentProps,
-  type DateAdapterContext,
   type DatePickerModel,
+} from "@bridge-ui/core/Domain";
+import {
+  calendarColorProps as colorProps,
+  calendarDayProps as dayProps,
+  calendarRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  dayProps,
-  roundedProps,
-} from "@bridge-ui/core/Tokens/Calendar";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";

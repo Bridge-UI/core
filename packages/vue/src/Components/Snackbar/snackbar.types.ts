@@ -3,14 +3,13 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
-  MergeHtmlProps,
-  MergeProps,
   SnackbarColor,
   SnackbarPadding,
   SnackbarPosition,
   SnackbarRounded,
   SnackbarTransition,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

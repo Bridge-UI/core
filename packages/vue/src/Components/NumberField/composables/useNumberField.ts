@@ -3,7 +3,7 @@ import { isNil } from "es-toolkit/compat";
 import { computed, useAttrs, type Ref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";

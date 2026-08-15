@@ -3,24 +3,29 @@ import { get, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
+import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   buildHourOptions,
   buildMinuteOptions,
   buildSecondOptions,
-  cn,
   isTimeDisabled,
-  mergeBridgeUILayeredClasses,
   resolveCalendarDayInteractionState,
   snapMinutes,
-  splitComponentProps,
   to12Hour,
   to24Hour,
   toMeridiem,
-  type DateAdapterContext,
+} from "@bridge-ui/core/Domain";
+import {
+  timeColorProps as colorProps,
+  timeRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Time";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";

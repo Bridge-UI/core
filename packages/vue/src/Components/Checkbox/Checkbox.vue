@@ -3,7 +3,8 @@
 import { computed, ref, useAttrs } from "vue";
 
 // ** Core Imports
-import { cn, resolveIconSource } from "@bridge-ui/core";
+import { resolveIconSource } from "@bridge-ui/core/Adapters";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useIconAdapter } from "@/Adapters/Icon";

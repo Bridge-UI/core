@@ -2,11 +2,8 @@
 import type { HTMLAttributes } from "vue";
 
 // ** Core Imports
-import type {
-  MergeHtmlProps,
-  MergeProps,
-  SkeletonRounded,
-} from "@bridge-ui/core";
+import type { SkeletonRounded } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface SkeletonRoundedOverrides {}
 

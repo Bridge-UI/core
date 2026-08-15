@@ -2,15 +2,13 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
+import type { DisableTimesInput, TimeValue } from "@bridge-ui/core/Domain";
 import type {
-  DisableTimesInput,
-  MergeHtmlProps,
-  MergeProps,
   TimeColor,
   TimeColorItem,
   TimeRounded,
-  TimeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface TimePanelColorOverrides {}
 export interface TimePanelRoundedOverrides {}

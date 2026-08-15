@@ -4,8 +4,8 @@ import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
-  type ButtonColor,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Layer";
+import type { ButtonColor } from "@bridge-ui/core/Tokens";
 import { computed } from "vue";
 
 // ** Local Imports

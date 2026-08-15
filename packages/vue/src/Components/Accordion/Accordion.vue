@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** Core Imports
-import type { AccordionValue } from "@bridge-ui/core";
+import type { AccordionValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import type {

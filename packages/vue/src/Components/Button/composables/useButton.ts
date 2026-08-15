@@ -4,17 +4,17 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
+  buttonDensityProps as densityProps,
+  buttonRoundedProps as roundedProps,
+  buttonVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import {
-  densityProps,
-  roundedProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Button";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

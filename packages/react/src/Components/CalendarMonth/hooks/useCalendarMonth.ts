@@ -3,17 +3,22 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
+import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
+import {
+  isMonthDisabled,
+  resolveCalendarDayInteractionState,
+} from "@bridge-ui/core/Domain";
+import {
+  calendarColorProps as colorProps,
+  calendarRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
-  isMonthDisabled,
   mergeBridgeUILayeredClasses,
-  resolveCalendarDayInteractionState,
   splitComponentProps,
-  type DateAdapterContext,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Calendar";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";

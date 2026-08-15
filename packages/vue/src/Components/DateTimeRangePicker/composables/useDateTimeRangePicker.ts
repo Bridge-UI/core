@@ -10,17 +10,18 @@ import {
 } from "vue";
 
 // ** Core Imports
+import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import {
+  combineDateAndTime,
+  type DateRangeValue,
+  type TimeValue,
+} from "@bridge-ui/core/Domain";
 import {
   cn,
-  combineDateAndTime,
   splitComponentProps,
-  type DateAdapter,
-  type DateAdapterContext,
-  type DateRangeValue,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type TimeValue,
-} from "@bridge-ui/core";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";

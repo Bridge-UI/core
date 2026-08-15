@@ -4,13 +4,16 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
+  labelInvalidatedProps as invalidatedProps,
+  labelSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

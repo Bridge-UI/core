@@ -2,7 +2,7 @@
 import { computed, type ComputedRef } from "vue";
 
 // ** Core Imports
-import type { IconAdapter } from "@bridge-ui/core";
+import type { IconAdapter } from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
 import { useBridgeUI } from "@/Provider/useBridgeUI";

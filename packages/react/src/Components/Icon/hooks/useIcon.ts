@@ -3,15 +3,15 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
+import { resolveIconSource } from "@bridge-ui/core/Adapters";
+import { iconSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
-  resolveIconSource,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { IconElement } from "@/Adapters/Icon";

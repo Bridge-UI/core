@@ -4,7 +4,7 @@ import { afterEach, expect, test, vi } from "vitest";
 import { ref } from "vue";
 
 // ** Core Imports
-import { resetLayerStackForTests } from "@bridge-ui/core";
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { Snackbar } from "@/Components/Snackbar";

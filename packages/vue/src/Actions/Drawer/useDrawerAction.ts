@@ -1,5 +1,5 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core";
+import { getLayerCount } from "@bridge-ui/core/Layer";
 import { computed, inject } from "vue";
 
 // ** Local Imports

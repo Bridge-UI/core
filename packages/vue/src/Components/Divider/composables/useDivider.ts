@@ -4,13 +4,16 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
+  dividerColorProps as colorProps,
+  dividerOrientationProps as orientationProps,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { colorProps, orientationProps } from "@bridge-ui/core/Tokens/Divider";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

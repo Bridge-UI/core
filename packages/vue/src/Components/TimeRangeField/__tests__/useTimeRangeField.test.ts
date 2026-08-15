@@ -4,7 +4,7 @@ import { expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
-import type { TimeRangeValue } from "@bridge-ui/core";
+import type { TimeRangeValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import {

@@ -10,12 +10,8 @@ import {
 } from "vue";
 
 // ** Core Imports
-import {
-  cn,
-  isToggleGroupItemSelected,
-  splitComponentProps,
-  type IconSize,
-} from "@bridge-ui/core";
+import type { IconSize } from "@bridge-ui/core/Tokens";
+import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { getToggleItemId } from "@/Components/ToggleGroup/composables/useToggleGroup";
@@ -29,6 +25,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { isToggleGroupItemSelected } from "@bridge-ui/core/Domain";
 
 const toggleItemBridgeKeys = [
   "value",

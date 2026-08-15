@@ -11,21 +11,20 @@ import {
 } from "vue";
 
 // ** Core Imports
+import { getTabId, type TabsActivation } from "@bridge-ui/core/Domain";
+import {
+  tabsColorProps as colorProps,
+  tabsOrientationProps as orientationProps,
+  tabsSizeProps as sizeProps,
+  tabsVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
-  getTabId,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-  type TabsActivation,
-} from "@bridge-ui/core";
-import {
-  colorProps,
-  orientationProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Tabs";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {

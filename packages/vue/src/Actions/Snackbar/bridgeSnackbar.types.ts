@@ -1,6 +1,10 @@
 // ** External Imports
-import type { LayerId, SnackbarColor, SnackbarRounded } from "@bridge-ui/core";
-import { snackbarPositionProps } from "@bridge-ui/core";
+import type { LayerId } from "@bridge-ui/core/Layer";
+import {
+  snackbarPositionProps,
+  type SnackbarColor,
+  type SnackbarRounded,
+} from "@bridge-ui/core/Tokens";
 import type { Ref } from "vue";
 
 // ** Local Imports

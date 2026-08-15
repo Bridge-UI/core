@@ -3,14 +3,14 @@ import { get } from "es-toolkit/compat";
 import type { KeyboardEvent, MouseEvent } from "react";
 
 // ** Core Imports
+import { chipSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
-} from "@bridge-ui/core";
-import { sizeProps } from "@bridge-ui/core/Tokens/Chip";
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {
