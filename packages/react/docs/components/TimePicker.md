@@ -44,6 +44,7 @@ import { TimePicker } from "@bridge-ui/react/Components/TimePicker";
 | `rounded`      | `CalendarRounded`       | `"md"`      | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`               | `false`     | Shows Cancel / Apply. Selection is draft until Apply. |
 | `showSeconds`  | `boolean`               | `false`     | Shows seconds in the panel and formatted value.       |
+| `slots`        | `TimePickerSlots`       | —           | Named slots (`footer` for Cancel / Apply).            |
 | `timeZone`     | `string`                | —           | IANA time zone.                                       |
 | `tokens`       | `TimePickerTokens`      | —           | Token overrides.                                      |
 | `value`        | `Date \| null`          | —           | Controlled value.                                     |
@@ -52,6 +53,7 @@ import { TimePicker } from "@bridge-ui/react/Components/TimePicker";
 
 | Callback   | Type                            | Description                                                            |
 | ---------- | ------------------------------- | ---------------------------------------------------------------------- |
+| `onApply`  | `() => void`                    | Called when Apply is pressed (`showFooter`).                           |
 | `onCancel` | `() => void`                    | Called when Cancel is pressed.                                         |
 | `onChange` | `(value: Date \| null) => void` | Called when Apply is pressed (`showFooter`) or when the value commits. |
 

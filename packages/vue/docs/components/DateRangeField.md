@@ -58,7 +58,7 @@ On mobile, `drawer` / `modal` overlays use vertical dual-calendar layout when
 | `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"`                               | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
 | `overlay`         | `FieldOverlayMode`           | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                              |
 | `showFooter`      | `boolean`                    | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.                                        |
-| `slots`           | `DateRangeFieldSlots`        | —                                            | Named slots (`FormField` slots + calendar `day`).                                 |
+| `slots`           | `DateRangeFieldSlots`        | —                                            | Named slots (`FormField` slots + calendar `day` + footer).                        |
 | `startOfWeek`     | `StartOfWeek`                | `0`                                          | First day of the week.                                                            |
 | `timeZone`        | `string`                     | —                                            | IANA time zone.                                                                   |
 | `value`           | `DateRangeValue \| null`     | —                                            | Controlled value.                                                                 |
@@ -76,12 +76,14 @@ See [FormField](./FormField.md).
 
 ## Events
 
-| Event         | Payload                           | Description                        |
-| ------------- | --------------------------------- | ---------------------------------- |
-| `v-on:change` | `(value: DateRangeValue \| null)` | Emitted when the range changes.    |
-| `v-on:clear`  | `()`                              | Emitted when the value is cleared. |
-| `v-on:close`  | `()`                              | Emitted when the menu closes.      |
-| `v-on:open`   | `()`                              | Emitted when the menu opens.       |
+| Event         | Payload                           | Description                                    |
+| ------------- | --------------------------------- | ---------------------------------------------- |
+| `v-on:apply`  | `()`                              | Emitted when Apply is pressed (`showFooter`).  |
+| `v-on:cancel` | `()`                              | Emitted when Cancel is pressed (`showFooter`). |
+| `v-on:change` | `(value: DateRangeValue \| null)` | Emitted when the range changes.                |
+| `v-on:clear`  | `()`                              | Emitted when the value is cleared.             |
+| `v-on:close`  | `()`                              | Emitted when the menu closes.                  |
+| `v-on:open`   | `()`                              | Emitted when the menu opens.                   |
 
 ## Related components
 

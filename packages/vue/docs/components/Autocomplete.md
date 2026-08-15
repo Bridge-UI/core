@@ -129,11 +129,13 @@ Use the default slot with `ListSection` / `ListItem` to build the dropdown list 
 ```vue
 <Autocomplete overlay="auto" label="Country" :options="countries" />
 
+<Autocomplete overlay="modal" label="Country" :options="countries" />
+
 <Autocomplete label="Country" overlay="drawer" :options="countries" />
 ```
 
 Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
-When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply.
+When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply. Apply commits and closes; Cancel discards and closes.
 
 ### customProps
 
@@ -192,12 +194,14 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 | Slot      | Scope                                         | Description                                                                                                |
 | --------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `default` | —                                             | Composed list content (`ListSection` / `ListItem` with `value`). Replaces mapped `options` in the listbox. |
+| `footer`  | `{ apply: () => void; cancel: () => void }`   | Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close, or `cancel()` to discard.      |
 | `option`  | `{ option: SelectOption; selected: boolean }` | Custom option content when rendering from the `options` prop.                                              |
 
 ## Events
 
 | Event           | Payload                  | Description                                                          |
 | --------------- | ------------------------ | -------------------------------------------------------------------- |
+| `v-on:apply`    | —                        | Emitted when Apply is pressed on the listbox footer (`showFooter`).  |
 | `v-on:cancel`   | —                        | Emitted when Cancel is pressed on the listbox footer (`showFooter`). |
 | `v-on:change`   | `(value: SelectModel)`   | Emitted when the selection changes.                                  |
 | `v-on:clear`    | —                        | Emitted when the value is cleared.                                   |

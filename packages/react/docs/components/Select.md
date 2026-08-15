@@ -82,6 +82,30 @@ import { Select } from "@bridge-ui/react/Components/Select";
 />
 ```
 
+### Custom footer
+
+Replaces Cancel / Apply on the listbox. `apply()` commits and closes; `cancel()` discards and closes.
+
+```tsx
+<Select
+  showFooter
+  label="Framework"
+  options={frameworks}
+  slots={{
+    footer: ({ apply, cancel }) => (
+      <>
+        <button type="button" onClick={cancel}>
+          Discard
+        </button>
+        <button type="button" onClick={apply}>
+          Save
+        </button>
+      </>
+    ),
+  }}
+/>
+```
+
 ### Grouped options
 
 `options` may mix standalone options and section groups (`{ title, options, sticky? }`). Search filters within sections and drops empty ones.
@@ -125,11 +149,13 @@ Pass `ListSection` / `ListItem` as children to build the dropdown list manually.
 ```tsx
 <Select label="Country" overlay="auto" options={countries} />
 
+<Select label="Country" overlay="modal" options={countries} />
+
 <Select label="Country" overlay="drawer" options={countries} />
 ```
 
 Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
-When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply.
+When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply. Apply commits and closes; Cancel discards and closes.
 
 ### customProps
 
@@ -187,6 +213,7 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 
 | Callback     | Payload                  | Description                                                         |
 | ------------ | ------------------------ | ------------------------------------------------------------------- |
+| `onApply`    | —                        | Called when Apply is pressed on the listbox footer (`showFooter`).  |
 | `onCancel`   | —                        | Called when Cancel is pressed on the listbox footer (`showFooter`). |
 | `onClear`    | —                        | Called when the value is cleared.                                   |
 | `onClose`    | —                        | Called when the menu closes.                                        |

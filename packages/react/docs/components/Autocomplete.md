@@ -133,11 +133,13 @@ Pass `ListSection` / `ListItem` as children to build the dropdown list manually.
 ```tsx
 <Autocomplete label="Country" overlay="auto" options={countries} />
 
+<Autocomplete label="Country" overlay="modal" options={countries} />
+
 <Autocomplete label="Country" overlay="drawer" options={countries} />
 ```
 
 Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
-When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply.
+When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply. Apply commits and closes; Cancel discards and closes.
 
 ### customProps
 
@@ -196,6 +198,7 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 
 | Callback     | Payload                  | Description                                                         |
 | ------------ | ------------------------ | ------------------------------------------------------------------- |
+| `onApply`    | —                        | Called when Apply is pressed on the listbox footer (`showFooter`).  |
 | `onCancel`   | —                        | Called when Cancel is pressed on the listbox footer (`showFooter`). |
 | `onClear`    | —                        | Called when the value is cleared.                                   |
 | `onClose`    | —                        | Called when the menu closes.                                        |
