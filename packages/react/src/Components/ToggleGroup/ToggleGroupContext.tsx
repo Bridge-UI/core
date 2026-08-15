@@ -1,6 +1,9 @@
 // ** External Imports
 import { createContext, useContext } from "react";
 
+// ** Core Imports
+import type { ToggleGroupValue } from "@bridge-ui/core";
+
 /**
  * Shared toggle group state for `ToggleItem` children.
  */
@@ -14,6 +17,11 @@ export type ToggleGroupContextValue = {
    * Disabled toggle values.
    */
   disabledValues: string[];
+
+  /**
+   * Value that currently owns the roving tab stop.
+   */
+  focusedValue: string;
 
   /**
    * Focus a segment by value (roving tabindex).
@@ -31,6 +39,11 @@ export type ToggleGroupContextValue = {
   id: string;
 
   /**
+   * Whether more than one segment can be selected.
+   */
+  multiple: boolean;
+
+  /**
    * Orientation of the track.
    */
   orientation: "vertical" | "horizontal";
@@ -41,14 +54,14 @@ export type ToggleGroupContextValue = {
   registerToggleItem: (value: string, disabled?: boolean) => () => void;
 
   /**
-   * Currently selected value.
+   * Currently selected value(s).
    */
-  selected: string;
+  selected: ToggleGroupValue;
 
   /**
-   * Selects a segment by value.
+   * Applies a segment press (select / toggle).
    */
-  setSelected: (value: string) => void;
+  toggleItem: (value: string) => void;
 
   /**
    * Ordered toggle values (mount order).

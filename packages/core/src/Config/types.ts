@@ -1389,6 +1389,7 @@ export interface ToggleGroupConfigBase {
     color: keyof ToggleGroupColor;
     disabled: boolean;
     full: boolean;
+    multiple: boolean;
     orientation: keyof ToggleGroupOrientation;
     rounded: keyof ToggleGroupRounded;
     size: keyof ToggleGroupSize;

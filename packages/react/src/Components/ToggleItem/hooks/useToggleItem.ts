@@ -3,7 +3,12 @@ import { get, omit } from "es-toolkit/compat";
 import { useEffect, type MouseEvent } from "react";
 
 // ** Core Imports
-import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
+import {
+  cn,
+  isToggleGroupItemSelected,
+  splitComponentProps,
+  type IconSize,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import { useToggleGroupContext } from "@/Components/ToggleGroup/ToggleGroupContext";
@@ -63,7 +68,7 @@ export function useToggleItem(props: ToggleItemProps) {
   });
 
   const selected = derived(() => {
-    return group.selected === value;
+    return isToggleGroupItemSelected(group.selected, value, group.multiple);
   });
 
   const iconSize = derived(() => {
@@ -88,19 +93,24 @@ export function useToggleItem(props: ToggleItemProps) {
       return;
     }
 
-    group.setSelected(value);
+    group.toggleItem(value);
     rootInheritedAttrs.onClick?.(event);
   }
 
   const rootBind = derived(() => {
+    const isTabStop = group.focusedValue
+      ? group.focusedValue === value
+      : selected;
+
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       disabled,
-      role: "radio",
       type: "button",
       onClick: handleClick,
-      "aria-checked": selected,
-      tabIndex: selected ? 0 : -1,
+      tabIndex: isTabStop ? 0 : -1,
       id: getToggleItemId(group.id, value),
+      role: group.multiple ? "button" : "radio",
+      "aria-pressed": selected && group.multiple,
+      "aria-checked": selected && !group.multiple,
       className: cn({
         "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
         [group.tokenClasses.iconGap ?? ""]: true,

@@ -9,6 +9,7 @@ import type {
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
+  ToggleGroupValue,
   ToggleGroupVariant,
 } from "@bridge-ui/core";
 
@@ -38,12 +39,12 @@ export interface ToggleGroupEmits {
   /**
    * Emitted when the selected value changes.
    */
-  change: [value: string];
+  change: [value: ToggleGroupValue];
 
   /**
    * Emitted when `v-model` should update.
    */
-  "update:modelValue": [value: string];
+  "update:modelValue": [value: ToggleGroupValue];
 }
 
 /**
@@ -84,6 +85,13 @@ export interface ToggleGroupOwnProps {
    * @default false
    */
   full?: boolean;
+
+  /**
+   * Allow selecting more than one segment.
+   *
+   * @default false
+   */
+  multiple?: boolean;
 
   /**
    * Layout orientation of the track.
@@ -131,5 +139,5 @@ export type ToggleGroupProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component (`defineModel` internally).
    */
-  modelValue?: string;
+  modelValue?: ToggleGroupValue;
 };

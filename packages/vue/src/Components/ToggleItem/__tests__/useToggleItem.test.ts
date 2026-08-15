@@ -7,7 +7,10 @@ import { defineComponent, h } from "vue";
 import { ToggleGroup } from "@/Components/ToggleGroup";
 import { useToggleItem } from "@/Components/ToggleItem/composables/useToggleItem";
 
-function mountUseToggleItem(value: string) {
+function mountUseToggleItem(
+  value: string,
+  groupProps: Record<string, unknown> = { modelValue: "a" },
+) {
   let result!: ReturnType<typeof useToggleItem>;
 
   const Probe = defineComponent({
@@ -20,7 +23,7 @@ function mountUseToggleItem(value: string) {
 
   mount(ToggleGroup, {
     slots: { default: () => h(Probe) },
-    props: { modelValue: "a", "aria-label": "Options" },
+    props: { "aria-label": "Options", ...groupProps },
   });
 
   return result;
@@ -31,6 +34,16 @@ test("it should mark the selected toggle item", () => {
 
   expect(result.rootBind.value.role).toBe("radio");
   expect(result.rootBind.value["aria-checked"]).toBe(true);
+});
+
+test("it should use pressed buttons when multiple is set", () => {
+  const result = mountUseToggleItem("a", {
+    multiple: true,
+    modelValue: ["a"],
+  });
+
+  expect(result.rootBind.value.role).toBe("button");
+  expect(result.rootBind.value["aria-pressed"]).toBe(true);
 });
 
 test("it should throw when used outside a ToggleGroup provider", () => {

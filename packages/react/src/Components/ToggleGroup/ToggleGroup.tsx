@@ -8,6 +8,7 @@ const toggleGroupLibDefaults = {
   full: false,
   rounded: "md",
   disabled: false,
+  multiple: false,
   variant: "solid",
   color: "primary",
   orientation: "horizontal",

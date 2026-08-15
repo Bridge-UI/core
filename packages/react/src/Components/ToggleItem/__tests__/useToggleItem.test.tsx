@@ -31,6 +31,26 @@ test("it should mark the selected toggle item", () => {
   expect(result.current.rootBind["aria-checked"]).toBe(true);
 });
 
+test("it should use pressed buttons when multiple is set", () => {
+  function Wrapper({ children }: { children: ReactNode }) {
+    return (
+      <ToggleGroup multiple defaultValue={["a"]} aria-label="Options">
+        {children}
+      </ToggleGroup>
+    );
+  }
+
+  const { result } = renderHook(
+    () => useToggleItem({ value: "a", children: "A" }),
+    {
+      wrapper: Wrapper,
+    },
+  );
+
+  expect(result.current.rootBind.role).toBe("button");
+  expect(result.current.rootBind["aria-pressed"]).toBe(true);
+});
+
 test("it should throw when used outside ToggleGroup", () => {
   expect(() => {
     renderHook(() => useToggleItem({ value: "a" }));

@@ -1,6 +1,6 @@
 # ToggleGroup
 
-Segmented control for mutually exclusive options. Use `Switch` for on/off; use `ToggleGroup` to pick among labeled segments in a shared track. Compose with `ToggleItem`.
+Segmented control for one or more labeled options in a shared track. Single selection by default; set `multiple` for multi-select. Use `Switch` for on/off. Compose with `ToggleItem`.
 
 ## Import
 
@@ -17,6 +17,17 @@ import { ToggleItem } from "@bridge-ui/react/Components/ToggleItem";
 const [lib, setLib] = useState("vue");
 
 <ToggleGroup value={lib} color="success" onChange={setLib} aria-label="Library">
+  <ToggleItem value="react">React</ToggleItem>
+  <ToggleItem value="vue">Vue</ToggleItem>
+</ToggleGroup>;
+```
+
+### Multiple
+
+```tsx
+const [libs, setLibs] = useState(["vue"]);
+
+<ToggleGroup multiple value={libs} onChange={setLibs} aria-label="Libraries">
   <ToggleItem value="react">React</ToggleItem>
   <ToggleItem value="vue">Vue</ToggleItem>
 </ToggleGroup>;

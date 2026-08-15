@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, head, isArray, omit } from "es-toolkit/compat";
 import {
   useCallback,
   useId,
@@ -10,12 +10,15 @@ import {
 
 // ** Core Imports
 import {
+  applyToggleGroupSelection,
   cn,
   getAdjacentTabValue,
   mergeBridgeUILayeredClasses,
+  normalizeToggleGroupValue,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
+  type ToggleGroupValue,
 } from "@bridge-ui/core";
 import {
   colorProps,
@@ -47,6 +50,7 @@ const toggleGroupBridgeKeys = [
   "rounded",
   "variant",
   "disabled",
+  "multiple",
   "onChange",
   "customProps",
   "orientation",
@@ -55,7 +59,14 @@ const toggleGroupBridgeKeys = [
 
 type ToggleGroupLibDefaults = LibDefaultsShape<
   ToggleGroupOwnProps,
-  "full" | "size" | "color" | "rounded" | "variant" | "disabled" | "orientation"
+  | "full"
+  | "size"
+  | "color"
+  | "rounded"
+  | "variant"
+  | "disabled"
+  | "multiple"
+  | "orientation"
 >;
 
 type ToggleGroupMerged = MergeLibDefaults<
@@ -70,6 +81,20 @@ function getToggleItemId(groupId: string, value: string) {
   return `${groupId}-toggle-${value}`;
 }
 
+/**
+ * Resolves a scalar fallback focus target from the selected value.
+ */
+function resolveFocusFallback(
+  selected: ToggleGroupValue,
+  toggleValues: string[],
+) {
+  if (isArray(selected)) {
+    return head(selected) ?? head(toggleValues) ?? "";
+  }
+
+  return selected || head(toggleValues) || "";
+}
+
 export function useToggleGroup(
   props: ToggleGroupProps,
   libDefaults: ToggleGroupLibDefaults,
@@ -77,6 +102,7 @@ export function useToggleGroup(
   const reactId = useId();
   const groupId = `bridge-toggle-group${reactId.replace(/:/g, "")}`;
 
+  const [focusedValue, setFocusedValue] = useState("");
   const [toggleValues, setToggleValues] = useState<string[]>([]);
   const [disabledValues, setDisabledValues] = useState<string[]>([]);
 
@@ -97,16 +123,27 @@ export function useToggleGroup(
     componentName: "ToggleGroup",
   });
 
+  const multiple = derived(() => {
+    return merged.multiple === true;
+  });
+
+  const orientation = derived(() => {
+    return (merged.orientation as "vertical" | "horizontal") ?? "horizontal";
+  });
+
   const isControlled = derived(() => {
     return props.value !== undefined;
   });
 
-  const [uncontrolled, setUncontrolled] = useState(
-    () => props.defaultValue ?? "",
+  const [uncontrolled, setUncontrolled] = useState<ToggleGroupValue>(() =>
+    normalizeToggleGroupValue(props.defaultValue, props.multiple === true),
   );
 
   const selected = derived(() => {
-    return isControlled ? (props.value ?? "") : uncontrolled;
+    return normalizeToggleGroupValue(
+      isControlled ? props.value : uncontrolled,
+      multiple,
+    );
   });
 
   const children = derived(() => {
@@ -181,19 +218,22 @@ export function useToggleGroup(
     return get(orientationClasses, merged.orientation);
   });
 
-  const setSelected = useCallback(
-    (next: string) => {
-      if (merged.disabled || disabledValues.includes(next)) {
+  const toggleItem = useCallback(
+    (nextValue: string) => {
+      if (merged.disabled || disabledValues.includes(nextValue)) {
         return;
       }
+
+      const next = applyToggleGroupSelection(selected, nextValue, multiple);
 
       if (!isControlled) {
         setUncontrolled(next);
       }
 
+      setFocusedValue(nextValue);
       merged.onChange?.(next);
     },
-    [merged, isControlled, disabledValues],
+    [merged, selected, multiple, isControlled, disabledValues],
   );
 
   const registerToggleItem = useCallback(
@@ -214,7 +254,11 @@ export function useToggleGroup(
         return previous.filter((item) => item !== value);
       });
 
-      if (!isControlled) {
+      setFocusedValue((current) => {
+        return current === "" && !disabled ? value : current;
+      });
+
+      if (!isControlled && !multiple) {
         setUncontrolled((current) => {
           return current === "" && !disabled ? value : current;
         });
@@ -229,11 +273,12 @@ export function useToggleGroup(
         );
       };
     },
-    [isControlled],
+    [isControlled, multiple],
   );
 
   const focusToggleItem = useCallback(
     (value: string) => {
+      setFocusedValue(value);
       document.getElementById(getToggleItemId(groupId, value))?.focus();
     },
     [groupId],
@@ -241,18 +286,17 @@ export function useToggleGroup(
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
-      const horizontal = (merged.orientation ?? "horizontal") === "horizontal";
-      const nextKey = horizontal ? "ArrowRight" : "ArrowDown";
-      const prevKey = horizontal ? "ArrowLeft" : "ArrowUp";
+      const horizontal = orientation === "horizontal";
 
-      const activeId =
-        typeof document !== "undefined"
-          ? document.activeElement?.id
-          : undefined;
+      const prevKey = horizontal ? "ArrowLeft" : "ArrowUp";
+      const nextKey = horizontal ? "ArrowRight" : "ArrowDown";
+
+      const activeId = get(document, "activeElement.id");
       const focused =
-        toggleValues.find(
-          (value) => getToggleItemId(groupId, value) === activeId,
-        ) ?? selected;
+        toggleValues.find((value) => {
+          return getToggleItemId(groupId, value) === activeId;
+        }) ??
+        (focusedValue || resolveFocusFallback(selected, toggleValues));
 
       if (event.key === nextKey || event.key === prevKey) {
         event.preventDefault();
@@ -266,7 +310,10 @@ export function useToggleGroup(
         );
 
         focusToggleItem(next);
-        setSelected(next);
+
+        if (!multiple) {
+          toggleItem(next);
+        }
 
         return;
       }
@@ -275,10 +322,13 @@ export function useToggleGroup(
         event.preventDefault();
         const first =
           toggleValues.find((value) => !disabledValues.includes(value)) ??
-          selected;
+          focused;
 
         focusToggleItem(first);
-        setSelected(first);
+
+        if (!multiple) {
+          toggleItem(first);
+        }
 
         return;
       }
@@ -288,36 +338,42 @@ export function useToggleGroup(
         const last =
           [...toggleValues]
             .reverse()
-            .find((value) => !disabledValues.includes(value)) ?? selected;
+            .find((value) => !disabledValues.includes(value)) ?? focused;
 
         focusToggleItem(last);
-        setSelected(last);
+
+        if (!multiple) {
+          toggleItem(last);
+        }
       }
     },
     [
       groupId,
+      multiple,
       selected,
-      setSelected,
+      toggleItem,
+      orientation,
+      focusedValue,
       toggleValues,
       disabledValues,
       focusToggleItem,
-      merged.orientation,
     ],
   );
 
   const contextValue = useMemo((): ToggleGroupContextValue => {
     return {
+      multiple,
       selected,
+      toggleItem,
       id: groupId,
-      setSelected,
+      orientation,
       toggleValues,
+      focusedValue,
       disabledValues,
       focusToggleItem,
       registerToggleItem,
       full: merged.full === true,
       disabled: merged.disabled === true,
-      orientation:
-        (merged.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
         iconGap: get(sizeItem, "gap"),
         itemSize: get(sizeItem, "item"),
@@ -337,30 +393,31 @@ export function useToggleGroup(
     };
   }, [
     groupId,
+    multiple,
     selected,
     sizeItem,
     colorItem,
     merged.full,
     roundedItem,
-    setSelected,
+    toggleItem,
+    orientation,
     variantItem,
+    focusedValue,
     toggleValues,
     disabledValues,
     merged.variant,
     focusToggleItem,
     merged.disabled,
     orientationItem,
-    merged.orientation,
     registerToggleItem,
   ]);
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      role: "radiogroup",
       onKeyDown: handleKeyDown,
+      "aria-orientation": orientation,
+      role: multiple ? "group" : "radiogroup",
       "aria-disabled": merged.disabled === true || undefined,
-      "aria-orientation":
-        (merged.orientation as "vertical" | "horizontal") ?? "horizontal",
       className: cn({
         [get(sizeItem, "root") ?? ""]: true,
         [get(variantItem, "root") ?? ""]: true,

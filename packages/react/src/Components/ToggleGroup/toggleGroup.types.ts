@@ -9,6 +9,7 @@ import type {
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
+  ToggleGroupValue,
   ToggleGroupVariant,
 } from "@bridge-ui/core";
 
@@ -71,7 +72,7 @@ export interface ToggleGroupOwnProps {
    *
    * @default undefined
    */
-  defaultValue?: string;
+  defaultValue?: ToggleGroupValue;
 
   /**
    * Disable the entire group.
@@ -88,11 +89,18 @@ export interface ToggleGroupOwnProps {
   full?: boolean;
 
   /**
+   * Allow selecting more than one segment.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
    * Called when the selected value changes.
    *
    * @default undefined
    */
-  onChange?: (value: string) => void;
+  onChange?: (value: ToggleGroupValue) => void;
 
   /**
    * Layout orientation of the track.
@@ -123,7 +131,7 @@ export interface ToggleGroupOwnProps {
    *
    * @default undefined
    */
-  value?: string;
+  value?: ToggleGroupValue;
 
   /**
    * Visual style of the selected segment.

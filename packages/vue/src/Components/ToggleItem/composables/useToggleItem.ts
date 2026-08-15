@@ -10,7 +10,12 @@ import {
 } from "vue";
 
 // ** Core Imports
-import { cn, splitComponentProps, type IconSize } from "@bridge-ui/core";
+import {
+  cn,
+  isToggleGroupItemSelected,
+  splitComponentProps,
+  type IconSize,
+} from "@bridge-ui/core";
 
 // ** Local Imports
 import { getToggleItemId } from "@/Components/ToggleGroup/composables/useToggleGroup";
@@ -68,7 +73,11 @@ export function useToggleItem(props: ToggleItemOwnProps) {
   });
 
   const selected = computed(() => {
-    return groupContextRef.value.selected === value.value;
+    return isToggleGroupItemSelected(
+      groupContextRef.value.selected,
+      value.value,
+      groupContextRef.value.multiple,
+    );
   });
 
   let unregister: null | (() => void) = null;
@@ -100,7 +109,7 @@ export function useToggleItem(props: ToggleItemOwnProps) {
       return;
     }
 
-    groupContextRef.value.setSelected(value.value);
+    groupContextRef.value.toggleItem(value.value);
     split.value.inheritedAttrs.onClick?.(event);
   }
 
@@ -116,14 +125,19 @@ export function useToggleItem(props: ToggleItemOwnProps) {
   const rootBind = computed(() => {
     const group = groupContextRef.value;
 
+    const isTabStop = group.focusedValue
+      ? group.focusedValue === value.value
+      : selected.value;
+
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
-      role: "radio",
       type: "button",
       onClick: handleClick,
       disabled: disabled.value,
-      "aria-checked": selected.value,
-      tabindex: selected.value ? 0 : -1,
+      tabindex: isTabStop ? 0 : -1,
+      role: group.multiple ? "button" : "radio",
       id: getToggleItemId(group.id, value.value),
+      "aria-pressed": selected.value && group.multiple,
+      "aria-checked": selected.value && !group.multiple,
       class: cn({
         "inline-flex cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:pointer-events-none disabled:opacity-50": true,
         [group.tokenClasses.iconGap ?? ""]: true,
