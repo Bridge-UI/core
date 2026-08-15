@@ -233,7 +233,7 @@ export function useToggleGroup(
       setFocusedValue(nextValue);
       merged.onChange?.(next);
     },
-    [merged, selected, multiple, isControlled, disabledValues],
+    [merged, multiple, selected, isControlled, disabledValues],
   );
 
   const registerToggleItem = useCallback(
@@ -273,7 +273,7 @@ export function useToggleGroup(
         );
       };
     },
-    [isControlled, multiple],
+    [multiple, isControlled],
   );
 
   const focusToggleItem = useCallback(
@@ -397,10 +397,10 @@ export function useToggleGroup(
     selected,
     sizeItem,
     colorItem,
-    merged.full,
-    roundedItem,
     toggleItem,
+    merged.full,
     orientation,
+    roundedItem,
     variantItem,
     focusedValue,
     toggleValues,
