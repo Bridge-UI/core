@@ -8,7 +8,7 @@ import type {
   ModalScroll,
   ModalSize,
   ModalTransition,
-} from "@bridge-ui/core/Tokens/Modal";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ModalBlurOverrides {}

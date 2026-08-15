@@ -4,11 +4,11 @@ import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Radio";
+  radioColorProps as colorProps,
+  radioInvalidatedProps as invalidatedProps,
+  radioRoundedProps as roundedProps,
+  radioSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

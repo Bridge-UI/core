@@ -13,7 +13,7 @@ import {
   resolveFieldShowFooter,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
-import { colorProps as listboxColorProps } from "@bridge-ui/core/Tokens/Listbox";
+import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

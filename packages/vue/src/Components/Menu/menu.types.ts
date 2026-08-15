@@ -6,7 +6,7 @@ import type {
   PositionPlacement,
   PositionStrategy,
 } from "@bridge-ui/core/Runtime";
-import type { MenuRounded, MenuShadow } from "@bridge-ui/core/Tokens/Menu";
+import type { MenuRounded, MenuShadow } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface MenuShadowOverrides {}

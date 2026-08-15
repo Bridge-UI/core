@@ -2,7 +2,7 @@
 import type { ComputedRef, InjectionKey } from "vue";
 
 // ** Core Imports
-import type { ToggleGroupValue } from "@bridge-ui/core";
+import type { ToggleGroupValue } from "@bridge-ui/core/Domain";
 
 /**
  * Merged token classes for the track and segments.

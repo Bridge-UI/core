@@ -6,7 +6,7 @@ import {
   mergeLayerShellProps,
   usesTrailingSnackbarActions,
 } from "@bridge-ui/core/Layer";
-import type { SnackbarColor } from "@bridge-ui/core/Tokens/Snackbar";
+import type { SnackbarColor } from "@bridge-ui/core/Tokens";
 import { computed } from "vue";
 
 // ** Local Imports

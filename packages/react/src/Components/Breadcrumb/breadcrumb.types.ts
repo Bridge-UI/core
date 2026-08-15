@@ -2,7 +2,7 @@
 import type { HTMLAttributes, OlHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { BreadcrumbSize } from "@bridge-ui/core/Tokens/Breadcrumb";
+import type { BreadcrumbSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

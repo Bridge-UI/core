@@ -11,7 +11,10 @@ import {
 } from "vue";
 
 // ** Core Imports
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/BaseField";
+import {
+  baseFieldInvalidatedProps as invalidatedProps,
+  baseFieldSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

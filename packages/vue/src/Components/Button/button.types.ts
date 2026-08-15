@@ -13,7 +13,7 @@ import type {
   ButtonRounded,
   ButtonSize,
   ButtonVariant,
-} from "@bridge-ui/core/Tokens/Button";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

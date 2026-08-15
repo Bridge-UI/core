@@ -8,7 +8,7 @@ import type {
   TabsOrientation,
   TabsSize,
   TabsVariant,
-} from "@bridge-ui/core/Tokens/Tabs";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

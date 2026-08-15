@@ -5,7 +5,7 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   BaseFieldInvalidated,
   BaseFieldSize,
-} from "@bridge-ui/core/Tokens/BaseField";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

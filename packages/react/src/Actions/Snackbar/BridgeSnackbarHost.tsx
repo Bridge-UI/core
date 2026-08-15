@@ -13,7 +13,7 @@ import {
   hasDocument,
   resolveModalPortalElement,
 } from "@bridge-ui/core/Runtime";
-import { positionProps as snackbarPositionProps } from "@bridge-ui/core/Tokens/Snackbar";
+import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

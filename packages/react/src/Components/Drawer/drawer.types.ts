@@ -8,7 +8,7 @@ import type {
   DrawerScroll,
   DrawerSize,
   DrawerTransition,
-} from "@bridge-ui/core/Tokens/Drawer";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface DrawerBlurOverrides {}

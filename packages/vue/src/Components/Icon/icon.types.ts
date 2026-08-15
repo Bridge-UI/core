@@ -2,7 +2,7 @@
 import type { SVGAttributes } from "vue";
 
 // ** Core Imports
-import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import type { IconSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

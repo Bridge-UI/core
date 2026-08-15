@@ -5,12 +5,12 @@ import { useId, useMemo } from "react";
 
 // ** Core Imports
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/FormField";
+  formFieldColorProps as colorProps,
+  formFieldInvalidatedProps as invalidatedProps,
+  formFieldRoundedProps as roundedProps,
+  formFieldSizeProps as sizeProps,
+  formFieldVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

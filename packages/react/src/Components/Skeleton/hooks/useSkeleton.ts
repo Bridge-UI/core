@@ -3,7 +3,7 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { roundedProps } from "@bridge-ui/core/Tokens/Skeleton";
+import { skeletonRoundedProps as roundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

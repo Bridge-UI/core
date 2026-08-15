@@ -4,11 +4,11 @@ import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
-  paddingProps,
-  roundedProps,
-  shadowProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Card";
+  cardPaddingProps as paddingProps,
+  cardRoundedProps as roundedProps,
+  cardShadowProps as shadowProps,
+  cardVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

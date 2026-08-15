@@ -2,8 +2,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { FormControlInvalidated } from "@bridge-ui/core/Tokens/FormControl";
-import type { LabelSize } from "@bridge-ui/core/Tokens/Label";
+import type { FormControlInvalidated, LabelSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

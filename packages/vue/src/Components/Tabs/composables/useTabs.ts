@@ -13,11 +13,11 @@ import {
 // ** Core Imports
 import { getTabId, type TabsActivation } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  orientationProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Tabs";
+  tabsColorProps as colorProps,
+  tabsOrientationProps as orientationProps,
+  tabsSizeProps as sizeProps,
+  tabsVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

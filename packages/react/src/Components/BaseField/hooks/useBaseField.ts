@@ -3,7 +3,10 @@ import { get, omit } from "es-toolkit/compat";
 import { useId, useMemo } from "react";
 
 // ** Core Imports
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/BaseField";
+import {
+  baseFieldInvalidatedProps as invalidatedProps,
+  baseFieldSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

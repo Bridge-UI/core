@@ -11,11 +11,11 @@ import {
 
 // ** Core Imports
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Checkbox";
+  checkboxColorProps as colorProps,
+  checkboxInvalidatedProps as invalidatedProps,
+  checkboxRoundedProps as roundedProps,
+  checkboxSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

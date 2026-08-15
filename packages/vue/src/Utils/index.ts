@@ -12,8 +12,7 @@ import {
 
 // ** Core Imports
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
-import type { FormFieldSize } from "@bridge-ui/core/Tokens/FormField";
-import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
   createMergePartBind,

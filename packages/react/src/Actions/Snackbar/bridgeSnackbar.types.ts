@@ -1,10 +1,10 @@
 // ** External Imports
 import type { LayerId } from "@bridge-ui/core/Layer";
 import {
-  positionProps as snackbarPositionProps,
+  snackbarPositionProps,
   type SnackbarColor,
   type SnackbarRounded,
-} from "@bridge-ui/core/Tokens/Snackbar";
+} from "@bridge-ui/core/Tokens";
 import type { ReactNode } from "react";
 
 // ** Local Imports

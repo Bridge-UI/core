@@ -21,13 +21,13 @@ import {
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
 import {
-  colorProps as snackbarColorProps,
-  paddingProps as snackbarPaddingProps,
-  positionProps as snackbarPositionProps,
-  roundedProps as snackbarRoundedProps,
-  transitionProps as snackbarTransitionProps,
+  snackbarColorProps,
+  snackbarPaddingProps,
+  snackbarPositionProps,
+  snackbarRoundedProps,
+  snackbarTransitionProps,
   type SnackbarTransition,
-} from "@bridge-ui/core/Tokens/Snackbar";
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

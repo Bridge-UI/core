@@ -16,7 +16,7 @@ import {
   resolveDatePickerMode,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
-import { roundedProps } from "@bridge-ui/core/Tokens/Calendar";
+import { calendarRoundedProps as roundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

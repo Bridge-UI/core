@@ -1,6 +1,6 @@
 // ** External Imports
 import type { LayerId } from "@bridge-ui/core/Layer";
-import type { ButtonColor } from "@bridge-ui/core/Tokens/Button";
+import type { ButtonColor } from "@bridge-ui/core/Tokens";
 import type { Ref } from "vue";
 
 // ** Local Imports

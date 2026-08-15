@@ -7,13 +7,13 @@ import {
   getPaginationItems,
   type PaginationEntry,
 } from "@bridge-ui/core/Domain";
-import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
 import {
-  colorProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Pagination";
+  paginationColorProps as colorProps,
+  paginationRoundedProps as roundedProps,
+  paginationSizeProps as sizeProps,
+  paginationVariantProps as variantProps,
+  type IconSize,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

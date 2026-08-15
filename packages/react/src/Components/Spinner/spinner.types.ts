@@ -6,7 +6,7 @@ import type {
   SpinnerColor,
   SpinnerSize,
   SpinnerVariant,
-} from "@bridge-ui/core/Tokens/Spinner";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface SpinnerSizeOverrides {}

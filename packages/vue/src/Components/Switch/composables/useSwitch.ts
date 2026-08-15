@@ -4,11 +4,11 @@ import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Switch";
+  switchColorProps as colorProps,
+  switchInvalidatedProps as invalidatedProps,
+  switchRoundedProps as roundedProps,
+  switchSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

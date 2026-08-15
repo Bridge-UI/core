@@ -2,10 +2,7 @@
 import type { HTMLAttributes } from "vue";
 
 // ** Core Imports
-import type {
-  DividerColor,
-  DividerOrientation,
-} from "@bridge-ui/core/Tokens/Divider";
+import type { DividerColor, DividerOrientation } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface DividerColorOverrides {}

@@ -10,10 +10,10 @@ import {
   type AccordionValue,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Accordion";
+  accordionColorProps as colorProps,
+  accordionSizeProps as sizeProps,
+  accordionVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

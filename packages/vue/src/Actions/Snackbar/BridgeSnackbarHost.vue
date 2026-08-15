@@ -4,7 +4,7 @@ import { get } from "es-toolkit/compat";
 import { computed, inject, provide } from "vue";
 
 // ** Core Imports
-import { positionProps as snackbarPositionProps } from "@bridge-ui/core/Tokens/Snackbar";
+import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

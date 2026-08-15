@@ -4,10 +4,10 @@ import { computed, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import {
-  colorProps,
-  sizeProps,
-  underlineProps,
-} from "@bridge-ui/core/Tokens/Link";
+  linkColorProps as colorProps,
+  linkSizeProps as sizeProps,
+  linkUnderlineProps as underlineProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

@@ -4,11 +4,11 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  colorProps,
-  iconSizeProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Avatar";
+  avatarColorProps as colorProps,
+  avatarIconSizeProps as iconSizeProps,
+  avatarRoundedProps as roundedProps,
+  avatarSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

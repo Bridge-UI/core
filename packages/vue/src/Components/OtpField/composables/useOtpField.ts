@@ -24,12 +24,12 @@ import {
   type OtpInputType,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/OtpField";
+  otpFieldColorProps as colorProps,
+  otpFieldInvalidatedProps as invalidatedProps,
+  otpFieldRoundedProps as roundedProps,
+  otpFieldSizeProps as sizeProps,
+  otpFieldVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

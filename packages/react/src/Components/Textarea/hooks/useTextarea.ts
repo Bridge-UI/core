@@ -8,7 +8,7 @@ import {
 } from "react";
 
 // ** Core Imports
-import { resizeProps } from "@bridge-ui/core/Tokens/Textarea";
+import { textareaResizeProps as resizeProps } from "@bridge-ui/core/Tokens";
 import {
   adjustAutosizeTextareaHeight,
   cn,

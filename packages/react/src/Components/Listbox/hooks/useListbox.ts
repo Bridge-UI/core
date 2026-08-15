@@ -10,10 +10,10 @@ import {
   type FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  invalidatedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Listbox";
+  listboxColorProps as colorProps,
+  listboxInvalidatedProps as invalidatedProps,
+  listboxSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

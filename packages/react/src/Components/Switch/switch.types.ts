@@ -6,7 +6,7 @@ import type {
   SwitchColor,
   SwitchRounded,
   SwitchSize,
-} from "@bridge-ui/core/Tokens/Switch";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

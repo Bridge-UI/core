@@ -4,11 +4,11 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  colorProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Progress";
+  progressColorProps as colorProps,
+  progressRoundedProps as roundedProps,
+  progressSizeProps as sizeProps,
+  progressVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

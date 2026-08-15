@@ -3,12 +3,12 @@ import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type { SliderRangeValue, SliderStopInput } from "@bridge-ui/core/Domain";
-import type { BaseFieldInvalidated } from "@bridge-ui/core/Tokens/BaseField";
 import type {
+  BaseFieldInvalidated,
   SliderColor,
   SliderInvalidated,
   SliderRounded,
-} from "@bridge-ui/core/Tokens/Slider";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

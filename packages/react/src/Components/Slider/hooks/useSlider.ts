@@ -26,11 +26,11 @@ import {
   type SliderStop,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  invalidatedProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Slider";
+  sliderColorProps as colorProps,
+  sliderInvalidatedProps as invalidatedProps,
+  sliderRoundedProps as roundedProps,
+  sliderSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

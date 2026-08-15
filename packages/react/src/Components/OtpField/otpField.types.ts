@@ -3,13 +3,13 @@ import type { HTMLAttributes, InputHTMLAttributes } from "react";
 
 // ** Core Imports
 import type { OtpInputType } from "@bridge-ui/core/Domain";
-import type { BaseFieldInvalidated } from "@bridge-ui/core/Tokens/BaseField";
 import type {
+  BaseFieldInvalidated,
   OtpFieldColor,
   OtpFieldInvalidated,
   OtpFieldRounded,
   OtpFieldVariant,
-} from "@bridge-ui/core/Tokens/OtpField";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

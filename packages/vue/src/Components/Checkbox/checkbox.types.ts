@@ -6,7 +6,7 @@ import type {
   CheckboxColor,
   CheckboxRounded,
   CheckboxSize,
-} from "@bridge-ui/core/Tokens/Checkbox";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

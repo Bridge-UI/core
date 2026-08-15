@@ -10,7 +10,7 @@ import type {
   TooltipColor,
   TooltipRounded,
   TooltipSize,
-} from "@bridge-ui/core/Tokens/Tooltip";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface TooltipSizeOverrides {}

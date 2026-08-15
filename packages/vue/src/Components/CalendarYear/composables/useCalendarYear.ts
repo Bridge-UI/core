@@ -8,7 +8,10 @@ import {
   isYearDisabled,
   resolveCalendarDayInteractionState,
 } from "@bridge-ui/core/Domain";
-import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Calendar";
+import {
+  calendarColorProps as colorProps,
+  calendarRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

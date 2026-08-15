@@ -1,5 +1,5 @@
 // ** Core Imports
-import type { LabelSize } from "@bridge-ui/core/Tokens/Label";
+import type { LabelSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 import type { LabelHTMLAttributes, ReactNode } from "react";
 

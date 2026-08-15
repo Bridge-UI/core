@@ -16,10 +16,10 @@ import {
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  dayProps,
-  roundedProps,
-} from "@bridge-ui/core/Tokens/Calendar";
+  calendarColorProps as colorProps,
+  calendarDayProps as dayProps,
+  calendarRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

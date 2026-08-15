@@ -3,7 +3,10 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
+import {
+  labelInvalidatedProps as invalidatedProps,
+  labelSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

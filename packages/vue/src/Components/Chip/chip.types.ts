@@ -2,7 +2,7 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { ChipSize } from "@bridge-ui/core/Tokens/Chip";
+import type { ChipSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

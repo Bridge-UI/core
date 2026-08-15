@@ -4,11 +4,11 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  paddingProps,
-  roundedProps,
-  shadowProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Alert";
+  alertPaddingProps as paddingProps,
+  alertRoundedProps as roundedProps,
+  alertShadowProps as shadowProps,
+  alertVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

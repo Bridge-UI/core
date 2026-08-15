@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** Core Imports
-import type { ToggleGroupValue } from "@bridge-ui/core";
+import type { ToggleGroupValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useToggleGroup } from "@/Components/ToggleGroup/composables/useToggleGroup";

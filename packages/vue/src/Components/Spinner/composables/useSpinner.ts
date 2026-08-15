@@ -9,10 +9,10 @@ import {
   SPINNER_VIEWBOX_SIZE,
 } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Spinner";
+  spinnerColorProps as colorProps,
+  spinnerSizeProps as sizeProps,
+  spinnerVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

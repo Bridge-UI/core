@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import { resolveIconSource } from "@bridge-ui/core/Adapters";
-import { sizeProps } from "@bridge-ui/core/Tokens/Icon";
+import { iconSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

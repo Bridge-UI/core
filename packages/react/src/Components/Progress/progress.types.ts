@@ -7,7 +7,7 @@ import type {
   ProgressRounded,
   ProgressSize,
   ProgressVariant,
-} from "@bridge-ui/core/Tokens/Progress";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ProgressSizeOverrides {}

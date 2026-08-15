@@ -4,7 +4,7 @@ import { computed, provide, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
 import { collapseBreadcrumbItems } from "@bridge-ui/core/Domain";
-import { sizeProps } from "@bridge-ui/core/Tokens/Breadcrumb";
+import { breadcrumbSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

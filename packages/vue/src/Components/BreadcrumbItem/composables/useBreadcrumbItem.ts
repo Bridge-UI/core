@@ -3,7 +3,7 @@ import { get, omit, pick } from "es-toolkit/compat";
 import { computed, inject, useAttrs, useSlots } from "vue";
 
 // ** Core Imports
-import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import type { IconSize } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

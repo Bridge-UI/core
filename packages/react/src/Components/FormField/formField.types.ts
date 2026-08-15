@@ -8,7 +8,7 @@ import type {
   FormFieldRounded,
   FormFieldSize,
   FormFieldVariant,
-} from "@bridge-ui/core/Tokens/FormField";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

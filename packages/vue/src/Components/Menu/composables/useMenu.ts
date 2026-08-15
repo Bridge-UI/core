@@ -28,7 +28,10 @@ import {
   createPositionable,
   type PositionHandle,
 } from "@bridge-ui/core/Runtime";
-import { roundedProps, shadowProps } from "@bridge-ui/core/Tokens/Menu";
+import {
+  menuRoundedProps as roundedProps,
+  menuShadowProps as shadowProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

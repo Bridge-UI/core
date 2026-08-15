@@ -3,7 +3,10 @@ import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { invalidatedProps, sizeProps } from "@bridge-ui/core/Tokens/Label";
+import {
+  labelInvalidatedProps as invalidatedProps,
+  labelSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

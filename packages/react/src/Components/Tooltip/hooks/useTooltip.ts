@@ -24,10 +24,10 @@ import {
   type PositionHandle,
 } from "@bridge-ui/core/Runtime";
 import {
-  colorProps,
-  roundedProps,
-  sizeProps,
-} from "@bridge-ui/core/Tokens/Tooltip";
+  tooltipColorProps as colorProps,
+  tooltipRoundedProps as roundedProps,
+  tooltipSizeProps as sizeProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

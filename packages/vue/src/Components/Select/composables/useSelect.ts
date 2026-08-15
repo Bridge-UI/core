@@ -30,7 +30,10 @@ import {
   type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core/Domain";
-import { colorProps, invalidatedProps } from "@bridge-ui/core/Tokens/Listbox";
+import {
+  listboxColorProps as colorProps,
+  listboxInvalidatedProps as invalidatedProps,
+} from "@bridge-ui/core/Tokens";
 import {
   adjustAutosizeTextareaHeight,
   cn,

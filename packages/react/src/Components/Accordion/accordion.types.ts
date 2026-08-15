@@ -7,7 +7,7 @@ import type {
   AccordionColor,
   AccordionSize,
   AccordionVariant,
-} from "@bridge-ui/core/Tokens/Accordion";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface AccordionSizeOverrides {}

@@ -2,14 +2,14 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
+import type { ToggleGroupValue } from "@bridge-ui/core/Domain";
 import type {
   ToggleGroupColor,
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
-  ToggleGroupValue,
   ToggleGroupVariant,
-} from "@bridge-ui/core/Tokens/ToggleGroup";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface ToggleGroupSizeOverrides {}

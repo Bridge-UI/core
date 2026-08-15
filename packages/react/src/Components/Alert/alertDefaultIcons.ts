@@ -1,5 +1,5 @@
 // ** Core Imports
-import type { AlertColor } from "@bridge-ui/core/Tokens/Alert";
+import type { AlertColor } from "@bridge-ui/core/Tokens";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";

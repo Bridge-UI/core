@@ -12,8 +12,8 @@ import type {
   CalendarColorItem,
   CalendarDay,
   CalendarRounded,
-} from "@bridge-ui/core/Tokens/Calendar";
-import type { TimeColorItem } from "@bridge-ui/core/Tokens/Time";
+  TimeColorItem,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

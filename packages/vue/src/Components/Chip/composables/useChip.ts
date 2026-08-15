@@ -3,7 +3,7 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs, type SetupContext } from "vue";
 
 // ** Core Imports
-import { sizeProps } from "@bridge-ui/core/Tokens/Chip";
+import { chipSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

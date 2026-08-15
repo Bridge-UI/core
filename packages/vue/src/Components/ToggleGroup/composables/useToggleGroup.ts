@@ -11,14 +11,19 @@ import {
 } from "vue";
 
 // ** Core Imports
-import { applyToggleGroupSelection, getAdjacentTabValue, normalizeToggleGroupValue, ToggleGroupValue } from "@bridge-ui/core/Domain";
 import {
-  colorProps,
-  orientationProps,
-  roundedProps,
-  sizeProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/ToggleGroup";
+  applyToggleGroupSelection,
+  getAdjacentTabValue,
+  normalizeToggleGroupValue,
+  ToggleGroupValue,
+} from "@bridge-ui/core/Domain";
+import {
+  toggleGroupColorProps as colorProps,
+  toggleGroupOrientationProps as orientationProps,
+  toggleGroupRoundedProps as roundedProps,
+  toggleGroupSizeProps as sizeProps,
+  toggleGroupVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

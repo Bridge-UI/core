@@ -15,7 +15,10 @@ import {
   to24Hour,
   toMeridiem,
 } from "@bridge-ui/core/Domain";
-import { colorProps, roundedProps } from "@bridge-ui/core/Tokens/Time";
+import {
+  timeColorProps as colorProps,
+  timeRoundedProps as roundedProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

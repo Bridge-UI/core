@@ -12,7 +12,7 @@ import type {
   PaginationRounded,
   PaginationSize,
   PaginationVariant,
-} from "@bridge-ui/core/Tokens/Pagination";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

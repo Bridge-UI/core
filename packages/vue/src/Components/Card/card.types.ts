@@ -7,7 +7,7 @@ import type {
   CardRounded,
   CardShadow,
   CardVariant,
-} from "@bridge-ui/core/Tokens/Card";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface CardShadowOverrides {}

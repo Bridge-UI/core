@@ -9,8 +9,11 @@ import type {
   ListboxValue,
 } from "@bridge-ui/core/Domain";
 import type { PositionPlacement } from "@bridge-ui/core/Runtime";
-import type { ListboxColor, ListboxSize } from "@bridge-ui/core/Tokens/Listbox";
-import type { MenuRounded } from "@bridge-ui/core/Tokens/Menu";
+import type {
+  ListboxColor,
+  ListboxSize,
+  MenuRounded,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

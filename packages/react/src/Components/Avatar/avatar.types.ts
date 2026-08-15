@@ -6,7 +6,7 @@ import type {
   AvatarColor,
   AvatarRounded,
   AvatarSize,
-} from "@bridge-ui/core/Tokens/Avatar";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

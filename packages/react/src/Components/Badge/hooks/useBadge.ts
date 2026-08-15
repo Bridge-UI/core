@@ -4,10 +4,10 @@ import { useMemo } from "react";
 
 // ** Core Imports
 import {
-  densityProps,
-  roundedProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Badge";
+  badgeDensityProps as densityProps,
+  badgeRoundedProps as roundedProps,
+  badgeVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

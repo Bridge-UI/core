@@ -9,7 +9,7 @@ import {
   getAdjacentAccordionValue,
   isAccordionItemExpanded,
 } from "@bridge-ui/core/Domain";
-import type { IconSize } from "@bridge-ui/core/Tokens/Icon";
+import type { IconSize } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

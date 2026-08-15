@@ -6,7 +6,7 @@ import type {
   LinkColor,
   LinkSize,
   LinkUnderline,
-} from "@bridge-ui/core/Tokens/Link";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

@@ -4,7 +4,7 @@ import { afterEach, expect, test } from "vitest";
 import { h } from "vue";
 
 // ** Core Imports
-import type { ToggleGroupValue } from "@bridge-ui/core";
+import type { ToggleGroupValue } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { ToggleGroup } from "@/Components/ToggleGroup";

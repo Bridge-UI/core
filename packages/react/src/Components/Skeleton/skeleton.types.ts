@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from "react";
 
 // ** Core Imports
-import type { SkeletonRounded } from "@bridge-ui/core/Tokens/Skeleton";
+import type { SkeletonRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface SkeletonRoundedOverrides {}

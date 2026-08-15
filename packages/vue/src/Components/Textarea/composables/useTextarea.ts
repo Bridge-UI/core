@@ -3,7 +3,7 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { computed, onMounted, useAttrs, watch, type Ref } from "vue";
 
 // ** Core Imports
-import { resizeProps } from "@bridge-ui/core/Tokens/Textarea";
+import { textareaResizeProps as resizeProps } from "@bridge-ui/core/Tokens";
 import {
   adjustAutosizeTextareaHeight,
   cn,

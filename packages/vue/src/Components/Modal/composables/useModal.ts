@@ -32,11 +32,11 @@ import {
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
-  alignProps,
-  blurProps,
-  sizeProps,
+  modalAlignProps as alignProps,
+  modalBlurProps as blurProps,
+  modalSizeProps as sizeProps,
   type ModalTransition,
-} from "@bridge-ui/core/Tokens/Modal";
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

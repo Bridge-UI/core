@@ -8,7 +8,7 @@ import type {
   SnackbarPosition,
   SnackbarRounded,
   SnackbarTransition,
-} from "@bridge-ui/core/Tokens/Snackbar";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

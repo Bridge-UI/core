@@ -4,10 +4,10 @@ import { computed, useAttrs } from "vue";
 
 // ** Core Imports
 import {
-  densityProps,
-  roundedProps,
-  variantProps,
-} from "@bridge-ui/core/Tokens/Button";
+  buttonDensityProps as densityProps,
+  buttonRoundedProps as roundedProps,
+  buttonVariantProps as variantProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

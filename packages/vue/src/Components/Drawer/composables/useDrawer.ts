@@ -33,12 +33,12 @@ import {
   type FocusTrap,
 } from "@bridge-ui/core/Runtime";
 import {
-  blurProps,
-  placementPanelProps,
-  placementProps,
-  sizeProps,
+  drawerBlurProps as blurProps,
+  drawerPlacementPanelProps as placementPanelProps,
+  drawerPlacementProps as placementProps,
+  drawerSizeProps as sizeProps,
   type DrawerTransition,
-} from "@bridge-ui/core/Tokens/Drawer";
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

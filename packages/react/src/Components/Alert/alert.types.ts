@@ -8,7 +8,7 @@ import type {
   AlertRounded,
   AlertShadow,
   AlertVariant,
-} from "@bridge-ui/core/Tokens/Alert";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports

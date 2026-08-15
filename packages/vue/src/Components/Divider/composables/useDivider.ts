@@ -3,7 +3,10 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import { colorProps, orientationProps } from "@bridge-ui/core/Tokens/Divider";
+import {
+  dividerColorProps as colorProps,
+  dividerOrientationProps as orientationProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,

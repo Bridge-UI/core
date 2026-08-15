@@ -7,7 +7,7 @@ import type {
   TimeColor,
   TimeColorItem,
   TimeRounded,
-} from "@bridge-ui/core/Tokens/Time";
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
