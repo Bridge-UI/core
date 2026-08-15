@@ -1,19 +1,19 @@
 <script setup lang="ts">
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
-import { useToggle } from "@/Components/Toggle/composables/useToggle";
+import { useToggleItem } from "@/Components/ToggleItem/composables/useToggleItem";
 import type {
-  ToggleOwnProps,
-  ToggleSlots,
-} from "@/Components/Toggle/toggle.types";
+  ToggleItemOwnProps,
+  ToggleItemSlots,
+} from "@/Components/ToggleItem/toggleItem.types";
 
-defineSlots<ToggleSlots>();
+defineSlots<ToggleItemSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ToggleOwnProps>();
+const props = defineProps<ToggleItemOwnProps>();
 
-const { merged, iconSize, rootBind, startIconBind } = useToggle(props);
+const { merged, iconSize, rootBind, startIconBind } = useToggleItem(props);
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 // ** External Imports
-import { cleanup, renderHook } from "@testing-library/react";
+import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
@@ -9,23 +9,41 @@ afterEach(() => {
   cleanup();
 });
 
+const libDefaults = {
+  size: "md",
+  full: false,
+  rounded: "md",
+  disabled: false,
+  multiple: false,
+  variant: "solid",
+  color: "primary",
+  orientation: "horizontal",
+} as const;
+
 test("it should expose context defaults from useToggleGroup", () => {
   const { result } = renderHook(() =>
-    useToggleGroup(
-      { defaultValue: "a" },
-      {
-        size: "md",
-        full: false,
-        rounded: "full",
-        disabled: false,
-        variant: "solid",
-        color: "primary",
-        orientation: "horizontal",
-      },
-    ),
+    useToggleGroup({ defaultValue: "a" }, libDefaults),
   );
 
   expect(result.current.contextValue.selected).toBe("a");
   expect(result.current.contextValue.orientation).toBe("horizontal");
   expect(result.current.contextValue.tokenClasses.softFill).toBe(true);
+});
+
+test("it should toggle membership when multiple is set", () => {
+  const { result } = renderHook(() =>
+    useToggleGroup({ multiple: true, defaultValue: ["a"] }, libDefaults),
+  );
+
+  act(() => {
+    result.current.contextValue.toggleItem("b");
+  });
+
+  expect(result.current.contextValue.selected).toEqual(["a", "b"]);
+
+  act(() => {
+    result.current.contextValue.toggleItem("a");
+  });
+
+  expect(result.current.contextValue.selected).toEqual(["b"]);
 });

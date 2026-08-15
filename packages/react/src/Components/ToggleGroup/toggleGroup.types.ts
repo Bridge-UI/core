@@ -7,6 +7,7 @@ import type {
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
+  ToggleGroupValue,
   ToggleGroupVariant,
 } from "@bridge-ui/core/Tokens/ToggleGroup";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
@@ -34,11 +35,11 @@ export interface ToggleGroupCustomProps {
 }
 
 /**
- * Segmented control root. Compose with `Toggle` children.
+ * Segmented control root. Compose with `ToggleItem` children.
  */
 export interface ToggleGroupOwnProps {
   /**
-   * The children to render (`Toggle` segments).
+   * The children to render (`ToggleItem` segments).
    *
    * @default undefined
    */
@@ -70,7 +71,7 @@ export interface ToggleGroupOwnProps {
    *
    * @default undefined
    */
-  defaultValue?: string;
+  defaultValue?: ToggleGroupValue;
 
   /**
    * Disable the entire group.
@@ -87,11 +88,18 @@ export interface ToggleGroupOwnProps {
   full?: boolean;
 
   /**
+   * Allow selecting more than one segment.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
    * Called when the selected value changes.
    *
    * @default undefined
    */
-  onChange?: (value: string) => void;
+  onChange?: (value: ToggleGroupValue) => void;
 
   /**
    * Layout orientation of the track.
@@ -106,7 +114,7 @@ export interface ToggleGroupOwnProps {
   /**
    * Track and segment roundness.
    *
-   * @default "full"
+   * @default "md"
    */
   rounded?: MergeProps<ToggleGroupRounded, ToggleGroupRoundedOverrides>;
 
@@ -122,7 +130,7 @@ export interface ToggleGroupOwnProps {
    *
    * @default undefined
    */
-  value?: string;
+  value?: ToggleGroupValue;
 
   /**
    * Visual style of the selected segment.

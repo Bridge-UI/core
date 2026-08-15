@@ -1,5 +1,5 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, Slot } from "vue";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
@@ -8,7 +8,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
 
-export interface ToggleClasses {
+export interface ToggleItemClasses {
   /**
    * Classes merged onto the segment button.
    */
@@ -20,11 +20,11 @@ export interface ToggleClasses {
   startIcon?: string;
 }
 
-export interface ToggleCustomProps {
+export interface ToggleItemCustomProps {
   /**
    * Props forwarded to the segment button.
    */
-  root?: ButtonHTMLAttributes;
+  root?: ButtonHTMLAttributes<HTMLButtonElement>;
 
   /**
    * Props forwarded to the start `Icon`.
@@ -33,22 +33,29 @@ export interface ToggleCustomProps {
 }
 
 /**
- * Toggle segment (`role="radio"`). Must be used inside `ToggleGroup`.
+ * Toggle group segment (`role="radio"`). Must be used inside `ToggleGroup`.
  */
-export interface ToggleOwnProps {
+export interface ToggleItemOwnProps {
   /**
-   * Classes for toggle parts.
+   * The label content.
    *
    * @default undefined
    */
-  classes?: ToggleClasses;
+  children?: ReactNode;
 
   /**
-   * Props forwarded to each toggle part.
+   * Classes for toggle item parts.
    *
    * @default undefined
    */
-  customProps?: ToggleCustomProps;
+  classes?: ToggleItemClasses;
+
+  /**
+   * Props forwarded to each toggle item part.
+   *
+   * @default undefined
+   */
+  customProps?: ToggleItemCustomProps;
 
   /**
    * Whether this segment is disabled.
@@ -70,11 +77,7 @@ export interface ToggleOwnProps {
   value: string;
 }
 
-export interface ToggleSlots {
-  /**
-   * The label content.
-   */
-  default?: Slot<undefined>;
-}
-
-export type ToggleProps = MergeHtmlProps<ToggleOwnProps, ButtonHTMLAttributes>;
+export type ToggleItemProps = MergeHtmlProps<
+  ToggleItemOwnProps,
+  ButtonHTMLAttributes<HTMLButtonElement>
+>;

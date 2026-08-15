@@ -38,6 +38,6 @@ export const orientationProps: ToggleGroupOrientation = {
   },
   "vertical": {
     "root": "flex-col",
-    "item": "w-full justify-start",
+    "item": "w-full justify-center",
   },
 };

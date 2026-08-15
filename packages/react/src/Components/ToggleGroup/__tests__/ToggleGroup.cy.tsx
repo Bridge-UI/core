@@ -1,12 +1,12 @@
 // ** Local Imports
-import { Toggle } from "@/Components/Toggle";
 import { ToggleGroup } from "@/Components/ToggleGroup";
+import { ToggleItem } from "@/Components/ToggleItem";
 
 test("it should render toggle group in the browser", () => {
   cy.mount(
     <ToggleGroup color="success" defaultValue="vue" aria-label="Library">
-      <Toggle value="react">React</Toggle>
-      <Toggle value="vue">Vue</Toggle>
+      <ToggleItem value="react">React</ToggleItem>
+      <ToggleItem value="vue">Vue</ToggleItem>
     </ToggleGroup>,
   );
 

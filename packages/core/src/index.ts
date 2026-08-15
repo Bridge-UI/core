@@ -84,8 +84,8 @@ export type {
   TimePickerConfigOverrides,
   TimeRangeFieldConfigOverrides,
   TimeRangePickerConfigOverrides,
-  ToggleConfigOverrides,
   ToggleGroupConfigOverrides,
+  ToggleItemConfigOverrides,
 } from "@/Config";
 export {
   DEFAULT_OTP_LENGTH,
@@ -101,6 +101,7 @@ export {
   applyOtpInput,
   applyOtpKeyNavigation,
   applyOtpPaste,
+  applyToggleGroupSelection,
   buildHourOptions,
   buildMinuteOptions,
   buildSecondOptions,
@@ -138,6 +139,7 @@ export {
   isSliderStopCovered,
   isTimeDisabled,
   isTimeRangeValue,
+  isToggleGroupItemSelected,
   isYearDisabled,
   joinOtpDigits,
   mapListboxEntriesToRows,
@@ -149,6 +151,7 @@ export {
   normalizeSelectOptions,
   normalizeSliderStops,
   normalizeTimeValue,
+  normalizeToggleGroupValue,
   observeTimePanelSelectedScroll,
   percentFromSliderPointer,
   percentToValue,
@@ -226,6 +229,7 @@ export type {
   TimeInterval,
   TimeRangeValue,
   TimeValue,
+  ToggleGroupValue,
 } from "@/Domain";
 export {
   DRAWER_LEAVE_FALLBACK_MS,

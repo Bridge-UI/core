@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, head, isArray } from "es-toolkit/compat";
 import {
   computed,
   provide,
@@ -11,7 +11,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import { getAdjacentTabValue } from "@bridge-ui/core/Domain";
+import { applyToggleGroupSelection, getAdjacentTabValue, normalizeToggleGroupValue, ToggleGroupValue } from "@bridge-ui/core/Domain";
 import {
   colorProps,
   orientationProps,
@@ -51,13 +51,21 @@ const toggleGroupBridgeKeys = [
   "rounded",
   "variant",
   "disabled",
+  "multiple",
   "customProps",
   "orientation",
 ] as const satisfies readonly (keyof ToggleGroupOwnProps)[];
 
 type ToggleGroupLibDefaults = LibDefaultsShape<
   ToggleGroupOwnProps,
-  "full" | "size" | "color" | "rounded" | "variant" | "disabled" | "orientation"
+  | "full"
+  | "size"
+  | "color"
+  | "rounded"
+  | "variant"
+  | "disabled"
+  | "multiple"
+  | "orientation"
 >;
 
 type ToggleGroupMerged = MergeLibDefaults<
@@ -68,14 +76,25 @@ type ToggleGroupMerged = MergeLibDefaults<
 /**
  * Builds a stable DOM id for a toggle segment.
  */
-function getToggleId(groupId: string, value: string) {
+function getToggleItemId(groupId: string, value: string) {
   return `${groupId}-toggle-${value}`;
+}
+
+/**
+ * Resolves a scalar fallback focus target from the selected value.
+ */
+function resolveFocusFallback(selected: ToggleGroupValue, values: string[]) {
+  if (isArray(selected)) {
+    return head(selected) ?? head(values) ?? "";
+  }
+
+  return selected || head(values) || "";
 }
 
 export function useToggleGroup(
   props: ToggleGroupOwnProps,
   libDefaults: ToggleGroupLibDefaults,
-  model: Ref<string | undefined>,
+  model: Ref<undefined | ToggleGroupValue>,
   emit: SetupContext<ToggleGroupEmits>["emit"],
 ) {
   const vueId = useId();
@@ -84,6 +103,7 @@ export function useToggleGroup(
 
   const toggleValues = ref<string[]>([]);
   const disabledValues = ref<string[]>([]);
+  const focusedValue = ref("");
 
   const split = computed(() => {
     return splitComponentProps<ToggleGroupProps, typeof toggleGroupBridgeKeys>({
@@ -101,21 +121,38 @@ export function useToggleGroup(
     props: () => split.value.componentProps,
   });
 
-  const selected = computed(() => {
-    return model.value ?? "";
+  const multiple = computed(() => {
+    return merged.value.multiple === true;
   });
 
-  function setSelected(next: string) {
-    if (merged.value.disabled || disabledValues.value.includes(next)) {
+  const orientation = computed(() => {
+    return (
+      (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal"
+    );
+  });
+
+  const selected = computed(() => {
+    return normalizeToggleGroupValue(model.value, multiple.value);
+  });
+
+  function toggleItem(nextValue: string) {
+    if (merged.value.disabled || disabledValues.value.includes(nextValue)) {
       return;
     }
 
+    const next = applyToggleGroupSelection(
+      selected.value,
+      nextValue,
+      multiple.value,
+    );
+
     model.value = next;
+    focusedValue.value = nextValue;
     emit("update:modelValue", next);
     emit("change", next);
   }
 
-  function registerToggle(value: string, disabled = false) {
+  function registerToggleItem(value: string, disabled = false) {
     if (!toggleValues.value.includes(value)) {
       toggleValues.value = [...toggleValues.value, value];
     }
@@ -130,8 +167,16 @@ export function useToggleGroup(
       );
     }
 
-    if ((model.value ?? "") === "" && !disabled) {
-      model.value = value;
+    if (focusedValue.value === "" && !disabled) {
+      focusedValue.value = value;
+    }
+
+    if (!multiple.value && !disabled) {
+      const current = normalizeToggleGroupValue(model.value, false);
+
+      if (current === "") {
+        model.value = value;
+      }
     }
 
     return () => {
@@ -142,22 +187,24 @@ export function useToggleGroup(
     };
   }
 
-  function focusToggle(value: string) {
-    document.getElementById(getToggleId(groupId, value))?.focus();
+  function focusToggleItem(value: string) {
+    focusedValue.value = value;
+    document.getElementById(getToggleItemId(groupId, value))?.focus();
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    const horizontal =
-      (merged.value.orientation ?? "horizontal") === "horizontal";
-    const nextKey = horizontal ? "ArrowRight" : "ArrowDown";
-    const prevKey = horizontal ? "ArrowLeft" : "ArrowUp";
+    const horizontal = orientation.value === "horizontal";
 
-    const activeId =
-      typeof document !== "undefined" ? document.activeElement?.id : undefined;
+    const prevKey = horizontal ? "ArrowLeft" : "ArrowUp";
+    const nextKey = horizontal ? "ArrowRight" : "ArrowDown";
+
+    const activeId = get(document, "activeElement.id");
     const focused =
-      toggleValues.value.find(
-        (value) => getToggleId(groupId, value) === activeId,
-      ) ?? selected.value;
+      toggleValues.value.find((value) => {
+        return getToggleItemId(groupId, value) === activeId;
+      }) ??
+      (focusedValue.value ||
+        resolveFocusFallback(selected.value, toggleValues.value));
 
     if (event.key === nextKey || event.key === prevKey) {
       event.preventDefault();
@@ -170,8 +217,11 @@ export function useToggleGroup(
         new Set(disabledValues.value),
       );
 
-      focusToggle(next);
-      setSelected(next);
+      focusToggleItem(next);
+
+      if (!multiple.value) {
+        toggleItem(next);
+      }
 
       return;
     }
@@ -181,10 +231,13 @@ export function useToggleGroup(
       const first =
         toggleValues.value.find(
           (value) => !disabledValues.value.includes(value),
-        ) ?? selected.value;
+        ) ?? focused;
 
-      focusToggle(first);
-      setSelected(first);
+      focusToggleItem(first);
+
+      if (!multiple.value) {
+        toggleItem(first);
+      }
 
       return;
     }
@@ -194,11 +247,13 @@ export function useToggleGroup(
       const last =
         [...toggleValues.value]
           .reverse()
-          .find((value) => !disabledValues.value.includes(value)) ??
-        selected.value;
+          .find((value) => !disabledValues.value.includes(value)) ?? focused;
 
-      focusToggle(last);
-      setSelected(last);
+      focusToggleItem(last);
+
+      if (!multiple.value) {
+        toggleItem(last);
+      }
     }
   }
 
@@ -264,17 +319,18 @@ export function useToggleGroup(
 
   const contextValue = computed((): ToggleGroupContextValue => {
     return {
-      focusToggle,
+      toggleItem,
       id: groupId,
-      setSelected,
-      registerToggle,
+      focusToggleItem,
+      registerToggleItem,
+      multiple: multiple.value,
       selected: selected.value,
+      orientation: orientation.value,
       toggleValues: toggleValues.value,
+      focusedValue: focusedValue.value,
       full: merged.value.full === true,
       disabledValues: disabledValues.value,
       disabled: merged.value.disabled === true,
-      orientation:
-        (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
         iconGap: get(sizeItem.value, "gap"),
         itemSize: get(sizeItem.value, "item"),
@@ -302,11 +358,10 @@ export function useToggleGroup(
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
-      role: "radiogroup",
       onKeydown: handleKeydown,
+      "aria-orientation": orientation.value,
+      role: multiple.value ? "group" : "radiogroup",
       "aria-disabled": merged.value.disabled === true || undefined,
-      "aria-orientation":
-        (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal",
       class: cn({
         [get(sizeItem.value, "root") ?? ""]: true,
         [get(variantItem.value, "root") ?? ""]: true,
@@ -326,4 +381,4 @@ export function useToggleGroup(
   };
 }
 
-export { getToggleId };
+export { getToggleItemId };

@@ -7,6 +7,7 @@ import type {
   ToggleGroupOrientation,
   ToggleGroupRounded,
   ToggleGroupSize,
+  ToggleGroupValue,
   ToggleGroupVariant,
 } from "@bridge-ui/core/Tokens/ToggleGroup";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
@@ -37,16 +38,16 @@ export interface ToggleGroupEmits {
   /**
    * Emitted when the selected value changes.
    */
-  change: [value: string];
+  change: [value: ToggleGroupValue];
 
   /**
    * Emitted when `v-model` should update.
    */
-  "update:modelValue": [value: string];
+  "update:modelValue": [value: ToggleGroupValue];
 }
 
 /**
- * Segmented control root. Compose with `Toggle` children.
+ * Segmented control root. Compose with `ToggleItem` children.
  */
 export interface ToggleGroupOwnProps {
   /**
@@ -85,6 +86,13 @@ export interface ToggleGroupOwnProps {
   full?: boolean;
 
   /**
+   * Allow selecting more than one segment.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
    * Layout orientation of the track.
    *
    * @default "horizontal"
@@ -97,7 +105,7 @@ export interface ToggleGroupOwnProps {
   /**
    * Track and segment roundness.
    *
-   * @default "full"
+   * @default "md"
    */
   rounded?: MergeProps<ToggleGroupRounded, ToggleGroupRoundedOverrides>;
 
@@ -118,7 +126,7 @@ export interface ToggleGroupOwnProps {
 
 export interface ToggleGroupSlots {
   /**
-   * The children to render (`Toggle` segments).
+   * The children to render (`ToggleItem` segments).
    */
   default?: Slot<undefined>;
 }
@@ -130,5 +138,5 @@ export type ToggleGroupProps = MergeHtmlProps<
   /**
    * Bound with `v-model` on the component (`defineModel` internally).
    */
-  modelValue?: string;
+  modelValue?: ToggleGroupValue;
 };

@@ -1,6 +1,9 @@
 // ** External Imports
 import type { ComputedRef, InjectionKey } from "vue";
 
+// ** Core Imports
+import type { ToggleGroupValue } from "@bridge-ui/core";
+
 /**
  * Merged token classes for the track and segments.
  */
@@ -22,7 +25,7 @@ export type ToggleGroupTokenClasses = {
 };
 
 /**
- * Shared toggle group state for `Toggle` descendants.
+ * Shared toggle group state for `ToggleItem` descendants.
  */
 export type ToggleGroupContextValue = {
   /**
@@ -36,9 +39,14 @@ export type ToggleGroupContextValue = {
   disabledValues: string[];
 
   /**
+   * Value that currently owns the roving tab stop.
+   */
+  focusedValue: string;
+
+  /**
    * Focus a segment by value (roving tabindex).
    */
-  focusToggle: (value: string) => void;
+  focusToggleItem: (value: string) => void;
 
   /**
    * Whether segments stretch to fill the track width.
@@ -51,6 +59,11 @@ export type ToggleGroupContextValue = {
   id: string;
 
   /**
+   * Whether more than one segment can be selected.
+   */
+  multiple: boolean;
+
+  /**
    * Orientation of the track.
    */
   orientation: "vertical" | "horizontal";
@@ -58,17 +71,17 @@ export type ToggleGroupContextValue = {
   /**
    * Registers a segment and returns unregister.
    */
-  registerToggle: (value: string, disabled?: boolean) => () => void;
+  registerToggleItem: (value: string, disabled?: boolean) => () => void;
 
   /**
-   * Currently selected value.
+   * Currently selected value(s).
    */
-  selected: string;
+  selected: ToggleGroupValue;
 
   /**
-   * Selects a segment by value.
+   * Applies a segment press (select / toggle).
    */
-  setSelected: (value: string) => void;
+  toggleItem: (value: string) => void;
 
   /**
    * Ordered toggle values (mount order).

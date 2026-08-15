@@ -6,8 +6,9 @@ import type { ToggleGroupProps } from "@/Components/ToggleGroup/toggleGroup.type
 const toggleGroupLibDefaults = {
   size: "md",
   full: false,
-  rounded: "full",
+  rounded: "md",
   disabled: false,
+  multiple: false,
   variant: "solid",
   color: "primary",
   orientation: "horizontal",
