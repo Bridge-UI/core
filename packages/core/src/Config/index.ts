@@ -115,4 +115,8 @@ export type {
   TimeRangeFieldConfigOverrides,
   TimeRangePickerConfigBase,
   TimeRangePickerConfigOverrides,
+  ToggleGroupConfigBase,
+  ToggleGroupConfigOverrides,
+  ToggleItemConfigBase,
+  ToggleItemConfigOverrides,
 } from "@/Config/types";

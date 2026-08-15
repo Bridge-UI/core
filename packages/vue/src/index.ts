@@ -706,6 +706,34 @@ export type {
   TimeRangePickerRoundedOverrides,
   TimeRangePickerTokens,
 } from "@/Components/TimeRangePicker";
+export {
+  TOGGLE_GROUP_INJECTION_KEY,
+  ToggleGroup,
+  useToggleGroup,
+} from "@/Components/ToggleGroup";
+export type {
+  ToggleGroupClasses,
+  ToggleGroupColorOverrides,
+  ToggleGroupContextValue,
+  ToggleGroupCustomProps,
+  ToggleGroupEmits,
+  ToggleGroupOrientationOverrides,
+  ToggleGroupOwnProps,
+  ToggleGroupProps,
+  ToggleGroupRoundedOverrides,
+  ToggleGroupSizeOverrides,
+  ToggleGroupSlots,
+  ToggleGroupTokenClasses,
+  ToggleGroupVariantOverrides,
+} from "@/Components/ToggleGroup";
+export { ToggleItem, useToggleItem } from "@/Components/ToggleItem";
+export type {
+  ToggleItemClasses,
+  ToggleItemCustomProps,
+  ToggleItemOwnProps,
+  ToggleItemProps,
+  ToggleItemSlots,
+} from "@/Components/ToggleItem";
 export { Tooltip, useTooltip } from "@/Components/Tooltip";
 export type {
   TooltipClasses,

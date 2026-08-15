@@ -59,6 +59,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [TimePicker](./components/TimePicker.md)
 - [TimeRangeField](./components/TimeRangeField.md)
 - [TimeRangePicker](./components/TimeRangePicker.md)
+- [ToggleGroup](./components/ToggleGroup.md)
 - [Tooltip](./components/Tooltip.md)
 - [useBreakpoint](./components/useBreakpoint.md)
 - [useDialogAction](./components/useDialogAction.md)

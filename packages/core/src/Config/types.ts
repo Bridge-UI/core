@@ -191,6 +191,18 @@ import type {
 import type { TextareaResize } from "@/Tokens/Textarea";
 import type { TimeColor, TimeColorItem, TimeRounded } from "@/Tokens/Time";
 import type {
+  ToggleGroupColor,
+  ToggleGroupColorItem,
+  ToggleGroupOrientation,
+  ToggleGroupOrientationItem,
+  ToggleGroupRounded,
+  ToggleGroupRoundedItem,
+  ToggleGroupSize,
+  ToggleGroupSizeItem,
+  ToggleGroupVariant,
+  ToggleGroupVariantItem,
+} from "@/Tokens/ToggleGroup";
+import type {
   TooltipColor,
   TooltipColorItem,
   TooltipRounded,
@@ -361,6 +373,8 @@ export interface TimeFieldConfigOverrides {}
 export interface TimePickerConfigOverrides {}
 export interface TimeRangeFieldConfigOverrides {}
 export interface TimeRangePickerConfigOverrides {}
+export interface ToggleGroupConfigOverrides {}
+export interface ToggleItemConfigOverrides {}
 export interface TooltipConfigOverrides {}
 
 export interface AccordionConfigBase {
@@ -1369,6 +1383,34 @@ export interface TabItemConfigBase {
   }>;
 }
 
+export interface ToggleGroupConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ToggleGroupColor;
+    disabled: boolean;
+    full: boolean;
+    multiple: boolean;
+    orientation: keyof ToggleGroupOrientation;
+    rounded: keyof ToggleGroupRounded;
+    size: keyof ToggleGroupSize;
+    variant: keyof ToggleGroupVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ToggleGroupColorItem>;
+    orientation: Record<string, ToggleGroupOrientationItem>;
+    rounded: Record<string, ToggleGroupRoundedItem>;
+    size: Record<string, ToggleGroupSizeItem>;
+    variant: Record<string, ToggleGroupVariantItem>;
+  }>;
+}
+
+export interface ToggleItemConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+  }>;
+}
+
 export interface TooltipConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1479,6 +1521,12 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   TimeRangePicker: Partial<
     Overwrite<TimeRangePickerConfigBase, TimeRangePickerConfigOverrides>
+  >;
+  ToggleGroup: Partial<
+    Overwrite<ToggleGroupConfigBase, ToggleGroupConfigOverrides>
+  >;
+  ToggleItem: Partial<
+    Overwrite<ToggleItemConfigBase, ToggleItemConfigOverrides>
   >;
   Tooltip: Partial<Overwrite<TooltipConfigBase, TooltipConfigOverrides>>;
 }>;

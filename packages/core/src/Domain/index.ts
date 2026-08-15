@@ -160,3 +160,9 @@ export type {
   TimeRangeValue,
   TimeValue,
 } from "@/Domain/time";
+export {
+  applyToggleGroupSelection,
+  isToggleGroupItemSelected,
+  normalizeToggleGroupValue,
+} from "@/Domain/toggleGroup";
+export type { ToggleGroupValue } from "@/Domain/toggleGroup";
