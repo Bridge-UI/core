@@ -130,6 +130,8 @@ export function useModal(
 
   const leaveTransitionEndsPendingRef = useRef(0);
 
+  const pendingLeaveRef = useRef(false);
+
   const stackOrderRef = useRef<null | number>(null);
 
   const focusTrapRef = useRef<null | FocusTrap>(null);
@@ -248,6 +250,11 @@ export function useModal(
   }
 
   function finishLeave() {
+    if (!pendingLeaveRef.current) {
+      return;
+    }
+
+    pendingLeaveRef.current = false;
     leaveTransitionEndsPendingRef.current = 0;
     setActive(false);
     releaseFocusTrap();
@@ -266,6 +273,7 @@ export function useModal(
 
   function startLeave() {
     stackHandleRef.current?.releaseScrollLock();
+    pendingLeaveRef.current = true;
 
     if (!transitionEnabled) {
       finishLeave();
@@ -285,6 +293,9 @@ export function useModal(
   }
 
   function scheduleOpen() {
+    pendingLeaveRef.current = false;
+    leaveTransitionEndsPendingRef.current = 0;
+
     if (!transitionEnabled) {
       setTransitionState("open");
 
@@ -299,7 +310,7 @@ export function useModal(
   }
 
   function handleShellTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
-    if (!mounted || transitionState !== "closed") {
+    if (!pendingLeaveRef.current || !mounted || transitionState !== "closed") {
       return;
     }
 

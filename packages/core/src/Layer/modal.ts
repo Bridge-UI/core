@@ -12,8 +12,13 @@ import {
   type ModalTransition,
 } from "@/Tokens/Modal/Transition";
 
-/** Base `z-index` for the first layer on the global stack. Each nested layer adds 1. */
-export const LAYER_STACK_BASE_Z_INDEX = 50;
+/**
+ * Base `z-index` for the first layer on the global stack. Each nested layer adds 1.
+ *
+ * Above common app chrome (e.g. Tailwind `z-50` sticky headers) so Drawer /
+ * Modal / Menu overlays cover the page shell by default.
+ */
+export const LAYER_STACK_BASE_Z_INDEX = 1000;
 
 /**
  * CSS custom property set on `:root` while body scroll is locked.

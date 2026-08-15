@@ -130,6 +130,8 @@ export function useModal(
 
   const panelRef = ref<null | HTMLElement>(null);
 
+  let pendingLeave = false;
+
   let leaveTransitionEndsPending = 0;
 
   let stackOrder: null | number = null;
@@ -342,6 +344,11 @@ export function useModal(
   }
 
   function finishLeave() {
+    if (!pendingLeave) {
+      return;
+    }
+
+    pendingLeave = false;
     leaveTransitionEndsPending = 0;
     active.value = false;
     releaseFocusTrap();
@@ -361,6 +368,7 @@ export function useModal(
 
   function startLeave() {
     stackHandle?.releaseScrollLock();
+    pendingLeave = true;
 
     if (!transitionEnabled.value) {
       finishLeave();
@@ -380,6 +388,9 @@ export function useModal(
   }
 
   function scheduleOpen() {
+    pendingLeave = false;
+    leaveTransitionEndsPending = 0;
+
     if (!transitionEnabled.value) {
       transitionState.value = "open";
 
@@ -396,7 +407,7 @@ export function useModal(
   }
 
   function handleShellTransitionEnd(event: TransitionEvent) {
-    if (!mounted.value || transitionState.value !== "closed") {
+    if (!pendingLeave || !mounted.value || transitionState.value !== "closed") {
       return;
     }
 

@@ -135,6 +135,8 @@ export function useDrawer(
 
   const layerStackId = ref("");
 
+  let pendingLeave = false;
+
   let leaveTransitionEndsPending = 0;
 
   let stackOrder: null | number = null;
@@ -378,6 +380,11 @@ export function useDrawer(
   }
 
   function finishLeave() {
+    if (!pendingLeave) {
+      return;
+    }
+
+    pendingLeave = false;
     clearLeaveFallback();
     leaveTransitionEndsPending = 0;
     active.value = false;
@@ -398,6 +405,7 @@ export function useDrawer(
 
   function startLeave() {
     stackHandle?.releaseScrollLock();
+    pendingLeave = true;
 
     if (!transitionEnabled.value) {
       finishLeave();
@@ -428,6 +436,10 @@ export function useDrawer(
   }
 
   function scheduleOpen() {
+    pendingLeave = false;
+    clearLeaveFallback();
+    leaveTransitionEndsPending = 0;
+
     if (!transitionEnabled.value) {
       transitionState.value = "open";
 
@@ -444,7 +456,7 @@ export function useDrawer(
   }
 
   function handleShellTransitionEnd(event: TransitionEvent) {
-    if (!mounted.value || transitionState.value !== "closed") {
+    if (!pendingLeave || !mounted.value || transitionState.value !== "closed") {
       return;
     }
 
