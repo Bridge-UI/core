@@ -30,6 +30,21 @@ test("it should expose context defaults from useToggleGroup", () => {
   expect(result.current.contextValue.tokenClasses.softFill).toBe(true);
 });
 
+test("it should use surface-full root radius when rounded is full", () => {
+  const { result } = renderHook(() =>
+    useToggleGroup({ rounded: "full", defaultValue: "a" }, libDefaults),
+  );
+
+  expect(result.current.rootBind.className).not.toContain("rounded-full");
+  expect(result.current.rootBind.className).toContain("rounded-surface-full");
+  expect(result.current.contextValue.tokenClasses.itemRounded).toBe(
+    "rounded-full",
+  );
+  expect(result.current.contextValue.tokenClasses.rootRounded).toBe(
+    "rounded-surface-full",
+  );
+});
+
 test("it should toggle membership when multiple is set", () => {
   const { result } = renderHook(() =>
     useToggleGroup({ multiple: true, defaultValue: ["a"] }, libDefaults),

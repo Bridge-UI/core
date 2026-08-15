@@ -241,7 +241,10 @@ export interface DatePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of calendar tiles and chrome.
+   * Border radius of the picker shell, calendar tiles, and chrome.
+   *
+   * The shell uses the Menu surface scale (`full` caps at `rounded-surface-full`).
+   * Calendar tiles keep a true pill when `rounded` is `full`.
    *
    * `DateField` always forwards its own `rounded` here so the picker matches the
    * field, independent of `DatePicker.defaultProps`.

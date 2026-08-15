@@ -1,5 +1,5 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
@@ -9,6 +9,7 @@ import {
   type DatePickerModel,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -224,11 +225,14 @@ export function useDateTimePicker(
   };
 
   const rootBind = derived(() => {
+    const shellRounded = get(shellRoundedProps, merged.rounded ?? "md");
+
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),
     );

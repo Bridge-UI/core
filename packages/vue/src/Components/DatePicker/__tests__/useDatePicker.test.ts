@@ -51,3 +51,17 @@ test("it should size the root to its content", () => {
 
   expect(rootBind.value.class).toContain("w-fit");
 });
+
+test("it should apply shell rounded from the rounded prop", () => {
+  const { rootBind } = mountUseDatePicker({ rounded: "xl" });
+
+  expect(rootBind.value.class).toContain("rounded-xl");
+  expect(rootBind.value.class).not.toContain("rounded-lg");
+});
+
+test("it should cap full shell rounded to surface-full", () => {
+  const { rootBind } = mountUseDatePicker({ rounded: "full" });
+
+  expect(rootBind.value.class).not.toContain("rounded-full");
+  expect(rootBind.value.class).toContain("rounded-surface-full");
+});

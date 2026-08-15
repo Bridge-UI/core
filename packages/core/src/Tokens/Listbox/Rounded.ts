@@ -34,7 +34,8 @@ export interface ListboxRounded {
   "4xl": ListboxRoundedItem;
 
   /**
-   * Full width or fully rounded token.
+   * Surface-max radius (`rounded-surface-full`).
+   * Caps extreme rounding so tall option lists do not become stadium-shaped.
    */
   "full": ListboxRoundedItem;
 
@@ -107,7 +108,7 @@ export const roundedProps: ListboxRounded = {
     "drawer": "rounded-t-4xl rounded-b-none",
   },
   "full": {
-    "panel": "rounded-full",
-    "drawer": "rounded-t-full rounded-b-none",
+    "panel": "rounded-surface-full",
+    "drawer": "rounded-t-surface-full rounded-b-none",
   },
 };

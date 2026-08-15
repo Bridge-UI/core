@@ -281,7 +281,10 @@ export interface DateTimeRangePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of calendar / time tiles and chrome.
+   * Border radius of the picker shell, calendar / time tiles, and chrome.
+   *
+   * The shell uses the Menu surface scale (`full` caps at `rounded-surface-full`).
+   * Tiles keep a true pill when `rounded` is `full`.
    *
    * `DateTimeRangeField` always forwards its own `rounded` here so the picker
    * matches the field, independent of `DateTimeRangePicker.defaultProps`.

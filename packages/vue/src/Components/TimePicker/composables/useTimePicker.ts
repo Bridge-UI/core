@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -11,6 +11,7 @@ import {
 
 // ** Core Imports
 import type { TimeValue } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -174,11 +175,14 @@ export function useTimePicker(
   };
 
   const rootBind = computed(() => {
+    const shellRounded = get(shellRoundedProps, merged.value.rounded ?? "md");
+
     return mergePartBind(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

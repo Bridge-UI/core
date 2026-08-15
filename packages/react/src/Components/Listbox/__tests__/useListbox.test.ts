@@ -210,6 +210,17 @@ test("it should follow the rounded prop with top-only corners on drawer", () => 
   expect(result.current.surfaceBind).toContain("rounded-b-none");
 });
 
+test("it should cap full panel rounded to surface-full on modal", () => {
+  const { result } = renderHook(() =>
+    useListbox({ ...baseProps, rounded: "full" }, libDefaults, {
+      overlay: "modal",
+    }),
+  );
+
+  expect(result.current.surfaceBind).not.toContain("rounded-full");
+  expect(result.current.surfaceBind).toContain("rounded-surface-full");
+});
+
 test("it should use a taller scroll max-height for dialog overlays", () => {
   const { result } = renderHook(() =>
     useListbox(baseProps, libDefaults, { overlay: "drawer" }),

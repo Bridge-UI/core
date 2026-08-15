@@ -15,7 +15,8 @@ export interface MenuRounded {
   "4xl": string;
 
   /**
-   * Full width or fully rounded token.
+   * Surface-max radius (`rounded-surface-full`).
+   * Caps extreme rounding so tall/narrow panels do not become stadium-shaped.
    */
   "full": string;
 
@@ -60,5 +61,5 @@ export const roundedProps: MenuRounded = {
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
   "none": "rounded-none",
-  "full": "rounded-full",
+  "full": "rounded-surface-full",
 };
