@@ -53,6 +53,7 @@ const props = withDefaults(defineProps<ListboxOwnProps>(), {
   color: "primary",
   showCheckmark: true,
   highlightedIndex: -1,
+  showFooter: undefined,
   hideEmptyMessage: false,
   disableAutoFocus: false,
   placement: "bottom-start",
@@ -273,6 +274,18 @@ const listBind = computed(() => {
     }),
   };
 });
+
+function handleFooterApply() {
+  emit("apply");
+
+  open.value = false;
+}
+
+function handleFooterCancel() {
+  emit("cancel");
+
+  open.value = false;
+}
 </script>
 
 <template>
@@ -344,22 +357,28 @@ const listBind = computed(() => {
       <slot name="afterOptions" v-if="hasNamedSlot(slots, 'afterOptions')" />
 
       <div v-if="showFooter" v-bind="footerBind">
-        <Button
-          variant="flat"
-          color="secondary"
-          v-bind="cancelButtonProps"
-          @click="emit('cancel')"
+        <slot
+          name="footer"
+          :apply="handleFooterApply"
+          :cancel="handleFooterCancel"
         >
-          {{ cancelLabel }}
-        </Button>
+          <Button
+            variant="flat"
+            color="secondary"
+            v-bind="cancelButtonProps"
+            @click="handleFooterCancel"
+          >
+            {{ cancelLabel }}
+          </Button>
 
-        <Button
-          color="primary"
-          v-bind="applyButtonProps"
-          @click="emit('apply')"
-        >
-          {{ applyLabel }}
-        </Button>
+          <Button
+            color="primary"
+            v-bind="applyButtonProps"
+            @click="handleFooterApply"
+          >
+            {{ applyLabel }}
+          </Button>
+        </slot>
       </div>
     </div>
   </FieldOverlay>

@@ -32,6 +32,7 @@ const model = defineModel<null | TimeValue>();
 const props = withDefaults(defineProps<TimeFieldOwnProps>(), {
   clearable: true,
   showErrorIcon: true,
+  showFooter: undefined,
 });
 
 const emit = defineEmits<TimeFieldEmits>();
@@ -124,6 +125,10 @@ const {
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
-    />
+    >
+      <template #footer="footer" v-if="$slots.footer">
+        <slot name="footer" v-bind="footer" />
+      </template>
+    </TimePicker>
   </FieldOverlay>
 </template>

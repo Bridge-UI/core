@@ -103,13 +103,15 @@ test("it should render drawer dialog when overlay is drawer", () => {
   expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 });
 
-test("it should resolve auto to menu on desktop", () => {
+test("it should resolve auto to menu on desktop", async () => {
   mockViewport(1280);
 
   mountFieldOverlay({
     props: { overlay: "auto", modelValue: true },
     slots: { default: () => h("span", "Auto desktop") },
   });
+
+  await flushPromises();
 
   expect(document.body.textContent).toContain("Auto desktop");
   expect(document.querySelector('[role="menu"]')).not.toBeNull();

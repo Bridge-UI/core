@@ -9,7 +9,6 @@ import {
   isFieldOverlayDialog,
   isTimeRangeValue,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -27,7 +26,12 @@ import type {
   TimeRangeFieldOwnProps,
   TimeRangeFieldProps,
 } from "@/Components/TimeRangeField/timeRangeField.types";
-import { derived, mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
+import {
+  derived,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
+} from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
@@ -72,11 +76,15 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
+
+  const { footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] =
@@ -159,9 +167,10 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
   const formField = useFormField(
     {
       ...formFieldCustom,
-      slots,
+      slots: formFieldSlots,
       classes: timeOnly.classes,
-      endIcon: formFieldCustom.endIcon ?? (slots?.end ? undefined : "clock"),
+      endIcon:
+        formFieldCustom.endIcon ?? (formFieldSlots.end ? undefined : "clock"),
       customProps: {
         ...formFieldOnlyCustom,
         container: mergePartBind(
@@ -221,20 +230,29 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     onChange?.(next);
   };
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(
-      timeOnly.showFooter,
-      resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "TimeRangeField",
+    timeOnly.showFooter,
+    resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
+  );
 
   const handlePickerChange = (next: null | TimeRangeValue) => {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter) {
+      onApply?.();
+
+      handleOpenChange(false);
+
+      return;
+    }
+
     handleOpenChange(false);
   };
 
   const handlePickerCancel = () => {
+    onCancel?.();
+
     handleOpenChange(false);
   };
 
@@ -328,6 +346,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     clearValue,
     modelValue,
     showFooter,
+    footerSlot,
     containerRef,
     clearIconSize,
     showClearIcon,

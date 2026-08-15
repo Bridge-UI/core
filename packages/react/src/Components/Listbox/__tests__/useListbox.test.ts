@@ -157,7 +157,18 @@ test("it should return default size as md", () => {
 
   expect(result.current.merged.size).toBe("md");
   expect(result.current.sizeClasses?.option).toContain("px-4");
+  expect(result.current.sizeClasses?.option).toContain("py-1.5");
   expect(result.current.messageBind.className).toContain("text-sm");
+});
+
+test("it should bump size classes on dialog overlays", () => {
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "drawer" }),
+  );
+
+  expect(result.current.merged.size).toBe("md");
+  expect(result.current.sizeClasses?.option).toContain("py-2");
+  expect(result.current.sizeClasses?.primary).toContain("text-sm");
 });
 
 test("it should apply size classes when size is overridden", () => {
@@ -175,9 +186,8 @@ test("it should round only the top of the surface when overlay is drawer", () =>
     useListbox(baseProps, libDefaults, { overlay: "drawer" }),
   );
 
-  expect(result.current.surfaceBind).toContain("rounded-t-md");
+  expect(result.current.surfaceBind).toContain("rounded-md");
   expect(result.current.surfaceBind).toContain("rounded-b-none");
-  expect(result.current.surfaceBind).not.toMatch(/(?:^|\s)rounded-md(?:\s|$)/);
 });
 
 test("it should round all corners when overlay is modal", () => {
@@ -206,7 +216,7 @@ test("it should follow the rounded prop with top-only corners on drawer", () => 
     }),
   );
 
-  expect(result.current.surfaceBind).toContain("rounded-t-xl");
+  expect(result.current.surfaceBind).toContain("rounded-xl");
   expect(result.current.surfaceBind).toContain("rounded-b-none");
 });
 

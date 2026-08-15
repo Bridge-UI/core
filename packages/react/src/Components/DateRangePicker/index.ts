@@ -8,6 +8,7 @@ export type {
   DateRangePickerOwnProps,
   DateRangePickerProps,
   DateRangePickerRoundedOverrides,
+  DateRangePickerSlots,
   DateRangePickerTokens,
 } from "@/Components/DateRangePicker/dateRangePicker.types";
 export { useDateRangePicker } from "@/Components/DateRangePicker/hooks/useDateRangePicker";

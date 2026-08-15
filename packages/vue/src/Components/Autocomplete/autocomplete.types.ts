@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, Slot, TextareaHTMLAttributes } from "vue";
 
 // ** Core Imports
 import type {
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   ListboxOptionsInput,
   SelectAsyncData,
@@ -92,6 +93,11 @@ export interface AutocompleteCustomProps extends FormFieldCustomProps {
 }
 
 export interface AutocompleteEmits {
+  /**
+   * Emitted when Apply is pressed on the listbox footer (`showFooter`).
+   */
+  apply: [];
+
   /**
    * Emitted when Cancel is pressed on the listbox footer (`showFooter`).
    */
@@ -311,7 +317,7 @@ export interface AutocompleteOwnProps extends Omit<FormFieldOwnProps, "field"> {
    * Shows Cancel / Apply on the nested listbox. When unset, defaults to `true` for dialog
    * shells (`modal` / `drawer`). Selection stays draft until Apply.
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 }
@@ -343,6 +349,14 @@ export interface AutocompleteSlots extends FormFieldSlots {
    * Custom empty-state content.
    */
   empty?: Slot<undefined>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 
   /**
    * Custom loading content.

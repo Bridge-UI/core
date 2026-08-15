@@ -2,11 +2,13 @@
 import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
+  inject,
   ref,
   toValue,
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -23,8 +25,10 @@ import {
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DatePickerClasses,
+  DatePickerEmits,
   DatePickerOwnProps,
 } from "@/Components/DatePicker/datePicker.types";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -60,7 +64,7 @@ const datePickerBridgeKeys = [
 
 type DatePickerLibDefaults = LibDefaultsShape<
   DatePickerOwnProps,
-  "color" | "rounded" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "startOfWeek"
 >;
 
 type DatePickerMerged = MergeLibDefaults<
@@ -71,12 +75,13 @@ type DatePickerMerged = MergeLibDefaults<
 export function useDatePicker(
   props: MaybeRefOrGetter<DatePickerOwnProps>,
   libDefaults: DatePickerLibDefaults,
-  emit: {
-    (event: "change", value: DatePickerModel): void;
-    (event: "cancel"): void;
-  },
+  emit: SetupContext<DatePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const overlayFooter = inject(FIELD_OVERLAY_INJECTION_KEY, {
+    apply: () => undefined,
+    cancel: () => undefined,
+  });
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -102,7 +107,11 @@ export function useDatePicker(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(split.value.inheritedAttrs, [
+      "onChange",
+      "onApply",
+      "onCancel",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DatePickerClasses>({
@@ -172,11 +181,14 @@ export function useDatePicker(
 
   const handleApply = () => {
     commitValue(draftValue.value);
+    emit("apply");
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     draftValue.value = committedValue.value;
     emit("cancel");
+    overlayFooter.cancel();
   };
 
   const rootBind = computed(() => {

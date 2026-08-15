@@ -168,6 +168,18 @@ function Listbox({
     [onSelect],
   );
 
+  const handleFooterApply = useCallback(() => {
+    onApply?.();
+
+    onShowChange?.(false);
+  }, [onApply, onShowChange]);
+
+  const handleFooterCancel = useCallback(() => {
+    onCancel?.();
+
+    onShowChange?.(false);
+  }, [onCancel, onShowChange]);
+
   const registerOption = useCallback((option: ListboxOption) => {
     const alreadyRegistered = registeredOptionsRef.current.some(
       (entry) => String(entry.value) === String(option.value),
@@ -340,22 +352,31 @@ function Listbox({
 
         {showFooter ? (
           <div {...footerBind}>
-            <Button
-              variant="flat"
-              color="secondary"
-              onClick={() => onCancel?.()}
-              {...cancelButtonProps}
-            >
-              {cancelLabel}
-            </Button>
+            {slots?.footer ? (
+              slots.footer({
+                apply: handleFooterApply,
+                cancel: handleFooterCancel,
+              })
+            ) : (
+              <>
+                <Button
+                  variant="flat"
+                  color="secondary"
+                  onClick={handleFooterCancel}
+                  {...cancelButtonProps}
+                >
+                  {cancelLabel}
+                </Button>
 
-            <Button
-              color="primary"
-              onClick={() => onApply?.()}
-              {...applyButtonProps}
-            >
-              {applyLabel}
-            </Button>
+                <Button
+                  color="primary"
+                  onClick={handleFooterApply}
+                  {...applyButtonProps}
+                >
+                  {applyLabel}
+                </Button>
+              </>
+            )}
           </div>
         ) : null}
       </div>

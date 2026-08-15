@@ -68,8 +68,8 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 
 /**
  * Resolves whether a field picker shows Cancel / Apply.
- * Explicit `showFooter` wins. When unset, defaults to `true` for dialog
- * shells (`modal` / `drawer`).
+ * Explicit `showFooter` wins (instance prop, then registry `defaultProps`).
+ * When unset, defaults to `true` for dialog shells (`modal` / `drawer`).
  */
 export function resolveFieldShowFooter(
   showFooter: boolean | undefined,
@@ -81,3 +81,12 @@ export function resolveFieldShowFooter(
 
   return isFieldOverlayDialog(overlay);
 }
+
+/**
+ * Actions passed to a custom field overlay footer slot.
+ * `apply` commits the draft; `cancel` discards it. Both close the overlay.
+ */
+export type FieldOverlayFooterSlotProps = {
+  apply: () => void;
+  cancel: () => void;
+};

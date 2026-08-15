@@ -25,7 +25,6 @@ import {
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -65,6 +64,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -290,12 +290,11 @@ export function useAutocomplete(
     );
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      autocompleteMerged.value.showFooter,
-      resolvedOverlay.value,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "Autocomplete",
+    () => autocompleteMerged.value.showFooter,
+    resolvedOverlay,
+  );
 
   const activeValues = computed(() => {
     return showFooter.value ? draftValues.value : selectedValues.value;
@@ -676,11 +675,15 @@ export function useAutocomplete(
     }
 
     closeMenu();
+
+    emit("apply");
   }
 
   function handleCancel() {
     draftValues.value = [...selectedValues.value];
+
     closeMenu();
+
     emit("cancel");
   }
 
@@ -1053,6 +1056,7 @@ export function useAutocomplete(
       loading: isLoading.value,
       multiple: multiple.value,
       maxHeight: props.maxHeight,
+      showFooter: showFooter.value,
       entries: visibleEntries.value,
       options: visibleOptions.value,
       size: formField.merged.value.size,
@@ -1062,7 +1066,6 @@ export function useAutocomplete(
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
-      showFooter: autocompleteMerged.value.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: autocompleteMerged.value.hideEmptyMessage === true,
       emptyMessage:

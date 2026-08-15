@@ -11,9 +11,11 @@ import type {
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { CalendarDateSlots } from "@/Components/CalendarDate";
 import type { CalendarRangeOrientation } from "@/Components/CalendarRange";
-import type { DateRangePickerCustomProps } from "@/Components/DateRangePicker";
+import type {
+  DateRangePickerCustomProps,
+  DateRangePickerSlots,
+} from "@/Components/DateRangePicker";
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type {
   FormFieldClasses,
@@ -70,6 +72,16 @@ export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
 }
 
 export interface DateRangeFieldCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed (`showFooter`).
+   */
+  onCancel?: () => void;
+
   /**
    * Called when the range selection changes.
    */
@@ -213,16 +225,16 @@ export interface DateRangeFieldOwnProps extends Omit<
    * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
    * shells (`modal` / `drawer`).
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
   /**
-   * Named slots (`FormField` slots + calendar `day`).
+   * Named slots (`FormField` slots + calendar `day` + footer).
    *
    * @default undefined
    */
-  slots?: FormFieldSlots & Pick<CalendarDateSlots, "day">;
+  slots?: FormFieldSlots & DateRangePickerSlots;
 
   /**
    * First day of the week.

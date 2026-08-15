@@ -6,7 +6,6 @@ import { useMemo } from "react";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 import {
@@ -35,6 +34,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -114,9 +114,11 @@ export function useListbox(
     return resolvedOverlay === "drawer";
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(merged.showFooter, resolvedOverlay);
-  });
+  const showFooter = useFieldShowFooter(
+    options.componentName,
+    merged.showFooter,
+    resolvedOverlay,
+  );
 
   const listboxTokens = derived(() => {
     return get(bridgeListbox, ["tokens", "listbox"]) as
@@ -160,8 +162,10 @@ export function useListbox(
 
   const sizeClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(sizeProps, listboxTokens?.size);
+    const sizeItem = get(classes, merged.size ?? "md");
+    const overlayKey = isDialogOverlay ? "panel" : "menu";
 
-    return get(classes, merged.size ?? "md");
+    return get(sizeItem, overlayKey);
   });
 
   const optionSelectedClass = derived(() => {
@@ -213,14 +217,20 @@ export function useListbox(
       return undefined;
     }
 
-    return isDrawerOverlay ? roundedToken?.drawer : roundedToken?.panel;
+    const panelRounded = roundedToken;
+
+    if (!panelRounded) {
+      return undefined;
+    }
+
+    return isDrawerOverlay ? `${panelRounded} rounded-b-none` : panelRounded;
   });
 
   const surfaceBind = derived(() => {
     return cn({
       "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10":
         isDialogOverlay,
-      [surfaceRoundedClass ?? ""]: Boolean(surfaceRoundedClass),
+      [String(surfaceRoundedClass ?? "")]: Boolean(surfaceRoundedClass),
     });
   });
 

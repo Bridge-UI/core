@@ -39,11 +39,13 @@ test("it should call onChange when a day is selected", () => {
 });
 
 test("it should close the overlay after Apply when showFooter is set", () => {
+  const onApply = vi.fn();
   const onChange = vi.fn();
 
   render(
     <DateField
       showFooter
+      onApply={onApply}
       onChange={onChange}
       defaultValue={new Date(2021, 4, 1)}
     />,
@@ -56,18 +58,33 @@ test("it should close the overlay after Apply when showFooter is set", () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Apply" }));
 
+  expect(onApply).toHaveBeenCalled();
   expect(onChange).toHaveBeenCalled();
   expect(screen.queryByRole("button", { name: "Apply" })).toBeNull();
 });
 
 test("it should close the overlay after Cancel when showFooter is set", () => {
-  render(<DateField showFooter defaultValue={new Date(2021, 4, 1)} />);
+  const onChange = vi.fn();
+  const onCancel = vi.fn();
+
+  render(
+    <DateField
+      showFooter
+      onChange={onChange}
+      onCancel={onCancel}
+      defaultValue={new Date(2021, 4, 1)}
+    />,
+  );
 
   fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  expect(onChange).not.toHaveBeenCalled();
   expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
 
   fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
+  expect(onCancel).toHaveBeenCalled();
+  expect(onChange).not.toHaveBeenCalled();
   expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
 });
 
@@ -131,5 +148,111 @@ test("it should open a dialog when overlay is modal", () => {
   const dialog = document.body.querySelector('[role="dialog"]');
 
   expect(dialog).not.toBeNull();
-  expect(dialog?.className).toMatch(/w-full|sm:max-w/);
+  expect(dialog?.className).toMatch(/w-fit/);
+});
+
+test("it should show footer actions when overlay is modal", () => {
+  render(
+    <DateField
+      overlay="modal"
+      defaultValue={new Date(2021, 4, 1)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
+});
+
+test("it should apply the value and close the modal overlay after Apply", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DateField
+      overlay="modal"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+
+  expect(onChange).toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay after Cancel without applying", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DateField
+      overlay="modal"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  expect(onChange).not.toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay when clicking outside the picker", () => {
+  render(
+    <DateField
+      overlay="modal"
+      defaultValue={new Date(2021, 4, 21)}
+      customProps={{ modal: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+
+  const wrapper = document.body.querySelector(
+    '[data-modal-part="overlay"]',
+  )?.nextElementSibling;
+
+  expect(wrapper).not.toBeNull();
+
+  fireEvent.click(wrapper!);
+
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay from a custom footer apply", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DateField
+      overlay="modal"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+      customProps={{ modal: { transition: "none" } }}
+      slots={{
+        footer: ({ apply }) => (
+          <button type="button" onClick={apply}>
+            Save
+          </button>
+        ),
+      }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+  expect(onChange).toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });

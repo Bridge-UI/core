@@ -29,6 +29,7 @@ const model = defineModel<Date | null>();
 const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
   clearable: true,
   showErrorIcon: true,
+  showFooter: undefined,
 });
 
 const emit = defineEmits<DateTimeFieldEmits>();
@@ -135,6 +136,10 @@ const {
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+      </template>
+
+      <template #footer="footer" v-if="$slots.footer">
+        <slot name="footer" v-bind="footer" />
       </template>
     </DateTimePicker>
   </FieldOverlay>

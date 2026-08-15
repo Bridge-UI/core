@@ -32,6 +32,7 @@ const model = defineModel<null | DateRangeValue>();
 const props = withDefaults(defineProps<DateTimeRangeFieldOwnProps>(), {
   clearable: true,
   showErrorIcon: true,
+  showFooter: undefined,
 });
 
 const emit = defineEmits<DateTimeRangeFieldEmits>();
@@ -141,6 +142,10 @@ const {
     >
       <template #day="cell">
         <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+      </template>
+
+      <template #footer="footer" v-if="$slots.footer">
+        <slot name="footer" v-bind="footer" />
       </template>
     </DateTimeRangePicker>
   </FieldOverlay>

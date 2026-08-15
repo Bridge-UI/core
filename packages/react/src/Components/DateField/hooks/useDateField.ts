@@ -10,7 +10,6 @@ import {
   isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -33,6 +32,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useBreakpoint,
+  useFieldShowFooter,
 } from "@/Utils";
 
 const dateFieldBridgeKeys = [
@@ -102,13 +102,15 @@ export function useDateField(props: DateFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
-  const { day: daySlot, ...formFieldSlots } = slots ?? {};
+  const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
@@ -151,9 +153,11 @@ export function useDateField(props: DateFieldProps) {
     return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateOnly.showFooter, resolvedOverlay);
-  });
+  const showFooter = useFieldShowFooter(
+    "DateField",
+    dateOnly.showFooter,
+    resolvedOverlay,
+  );
 
   const clearable = derived(() => {
     return dateOnly.clearable !== false;
@@ -303,13 +307,22 @@ export function useDateField(props: DateFieldProps) {
     commitValue(next);
     setDraftText(null);
 
-    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
-    if (mode === "single" || showFooter) {
+    if (showFooter) {
+      onApply?.();
+
+      handleOpenChange(false);
+
+      return;
+    }
+
+    if (mode === "single") {
       handleOpenChange(false);
     }
   };
 
   const handlePickerCancel = () => {
+    onCancel?.();
+
     handleOpenChange(false);
   };
 
@@ -415,6 +428,7 @@ export function useDateField(props: DateFieldProps) {
     inputBind,
     clearable,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,

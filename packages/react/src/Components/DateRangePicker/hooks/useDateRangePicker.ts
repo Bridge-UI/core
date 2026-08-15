@@ -19,6 +19,7 @@ import type {
   DateRangePickerOwnProps,
   DateRangePickerProps,
 } from "@/Components/DateRangePicker/dateRangePicker.types";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import {
   derived,
   mergePartBind,
@@ -53,7 +54,7 @@ const dateRangePickerBridgeKeys = [
 
 type DateRangePickerLibDefaults = LibDefaultsShape<
   DateRangePickerOwnProps,
-  "color" | "rounded" | "showFooter" | "orientation" | "startOfWeek"
+  "color" | "rounded" | "orientation" | "startOfWeek"
 >;
 
 type DateRangePickerMerged = MergeLibDefaults<
@@ -65,6 +66,7 @@ export function useDateRangePicker(
   props: DateRangePickerProps,
   libDefaults: DateRangePickerLibDefaults,
 ) {
+  const overlayFooter = useFieldOverlayFooter();
   const resolveMessage = useResolveMessage();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -89,7 +91,7 @@ export function useDateRangePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["slots", "onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses =
@@ -161,11 +163,14 @@ export function useDateRangePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {

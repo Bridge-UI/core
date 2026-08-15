@@ -1,9 +1,10 @@
 // ** External Imports
-import type { HTMLAttributes } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -110,6 +111,11 @@ export interface TimeRangePickerCustomProps {
 
 export interface TimeRangePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -118,6 +124,16 @@ export interface TimeRangePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: null | TimeRangeValue];
+}
+
+export interface TimeRangePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface TimeRangePickerOwnProps {

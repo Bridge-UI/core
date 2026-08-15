@@ -16,7 +16,6 @@ import {
   isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -38,6 +37,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -139,12 +139,11 @@ export function useDateField(
     return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      dateOnly.value.showFooter,
-      resolvedOverlay.value,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "DateField",
+    () => dateOnly.value.showFooter,
+    resolvedOverlay,
+  );
 
   const modelValue = computed(() => {
     return model.value ?? null;
@@ -274,13 +273,22 @@ export function useDateField(
     commitValue(next);
     draftText.value = null;
 
-    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
-    if (mode.value === "single" || showFooter.value) {
+    if (showFooter.value) {
+      emit("apply");
+
+      handleOpenChange(false);
+
+      return;
+    }
+
+    if (mode.value === "single") {
       handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
+    emit("cancel");
+
     handleOpenChange(false);
   }
 

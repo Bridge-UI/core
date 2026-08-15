@@ -18,7 +18,6 @@ import {
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -62,6 +61,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -103,6 +103,7 @@ export function useSelect(
     onOpen,
     onClear,
     onClose,
+    onApply,
     onChange,
     onSearch,
     onCancel,
@@ -254,9 +255,11 @@ export function useSelect(
     return resolveFieldOverlay(selectMerged.overlay, breakpoint.mobile);
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(selectMerged.showFooter, resolvedOverlay);
-  });
+  const showFooter = useFieldShowFooter(
+    "Select",
+    selectMerged.showFooter,
+    resolvedOverlay,
+  );
 
   const activeValues = derived(() => {
     return showFooter ? draftValues : selectedValues;
@@ -570,11 +573,15 @@ export function useSelect(
     }
 
     closeMenu();
-  }, [multiple, draftValues, setModel, emitChange, closeMenu]);
+
+    onApply?.();
+  }, [multiple, onApply, closeMenu, emitChange, setModel, draftValues]);
 
   const handleCancel = useCallback(() => {
     setDraftValues(selectedValues);
+
     closeMenu();
+
     onCancel?.();
   }, [selectedValues, closeMenu, onCancel]);
 
@@ -1067,6 +1074,7 @@ export function useSelect(
       multiple,
       listboxId,
       isSelected,
+      showFooter,
       emptyMessage,
       loadingMessage,
       hideEmptyMessage,
@@ -1085,7 +1093,6 @@ export function useSelect(
       componentName: "Select" as const,
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
-      showFooter: selectMerged.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,
@@ -1111,7 +1118,7 @@ export function useSelect(
     formField.merged.color,
     props.disableMaxHeight,
     formField.merged.rounded,
-    selectMerged.showFooter,
+    showFooter,
     props.customProps?.listbox,
     handleRegisteredOptionsChange,
   ]);

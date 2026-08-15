@@ -378,6 +378,31 @@ test("it should show footer actions when showFooter is set", async () => {
   });
 });
 
+test("it should show footer actions for dialog overlays when showFooter is unset", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          overlay="modal"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="dialog-footer-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Cancel" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Apply" })).toBeTruthy();
+  });
+});
+
 test("it should call onApply and onCancel from the footer", async () => {
   const onApply = vi.fn();
   const onCancel = vi.fn();
@@ -411,4 +436,46 @@ test("it should call onApply and onCancel from the footer", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
   expect(onCancel).toHaveBeenCalled();
+});
+
+test("it should render a custom footer slot and close on apply", async () => {
+  const onApply = vi.fn();
+  const onShowChange = vi.fn();
+
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          showFooter
+          overlay="modal"
+          options={options}
+          onApply={onApply}
+          anchorEl={anchorRef}
+          onShowChange={onShowChange}
+          listboxId="custom-footer-listbox"
+          slots={{
+            footer: ({ apply }) => (
+              <button type="button" onClick={apply}>
+                Save
+              </button>
+            ),
+          }}
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: "Save" })).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+  expect(onApply).toHaveBeenCalled();
+  expect(onShowChange).toHaveBeenCalledWith(false);
 });

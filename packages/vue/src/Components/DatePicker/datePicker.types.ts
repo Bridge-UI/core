@@ -5,6 +5,7 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   DatePickerModel,
   DisableDatesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -67,6 +68,11 @@ export interface DatePickerCustomProps {
 
 export interface DatePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -84,6 +90,14 @@ export interface DatePickerSlots {
    * @default undefined
    */
   day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface DatePickerTokens {

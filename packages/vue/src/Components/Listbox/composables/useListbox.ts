@@ -6,7 +6,6 @@ import { computed, useAttrs } from "vue";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
 } from "@bridge-ui/core/Domain";
 import {
   listboxColorProps as colorProps,
@@ -33,6 +32,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -111,12 +111,11 @@ export function useListbox(
     return resolvedOverlay.value === "drawer";
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      merged.value.showFooter,
-      resolvedOverlay.value,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    options.componentName,
+    () => merged.value.showFooter,
+    resolvedOverlay,
+  );
 
   const listboxTokens = computed(() => {
     return get(bridgeListbox.value, ["tokens", "listbox"]) as
@@ -166,7 +165,10 @@ export function useListbox(
       listboxTokens.value?.size,
     );
 
-    return get(classes, merged.value.size ?? "md");
+    const sizeItem = get(classes, merged.value.size ?? "md");
+    const overlayKey = isDialogOverlay.value ? "panel" : "menu";
+
+    return get(sizeItem, overlayKey);
   });
 
   const optionSelectedClass = computed(() => {
@@ -218,16 +220,24 @@ export function useListbox(
       return undefined;
     }
 
+    const panelRounded = roundedToken.value;
+
+    if (!panelRounded) {
+      return undefined;
+    }
+
     return isDrawerOverlay.value
-      ? roundedToken.value?.drawer
-      : roundedToken.value?.panel;
+      ? `${panelRounded} rounded-b-none`
+      : panelRounded;
   });
 
   const surfaceBind = computed(() => {
     return cn({
       "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10":
         isDialogOverlay.value,
-      [surfaceRoundedClass.value ?? ""]: Boolean(surfaceRoundedClass.value),
+      [String(surfaceRoundedClass.value ?? "")]: Boolean(
+        surfaceRoundedClass.value,
+      ),
     });
   });
 

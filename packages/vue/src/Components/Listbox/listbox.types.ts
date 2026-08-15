@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   ListboxEntry,
   ListboxOption,
@@ -343,8 +344,8 @@ export interface ListboxOwnProps {
 
   /**
    * Roundedness of the panel surface. Applied to `Menu` when the overlay is a
-   * menu, and to Listbox `panel` / `drawer` tokens when the overlay is a
-   * dialog (`modal` uses full corners; `drawer` uses top-only).
+   * menu, and to the Listbox surface when the overlay is a dialog (`modal`
+   * uses full corners; `drawer` flushes the bottom edge).
    *
    * When omitted, defaults to `md`.
    *
@@ -364,12 +365,14 @@ export interface ListboxOwnProps {
    * Shows Cancel / Apply footer. When unset, defaults to `true` for dialog shells (`modal` / `drawer`).
    * Parents (e.g. Select) typically keep selection as draft until Apply.
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
   /**
    * Typography and option padding scale, aligned with `FormField` / `Select`.
+   * Dialog overlays (`modal` / `drawer`) use the `panel` part of the size
+   * token (larger padding / type for touch). Menu overlays use `menu`.
    *
    * @default "md"
    */
@@ -397,6 +400,14 @@ export interface ListboxSlots {
    * Custom empty-state content.
    */
   empty?: Slot<undefined>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 
   /**
    * Custom loading content. Replaces the default `loadingMessage` when set.

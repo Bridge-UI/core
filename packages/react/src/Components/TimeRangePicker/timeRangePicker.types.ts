@@ -1,9 +1,10 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -31,6 +32,11 @@ type TimeRangePickerFooterButtonProps = Partial<
 >;
 
 export interface TimeRangePickerCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
   /**
    * Called when Cancel is pressed.
    */
@@ -250,6 +256,13 @@ export interface TimeRangePickerOwnProps {
   showSeconds?: boolean;
 
   /**
+   * Named slots (`footer` for Cancel / Apply).
+   *
+   * @default undefined
+   */
+  slots?: TimeRangePickerSlots;
+
+  /**
    * Label above the start time panel.
    *
    * @default "Start time"
@@ -276,6 +289,16 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   value?: null | TimeRangeValue;
+}
+
+export interface TimeRangePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
 }
 
 export interface TimeRangePickerTokens {

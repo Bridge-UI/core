@@ -1,8 +1,12 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { DisableTimesInput, TimeValue } from "@bridge-ui/core/Domain";
+import type {
+  DisableTimesInput,
+  FieldOverlayFooterSlotProps,
+  TimeValue,
+} from "@bridge-ui/core/Domain";
 import type {
   TimeColor,
   TimeColorItem,
@@ -39,6 +43,11 @@ export interface TimePickerClasses {
 }
 
 export interface TimePickerCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
   /**
    * Called when Cancel is pressed.
    */
@@ -98,6 +107,16 @@ export interface TimePickerTokens {
     color?: Record<string, Partial<TimeColorItem>>;
     rounded?: Record<string, string>;
   };
+}
+
+export interface TimePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
 }
 
 export interface TimePickerOwnProps {
@@ -204,6 +223,13 @@ export interface TimePickerOwnProps {
    * @default false
    */
   showSeconds?: boolean;
+
+  /**
+   * Named slots (`footer` for Cancel / Apply).
+   *
+   * @default undefined
+   */
+  slots?: TimePickerSlots;
 
   /**
    * IANA time zone.

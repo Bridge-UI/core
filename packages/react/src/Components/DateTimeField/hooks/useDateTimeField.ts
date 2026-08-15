@@ -8,7 +8,6 @@ import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -30,6 +29,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useBreakpoint,
+  useFieldShowFooter,
 } from "@/Utils";
 
 const dateTimeFieldBridgeKeys = [
@@ -85,13 +85,15 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
-  const { day: daySlot, ...formFieldSlots } = slots ?? {};
+  const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<Date | null>(
@@ -229,9 +231,11 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return hasValue && clearable && !props.readonly && !formField.isDisabled;
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateTimeOnly.showFooter, resolvedOverlay);
-  });
+  const showFooter = useFieldShowFooter(
+    "DateTimeField",
+    dateTimeOnly.showFooter,
+    resolvedOverlay,
+  );
 
   const displayText = derived(() => {
     return formatDateTimeValue(
@@ -253,11 +257,21 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const handlePickerChange = (next: Date | null) => {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter) {
+      onApply?.();
+
+      handleOpenChange(false);
+
+      return;
+    }
+
     handleOpenChange(false);
   };
 
   const handlePickerCancel = () => {
+    onCancel?.();
+
     handleOpenChange(false);
   };
 
@@ -338,6 +352,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     inputBind,
     clearable,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,

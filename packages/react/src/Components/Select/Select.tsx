@@ -124,6 +124,7 @@ function Select(props: SelectProps) {
         slots={{
           empty: slots?.empty,
           option: slots?.option,
+          footer: slots?.footer,
           loading: slots?.loading,
           afterOptions: slots?.afterOptions,
           beforeOptions: slots?.beforeOptions,

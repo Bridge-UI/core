@@ -23,14 +23,12 @@ function DateRangePicker(props: DateRangePickerProps) {
     rounded: "md",
     startOfWeek: 0,
     color: "primary",
-    showFooter: false,
     orientation: "horizontal",
   });
 
   return (
     <div {...rootBind}>
       <CalendarRange
-        slots={props.slots}
         color={merged.color}
         value={displayValue}
         tokens={calendarTokens}
@@ -50,22 +48,33 @@ function DateRangePicker(props: DateRangePickerProps) {
         disableYears={merged.disableYears}
         disableMonths={merged.disableMonths}
         hideOutsideDays={merged.hideOutsideDays}
+        slots={props.slots?.day ? { day: props.slots.day } : undefined}
       />
 
       {showFooter && (
         <div {...footerBind}>
-          <Button
-            variant="flat"
-            color="secondary"
-            onClick={handleCancel}
-            {...cancelButtonProps}
-          >
-            {cancelLabel}
-          </Button>
+          {props.slots?.footer ? (
+            props.slots.footer({ apply: handleApply, cancel: handleCancel })
+          ) : (
+            <>
+              <Button
+                variant="flat"
+                color="secondary"
+                onClick={handleCancel}
+                {...cancelButtonProps}
+              >
+                {cancelLabel}
+              </Button>
 
-          <Button color="primary" onClick={handleApply} {...applyButtonProps}>
-            {applyLabel}
-          </Button>
+              <Button
+                color="primary"
+                onClick={handleApply}
+                {...applyButtonProps}
+              >
+                {applyLabel}
+              </Button>
+            </>
+          )}
         </div>
       )}
     </div>

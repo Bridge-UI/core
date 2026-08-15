@@ -6,6 +6,7 @@ import type {
   DateRangeValue,
   DisableDatesInput,
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
@@ -71,6 +72,16 @@ export interface DateTimeRangeFieldCustomProps extends FormFieldCustomProps {
 }
 
 export interface DateTimeRangeFieldEmits {
+  /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
+   * Emitted when Cancel is pressed (`showFooter`).
+   */
+  cancel: [];
+
   /**
    * Emitted when the range selection changes.
    */
@@ -242,7 +253,7 @@ export interface DateTimeRangeFieldOwnProps extends Omit<
    * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
    * shells (`modal` / `drawer`).
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
@@ -275,6 +286,14 @@ export interface DateTimeRangeFieldSlots extends FormFieldSlots {
    * @default undefined
    */
   day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export type DateTimeRangeFieldProps = MergeHtmlProps<

@@ -1,10 +1,11 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   DatePickerModel,
   DisableDatesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -77,6 +78,11 @@ export interface DatePickerCustomProps {
 
 export interface DatePickerCallbacks {
   /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
    * Called when Cancel is pressed.
    */
   onCancel?: () => void;
@@ -111,6 +117,23 @@ export interface DatePickerTokens {
    * Border radius token map overrides.
    */
   rounded?: Record<string, string>;
+}
+
+export interface DatePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: CalendarDateSlots["day"];
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
 }
 
 export interface DatePickerOwnProps {
@@ -261,11 +284,11 @@ export interface DatePickerOwnProps {
   showFooter?: boolean;
 
   /**
-   * Named slots forwarded to `Calendar` (`day`).
+   * Named slots (`day` on the calendar, `footer` for Cancel / Apply).
    *
    * @default undefined
    */
-  slots?: Pick<CalendarDateSlots, "day">;
+  slots?: DatePickerSlots;
 
   /**
    * First day of the week.

@@ -1,8 +1,12 @@
 // ** External Imports
-import type { HTMLAttributes } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { DisableTimesInput, TimeValue } from "@bridge-ui/core/Domain";
+import type {
+  DisableTimesInput,
+  FieldOverlayFooterSlotProps,
+  TimeValue,
+} from "@bridge-ui/core/Domain";
 import type {
   TimeColor,
   TimeColorItem,
@@ -60,6 +64,11 @@ export interface TimePickerCustomProps {
 
 export interface TimePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -68,6 +77,16 @@ export interface TimePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: null | TimeValue];
+}
+
+export interface TimePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface TimePickerTokens {

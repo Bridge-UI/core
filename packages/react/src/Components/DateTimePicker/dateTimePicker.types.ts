@@ -1,10 +1,11 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   DisableDatesInput,
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -57,6 +58,11 @@ export interface DateTimePickerClasses {
 }
 
 export interface DateTimePickerCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
   /**
    * Called when Cancel is pressed.
    */
@@ -130,6 +136,23 @@ export interface DateTimePickerTokens {
     color?: Record<string, Partial<TimeColorItem>>;
     rounded?: Record<string, string>;
   };
+}
+
+export interface DateTimePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: CalendarDateSlots["day"];
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
 }
 
 export interface DateTimePickerOwnProps {
@@ -308,11 +331,11 @@ export interface DateTimePickerOwnProps {
   showSeconds?: boolean;
 
   /**
-   * Named slots forwarded to `Calendar` (`day`).
+   * Named slots (`day` on the calendar, `footer` for Cancel / Apply).
    *
    * @default undefined
    */
-  slots?: Pick<CalendarDateSlots, "day">;
+  slots?: DateTimePickerSlots;
 
   /**
    * First day of the week.

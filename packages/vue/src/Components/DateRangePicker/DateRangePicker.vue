@@ -13,7 +13,9 @@ defineOptions({ inheritAttrs: false });
 
 defineSlots<DateRangePickerSlots>();
 
-const props = defineProps<DateRangePickerOwnProps>();
+const props = withDefaults(defineProps<DateRangePickerOwnProps>(), {
+  showFooter: undefined,
+});
 
 const emit = defineEmits<DateRangePickerEmits>();
 
@@ -37,7 +39,6 @@ const {
     rounded: "md",
     startOfWeek: 0,
     color: "primary",
-    showFooter: false,
     orientation: "horizontal",
   },
   emit,
@@ -73,18 +74,20 @@ const {
     </CalendarRange>
 
     <div v-if="showFooter" v-bind="footerBind">
-      <Button
-        variant="flat"
-        color="secondary"
-        v-on:click="handleCancel"
-        v-bind="cancelButtonProps"
-      >
-        {{ cancelLabel }}
-      </Button>
+      <slot name="footer" :apply="handleApply" :cancel="handleCancel">
+        <Button
+          variant="flat"
+          color="secondary"
+          v-on:click="handleCancel"
+          v-bind="cancelButtonProps"
+        >
+          {{ cancelLabel }}
+        </Button>
 
-      <Button color="primary" v-bind="applyButtonProps" @click="handleApply">
-        {{ applyLabel }}
-      </Button>
+        <Button color="primary" v-bind="applyButtonProps" @click="handleApply">
+          {{ applyLabel }}
+        </Button>
+      </slot>
     </div>
   </div>
 </template>

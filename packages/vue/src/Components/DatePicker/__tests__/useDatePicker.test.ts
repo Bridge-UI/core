@@ -13,7 +13,6 @@ const libDefaults = {
   rounded: "md",
   startOfWeek: 0,
   color: "primary",
-  showFooter: false,
 } as const satisfies Partial<DatePickerOwnProps>;
 
 function mountUseDatePicker(props: Partial<DatePickerOwnProps> = {}) {

@@ -71,6 +71,22 @@ test("it should default showFooter to true on mobile", () => {
   expect(result.current.showFooter).toBe(true);
 });
 
+test("it should default showFooter to true for dialog overlays on desktop", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ overlay: "modal" });
+
+  expect(result.current.showFooter).toBe(true);
+});
+
+test("it should default showFooter to true for drawer overlays on desktop", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ overlay: "drawer" });
+
+  expect(result.current.showFooter).toBe(true);
+});
+
 test("it should keep explicit showFooter false on mobile", () => {
   mockViewport(500);
 

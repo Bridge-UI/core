@@ -19,7 +19,6 @@ import {
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -63,6 +62,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -105,6 +105,7 @@ export function useAutocomplete(
     onOpen,
     onClear,
     onClose,
+    onApply,
     onChange,
     onSearch,
     onCancel,
@@ -254,12 +255,11 @@ export function useAutocomplete(
     return resolveFieldOverlay(autocompleteMerged.overlay, breakpoint.mobile);
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(
-      autocompleteMerged.showFooter,
-      resolvedOverlay,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "Autocomplete",
+    autocompleteMerged.showFooter,
+    resolvedOverlay,
+  );
 
   const activeValues = derived(() => {
     return showFooter ? draftValues : selectedValues;
@@ -607,13 +607,17 @@ export function useAutocomplete(
     }
 
     closeMenu();
-  }, [multiple, draftValues, setModel, emitChange, closeMenu]);
+
+    onApply?.();
+  }, [multiple, onApply, closeMenu, emitChange, setModel, draftValues]);
 
   const handleCancel = useCallback(() => {
     setDraftValues(selectedValues);
+
     closeMenu();
+
     onCancel?.();
-  }, [selectedValues, closeMenu, onCancel]);
+  }, [onCancel, closeMenu, selectedValues]);
 
   const commitFreeSolo = useCallback(() => {
     if (autocompleteMerged.freeSolo === false) {
@@ -1149,6 +1153,7 @@ export function useAutocomplete(
       multiple,
       listboxId,
       isSelected,
+      showFooter,
       emptyMessage,
       loadingMessage,
       hideEmptyMessage,
@@ -1167,7 +1172,6 @@ export function useAutocomplete(
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
       componentName: "Autocomplete" as const,
-      showFooter: autocompleteMerged.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,
@@ -1194,7 +1198,7 @@ export function useAutocomplete(
     props.disableMaxHeight,
     formField.merged.rounded,
     props.customProps?.listbox,
-    autocompleteMerged.showFooter,
+    showFooter,
     handleRegisteredOptionsChange,
   ]);
 

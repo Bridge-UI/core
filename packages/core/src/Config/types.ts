@@ -1162,6 +1162,7 @@ export interface AutocompleteConfigBase {
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
+    showFooter: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
   }>;
@@ -1186,6 +1187,7 @@ export interface SelectConfigBase {
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
+    showFooter: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
   }>;

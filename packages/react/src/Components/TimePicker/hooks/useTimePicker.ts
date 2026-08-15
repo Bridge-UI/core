@@ -14,6 +14,7 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import type {
   TimePickerClasses,
   TimePickerOwnProps,
@@ -48,7 +49,7 @@ const timePickerBridgeKeys = [
 
 type TimePickerLibDefaults = LibDefaultsShape<
   TimePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimePickerMerged = MergeLibDefaults<
@@ -60,6 +61,7 @@ export function useTimePicker(
   props: TimePickerProps,
   libDefaults: TimePickerLibDefaults,
 ) {
+  const overlayFooter = useFieldOverlayFooter();
   const resolveMessage = useResolveMessage();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -84,7 +86,7 @@ export function useTimePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TimePickerClasses>({
@@ -145,11 +147,14 @@ export function useTimePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {

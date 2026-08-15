@@ -12,6 +12,10 @@ import {
 
 // ** Core Imports
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
+import {
+  resolveFieldShowFooter,
+  type ResolvedFieldOverlay,
+} from "@bridge-ui/core/Domain";
 import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
@@ -108,6 +112,33 @@ export function useBridgeUIComponent<
     merged,
     components,
   };
+}
+
+/**
+ * Resolves Cancel / Apply visibility: instance prop, then registry
+ * `defaultProps.showFooter`, then the overlay default from core.
+ */
+export function useFieldShowFooter(
+  componentName: undefined | keyof BridgeUIComponentsConfig,
+  showFooter: MaybeRefOrGetter<boolean | undefined>,
+  overlay: MaybeRefOrGetter<ResolvedFieldOverlay>,
+): ComputedRef<boolean> {
+  const bridge = useBridgeUI();
+
+  return computed(() => {
+    const registryShowFooter = componentName
+      ? (get(unref(bridge?.components), [
+          componentName,
+          "defaultProps",
+          "showFooter",
+        ]) as boolean | undefined)
+      : undefined;
+
+    return resolveFieldShowFooter(
+      toValue(showFooter) ?? registryShowFooter,
+      toValue(overlay),
+    );
+  });
 }
 
 /**

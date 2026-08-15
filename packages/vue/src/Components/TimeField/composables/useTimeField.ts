@@ -14,7 +14,6 @@ import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -36,6 +35,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -233,20 +233,29 @@ export function useTimeField(
     emit("change", next);
   }
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      timeOnly.value.showFooter,
-      resolvedOverlay.value,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "TimeField",
+    () => timeOnly.value.showFooter,
+    resolvedOverlay,
+  );
 
   function handlePickerChange(next: null | TimeValue) {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter.value) {
+      emit("apply");
+
+      handleOpenChange(false);
+
+      return;
+    }
+
     handleOpenChange(false);
   }
 
   function handlePickerCancel() {
+    emit("cancel");
+
     handleOpenChange(false);
   }
 

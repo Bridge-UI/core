@@ -204,9 +204,9 @@ export type {
   ListboxColorItem,
   ListboxInvalidated,
   ListboxRounded,
-  ListboxRoundedItem,
   ListboxSize,
   ListboxSizeItem,
+  ListboxSizeOverlayItem,
 } from "@/Tokens/Listbox";
 export {
   roundedProps as menuRoundedProps,

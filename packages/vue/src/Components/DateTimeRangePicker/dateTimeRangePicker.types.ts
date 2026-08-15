@@ -6,6 +6,7 @@ import type {
   DateRangeValue,
   DisableDatesInput,
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -79,6 +80,11 @@ export interface DateTimeRangePickerCustomProps {
 
 export interface DateTimeRangePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -96,6 +102,14 @@ export interface DateTimeRangePickerSlots {
    * @default undefined
    */
   day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface DateTimeRangePickerTokens {

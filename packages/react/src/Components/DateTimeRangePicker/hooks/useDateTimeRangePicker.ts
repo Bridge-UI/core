@@ -25,6 +25,7 @@ import type {
   DateTimeRangePickerOwnProps,
   DateTimeRangePickerProps,
 } from "@/Components/DateTimeRangePicker/dateTimeRangePicker.types";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import {
   derived,
   mergePartBind,
@@ -69,7 +70,6 @@ type DateTimeRangePickerLibDefaults = LibDefaultsShape<
   | "color"
   | "rounded"
   | "interval"
-  | "showFooter"
   | "orientation"
   | "showSeconds"
   | "startOfWeek"
@@ -102,6 +102,7 @@ export function useDateTimeRangePicker(
   libDefaults: DateTimeRangePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
+  const overlayFooter = useFieldOverlayFooter();
   const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
@@ -127,7 +128,7 @@ export function useDateTimeRangePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["slots", "onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses =
@@ -272,11 +273,14 @@ export function useDateTimeRangePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {

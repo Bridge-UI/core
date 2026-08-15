@@ -25,6 +25,7 @@ import type {
   DateTimePickerOwnProps,
   DateTimePickerProps,
 } from "@/Components/DateTimePicker/dateTimePicker.types";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import {
   derived,
   mergePartBind,
@@ -69,7 +70,6 @@ type DateTimePickerLibDefaults = LibDefaultsShape<
   | "color"
   | "rounded"
   | "interval"
-  | "showFooter"
   | "defaultView"
   | "showSeconds"
   | "startOfWeek"
@@ -85,6 +85,7 @@ export function useDateTimePicker(
   libDefaults: DateTimePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
+  const overlayFooter = useFieldOverlayFooter();
   const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
@@ -110,7 +111,7 @@ export function useDateTimePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["slots", "onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DateTimePickerClasses>(
@@ -217,11 +218,14 @@ export function useDateTimePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {

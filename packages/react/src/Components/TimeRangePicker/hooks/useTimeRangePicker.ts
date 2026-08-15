@@ -19,6 +19,7 @@ import {
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import type {
   TimeRangePickerClasses,
   TimeRangePickerOwnProps,
@@ -56,13 +57,7 @@ const timeRangePickerBridgeKeys = [
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  | "ampm"
-  | "color"
-  | "rounded"
-  | "interval"
-  | "showFooter"
-  | "orientation"
-  | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "orientation" | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -75,6 +70,7 @@ export function useTimeRangePicker(
   libDefaults: TimeRangePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
+  const overlayFooter = useFieldOverlayFooter();
   const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
@@ -100,7 +96,7 @@ export function useTimeRangePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses =
@@ -195,11 +191,14 @@ export function useTimeRangePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {

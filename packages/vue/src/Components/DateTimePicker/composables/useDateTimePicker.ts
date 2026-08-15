@@ -2,11 +2,13 @@
 import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
+  inject,
   ref,
   toValue,
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -30,8 +32,10 @@ import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DateTimePickerClasses,
+  DateTimePickerEmits,
   DateTimePickerOwnProps,
 } from "@/Components/DateTimePicker/dateTimePicker.types";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -75,7 +79,6 @@ type DateTimePickerLibDefaults = LibDefaultsShape<
   | "color"
   | "rounded"
   | "interval"
-  | "showFooter"
   | "defaultView"
   | "showSeconds"
   | "startOfWeek"
@@ -92,12 +95,13 @@ type DateTimePickerMerged = MergeLibDefaults<
 export function useDateTimePicker(
   props: MaybeRefOrGetter<DateTimePickerOwnProps>,
   libDefaults: DateTimePickerLibDefaults,
-  emit: {
-    (event: "change", value: Date | null): void;
-    (event: "cancel"): void;
-  },
+  emit: SetupContext<DateTimePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const overlayFooter = inject(FIELD_OVERLAY_INJECTION_KEY, {
+    apply: () => undefined,
+    cancel: () => undefined,
+  });
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
   const resolveContext = useDateAdapterContext();
@@ -126,7 +130,11 @@ export function useDateTimePicker(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(split.value.inheritedAttrs, [
+      "onChange",
+      "onApply",
+      "onCancel",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DateTimePickerClasses>(
@@ -242,11 +250,14 @@ export function useDateTimePicker(
 
   const handleApply = () => {
     commitValue(draftValue.value);
+    emit("apply");
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     draftValue.value = committedValue.value;
     emit("cancel");
+    overlayFooter.cancel();
   };
 
   const rootBind = computed(() => {

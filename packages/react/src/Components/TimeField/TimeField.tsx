@@ -20,6 +20,7 @@ function TimeField(props: TimeFieldProps) {
     clearValue,
     modelValue,
     showFooter,
+    footerSlot,
     clearIconSize,
     showClearIcon,
     pickerClassName,
@@ -82,6 +83,7 @@ function TimeField(props: TimeFieldProps) {
           rounded={formField.merged.rounded}
           customProps={timePickerCustomProps}
           disableTimes={timeOnly.disableTimes}
+          slots={footerSlot ? { footer: footerSlot } : undefined}
         />
       </FieldOverlay>
     </>

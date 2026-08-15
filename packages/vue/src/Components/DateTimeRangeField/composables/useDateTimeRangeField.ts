@@ -15,7 +15,6 @@ import {
   isDateRangeValue,
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   resolveRangePickerOrientation,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -38,6 +37,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -253,23 +253,25 @@ export function useDateTimeRangeField(
     );
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      dateTimeOnly.value.showFooter,
-      resolvedOverlay.value,
-    );
-  });
+  const showFooter = useFieldShowFooter(
+    "DateTimeRangeField",
+    () => dateTimeOnly.value.showFooter,
+    resolvedOverlay,
+  );
 
   function handlePickerChange(next: null | DateRangeValue) {
     commitValue(next);
 
-    // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
     if (showFooter.value) {
+      emit("apply");
+
       handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
+    emit("cancel");
+
     handleOpenChange(false);
   }
 

@@ -54,6 +54,7 @@ export {
   resolveRangePickerOrientation,
 } from "@/Domain/overlay";
 export type {
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   RangePickerOrientation,
   ResolvedFieldOverlay,

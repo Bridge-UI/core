@@ -56,6 +56,7 @@ declare module "@bridge-ui/core/Config" {
         | "color"
         | "rounded"
         | "variant"
+        | "showFooter"
         | "showErrorIcon"
         | "hideErrorMessage"
       >
@@ -231,6 +232,7 @@ declare module "@bridge-ui/core/Config" {
         | "color"
         | "rounded"
         | "variant"
+        | "showFooter"
         | "showErrorIcon"
         | "hideErrorMessage"
       >

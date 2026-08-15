@@ -1,6 +1,7 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { h } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -86,6 +87,90 @@ test("it should call change when a day is selected", async () => {
   expect(onChange).toHaveBeenCalled();
 });
 
+test("it should close the overlay after Apply when showFooter is set", async () => {
+  const onApply = vi.fn();
+  const onChange = vi.fn();
+
+  mountDateField({
+    props: {
+      onApply,
+      onChange,
+      showFooter: true,
+      defaultValue: new Date(2021, 4, 1),
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "21",
+  );
+
+  day?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).not.toHaveBeenCalled();
+
+  const apply = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Apply",
+  );
+
+  apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onApply).toHaveBeenCalled();
+  expect(onChange).toHaveBeenCalled();
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Apply",
+    ),
+  ).toBe(false);
+});
+
+test("it should close the overlay after Cancel without applying", async () => {
+  const onChange = vi.fn();
+  const onCancel = vi.fn();
+
+  mountDateField({
+    props: {
+      onChange,
+      onCancel,
+      showFooter: true,
+      defaultValue: new Date(2021, 4, 1),
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "21",
+  );
+
+  day?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const cancel = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Cancel",
+  );
+
+  cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onCancel).toHaveBeenCalled();
+  expect(onChange).not.toHaveBeenCalled();
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Cancel",
+    ),
+  ).toBe(false);
+});
+
 test("it should pass color to the nested DatePicker", async () => {
   mountDateField({
     props: {
@@ -165,4 +250,168 @@ test("it should open a dialog when overlay is modal", async () => {
   await flushPromises();
 
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should show footer actions when overlay is modal", async () => {
+  mountDateField({
+    props: {
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 1),
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Apply",
+    ),
+  ).toBe(true);
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Cancel",
+    ),
+  ).toBe(true);
+});
+
+test("it should apply the value and close the modal overlay after Apply", async () => {
+  const onChange = vi.fn();
+
+  mountDateField({
+    props: {
+      onChange,
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 1),
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "21",
+  );
+
+  day?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const apply = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Apply",
+  );
+
+  apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay after Cancel without applying", async () => {
+  const onChange = vi.fn();
+
+  mountDateField({
+    props: {
+      onChange,
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 1),
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "21",
+  );
+
+  day?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const cancel = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Cancel",
+  );
+
+  cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).not.toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay when clicking outside the picker", async () => {
+  mountDateField({
+    props: {
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 21),
+      customProps: { modal: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+
+  const wrapper = document.body.querySelector(
+    '[data-modal-part="overlay"]',
+  )?.nextElementSibling;
+
+  expect(wrapper).not.toBeNull();
+
+  wrapper?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+});
+
+test("it should close the modal overlay from a custom footer apply", async () => {
+  const onChange = vi.fn();
+
+  mountDateField({
+    props: {
+      onChange,
+      overlay: "modal",
+      defaultValue: new Date(2021, 4, 1),
+      customProps: { modal: { transition: "none" } },
+    },
+    slots: {
+      footer: (props: { apply: () => void }) => {
+        return h("button", { type: "button", onClick: props.apply }, "Save");
+      },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "21",
+  );
+
+  day?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const save = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Save",
+  );
+
+  save?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalled();
+  expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });

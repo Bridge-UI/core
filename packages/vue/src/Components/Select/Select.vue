@@ -40,6 +40,7 @@ const props = withDefaults(defineProps<SelectOwnProps>(), {
   clearable: true,
   searchable: false,
   showErrorIcon: true,
+  showFooter: undefined,
   minItemsForSearch: 11,
 });
 
@@ -197,6 +198,10 @@ const {
 
     <template #empty v-if="hasNamedSlot(slots, 'empty')">
       <slot name="empty" />
+    </template>
+
+    <template #footer="footer" v-if="hasNamedSlot(slots, 'footer')">
+      <slot name="footer" v-bind="footer" />
     </template>
 
     <template #afterOptions v-if="hasNamedSlot(slots, 'afterOptions')">

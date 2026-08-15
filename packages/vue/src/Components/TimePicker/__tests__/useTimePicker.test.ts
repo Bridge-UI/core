@@ -14,7 +14,6 @@ const libDefaults = {
   interval: 1,
   rounded: "md",
   color: "primary",
-  showFooter: false,
   showSeconds: false,
 } as const satisfies Partial<TimePickerOwnProps>;
 
