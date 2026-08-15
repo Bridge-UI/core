@@ -16,18 +16,18 @@ describe("resolveFieldOverlay", () => {
   });
 
   test("it should keep menu when mode is menu", () => {
-    expect(resolveFieldOverlay("menu", false)).toBe("menu");
     expect(resolveFieldOverlay("menu", true)).toBe("menu");
+    expect(resolveFieldOverlay("menu", false)).toBe("menu");
   });
 
   test("it should keep modal when mode is modal", () => {
-    expect(resolveFieldOverlay("modal", false)).toBe("modal");
     expect(resolveFieldOverlay("modal", true)).toBe("modal");
+    expect(resolveFieldOverlay("modal", false)).toBe("modal");
   });
 
   test("it should keep drawer when mode is drawer", () => {
-    expect(resolveFieldOverlay("drawer", false)).toBe("drawer");
     expect(resolveFieldOverlay("drawer", true)).toBe("drawer");
+    expect(resolveFieldOverlay("drawer", false)).toBe("drawer");
   });
 
   test("it should resolve auto to menu on desktop", () => {
@@ -79,9 +79,9 @@ describe("resolveRangePickerOrientation", () => {
 
 describe("isFieldOverlayDialog", () => {
   test("it should be true for modal and drawer", () => {
+    expect(isFieldOverlayDialog("menu")).toBe(false);
     expect(isFieldOverlayDialog("modal")).toBe(true);
     expect(isFieldOverlayDialog("drawer")).toBe(true);
-    expect(isFieldOverlayDialog("menu")).toBe(false);
   });
 });
 
@@ -92,8 +92,8 @@ describe("resolveFieldShowFooter", () => {
   });
 
   test("it should default to true for drawer and modal when unset", () => {
-    expect(resolveFieldShowFooter(undefined, "drawer")).toBe(true);
     expect(resolveFieldShowFooter(undefined, "modal")).toBe(true);
+    expect(resolveFieldShowFooter(undefined, "drawer")).toBe(true);
   });
 
   test("it should default to false for menu when unset", () => {
