@@ -3,6 +3,7 @@ import { isEmpty, isNil } from "es-toolkit/compat";
 import { toMerged } from "es-toolkit/object";
 import {
   onBeforeUnmount,
+  onMounted,
   reactive,
   toValue,
   watch,
@@ -33,7 +34,10 @@ export type UseBreakpointOptions = BreakpointObserverOptions;
  * Falls back to `BridgeUIProvider` `global.mobileBreakpoint` and
  * `global.breakpoints`. Composable options win when passed.
  *
- * On the server (and before mount), `mobile` is `true` at width `0`.
+ * On the server and during the hydration pass, `mobile` stays `true` (width
+ * `0`) so SSR HTML matches the client first paint. The real viewport is applied
+ * after mount — same contract as React's `useSyncExternalStore` +
+ * `getServerSnapshot`.
  */
 export function useBreakpoint(
   options?: MaybeRefOrGetter<undefined | UseBreakpointOptions>,
@@ -42,6 +46,8 @@ export function useBreakpoint(
   const state = reactive(
     buildBreakpointSnapshot(0, 0, resolveBreakpoints(), "sm"),
   ) as BreakpointSnapshot;
+
+  let mounted = false;
 
   let observer: undefined | BreakpointObserver;
   let unsubscribe: undefined | (() => void);
@@ -70,7 +76,18 @@ export function useBreakpoint(
     unsubscribe?.();
     unsubscribe = undefined;
     observer = createBreakpointObserver(resolveOptions(nextOptions));
-    applySnapshot(observer.getSnapshot());
+
+    // Seed from the server snapshot until mount so SSR and hydration agree.
+    // Applying `window.innerWidth` during setup makes `overlay="auto"` SSR as
+    // Drawer and hydrate as Menu on desktop, which breaks Teleport hosts.
+    applySnapshot(
+      mounted ? observer.getSnapshot() : observer.getServerSnapshot(),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
     unsubscribe = observer.subscribe(() => {
       if (!isNil(observer)) {
         applySnapshot(observer.getSnapshot());
@@ -79,6 +96,11 @@ export function useBreakpoint(
   }
 
   bind(toValue(options));
+
+  onMounted(() => {
+    mounted = true;
+    bind(toValue(options));
+  });
 
   watch(
     () =>
