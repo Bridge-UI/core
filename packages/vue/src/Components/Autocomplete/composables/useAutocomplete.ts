@@ -24,7 +24,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveFieldShowFooter,
+  resolveFieldOverlay,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -64,6 +64,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -109,14 +110,13 @@ export function useAutocomplete(
 
   const open = ref(false);
   const searchQuery = ref("");
+  const asyncLoading = ref(false);
   const highlightedIndex = ref(-1);
   const draftValues = ref<SelectValue[]>([]);
-  const containerRef = ref<null | HTMLElement>(null);
-
-  const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
-  let asyncSearch: null | SelectAsyncSearch = null;
   const resolvedSelected = ref<SelectOption[]>([]);
+  const containerRef = ref<null | HTMLElement>(null);
+  let asyncSearch: null | SelectAsyncSearch = null;
 
   const split = computed(() => {
     return splitComponentProps<
@@ -282,11 +282,17 @@ export function useAutocomplete(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      autocompleteMerged.value.showFooter,
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(
+      autocompleteMerged.value.overlay,
       breakpoint.mobile,
     );
+  });
+
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "Autocomplete",
+    showFooter: () => autocompleteMerged.value.showFooter,
   });
 
   const activeValues = computed(() => {
@@ -668,11 +674,15 @@ export function useAutocomplete(
     }
 
     closeMenu();
+
+    emit("apply");
   }
 
   function handleCancel() {
     draftValues.value = [...selectedValues.value];
+
     closeMenu();
+
     emit("cancel");
   }
 
@@ -1045,6 +1055,7 @@ export function useAutocomplete(
       loading: isLoading.value,
       multiple: multiple.value,
       maxHeight: props.maxHeight,
+      showFooter: showFooter.value,
       entries: visibleEntries.value,
       options: visibleOptions.value,
       size: formField.merged.value.size,
@@ -1054,7 +1065,6 @@ export function useAutocomplete(
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
-      showFooter: autocompleteMerged.value.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: autocompleteMerged.value.hideEmptyMessage === true,
       emptyMessage:

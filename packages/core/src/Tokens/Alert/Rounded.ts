@@ -15,7 +15,8 @@ export interface AlertRounded {
   "4xl": string;
 
   /**
-   * Full width or fully rounded token.
+   * Panel-max radius (`rounded-panel-full`).
+   * Caps extreme rounding so wide banners do not become stadium-shaped.
    */
   "full": string;
 
@@ -60,5 +61,5 @@ export const roundedProps: AlertRounded = {
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
   "none": "rounded-none",
-  "full": "rounded-full",
+  "full": "rounded-panel-full",
 };

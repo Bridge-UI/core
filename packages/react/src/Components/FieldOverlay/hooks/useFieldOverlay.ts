@@ -67,10 +67,12 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         size: "md",
         onShowChange,
         scroll: "paper",
+        closeOnOverlay: true,
         align: "middle-center",
+        disableRestoreFocus: true,
         ...customProps?.modal,
       },
-      "flex flex-col items-stretch p-0",
+      "flex w-fit max-w-full flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.modal]);
 
@@ -81,6 +83,8 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         size: "md",
         onShowChange,
         placement: "bottom",
+        closeOnOverlay: true,
+        disableRestoreFocus: true,
         ...customProps?.drawer,
       },
       "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",

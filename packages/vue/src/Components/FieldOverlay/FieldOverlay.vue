@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { provide } from "vue";
+
 // ** Local Imports
 import { Drawer } from "@/Components/Drawer";
 import { useFieldOverlay } from "@/Components/FieldOverlay/composables/useFieldOverlay";
@@ -7,6 +10,7 @@ import type {
   FieldOverlayOwnProps,
   FieldOverlaySlots,
 } from "@/Components/FieldOverlay/fieldOverlay.types";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 
@@ -24,6 +28,15 @@ const model = defineModel<boolean>({ default: false });
 
 const { menuBind, modalBind, drawerBind, resolvedOverlay } =
   useFieldOverlay(props);
+
+provide(FIELD_OVERLAY_INJECTION_KEY, {
+  apply: () => {
+    model.value = false;
+  },
+  cancel: () => {
+    model.value = false;
+  },
+});
 
 function handleShowChange(show: boolean) {
   emit("show-change", show);

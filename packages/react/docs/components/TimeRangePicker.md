@@ -45,6 +45,7 @@ import { TimeRangePicker } from "@bridge-ui/react/Components/TimeRangePicker";
 | `rounded`      | `CalendarRounded`            | `"md"`         | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`                    | `false`        | Shows Cancel / Apply. Selection is draft until Apply. |
 | `showSeconds`  | `boolean`                    | `false`        | Shows seconds in the panel and formatted value.       |
+| `slots`        | `TimeRangePickerSlots`       | —              | Named slots (`footer` for Cancel / Apply).            |
 | `startTitle`   | `string`                     | `"Start time"` | Label above the start time panel.                     |
 | `timeZone`     | `string`                     | —              | IANA time zone.                                       |
 | `tokens`       | `TimeRangePickerTokens`      | —              | Token overrides.                                      |
@@ -54,6 +55,7 @@ import { TimeRangePicker } from "@bridge-ui/react/Components/TimeRangePicker";
 
 | Callback   | Type                                      | Description                                                            |
 | ---------- | ----------------------------------------- | ---------------------------------------------------------------------- |
+| `onApply`  | `() => void`                              | Called when Apply is pressed (`showFooter`).                           |
 | `onCancel` | `() => void`                              | Called when Cancel is pressed.                                         |
 | `onChange` | `(value: TimeRangeValue \| null) => void` | Called when Apply is pressed (`showFooter`) or when the value commits. |
 

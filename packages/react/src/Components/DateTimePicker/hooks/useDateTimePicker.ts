@@ -1,5 +1,5 @@
 // ** External Imports
-import { isArray, isNil, omit } from "es-toolkit/compat";
+import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
@@ -9,6 +9,7 @@ import {
   type DatePickerModel,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -24,6 +25,7 @@ import type {
   DateTimePickerOwnProps,
   DateTimePickerProps,
 } from "@/Components/DateTimePicker/dateTimePicker.types";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import {
   derived,
   mergePartBind,
@@ -68,7 +70,6 @@ type DateTimePickerLibDefaults = LibDefaultsShape<
   | "color"
   | "rounded"
   | "interval"
-  | "showFooter"
   | "defaultView"
   | "showSeconds"
   | "startOfWeek"
@@ -84,8 +85,9 @@ export function useDateTimePicker(
   libDefaults: DateTimePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
+  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DateTimePickerProps,
@@ -109,7 +111,7 @@ export function useDateTimePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["slots", "onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DateTimePickerClasses>(
@@ -216,19 +218,25 @@ export function useDateTimePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {
+    const shellRounded = get(shellRoundedProps, merged.rounded ?? "md");
+
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),
     );

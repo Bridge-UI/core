@@ -1,10 +1,11 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
   DateRangeValue,
   DisableDatesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -77,6 +78,11 @@ export interface DateRangePickerCustomProps {
 
 export interface DateRangePickerCallbacks {
   /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
    * Called when Cancel is pressed.
    */
   onCancel?: () => void;
@@ -85,32 +91,6 @@ export interface DateRangePickerCallbacks {
    * Called when Apply is pressed (`showFooter`) or when the value commits.
    */
   onChange?: (value: null | DateRangeValue) => void;
-}
-
-export interface DateRangePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
 }
 
 export interface DateRangePickerOwnProps {
@@ -227,7 +207,10 @@ export interface DateRangePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of calendar tiles and chrome.
+   * Border radius of the picker shell, calendar tiles, and chrome.
+   *
+   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
+   * Calendar tiles keep a true pill when `rounded` is `full`.
    *
    * @default "md"
    */
@@ -235,17 +218,18 @@ export interface DateRangePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
   showFooter?: boolean;
 
   /**
-   * Named slots forwarded to `CalendarRange` (`day`).
+   * Named slots (`day` on the calendars, `footer` for Cancel / Apply).
    *
    * @default undefined
    */
-  slots?: Pick<CalendarDateSlots, "day">;
+  slots?: DateRangePickerSlots;
 
   /**
    * First day of the week.
@@ -274,6 +258,49 @@ export interface DateRangePickerOwnProps {
    * @default undefined
    */
   value?: null | DateRangeValue;
+}
+
+export interface DateRangePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendars.
+   *
+   * @default undefined
+   */
+  day?: CalendarDateSlots["day"];
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
+}
+
+export interface DateRangePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export type DateRangePickerProps = MergeHtmlProps<

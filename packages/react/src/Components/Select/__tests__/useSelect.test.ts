@@ -42,6 +42,28 @@ test("it should start closed", () => {
   expect(result.current.open).toBe(false);
 });
 
+test("it should default listbox showFooter to true for dialog overlays", () => {
+  const { result } = renderUseSelect({ options, overlay: "modal" });
+
+  expect(result.current.listboxProps.showFooter).toBe(true);
+});
+
+test("it should default listbox showFooter to false for menu overlays", () => {
+  const { result } = renderUseSelect({ options, overlay: "menu" });
+
+  expect(result.current.listboxProps.showFooter).toBe(false);
+});
+
+test("it should keep explicit showFooter false on dialog overlays", () => {
+  const { result } = renderUseSelect({
+    options,
+    overlay: "modal",
+    showFooter: false,
+  });
+
+  expect(result.current.listboxProps.showFooter).toBe(false);
+});
+
 test("it should reflect selected value in display for single mode", () => {
   const { result } = renderUseSelect({ options, value: "apple" });
 

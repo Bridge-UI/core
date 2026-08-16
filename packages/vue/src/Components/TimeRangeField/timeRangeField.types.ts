@@ -1,9 +1,10 @@
 // ** External Imports
-import type { InputHTMLAttributes } from "vue";
+import type { InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -67,6 +68,16 @@ export interface TimeRangeFieldCustomProps extends FormFieldCustomProps {
 }
 
 export interface TimeRangeFieldEmits {
+  /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
+   * Emitted when Cancel is pressed (`showFooter`).
+   */
+  cancel: [];
+
   /**
    * Emitted when the selected range changes.
    */
@@ -164,10 +175,10 @@ export interface TimeRangeFieldOwnProps extends Omit<
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
-   * on mobile.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`).
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
@@ -186,7 +197,15 @@ export interface TimeRangeFieldOwnProps extends Omit<
   timeZone?: string;
 }
 
-export interface TimeRangeFieldSlots extends FormFieldSlots {}
+export interface TimeRangeFieldSlots extends FormFieldSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
+}
 
 export type TimeRangeFieldProps = MergeHtmlProps<
   TimeRangeFieldOwnProps,

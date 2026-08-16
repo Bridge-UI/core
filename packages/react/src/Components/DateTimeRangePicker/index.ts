@@ -8,6 +8,7 @@ export type {
   DateTimeRangePickerOwnProps,
   DateTimeRangePickerProps,
   DateTimeRangePickerRoundedOverrides,
+  DateTimeRangePickerSlots,
   DateTimeRangePickerTokens,
 } from "@/Components/DateTimeRangePicker/dateTimeRangePicker.types";
 export { useDateTimeRangePicker } from "@/Components/DateTimeRangePicker/hooks/useDateTimeRangePicker";

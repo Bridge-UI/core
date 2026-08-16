@@ -5,6 +5,7 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   DisableDatesInput,
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -78,6 +79,11 @@ export interface DateTimePickerCustomProps {
 
 export interface DateTimePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -86,49 +92,6 @@ export interface DateTimePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: Date | null];
-}
-
-export interface DateTimePickerSlots {
-  /**
-   * Custom content inside each day button on the nested calendar.
-   *
-   * @default undefined
-   */
-  day?: Slot<CalendarDateDayCell>;
-}
-
-export interface DateTimePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides for the calendar (and time when `time` is unset).
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
 }
 
 export interface DateTimePickerOwnProps {
@@ -280,7 +243,10 @@ export interface DateTimePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of calendar / time tiles and chrome.
+   * Border radius of the picker shell, calendar / time tiles, and chrome.
+   *
+   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
+   * Tiles keep a true pill when `rounded` is `full`.
    *
    * `DateTimeField` always forwards its own `rounded` here so the picker matches
    * the field, independent of `DateTimePicker.defaultProps`.
@@ -291,6 +257,7 @@ export interface DateTimePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -330,6 +297,57 @@ export interface DateTimePickerOwnProps {
    * @default undefined
    */
   value?: Date | null;
+}
+
+export interface DateTimePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
+}
+
+export interface DateTimePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides for the calendar (and time when `time` is unset).
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
+
+  /**
+   * Nested time panel token overrides.
+   */
+  time?: {
+    color?: Record<string, Partial<TimeColorItem>>;
+    rounded?: Record<string, string>;
+  };
 }
 
 export type DateTimePickerProps = MergeHtmlProps<

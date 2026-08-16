@@ -272,3 +272,50 @@ test("it should show footer actions when showFooter is set", async () => {
   expect(document.body.textContent).toContain("Cancel");
   expect(document.body.textContent).toContain("Apply");
 });
+
+test("it should show footer actions for dialog overlays when showFooter is unset", async () => {
+  mountListbox({
+    props: {
+      overlay: "modal",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Cancel");
+  expect(document.body.textContent).toContain("Apply");
+});
+
+test("it should render a custom footer slot and close on apply", async () => {
+  const onApply = vi.fn();
+
+  const wrapper = mountListbox({
+    props: {
+      onApply,
+      overlay: "modal",
+      showFooter: true,
+      modelValue: true,
+    },
+    slots: {
+      footer: (props: { apply: () => void }) => {
+        return h("button", { type: "button", onClick: props.apply }, "Save");
+      },
+    },
+  });
+
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Save");
+  expect(document.body.textContent).not.toContain("Apply");
+
+  const save = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Save",
+  );
+
+  save?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onApply).toHaveBeenCalled();
+  expect(wrapper.emitted("apply")).toBeTruthy();
+});

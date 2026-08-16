@@ -15,7 +15,6 @@ import {
   isFieldOverlayDialog,
   isTimeRangeValue,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -37,6 +36,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -122,6 +122,10 @@ export function useTimeRangeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -224,18 +228,27 @@ export function useTimeRangeField(
     emit("change", next);
   }
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(timeOnly.value.showFooter, breakpoint.mobile);
+  const showFooter = useFieldShowFooter({
+    componentName: "TimeRangeField",
+    showFooter: () => timeOnly.value.showFooter,
+    overlay: () =>
+      resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile),
   });
 
   function handlePickerChange(next: null | TimeRangeValue) {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter.value) {
+      emit("apply");
+
+      return;
+    }
+
     handleOpenChange(false);
   }
 
   function handlePickerCancel() {
-    handleOpenChange(false);
+    emit("cancel");
   }
 
   function clearValue(event?: Event) {

@@ -32,6 +32,7 @@ const model = defineModel<null | TimeRangeValue>();
 const props = withDefaults(defineProps<TimeRangeFieldOwnProps>(), {
   clearable: true,
   showErrorIcon: true,
+  showFooter: undefined,
 });
 
 const emit = defineEmits<TimeRangeFieldEmits>();
@@ -103,8 +104,8 @@ const {
   </FormField>
 
   <FieldOverlay
-    v-model="open"
     :overlay="overlay"
+    :model-value="open"
     :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >
@@ -126,6 +127,10 @@ const {
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
       :custom-props="timeRangePickerCustomProps"
-    />
+    >
+      <template #footer="footer" v-if="$slots.footer">
+        <slot name="footer" v-bind="footer" />
+      </template>
+    </TimeRangePicker>
   </FieldOverlay>
 </template>

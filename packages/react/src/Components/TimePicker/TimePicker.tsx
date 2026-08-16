@@ -25,7 +25,6 @@ function TimePicker(props: TimePickerProps) {
     interval: 1,
     rounded: "md",
     color: "primary",
-    showFooter: false,
     showSeconds: false,
   });
 
@@ -52,18 +51,28 @@ function TimePicker(props: TimePickerProps) {
 
       {showFooter && (
         <div {...footerBind}>
-          <Button
-            variant="flat"
-            color="secondary"
-            onClick={handleCancel}
-            {...cancelButtonProps}
-          >
-            {cancelLabel}
-          </Button>
+          {props.slots?.footer ? (
+            props.slots.footer({ apply: handleApply, cancel: handleCancel })
+          ) : (
+            <>
+              <Button
+                variant="flat"
+                color="secondary"
+                onClick={handleCancel}
+                {...cancelButtonProps}
+              >
+                {cancelLabel}
+              </Button>
 
-          <Button color="primary" onClick={handleApply} {...applyButtonProps}>
-            {applyLabel}
-          </Button>
+              <Button
+                color="primary"
+                onClick={handleApply}
+                {...applyButtonProps}
+              >
+                {applyLabel}
+              </Button>
+            </>
+          )}
         </div>
       )}
     </div>

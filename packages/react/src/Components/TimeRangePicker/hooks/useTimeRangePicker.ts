@@ -1,5 +1,5 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
@@ -8,6 +8,7 @@ import {
   type TimeRangeValue,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -18,6 +19,7 @@ import {
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import type {
   TimeRangePickerClasses,
   TimeRangePickerOwnProps,
@@ -55,13 +57,7 @@ const timeRangePickerBridgeKeys = [
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  | "ampm"
-  | "color"
-  | "rounded"
-  | "interval"
-  | "showFooter"
-  | "orientation"
-  | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "orientation" | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -74,8 +70,9 @@ export function useTimeRangePicker(
   libDefaults: TimeRangePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
+  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     TimeRangePickerProps,
@@ -99,7 +96,7 @@ export function useTimeRangePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses =
@@ -194,19 +191,25 @@ export function useTimeRangePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {
+    const shellRounded = get(shellRoundedProps, merged.rounded ?? "md");
+
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),
     );

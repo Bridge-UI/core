@@ -89,6 +89,8 @@ test("it should resolve explicit modal", () => {
   expect(resolvedOverlay.value).toBe("modal");
   expect(modalBind.value.align).toBe("middle-center");
   expect(modalBind.value.size).toBe("md");
+  expect(modalBind.value.closeOnOverlay).toBe(true);
+  expect(modalBind.value.disableRestoreFocus).toBe(true);
 });
 
 test("it should resolve auto to drawer on mobile", () => {
@@ -114,6 +116,8 @@ test("it should apply panel padding and layout on drawer and modal", () => {
   expect(drawerPanel).toContain("h-auto");
   expect(drawerPanel).toContain("max-h-[90dvh]");
   expect(modalPanel).toContain("p-0");
+  expect(modalPanel).toContain("w-fit");
+  expect(modalPanel).toContain("max-w-full");
   expect(modalPanel).toContain("items-stretch");
 });
 

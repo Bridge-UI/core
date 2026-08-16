@@ -195,6 +195,7 @@ export type {
   DateRangeValue,
   DisableDatesInput,
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   GetPaginationItemsOptions,
   IsDateDisabledOptions,
@@ -508,14 +509,17 @@ export type {
 export {
   colorProps as listboxColorProps,
   invalidatedProps as listboxInvalidatedProps,
+  roundedProps as listboxRoundedProps,
   sizeProps as listboxSizeProps,
 } from "@/Tokens/Listbox";
 export type {
   ListboxColor,
   ListboxColorItem,
   ListboxInvalidated,
+  ListboxRounded,
   ListboxSize,
   ListboxSizeItem,
+  ListboxSizeOverlayItem,
 } from "@/Tokens/Listbox";
 export {
   roundedProps as menuRoundedProps,

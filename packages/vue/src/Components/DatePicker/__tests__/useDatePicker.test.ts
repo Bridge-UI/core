@@ -13,7 +13,6 @@ const libDefaults = {
   rounded: "md",
   startOfWeek: 0,
   color: "primary",
-  showFooter: false,
 } as const satisfies Partial<DatePickerOwnProps>;
 
 function mountUseDatePicker(props: Partial<DatePickerOwnProps> = {}) {
@@ -50,4 +49,18 @@ test("it should size the root to its content", () => {
   const { rootBind } = mountUseDatePicker();
 
   expect(rootBind.value.class).toContain("w-fit");
+});
+
+test("it should apply shell rounded from the rounded prop", () => {
+  const { rootBind } = mountUseDatePicker({ rounded: "xl" });
+
+  expect(rootBind.value.class).toContain("rounded-xl");
+  expect(rootBind.value.class).not.toContain("rounded-lg");
+});
+
+test("it should cap full shell rounded to panel-full", () => {
+  const { rootBind } = mountUseDatePicker({ rounded: "full" });
+
+  expect(rootBind.value.class).not.toContain("rounded-full");
+  expect(rootBind.value.class).toContain("rounded-panel-full");
 });

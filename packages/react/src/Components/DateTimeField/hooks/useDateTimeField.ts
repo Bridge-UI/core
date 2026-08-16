@@ -8,7 +8,6 @@ import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -30,6 +29,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useBreakpoint,
+  useFieldShowFooter,
 } from "@/Utils";
 
 const dateTimeFieldBridgeKeys = [
@@ -85,14 +85,17 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
-  const { day: daySlot, ...formFieldSlots } = slots ?? {};
+  const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<Date | null>(
     () => defaultValue ?? null,
@@ -146,6 +149,11 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -154,7 +162,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -229,8 +237,10 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return hasValue && clearable && !props.readonly && !formField.isDisabled;
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateTimeOnly.showFooter, breakpoint.mobile);
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateTimeField",
+    showFooter: dateTimeOnly.showFooter,
   });
 
   const displayText = derived(() => {
@@ -253,12 +263,18 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const handlePickerChange = (next: Date | null) => {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter) {
+      onApply?.();
+
+      return;
+    }
+
     handleOpenChange(false);
   };
 
   const handlePickerCancel = () => {
-    handleOpenChange(false);
+    onCancel?.();
   };
 
   const clearValue = useCallback(
@@ -338,6 +354,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     inputBind,
     clearable,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,

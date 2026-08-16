@@ -83,12 +83,14 @@ function Listbox({
     sizeClasses,
     mergedClasses,
     applyButtonProps,
+    optionHoverClass,
     cancelButtonProps,
     optionSelectedClass,
     optionHighlightedClass,
   } = useListbox(
     {
       ...ownProps,
+      rounded,
       loading,
       multiple,
       anchorEl,
@@ -166,6 +168,18 @@ function Listbox({
     [onSelect],
   );
 
+  const handleFooterApply = useCallback(() => {
+    onApply?.();
+
+    onShowChange?.(false);
+  }, [onApply, onShowChange]);
+
+  const handleFooterCancel = useCallback(() => {
+    onCancel?.();
+
+    onShowChange?.(false);
+  }, [onCancel, onShowChange]);
+
   const registerOption = useCallback((option: ListboxOption) => {
     const alreadyRegistered = registeredOptionsRef.current.some(
       (entry) => String(entry.value) === String(option.value),
@@ -208,12 +222,14 @@ function Listbox({
       getOptionIndex,
       registerOption,
       highlightedIndex,
+      optionHoverClass,
       optionSelectedClass,
       onSelect: handleSelect,
       optionHighlightedClass,
       isSelected: resolveSelected,
       checkClass: resolvedCheckClass,
       mergedClasses: {
+        optionHover: mergedClasses.optionHover,
         optionSelected: mergedClasses.optionSelected,
         optionHighlighted: mergedClasses.optionHighlighted,
       },
@@ -227,9 +243,11 @@ function Listbox({
     registerOption,
     resolveSelected,
     highlightedIndex,
+    optionHoverClass,
     resolvedCheckClass,
     optionSelectedClass,
     optionHighlightedClass,
+    mergedClasses.optionHover,
     mergedClasses.optionSelected,
     mergedClasses.optionHighlighted,
   ]);
@@ -334,22 +352,31 @@ function Listbox({
 
         {showFooter ? (
           <div {...footerBind}>
-            <Button
-              variant="flat"
-              color="secondary"
-              onClick={() => onCancel?.()}
-              {...cancelButtonProps}
-            >
-              {cancelLabel}
-            </Button>
+            {slots?.footer ? (
+              slots.footer({
+                apply: handleFooterApply,
+                cancel: handleFooterCancel,
+              })
+            ) : (
+              <>
+                <Button
+                  variant="flat"
+                  color="secondary"
+                  onClick={handleFooterCancel}
+                  {...cancelButtonProps}
+                >
+                  {cancelLabel}
+                </Button>
 
-            <Button
-              color="primary"
-              onClick={() => onApply?.()}
-              {...applyButtonProps}
-            >
-              {applyLabel}
-            </Button>
+                <Button
+                  color="primary"
+                  onClick={handleFooterApply}
+                  {...applyButtonProps}
+                >
+                  {applyLabel}
+                </Button>
+              </>
+            )}
           </div>
         ) : null}
       </div>

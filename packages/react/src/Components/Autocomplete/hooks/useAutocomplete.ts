@@ -18,7 +18,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveFieldShowFooter,
+  resolveFieldOverlay,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -62,6 +62,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -104,6 +105,7 @@ export function useAutocomplete(
     onOpen,
     onClear,
     onClose,
+    onApply,
     onChange,
     onSearch,
     onCancel,
@@ -249,11 +251,14 @@ export function useAutocomplete(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   }, [multiple, modelValue]);
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(
-      autocompleteMerged.showFooter,
-      breakpoint.mobile,
-    );
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(autocompleteMerged.overlay, breakpoint.mobile);
+  });
+
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "Autocomplete",
+    showFooter: autocompleteMerged.showFooter,
   });
 
   const activeValues = derived(() => {
@@ -602,13 +607,17 @@ export function useAutocomplete(
     }
 
     closeMenu();
-  }, [multiple, draftValues, setModel, emitChange, closeMenu]);
+
+    onApply?.();
+  }, [onApply, multiple, setModel, closeMenu, emitChange, draftValues]);
 
   const handleCancel = useCallback(() => {
     setDraftValues(selectedValues);
+
     closeMenu();
+
     onCancel?.();
-  }, [selectedValues, closeMenu, onCancel]);
+  }, [onCancel, closeMenu, selectedValues]);
 
   const commitFreeSolo = useCallback(() => {
     if (autocompleteMerged.freeSolo === false) {
@@ -1144,6 +1153,7 @@ export function useAutocomplete(
       multiple,
       listboxId,
       isSelected,
+      showFooter,
       emptyMessage,
       loadingMessage,
       hideEmptyMessage,
@@ -1162,7 +1172,6 @@ export function useAutocomplete(
       rounded: formField.merged.rounded,
       invalidated: formField.invalidated,
       componentName: "Autocomplete" as const,
-      showFooter: autocompleteMerged.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,
@@ -1172,6 +1181,7 @@ export function useAutocomplete(
     isLoading,
     listboxId,
     isSelected,
+    showFooter,
     emptyMessage,
     handleApply,
     handleCancel,
@@ -1189,7 +1199,6 @@ export function useAutocomplete(
     props.disableMaxHeight,
     formField.merged.rounded,
     props.customProps?.listbox,
-    autocompleteMerged.showFooter,
     handleRegisteredOptionsChange,
   ]);
 

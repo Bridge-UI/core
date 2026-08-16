@@ -6,12 +6,12 @@ import { useMemo } from "react";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 import {
   listboxColorProps as colorProps,
   listboxInvalidatedProps as invalidatedProps,
+  listboxRoundedProps as roundedProps,
   listboxSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
@@ -34,6 +34,7 @@ import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -101,15 +102,23 @@ export function useListbox(
     return merged.customProps;
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(merged.showFooter, breakpoint.mobile);
+  const resolvedOverlay = useMemo(() => {
+    return resolveFieldOverlay(options.overlay, breakpoint.mobile);
+  }, [options.overlay, breakpoint.mobile]);
+
+  const isDialogOverlay = derived(() => {
+    return isFieldOverlayDialog(resolvedOverlay);
   });
 
-  const isDialogOverlay = useMemo(() => {
-    return isFieldOverlayDialog(
-      resolveFieldOverlay(options.overlay, breakpoint.mobile),
-    );
-  }, [options.overlay, breakpoint.mobile]);
+  const isDrawerOverlay = derived(() => {
+    return resolvedOverlay === "drawer";
+  });
+
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    showFooter: merged.showFooter,
+    componentName: options.componentName,
+  });
 
   const listboxTokens = derived(() => {
     return get(bridgeListbox, ["tokens", "listbox"]) as
@@ -117,6 +126,7 @@ export function useListbox(
       | {
           color?: object;
           invalidated?: object;
+          rounded?: object;
           size?: object;
         };
   });
@@ -128,6 +138,15 @@ export function useListbox(
     );
 
     return get(classes, merged.color ?? "primary");
+  });
+
+  const roundedToken = derived(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      listboxTokens?.rounded,
+    );
+
+    return get(classes, props.rounded ?? "md");
   });
 
   const invalidatedPalette = derived(() => {
@@ -143,8 +162,10 @@ export function useListbox(
 
   const sizeClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(sizeProps, listboxTokens?.size);
+    const sizeItem = get(classes, merged.size ?? "md");
+    const overlayKey = isDialogOverlay ? "panel" : "menu";
 
-    return get(classes, merged.size ?? "md");
+    return get(sizeItem, overlayKey);
   });
 
   const optionSelectedClass = derived(() => {
@@ -155,19 +176,25 @@ export function useListbox(
     return colorClasses?.highlighted;
   });
 
+  const optionHoverClass = derived(() => {
+    return colorClasses?.hover;
+  });
+
   const checkClass = derived(() => {
     return cn(sizeClasses?.check, colorClasses?.check);
   });
 
   const scrollBind = derived(() => {
-    const maxHeightClass = merged.maxHeight ?? "max-h-60";
+    const maxHeightClass =
+      merged.maxHeight ??
+      (isDialogOverlay ? "max-h-[min(60dvh,28rem)]" : "max-h-60");
     const disableMaxHeight = merged.disableMaxHeight === true;
 
     return mergePartBind(
       merged.customProps?.scroll,
       {},
       cn({
-        "overflow-y-auto overscroll-contain": !disableMaxHeight,
+        "min-h-0 overflow-y-auto overscroll-contain": !disableMaxHeight,
         [maxHeightClass]: !disableMaxHeight,
         [mergedClasses.scroll ?? ""]: true,
       }),
@@ -185,12 +212,28 @@ export function useListbox(
     );
   });
 
+  const surfaceRoundedClass = derived(() => {
+    if (!isDialogOverlay) {
+      return undefined;
+    }
+
+    const panelRounded = roundedToken;
+
+    if (!panelRounded) {
+      return undefined;
+    }
+
+    return cn({
+      [panelRounded]: true,
+      "rounded-b-none": isDrawerOverlay,
+    });
+  });
+
   const surfaceBind = derived(() => {
     return cn({
-      "overflow-hidden ring-1 ring-black/5 outline-hidden dark:ring-white/10":
+      "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10":
         isDialogOverlay,
-      "w-full rounded-lg bg-white text-dark-900 shadow-lg dark:bg-dark-800 dark:text-dark-100":
-        isDialogOverlay,
+      [String(surfaceRoundedClass ?? "")]: Boolean(surfaceRoundedClass),
     });
   });
 
@@ -215,6 +258,7 @@ export function useListbox(
     surfaceBind,
     sizeClasses,
     mergedClasses,
+    optionHoverClass,
     optionSelectedClass,
     optionHighlightedClass,
     applyLabel: resolveMessage("Apply"),

@@ -17,7 +17,7 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 
 <TimePicker v-model="time" />
 
-<TimePicker ampm :interval="15" show-footer v-model="time" />
+<TimePicker ampm show-footer v-model="time" :interval="15" />
 ```
 
 ## Props
@@ -38,6 +38,7 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 | `rounded`      | `CalendarRounded`       | `"md"`      | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`               | `false`     | Shows Cancel / Apply. Selection is draft until Apply. |
 | `showSeconds`  | `boolean`               | `false`     | Shows seconds in the panel and formatted value.       |
+| `slots`        | `TimePickerSlots`       | —           | Named slots (`footer` for Cancel / Apply).            |
 | `timeZone`     | `string`                | —           | IANA time zone.                                       |
 | `tokens`       | `TimePickerTokens`      | —           | Token overrides.                                      |
 | `value`        | `Date \| null`          | —           | Controlled value.                                     |
@@ -53,6 +54,7 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 
 | Event         | Payload                 | Description                                                             |
 | ------------- | ----------------------- | ----------------------------------------------------------------------- |
+| `v-on:apply`  | `()`                    | Emitted when Apply is pressed (`showFooter`).                           |
 | `v-on:cancel` | `()`                    | Emitted when Cancel is pressed.                                         |
 | `v-on:change` | `(value: Date \| null)` | Emitted when Apply is pressed (`showFooter`) or when the value commits. |
 

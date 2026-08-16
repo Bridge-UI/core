@@ -133,11 +133,13 @@ Pass `ListSection` / `ListItem` as children to build the dropdown list manually.
 ```tsx
 <Autocomplete label="Country" overlay="auto" options={countries} />
 
+<Autocomplete label="Country" overlay="modal" options={countries} />
+
 <Autocomplete label="Country" overlay="drawer" options={countries} />
 ```
 
 Default `overlay` is `auto`: `menu` on desktop and bottom `drawer` on mobile.
-When unset, `showFooter` defaults to `true` on mobile (`false` on desktop). Selection stays draft until Apply.
+When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`false` for `menu`). Selection stays draft until Apply. Apply commits and closes; Cancel discards and closes.
 
 ### customProps
 
@@ -157,29 +159,29 @@ When unset, `showFooter` defaults to `true` on mobile (`false` on desktop). Sele
 
 ### Autocomplete-specific
 
-| Prop                | Type                  | Default                               | Description                                                                                             |
-| ------------------- | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| `asyncData`         | `SelectAsyncData`     | —                                     | Remote data source. Implies `searchable`.                                                               |
-| `children`          | `ReactNode`           | —                                     | Composed dropdown content (`ListSection` / `ListItem` with `value`). Replaces mapped `options`.         |
-| `clearable`         | `boolean`             | `true`                                | Whether the value can be cleared.                                                                       |
-| `defaultValue`      | `SelectModel \| null` | —                                     | Initial value when uncontrolled.                                                                        |
-| `disableMaxHeight`  | `boolean`             | `false`                               | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
-| `emptyMessage`      | `string`              | "No options"                          | Message when the filtered list is empty.                                                                |
-| `flipOptions`       | `boolean`             | `false`                               | Inverts the visual order of options.                                                                    |
-| `freeSolo`          | `boolean`             | `true`                                | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
-| `hideEmptyMessage`  | `boolean`             | `false`                               | Hides the empty-state message.                                                                          |
-| `loading`           | `boolean`             | —                                     | External or async loading state.                                                                        |
-| `maxHeight`         | `string`              | "max-h-60"                            | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
-| `minItemsForSearch` | `number`              | 11                                    | Minimum option count before search UI is enabled.                                                       |
-| `multiple`          | `boolean`             | `false`                               | Whether multiple values can be selected.                                                                |
-| `optionDescription` | `string`              | "description"                         | Key used to read the description from option objects.                                                   |
-| `optionLabel`       | `string`              | "label"                               | Key used to read the label from option objects.                                                         |
-| `options`           | `ListboxOptionsInput` | —                                     | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
-| `optionValue`       | `string`              | "value"                               | Key used to read the value from option objects.                                                         |
-| `overlay`           | `FieldOverlayMode`    | `"auto"`                              | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
-| `placeholder`       | `string`              | —                                     | Placeholder shown when no value is selected.                                                            |
-| `searchable`        | `boolean`             | `true`                                | Whether options can be filtered via the trigger input.                                                  |
-| `showFooter`        | `boolean`             | `false` (`true` on mobile when unset) | Shows Cancel / Apply on the nested listbox. Selection stays draft until Apply.                          |
+| Prop                | Type                  | Default                                      | Description                                                                                             |
+| ------------------- | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `asyncData`         | `SelectAsyncData`     | —                                            | Remote data source. Implies `searchable`.                                                               |
+| `children`          | `ReactNode`           | —                                            | Composed dropdown content (`ListSection` / `ListItem` with `value`). Replaces mapped `options`.         |
+| `clearable`         | `boolean`             | `true`                                       | Whether the value can be cleared.                                                                       |
+| `defaultValue`      | `SelectModel \| null` | —                                            | Initial value when uncontrolled.                                                                        |
+| `disableMaxHeight`  | `boolean`             | `false`                                      | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
+| `emptyMessage`      | `string`              | "No options"                                 | Message when the filtered list is empty.                                                                |
+| `flipOptions`       | `boolean`             | `false`                                      | Inverts the visual order of options.                                                                    |
+| `freeSolo`          | `boolean`             | `true`                                       | Allows committing typed text that is not in `options` (Enter, Tab, or closing the menu).                |
+| `hideEmptyMessage`  | `boolean`             | `false`                                      | Hides the empty-state message.                                                                          |
+| `loading`           | `boolean`             | —                                            | External or async loading state.                                                                        |
+| `maxHeight`         | `string`              | "max-h-60"                                   | Tailwind max-height class for the dropdown options area. Forwarded to the internal `Listbox`.           |
+| `minItemsForSearch` | `number`              | 11                                           | Minimum option count before search UI is enabled.                                                       |
+| `multiple`          | `boolean`             | `false`                                      | Whether multiple values can be selected.                                                                |
+| `optionDescription` | `string`              | "description"                                | Key used to read the description from option objects.                                                   |
+| `optionLabel`       | `string`              | "label"                                      | Key used to read the label from option objects.                                                         |
+| `options`           | `ListboxOptionsInput` | —                                            | Options to display. May include section groups (`{ title, options, sticky? }`) mixed with flat options. |
+| `optionValue`       | `string`              | "value"                                      | Key used to read the value from option objects.                                                         |
+| `overlay`           | `FieldOverlayMode`    | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                    |
+| `placeholder`       | `string`              | —                                            | Placeholder shown when no value is selected.                                                            |
+| `searchable`        | `boolean`             | `true`                                       | Whether options can be filtered via the trigger input.                                                  |
+| `showFooter`        | `boolean`             | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested listbox. Selection stays draft until Apply.                          |
 
 ### Binding
 
@@ -196,6 +198,7 @@ See [FormField](./FormField.md) (building-block chrome). Field tokens live on `c
 
 | Callback     | Payload                  | Description                                                         |
 | ------------ | ------------------------ | ------------------------------------------------------------------- |
+| `onApply`    | —                        | Called when Apply is pressed on the listbox footer (`showFooter`).  |
 | `onCancel`   | —                        | Called when Cancel is pressed on the listbox footer (`showFooter`). |
 | `onClear`    | —                        | Called when the value is cleared.                                   |
 | `onClose`    | —                        | Called when the menu closes.                                        |

@@ -124,6 +124,7 @@ function Autocomplete(props: AutocompleteProps) {
         slots={{
           empty: slots?.empty,
           option: slots?.option,
+          footer: slots?.footer,
           loading: slots?.loading,
           afterOptions: slots?.afterOptions,
           beforeOptions: slots?.beforeOptions,

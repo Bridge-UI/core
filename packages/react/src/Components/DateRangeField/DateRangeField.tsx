@@ -18,6 +18,7 @@ function DateRangeField(props: DateRangeFieldProps) {
     formField,
     inputBind,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,
@@ -89,7 +90,11 @@ function DateRangeField(props: DateRangeFieldProps) {
           disableMonths={dateOnly.disableMonths}
           customProps={dateRangePickerCustomProps}
           hideOutsideDays={dateOnly.hideOutsideDays}
-          slots={daySlot ? { day: daySlot } : undefined}
+          slots={
+            daySlot || footerSlot
+              ? { day: daySlot, footer: footerSlot }
+              : undefined
+          }
         />
       </FieldOverlay>
     </>

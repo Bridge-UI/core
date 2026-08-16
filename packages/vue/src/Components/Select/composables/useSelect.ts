@@ -23,7 +23,7 @@ import {
   flattenListboxOptions,
   normalizeListboxEntries,
   normalizeSelectOptions,
-  resolveFieldShowFooter,
+  resolveFieldOverlay,
   resolveSelectAsyncDebounce,
   resolveSelectAsyncOptions,
   selectValuesEqual,
@@ -63,6 +63,7 @@ import {
   resolveFieldAdornmentIconSize,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -107,14 +108,13 @@ export function useSelect(
 
   const open = ref(false);
   const searchQuery = ref("");
+  const asyncLoading = ref(false);
   const highlightedIndex = ref(-1);
   const draftValues = ref<SelectValue[]>([]);
-  const containerRef = ref<null | HTMLElement>(null);
-
-  const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
-  let asyncSearch: null | SelectAsyncSearch = null;
   const resolvedSelected = ref<SelectOption[]>([]);
+  const containerRef = ref<null | HTMLElement>(null);
+  let asyncSearch: null | SelectAsyncSearch = null;
 
   const split = computed(() => {
     return splitComponentProps<
@@ -277,11 +277,14 @@ export function useSelect(
     return !isNil(value) && value !== "" ? [value as SelectValue] : [];
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      selectMerged.value.showFooter,
-      breakpoint.mobile,
-    );
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(selectMerged.value.overlay, breakpoint.mobile);
+  });
+
+  const showFooter = useFieldShowFooter({
+    componentName: "Select",
+    overlay: resolvedOverlay,
+    showFooter: () => selectMerged.value.showFooter,
   });
 
   const activeValues = computed(() => {
@@ -636,11 +639,15 @@ export function useSelect(
     }
 
     closeMenu();
+
+    emit("apply");
   }
 
   function handleCancel() {
     draftValues.value = [...selectedValues.value];
+
     closeMenu();
+
     emit("cancel");
   }
 
@@ -970,6 +977,7 @@ export function useSelect(
       loading: isLoading.value,
       multiple: multiple.value,
       maxHeight: props.maxHeight,
+      showFooter: showFooter.value,
       entries: visibleEntries.value,
       options: visibleOptions.value,
       componentName: "Select" as const,
@@ -979,7 +987,6 @@ export function useSelect(
       rounded: formField.merged.value.rounded,
       invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
-      showFooter: selectMerged.value.showFooter,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,
       emptyMessage:

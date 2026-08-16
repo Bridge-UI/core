@@ -18,6 +18,7 @@ function DateField(props: DateFieldProps) {
     formField,
     inputBind,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,
@@ -90,7 +91,11 @@ function DateField(props: DateFieldProps) {
           disableYears={dateOnly.disableYears}
           disableMonths={dateOnly.disableMonths}
           hideOutsideDays={dateOnly.hideOutsideDays}
-          slots={daySlot ? { day: daySlot } : undefined}
+          slots={
+            daySlot || footerSlot
+              ? { day: daySlot, footer: footerSlot }
+              : undefined
+          }
         />
       </FieldOverlay>
     </>

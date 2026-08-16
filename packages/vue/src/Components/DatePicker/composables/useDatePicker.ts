@@ -1,16 +1,19 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
+  inject,
   ref,
   toValue,
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
 import type { DatePickerModel } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -22,8 +25,10 @@ import {
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DatePickerClasses,
+  DatePickerEmits,
   DatePickerOwnProps,
 } from "@/Components/DatePicker/datePicker.types";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -59,7 +64,7 @@ const datePickerBridgeKeys = [
 
 type DatePickerLibDefaults = LibDefaultsShape<
   DatePickerOwnProps,
-  "color" | "rounded" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "startOfWeek"
 >;
 
 type DatePickerMerged = MergeLibDefaults<
@@ -70,12 +75,13 @@ type DatePickerMerged = MergeLibDefaults<
 export function useDatePicker(
   props: MaybeRefOrGetter<DatePickerOwnProps>,
   libDefaults: DatePickerLibDefaults,
-  emit: {
-    (event: "change", value: DatePickerModel): void;
-    (event: "cancel"): void;
-  },
+  emit: SetupContext<DatePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const overlayFooter = inject(FIELD_OVERLAY_INJECTION_KEY, {
+    apply: () => undefined,
+    cancel: () => undefined,
+  });
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -101,7 +107,11 @@ export function useDatePicker(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(split.value.inheritedAttrs, [
+      "onApply",
+      "onCancel",
+      "onChange",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DatePickerClasses>({
@@ -171,19 +181,25 @@ export function useDatePicker(
 
   const handleApply = () => {
     commitValue(draftValue.value);
+    emit("apply");
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     draftValue.value = committedValue.value;
     emit("cancel");
+    overlayFooter.cancel();
   };
 
   const rootBind = computed(() => {
+    const shellRounded = get(shellRoundedProps, merged.value.rounded ?? "md");
+
     return mergePartBind(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

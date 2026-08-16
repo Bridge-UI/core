@@ -3,7 +3,7 @@ import type { ComputedRef, InjectionKey } from "vue";
 
 // ** Core Imports
 import type { ListboxOption, ListboxValue } from "@bridge-ui/core/Domain";
-import type { ListboxSizeItem } from "@bridge-ui/core/Tokens";
+import type { ListboxSizeOverlayItem } from "@bridge-ui/core/Tokens";
 
 /**
  * Shared listbox state for composed `ListItem` children with `value`.
@@ -16,14 +16,16 @@ export type ListboxContextValue = {
   listboxId?: string;
   mergedClasses: {
     optionHighlighted?: string;
+    optionHover?: string;
     optionSelected?: string;
   };
   onSelect: (option: ListboxOption) => void;
   optionHighlightedClass?: string;
+  optionHoverClass?: string;
   optionSelectedClass?: string;
   registerOption: (option: ListboxOption) => () => void;
   showCheckmark: boolean;
-  sizeClasses?: ListboxSizeItem;
+  sizeClasses?: ListboxSizeOverlayItem;
 };
 
 export const LISTBOX_INJECTION_KEY = Symbol("bridge-listbox") as InjectionKey<

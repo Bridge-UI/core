@@ -1,4 +1,4 @@
-export interface MenuRounded {
+export interface ListboxRounded {
   /**
    * Border radius classes for the `2xl` token.
    */
@@ -16,7 +16,7 @@ export interface MenuRounded {
 
   /**
    * Panel-max radius (`rounded-panel-full`).
-   * Caps extreme rounding so tall/narrow panels do not become stadium-shaped.
+   * Caps extreme rounding so tall option lists do not become stadium-shaped.
    */
   "full": string;
 
@@ -51,7 +51,7 @@ export interface MenuRounded {
   "xs": string;
 }
 
-export const roundedProps: MenuRounded = {
+export const roundedProps: ListboxRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",
   "md": "rounded-md",

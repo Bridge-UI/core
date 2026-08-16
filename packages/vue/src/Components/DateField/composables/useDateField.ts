@@ -16,7 +16,6 @@ import {
   isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -38,6 +37,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -135,8 +135,14 @@ export function useDateField(
     });
   });
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(dateOnly.value.showFooter, breakpoint.mobile);
+  const resolvedOverlay = computed(() => {
+    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
+  });
+
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateField",
+    showFooter: () => dateOnly.value.showFooter,
   });
 
   const modelValue = computed(() => {
@@ -151,10 +157,6 @@ export function useDateField(
     return hasDateFieldValue(modelValue.value);
   });
 
-  const resolvedOverlay = computed(() => {
-    return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
-  });
-
   const pickerClass = computed(() => {
     return isFieldOverlayDialog(resolvedOverlay.value)
       ? "w-full shadow-none"
@@ -166,6 +168,10 @@ export function useDateField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -271,14 +277,19 @@ export function useDateField(
     commitValue(next);
     draftText.value = null;
 
-    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
-    if (mode.value === "single" || showFooter.value) {
+    if (showFooter.value) {
+      emit("apply");
+
+      return;
+    }
+
+    if (mode.value === "single") {
       handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
-    handleOpenChange(false);
+    emit("cancel");
   }
 
   function clearValue(event?: Event) {

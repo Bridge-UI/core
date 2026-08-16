@@ -68,15 +68,26 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 
 /**
  * Resolves whether a field picker shows Cancel / Apply.
- * Explicit `showFooter` wins. When unset, defaults to `true` on mobile.
+ * Explicit `showFooter` wins (instance prop, then registry `defaultProps`).
+ * When unset, defaults to `true` for dialog shells (`modal` / `drawer`).
  */
 export function resolveFieldShowFooter(
   showFooter: boolean | undefined,
-  mobile: boolean,
+  overlay: ResolvedFieldOverlay,
 ): boolean {
   if (showFooter !== undefined) {
     return showFooter;
   }
 
-  return mobile;
+  return isFieldOverlayDialog(overlay);
 }
+
+/**
+ * Actions passed to a custom field overlay footer slot on a picker or listbox.
+ * `apply` commits the draft then closes; `cancel` discards then closes.
+ * Do not confuse with FieldOverlay context helpers, which only close.
+ */
+export type FieldOverlayFooterSlotProps = {
+  apply: () => void;
+  cancel: () => void;
+};

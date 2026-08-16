@@ -40,6 +40,7 @@ import { TimeRangePicker } from "@bridge-ui/vue/Components/TimeRangePicker";
 | `rounded`      | `CalendarRounded`            | `"md"`         | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`                    | `false`        | Shows Cancel / Apply. Selection is draft until Apply. |
 | `showSeconds`  | `boolean`                    | `false`        | Shows seconds in the panel and formatted value.       |
+| `slots`        | `TimeRangePickerSlots`       | —              | Named slots (`footer` for Cancel / Apply).            |
 | `startTitle`   | `string`                     | `"Start time"` | Label above the start time panel.                     |
 | `timeZone`     | `string`                     | —              | IANA time zone.                                       |
 | `tokens`       | `TimeRangePickerTokens`      | —              | Token overrides.                                      |
@@ -56,6 +57,7 @@ import { TimeRangePicker } from "@bridge-ui/vue/Components/TimeRangePicker";
 
 | Event         | Payload                           | Description                                                             |
 | ------------- | --------------------------------- | ----------------------------------------------------------------------- |
+| `v-on:apply`  | `()`                              | Emitted when Apply is pressed (`showFooter`).                           |
 | `v-on:cancel` | `()`                              | Emitted when Cancel is pressed.                                         |
 | `v-on:change` | `(value: TimeRangeValue \| null)` | Emitted when Apply is pressed (`showFooter`) or when the value commits. |
 

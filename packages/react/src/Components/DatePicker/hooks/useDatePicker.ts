@@ -1,9 +1,10 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
 import type { DatePickerModel } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -18,6 +19,7 @@ import type {
   DatePickerOwnProps,
   DatePickerProps,
 } from "@/Components/DatePicker/datePicker.types";
+import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import {
   derived,
   mergePartBind,
@@ -54,7 +56,7 @@ const datePickerBridgeKeys = [
 
 type DatePickerLibDefaults = LibDefaultsShape<
   DatePickerOwnProps,
-  "color" | "rounded" | "showFooter" | "startOfWeek"
+  "color" | "rounded" | "startOfWeek"
 >;
 
 type DatePickerMerged = MergeLibDefaults<
@@ -67,6 +69,7 @@ export function useDatePicker(
   libDefaults: DatePickerLibDefaults,
 ) {
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DatePickerProps,
@@ -90,7 +93,7 @@ export function useDatePicker(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "onCancel", "onChange"]);
+    return omit(inheritedAttrs, ["slots", "onApply", "onCancel", "onChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<DatePickerClasses>({
@@ -150,19 +153,25 @@ export function useDatePicker(
 
   const handleApply = () => {
     commitValue(draftValue);
+    props.onApply?.();
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     setDraftValue(committedValue);
     props.onCancel?.();
+    overlayFooter.cancel();
   };
 
   const rootBind = derived(() => {
+    const shellRounded = get(shellRoundedProps, merged.rounded ?? "md");
+
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),
     );

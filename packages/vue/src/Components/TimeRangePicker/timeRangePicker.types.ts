@@ -1,9 +1,10 @@
 // ** External Imports
-import type { HTMLAttributes } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
   DisableTimesInput,
+  FieldOverlayFooterSlotProps,
   RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -110,6 +111,11 @@ export interface TimeRangePickerCustomProps {
 
 export interface TimeRangePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -213,7 +219,10 @@ export interface TimeRangePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of time tiles and chrome.
+   * Border radius of the picker shell, time tiles, and chrome.
+   *
+   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
+   * Time tiles keep a true pill when `rounded` is `full`.
    *
    * `TimeRangeField` always forwards its own `rounded` here so the picker matches
    * the field, independent of `TimeRangePicker.defaultProps`.
@@ -224,6 +233,7 @@ export interface TimeRangePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -263,6 +273,16 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   value?: null | TimeRangeValue;
+}
+
+export interface TimeRangePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface TimeRangePickerTokens {

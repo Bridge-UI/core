@@ -67,6 +67,17 @@ Forward props to the active shell via `customProps.menu`, `customProps.modal`, o
 </FieldOverlay>
 ```
 
+### Footer close
+
+Nested pickers and listboxes close the overlay on Apply (after committing) and
+Cancel (without committing).
+
+A custom `footer` slot on the nested picker or listbox receives `{ apply, cancel }`.
+Call `apply()` to commit the draft and close, or `cancel()` to discard and close.
+
+`useFieldOverlayFooter` only closes the overlay. Use the picker slot callbacks
+in custom footers so Apply still commits.
+
 ## Props
 
 | Prop           | Type                      | Default  | Description                                                |

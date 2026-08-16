@@ -45,6 +45,7 @@ function renderUseListbox(props: Partial<ListboxOwnProps> = {}) {
 }
 
 afterEach(() => {
+  mockViewport(1280);
   resetBreakpointCachesForTests();
   vi.restoreAllMocks();
 });
@@ -67,6 +68,7 @@ test("it should expose color classes for options", () => {
   expect(result.current.checkClass).toBeTruthy();
   expect(result.current.optionSelectedClass).toBeTruthy();
   expect(result.current.optionHighlightedClass).toBeTruthy();
+  expect(result.current.optionHoverClass).toContain("hover:bg-black/5");
 });
 
 test("it should merge registry classes", () => {
@@ -155,7 +157,18 @@ test("it should return default size as md", () => {
 
   expect(result.current.merged.size).toBe("md");
   expect(result.current.sizeClasses?.option).toContain("px-4");
+  expect(result.current.sizeClasses?.option).toContain("py-1.5");
   expect(result.current.messageBind.className).toContain("text-sm");
+});
+
+test("it should bump size classes on dialog overlays", () => {
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "drawer" }),
+  );
+
+  expect(result.current.merged.size).toBe("md");
+  expect(result.current.sizeClasses?.option).toContain("py-2");
+  expect(result.current.sizeClasses?.primary).toContain("text-sm");
 });
 
 test("it should apply size classes when size is overridden", () => {
@@ -168,7 +181,68 @@ test("it should apply size classes when size is overridden", () => {
   expect(result.current.messageBind.className).toContain("text-xs");
 });
 
-test("it should default showFooter to false on desktop when unset", () => {
+test("it should round only the top of the surface when overlay is drawer", () => {
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "drawer" }),
+  );
+
+  expect(result.current.surfaceBind).toContain("rounded-md");
+  expect(result.current.surfaceBind).toContain("rounded-b-none");
+});
+
+test("it should round all corners when overlay is modal", () => {
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "modal" }),
+  );
+
+  expect(result.current.surfaceBind).toContain("rounded-md");
+  expect(result.current.surfaceBind).not.toContain("rounded-t-md");
+});
+
+test("it should follow the rounded prop on dialog surfaces", () => {
+  const { result } = renderHook(() =>
+    useListbox({ ...baseProps, rounded: "xl" }, libDefaults, {
+      overlay: "modal",
+    }),
+  );
+
+  expect(result.current.surfaceBind).toContain("rounded-xl");
+});
+
+test("it should follow the rounded prop with top-only corners on drawer", () => {
+  const { result } = renderHook(() =>
+    useListbox({ ...baseProps, rounded: "xl" }, libDefaults, {
+      overlay: "drawer",
+    }),
+  );
+
+  expect(result.current.surfaceBind).toContain("rounded-xl");
+  expect(result.current.surfaceBind).toContain("rounded-b-none");
+});
+
+test("it should cap full panel rounded to panel-full on modal", () => {
+  const { result } = renderHook(() =>
+    useListbox({ ...baseProps, rounded: "full" }, libDefaults, {
+      overlay: "modal",
+    }),
+  );
+
+  expect(result.current.surfaceBind).not.toContain("rounded-full");
+  expect(result.current.surfaceBind).toContain("rounded-panel-full");
+});
+
+test("it should use a taller scroll max-height for dialog overlays", () => {
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "drawer" }),
+  );
+
+  expect(result.current.scrollBind.className).toContain(
+    "max-h-[min(60dvh,28rem)]",
+  );
+  expect(result.current.scrollBind.className).not.toContain("max-h-60");
+});
+
+test("it should default showFooter to false on desktop menu when unset", () => {
   mockViewport(1280);
 
   const { result } = renderUseListbox();
@@ -176,7 +250,7 @@ test("it should default showFooter to false on desktop when unset", () => {
   expect(result.current.showFooter).toBe(false);
 });
 
-test("it should default showFooter to true on mobile when unset", () => {
+test("it should default showFooter to true on mobile drawer when unset", () => {
   mockViewport(500);
 
   const { result } = renderUseListbox();
@@ -184,10 +258,24 @@ test("it should default showFooter to true on mobile when unset", () => {
   expect(result.current.showFooter).toBe(true);
 });
 
-test("it should keep explicit showFooter false on mobile", () => {
+test("it should default showFooter to true for explicit modal on desktop", () => {
+  mockViewport(1280);
+
+  const { result } = renderHook(() =>
+    useListbox(baseProps, libDefaults, { overlay: "modal" }),
+  );
+
+  expect(result.current.showFooter).toBe(true);
+});
+
+test("it should keep explicit showFooter false on dialog overlays", () => {
   mockViewport(500);
 
-  const { result } = renderUseListbox({ showFooter: false });
+  const { result } = renderHook(() =>
+    useListbox({ ...baseProps, showFooter: false }, libDefaults, {
+      overlay: "drawer",
+    }),
+  );
 
   expect(result.current.showFooter).toBe(false);
 });

@@ -14,7 +14,6 @@ import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -35,6 +34,7 @@ import {
   hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -141,6 +141,10 @@ export function useDateTimeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -243,21 +247,26 @@ export function useDateTimeField(
     emit("change", next);
   }
 
-  const showFooter = computed(() => {
-    return resolveFieldShowFooter(
-      dateTimeOnly.value.showFooter,
-      breakpoint.mobile,
-    );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateTimeField",
+    showFooter: () => dateTimeOnly.value.showFooter,
   });
 
   function handlePickerChange(next: Date | null) {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter.value) {
+      emit("apply");
+
+      return;
+    }
+
     handleOpenChange(false);
   }
 
   function handlePickerCancel() {
-    handleOpenChange(false);
+    emit("cancel");
   }
 
   function clearValue(event?: Event) {

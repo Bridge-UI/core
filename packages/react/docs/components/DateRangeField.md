@@ -48,28 +48,28 @@ On mobile, `drawer` / `modal` overlays use vertical dual-calendar layout when
 
 ### DateRangeField-specific
 
-| Prop              | Type                         | Default                               | Description                                                                       |
-| ----------------- | ---------------------------- | ------------------------------------- | --------------------------------------------------------------------------------- |
-| `classes`         | `DateRangeFieldClasses`      | —                                     | Classes for field / input regions.                                                |
-| `clearable`       | `boolean`                    | `true`                                | Whether the value can be cleared.                                                 |
-| `customProps`     | `DateRangeFieldCustomProps`  | —                                     | Extra props for internal parts.                                                   |
-| `defaultValue`    | `DateRangeValue \| null`     | `null`                                | Uncontrolled initial value.                                                       |
-| `disableDates`    | `Date[]`                     | —                                     | Dates that cannot be selected.                                                    |
-| `disableMonths`   | `number[]`                   | —                                     | Month indexes that cannot be selected.                                            |
-| `disableYears`    | `number[]`                   | —                                     | Years that cannot be selected.                                                    |
-| `hideMonths`      | `boolean`                    | `false`                               | Hides month navigation / panel.                                                   |
-| `hideOutsideDays` | `boolean`                    | `false`                               | Hides days that fall outside the displayed month.                                 |
-| `hideWeekdays`    | `boolean`                    | `false`                               | Hides weekday labels.                                                             |
-| `hideYears`       | `boolean`                    | `false`                               | Hides year navigation / panel.                                                    |
-| `maxDate`         | `Date`                       | —                                     | Latest selectable date.                                                           |
-| `minDate`         | `Date`                       | —                                     | Earliest selectable date.                                                         |
-| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"`                        | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
-| `overlay`         | `FieldOverlayMode`           | `"auto"`                              | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                              |
-| `showFooter`      | `boolean`                    | `false` (`true` on mobile when unset) | Shows Cancel / Apply on the nested picker.                                        |
-| `slots`           | `DateRangeFieldSlots`        | —                                     | Named slots (`FormField` slots + calendar `day`).                                 |
-| `startOfWeek`     | `StartOfWeek`                | `0`                                   | First day of the week.                                                            |
-| `timeZone`        | `string`                     | —                                     | IANA time zone.                                                                   |
-| `value`           | `DateRangeValue \| null`     | —                                     | Controlled value.                                                                 |
+| Prop              | Type                         | Default                                      | Description                                                                       |
+| ----------------- | ---------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------- |
+| `classes`         | `DateRangeFieldClasses`      | —                                            | Classes for field / input regions.                                                |
+| `clearable`       | `boolean`                    | `true`                                       | Whether the value can be cleared.                                                 |
+| `customProps`     | `DateRangeFieldCustomProps`  | —                                            | Extra props for internal parts.                                                   |
+| `defaultValue`    | `DateRangeValue \| null`     | `null`                                       | Uncontrolled initial value.                                                       |
+| `disableDates`    | `Date[]`                     | —                                            | Dates that cannot be selected.                                                    |
+| `disableMonths`   | `number[]`                   | —                                            | Month indexes that cannot be selected.                                            |
+| `disableYears`    | `number[]`                   | —                                            | Years that cannot be selected.                                                    |
+| `hideMonths`      | `boolean`                    | `false`                                      | Hides month navigation / panel.                                                   |
+| `hideOutsideDays` | `boolean`                    | `false`                                      | Hides days that fall outside the displayed month.                                 |
+| `hideWeekdays`    | `boolean`                    | `false`                                      | Hides weekday labels.                                                             |
+| `hideYears`       | `boolean`                    | `false`                                      | Hides year navigation / panel.                                                    |
+| `maxDate`         | `Date`                       | —                                            | Latest selectable date.                                                           |
+| `minDate`         | `Date`                       | —                                            | Earliest selectable date.                                                         |
+| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"`                               | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
+| `overlay`         | `FieldOverlayMode`           | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                              |
+| `showFooter`      | `boolean`                    | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.                                        |
+| `slots`           | `DateRangeFieldSlots`        | —                                            | Named slots (`FormField` slots + calendar `day` + footer).                        |
+| `startOfWeek`     | `StartOfWeek`                | `0`                                          | First day of the week.                                                            |
+| `timeZone`        | `string`                     | —                                            | IANA time zone.                                                                   |
+| `value`           | `DateRangeValue \| null`     | —                                            | Controlled value.                                                                 |
 
 ### Binding
 
@@ -84,12 +84,14 @@ See [FormField](./FormField.md).
 
 ## Events
 
-| Callback   | Type                                      | Description                       |
-| ---------- | ----------------------------------------- | --------------------------------- |
-| `onChange` | `(value: DateRangeValue \| null) => void` | Called when the range changes.    |
-| `onClear`  | `() => void`                              | Called when the value is cleared. |
-| `onClose`  | `() => void`                              | Called when the menu closes.      |
-| `onOpen`   | `() => void`                              | Called when the menu opens.       |
+| Callback   | Type                                      | Description                                   |
+| ---------- | ----------------------------------------- | --------------------------------------------- |
+| `onApply`  | `() => void`                              | Called when Apply is pressed (`showFooter`).  |
+| `onCancel` | `() => void`                              | Called when Cancel is pressed (`showFooter`). |
+| `onChange` | `(value: DateRangeValue \| null) => void` | Called when the range changes.                |
+| `onClear`  | `() => void`                              | Called when the value is cleared.             |
+| `onClose`  | `() => void`                              | Called when the menu closes.                  |
+| `onOpen`   | `() => void`                              | Called when the menu opens.                   |
 
 ## Related components
 

@@ -2,12 +2,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Local Imports
+import { DatePicker } from "@/Components/DatePicker";
+
 afterEach(() => {
   cleanup();
 });
-
-// ** Local Imports
-import { DatePicker } from "@/Components/DatePicker";
 
 test("it should render the calendar", () => {
   render(<DatePicker defaultValue={new Date(2021, 4, 21)} />);
@@ -49,5 +49,37 @@ test("it should commit draft value on Apply", () => {
   expect(onChange).not.toHaveBeenCalled();
 
   fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+  expect(onChange).toHaveBeenCalled();
+});
+
+test("it should render a custom footer slot and commit on apply", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DatePicker
+      showFooter
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+      slots={{
+        footer: ({ apply, cancel }) => (
+          <>
+            <button type="button" onClick={cancel}>
+              Discard
+            </button>
+            <button type="button" onClick={apply}>
+              Save
+            </button>
+          </>
+        ),
+      }}
+    />,
+  );
+
+  expect(screen.queryByRole("button", { name: "Apply" })).toBeNull();
+
+  fireEvent.click(screen.getByRole("button", { name: "21" }));
+  expect(onChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
   expect(onChange).toHaveBeenCalled();
 });

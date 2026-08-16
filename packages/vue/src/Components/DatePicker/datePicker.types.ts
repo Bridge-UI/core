@@ -5,6 +5,7 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   DatePickerModel,
   DisableDatesInput,
+  FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
 import type {
@@ -67,6 +68,11 @@ export interface DatePickerCustomProps {
 
 export interface DatePickerEmits {
   /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
    * Emitted when Cancel is pressed.
    */
   cancel: [];
@@ -75,41 +81,6 @@ export interface DatePickerEmits {
    * Emitted when Apply is pressed (`showFooter`) or when the value commits.
    */
   change: [value: DatePickerModel];
-}
-
-export interface DatePickerSlots {
-  /**
-   * Custom content inside each day button on the nested calendar.
-   *
-   * @default undefined
-   */
-  day?: Slot<CalendarDateDayCell>;
-}
-
-export interface DatePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
 }
 
 export interface DatePickerOwnProps {
@@ -240,7 +211,10 @@ export interface DatePickerOwnProps {
   readOnly?: boolean;
 
   /**
-   * Border radius of calendar tiles and chrome.
+   * Border radius of the picker shell, calendar tiles, and chrome.
+   *
+   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
+   * Calendar tiles keep a true pill when `rounded` is `full`.
    *
    * `DateField` always forwards its own `rounded` here so the picker matches the
    * field, independent of `DatePicker.defaultProps`.
@@ -251,6 +225,7 @@ export interface DatePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -283,6 +258,49 @@ export interface DatePickerOwnProps {
    * @default undefined
    */
   value?: DatePickerModel;
+}
+
+export interface DatePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
+}
+
+export interface DatePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export type DatePickerProps = MergeHtmlProps<

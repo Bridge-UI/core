@@ -3,7 +3,7 @@ import { createContext, useContext } from "react";
 
 // ** Core Imports
 import type { ListboxOption, ListboxValue } from "@bridge-ui/core/Domain";
-import type { ListboxSizeItem } from "@bridge-ui/core/Tokens";
+import type { ListboxSizeOverlayItem } from "@bridge-ui/core/Tokens";
 
 /**
  * Shared listbox state for composed `ListItem` children with `value`.
@@ -35,10 +35,11 @@ export type ListboxContextValue = {
   listboxId?: string;
 
   /**
-   * Registry classes for selected / highlighted options.
+   * Registry classes for selected / highlighted / hovered options.
    */
   mergedClasses: {
     optionHighlighted?: string;
+    optionHover?: string;
     optionSelected?: string;
   };
 
@@ -51,6 +52,11 @@ export type ListboxContextValue = {
    * Classes for keyboard-highlighted options.
    */
   optionHighlightedClass?: string;
+
+  /**
+   * Classes for pointer-hovered options.
+   */
+  optionHoverClass?: string;
 
   /**
    * Classes for selected options.
@@ -70,7 +76,7 @@ export type ListboxContextValue = {
   /**
    * Size token classes for option / primary / secondary / check.
    */
-  sizeClasses?: ListboxSizeItem;
+  sizeClasses?: ListboxSizeOverlayItem;
 };
 
 export const ListboxContext = createContext<null | ListboxContextValue>(null);

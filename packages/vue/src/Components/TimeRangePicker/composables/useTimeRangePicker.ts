@@ -1,12 +1,14 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
+  inject,
   ref,
   toValue,
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
@@ -15,6 +17,7 @@ import {
   type TimeRangeValue,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -25,8 +28,10 @@ import {
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import type {
   TimeRangePickerClasses,
+  TimeRangePickerEmits,
   TimeRangePickerOwnProps,
 } from "@/Components/TimeRangePicker/timeRangePicker.types";
 import {
@@ -60,13 +65,7 @@ const timeRangePickerBridgeKeys = [
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  | "ampm"
-  | "color"
-  | "rounded"
-  | "interval"
-  | "showFooter"
-  | "orientation"
-  | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "orientation" | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -80,12 +79,13 @@ type TimeRangePickerMerged = MergeLibDefaults<
 export function useTimeRangePicker(
   props: MaybeRefOrGetter<TimeRangePickerOwnProps>,
   libDefaults: TimeRangePickerLibDefaults,
-  emit: {
-    (event: "change", value: null | TimeRangeValue): void;
-    (event: "cancel"): void;
-  },
+  emit: SetupContext<TimeRangePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const overlayFooter = inject(FIELD_OVERLAY_INJECTION_KEY, {
+    apply: () => undefined,
+    cancel: () => undefined,
+  });
   const adapter = useDateAdapter();
   const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
@@ -114,7 +114,11 @@ export function useTimeRangePicker(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(split.value.inheritedAttrs, [
+      "onApply",
+      "onCancel",
+      "onChange",
+    ]);
   });
 
   const mergedClasses =
@@ -218,19 +222,25 @@ export function useTimeRangePicker(
 
   const handleApply = () => {
     commitValue(draftValue.value);
+    emit("apply");
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     draftValue.value = committedValue.value;
     emit("cancel");
+    overlayFooter.cancel();
   };
 
   const rootBind = computed(() => {
+    const shellRounded = get(shellRoundedProps, merged.value.rounded ?? "md");
+
     return mergePartBind(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

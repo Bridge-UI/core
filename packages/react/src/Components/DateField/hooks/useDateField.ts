@@ -10,7 +10,6 @@ import {
   isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -33,6 +32,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useBreakpoint,
+  useFieldShowFooter,
 } from "@/Utils";
 
 const dateFieldBridgeKeys = [
@@ -102,19 +102,22 @@ export function useDateField(props: DateFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
-  const { day: daySlot, ...formFieldSlots } = slots ?? {};
+  const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
+  const [draftText, setDraftText] = useState<null | string>(null);
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
     () => defaultValue ?? null,
   );
-  const [draftText, setDraftText] = useState<null | string>(null);
 
   const { inheritedAttrs, componentProps: dateOnly } = splitComponentProps<
     DateFieldProps,
@@ -147,8 +150,14 @@ export function useDateField(props: DateFieldProps) {
     });
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateOnly.showFooter, breakpoint.mobile);
+  const resolvedOverlay = derived(() => {
+    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
+  });
+
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateField",
+    showFooter: dateOnly.showFooter,
   });
 
   const clearable = derived(() => {
@@ -157,10 +166,6 @@ export function useDateField(props: DateFieldProps) {
 
   const hasValue = derived(() => {
     return hasDateFieldValue(modelValue);
-  });
-
-  const resolvedOverlay = derived(() => {
-    return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
   });
 
   const pickerClassName = derived(() => {
@@ -175,6 +180,11 @@ export function useDateField(props: DateFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -184,7 +194,7 @@ export function useDateField(props: DateFieldProps) {
         setDraftText(null);
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -303,14 +313,19 @@ export function useDateField(props: DateFieldProps) {
     commitValue(next);
     setDraftText(null);
 
-    // Close on immediate select (single, no footer) or when Apply commits (`showFooter`).
-    if (mode === "single" || showFooter) {
+    if (showFooter) {
+      onApply?.();
+
+      return;
+    }
+
+    if (mode === "single") {
       handleOpenChange(false);
     }
   };
 
   const handlePickerCancel = () => {
-    handleOpenChange(false);
+    onCancel?.();
   };
 
   const parseDraft = () => {
@@ -415,6 +430,7 @@ export function useDateField(props: DateFieldProps) {
     inputBind,
     clearable,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,

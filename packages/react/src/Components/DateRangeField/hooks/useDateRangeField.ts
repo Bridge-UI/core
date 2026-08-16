@@ -9,7 +9,6 @@ import {
   isDateRangeValue,
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   resolveRangePickerOrientation,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -28,7 +27,12 @@ import {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
-import { derived, mergePartBind, resolveFieldAdornmentIconSize } from "@/Utils";
+import {
+  derived,
+  mergePartBind,
+  resolveFieldAdornmentIconSize,
+  useFieldShowFooter,
+} from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateRangeFieldBridgeKeys = [
@@ -76,14 +80,17 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
-  const { day: daySlot, ...formFieldSlots } = slots ?? {};
+  const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<null | DateRangeValue>(() => {
@@ -128,6 +135,11 @@ export function useDateRangeField(props: DateRangeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -136,7 +148,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -235,21 +247,22 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     );
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(dateOnly.showFooter, breakpoint.mobile);
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    showFooter: dateOnly.showFooter,
+    componentName: "DateRangeField",
   });
 
   const handlePickerChange = (next: null | DateRangeValue) => {
     commitValue(next);
 
-    // Close when Apply commits (`showFooter`). Without footer, keep open while picking.
     if (showFooter) {
-      handleOpenChange(false);
+      onApply?.();
     }
   };
 
   const handlePickerCancel = () => {
-    handleOpenChange(false);
+    onCancel?.();
   };
 
   const clearValue = useCallback(
@@ -336,6 +349,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     inputBind,
     clearable,
     clearBind,
+    footerSlot,
     clearValue,
     modelValue,
     showFooter,

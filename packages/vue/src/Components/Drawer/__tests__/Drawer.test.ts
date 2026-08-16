@@ -1,6 +1,6 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
@@ -382,6 +382,54 @@ test("it should keep drawer mounted when keepMounted is true", async () => {
   await flushPromises();
 
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should stay open when reopened before the leave transition ends", async () => {
+  const onUpdate = vi.fn();
+
+  const wrapper = mount(Drawer, {
+    attachTo: document.body,
+    slots: { default: "Drawer body" },
+    props: {
+      modelValue: true,
+      transition: "slide",
+      "onUpdate:modelValue": onUpdate,
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  await flushPromises();
+
+  await wrapper.setProps({ modelValue: false });
+  await wrapper.setProps({ modelValue: true });
+  await flushPromises();
+
+  const panel = document.body.querySelector('[data-drawer-part="panel"]');
+
+  panel?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "transform",
+    }),
+  );
+
+  const overlay = document.body.querySelector('[data-drawer-part="overlay"]');
+
+  overlay?.dispatchEvent(
+    new TransitionEvent("transitionend", {
+      bubbles: true,
+      elapsedTime: 0.3,
+      propertyName: "opacity",
+    }),
+  );
+
+  await flushPromises();
+
+  expect(onUpdate).not.toHaveBeenCalledWith(false);
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.textContent).toContain("Drawer body");
 });
 
 test("it should scroll inside panel when scroll is paper", () => {

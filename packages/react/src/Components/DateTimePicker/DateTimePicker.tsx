@@ -37,7 +37,6 @@ function DateTimePicker(props: DateTimePickerProps) {
     rounded: "md",
     startOfWeek: 0,
     color: "primary",
-    showFooter: false,
     showSeconds: false,
     defaultView: "date",
   });
@@ -47,7 +46,6 @@ function DateTimePicker(props: DateTimePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <Calendar
-            slots={props.slots}
             color={merged.color}
             value={displayValue}
             tokens={calendarTokens}
@@ -67,6 +65,7 @@ function DateTimePicker(props: DateTimePickerProps) {
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
             hideOutsideDays={merged.hideOutsideDays}
+            slots={props.slots?.day ? { day: props.slots.day } : undefined}
           />
         </div>
 
@@ -106,18 +105,28 @@ function DateTimePicker(props: DateTimePickerProps) {
 
       {showFooter && (
         <div {...footerBind}>
-          <Button
-            variant="flat"
-            color="secondary"
-            onClick={handleCancel}
-            {...cancelButtonProps}
-          >
-            {cancelLabel}
-          </Button>
+          {props.slots?.footer ? (
+            props.slots.footer({ apply: handleApply, cancel: handleCancel })
+          ) : (
+            <>
+              <Button
+                variant="flat"
+                color="secondary"
+                onClick={handleCancel}
+                {...cancelButtonProps}
+              >
+                {cancelLabel}
+              </Button>
 
-          <Button color="primary" onClick={handleApply} {...applyButtonProps}>
-            {applyLabel}
-          </Button>
+              <Button
+                color="primary"
+                onClick={handleApply}
+                {...applyButtonProps}
+              >
+                {applyLabel}
+              </Button>
+            </>
+          )}
         </div>
       )}
     </div>

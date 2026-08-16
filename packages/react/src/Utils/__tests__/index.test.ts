@@ -3,7 +3,11 @@ import { renderHook } from "@testing-library/react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
-import { derived, useBridgeUIMergedRegistryClasses } from "@/Utils";
+import {
+  derived,
+  useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
+} from "@/Utils";
 
 test("it should run the getter and return its value from derived", () => {
   let runs = 0;
@@ -79,4 +83,28 @@ test("it should merge entry and props classes with props winning", () => {
   );
 
   expect(result.current).toEqual({ icon: "text-sm", root: "bg-blue-500" });
+});
+
+test("it should default showFooter to true for dialog overlays", () => {
+  const { result } = renderHook(() => {
+    return useFieldShowFooter({
+      overlay: "modal",
+      showFooter: undefined,
+      componentName: "DateField",
+    });
+  });
+
+  expect(result.current).toBe(true);
+});
+
+test("it should keep an explicit showFooter false on dialog overlays", () => {
+  const { result } = renderHook(() => {
+    return useFieldShowFooter({
+      overlay: "drawer",
+      showFooter: false,
+      componentName: "DateField",
+    });
+  });
+
+  expect(result.current).toBe(false);
 });

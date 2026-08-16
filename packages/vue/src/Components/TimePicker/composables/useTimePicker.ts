@@ -1,16 +1,19 @@
 // ** External Imports
-import { isNil, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
+  inject,
   ref,
   toValue,
   useAttrs,
   watch,
   type MaybeRefOrGetter,
+  type SetupContext,
 } from "vue";
 
 // ** Core Imports
 import type { TimeValue } from "@bridge-ui/core/Domain";
+import { menuRoundedProps as shellRoundedProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   splitComponentProps,
@@ -20,8 +23,10 @@ import {
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
+import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import type {
   TimePickerClasses,
+  TimePickerEmits,
   TimePickerOwnProps,
 } from "@/Components/TimePicker/timePicker.types";
 import {
@@ -52,7 +57,7 @@ const timePickerBridgeKeys = [
 
 type TimePickerLibDefaults = LibDefaultsShape<
   TimePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "showFooter" | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimePickerMerged = MergeLibDefaults<
@@ -66,12 +71,13 @@ type TimePickerMerged = MergeLibDefaults<
 export function useTimePicker(
   props: MaybeRefOrGetter<TimePickerOwnProps>,
   libDefaults: TimePickerLibDefaults,
-  emit: {
-    (event: "change", value: null | TimeValue): void;
-    (event: "cancel"): void;
-  },
+  emit: SetupContext<TimePickerEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const overlayFooter = inject(FIELD_OVERLAY_INJECTION_KEY, {
+    apply: () => undefined,
+    cancel: () => undefined,
+  });
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -97,7 +103,11 @@ export function useTimePicker(
   });
 
   const rootInheritedAttrs = computed(() => {
-    return omit(split.value.inheritedAttrs, ["onChange", "onCancel"]);
+    return omit(split.value.inheritedAttrs, [
+      "onApply",
+      "onCancel",
+      "onChange",
+    ]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<TimePickerClasses>({
@@ -166,19 +176,25 @@ export function useTimePicker(
 
   const handleApply = () => {
     commitValue(draftValue.value);
+    emit("apply");
+    overlayFooter.apply();
   };
 
   const handleCancel = () => {
     draftValue.value = committedValue.value;
     emit("cancel");
+    overlayFooter.cancel();
   };
 
   const rootBind = computed(() => {
+    const shellRounded = get(shellRoundedProps, merged.value.rounded ?? "md");
+
     return mergePartBind(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden rounded-lg bg-white shadow-lg dark:bg-dark-900": true,
+        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

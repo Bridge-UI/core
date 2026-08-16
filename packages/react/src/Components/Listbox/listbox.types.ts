@@ -8,6 +8,7 @@ import type {
 
 // ** Core Imports
 import type {
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   ListboxEntry,
   ListboxOption,
@@ -16,8 +17,8 @@ import type {
 import type { PositionPlacement } from "@bridge-ui/core/Runtime";
 import type {
   ListboxColor,
+  ListboxRounded,
   ListboxSize,
-  MenuRounded,
 } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
@@ -65,6 +66,11 @@ export interface ListboxClasses {
    * Classes merged onto keyboard-highlighted options.
    */
   optionHighlighted?: string;
+
+  /**
+   * Classes merged onto hovered options (pointer).
+   */
+  optionHover?: string;
 
   /**
    * Classes merged onto selected options.
@@ -322,6 +328,8 @@ export interface ListboxOwnProps {
 
   /**
    * Tailwind max-height class for the options scroll area (e.g. `max-h-80`).
+   * Dialog overlays (`modal` / `drawer`) default to `max-h-[min(60dvh,28rem)]`
+   * when unset; menus default to `max-h-60`.
    *
    * @default "max-h-60"
    */
@@ -358,13 +366,16 @@ export interface ListboxOwnProps {
   placement?: PositionPlacement;
 
   /**
-   * Roundedness of the floating panel (`Menu`). When omitted, `Menu` defaults
-   * apply (including `Menu.defaultProps.rounded`).
+   * Roundedness of the panel surface. Applied to `Menu` when the overlay is a
+   * menu, and to the Listbox surface when the overlay is a dialog (`modal`
+   * uses full corners; `drawer` flushes the bottom edge).
+   *
+   * When omitted, defaults to `md`.
    *
    * `Select` always forwards its own `rounded` here so the dropdown matches the
    * field, independent of `Menu.defaultProps`.
    */
-  rounded?: MergeProps<MenuRounded, ListboxRoundedOverrides>;
+  rounded?: MergeProps<ListboxRounded, ListboxRoundedOverrides>;
 
   /**
    * Shows a check icon on selected options.
@@ -374,15 +385,18 @@ export interface ListboxOwnProps {
   showCheckmark?: boolean;
 
   /**
-   * Shows Cancel / Apply footer. When unset, defaults to `true` on mobile.
-   * Parents (e.g. Select) typically keep selection as draft until Apply.
+   * Shows Cancel / Apply footer. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`). Parents (e.g. Select) typically keep selection
+   * as draft until Apply.
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
   /**
    * Typography and option padding scale, aligned with `FormField` / `Select`.
+   * Dialog overlays (`modal` / `drawer`) use the `panel` part of the size
+   * token (larger padding / type for touch). Menu overlays use `menu`.
    *
    * @default "md"
    */
@@ -404,6 +418,14 @@ export interface ListboxSlots {
    * Custom empty-state content.
    */
   empty?: ReactNode;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
 
   /**
    * Custom loading content. Replaces the default `loadingMessage` when set.

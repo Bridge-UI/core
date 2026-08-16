@@ -8,7 +8,6 @@ import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
-  resolveFieldShowFooter,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -31,6 +30,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useBreakpoint,
+  useFieldShowFooter,
 } from "@/Utils";
 
 const timeFieldBridgeKeys = [
@@ -75,12 +75,17 @@ export function useTimeField(props: TimeFieldProps) {
     onOpen,
     onClose,
     onClear,
+    onApply,
     onChange,
+    onCancel,
     defaultValue,
     value: valueProp,
     ...propsForSplit
   } = props;
 
+  const { footer: footerSlot, ...formFieldSlots } = slots ?? {};
+
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<null | TimeValue>(
     () => defaultValue ?? null,
@@ -134,6 +139,11 @@ export function useTimeField(props: TimeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -142,7 +152,7 @@ export function useTimeField(props: TimeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -173,9 +183,10 @@ export function useTimeField(props: TimeFieldProps) {
   const formField = useFormField(
     {
       ...formFieldCustom,
-      slots,
+      slots: formFieldSlots,
       classes: timeOnly.classes,
-      endIcon: formFieldCustom.endIcon ?? (slots?.end ? undefined : "clock"),
+      endIcon:
+        formFieldCustom.endIcon ?? (formFieldSlots.end ? undefined : "clock"),
       customProps: {
         ...formFieldOnlyCustom,
         container: mergePartBind(
@@ -223,8 +234,10 @@ export function useTimeField(props: TimeFieldProps) {
     );
   });
 
-  const showFooter = derived(() => {
-    return resolveFieldShowFooter(timeOnly.showFooter, breakpoint.mobile);
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "TimeField",
+    showFooter: timeOnly.showFooter,
   });
 
   const showClearIcon = derived(() => {
@@ -241,12 +254,18 @@ export function useTimeField(props: TimeFieldProps) {
 
   const handlePickerChange = (next: null | TimeValue) => {
     commitValue(next);
-    // Close on immediate select or when Apply commits (`showFooter`).
+
+    if (showFooter) {
+      onApply?.();
+
+      return;
+    }
+
     handleOpenChange(false);
   };
 
   const handlePickerCancel = () => {
-    handleOpenChange(false);
+    onCancel?.();
   };
 
   const clearValue = useCallback(
@@ -331,6 +350,7 @@ export function useTimeField(props: TimeFieldProps) {
     clearValue,
     modelValue,
     showFooter,
+    footerSlot,
     containerRef,
     clearIconSize,
     showClearIcon,

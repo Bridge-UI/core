@@ -44,6 +44,18 @@ test("it should start closed", () => {
   expect(result.current.open).toBe(false);
 });
 
+test("it should default listbox showFooter to true for dialog overlays", () => {
+  const { result } = renderUseAutocomplete({ options, overlay: "modal" });
+
+  expect(result.current.listboxProps.showFooter).toBe(true);
+});
+
+test("it should default listbox showFooter to false for menu overlays", () => {
+  const { result } = renderUseAutocomplete({ options, overlay: "menu" });
+
+  expect(result.current.listboxProps.showFooter).toBe(false);
+});
+
 test("it should reflect selected value in display for single mode", () => {
   const { result } = renderUseAutocomplete({ options, value: "apple" });
 

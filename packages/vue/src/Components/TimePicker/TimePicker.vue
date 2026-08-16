@@ -6,11 +6,16 @@ import { useTimePicker } from "@/Components/TimePicker/composables/useTimePicker
 import type {
   TimePickerEmits,
   TimePickerOwnProps,
+  TimePickerSlots,
 } from "@/Components/TimePicker/timePicker.types";
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<TimePickerOwnProps>();
+defineSlots<TimePickerSlots>();
+
+const props = withDefaults(defineProps<TimePickerOwnProps>(), {
+  showFooter: undefined,
+});
 
 const emit = defineEmits<TimePickerEmits>();
 
@@ -36,7 +41,6 @@ const {
     interval: 1,
     rounded: "md",
     color: "primary",
-    showFooter: false,
     showSeconds: false,
   },
   emit,
@@ -65,18 +69,24 @@ const {
     </div>
 
     <div v-if="showFooter" v-bind="footerBind">
-      <Button
-        variant="flat"
-        color="secondary"
-        v-on:click="handleCancel"
-        v-bind="cancelButtonProps"
-      >
-        {{ cancelLabel }}
-      </Button>
+      <slot name="footer" :apply="handleApply" :cancel="handleCancel">
+        <Button
+          variant="flat"
+          color="secondary"
+          v-on:click="handleCancel"
+          v-bind="cancelButtonProps"
+        >
+          {{ cancelLabel }}
+        </Button>
 
-      <Button color="primary" v-bind="applyButtonProps" @click="handleApply">
-        {{ applyLabel }}
-      </Button>
+        <Button
+          color="primary"
+          v-bind="applyButtonProps"
+          v-on:click="handleApply"
+        >
+          {{ applyLabel }}
+        </Button>
+      </slot>
     </div>
   </div>
 </template>

@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { computed, effectScope } from "vue";
 
 // ** Local Imports
-import { useBridgeUIMergedRegistryClasses } from "@/Utils";
+import { useBridgeUIMergedRegistryClasses, useFieldShowFooter } from "@/Utils";
 
 test("it should return empty object when entry and props have no classes", () => {
   const scope = effectScope();
@@ -75,6 +75,38 @@ test("it should merge entry and props classes with props winning", () => {
     const result = useBridgeUIMergedRegistryClasses({ entry, props });
 
     expect(result.value).toEqual({ icon: "text-sm", root: "bg-blue-500" });
+  });
+
+  scope.stop();
+});
+
+test("it should default showFooter to true for dialog overlays", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const result = useFieldShowFooter({
+      overlay: "modal",
+      showFooter: undefined,
+      componentName: "DateField",
+    });
+
+    expect(result.value).toBe(true);
+  });
+
+  scope.stop();
+});
+
+test("it should keep an explicit showFooter false on dialog overlays", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const result = useFieldShowFooter({
+      overlay: "drawer",
+      showFooter: false,
+      componentName: "DateField",
+    });
+
+    expect(result.value).toBe(false);
   });
 
   scope.stop();

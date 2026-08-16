@@ -1,23 +1,47 @@
+// ** External Imports
+import { useMemo } from "react";
+
 // ** Local Imports
 import { Drawer } from "@/Components/Drawer";
 import type { FieldOverlayProps } from "@/Components/FieldOverlay/fieldOverlay.types";
+import {
+  FieldOverlayContext,
+  type FieldOverlayFooterContextValue,
+} from "@/Components/FieldOverlay/FieldOverlayContext";
 import { useFieldOverlay } from "@/Components/FieldOverlay/hooks/useFieldOverlay";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 
 function FieldOverlay(props: FieldOverlayProps) {
+  const { onShowChange } = props;
   const { children, menuProps, modalProps, drawerProps, resolvedOverlay } =
     useFieldOverlay(props);
 
-  if (resolvedOverlay === "modal") {
-    return <Modal {...modalProps}>{children}</Modal>;
-  }
+  const footer = useMemo((): FieldOverlayFooterContextValue => {
+    return {
+      apply: () => {
+        onShowChange?.(false);
+      },
+      cancel: () => {
+        onShowChange?.(false);
+      },
+    };
+  }, [onShowChange]);
 
-  if (resolvedOverlay === "drawer") {
-    return <Drawer {...drawerProps}>{children}</Drawer>;
-  }
+  const content =
+    resolvedOverlay === "modal" ? (
+      <Modal {...modalProps}>{children}</Modal>
+    ) : resolvedOverlay === "drawer" ? (
+      <Drawer {...drawerProps}>{children}</Drawer>
+    ) : (
+      <Menu {...menuProps}>{children}</Menu>
+    );
 
-  return <Menu {...menuProps}>{children}</Menu>;
+  return (
+    <FieldOverlayContext.Provider value={footer}>
+      {content}
+    </FieldOverlayContext.Provider>
+  );
 }
 
 export default FieldOverlay;

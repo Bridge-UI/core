@@ -90,12 +90,14 @@ test("it should select an option and update the value", async () => {
 });
 
 test("it should keep selection draft until Apply when showFooter is set", async () => {
+  const onApply = vi.fn();
   const onChange = vi.fn();
 
   render(
     <Select
       value=""
       showFooter
+      onApply={onApply}
       options={options}
       aria-label="Fruit"
       onChange={onChange}
@@ -114,6 +116,7 @@ test("it should keep selection draft until Apply when showFooter is set", async 
   expect(screen.getByRole("listbox")).toBeTruthy();
 
   fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+  expect(onApply).toHaveBeenCalled();
   expect(onChange).toHaveBeenCalledWith("banana");
 });
 

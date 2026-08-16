@@ -32,7 +32,8 @@ export interface CardRounded {
   "4xl": CardRoundedItem;
 
   /**
-   * Full width or fully rounded token.
+   * Panel-max radius (`rounded-panel-full`).
+   * Caps extreme rounding so content cards do not become stadium-shaped.
    */
   "full": CardRoundedItem;
 
@@ -114,8 +115,8 @@ export const roundedProps: CardRounded = {
     "footer": "rounded-b-none",
   },
   "full": {
-    "root": "rounded-full",
-    "header": "rounded-t-full",
-    "footer": "rounded-b-full",
+    "root": "rounded-panel-full",
+    "header": "rounded-t-panel-full",
+    "footer": "rounded-b-panel-full",
   },
 };

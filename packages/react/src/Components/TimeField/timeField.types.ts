@@ -20,7 +20,10 @@ import type {
 import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
-import type { TimePickerCustomProps } from "@/Components/TimePicker";
+import type {
+  TimePickerCustomProps,
+  TimePickerSlots,
+} from "@/Components/TimePicker";
 
 export interface TimeFieldClasses extends FormFieldClasses {
   /**
@@ -67,6 +70,16 @@ export interface TimeFieldCustomProps extends FormFieldCustomProps {
 }
 
 export interface TimeFieldCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed (`showFooter`).
+   */
+  onCancel?: () => void;
+
   /**
    * Called when the selected time changes.
    */
@@ -171,10 +184,10 @@ export interface TimeFieldOwnProps extends Omit<
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
-   * on mobile.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`).
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
@@ -186,11 +199,11 @@ export interface TimeFieldOwnProps extends Omit<
   showSeconds?: boolean;
 
   /**
-   * Named slots (`FormField` slots).
+   * Named slots (`FormField` slots + footer).
    *
    * @default undefined
    */
-  slots?: FormFieldSlots;
+  slots?: FormFieldSlots & TimePickerSlots;
 
   /**
    * IANA time zone.

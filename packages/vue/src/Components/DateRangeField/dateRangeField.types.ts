@@ -5,6 +5,7 @@ import type { InputHTMLAttributes, Slot } from "vue";
 import type {
   DateRangeValue,
   DisableDatesInput,
+  FieldOverlayFooterSlotProps,
   FieldOverlayMode,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
@@ -70,6 +71,16 @@ export interface DateRangeFieldCustomProps extends FormFieldCustomProps {
 }
 
 export interface DateRangeFieldEmits {
+  /**
+   * Emitted when Apply is pressed (`showFooter`).
+   */
+  apply: [];
+
+  /**
+   * Emitted when Cancel is pressed (`showFooter`).
+   */
+  cancel: [];
+
   /**
    * Emitted when the range selection changes.
    */
@@ -203,10 +214,10 @@ export interface DateRangeFieldOwnProps extends Omit<
   overlay?: FieldOverlayMode;
 
   /**
-   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true`
-   * on mobile.
+   * Shows Cancel / Apply on the nested picker. When unset, defaults to `true` for dialog
+   * shells (`modal` / `drawer`).
    *
-   * @default false
+   * @default false (`true` for `modal` / `drawer` when unset)
    */
   showFooter?: boolean;
 
@@ -232,6 +243,14 @@ export interface DateRangeFieldSlots extends FormFieldSlots {
    * @default undefined
    */
   day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export type DateRangeFieldProps = MergeHtmlProps<
