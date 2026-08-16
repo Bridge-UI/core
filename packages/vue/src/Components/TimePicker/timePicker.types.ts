@@ -79,36 +79,6 @@ export interface TimePickerEmits {
   change: [value: null | TimeValue];
 }
 
-export interface TimePickerSlots {
-  /**
-   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
-   * the overlay, or `cancel()` to discard and close.
-   *
-   * @default undefined
-   */
-  footer?: Slot<FieldOverlayFooterSlotProps>;
-}
-
-export interface TimePickerTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<TimeColorItem>>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
-}
-
 export interface TimePickerOwnProps {
   /**
    * Uses a 12-hour clock with an AM/PM column.
@@ -202,6 +172,7 @@ export interface TimePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -234,6 +205,36 @@ export interface TimePickerOwnProps {
    * @default undefined
    */
   value?: null | TimeValue;
+}
+
+export interface TimePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
+}
+
+export interface TimePickerTokens {
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<TimeColorItem>>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
+
+  /**
+   * Nested time panel token overrides.
+   */
+  time?: {
+    color?: Record<string, Partial<TimeColorItem>>;
+    rounded?: Record<string, string>;
+  };
 }
 
 export type TimePickerProps = MergeHtmlProps<

@@ -135,7 +135,11 @@ const {
           {{ cancelLabel }}
         </Button>
 
-        <Button color="primary" v-bind="applyButtonProps" @click="handleApply">
+        <Button
+          color="primary"
+          v-bind="applyButtonProps"
+          v-on:click="handleApply"
+        >
           {{ applyLabel }}
         </Button>
       </slot>

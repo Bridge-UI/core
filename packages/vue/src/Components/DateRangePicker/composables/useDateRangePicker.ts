@@ -107,9 +107,9 @@ export function useDateRangePicker(
 
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, [
-      "onChange",
       "onApply",
       "onCancel",
+      "onChange",
     ]);
   });
 

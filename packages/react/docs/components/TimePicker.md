@@ -19,9 +19,9 @@ import { TimePicker } from "@bridge-ui/react/Components/TimePicker";
 
 <TimePicker
   ampm
-  interval={15}
-  value={time}
   showFooter
+  value={time}
+  interval={15}
   onChange={setTime}
 />
 ```

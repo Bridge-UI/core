@@ -61,8 +61,8 @@ export function useTimePicker(
   props: TimePickerProps,
   libDefaults: TimePickerLibDefaults,
 ) {
-  const overlayFooter = useFieldOverlayFooter();
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     TimePickerProps,

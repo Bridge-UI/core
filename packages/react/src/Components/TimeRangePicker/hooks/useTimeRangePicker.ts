@@ -70,9 +70,9 @@ export function useTimeRangePicker(
   libDefaults: TimeRangePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
+  const resolveMessage = useResolveMessage();
   const overlayFooter = useFieldOverlayFooter();
   const resolveContext = useDateAdapterContext();
-  const resolveMessage = useResolveMessage();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     TimeRangePickerProps,

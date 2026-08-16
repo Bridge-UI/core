@@ -68,8 +68,8 @@ export function useDatePicker(
   props: DatePickerProps,
   libDefaults: DatePickerLibDefaults,
 ) {
-  const overlayFooter = useFieldOverlayFooter();
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DatePickerProps,

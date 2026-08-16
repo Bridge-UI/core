@@ -20,9 +20,9 @@ import { DateTimePicker } from "@bridge-ui/react/Components/DateTimePicker";
 
 <DateTimePicker
   ampm
-  interval={15}
-  value={when}
   showFooter
+  value={when}
+  interval={15}
   onChange={setWhen}
 />
 ```

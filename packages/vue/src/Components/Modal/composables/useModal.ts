@@ -122,9 +122,9 @@ export function useModal(
 ) {
   const attrs = useAttrs();
 
-  const mounted = ref(false);
-
   const active = ref(false);
+
+  const mounted = ref(false);
 
   const layerStackId = ref("");
 

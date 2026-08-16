@@ -19,8 +19,8 @@ import { DatePicker } from "@bridge-ui/react/Components/DatePicker";
 
 <DatePicker
   range
-  value={range}
   showFooter
+  value={range}
   onChange={setRange}
   onCancel={() => {}}
 />

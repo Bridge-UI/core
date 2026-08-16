@@ -133,21 +133,21 @@ export function useDrawer(
 
   const [mounted, setMounted] = useState(show);
 
+  const pendingLeaveRef = useRef(false);
+
   const panelRef = useRef<HTMLDivElement>(null);
 
   const leaveTransitionEndsPendingRef = useRef(0);
-
-  const pendingLeaveRef = useRef(false);
-
-  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
-    null,
-  );
 
   const stackOrderRef = useRef<null | number>(null);
 
   const focusTrapRef = useRef<null | FocusTrap>(null);
 
   const stackHandleRef = useRef<null | LayerStackHandle>(null);
+
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
 
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 

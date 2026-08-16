@@ -18,7 +18,7 @@ import { DateTimePicker } from "@bridge-ui/vue/Components/DateTimePicker";
 
 <DateTimePicker v-model="when" />
 
-<DateTimePicker ampm :interval="15" show-footer v-model="when" />
+<DateTimePicker ampm show-footer v-model="when" :interval="15" />
 ```
 
 ## Props

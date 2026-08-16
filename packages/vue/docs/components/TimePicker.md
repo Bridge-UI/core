@@ -17,7 +17,7 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 
 <TimePicker v-model="time" />
 
-<TimePicker ampm :interval="15" show-footer v-model="time" />
+<TimePicker ampm show-footer v-model="time" :interval="15" />
 ```
 
 ## Props

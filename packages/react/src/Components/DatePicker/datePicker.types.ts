@@ -93,49 +93,6 @@ export interface DatePickerCallbacks {
   onChange?: (value: DatePickerModel) => void;
 }
 
-export interface DatePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-}
-
-export interface DatePickerSlots {
-  /**
-   * Custom content inside each day button on the nested calendar.
-   *
-   * @default undefined
-   */
-  day?: CalendarDateSlots["day"];
-
-  /**
-   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
-   * the overlay, or `cancel()` to discard and close.
-   *
-   * @default undefined
-   */
-  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
-}
-
 export interface DatePickerOwnProps {
   /**
    * Classes for picker regions.
@@ -278,6 +235,7 @@ export interface DatePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -317,6 +275,49 @@ export interface DatePickerOwnProps {
    * @default undefined
    */
   value?: DatePickerModel;
+}
+
+export interface DatePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: CalendarDateSlots["day"];
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
+}
+
+export interface DatePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides.
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
 }
 
 export type DatePickerProps = MergeHtmlProps<

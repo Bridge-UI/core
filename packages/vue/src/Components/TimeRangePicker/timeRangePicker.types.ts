@@ -126,16 +126,6 @@ export interface TimeRangePickerEmits {
   change: [value: null | TimeRangeValue];
 }
 
-export interface TimeRangePickerSlots {
-  /**
-   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
-   * the overlay, or `cancel()` to discard and close.
-   *
-   * @default undefined
-   */
-  footer?: Slot<FieldOverlayFooterSlotProps>;
-}
-
 export interface TimeRangePickerOwnProps {
   /**
    * Uses a 12-hour clock with an AM/PM column.
@@ -243,6 +233,7 @@ export interface TimeRangePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -282,6 +273,16 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   value?: null | TimeRangeValue;
+}
+
+export interface TimeRangePickerSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
 }
 
 export interface TimeRangePickerTokens {

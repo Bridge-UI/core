@@ -66,8 +66,8 @@ export function useDateRangePicker(
   props: DateRangePickerProps,
   libDefaults: DateRangePickerLibDefaults,
 ) {
-  const overlayFooter = useFieldOverlayFooter();
   const resolveMessage = useResolveMessage();
+  const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DateRangePickerProps,

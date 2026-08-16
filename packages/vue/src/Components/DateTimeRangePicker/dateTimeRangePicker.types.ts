@@ -95,57 +95,6 @@ export interface DateTimeRangePickerEmits {
   change: [value: null | DateRangeValue];
 }
 
-export interface DateTimeRangePickerSlots {
-  /**
-   * Custom content inside each day button on the nested calendar.
-   *
-   * @default undefined
-   */
-  day?: Slot<CalendarDateDayCell>;
-
-  /**
-   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
-   * the overlay, or `cancel()` to discard and close.
-   *
-   * @default undefined
-   */
-  footer?: Slot<FieldOverlayFooterSlotProps>;
-}
-
-export interface DateTimeRangePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides for the calendar (and time when `time` is unset).
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
-}
-
 export interface DateTimeRangePickerOwnProps {
   /**
    * Uses a 12-hour clock with an AM/PM column.
@@ -309,6 +258,7 @@ export interface DateTimeRangePickerOwnProps {
 
   /**
    * Shows Cancel / Apply footer. Selection is draft until Apply.
+   * Nested fields forward their own `showFooter` (dialog overlays default to `true`).
    *
    * @default false
    */
@@ -348,6 +298,57 @@ export interface DateTimeRangePickerOwnProps {
    * @default undefined
    */
   value?: null | DateRangeValue;
+}
+
+export interface DateTimeRangePickerSlots {
+  /**
+   * Custom content inside each day button on the nested calendar.
+   *
+   * @default undefined
+   */
+  day?: Slot<CalendarDateDayCell>;
+
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: Slot<FieldOverlayFooterSlotProps>;
+}
+
+export interface DateTimeRangePickerTokens {
+  /**
+   * Nested calendar token overrides.
+   */
+  calendar?: {
+    color?: Record<string, Partial<CalendarColorItem>>;
+    day?: Partial<CalendarDay>;
+    rounded?: Record<string, string>;
+  };
+
+  /**
+   * Color token map overrides for the calendar (and time when `time` is unset).
+   */
+  color?: Record<string, Partial<CalendarColorItem>>;
+
+  /**
+   * Day chrome overrides.
+   */
+  day?: Partial<CalendarDay>;
+
+  /**
+   * Border radius token map overrides.
+   */
+  rounded?: Record<string, string>;
+
+  /**
+   * Nested time panel token overrides.
+   */
+  time?: {
+    color?: Record<string, Partial<TimeColorItem>>;
+    rounded?: Record<string, string>;
+  };
 }
 
 export type DateTimeRangePickerProps = MergeHtmlProps<

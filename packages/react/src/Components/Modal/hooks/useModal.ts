@@ -126,11 +126,11 @@ export function useModal(
 
   const [mounted, setMounted] = useState(show);
 
+  const pendingLeaveRef = useRef(false);
+
   const panelRef = useRef<HTMLDivElement>(null);
 
   const leaveTransitionEndsPendingRef = useRef(0);
-
-  const pendingLeaveRef = useRef(false);
 
   const stackOrderRef = useRef<null | number>(null);
 

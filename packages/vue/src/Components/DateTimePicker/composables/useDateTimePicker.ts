@@ -131,9 +131,9 @@ export function useDateTimePicker(
 
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, [
-      "onChange",
       "onApply",
       "onCancel",
+      "onChange",
     ]);
   });
 
