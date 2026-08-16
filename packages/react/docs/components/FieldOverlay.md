@@ -73,7 +73,10 @@ Nested pickers and listboxes close the overlay on Apply (after committing) and
 Cancel (without committing).
 
 A custom `footer` slot on the nested picker or listbox receives `{ apply, cancel }`.
-Calling those functions closes the overlay.
+Call `apply()` to commit the draft and close, or `cancel()` to discard and close.
+
+`useFieldOverlayFooter` only closes the overlay. Use the picker slot callbacks
+in custom footers so Apply still commits.
 
 ## Props
 

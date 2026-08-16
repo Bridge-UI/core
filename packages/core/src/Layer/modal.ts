@@ -17,6 +17,9 @@ import {
  *
  * Above common app chrome (e.g. Tailwind `z-50` sticky headers) so Drawer /
  * Modal / Menu overlays cover the page shell by default.
+ *
+ * Previously `50`. Chrome stacked between `50` and `1000` to sit above Bridge
+ * overlays will now render underneath them.
  */
 export const LAYER_STACK_BASE_Z_INDEX = 1000;
 

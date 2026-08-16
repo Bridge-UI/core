@@ -83,8 +83,9 @@ export function resolveFieldShowFooter(
 }
 
 /**
- * Actions passed to a custom field overlay footer slot.
- * `apply` commits the draft; `cancel` discards it. Both close the overlay.
+ * Actions passed to a custom field overlay footer slot on a picker or listbox.
+ * `apply` commits the draft then closes; `cancel` discards then closes.
+ * Do not confuse with FieldOverlay context helpers, which only close.
  */
 export type FieldOverlayFooterSlotProps = {
   apply: () => void;
