@@ -139,11 +139,11 @@ export function useDateField(
     return resolveFieldOverlay(dateOnly.value.overlay, breakpoint.mobile);
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateField",
-    () => dateOnly.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateField",
+    showFooter: () => dateOnly.value.showFooter,
+  });
 
   const modelValue = computed(() => {
     return model.value ?? null;
@@ -168,6 +168,10 @@ export function useDateField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -276,8 +280,6 @@ export function useDateField(
     if (showFooter.value) {
       emit("apply");
 
-      handleOpenChange(false);
-
       return;
     }
 
@@ -288,8 +290,6 @@ export function useDateField(
 
   function handlePickerCancel() {
     emit("cancel");
-
-    handleOpenChange(false);
   }
 
   function clearValue(event?: Event) {

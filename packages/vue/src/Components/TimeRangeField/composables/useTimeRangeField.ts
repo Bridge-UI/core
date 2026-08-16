@@ -122,6 +122,10 @@ export function useTimeRangeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -224,19 +228,18 @@ export function useTimeRangeField(
     emit("change", next);
   }
 
-  const showFooter = useFieldShowFooter(
-    "TimeRangeField",
-    () => timeOnly.value.showFooter,
-    () => resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile),
-  );
+  const showFooter = useFieldShowFooter({
+    componentName: "TimeRangeField",
+    showFooter: () => timeOnly.value.showFooter,
+    overlay: () =>
+      resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile),
+  });
 
   function handlePickerChange(next: null | TimeRangeValue) {
     commitValue(next);
 
     if (showFooter.value) {
       emit("apply");
-
-      handleOpenChange(false);
 
       return;
     }
@@ -246,8 +249,6 @@ export function useTimeRangeField(
 
   function handlePickerCancel() {
     emit("cancel");
-
-    handleOpenChange(false);
   }
 
   function clearValue(event?: Event) {

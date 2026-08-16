@@ -86,6 +86,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const { footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<null | TimeRangeValue>(() => defaultValue ?? null);
@@ -128,6 +129,11 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -136,7 +142,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -230,19 +236,17 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     onChange?.(next);
   };
 
-  const showFooter = useFieldShowFooter(
-    "TimeRangeField",
-    timeOnly.showFooter,
-    resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
-  );
+  const showFooter = useFieldShowFooter({
+    showFooter: timeOnly.showFooter,
+    componentName: "TimeRangeField",
+    overlay: resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile),
+  });
 
   const handlePickerChange = (next: null | TimeRangeValue) => {
     commitValue(next);
 
     if (showFooter) {
       onApply?.();
-
-      handleOpenChange(false);
 
       return;
     }
@@ -252,8 +256,6 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
 
   const handlePickerCancel = () => {
     onCancel?.();
-
-    handleOpenChange(false);
   };
 
   const clearValue = useCallback(

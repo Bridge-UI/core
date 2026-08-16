@@ -118,11 +118,15 @@ export function useBridgeUIComponent<
  * Resolves Cancel / Apply visibility: instance prop, then registry
  * `defaultProps.showFooter`, then the overlay default from core.
  */
-export function useFieldShowFooter(
-  componentName: undefined | keyof BridgeUIComponentsConfig,
-  showFooter: MaybeRefOrGetter<boolean | undefined>,
-  overlay: MaybeRefOrGetter<ResolvedFieldOverlay>,
-): ComputedRef<boolean> {
+export function useFieldShowFooter({
+  overlay,
+  showFooter,
+  componentName,
+}: {
+  componentName: undefined | keyof BridgeUIComponentsConfig;
+  overlay: MaybeRefOrGetter<ResolvedFieldOverlay>;
+  showFooter: MaybeRefOrGetter<boolean | undefined>;
+}): ComputedRef<boolean> {
   const bridge = useBridgeUI();
 
   return computed(() => {

@@ -90,10 +90,12 @@ test("it should call change when a day is selected", async () => {
 test("it should close the overlay after Apply when showFooter is set", async () => {
   const onApply = vi.fn();
   const onChange = vi.fn();
+  const onClose = vi.fn();
 
   mountDateField({
     props: {
       onApply,
+      onClose,
       onChange,
       showFooter: true,
       defaultValue: new Date(2021, 4, 1),
@@ -121,8 +123,9 @@ test("it should close the overlay after Apply when showFooter is set", async () 
   apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
-  expect(onApply).toHaveBeenCalled();
-  expect(onChange).toHaveBeenCalled();
+  expect(onApply).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
   expect(
     Array.from(document.body.querySelectorAll("button")).some(
       (node) => node.textContent === "Apply",
@@ -133,9 +136,11 @@ test("it should close the overlay after Apply when showFooter is set", async () 
 test("it should close the overlay after Cancel without applying", async () => {
   const onChange = vi.fn();
   const onCancel = vi.fn();
+  const onClose = vi.fn();
 
   mountDateField({
     props: {
+      onClose,
       onChange,
       onCancel,
       showFooter: true,
@@ -162,7 +167,8 @@ test("it should close the overlay after Cancel without applying", async () => {
   cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
-  expect(onCancel).toHaveBeenCalled();
+  expect(onCancel).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
   expect(onChange).not.toHaveBeenCalled();
   expect(
     Array.from(document.body.querySelectorAll("button")).some(

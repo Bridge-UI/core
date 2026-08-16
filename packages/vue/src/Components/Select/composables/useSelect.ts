@@ -108,14 +108,13 @@ export function useSelect(
 
   const open = ref(false);
   const searchQuery = ref("");
+  const asyncLoading = ref(false);
   const highlightedIndex = ref(-1);
   const draftValues = ref<SelectValue[]>([]);
-  const containerRef = ref<null | HTMLElement>(null);
-
-  const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
-  let asyncSearch: null | SelectAsyncSearch = null;
   const resolvedSelected = ref<SelectOption[]>([]);
+  const containerRef = ref<null | HTMLElement>(null);
+  let asyncSearch: null | SelectAsyncSearch = null;
 
   const split = computed(() => {
     return splitComponentProps<
@@ -282,11 +281,11 @@ export function useSelect(
     return resolveFieldOverlay(selectMerged.value.overlay, breakpoint.mobile);
   });
 
-  const showFooter = useFieldShowFooter(
-    "Select",
-    () => selectMerged.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    componentName: "Select",
+    overlay: resolvedOverlay,
+    showFooter: () => selectMerged.value.showFooter,
+  });
 
   const activeValues = computed(() => {
     return showFooter.value ? draftValues.value : selectedValues.value;

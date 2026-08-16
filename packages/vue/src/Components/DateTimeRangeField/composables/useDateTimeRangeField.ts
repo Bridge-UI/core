@@ -139,6 +139,10 @@ export function useDateTimeRangeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -253,26 +257,22 @@ export function useDateTimeRangeField(
     );
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateTimeRangeField",
-    () => dateTimeOnly.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateTimeRangeField",
+    showFooter: () => dateTimeOnly.value.showFooter,
+  });
 
   function handlePickerChange(next: null | DateRangeValue) {
     commitValue(next);
 
     if (showFooter.value) {
       emit("apply");
-
-      handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
     emit("cancel");
-
-    handleOpenChange(false);
   }
 
   function clearValue(event?: Event) {

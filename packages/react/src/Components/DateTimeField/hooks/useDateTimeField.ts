@@ -95,6 +95,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<Date | null>(
     () => defaultValue ?? null,
@@ -148,6 +149,11 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -156,7 +162,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -231,11 +237,11 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return hasValue && clearable && !props.readonly && !formField.isDisabled;
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateTimeField",
-    dateTimeOnly.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateTimeField",
+    showFooter: dateTimeOnly.showFooter,
+  });
 
   const displayText = derived(() => {
     return formatDateTimeValue(
@@ -261,8 +267,6 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     if (showFooter) {
       onApply?.();
 
-      handleOpenChange(false);
-
       return;
     }
 
@@ -271,8 +275,6 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   const handlePickerCancel = () => {
     onCancel?.();
-
-    handleOpenChange(false);
   };
 
   const clearValue = useCallback(

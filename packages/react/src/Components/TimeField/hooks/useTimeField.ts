@@ -85,6 +85,7 @@ export function useTimeField(props: TimeFieldProps) {
 
   const { footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<null | TimeValue>(
     () => defaultValue ?? null,
@@ -138,6 +139,11 @@ export function useTimeField(props: TimeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -146,7 +152,7 @@ export function useTimeField(props: TimeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -228,11 +234,11 @@ export function useTimeField(props: TimeFieldProps) {
     );
   });
 
-  const showFooter = useFieldShowFooter(
-    "TimeField",
-    timeOnly.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "TimeField",
+    showFooter: timeOnly.showFooter,
+  });
 
   const showClearIcon = derived(() => {
     return hasValue && clearable && !props.readonly && !formField.isDisabled;
@@ -252,8 +258,6 @@ export function useTimeField(props: TimeFieldProps) {
     if (showFooter) {
       onApply?.();
 
-      handleOpenChange(false);
-
       return;
     }
 
@@ -262,8 +266,6 @@ export function useTimeField(props: TimeFieldProps) {
 
   const handlePickerCancel = () => {
     onCancel?.();
-
-    handleOpenChange(false);
   };
 
   const clearValue = useCallback(

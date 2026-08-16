@@ -255,11 +255,11 @@ export function useAutocomplete(
     return resolveFieldOverlay(autocompleteMerged.overlay, breakpoint.mobile);
   });
 
-  const showFooter = useFieldShowFooter(
-    "Autocomplete",
-    autocompleteMerged.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "Autocomplete",
+    showFooter: autocompleteMerged.showFooter,
+  });
 
   const activeValues = derived(() => {
     return showFooter ? draftValues : selectedValues;
@@ -609,7 +609,7 @@ export function useAutocomplete(
     closeMenu();
 
     onApply?.();
-  }, [multiple, onApply, closeMenu, emitChange, setModel, draftValues]);
+  }, [onApply, multiple, setModel, closeMenu, emitChange, draftValues]);
 
   const handleCancel = useCallback(() => {
     setDraftValues(selectedValues);
@@ -1181,6 +1181,7 @@ export function useAutocomplete(
     isLoading,
     listboxId,
     isSelected,
+    showFooter,
     emptyMessage,
     handleApply,
     handleCancel,
@@ -1198,7 +1199,6 @@ export function useAutocomplete(
     props.disableMaxHeight,
     formField.merged.rounded,
     props.customProps?.listbox,
-    showFooter,
     handleRegisteredOptionsChange,
   ]);
 

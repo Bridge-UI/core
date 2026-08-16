@@ -104,8 +104,8 @@ const {
   </FormField>
 
   <FieldOverlay
-    v-model="open"
     :overlay="overlay"
+    :model-value="open"
     :custom-props="overlayCustomProps"
     v-on:update:model-value="handleOpenChange"
   >

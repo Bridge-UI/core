@@ -87,7 +87,11 @@ test("it should merge entry and props classes with props winning", () => {
 
 test("it should default showFooter to true for dialog overlays", () => {
   const { result } = renderHook(() => {
-    return useFieldShowFooter("DateField", undefined, "modal");
+    return useFieldShowFooter({
+      overlay: "modal",
+      showFooter: undefined,
+      componentName: "DateField",
+    });
   });
 
   expect(result.current).toBe(true);
@@ -95,7 +99,11 @@ test("it should default showFooter to true for dialog overlays", () => {
 
 test("it should keep an explicit showFooter false on dialog overlays", () => {
   const { result } = renderHook(() => {
-    return useFieldShowFooter("DateField", false, "drawer");
+    return useFieldShowFooter({
+      overlay: "drawer",
+      showFooter: false,
+      componentName: "DateField",
+    });
   });
 
   expect(result.current).toBe(false);

@@ -131,6 +131,10 @@ export function useTimeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -233,19 +237,17 @@ export function useTimeField(
     emit("change", next);
   }
 
-  const showFooter = useFieldShowFooter(
-    "TimeField",
-    () => timeOnly.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "TimeField",
+    showFooter: () => timeOnly.value.showFooter,
+  });
 
   function handlePickerChange(next: null | TimeValue) {
     commitValue(next);
 
     if (showFooter.value) {
       emit("apply");
-
-      handleOpenChange(false);
 
       return;
     }
@@ -255,8 +257,6 @@ export function useTimeField(
 
   function handlePickerCancel() {
     emit("cancel");
-
-    handleOpenChange(false);
   }
 
   function clearValue(event?: Event) {

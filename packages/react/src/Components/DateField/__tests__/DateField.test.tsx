@@ -5,13 +5,13 @@ import { afterEach, expect, test, vi } from "vitest";
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
+// ** Local Imports
+import { DateField } from "@/Components/DateField";
+
 afterEach(() => {
   cleanup();
   resetLayerStackForTests();
 });
-
-// ** Local Imports
-import { DateField } from "@/Components/DateField";
 
 test("it should render a text input", () => {
   const { container } = render(<DateField />);
@@ -41,11 +41,13 @@ test("it should call onChange when a day is selected", () => {
 test("it should close the overlay after Apply when showFooter is set", () => {
   const onApply = vi.fn();
   const onChange = vi.fn();
+  const onClose = vi.fn();
 
   render(
     <DateField
       showFooter
       onApply={onApply}
+      onClose={onClose}
       onChange={onChange}
       defaultValue={new Date(2021, 4, 1)}
     />,
@@ -58,18 +60,21 @@ test("it should close the overlay after Apply when showFooter is set", () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Apply" }));
 
-  expect(onApply).toHaveBeenCalled();
-  expect(onChange).toHaveBeenCalled();
+  expect(onApply).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
   expect(screen.queryByRole("button", { name: "Apply" })).toBeNull();
 });
 
 test("it should close the overlay after Cancel when showFooter is set", () => {
   const onChange = vi.fn();
   const onCancel = vi.fn();
+  const onClose = vi.fn();
 
   render(
     <DateField
       showFooter
+      onClose={onClose}
       onChange={onChange}
       onCancel={onCancel}
       defaultValue={new Date(2021, 4, 1)}
@@ -83,7 +88,8 @@ test("it should close the overlay after Cancel when showFooter is set", () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
-  expect(onCancel).toHaveBeenCalled();
+  expect(onCancel).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
   expect(onChange).not.toHaveBeenCalled();
   expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
 });

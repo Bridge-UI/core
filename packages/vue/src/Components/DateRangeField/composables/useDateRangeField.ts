@@ -123,6 +123,10 @@ export function useDateRangeField(
   };
 
   function handleOpenChange(next: boolean) {
+    if (open.value === next) {
+      return;
+    }
+
     open.value = next;
 
     if (next) {
@@ -231,26 +235,22 @@ export function useDateRangeField(
     );
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateRangeField",
-    () => dateOnly.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateRangeField",
+    showFooter: () => dateOnly.value.showFooter,
+  });
 
   function handlePickerChange(next: null | DateRangeValue) {
     commitValue(next);
 
     if (showFooter.value) {
       emit("apply");
-
-      handleOpenChange(false);
     }
   }
 
   function handlePickerCancel() {
     emit("cancel");
-
-    handleOpenChange(false);
   }
 
   function clearValue(event?: Event) {

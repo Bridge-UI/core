@@ -125,3 +125,93 @@ test("it should emit change and clear when the clear control is clicked", async 
   expect(onChange).toHaveBeenCalledWith(null);
   expect(onClear).toHaveBeenCalled();
 });
+
+test("it should close the overlay after Apply when showFooter is set", async () => {
+  const onApply = vi.fn();
+  const onChange = vi.fn();
+  const onClose = vi.fn();
+
+  mountTimeField({
+    props: {
+      onApply,
+      onClose,
+      onChange,
+      showFooter: true,
+      defaultValue: new Date(2021, 4, 21, 14, 30),
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const hour = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "15",
+  );
+
+  hour?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).not.toHaveBeenCalled();
+
+  const apply = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Apply",
+  );
+
+  apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onApply).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalled();
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Apply",
+    ),
+  ).toBe(false);
+});
+
+test("it should close the overlay after Cancel when showFooter is set", async () => {
+  const onChange = vi.fn();
+  const onCancel = vi.fn();
+  const onClose = vi.fn();
+
+  mountTimeField({
+    props: {
+      onClose,
+      onChange,
+      onCancel,
+      showFooter: true,
+      defaultValue: new Date(2021, 4, 21, 14, 30),
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const hour = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "15",
+  );
+
+  hour?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const cancel = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Cancel",
+  );
+
+  cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onCancel).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(onChange).not.toHaveBeenCalled();
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some(
+      (node) => node.textContent === "Cancel",
+    ),
+  ).toBe(false);
+});

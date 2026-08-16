@@ -110,14 +110,13 @@ export function useAutocomplete(
 
   const open = ref(false);
   const searchQuery = ref("");
+  const asyncLoading = ref(false);
   const highlightedIndex = ref(-1);
   const draftValues = ref<SelectValue[]>([]);
-  const containerRef = ref<null | HTMLElement>(null);
-
-  const asyncLoading = ref(false);
   const asyncOptions = ref<SelectOption[]>([]);
-  let asyncSearch: null | SelectAsyncSearch = null;
   const resolvedSelected = ref<SelectOption[]>([]);
+  const containerRef = ref<null | HTMLElement>(null);
+  let asyncSearch: null | SelectAsyncSearch = null;
 
   const split = computed(() => {
     return splitComponentProps<
@@ -290,11 +289,11 @@ export function useAutocomplete(
     );
   });
 
-  const showFooter = useFieldShowFooter(
-    "Autocomplete",
-    () => autocompleteMerged.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "Autocomplete",
+    showFooter: () => autocompleteMerged.value.showFooter,
+  });
 
   const activeValues = computed(() => {
     return showFooter.value ? draftValues.value : selectedValues.value;

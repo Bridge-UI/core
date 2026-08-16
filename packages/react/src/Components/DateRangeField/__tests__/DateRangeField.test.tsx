@@ -2,12 +2,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
-afterEach(() => {
-  cleanup();
-});
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { DateRangeField } from "@/Components/DateRangeField";
+
+afterEach(() => {
+  cleanup();
+  resetLayerStackForTests();
+});
 
 test("it should render a text input", () => {
   const { container } = render(<DateRangeField />);
@@ -69,4 +73,57 @@ test("it should call onChange and onClear when the clear control is clicked", ()
 
   expect(onChange).toHaveBeenCalledWith(null);
   expect(onClear).toHaveBeenCalled();
+});
+
+test("it should close the overlay after Apply when showFooter is set", () => {
+  const onApply = vi.fn();
+  const onChange = vi.fn();
+  const onClose = vi.fn();
+
+  render(
+    <DateRangeField
+      showFooter
+      onApply={onApply}
+      onClose={onClose}
+      onChange={onChange}
+      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getAllByRole("button", { name: "21" })[0]!);
+  expect(onChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+
+  expect(onApply).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalled();
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole("button", { name: "Apply" })).toBeNull();
+});
+
+test("it should close the overlay after Cancel when showFooter is set", () => {
+  const onChange = vi.fn();
+  const onCancel = vi.fn();
+  const onClose = vi.fn();
+
+  render(
+    <DateRangeField
+      showFooter
+      onClose={onClose}
+      onChange={onChange}
+      onCancel={onCancel}
+      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getAllByRole("button", { name: "21" })[0]!);
+
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  expect(onCancel).toHaveBeenCalledTimes(1);
+  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
 });

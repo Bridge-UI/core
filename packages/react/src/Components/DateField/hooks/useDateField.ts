@@ -112,11 +112,12 @@ export function useDateField(props: DateFieldProps) {
 
   const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
+  const [draftText, setDraftText] = useState<null | string>(null);
   const [uncontrolledValue, setUncontrolledValue] = useState<DatePickerModel>(
     () => defaultValue ?? null,
   );
-  const [draftText, setDraftText] = useState<null | string>(null);
 
   const { inheritedAttrs, componentProps: dateOnly } = splitComponentProps<
     DateFieldProps,
@@ -153,11 +154,11 @@ export function useDateField(props: DateFieldProps) {
     return resolveFieldOverlay(dateOnly.overlay, breakpoint.mobile);
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateField",
-    dateOnly.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: "DateField",
+    showFooter: dateOnly.showFooter,
+  });
 
   const clearable = derived(() => {
     return dateOnly.clearable !== false;
@@ -179,6 +180,11 @@ export function useDateField(props: DateFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -188,7 +194,7 @@ export function useDateField(props: DateFieldProps) {
         setDraftText(null);
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -310,8 +316,6 @@ export function useDateField(props: DateFieldProps) {
     if (showFooter) {
       onApply?.();
 
-      handleOpenChange(false);
-
       return;
     }
 
@@ -322,8 +326,6 @@ export function useDateField(props: DateFieldProps) {
 
   const handlePickerCancel = () => {
     onCancel?.();
-
-    handleOpenChange(false);
   };
 
   const parseDraft = () => {

@@ -102,11 +102,15 @@ export function useBridgeUIComponent<
  * Resolves Cancel / Apply visibility: instance prop, then registry
  * `defaultProps.showFooter`, then the overlay default from core.
  */
-export function useFieldShowFooter(
-  componentName: undefined | keyof BridgeUIComponentsConfig,
-  showFooter: boolean | undefined,
-  overlay: ResolvedFieldOverlay,
-): boolean {
+export function useFieldShowFooter({
+  overlay,
+  showFooter,
+  componentName,
+}: {
+  componentName: undefined | keyof BridgeUIComponentsConfig;
+  overlay: ResolvedFieldOverlay;
+  showFooter: boolean | undefined;
+}): boolean {
   const bridge = useBridgeUI();
 
   const registryShowFooter = componentName

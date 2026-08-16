@@ -111,11 +111,11 @@ export function useListbox(
     return resolvedOverlay.value === "drawer";
   });
 
-  const showFooter = useFieldShowFooter(
-    options.componentName,
-    () => merged.value.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    componentName: options.componentName,
+    showFooter: () => merged.value.showFooter,
+  });
 
   const listboxTokens = computed(() => {
     return get(bridgeListbox.value, ["tokens", "listbox"]) as
@@ -226,9 +226,10 @@ export function useListbox(
       return undefined;
     }
 
-    return isDrawerOverlay.value
-      ? `${panelRounded} rounded-b-none`
-      : panelRounded;
+    return cn({
+      [panelRounded]: true,
+      "rounded-b-none": isDrawerOverlay.value,
+    });
   });
 
   const surfaceBind = computed(() => {

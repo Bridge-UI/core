@@ -84,7 +84,11 @@ test("it should default showFooter to true for dialog overlays", () => {
   const scope = effectScope();
 
   scope.run(() => {
-    const result = useFieldShowFooter("DateField", undefined, "modal");
+    const result = useFieldShowFooter({
+      overlay: "modal",
+      showFooter: undefined,
+      componentName: "DateField",
+    });
 
     expect(result.value).toBe(true);
   });
@@ -96,7 +100,11 @@ test("it should keep an explicit showFooter false on dialog overlays", () => {
   const scope = effectScope();
 
   scope.run(() => {
-    const result = useFieldShowFooter("DateField", false, "drawer");
+    const result = useFieldShowFooter({
+      overlay: "drawer",
+      showFooter: false,
+      componentName: "DateField",
+    });
 
     expect(result.value).toBe(false);
   });

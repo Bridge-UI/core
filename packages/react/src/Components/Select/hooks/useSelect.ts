@@ -255,11 +255,11 @@ export function useSelect(
     return resolveFieldOverlay(selectMerged.overlay, breakpoint.mobile);
   });
 
-  const showFooter = useFieldShowFooter(
-    "Select",
-    selectMerged.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    componentName: "Select",
+    overlay: resolvedOverlay,
+    showFooter: selectMerged.showFooter,
+  });
 
   const activeValues = derived(() => {
     return showFooter ? draftValues : selectedValues;
@@ -575,7 +575,7 @@ export function useSelect(
     closeMenu();
 
     onApply?.();
-  }, [multiple, onApply, closeMenu, emitChange, setModel, draftValues]);
+  }, [onApply, multiple, setModel, closeMenu, emitChange, draftValues]);
 
   const handleCancel = useCallback(() => {
     setDraftValues(selectedValues);
@@ -583,7 +583,7 @@ export function useSelect(
     closeMenu();
 
     onCancel?.();
-  }, [selectedValues, closeMenu, onCancel]);
+  }, [onCancel, closeMenu, selectedValues]);
 
   const clearValue = useCallback(
     (event?: { preventDefault: () => void; stopPropagation: () => void }) => {
@@ -1102,6 +1102,7 @@ export function useSelect(
     isLoading,
     listboxId,
     isSelected,
+    showFooter,
     emptyMessage,
     handleApply,
     handleCancel,
@@ -1118,7 +1119,6 @@ export function useSelect(
     formField.merged.color,
     props.disableMaxHeight,
     formField.merged.rounded,
-    showFooter,
     props.customProps?.listbox,
     handleRegisteredOptionsChange,
   ]);

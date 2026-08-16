@@ -90,6 +90,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
 
   const { day: daySlot, footer: footerSlot, ...formFieldSlots } = slots ?? {};
 
+  const openRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<null | DateRangeValue>(() => {
@@ -134,6 +135,11 @@ export function useDateRangeField(props: DateRangeFieldProps) {
 
   const handleOpenChange = useCallback(
     (next: boolean) => {
+      if (openRef.current === next) {
+        return;
+      }
+
+      openRef.current = next;
       setOpen(next);
 
       if (next) {
@@ -142,7 +148,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
         onClose?.();
       }
     },
-    [onClose, onOpen],
+    [onOpen, onClose],
   );
 
   const inherited = derived(() => {
@@ -241,26 +247,22 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     );
   });
 
-  const showFooter = useFieldShowFooter(
-    "DateRangeField",
-    dateOnly.showFooter,
-    resolvedOverlay,
-  );
+  const showFooter = useFieldShowFooter({
+    overlay: resolvedOverlay,
+    showFooter: dateOnly.showFooter,
+    componentName: "DateRangeField",
+  });
 
   const handlePickerChange = (next: null | DateRangeValue) => {
     commitValue(next);
 
     if (showFooter) {
       onApply?.();
-
-      handleOpenChange(false);
     }
   };
 
   const handlePickerCancel = () => {
     onCancel?.();
-
-    handleOpenChange(false);
   };
 
   const clearValue = useCallback(
