@@ -34,7 +34,7 @@ export interface ToggleGroupRounded {
 
   /**
    * Full / pill radius token (default).
-   * Track uses `rounded-surface-full` (still reads as a pill at typical heights);
+   * Track uses `rounded-panel-full` (still reads as a pill at typical heights);
    * items keep a true `rounded-full` chip.
    */
   "full": ToggleGroupRoundedItem;
@@ -112,6 +112,6 @@ export const roundedProps: ToggleGroupRounded = {
   },
   "full": {
     "item": "rounded-full",
-    "root": "rounded-surface-full",
+    "root": "rounded-panel-full",
   },
 };

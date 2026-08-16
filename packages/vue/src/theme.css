@@ -16,8 +16,8 @@
   --text-2xs: 0.625rem;
   --text-2xs--line-height: 0.75rem;
 
-  /* Surface-max radius for large panels (`rounded="full"` on Menu / Card / …) */
-  --radius-surface-full: 2.5rem;
+  /* Panel-max radius for large panels (`rounded="full"` on Menu / Card / …) */
+  --radius-panel-full: 2.5rem;
 
   /* Dark (slate) */
   --color-dark-50: var(--color-slate-50);

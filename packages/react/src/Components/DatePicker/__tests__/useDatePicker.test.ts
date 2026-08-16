@@ -46,9 +46,9 @@ test("it should apply shell rounded from the rounded prop", () => {
   expect(result.current.rootBind.className).not.toContain("rounded-lg");
 });
 
-test("it should cap full shell rounded to surface-full", () => {
+test("it should cap full shell rounded to panel-full", () => {
   const { result } = renderUseDatePicker({ rounded: "full" });
 
   expect(result.current.rootBind.className).not.toContain("rounded-full");
-  expect(result.current.rootBind.className).toContain("rounded-surface-full");
+  expect(result.current.rootBind.className).toContain("rounded-panel-full");
 });

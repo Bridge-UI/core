@@ -160,7 +160,7 @@ export interface TimePickerOwnProps {
   /**
    * Border radius of the picker shell, time tiles, and chrome.
    *
-   * The shell uses the Menu surface scale (`full` caps at `rounded-surface-full`).
+   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
    * Time tiles keep a true pill when `rounded` is `full`.
    *
    * `TimeField` always forwards its own `rounded` here so the picker matches the

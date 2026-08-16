@@ -54,16 +54,16 @@ test("it should expose context defaults from useToggleGroup", () => {
   expect(result.contextValue.value.tokenClasses.softFill).toBe(true);
 });
 
-test("it should use surface-full root radius when rounded is full", () => {
+test("it should use panel-full root radius when rounded is full", () => {
   const { result } = mountUseToggleGroup({ rounded: "full" }, ref("a"));
 
   expect(result.rootBind.value.class).not.toContain("rounded-full");
-  expect(result.rootBind.value.class).toContain("rounded-surface-full");
+  expect(result.rootBind.value.class).toContain("rounded-panel-full");
   expect(result.contextValue.value.tokenClasses.itemRounded).toBe(
     "rounded-full",
   );
   expect(result.contextValue.value.tokenClasses.rootRounded).toBe(
-    "rounded-surface-full",
+    "rounded-panel-full",
   );
 });
 

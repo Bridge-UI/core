@@ -15,7 +15,7 @@ export interface ListboxRounded {
   "4xl": string;
 
   /**
-   * Surface-max radius (`rounded-surface-full`).
+   * Panel-max radius (`rounded-panel-full`).
    * Caps extreme rounding so tall option lists do not become stadium-shaped.
    */
   "full": string;
@@ -61,5 +61,5 @@ export const roundedProps: ListboxRounded = {
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
   "none": "rounded-none",
-  "full": "rounded-surface-full",
+  "full": "rounded-panel-full",
 };
