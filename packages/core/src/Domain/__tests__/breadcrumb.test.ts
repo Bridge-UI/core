@@ -1,11 +1,11 @@
 // ** External Imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import { collapseBreadcrumbItems } from "@/Domain/breadcrumb";
 
 describe("collapseBreadcrumbItems", () => {
-  it("returns all items when under the max", () => {
+  test("it should return all items when under the max", () => {
     expect(collapseBreadcrumbItems(["a", "b", "c"], 5)).toEqual([
       { index: 0, item: "a", type: "item" },
       { index: 1, item: "b", type: "item" },
@@ -13,14 +13,14 @@ describe("collapseBreadcrumbItems", () => {
     ]);
   });
 
-  it("returns all items when maxItems is omitted", () => {
+  test("it should return all items when maxItems is omitted", () => {
     expect(collapseBreadcrumbItems(["a", "b"])).toEqual([
       { index: 0, item: "a", type: "item" },
       { index: 1, item: "b", type: "item" },
     ]);
   });
 
-  it("keeps first and last with an ellipsis when maxItems is 3", () => {
+  test("it should keep first and last with an ellipsis when maxItems is 3", () => {
     expect(collapseBreadcrumbItems(["home", "a", "b", "c", "page"], 3)).toEqual(
       [
         { index: 0, type: "item", item: "home" },
@@ -30,7 +30,7 @@ describe("collapseBreadcrumbItems", () => {
     );
   });
 
-  it("keeps a longer tail when maxItems is 4", () => {
+  test("it should keep a longer tail when maxItems is 4", () => {
     expect(collapseBreadcrumbItems(["home", "a", "b", "c", "page"], 4)).toEqual(
       [
         { index: 0, type: "item", item: "home" },
@@ -41,7 +41,7 @@ describe("collapseBreadcrumbItems", () => {
     );
   });
 
-  it("returns only the last item when maxItems is 1", () => {
+  test("it should return only the last item when maxItems is 1", () => {
     expect(collapseBreadcrumbItems(["a", "b", "c"], 1)).toEqual([
       { index: 2, item: "c", type: "item" },
     ]);

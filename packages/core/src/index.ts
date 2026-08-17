@@ -72,6 +72,8 @@ export type {
   SkeletonConfigOverrides,
   SliderConfigOverrides,
   SpinnerConfigOverrides,
+  StepConfigOverrides,
+  StepperConfigOverrides,
   SwitchConfigOverrides,
   TabConfigOverrides,
   TabItemConfigOverrides,
@@ -623,6 +625,21 @@ export type {
   SpinnerSize,
   SpinnerVariant,
 } from "@/Tokens/Spinner";
+export {
+  chromeProps as stepperChromeProps,
+  colorProps as stepperColorProps,
+  orientationProps as stepperOrientationProps,
+  sizeProps as stepperSizeProps,
+} from "@/Tokens/Stepper";
+export type {
+  StepperChrome,
+  StepperColor,
+  StepperColorItem,
+  StepperOrientation,
+  StepperOrientationItem,
+  StepperSize,
+  StepperSizeItem,
+} from "@/Tokens/Stepper";
 export {
   colorProps as switchColorProps,
   roundedProps as switchRoundedProps,

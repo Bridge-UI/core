@@ -1,5 +1,5 @@
 // ** External Imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
@@ -11,42 +11,42 @@ import {
 } from "@/Layer/drawer";
 
 describe("hasDrawerTransition", () => {
-  it("returns false for none and undefined", () => {
+  test("it should return false for none and undefined", () => {
     expect(hasDrawerTransition("none")).toBe(false);
     expect(hasDrawerTransition(undefined)).toBe(false);
   });
 
-  it("returns true for animated tokens", () => {
+  test("it should return true for animated tokens", () => {
     expect(hasDrawerTransition("fade")).toBe(true);
     expect(hasDrawerTransition("slide")).toBe(true);
   });
 });
 
 describe("countDrawerTransitionLayers", () => {
-  it("counts overlay and panel when backdrop is visible", () => {
+  test("it should count overlay and panel when backdrop is visible", () => {
     expect(countDrawerTransitionLayers("slide")).toBe(2);
   });
 
-  it("counts only panel when backdrop is hidden", () => {
+  test("it should count only panel when backdrop is hidden", () => {
     expect(countDrawerTransitionLayers("slide", { hideBackdrop: true })).toBe(
       1,
     );
   });
 
-  it("returns zero for none", () => {
+  test("it should return zero for none", () => {
     expect(countDrawerTransitionLayers("none")).toBe(0);
   });
 });
 
 describe("getDrawerPanelTransitionClass", () => {
-  it("includes placement slide transforms for slide", () => {
+  test("it should include placement slide transforms for slide", () => {
     const left = getDrawerPanelTransitionClass("slide", "left");
 
     expect(left).toContain("-translate-x-full");
     expect(left).toContain("data-[state=open]:translate-x-0");
   });
 
-  it("does not include placement slide for fade", () => {
+  test("it should not include placement slide for fade", () => {
     const fade = getDrawerPanelTransitionClass("fade", "left");
 
     expect(fade).toContain("opacity-0");
@@ -55,13 +55,13 @@ describe("getDrawerPanelTransitionClass", () => {
 });
 
 describe("getDrawerOverlayTransitionClass", () => {
-  it("returns fade classes for slide overlay", () => {
+  test("it should return fade classes for slide overlay", () => {
     expect(getDrawerOverlayTransitionClass("slide")).toContain("opacity-0");
   });
 });
 
 describe("resolveEffectiveDrawerTransition", () => {
-  it("returns none when transition is none", () => {
+  test("it should return none when transition is none", () => {
     expect(resolveEffectiveDrawerTransition("none")).toBe("none");
   });
 });

@@ -136,6 +136,21 @@ export type {
   SliderStop,
   SliderStopInput,
 } from "@/Domain/slider";
+export {
+  formatStepperStepNumber,
+  getAdjacentStepperIndex,
+  getStepperStepContentId,
+  getStepperStepId,
+  isStepperStepClickable,
+  isStepperStepCompleted,
+  resolveStepperStepStatus,
+} from "@/Domain/stepper";
+export type {
+  IsStepperStepClickableOptions,
+  ResolveStepperStepCompletedOptions,
+  ResolveStepperStepStatusOptions,
+  StepperStepStatus,
+} from "@/Domain/stepper";
 export { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Domain/tabs";
 export type { TabsActivation } from "@/Domain/tabs";
 export {

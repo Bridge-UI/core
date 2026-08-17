@@ -159,6 +159,14 @@ import type {
   SpinnerVariant,
 } from "@/Tokens/Spinner";
 import type {
+  StepperColor,
+  StepperColorItem,
+  StepperOrientation,
+  StepperOrientationItem,
+  StepperSize,
+  StepperSizeItem,
+} from "@/Tokens/Stepper";
+import type {
   SwitchColor,
   SwitchColorItem,
   SwitchRounded,
@@ -347,6 +355,8 @@ export interface SkeletonConfigOverrides {}
 export interface SliderConfigOverrides {}
 export interface SnackbarConfigOverrides {}
 export interface SpinnerConfigOverrides {}
+export interface StepConfigOverrides {}
+export interface StepperConfigOverrides {}
 export interface SwitchConfigOverrides {}
 export interface TabConfigOverrides {}
 export interface TabItemConfigOverrides {}
@@ -1270,6 +1280,29 @@ export interface SpinnerConfigBase {
   }>;
 }
 
+export interface StepConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    disabled: boolean;
+    error: boolean;
+  }>;
+}
+
+export interface StepperConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof StepperColor;
+    linear: boolean;
+    orientation: keyof StepperOrientation;
+    size: keyof StepperSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, StepperColorItem>;
+    orientation: Record<string, StepperOrientationItem>;
+    size: Record<string, StepperSizeItem>;
+  }>;
+}
+
 export interface SwitchConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1485,6 +1518,8 @@ export type BridgeUIComponentsConfig = Partial<{
   Slider: Partial<Overwrite<SliderConfigBase, SliderConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;
   Spinner: Partial<Overwrite<SpinnerConfigBase, SpinnerConfigOverrides>>;
+  Step: Partial<Overwrite<StepConfigBase, StepConfigOverrides>>;
+  Stepper: Partial<Overwrite<StepperConfigBase, StepperConfigOverrides>>;
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
   Tab: Partial<Overwrite<TabConfigBase, TabConfigOverrides>>;
   TabItem: Partial<Overwrite<TabItemConfigBase, TabItemConfigOverrides>>;

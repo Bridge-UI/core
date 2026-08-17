@@ -577,6 +577,28 @@ export type {
   SpinnerSizeOverrides,
   SpinnerVariantOverrides,
 } from "@/Components/Spinner";
+export { Step, useStep } from "@/Components/Step";
+export type {
+  StepClasses,
+  StepCustomProps,
+  StepOwnProps,
+  StepProps,
+  StepSlots,
+} from "@/Components/Step";
+export { Stepper, useStepper } from "@/Components/Stepper";
+export type {
+  StepperClasses,
+  StepperColorOverrides,
+  StepperContextValue,
+  StepperCustomProps,
+  StepperEmits,
+  StepperOrientationOverrides,
+  StepperOwnProps,
+  StepperProps,
+  StepperSizeOverrides,
+  StepperSlots,
+  StepperStepMeta,
+} from "@/Components/Stepper";
 export { Switch, useSwitch } from "@/Components/Switch";
 export type {
   SwitchClasses,

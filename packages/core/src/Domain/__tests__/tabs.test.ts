@@ -1,38 +1,38 @@
 // ** External Imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import { getAdjacentTabValue, getTabId, getTabPanelId } from "@/Domain/tabs";
 
 describe("getTabId", () => {
-  it("builds a stable tab id", () => {
+  test("it should build a stable tab id", () => {
     expect(getTabId("tabs-1", "bun")).toBe("tabs-1-tab-bun");
   });
 });
 
 describe("getTabPanelId", () => {
-  it("builds a stable panel id", () => {
+  test("it should build a stable panel id", () => {
     expect(getTabPanelId("tabs-1", "bun")).toBe("tabs-1-panel-bun");
   });
 });
 
 describe("getAdjacentTabValue", () => {
-  it("moves forward and wraps", () => {
+  test("it should move forward and wrap", () => {
     expect(getAdjacentTabValue(["a", "b", "c"], "a", 1)).toBe("b");
     expect(getAdjacentTabValue(["a", "b", "c"], "c", 1)).toBe("a");
   });
 
-  it("moves backward and wraps", () => {
+  test("it should move backward and wrap", () => {
     expect(getAdjacentTabValue(["a", "b", "c"], "a", -1)).toBe("c");
   });
 
-  it("skips disabled values", () => {
+  test("it should skip disabled values", () => {
     expect(getAdjacentTabValue(["a", "b", "c"], "a", 1, new Set(["b"]))).toBe(
       "c",
     );
   });
 
-  it("returns current when empty", () => {
+  test("it should return current when empty", () => {
     expect(getAdjacentTabValue([], "a", 1)).toBe("a");
   });
 });
