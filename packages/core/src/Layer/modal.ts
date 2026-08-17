@@ -42,10 +42,26 @@ const stack: LayerStackEntry[] = [];
 
 const stackListeners = new Set<() => void>();
 
+const BODY_SCROLL_LOCK_STYLE_KEYS = [
+  "top",
+  "left",
+  "right",
+  "width",
+  "overflow",
+  "position",
+  "paddingRight",
+] as const;
+
+type BodyScrollLockStyles = Record<
+  (typeof BODY_SCROLL_LOCK_STYLE_KEYS)[number],
+  string
+>;
+
 let nextStackOrder = 0;
 let scrollLockCount = 0;
-let savedBodyOverflow = "";
-let savedBodyPaddingRight = "";
+let savedScrollX = 0;
+let savedScrollY = 0;
+let savedBodyScrollLockStyles: null | BodyScrollLockStyles = null;
 let escapeListener: null | ((event: KeyboardEvent) => void) = null;
 
 /**
@@ -138,6 +154,33 @@ function handleGlobalEscape(event: KeyboardEvent) {
 }
 
 /**
+ * Reads inline body styles that scroll-lock mutates.
+ */
+function readBodyScrollLockStyles(body: HTMLElement): BodyScrollLockStyles {
+  return {
+    top: body.style.top,
+    left: body.style.left,
+    right: body.style.right,
+    width: body.style.width,
+    overflow: body.style.overflow,
+    position: body.style.position,
+    paddingRight: body.style.paddingRight,
+  };
+}
+
+/**
+ * Writes inline body styles that scroll-lock mutates.
+ */
+function writeBodyScrollLockStyles(
+  body: HTMLElement,
+  styles: BodyScrollLockStyles,
+) {
+  BODY_SCROLL_LOCK_STYLE_KEYS.forEach((key) => {
+    body.style[key] = styles[key];
+  });
+}
+
+/**
  * Sets the scrollbar compensation CSS variable on `:root`.
  */
 function setScrollbarCompensationVar(scrollbarWidth: number) {
@@ -158,6 +201,9 @@ function setScrollbarCompensationVar(scrollbarWidth: number) {
 
 /**
  * Locks the body scroll and compensates layout shift when the scrollbar is hidden.
+ *
+ * Pins `body` with `position: fixed` and `top: -scrollY`. `overflow: hidden`
+ * alone drops the viewport offset on mobile when the lock is released.
  */
 function lockBodyScroll() {
   if (!hasDocument()) {
@@ -166,24 +212,32 @@ function lockBodyScroll() {
 
   scrollLockCount += 1;
 
-  if (scrollLockCount === 1) {
-    const body = document.body;
-
-    savedBodyOverflow = body.style.overflow;
-    savedBodyPaddingRight = body.style.paddingRight;
-
-    const scrollbarWidth = getScrollbarWidth();
-
-    if (scrollbarWidth > 0) {
-      const computedPaddingRight =
-        Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
-
-      body.style.paddingRight = `${computedPaddingRight + scrollbarWidth}px`;
-      setScrollbarCompensationVar(scrollbarWidth);
-    }
-
-    body.style.overflow = "hidden";
+  if (scrollLockCount !== 1) {
+    return;
   }
+
+  const body = document.body;
+
+  savedBodyScrollLockStyles = readBodyScrollLockStyles(body);
+  savedScrollX = hasWindow() ? window.scrollX : 0;
+  savedScrollY = hasWindow() ? window.scrollY : 0;
+
+  const scrollbarWidth = getScrollbarWidth();
+
+  if (scrollbarWidth > 0) {
+    const computedPaddingRight =
+      Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0;
+
+    body.style.paddingRight = `${computedPaddingRight + scrollbarWidth}px`;
+    setScrollbarCompensationVar(scrollbarWidth);
+  }
+
+  body.style.left = "0px";
+  body.style.right = "0px";
+  body.style.width = "100%";
+  body.style.overflow = "hidden";
+  body.style.position = "fixed";
+  body.style.top = `-${savedScrollY}px`;
 }
 
 /**
@@ -245,12 +299,20 @@ function unlockBodyScroll() {
 
   scrollLockCount = Math.max(0, scrollLockCount - 1);
 
-  if (scrollLockCount === 0) {
-    document.body.style.overflow = savedBodyOverflow;
-    document.body.style.paddingRight = savedBodyPaddingRight;
-    savedBodyPaddingRight = "";
-    setScrollbarCompensationVar(0);
+  if (scrollLockCount !== 0 || !savedBodyScrollLockStyles) {
+    return;
   }
+
+  writeBodyScrollLockStyles(document.body, savedBodyScrollLockStyles);
+  savedBodyScrollLockStyles = null;
+  setScrollbarCompensationVar(0);
+
+  if (hasWindow()) {
+    window.scrollTo(savedScrollX, savedScrollY);
+  }
+
+  savedScrollX = 0;
+  savedScrollY = 0;
 }
 
 /**
@@ -398,14 +460,22 @@ export function resetLayerStackForTests() {
   stack.length = 0;
   nextStackOrder = 0;
   scrollLockCount = 0;
-  savedBodyOverflow = "";
-  savedBodyPaddingRight = "";
+  savedScrollX = 0;
+  savedScrollY = 0;
+  savedBodyScrollLockStyles = null;
   resetLayerIdCounterForTests();
   resetOpenMenuLayersForTests();
 
   if (hasDocument()) {
-    document.body.style.overflow = "";
-    document.body.style.paddingRight = "";
+    writeBodyScrollLockStyles(document.body, {
+      top: "",
+      left: "",
+      right: "",
+      width: "",
+      overflow: "",
+      position: "",
+      paddingRight: "",
+    });
     setScrollbarCompensationVar(0);
   }
 
