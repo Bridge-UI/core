@@ -58,6 +58,7 @@ const calendarDateBridgeKeys = [
   "timeZone",
   "viewDate",
   "customProps",
+  "invalidated",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -200,7 +201,7 @@ export function useCalendarDate(
   }, [merged.rounded, merged.tokens?.rounded]);
 
   const colorClass = derived(() => {
-    return get(colorTokens, merged.color);
+    return get(colorTokens, merged.invalidated ? "error" : merged.color);
   });
 
   const weekdays = derived(() => {
@@ -327,7 +328,7 @@ export function useCalendarDate(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex flex-col": true,
+        "flex w-full flex-col": true,
         [mergedClasses.root ?? ""]: true,
       }),
     );

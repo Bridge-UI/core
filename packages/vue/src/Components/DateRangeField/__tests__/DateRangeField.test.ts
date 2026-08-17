@@ -103,6 +103,28 @@ test("it should pass color to the nested DateRangePicker", async () => {
   expect(String(day?.className)).toMatch(/secondary/);
 });
 
+test("it should apply invalidated calendar colors when error is set", async () => {
+  mountDateRangeField({
+    props: {
+      error: true,
+      color: "secondary",
+      defaultValue: [new Date(2021, 4, 1), new Date(2021, 4, 10)],
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const day = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "15",
+  );
+
+  expect(String(day?.className)).toMatch(/error/);
+  expect(String(day?.className)).not.toMatch(/secondary/);
+});
+
 test("it should emit change and clear when the clear control is clicked", async () => {
   const onChange = vi.fn();
   const onClear = vi.fn();

@@ -40,6 +40,7 @@ import {
 } from "@/Utils";
 
 const calendarBridgeKeys = [
+  "fill",
   "view",
   "color",
   "range",
@@ -58,6 +59,7 @@ const calendarBridgeKeys = [
   "hideMonths",
   "customProps",
   "defaultView",
+  "invalidated",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -360,6 +362,7 @@ export function useCalendar(
       disabled: merged.value.disabled,
       readOnly: merged.value.readOnly,
       timeZone: merged.value.timeZone,
+      invalidated: merged.value.invalidated,
     };
   });
 
@@ -368,7 +371,9 @@ export function useCalendar(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-full min-w-72 flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "w-full min-w-72": merged.value.fill,
+        "w-72": !merged.value.fill,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

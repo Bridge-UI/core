@@ -48,6 +48,7 @@ const {
 <template>
   <div v-bind="rootBind">
     <CalendarRange
+      :fill="merged.fill"
       :color="merged.color"
       :value="displayValue"
       :tokens="calendarTokens"
@@ -59,6 +60,7 @@ const {
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"
       :hide-months="merged.hideMonths"
+      :invalidated="merged.invalidated"
       :orientation="merged.orientation"
       v-on:change="handleCalendarChange"
       :start-of-week="merged.startOfWeek"

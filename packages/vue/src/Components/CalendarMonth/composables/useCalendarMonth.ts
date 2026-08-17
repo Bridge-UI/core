@@ -45,6 +45,7 @@ const calendarMonthBridgeKeys = [
   "readOnly",
   "timeZone",
   "customProps",
+  "invalidated",
   "disableMonths",
 ] as const satisfies readonly (keyof CalendarMonthOwnProps)[];
 
@@ -130,7 +131,10 @@ export function useCalendarMonth(
   });
 
   const colorClass = computed(() => {
-    return get(colorTokens.value, merged.value.color);
+    return get(
+      colorTokens.value,
+      merged.value.invalidated ? "error" : merged.value.color,
+    );
   });
 
   const months = computed((): CalendarMonthCell[] => {

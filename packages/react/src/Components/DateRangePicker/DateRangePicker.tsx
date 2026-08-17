@@ -29,6 +29,7 @@ function DateRangePicker(props: DateRangePickerProps) {
   return (
     <div {...rootBind}>
       <CalendarRange
+        fill={merged.fill}
         color={merged.color}
         value={displayValue}
         tokens={calendarTokens}
@@ -41,6 +42,7 @@ function DateRangePicker(props: DateRangePickerProps) {
         hideYears={merged.hideYears}
         hideMonths={merged.hideMonths}
         onChange={handleCalendarChange}
+        invalidated={merged.invalidated}
         orientation={merged.orientation}
         startOfWeek={merged.startOfWeek}
         disableDates={merged.disableDates}

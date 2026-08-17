@@ -296,6 +296,14 @@ export interface CalendarRangeOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Hides the shared month selector and month panel.
    *
    * @default false
@@ -322,6 +330,13 @@ export interface CalendarRangeOwnProps {
    * @default false
    */
   hideYears?: boolean;
+
+  /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  invalidated?: boolean;
 
   /**
    * Latest selectable date.

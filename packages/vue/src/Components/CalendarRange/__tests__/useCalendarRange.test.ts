@@ -61,11 +61,13 @@ test("it should default to horizontal orientation", () => {
 
   expect(merged.value.orientation).toBe("horizontal");
   expect(isVertical.value).toBe(false);
-  expect(rootBind.value.class).toContain("w-full");
+  expect(rootBind.value.class).not.toContain("w-full");
   expect(rootBind.value.class).toContain("min-w-[38rem]");
   expect(panelsBind.value.class).toContain("w-full");
   expect(panelsBind.value.class).toContain("flex-row");
-  expect(startBind.value.class).toContain("w-72");
+  expect(startBind.value.class).toContain("flex-1");
+  expect(startBind.value.class).toContain("min-w-0");
+  expect(startBind.value.class).toContain("w-full");
 });
 
 test("it should stack panels when orientation is vertical", () => {
@@ -75,7 +77,7 @@ test("it should stack panels when orientation is vertical", () => {
     });
 
   expect(isVertical.value).toBe(true);
-  expect(rootBind.value.class).toContain("w-full");
+  expect(rootBind.value.class).toContain("w-72");
   expect(rootBind.value.class).toContain("min-w-72");
   expect(panelsBind.value.class).toContain("flex-col");
   expect(startBind.value.class).toContain("flex-1");

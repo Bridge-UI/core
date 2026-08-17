@@ -68,6 +68,7 @@ const {
     <div :class="contentBind">
       <div :class="calendarBind">
         <CalendarRange
+          :fill="merged.fill"
           :color="merged.color"
           :value="displayValue"
           :tokens="calendarTokens"
@@ -79,6 +80,7 @@ const {
           :time-zone="merged.timeZone"
           :hide-years="merged.hideYears"
           :hide-months="merged.hideMonths"
+          :invalidated="merged.invalidated"
           :orientation="merged.orientation"
           v-on:change="handleCalendarChange"
           :start-of-week="merged.startOfWeek"
@@ -115,6 +117,7 @@ const {
               <div :class="timeFillBind">
                 <TimePanel
                   :ampm="merged.ampm"
+                  :fill="merged.fill"
                   :tokens="timeTokens"
                   :color="merged.color"
                   :value="startTimeValue"
@@ -125,6 +128,7 @@ const {
                   :interval="merged.interval"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
+                  :invalidated="merged.invalidated"
                   :show-seconds="merged.showSeconds"
                   v-on:change="handleStartPanelChange"
                   :disable-times="merged.disableTimes"
@@ -152,6 +156,7 @@ const {
               <div :class="timeFillBind">
                 <TimePanel
                   :ampm="merged.ampm"
+                  :fill="merged.fill"
                   :tokens="timeTokens"
                   :color="merged.color"
                   :value="endTimeValue"
@@ -162,6 +167,7 @@ const {
                   :interval="merged.interval"
                   :read-only="merged.readOnly"
                   :time-zone="merged.timeZone"
+                  :invalidated="merged.invalidated"
                   :show-seconds="merged.showSeconds"
                   v-on:change="handleEndPanelChange"
                   :disable-times="merged.disableTimes"

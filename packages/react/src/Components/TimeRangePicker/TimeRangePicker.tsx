@@ -45,6 +45,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
 
           <TimePanel
             ampm={merged.ampm}
+            fill={merged.fill}
             tokens={timeTokens}
             color={merged.color}
             maxTime={merged.maxTime}
@@ -56,6 +57,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             readOnly={merged.readOnly}
             timeZone={merged.timeZone}
             onChange={handleStartChange}
+            invalidated={merged.invalidated}
             showSeconds={merged.showSeconds}
             disableTimes={merged.disableTimes}
           />
@@ -66,6 +68,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
 
           <TimePanel
             ampm={merged.ampm}
+            fill={merged.fill}
             tokens={timeTokens}
             color={merged.color}
             value={endDisplayValue}
@@ -77,6 +80,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             readOnly={merged.readOnly}
             timeZone={merged.timeZone}
             onChange={handleEndChange}
+            invalidated={merged.invalidated}
             showSeconds={merged.showSeconds}
             disableTimes={merged.disableTimes}
           />

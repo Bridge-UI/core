@@ -12,6 +12,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
 
   const {
     open,
+    fill,
     overlay,
     timeOnly,
     formField,
@@ -21,6 +22,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
     modelValue,
     showFooter,
     footerSlot,
+    orientation,
     clearIconSize,
     showClearIcon,
     pickerClassName,
@@ -66,10 +68,12 @@ function TimeRangeField(props: TimeRangeFieldProps) {
         customProps={overlayCustomProps}
       >
         <TimeRangePicker
+          fill={fill}
           value={modelValue}
           ampm={timeOnly.ampm}
           showFooter={showFooter}
           readOnly={props.readonly}
+          orientation={orientation}
           maxTime={timeOnly.maxTime}
           minTime={timeOnly.minTime}
           className={pickerClassName}
@@ -81,6 +85,7 @@ function TimeRangeField(props: TimeRangeFieldProps) {
           disabled={formField.isDisabled}
           showSeconds={timeOnly.showSeconds}
           rounded={formField.merged.rounded}
+          invalidated={formField.invalidated}
           disableTimes={timeOnly.disableTimes}
           customProps={timeRangePickerCustomProps}
           slots={footerSlot ? { footer: footerSlot } : undefined}

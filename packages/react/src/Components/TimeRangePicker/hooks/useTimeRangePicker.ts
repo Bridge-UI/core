@@ -34,6 +34,7 @@ import {
 
 const timeRangePickerBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "value",
   "tokens",
@@ -49,6 +50,7 @@ const timeRangePickerBridgeKeys = [
   "showFooter",
   "startTitle",
   "customProps",
+  "invalidated",
   "orientation",
   "showSeconds",
   "defaultValue",
@@ -208,7 +210,9 @@ export function useTimeRangePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "w-full": merged.fill,
+        "w-fit": !merged.fill,
         [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),

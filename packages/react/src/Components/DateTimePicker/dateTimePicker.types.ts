@@ -183,6 +183,14 @@ export interface DateTimePickerOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Hides month navigation / panel.
    *
    * @default false
@@ -216,6 +224,13 @@ export interface DateTimePickerOwnProps {
    * @default 1
    */
   interval?: number;
+
+  /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  invalidated?: boolean;
 
   /**
    * Latest selectable date.

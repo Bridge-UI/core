@@ -55,6 +55,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   dateOnly,
   formField,
@@ -111,6 +112,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DateRangePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :show-footer="showFooter"
@@ -131,6 +133,7 @@ const {
       :disable-years="dateOnly.disableYears"
       :disable-months="dateOnly.disableMonths"
       :rounded="formField.merged.value.rounded"
+      :invalidated="formField.invalidated.value"
       :custom-props="dateRangePickerCustomProps"
       :hide-outside-days="dateOnly.hideOutsideDays"
     >

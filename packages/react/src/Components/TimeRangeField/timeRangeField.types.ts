@@ -5,6 +5,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 import type {
   DisableTimesInput,
   FieldOverlayMode,
+  RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
@@ -155,6 +156,15 @@ export interface TimeRangeFieldOwnProps extends Omit<
   disableTimes?: DisableTimesInput;
 
   /**
+   * When `true`, the picker fills the overlay width.
+   * When `false`, it stays at its minimum width.
+   * Unset: `true` for `drawer`, `false` for `menu` and `modal`.
+   *
+   * @default undefined
+   */
+  fill?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1
@@ -174,6 +184,14 @@ export interface TimeRangeFieldOwnProps extends Omit<
    * @default undefined
    */
   minTime?: Date;
+
+  /**
+   * Layout of start / end time panels forwarded to `TimeRangePicker`.
+   * On mobile, `drawer` / `modal` overlays default to `vertical` when unset.
+   *
+   * @default "horizontal"
+   */
+  orientation?: RangePickerOrientation;
 
   /**
    * Which overlay shell opens the picker. `auto` uses `menu` on desktop and

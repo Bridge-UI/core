@@ -164,6 +164,15 @@ export interface DateRangeFieldOwnProps extends Omit<
   disableYears?: number[];
 
   /**
+   * When `true`, the picker fills the overlay width.
+   * When `false`, it stays at its minimum width.
+   * Unset: `true` for `drawer`, `false` for `menu` and `modal`.
+   *
+   * @default undefined
+   */
+  fill?: boolean;
+
+  /**
    * Hides month navigation / panel.
    *
    * @default false

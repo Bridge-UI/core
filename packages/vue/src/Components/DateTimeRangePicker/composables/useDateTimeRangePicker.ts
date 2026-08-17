@@ -43,6 +43,7 @@ import {
 
 const dateTimeRangePickerBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "value",
   "tokens",
@@ -60,6 +61,7 @@ const dateTimeRangePickerBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "invalidated",
   "orientation",
   "showSeconds",
   "startOfWeek",
@@ -326,7 +328,9 @@ export function useDateTimeRangePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "w-full": merged.value.fill,
+        "w-fit": !merged.value.fill,
         [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),

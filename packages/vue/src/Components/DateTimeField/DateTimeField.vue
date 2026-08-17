@@ -50,6 +50,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   formField,
   inputBind,
@@ -105,6 +106,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DateTimePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="dateTimeOnly.ampm"
@@ -127,6 +129,7 @@ const {
       :start-of-week="dateTimeOnly.startOfWeek"
       :custom-props="dateTimePickerCustomProps"
       :rounded="formField.merged.value.rounded"
+      :invalidated="formField.invalidated.value"
       :disable-dates="dateTimeOnly.disableDates"
       :hide-weekdays="dateTimeOnly.hideWeekdays"
       :disable-times="dateTimeOnly.disableTimes"

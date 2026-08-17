@@ -12,6 +12,7 @@ function DateRangeField(props: DateRangeFieldProps) {
 
   const {
     open,
+    fill,
     daySlot,
     overlay,
     dateOnly,
@@ -68,6 +69,7 @@ function DateRangeField(props: DateRangeFieldProps) {
         customProps={overlayCustomProps}
       >
         <DateRangePicker
+          fill={fill}
           value={modelValue}
           showFooter={showFooter}
           readOnly={props.readonly}
@@ -84,6 +86,7 @@ function DateRangeField(props: DateRangeFieldProps) {
           hideMonths={dateOnly.hideMonths}
           startOfWeek={dateOnly.startOfWeek}
           rounded={formField.merged.rounded}
+          invalidated={formField.invalidated}
           disableDates={dateOnly.disableDates}
           hideWeekdays={dateOnly.hideWeekdays}
           disableYears={dateOnly.disableYears}

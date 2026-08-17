@@ -46,6 +46,7 @@ function DateTimePicker(props: DateTimePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <Calendar
+            fill={merged.fill}
             color={merged.color}
             value={displayValue}
             tokens={calendarTokens}
@@ -58,6 +59,7 @@ function DateTimePicker(props: DateTimePickerProps) {
             hideYears={merged.hideYears}
             hideMonths={merged.hideMonths}
             onChange={handleCalendarChange}
+            invalidated={merged.invalidated}
             defaultView={merged.defaultView}
             startOfWeek={merged.startOfWeek}
             disableDates={merged.disableDates}
@@ -84,6 +86,7 @@ function DateTimePicker(props: DateTimePickerProps) {
           <div className={timeFillBind}>
             <TimePanel
               ampm={merged.ampm}
+              fill={merged.fill}
               tokens={timeTokens}
               color={merged.color}
               value={displayValue}
@@ -95,6 +98,7 @@ function DateTimePicker(props: DateTimePickerProps) {
               readOnly={merged.readOnly}
               timeZone={merged.timeZone}
               onChange={handlePanelChange}
+              invalidated={merged.invalidated}
               showSeconds={merged.showSeconds}
               disableTimes={merged.disableTimes}
               customProps={timePanelCustomProps}

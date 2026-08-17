@@ -41,23 +41,24 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 
 ### TimeRangeField-specific
 
-| Prop           | Type                        | Default                                      | Description                                          |
-| -------------- | --------------------------- | -------------------------------------------- | ---------------------------------------------------- |
-| `ampm`         | `boolean`                   | `false`                                      | Uses a 12-hour clock with an AM/PM column.           |
-| `classes`      | `TimeRangeFieldClasses`     | —                                            | Classes for field / input regions.                   |
-| `clearable`    | `boolean`                   | `true`                                       | Whether the value can be cleared.                    |
-| `customProps`  | `TimeRangeFieldCustomProps` | —                                            | Extra props for internal parts.                      |
-| `defaultValue` | `TimeRangeValue \| null`    | `null`                                       | Uncontrolled initial value.                          |
-| `disableTimes` | `Date[]`                    | —                                            | Times that cannot be selected.                       |
-| `interval`     | `number`                    | `1`                                          | Minute step between options.                         |
-| `maxTime`      | `Date`                      | —                                            | Latest selectable time.                              |
-| `minTime`      | `Date`                      | —                                            | Earliest selectable time.                            |
-| `overlay`      | `FieldOverlayMode`          | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`. |
-| `showFooter`   | `boolean`                   | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.           |
-| `showSeconds`  | `boolean`                   | `false`                                      | Shows seconds in the panel and formatted value.      |
-| `slots`        | `TimeRangeFieldSlots`       | —                                            | Named slots (`FormField` slots + footer).            |
-| `timeZone`     | `string`                    | —                                            | IANA time zone.                                      |
-| `value`        | `TimeRangeValue \| null`    | —                                            | Controlled value.                                    |
+| Prop           | Type                         | Default                                      | Description                                                                    |
+| -------------- | ---------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
+| `ampm`         | `boolean`                    | `false`                                      | Uses a 12-hour clock with an AM/PM column.                                     |
+| `classes`      | `TimeRangeFieldClasses`      | —                                            | Classes for field / input regions.                                             |
+| `clearable`    | `boolean`                    | `true`                                       | Whether the value can be cleared.                                              |
+| `customProps`  | `TimeRangeFieldCustomProps`  | —                                            | Extra props for internal parts.                                                |
+| `defaultValue` | `TimeRangeValue \| null`     | `null`                                       | Uncontrolled initial value.                                                    |
+| `disableTimes` | `Date[]`                     | —                                            | Times that cannot be selected.                                                 |
+| `interval`     | `number`                     | `1`                                          | Minute step between options.                                                   |
+| `maxTime`      | `Date`                       | —                                            | Latest selectable time.                                                        |
+| `minTime`      | `Date`                       | —                                            | Earliest selectable time.                                                      |
+| `orientation`  | `"horizontal" \| "vertical"` | `"horizontal"`                               | Dual panel layout. Mobile `drawer` / `modal` default to `vertical` when unset. |
+| `overlay`      | `FieldOverlayMode`           | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                           |
+| `showFooter`   | `boolean`                    | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.                                     |
+| `showSeconds`  | `boolean`                    | `false`                                      | Shows seconds in the panel and formatted value.                                |
+| `slots`        | `TimeRangeFieldSlots`        | —                                            | Named slots (`FormField` slots + footer).                                      |
+| `timeZone`     | `string`                     | —                                            | IANA time zone.                                                                |
+| `value`        | `TimeRangeValue \| null`     | —                                            | Controlled value.                                                              |
 
 ### Binding
 

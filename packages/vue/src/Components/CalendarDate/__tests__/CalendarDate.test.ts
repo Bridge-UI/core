@@ -71,6 +71,20 @@ test("it should mark the selected day", () => {
   expect(day?.attributes("aria-pressed")).toBe("true");
 });
 
+test("it should apply error tile colors when invalidated", () => {
+  const wrapper = mount(CalendarDate, {
+    props: {
+      invalidated: true,
+      value: new Date(2021, 4, 21),
+      viewDate: new Date(2021, 4, 1),
+    },
+  });
+
+  const day = wrapper.findAll("button").find((node) => node.text() === "21");
+
+  expect(String(day?.attributes("class"))).toMatch(/error/);
+});
+
 test("it should disable dates before minDate", () => {
   const wrapper = mount(CalendarDate, {
     props: {

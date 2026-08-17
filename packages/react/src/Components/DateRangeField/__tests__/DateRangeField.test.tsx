@@ -57,6 +57,23 @@ test("it should pass color to the nested DateRangePicker", () => {
   expect(day.className).toMatch(/secondary/);
 });
 
+test("it should apply invalidated calendar colors when error is set", () => {
+  render(
+    <DateRangeField
+      error
+      color="secondary"
+      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const day = screen.getAllByRole("button", { name: "15" })[0]!;
+
+  expect(day.className).toMatch(/error/);
+  expect(day.className).not.toMatch(/secondary/);
+});
+
 test("it should call onChange and onClear when the clear control is clicked", () => {
   const onChange = vi.fn();
   const onClear = vi.fn();

@@ -62,6 +62,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
         <TimePanel
           value={value}
           ampm={merged.ampm}
+          fill={merged.fill}
           tokens={timeTokens}
           onChange={onChange}
           color={merged.color}
@@ -72,6 +73,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           interval={merged.interval}
           readOnly={merged.readOnly}
           timeZone={merged.timeZone}
+          invalidated={merged.invalidated}
           showSeconds={merged.showSeconds}
           disableTimes={merged.disableTimes}
           customProps={timePanelCustomProps}
@@ -85,6 +87,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <CalendarRange
+            fill={merged.fill}
             color={merged.color}
             value={displayValue}
             tokens={calendarTokens}
@@ -97,6 +100,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             hideYears={merged.hideYears}
             hideMonths={merged.hideMonths}
             onChange={handleCalendarChange}
+            invalidated={merged.invalidated}
             orientation={merged.orientation}
             startOfWeek={merged.startOfWeek}
             disableDates={merged.disableDates}

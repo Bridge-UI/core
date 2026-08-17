@@ -53,6 +53,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   timeOnly,
   formField,
@@ -108,6 +109,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <TimePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="timeOnly.ampm"
@@ -125,6 +127,7 @@ const {
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
+      :invalidated="formField.invalidated.value"
     >
       <template #footer="footer" v-if="$slots.footer">
         <slot name="footer" v-bind="footer" />

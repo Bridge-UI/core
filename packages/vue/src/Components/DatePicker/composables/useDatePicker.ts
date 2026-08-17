@@ -36,6 +36,7 @@ import {
 } from "@/Utils";
 
 const datePickerBridgeKeys = [
+  "fill",
   "color",
   "range",
   "value",
@@ -53,6 +54,7 @@ const datePickerBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "invalidated",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -198,7 +200,9 @@ export function useDatePicker(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "w-full": merged.value.fill,
+        "w-fit": !merged.value.fill,
         [shellRounded]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),

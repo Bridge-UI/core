@@ -65,6 +65,7 @@ const {
     <div :class="contentBind">
       <div :class="calendarBind">
         <Calendar
+          :fill="merged.fill"
           :color="merged.color"
           :value="displayValue"
           :tokens="calendarTokens"
@@ -76,6 +77,7 @@ const {
           :time-zone="merged.timeZone"
           :hide-years="merged.hideYears"
           :hide-months="merged.hideMonths"
+          :invalidated="merged.invalidated"
           v-on:change="handleCalendarChange"
           :default-view="merged.defaultView"
           :start-of-week="merged.startOfWeek"
@@ -105,6 +107,7 @@ const {
         <div :class="timeFillBind">
           <TimePanel
             :ampm="merged.ampm"
+            :fill="merged.fill"
             :tokens="timeTokens"
             :color="merged.color"
             :value="displayValue"
@@ -116,6 +119,7 @@ const {
             :read-only="merged.readOnly"
             :time-zone="merged.timeZone"
             v-on:change="handlePanelChange"
+            :invalidated="merged.invalidated"
             :show-seconds="merged.showSeconds"
             :disable-times="merged.disableTimes"
             :custom-props="timePanelCustomProps"

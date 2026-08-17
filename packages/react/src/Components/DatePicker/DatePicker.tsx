@@ -28,6 +28,7 @@ function DatePicker(props: DatePickerProps) {
   return (
     <div {...rootBind}>
       <Calendar
+        fill={merged.fill}
         color={merged.color}
         range={merged.range}
         value={displayValue}
@@ -42,6 +43,7 @@ function DatePicker(props: DatePickerProps) {
         hideYears={merged.hideYears}
         hideMonths={merged.hideMonths}
         onChange={handleCalendarChange}
+        invalidated={merged.invalidated}
         defaultView={merged.defaultView}
         startOfWeek={merged.startOfWeek}
         disableDates={merged.disableDates}

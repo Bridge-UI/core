@@ -55,6 +55,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   timeOnly,
   formField,
@@ -64,6 +65,7 @@ const {
   modelValue,
   showFooter,
   pickerClass,
+  orientation,
   clearIconSize,
   showClearIcon,
   handleOpenChange,
@@ -110,10 +112,12 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <TimeRangePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="timeOnly.ampm"
       :show-footer="showFooter"
+      :orientation="orientation"
       :read-only="props.readonly"
       :max-time="timeOnly.maxTime"
       :min-time="timeOnly.minTime"
@@ -126,6 +130,7 @@ const {
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"
       :rounded="formField.merged.value.rounded"
+      :invalidated="formField.invalidated.value"
       :custom-props="timeRangePickerCustomProps"
     >
       <template #footer="footer" v-if="$slots.footer">

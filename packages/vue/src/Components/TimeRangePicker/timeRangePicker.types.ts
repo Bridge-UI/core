@@ -184,11 +184,26 @@ export interface TimeRangePickerOwnProps {
   endTitle?: string;
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1
    */
   interval?: number;
+
+  /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  invalidated?: boolean;
 
   /**
    * Latest selectable time.

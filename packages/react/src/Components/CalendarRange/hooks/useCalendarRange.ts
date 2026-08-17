@@ -35,6 +35,7 @@ import {
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
+  "fill",
   "color",
   "value",
   "tokens",
@@ -49,6 +50,7 @@ const calendarRangeBridgeKeys = [
   "hideYears",
   "hideMonths",
   "customProps",
+  "invalidated",
   "orientation",
   "previewDate",
   "startOfWeek",
@@ -394,6 +396,7 @@ export function useCalendarRange(
       disabled: merged.disabled,
       readOnly: merged.readOnly,
       timeZone: merged.timeZone,
+      invalidated: merged.invalidated,
     };
   });
 
@@ -406,9 +409,11 @@ export function useCalendarRange(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-full flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "w-full": merged.fill,
         "min-w-[38rem]": !isVertical,
         "min-w-72": isVertical,
+        "w-72": !merged.fill && isVertical,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -476,9 +481,7 @@ export function useCalendarRange(
       customProps?.start,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical,
-        "w-72 shrink-0": !isVertical,
+        "flex min-w-0 w-full flex-1 flex-col": true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -489,9 +492,7 @@ export function useCalendarRange(
       customProps?.end,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical,
-        "w-72 shrink-0": !isVertical,
+        "flex min-w-0 w-full flex-1 flex-col": true,
         [mergedClasses.end ?? ""]: true,
       }),
     );

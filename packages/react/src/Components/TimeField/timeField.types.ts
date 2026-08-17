@@ -155,6 +155,22 @@ export interface TimeFieldOwnProps extends Omit<
   disableTimes?: DisableTimesInput;
 
   /**
+   * Allows typing in the input. When unset, the input is read-only (picker only).
+   *
+   * @default false
+   */
+  editable?: boolean;
+
+  /**
+   * When `true`, the picker fills the overlay width.
+   * When `false`, it stays at its minimum width.
+   * Unset: `true` for `drawer`, `false` for `menu` and `modal`.
+   *
+   * @default undefined
+   */
+  fill?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1

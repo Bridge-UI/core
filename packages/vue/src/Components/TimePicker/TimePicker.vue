@@ -52,6 +52,7 @@ const {
     <div :class="contentBind">
       <TimePanel
         :ampm="merged.ampm"
+        :fill="merged.fill"
         :tokens="timeTokens"
         :color="merged.color"
         :value="displayValue"
@@ -63,6 +64,7 @@ const {
         :read-only="merged.readOnly"
         :time-zone="merged.timeZone"
         v-on:change="handlePanelChange"
+        :invalidated="merged.invalidated"
         :show-seconds="merged.showSeconds"
         :disable-times="merged.disableTimes"
       />

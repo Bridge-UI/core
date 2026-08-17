@@ -231,6 +231,13 @@ export interface CalendarDateOwnProps {
   hideWeekdays?: boolean;
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  invalidated?: boolean;
+
+  /**
    * Latest selectable date (inclusive).
    *
    * @default undefined

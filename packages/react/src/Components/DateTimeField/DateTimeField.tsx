@@ -12,6 +12,7 @@ function DateTimeField(props: DateTimeFieldProps) {
 
   const {
     open,
+    fill,
     daySlot,
     overlay,
     formField,
@@ -67,6 +68,7 @@ function DateTimeField(props: DateTimeFieldProps) {
         customProps={overlayCustomProps}
       >
         <DateTimePicker
+          fill={fill}
           value={modelValue}
           showFooter={showFooter}
           ampm={dateTimeOnly.ampm}
@@ -84,6 +86,7 @@ function DateTimeField(props: DateTimeFieldProps) {
           interval={dateTimeOnly.interval}
           hideYears={dateTimeOnly.hideYears}
           rounded={formField.merged.rounded}
+          invalidated={formField.invalidated}
           hideMonths={dateTimeOnly.hideMonths}
           showSeconds={dateTimeOnly.showSeconds}
           defaultView={dateTimeOnly.defaultView}

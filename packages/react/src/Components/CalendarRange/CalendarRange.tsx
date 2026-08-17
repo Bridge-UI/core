@@ -142,7 +142,7 @@ function CalendarRange(props: CalendarRangeProps) {
       <div {...bodyBind}>
         {view === "date" && (
           <div {...panelsBind}>
-            <div className="flex w-full min-w-0 items-stretch">
+            <div className="flex min-w-0 flex-1 items-stretch">
               <div {...startBind}>
                 <CalendarDate
                   {...shared}
@@ -168,7 +168,7 @@ function CalendarRange(props: CalendarRangeProps) {
               {props.slots?.startAside}
             </div>
 
-            <div className="flex w-full min-w-0 items-stretch">
+            <div className="flex min-w-0 flex-1 items-stretch">
               <div {...endBind}>
                 {isVertical && endMonthButton ? (
                   <div {...endHeaderBind}>{endMonthButton}</div>

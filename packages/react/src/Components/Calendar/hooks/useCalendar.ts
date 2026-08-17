@@ -35,6 +35,7 @@ import {
 } from "@/Utils";
 
 const calendarBridgeKeys = [
+  "fill",
   "view",
   "color",
   "range",
@@ -53,6 +54,7 @@ const calendarBridgeKeys = [
   "hideMonths",
   "customProps",
   "defaultView",
+  "invalidated",
   "previewDate",
   "startOfWeek",
   "defaultValue",
@@ -318,7 +320,9 @@ export function useCalendar(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-full min-w-72 flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "w-full min-w-72": merged.fill,
+        "w-72": !merged.fill,
         [mergedClasses.root ?? ""]: true,
       }),
     );

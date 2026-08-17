@@ -40,8 +40,8 @@ export function resolveFieldOverlay(
 
 /**
  * Picks range-picker orientation. Explicit `orientation` wins.
- * On mobile, drawer / modal shells default to vertical so dual panels stack
- * instead of forcing horizontal scroll.
+ * When overlay is `drawer` and orientation is unset: `horizontal` on desktop,
+ * `vertical` on mobile. Modal follows the same mobile stacking default.
  */
 export function resolveRangePickerOrientation(
   orientation: undefined | RangePickerOrientation,
@@ -64,6 +64,47 @@ export function resolveRangePickerOrientation(
  */
 export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
   return overlay === "modal" || overlay === "drawer";
+}
+
+/**
+ * Whether a date / time picker fills its overlay or container width.
+ * Explicit `fill` wins. Unset: `true` for `drawer`, `false` for `menu` /
+ * `modal` and for standalone pickers (no overlay).
+ */
+export function resolvePickerFill(
+  fill: boolean | undefined,
+  overlay?: ResolvedFieldOverlay,
+): boolean {
+  if (fill !== undefined) {
+    return fill;
+  }
+
+  return overlay === "drawer";
+}
+
+/**
+ * Overlay classes for a field picker shell.
+ * Dialogs drop the picker shadow; fill stretches to the overlay width.
+ */
+export function resolveFieldPickerClassName(
+  fill: boolean,
+  overlay: ResolvedFieldOverlay,
+): string | undefined {
+  const isDialog = isFieldOverlayDialog(overlay);
+
+  if (!fill && !isDialog) {
+    return undefined;
+  }
+
+  if (fill && isDialog) {
+    return "w-full shadow-none";
+  }
+
+  if (fill) {
+    return "w-full";
+  }
+
+  return "shadow-none";
 }
 
 /**

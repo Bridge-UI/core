@@ -53,6 +53,7 @@ function Calendar(props: CalendarProps) {
     disabled: merged.disabled,
     readOnly: merged.readOnly,
     timeZone: merged.timeZone,
+    invalidated: merged.invalidated,
   };
 
   const chevronClass = (open: boolean) => {

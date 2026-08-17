@@ -13,9 +13,10 @@ import {
 import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isDateRangeValue,
-  isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
+  resolvePickerFill,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -42,11 +43,13 @@ import {
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateFieldBridgeKeys = [
+  "fill",
   "range",
   "classes",
   "maxDate",
   "minDate",
   "overlay",
+  "editable",
   "multiple",
   "timeZone",
   "clearable",
@@ -108,7 +111,6 @@ export function useDateField(
   const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
-  const draftText = ref<null | string>(null);
   const containerRef = ref<null | HTMLElement>(null);
 
   const split = computed(() => {
@@ -157,10 +159,12 @@ export function useDateField(
     return hasDateFieldValue(modelValue.value);
   });
 
+  const fill = computed(() => {
+    return resolvePickerFill(dateOnly.value.fill, resolvedOverlay.value);
+  });
+
   const pickerClass = computed(() => {
-    return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill.value, resolvedOverlay.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -178,7 +182,6 @@ export function useDateField(
       emit("open");
     } else {
       emit("close");
-      draftText.value = null;
     }
   }
 
@@ -261,10 +264,6 @@ export function useDateField(
   });
 
   const displayText = computed(() => {
-    if (!isNil(draftText.value)) {
-      return draftText.value;
-    }
-
     return formatModel(modelValue.value, adapter.value, context.value);
   });
 
@@ -275,7 +274,6 @@ export function useDateField(
 
   function handlePickerChange(next: DatePickerModel) {
     commitValue(next);
-    draftText.value = null;
 
     if (showFooter.value) {
       emit("apply");
@@ -301,7 +299,6 @@ export function useDateField(
     }
 
     commitValue(null);
-    draftText.value = null;
     emit("clear");
     handleOpenChange(false);
   }
@@ -310,63 +307,21 @@ export function useDateField(
     event.preventDefault();
   }
 
-  function parseDraft() {
-    if (isNil(draftText.value)) {
-      return;
-    }
-
-    if (draftText.value.trim() === "") {
-      commitValue(null);
-      draftText.value = null;
-
-      return;
-    }
-
-    if (mode.value !== "single") {
-      draftText.value = null;
-
-      return;
-    }
-
-    const parsed = adapter.value.parse(draftText.value, context.value);
-
-    if (!isNil(parsed)) {
-      commitValue(parsed);
-    }
-
-    draftText.value = null;
-  }
-
   const inputBind = computed(() => {
     return mergePartBind(
       {
         value: displayText.value,
-        readonly:
-          mode.value !== "single" ? true : formField.inputBind.value.readonly,
-        onBlur: (event: FocusEvent) => {
-          formField.inputBind.value.onBlur?.(event);
-          parseDraft();
-        },
+        readonly: dateOnly.value.editable
+          ? formField.inputBind.value.readonly
+          : true,
         onFocus: (event: FocusEvent) => {
           formField.inputBind.value.onFocus?.(event);
           handleOpenChange(true);
         },
-        onInput: (event: Event) => {
-          if (mode.value !== "single") {
-            return;
-          }
-
-          draftText.value = (event.target as HTMLInputElement).value;
-        },
         onKeydown: (event: KeyboardEvent) => {
           formField.inputBind.value.onKeydown?.(event);
 
-          if (event.key === "Enter") {
-            parseDraft();
-          }
-
           if (event.key === "Escape") {
-            draftText.value = null;
             handleOpenChange(false);
           }
         },
@@ -431,6 +386,7 @@ export function useDateField(
   return {
     open,
     mode,
+    fill,
     overlay,
     hasValue,
     dateOnly,

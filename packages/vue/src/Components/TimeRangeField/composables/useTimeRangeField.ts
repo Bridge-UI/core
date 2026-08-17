@@ -12,9 +12,11 @@ import {
 // ** Core Imports
 import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isFieldOverlayDialog,
   isTimeRangeValue,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
+  resolvePickerFill,
+  resolveRangePickerOrientation,
   type TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -42,6 +44,7 @@ import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeRangeFieldBridgeKeys = [
   "ampm",
+  "fill",
   "classes",
   "maxTime",
   "minTime",
@@ -51,6 +54,7 @@ const timeRangeFieldBridgeKeys = [
   "clearable",
   "showFooter",
   "customProps",
+  "orientation",
   "showSeconds",
   "defaultValue",
   "disableTimes",
@@ -314,10 +318,20 @@ export function useTimeRangeField(
     return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
   });
 
+  const orientation = computed(() => {
+    return resolveRangePickerOrientation(
+      timeOnly.value.orientation,
+      resolvedOverlay.value,
+      breakpoint.mobile,
+    );
+  });
+
+  const fill = computed(() => {
+    return resolvePickerFill(timeOnly.value.fill, resolvedOverlay.value);
+  });
+
   const pickerClass = computed(() => {
-    return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill.value, resolvedOverlay.value);
   });
 
   const clearIconSize = computed(() => {
@@ -354,6 +368,7 @@ export function useTimeRangeField(
 
   return {
     open,
+    fill,
     overlay,
     hasValue,
     timeOnly,
@@ -364,6 +379,7 @@ export function useTimeRangeField(
     clearValue,
     modelValue,
     showFooter,
+    orientation,
     pickerClass,
     containerRef,
     clearIconSize,

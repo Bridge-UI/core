@@ -64,6 +64,7 @@ const {
 
         <TimePanel
           :ampm="merged.ampm"
+          :fill="merged.fill"
           :tokens="timeTokens"
           :color="merged.color"
           :rounded="merged.rounded"
@@ -75,6 +76,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleStartChange"
+          :invalidated="merged.invalidated"
           :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />
@@ -85,6 +87,7 @@ const {
 
         <TimePanel
           :ampm="merged.ampm"
+          :fill="merged.fill"
           :tokens="timeTokens"
           :color="merged.color"
           :value="endDisplayValue"
@@ -96,6 +99,7 @@ const {
           :read-only="merged.readOnly"
           :time-zone="merged.timeZone"
           v-on:change="handleEndChange"
+          :invalidated="merged.invalidated"
           :show-seconds="merged.showSeconds"
           :disable-times="merged.disableTimes"
         />

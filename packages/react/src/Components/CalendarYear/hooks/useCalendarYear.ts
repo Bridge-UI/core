@@ -50,6 +50,7 @@ const calendarYearBridgeKeys = [
   "timeZone",
   "startYear",
   "customProps",
+  "invalidated",
   "disableYears",
 ] as const satisfies readonly (keyof CalendarYearOwnProps)[];
 
@@ -137,7 +138,7 @@ export function useCalendarYear(
   }, [merged.rounded, merged.tokens?.rounded]);
 
   const colorClass = derived(() => {
-    return get(colorTokens, merged.color);
+    return get(colorTokens, merged.invalidated ? "error" : merged.color);
   });
 
   const years = derived((): CalendarYearCell[] => {

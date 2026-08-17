@@ -6,8 +6,9 @@ import { useCallback, useRef, useState } from "react";
 // ** Core Imports
 import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
+  resolvePickerFill,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -34,6 +35,7 @@ import {
 
 const dateTimeFieldBridgeKeys = [
   "ampm",
+  "fill",
   "value",
   "classes",
   "maxDate",
@@ -41,6 +43,7 @@ const dateTimeFieldBridgeKeys = [
   "minDate",
   "minTime",
   "overlay",
+  "editable",
   "interval",
   "timeZone",
   "clearable",
@@ -137,10 +140,12 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return resolveFieldOverlay(dateTimeOnly.overlay, breakpoint.mobile);
   });
 
+  const fill = derived(() => {
+    return resolvePickerFill(dateTimeOnly.fill, resolvedOverlay);
+  });
+
   const pickerClassName = derived(() => {
-    return isFieldOverlayDialog(resolvedOverlay)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill, resolvedOverlay);
   });
 
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
@@ -300,8 +305,8 @@ export function useDateTimeField(props: DateTimeFieldProps) {
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        readOnly: true,
         value: displayText,
+        readOnly: dateTimeOnly.editable ? formField.inputBind.readOnly : true,
         onFocus: (event: FocusEvent<HTMLInputElement>) => {
           formField.inputBind.onFocus?.(event as never);
           handleOpenChange(true);
@@ -348,6 +353,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
 
   return {
     open,
+    fill,
     daySlot,
     hasValue,
     formField,

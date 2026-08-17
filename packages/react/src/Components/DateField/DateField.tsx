@@ -12,6 +12,7 @@ function DateField(props: DateFieldProps) {
 
   const {
     open,
+    fill,
     daySlot,
     overlay,
     dateOnly,
@@ -67,6 +68,7 @@ function DateField(props: DateFieldProps) {
         customProps={overlayCustomProps}
       >
         <DatePicker
+          fill={fill}
           value={modelValue}
           range={dateOnly.range}
           showFooter={showFooter}
@@ -85,6 +87,7 @@ function DateField(props: DateFieldProps) {
           defaultView={dateOnly.defaultView}
           startOfWeek={dateOnly.startOfWeek}
           rounded={formField.merged.rounded}
+          invalidated={formField.invalidated}
           customProps={datePickerCustomProps}
           disableDates={dateOnly.disableDates}
           hideWeekdays={dateOnly.hideWeekdays}

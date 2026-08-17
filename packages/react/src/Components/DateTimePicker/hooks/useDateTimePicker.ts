@@ -35,6 +35,7 @@ import {
 
 const dateTimePickerBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "value",
   "tokens",
@@ -53,6 +54,7 @@ const dateTimePickerBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "invalidated",
   "showSeconds",
   "startOfWeek",
   "defaultValue",
@@ -235,7 +237,9 @@ export function useDateTimePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "w-full": merged.fill,
+        "w-fit": !merged.fill,
         [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),

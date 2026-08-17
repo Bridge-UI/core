@@ -531,6 +531,8 @@ export interface DateFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    editable: boolean;
+    fill: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -571,10 +573,12 @@ export interface DatePickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof CalendarColor;
+    fill: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
+    invalidated: boolean;
     multiple: boolean;
     range: boolean;
     rounded: keyof CalendarRounded;
@@ -598,6 +602,7 @@ export interface DateRangeFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    fill: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -637,10 +642,12 @@ export interface DateRangePickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof CalendarColor;
+    fill: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
+    invalidated: boolean;
     orientation: "vertical" | "horizontal";
     rounded: keyof CalendarRounded;
     showFooter: boolean;
@@ -664,6 +671,8 @@ export interface DateTimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
+    fill: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -713,11 +722,13 @@ export interface DateTimePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof CalendarColor;
+    fill: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
+    invalidated: boolean;
     rounded: keyof CalendarRounded;
     showFooter: boolean;
     showSeconds: boolean;
@@ -745,6 +756,8 @@ export interface TimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
+    fill: boolean;
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
@@ -779,7 +792,9 @@ export interface TimePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof TimeColor;
+    fill: boolean;
     interval: number;
+    invalidated: boolean;
     rounded: keyof TimeRounded;
     showFooter: boolean;
     showSeconds: boolean;
@@ -800,8 +815,10 @@ export interface TimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    fill: boolean;
     hideErrorMessage: boolean;
     interval: number;
+    orientation: "vertical" | "horizontal";
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
     showFooter: boolean;
@@ -834,7 +851,9 @@ export interface TimeRangePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof TimeColor;
+    fill: boolean;
     interval: number;
+    invalidated: boolean;
     orientation: "vertical" | "horizontal";
     rounded: keyof TimeRounded;
     showFooter: boolean;
@@ -856,6 +875,7 @@ export interface DateTimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    fill: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -906,11 +926,13 @@ export interface DateTimeRangePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof CalendarColor;
+    fill: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
     hideYears: boolean;
     interval: number;
+    invalidated: boolean;
     orientation: "vertical" | "horizontal";
     rounded: keyof CalendarRounded;
     showFooter: boolean;

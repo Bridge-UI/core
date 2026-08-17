@@ -41,6 +41,7 @@ import {
 
 const timePanelBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "value",
   "tokens",
@@ -53,6 +54,7 @@ const timePanelBridgeKeys = [
   "readOnly",
   "timeZone",
   "customProps",
+  "invalidated",
   "showSeconds",
   "disableTimes",
 ] as const satisfies readonly (keyof TimePanelOwnProps)[];
@@ -139,7 +141,10 @@ export function useTimePanel(
   });
 
   const colorClass = computed(() => {
-    return get(colorTokens.value, merged.value.color);
+    return get(
+      colorTokens.value,
+      merged.value.invalidated ? "error" : merged.value.color,
+    );
   });
 
   const displayDate = computed(() => {
@@ -411,7 +416,9 @@ export function useTimePanel(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex h-72 w-full min-w-fit flex-row gap-2": true,
+        "flex h-72 flex-row gap-2": true,
+        "w-full min-w-fit": merged.value.fill,
+        "w-fit min-w-fit": !merged.value.fill,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
