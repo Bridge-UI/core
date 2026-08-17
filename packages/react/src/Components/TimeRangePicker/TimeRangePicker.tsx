@@ -47,6 +47,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             ampm={merged.ampm}
             tokens={timeTokens}
             color={merged.color}
+            error={merged.error}
             maxTime={merged.maxTime}
             minTime={merged.minTime}
             rounded={merged.rounded}
@@ -68,6 +69,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
             ampm={merged.ampm}
             tokens={timeTokens}
             color={merged.color}
+            error={merged.error}
             value={endDisplayValue}
             maxTime={merged.maxTime}
             minTime={merged.minTime}

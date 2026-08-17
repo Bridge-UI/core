@@ -21,6 +21,7 @@ import {
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -42,6 +43,7 @@ import {
 const timePanelBridgeKeys = [
   "ampm",
   "color",
+  "error",
   "value",
   "tokens",
   "classes",
@@ -125,10 +127,6 @@ export function useTimePanel(
     return resolveContext(merged.value.timeZone);
   });
 
-  const colorTokens = computed(() => {
-    return mergeBridgeUILayeredClasses(colorProps, merged.value.tokens?.color);
-  });
-
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
@@ -139,7 +137,16 @@ export function useTimePanel(
   });
 
   const colorClass = computed(() => {
-    return get(colorTokens.value, merged.value.color);
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      merged.value.tokens?.color,
+    );
+
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: merged.value.error,
+    });
   });
 
   const displayDate = computed(() => {

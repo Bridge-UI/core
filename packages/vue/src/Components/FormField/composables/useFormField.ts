@@ -12,13 +12,13 @@ import {
 // ** Core Imports
 import {
   formFieldColorProps as colorProps,
-  formFieldInvalidatedProps as invalidatedProps,
   formFieldRoundedProps as roundedProps,
   formFieldSizeProps as sizeProps,
   formFieldVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -268,19 +268,11 @@ export function useFormField(
       bridgeFormField.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeFormField.value?.tokens?.invalidated,
-      merged.value.customProps?.invalidated,
-    );
-  });
-
-  const invalidatedColors = computed(() => {
-    return invalidated.value ? invalidatedPalette.value : undefined;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: invalidated.value,
+    });
   });
 
   const roundedClasses = computed(() => {
@@ -302,15 +294,11 @@ export function useFormField(
   });
 
   const containerColorFocus = computed(() => {
-    const palette = invalidated.value
-      ? invalidatedPalette.value
-      : colorPalette.value;
-
     if (isUnderlined.value) {
-      return palette?.underlined;
+      return colorPalette.value?.underlined;
     }
 
-    return palette?.input;
+    return colorPalette.value?.input;
   });
 
   const stackedBodySpacing = computed(() => {
@@ -352,11 +340,10 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-dark-500": !invalidated.value,
+        "text-dark-500": true,
         [roundedClasses.value?.end ?? ""]:
           !isUnderlined.value && !isStacked.value,
-        [colorPalette.value?.end ?? ""]: !invalidated.value,
-        [invalidatedColors.value?.adornment ?? ""]: invalidated.value,
+        [colorPalette.value?.end ?? ""]: true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
@@ -387,7 +374,7 @@ export function useFormField(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
-        [invalidatedColors.value?.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [sizeClasses.value?.text ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),
@@ -442,11 +429,10 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-dark-400": !invalidated.value,
+        "text-dark-400": true,
         [roundedClasses.value?.start ?? ""]:
           !isUnderlined.value && !isStacked.value,
-        [colorPalette.value?.start ?? ""]: !invalidated.value,
-        [invalidatedColors.value?.adornment ?? ""]: invalidated.value,
+        [colorPalette.value?.start ?? ""]: true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -566,9 +552,9 @@ export function useFormField(
         [containerSpacing.value ?? ""]: true,
         [containerColorFocus.value ?? ""]: true,
         "rounded-none": isUnderlined.value,
-        [invalidatedColors.value?.container ?? ""]:
+        "bg-error-50 ring-error-500 dark:bg-error-700/10 dark:ring-error-600":
           invalidated.value && !isUnderlined.value,
-        [invalidatedColors.value?.containerUnderlined ?? ""]:
+        "border-error-500 dark:border-error-600":
           invalidated.value && isUnderlined.value,
         [mergedClasses.value.container ?? ""]: true,
       }),

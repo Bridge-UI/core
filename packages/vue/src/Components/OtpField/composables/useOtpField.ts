@@ -25,13 +25,13 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   otpFieldColorProps as colorProps,
-  otpFieldInvalidatedProps as invalidatedProps,
   otpFieldRoundedProps as roundedProps,
   otpFieldSizeProps as sizeProps,
   otpFieldVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -86,14 +86,9 @@ function resolveBaseFieldCustomProps(
     return undefined;
   }
 
-  const { pin: _pin, invalidated, input: _input, ...chrome } = customProps;
+  const { pin: _pin, input: _input, ...chrome } = customProps;
 
-  return {
-    ...chrome,
-    ...(invalidated?.errorMessage
-      ? { invalidated: { errorMessage: invalidated.errorMessage } }
-      : {}),
-  };
+  return chrome;
 }
 
 /**
@@ -262,19 +257,11 @@ export function useOtpField(
       bridgeOtpField.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeOtpField.value?.tokens?.invalidated,
-      merged.value.customProps?.invalidated,
-    );
-  });
-
-  const invalidatedColors = computed(() => {
-    return invalidated.value ? invalidatedPalette.value : undefined;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: invalidated.value,
+    });
   });
 
   const roundedClasses = computed(() => {
@@ -315,14 +302,8 @@ export function useOtpField(
         [sizeClasses.value?.pin ?? ""]: true,
         [variantClasses.value?.pin ?? ""]: true,
         [roundedClasses.value?.pin ?? ""]: !isUnderlined.value,
-        [colorPalette.value?.pin ?? ""]:
-          !invalidated.value && !isUnderlined.value,
-        [colorPalette.value?.underlined ?? ""]:
-          !invalidated.value && isUnderlined.value,
-        [invalidatedColors.value?.pin ?? ""]:
-          invalidated.value && !isUnderlined.value,
-        [invalidatedColors.value?.pinUnderlined ?? ""]:
-          invalidated.value && isUnderlined.value,
+        [colorPalette.value?.pin ?? ""]: !isUnderlined.value,
+        [colorPalette.value?.underlined ?? ""]: isUnderlined.value,
         [mergedClasses.value.pin ?? ""]: true,
       }),
     );

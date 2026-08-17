@@ -76,6 +76,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
           className={pickerClassName}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
+          error={formField.invalidated}
           maxDate={dateTimeOnly.maxDate}
           maxTime={dateTimeOnly.maxTime}
           minDate={dateTimeOnly.minDate}

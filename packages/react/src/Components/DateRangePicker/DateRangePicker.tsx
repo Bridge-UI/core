@@ -31,6 +31,7 @@ function DateRangePicker(props: DateRangePickerProps) {
       <CalendarRange
         color={merged.color}
         value={displayValue}
+        error={merged.error}
         tokens={calendarTokens}
         maxDate={merged.maxDate}
         minDate={merged.minDate}

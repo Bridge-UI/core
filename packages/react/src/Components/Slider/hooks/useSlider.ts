@@ -27,12 +27,12 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   sliderColorProps as colorProps,
-  sliderInvalidatedProps as invalidatedProps,
   sliderRoundedProps as roundedProps,
   sliderSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -294,26 +294,18 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
     });
   });
 
-  const colorPalette = useMemo(() => {
+  const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeSlider?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeSlider?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeSlider?.tokens?.invalidated,
-      merged.customProps?.invalidated,
-    );
-  }, [merged.customProps?.invalidated, bridgeSlider?.tokens?.invalidated]);
-
-  const colorClasses = derived(() => {
-    return invalidated ? invalidatedPalette : colorPalette;
-  });
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: invalidated,
+    });
+  }, [invalidated, merged.color, bridgeSlider?.tokens?.color]);
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -767,7 +759,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       cn({
         "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
         "text-dark-700 dark:text-dark-400": !invalidated,
-        [invalidatedPalette.stopLabel ?? ""]: invalidated,
+        "text-error-600 dark:text-error-400": invalidated,
         [mergedClasses.stopLabel ?? ""]: true,
       }),
     );

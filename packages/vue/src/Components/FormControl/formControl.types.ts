@@ -2,7 +2,7 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type { FormControlInvalidated, LabelSize } from "@bridge-ui/core/Tokens";
+import type { LabelSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -60,13 +60,6 @@ export interface FormControlCustomProps {
    * Props forwarded to the error message element.
    */
   errorMessage?: HTMLAttributes;
-
-  /**
-   * Error-state message colors (`errorMessage`). Label colors come from `Label` when `error` is set.
-   *
-   * @default undefined
-   */
-  invalidated?: Partial<FormControlInvalidated>;
 
   /**
    * Props forwarded to the root wrapper.

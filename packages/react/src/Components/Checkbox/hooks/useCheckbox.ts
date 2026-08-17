@@ -7,12 +7,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { resolveIconSource } from "@bridge-ui/core/Adapters";
 import {
   checkboxColorProps as colorProps,
-  checkboxInvalidatedProps as invalidatedProps,
   checkboxRoundedProps as roundedProps,
   checkboxSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -125,25 +125,18 @@ export function useCheckbox(
     return uncontrolledChecked;
   });
 
-  const colorPalette = useMemo(() => {
+  const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeCheckbox?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeCheckbox?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeCheckbox?.tokens?.invalidated,
-    );
-  }, [bridgeCheckbox?.tokens?.invalidated]);
-
-  const colorClasses = derived(() => {
-    return formControl.invalidated ? invalidatedPalette : colorPalette;
-  });
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: formControl.invalidated,
+    });
+  }, [formControl.invalidated, merged.color, bridgeCheckbox?.tokens?.color]);
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

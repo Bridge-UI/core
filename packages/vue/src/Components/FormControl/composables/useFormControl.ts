@@ -12,13 +12,9 @@ import {
 } from "vue";
 
 // ** Core Imports
-import {
-  formControlInvalidatedProps as invalidatedProps,
-  labelSizeProps,
-} from "@bridge-ui/core/Tokens";
+import { labelSizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -167,14 +163,6 @@ export function useFormControl(
     return get(labelSizeProps, merged.value.size ?? "md");
   });
 
-  const invalidatedColors = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(bridgeFormControl.value, ["tokens", "formControl", "invalidated"]),
-      merged.value.customProps?.invalidated,
-    );
-  });
-
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
@@ -241,7 +229,7 @@ export function useFormControl(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
-        [invalidatedColors.value.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [textSizeClass.value ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),

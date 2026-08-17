@@ -48,6 +48,7 @@ const {
   <div v-bind="rootBind">
     <Calendar
       :color="merged.color"
+      :error="merged.error"
       :range="merged.range"
       :value="displayValue"
       :tokens="calendarTokens"

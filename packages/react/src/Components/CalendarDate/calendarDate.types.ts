@@ -217,6 +217,13 @@ export interface CalendarDateOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Hides days that fall outside the displayed month.
    *
    * @default false

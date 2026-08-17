@@ -28,6 +28,23 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Reads a color token map. Uses the `error` palette when `invalid` is true.
+ */
+export function getColorToken<T>({
+  color,
+  tokens,
+  invalid = false,
+  fallback = "primary",
+}: {
+  color?: string;
+  fallback?: string;
+  invalid?: boolean;
+  tokens: T;
+}) {
+  return get(tokens, invalid ? "error" : (color ?? fallback));
+}
+
+/**
  * Registry keys that receive `global.formDefaults` (`size` / `rounded`).
  */
 export const BRIDGE_UI_FORM_COMPONENT_NAMES = [

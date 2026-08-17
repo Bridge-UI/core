@@ -37,6 +37,7 @@ import {
 
 const dateRangePickerBridgeKeys = [
   "color",
+  "error",
   "value",
   "tokens",
   "classes",

@@ -23,13 +23,13 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   otpFieldColorProps as colorProps,
-  otpFieldInvalidatedProps as invalidatedProps,
   otpFieldRoundedProps as roundedProps,
   otpFieldSizeProps as sizeProps,
   otpFieldVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -82,14 +82,9 @@ function resolveBaseFieldCustomProps(
     return undefined;
   }
 
-  const { pin: _pin, invalidated, input: _input, ...chrome } = customProps;
+  const { pin: _pin, input: _input, ...chrome } = customProps;
 
-  return {
-    ...chrome,
-    ...(invalidated?.errorMessage
-      ? { invalidated: { errorMessage: invalidated.errorMessage } }
-      : {}),
-  };
+  return chrome;
 }
 
 /**
@@ -250,20 +245,12 @@ export function useOtpField(
       bridgeOtpField?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeOtpField?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeOtpField?.tokens?.invalidated,
-      merged.customProps?.invalidated,
-    );
-  }, [merged.customProps?.invalidated, bridgeOtpField?.tokens?.invalidated]);
-
-  const invalidatedColors = useMemo(() => {
-    return invalidated ? invalidatedPalette : undefined;
-  }, [invalidated, invalidatedPalette]);
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: invalidated,
+    });
+  }, [invalidated, merged.color, bridgeOtpField?.tokens?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -304,10 +291,8 @@ export function useOtpField(
           [sizeClasses?.pin ?? ""]: true,
           [variantClasses?.pin ?? ""]: true,
           [roundedClasses?.pin ?? ""]: !isUnderlined,
-          [colorPalette?.pin ?? ""]: !invalidated && !isUnderlined,
-          [colorPalette?.underlined ?? ""]: !invalidated && isUnderlined,
-          [invalidatedColors?.pin ?? ""]: invalidated && !isUnderlined,
-          [invalidatedColors?.pinUnderlined ?? ""]: invalidated && isUnderlined,
+          [colorPalette?.pin ?? ""]: !isUnderlined,
+          [colorPalette?.underlined ?? ""]: isUnderlined,
           [mergedClasses.pin ?? ""]: true,
         }),
       );
@@ -318,8 +303,6 @@ export function useOtpField(
       variantClasses,
       roundedClasses,
       colorPalette,
-      invalidatedColors,
-      invalidated,
       isUnderlined,
       mergedClasses.pin,
     ],

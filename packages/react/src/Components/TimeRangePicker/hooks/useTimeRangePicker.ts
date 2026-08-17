@@ -35,6 +35,7 @@ import {
 const timeRangePickerBridgeKeys = [
   "ampm",
   "color",
+  "error",
   "value",
   "tokens",
   "classes",

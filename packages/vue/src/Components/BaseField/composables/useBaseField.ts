@@ -11,10 +11,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import {
-  baseFieldInvalidatedProps as invalidatedProps,
-  baseFieldSizeProps as sizeProps,
-} from "@bridge-ui/core/Tokens";
+import { baseFieldSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -153,18 +150,6 @@ export function useBaseField(
     return get(classes, merged.value.size ?? "md");
   });
 
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(bridgeBaseField.value, ["tokens", "baseField", "invalidated"]),
-      merged.value.customProps?.invalidated,
-    );
-  });
-
-  const invalidatedColors = computed(() => {
-    return invalidated.value ? invalidatedPalette.value : undefined;
-  });
-
   const reservesErrorMessageSpace = computed(() => {
     return !merged.value.hideErrorMessage;
   });
@@ -301,7 +286,7 @@ export function useBaseField(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
-        [invalidatedColors.value?.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [sizeClasses.value?.text ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),

@@ -158,6 +158,13 @@ export interface DatePickerOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Hides month navigation / panel.
    *
    * @default false

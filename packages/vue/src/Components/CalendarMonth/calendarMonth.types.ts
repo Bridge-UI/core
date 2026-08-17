@@ -108,6 +108,13 @@ export interface CalendarMonthOwnProps {
   disableMonths?: number[];
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Latest selectable date (bounds month availability for `year`).
    *
    * @default undefined

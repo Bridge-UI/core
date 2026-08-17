@@ -29,6 +29,7 @@ import {
 
 const datePickerBridgeKeys = [
   "color",
+  "error",
   "range",
   "value",
   "tokens",

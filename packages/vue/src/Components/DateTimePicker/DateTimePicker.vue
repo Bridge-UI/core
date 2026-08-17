@@ -67,6 +67,7 @@ const {
         <Calendar
           :color="merged.color"
           :value="displayValue"
+          :error="merged.error"
           :tokens="calendarTokens"
           :rounded="merged.rounded"
           :max-date="merged.maxDate"
@@ -108,6 +109,7 @@ const {
             :tokens="timeTokens"
             :color="merged.color"
             :value="displayValue"
+            :error="merged.error"
             :rounded="merged.rounded"
             :max-time="merged.maxTime"
             :min-time="merged.minTime"

@@ -122,6 +122,7 @@ const {
       v-on:change="handlePickerChange"
       v-on:cancel="handlePickerCancel"
       :show-seconds="timeOnly.showSeconds"
+      :error="formField.invalidated.value"
       :color="formField.merged.value.color"
       :disabled="formField.isDisabled.value"
       :disable-times="timeOnly.disableTimes"

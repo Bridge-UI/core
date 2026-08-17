@@ -31,6 +31,7 @@ function DatePicker(props: DatePickerProps) {
         color={merged.color}
         range={merged.range}
         value={displayValue}
+        error={merged.error}
         tokens={calendarTokens}
         maxDate={merged.maxDate}
         minDate={merged.minDate}

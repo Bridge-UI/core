@@ -5,12 +5,12 @@ import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 // ** Core Imports
 import {
   radioColorProps as colorProps,
-  radioInvalidatedProps as invalidatedProps,
   radioRoundedProps as roundedProps,
   radioSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -97,26 +97,17 @@ export function useRadio(
     return toValue(modelValue) === merged.value.value;
   });
 
-  const colorPalette = computed(() => {
+  const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeRadio.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeRadio.value?.tokens?.invalidated,
-    );
-  });
-
-  const colorClasses = computed(() => {
-    return formControl.invalidated.value
-      ? invalidatedPalette.value
-      : colorPalette.value;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: formControl.invalidated.value,
+    });
   });
 
   const sizeClasses = computed(() => {

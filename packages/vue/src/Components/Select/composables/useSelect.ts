@@ -30,13 +30,11 @@ import {
   type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core/Domain";
-import {
-  listboxColorProps as colorProps,
-  listboxInvalidatedProps as invalidatedProps,
-} from "@bridge-ui/core/Tokens";
+import { listboxColorProps as colorProps } from "@bridge-ui/core/Tokens";
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
 } from "@bridge-ui/core/Utils";
@@ -837,16 +835,12 @@ export function useSelect(
       colorProps,
       get(components.value, ["Select", "tokens", "listbox", "color"]),
     );
-    const base = get(classes, formField.merged.value.color ?? "primary");
 
-    if (!formField.invalidated.value) {
-      return base;
-    }
-
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(components.value, ["Select", "tokens", "listbox", "invalidated"]),
-    );
+    return getColorToken({
+      tokens: classes,
+      color: formField.merged.value.color,
+      invalid: formField.invalidated.value,
+    });
   });
 
   const selectedValueTextClass = computed(() => {
@@ -982,10 +976,10 @@ export function useSelect(
       options: visibleOptions.value,
       componentName: "Select" as const,
       size: formField.merged.value.size,
+      error: formField.invalidated.value,
       color: formField.merged.value.color,
       labelledBy: formField.controlId.value,
       rounded: formField.merged.value.rounded,
-      invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: selectMerged.value.hideEmptyMessage === true,

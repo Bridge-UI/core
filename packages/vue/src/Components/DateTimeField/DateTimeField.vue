@@ -119,6 +119,7 @@ const {
       :interval="dateTimeOnly.interval"
       :time-zone="dateTimeOnly.timeZone"
       :hide-years="dateTimeOnly.hideYears"
+      :error="formField.invalidated.value"
       :color="formField.merged.value.color"
       :hide-months="dateTimeOnly.hideMonths"
       :disabled="formField.isDisabled.value"

@@ -296,6 +296,13 @@ export interface CalendarRangeOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Hides the shared month selector and month panel.
    *
    * @default false

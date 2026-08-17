@@ -3,10 +3,7 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import {
-  labelInvalidatedProps as invalidatedProps,
-  labelSizeProps as sizeProps,
-} from "@bridge-ui/core/Tokens";
+import { labelSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -71,19 +68,12 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
     return get(classes, merged.value.size);
   });
 
-  const invalidatedColors = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeLabel.value?.tokens?.invalidated,
-    );
-  });
-
   const requiredBind = computed(() => {
     return mergePartBind(
       {},
       {},
       cn({
-        [invalidatedColors.value.required ?? ""]: true,
+        "text-error-500 dark:text-error-500 select-none": true,
         [mergedClasses.value.required ?? ""]: true,
       }),
     );
@@ -96,7 +86,7 @@ export function useLabel(props: LabelOwnProps, libDefaults: LabelLibDefaults) {
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
         "text-dark-700 dark:text-dark-300": !merged.value.error,
-        [invalidatedColors.value.label ?? ""]: merged.value.error,
+        "text-error-600 dark:text-error-400": merged.value.error,
         [sizeClass.value ?? ""]: true,
         [mergedClasses.value.root ?? ""]: true,
       }),

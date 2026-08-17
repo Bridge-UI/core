@@ -7,9 +7,38 @@ import {
   cn,
   createMergeNestedComponentProps,
   createMergePartBind,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
 } from "@/Utils";
+
+test("it should read the error palette when invalid", () => {
+  const tokens = { error: { base: "e" }, primary: { base: "p" } };
+
+  expect(getColorToken({ tokens, invalid: true, color: "primary" })).toEqual({
+    base: "e",
+  });
+});
+
+test("it should read the requested color when valid", () => {
+  const tokens = { primary: { base: "p" }, secondary: { base: "s" } };
+
+  expect(getColorToken({ tokens, color: "secondary" })).toEqual({ base: "s" });
+});
+
+test("it should fall back to primary when color is omitted", () => {
+  const tokens = { primary: { base: "p" } };
+
+  expect(getColorToken({ tokens })).toEqual({ base: "p" });
+});
+
+test("it should use a custom fallback color", () => {
+  const tokens = { secondary: { base: "s" } };
+
+  expect(getColorToken({ tokens, fallback: "secondary" })).toEqual({
+    base: "s",
+  });
+});
 
 test("it should merge simple class strings", () => {
   expect(cn("foo", "bar")).toBe("foo bar");

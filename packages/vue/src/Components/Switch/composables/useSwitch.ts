@@ -5,12 +5,12 @@ import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 // ** Core Imports
 import {
   switchColorProps as colorProps,
-  switchInvalidatedProps as invalidatedProps,
   switchRoundedProps as roundedProps,
   switchSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -95,26 +95,17 @@ export function useSwitch(
     return Boolean(toValue(checked));
   });
 
-  const colorPalette = computed(() => {
+  const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeSwitch.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeSwitch.value?.tokens?.invalidated,
-    );
-  });
-
-  const colorClasses = computed(() => {
-    return formControl.invalidated.value
-      ? invalidatedPalette.value
-      : colorPalette.value;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: formControl.invalidated.value,
+    });
   });
 
   const sizeClasses = computed(() => {

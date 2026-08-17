@@ -77,6 +77,7 @@ function TimeField(props: TimeFieldProps) {
           interval={timeOnly.interval}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
+          error={formField.invalidated}
           color={formField.merged.color}
           disabled={formField.isDisabled}
           showSeconds={timeOnly.showSeconds}

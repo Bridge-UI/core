@@ -55,6 +55,7 @@ const {
         :tokens="timeTokens"
         :color="merged.color"
         :value="displayValue"
+        :error="merged.error"
         :rounded="merged.rounded"
         :max-time="merged.maxTime"
         :min-time="merged.minTime"

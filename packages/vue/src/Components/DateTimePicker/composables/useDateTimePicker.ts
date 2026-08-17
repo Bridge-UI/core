@@ -45,6 +45,7 @@ import {
 const dateTimePickerBridgeKeys = [
   "ampm",
   "color",
+  "error",
   "value",
   "tokens",
   "classes",

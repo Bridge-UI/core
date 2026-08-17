@@ -6,12 +6,12 @@ import { useMemo, useState } from "react";
 // ** Core Imports
 import {
   switchColorProps as colorProps,
-  switchInvalidatedProps as invalidatedProps,
   switchRoundedProps as roundedProps,
   switchSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -113,25 +113,18 @@ export function useSwitch(props: SwitchProps, libDefaults: SwitchLibDefaults) {
     return uncontrolledChecked;
   });
 
-  const colorPalette = useMemo(() => {
+  const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeSwitch?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeSwitch?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeSwitch?.tokens?.invalidated,
-    );
-  }, [bridgeSwitch?.tokens?.invalidated]);
-
-  const colorClasses = derived(() => {
-    return formControl.invalidated ? invalidatedPalette : colorPalette;
-  });
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: formControl.invalidated,
+    });
+  }, [formControl.invalidated, merged.color, bridgeSwitch?.tokens?.color]);
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

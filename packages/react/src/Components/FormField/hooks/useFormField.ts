@@ -6,13 +6,13 @@ import { useId, useMemo } from "react";
 // ** Core Imports
 import {
   formFieldColorProps as colorProps,
-  formFieldInvalidatedProps as invalidatedProps,
   formFieldRoundedProps as roundedProps,
   formFieldSizeProps as sizeProps,
   formFieldVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -268,20 +268,12 @@ export function useFormField(
       bridgeFormField?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeFormField?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeFormField?.tokens?.invalidated,
-      merged.customProps?.invalidated,
-    );
-  }, [merged.customProps?.invalidated, bridgeFormField?.tokens?.invalidated]);
-
-  const invalidatedColors = useMemo(() => {
-    return invalidated ? invalidatedPalette : undefined;
-  }, [invalidated, invalidatedPalette]);
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: invalidated,
+    });
+  }, [invalidated, merged.color, bridgeFormField?.tokens?.color]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -302,13 +294,11 @@ export function useFormField(
   }, [merged.variant, bridgeFormField?.tokens?.variant]);
 
   const containerColorFocus = derived(() => {
-    const palette = invalidated ? invalidatedPalette : colorPalette;
-
     if (isUnderlined) {
-      return palette?.underlined;
+      return colorPalette?.underlined;
     }
 
-    return palette?.input;
+    return colorPalette?.input;
   });
 
   const stackedBodySpacing = derived(() => {
@@ -350,10 +340,9 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-dark-500": !invalidated,
+        "text-dark-500": true,
         [roundedClasses?.end ?? ""]: !isUnderlined && !isStacked,
-        [colorPalette?.end ?? ""]: !invalidated,
-        [invalidatedColors?.adornment ?? ""]: invalidated,
+        [colorPalette?.end ?? ""]: true,
         [mergedClasses.end ?? ""]: true,
       }),
     );
@@ -382,7 +371,7 @@ export function useFormField(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
-        [invalidatedColors?.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),
@@ -437,10 +426,9 @@ export function useFormField(
       {},
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
-        "text-dark-400": !invalidated,
+        "text-dark-400": true,
         [roundedClasses?.start ?? ""]: !isUnderlined && !isStacked,
-        [colorPalette?.start ?? ""]: !invalidated,
-        [invalidatedColors?.adornment ?? ""]: invalidated,
+        [colorPalette?.start ?? ""]: true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -540,9 +528,9 @@ export function useFormField(
         [containerSpacing ?? ""]: true,
         [containerColorFocus ?? ""]: true,
         "rounded-none": isUnderlined,
-        [invalidatedColors?.container ?? ""]: invalidated && !isUnderlined,
-        [invalidatedColors?.containerUnderlined ?? ""]:
-          invalidated && isUnderlined,
+        "bg-error-50 ring-error-500 dark:bg-error-700/10 dark:ring-error-600":
+          invalidated && !isUnderlined,
+        "border-error-500 dark:border-error-600": invalidated && isUnderlined,
         [mergedClasses.container ?? ""]: true,
       }),
     );

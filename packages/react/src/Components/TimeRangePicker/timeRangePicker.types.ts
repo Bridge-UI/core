@@ -194,6 +194,13 @@ export interface TimeRangePickerOwnProps {
   endTitle?: string;
 
   /**
+   * When `true`, applies invalidated (error) tile colors.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1

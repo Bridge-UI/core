@@ -3,12 +3,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type { SliderRangeValue, SliderStopInput } from "@bridge-ui/core/Domain";
-import type {
-  BaseFieldInvalidated,
-  SliderColor,
-  SliderInvalidated,
-  SliderRounded,
-} from "@bridge-ui/core/Tokens";
+import type { SliderColor, SliderRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -67,22 +62,11 @@ export interface SliderClasses extends BaseFieldClasses {
   track?: string;
 }
 
-export interface SliderCustomProps extends Omit<
-  BaseFieldCustomProps,
-  "invalidated"
-> {
+export interface SliderCustomProps extends BaseFieldCustomProps {
   /**
    * Props forwarded to the filled bar.
    */
   bar?: HTMLAttributes;
-
-  /**
-   * Control error chrome (`bar`, `thumb`, `track`, …). Error message color comes
-   * from {@link BaseField}; pass `errorMessage` here to override.
-   *
-   * @default undefined
-   */
-  invalidated?: Partial<SliderInvalidated & BaseFieldInvalidated>;
 
   /**
    * Props forwarded to stop markers.

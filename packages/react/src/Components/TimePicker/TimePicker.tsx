@@ -36,6 +36,7 @@ function TimePicker(props: TimePickerProps) {
           tokens={timeTokens}
           color={merged.color}
           value={displayValue}
+          error={merged.error}
           maxTime={merged.maxTime}
           minTime={merged.minTime}
           rounded={merged.rounded}

@@ -1,16 +1,12 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
 import type { InputHTMLAttributes } from "react";
-import { useId, useMemo } from "react";
+import { useId } from "react";
 
 // ** Core Imports
-import {
-  formControlInvalidatedProps as invalidatedProps,
-  labelSizeProps,
-} from "@bridge-ui/core/Tokens";
+import { labelSizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
-  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -164,14 +160,6 @@ export function useFormControl(
     return get(labelSizeProps, merged.size ?? "md");
   });
 
-  const invalidatedColors = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(bridgeFormControl, ["tokens", "formControl", "invalidated"]),
-      merged.customProps?.invalidated,
-    );
-  }, [merged.customProps?.invalidated, bridgeFormControl]);
-
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
@@ -239,7 +227,7 @@ export function useFormControl(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
-        [invalidatedColors.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [textSizeClass ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),

@@ -123,6 +123,7 @@ const {
       v-on:cancel="handlePickerCancel"
       :hide-years="dateOnly.hideYears"
       :hide-months="dateOnly.hideMonths"
+      :error="formField.invalidated.value"
       :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"
       :disabled="formField.isDisabled.value"
