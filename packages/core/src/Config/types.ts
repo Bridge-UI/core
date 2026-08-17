@@ -531,6 +531,7 @@ export interface DateFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -598,6 +599,7 @@ export interface DateRangeFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -664,6 +666,7 @@ export interface DateTimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -745,6 +748,7 @@ export interface TimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
@@ -800,6 +804,7 @@ export interface TimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
@@ -856,6 +861,7 @@ export interface DateTimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;

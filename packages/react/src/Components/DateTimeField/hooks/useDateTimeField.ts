@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import type { FocusEvent, KeyboardEvent, MouseEvent } from "react";
+import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
@@ -41,6 +41,7 @@ const dateTimeFieldBridgeKeys = [
   "minDate",
   "minTime",
   "overlay",
+  "editable",
   "interval",
   "timeZone",
   "clearable",
@@ -300,8 +301,11 @@ export function useDateTimeField(props: DateTimeFieldProps) {
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        readOnly: true,
         value: displayText,
+        readOnly: dateTimeOnly.editable ? formField.inputBind.readOnly : true,
+        onChange: (event: ChangeEvent<HTMLInputElement>) => {
+          formField.inputBind.onChange?.(event as never);
+        },
         onFocus: (event: FocusEvent<HTMLInputElement>) => {
           formField.inputBind.onFocus?.(event as never);
           handleOpenChange(true);

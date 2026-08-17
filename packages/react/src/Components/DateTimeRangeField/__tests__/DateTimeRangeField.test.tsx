@@ -15,6 +15,20 @@ test("it should render a text input", () => {
   expect(container.querySelector("input")).not.toBeNull();
 });
 
+test("it should keep the input read-only by default", () => {
+  render(<DateTimeRangeField />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(true);
+});
+
+test("it should allow typing when editable is set", () => {
+  render(<DateTimeRangeField editable />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(
+    false,
+  );
+});
+
 test("it should open the picker on focus", () => {
   render(
     <DateTimeRangeField

@@ -155,6 +155,13 @@ export interface TimeRangeFieldOwnProps extends Omit<
   disableTimes?: DisableTimesInput;
 
   /**
+   * Allows typing in the input. When unset, the input is read-only (picker only).
+   *
+   * @default false
+   */
+  editable?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1
