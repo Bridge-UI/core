@@ -115,9 +115,9 @@ test("it should pin body and restore viewport scroll when unlocking", () => {
   const handle = pushLayerStack();
 
   expect(scrollToSpy).not.toHaveBeenCalled();
-  expect(document.body.style.left).toBe("0px");
   expect(document.body.style.right).toBe("0px");
   expect(document.body.style.top).toBe("-480px");
+  expect(document.body.style.left).toBe("-12px");
   expect(document.body.style.width).toBe("100%");
   expect(document.body.style.position).toBe("fixed");
   expect(document.body.style.overflow).toBe("hidden");

@@ -202,8 +202,9 @@ function setScrollbarCompensationVar(scrollbarWidth: number) {
 /**
  * Locks the body scroll and compensates layout shift when the scrollbar is hidden.
  *
- * Pins `body` with `position: fixed` and `top: -scrollY`. `overflow: hidden`
- * alone drops the viewport offset on mobile when the lock is released.
+ * Pins `body` with `position: fixed`, `top: -scrollY`, and `left: -scrollX`.
+ * `overflow: hidden` alone drops the viewport offset on mobile when the lock
+ * is released.
  */
 function lockBodyScroll() {
   if (!hasDocument()) {
@@ -232,12 +233,12 @@ function lockBodyScroll() {
     setScrollbarCompensationVar(scrollbarWidth);
   }
 
-  body.style.left = "0px";
   body.style.right = "0px";
   body.style.width = "100%";
   body.style.position = "fixed";
   body.style.overflow = "hidden";
   body.style.top = `-${savedScrollY}px`;
+  body.style.left = `-${savedScrollX}px`;
 }
 
 /**
