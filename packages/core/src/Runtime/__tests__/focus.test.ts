@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 
 // ** External Imports
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import {
@@ -63,9 +63,12 @@ test("it should restore focus on release", () => {
 
   expect(document.activeElement?.id).toBe("first");
 
+  const focus = vi.spyOn(trigger, "focus");
+
   trap.release();
 
   expect(document.activeElement?.id).toBe("trigger");
+  expect(focus).toHaveBeenCalledWith({ preventScroll: true });
 });
 
 test("it should skip auto-focus and restore when disabled", () => {

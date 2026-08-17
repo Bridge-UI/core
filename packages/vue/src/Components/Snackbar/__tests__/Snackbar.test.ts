@@ -46,13 +46,14 @@ function mountSnackbar(
 }
 
 test("it should not render in the document when modelValue is false", () => {
-  mountSnackbar({
+  const wrapper = mountSnackbar({
     props: { title: "Hidden", duration: false, modelValue: false },
   });
 
   expect(
     document.body.querySelector('[data-snackbar-part="panel"]'),
   ).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should teleport to body when modelValue is true", async () => {

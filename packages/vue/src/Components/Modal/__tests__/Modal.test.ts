@@ -3,13 +3,15 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
-// ** Local Imports
-import { Card } from "@/Components/Card";
-import { Modal } from "@/Components/Modal";
+// ** Core Imports
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
 } from "@bridge-ui/core/Layer";
+
+// ** Local Imports
+import { Card } from "@/Components/Card";
+import { Modal } from "@/Components/Modal";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -42,9 +44,10 @@ function mountModal(options: Parameters<typeof mount<typeof Modal>>[1] = {}) {
 }
 
 test("it should not render in the document when modelValue is false", () => {
-  mountModal({ props: { modelValue: false } });
+  const wrapper = mountModal({ props: { modelValue: false } });
 
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should teleport to body when modelValue is true", () => {
@@ -507,6 +510,20 @@ test("it should keep dialog mounted when keepMounted is true", async () => {
   await wrapper.setProps({ modelValue: false });
   await flushPromises();
 
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
+test("it should keep overlay content mounted while the leave transition runs", async () => {
+  const wrapper = mountModal({
+    slots: { default: "Modal body" },
+    props: { modelValue: true, transition: "fade" },
+  });
+
+  await flushPromises();
+  await wrapper.setProps({ modelValue: false });
+  await flushPromises();
+
+  expect(document.body.textContent).toContain("Modal body");
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
 });
 

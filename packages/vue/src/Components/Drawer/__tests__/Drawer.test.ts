@@ -3,12 +3,14 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
-// ** Local Imports
-import { Drawer } from "@/Components/Drawer";
+// ** Core Imports
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
 } from "@bridge-ui/core/Layer";
+
+// ** Local Imports
+import { Drawer } from "@/Components/Drawer";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -41,9 +43,10 @@ function mountDrawer(options: Parameters<typeof mount<typeof Drawer>>[1] = {}) {
 }
 
 test("it should not render in the document when modelValue is false", () => {
-  mountDrawer({ props: { modelValue: false } });
+  const wrapper = mountDrawer({ props: { modelValue: false } });
 
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should teleport to body when modelValue is true", () => {

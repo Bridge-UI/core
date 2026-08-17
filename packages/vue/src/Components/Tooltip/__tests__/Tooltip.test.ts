@@ -41,7 +41,7 @@ function mountTooltip(options: Parameters<typeof mount>[1] = {}) {
 }
 
 test("it should not show the tooltip by default", () => {
-  mountTooltip({
+  const wrapper = mountTooltip({
     props: { content: "Save file" },
     slots: {
       trigger: () => h(Button, null, () => "Save"),
@@ -49,6 +49,7 @@ test("it should not show the tooltip by default", () => {
   });
 
   expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should open on pointer enter when openDelay is 0", async () => {

@@ -34,6 +34,7 @@ test("it should increment z-index per level", () => {
 test("it should skip scroll lock when lockScroll is false", () => {
   const handle = pushLayerStack({ lockScroll: false });
 
+  expect(document.body.style.position).not.toBe("fixed");
   expect(document.body.style.overflow).not.toBe("hidden");
 
   handle.release();
@@ -104,6 +105,58 @@ test("it should not add body padding when no scrollbar is shown", () => {
   clientWidthSpy.mockRestore();
 });
 
+test("it should pin body and restore viewport scroll when unlocking", () => {
+  const scrollXSpy = vi.spyOn(window, "scrollX", "get").mockReturnValue(12);
+  const scrollYSpy = vi.spyOn(window, "scrollY", "get").mockReturnValue(480);
+  const scrollToSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+  document.body.style.position = "relative";
+
+  const handle = pushLayerStack();
+
+  expect(scrollToSpy).not.toHaveBeenCalled();
+  expect(document.body.style.right).toBe("0px");
+  expect(document.body.style.top).toBe("-480px");
+  expect(document.body.style.left).toBe("-12px");
+  expect(document.body.style.width).toBe("100%");
+  expect(document.body.style.position).toBe("fixed");
+  expect(document.body.style.overflow).toBe("hidden");
+
+  handle.release();
+
+  expect(document.body.style.top).toBe("");
+  expect(document.body.style.overflow).toBe("");
+  expect(scrollToSpy).toHaveBeenCalledWith(12, 480);
+  expect(document.body.style.position).toBe("relative");
+
+  scrollXSpy.mockRestore();
+  scrollYSpy.mockRestore();
+  scrollToSpy.mockRestore();
+});
+
+test("it should restore viewport scroll only after the last lock releases", () => {
+  const scrollXSpy = vi.spyOn(window, "scrollX", "get").mockReturnValue(0);
+  const scrollYSpy = vi.spyOn(window, "scrollY", "get").mockReturnValue(240);
+  const scrollToSpy = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+  const outer = pushLayerStack();
+  const inner = pushLayerStack();
+
+  inner.release();
+
+  expect(scrollToSpy).not.toHaveBeenCalled();
+  expect(document.body.style.position).toBe("fixed");
+
+  outer.release();
+
+  expect(document.body.style.position).toBe("");
+  expect(scrollToSpy).toHaveBeenCalledWith(0, 240);
+
+  scrollXSpy.mockRestore();
+  scrollYSpy.mockRestore();
+  scrollToSpy.mockRestore();
+});
+
 test("it should release scroll lock before the layer leaves the stack", () => {
   const handle = pushLayerStack();
 
@@ -113,6 +166,7 @@ test("it should release scroll lock before the layer leaves the stack", () => {
   handle.releaseScrollLock();
 
   expect(document.body.style.overflow).toBe("");
+  expect(document.body.style.position).toBe("");
   expect(getLayerStackSnapshot()).toHaveLength(1);
 
   handle.release();
