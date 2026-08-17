@@ -9,7 +9,6 @@ import {
   isTimeRangeValue,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
-  resolvePickerFill,
   type TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -32,6 +31,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -310,8 +310,10 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     return resolveFieldOverlay(timeOnly.overlay, breakpoint.mobile);
   });
 
-  const fill = derived(() => {
-    return resolvePickerFill(timeOnly.fill, resolvedOverlay);
+  const fill = usePickerFill({
+    fill: timeOnly.fill,
+    overlay: resolvedOverlay,
+    componentName: "TimeRangeField",
   });
 
   const pickerClassName = derived(() => {

@@ -9,7 +9,6 @@ import {
   isDateRangeValue,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
-  resolvePickerFill,
   resolveRangePickerOrientation,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -33,6 +32,7 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
@@ -313,8 +313,10 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     );
   });
 
-  const fill = derived(() => {
-    return resolvePickerFill(dateOnly.fill, resolvedOverlay);
+  const fill = usePickerFill({
+    fill: dateOnly.fill,
+    overlay: resolvedOverlay,
+    componentName: "DateRangeField",
   });
 
   const pickerClassName = derived(() => {

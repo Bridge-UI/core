@@ -88,6 +88,8 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.drawer,
       },
+      // Paper already scrolls vertically. `overflow-x-auto` scrolls dual
+      // calendars / time columns when they exceed the sheet width.
       "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);

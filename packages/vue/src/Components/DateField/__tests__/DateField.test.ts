@@ -279,6 +279,7 @@ test("it should fill the picker in a drawer overlay by default", async () => {
   expect(picker).not.toBeNull();
   expect(picker?.className).toContain("w-full");
   expect(picker?.className).not.toContain("w-fit");
+  expect(picker?.className).toContain("overflow-visible");
 });
 
 test("it should open a dialog when overlay is modal", async () => {

@@ -9,6 +9,7 @@ import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useDateField, type DateFieldOwnProps } from "@/Components/DateField";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 function mockViewport(width: number) {
   Object.defineProperty(window, "innerWidth", {
@@ -183,4 +184,34 @@ test("it should not fill a drawer picker when fill is false", () => {
   expect(pickerClass.value).toBe(
     "shadow-none min-w-max rounded-b-none overflow-visible",
   );
+});
+
+test("it should resolve fill from BridgeUIProvider defaultProps", () => {
+  mockViewport(1280);
+
+  let result!: ReturnType<typeof useDateField>;
+  const emit = vi.fn();
+  const model = ref<null | undefined | DatePickerModel>(null);
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useDateField({ overlay: "menu" }, model, emit);
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        DateField: { defaultProps: { fill: true } },
+      },
+    },
+  });
+
+  expect(result.fill.value).toBe(true);
+  expect(result.pickerClass.value).toBe("w-full");
 });

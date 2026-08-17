@@ -52,8 +52,8 @@ const {
   endMonthLabel,
   yearPageStart,
   endHeaderBind,
+  monthYearBind,
   nextButtonBind,
-  pickerFillBind,
   monthPanelYear,
   todayButtonBind,
   monthPanelValue,
@@ -220,7 +220,7 @@ function chevronClass(open: boolean) {
         </div>
       </div>
 
-      <div :class="pickerFillBind" v-else-if="view === 'month'">
+      <div :class="monthYearBind" v-else-if="view === 'month'">
         <CalendarMonth
           v-bind="shared"
           :key="monthTarget"
@@ -236,7 +236,7 @@ function chevronClass(open: boolean) {
         />
       </div>
 
-      <div :class="pickerFillBind" v-else-if="view === 'year'">
+      <div :class="monthYearBind" v-else-if="view === 'year'">
         <CalendarYear
           v-bind="shared"
           :value="viewYear"

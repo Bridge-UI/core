@@ -499,7 +499,7 @@ export function useCalendarRange(
     );
   });
 
-  const pickerFillBind = derived(() => {
+  const monthYearBind = derived(() => {
     return cn({
       "flex min-h-64 flex-1 flex-col": true,
     });
@@ -665,8 +665,8 @@ export function useCalendarRange(
     endMonthLabel,
     showNav: true,
     endHeaderBind,
+    monthYearBind,
     nextButtonBind,
-    pickerFillBind,
     monthPanelYear,
     todayButtonBind,
     monthPanelValue,

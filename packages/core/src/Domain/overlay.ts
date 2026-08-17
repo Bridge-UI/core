@@ -68,8 +68,9 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 
 /**
  * Whether a date / time picker fills its overlay or container width.
- * Explicit `fill` wins. Unset: `true` for `drawer`, `false` for `menu` /
- * `modal` and for standalone pickers (no overlay).
+ * Explicit `fill` wins (instance prop, then registry `defaultProps`).
+ * Unset: `true` for `drawer`, `false` for `menu` / `modal` and for
+ * standalone pickers (no overlay).
  */
 export function resolvePickerFill(
   fill: boolean | undefined,

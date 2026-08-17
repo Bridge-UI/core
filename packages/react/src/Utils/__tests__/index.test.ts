@@ -1,12 +1,15 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
+import { BridgeUIProvider } from "@/Provider";
 import {
   derived,
   useBridgeUIMergedRegistryClasses,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 
 test("it should run the getter and return its value from derived", () => {
@@ -105,6 +108,78 @@ test("it should keep an explicit showFooter false on dialog overlays", () => {
       componentName: "DateField",
     });
   });
+
+  expect(result.current).toBe(false);
+});
+
+test("it should default fill to true for drawer overlays", () => {
+  const { result } = renderHook(() => {
+    return usePickerFill({
+      fill: undefined,
+      overlay: "drawer",
+      componentName: "DateField",
+    });
+  });
+
+  expect(result.current).toBe(true);
+});
+
+test("it should keep an explicit fill false on drawer overlays", () => {
+  const { result } = renderHook(() => {
+    return usePickerFill({
+      fill: false,
+      overlay: "drawer",
+      componentName: "DateField",
+    });
+  });
+
+  expect(result.current).toBe(false);
+});
+
+test("it should resolve fill from BridgeUIProvider defaultProps", () => {
+  const { result } = renderHook(
+    () => {
+      return usePickerFill({
+        overlay: "menu",
+        fill: undefined,
+        componentName: "DateField",
+      });
+    },
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            DateField: { defaultProps: { fill: true } },
+          },
+        });
+      },
+    },
+  );
+
+  expect(result.current).toBe(true);
+});
+
+test("it should keep explicit fill false over registry defaultProps", () => {
+  const { result } = renderHook(
+    () => {
+      return usePickerFill({
+        fill: false,
+        overlay: "menu",
+        componentName: "DateField",
+      });
+    },
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            DateField: { defaultProps: { fill: true } },
+          },
+        });
+      },
+    },
+  );
 
   expect(result.current).toBe(false);
 });

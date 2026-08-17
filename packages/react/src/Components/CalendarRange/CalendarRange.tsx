@@ -36,8 +36,8 @@ function CalendarRange(props: CalendarRangeProps) {
     endMonthLabel,
     yearPageStart,
     endHeaderBind,
+    monthYearBind,
     nextButtonBind,
-    pickerFillBind,
     monthPanelYear,
     todayButtonBind,
     monthPanelValue,
@@ -201,7 +201,7 @@ function CalendarRange(props: CalendarRangeProps) {
         )}
 
         {view === "month" && (
-          <div className={pickerFillBind}>
+          <div className={monthYearBind}>
             <CalendarMonth
               {...shared}
               key={monthTarget}
@@ -219,7 +219,7 @@ function CalendarRange(props: CalendarRangeProps) {
         )}
 
         {view === "year" && (
-          <div className={pickerFillBind}>
+          <div className={monthYearBind}>
             <CalendarYear
               {...shared}
               value={viewYear}

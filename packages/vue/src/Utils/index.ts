@@ -14,6 +14,7 @@ import {
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   resolveFieldShowFooter,
+  resolvePickerFill,
   type ResolvedFieldOverlay,
 } from "@bridge-ui/core/Domain";
 import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
@@ -142,6 +143,34 @@ export function useFieldShowFooter({
       toValue(showFooter) ?? registryShowFooter,
       toValue(overlay),
     );
+  });
+}
+
+/**
+ * Resolves picker fill: instance prop, then registry `defaultProps.fill`,
+ * then the overlay default from core.
+ */
+export function usePickerFill({
+  fill,
+  overlay,
+  componentName,
+}: {
+  componentName: undefined | keyof BridgeUIComponentsConfig;
+  fill: MaybeRefOrGetter<boolean | undefined>;
+  overlay?: MaybeRefOrGetter<undefined | ResolvedFieldOverlay>;
+}): ComputedRef<boolean> {
+  const bridge = useBridgeUI();
+
+  return computed(() => {
+    const registryFill = componentName
+      ? (get(unref(bridge?.components), [
+          componentName,
+          "defaultProps",
+          "fill",
+        ]) as boolean | undefined)
+      : undefined;
+
+    return resolvePickerFill(toValue(fill) ?? registryFill, toValue(overlay));
   });
 }
 
