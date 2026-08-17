@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isArray, isNil, omit } from "es-toolkit/compat";
-import type { FocusEvent, KeyboardEvent, MouseEvent } from "react";
+import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
@@ -330,6 +330,9 @@ export function useDateField(props: DateFieldProps) {
       {
         value: displayText,
         readOnly: dateOnly.editable ? formField.inputBind.readOnly : true,
+        onChange: (event: ChangeEvent<HTMLInputElement>) => {
+          formField.inputBind.onChange?.(event as never);
+        },
         onFocus: (event: FocusEvent<HTMLInputElement>) => {
           formField.inputBind.onFocus?.(event as never);
           handleOpenChange(true);

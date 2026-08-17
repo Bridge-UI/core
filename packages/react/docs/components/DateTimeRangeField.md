@@ -25,6 +25,12 @@ import { DateTimeRangeField } from "@bridge-ui/react/Components/DateTimeRangeFie
 
 Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `auto`).
 
+The input is read-only by default (picker only). Set `editable` to allow typing:
+
+```tsx
+<DateTimeRangeField editable label="Event" />
+```
+
 ### customProps
 
 ```tsx
@@ -52,6 +58,7 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 | `disableMonths`   | `number[]`                      | —                                            | Month indexes that cannot be selected.                                            |
 | `disableTimes`    | `Date[]`                        | —                                            | Times that cannot be selected.                                                    |
 | `disableYears`    | `number[]`                      | —                                            | Years that cannot be selected.                                                    |
+| `editable`        | `boolean`                       | `false`                                      | Allows typing in the input. Input is read-only when unset.                        |
 | `hideMonths`      | `boolean`                       | `false`                                      | Hides month navigation / panel.                                                   |
 | `hideOutsideDays` | `boolean`                       | `false`                                      | Hides days that fall outside the displayed month.                                 |
 | `hideWeekdays`    | `boolean`                       | `false`                                      | Hides weekday labels.                                                             |

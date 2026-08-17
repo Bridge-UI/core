@@ -24,6 +24,12 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 On mobile, `drawer` / `modal` overlays use vertical dual-calendar layout when
 `orientation` is unset.
 
+The input is read-only by default (picker only). Set `editable` to allow typing:
+
+```vue
+<DateRangeField editable label="Stay" />
+```
+
 ### customProps
 
 ```vue
@@ -49,6 +55,7 @@ On mobile, `drawer` / `modal` overlays use vertical dual-calendar layout when
 | `disableDates`    | `Date[]`                     | —                                            | Dates that cannot be selected.                                                    |
 | `disableMonths`   | `number[]`                   | —                                            | Month indexes that cannot be selected.                                            |
 | `disableYears`    | `number[]`                   | —                                            | Years that cannot be selected.                                                    |
+| `editable`        | `boolean`                    | `false`                                      | Allows typing in the input. Input is read-only when unset.                        |
 | `hideMonths`      | `boolean`                    | `false`                                      | Hides month navigation / panel.                                                   |
 | `hideOutsideDays` | `boolean`                    | `false`                                      | Hides days that fall outside the displayed month.                                 |
 | `hideWeekdays`    | `boolean`                    | `false`                                      | Hides weekday labels.                                                             |

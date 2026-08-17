@@ -49,6 +49,7 @@ const timeRangeFieldBridgeKeys = [
   "maxTime",
   "minTime",
   "overlay",
+  "editable",
   "interval",
   "timeZone",
   "clearable",
@@ -275,8 +276,10 @@ export function useTimeRangeField(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        readonly: true,
         value: displayText.value,
+        readonly: timeOnly.value.editable
+          ? formField.inputBind.value.readonly
+          : true,
         onFocus: (event: FocusEvent) => {
           formField.inputBind.value.onFocus?.(event);
           handleOpenChange(true);

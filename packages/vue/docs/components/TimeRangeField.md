@@ -20,6 +20,12 @@ import { TimeRangeField } from "@bridge-ui/vue/Components/TimeRangeField";
 
 Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `auto`).
 
+The input is read-only by default (picker only). Set `editable` to allow typing:
+
+```vue
+<TimeRangeField editable label="Hours" />
+```
+
 ### customProps
 
 ```vue
@@ -44,6 +50,7 @@ Supports the same `overlay` prop as DateField (`menu` | `modal` | `drawer` | `au
 | `customProps`  | `TimeRangeFieldCustomProps`  | —                                            | Extra props for internal parts.                                                |
 | `defaultValue` | `TimeRangeValue \| null`     | `null`                                       | Uncontrolled initial value.                                                    |
 | `disableTimes` | `Date[]`                     | —                                            | Times that cannot be selected.                                                 |
+| `editable`     | `boolean`                    | `false`                                      | Allows typing in the input. Input is read-only when unset.                     |
 | `interval`     | `number`                     | `1`                                          | Minute step between options.                                                   |
 | `maxTime`      | `Date`                       | —                                            | Latest selectable time.                                                        |
 | `minTime`      | `Date`                       | —                                            | Earliest selectable time.                                                      |

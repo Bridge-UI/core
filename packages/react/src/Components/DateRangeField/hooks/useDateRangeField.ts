@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import type { FocusEvent, KeyboardEvent, MouseEvent } from "react";
+import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
@@ -43,6 +43,7 @@ const dateRangeFieldBridgeKeys = [
   "maxDate",
   "minDate",
   "overlay",
+  "editable",
   "timeZone",
   "clearable",
   "hideYears",
@@ -290,8 +291,11 @@ export function useDateRangeField(props: DateRangeFieldProps) {
   const inputBind = derived(() => {
     return mergePartBind(
       {
-        readOnly: true,
         value: displayText,
+        readOnly: dateOnly.editable ? formField.inputBind.readOnly : true,
+        onChange: (event: ChangeEvent<HTMLInputElement>) => {
+          formField.inputBind.onChange?.(event as never);
+        },
         onFocus: (event: FocusEvent<HTMLInputElement>) => {
           formField.inputBind.onFocus?.(event as never);
           handleOpenChange(true);
