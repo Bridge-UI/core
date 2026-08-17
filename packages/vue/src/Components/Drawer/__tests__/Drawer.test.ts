@@ -41,9 +41,10 @@ function mountDrawer(options: Parameters<typeof mount<typeof Drawer>>[1] = {}) {
 }
 
 test("it should not render in the document when modelValue is false", () => {
-  mountDrawer({ props: { modelValue: false } });
+  const wrapper = mountDrawer({ props: { modelValue: false } });
 
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 });
 
 test("it should teleport to body when modelValue is true", () => {

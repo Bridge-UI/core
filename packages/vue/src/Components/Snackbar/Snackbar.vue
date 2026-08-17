@@ -101,7 +101,7 @@ const teleportTarget = computed(() => {
 </script>
 
 <template>
-  <Teleport :to="teleportTarget" :disabled="teleportDisabled">
+  <Teleport v-if="rendered" :to="teleportTarget" :disabled="teleportDisabled">
     <div v-bind="portalBind" v-if="rendered && isPortaled">
       <div class="w-full max-w-sm pointer-events-auto">
         <div
