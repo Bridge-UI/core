@@ -51,7 +51,7 @@ export const orientationProps: StepperOrientation = {
     "item": "flex-1",
     "list": "flex-row",
     "content": "hidden",
-    "connector": "top-4 left-1/2 h-0.5 w-full",
+    "connector": "left-1/2 h-0.5 w-full",
     "trigger": "flex-col items-center text-center gap-2",
   },
   "vertical": {
@@ -59,6 +59,7 @@ export const orientationProps: StepperOrientation = {
     "item": "pb-10 last:pb-0",
     "content": "ml-12 min-w-0",
     "trigger": "flex-row items-start text-left gap-4",
-    "connector": "top-4 left-4 mt-0.5 -ml-px h-full w-0.5",
+    "connector":
+      "top-[var(--bridge-stepper-indicator-half)] left-[var(--bridge-stepper-indicator-half)] -ml-px h-full w-0.5",
   },
 };

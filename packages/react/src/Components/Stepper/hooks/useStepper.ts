@@ -252,6 +252,7 @@ export function useStepper(
       {
         className: cn({
           [chromeProps.list]: true,
+          [get(sizeItem, "track") ?? ""]: true,
           [get(orientationItem, "list") ?? ""]: true,
           [get(mergedClasses, "list") ?? ""]: true,
           "[&>li:last-child_[data-part=connector]]:hidden": true,

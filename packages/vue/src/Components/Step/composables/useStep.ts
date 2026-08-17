@@ -165,7 +165,7 @@ export function useStep(props: StepOwnProps) {
     }
 
     if (isError.value) {
-      return "error" as const;
+      return "clear" as const;
     }
 
     return undefined;
@@ -242,6 +242,8 @@ export function useStep(props: StepOwnProps) {
           [chromeProps.connector]: true,
           [get(stepperContextRef.value.orientationItem, "connector") ?? ""]:
             true,
+          [get(stepperContextRef.value.sizeItem, "connector") ?? ""]:
+            stepperContextRef.value.orientation !== "vertical",
           [get(accent.value, "connector") ?? ""]: isCompleted.value,
           [get(mergedClasses.value, "connector") ?? ""]: true,
         }),

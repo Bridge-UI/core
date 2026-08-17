@@ -62,7 +62,7 @@ export const chromeProps: StepperChrome = {
   "upcoming":
     "border-dark-300 text-dark-500 dark:border-dark-600 dark:text-dark-400",
   "indicator":
-    "flex shrink-0 items-center justify-center rounded-full border-2 bg-white dark:bg-dark-900",
+    "relative z-10 flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 bg-white dark:bg-dark-900",
   "trigger":
     "group relative z-10 flex w-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40",
 };
