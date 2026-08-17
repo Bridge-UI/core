@@ -1,9 +1,28 @@
 // ** External Imports
+import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { computed, effectScope } from "vue";
+import { computed, defineComponent, effectScope, h } from "vue";
 
 // ** Local Imports
 import { useBridgeUIMergedRegistryClasses, useFieldShowFooter } from "@/Utils";
+
+function mountUseFieldShowFooter(
+  options: Parameters<typeof useFieldShowFooter>[0],
+) {
+  let result!: ReturnType<typeof useFieldShowFooter>;
+
+  const Wrapper = defineComponent({
+    setup() {
+      result = useFieldShowFooter(options);
+
+      return () => h("div");
+    },
+  });
+
+  mount(Wrapper);
+
+  return result;
+}
 
 test("it should return empty object when entry and props have no classes", () => {
   const scope = effectScope();
@@ -81,33 +100,21 @@ test("it should merge entry and props classes with props winning", () => {
 });
 
 test("it should default showFooter to true for dialog overlays", () => {
-  const scope = effectScope();
-
-  scope.run(() => {
-    const result = useFieldShowFooter({
-      overlay: "modal",
-      showFooter: undefined,
-      componentName: "DateField",
-    });
-
-    expect(result.value).toBe(true);
+  const result = mountUseFieldShowFooter({
+    overlay: "modal",
+    showFooter: undefined,
+    componentName: "DateField",
   });
 
-  scope.stop();
+  expect(result.value).toBe(true);
 });
 
 test("it should keep an explicit showFooter false on dialog overlays", () => {
-  const scope = effectScope();
-
-  scope.run(() => {
-    const result = useFieldShowFooter({
-      overlay: "drawer",
-      showFooter: false,
-      componentName: "DateField",
-    });
-
-    expect(result.value).toBe(false);
+  const result = mountUseFieldShowFooter({
+    overlay: "drawer",
+    showFooter: false,
+    componentName: "DateField",
   });
 
-  scope.stop();
+  expect(result.value).toBe(false);
 });
