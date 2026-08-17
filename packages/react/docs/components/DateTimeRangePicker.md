@@ -41,6 +41,7 @@ import { DateTimeRangePicker } from "@bridge-ui/react/Components/DateTimeRangePi
 | `disableTimes`    | `Date[]`                         | —              | Times that cannot be selected.                                     |
 | `disableYears`    | `number[]`                       | —              | Years that cannot be selected.                                     |
 | `error`           | `boolean`                        | `false`        | Applies the error color palette to tiles.                          |
+| `fill`            | `boolean`                        | `false`        | Fills the container width.                                         |
 | `hideMonths`      | `boolean`                        | `false`        | Hides month navigation / panel.                                    |
 | `hideOutsideDays` | `boolean`                        | `false`        | Hides days that fall outside the displayed month.                  |
 | `hideWeekdays`    | `boolean`                        | `false`        | Hides weekday labels.                                              |

@@ -40,6 +40,7 @@ import {
 } from "@/Utils";
 
 const calendarBridgeKeys = [
+  "fill",
   "view",
   "color",
   "error",
@@ -370,7 +371,9 @@ export function useCalendar(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-full min-w-72 flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "w-full min-w-72": merged.value.fill,
+        "w-72": !merged.value.fill,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );

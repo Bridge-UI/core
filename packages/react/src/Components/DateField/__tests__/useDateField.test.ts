@@ -108,24 +108,29 @@ test("it should resolve auto overlay to menu on desktop", () => {
 
   const { result } = renderUseDateField();
 
+  expect(result.current.fill).toBe(false);
   expect(result.current.overlay).toBeUndefined();
   expect(result.current.pickerClassName).toBeUndefined();
 });
 
-test("it should stretch the picker when overlay is a dialog", () => {
+test("it should not fill the picker when overlay is modal", () => {
   mockViewport(1280);
 
   const { result } = renderUseDateField({ overlay: "modal" });
 
-  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+  expect(result.current.fill).toBe(false);
+  expect(result.current.pickerClassName).toBe("shadow-none");
 });
 
-test("it should stretch the picker for auto overlay on mobile", () => {
+test("it should fill the picker for auto overlay on mobile", () => {
   mockViewport(500);
 
   const { result } = renderUseDateField();
 
-  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+  expect(result.current.fill).toBe(true);
+  expect(result.current.pickerClassName).toBe(
+    "w-full shadow-none rounded-b-none",
+  );
 });
 
 test("it should keep menu overlay without dialog picker classes", () => {
@@ -133,5 +138,24 @@ test("it should keep menu overlay without dialog picker classes", () => {
 
   const { result } = renderUseDateField({ overlay: "menu" });
 
+  expect(result.current.fill).toBe(false);
   expect(result.current.pickerClassName).toBeUndefined();
+});
+
+test("it should fill a modal picker when fill is set", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ fill: true, overlay: "modal" });
+
+  expect(result.current.fill).toBe(true);
+  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+});
+
+test("it should not fill a drawer picker when fill is false", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ fill: false, overlay: "drawer" });
+
+  expect(result.current.fill).toBe(false);
+  expect(result.current.pickerClassName).toBe("shadow-none rounded-b-none");
 });

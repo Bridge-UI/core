@@ -45,6 +45,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
 
           <TimePanel
             ampm={merged.ampm}
+            fill={merged.fill}
             tokens={timeTokens}
             color={merged.color}
             error={merged.error}
@@ -67,6 +68,7 @@ function TimeRangePicker(props: TimeRangePickerProps) {
 
           <TimePanel
             ampm={merged.ampm}
+            fill={merged.fill}
             tokens={timeTokens}
             color={merged.color}
             error={merged.error}

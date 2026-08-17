@@ -33,6 +33,7 @@ function TimePicker(props: TimePickerProps) {
       <div className={contentBind}>
         <TimePanel
           ampm={merged.ampm}
+          fill={merged.fill}
           tokens={timeTokens}
           color={merged.color}
           value={displayValue}

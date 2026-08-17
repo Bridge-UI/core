@@ -62,6 +62,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
         <TimePanel
           value={value}
           ampm={merged.ampm}
+          fill={merged.fill}
           tokens={timeTokens}
           onChange={onChange}
           color={merged.color}
@@ -86,6 +87,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <CalendarRange
+            fill={merged.fill}
             color={merged.color}
             value={displayValue}
             error={merged.error}

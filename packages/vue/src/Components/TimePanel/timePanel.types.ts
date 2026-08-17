@@ -123,6 +123,14 @@ export interface TimePanelOwnProps {
   error?: boolean;
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Minute step between options.
    *
    * @default 1

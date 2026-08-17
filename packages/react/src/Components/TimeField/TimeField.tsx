@@ -12,6 +12,7 @@ function TimeField(props: TimeFieldProps) {
 
   const {
     open,
+    fill,
     overlay,
     timeOnly,
     formField,
@@ -66,6 +67,7 @@ function TimeField(props: TimeFieldProps) {
         customProps={overlayCustomProps}
       >
         <TimePicker
+          fill={fill}
           value={modelValue}
           ampm={timeOnly.ampm}
           showFooter={showFooter}

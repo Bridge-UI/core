@@ -72,7 +72,7 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.modal,
       },
-      "flex w-fit max-w-full flex-col items-stretch p-0",
+      "flex w-fit max-w-full sm:max-w-full flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.modal]);
 
@@ -87,7 +87,7 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);
 

@@ -47,6 +47,7 @@ const {
 <template>
   <div v-bind="rootBind">
     <Calendar
+      :fill="merged.fill"
       :color="merged.color"
       :error="merged.error"
       :range="merged.range"

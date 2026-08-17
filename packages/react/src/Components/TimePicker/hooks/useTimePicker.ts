@@ -29,6 +29,7 @@ import {
 
 const timePickerBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "error",
   "value",
@@ -165,7 +166,9 @@ export function useTimePicker(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-fit flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
+        "w-full": merged.fill,
+        "w-fit": !merged.fill,
         [shellRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),

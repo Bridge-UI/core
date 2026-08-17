@@ -124,31 +124,59 @@ test("it should keep explicit showFooter true on desktop", () => {
 test("it should leave picker class empty for auto overlay on desktop", () => {
   mockViewport(1280);
 
-  const { pickerClass } = mountUseDateField();
+  const { fill, pickerClass } = mountUseDateField();
 
+  expect(fill.value).toBe(false);
   expect(pickerClass.value).toBeUndefined();
 });
 
-test("it should stretch the picker when overlay is a dialog", () => {
+test("it should not fill the picker when overlay is modal", () => {
   mockViewport(1280);
 
-  const { pickerClass } = mountUseDateField({ overlay: "modal" });
+  const { fill, pickerClass } = mountUseDateField({ overlay: "modal" });
 
-  expect(pickerClass.value).toBe("w-full shadow-none");
+  expect(fill.value).toBe(false);
+  expect(pickerClass.value).toBe("shadow-none");
 });
 
-test("it should stretch the picker for auto overlay on mobile", () => {
+test("it should fill the picker for auto overlay on mobile", () => {
   mockViewport(500);
 
-  const { pickerClass } = mountUseDateField();
+  const { fill, pickerClass } = mountUseDateField();
 
-  expect(pickerClass.value).toBe("w-full shadow-none");
+  expect(fill.value).toBe(true);
+  expect(pickerClass.value).toBe("w-full shadow-none rounded-b-none");
 });
 
 test("it should keep menu overlay without dialog picker classes", () => {
   mockViewport(500);
 
-  const { pickerClass } = mountUseDateField({ overlay: "menu" });
+  const { fill, pickerClass } = mountUseDateField({ overlay: "menu" });
 
+  expect(fill.value).toBe(false);
   expect(pickerClass.value).toBeUndefined();
+});
+
+test("it should fill a modal picker when fill is set", () => {
+  mockViewport(1280);
+
+  const { fill, pickerClass } = mountUseDateField({
+    fill: true,
+    overlay: "modal",
+  });
+
+  expect(fill.value).toBe(true);
+  expect(pickerClass.value).toBe("w-full shadow-none");
+});
+
+test("it should not fill a drawer picker when fill is false", () => {
+  mockViewport(1280);
+
+  const { fill, pickerClass } = mountUseDateField({
+    fill: false,
+    overlay: "drawer",
+  });
+
+  expect(fill.value).toBe(false);
+  expect(pickerClass.value).toBe("shadow-none rounded-b-none");
 });

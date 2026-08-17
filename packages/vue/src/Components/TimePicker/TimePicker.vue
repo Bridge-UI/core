@@ -52,6 +52,7 @@ const {
     <div :class="contentBind">
       <TimePanel
         :ampm="merged.ampm"
+        :fill="merged.fill"
         :tokens="timeTokens"
         :color="merged.color"
         :value="displayValue"

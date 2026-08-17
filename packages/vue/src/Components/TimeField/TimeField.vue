@@ -31,6 +31,7 @@ const model = defineModel<null | TimeValue>();
 
 const props = withDefaults(defineProps<TimeFieldOwnProps>(), {
   clearable: true,
+  fill: undefined,
   showErrorIcon: true,
   showFooter: undefined,
 });
@@ -53,6 +54,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   timeOnly,
   formField,
@@ -108,6 +110,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <TimePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="timeOnly.ampm"

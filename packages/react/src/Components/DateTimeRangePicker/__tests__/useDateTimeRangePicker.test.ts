@@ -38,3 +38,18 @@ test("it should enable footer when showFooter is set", () => {
 
   expect(result.current.showFooter).toBe(true);
 });
+
+test("it should fill the overlay width when fill is set", () => {
+  const { result } = renderUseDateTimeRangePicker({ fill: true });
+
+  expect(result.current.calendarBind).toContain("w-full");
+  expect(result.current.rootBind.className).toContain("w-full");
+});
+
+test("it should hug content width when fill is unset", () => {
+  const { result } = renderUseDateTimeRangePicker();
+
+  expect(result.current.calendarBind.split(/\s+/)).not.toContain("w-full");
+  expect(result.current.calendarBind.split(/\s+/)).not.toContain("min-w-0");
+  expect(result.current.rootBind.className.split(/\s+/)).toContain("w-fit");
+});

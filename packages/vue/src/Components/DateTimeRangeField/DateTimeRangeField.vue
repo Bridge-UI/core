@@ -31,6 +31,7 @@ const model = defineModel<null | DateRangeValue>();
 
 const props = withDefaults(defineProps<DateTimeRangeFieldOwnProps>(), {
   clearable: true,
+  fill: undefined,
   showErrorIcon: true,
   showFooter: undefined,
 });
@@ -55,6 +56,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   formField,
   inputBind,
@@ -111,6 +113,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DateTimeRangePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="dateTimeOnly.ampm"

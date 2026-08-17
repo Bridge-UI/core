@@ -64,6 +64,7 @@ const {
 
         <TimePanel
           :ampm="merged.ampm"
+          :fill="merged.fill"
           :tokens="timeTokens"
           :color="merged.color"
           :error="merged.error"
@@ -86,6 +87,7 @@ const {
 
         <TimePanel
           :ampm="merged.ampm"
+          :fill="merged.fill"
           :tokens="timeTokens"
           :color="merged.color"
           :error="merged.error"

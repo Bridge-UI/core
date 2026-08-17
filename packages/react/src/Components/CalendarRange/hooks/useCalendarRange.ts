@@ -35,6 +35,7 @@ import {
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
+  "fill",
   "color",
   "error",
   "value",
@@ -408,9 +409,13 @@ export function useCalendarRange(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex w-full flex-col overflow-hidden": true,
+        "flex flex-col overflow-hidden": true,
+        "w-full": merged.fill,
         "min-w-[38rem]": !isVertical,
         "min-w-72": isVertical,
+        // Hug stacked calendars and optional time asides. A fixed `w-72`
+        // clips DateTimeRange TimePanels beside each month.
+        "w-fit": !merged.fill && isVertical,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -421,7 +426,7 @@ export function useCalendarRange(
       customProps?.header,
       {},
       cn({
-        "flex items-center p-2.5": true,
+        "flex w-full items-center p-2.5": true,
         [mergedClasses.header ?? ""]: true,
       }),
     );
@@ -432,7 +437,9 @@ export function useCalendarRange(
       customProps?.months,
       {},
       cn({
-        "flex shrink-0 items-center gap-x-10": true,
+        "flex min-w-0 flex-1 items-center": true,
+        "justify-between": !isVertical,
+        "justify-start": isVertical,
         [mergedClasses.months ?? ""]: true,
       }),
     );
@@ -478,9 +485,7 @@ export function useCalendarRange(
       customProps?.start,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical,
-        "w-72 shrink-0": !isVertical,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -491,9 +496,7 @@ export function useCalendarRange(
       customProps?.end,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical,
-        "w-72 shrink-0": !isVertical,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.end ?? ""]: true,
       }),
     );

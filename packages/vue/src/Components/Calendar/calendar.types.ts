@@ -236,6 +236,14 @@ export interface CalendarOwnProps {
   error?: boolean;
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Hides the month selector and month panel.
    *
    * @default false
