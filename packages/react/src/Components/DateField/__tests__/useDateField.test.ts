@@ -129,7 +129,7 @@ test("it should fill the picker for auto overlay on mobile", () => {
 
   expect(result.current.fill).toBe(true);
   expect(result.current.pickerClassName).toBe(
-    "w-full shadow-none rounded-b-none",
+    "w-full shadow-none min-w-max rounded-b-none overflow-visible",
   );
 });
 
@@ -157,5 +157,7 @@ test("it should not fill a drawer picker when fill is false", () => {
   const { result } = renderUseDateField({ fill: false, overlay: "drawer" });
 
   expect(result.current.fill).toBe(false);
-  expect(result.current.pickerClassName).toBe("shadow-none rounded-b-none");
+  expect(result.current.pickerClassName).toBe(
+    "shadow-none min-w-max rounded-b-none overflow-visible",
+  );
 });

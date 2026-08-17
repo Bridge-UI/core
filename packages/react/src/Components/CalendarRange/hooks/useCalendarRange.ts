@@ -411,10 +411,7 @@ export function useCalendarRange(
       cn({
         "flex flex-col overflow-hidden": true,
         "w-full": merged.fill,
-        "min-w-[38rem]": !isVertical,
-        "min-w-72": isVertical,
-        // Hug stacked calendars and optional time asides. A fixed `w-72`
-        // clips DateTimeRange TimePanels beside each month.
+        "min-w-max": true,
         "w-fit": !merged.fill && isVertical,
         [mergedClasses.root ?? ""]: true,
       }),

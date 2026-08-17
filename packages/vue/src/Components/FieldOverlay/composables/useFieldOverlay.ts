@@ -68,12 +68,15 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
     return withDialogPanelClasses(
       {
         size: "md",
+        scroll: "paper",
         placement: "bottom",
         closeOnOverlay: true,
         disableRestoreFocus: true,
         ...props.customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch p-0",
+      // Paper already scrolls vertically. `overflow-x-auto` scrolls dual
+      // calendars / time columns when they exceed the sheet width.
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
     );
   });
 

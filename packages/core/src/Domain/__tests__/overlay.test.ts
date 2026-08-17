@@ -108,9 +108,9 @@ describe("resolvePickerFill", () => {
 });
 
 describe("resolveFieldPickerClassName", () => {
-  test("it should stretch, drop shadow, and flush the bottom in a filled drawer", () => {
+  test("it should stretch, drop shadow, and let a filled drawer scroll", () => {
     expect(resolveFieldPickerClassName(true, "drawer")).toBe(
-      "w-full shadow-none rounded-b-none",
+      "w-full shadow-none min-w-max rounded-b-none overflow-visible",
     );
   });
 
@@ -120,7 +120,7 @@ describe("resolveFieldPickerClassName", () => {
 
   test("it should flush the bottom without stretching in an unfilled drawer", () => {
     expect(resolveFieldPickerClassName(false, "drawer")).toBe(
-      "shadow-none rounded-b-none",
+      "shadow-none min-w-max rounded-b-none overflow-visible",
     );
   });
 

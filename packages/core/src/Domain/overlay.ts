@@ -85,7 +85,9 @@ export function resolvePickerFill(
 /**
  * Overlay classes for a field picker shell.
  * Dialogs drop the picker shadow; fill stretches to the overlay width;
- * `drawer` flushes the bottom edge so the shell meets the viewport.
+ * `drawer` keeps the picker's intrinsic width (`min-w-max`) and drops
+ * `overflow-hidden` so dual calendars / time columns can overflow into
+ * the sheet's horizontal scroll, then flushes the bottom edge.
  */
 export function resolveFieldPickerClassName(
   fill: boolean,
@@ -103,7 +105,9 @@ export function resolveFieldPickerClassName(
   }
 
   if (overlay === "drawer") {
+    classes.push("min-w-max");
     classes.push("rounded-b-none");
+    classes.push("overflow-visible");
   }
 
   if (classes.length === 0) {

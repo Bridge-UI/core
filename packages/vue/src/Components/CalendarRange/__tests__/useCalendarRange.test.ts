@@ -66,17 +66,17 @@ test("it should default to horizontal orientation", () => {
     panelsBind,
   } = mountUseCalendarRange();
 
-  expect(merged.value.orientation).toBe("horizontal");
   expect(isVertical.value).toBe(false);
-  expect(rootBind.value.class).not.toContain("w-full");
-  expect(rootBind.value.class).toContain("min-w-[38rem]");
-  expect(panelsBind.value.class).toContain("w-full");
-  expect(panelsBind.value.class).toContain("flex-row");
-  expect(startBind.value.class).toContain("flex-1");
-  expect(startBind.value.class).toContain("min-w-72");
-  expect(startBind.value.class).not.toContain("min-w-0");
   expect(endBind.value.class).toContain("flex-1");
+  expect(startBind.value.class).toContain("flex-1");
   expect(monthsBind.value.class).toContain("flex-1");
+  expect(panelsBind.value.class).toContain("w-full");
+  expect(merged.value.orientation).toBe("horizontal");
+  expect(rootBind.value.class).toContain("min-w-max");
+  expect(startBind.value.class).toContain("min-w-72");
+  expect(panelsBind.value.class).toContain("flex-row");
+  expect(rootBind.value.class).not.toContain("w-full");
+  expect(startBind.value.class).not.toContain("min-w-0");
   expect(monthsBind.value.class).toContain("justify-between");
 });
 
@@ -84,7 +84,7 @@ test("it should fill available width when fill is set", () => {
   const { rootBind } = mountUseCalendarRange({ fill: true });
 
   expect(rootBind.value.class).toContain("w-full");
-  expect(rootBind.value.class).toContain("min-w-[38rem]");
+  expect(rootBind.value.class).toContain("min-w-max");
 });
 
 test("it should fill stacked panels when fill is set", () => {
@@ -93,7 +93,7 @@ test("it should fill stacked panels when fill is set", () => {
     orientation: "vertical",
   });
 
-  expect(rootBind.value.class).toContain("min-w-72");
+  expect(rootBind.value.class).toContain("min-w-max");
   expect(rootBind.value.class.split(/\s+/)).toContain("w-full");
   expect(rootBind.value.class.split(/\s+/)).not.toContain("w-fit");
 });
@@ -105,13 +105,13 @@ test("it should stack panels when orientation is vertical", () => {
     });
 
   expect(isVertical.value).toBe(true);
-  expect(rootBind.value.class.split(/\s+/)).toContain("w-fit");
-  expect(rootBind.value.class.split(/\s+/)).not.toContain("w-72");
-  expect(rootBind.value.class).toContain("min-w-72");
-  expect(panelsBind.value.class).toContain("flex-col");
-  expect(startBind.value.class).toContain("flex-1");
-  expect(startBind.value.class).toContain("min-w-72");
   expect(endBind.value.class).toContain("flex-1");
+  expect(startBind.value.class).toContain("flex-1");
+  expect(rootBind.value.class).toContain("min-w-max");
+  expect(startBind.value.class).toContain("min-w-72");
+  expect(panelsBind.value.class).toContain("flex-col");
   expect(monthsBind.value.class).toContain("justify-start");
+  expect(rootBind.value.class.split(/\s+/)).toContain("w-fit");
   expect(monthsBind.value.class).not.toContain("justify-between");
+  expect(rootBind.value.class.split(/\s+/)).not.toContain("w-72");
 });

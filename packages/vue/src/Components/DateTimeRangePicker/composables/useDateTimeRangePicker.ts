@@ -339,12 +339,13 @@ export function useDateTimeRangePicker(
 
   const contentBind = computed(() => {
     return cn({
-      "flex w-full flex-col": true,
+      "flex w-full min-w-max flex-col": true,
     });
   });
 
   const calendarBind = computed(() => {
     return cn({
+      "min-w-max": true,
       "w-full": merged.value.fill,
       [mergedClasses.value.calendar ?? ""]: true,
     });

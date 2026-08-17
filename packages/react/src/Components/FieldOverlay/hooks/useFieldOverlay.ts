@@ -82,12 +82,13 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         show,
         size: "md",
         onShowChange,
+        scroll: "paper",
         placement: "bottom",
         closeOnOverlay: true,
         disableRestoreFocus: true,
         ...customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch p-0",
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);
 

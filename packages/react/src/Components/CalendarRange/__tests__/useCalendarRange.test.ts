@@ -51,16 +51,16 @@ test("it should default to horizontal orientation", () => {
   const { result } = renderUseCalendarRange();
 
   expect(result.current.isVertical).toBe(false);
-  expect(result.current.merged.orientation).toBe("horizontal");
   expect(result.current.endBind.className).toContain("flex-1");
+  expect(result.current.merged.orientation).toBe("horizontal");
   expect(result.current.startBind.className).toContain("flex-1");
   expect(result.current.monthsBind.className).toContain("flex-1");
   expect(result.current.panelsBind.className).toContain("w-full");
+  expect(result.current.rootBind.className).toContain("min-w-max");
   expect(result.current.startBind.className).toContain("min-w-72");
   expect(result.current.panelsBind.className).toContain("flex-row");
   expect(result.current.rootBind.className).not.toContain("w-full");
   expect(result.current.startBind.className).not.toContain("min-w-0");
-  expect(result.current.rootBind.className).toContain("min-w-[38rem]");
   expect(result.current.monthsBind.className).toContain("justify-between");
 });
 
@@ -68,7 +68,7 @@ test("it should fill available width when fill is set", () => {
   const { result } = renderUseCalendarRange({ fill: true });
 
   expect(result.current.rootBind.className).toContain("w-full");
-  expect(result.current.rootBind.className).toContain("min-w-[38rem]");
+  expect(result.current.rootBind.className).toContain("min-w-max");
 });
 
 test("it should fill stacked panels when fill is set", () => {
@@ -77,7 +77,7 @@ test("it should fill stacked panels when fill is set", () => {
     orientation: "vertical",
   });
 
-  expect(result.current.rootBind.className).toContain("min-w-72");
+  expect(result.current.rootBind.className).toContain("min-w-max");
   expect(result.current.rootBind.className.split(/\s+/)).toContain("w-full");
   expect(result.current.rootBind.className.split(/\s+/)).not.toContain("w-fit");
 });
@@ -88,11 +88,11 @@ test("it should stack panels when orientation is vertical", () => {
   expect(result.current.isVertical).toBe(true);
   expect(result.current.endBind.className).toContain("flex-1");
   expect(result.current.startBind.className).toContain("flex-1");
-  expect(result.current.rootBind.className).toContain("min-w-72");
+  expect(result.current.rootBind.className).toContain("min-w-max");
   expect(result.current.startBind.className).toContain("min-w-72");
   expect(result.current.panelsBind.className).toContain("flex-col");
   expect(result.current.monthsBind.className).toContain("justify-start");
   expect(result.current.rootBind.className.split(/\s+/)).toContain("w-fit");
-  expect(result.current.rootBind.className.split(/\s+/)).not.toContain("w-72");
   expect(result.current.monthsBind.className).not.toContain("justify-between");
+  expect(result.current.rootBind.className.split(/\s+/)).not.toContain("w-72");
 });
