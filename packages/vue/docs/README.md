@@ -50,6 +50,7 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 - [Slider](./components/Slider.md)
 - [Snackbar](./components/Snackbar.md)
 - [Spinner](./components/Spinner.md)
+- [Stepper](./components/Stepper.md)
 - [Switch](./components/Switch.md)
 - [Tabs](./components/Tabs.md)
 - [Textarea](./components/Textarea.md)

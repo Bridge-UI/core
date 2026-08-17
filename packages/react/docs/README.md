@@ -50,6 +50,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [Slider](./components/Slider.md)
 - [Snackbar](./components/Snackbar.md)
 - [Spinner](./components/Spinner.md)
+- [Stepper](./components/Stepper.md)
 - [Switch](./components/Switch.md)
 - [Tabs](./components/Tabs.md)
 - [Textarea](./components/Textarea.md)
