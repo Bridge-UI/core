@@ -72,7 +72,7 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.modal,
       },
-      "flex w-fit max-w-full flex-col items-stretch p-0",
+      "flex w-fit max-w-full sm:max-w-full flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.modal]);
 
@@ -82,12 +82,15 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         show,
         size: "md",
         onShowChange,
+        scroll: "paper",
         placement: "bottom",
         closeOnOverlay: true,
         disableRestoreFocus: true,
         ...customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",
+      // Paper already scrolls vertically. `overflow-x-auto` scrolls dual
+      // calendars / time columns when they exceed the sheet width.
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);
 

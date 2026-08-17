@@ -44,6 +44,7 @@ import {
 
 const timePanelBridgeKeys = [
   "ampm",
+  "fill",
   "color",
   "error",
   "value",
@@ -362,7 +363,9 @@ export function useTimePanel(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "flex h-72 w-full min-w-fit flex-row gap-2": true,
+        "flex h-72 flex-row gap-2": true,
+        "w-full min-w-fit": merged.fill,
+        "w-fit min-w-fit": !merged.fill,
         [mergedClasses.root ?? ""]: true,
       }),
     );

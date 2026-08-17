@@ -259,6 +259,29 @@ test("it should not show the clear control when clearable is false", () => {
   expect(document.body.querySelector('[aria-label="Clear"]')).toBeNull();
 });
 
+test("it should fill the picker in a drawer overlay by default", async () => {
+  mountDateField({
+    props: {
+      overlay: "drawer",
+      defaultValue: new Date(2021, 4, 21),
+      customProps: { drawer: { transition: "none" } },
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const yearButton = document.body.querySelector('[aria-label="Select year"]');
+  const picker = yearButton?.closest(".shadow-none");
+
+  expect(picker).not.toBeNull();
+  expect(picker?.className).toContain("w-full");
+  expect(picker?.className).not.toContain("w-fit");
+  expect(picker?.className).toContain("overflow-visible");
+});
+
 test("it should open a dialog when overlay is modal", async () => {
   mountDateField({
     props: {

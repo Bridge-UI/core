@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -7,6 +8,7 @@ import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useDateField, type DateFieldProps } from "@/Components/DateField";
+import { BridgeUIProvider } from "@/Provider";
 
 function mockViewport(width: number) {
   Object.defineProperty(window, "innerWidth", {
@@ -108,24 +110,29 @@ test("it should resolve auto overlay to menu on desktop", () => {
 
   const { result } = renderUseDateField();
 
+  expect(result.current.fill).toBe(false);
   expect(result.current.overlay).toBeUndefined();
   expect(result.current.pickerClassName).toBeUndefined();
 });
 
-test("it should stretch the picker when overlay is a dialog", () => {
+test("it should not fill the picker when overlay is modal", () => {
   mockViewport(1280);
 
   const { result } = renderUseDateField({ overlay: "modal" });
 
-  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+  expect(result.current.fill).toBe(false);
+  expect(result.current.pickerClassName).toBe("shadow-none");
 });
 
-test("it should stretch the picker for auto overlay on mobile", () => {
+test("it should fill the picker for auto overlay on mobile", () => {
   mockViewport(500);
 
   const { result } = renderUseDateField();
 
-  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+  expect(result.current.fill).toBe(true);
+  expect(result.current.pickerClassName).toBe(
+    "w-full shadow-none min-w-max rounded-b-none overflow-visible",
+  );
 });
 
 test("it should keep menu overlay without dialog picker classes", () => {
@@ -133,5 +140,44 @@ test("it should keep menu overlay without dialog picker classes", () => {
 
   const { result } = renderUseDateField({ overlay: "menu" });
 
+  expect(result.current.fill).toBe(false);
   expect(result.current.pickerClassName).toBeUndefined();
+});
+
+test("it should fill a modal picker when fill is set", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ fill: true, overlay: "modal" });
+
+  expect(result.current.fill).toBe(true);
+  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+});
+
+test("it should not fill a drawer picker when fill is false", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseDateField({ fill: false, overlay: "drawer" });
+
+  expect(result.current.fill).toBe(false);
+  expect(result.current.pickerClassName).toBe(
+    "shadow-none min-w-max rounded-b-none overflow-visible",
+  );
+});
+
+test("it should resolve fill from BridgeUIProvider defaultProps", () => {
+  mockViewport(1280);
+
+  const { result } = renderHook(() => useDateField({ overlay: "menu" }), {
+    wrapper: ({ children }) => {
+      return createElement(BridgeUIProvider, {
+        children,
+        components: {
+          DateField: { defaultProps: { fill: true } },
+        },
+      });
+    },
+  });
+
+  expect(result.current.fill).toBe(true);
+  expect(result.current.pickerClassName).toBe("w-full");
 });

@@ -4,7 +4,12 @@ import { expect, test } from "vitest";
 import { computed, defineComponent, effectScope, h } from "vue";
 
 // ** Local Imports
-import { useBridgeUIMergedRegistryClasses, useFieldShowFooter } from "@/Utils";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
+import {
+  useBridgeUIMergedRegistryClasses,
+  useFieldShowFooter,
+  usePickerFill,
+} from "@/Utils";
 
 function mountUseFieldShowFooter(
   options: Parameters<typeof useFieldShowFooter>[0],
@@ -20,6 +25,40 @@ function mountUseFieldShowFooter(
   });
 
   mount(Wrapper);
+
+  return result;
+}
+
+function mountUsePickerFill(
+  options: Parameters<typeof usePickerFill>[0],
+  registry: { fill?: boolean } = {},
+) {
+  let result!: ReturnType<typeof usePickerFill>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = usePickerFill(options);
+
+      return () => h("div");
+    },
+  });
+
+  if (!("fill" in registry)) {
+    mount(Consumer);
+
+    return result;
+  }
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        DateField: { defaultProps: { fill: registry.fill } },
+      },
+    },
+  });
 
   return result;
 }
@@ -115,6 +154,52 @@ test("it should keep an explicit showFooter false on dialog overlays", () => {
     showFooter: false,
     componentName: "DateField",
   });
+
+  expect(result.value).toBe(false);
+});
+
+test("it should default fill to true for drawer overlays", () => {
+  const result = mountUsePickerFill({
+    fill: undefined,
+    overlay: "drawer",
+    componentName: "DateField",
+  });
+
+  expect(result.value).toBe(true);
+});
+
+test("it should keep an explicit fill false on drawer overlays", () => {
+  const result = mountUsePickerFill({
+    fill: false,
+    overlay: "drawer",
+    componentName: "DateField",
+  });
+
+  expect(result.value).toBe(false);
+});
+
+test("it should resolve fill from BridgeUIProvider defaultProps", () => {
+  const result = mountUsePickerFill(
+    {
+      overlay: "menu",
+      fill: undefined,
+      componentName: "DateField",
+    },
+    { fill: true },
+  );
+
+  expect(result.value).toBe(true);
+});
+
+test("it should keep explicit fill false over registry defaultProps", () => {
+  const result = mountUsePickerFill(
+    {
+      fill: false,
+      overlay: "menu",
+      componentName: "DateField",
+    },
+    { fill: true },
+  );
 
   expect(result.value).toBe(false);
 });

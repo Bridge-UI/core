@@ -36,8 +36,8 @@ function CalendarRange(props: CalendarRangeProps) {
     endMonthLabel,
     yearPageStart,
     endHeaderBind,
+    monthYearBind,
     nextButtonBind,
-    pickerFillBind,
     monthPanelYear,
     todayButtonBind,
     monthPanelValue,
@@ -125,7 +125,7 @@ function CalendarRange(props: CalendarRangeProps) {
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        <div className="flex min-w-0 flex-1 items-center justify-start">
+        <div className="flex shrink-0 items-center justify-start">
           {yearButton}
         </div>
 
@@ -134,7 +134,7 @@ function CalendarRange(props: CalendarRangeProps) {
           {!isVertical && endMonthButton}
         </div>
 
-        <div className="flex min-w-0 flex-1 items-center justify-end">
+        <div className="flex shrink-0 items-center justify-end">
           {navButtons}
         </div>
       </div>
@@ -142,7 +142,7 @@ function CalendarRange(props: CalendarRangeProps) {
       <div {...bodyBind}>
         {view === "date" && (
           <div {...panelsBind}>
-            <div className="flex w-full min-w-0 items-stretch">
+            <div className="flex min-w-max flex-1 items-stretch">
               <div {...startBind}>
                 <CalendarDate
                   {...shared}
@@ -168,7 +168,7 @@ function CalendarRange(props: CalendarRangeProps) {
               {props.slots?.startAside}
             </div>
 
-            <div className="flex w-full min-w-0 items-stretch">
+            <div className="flex min-w-max flex-1 items-stretch">
               <div {...endBind}>
                 {isVertical && endMonthButton ? (
                   <div {...endHeaderBind}>{endMonthButton}</div>
@@ -201,7 +201,7 @@ function CalendarRange(props: CalendarRangeProps) {
         )}
 
         {view === "month" && (
-          <div className={pickerFillBind}>
+          <div className={monthYearBind}>
             <CalendarMonth
               {...shared}
               key={monthTarget}
@@ -219,7 +219,7 @@ function CalendarRange(props: CalendarRangeProps) {
         )}
 
         {view === "year" && (
-          <div className={pickerFillBind}>
+          <div className={monthYearBind}>
             <CalendarYear
               {...shared}
               value={viewYear}

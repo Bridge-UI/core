@@ -31,8 +31,15 @@ test("it should default to the date view", () => {
   expect(result.current.view).toBe("date");
 });
 
-test("it should size the root to fill available width", () => {
+test("it should size the root to the minimum width by default", () => {
   const { result } = renderUseCalendar();
+
+  expect(result.current.rootBind.className).toContain("w-72");
+  expect(result.current.rootBind.className).not.toContain("w-full");
+});
+
+test("it should fill available width when fill is set", () => {
+  const { result } = renderUseCalendar({ fill: true });
 
   expect(result.current.rootBind.className).toContain("w-full");
   expect(result.current.rootBind.className).toContain("min-w-72");

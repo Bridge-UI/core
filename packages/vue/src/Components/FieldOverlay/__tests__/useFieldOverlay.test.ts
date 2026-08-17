@@ -76,9 +76,9 @@ test("it should resolve explicit drawer", () => {
     overlay: "drawer",
   });
 
+  expect(drawerBind.value.size).toBe("md");
   expect(resolvedOverlay.value).toBe("drawer");
   expect(drawerBind.value.placement).toBe("bottom");
-  expect(drawerBind.value.size).toBe("md");
 });
 
 test("it should resolve explicit modal", () => {
@@ -86,10 +86,10 @@ test("it should resolve explicit modal", () => {
     overlay: "modal",
   });
 
-  expect(resolvedOverlay.value).toBe("modal");
-  expect(modalBind.value.align).toBe("middle-center");
   expect(modalBind.value.size).toBe("md");
+  expect(resolvedOverlay.value).toBe("modal");
   expect(modalBind.value.closeOnOverlay).toBe(true);
+  expect(modalBind.value.align).toBe("middle-center");
   expect(modalBind.value.disableRestoreFocus).toBe(true);
 });
 
@@ -111,14 +111,18 @@ test("it should apply panel padding and layout on drawer and modal", () => {
 
   expect(drawerPanel).toContain("p-0");
   expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("w-full");
   expect(drawerPanel).toContain("flex-col");
   expect(drawerPanel).toContain("items-stretch");
-  expect(drawerPanel).toContain("h-auto");
   expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(drawerPanel).toContain("overflow-x-auto");
+
   expect(modalPanel).toContain("p-0");
   expect(modalPanel).toContain("w-fit");
   expect(modalPanel).toContain("max-w-full");
   expect(modalPanel).toContain("items-stretch");
+  expect(modalPanel).toContain("sm:max-w-full");
 });
 
 test("it should scroll modal content inside the paper panel", () => {
@@ -128,6 +132,14 @@ test("it should scroll modal content inside the paper panel", () => {
 
   expect(modalBind.value.scroll).toBe("paper");
   expect(modalBind.value.align).toBe("middle-center");
+});
+
+test("it should scroll drawer content inside the paper panel", () => {
+  const { drawerBind } = mountUseFieldOverlay({
+    overlay: "drawer",
+  });
+
+  expect(drawerBind.value.scroll).toBe("paper");
 });
 
 test("it should forward customProps.menu onto menuBind", () => {

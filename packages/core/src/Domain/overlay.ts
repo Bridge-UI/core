@@ -67,6 +67,58 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 }
 
 /**
+ * Whether a date / time picker fills its overlay or container width.
+ * Explicit `fill` wins (instance prop, then registry `defaultProps`).
+ * Unset: `true` for `drawer`, `false` for `menu` / `modal` and for
+ * standalone pickers (no overlay).
+ */
+export function resolvePickerFill(
+  fill: boolean | undefined,
+  overlay?: ResolvedFieldOverlay,
+): boolean {
+  if (fill !== undefined) {
+    return fill;
+  }
+
+  return overlay === "drawer";
+}
+
+/**
+ * Overlay classes for a field picker shell.
+ * Dialogs drop the picker shadow; fill stretches to the overlay width;
+ * `drawer` keeps the picker's intrinsic width (`min-w-max`) and drops
+ * `overflow-hidden` so dual calendars / time columns can overflow into
+ * the sheet's horizontal scroll, then flushes the bottom edge.
+ */
+export function resolveFieldPickerClassName(
+  fill: boolean,
+  overlay: ResolvedFieldOverlay,
+): string | undefined {
+  const isDialog = isFieldOverlayDialog(overlay);
+  const classes: string[] = [];
+
+  if (fill) {
+    classes.push("w-full");
+  }
+
+  if (isDialog) {
+    classes.push("shadow-none");
+  }
+
+  if (overlay === "drawer") {
+    classes.push("min-w-max");
+    classes.push("rounded-b-none");
+    classes.push("overflow-visible");
+  }
+
+  if (classes.length === 0) {
+    return undefined;
+  }
+
+  return classes.join(" ");
+}
+
+/**
  * Resolves whether a field picker shows Cancel / Apply.
  * Explicit `showFooter` wins (instance prop, then registry `defaultProps`).
  * When unset, defaults to `true` for dialog shells (`modal` / `drawer`).

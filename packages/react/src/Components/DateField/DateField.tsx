@@ -12,6 +12,7 @@ function DateField(props: DateFieldProps) {
 
   const {
     open,
+    fill,
     daySlot,
     overlay,
     dateOnly,
@@ -67,6 +68,7 @@ function DateField(props: DateFieldProps) {
         customProps={overlayCustomProps}
       >
         <DatePicker
+          fill={fill}
           value={modelValue}
           range={dateOnly.range}
           showFooter={showFooter}

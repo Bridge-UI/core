@@ -12,8 +12,8 @@ import {
 // ** Core Imports
 import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
   type TimeValue,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -36,11 +36,13 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const timeFieldBridgeKeys = [
   "ampm",
+  "fill",
   "classes",
   "maxTime",
   "minTime",
@@ -121,10 +123,14 @@ export function useTimeField(
     return resolveFieldOverlay(timeOnly.value.overlay, breakpoint.mobile);
   });
 
+  const fill = usePickerFill({
+    overlay: resolvedOverlay,
+    componentName: "TimeField",
+    fill: () => timeOnly.value.fill,
+  });
+
   const pickerClass = computed(() => {
-    return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill.value, resolvedOverlay.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -362,6 +368,7 @@ export function useTimeField(
 
   return {
     open,
+    fill,
     overlay,
     hasValue,
     timeOnly,

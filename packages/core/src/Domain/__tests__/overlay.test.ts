@@ -5,7 +5,9 @@ import { describe, expect, test } from "vitest";
 import {
   isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
   resolveFieldShowFooter,
+  resolvePickerFill,
   resolveRangePickerOrientation,
 } from "@/Domain/overlay";
 
@@ -82,6 +84,52 @@ describe("isFieldOverlayDialog", () => {
     expect(isFieldOverlayDialog("menu")).toBe(false);
     expect(isFieldOverlayDialog("modal")).toBe(true);
     expect(isFieldOverlayDialog("drawer")).toBe(true);
+  });
+});
+
+describe("resolvePickerFill", () => {
+  test("it should keep an explicit fill", () => {
+    expect(resolvePickerFill(true, "menu")).toBe(true);
+    expect(resolvePickerFill(false, "drawer")).toBe(false);
+  });
+
+  test("it should default to true for drawer when unset", () => {
+    expect(resolvePickerFill(undefined, "drawer")).toBe(true);
+  });
+
+  test("it should default to false for menu and modal when unset", () => {
+    expect(resolvePickerFill(undefined, "menu")).toBe(false);
+    expect(resolvePickerFill(undefined, "modal")).toBe(false);
+  });
+
+  test("it should default to false without an overlay", () => {
+    expect(resolvePickerFill(undefined)).toBe(false);
+  });
+});
+
+describe("resolveFieldPickerClassName", () => {
+  test("it should stretch, drop shadow, and let a filled drawer scroll", () => {
+    expect(resolveFieldPickerClassName(true, "drawer")).toBe(
+      "w-full shadow-none min-w-max rounded-b-none overflow-visible",
+    );
+  });
+
+  test("it should drop shadow without stretching in a modal", () => {
+    expect(resolveFieldPickerClassName(false, "modal")).toBe("shadow-none");
+  });
+
+  test("it should flush the bottom without stretching in an unfilled drawer", () => {
+    expect(resolveFieldPickerClassName(false, "drawer")).toBe(
+      "shadow-none min-w-max rounded-b-none overflow-visible",
+    );
+  });
+
+  test("it should stretch a filled menu", () => {
+    expect(resolveFieldPickerClassName(true, "menu")).toBe("w-full");
+  });
+
+  test("it should leave menu class empty when not filling", () => {
+    expect(resolveFieldPickerClassName(false, "menu")).toBeUndefined();
   });
 });
 

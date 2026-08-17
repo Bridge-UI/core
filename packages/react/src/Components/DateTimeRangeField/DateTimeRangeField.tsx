@@ -12,6 +12,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
 
   const {
     open,
+    fill,
     daySlot,
     overlay,
     formField,
@@ -68,6 +69,7 @@ function DateTimeRangeField(props: DateTimeRangeFieldProps) {
         customProps={overlayCustomProps}
       >
         <DateTimeRangePicker
+          fill={fill}
           value={modelValue}
           showFooter={showFooter}
           ampm={dateTimeOnly.ampm}

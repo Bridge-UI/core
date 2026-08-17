@@ -34,6 +34,7 @@ import { TimePanel } from "@bridge-ui/react/Components/TimePanel";
 | `disabled`     | `boolean`              | `false`     | Disables the entire panel.                      |
 | `disableTimes` | `Date[]`               | —           | Times that cannot be selected.                  |
 | `error`        | `boolean`              | `false`     | Applies the error color palette to tiles.       |
+| `fill`         | `boolean`              | `false`     | Fills the container width.                      |
 | `interval`     | `number`               | `1`         | Minute step between options.                    |
 | `maxTime`      | `Date`                 | —           | Latest selectable time.                         |
 | `minTime`      | `Date`                 | —           | Earliest selectable time.                       |

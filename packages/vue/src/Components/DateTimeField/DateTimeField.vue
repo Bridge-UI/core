@@ -28,6 +28,7 @@ const model = defineModel<Date | null>();
 
 const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
   clearable: true,
+  fill: undefined,
   showErrorIcon: true,
   showFooter: undefined,
 });
@@ -50,6 +51,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   formField,
   inputBind,
@@ -105,6 +107,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DateTimePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :ampm="dateTimeOnly.ampm"

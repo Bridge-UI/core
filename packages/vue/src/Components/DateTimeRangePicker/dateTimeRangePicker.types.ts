@@ -174,6 +174,14 @@ export interface DateTimeRangePickerOwnProps {
   error?: boolean;
 
   /**
+   * When `true`, fills the container width.
+   * When `false` or unset, stays at the minimum width.
+   *
+   * @default false
+   */
+  fill?: boolean;
+
+  /**
    * Hides month navigation / panel.
    *
    * @default false

@@ -13,8 +13,8 @@ import {
 import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isDateRangeValue,
-  isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
   resolveRangePickerOrientation,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -38,10 +38,12 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateRangeFieldBridgeKeys = [
+  "fill",
   "classes",
   "maxDate",
   "minDate",
@@ -315,10 +317,14 @@ export function useDateRangeField(
     return dateOnly.value.customProps?.dateRangePicker;
   });
 
+  const fill = usePickerFill({
+    overlay: resolvedOverlay,
+    componentName: "DateRangeField",
+    fill: () => dateOnly.value.fill,
+  });
+
   const pickerClass = computed(() => {
-    return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill.value, resolvedOverlay.value);
   });
 
   const clearIconSize = computed(() => {
@@ -355,6 +361,7 @@ export function useDateRangeField(
 
   return {
     open,
+    fill,
     overlay,
     hasValue,
     dateOnly,

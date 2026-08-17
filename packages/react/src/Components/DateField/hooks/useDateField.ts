@@ -7,9 +7,9 @@ import { useCallback, useRef, useState } from "react";
 import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isDateRangeValue,
-  isFieldOverlayDialog,
   resolveDatePickerMode,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
   type DatePickerModel,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
@@ -33,9 +33,11 @@ import {
   resolveFieldAdornmentIconSize,
   useBreakpoint,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 
 const dateFieldBridgeKeys = [
+  "fill",
   "range",
   "value",
   "classes",
@@ -168,10 +170,14 @@ export function useDateField(props: DateFieldProps) {
     return hasDateFieldValue(modelValue);
   });
 
+  const fill = usePickerFill({
+    fill: dateOnly.fill,
+    overlay: resolvedOverlay,
+    componentName: "DateField",
+  });
+
   const pickerClassName = derived(() => {
-    return isFieldOverlayDialog(resolvedOverlay)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill, resolvedOverlay);
   });
 
   const handleContainerRef = useCallback((element: null | HTMLElement) => {
@@ -376,6 +382,7 @@ export function useDateField(props: DateFieldProps) {
   return {
     open,
     mode,
+    fill,
     daySlot,
     hasValue,
     dateOnly,

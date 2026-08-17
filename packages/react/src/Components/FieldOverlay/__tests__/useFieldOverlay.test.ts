@@ -56,9 +56,9 @@ test("it should resolve explicit drawer", () => {
     useFieldOverlay({ show: true, overlay: "drawer" }),
   );
 
+  expect(result.current.drawerProps.size).toBe("md");
   expect(result.current.resolvedOverlay).toBe("drawer");
   expect(result.current.drawerProps.placement).toBe("bottom");
-  expect(result.current.drawerProps.size).toBe("md");
 });
 
 test("it should resolve explicit modal", () => {
@@ -66,10 +66,10 @@ test("it should resolve explicit modal", () => {
     useFieldOverlay({ show: true, overlay: "modal" }),
   );
 
-  expect(result.current.resolvedOverlay).toBe("modal");
-  expect(result.current.modalProps.align).toBe("middle-center");
   expect(result.current.modalProps.size).toBe("md");
+  expect(result.current.resolvedOverlay).toBe("modal");
   expect(result.current.modalProps.closeOnOverlay).toBe(true);
+  expect(result.current.modalProps.align).toBe("middle-center");
   expect(result.current.modalProps.disableRestoreFocus).toBe(true);
 });
 
@@ -93,14 +93,18 @@ test("it should apply panel padding and layout on drawer and modal", () => {
 
   expect(drawerPanel).toContain("p-0");
   expect(drawerPanel).toContain("flex");
+  expect(drawerPanel).toContain("h-auto");
+  expect(drawerPanel).toContain("w-full");
   expect(drawerPanel).toContain("flex-col");
   expect(drawerPanel).toContain("items-stretch");
-  expect(drawerPanel).toContain("h-auto");
   expect(drawerPanel).toContain("max-h-[90dvh]");
+  expect(drawerPanel).toContain("overflow-x-auto");
+
   expect(modalPanel).toContain("p-0");
   expect(modalPanel).toContain("w-fit");
   expect(modalPanel).toContain("max-w-full");
   expect(modalPanel).toContain("items-stretch");
+  expect(modalPanel).toContain("sm:max-w-full");
 });
 
 test("it should scroll modal content inside the paper panel", () => {
@@ -110,6 +114,14 @@ test("it should scroll modal content inside the paper panel", () => {
 
   expect(result.current.modalProps.scroll).toBe("paper");
   expect(result.current.modalProps.align).toBe("middle-center");
+});
+
+test("it should scroll drawer content inside the paper panel", () => {
+  const { result } = renderHook(() =>
+    useFieldOverlay({ show: true, overlay: "drawer" }),
+  );
+
+  expect(result.current.drawerProps.scroll).toBe("paper");
 });
 
 test("it should forward customProps.menu onto menuProps", () => {

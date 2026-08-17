@@ -148,6 +148,26 @@ test("it should not show the clear control when clearable is false", () => {
   expect(screen.queryByLabelText("Clear")).toBeNull();
 });
 
+test("it should fill the picker in a drawer overlay by default", () => {
+  render(
+    <DateField
+      overlay="drawer"
+      defaultValue={new Date(2021, 4, 21)}
+      customProps={{ drawer: { transition: "none" } }}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const yearButton = screen.getByRole("button", { name: "Select year" });
+  const picker = yearButton.closest(".shadow-none");
+
+  expect(picker).not.toBeNull();
+  expect(picker?.className).toContain("w-full");
+  expect(picker?.className).not.toContain("w-fit");
+  expect(picker?.className).toContain("overflow-visible");
+});
+
 test("it should open a dialog when overlay is modal", () => {
   render(
     <DateField

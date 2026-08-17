@@ -40,6 +40,7 @@ import {
 } from "@/Utils";
 
 const calendarRangeBridgeKeys = [
+  "fill",
   "color",
   "error",
   "value",
@@ -434,9 +435,10 @@ export function useCalendarRange(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "flex w-full flex-col overflow-hidden": true,
-        "min-w-[38rem]": !isVertical.value,
-        "min-w-72": isVertical.value,
+        "flex flex-col overflow-hidden": true,
+        "w-full": merged.value.fill,
+        "min-w-max": true,
+        "w-fit": !merged.value.fill && isVertical.value,
         [mergedClasses.value.root ?? ""]: true,
       }),
     );
@@ -447,7 +449,7 @@ export function useCalendarRange(
       customProps.value?.header,
       {},
       cn({
-        "flex items-center p-2.5": true,
+        "flex w-full items-center p-2.5": true,
         [mergedClasses.value.header ?? ""]: true,
       }),
     );
@@ -458,7 +460,9 @@ export function useCalendarRange(
       customProps.value?.months,
       {},
       cn({
-        "flex shrink-0 items-center gap-x-10": true,
+        "flex min-w-0 flex-1 items-center": true,
+        "justify-between": !isVertical.value,
+        "justify-start": isVertical.value,
         [mergedClasses.value.months ?? ""]: true,
       }),
     );
@@ -504,9 +508,7 @@ export function useCalendarRange(
       customProps.value?.start,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical.value,
-        "w-72 shrink-0": !isVertical.value,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -517,15 +519,13 @@ export function useCalendarRange(
       customProps.value?.end,
       {},
       cn({
-        "flex flex-col": true,
-        "min-w-0 flex-1": isVertical.value,
-        "w-72 shrink-0": !isVertical.value,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
   });
 
-  const pickerFillBind = computed(() => {
+  const monthYearBind = computed(() => {
     return cn({
       "flex min-h-64 flex-1 flex-col": true,
     });
@@ -708,8 +708,8 @@ export function useCalendarRange(
     yearPageSize,
     endMonthLabel,
     endHeaderBind,
+    monthYearBind,
     nextButtonBind,
-    pickerFillBind,
     monthPanelYear,
     todayButtonBind,
     monthPanelValue,

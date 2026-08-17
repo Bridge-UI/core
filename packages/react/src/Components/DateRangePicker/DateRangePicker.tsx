@@ -29,6 +29,7 @@ function DateRangePicker(props: DateRangePickerProps) {
   return (
     <div {...rootBind}>
       <CalendarRange
+        fill={merged.fill}
         color={merged.color}
         value={displayValue}
         error={merged.error}

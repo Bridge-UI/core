@@ -52,8 +52,8 @@ const {
   endMonthLabel,
   yearPageStart,
   endHeaderBind,
+  monthYearBind,
   nextButtonBind,
-  pickerFillBind,
   monthPanelYear,
   todayButtonBind,
   monthPanelValue,
@@ -93,7 +93,7 @@ function chevronClass(open: boolean) {
 <template>
   <div v-bind="rootBind">
     <div v-bind="headerBind">
-      <div class="flex min-w-0 flex-1 items-center justify-start">
+      <div class="flex shrink-0 items-center justify-start">
         <button v-if="showYearSelector" v-bind="yearSelectorBind">
           <span>{{ yearLabel }}</span>
 
@@ -133,7 +133,7 @@ function chevronClass(open: boolean) {
         </button>
       </div>
 
-      <div class="flex min-w-0 flex-1 items-center justify-end">
+      <div class="flex shrink-0 items-center justify-end">
         <div class="flex shrink-0 items-center">
           <button v-bind="previousButtonBind">
             <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
@@ -152,7 +152,7 @@ function chevronClass(open: boolean) {
 
     <div v-bind="bodyBind">
       <div v-bind="panelsBind" v-if="view === 'date'">
-        <div class="flex w-full min-w-0 items-stretch">
+        <div class="flex min-w-max flex-1 items-stretch">
           <div v-bind="startBind">
             <CalendarDate
               v-bind="shared"
@@ -179,7 +179,7 @@ function chevronClass(open: boolean) {
           <slot name="startAside" />
         </div>
 
-        <div class="flex w-full min-w-0 items-stretch">
+        <div class="flex min-w-max flex-1 items-stretch">
           <div v-bind="endBind">
             <div v-bind="endHeaderBind" v-if="isVertical && showMonthSelector">
               <button v-bind="endMonthSelectorBind">
@@ -220,7 +220,7 @@ function chevronClass(open: boolean) {
         </div>
       </div>
 
-      <div :class="pickerFillBind" v-else-if="view === 'month'">
+      <div :class="monthYearBind" v-else-if="view === 'month'">
         <CalendarMonth
           v-bind="shared"
           :key="monthTarget"
@@ -236,7 +236,7 @@ function chevronClass(open: boolean) {
         />
       </div>
 
-      <div :class="pickerFillBind" v-else-if="view === 'year'">
+      <div :class="monthYearBind" v-else-if="view === 'year'">
         <CalendarYear
           v-bind="shared"
           :value="viewYear"

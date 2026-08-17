@@ -65,6 +65,7 @@ const {
     <div :class="contentBind">
       <div :class="calendarBind">
         <Calendar
+          :fill="merged.fill"
           :color="merged.color"
           :value="displayValue"
           :error="merged.error"
@@ -106,6 +107,7 @@ const {
         <div :class="timeFillBind">
           <TimePanel
             :ampm="merged.ampm"
+            :fill="merged.fill"
             :tokens="timeTokens"
             :color="merged.color"
             :value="displayValue"

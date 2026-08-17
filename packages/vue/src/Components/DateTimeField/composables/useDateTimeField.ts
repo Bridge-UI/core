@@ -12,8 +12,8 @@ import {
 // ** Core Imports
 import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
 } from "@bridge-ui/core/Domain";
 import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -35,11 +35,13 @@ import {
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
+  usePickerFill,
 } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 const dateTimeFieldBridgeKeys = [
   "ampm",
+  "fill",
   "classes",
   "maxDate",
   "maxTime",
@@ -131,10 +133,14 @@ export function useDateTimeField(
     return resolveFieldOverlay(dateTimeOnly.value.overlay, breakpoint.mobile);
   });
 
+  const fill = usePickerFill({
+    overlay: resolvedOverlay,
+    componentName: "DateTimeField",
+    fill: () => dateTimeOnly.value.fill,
+  });
+
   const pickerClass = computed(() => {
-    return isFieldOverlayDialog(resolvedOverlay.value)
-      ? "w-full shadow-none"
-      : undefined;
+    return resolveFieldPickerClassName(fill.value, resolvedOverlay.value);
   });
 
   const handleContainerRef = (element: null | Element) => {
@@ -365,6 +371,7 @@ export function useDateTimeField(
 
   return {
     open,
+    fill,
     overlay,
     hasValue,
     formField,

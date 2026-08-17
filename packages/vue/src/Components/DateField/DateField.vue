@@ -31,6 +31,7 @@ const model = defineModel<DatePickerModel>();
 
 const props = withDefaults(defineProps<DateFieldOwnProps>(), {
   clearable: true,
+  fill: undefined,
   showErrorIcon: true,
   showFooter: undefined,
 });
@@ -53,6 +54,7 @@ const value = computed({
 
 const {
   open,
+  fill,
   overlay,
   dateOnly,
   formField,
@@ -108,6 +110,7 @@ const {
     v-on:update:model-value="handleOpenChange"
   >
     <DatePicker
+      :fill="fill"
       :value="modelValue"
       :class="pickerClass"
       :range="dateOnly.range"

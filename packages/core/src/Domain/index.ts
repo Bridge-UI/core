@@ -50,7 +50,9 @@ export type { OtpDigitsUpdate, OtpInputType } from "@/Domain/otp";
 export {
   isFieldOverlayDialog,
   resolveFieldOverlay,
+  resolveFieldPickerClassName,
   resolveFieldShowFooter,
+  resolvePickerFill,
   resolveRangePickerOrientation,
 } from "@/Domain/overlay";
 export type {

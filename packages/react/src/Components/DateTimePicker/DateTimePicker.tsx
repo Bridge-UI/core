@@ -46,6 +46,7 @@ function DateTimePicker(props: DateTimePickerProps) {
       <div className={contentBind}>
         <div className={calendarBind}>
           <Calendar
+            fill={merged.fill}
             color={merged.color}
             value={displayValue}
             error={merged.error}
@@ -85,6 +86,7 @@ function DateTimePicker(props: DateTimePickerProps) {
           <div className={timeFillBind}>
             <TimePanel
               ampm={merged.ampm}
+              fill={merged.fill}
               tokens={timeTokens}
               color={merged.color}
               value={displayValue}

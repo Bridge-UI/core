@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
 import {
   resolveFieldShowFooter,
+  resolvePickerFill,
   type ResolvedFieldOverlay,
 } from "@bridge-ui/core/Domain";
 import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
@@ -123,6 +124,29 @@ export function useFieldShowFooter({
     : undefined;
 
   return resolveFieldShowFooter(showFooter ?? registryShowFooter, overlay);
+}
+
+/**
+ * Resolves picker fill: instance prop, then registry `defaultProps.fill`,
+ * then the overlay default from core.
+ */
+export function usePickerFill({
+  fill,
+  overlay,
+  componentName,
+}: {
+  componentName: undefined | keyof BridgeUIComponentsConfig;
+  fill: boolean | undefined;
+  overlay?: ResolvedFieldOverlay;
+}): boolean {
+  const bridge = useBridgeUI();
+
+  const registryFill = componentName
+    ? (get(bridge, ["components", componentName, "defaultProps", "fill"]) as
+        boolean | undefined)
+    : undefined;
+
+  return resolvePickerFill(fill ?? registryFill, overlay);
 }
 
 /**
