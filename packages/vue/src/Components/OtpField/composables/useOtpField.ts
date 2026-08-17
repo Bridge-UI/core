@@ -304,6 +304,10 @@ export function useOtpField(
         [roundedClasses.value?.pin ?? ""]: !isUnderlined.value,
         [colorPalette.value?.pin ?? ""]: !isUnderlined.value,
         [colorPalette.value?.underlined ?? ""]: isUnderlined.value,
+        "bg-error-50 ring-error-500 dark:bg-error-700/10 dark:ring-error-600":
+          invalidated.value && !isUnderlined.value,
+        "border-error-500 dark:border-error-600":
+          invalidated.value && isUnderlined.value,
         [mergedClasses.value.pin ?? ""]: true,
       }),
     );

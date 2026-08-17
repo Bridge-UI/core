@@ -293,17 +293,21 @@ export function useOtpField(
           [roundedClasses?.pin ?? ""]: !isUnderlined,
           [colorPalette?.pin ?? ""]: !isUnderlined,
           [colorPalette?.underlined ?? ""]: isUnderlined,
+          "bg-error-50 ring-error-500 dark:bg-error-700/10 dark:ring-error-600":
+            invalidated && !isUnderlined,
+          "border-error-500 dark:border-error-600": invalidated && isUnderlined,
           [mergedClasses.pin ?? ""]: true,
         }),
       );
     },
     [
-      customProps?.pin,
       sizeClasses,
-      variantClasses,
-      roundedClasses,
       colorPalette,
+      invalidated,
       isUnderlined,
+      roundedClasses,
+      variantClasses,
+      customProps?.pin,
       mergedClasses.pin,
     ],
   );

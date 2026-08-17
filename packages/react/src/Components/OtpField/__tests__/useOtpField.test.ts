@@ -39,6 +39,12 @@ test("it should mark the field as invalidated when error is set", () => {
   expect(result.current.baseField.invalidated).toBe(true);
 });
 
+test("it should apply error chrome on pins when error is set", () => {
+  const { result } = renderHook(() => useOtpField({ error: true }));
+
+  expect(result.current.pinBind(0).className).toMatch(/error/);
+});
+
 test("it should resolve numeric input mode by default", () => {
   const { result } = renderHook(() => useOtpField({}));
 
