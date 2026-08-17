@@ -3,12 +3,14 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
 import { Button } from "@/Components/Button";
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
 import { Menu } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -57,6 +59,7 @@ test("it should open the menu when the trigger is clicked", async () => {
   });
 
   expect(document.body.querySelector('[role="menu"]')).toBeNull();
+  expect(wrapper.findComponent({ name: "Teleport" }).exists()).toBe(false);
 
   const button = wrapper.find("button");
 

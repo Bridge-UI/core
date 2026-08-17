@@ -3,12 +3,14 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
-// ** Local Imports
-import { Drawer } from "@/Components/Drawer";
+// ** Core Imports
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
 } from "@bridge-ui/core/Layer";
+
+// ** Local Imports
+import { Drawer } from "@/Components/Drawer";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
