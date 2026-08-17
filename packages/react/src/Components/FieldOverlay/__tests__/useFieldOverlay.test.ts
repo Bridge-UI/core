@@ -100,6 +100,7 @@ test("it should apply panel padding and layout on drawer and modal", () => {
   expect(modalPanel).toContain("p-0");
   expect(modalPanel).toContain("w-fit");
   expect(modalPanel).toContain("max-w-full");
+  expect(modalPanel).toContain("sm:max-w-full");
   expect(modalPanel).toContain("items-stretch");
 });
 

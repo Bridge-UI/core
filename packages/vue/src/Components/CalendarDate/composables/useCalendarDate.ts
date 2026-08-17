@@ -382,7 +382,7 @@ export function useCalendarDate(
         },
       },
       cn({
-        "grid grid-cols-7 gap-1": true,
+        "grid w-full grid-cols-7 gap-1": true,
         [mergedClasses.value.grid ?? ""]: true,
       }),
     );

@@ -84,27 +84,33 @@ export function resolvePickerFill(
 
 /**
  * Overlay classes for a field picker shell.
- * Dialogs drop the picker shadow; fill stretches to the overlay width.
+ * Dialogs drop the picker shadow; fill stretches to the overlay width;
+ * `drawer` flushes the bottom edge so the shell meets the viewport.
  */
 export function resolveFieldPickerClassName(
   fill: boolean,
   overlay: ResolvedFieldOverlay,
 ): string | undefined {
   const isDialog = isFieldOverlayDialog(overlay);
+  const classes: string[] = [];
 
-  if (!fill && !isDialog) {
+  if (fill) {
+    classes.push("w-full");
+  }
+
+  if (isDialog) {
+    classes.push("shadow-none");
+  }
+
+  if (overlay === "drawer") {
+    classes.push("rounded-b-none");
+  }
+
+  if (classes.length === 0) {
     return undefined;
   }
 
-  if (fill && isDialog) {
-    return "w-full shadow-none";
-  }
-
-  if (fill) {
-    return "w-full";
-  }
-
-  return "shadow-none";
+  return classes.join(" ");
 }
 
 /**

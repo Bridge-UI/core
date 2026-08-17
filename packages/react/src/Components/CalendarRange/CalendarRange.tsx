@@ -125,7 +125,7 @@ function CalendarRange(props: CalendarRangeProps) {
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        <div className="flex min-w-0 flex-1 items-center justify-start">
+        <div className="flex shrink-0 items-center justify-start">
           {yearButton}
         </div>
 
@@ -134,7 +134,7 @@ function CalendarRange(props: CalendarRangeProps) {
           {!isVertical && endMonthButton}
         </div>
 
-        <div className="flex min-w-0 flex-1 items-center justify-end">
+        <div className="flex shrink-0 items-center justify-end">
           {navButtons}
         </div>
       </div>
@@ -142,7 +142,7 @@ function CalendarRange(props: CalendarRangeProps) {
       <div {...bodyBind}>
         {view === "date" && (
           <div {...panelsBind}>
-            <div className="flex min-w-0 flex-1 items-stretch">
+            <div className="flex min-w-0 w-full flex-1 items-stretch">
               <div {...startBind}>
                 <CalendarDate
                   {...shared}
@@ -168,7 +168,7 @@ function CalendarRange(props: CalendarRangeProps) {
               {props.slots?.startAside}
             </div>
 
-            <div className="flex min-w-0 flex-1 items-stretch">
+            <div className="flex min-w-0 w-full flex-1 items-stretch">
               <div {...endBind}>
                 {isVertical && endMonthButton ? (
                   <div {...endHeaderBind}>{endMonthButton}</div>

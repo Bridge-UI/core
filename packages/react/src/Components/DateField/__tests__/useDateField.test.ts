@@ -128,7 +128,9 @@ test("it should fill the picker for auto overlay on mobile", () => {
   const { result } = renderUseDateField();
 
   expect(result.current.fill).toBe(true);
-  expect(result.current.pickerClassName).toBe("w-full shadow-none");
+  expect(result.current.pickerClassName).toBe(
+    "w-full shadow-none rounded-b-none",
+  );
 });
 
 test("it should keep menu overlay without dialog picker classes", () => {
@@ -155,5 +157,5 @@ test("it should not fill a drawer picker when fill is false", () => {
   const { result } = renderUseDateField({ fill: false, overlay: "drawer" });
 
   expect(result.current.fill).toBe(false);
-  expect(result.current.pickerClassName).toBe("shadow-none");
+  expect(result.current.pickerClassName).toBe("shadow-none rounded-b-none");
 });

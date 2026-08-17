@@ -60,7 +60,7 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
         disableRestoreFocus: true,
         ...props.customProps?.modal,
       },
-      "flex w-fit max-w-full flex-col items-stretch p-0",
+      "flex w-fit max-w-full sm:max-w-full flex-col items-stretch p-0",
     );
   });
 

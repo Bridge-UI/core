@@ -450,7 +450,7 @@ export function useCalendarRange(
       customProps.value?.header,
       {},
       cn({
-        "flex items-center p-2.5": true,
+        "flex w-full items-center p-2.5": true,
         [mergedClasses.value.header ?? ""]: true,
       }),
     );
@@ -461,7 +461,9 @@ export function useCalendarRange(
       customProps.value?.months,
       {},
       cn({
-        "flex shrink-0 items-center gap-x-10": true,
+        "flex min-w-0 flex-1 items-center": true,
+        "justify-between": !isVertical.value,
+        "justify-start": isVertical.value,
         [mergedClasses.value.months ?? ""]: true,
       }),
     );
