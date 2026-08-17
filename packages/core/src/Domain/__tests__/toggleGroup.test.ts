@@ -1,5 +1,5 @@
 // ** External Imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
@@ -9,13 +9,13 @@ import {
 } from "@/Domain/toggleGroup";
 
 describe("normalizeToggleGroupValue", () => {
-  it("normalizes single mode", () => {
+  test("it should normalize single mode", () => {
     expect(normalizeToggleGroupValue(undefined, false)).toBe("");
     expect(normalizeToggleGroupValue("a", false)).toBe("a");
     expect(normalizeToggleGroupValue(["a", "b"], false)).toBe("a");
   });
 
-  it("normalizes multiple mode", () => {
+  test("it should normalize multiple mode", () => {
     expect(normalizeToggleGroupValue(undefined, true)).toEqual([]);
     expect(normalizeToggleGroupValue("a", true)).toEqual(["a"]);
     expect(normalizeToggleGroupValue(["a", "b"], true)).toEqual(["a", "b"]);
@@ -23,7 +23,7 @@ describe("normalizeToggleGroupValue", () => {
 });
 
 describe("isToggleGroupItemSelected", () => {
-  it("checks single and multiple selected state", () => {
+  test("it should check single and multiple selected state", () => {
     expect(isToggleGroupItemSelected("a", "a", false)).toBe(true);
     expect(isToggleGroupItemSelected("a", "b", false)).toBe(false);
     expect(isToggleGroupItemSelected(["a", "b"], "b", true)).toBe(true);
@@ -32,13 +32,13 @@ describe("isToggleGroupItemSelected", () => {
 });
 
 describe("applyToggleGroupSelection", () => {
-  it("selects in single mode without clearing the active item", () => {
+  test("it should select in single mode without clearing the active item", () => {
     expect(applyToggleGroupSelection("", "a", false)).toBe("a");
     expect(applyToggleGroupSelection("a", "a", false)).toBe("a");
     expect(applyToggleGroupSelection("a", "b", false)).toBe("b");
   });
 
-  it("toggles membership in multiple mode", () => {
+  test("it should toggle membership in multiple mode", () => {
     expect(applyToggleGroupSelection([], "a", true)).toEqual(["a"]);
     expect(applyToggleGroupSelection(["a"], "b", true)).toEqual(["a", "b"]);
     expect(applyToggleGroupSelection(["a", "b"], "a", true)).toEqual(["b"]);
