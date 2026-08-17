@@ -4,7 +4,7 @@
 
 Shared field chrome (label, corner, start/end slots, description, error) for composite inputs such as `OtpField` and `Slider`.
 
-Control tokens stay on the parent (`tokens.size`, `tokens.invalidated`, …).
+Control tokens stay on the parent (`tokens.size`, …).
 
 ## Import
 

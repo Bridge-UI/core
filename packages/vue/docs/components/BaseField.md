@@ -5,7 +5,7 @@
 Shared vertical field chrome (label, corner, start/end slots, description,
 error message) for OtpField, Slider, and similar controls.
 
-Control tokens stay on the parent (`tokens.size`, `tokens.invalidated`, …).
+Control tokens stay on the parent (`tokens.size`, …).
 
 ## Import
 
