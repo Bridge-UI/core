@@ -49,3 +49,21 @@ test("it should enable footer when showFooter is set", () => {
 
   expect(showFooter.value).toBe(true);
 });
+
+test("it should not shrink the calendar shell below its content", () => {
+  const { calendarBind, contentBind } = mountUseDateTimeRangePicker();
+
+  expect(contentBind.value).toContain("w-full");
+  expect(contentBind.value).not.toContain("min-w-0");
+  expect(calendarBind.value).toContain("w-full");
+});
+
+test("it should fill the overlay width when fill is set", () => {
+  const { calendarBind, contentBind, rootBind } = mountUseDateTimeRangePicker({
+    fill: true,
+  });
+
+  expect(rootBind.value.class).toContain("w-full");
+  expect(contentBind.value).toContain("w-full");
+  expect(calendarBind.value).toContain("w-full");
+});

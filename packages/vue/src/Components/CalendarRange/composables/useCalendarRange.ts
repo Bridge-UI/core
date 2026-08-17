@@ -509,7 +509,7 @@ export function useCalendarRange(
       customProps.value?.start,
       {},
       cn({
-        "flex min-w-0 w-full flex-1 flex-col": true,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -520,7 +520,7 @@ export function useCalendarRange(
       customProps.value?.end,
       {},
       cn({
-        "flex min-w-0 w-full flex-1 flex-col": true,
+        "flex min-w-72 flex-1 flex-col": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );

@@ -72,7 +72,10 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.modal,
       },
-      "flex w-fit max-w-full sm:max-w-full flex-col items-stretch p-0",
+      // `!w-fit` / `!max-w-full` beat Modal `w-full` and `size` tokens
+      // (`sm:max-w-md`, …) so the dialog hugs the picker instead of stretching
+      // to the viewport, while dual calendars still fit past `size: "md"`.
+      "flex !w-fit !max-w-full flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.modal]);
 
@@ -87,7 +90,9 @@ export function useFieldOverlay(props: FieldOverlayProps) {
         disableRestoreFocus: true,
         ...customProps?.drawer,
       },
-      "flex h-auto max-h-[90dvh] flex-col items-stretch p-0",
+      // `!h-auto` / `!max-h-[90dvh]` beat Drawer `size: "md"` (`h-64`) so the
+      // sheet grows with the picker instead of flattening the calendar.
+      "flex w-full !h-auto !max-h-[90dvh] flex-col items-stretch p-0",
     );
   }, [show, onShowChange, customProps?.drawer]);
 

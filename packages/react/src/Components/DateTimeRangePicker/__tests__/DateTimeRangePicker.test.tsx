@@ -10,7 +10,7 @@ afterEach(() => {
 import { DateTimeRangePicker } from "@/Components/DateTimeRangePicker";
 
 test("it should render the calendar and time panels", () => {
-  render(
+  const { container } = render(
     <DateTimeRangePicker
       defaultValue={[
         new Date(2021, 4, 21, 9, 30),
@@ -26,6 +26,7 @@ test("it should render the calendar and time panels", () => {
   expect(
     screen.getAllByRole("button", { name: "Hour 17" }).length,
   ).toBeGreaterThan(0);
+  expect(container.querySelector(".min-w-72")).toBeTruthy();
 });
 
 test("it should commit immediately without footer", () => {

@@ -108,15 +108,15 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
             hideOutsideDays={merged.hideOutsideDays}
-            customProps={{
-              end: { className: "pr-2.5" },
-              start: { className: "pr-2.5" },
-              panels: { className: "gap-0" },
-            }}
             slots={{
               day: props.slots?.day,
               endAside: timeAside(endTimeValue, handleEndPanelChange),
               startAside: timeAside(startTimeValue, handleStartPanelChange),
+            }}
+            customProps={{
+              end: { className: "pr-2.5" },
+              start: { className: "pr-2.5" },
+              panels: { className: "gap-0" },
             }}
           />
         </div>

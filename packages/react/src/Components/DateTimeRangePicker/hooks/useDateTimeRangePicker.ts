@@ -303,13 +303,13 @@ export function useDateTimeRangePicker(
 
   const contentBind = derived(() => {
     return cn({
-      "flex min-w-0 flex-col": true,
+      "flex w-full flex-col": true,
     });
   });
 
   const calendarBind = derived(() => {
     return cn({
-      "min-w-0": true,
+      "w-full": true,
       [mergedClasses.calendar ?? ""]: true,
     });
   });

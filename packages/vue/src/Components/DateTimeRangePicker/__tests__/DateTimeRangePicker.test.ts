@@ -17,6 +17,7 @@ test("it should render the calendar and time panels", () => {
 
   expect(wrapper.find('[aria-label="Select year"]').exists()).toBe(true);
   expect(wrapper.findAll("button").length).toBeGreaterThan(48);
+  expect(wrapper.find(".min-w-72").exists()).toBe(true);
 });
 
 test("it should commit immediately without footer", async () => {
