@@ -213,7 +213,7 @@ export function createFocusTrap(options: FocusTrapOptions): FocusTrap {
         return;
       }
 
-      previouslyFocused.focus();
+      previouslyFocused.focus({ preventScroll: true });
     },
   };
 }
