@@ -52,7 +52,7 @@ test("it should keep the input read-only by default", () => {
   );
 });
 
-test("it should allow typing when editable is set", () => {
+test("it should unlock the input when editable is set", () => {
   const wrapper = mountTimeField({
     props: { editable: true },
   });

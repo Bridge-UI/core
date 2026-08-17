@@ -21,7 +21,7 @@ test("it should keep the input read-only by default", () => {
   expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(true);
 });
 
-test("it should allow typing when editable is set", () => {
+test("it should unlock the input when editable is set", () => {
   render(<TimeRangeField editable />);
 
   expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(

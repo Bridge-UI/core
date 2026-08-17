@@ -112,7 +112,7 @@ test("it should resolve visible options from props", () => {
   expect(result.visibleOptions.value[0]?.label).toBe("Active");
 });
 
-test("it should apply invalidated listbox palette when field is invalid", () => {
+test("it should apply error listbox palette when field is invalid", () => {
   const { result } = mountUseSelect({ error: true });
 
   expect(result.formField.invalidated.value).toBe(true);

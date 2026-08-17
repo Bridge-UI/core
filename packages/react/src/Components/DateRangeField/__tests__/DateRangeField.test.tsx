@@ -25,7 +25,7 @@ test("it should keep the input read-only by default", () => {
   expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(true);
 });
 
-test("it should allow typing when editable is set", () => {
+test("it should unlock the input when editable is set", () => {
   render(<DateRangeField editable />);
 
   expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(
@@ -71,7 +71,7 @@ test("it should pass color to the nested DateRangePicker", () => {
   expect(day.className).toMatch(/secondary/);
 });
 
-test("it should apply invalidated calendar colors when error is set", () => {
+test("it should apply error calendar colors when error is set", () => {
   render(
     <DateRangeField
       error

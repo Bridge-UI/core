@@ -52,7 +52,7 @@ test("it should keep the input read-only by default", () => {
   );
 });
 
-test("it should allow typing when editable is set", () => {
+test("it should unlock the input when editable is set", () => {
   const wrapper = mountDateRangeField({
     props: { editable: true },
   });
@@ -121,7 +121,7 @@ test("it should pass color to the nested DateRangePicker", async () => {
   expect(String(day?.className)).toMatch(/secondary/);
 });
 
-test("it should apply invalidated calendar colors when error is set", async () => {
+test("it should apply error calendar colors when error is set", async () => {
   mountDateRangeField({
     props: {
       error: true,
