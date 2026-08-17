@@ -111,9 +111,9 @@ Building blocks (`FormField`, `FormControl`, `BaseField`, `Listbox`) are not reg
     },
     Checkbox: {
       tokens: {
-        formControl: {
-          invalidated: {
-            errorMessage: "text-error-700 dark:text-error-300",
+        color: {
+          error: {
+            checked: "bg-error-700 border-error-700",
           },
         },
       },

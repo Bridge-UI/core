@@ -61,15 +61,8 @@ export type {
   BadgeSize,
   BadgeVariant,
 } from "@/Tokens/Badge";
-export {
-  invalidatedProps as baseFieldInvalidatedProps,
-  sizeProps as baseFieldSizeProps,
-} from "@/Tokens/BaseField";
-export type {
-  BaseFieldInvalidated,
-  BaseFieldSize,
-  BaseFieldSizeItem,
-} from "@/Tokens/BaseField";
+export { sizeProps as baseFieldSizeProps } from "@/Tokens/BaseField";
+export type { BaseFieldSize, BaseFieldSizeItem } from "@/Tokens/BaseField";
 export { sizeProps as breadcrumbSizeProps } from "@/Tokens/Breadcrumb";
 export type { BreadcrumbSize, BreadcrumbSizeItem } from "@/Tokens/Breadcrumb";
 export {
@@ -119,14 +112,12 @@ export type {
 } from "@/Tokens/Card";
 export {
   colorProps as checkboxColorProps,
-  invalidatedProps as checkboxInvalidatedProps,
   roundedProps as checkboxRoundedProps,
   sizeProps as checkboxSizeProps,
 } from "@/Tokens/Checkbox";
 export type {
   CheckboxColor,
   CheckboxColorItem,
-  CheckboxInvalidated,
   CheckboxRounded,
   CheckboxSize,
 } from "@/Tokens/Checkbox";
@@ -155,11 +146,8 @@ export type {
   DrawerTransition,
   DrawerTransitionLayer,
 } from "@/Tokens/Drawer";
-export { invalidatedProps as formControlInvalidatedProps } from "@/Tokens/FormControl";
-export type { FormControlInvalidated } from "@/Tokens/FormControl";
 export {
   colorProps as formFieldColorProps,
-  invalidatedProps as formFieldInvalidatedProps,
   roundedProps as formFieldRoundedProps,
   sizeProps as formFieldSizeProps,
   variantProps as formFieldVariantProps,
@@ -167,7 +155,6 @@ export {
 export type {
   FormFieldColor,
   FormFieldColorItem,
-  FormFieldInvalidated,
   FormFieldRounded,
   FormFieldRoundedItem,
   FormFieldSize,
@@ -177,11 +164,8 @@ export type {
 } from "@/Tokens/FormField";
 export { sizeProps as iconSizeProps } from "@/Tokens/Icon";
 export type { IconSize } from "@/Tokens/Icon";
-export {
-  invalidatedProps as labelInvalidatedProps,
-  sizeProps as labelSizeProps,
-} from "@/Tokens/Label";
-export type { LabelInvalidated, LabelSize } from "@/Tokens/Label";
+export { sizeProps as labelSizeProps } from "@/Tokens/Label";
+export type { LabelSize } from "@/Tokens/Label";
 export {
   colorProps as linkColorProps,
   sizeProps as linkSizeProps,
@@ -195,14 +179,12 @@ export type {
 } from "@/Tokens/Link";
 export {
   colorProps as listboxColorProps,
-  invalidatedProps as listboxInvalidatedProps,
   roundedProps as listboxRoundedProps,
   sizeProps as listboxSizeProps,
 } from "@/Tokens/Listbox";
 export type {
   ListboxColor,
   ListboxColorItem,
-  ListboxInvalidated,
   ListboxRounded,
   ListboxSize,
   ListboxSizeItem,
@@ -230,7 +212,6 @@ export type {
 } from "@/Tokens/Modal";
 export {
   colorProps as otpFieldColorProps,
-  invalidatedProps as otpFieldInvalidatedProps,
   roundedProps as otpFieldRoundedProps,
   sizeProps as otpFieldSizeProps,
   variantProps as otpFieldVariantProps,
@@ -238,7 +219,6 @@ export {
 export type {
   OtpFieldColor,
   OtpFieldColorItem,
-  OtpFieldInvalidated,
   OtpFieldRounded,
   OtpFieldRoundedItem,
   OtpFieldSize,
@@ -277,14 +257,12 @@ export type {
 } from "@/Tokens/Progress";
 export {
   colorProps as radioColorProps,
-  invalidatedProps as radioInvalidatedProps,
   roundedProps as radioRoundedProps,
   sizeProps as radioSizeProps,
 } from "@/Tokens/Radio";
 export type {
   RadioColor,
   RadioColorItem,
-  RadioInvalidated,
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
@@ -292,14 +270,12 @@ export { roundedProps as skeletonRoundedProps } from "@/Tokens/Skeleton";
 export type { SkeletonRounded } from "@/Tokens/Skeleton";
 export {
   colorProps as sliderColorProps,
-  invalidatedProps as sliderInvalidatedProps,
   roundedProps as sliderRoundedProps,
   sizeProps as sliderSizeProps,
 } from "@/Tokens/Slider";
 export type {
   SliderColor,
   SliderColorItem,
-  SliderInvalidated,
   SliderRounded,
   SliderSize,
   SliderSizeItem,
@@ -334,14 +310,12 @@ export type {
 } from "@/Tokens/Spinner";
 export {
   colorProps as switchColorProps,
-  invalidatedProps as switchInvalidatedProps,
   roundedProps as switchRoundedProps,
   sizeProps as switchSizeProps,
 } from "@/Tokens/Switch";
 export type {
   SwitchColor,
   SwitchColorItem,
-  SwitchInvalidated,
   SwitchRounded,
   SwitchSize,
   SwitchSizeItem,

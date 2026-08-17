@@ -77,7 +77,7 @@ test("it should resolve visible options from props", () => {
   expect(result.current.visibleOptions[0]?.label).toBe("Apple");
 });
 
-test("it should apply invalidated listbox palette when field is invalid", () => {
+test("it should apply error listbox palette when field is invalid", () => {
   const { result } = renderUseAutocomplete({ options, error: true });
 
   expect(result.current.formField.invalidated).toBe(true);

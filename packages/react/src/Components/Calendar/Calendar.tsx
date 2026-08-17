@@ -46,6 +46,7 @@ function Calendar(props: CalendarProps) {
 
   const shared = {
     color: merged.color,
+    error: merged.error,
     tokens: merged.tokens,
     rounded: merged.rounded,
     maxDate: merged.maxDate,

@@ -65,6 +65,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           tokens={timeTokens}
           onChange={onChange}
           color={merged.color}
+          error={merged.error}
           maxTime={merged.maxTime}
           minTime={merged.minTime}
           rounded={merged.rounded}
@@ -87,6 +88,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           <CalendarRange
             color={merged.color}
             value={displayValue}
+            error={merged.error}
             tokens={calendarTokens}
             maxDate={merged.maxDate}
             minDate={merged.minDate}

@@ -122,6 +122,7 @@ const {
       v-on:cancel="handlePickerCancel"
       :hide-months="dateOnly.hideMonths"
       :default-view="dateOnly.defaultView"
+      :error="formField.invalidated.value"
       :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"
       :custom-props="datePickerCustomProps"

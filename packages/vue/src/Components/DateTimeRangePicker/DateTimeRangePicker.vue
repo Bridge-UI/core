@@ -69,6 +69,7 @@ const {
       <div :class="calendarBind">
         <CalendarRange
           :color="merged.color"
+          :error="merged.error"
           :value="displayValue"
           :tokens="calendarTokens"
           :rounded="merged.rounded"
@@ -117,6 +118,7 @@ const {
                   :ampm="merged.ampm"
                   :tokens="timeTokens"
                   :color="merged.color"
+                  :error="merged.error"
                   :value="startTimeValue"
                   :rounded="merged.rounded"
                   :max-time="merged.maxTime"
@@ -155,6 +157,7 @@ const {
                   :tokens="timeTokens"
                   :color="merged.color"
                   :value="endTimeValue"
+                  :error="merged.error"
                   :rounded="merged.rounded"
                   :max-time="merged.maxTime"
                   :min-time="merged.minTime"

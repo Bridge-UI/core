@@ -185,6 +185,15 @@ export interface DateTimeFieldOwnProps extends Omit<
   disableYears?: number[];
 
   /**
+   * Unlocks the input for typing. The field does not parse or commit typed
+   * text; use the picker (or your own component) to update the value. When
+   * unset, the input is read-only.
+   *
+   * @default false
+   */
+  editable?: boolean;
+
+  /**
    * Hides month navigation / panel.
    *
    * @default false

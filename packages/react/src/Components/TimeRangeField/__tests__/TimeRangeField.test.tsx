@@ -15,6 +15,20 @@ test("it should render a text input", () => {
   expect(container.querySelector("input")).not.toBeNull();
 });
 
+test("it should keep the input read-only by default", () => {
+  render(<TimeRangeField />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(true);
+});
+
+test("it should unlock the input when editable is set", () => {
+  render(<TimeRangeField editable />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(
+    false,
+  );
+});
+
 test("it should open the picker on focus and show dual time panels", () => {
   render(
     <TimeRangeField

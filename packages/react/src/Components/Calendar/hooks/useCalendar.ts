@@ -37,6 +37,7 @@ import {
 const calendarBridgeKeys = [
   "view",
   "color",
+  "error",
   "range",
   "value",
   "tokens",

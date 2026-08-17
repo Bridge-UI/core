@@ -22,6 +22,7 @@ import {
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -45,6 +46,7 @@ import {
 
 const calendarDateBridgeKeys = [
   "color",
+  "error",
   "range",
   "value",
   "tokens",
@@ -182,10 +184,6 @@ export function useCalendarDate(
     return resolveStartOfWeek(merged.startOfWeek);
   });
 
-  const colorTokens = useMemo(() => {
-    return mergeBridgeUILayeredClasses(colorProps, merged.tokens?.color);
-  }, [merged.tokens?.color]);
-
   const dayTokens = useMemo(() => {
     return mergeBridgeUILayeredClasses(dayProps, merged.tokens?.day);
   }, [merged.tokens?.day]);
@@ -200,7 +198,16 @@ export function useCalendarDate(
   }, [merged.rounded, merged.tokens?.rounded]);
 
   const colorClass = derived(() => {
-    return get(colorTokens, merged.color);
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      merged.tokens?.color,
+    );
+
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: merged.error,
+    });
   });
 
   const weekdays = derived(() => {

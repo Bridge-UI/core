@@ -10,12 +10,12 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   listboxColorProps as colorProps,
-  listboxInvalidatedProps as invalidatedProps,
   listboxRoundedProps as roundedProps,
   listboxSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -41,11 +41,11 @@ import { useBreakpoint } from "@/Utils/useBreakpoint";
 export const listboxBridgeKeys = [
   "size",
   "color",
+  "error",
   "classes",
   "maxHeight",
   "showFooter",
   "customProps",
-  "invalidated",
   "disableMaxHeight",
 ] as const satisfies readonly (keyof ListboxOwnProps)[];
 
@@ -125,19 +125,22 @@ export function useListbox(
       | undefined
       | {
           color?: object;
-          invalidated?: object;
           rounded?: object;
           size?: object;
         };
   });
 
-  const colorPalette = derived(() => {
+  const colorClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       listboxTokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: merged.error,
+    });
   });
 
   const roundedToken = derived(() => {
@@ -147,17 +150,6 @@ export function useListbox(
     );
 
     return get(classes, props.rounded ?? "md");
-  });
-
-  const invalidatedPalette = derived(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      listboxTokens?.invalidated,
-    );
-  });
-
-  const colorClasses = derived(() => {
-    return merged.invalidated ? invalidatedPalette : colorPalette;
   });
 
   const sizeClasses = derived(() => {

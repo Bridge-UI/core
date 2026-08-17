@@ -229,6 +229,13 @@ export interface CalendarOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, applies the error color palette to tiles.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Hides the month selector and month panel.
    *
    * @default false

@@ -37,6 +37,7 @@ import { TimeRangePicker } from "@bridge-ui/react/Components/TimeRangePicker";
 | `disabled`     | `boolean`                    | `false`        | Disables the picker.                                  |
 | `disableTimes` | `Date[]`                     | —              | Times that cannot be selected.                        |
 | `endTitle`     | `string`                     | `"End time"`   | Label above the end time panel.                       |
+| `error`        | `boolean`                    | `false`        | Applies the error color palette to tiles.             |
 | `interval`     | `number`                     | `1`            | Minute step between options.                          |
 | `maxTime`      | `Date`                       | —              | Latest selectable time.                               |
 | `minTime`      | `Date`                       | —              | Earliest selectable time.                             |

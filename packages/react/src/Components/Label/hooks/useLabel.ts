@@ -3,10 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import {
-  labelInvalidatedProps as invalidatedProps,
-  labelSizeProps as sizeProps,
-} from "@bridge-ui/core/Tokens";
+import { labelSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -79,19 +76,12 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
     return get(classes, merged.size);
   }, [merged.size, bridgeLabel?.tokens?.size]);
 
-  const invalidatedColors = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeLabel?.tokens?.invalidated,
-    );
-  }, [bridgeLabel?.tokens?.invalidated]);
-
   const requiredBind = derived(() => {
     return mergePartBind(
       {},
       {},
       cn({
-        [invalidatedColors.required ?? ""]: true,
+        "text-error-500 dark:text-error-500 select-none": true,
         [mergedClasses.required ?? ""]: true,
       }),
     );
@@ -104,7 +94,7 @@ export function useLabel(props: LabelProps, libDefaults: LabelLibDefaults) {
       cn({
         "inline-flex items-center gap-x-0.5 font-medium leading-none": true,
         "text-dark-700 dark:text-dark-300": !merged.error,
-        [invalidatedColors.label ?? ""]: merged.error,
+        "text-error-600 dark:text-error-400": merged.error,
         [sizeClass ?? ""]: true,
         [mergedClasses.root ?? ""]: true,
       }),

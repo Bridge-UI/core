@@ -253,6 +253,13 @@ export interface ListboxOwnProps {
   entries?: ListboxEntry[];
 
   /**
+   * When `true`, applies the error color palette to options.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Hides the empty-state message.
    *
    * @default false
@@ -265,13 +272,6 @@ export interface ListboxOwnProps {
    * @default -1
    */
   highlightedIndex?: number;
-
-  /**
-   * When `true`, applies invalidated option colors.
-   *
-   * @default false
-   */
-  invalidated?: boolean;
 
   /**
    * Whether a value is selected (shows checkmark when `showCheckmark` is true).

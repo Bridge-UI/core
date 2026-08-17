@@ -12,12 +12,12 @@ import {
 // ** Core Imports
 import {
   checkboxColorProps as colorProps,
-  checkboxInvalidatedProps as invalidatedProps,
   checkboxRoundedProps as roundedProps,
   checkboxSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -104,26 +104,17 @@ export function useCheckbox(
     return Boolean(toValue(checked));
   });
 
-  const colorPalette = computed(() => {
+  const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeCheckbox.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeCheckbox.value?.tokens?.invalidated,
-    );
-  });
-
-  const colorClasses = computed(() => {
-    return formControl.invalidated.value
-      ? invalidatedPalette.value
-      : colorPalette.value;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: formControl.invalidated.value,
+    });
   });
 
   const sizeClasses = computed(() => {

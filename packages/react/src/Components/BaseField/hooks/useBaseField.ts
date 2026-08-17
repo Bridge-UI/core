@@ -3,10 +3,7 @@ import { get, omit } from "es-toolkit/compat";
 import { useId, useMemo } from "react";
 
 // ** Core Imports
-import {
-  baseFieldInvalidatedProps as invalidatedProps,
-  baseFieldSizeProps as sizeProps,
-} from "@bridge-ui/core/Tokens";
+import { baseFieldSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -147,18 +144,6 @@ export function useBaseField(
     return get(classes, merged.size ?? "md");
   }, [merged.size, bridgeBaseField]);
 
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(bridgeBaseField, ["tokens", "baseField", "invalidated"]),
-      merged.customProps?.invalidated,
-    );
-  }, [merged.customProps?.invalidated, bridgeBaseField]);
-
-  const invalidatedColors = useMemo(() => {
-    return invalidated ? invalidatedPalette : undefined;
-  }, [invalidated, invalidatedPalette]);
-
   const reservesErrorMessageSpace = derived(() => {
     return !merged.hideErrorMessage;
   });
@@ -294,7 +279,7 @@ export function useBaseField(
       cn({
         "mt-2": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
-        [invalidatedColors?.errorMessage ?? ""]: true,
+        "text-error-600 dark:text-error-400": true,
         [sizeClasses?.text ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),

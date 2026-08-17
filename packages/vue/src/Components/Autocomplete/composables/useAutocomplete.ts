@@ -31,13 +31,11 @@ import {
   type ListboxEntry,
   type SelectAsyncSearch,
 } from "@bridge-ui/core/Domain";
-import {
-  listboxColorProps as colorProps,
-  listboxInvalidatedProps as invalidatedProps,
-} from "@bridge-ui/core/Tokens";
+import { listboxColorProps as colorProps } from "@bridge-ui/core/Tokens";
 import {
   adjustAutosizeTextareaHeight,
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
 } from "@bridge-ui/core/Utils";
@@ -910,21 +908,12 @@ export function useAutocomplete(
       colorProps,
       get(components.value, ["Autocomplete", "tokens", "listbox", "color"]),
     );
-    const base = get(classes, formField.merged.value.color ?? "primary");
 
-    if (!formField.invalidated.value) {
-      return base;
-    }
-
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      get(components.value, [
-        "Autocomplete",
-        "tokens",
-        "listbox",
-        "invalidated",
-      ]),
-    );
+    return getColorToken({
+      tokens: classes,
+      color: formField.merged.value.color,
+      invalid: formField.invalidated.value,
+    });
   });
 
   const selectedValueTextClass = computed(() => {
@@ -1059,11 +1048,11 @@ export function useAutocomplete(
       entries: visibleEntries.value,
       options: visibleOptions.value,
       size: formField.merged.value.size,
+      error: formField.invalidated.value,
       color: formField.merged.value.color,
       labelledBy: formField.controlId.value,
       componentName: "Autocomplete" as const,
       rounded: formField.merged.value.rounded,
-      invalidated: formField.invalidated.value,
       highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,
       hideEmptyMessage: autocompleteMerged.value.hideEmptyMessage === true,

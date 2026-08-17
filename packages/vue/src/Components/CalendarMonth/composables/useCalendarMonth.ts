@@ -14,6 +14,7 @@ import {
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -35,6 +36,7 @@ import {
 const calendarMonthBridgeKeys = [
   "year",
   "color",
+  "error",
   "value",
   "tokens",
   "classes",
@@ -116,10 +118,6 @@ export function useCalendarMonth(
     );
   });
 
-  const colorTokens = computed(() => {
-    return mergeBridgeUILayeredClasses(colorProps, merged.value.tokens?.color);
-  });
-
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
@@ -130,7 +128,16 @@ export function useCalendarMonth(
   });
 
   const colorClass = computed(() => {
-    return get(colorTokens.value, merged.value.color);
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      merged.value.tokens?.color,
+    );
+
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: merged.value.error,
+    });
   });
 
   const months = computed((): CalendarMonthCell[] => {

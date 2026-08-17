@@ -6,12 +6,12 @@ import { useMemo, useState } from "react";
 // ** Core Imports
 import {
   radioColorProps as colorProps,
-  radioInvalidatedProps as invalidatedProps,
   radioRoundedProps as roundedProps,
   radioSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -115,25 +115,18 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
     return uncontrolledChecked;
   });
 
-  const colorPalette = useMemo(() => {
+  const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeRadio?.tokens?.color,
     );
 
-    return get(classes, merged.color ?? "primary");
-  }, [merged.color, bridgeRadio?.tokens?.color]);
-
-  const invalidatedPalette = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeRadio?.tokens?.invalidated,
-    );
-  }, [bridgeRadio?.tokens?.invalidated]);
-
-  const colorClasses = derived(() => {
-    return formControl.invalidated ? invalidatedPalette : colorPalette;
-  });
+    return getColorToken({
+      tokens: classes,
+      color: merged.color,
+      invalid: formControl.invalidated,
+    });
+  }, [formControl.invalidated, merged.color, bridgeRadio?.tokens?.color]);
 
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(

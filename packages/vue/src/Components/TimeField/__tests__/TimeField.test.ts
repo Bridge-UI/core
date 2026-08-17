@@ -44,6 +44,24 @@ test("it should render a text input", () => {
   expect(wrapper.find("input").exists()).toBe(true);
 });
 
+test("it should keep the input read-only by default", () => {
+  const wrapper = mountTimeField();
+
+  expect((wrapper.find("input").element as HTMLInputElement).readOnly).toBe(
+    true,
+  );
+});
+
+test("it should unlock the input when editable is set", () => {
+  const wrapper = mountTimeField({
+    props: { editable: true },
+  });
+
+  expect((wrapper.find("input").element as HTMLInputElement).readOnly).toBe(
+    false,
+  );
+});
+
 test("it should open the picker on focus", async () => {
   mountTimeField({
     props: { defaultValue: new Date(2021, 4, 21, 14, 30) },

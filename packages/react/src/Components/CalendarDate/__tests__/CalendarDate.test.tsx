@@ -61,6 +61,18 @@ test("it should mark the selected day", () => {
   ).toBe("true");
 });
 
+test("it should apply error tile colors when error is set", () => {
+  render(
+    <CalendarDate
+      error
+      value={new Date(2021, 4, 21)}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
+
+  expect(screen.getByRole("button", { name: "21" }).className).toMatch(/error/);
+});
+
 test("it should disable dates before minDate", () => {
   render(
     <CalendarDate

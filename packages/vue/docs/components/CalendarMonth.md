@@ -25,6 +25,7 @@ import { CalendarMonth } from "@bridge-ui/vue/Components/CalendarMonth";
 | `customProps`   | `CalendarMonthCustomProps` | —            | Extra props for internal parts.                      |
 | `disabled`      | `boolean`                  | `false`      | Disables the entire month grid.                      |
 | `disableMonths` | `number[]`                 | —            | Month indexes that cannot be selected.               |
+| `error`         | `boolean`                  | `false`      | Applies the error color palette to tiles.            |
 | `maxDate`       | `Date`                     | —            | Latest selectable date (bounds months for `year`).   |
 | `minDate`       | `Date`                     | —            | Earliest selectable date (bounds months for `year`). |
 | `readOnly`      | `boolean`                  | `false`      | Prevents selection.                                  |

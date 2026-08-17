@@ -4,9 +4,7 @@ import type { HTMLAttributes, InputHTMLAttributes } from "react";
 // ** Core Imports
 import type { OtpInputType } from "@bridge-ui/core/Domain";
 import type {
-  BaseFieldInvalidated,
   OtpFieldColor,
-  OtpFieldInvalidated,
   OtpFieldRounded,
   OtpFieldVariant,
 } from "@bridge-ui/core/Tokens";
@@ -37,22 +35,11 @@ export interface OtpFieldClasses extends BaseFieldClasses {
   pin?: string;
 }
 
-export interface OtpFieldCustomProps extends Omit<
-  BaseFieldCustomProps,
-  "invalidated"
-> {
+export interface OtpFieldCustomProps extends BaseFieldCustomProps {
   /**
    * Props forwarded to each pin `<input>`.
    */
   input?: Partial<InputHTMLAttributes<HTMLInputElement>>;
-
-  /**
-   * Pin error chrome (`pin` / `pinUnderlined`). Error message color comes from
-   * {@link BaseField} (`Tokens/BaseField`); pass `errorMessage` here to override.
-   *
-   * @default undefined
-   */
-  invalidated?: Partial<OtpFieldInvalidated & BaseFieldInvalidated>;
 
   /**
    * Props forwarded to each pin cell wrapper.

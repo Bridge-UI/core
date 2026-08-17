@@ -2,10 +2,7 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  BaseFieldInvalidated,
-  BaseFieldSize,
-} from "@bridge-ui/core/Tokens";
+import type { BaseFieldSize } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -96,14 +93,6 @@ export interface BaseFieldCustomProps {
    * Props forwarded to the label + corner header row.
    */
   header?: HTMLAttributes<HTMLDivElement>;
-
-  /**
-   * Error-state message colors (`errorMessage`). Label colors come from `Label`
-   * when `error` is set.
-   *
-   * @default undefined
-   */
-  invalidated?: Partial<BaseFieldInvalidated>;
 
   /**
    * Props forwarded to the primary `Label` (content stays owned by `BaseField`).

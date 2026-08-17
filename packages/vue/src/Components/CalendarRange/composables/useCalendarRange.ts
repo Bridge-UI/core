@@ -41,6 +41,7 @@ import {
 
 const calendarRangeBridgeKeys = [
   "color",
+  "error",
   "value",
   "tokens",
   "classes",
@@ -413,6 +414,7 @@ export function useCalendarRange(
   const shared = computed(() => {
     return {
       color: merged.value.color,
+      error: merged.value.error,
       tokens: merged.value.tokens,
       rounded: merged.value.rounded,
       maxDate: merged.value.maxDate,

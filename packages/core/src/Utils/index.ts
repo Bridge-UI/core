@@ -6,6 +6,7 @@ export {
   cn,
   createMergeNestedComponentProps,
   createMergePartBind,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
   resolveBridgeUIFormDefaults,

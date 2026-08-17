@@ -46,6 +46,7 @@ const dateRangeFieldBridgeKeys = [
   "maxDate",
   "minDate",
   "overlay",
+  "editable",
   "timeZone",
   "clearable",
   "hideYears",
@@ -273,8 +274,10 @@ export function useDateRangeField(
   const inputBind = computed(() => {
     return mergePartBind(
       {
-        readonly: true,
         value: displayText.value,
+        readonly: dateOnly.value.editable
+          ? formField.inputBind.value.readonly
+          : true,
         onFocus: (event: FocusEvent) => {
           formField.inputBind.value.onFocus?.(event);
           handleOpenChange(true);

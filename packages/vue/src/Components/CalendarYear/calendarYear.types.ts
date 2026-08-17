@@ -108,6 +108,13 @@ export interface CalendarYearOwnProps {
   disableYears?: number[];
 
   /**
+   * When `true`, applies the error color palette to tiles.
+   *
+   * @default false
+   */
+  error?: boolean;
+
+  /**
    * Latest selectable date (bounds year availability).
    *
    * @default undefined

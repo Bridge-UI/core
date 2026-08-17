@@ -54,6 +54,7 @@ import { CalendarRange } from "@bridge-ui/react/Components/CalendarRange";
 | `disableDates`    | `Date[]`                     | —              | Dates that cannot be selected.                              |
 | `disableMonths`   | `number[]`                   | —              | Month indexes that cannot be selected.                      |
 | `disableYears`    | `number[]`                   | —              | Years that cannot be selected.                              |
+| `error`           | `boolean`                    | `false`        | Applies the error color palette to tiles.                   |
 | `hideMonths`      | `boolean`                    | `false`        | Hides the shared month selector and month panel.            |
 | `hideOutsideDays` | `boolean`                    | `false`        | Hides days outside the displayed month on both date panels. |
 | `hideWeekdays`    | `boolean`                    | `false`        | Hides weekday labels on both date panels.                   |

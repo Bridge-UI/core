@@ -57,6 +57,7 @@ Call `apply()` to commit and close the overlay, or `cancel()` to discard and clo
 | `disableDates`    | `Date[]`                | —           | Dates that cannot be selected.                                    |
 | `disableMonths`   | `number[]`              | —           | Month indexes that cannot be selected.                            |
 | `disableYears`    | `number[]`              | —           | Years that cannot be selected.                                    |
+| `error`           | `boolean`               | `false`     | Applies the error color palette to tiles.                         |
 | `hideMonths`      | `boolean`               | `false`     | Hides month navigation / panel.                                   |
 | `hideOutsideDays` | `boolean`               | `false`     | Hides days that fall outside the displayed month.                 |
 | `hideWeekdays`    | `boolean`               | `false`     | Hides weekday labels.                                             |

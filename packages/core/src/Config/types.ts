@@ -33,10 +33,7 @@ import type {
   BadgeSize,
   BadgeVariant,
 } from "@/Tokens/Badge";
-import type {
-  BaseFieldInvalidated,
-  BaseFieldSizeItem,
-} from "@/Tokens/BaseField";
+import type { BaseFieldSizeItem } from "@/Tokens/BaseField";
 import type { BreadcrumbSize, BreadcrumbSizeItem } from "@/Tokens/Breadcrumb";
 import type {
   ButtonColor,
@@ -64,7 +61,6 @@ import type {
 import type {
   CheckboxColor,
   CheckboxColorItem,
-  CheckboxInvalidated,
   CheckboxRounded,
   CheckboxSize,
 } from "@/Tokens/Checkbox";
@@ -78,11 +74,9 @@ import type {
   DrawerTransition,
   DrawerTransitionLayer,
 } from "@/Tokens/Drawer";
-import type { FormControlInvalidated } from "@/Tokens/FormControl";
 import type {
   FormFieldColor,
   FormFieldColorItem,
-  FormFieldInvalidated,
   FormFieldRounded,
   FormFieldRoundedItem,
   FormFieldSize,
@@ -91,18 +85,14 @@ import type {
   FormFieldVariantItem,
 } from "@/Tokens/FormField";
 import type { IconSize } from "@/Tokens/Icon";
-import type { LabelInvalidated, LabelSize } from "@/Tokens/Label";
+import type { LabelSize } from "@/Tokens/Label";
 import type {
   LinkColor,
   LinkColorItem,
   LinkSize,
   LinkUnderline,
 } from "@/Tokens/Link";
-import type {
-  ListboxColorItem,
-  ListboxInvalidated,
-  ListboxSizeItem,
-} from "@/Tokens/Listbox";
+import type { ListboxColorItem, ListboxSizeItem } from "@/Tokens/Listbox";
 import type { MenuRounded, MenuShadow } from "@/Tokens/Menu";
 import type {
   ModalAlign,
@@ -114,7 +104,6 @@ import type {
 import type {
   OtpFieldColor,
   OtpFieldColorItem,
-  OtpFieldInvalidated,
   OtpFieldRounded,
   OtpFieldRoundedItem,
   OtpFieldSize,
@@ -142,7 +131,6 @@ import type {
 import type {
   RadioColor,
   RadioColorItem,
-  RadioInvalidated,
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
@@ -150,7 +138,6 @@ import type { SkeletonRounded } from "@/Tokens/Skeleton";
 import type {
   SliderColor,
   SliderColorItem,
-  SliderInvalidated,
   SliderRounded,
   SliderSize,
   SliderSizeItem,
@@ -174,7 +161,6 @@ import type {
 import type {
   SwitchColor,
   SwitchColorItem,
-  SwitchInvalidated,
   SwitchRounded,
   SwitchSize,
 } from "@/Tokens/Switch";
@@ -508,10 +494,6 @@ export interface CheckboxConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, CheckboxColorItem>;
-    formControl: Partial<{
-      invalidated: Partial<FormControlInvalidated>;
-    }>;
-    invalidated: Partial<CheckboxInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
@@ -531,6 +513,7 @@ export interface DateFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -560,7 +543,6 @@ export interface DateFieldConfigBase {
       rounded: keyof CalendarRounded;
       roundedMap: Record<string, string>;
     }>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -571,6 +553,7 @@ export interface DatePickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof CalendarColor;
+    error: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -598,6 +581,7 @@ export interface DateRangeFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -626,7 +610,6 @@ export interface DateRangeFieldConfigBase {
       rounded: keyof CalendarRounded;
       roundedMap: Record<string, string>;
     }>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -637,6 +620,7 @@ export interface DateRangePickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof CalendarColor;
+    error: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -664,6 +648,7 @@ export interface DateTimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -697,7 +682,6 @@ export interface DateTimeFieldConfigBase {
       timeRounded: keyof TimeRounded;
       timeRoundedMap: Record<string, string>;
     }>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     time: Partial<{
@@ -713,6 +697,7 @@ export interface DateTimePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof CalendarColor;
+    error: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -745,6 +730,7 @@ export interface TimeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
@@ -757,7 +743,6 @@ export interface TimeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     time: Partial<{
@@ -779,6 +764,7 @@ export interface TimePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof TimeColor;
+    error: boolean;
     interval: number;
     rounded: keyof TimeRounded;
     showFooter: boolean;
@@ -800,6 +786,7 @@ export interface TimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
@@ -812,7 +799,6 @@ export interface TimeRangeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     time: Partial<{
@@ -834,6 +820,7 @@ export interface TimeRangePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof TimeColor;
+    error: boolean;
     interval: number;
     orientation: "vertical" | "horizontal";
     rounded: keyof TimeRounded;
@@ -856,6 +843,7 @@ export interface DateTimeRangeFieldConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof FormFieldColor;
+    editable: boolean;
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -890,7 +878,6 @@ export interface DateTimeRangeFieldConfigBase {
       timeRounded: keyof TimeRounded;
       timeRoundedMap: Record<string, string>;
     }>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     time: Partial<{
@@ -906,6 +893,7 @@ export interface DateTimeRangePickerConfigBase {
   defaultProps: Partial<{
     ampm: boolean;
     color: keyof CalendarColor;
+    error: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -949,7 +937,6 @@ export interface LabelConfigBase {
     size: keyof LabelSize;
   }>;
   tokens: Partial<{
-    invalidated: Partial<LabelInvalidated>;
     size: Record<string, string>;
   }>;
 }
@@ -1042,7 +1029,6 @@ export interface NumberFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -1062,11 +1048,9 @@ export interface OtpFieldConfigBase {
   }>;
   tokens: Partial<{
     baseField: Partial<{
-      invalidated: Partial<BaseFieldInvalidated>;
       size: Record<string, BaseFieldSizeItem>;
     }>;
     color: Record<string, OtpFieldColorItem>;
-    invalidated: Partial<OtpFieldInvalidated>;
     rounded: Record<string, OtpFieldRoundedItem>;
     size: Record<string, OtpFieldSizeItem>;
     variant: Record<string, OtpFieldVariantItem>;
@@ -1107,7 +1091,6 @@ export interface PasswordFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -1124,10 +1107,6 @@ export interface RadioConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, RadioColorItem>;
-    formControl: Partial<{
-      invalidated: Partial<FormControlInvalidated>;
-    }>;
-    invalidated: Partial<RadioInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
@@ -1168,10 +1147,8 @@ export interface AutocompleteConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     listbox: Partial<{
       color: Record<string, ListboxColorItem>;
-      invalidated: Partial<ListboxInvalidated>;
       size: Record<string, ListboxSizeItem>;
     }>;
     rounded: Record<string, FormFieldRoundedItem>;
@@ -1193,10 +1170,8 @@ export interface SelectConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     listbox: Partial<{
       color: Record<string, ListboxColorItem>;
-      invalidated: Partial<ListboxInvalidated>;
       size: Record<string, ListboxSizeItem>;
     }>;
     rounded: Record<string, FormFieldRoundedItem>;
@@ -1258,11 +1233,9 @@ export interface SliderConfigBase {
   }>;
   tokens: Partial<{
     baseField: Partial<{
-      invalidated: Partial<BaseFieldInvalidated>;
       size: Record<string, BaseFieldSizeItem>;
     }>;
     color: Record<string, SliderColorItem>;
-    invalidated: Partial<SliderInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, SliderSizeItem>;
   }>;
@@ -1295,10 +1268,6 @@ export interface SwitchConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, SwitchColorItem>;
-    formControl: Partial<{
-      invalidated: Partial<FormControlInvalidated>;
-    }>;
-    invalidated: Partial<SwitchInvalidated>;
     rounded: Record<string, string>;
     size: Record<string, string>;
   }>;
@@ -1318,7 +1287,6 @@ export interface TextareaConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     resize: Record<string, string>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
@@ -1338,7 +1306,6 @@ export interface TextFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    invalidated: Partial<FormFieldInvalidated>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;

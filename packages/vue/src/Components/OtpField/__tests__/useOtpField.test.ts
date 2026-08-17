@@ -49,6 +49,12 @@ test("it should mark the field as invalidated when error is set", () => {
   expect(api.baseField.invalidated.value).toBe(true);
 });
 
+test("it should apply error chrome on pins when error is set", () => {
+  const { api } = mountUseOtpField({ error: true });
+
+  expect(api.pinBind(0).class).toMatch(/error/);
+});
+
 test("it should resolve numeric input mode by default", () => {
   const { api } = mountUseOtpField();
 

@@ -30,12 +30,12 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   sliderColorProps as colorProps,
-  sliderInvalidatedProps as invalidatedProps,
   sliderRoundedProps as roundedProps,
   sliderSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  getColorToken,
   mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
@@ -288,25 +288,17 @@ export function useSlider(
     });
   });
 
-  const colorPalette = computed(() => {
+  const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
       bridgeSlider.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color ?? "primary");
-  });
-
-  const invalidatedPalette = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      invalidatedProps,
-      bridgeSlider.value?.tokens?.invalidated,
-      merged.value.customProps?.invalidated,
-    );
-  });
-
-  const colorClasses = computed(() => {
-    return invalidated.value ? invalidatedPalette.value : colorPalette.value;
+    return getColorToken({
+      tokens: classes,
+      color: merged.value.color,
+      invalid: invalidated.value,
+    });
   });
 
   const sizeClasses = computed(() => {
@@ -770,7 +762,7 @@ export function useSlider(
       cn({
         "absolute top-0 -translate-x-1/2 whitespace-nowrap": true,
         "text-dark-700 dark:text-dark-400": !invalidated.value,
-        [invalidatedPalette.value.stopLabel ?? ""]: invalidated.value,
+        "text-error-600 dark:text-error-400": invalidated.value,
         [mergedClasses.value.stopLabel ?? ""]: true,
       }),
     );

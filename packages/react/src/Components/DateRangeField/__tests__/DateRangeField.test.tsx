@@ -19,6 +19,20 @@ test("it should render a text input", () => {
   expect(container.querySelector("input")).not.toBeNull();
 });
 
+test("it should keep the input read-only by default", () => {
+  render(<DateRangeField />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(true);
+});
+
+test("it should unlock the input when editable is set", () => {
+  render(<DateRangeField editable />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).readOnly).toBe(
+    false,
+  );
+});
+
 test("it should open the picker on focus", () => {
   render(
     <DateRangeField
@@ -55,6 +69,23 @@ test("it should pass color to the nested DateRangePicker", () => {
   const day = screen.getAllByRole("button", { name: "15" })[0]!;
 
   expect(day.className).toMatch(/secondary/);
+});
+
+test("it should apply error calendar colors when error is set", () => {
+  render(
+    <DateRangeField
+      error
+      color="secondary"
+      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const day = screen.getAllByRole("button", { name: "15" })[0]!;
+
+  expect(day.className).toMatch(/error/);
+  expect(day.className).not.toMatch(/secondary/);
 });
 
 test("it should call onChange and onClear when the clear control is clicked", () => {

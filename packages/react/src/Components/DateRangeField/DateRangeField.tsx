@@ -78,6 +78,7 @@ function DateRangeField(props: DateRangeFieldProps) {
           timeZone={dateOnly.timeZone}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
+          error={formField.invalidated}
           hideYears={dateOnly.hideYears}
           color={formField.merged.color}
           disabled={formField.isDisabled}

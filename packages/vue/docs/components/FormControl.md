@@ -4,7 +4,7 @@
 
 Low-level form control chrome (labels, description, error) for Checkbox, Radio, and Switch.
 
-Control tokens stay on the parent (`tokens.color`, `tokens.invalidated`, …).
+Control tokens stay on the parent (`tokens.color`, …).
 
 ## Import
 
