@@ -85,8 +85,8 @@ const teleportTarget = computed(() => {
     </div>
   </div>
 
-  <Teleport :to="teleportTarget" :disabled="teleportDisabled">
-    <div v-if="mounted" :ref="setContentRef" v-bind="contentBind">
+  <Teleport v-if="mounted" :to="teleportTarget" :disabled="teleportDisabled">
+    <div :ref="setContentRef" v-bind="contentBind">
       <slot />
     </div>
   </Teleport>
