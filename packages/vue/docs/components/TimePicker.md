@@ -31,6 +31,7 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 | `defaultValue` | `Date \| null`          | `null`      | Uncontrolled initial value.                           |
 | `disabled`     | `boolean`               | `false`     | Disables the picker.                                  |
 | `disableTimes` | `Date[]`                | —           | Times that cannot be selected.                        |
+| `error`        | `boolean`               | `false`     | Applies the error color palette to tiles.             |
 | `interval`     | `number`                | `1`         | Minute step between options.                          |
 | `maxTime`      | `Date`                  | —           | Latest selectable time.                               |
 | `minTime`      | `Date`                  | —           | Earliest selectable time.                             |

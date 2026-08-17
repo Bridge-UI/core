@@ -108,7 +108,7 @@ export interface CalendarMonthOwnProps {
   disableMonths?: number[];
 
   /**
-   * When `true`, applies invalidated (error) tile colors.
+   * When `true`, applies the error color palette to tiles.
    *
    * @default false
    */

@@ -33,6 +33,7 @@ import { TimePanel } from "@bridge-ui/react/Components/TimePanel";
 | `customProps`  | `TimePanelCustomProps` | —           | Extra props for internal parts.                 |
 | `disabled`     | `boolean`              | `false`     | Disables the entire panel.                      |
 | `disableTimes` | `Date[]`               | —           | Times that cannot be selected.                  |
+| `error`        | `boolean`              | `false`     | Applies the error color palette to tiles.       |
 | `interval`     | `number`               | `1`         | Minute step between options.                    |
 | `maxTime`      | `Date`                 | —           | Latest selectable time.                         |
 | `minTime`      | `Date`                 | —           | Earliest selectable time.                       |

@@ -56,6 +56,7 @@ import { Calendar } from "@bridge-ui/vue/Components/Calendar";
 | `disableDates`    | `Date[]`              | —           | Dates that cannot be selected.                            |
 | `disableMonths`   | `number[]`            | —           | Month indexes (`0`–`11`) that cannot be selected.         |
 | `disableYears`    | `number[]`            | —           | Years that cannot be selected.                            |
+| `error`           | `boolean`             | `false`     | Applies the error color palette to tiles.                 |
 | `hideMonths`      | `boolean`             | `false`     | Hides the month selector and month panel.                 |
 | `hideOutsideDays` | `boolean`             | `false`     | Hides days that fall outside the displayed month.         |
 | `hideWeekdays`    | `boolean`             | `false`     | Hides weekday labels on the date panel.                   |

@@ -146,7 +146,9 @@ export interface TimeFieldOwnProps extends Omit<
   disableTimes?: DisableTimesInput;
 
   /**
-   * Allows typing in the input. When unset, the input is read-only (picker only).
+   * Unlocks the input for typing. The field does not parse or commit typed
+   * text; use the picker (or your own component) to update the value. When
+   * unset, the input is read-only.
    *
    * @default false
    */

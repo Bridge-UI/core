@@ -36,6 +36,7 @@ import { CalendarDate } from "@bridge-ui/react/Components/CalendarDate";
 | `disableDates`    | `Date[]`                  | —           | Dates that cannot be selected.                    |
 | `disableMonths`   | `number[]`                | —           | Month indexes that cannot be selected.            |
 | `disableYears`    | `number[]`                | —           | Years that cannot be selected.                    |
+| `error`           | `boolean`                 | `false`     | Applies the error color palette to tiles.         |
 | `hideOutsideDays` | `boolean`                 | `false`     | Hides days that fall outside the displayed month. |
 | `hideWeekdays`    | `boolean`                 | `false`     | Hides the weekday header row.                     |
 | `maxDate`         | `Date`                    | —           | Latest selectable date.                           |

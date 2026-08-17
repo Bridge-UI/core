@@ -276,7 +276,7 @@ export interface ListboxOwnProps {
   entries?: ListboxEntry[];
 
   /**
-   * When `true`, applies invalidated option colors.
+   * When `true`, applies the error color palette to options.
    *
    * @default false
    */

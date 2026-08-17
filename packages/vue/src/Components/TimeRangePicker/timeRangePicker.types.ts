@@ -184,7 +184,7 @@ export interface TimeRangePickerOwnProps {
   endTitle?: string;
 
   /**
-   * When `true`, applies invalidated (error) tile colors.
+   * When `true`, applies the error color palette to tiles.
    *
    * @default false
    */

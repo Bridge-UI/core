@@ -35,6 +35,7 @@ import { DateTimeRangePicker } from "@bridge-ui/vue/Components/DateTimeRangePick
 | `disableMonths`   | `number[]`                       | —              | Month indexes that cannot be selected.                             |
 | `disableTimes`    | `Date[]`                         | —              | Times that cannot be selected.                                     |
 | `disableYears`    | `number[]`                       | —              | Years that cannot be selected.                                     |
+| `error`           | `boolean`                        | `false`        | Applies the error color palette to tiles.                          |
 | `hideMonths`      | `boolean`                        | `false`        | Hides month navigation / panel.                                    |
 | `hideOutsideDays` | `boolean`                        | `false`        | Hides days that fall outside the displayed month.                  |
 | `hideWeekdays`    | `boolean`                        | `false`        | Hides weekday labels.                                              |
