@@ -573,6 +573,11 @@ export function useColorPicker(
     isSwatchSelected: (value: string) => {
       return colorStringsEqual(value, formattedValue);
     },
+    swatchCss: (value: string) => {
+      const parsed = parseColor(value);
+
+      return parsed ? toCssRgba(parsed) : undefined;
+    },
     swatchButtonClass: derived(() => {
       return cn({
         "relative shrink-0 overflow-hidden": true,

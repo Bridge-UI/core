@@ -15,7 +15,7 @@ import { ColorField } from "@bridge-ui/vue/Components/ColorField";
 ```vue
 <ColorField label="Brand color" />
 
-<ColorField v-model="color" label="Brand" />
+<ColorField label="Brand" v-model="color" />
 
 <ColorField error label="Color" error-message="Pick a valid color." />
 ```
@@ -30,9 +30,9 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 ### Output format
 
 ```vue
-<ColorField v-model="color" format="hex" label="Hex" />
+<ColorField label="Hex" format="hex" v-model="color" />
 
-<ColorField v-model="color" label="RGBA" format="rgba" />
+<ColorField label="RGBA" format="rgba" v-model="color" />
 ```
 
 ### customProps

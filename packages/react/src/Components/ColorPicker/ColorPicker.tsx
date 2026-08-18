@@ -1,5 +1,4 @@
 // ** Core Imports
-import { parseColor, toCssRgba } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -15,6 +14,7 @@ function ColorPicker(props: ColorPickerProps) {
     areaBind,
     alphaBind,
     showAlpha,
+    swatchCss,
     footerBind,
     applyLabel,
     showFooter,
@@ -88,7 +88,6 @@ function ColorPicker(props: ColorPickerProps) {
         {presetSwatches.length > 0 ? (
           <div {...swatchesBind}>
             {presetSwatches.map((swatch) => {
-              const parsed = parseColor(swatch);
               const selected = isSwatchSelected(swatch);
 
               return (
@@ -107,9 +106,7 @@ function ColorPicker(props: ColorPickerProps) {
                   <span
                     aria-hidden
                     className="absolute inset-0"
-                    style={{
-                      backgroundColor: parsed ? toCssRgba(parsed) : undefined,
-                    }}
+                    style={{ backgroundColor: swatchCss(swatch) }}
                   />
                 </button>
               );

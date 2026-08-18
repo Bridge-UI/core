@@ -38,7 +38,7 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 ### Output format
 
 ```tsx
-<ColorField format="hex" label="Hex" value={color} onChange={setColor} />
+<ColorField label="Hex" format="hex" value={color} onChange={setColor} />
 
 <ColorField
   label="RGBA"

@@ -66,23 +66,6 @@ export interface ColorPickerClasses {
   swatches?: string;
 }
 
-export interface ColorPickerCallbacks {
-  /**
-   * Called when Apply is pressed (`showFooter`).
-   */
-  onApply?: () => void;
-
-  /**
-   * Called when Cancel is pressed.
-   */
-  onCancel?: () => void;
-
-  /**
-   * Called when Apply is pressed (`showFooter`) or when the value commits.
-   */
-  onChange?: (value: null | string) => void;
-}
-
 export interface ColorPickerCustomProps {
   /**
    * Props forwarded to the alpha slider.
@@ -146,6 +129,23 @@ export interface ColorPickerCustomProps {
    * @default undefined
    */
   swatches?: HTMLAttributes<HTMLDivElement>;
+}
+
+export interface ColorPickerCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed.
+   */
+  onCancel?: () => void;
+
+  /**
+   * Called when Apply is pressed (`showFooter`) or when the value commits.
+   */
+  onChange?: (value: null | string) => void;
 }
 
 export interface ColorPickerOwnProps {
