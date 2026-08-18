@@ -125,10 +125,10 @@ test("it should keep picker chrome inside an unstyled menu overlay", async () =>
 
   const menu = document.body.querySelector('[role="menu"]');
 
-  expect(menu?.className).toContain("bg-transparent");
   expect(menu?.className).toContain("rounded-none");
-  expect(menu?.firstElementChild?.className).toContain("rounded-panel-full");
+  expect(menu?.className).toContain("bg-transparent");
   expect(menu?.firstElementChild?.className).toContain("bg-white");
+  expect(menu?.firstElementChild?.className).toContain("rounded-panel-full");
 });
 
 test("it should emit change when a swatch is selected", async () => {

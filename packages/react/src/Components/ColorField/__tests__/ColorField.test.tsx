@@ -76,10 +76,10 @@ test("it should keep picker chrome inside an unstyled menu overlay", () => {
 
   const menu = screen.getByRole("menu");
 
-  expect(menu.className).toContain("bg-transparent");
   expect(menu.className).toContain("rounded-none");
-  expect(menu.firstElementChild?.className).toContain("rounded-panel-full");
+  expect(menu.className).toContain("bg-transparent");
   expect(menu.firstElementChild?.className).toContain("bg-white");
+  expect(menu.firstElementChild?.className).toContain("rounded-panel-full");
 });
 
 test("it should call onChange when a swatch is selected", () => {

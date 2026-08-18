@@ -153,6 +153,6 @@ test("it should forward customProps.menu onto menuBind", () => {
 test("it should strip menu content chrome by default", () => {
   const { menuBind } = mountUseFieldOverlay();
 
-  expect(menuBind.value.classes?.content).toContain("bg-transparent");
   expect(menuBind.value.classes?.content).toContain("rounded-none");
+  expect(menuBind.value.classes?.content).toContain("bg-transparent");
 });

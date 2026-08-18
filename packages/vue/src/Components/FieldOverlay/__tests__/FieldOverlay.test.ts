@@ -83,9 +83,9 @@ test("it should strip menu chrome so nested content paints the surface", () => {
 
   const menu = document.querySelector('[role="menu"]');
 
-  expect(menu?.className).toContain("bg-transparent");
-  expect(menu?.className).toContain("rounded-none");
   expect(menu?.className).toContain("shadow-none");
+  expect(menu?.className).toContain("rounded-none");
+  expect(menu?.className).toContain("bg-transparent");
   expect(menu?.className).not.toContain("bg-white");
 });
 
