@@ -222,6 +222,27 @@ export type {
   ChipSizeOverrides,
   ChipSlots,
 } from "@/Components/Chip";
+export { ColorField, useColorField } from "@/Components/ColorField";
+export type {
+  ColorFieldClasses,
+  ColorFieldCustomProps,
+  ColorFieldEmits,
+  ColorFieldOwnProps,
+  ColorFieldProps,
+  ColorFieldSlots,
+} from "@/Components/ColorField";
+export { ColorPicker, useColorPicker } from "@/Components/ColorPicker";
+export type {
+  ColorPickerClasses,
+  ColorPickerColorOverrides,
+  ColorPickerCustomProps,
+  ColorPickerEmits,
+  ColorPickerOwnProps,
+  ColorPickerProps,
+  ColorPickerRoundedOverrides,
+  ColorPickerSlots,
+  ColorPickerTokens,
+} from "@/Components/ColorPicker";
 export { DateField, useDateField } from "@/Components/DateField";
 export type {
   DateFieldClasses,
