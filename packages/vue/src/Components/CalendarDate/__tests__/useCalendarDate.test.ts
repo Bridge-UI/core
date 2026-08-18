@@ -8,6 +8,7 @@ import {
   useCalendarDate,
   type CalendarDateOwnProps,
 } from "@/Components/CalendarDate";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   rounded: "md",
@@ -15,7 +16,10 @@ const libDefaults = {
   color: "primary",
 } satisfies Partial<CalendarDateOwnProps>;
 
-function mountUseCalendarDate(props: Partial<CalendarDateOwnProps> = {}) {
+function mountUseCalendarDate(
+  props: Partial<CalendarDateOwnProps> = {},
+  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+) {
   let result!: ReturnType<typeof useCalendarDate>;
 
   const emit = vi.fn();
@@ -32,7 +36,24 @@ function mountUseCalendarDate(props: Partial<CalendarDateOwnProps> = {}) {
     },
   });
 
-  mount(Wrapper);
+  if (!("registryTokens" in options)) {
+    mount(Wrapper);
+
+    return result;
+  }
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Wrapper),
+    },
+    props: {
+      components: {
+        Calendar: {
+          tokens: options.registryTokens,
+        },
+      },
+    },
+  });
 
   return result;
 }
@@ -64,4 +85,16 @@ test("it should mark selected day cells", () => {
 
   expect(selected).toHaveLength(1);
   expect(selected[0]?.label).toBe("21");
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  const { days, getDayBind } = mountUseCalendarDate(
+    { rounded: "md" },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
+
+  const day = days.value.find((cell) => !cell.outside);
+
+  expect(day).toBeTruthy();
+  expect(getDayBind(day!).class).toContain("rounded-none");
 });

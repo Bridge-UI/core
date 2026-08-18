@@ -42,8 +42,9 @@ import { TimePanel } from "@bridge-ui/react/Components/TimePanel";
 | `rounded`      | `CalendarRounded`      | `"md"`      | Border radius of time tiles.                    |
 | `showSeconds`  | `boolean`              | `false`     | Shows seconds in the panel and formatted value. |
 | `timeZone`     | `string`               | —           | IANA time zone.                                 |
-| `tokens`       | `TimePanelTokens`      | —           | Token overrides.                                |
 | `value`        | `Date \| null`         | —           | Selected time (`Date` wall clock).              |
+
+Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
 ## Events
 

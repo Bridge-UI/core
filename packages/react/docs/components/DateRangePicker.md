@@ -55,8 +55,9 @@ import { DateRangePicker } from "@bridge-ui/react/Components/DateRangePicker";
 | `slots`           | `DateRangePickerSlots`       | —              | Named slots (`day` on the calendars, `footer` for Cancel / Apply). |
 | `startOfWeek`     | `StartOfWeek`                | `0`            | First day of the week.                                             |
 | `timeZone`        | `string`                     | —              | IANA time zone.                                                    |
-| `tokens`          | `DateRangePickerTokens`      | —              | Token overrides.                                                   |
 | `value`           | `DateRangeValue \| null`     | —              | Controlled value (`[start, end]`).                                 |
+
+Calendar tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

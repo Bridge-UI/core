@@ -3,11 +3,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
 import type { DisableTimesInput, TimeValue } from "@bridge-ui/core/Domain";
-import type {
-  TimeColor,
-  TimeColorItem,
-  TimeRounded,
-} from "@bridge-ui/core/Tokens";
+import type { TimeColor, TimeRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface TimePanelColorOverrides {}
@@ -58,18 +54,6 @@ export interface TimePanelCustomProps {
    * @default undefined
    */
   root?: HTMLAttributes<HTMLDivElement>;
-}
-
-export interface TimePanelTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<TimeColorItem>>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
 }
 
 export interface TimePanelOwnProps {
@@ -178,13 +162,6 @@ export interface TimePanelOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: TimePanelTokens;
 
   /**
    * Selected time (`Date` wall clock).

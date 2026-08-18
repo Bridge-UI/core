@@ -8,7 +8,6 @@ export type {
   CalendarProps,
   CalendarRoundedOverrides,
   CalendarSlots,
-  CalendarTokens,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";
 export { default as Calendar } from "@/Components/Calendar/Calendar.vue";

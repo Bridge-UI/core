@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -8,6 +9,7 @@ import {
   type CalendarDateOwnProps,
   type CalendarDateProps,
 } from "@/Components/CalendarDate";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   rounded: "md",
@@ -15,12 +17,32 @@ const libDefaults = {
   color: "primary",
 } as const satisfies Partial<CalendarDateOwnProps>;
 
-function renderUseCalendarDate(props: CalendarDateProps = {}) {
-  return renderHook(() =>
-    useCalendarDate(
-      { viewDate: new Date(2021, 4, 1), ...props },
-      libDefaults as Parameters<typeof useCalendarDate>[1],
-    ),
+function renderUseCalendarDate(
+  props: CalendarDateProps = {},
+  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+) {
+  return renderHook(
+    () =>
+      useCalendarDate(
+        { viewDate: new Date(2021, 4, 1), ...props },
+        libDefaults as Parameters<typeof useCalendarDate>[1],
+      ),
+    {
+      wrapper: ({ children }) => {
+        if (!("registryTokens" in options)) {
+          return children;
+        }
+
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            Calendar: {
+              tokens: options.registryTokens,
+            },
+          },
+        });
+      },
+    },
   );
 }
 
@@ -51,4 +73,16 @@ test("it should mark selected day cells", () => {
 
   expect(selected).toHaveLength(1);
   expect(selected[0]?.label).toBe("21");
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  const { result } = renderUseCalendarDate(
+    { rounded: "md" },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
+
+  const day = result.current.days.find((cell) => !cell.outside);
+
+  expect(day).toBeTruthy();
+  expect(result.current.getDayBind(day!).className).toContain("rounded-none");
 });

@@ -8,12 +8,7 @@ import type {
   FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
-import type {
-  CalendarColor,
-  CalendarColorItem,
-  CalendarDay,
-  CalendarRounded,
-} from "@bridge-ui/core/Tokens";
+import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -261,13 +256,6 @@ export interface DateRangePickerOwnProps {
   timeZone?: string;
 
   /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: DateRangePickerTokens;
-
-  /**
    * Controlled value.
    *
    * @default undefined
@@ -290,32 +278,6 @@ export interface DateRangePickerSlots {
    * @default undefined
    */
   footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
-}
-
-export interface DateRangePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
 }
 
 export type DateRangePickerProps = MergeHtmlProps<

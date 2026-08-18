@@ -10,5 +10,4 @@ export type {
   TimePickerProps,
   TimePickerRoundedOverrides,
   TimePickerSlots,
-  TimePickerTokens,
 } from "@/Components/TimePicker/timePicker.types";

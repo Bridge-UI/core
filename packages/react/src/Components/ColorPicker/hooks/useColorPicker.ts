@@ -50,7 +50,6 @@ const colorPickerBridgeKeys = [
   "alpha",
   "value",
   "format",
-  "tokens",
   "classes",
   "rounded",
   "disabled",
@@ -169,7 +168,6 @@ export function useColorPicker(
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
       bridgeColorPicker?.tokens?.size,
-      merged.tokens?.size,
     );
 
     return get(classes, ["md", "swatch"]) ?? "";
@@ -179,7 +177,6 @@ export function useColorPicker(
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
       bridgeColorPicker?.tokens?.rounded,
-      merged.tokens?.rounded,
     );
 
     return get(classes, merged.rounded ?? "md") ?? "";

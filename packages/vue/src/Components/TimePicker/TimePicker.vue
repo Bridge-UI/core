@@ -25,7 +25,6 @@ const {
   footerBind,
   showFooter,
   applyLabel,
-  timeTokens,
   contentBind,
   handleApply,
   cancelLabel,
@@ -53,7 +52,6 @@ const {
       <TimePanel
         :ampm="merged.ampm"
         :fill="merged.fill"
-        :tokens="timeTokens"
         :color="merged.color"
         :value="displayValue"
         :error="merged.error"

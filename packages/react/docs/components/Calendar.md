@@ -85,10 +85,11 @@ import { Calendar } from "@bridge-ui/react/Components/Calendar";
 | `slots`           | `CalendarDateSlots`   | —           | Named slots forwarded to `CalendarDate` (`day`).          |
 | `startOfWeek`     | `StartOfWeek`         | `0`         | First day of the week (`0` = Sunday).                     |
 | `timeZone`        | `string`              | —           | IANA time zone.                                           |
-| `tokens`          | `CalendarTokens`      | —           | Token overrides.                                          |
 | `value`           | `DatePickerModel`     | —           | Controlled selection model.                               |
 | `view`            | `CalendarView`        | —           | Controlled panel view. Pair with `onViewChange`.          |
 | `viewDate`        | `Date`                | —           | Controlled displayed month. Pair with `onViewDateChange`. |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

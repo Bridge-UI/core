@@ -5,6 +5,7 @@ import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { useTimePanel, type TimePanelOwnProps } from "@/Components/TimePanel";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   ampm: false,
@@ -14,7 +15,10 @@ const libDefaults = {
   showSeconds: false,
 } satisfies Partial<TimePanelOwnProps>;
 
-function mountUseTimePanel(props: Partial<TimePanelOwnProps> = {}) {
+function mountUseTimePanel(
+  props: Partial<TimePanelOwnProps> = {},
+  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+) {
   let result!: ReturnType<typeof useTimePanel>;
 
   const emit = vi.fn();
@@ -31,7 +35,24 @@ function mountUseTimePanel(props: Partial<TimePanelOwnProps> = {}) {
     },
   });
 
-  mount(Wrapper);
+  if (!("registryTokens" in options)) {
+    mount(Wrapper);
+
+    return result;
+  }
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Wrapper),
+    },
+    props: {
+      components: {
+        TimePanel: {
+          tokens: options.registryTokens,
+        },
+      },
+    },
+  });
 
   return result;
 }
@@ -68,4 +89,13 @@ test("it should expose meridiem items when ampm is set", () => {
 
   expect(showMeridiem.value).toBe(true);
   expect(meridiemItems.value).toHaveLength(2);
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  const { hourItems, getHourBind } = mountUseTimePanel(
+    { rounded: "md" },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
+
+  expect(getHourBind(hourItems.value[0]!).class).toContain("rounded-none");
 });

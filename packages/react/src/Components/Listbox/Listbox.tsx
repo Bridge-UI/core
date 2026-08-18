@@ -48,7 +48,6 @@ function Listbox({
   labelledBy,
   show = false,
   onShowChange,
-  componentName,
   loading = false,
   multiple = false,
   showCheckmark = true,
@@ -106,7 +105,7 @@ function Listbox({
       isSelected: isSelectedProp,
     },
     listboxLibDefaults,
-    { overlay, componentName },
+    { overlay },
   );
 
   const resolvedEntries = useMemo(() => {

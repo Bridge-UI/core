@@ -7,7 +7,6 @@ export type {
   CalendarYearOwnProps,
   CalendarYearProps,
   CalendarYearRoundedOverrides,
-  CalendarYearTokens,
 } from "@/Components/CalendarYear/calendarYear.types";
 export { default as CalendarYear } from "@/Components/CalendarYear/CalendarYear.vue";
 export {

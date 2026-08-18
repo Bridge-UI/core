@@ -9,6 +9,5 @@ export type {
   DateRangePickerProps,
   DateRangePickerRoundedOverrides,
   DateRangePickerSlots,
-  DateRangePickerTokens,
 } from "@/Components/DateRangePicker/dateRangePicker.types";
 export { default as DateRangePicker } from "@/Components/DateRangePicker/DateRangePicker.vue";

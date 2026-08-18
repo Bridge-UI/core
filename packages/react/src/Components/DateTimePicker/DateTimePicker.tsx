@@ -16,7 +16,6 @@ function DateTimePicker(props: DateTimePickerProps) {
     footerBind,
     showFooter,
     applyLabel,
-    timeTokens,
     handleApply,
     cancelLabel,
     contentBind,
@@ -25,7 +24,6 @@ function DateTimePicker(props: DateTimePickerProps) {
     calendarBind,
     timeFillBind,
     timeSizerBind,
-    calendarTokens,
     applyButtonProps,
     cancelButtonProps,
     handlePanelChange,
@@ -50,7 +48,6 @@ function DateTimePicker(props: DateTimePickerProps) {
             color={merged.color}
             value={displayValue}
             error={merged.error}
-            tokens={calendarTokens}
             maxDate={merged.maxDate}
             minDate={merged.minDate}
             rounded={merged.rounded}
@@ -87,7 +84,6 @@ function DateTimePicker(props: DateTimePickerProps) {
             <TimePanel
               ampm={merged.ampm}
               fill={merged.fill}
-              tokens={timeTokens}
               color={merged.color}
               value={displayValue}
               error={merged.error}

@@ -37,7 +37,6 @@ import { TimePanel } from "@bridge-ui/vue/Components/TimePanel";
 | `rounded`      | `CalendarRounded`      | `"md"`      | Border radius of time tiles.                    |
 | `showSeconds`  | `boolean`              | `false`     | Shows seconds in the panel and formatted value. |
 | `timeZone`     | `string`               | —           | IANA time zone.                                 |
-| `tokens`       | `TimePanelTokens`      | —           | Token overrides.                                |
 | `value`        | `Date \| null`         | —           | Selected time (`Date` wall clock).              |
 
 ### v-model
@@ -46,6 +45,8 @@ import { TimePanel } from "@bridge-ui/vue/Components/TimePanel";
 | ------------------- | ------------------------------- | ------- | ------------------------------------- |
 | `modelValue`        | `Date \| null`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: Date \| null) => void` | —       | Emitted when `v-model` should update. |
+
+Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
 ## Events
 

@@ -33,8 +33,9 @@ import { CalendarYear } from "@bridge-ui/react/Components/CalendarYear";
 | `rounded`      | `CalendarRounded`         | `"md"`      | Border radius of year tiles.              |
 | `startYear`    | `number`                  | —           | First year of the visible page.           |
 | `timeZone`     | `string`                  | —           | IANA time zone.                           |
-| `tokens`       | `CalendarYearTokens`      | —           | Token overrides.                          |
 | `value`        | `number`                  | —           | Selected year.                            |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

@@ -29,7 +29,6 @@ const {
   cancelLabel,
   displayValue,
   handleCancel,
-  calendarTokens,
   applyButtonProps,
   cancelButtonProps,
   handleCalendarChange,
@@ -52,7 +51,6 @@ const {
       :color="merged.color"
       :error="merged.error"
       :value="displayValue"
-      :tokens="calendarTokens"
       :rounded="merged.rounded"
       :max-date="merged.maxDate"
       :min-date="merged.minDate"

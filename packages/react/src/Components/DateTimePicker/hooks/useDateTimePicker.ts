@@ -39,7 +39,6 @@ const dateTimePickerBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "maxTime",
@@ -149,21 +148,6 @@ export function useDateTimePicker(
 
   const displayValue = derived(() => {
     return merged.showFooter ? draftValue : committedValue;
-  });
-
-  const calendarTokens = derived(() => {
-    return {
-      day: merged.tokens?.calendar?.day ?? merged.tokens?.day,
-      color: merged.tokens?.calendar?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.calendar?.rounded ?? merged.tokens?.rounded,
-    };
-  });
-
-  const timeTokens = derived(() => {
-    return {
-      color: merged.tokens?.time?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.time?.rounded ?? merged.tokens?.rounded,
-    };
   });
 
   const commitValue = (next: Date | null) => {
@@ -305,7 +289,6 @@ export function useDateTimePicker(
     merged,
     rootBind,
     timeBind,
-    timeTokens,
     footerBind,
     contentBind,
     handleApply,
@@ -314,7 +297,6 @@ export function useDateTimePicker(
     calendarBind,
     timeFillBind,
     timeSizerBind,
-    calendarTokens,
     handlePanelChange,
     handleCalendarChange,
     timePanelCustomProps,

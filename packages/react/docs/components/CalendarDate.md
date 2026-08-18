@@ -49,9 +49,10 @@ import { CalendarDate } from "@bridge-ui/react/Components/CalendarDate";
 | `slots`           | `{ day?: … }`             | —           | Named slots (`day`).                              |
 | `startOfWeek`     | `StartOfWeek`             | `0`         | First day of the week.                            |
 | `timeZone`        | `string`                  | —           | IANA time zone.                                   |
-| `tokens`          | `CalendarDateTokens`      | —           | Token overrides.                                  |
 | `value`           | `DatePickerModel`         | —           | Controlled selection model.                       |
 | `viewDate`        | `Date`                    | —           | Month currently displayed in the grid.            |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

@@ -44,7 +44,6 @@ const calendarRangeBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "minDate",
@@ -121,9 +120,23 @@ export function useCalendarRange(
     });
   });
 
-  const { merged } = useBridgeUIComponent<CalendarRangeMerged>({
+  const { entry, merged } = useBridgeUIComponent<
+    CalendarRangeMerged,
+    "Calendar"
+  >({
     libDefaults,
+    componentName: "Calendar",
     props: () => split.value.componentProps,
+  });
+
+  const calendarTokens = computed(() => {
+    return get(entry.value, ["tokens"]) as
+      | undefined
+      | {
+          color?: object;
+          day?: object;
+          rounded?: object;
+        };
   });
 
   const customProps = computed(() => {
@@ -273,7 +286,7 @@ export function useCalendarRange(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      merged.value.tokens?.rounded,
+      calendarTokens.value?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -416,7 +429,6 @@ export function useCalendarRange(
     return {
       color: merged.value.color,
       error: merged.value.error,
-      tokens: merged.value.tokens,
       rounded: merged.value.rounded,
       maxDate: merged.value.maxDate,
       minDate: merged.value.minDate,

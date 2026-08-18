@@ -86,16 +86,10 @@ const {
   cancelButtonProps,
   optionSelectedClass,
   optionHighlightedClass,
-} = useListbox(
-  props,
-  {
-    size: "md",
-    color: "primary",
-  },
-  {
-    componentName: props.componentName,
-  },
-);
+} = useListbox(props, {
+  size: "md",
+  color: "primary",
+});
 
 const resolvedOptions = computed(() => {
   return props.options ?? [];

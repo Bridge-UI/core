@@ -1165,7 +1165,6 @@ export function useAutocomplete(
       color: formField.merged.color,
       labelledBy: formField.controlId,
       rounded: formField.merged.rounded,
-      componentName: "Autocomplete" as const,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,
       ...props.customProps?.listbox,

@@ -96,7 +96,13 @@ import type {
   LinkSize,
   LinkUnderline,
 } from "@/Tokens/Link";
-import type { ListboxColorItem, ListboxSizeItem } from "@/Tokens/Listbox";
+import type {
+  ListboxColor,
+  ListboxColorItem,
+  ListboxRounded,
+  ListboxSize,
+  ListboxSizeItem,
+} from "@/Tokens/Listbox";
 import type { MenuRounded, MenuShadow } from "@/Tokens/Menu";
 import type {
   ModalAlign,
@@ -327,6 +333,7 @@ export interface BadgeConfigOverrides {}
 export interface BreadcrumbConfigOverrides {}
 export interface BreadcrumbItemConfigOverrides {}
 export interface ButtonConfigOverrides {}
+export interface CalendarConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
@@ -347,6 +354,7 @@ export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
 export interface ListConfigOverrides {}
 export interface ListItemConfigOverrides {}
+export interface ListboxConfigOverrides {}
 export interface ListSectionConfigOverrides {}
 export interface MenuConfigOverrides {}
 export interface ModalConfigOverrides {}
@@ -372,6 +380,7 @@ export interface TabsConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface TextFieldConfigOverrides {}
 export interface TimeFieldConfigOverrides {}
+export interface TimePanelConfigOverrides {}
 export interface TimePickerConfigOverrides {}
 export interface TimeRangeFieldConfigOverrides {}
 export interface TimeRangePickerConfigOverrides {}
@@ -543,11 +552,6 @@ export interface ColorFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    colorPicker: Partial<{
-      rounded: keyof ColorPickerRounded;
-      roundedMap: Record<string, string>;
-      size: Record<string, ColorPickerSizeItem>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -566,6 +570,25 @@ export interface ColorPickerConfigBase {
   tokens: Partial<{
     rounded: Record<string, string>;
     size: Record<string, ColorPickerSizeItem>;
+  }>;
+}
+
+export interface CalendarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof CalendarColor;
+    fill: boolean;
+    hideMonths: boolean;
+    hideOutsideDays: boolean;
+    hideWeekdays: boolean;
+    hideYears: boolean;
+    rounded: keyof CalendarRounded;
+    startOfWeek: number;
+  }>;
+  tokens: Partial<{
+    color: Record<string, CalendarColorItem>;
+    day: Partial<CalendarDay>;
+    rounded: Record<string, string>;
   }>;
 }
 
@@ -591,19 +614,7 @@ export interface DateFieldConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
     color: Record<string, FormFieldColorItem>;
-    datePicker: Partial<{
-      color: keyof CalendarColor;
-      colorMap: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: keyof CalendarRounded;
-      roundedMap: Record<string, string>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -626,16 +637,6 @@ export interface DatePickerConfigBase {
     showFooter: boolean;
     startOfWeek: number;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
-    color: Record<string, CalendarColorItem>;
-    day: Partial<CalendarDay>;
-    rounded: Record<string, string>;
   }>;
 }
 
@@ -660,19 +661,7 @@ export interface DateRangeFieldConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
     color: Record<string, FormFieldColorItem>;
-    dateRangePicker: Partial<{
-      color: keyof CalendarColor;
-      colorMap: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: keyof CalendarRounded;
-      roundedMap: Record<string, string>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -694,16 +683,6 @@ export interface DateRangePickerConfigBase {
     showFooter: boolean;
     startOfWeek: number;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
-    color: Record<string, CalendarColorItem>;
-    day: Partial<CalendarDay>;
-    rounded: Record<string, string>;
   }>;
 }
 
@@ -730,29 +709,9 @@ export interface DateTimeFieldConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
     color: Record<string, FormFieldColorItem>;
-    dateTimePicker: Partial<{
-      color: keyof CalendarColor;
-      colorMap: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: keyof CalendarRounded;
-      roundedMap: Record<string, string>;
-      timeColor: keyof TimeColor;
-      timeColorMap: Record<string, TimeColorItem>;
-      timeRounded: keyof TimeRounded;
-      timeRoundedMap: Record<string, string>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
 }
@@ -774,20 +733,6 @@ export interface DateTimePickerConfigBase {
     showSeconds: boolean;
     startOfWeek: number;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
-    color: Record<string, CalendarColorItem>;
-    day: Partial<CalendarDay>;
-    rounded: Record<string, string>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
   }>;
 }
 
@@ -812,17 +757,23 @@ export interface TimeFieldConfigBase {
     color: Record<string, FormFieldColorItem>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
-    timePicker: Partial<{
-      color: keyof TimeColor;
-      colorMap: Record<string, TimeColorItem>;
-      rounded: keyof TimeRounded;
-      roundedMap: Record<string, string>;
-    }>;
     variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface TimePanelConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    ampm: boolean;
+    color: keyof TimeColor;
+    fill: boolean;
+    interval: number;
+    rounded: keyof TimeRounded;
+    showSeconds: boolean;
+  }>;
+  tokens: Partial<{
+    color: Record<string, TimeColorItem>;
+    rounded: Record<string, string>;
   }>;
 }
 
@@ -838,14 +789,6 @@ export interface TimePickerConfigBase {
     showFooter: boolean;
     showSeconds: boolean;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    color: Record<string, TimeColorItem>;
-    rounded: Record<string, string>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
   }>;
 }
 
@@ -870,16 +813,6 @@ export interface TimeRangeFieldConfigBase {
     color: Record<string, FormFieldColorItem>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
-    timeRangePicker: Partial<{
-      color: keyof TimeColor;
-      colorMap: Record<string, TimeColorItem>;
-      rounded: keyof TimeRounded;
-      roundedMap: Record<string, string>;
-    }>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
 }
@@ -897,14 +830,6 @@ export interface TimeRangePickerConfigBase {
     showFooter: boolean;
     showSeconds: boolean;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    color: Record<string, TimeColorItem>;
-    rounded: Record<string, string>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
   }>;
 }
 
@@ -932,29 +857,9 @@ export interface DateTimeRangeFieldConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
     color: Record<string, FormFieldColorItem>;
-    dateTimeRangePicker: Partial<{
-      color: keyof CalendarColor;
-      colorMap: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: keyof CalendarRounded;
-      roundedMap: Record<string, string>;
-      timeColor: keyof TimeColor;
-      timeColorMap: Record<string, TimeColorItem>;
-      timeRounded: keyof TimeRounded;
-      timeRoundedMap: Record<string, string>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
 }
@@ -977,20 +882,6 @@ export interface DateTimeRangePickerConfigBase {
     showSeconds: boolean;
     startOfWeek: number;
     timeZone: string;
-  }>;
-  tokens: Partial<{
-    calendar: Partial<{
-      color: Record<string, CalendarColorItem>;
-      day: Partial<CalendarDay>;
-      rounded: Record<string, string>;
-    }>;
-    color: Record<string, CalendarColorItem>;
-    day: Partial<CalendarDay>;
-    rounded: Record<string, string>;
-    time: Partial<{
-      color: Record<string, TimeColorItem>;
-      rounded: Record<string, string>;
-    }>;
   }>;
 }
 
@@ -1041,6 +932,21 @@ export interface ListItemConfigBase {
 
 export interface ListSectionConfigBase {
   classes: object;
+}
+
+export interface ListboxConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ListboxColor;
+    rounded: keyof ListboxRounded;
+    showFooter: boolean;
+    size: keyof ListboxSize;
+  }>;
+  tokens: Partial<{
+    color: Record<string, ListboxColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, ListboxSizeItem>;
+  }>;
 }
 
 export interface MenuConfigBase {
@@ -1219,10 +1125,6 @@ export interface AutocompleteConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    listbox: Partial<{
-      color: Record<string, ListboxColorItem>;
-      size: Record<string, ListboxSizeItem>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -1242,10 +1144,6 @@ export interface SelectConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    listbox: Partial<{
-      color: Record<string, ListboxColorItem>;
-      size: Record<string, ListboxSizeItem>;
-    }>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
@@ -1514,6 +1412,7 @@ export type BridgeUIComponentsConfig = Partial<{
     Overwrite<BreadcrumbItemConfigBase, BreadcrumbItemConfigOverrides>
   >;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
+  Calendar: Partial<Overwrite<CalendarConfigBase, CalendarConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
@@ -1551,6 +1450,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;
   List: Partial<Overwrite<ListConfigBase, ListConfigOverrides>>;
+  Listbox: Partial<Overwrite<ListboxConfigBase, ListboxConfigOverrides>>;
   ListItem: Partial<Overwrite<ListItemConfigBase, ListItemConfigOverrides>>;
   ListSection: Partial<
     Overwrite<ListSectionConfigBase, ListSectionConfigOverrides>
@@ -1585,6 +1485,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Textarea: Partial<Overwrite<TextareaConfigBase, TextareaConfigOverrides>>;
   TextField: Partial<Overwrite<TextFieldConfigBase, TextFieldConfigOverrides>>;
   TimeField: Partial<Overwrite<TimeFieldConfigBase, TimeFieldConfigOverrides>>;
+  TimePanel: Partial<Overwrite<TimePanelConfigBase, TimePanelConfigOverrides>>;
   TimePicker: Partial<
     Overwrite<TimePickerConfigBase, TimePickerConfigOverrides>
   >;

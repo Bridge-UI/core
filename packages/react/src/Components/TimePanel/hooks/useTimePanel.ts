@@ -48,7 +48,6 @@ const timePanelBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxTime",
   "minTime",
@@ -102,9 +101,22 @@ export function useTimePanel(
     bridgeKeys: timePanelBridgeKeys,
   });
 
-  const { merged } = useBridgeUIComponent<TimePanelMerged>({
+  const { merged, entry: bridgeTime } = useBridgeUIComponent<
+    TimePanelMerged,
+    "TimePanel"
+  >({
     libDefaults,
     props: componentProps,
+    componentName: "TimePanel",
+  });
+
+  const timeTokens = derived(() => {
+    return get(bridgeTime, ["tokens"]) as
+      | undefined
+      | {
+          color?: object;
+          rounded?: object;
+        };
   });
 
   const customProps = derived(() => {
@@ -126,17 +138,14 @@ export function useTimePanel(
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      merged.tokens?.rounded,
+      timeTokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, merged.tokens?.rounded]);
+  }, [merged.rounded, timeTokens?.rounded]);
 
   const colorClass = derived(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      merged.tokens?.color,
-    );
+    const classes = mergeBridgeUILayeredClasses(colorProps, timeTokens?.color);
 
     return getColorToken({
       tokens: classes,

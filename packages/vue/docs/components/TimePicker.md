@@ -42,7 +42,6 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 | `showSeconds`  | `boolean`               | `false`     | Shows seconds in the panel and formatted value.       |
 | `slots`        | `TimePickerSlots`       | —           | Named slots (`footer` for Cancel / Apply).            |
 | `timeZone`     | `string`                | —           | IANA time zone.                                       |
-| `tokens`       | `TimePickerTokens`      | —           | Token overrides.                                      |
 | `value`        | `Date \| null`          | —           | Controlled value.                                     |
 
 ### v-model
@@ -51,6 +50,8 @@ import { TimePicker } from "@bridge-ui/vue/Components/TimePicker";
 | ------------------- | ------------------------------- | ------- | ------------------------------------- |
 | `modelValue`        | `Date \| null`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: Date \| null) => void` | —       | Emitted when `v-model` should update. |
+
+Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
 ## Events
 

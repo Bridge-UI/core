@@ -8,7 +8,6 @@ export type {
   CalendarOwnProps,
   CalendarProps,
   CalendarRoundedOverrides,
-  CalendarTokens,
   CalendarView,
 } from "@/Components/Calendar/calendar.types";
 export { useCalendar } from "@/Components/Calendar/hooks/useCalendar";

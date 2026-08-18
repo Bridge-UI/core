@@ -51,20 +51,9 @@ type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "size" | "color">;
 
 type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
 
-/**
- * Options for {@link useListbox}.
- */
-export type ListboxOptions = {
-  /**
-   * Public registry key that owns nested `tokens.listbox` defaults.
-   */
-  componentName?: "Select" | "Autocomplete";
-};
-
 export function useListbox(
   props: ListboxOwnProps,
   libDefaults: ListboxLibDefaults,
-  options: ListboxOptions = {},
 ) {
   const attrs = useAttrs();
   const breakpoint = useBreakpoint();
@@ -79,10 +68,10 @@ export function useListbox(
 
   const { merged, entry: bridgeListbox } = useBridgeUIComponent<
     ListboxMerged,
-    NonNullable<ListboxOptions["componentName"]>
+    "Listbox"
   >({
     libDefaults,
-    componentName: options.componentName,
+    componentName: "Listbox",
     props: () => {
       return split.value.componentProps;
     },
@@ -113,12 +102,12 @@ export function useListbox(
 
   const showFooter = useFieldShowFooter({
     overlay: resolvedOverlay,
-    componentName: options.componentName,
+    componentName: "Listbox",
     showFooter: () => merged.value.showFooter,
   });
 
   const listboxTokens = computed(() => {
-    return get(bridgeListbox.value, ["tokens", "listbox"]) as
+    return get(bridgeListbox.value, ["tokens"]) as
       | undefined
       | {
           color?: object;

@@ -30,7 +30,6 @@ const {
   panelsBind,
   showFooter,
   applyLabel,
-  timeTokens,
   handleApply,
   cancelLabel,
   endTitleBind,
@@ -65,7 +64,6 @@ const {
         <TimePanel
           :ampm="merged.ampm"
           :fill="merged.fill"
-          :tokens="timeTokens"
           :color="merged.color"
           :error="merged.error"
           :rounded="merged.rounded"
@@ -88,7 +86,6 @@ const {
         <TimePanel
           :ampm="merged.ampm"
           :fill="merged.fill"
-          :tokens="timeTokens"
           :color="merged.color"
           :error="merged.error"
           :value="endDisplayValue"

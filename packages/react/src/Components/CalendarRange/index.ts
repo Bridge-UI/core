@@ -10,7 +10,6 @@ export type {
   CalendarRangeProps,
   CalendarRangeRoundedOverrides,
   CalendarRangeSlots,
-  CalendarRangeTokens,
   CalendarRangeView,
 } from "@/Components/CalendarRange/calendarRange.types";
 export { useCalendarRange } from "@/Components/CalendarRange/hooks/useCalendarRange";

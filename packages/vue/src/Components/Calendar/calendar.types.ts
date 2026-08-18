@@ -7,12 +7,7 @@ import type {
   DisableDatesInput,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
-import type {
-  CalendarColor,
-  CalendarColorItem,
-  CalendarDay,
-  CalendarRounded,
-} from "@bridge-ui/core/Tokens";
+import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -145,23 +140,6 @@ export interface CalendarSlots {
    * @default undefined
    */
   day?: Slot<CalendarDateDayCell>;
-}
-
-export interface CalendarTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
 }
 
 export interface CalendarOwnProps {
@@ -333,13 +311,6 @@ export interface CalendarOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: CalendarTokens;
 
   /**
    * Controlled selection model.

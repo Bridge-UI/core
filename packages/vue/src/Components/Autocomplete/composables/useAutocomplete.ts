@@ -1051,7 +1051,6 @@ export function useAutocomplete(
       error: formField.invalidated.value,
       color: formField.merged.value.color,
       labelledBy: formField.controlId.value,
-      componentName: "Autocomplete" as const,
       rounded: formField.merged.value.rounded,
       highlightedIndex: highlightedIndex.value,
       disableMaxHeight: props.disableMaxHeight === true,

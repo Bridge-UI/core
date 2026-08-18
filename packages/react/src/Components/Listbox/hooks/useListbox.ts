@@ -58,11 +58,6 @@ type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
  */
 export type ListboxOptions = {
   /**
-   * Public registry key that owns nested `tokens.listbox` defaults.
-   */
-  componentName?: "Select" | "Autocomplete";
-
-  /**
    * Overlay mode forwarded from `Listbox` — dialogs need Listbox surface chrome.
    */
   overlay?: FieldOverlayMode;
@@ -86,11 +81,11 @@ export function useListbox(
 
   const { merged, entry: bridgeListbox } = useBridgeUIComponent<
     ListboxMerged,
-    NonNullable<ListboxOptions["componentName"]>
+    "Listbox"
   >({
     libDefaults,
     props: componentProps,
-    componentName: options.componentName,
+    componentName: "Listbox",
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
@@ -116,12 +111,12 @@ export function useListbox(
 
   const showFooter = useFieldShowFooter({
     overlay: resolvedOverlay,
+    componentName: "Listbox",
     showFooter: merged.showFooter,
-    componentName: options.componentName,
   });
 
   const listboxTokens = derived(() => {
-    return get(bridgeListbox, ["tokens", "listbox"]) as
+    return get(bridgeListbox, ["tokens"]) as
       | undefined
       | {
           color?: object;
