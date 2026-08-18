@@ -31,8 +31,8 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 ```vue
 <ColorPicker
   :value="color"
-  :swatches="['#0f766e', '#2563eb', '#dc2626', '#000000']"
   v-on:change="color = $event"
+  :swatches="['#0f766e', '#2563eb', '#dc2626', '#000000']"
 />
 ```
 

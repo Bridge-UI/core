@@ -42,8 +42,8 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 
 <ColorField
   label="RGBA"
-  format="rgba"
   value={color}
+  format="rgba"
   onChange={setColor}
 />
 ```

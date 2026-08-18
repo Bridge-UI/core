@@ -20,8 +20,8 @@ import { ColorPicker } from "@bridge-ui/react/Components/ColorPicker";
 <ColorPicker
   alpha
   showFooter
-  format="rgba"
   value={color}
+  format="rgba"
   onChange={setColor}
 />
 ```
