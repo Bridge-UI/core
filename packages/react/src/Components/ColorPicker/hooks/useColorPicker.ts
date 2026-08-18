@@ -21,7 +21,6 @@ import {
 import {
   colorPickerColorProps as colorProps,
   colorPickerRoundedProps as roundedProps,
-  menuRoundedProps as shellRoundedProps,
   colorPickerSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
 import {
@@ -174,16 +173,16 @@ export function useColorPicker(
     return toCssRgba({ ...displayHsva, a: 1 });
   });
 
-  const swatchRounded = derived(() => {
-    return get(roundedProps, merged.rounded ?? "md") ?? "rounded-md";
+  const tone = derived(() => {
+    return merged.color ?? "primary";
   });
 
   const swatchSize = derived(() => {
-    return get(sizeProps, ["md", "swatch"]) ?? "h-6 w-6";
+    return get(sizeProps, ["md", "swatch"]);
   });
 
-  const tone = derived(() => {
-    return merged.error ? "error" : (merged.color ?? "primary");
+  const swatchRounded = derived(() => {
+    return get(roundedProps, merged.rounded ?? "md");
   });
 
   const swatchTone = derived(() => {
@@ -349,8 +348,6 @@ export function useColorPicker(
   };
 
   const rootBind = derived(() => {
-    const shellRounded = get(shellRoundedProps, merged.rounded ?? "md");
-
     return mergePartBind(
       customProps?.root,
       rootInheritedAttrs,
@@ -358,7 +355,7 @@ export function useColorPicker(
         "flex flex-col overflow-hidden bg-white shadow-lg dark:bg-dark-900": true,
         "w-full": merged.fill,
         "w-72": !merged.fill,
-        [shellRounded]: true,
+        [swatchRounded]: true,
         [mergedClasses.root ?? ""]: true,
       }),
     );
@@ -420,7 +417,7 @@ export function useColorPicker(
         "aria-valuenow": Math.round(displayHsva.h),
         className: cn({
           "relative h-3 w-full cursor-pointer touch-none": true,
-          [swatchRounded]: true,
+          "rounded-full": true,
           "cursor-not-allowed": !interactive,
           [mergedClasses.hue ?? ""]: true,
         }),
@@ -456,7 +453,7 @@ export function useColorPicker(
         className: cn({
           "relative h-3 w-full cursor-pointer overflow-hidden touch-none": true,
           [CHECKERBOARD_CLASS]: true,
-          [swatchRounded]: true,
+          "rounded-full": true,
           "cursor-not-allowed": !interactive,
           [mergedClasses.alpha ?? ""]: true,
         }),

@@ -193,7 +193,7 @@ export interface ColorPickerOwnProps {
   disabled?: boolean;
 
   /**
-   * When `true`, applies the error color palette to selected swatches.
+   * When `true`, marks the picker invalid. Preset swatches still use `color`.
    *
    * @default false
    */
@@ -224,10 +224,12 @@ export interface ColorPickerOwnProps {
   /**
    * Border radius of the picker shell and swatches.
    *
-   * The shell uses the Menu panel scale (`full` caps at `rounded-panel-full`).
+   * `full` uses `rounded-panel-full` so tall surfaces do not become stadium-shaped.
+   * Hue and alpha tracks stay pill-shaped.
    *
-   * `ColorField` always forwards its own `rounded` here so the picker matches
-   * the field, independent of `ColorPicker.defaultProps`.
+   * `ColorField` always forwards its own `rounded` here so internals and the
+   * picker shell match the field. Field overlay menus are unstyled, so this
+   * shell is the visible radius.
    *
    * @default "md"
    */

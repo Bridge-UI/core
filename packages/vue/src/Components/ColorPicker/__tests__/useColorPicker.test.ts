@@ -62,3 +62,15 @@ test("it should show alpha for rgba", () => {
 
   expect(showAlpha.value).toBe(true);
 });
+
+test("it should use panel-full rounding when rounded is full", () => {
+  const { areaBind } = mountUseColorPicker({ rounded: "full" });
+
+  expect(areaBind.value.class).toContain("rounded-panel-full");
+});
+
+test("it should keep color swatch chrome when error is set", () => {
+  const { swatchSelectedClass } = mountUseColorPicker({ error: true });
+
+  expect(swatchSelectedClass.value).toContain("ring-primary");
+});

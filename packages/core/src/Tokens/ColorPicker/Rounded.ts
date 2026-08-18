@@ -18,7 +18,8 @@ export interface ColorPickerRounded {
   "4xl": string;
 
   /**
-   * Fully rounded token.
+   * Panel-max radius (`rounded-panel-full`).
+   * Caps extreme rounding so tall/narrow panels do not become stadium-shaped.
    */
   "full": string;
 
@@ -63,5 +64,5 @@ export const roundedProps: ColorPickerRounded = {
   "3xl": "rounded-3xl",
   "4xl": "rounded-4xl",
   "none": "rounded-none",
-  "full": "rounded-full",
+  "full": "rounded-panel-full",
 };
