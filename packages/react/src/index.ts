@@ -214,6 +214,25 @@ export type {
   ChipProps,
   ChipSizeOverrides,
 } from "@/Components/Chip";
+export { ColorField, useColorField } from "@/Components/ColorField";
+export type {
+  ColorFieldCallbacks,
+  ColorFieldClasses,
+  ColorFieldCustomProps,
+  ColorFieldOwnProps,
+  ColorFieldProps,
+} from "@/Components/ColorField";
+export { ColorPicker, useColorPicker } from "@/Components/ColorPicker";
+export type {
+  ColorPickerCallbacks,
+  ColorPickerClasses,
+  ColorPickerColorOverrides,
+  ColorPickerCustomProps,
+  ColorPickerOwnProps,
+  ColorPickerProps,
+  ColorPickerRoundedOverrides,
+  ColorPickerTokens,
+} from "@/Components/ColorPicker";
 export { DateField, useDateField } from "@/Components/DateField";
 export type {
   DateFieldCallbacks,

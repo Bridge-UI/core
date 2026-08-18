@@ -52,6 +52,7 @@ export type FormFieldOptions = {
     | "DateField"
     | "TextField"
     | "TimeField"
+    | "ColorField"
     | "NumberField"
     | "Autocomplete"
     | "DateTimeField"
