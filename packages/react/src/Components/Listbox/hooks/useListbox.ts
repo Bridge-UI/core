@@ -115,20 +115,10 @@ export function useListbox(
     showFooter: merged.showFooter,
   });
 
-  const listboxTokens = derived(() => {
-    return get(bridgeListbox, ["tokens"]) as
-      | undefined
-      | {
-          color?: object;
-          rounded?: object;
-          size?: object;
-        };
-  });
-
   const colorClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      listboxTokens?.color,
+      bridgeListbox?.tokens?.color,
     );
 
     return getColorToken({
@@ -141,14 +131,17 @@ export function useListbox(
   const roundedToken = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      listboxTokens?.rounded,
+      bridgeListbox?.tokens?.rounded,
     );
 
     return get(classes, props.rounded ?? "md");
   });
 
   const sizeClasses = derived(() => {
-    const classes = mergeBridgeUILayeredClasses(sizeProps, listboxTokens?.size);
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeListbox?.tokens?.size,
+    );
     const sizeItem = get(classes, merged.size ?? "md");
     const overlayKey = isDialogOverlay ? "panel" : "menu";
 

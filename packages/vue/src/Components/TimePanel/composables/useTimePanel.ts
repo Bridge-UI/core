@@ -103,19 +103,13 @@ export function useTimePanel(
     });
   });
 
-  const { entry, merged } = useBridgeUIComponent<TimePanelMerged, "TimePanel">({
+  const { merged, entry: bridgeTime } = useBridgeUIComponent<
+    TimePanelMerged,
+    "TimePanel"
+  >({
     libDefaults,
     componentName: "TimePanel",
     props: () => split.value.componentProps,
-  });
-
-  const timeTokens = computed(() => {
-    return get(entry.value, ["tokens"]) as
-      | undefined
-      | {
-          color?: object;
-          rounded?: object;
-        };
   });
 
   const customProps = computed(() => {
@@ -140,7 +134,7 @@ export function useTimePanel(
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      timeTokens.value?.rounded,
+      bridgeTime.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -149,7 +143,7 @@ export function useTimePanel(
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      timeTokens.value?.color,
+      bridgeTime.value?.tokens?.color,
     );
 
     return getColorToken({

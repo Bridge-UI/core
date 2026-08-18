@@ -106,20 +106,10 @@ export function useListbox(
     showFooter: () => merged.value.showFooter,
   });
 
-  const listboxTokens = computed(() => {
-    return get(bridgeListbox.value, ["tokens"]) as
-      | undefined
-      | {
-          color?: object;
-          rounded?: object;
-          size?: object;
-        };
-  });
-
   const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      listboxTokens.value?.color,
+      bridgeListbox.value?.tokens?.color,
     );
 
     return getColorToken({
@@ -132,7 +122,7 @@ export function useListbox(
   const roundedToken = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      listboxTokens.value?.rounded,
+      bridgeListbox.value?.tokens?.rounded,
     );
 
     return get(classes, props.rounded ?? "md");
@@ -141,7 +131,7 @@ export function useListbox(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      listboxTokens.value?.size,
+      bridgeListbox.value?.tokens?.size,
     );
 
     const sizeItem = get(classes, merged.value.size ?? "md");

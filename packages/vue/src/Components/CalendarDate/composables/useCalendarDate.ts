@@ -108,23 +108,13 @@ export function useCalendarDate(
     });
   });
 
-  const { entry, merged } = useBridgeUIComponent<
+  const { merged, entry: bridgeCalendar } = useBridgeUIComponent<
     CalendarDateMerged,
     "Calendar"
   >({
     libDefaults,
     componentName: "Calendar",
     props: () => split.value.componentProps,
-  });
-
-  const calendarTokens = computed(() => {
-    return get(entry.value, ["tokens"]) as
-      | undefined
-      | {
-          color?: object;
-          day?: object;
-          rounded?: object;
-        };
   });
 
   const customProps = computed(() => {
@@ -223,13 +213,16 @@ export function useCalendarDate(
   });
 
   const dayTokens = computed(() => {
-    return mergeBridgeUILayeredClasses(dayProps, calendarTokens.value?.day);
+    return mergeBridgeUILayeredClasses(
+      dayProps,
+      bridgeCalendar.value?.tokens?.day,
+    );
   });
 
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      calendarTokens.value?.rounded,
+      bridgeCalendar.value?.tokens?.rounded,
     );
 
     return get(classes, merged.value.rounded);
@@ -238,7 +231,7 @@ export function useCalendarDate(
   const colorClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      calendarTokens.value?.color,
+      bridgeCalendar.value?.tokens?.color,
     );
 
     return getColorToken({

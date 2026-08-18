@@ -116,16 +116,6 @@ export function useCalendar(
     componentName: "Calendar",
   });
 
-  const calendarTokens = derived(() => {
-    return get(bridgeCalendar, ["tokens"]) as
-      | undefined
-      | {
-          color?: object;
-          day?: object;
-          rounded?: object;
-        };
-  });
-
   const customProps = derived(() => {
     return merged.customProps;
   });
@@ -225,11 +215,11 @@ export function useCalendar(
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      calendarTokens?.rounded,
+      bridgeCalendar?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, calendarTokens?.rounded]);
+  }, [merged.rounded, bridgeCalendar?.tokens?.rounded]);
 
   const yearLabel = derived(() => {
     return String(adapter.getYear(viewDate, context));
