@@ -20,6 +20,8 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 - [CalendarYear](./components/CalendarYear.md)
 - [Card](./components/Card.md)
 - [Checkbox](./components/Checkbox.md)
+- [ColorField](./components/ColorField.md)
+- [ColorPicker](./components/ColorPicker.md)
 - [DateField](./components/DateField.md)
 - [DatePicker](./components/DatePicker.md)
 - [DateRangeField](./components/DateRangeField.md)

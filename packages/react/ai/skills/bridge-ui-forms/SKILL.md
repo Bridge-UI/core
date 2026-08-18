@@ -5,7 +5,8 @@ description: >-
   NumberField, OtpField, Select, Autocomplete, Slider, Checkbox, Radio,
   Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
   TimePicker, TimeRangeField, TimeRangePicker, DateTimeField, DateTimePicker,
-  DateTimeRangeField, DateTimeRangePicker, FormField, FormControl, BaseField.
+  DateTimeRangeField, DateTimeRangePicker, ColorField, ColorPicker, FormField,
+  FormControl, BaseField.
   Use when wiring inputs, date/time pickers, validation chrome, or select.
 ---
 
@@ -34,6 +35,7 @@ Controlled fields: **`value` + `onChange`**. Never Vue `v-model`.
 | Time range                | `.ai/docs/components/TimeRangeField.md`, `TimeRangePicker.md`         |
 | Date-time                 | `.ai/docs/components/DateTimeField.md`, `DateTimePicker.md`           |
 | Date-time range           | `.ai/docs/components/DateTimeRangeField.md`, `DateTimeRangePicker.md` |
+| Color                     | `.ai/docs/components/ColorField.md`, `ColorPicker.md`                 |
 | Input chrome              | `.ai/docs/components/FormField.md`                                    |
 | Toggle row chrome         | `.ai/docs/components/FormControl.md`                                  |
 | Custom control chrome     | `.ai/docs/components/BaseField.md`                                    |

@@ -91,4 +91,4 @@ in custom footers so Apply still commits.
 
 ## Related components
 
-Menu, Modal, Drawer, Select, Autocomplete, DateField, TimeField, DateTimeField, DateRangeField, TimeRangeField, DateTimeRangeField, Listbox
+Menu, Modal, Drawer, Select, Autocomplete, DateField, TimeField, DateTimeField, DateRangeField, TimeRangeField, DateTimeRangeField, ColorField, Listbox

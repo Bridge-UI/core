@@ -4,8 +4,8 @@ description: >-
   Use Bridge UI Vue components — Button, Avatar, Card, Alert, Accordion, Badge, Icon,
   Link, List, Tabs, Spinner, Skeleton, Progress, Stepper, TextField, Select,
   Autocomplete, DateField, DatePicker, DateRangeField, DateRangePicker,
-  TimeField, TimePicker, DateTimeField, DateTimePicker, classes, customProps,
-  slots. Use when building UI with Bridge components.
+  TimeField, TimePicker, DateTimeField, DateTimePicker, ColorField, ColorPicker,
+  classes, customProps, slots. Use when building UI with Bridge components.
 ---
 
 # Bridge UI (Vue) — components
@@ -36,6 +36,7 @@ In templates, use kebab-case attrs (`start-icon`, `custom-props`, `error-message
 | Time range                    | `.ai/docs/components/TimeRangeField.md`, `TimeRangePicker.md`         |
 | Date-time                     | `.ai/docs/components/DateTimeField.md`, `DateTimePicker.md`           |
 | Date-time range               | `.ai/docs/components/DateTimeRangeField.md`, `DateTimeRangePicker.md` |
+| Color                         | `.ai/docs/components/ColorField.md`, `ColorPicker.md`                 |
 | Spinner / skeleton / progress | `.ai/docs/components/Spinner.md`, `Skeleton.md`, `Progress.md`        |
 | Index                         | `.ai/docs/README.md`                                                  |
 
