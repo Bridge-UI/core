@@ -78,3 +78,11 @@ test("it should default showSwatch to true", () => {
 
   expect(result.current.showSwatch).toBe(true);
 });
+
+test("it should leave picker chrome intact in a menu overlay", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseColorField({ overlay: "menu" });
+
+  expect(result.current.pickerClassName).toBeUndefined();
+});

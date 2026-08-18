@@ -369,6 +369,18 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     );
   });
 
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: dateTimeOnly.customProps?.modal,
+      drawer: dateTimeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateTimeOnly.customProps?.menu,
+      },
+    };
+  });
+
   return {
     open,
     fill,
@@ -391,17 +403,9 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: dateTimeOnly.overlay,
     dateTimeRangePickerCustomProps:
       dateTimeOnly.customProps?.dateTimeRangePicker,
-    overlayCustomProps: {
-      modal: dateTimeOnly.customProps?.modal,
-      drawer: dateTimeOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...dateTimeOnly.customProps?.menu,
-      },
-    },
   };
 }

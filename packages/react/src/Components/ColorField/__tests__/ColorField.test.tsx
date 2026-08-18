@@ -59,6 +59,29 @@ test("it should open the picker on focus", () => {
   ).toBeTruthy();
 });
 
+test("it should forward field rounded to picker internals", () => {
+  render(<ColorField rounded="full" defaultValue="#ea1212" />);
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  expect(
+    screen.getByRole("slider", { name: "Saturation and brightness" }).className,
+  ).toContain("rounded-panel-full");
+});
+
+test("it should keep picker chrome inside an unstyled menu overlay", () => {
+  render(<ColorField rounded="full" defaultValue="#ea1212" />);
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const menu = screen.getByRole("menu");
+
+  expect(menu.className).toContain("bg-transparent");
+  expect(menu.className).toContain("rounded-none");
+  expect(menu.firstElementChild?.className).toContain("rounded-panel-full");
+  expect(menu.firstElementChild?.className).toContain("bg-white");
+});
+
 test("it should call onChange when a swatch is selected", () => {
   const onChange = vi.fn();
 
@@ -74,6 +97,29 @@ test("it should call onChange when a swatch is selected", () => {
   fireEvent.click(screen.getByRole("button", { name: "#ea1212" }));
 
   expect(onChange).toHaveBeenCalledWith("#ea1212");
+});
+
+test("it should keep the overlay open when a color is picked without footer", () => {
+  const onChange = vi.fn();
+  const onClose = vi.fn();
+
+  render(
+    <ColorField
+      onClose={onClose}
+      onChange={onChange}
+      defaultValue="#000000"
+      swatches={["#ea1212"]}
+    />,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+  fireEvent.click(screen.getByRole("button", { name: "#ea1212" }));
+
+  expect(onChange).toHaveBeenCalledWith("#ea1212");
+  expect(onClose).not.toHaveBeenCalled();
+  expect(
+    screen.getByRole("slider", { name: "Saturation and brightness" }),
+  ).toBeTruthy();
 });
 
 test("it should close the overlay after Apply when showFooter is set", () => {

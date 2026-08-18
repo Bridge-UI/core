@@ -326,11 +326,7 @@ export function useColorField(props: ColorFieldProps) {
 
     if (showFooter) {
       onApply?.();
-
-      return;
     }
-
-    handleOpenChange(false);
   };
 
   const handlePickerCancel = () => {
@@ -411,11 +407,11 @@ export function useColorField(props: ColorFieldProps) {
   });
 
   const swatchBind = derived(() => {
-    const fieldSwatch =
-      get(sizeProps, [formField.merged.size ?? "md", "fieldSwatch"]) ??
-      "h-4 w-4";
-    const swatchRounded =
-      get(roundedProps, formField.merged.rounded ?? "md") ?? "rounded-md";
+    const fieldSwatch = get(sizeProps, [
+      formField.merged.size ?? "md",
+      "fieldSwatch",
+    ]);
+    const swatchRounded = get(roundedProps, formField.merged.rounded ?? "md");
 
     return mergePartBind(
       colorOnly.customProps?.swatch,
@@ -437,6 +433,18 @@ export function useColorField(props: ColorFieldProps) {
     return {
       className: "absolute inset-0",
       style: cssColor ? { backgroundColor: cssColor } : undefined,
+    };
+  });
+
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: colorOnly.customProps?.modal,
+      drawer: colorOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...colorOnly.customProps?.menu,
+      },
     };
   });
 
@@ -464,16 +472,8 @@ export function useColorField(props: ColorFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: colorOnly.overlay,
     colorPickerCustomProps: colorOnly.customProps?.colorPicker,
-    overlayCustomProps: {
-      modal: colorOnly.customProps?.modal,
-      drawer: colorOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...colorOnly.customProps?.menu,
-      },
-    },
   };
 }

@@ -87,7 +87,6 @@ function ColorField(props: ColorFieldProps) {
           swatches={colorOnly.swatches}
           onChange={handlePickerChange}
           onCancel={handlePickerCancel}
-          error={formField.invalidated}
           color={formField.merged.color}
           disabled={formField.isDisabled}
           rounded={formField.merged.rounded}

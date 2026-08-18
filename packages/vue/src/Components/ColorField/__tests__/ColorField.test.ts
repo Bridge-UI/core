@@ -97,6 +97,40 @@ test("it should open the picker on focus", async () => {
   ).not.toBeNull();
 });
 
+test("it should forward field rounded to picker internals", async () => {
+  mountColorField({
+    props: { rounded: "full", defaultValue: "#ea1212" },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  expect(
+    document.body.querySelector('[aria-label="Saturation and brightness"]')
+      ?.className,
+  ).toContain("rounded-panel-full");
+});
+
+test("it should keep picker chrome inside an unstyled menu overlay", async () => {
+  mountColorField({
+    props: { rounded: "full", defaultValue: "#ea1212" },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const menu = document.body.querySelector('[role="menu"]');
+
+  expect(menu?.className).toContain("bg-transparent");
+  expect(menu?.className).toContain("rounded-none");
+  expect(menu?.firstElementChild?.className).toContain("rounded-panel-full");
+  expect(menu?.firstElementChild?.className).toContain("bg-white");
+});
+
 test("it should emit change when a swatch is selected", async () => {
   const onChange = vi.fn();
 
@@ -119,6 +153,36 @@ test("it should emit change when a swatch is selected", async () => {
   await flushPromises();
 
   expect(onChange).toHaveBeenCalledWith("#ea1212");
+});
+
+test("it should keep the overlay open when a color is picked without footer", async () => {
+  const onChange = vi.fn();
+  const onClose = vi.fn();
+
+  mountColorField({
+    props: {
+      onClose,
+      onChange,
+      swatches: ["#ea1212"],
+      defaultValue: "#000000",
+    },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const swatch = document.body.querySelector('[aria-label="#ea1212"]');
+
+  swatch?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(onChange).toHaveBeenCalledWith("#ea1212");
+  expect(onClose).not.toHaveBeenCalled();
+  expect(
+    document.body.querySelector('[aria-label="Saturation and brightness"]'),
+  ).not.toBeNull();
 });
 
 test("it should emit change and clear when the clear control is clicked", async () => {

@@ -350,6 +350,18 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     );
   });
 
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: dateOnly.customProps?.modal,
+      drawer: dateOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateOnly.customProps?.menu,
+      },
+    };
+  });
+
   return {
     open,
     fill,
@@ -372,16 +384,8 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: dateOnly.overlay,
     dateRangePickerCustomProps: dateOnly.customProps?.dateRangePicker,
-    overlayCustomProps: {
-      modal: dateOnly.customProps?.modal,
-      drawer: dateOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...dateOnly.customProps?.menu,
-      },
-    },
   };
 }

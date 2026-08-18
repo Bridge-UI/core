@@ -279,11 +279,7 @@ export function useColorField(
 
     if (showFooter.value) {
       emit("apply");
-
-      return;
     }
-
-    handleOpenChange(false);
   }
 
   function handlePickerCancel() {
@@ -410,11 +406,14 @@ export function useColorField(
   });
 
   const swatchBind = computed(() => {
-    const fieldSwatch =
-      get(sizeProps, [formField.merged.value.size ?? "md", "fieldSwatch"]) ??
-      "h-4 w-4";
-    const swatchRounded =
-      get(roundedProps, formField.merged.value.rounded ?? "md") ?? "rounded-md";
+    const fieldSwatch = get(sizeProps, [
+      formField.merged.value.size ?? "md",
+      "fieldSwatch",
+    ]);
+    const swatchRounded = get(
+      roundedProps,
+      formField.merged.value.rounded ?? "md",
+    );
 
     return mergePartBind(
       colorOnly.value.customProps?.swatch,

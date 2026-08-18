@@ -379,6 +379,18 @@ export function useDateField(props: DateFieldProps) {
     );
   });
 
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: dateOnly.customProps?.modal,
+      drawer: dateOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateOnly.customProps?.menu,
+      },
+    };
+  });
+
   return {
     open,
     mode,
@@ -401,16 +413,8 @@ export function useDateField(props: DateFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: dateOnly.overlay,
     datePickerCustomProps: dateOnly.customProps?.datePicker,
-    overlayCustomProps: {
-      modal: dateOnly.customProps?.modal,
-      drawer: dateOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...dateOnly.customProps?.menu,
-      },
-    },
   };
 }

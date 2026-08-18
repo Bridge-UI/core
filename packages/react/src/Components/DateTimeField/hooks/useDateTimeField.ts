@@ -356,6 +356,18 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     );
   });
 
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: dateTimeOnly.customProps?.modal,
+      drawer: dateTimeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...dateTimeOnly.customProps?.menu,
+      },
+    };
+  });
+
   return {
     open,
     fill,
@@ -377,16 +389,8 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: dateTimeOnly.overlay,
     dateTimePickerCustomProps: dateTimeOnly.customProps?.dateTimePicker,
-    overlayCustomProps: {
-      modal: dateTimeOnly.customProps?.modal,
-      drawer: dateTimeOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...dateTimeOnly.customProps?.menu,
-      },
-    },
   };
 }
