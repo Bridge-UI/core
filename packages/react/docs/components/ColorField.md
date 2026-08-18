@@ -1,6 +1,6 @@
 # ColorField
 
-Form field that opens a `ColorPicker` in an overlay (`auto` by default: `menu` on desktop, bottom `drawer` on mobile). Extends FormField props. Shows a start swatch for the selected color.
+Form field that opens a `ColorPicker` in an overlay (`auto` by default: `menu` on desktop, bottom `drawer` on mobile). Extends FormField props. Shows a start swatch for the selected color. Uses the semantic `palette` icon by default.
 
 ## Import
 

@@ -25,6 +25,7 @@ export const SEMANTIC_ICON_NAMES = [
   "error",
   "eyeOff",
   "loader",
+  "palette",
   "success",
   "warning",
   "calendar",

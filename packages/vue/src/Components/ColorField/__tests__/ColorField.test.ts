@@ -44,6 +44,12 @@ test("it should render a text input", () => {
   expect(wrapper.find("input").exists()).toBe(true);
 });
 
+test("it should render the palette end icon by default", () => {
+  const wrapper = mountColorField();
+
+  expect(wrapper.find("svg").exists()).toBe(true);
+});
+
 test("it should keep the input read-only by default", () => {
   const wrapper = mountColorField();
 

@@ -1,6 +1,13 @@
 // ** External Imports
 import { get, isNil, omit } from "es-toolkit/compat";
-import { computed, ref, useAttrs, type Ref, type SetupContext } from "vue";
+import {
+  computed,
+  ref,
+  useAttrs,
+  useSlots,
+  type Ref,
+  type SetupContext,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -32,6 +39,7 @@ import {
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
+  hasNamedSlot,
   mergePartBind,
   resolveFieldAdornmentIconSize,
   useFieldShowFooter,
@@ -80,6 +88,7 @@ export function useColorField(
   emit: SetupContext<ColorFieldEmits>["emit"],
 ) {
   const attrs = useAttrs();
+  const slots = useSlots();
   const breakpoint = useBreakpoint();
 
   const open = ref(false);
@@ -165,6 +174,10 @@ export function useColorField(
       props: inherited.value as Omit<FormFieldOwnProps, "field">,
     }).componentProps;
 
+    const endIcon =
+      formFieldCustom.endIcon ??
+      (hasNamedSlot(slots, "end") ? undefined : "palette");
+
     const {
       menu: _menu,
       swatch: _swatch,
@@ -175,6 +188,7 @@ export function useColorField(
 
     return {
       ...formFieldCustom,
+      endIcon,
       classes: colorOnly.value.classes,
       customProps: {
         ...formFieldOnlyCustom,

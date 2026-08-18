@@ -79,6 +79,24 @@ test("it should default showSwatch to true", () => {
   expect(result.current.showSwatch).toBe(true);
 });
 
+test("it should default endIcon to palette", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseColorField();
+
+  expect(result.current.formField.merged.endIcon).toBe("palette");
+});
+
+test("it should skip the default palette icon when end slot is set", () => {
+  mockViewport(1280);
+
+  const { result } = renderUseColorField({
+    slots: { end: "Custom" },
+  });
+
+  expect(result.current.formField.merged.endIcon).toBeUndefined();
+});
+
 test("it should leave picker chrome intact in a menu overlay", () => {
   mockViewport(1280);
 

@@ -9,7 +9,10 @@ import {
   type ColorFieldOwnProps,
 } from "@/Components/ColorField";
 
-function mountUseColorField(props: Partial<ColorFieldOwnProps> = {}) {
+function mountUseColorField(
+  props: Partial<ColorFieldOwnProps> = {},
+  slots: Record<string, unknown> = {},
+) {
   let result!: ReturnType<typeof useColorField>;
 
   const model = ref<null | string | undefined>(null);
@@ -24,7 +27,7 @@ function mountUseColorField(props: Partial<ColorFieldOwnProps> = {}) {
     },
   });
 
-  mount(Wrapper);
+  mount(Wrapper, { slots });
 
   return result;
 }
@@ -45,6 +48,18 @@ test("it should default showSwatch to true", () => {
   const { showSwatch } = mountUseColorField();
 
   expect(showSwatch.value).toBe(true);
+});
+
+test("it should default endIcon to palette", () => {
+  const { formField } = mountUseColorField();
+
+  expect(formField.merged.value.endIcon).toBe("palette");
+});
+
+test("it should skip the default palette icon when end slot is set", () => {
+  const { formField } = mountUseColorField({}, { end: "Custom" });
+
+  expect(formField.merged.value.endIcon).toBeUndefined();
 });
 
 test("it should leave picker chrome intact in a menu overlay", () => {

@@ -209,6 +209,8 @@ export function useColorField(props: ColorFieldProps) {
       ...formFieldCustom,
       slots: formFieldSlots,
       classes: colorOnly.classes,
+      endIcon:
+        formFieldCustom.endIcon ?? (formFieldSlots.end ? undefined : "palette"),
       customProps: {
         ...formFieldOnlyCustom,
         container: mergePartBind(

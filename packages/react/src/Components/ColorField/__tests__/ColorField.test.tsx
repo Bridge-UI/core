@@ -49,6 +49,12 @@ test("it should render the start swatch", () => {
   expect(container.querySelector("[aria-hidden]")).toBeTruthy();
 });
 
+test("it should render the palette end icon by default", () => {
+  const { container } = render(<ColorField />);
+
+  expect(container.querySelector("svg")).not.toBeNull();
+});
+
 test("it should open the picker on focus", () => {
   render(<ColorField defaultValue="#ea1212" />);
 
