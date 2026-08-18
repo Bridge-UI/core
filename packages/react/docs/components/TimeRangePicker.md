@@ -50,8 +50,9 @@ import { TimeRangePicker } from "@bridge-ui/react/Components/TimeRangePicker";
 | `slots`        | `TimeRangePickerSlots`       | —              | Named slots (`footer` for Cancel / Apply).            |
 | `startTitle`   | `string`                     | `"Start time"` | Label above the start time panel.                     |
 | `timeZone`     | `string`                     | —              | IANA time zone.                                       |
-| `tokens`       | `TimeRangePickerTokens`      | —              | Token overrides.                                      |
 | `value`        | `TimeRangeValue \| null`     | —              | Controlled value (`[start, end]`).                    |
+
+Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
 ## Events
 

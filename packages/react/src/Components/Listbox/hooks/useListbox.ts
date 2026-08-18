@@ -58,11 +58,6 @@ type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
  */
 export type ListboxOptions = {
   /**
-   * Public registry key that owns nested `tokens.listbox` defaults.
-   */
-  componentName?: "Select" | "Autocomplete";
-
-  /**
    * Overlay mode forwarded from `Listbox` — dialogs need Listbox surface chrome.
    */
   overlay?: FieldOverlayMode;
@@ -86,11 +81,11 @@ export function useListbox(
 
   const { merged, entry: bridgeListbox } = useBridgeUIComponent<
     ListboxMerged,
-    NonNullable<ListboxOptions["componentName"]>
+    "Listbox"
   >({
     libDefaults,
     props: componentProps,
-    componentName: options.componentName,
+    componentName: "Listbox",
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<ListboxClasses>({
@@ -116,24 +111,14 @@ export function useListbox(
 
   const showFooter = useFieldShowFooter({
     overlay: resolvedOverlay,
+    componentName: "Listbox",
     showFooter: merged.showFooter,
-    componentName: options.componentName,
-  });
-
-  const listboxTokens = derived(() => {
-    return get(bridgeListbox, ["tokens", "listbox"]) as
-      | undefined
-      | {
-          color?: object;
-          rounded?: object;
-          size?: object;
-        };
   });
 
   const colorClasses = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      listboxTokens?.color,
+      bridgeListbox?.tokens?.color,
     );
 
     return getColorToken({
@@ -146,14 +131,17 @@ export function useListbox(
   const roundedToken = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      listboxTokens?.rounded,
+      bridgeListbox?.tokens?.rounded,
     );
 
     return get(classes, props.rounded ?? "md");
   });
 
   const sizeClasses = derived(() => {
-    const classes = mergeBridgeUILayeredClasses(sizeProps, listboxTokens?.size);
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeListbox?.tokens?.size,
+    );
     const sizeItem = get(classes, merged.size ?? "md");
     const overlayKey = isDialogOverlay ? "panel" : "menu";
 

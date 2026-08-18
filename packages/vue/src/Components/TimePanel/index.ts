@@ -12,6 +12,5 @@ export type {
   TimePanelOwnProps,
   TimePanelProps,
   TimePanelRoundedOverrides,
-  TimePanelTokens,
 } from "@/Components/TimePanel/timePanel.types";
 export { default as TimePanel } from "@/Components/TimePanel/TimePanel.vue";

@@ -33,7 +33,6 @@ import { CalendarYear } from "@bridge-ui/vue/Components/CalendarYear";
 | `rounded`      | `CalendarRounded`         | `"md"`      | Border radius of year tiles.              |
 | `startYear`    | `number`                  | —           | First year of the visible page.           |
 | `timeZone`     | `string`                  | —           | IANA time zone.                           |
-| `tokens`       | `CalendarYearTokens`      | —           | Token overrides.                          |
 | `value`        | `number`                  | —           | Selected year.                            |
 
 ### v-model
@@ -42,6 +41,8 @@ import { CalendarYear } from "@bridge-ui/vue/Components/CalendarYear";
 | ------------------- | ------------------------- | ------- | ------------------------------------- |
 | `modelValue`        | `number`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: number) => void` | —       | Emitted when `v-model` should update. |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

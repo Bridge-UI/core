@@ -974,7 +974,6 @@ export function useSelect(
       showFooter: showFooter.value,
       entries: visibleEntries.value,
       options: visibleOptions.value,
-      componentName: "Select" as const,
       size: formField.merged.value.size,
       error: formField.invalidated.value,
       color: formField.merged.value.color,

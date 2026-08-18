@@ -13,5 +13,4 @@ export type {
   TimePanelOwnProps,
   TimePanelProps,
   TimePanelRoundedOverrides,
-  TimePanelTokens,
 } from "@/Components/TimePanel/timePanel.types";

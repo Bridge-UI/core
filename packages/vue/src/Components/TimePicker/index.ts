@@ -9,6 +9,5 @@ export type {
   TimePickerProps,
   TimePickerRoundedOverrides,
   TimePickerSlots,
-  TimePickerTokens,
 } from "@/Components/TimePicker/timePicker.types";
 export { default as TimePicker } from "@/Components/TimePicker/TimePicker.vue";

@@ -1,5 +1,6 @@
 // ** External Imports
 import { act, renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -8,15 +9,39 @@ import {
   type ColorPickerOwnProps,
   type ColorPickerProps,
 } from "@/Components/ColorPicker";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   rounded: "md",
   format: "hex",
 } as const satisfies Partial<ColorPickerOwnProps>;
 
-function renderUseColorPicker(props: ColorPickerProps = {}) {
-  return renderHook(() =>
-    useColorPicker(props, libDefaults as Parameters<typeof useColorPicker>[1]),
+function renderUseColorPicker(
+  props: ColorPickerProps = {},
+  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+) {
+  return renderHook(
+    () =>
+      useColorPicker(
+        props,
+        libDefaults as Parameters<typeof useColorPicker>[1],
+      ),
+    {
+      wrapper: ({ children }) => {
+        if (!("registryTokens" in options)) {
+          return children;
+        }
+
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            ColorPicker: {
+              tokens: options.registryTokens,
+            },
+          },
+        });
+      },
+    },
   );
 }
 
@@ -62,11 +87,11 @@ test("it should use panel-full rounding when rounded is full", () => {
   expect(result.current.areaBind.className).toContain("rounded-panel-full");
 });
 
-test("it should apply tokens.rounded overrides", () => {
-  const { result } = renderUseColorPicker({
-    rounded: "md",
-    tokens: { rounded: { md: "rounded-none" } },
-  });
+test("it should apply registry tokens.rounded overrides", () => {
+  const { result } = renderUseColorPicker(
+    { rounded: "md" },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
 
   expect(result.current.areaBind.className).toContain("rounded-none");
 });

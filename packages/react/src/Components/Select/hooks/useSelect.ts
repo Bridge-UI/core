@@ -1085,7 +1085,6 @@ export function useSelect(
       error: formField.invalidated,
       color: formField.merged.color,
       labelledBy: formField.controlId,
-      componentName: "Select" as const,
       rounded: formField.merged.rounded,
       disableMaxHeight: props.disableMaxHeight === true,
       onRegisteredOptionsChange: handleRegisteredOptionsChange,

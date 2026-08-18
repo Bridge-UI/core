@@ -15,7 +15,6 @@ function DateRangePicker(props: DateRangePickerProps) {
     cancelLabel,
     displayValue,
     handleCancel,
-    calendarTokens,
     applyButtonProps,
     cancelButtonProps,
     handleCalendarChange,
@@ -33,7 +32,6 @@ function DateRangePicker(props: DateRangePickerProps) {
         color={merged.color}
         value={displayValue}
         error={merged.error}
-        tokens={calendarTokens}
         maxDate={merged.maxDate}
         minDate={merged.minDate}
         rounded={merged.rounded}

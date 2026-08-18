@@ -54,7 +54,6 @@ import { DateTimeRangePicker } from "@bridge-ui/vue/Components/DateTimeRangePick
 | `slots`           | `DateTimeRangePickerSlots`       | —              | Named slots (`day` on the calendars, `footer` for Cancel / Apply). |
 | `startOfWeek`     | `StartOfWeek`                    | `0`            | First day of the week.                                             |
 | `timeZone`        | `string`                         | —              | IANA time zone.                                                    |
-| `tokens`          | `DateTimeRangePickerTokens`      | —              | Token overrides.                                                   |
 | `value`           | `DateRangeValue \| null`         | —              | Controlled value (`[start, end]` date-times).                      |
 
 ### v-model
@@ -63,6 +62,8 @@ import { DateTimeRangePicker } from "@bridge-ui/vue/Components/DateTimeRangePick
 | ------------------- | ----------------------------------------- | ------- | ------------------------------------- |
 | `modelValue`        | `DateRangeValue \| null`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: DateRangeValue \| null) => void` | —       | Emitted when `v-model` should update. |
+
+Calendar tokens live on `components.Calendar`. Time panel tokens live on `components.TimePanel`.
 
 ## Events
 

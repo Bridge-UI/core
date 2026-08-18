@@ -10,5 +10,4 @@ export type {
   TimeRangePickerProps,
   TimeRangePickerRoundedOverrides,
   TimeRangePickerSlots,
-  TimeRangePickerTokens,
 } from "@/Components/TimeRangePicker/timeRangePicker.types";

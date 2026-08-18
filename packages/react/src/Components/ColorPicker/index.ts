@@ -8,6 +8,5 @@ export type {
   ColorPickerProps,
   ColorPickerRoundedOverrides,
   ColorPickerSlots,
-  ColorPickerTokens,
 } from "@/Components/ColorPicker/colorPicker.types";
 export { useColorPicker } from "@/Components/ColorPicker/hooks/useColorPicker";

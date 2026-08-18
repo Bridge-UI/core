@@ -88,8 +88,9 @@ Call `apply()` to commit and close the overlay, or `cancel()` to discard and clo
 | `slots`           | `DatePickerSlots`       | —           | Named slots (`day` on the calendar, `footer` for Cancel / Apply). |
 | `startOfWeek`     | `StartOfWeek`           | `0`         | First day of the week.                                            |
 | `timeZone`        | `string`                | —           | IANA time zone.                                                   |
-| `tokens`          | `DatePickerTokens`      | —           | Token overrides.                                                  |
 | `value`           | `DatePickerModel`       | —           | Controlled value.                                                 |
+
+Calendar tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

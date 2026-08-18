@@ -40,7 +40,6 @@ const calendarMonthBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "minDate",
@@ -85,9 +84,13 @@ export function useCalendarMonth(
     bridgeKeys: calendarMonthBridgeKeys,
   });
 
-  const { merged } = useBridgeUIComponent<CalendarMonthMerged>({
+  const { merged, entry: bridgeCalendar } = useBridgeUIComponent<
+    CalendarMonthMerged,
+    "Calendar"
+  >({
     libDefaults,
     props: componentProps,
+    componentName: "Calendar",
   });
 
   const customProps = derived(() => {
@@ -113,16 +116,16 @@ export function useCalendarMonth(
   const roundedClass = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      merged.tokens?.rounded,
+      bridgeCalendar?.tokens?.rounded,
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, merged.tokens?.rounded]);
+  }, [merged.rounded, bridgeCalendar?.tokens?.rounded]);
 
   const colorClass = derived(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      merged.tokens?.color,
+      bridgeCalendar?.tokens?.color,
     );
 
     return getColorToken({

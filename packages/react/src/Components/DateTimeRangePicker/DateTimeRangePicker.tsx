@@ -16,7 +16,6 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     footerBind,
     showFooter,
     applyLabel,
-    timeTokens,
     handleApply,
     cancelLabel,
     contentBind,
@@ -26,7 +25,6 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     timeFillBind,
     endTimeValue,
     timeSizerBind,
-    calendarTokens,
     startTimeValue,
     applyButtonProps,
     cancelButtonProps,
@@ -63,7 +61,6 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           value={value}
           ampm={merged.ampm}
           fill={merged.fill}
-          tokens={timeTokens}
           onChange={onChange}
           color={merged.color}
           error={merged.error}
@@ -91,7 +88,6 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
             color={merged.color}
             value={displayValue}
             error={merged.error}
-            tokens={calendarTokens}
             maxDate={merged.maxDate}
             minDate={merged.minDate}
             rounded={merged.rounded}

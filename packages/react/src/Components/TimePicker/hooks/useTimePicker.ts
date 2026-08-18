@@ -33,7 +33,6 @@ const timePickerBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxTime",
   "minTime",
@@ -122,13 +121,6 @@ export function useTimePicker(
     return merged.showFooter ? draftValue : committedValue;
   });
 
-  const timeTokens = derived(() => {
-    return {
-      color: merged.tokens?.time?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.time?.rounded ?? merged.tokens?.rounded,
-    };
-  });
-
   const commitValue = (next: null | TimeValue) => {
     if (!isControlled) {
       setUncontrolledValue(next);
@@ -196,7 +188,6 @@ export function useTimePicker(
     merged,
     rootBind,
     footerBind,
-    timeTokens,
     contentBind,
     handleApply,
     displayValue,

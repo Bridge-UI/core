@@ -11,7 +11,6 @@ function TimePicker(props: TimePickerProps) {
     footerBind,
     showFooter,
     applyLabel,
-    timeTokens,
     contentBind,
     handleApply,
     cancelLabel,
@@ -34,7 +33,6 @@ function TimePicker(props: TimePickerProps) {
         <TimePanel
           ampm={merged.ampm}
           fill={merged.fill}
-          tokens={timeTokens}
           color={merged.color}
           value={displayValue}
           error={merged.error}

@@ -6,10 +6,7 @@ import type {
   ColorFormat,
   FieldOverlayFooterSlotProps,
 } from "@bridge-ui/core/Domain";
-import type {
-  ColorPickerRounded,
-  ColorPickerSizeItem,
-} from "@bridge-ui/core/Tokens";
+import type { ColorPickerRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -242,13 +239,6 @@ export interface ColorPickerOwnProps {
   swatches?: string[];
 
   /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: ColorPickerTokens;
-
-  /**
    * Controlled value.
    *
    * @default undefined
@@ -264,18 +254,6 @@ export interface ColorPickerSlots {
    * @default undefined
    */
   footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
-}
-
-export interface ColorPickerTokens {
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Size token map overrides for picker and field swatches.
-   */
-  size?: Record<string, ColorPickerSizeItem>;
 }
 
 export type ColorPickerProps = MergeHtmlProps<

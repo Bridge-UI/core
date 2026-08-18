@@ -69,9 +69,10 @@ import { CalendarRange } from "@bridge-ui/react/Components/CalendarRange";
 | `slots`           | `CalendarRangeSlots`         | —              | Named slots (`day`, optional `startAside` / `endAside`).    |
 | `startOfWeek`     | `StartOfWeek`                | `0`            | First day of the week.                                      |
 | `timeZone`        | `string`                     | —              | IANA time zone.                                             |
-| `tokens`          | `CalendarRangeTokens`        | —              | Token overrides.                                            |
 | `value`           | `DateRangeValue \| null`     | —              | Controlled range value (`[start, end]`).                    |
 | `viewDate`        | `Date`                       | —              | Controlled start (left) displayed month.                    |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

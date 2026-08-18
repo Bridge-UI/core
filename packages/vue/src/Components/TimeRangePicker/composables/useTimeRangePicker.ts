@@ -46,7 +46,6 @@ const timeRangePickerBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxTime",
   "minTime",
@@ -172,14 +171,6 @@ export function useTimeRangePicker(
 
   const endDisplayValue = computed((): TimeValue => {
     return displayValue.value?.[1] ?? adapter.value.now(context.value);
-  });
-
-  const timeTokens = computed(() => {
-    return {
-      color: merged.value.tokens?.time?.color ?? merged.value.tokens?.color,
-      rounded:
-        merged.value.tokens?.time?.rounded ?? merged.value.tokens?.rounded,
-    };
   });
 
   const commitValue = (next: null | TimeRangeValue) => {
@@ -332,7 +323,6 @@ export function useTimeRangePicker(
     footerBind,
     panelsBind,
     showFooter,
-    timeTokens,
     handleApply,
     displayValue,
     handleCancel,

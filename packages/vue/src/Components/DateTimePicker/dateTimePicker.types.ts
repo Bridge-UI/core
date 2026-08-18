@@ -8,13 +8,7 @@ import type {
   FieldOverlayFooterSlotProps,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
-import type {
-  CalendarColor,
-  CalendarColorItem,
-  CalendarDay,
-  CalendarRounded,
-  TimeColorItem,
-} from "@bridge-ui/core/Tokens";
+import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -300,13 +294,6 @@ export interface DateTimePickerOwnProps {
   timeZone?: string;
 
   /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: DateTimePickerTokens;
-
-  /**
    * Controlled value.
    *
    * @default undefined
@@ -329,40 +316,6 @@ export interface DateTimePickerSlots {
    * @default undefined
    */
   footer?: Slot<FieldOverlayFooterSlotProps>;
-}
-
-export interface DateTimePickerTokens {
-  /**
-   * Nested calendar token overrides.
-   */
-  calendar?: {
-    color?: Record<string, Partial<CalendarColorItem>>;
-    day?: Partial<CalendarDay>;
-    rounded?: Record<string, string>;
-  };
-
-  /**
-   * Color token map overrides for the calendar (and time when `time` is unset).
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
 }
 
 export type DateTimePickerProps = MergeHtmlProps<

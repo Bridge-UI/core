@@ -16,7 +16,6 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     panelsBind,
     showFooter,
     applyLabel,
-    timeTokens,
     handleApply,
     cancelLabel,
     endTitleBind,
@@ -46,7 +45,6 @@ function TimeRangePicker(props: TimeRangePickerProps) {
           <TimePanel
             ampm={merged.ampm}
             fill={merged.fill}
-            tokens={timeTokens}
             color={merged.color}
             error={merged.error}
             maxTime={merged.maxTime}
@@ -69,7 +67,6 @@ function TimeRangePicker(props: TimeRangePickerProps) {
           <TimePanel
             ampm={merged.ampm}
             fill={merged.fill}
-            tokens={timeTokens}
             color={merged.color}
             error={merged.error}
             value={endDisplayValue}

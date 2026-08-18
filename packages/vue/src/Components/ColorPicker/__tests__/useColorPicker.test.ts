@@ -8,18 +8,24 @@ import {
   useColorPicker,
   type ColorPickerOwnProps,
 } from "@/Components/ColorPicker";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   rounded: "md",
   format: "hex",
 } as const satisfies Partial<ColorPickerOwnProps>;
 
-function mountUseColorPicker(props: Partial<ColorPickerOwnProps> = {}) {
+function mountUseColorPicker(
+  props: Partial<ColorPickerOwnProps> = {},
+  options: {
+    registryTokens?: { rounded?: Record<string, string> };
+  } = {},
+) {
   let result!: ReturnType<typeof useColorPicker>;
 
   const emit = vi.fn();
 
-  const Wrapper = defineComponent({
+  const Consumer = defineComponent({
     setup() {
       result = useColorPicker(props, libDefaults, emit);
 
@@ -27,7 +33,24 @@ function mountUseColorPicker(props: Partial<ColorPickerOwnProps> = {}) {
     },
   });
 
-  mount(Wrapper);
+  if (!("registryTokens" in options)) {
+    mount(Consumer);
+
+    return result;
+  }
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        ColorPicker: {
+          tokens: options.registryTokens,
+        },
+      },
+    },
+  });
 
   return result;
 }
@@ -68,11 +91,11 @@ test("it should use panel-full rounding when rounded is full", () => {
   expect(areaBind.value.class).toContain("rounded-panel-full");
 });
 
-test("it should apply tokens.rounded overrides", () => {
-  const { areaBind } = mountUseColorPicker({
-    rounded: "md",
-    tokens: { rounded: { md: "rounded-none" } },
-  });
+test("it should apply registry tokens.rounded overrides", () => {
+  const { areaBind } = mountUseColorPicker(
+    { rounded: "md" },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
 
   expect(areaBind.value.class).toContain("rounded-none");
 });

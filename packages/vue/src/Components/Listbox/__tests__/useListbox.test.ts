@@ -8,6 +8,7 @@ import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useListbox, type ListboxOwnProps } from "@/Components/Listbox";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   size: "md",
@@ -297,4 +298,34 @@ test("it should keep explicit showFooter false on dialog overlays", () => {
   });
 
   expect(showFooter.value).toBe(false);
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  let result!: ReturnType<typeof useListbox>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useListbox(
+        { ...baseProps, rounded: "md", overlay: "modal" },
+        libDefaults,
+      );
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        Listbox: {
+          tokens: { rounded: { md: "rounded-none" } },
+        },
+      },
+    },
+  });
+
+  expect(result.surfaceBind.value).toContain("rounded-none");
 });

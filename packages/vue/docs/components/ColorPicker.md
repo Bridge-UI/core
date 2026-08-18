@@ -61,8 +61,9 @@ import { ColorPicker } from "@bridge-ui/vue/Components/ColorPicker";
 | `rounded`      | `ColorPickerRounded`     | `"md"`  | Border radius of the picker shell and swatches.                     |
 | `showFooter`   | `boolean`                | `false` | Shows Cancel / Apply. Selection is draft until Apply.               |
 | `swatches`     | `string[]`               | —       | Preset colors shown below the sliders.                              |
-| `tokens`       | `ColorPickerTokens`      | —       | Token overrides.                                                    |
 | `value`        | `string \| null`         | —       | Controlled value.                                                   |
+
+Picker tokens live on `components.ColorPicker` (`rounded`, `size`).
 
 ## Events
 

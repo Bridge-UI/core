@@ -45,4 +45,4 @@ Controlled fields: **`value` + `onChange`**. Never Vue `v-model`.
 1. Map validation to `error`, `errorMessage`, `description`, `disabled`, `readOnly`.
 2. Native input attrs for the control often go through `customProps.input` — see TextField docs.
 3. Use only documented option shapes for Select/Autocomplete.
-4. Prefer public fields/controls in apps. `FormField`, `FormControl`, `BaseField`, and `Listbox` are exported building blocks for advanced composition — they are **not** registry keys. Theme via the public parent (`components.TextField`, `tokens.baseField`, `tokens.formControl`, `tokens.listbox` on Select/Autocomplete). Shared form density: `global.formDefaults: { size, rounded }` (Radio/Switch ignore `rounded`).
+4. Prefer public fields/controls in apps. `FormField`, `FormControl`, and `BaseField` are exported building blocks for advanced composition — they are **not** registry keys. Theme via the public parent (`components.TextField`, `tokens.baseField`, `tokens.formControl`). Dropdown tokens live on `components.Listbox`. Shared form density: `global.formDefaults: { size, rounded }` (Radio/Switch ignore `rounded`).

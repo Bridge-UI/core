@@ -10,6 +10,5 @@ export type {
   CalendarDateProps,
   CalendarDateRoundedOverrides,
   CalendarDateSlots,
-  CalendarDateTokens,
 } from "@/Components/CalendarDate/calendarDate.types";
 export { useCalendarDate } from "@/Components/CalendarDate/hooks/useCalendarDate";

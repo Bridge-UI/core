@@ -7,11 +7,7 @@ import type {
   FieldOverlayFooterSlotProps,
   TimeValue,
 } from "@bridge-ui/core/Domain";
-import type {
-  TimeColor,
-  TimeColorItem,
-  TimeRounded,
-} from "@bridge-ui/core/Tokens";
+import type { TimeColor, TimeRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -208,13 +204,6 @@ export interface TimePickerOwnProps {
   timeZone?: string;
 
   /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: TimePickerTokens;
-
-  /**
    * Controlled value.
    *
    * @default undefined
@@ -230,26 +219,6 @@ export interface TimePickerSlots {
    * @default undefined
    */
   footer?: Slot<FieldOverlayFooterSlotProps>;
-}
-
-export interface TimePickerTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<TimeColorItem>>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
 }
 
 export type TimePickerProps = MergeHtmlProps<

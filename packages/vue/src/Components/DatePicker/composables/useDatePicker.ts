@@ -41,7 +41,6 @@ const datePickerBridgeKeys = [
   "error",
   "range",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "minDate",
@@ -154,15 +153,6 @@ export function useDatePicker(
     return merged.value.showFooter ? draftValue.value : committedValue.value;
   });
 
-  const calendarTokens = computed(() => {
-    return {
-      day: merged.value.tokens?.calendar?.day ?? merged.value.tokens?.day,
-      color: merged.value.tokens?.calendar?.color ?? merged.value.tokens?.color,
-      rounded:
-        merged.value.tokens?.calendar?.rounded ?? merged.value.tokens?.rounded,
-    };
-  });
-
   const commitValue = (next: DatePickerModel) => {
     if (!isControlled.value) {
       uncontrolledValue.value = next;
@@ -232,7 +222,6 @@ export function useDatePicker(
     handleApply,
     displayValue,
     handleCancel,
-    calendarTokens,
     handleCalendarChange,
     applyLabel: computed(() => {
       return resolveMessage("Apply");

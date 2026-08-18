@@ -31,7 +31,6 @@ import { CalendarMonth } from "@bridge-ui/vue/Components/CalendarMonth";
 | `readOnly`      | `boolean`                  | `false`      | Prevents selection.                                  |
 | `rounded`       | `CalendarRounded`          | `"md"`       | Border radius of month tiles.                        |
 | `timeZone`      | `string`                   | —            | IANA time zone.                                      |
-| `tokens`        | `CalendarMonthTokens`      | —            | Token overrides.                                     |
 | `value`         | `number`                   | —            | Selected month (`0`–`11`).                           |
 | `year`          | `number`                   | current year | Year context for min/max month disabling.            |
 
@@ -41,6 +40,8 @@ import { CalendarMonth } from "@bridge-ui/vue/Components/CalendarMonth";
 | ------------------- | ------------------------- | ------- | ------------------------------------- |
 | `modelValue`        | `number`                  | —       | Bound with `v-model`.                 |
 | `update:modelValue` | `(value: number) => void` | —       | Emitted when `v-model` should update. |
+
+Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Events
 

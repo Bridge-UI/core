@@ -8,11 +8,7 @@ import type {
   RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
-import type {
-  TimeColor,
-  TimeColorItem,
-  TimeRounded,
-} from "@bridge-ui/core/Tokens";
+import type { TimeColor, TimeRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -293,13 +289,6 @@ export interface TimeRangePickerOwnProps {
   timeZone?: string;
 
   /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: TimeRangePickerTokens;
-
-  /**
    * Controlled value.
    *
    * @default undefined
@@ -315,26 +304,6 @@ export interface TimeRangePickerSlots {
    * @default undefined
    */
   footer?: (ctx: FieldOverlayFooterSlotProps) => ReactNode;
-}
-
-export interface TimeRangePickerTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<TimeColorItem>>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-
-  /**
-   * Nested time panel token overrides.
-   */
-  time?: {
-    color?: Record<string, Partial<TimeColorItem>>;
-    rounded?: Record<string, string>;
-  };
 }
 
 export type TimeRangePickerProps = MergeHtmlProps<

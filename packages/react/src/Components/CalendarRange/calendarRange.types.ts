@@ -7,12 +7,7 @@ import type {
   DisableDatesInput,
   StartOfWeek,
 } from "@bridge-ui/core/Domain";
-import type {
-  CalendarColor,
-  CalendarColorItem,
-  CalendarDay,
-  CalendarRounded,
-} from "@bridge-ui/core/Tokens";
+import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -221,23 +216,6 @@ export interface CalendarRangeSlots {
   startAside?: ReactNode;
 }
 
-export interface CalendarRangeTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<CalendarColorItem>>;
-
-  /**
-   * Day chrome overrides.
-   */
-  day?: Partial<CalendarDay>;
-
-  /**
-   * Border radius token map overrides.
-   */
-  rounded?: Record<string, string>;
-}
-
 export interface CalendarRangeOwnProps {
   /**
    * Classes for calendar range regions.
@@ -403,13 +381,6 @@ export interface CalendarRangeOwnProps {
    * @default undefined
    */
   timeZone?: string;
-
-  /**
-   * Token overrides.
-   *
-   * @default undefined
-   */
-  tokens?: CalendarRangeTokens;
 
   /**
    * Controlled range value.

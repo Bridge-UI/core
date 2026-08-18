@@ -97,7 +97,7 @@ Radio and Switch receive `size` only — their `rounded` stays shape-driven (`fu
 
 ### Nested chrome tokens
 
-Building blocks (`FormField`, `FormControl`, `BaseField`, `Listbox`) are not registry keys. Theme chrome under the public parent:
+Building blocks (`FormField`, `FormControl`, `BaseField`) are not registry keys. Theme chrome under the public parent. Dropdown tokens live on `components.Listbox`:
 
 ```tsx
 <BridgeUIProvider
@@ -118,17 +118,15 @@ Building blocks (`FormField`, `FormControl`, `BaseField`, `Listbox`) are not reg
         },
       },
     },
-    Select: {
+    Listbox: {
       tokens: {
-        listbox: {
-          size: {
-            md: {
-              option: "px-3 py-2 text-sm",
-              check: "size-4",
-              message: "text-xs",
-              primary: "font-medium",
-              secondary: "text-xs opacity-70",
-            },
+        size: {
+          md: {
+            option: "px-3 py-2 text-sm",
+            check: "size-4",
+            message: "text-xs",
+            primary: "font-medium",
+            secondary: "text-xs opacity-70",
           },
         },
       },

@@ -51,20 +51,9 @@ type ListboxLibDefaults = LibDefaultsShape<ListboxOwnProps, "size" | "color">;
 
 type ListboxMerged = MergeLibDefaults<ListboxOwnProps, ListboxLibDefaults>;
 
-/**
- * Options for {@link useListbox}.
- */
-export type ListboxOptions = {
-  /**
-   * Public registry key that owns nested `tokens.listbox` defaults.
-   */
-  componentName?: "Select" | "Autocomplete";
-};
-
 export function useListbox(
   props: ListboxOwnProps,
   libDefaults: ListboxLibDefaults,
-  options: ListboxOptions = {},
 ) {
   const attrs = useAttrs();
   const breakpoint = useBreakpoint();
@@ -79,10 +68,10 @@ export function useListbox(
 
   const { merged, entry: bridgeListbox } = useBridgeUIComponent<
     ListboxMerged,
-    NonNullable<ListboxOptions["componentName"]>
+    "Listbox"
   >({
     libDefaults,
-    componentName: options.componentName,
+    componentName: "Listbox",
     props: () => {
       return split.value.componentProps;
     },
@@ -113,24 +102,14 @@ export function useListbox(
 
   const showFooter = useFieldShowFooter({
     overlay: resolvedOverlay,
-    componentName: options.componentName,
+    componentName: "Listbox",
     showFooter: () => merged.value.showFooter,
-  });
-
-  const listboxTokens = computed(() => {
-    return get(bridgeListbox.value, ["tokens", "listbox"]) as
-      | undefined
-      | {
-          color?: object;
-          rounded?: object;
-          size?: object;
-        };
   });
 
   const colorClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      listboxTokens.value?.color,
+      bridgeListbox.value?.tokens?.color,
     );
 
     return getColorToken({
@@ -143,7 +122,7 @@ export function useListbox(
   const roundedToken = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      listboxTokens.value?.rounded,
+      bridgeListbox.value?.tokens?.rounded,
     );
 
     return get(classes, props.rounded ?? "md");
@@ -152,7 +131,7 @@ export function useListbox(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      listboxTokens.value?.size,
+      bridgeListbox.value?.tokens?.size,
     );
 
     const sizeItem = get(classes, merged.value.size ?? "md");

@@ -39,7 +39,6 @@ const dateTimeRangePickerBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "maxTime",
@@ -168,21 +167,6 @@ export function useDateTimeRangePicker(
 
   const displayValue = derived(() => {
     return merged.showFooter ? draftValue : committedValue;
-  });
-
-  const calendarTokens = derived(() => {
-    return {
-      day: merged.tokens?.calendar?.day ?? merged.tokens?.day,
-      color: merged.tokens?.calendar?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.calendar?.rounded ?? merged.tokens?.rounded,
-    };
-  });
-
-  const timeTokens = derived(() => {
-    return {
-      color: merged.tokens?.time?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.time?.rounded ?? merged.tokens?.rounded,
-    };
   });
 
   const startTimeValue = derived(() => {
@@ -357,7 +341,6 @@ export function useDateTimeRangePicker(
     merged,
     rootBind,
     timeBind,
-    timeTokens,
     footerBind,
     contentBind,
     handleApply,
@@ -367,7 +350,6 @@ export function useDateTimeRangePicker(
     timeFillBind,
     endTimeValue,
     timeSizerBind,
-    calendarTokens,
     startTimeValue,
     handleCalendarChange,
     handleEndPanelChange,

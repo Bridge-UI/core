@@ -32,7 +32,6 @@ const dateRangePickerBridgeKeys = [
   "color",
   "error",
   "value",
-  "tokens",
   "classes",
   "maxDate",
   "minDate",
@@ -137,14 +136,6 @@ export function useDateRangePicker(
     return committedValue;
   });
 
-  const calendarTokens = derived(() => {
-    return {
-      day: merged.tokens?.calendar?.day ?? merged.tokens?.day,
-      color: merged.tokens?.calendar?.color ?? merged.tokens?.color,
-      rounded: merged.tokens?.calendar?.rounded ?? merged.tokens?.rounded,
-    };
-  });
-
   const commitValue = (next: null | DateRangeValue) => {
     if (!isControlled) {
       setUncontrolledValue(next);
@@ -209,7 +200,6 @@ export function useDateRangePicker(
     handleApply,
     displayValue,
     handleCancel,
-    calendarTokens,
     handleCalendarChange,
     applyLabel: resolveMessage("Apply"),
     cancelLabel: resolveMessage("Cancel"),

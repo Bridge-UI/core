@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -7,6 +8,7 @@ import { resetBreakpointCachesForTests } from "@bridge-ui/core/Runtime";
 
 // ** Local Imports
 import { useListbox, type ListboxOwnProps } from "@/Components/Listbox";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   size: "md",
@@ -279,4 +281,27 @@ test("it should keep explicit showFooter false on dialog overlays", () => {
   );
 
   expect(result.current.showFooter).toBe(false);
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  const { result } = renderHook(
+    () =>
+      useListbox({ ...baseProps, rounded: "md" }, libDefaults, {
+        overlay: "modal",
+      }),
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            Listbox: {
+              tokens: { rounded: { md: "rounded-none" } },
+            },
+          },
+        });
+      },
+    },
+  );
+
+  expect(result.current.surfaceBind).toContain("rounded-none");
 });

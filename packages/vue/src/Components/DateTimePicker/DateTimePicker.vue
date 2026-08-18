@@ -29,7 +29,6 @@ const {
   footerBind,
   showFooter,
   applyLabel,
-  timeTokens,
   handleApply,
   cancelLabel,
   contentBind,
@@ -39,7 +38,6 @@ const {
   timeFillBind,
   timeSizerBind,
   timePanelBind,
-  calendarTokens,
   applyButtonProps,
   cancelButtonProps,
   handlePanelChange,
@@ -69,7 +67,6 @@ const {
           :color="merged.color"
           :value="displayValue"
           :error="merged.error"
-          :tokens="calendarTokens"
           :rounded="merged.rounded"
           :max-date="merged.maxDate"
           :min-date="merged.minDate"
@@ -108,7 +105,6 @@ const {
           <TimePanel
             :ampm="merged.ampm"
             :fill="merged.fill"
-            :tokens="timeTokens"
             :color="merged.color"
             :value="displayValue"
             :error="merged.error"

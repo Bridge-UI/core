@@ -64,8 +64,9 @@ import { ColorPicker } from "@bridge-ui/react/Components/ColorPicker";
 | `showFooter`   | `boolean`                | `false` | Shows Cancel / Apply. Selection is draft until Apply.               |
 | `slots`        | `ColorPickerSlots`       | —       | Named slots (`footer` for Cancel / Apply).                          |
 | `swatches`     | `string[]`               | —       | Preset colors shown below the sliders.                              |
-| `tokens`       | `ColorPickerTokens`      | —       | Token overrides.                                                    |
 | `value`        | `string \| null`         | —       | Controlled value.                                                   |
+
+Picker tokens live on `components.ColorPicker` (`rounded`, `size`).
 
 ## Events
 

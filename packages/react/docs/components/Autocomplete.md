@@ -192,7 +192,7 @@ When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`fa
 
 ### Inherited from FormField
 
-See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Autocomplete` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens are nested under `components.Autocomplete.tokens.listbox`.
+See [FormField](./FormField.md) (building-block chrome). Field tokens live on `components.Autocomplete` (`size`, `color`, `rounded`, `variant`, …). Dropdown option tokens live on `components.Listbox`.
 
 ## Events
 

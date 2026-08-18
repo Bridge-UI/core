@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -8,6 +9,7 @@ import {
   type TimePanelOwnProps,
   type TimePanelProps,
 } from "@/Components/TimePanel";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   ampm: false,
@@ -17,9 +19,29 @@ const libDefaults = {
   showSeconds: false,
 } as const satisfies Partial<TimePanelOwnProps>;
 
-function renderUseTimePanel(props: TimePanelProps = {}) {
-  return renderHook(() =>
-    useTimePanel(props, libDefaults as Parameters<typeof useTimePanel>[1]),
+function renderUseTimePanel(
+  props: TimePanelProps = {},
+  options: { registryTokens?: { rounded?: Record<string, string> } } = {},
+) {
+  return renderHook(
+    () =>
+      useTimePanel(props, libDefaults as Parameters<typeof useTimePanel>[1]),
+    {
+      wrapper: ({ children }) => {
+        if (!("registryTokens" in options)) {
+          return children;
+        }
+
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            TimePanel: {
+              tokens: options.registryTokens,
+            },
+          },
+        });
+      },
+    },
   );
 }
 
@@ -59,4 +81,16 @@ test("it should expose twelve hour items when ampm is set", () => {
 
   expect(result.current.hourItems).toHaveLength(12);
   expect(result.current.showMeridiem).toBe(true);
+});
+
+test("it should apply registry tokens.rounded overrides", () => {
+  const { result } = renderUseTimePanel(
+    { rounded: "md", value: new Date(2021, 4, 21, 9, 30) },
+    { registryTokens: { rounded: { md: "rounded-none" } } },
+  );
+
+  const hour = result.current.hourItems[0];
+
+  expect(hour).toBeTruthy();
+  expect(result.current.getHourBind(hour!).className).toContain("rounded-none");
 });
