@@ -205,10 +205,6 @@ export function useListbox(
   });
 
   const surfaceRoundedClass = derived(() => {
-    if (!isDialogOverlay) {
-      return undefined;
-    }
-
     const panelRounded = roundedToken;
 
     if (!panelRounded) {
@@ -223,8 +219,7 @@ export function useListbox(
 
   const surfaceBind = derived(() => {
     return cn({
-      "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10":
-        isDialogOverlay,
+      "flex w-full flex-col overflow-hidden bg-white text-dark-900 shadow-lg outline-hidden ring-1 ring-black/5 dark:bg-dark-800 dark:text-dark-100 dark:ring-white/10": true,
       [String(surfaceRoundedClass ?? "")]: Boolean(surfaceRoundedClass),
     });
   });

@@ -51,12 +51,22 @@ export function useFieldOverlay(props: FieldOverlayProps) {
   }, [overlay, breakpoint.mobile]);
 
   const menuProps = useMemo((): Omit<MenuOwnProps, "children"> => {
+    const menuFromProps = customProps?.menu;
+
     return {
       show,
       onShowChange,
       closeOnClickAway: true,
       placement: "bottom-start",
-      ...customProps?.menu,
+      ...menuFromProps,
+      classes: {
+        ...menuFromProps?.classes,
+        content: cn(
+          menuFromProps?.classes?.content,
+          // Nested picker / listbox paints the surface, like modal / drawer.
+          "overflow-visible rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent",
+        ),
+      },
     };
   }, [show, onShowChange, customProps?.menu]);
 

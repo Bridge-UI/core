@@ -134,3 +134,10 @@ test("it should forward customProps.menu onto menuProps", () => {
 
   expect(result.current.menuProps.shadow).toBe("lg");
 });
+
+test("it should strip menu content chrome by default", () => {
+  const { result } = renderHook(() => useFieldOverlay({ show: true }));
+
+  expect(result.current.menuProps.classes?.content).toContain("bg-transparent");
+  expect(result.current.menuProps.classes?.content).toContain("rounded-none");
+});

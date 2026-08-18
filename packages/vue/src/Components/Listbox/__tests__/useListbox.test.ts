@@ -125,10 +125,11 @@ test("it should paint a surface for auto overlay on mobile", () => {
   expect(surfaceBind.value).toContain("bg-white");
 });
 
-test("it should skip dialog surface when overlay is menu", () => {
+test("it should paint a surface when overlay is menu", () => {
   const { surfaceBind } = mountUseListbox({ overlay: "menu" });
 
-  expect(surfaceBind.value).not.toContain("bg-white");
+  expect(surfaceBind.value).toContain("bg-white");
+  expect(surfaceBind.value).toContain("rounded-md");
 });
 
 test("it should forward scroll customProps onto scrollBind", () => {

@@ -113,12 +113,13 @@ test("it should paint a surface for auto overlay on mobile", () => {
   expect(result.current.surfaceBind).toContain("bg-white");
 });
 
-test("it should skip dialog surface when overlay is menu", () => {
+test("it should paint a surface when overlay is menu", () => {
   const { result } = renderHook(() =>
     useListbox(baseProps, libDefaults, { overlay: "menu" }),
   );
 
-  expect(result.current.surfaceBind).not.toContain("bg-white");
+  expect(result.current.surfaceBind).toContain("bg-white");
+  expect(result.current.surfaceBind).toContain("rounded-md");
 });
 
 test("it should forward scroll customProps onto scrollBind", () => {

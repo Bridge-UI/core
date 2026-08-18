@@ -80,6 +80,24 @@ test("it should open the picker on focus", async () => {
   ).not.toBeNull();
 });
 
+test("it should keep picker chrome inside an unstyled menu overlay", async () => {
+  mountDateField({
+    props: { rounded: "full", defaultValue: new Date(2021, 4, 21) },
+  });
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const menu = document.body.querySelector('[role="menu"]');
+
+  expect(menu?.className).toContain("bg-transparent");
+  expect(menu?.className).toContain("rounded-none");
+  expect(menu?.firstElementChild?.className).toContain("rounded-panel-full");
+  expect(menu?.firstElementChild?.className).toContain("bg-white");
+});
+
 test("it should call change when a day is selected", async () => {
   const onChange = vi.fn();
 
