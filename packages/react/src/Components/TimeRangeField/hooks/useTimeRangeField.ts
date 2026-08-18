@@ -347,6 +347,18 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     );
   });
 
+  const overlayCustomProps = derived(() => {
+    return {
+      modal: timeOnly.customProps?.modal,
+      drawer: timeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...timeOnly.customProps?.menu,
+      },
+    };
+  });
+
   return {
     open,
     fill,
@@ -367,16 +379,8 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: timeOnly.overlay,
     timeRangePickerCustomProps: timeOnly.customProps?.timeRangePicker,
-    overlayCustomProps: {
-      modal: timeOnly.customProps?.modal,
-      drawer: timeOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...timeOnly.customProps?.menu,
-      },
-    },
   };
 }

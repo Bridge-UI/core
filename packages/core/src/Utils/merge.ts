@@ -58,6 +58,7 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "DateField",
   "TextField",
   "TimeField",
+  "ColorField",
   "NumberField",
   "Autocomplete",
   "DateTimeField",

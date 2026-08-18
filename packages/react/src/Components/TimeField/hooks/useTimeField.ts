@@ -320,7 +320,24 @@ export function useTimeField(props: TimeFieldProps) {
     );
   });
 
-  const menuFromProps = timeOnly.customProps?.menu;
+  const overlayCustomProps = derived(() => {
+    const menuFromProps = timeOnly.customProps?.menu;
+
+    // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
+    return {
+      modal: timeOnly.customProps?.modal,
+      drawer: timeOnly.customProps?.drawer,
+      menu: {
+        anchorEl: containerRef,
+        placement: "bottom-start" as const,
+        ...menuFromProps,
+        classes: {
+          ...menuFromProps?.classes,
+          content: cn("min-w-0", menuFromProps?.classes?.content),
+        },
+      },
+    };
+  });
 
   const clearIconSize = resolveFieldAdornmentIconSize(formField.merged.size);
 
@@ -369,21 +386,8 @@ export function useTimeField(props: TimeFieldProps) {
     handleOpenChange,
     handlePickerChange,
     handlePickerCancel,
+    overlayCustomProps,
     overlay: timeOnly.overlay,
     timePickerCustomProps: timeOnly.customProps?.timePicker,
-    // Menu defaults to `min-w-32`; TimePanel is often slightly narrower (~124px).
-    overlayCustomProps: {
-      modal: timeOnly.customProps?.modal,
-      drawer: timeOnly.customProps?.drawer,
-      menu: {
-        anchorEl: containerRef,
-        placement: "bottom-start" as const,
-        ...menuFromProps,
-        classes: {
-          ...menuFromProps?.classes,
-          content: cn("min-w-0", menuFromProps?.classes?.content),
-        },
-      },
-    },
   };
 }

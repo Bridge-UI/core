@@ -43,10 +43,20 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
   });
 
   const menuBind = computed((): MenuOwnProps => {
+    const menuFromProps = props.customProps?.menu;
+
     return {
       closeOnClickAway: true,
       placement: "bottom-start",
-      ...props.customProps?.menu,
+      ...menuFromProps,
+      classes: {
+        ...menuFromProps?.classes,
+        content: cn(
+          menuFromProps?.classes?.content,
+          // Nested picker / listbox paints the surface, like modal / drawer.
+          "overflow-visible rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent",
+        ),
+      },
     };
   });
 

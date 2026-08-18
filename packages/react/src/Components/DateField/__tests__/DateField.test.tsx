@@ -35,6 +35,19 @@ test("it should open the picker on focus", () => {
   expect(screen.getByRole("button", { name: "Select year" })).toBeTruthy();
 });
 
+test("it should keep picker chrome inside an unstyled menu overlay", () => {
+  render(<DateField rounded="full" defaultValue={new Date(2021, 4, 21)} />);
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const menu = screen.getByRole("menu");
+
+  expect(menu.className).toContain("rounded-none");
+  expect(menu.className).toContain("bg-transparent");
+  expect(menu.firstElementChild?.className).toContain("bg-white");
+  expect(menu.firstElementChild?.className).toContain("rounded-panel-full");
+});
+
 test("it should call onChange when a day is selected", () => {
   const onChange = vi.fn();
 

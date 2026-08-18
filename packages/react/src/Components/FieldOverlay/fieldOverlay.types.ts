@@ -36,6 +36,9 @@ export interface FieldOverlayCustomProps {
  * Renders field picker / listbox content in a `Menu`, `Modal`, or `Drawer`.
  * Control visibility with `show` and `onShowChange`. Shell-specific options
  * go through `customProps.menu` / `.modal` / `.drawer`.
+ *
+ * Menu chrome (fill, radius, shadow, ring) is stripped so the nested picker
+ * or listbox paints the visible surface, matching modal / drawer panels.
  */
 export interface FieldOverlayOwnProps {
   /**

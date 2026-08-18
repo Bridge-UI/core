@@ -65,6 +65,10 @@ import type {
   CheckboxSize,
 } from "@/Tokens/Checkbox";
 import type { ChipSize, ChipSizeItem } from "@/Tokens/Chip";
+import type {
+  ColorPickerRounded,
+  ColorPickerSizeItem,
+} from "@/Tokens/ColorPicker";
 import type { DividerColor, DividerOrientation } from "@/Tokens/Divider";
 import type {
   DrawerBlur,
@@ -326,6 +330,8 @@ export interface ButtonConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
+export interface ColorFieldConfigOverrides {}
+export interface ColorPickerConfigOverrides {}
 export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
 export interface DateRangeFieldConfigOverrides {}
@@ -516,6 +522,50 @@ export interface ChipConfigBase {
   }>;
   tokens: Partial<{
     size: Record<string, ChipSizeItem>;
+  }>;
+}
+
+export interface ColorFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    alpha: boolean;
+    color: keyof FormFieldColor;
+    editable: boolean;
+    fill: boolean;
+    format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showErrorIcon: boolean;
+    showFooter: boolean;
+    showSwatch: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    colorPicker: Partial<{
+      rounded: keyof ColorPickerRounded;
+      roundedMap: Record<string, string>;
+      size: Record<string, ColorPickerSizeItem>;
+    }>;
+    rounded: Record<string, FormFieldRoundedItem>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
+export interface ColorPickerConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    alpha: boolean;
+    fill: boolean;
+    format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
+    rounded: keyof ColorPickerRounded;
+    showFooter: boolean;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    size: Record<string, ColorPickerSizeItem>;
   }>;
 }
 
@@ -1467,6 +1517,12 @@ export type BridgeUIComponentsConfig = Partial<{
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;
   Chip: Partial<Overwrite<ChipConfigBase, ChipConfigOverrides>>;
+  ColorField: Partial<
+    Overwrite<ColorFieldConfigBase, ColorFieldConfigOverrides>
+  >;
+  ColorPicker: Partial<
+    Overwrite<ColorPickerConfigBase, ColorPickerConfigOverrides>
+  >;
   DateField: Partial<Overwrite<DateFieldConfigBase, DateFieldConfigOverrides>>;
   DatePicker: Partial<
     Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>

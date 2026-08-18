@@ -49,6 +49,9 @@ export interface FieldOverlayEmits {
  * Renders field picker / listbox content in a `Menu`, `Modal`, or `Drawer`.
  * Visibility is controlled with `v-model`. Shell-specific options go through
  * `customProps.menu` / `.modal` / `.drawer`.
+ *
+ * Menu chrome (fill, radius, shadow, ring) is stripped so the nested picker
+ * or listbox paints the visible surface, matching modal / drawer panels.
  */
 export interface FieldOverlayOwnProps {
   /**

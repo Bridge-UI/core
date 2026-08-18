@@ -124,6 +124,15 @@ export type {
 export { sizeProps as chipSizeProps } from "@/Tokens/Chip";
 export type { ChipSize, ChipSizeItem } from "@/Tokens/Chip";
 export {
+  roundedProps as colorPickerRoundedProps,
+  sizeProps as colorPickerSizeProps,
+} from "@/Tokens/ColorPicker";
+export type {
+  ColorPickerRounded,
+  ColorPickerSize,
+  ColorPickerSizeItem,
+} from "@/Tokens/ColorPicker";
+export {
   colorProps as dividerColorProps,
   orientationProps as dividerOrientationProps,
 } from "@/Tokens/Divider";
