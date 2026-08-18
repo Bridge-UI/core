@@ -6,7 +6,10 @@ import type {
   ColorFormat,
   FieldOverlayFooterSlotProps,
 } from "@bridge-ui/core/Domain";
-import type { ColorPickerRounded } from "@bridge-ui/core/Tokens";
+import type {
+  ColorPickerRounded,
+  ColorPickerSizeItem,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -23,6 +26,23 @@ type ColorPickerFooterButtonProps = Partial<
     ButtonHTMLAttributes<HTMLButtonElement>
   >
 >;
+
+export interface ColorPickerCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed.
+   */
+  onCancel?: () => void;
+
+  /**
+   * Called when Apply is pressed (`showFooter`) or when the value commits.
+   */
+  onChange?: (value: null | string) => void;
+}
 
 export interface ColorPickerClasses {
   /**
@@ -126,23 +146,6 @@ export interface ColorPickerCustomProps {
   swatches?: HTMLAttributes<HTMLDivElement>;
 }
 
-export interface ColorPickerCallbacks {
-  /**
-   * Called when Apply is pressed (`showFooter`).
-   */
-  onApply?: () => void;
-
-  /**
-   * Called when Cancel is pressed.
-   */
-  onCancel?: () => void;
-
-  /**
-   * Called when Apply is pressed (`showFooter`) or when the value commits.
-   */
-  onChange?: (value: null | string) => void;
-}
-
 export interface ColorPickerOwnProps {
   /**
    * Shows the alpha slider. When unset, follows `format` (`rgba` / `hexa` /
@@ -179,13 +182,6 @@ export interface ColorPickerOwnProps {
    * @default false
    */
   disabled?: boolean;
-
-  /**
-   * When `true`, marks the picker invalid. Preset swatches keep the dark ring.
-   *
-   * @default false
-   */
-  error?: boolean;
 
   /**
    * When `true`, fills the container width.
@@ -275,6 +271,11 @@ export interface ColorPickerTokens {
    * Border radius token map overrides.
    */
   rounded?: Record<string, string>;
+
+  /**
+   * Size token map overrides for picker and field swatches.
+   */
+  size?: Record<string, ColorPickerSizeItem>;
 }
 
 export type ColorPickerProps = MergeHtmlProps<

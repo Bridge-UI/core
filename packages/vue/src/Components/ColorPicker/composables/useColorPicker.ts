@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, omit } from "es-toolkit/compat";
 import {
   computed,
   inject,
@@ -32,6 +32,7 @@ import {
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -54,7 +55,6 @@ import {
 const colorPickerBridgeKeys = [
   "fill",
   "alpha",
-  "error",
   "value",
   "format",
   "tokens",
@@ -138,7 +138,7 @@ export function useColorPicker(
   });
 
   const isControlled = computed(() => {
-    return !isNil(propsValue.value.value);
+    return propsValue.value.value !== undefined;
   });
 
   const uncontrolledValue = ref<null | string>(
@@ -193,11 +193,23 @@ export function useColorPicker(
   });
 
   const swatchSize = computed(() => {
-    return get(sizeProps, ["md", "swatch"]);
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeColorPicker.value?.tokens?.size,
+      merged.value.tokens?.size,
+    );
+
+    return get(classes, ["md", "swatch"]) ?? "";
   });
 
   const swatchRounded = computed(() => {
-    return get(roundedProps, merged.value.rounded ?? "md");
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeColorPicker.value?.tokens?.rounded,
+      merged.value.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded ?? "md") ?? "";
   });
 
   const presetSwatches = computed(() => {

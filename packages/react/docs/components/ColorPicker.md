@@ -57,7 +57,6 @@ import { ColorPicker } from "@bridge-ui/react/Components/ColorPicker";
 | `customProps`  | `ColorPickerCustomProps` | —       | Extra props for internal parts.                                     |
 | `defaultValue` | `string \| null`         | `null`  | Uncontrolled initial value.                                         |
 | `disabled`     | `boolean`                | `false` | Disables the picker.                                                |
-| `error`        | `boolean`                | `false` | Invalid state. Preset swatches keep the dark ring.                  |
 | `fill`         | `boolean`                | `false` | Fills the container width.                                          |
 | `format`       | `ColorFormat`            | `"hex"` | Serialized output: `hex`, `hexa`, `rgb`, `rgba`, `hsl`, `hsla`.     |
 | `readOnly`     | `boolean`                | `false` | Prevents selection.                                                 |

@@ -1,5 +1,5 @@
 // ** External Imports
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -62,8 +62,24 @@ test("it should use panel-full rounding when rounded is full", () => {
   expect(result.current.areaBind.className).toContain("rounded-panel-full");
 });
 
-test("it should keep dark swatch chrome when error is set", () => {
-  const { result } = renderUseColorPicker({ error: true });
+test("it should apply tokens.rounded overrides", () => {
+  const { result } = renderUseColorPicker({
+    rounded: "md",
+    tokens: { rounded: { md: "rounded-none" } },
+  });
 
-  expect(result.current.swatchSelectedClass).toContain("ring-dark");
+  expect(result.current.areaBind.className).toContain("rounded-none");
+});
+
+test("it should treat a null value as controlled empty", () => {
+  const { result } = renderUseColorPicker({
+    value: null,
+    swatches: ["#ea1212"],
+  });
+
+  act(() => {
+    result.current.handleSwatchClick("#ea1212");
+  });
+
+  expect(result.current.formattedValue).toBe("#ff0000");
 });

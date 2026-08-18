@@ -68,8 +68,22 @@ test("it should use panel-full rounding when rounded is full", () => {
   expect(areaBind.value.class).toContain("rounded-panel-full");
 });
 
-test("it should keep dark swatch chrome when error is set", () => {
-  const { swatchSelectedClass } = mountUseColorPicker({ error: true });
+test("it should apply tokens.rounded overrides", () => {
+  const { areaBind } = mountUseColorPicker({
+    rounded: "md",
+    tokens: { rounded: { md: "rounded-none" } },
+  });
 
-  expect(swatchSelectedClass.value).toContain("ring-dark");
+  expect(areaBind.value.class).toContain("rounded-none");
+});
+
+test("it should treat a null value as controlled empty", () => {
+  const { formattedValue, handleSwatchClick } = mountUseColorPicker({
+    value: null,
+    swatches: ["#ea1212"],
+  });
+
+  handleSwatchClick("#ea1212");
+
+  expect(formattedValue.value).toBe("#ff0000");
 });
