@@ -366,19 +366,13 @@ export function useColorField(
   });
 
   const overlayCustomProps = computed(() => {
-    const menuFromProps = colorOnly.value.customProps?.menu;
-
     return {
       modal: colorOnly.value.customProps?.modal,
       drawer: colorOnly.value.customProps?.drawer,
       menu: {
         anchorEl: containerRef.value,
         placement: "bottom-start" as const,
-        ...menuFromProps,
-        classes: {
-          ...menuFromProps?.classes,
-          content: cn("min-w-0", menuFromProps?.classes?.content),
-        },
+        ...colorOnly.value.customProps?.menu,
       },
     };
   });
@@ -424,6 +418,7 @@ export function useColorField(
       formField.merged.value.size ?? "md",
       "fieldSwatch",
     ]);
+
     const swatchRounded = get(
       roundedProps,
       formField.merged.value.rounded ?? "md",

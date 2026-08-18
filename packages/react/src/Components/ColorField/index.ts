@@ -6,5 +6,6 @@ export type {
   ColorFieldCustomProps,
   ColorFieldOwnProps,
   ColorFieldProps,
+  ColorFieldSlots,
 } from "@/Components/ColorField/colorField.types";
 export { useColorField } from "@/Components/ColorField/hooks/useColorField";

@@ -221,6 +221,7 @@ export type {
   ColorFieldCustomProps,
   ColorFieldOwnProps,
   ColorFieldProps,
+  ColorFieldSlots,
 } from "@/Components/ColorField";
 export { ColorPicker, useColorPicker } from "@/Components/ColorPicker";
 export type {

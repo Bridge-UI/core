@@ -21,6 +21,38 @@ import type { IconProps } from "@/Components/Icon";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
 
+export interface ColorFieldCallbacks {
+  /**
+   * Called when Apply is pressed (`showFooter`).
+   */
+  onApply?: () => void;
+
+  /**
+   * Called when Cancel is pressed (`showFooter`).
+   */
+  onCancel?: () => void;
+
+  /**
+   * Called when the selected color changes.
+   */
+  onChange?: (value: null | string) => void;
+
+  /**
+   * Called when the value is cleared.
+   */
+  onClear?: () => void;
+
+  /**
+   * Called when the menu closes.
+   */
+  onClose?: () => void;
+
+  /**
+   * Called when the menu opens.
+   */
+  onOpen?: () => void;
+}
+
 export interface ColorFieldClasses extends FormFieldClasses {
   /**
    * Classes merged onto the clear control.
@@ -75,38 +107,6 @@ export interface ColorFieldCustomProps extends FormFieldCustomProps {
    * @default undefined
    */
   swatch?: HTMLAttributes<HTMLSpanElement>;
-}
-
-export interface ColorFieldCallbacks {
-  /**
-   * Called when Apply is pressed (`showFooter`).
-   */
-  onApply?: () => void;
-
-  /**
-   * Called when Cancel is pressed (`showFooter`).
-   */
-  onCancel?: () => void;
-
-  /**
-   * Called when the selected color changes.
-   */
-  onChange?: (value: null | string) => void;
-
-  /**
-   * Called when the value is cleared.
-   */
-  onClear?: () => void;
-
-  /**
-   * Called when the menu closes.
-   */
-  onClose?: () => void;
-
-  /**
-   * Called when the menu opens.
-   */
-  onOpen?: () => void;
 }
 
 export interface ColorFieldOwnProps extends Omit<
@@ -207,7 +207,7 @@ export interface ColorFieldOwnProps extends Omit<
    *
    * @default undefined
    */
-  slots?: FormFieldSlots & ColorPickerSlots;
+  slots?: ColorFieldSlots;
 
   /**
    * Preset colors forwarded to the nested picker.
@@ -222,6 +222,16 @@ export interface ColorFieldOwnProps extends Omit<
    * @default undefined
    */
   value?: null | string;
+}
+
+export interface ColorFieldSlots extends FormFieldSlots {
+  /**
+   * Custom footer. Replaces Cancel / Apply. Call `apply()` to commit and close
+   * the overlay, or `cancel()` to discard and close.
+   *
+   * @default undefined
+   */
+  footer?: ColorPickerSlots["footer"];
 }
 
 export type ColorFieldProps = MergeHtmlProps<

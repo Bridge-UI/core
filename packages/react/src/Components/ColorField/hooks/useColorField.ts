@@ -277,7 +277,7 @@ export function useColorField(props: ColorFieldProps) {
       setDraftText(null);
       onChange?.(next);
     },
-    [isControlled, onChange],
+    [onChange, isControlled],
   );
 
   const commitTypedText = useCallback(
@@ -300,7 +300,7 @@ export function useColorField(props: ColorFieldProps) {
 
       commitValue(normalized);
     },
-    [commitValue, format],
+    [format, commitValue],
   );
 
   const clearValue = useCallback(
@@ -316,7 +316,7 @@ export function useColorField(props: ColorFieldProps) {
       onClear?.();
       handleOpenChange(false);
     },
-    [onClear, commitValue, handleOpenChange, props.disabled, props.readonly],
+    [onClear, commitValue, props.disabled, props.readonly, handleOpenChange],
   );
 
   const handleClearPointer = useCallback((event: MouseEvent) => {
@@ -413,6 +413,7 @@ export function useColorField(props: ColorFieldProps) {
       formField.merged.size ?? "md",
       "fieldSwatch",
     ]);
+
     const swatchRounded = get(roundedProps, formField.merged.rounded ?? "md");
 
     return mergePartBind(
