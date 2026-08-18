@@ -126,7 +126,6 @@ const {
       :swatches="colorOnly.swatches"
       v-on:change="handlePickerChange"
       v-on:cancel="handlePickerCancel"
-      :color="formField.merged.value.color"
       :custom-props="colorPickerCustomProps"
       :disabled="formField.isDisabled.value"
       :rounded="formField.merged.value.rounded"

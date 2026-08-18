@@ -6,17 +6,12 @@ import type {
   ColorFormat,
   FieldOverlayFooterSlotProps,
 } from "@bridge-ui/core/Domain";
-import type {
-  ColorPickerColor,
-  ColorPickerColorItem,
-  ColorPickerRounded,
-} from "@bridge-ui/core/Tokens";
+import type { ColorPickerRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";
 
-export interface ColorPickerColorOverrides {}
 export interface ColorPickerRoundedOverrides {}
 
 /**
@@ -165,13 +160,6 @@ export interface ColorPickerOwnProps {
   classes?: ColorPickerClasses;
 
   /**
-   * Accent color for selected swatches.
-   *
-   * @default "primary"
-   */
-  color?: MergeProps<ColorPickerColor, ColorPickerColorOverrides>;
-
-  /**
    * Extra props for internal parts.
    *
    * @default undefined
@@ -193,7 +181,7 @@ export interface ColorPickerOwnProps {
   disabled?: boolean;
 
   /**
-   * When `true`, marks the picker invalid. Preset swatches still use `color`.
+   * When `true`, marks the picker invalid. Preset swatches keep the dark ring.
    *
    * @default false
    */
@@ -283,11 +271,6 @@ export interface ColorPickerSlots {
 }
 
 export interface ColorPickerTokens {
-  /**
-   * Color token map overrides.
-   */
-  color?: Record<string, Partial<ColorPickerColorItem>>;
-
   /**
    * Border radius token map overrides.
    */

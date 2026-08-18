@@ -19,7 +19,6 @@ import {
   type HsvaColor,
 } from "@bridge-ui/core/Domain";
 import {
-  colorPickerColorProps as colorProps,
   colorPickerRoundedProps as roundedProps,
   colorPickerSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
@@ -48,7 +47,6 @@ import {
 const colorPickerBridgeKeys = [
   "fill",
   "alpha",
-  "color",
   "error",
   "value",
   "format",
@@ -65,19 +63,13 @@ const colorPickerBridgeKeys = [
 
 type ColorPickerLibDefaults = LibDefaultsShape<
   ColorPickerOwnProps,
-  "color" | "format" | "rounded"
+  "format" | "rounded"
 >;
 
 type ColorPickerMerged = MergeLibDefaults<
   ColorPickerOwnProps,
   ColorPickerLibDefaults
 >;
-
-const HUE_GRADIENT =
-  "linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)";
-
-const CHECKERBOARD_CLASS =
-  "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]";
 
 function resolveHsva(value: null | string | undefined): HsvaColor {
   return parseColor(value) ?? DEFAULT_HSVA;
@@ -173,20 +165,12 @@ export function useColorPicker(
     return toCssRgba({ ...displayHsva, a: 1 });
   });
 
-  const tone = derived(() => {
-    return merged.color ?? "primary";
-  });
-
   const swatchSize = derived(() => {
     return get(sizeProps, ["md", "swatch"]);
   });
 
   const swatchRounded = derived(() => {
     return get(roundedProps, merged.rounded ?? "md");
-  });
-
-  const swatchTone = derived(() => {
-    return get(colorProps, tone) ?? colorProps.primary;
   });
 
   const presetSwatches = derived(() => {
@@ -413,8 +397,11 @@ export function useColorPicker(
         onKeyDown: handleHueKeyDown,
         tabIndex: interactive ? 0 : -1,
         "aria-label": resolveMessage("Hue"),
-        style: { backgroundImage: HUE_GRADIENT },
         "aria-valuenow": Math.round(displayHsva.h),
+        style: {
+          backgroundImage:
+            "linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)",
+        },
         className: cn({
           "relative h-3 w-full cursor-pointer touch-none": true,
           "rounded-full": true,
@@ -452,7 +439,7 @@ export function useColorPicker(
         "aria-valuenow": Math.round(displayHsva.a * 100),
         className: cn({
           "relative h-3 w-full cursor-pointer overflow-hidden touch-none": true,
-          [CHECKERBOARD_CLASS]: true,
+          "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
           "rounded-full": true,
           "cursor-not-allowed": !interactive,
           [mergedClasses.alpha ?? ""]: true,
@@ -499,7 +486,7 @@ export function useColorPicker(
       "aria-hidden": true,
       className: cn({
         "relative shrink-0 overflow-hidden": true,
-        [CHECKERBOARD_CLASS]: true,
+        "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
         [swatchSize]: true,
         [swatchRounded]: true,
       }),
@@ -559,14 +546,10 @@ export function useColorPicker(
     handleSwatchClick,
     previewSwatchFillBind,
     applyLabel: resolveMessage("Apply"),
-    checkerboardClass: CHECKERBOARD_CLASS,
     cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,
-    swatchSelectedClass: derived(() => {
-      return swatchTone.selected;
-    }),
     isSwatchSelected: (value: string) => {
       return colorStringsEqual(value, formattedValue);
     },
@@ -575,15 +558,19 @@ export function useColorPicker(
 
       return parsed ? toCssRgba(parsed) : undefined;
     },
+    swatchSelectedClass: derived(() => {
+      return "ring-2 ring-dark-500 ring-offset-2 ring-offset-white dark:ring-dark-400 dark:ring-offset-dark-900";
+    }),
     swatchButtonClass: derived(() => {
       return cn({
         "relative shrink-0 overflow-hidden": true,
-        [CHECKERBOARD_CLASS]: true,
+        "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
         [swatchSize]: true,
         [swatchRounded]: true,
-        [swatchTone.base]: true,
-        [swatchTone.hover]: interactive,
-        [swatchTone.disabled]: !interactive,
+        "border border-black/10 dark:border-white/15": true,
+        "hover:ring-2 hover:ring-dark-300 hover:ring-offset-2 hover:ring-offset-white dark:hover:ring-dark-500 dark:hover:ring-offset-dark-900":
+          interactive,
+        "cursor-not-allowed opacity-50": !interactive,
       });
     }),
   };

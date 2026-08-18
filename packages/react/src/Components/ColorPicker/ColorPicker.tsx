@@ -41,7 +41,6 @@ function ColorPicker(props: ColorPickerProps) {
   } = useColorPicker(props, {
     rounded: "md",
     format: "hex",
-    color: "primary",
   });
 
   return (

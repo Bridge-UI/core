@@ -226,7 +226,6 @@ export { ColorPicker, useColorPicker } from "@/Components/ColorPicker";
 export type {
   ColorPickerCallbacks,
   ColorPickerClasses,
-  ColorPickerColorOverrides,
   ColorPickerCustomProps,
   ColorPickerOwnProps,
   ColorPickerProps,

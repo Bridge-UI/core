@@ -3,7 +3,6 @@ export { default as ColorPicker } from "@/Components/ColorPicker/ColorPicker";
 export type {
   ColorPickerCallbacks,
   ColorPickerClasses,
-  ColorPickerColorOverrides,
   ColorPickerCustomProps,
   ColorPickerOwnProps,
   ColorPickerProps,

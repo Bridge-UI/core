@@ -12,7 +12,6 @@ import {
 const libDefaults = {
   rounded: "md",
   format: "hex",
-  color: "primary",
 } as const satisfies Partial<ColorPickerOwnProps>;
 
 function mountUseColorPicker(props: Partial<ColorPickerOwnProps> = {}) {
@@ -69,8 +68,8 @@ test("it should use panel-full rounding when rounded is full", () => {
   expect(areaBind.value.class).toContain("rounded-panel-full");
 });
 
-test("it should keep color swatch chrome when error is set", () => {
+test("it should keep dark swatch chrome when error is set", () => {
   const { swatchSelectedClass } = mountUseColorPicker({ error: true });
 
-  expect(swatchSelectedClass.value).toContain("ring-primary");
+  expect(swatchSelectedClass.value).toContain("ring-dark");
 });

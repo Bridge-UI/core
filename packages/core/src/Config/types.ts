@@ -66,8 +66,6 @@ import type {
 } from "@/Tokens/Checkbox";
 import type { ChipSize, ChipSizeItem } from "@/Tokens/Chip";
 import type {
-  ColorPickerColor,
-  ColorPickerColorItem,
   ColorPickerRounded,
   ColorPickerSizeItem,
 } from "@/Tokens/ColorPicker";
@@ -546,8 +544,6 @@ export interface ColorFieldConfigBase {
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
     colorPicker: Partial<{
-      color: keyof ColorPickerColor;
-      colorMap: Record<string, ColorPickerColorItem>;
       rounded: keyof ColorPickerRounded;
       roundedMap: Record<string, string>;
       size: Record<string, ColorPickerSizeItem>;
@@ -562,7 +558,6 @@ export interface ColorPickerConfigBase {
   classes: object;
   defaultProps: Partial<{
     alpha: boolean;
-    color: keyof ColorPickerColor;
     error: boolean;
     fill: boolean;
     format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
@@ -570,7 +565,6 @@ export interface ColorPickerConfigBase {
     showFooter: boolean;
   }>;
   tokens: Partial<{
-    color: Record<string, ColorPickerColorItem>;
     rounded: Record<string, string>;
     size: Record<string, ColorPickerSizeItem>;
   }>;

@@ -57,7 +57,6 @@ const {
   {
     rounded: "md",
     format: "hex",
-    color: "primary",
   },
   emit,
 );

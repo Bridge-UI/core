@@ -50,24 +50,23 @@ import { ColorPicker } from "@bridge-ui/react/Components/ColorPicker";
 
 ## Props
 
-| Prop           | Type                     | Default     | Description                                                         |
-| -------------- | ------------------------ | ----------- | ------------------------------------------------------------------- |
-| `alpha`        | `boolean`                | —           | Shows the alpha slider. Unset: `true` for `hexa` / `rgba` / `hsla`. |
-| `classes`      | `ColorPickerClasses`     | —           | Classes for picker regions.                                         |
-| `color`        | `ColorPickerColor`       | `"primary"` | Accent color for selected swatches.                                 |
-| `customProps`  | `ColorPickerCustomProps` | —           | Extra props for internal parts.                                     |
-| `defaultValue` | `string \| null`         | `null`      | Uncontrolled initial value.                                         |
-| `disabled`     | `boolean`                | `false`     | Disables the picker.                                                |
-| `error`        | `boolean`                | `false`     | Invalid state. Preset swatches still use `color`.                   |
-| `fill`         | `boolean`                | `false`     | Fills the container width.                                          |
-| `format`       | `ColorFormat`            | `"hex"`     | Serialized output: `hex`, `hexa`, `rgb`, `rgba`, `hsl`, `hsla`.     |
-| `readOnly`     | `boolean`                | `false`     | Prevents selection.                                                 |
-| `rounded`      | `ColorPickerRounded`     | `"md"`      | Border radius of the picker shell and swatches.                     |
-| `showFooter`   | `boolean`                | `false`     | Shows Cancel / Apply. Selection is draft until Apply.               |
-| `slots`        | `ColorPickerSlots`       | —           | Named slots (`footer` for Cancel / Apply).                          |
-| `swatches`     | `string[]`               | —           | Preset colors shown below the sliders.                              |
-| `tokens`       | `ColorPickerTokens`      | —           | Token overrides.                                                    |
-| `value`        | `string \| null`         | —           | Controlled value.                                                   |
+| Prop           | Type                     | Default | Description                                                         |
+| -------------- | ------------------------ | ------- | ------------------------------------------------------------------- |
+| `alpha`        | `boolean`                | —       | Shows the alpha slider. Unset: `true` for `hexa` / `rgba` / `hsla`. |
+| `classes`      | `ColorPickerClasses`     | —       | Classes for picker regions.                                         |
+| `customProps`  | `ColorPickerCustomProps` | —       | Extra props for internal parts.                                     |
+| `defaultValue` | `string \| null`         | `null`  | Uncontrolled initial value.                                         |
+| `disabled`     | `boolean`                | `false` | Disables the picker.                                                |
+| `error`        | `boolean`                | `false` | Invalid state. Preset swatches keep the dark ring.                  |
+| `fill`         | `boolean`                | `false` | Fills the container width.                                          |
+| `format`       | `ColorFormat`            | `"hex"` | Serialized output: `hex`, `hexa`, `rgb`, `rgba`, `hsl`, `hsla`.     |
+| `readOnly`     | `boolean`                | `false` | Prevents selection.                                                 |
+| `rounded`      | `ColorPickerRounded`     | `"md"`  | Border radius of the picker shell and swatches.                     |
+| `showFooter`   | `boolean`                | `false` | Shows Cancel / Apply. Selection is draft until Apply.               |
+| `slots`        | `ColorPickerSlots`       | —       | Named slots (`footer` for Cancel / Apply).                          |
+| `swatches`     | `string[]`               | —       | Preset colors shown below the sliders.                              |
+| `tokens`       | `ColorPickerTokens`      | —       | Token overrides.                                                    |
+| `value`        | `string \| null`         | —       | Controlled value.                                                   |
 
 ## Events
 

@@ -27,7 +27,6 @@ import {
   type HsvaColor,
 } from "@bridge-ui/core/Domain";
 import {
-  colorPickerColorProps as colorProps,
   colorPickerRoundedProps as roundedProps,
   colorPickerSizeProps as sizeProps,
 } from "@bridge-ui/core/Tokens";
@@ -55,7 +54,6 @@ import {
 const colorPickerBridgeKeys = [
   "fill",
   "alpha",
-  "color",
   "error",
   "value",
   "format",
@@ -72,19 +70,13 @@ const colorPickerBridgeKeys = [
 
 type ColorPickerLibDefaults = LibDefaultsShape<
   ColorPickerOwnProps,
-  "color" | "format" | "rounded"
+  "format" | "rounded"
 >;
 
 type ColorPickerMerged = MergeLibDefaults<
   ColorPickerOwnProps,
   ColorPickerLibDefaults
 >;
-
-const HUE_GRADIENT =
-  "linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)";
-
-const CHECKERBOARD_CLASS =
-  "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]";
 
 function resolveHsva(value: null | string | undefined): HsvaColor {
   return parseColor(value) ?? DEFAULT_HSVA;
@@ -200,20 +192,12 @@ export function useColorPicker(
     return toCssRgba({ ...displayHsva.value, a: 1 });
   });
 
-  const tone = computed(() => {
-    return merged.value.color ?? "primary";
-  });
-
   const swatchSize = computed(() => {
     return get(sizeProps, ["md", "swatch"]);
   });
 
   const swatchRounded = computed(() => {
     return get(roundedProps, merged.value.rounded ?? "md");
-  });
-
-  const swatchTone = computed(() => {
-    return get(colorProps, tone.value) ?? colorProps.primary;
   });
 
   const presetSwatches = computed(() => {
@@ -440,8 +424,11 @@ export function useColorPicker(
         onKeydown: handleHueKeydown,
         "aria-label": resolveMessage("Hue"),
         tabindex: interactive.value ? 0 : -1,
-        style: { backgroundImage: HUE_GRADIENT },
         "aria-valuenow": Math.round(displayHsva.value.h),
+        style: {
+          backgroundImage:
+            "linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)",
+        },
       },
       cn({
         "relative h-3 w-full cursor-pointer touch-none": true,
@@ -479,7 +466,7 @@ export function useColorPicker(
       },
       cn({
         "relative h-3 w-full cursor-pointer overflow-hidden touch-none": true,
-        [CHECKERBOARD_CLASS]: true,
+        "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
         "rounded-full": true,
         "cursor-not-allowed": !interactive.value,
         [mergedClasses.value.alpha ?? ""]: true,
@@ -525,7 +512,7 @@ export function useColorPicker(
       "aria-hidden": true,
       class: cn({
         "relative shrink-0 overflow-hidden": true,
-        [CHECKERBOARD_CLASS]: true,
+        "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
         [swatchSize.value]: true,
         [swatchRounded.value]: true,
       }),
@@ -568,17 +555,18 @@ export function useColorPicker(
   const swatchButtonClass = computed(() => {
     return cn({
       "relative shrink-0 overflow-hidden": true,
-      [CHECKERBOARD_CLASS]: true,
+      "bg-[image:repeating-conic-gradient(#d1d5db_0%_25%,#ffffff_0%_50%)] bg-[size:0.5rem_0.5rem] dark:bg-[image:repeating-conic-gradient(#4b5563_0%_25%,#1f2937_0%_50%)]": true,
       [swatchSize.value]: true,
       [swatchRounded.value]: true,
-      [swatchTone.value.base]: true,
-      [swatchTone.value.hover]: interactive.value,
-      [swatchTone.value.disabled]: !interactive.value,
+      "border border-black/10 dark:border-white/15": true,
+      "hover:ring-2 hover:ring-dark-300 hover:ring-offset-2 hover:ring-offset-white dark:hover:ring-dark-500 dark:hover:ring-offset-dark-900":
+        interactive.value,
+      "cursor-not-allowed opacity-50": !interactive.value,
     });
   });
 
   const swatchSelectedClass = computed(() => {
-    return swatchTone.value.selected;
+    return "ring-2 ring-dark-500 ring-offset-2 ring-offset-white dark:ring-dark-400 dark:ring-offset-dark-900";
   });
 
   return {

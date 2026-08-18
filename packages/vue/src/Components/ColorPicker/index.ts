@@ -1,7 +1,6 @@
 // ** Exports
 export type {
   ColorPickerClasses,
-  ColorPickerColorOverrides,
   ColorPickerCustomProps,
   ColorPickerEmits,
   ColorPickerOwnProps,
