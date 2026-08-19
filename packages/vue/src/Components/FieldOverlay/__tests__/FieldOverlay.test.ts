@@ -130,11 +130,13 @@ test("it should fade horizontal overflow on a nested drawer scroller", () => {
   const panel = document.querySelector('[role="dialog"]');
   const scroller = panel?.querySelector(".bridge-scroll-fade-x");
 
-  expect(panel?.className).not.toContain("bridge-scroll-fade-x");
   expect(scroller).not.toBeNull();
+  expect(scroller?.className).toContain("flex");
+  expect(scroller?.className).toContain("flex-col");
   expect(scroller?.className).toContain("overflow-x-auto");
   expect(scroller?.className).toContain("overflow-y-hidden");
   expect(scroller?.className).toContain("bridge-hide-scrollbar");
+  expect(panel?.className).not.toContain("bridge-scroll-fade-x");
 });
 
 test("it should resolve auto to menu on desktop", async () => {

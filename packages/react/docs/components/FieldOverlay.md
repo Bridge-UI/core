@@ -39,7 +39,7 @@ import { FieldOverlay } from "@bridge-ui/react/Components/FieldOverlay";
 
 ### customProps
 
-Forward props to the active shell via `customProps.menu`, `customProps.modal`, or `customProps.drawer`. Menu-only options such as `anchorEl`, `placement`, `disableAutoFocus`, and `rounded` go through `customProps.menu`.
+Forward props to the active shell via `customProps.menu`, `customProps.modal`, or `customProps.drawer`. The drawer inner scroller accepts `customProps.drawerScroller`. Menu-only options such as `anchorEl`, `placement`, `disableAutoFocus`, and `rounded` go through `customProps.menu`.
 
 ```tsx
 <FieldOverlay
@@ -67,6 +67,17 @@ Forward props to the active shell via `customProps.menu`, `customProps.modal`, o
 >
   <PickerContent />
 </FieldOverlay>
+
+<FieldOverlay
+  show={open}
+  overlay="drawer"
+  onShowChange={setOpen}
+  customProps={{
+    drawerScroller: { className: "bridge-scroll-fade-none" },
+  }}
+>
+  <PickerContent />
+</FieldOverlay>
 ```
 
 ### Footer close
@@ -82,13 +93,13 @@ in custom footers so Apply still commits.
 
 ## Props
 
-| Prop           | Type                      | Default  | Description                                                |
-| -------------- | ------------------------- | -------- | ---------------------------------------------------------- |
-| `children`     | `ReactNode`               | —        | Content rendered inside the active overlay shell.          |
-| `customProps`  | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`). |
-| `overlay`      | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
-| `show`         | `boolean`                 | `false`  | Whether the overlay is open.                               |
-| `onShowChange` | `(show: boolean) => void` | —        | Called when open state should change.                      |
+| Prop           | Type                      | Default  | Description                                                                                           |
+| -------------- | ------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `children`     | `ReactNode`               | —        | Content rendered inside the active overlay shell.                                                     |
+| `customProps`  | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`) and the drawer scroller (`drawerScroller`). |
+| `overlay`      | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                  |
+| `show`         | `boolean`                 | `false`  | Whether the overlay is open.                                                                          |
+| `onShowChange` | `(show: boolean) => void` | —        | Called when open state should change.                                                                 |
 
 ## Related components
 

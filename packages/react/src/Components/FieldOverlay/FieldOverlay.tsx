@@ -20,7 +20,7 @@ function FieldOverlay(props: FieldOverlayProps) {
     modalProps,
     drawerProps,
     resolvedOverlay,
-    drawerScrollerClass,
+    drawerScrollerBind,
   } = useFieldOverlay(props);
 
   const footer = useMemo((): FieldOverlayFooterContextValue => {
@@ -39,7 +39,7 @@ function FieldOverlay(props: FieldOverlayProps) {
       <Modal {...modalProps}>{children}</Modal>
     ) : resolvedOverlay === "drawer" ? (
       <Drawer {...drawerProps}>
-        <div className={drawerScrollerClass}>{children}</div>
+        <div {...drawerScrollerBind}>{children}</div>
       </Drawer>
     ) : (
       <Menu {...menuProps}>{children}</Menu>

@@ -14,6 +14,7 @@ import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type { FieldOverlayOwnProps } from "@/Components/FieldOverlay/fieldOverlay.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
+import { mergePartBind } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 function withDialogPanelClasses<T extends ModalOwnProps | DrawerOwnProps>(
@@ -88,11 +89,14 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
     );
   });
 
-  const drawerScrollerClass = computed(() => {
-    return cn({
-      "min-w-0 w-full overflow-x-auto overflow-y-hidden bridge-scroll-fade-x bridge-hide-scrollbar":
-        true,
-    });
+  const drawerScrollerBind = computed(() => {
+    return mergePartBind(
+      props.customProps?.drawerScroller,
+      {},
+      cn({
+        "flex min-w-0 w-full flex-col overflow-x-auto overflow-y-hidden bridge-scroll-fade-x bridge-hide-scrollbar": true,
+      }),
+    );
   });
 
   return {
@@ -100,7 +104,7 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
     modalBind,
     drawerBind,
     resolvedOverlay,
-    drawerScrollerClass,
+    drawerScrollerBind,
   };
 }
 

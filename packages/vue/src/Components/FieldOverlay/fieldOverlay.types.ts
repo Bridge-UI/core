@@ -1,5 +1,5 @@
 // ** External Imports
-import type { Slot } from "vue";
+import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type { FieldOverlayMode } from "@bridge-ui/core/Domain";
@@ -16,6 +16,13 @@ export interface FieldOverlayCustomProps {
    * @default undefined
    */
   drawer?: Partial<DrawerOwnProps>;
+
+  /**
+   * Props forwarded to the inner horizontal scroller in the `drawer` shell.
+   *
+   * @default undefined
+   */
+  drawerScroller?: HTMLAttributes;
 
   /**
    * Props forwarded to the nested `Menu` when that shell is active.
@@ -48,14 +55,16 @@ export interface FieldOverlayEmits {
 /**
  * Renders field picker / listbox content in a `Menu`, `Modal`, or `Drawer`.
  * Visibility is controlled with `v-model`. Shell-specific options go through
- * `customProps.menu` / `.modal` / `.drawer`.
+ * `customProps.menu` / `.modal` / `.drawer`. The drawer inner scroller
+ * accepts `customProps.drawerScroller`.
  *
  * Menu chrome (fill, radius, shadow, ring) is stripped so the nested picker
  * or listbox paints the visible surface, matching modal / drawer panels.
  */
 export interface FieldOverlayOwnProps {
   /**
-   * Extra props for the nested shells (`menu`, `modal`, `drawer`).
+   * Extra props for the nested shells (`menu`, `modal`, `drawer`) and the
+   * drawer horizontal scroller (`drawerScroller`).
    *
    * @default undefined
    */

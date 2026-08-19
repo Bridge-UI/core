@@ -130,12 +130,35 @@ test("it should fade horizontal overflow on a nested drawer scroller", () => {
     useFieldOverlay({ show: true, overlay: "drawer" }),
   );
 
-  expect(result.current.drawerScrollerClass).toContain("min-w-0");
-  expect(result.current.drawerScrollerClass).toContain("overflow-x-auto");
-  expect(result.current.drawerScrollerClass).toContain("overflow-y-hidden");
-  expect(result.current.drawerScrollerClass).toContain("bridge-scroll-fade-x");
-  expect(result.current.drawerScrollerClass).toContain(
+  expect(result.current.drawerScrollerBind.className).toContain("flex");
+  expect(result.current.drawerScrollerBind.className).toContain("min-w-0");
+  expect(result.current.drawerScrollerBind.className).toContain("flex-col");
+  expect(result.current.drawerScrollerBind.className).toContain(
+    "overflow-x-auto",
+  );
+  expect(result.current.drawerScrollerBind.className).toContain(
+    "overflow-y-hidden",
+  );
+  expect(result.current.drawerScrollerBind.className).toContain(
+    "bridge-scroll-fade-x",
+  );
+  expect(result.current.drawerScrollerBind.className).toContain(
     "bridge-hide-scrollbar",
+  );
+});
+
+test("it should merge customProps.drawerScroller onto the nested scroller", () => {
+  const { result } = renderHook(() =>
+    useFieldOverlay({
+      show: true,
+      overlay: "drawer",
+      customProps: { drawerScroller: { className: "bg-red-50" } },
+    }),
+  );
+
+  expect(result.current.drawerScrollerBind.className).toContain("bg-red-50");
+  expect(result.current.drawerScrollerBind.className).toContain(
+    "bridge-scroll-fade-x",
   );
 });
 
