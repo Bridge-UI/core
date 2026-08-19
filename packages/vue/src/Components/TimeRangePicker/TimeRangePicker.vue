@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // ** Local Imports
 import { Button } from "@/Components/Button";
+import { Divider } from "@/Components/Divider";
 import { TimePanel } from "@/Components/TimePanel";
 import { useTimeRangePicker } from "@/Components/TimeRangePicker/composables/useTimeRangePicker";
 import type {
@@ -27,11 +28,13 @@ const {
   startBind,
   startTitle,
   footerBind,
+  titlesBind,
   panelsBind,
   showFooter,
   applyLabel,
   handleApply,
   cancelLabel,
+  titleGapBind,
   endTitleBind,
   handleCancel,
   startTitleBind,
@@ -49,7 +52,6 @@ const {
     rounded: "md",
     color: "primary",
     showSeconds: false,
-    orientation: "horizontal",
   },
   emit,
 );
@@ -57,10 +59,14 @@ const {
 
 <template>
   <div v-bind="rootBind">
+    <div :class="titlesBind">
+      <p :class="startTitleBind">{{ startTitle }}</p>
+      <span aria-hidden="true" :class="titleGapBind" />
+      <p :class="endTitleBind">{{ endTitle }}</p>
+    </div>
+
     <div v-bind="panelsBind">
       <div v-bind="startBind">
-        <p :class="startTitleBind">{{ startTitle }}</p>
-
         <TimePanel
           :ampm="merged.ampm"
           :fill="merged.fill"
@@ -80,9 +86,9 @@ const {
         />
       </div>
 
-      <div v-bind="endBind">
-        <p :class="endTitleBind">{{ endTitle }}</p>
+      <Divider orientation="vertical" />
 
+      <div v-bind="endBind">
         <TimePanel
           :ampm="merged.ampm"
           :fill="merged.fill"

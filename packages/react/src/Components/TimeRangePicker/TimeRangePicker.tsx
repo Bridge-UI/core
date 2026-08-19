@@ -1,5 +1,6 @@
 // ** Local Imports
 import { Button } from "@/Components/Button";
+import { Divider } from "@/Components/Divider";
 import { TimePanel } from "@/Components/TimePanel";
 import { useTimeRangePicker } from "@/Components/TimeRangePicker/hooks/useTimeRangePicker";
 import type { TimeRangePickerProps } from "@/Components/TimeRangePicker/timeRangePicker.types";
@@ -13,11 +14,13 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     startBind,
     startTitle,
     footerBind,
+    titlesBind,
     panelsBind,
     showFooter,
     applyLabel,
     handleApply,
     cancelLabel,
+    titleGapBind,
     endTitleBind,
     handleCancel,
     startTitleBind,
@@ -33,15 +36,18 @@ function TimeRangePicker(props: TimeRangePickerProps) {
     rounded: "md",
     color: "primary",
     showSeconds: false,
-    orientation: "horizontal",
   });
 
   return (
     <div {...rootBind}>
+      <div className={titlesBind}>
+        <p className={startTitleBind}>{startTitle}</p>
+        <span aria-hidden className={titleGapBind} />
+        <p className={endTitleBind}>{endTitle}</p>
+      </div>
+
       <div {...panelsBind}>
         <div {...startBind}>
-          <p className={startTitleBind}>{startTitle}</p>
-
           <TimePanel
             ampm={merged.ampm}
             fill={merged.fill}
@@ -61,9 +67,9 @@ function TimeRangePicker(props: TimeRangePickerProps) {
           />
         </div>
 
-        <div {...endBind}>
-          <p className={endTitleBind}>{endTitle}</p>
+        <Divider orientation="vertical" />
 
+        <div {...endBind}>
           <TimePanel
             ampm={merged.ampm}
             fill={merged.fill}

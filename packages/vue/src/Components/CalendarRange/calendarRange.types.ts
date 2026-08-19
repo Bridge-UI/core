@@ -36,12 +36,12 @@ export interface CalendarRangeClasses {
   end?: string;
 
   /**
-   * Classes for the end-month header (vertical orientation).
+   * Classes for the end-month header.
    */
   endHeader?: string;
 
   /**
-   * Classes for the shared header.
+   * Classes for the shared header (year, months, and nav).
    */
   header?: string;
 
@@ -74,6 +74,11 @@ export interface CalendarRangeClasses {
    * Classes for the start (left / top) date panel wrapper.
    */
   start?: string;
+
+  /**
+   * Classes for the start-month header (horizontal).
+   */
+  startHeader?: string;
 }
 
 export interface CalendarRangeCustomProps {
@@ -92,7 +97,7 @@ export interface CalendarRangeCustomProps {
   end?: HTMLAttributes;
 
   /**
-   * Props forwarded to the end-month header (vertical orientation).
+   * Props forwarded to the end-month header.
    *
    * @default undefined
    */
@@ -167,6 +172,13 @@ export interface CalendarRangeCustomProps {
    * @default undefined
    */
   start?: HTMLAttributes;
+
+  /**
+   * Props forwarded to the start-month header (horizontal date view).
+   *
+   * @default undefined
+   */
+  startHeader?: HTMLAttributes;
 
   /**
    * Props forwarded to the today control.
@@ -310,8 +322,10 @@ export interface CalendarRangeOwnProps {
   /**
    * Dual calendar arrangement.
    *
-   * - `horizontal`: shared header with year, both months, and nav; panels side by side
-   * - `vertical`: top header with year, start month, and nav; end month header above the bottom panel
+   * - `horizontal`: year on the left, nav on the right; month selectors sit inward
+   *   from the header midpoint; divider between the date grids
+   * - `vertical`: year on the left, nav on the right; start month centered in the
+   *   header, end month centered over the bottom panel
    *
    * @default "horizontal"
    */

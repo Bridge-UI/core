@@ -1,7 +1,8 @@
 # DateRangePicker
 
-Inline dual-month picker for an inclusive date range (`[start, end]`). The header
-exposes year, start month, and end month selectors in one row.
+Inline dual-month picker for an inclusive date range (`[start, end]`). Year sits
+on the left and nav on the right; month selectors sit inward from the header
+midpoint.
 
 ## Import
 

@@ -89,7 +89,7 @@ test("it should emit change when a range is selected", async () => {
   expect(onChange).toHaveBeenCalled();
 });
 
-test("it should highlight the end month when opening from the end month selector", async () => {
+test("it should highlight the start month when opening from the end month selector", async () => {
   mountCalendarRange({
     props: {
       onViewDateChange: () => {},
@@ -102,6 +102,13 @@ test("it should highlight the end month when opening from the end month selector
     ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
   await flushPromises();
 
+  expect(
+    document.body.querySelector('[aria-label="Select month"]'),
+  ).not.toBeNull();
+  expect(
+    document.body.querySelector('[aria-label="Select end month"]'),
+  ).not.toBeNull();
+
   const monthButtons = Array.from(
     document.body.querySelectorAll("button[aria-pressed]"),
   );
@@ -110,11 +117,11 @@ test("it should highlight the end month when opening from the end month selector
   );
   const may = monthButtons.find((node) => /may/i.test(node.textContent ?? ""));
 
-  expect(june?.getAttribute("aria-pressed")).toBe("true");
-  expect(may?.getAttribute("aria-pressed")).toBe("false");
+  expect(may?.getAttribute("aria-pressed")).toBe("true");
+  expect(june?.getAttribute("aria-pressed")).toBe("false");
 });
 
-test("it should move the end panel when selecting a month from the end selector", async () => {
+test("it should apply the selected month to the start calendar from either selector", async () => {
   const onViewDateChange = vi.fn();
 
   mountCalendarRange({
@@ -138,23 +145,31 @@ test("it should move the end panel when selecting a month from the end selector"
 
   expect(onViewDateChange).toHaveBeenCalled();
   const next = onViewDateChange.mock.calls.at(-1)?.[0] as Date;
-  expect(next.getMonth()).toBe(6);
+  expect(next.getMonth()).toBe(7);
 });
 
-test("it should keep end month in the header when horizontal", () => {
-  const wrapper = mountCalendarRange({
-    props: { orientation: "horizontal" },
+test("it should keep end month over the end calendar when horizontal", () => {
+  mountCalendarRange({
+    props: {
+      orientation: "horizontal",
+      onViewDateChange: () => {},
+      viewDate: new Date(2021, 4, 1),
+    },
   });
 
-  const header = wrapper.element.firstElementChild;
+  expect(document.body.querySelector('[role="separator"]')).not.toBeNull();
   expect(
-    header?.querySelector('[aria-label="Select end month"]'),
+    document.body.querySelector('[aria-label="Select end month"]'),
   ).not.toBeNull();
 });
 
 test("it should move end month below the start panel when vertical", () => {
   const wrapper = mountCalendarRange({
-    props: { orientation: "vertical" },
+    props: {
+      orientation: "vertical",
+      onViewDateChange: () => {},
+      viewDate: new Date(2021, 4, 1),
+    },
   });
 
   const header = wrapper.element.firstElementChild;

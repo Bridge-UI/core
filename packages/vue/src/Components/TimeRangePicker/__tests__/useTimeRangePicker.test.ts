@@ -15,7 +15,6 @@ const libDefaults = {
   rounded: "md",
   color: "primary",
   showSeconds: false,
-  orientation: "horizontal",
 } as const satisfies Partial<TimeRangePickerOwnProps>;
 
 function mountUseTimeRangePicker(props: Partial<TimeRangePickerOwnProps> = {}) {
@@ -57,24 +56,28 @@ test("it should enable footer when showFooter is set", () => {
 });
 
 test("it should size the root to content and let panels grow", () => {
-  const { endBind, rootBind, startBind, panelsBind } =
-    mountUseTimeRangePicker();
+  const {
+    endBind,
+    rootBind,
+    startBind,
+    panelsBind,
+    titlesBind,
+    endTitleBind,
+    titleGapBind,
+    startTitleBind,
+  } = mountUseTimeRangePicker();
 
-  expect(rootBind.value.class).toContain("w-fit");
+  expect(titlesBind.value).toContain("px-2.5");
+  expect(titleGapBind.value).toContain("w-px");
+  expect(endTitleBind.value).toContain("pl-2.5");
   expect(endBind.value.class).toContain("flex-1");
+  expect(endBind.value.class).toContain("pl-2.5");
+  expect(rootBind.value.class).toContain("w-fit");
+  expect(startTitleBind.value).toContain("pr-2.5");
   expect(startBind.value.class).toContain("flex-1");
-  expect(panelsBind.value.class).toContain("w-full");
+  expect(startBind.value.class).toContain("pr-2.5");
   expect(panelsBind.value.class).toContain("px-2.5");
+  expect(panelsBind.value.class).toContain("w-full");
   expect(panelsBind.value.class).toContain("flex-row");
   expect(rootBind.value.class).not.toContain("px-2.5");
-});
-
-test("it should stack panels when orientation is vertical", () => {
-  const { endBind, startBind, panelsBind } = mountUseTimeRangePicker({
-    orientation: "vertical",
-  });
-
-  expect(panelsBind.value.class).toContain("flex-col");
-  expect(startBind.value.class).toContain("flex-1");
-  expect(endBind.value.class).toContain("flex-1");
 });

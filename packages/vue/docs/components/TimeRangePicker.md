@@ -37,7 +37,6 @@ import { TimeRangePicker } from "@bridge-ui/vue/Components/TimeRangePicker";
 | `interval`     | `number`                     | `1`            | Minute step between options.                          |
 | `maxTime`      | `Date`                       | —              | Latest selectable time.                               |
 | `minTime`      | `Date`                       | —              | Earliest selectable time.                             |
-| `orientation`  | `"horizontal" \| "vertical"` | `"horizontal"` | Layout of start / end time panels.                    |
 | `readOnly`     | `boolean`                    | `false`        | Prevents selection.                                   |
 | `rounded`      | `CalendarRounded`            | `"md"`         | Border radius of time tiles and chrome.               |
 | `showFooter`   | `boolean`                    | `false`        | Shows Cancel / Apply. Selection is draft until Apply. |

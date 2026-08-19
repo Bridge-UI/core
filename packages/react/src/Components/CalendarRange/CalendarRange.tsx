@@ -7,6 +7,7 @@ import { CalendarMonth } from "@/Components/CalendarMonth";
 import type { CalendarRangeProps } from "@/Components/CalendarRange/calendarRange.types";
 import { useCalendarRange } from "@/Components/CalendarRange/hooks/useCalendarRange";
 import { CalendarYear } from "@/Components/CalendarYear";
+import { Divider } from "@/Components/Divider";
 import { Icon } from "@/Components/Icon";
 
 function CalendarRange(props: CalendarRangeProps) {
@@ -30,7 +31,6 @@ function CalendarRange(props: CalendarRangeProps) {
     endViewDate,
     previewDate,
     navIconBind,
-    monthTarget,
     handleChange,
     yearPageSize,
     endMonthLabel,
@@ -41,6 +41,7 @@ function CalendarRange(props: CalendarRangeProps) {
     monthPanelYear,
     todayButtonBind,
     monthPanelValue,
+    startHeaderBind,
     yearSelectorBind,
     handleYearSelect,
     showYearSelector,
@@ -91,7 +92,7 @@ function CalendarRange(props: CalendarRangeProps) {
         size="2xs"
         icon="chevronDown"
         {...navIconBind}
-        className={chevronClass(view === "month" && monthTarget === "start")}
+        className={chevronClass(view === "month")}
       />
     </button>
   ) : null;
@@ -104,7 +105,7 @@ function CalendarRange(props: CalendarRangeProps) {
         size="2xs"
         icon="chevronDown"
         {...navIconBind}
-        className={chevronClass(view === "month" && monthTarget === "end")}
+        className={chevronClass(view === "month")}
       />
     </button>
   ) : null;
@@ -122,58 +123,81 @@ function CalendarRange(props: CalendarRangeProps) {
     </button>
   ) : null;
 
+  const showCenteredHeader = view === "year" || (isVertical && view === "date");
+  const centeredMonthButton = view === "date" ? startMonthButton : null;
+
   return (
     <div {...rootBind}>
       <div {...headerBind}>
-        <div className="flex shrink-0 items-center justify-start">
-          {yearButton}
-        </div>
+        {showCenteredHeader ? (
+          <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center">
+            <div className="flex justify-start">{yearButton}</div>
 
-        <div {...monthsBind}>
-          {startMonthButton}
-          {!isVertical && endMonthButton}
-        </div>
+            <div {...monthsBind}>{centeredMonthButton}</div>
 
-        <div className="flex shrink-0 items-center justify-end">
-          {navButtons}
-        </div>
+            <div className="flex justify-end">{navButtons}</div>
+          </div>
+        ) : (
+          <>
+            <div {...startHeaderBind}>
+              {yearButton}
+              <div className="ml-auto">{startMonthButton}</div>
+            </div>
+
+            <div {...endHeaderBind}>
+              {endMonthButton}
+              <div className="ml-auto">{navButtons}</div>
+            </div>
+          </>
+        )}
       </div>
 
       <div {...bodyBind}>
-        {view === "date" && (
-          <div {...panelsBind}>
-            <div className="flex min-w-max flex-1 items-stretch">
-              <div {...startBind}>
-                <CalendarDate
-                  {...shared}
-                  range
-                  value={value}
-                  viewDate={viewDate}
-                  onChange={handleChange}
-                  previewDate={previewDate}
-                  startOfWeek={merged.startOfWeek}
-                  disableDates={merged.disableDates}
-                  disableYears={merged.disableYears}
-                  hideWeekdays={merged.hideWeekdays}
-                  disableMonths={merged.disableMonths}
-                  hideOutsideDays={merged.hideOutsideDays}
-                  onViewDateChange={handleStartViewDateChange}
-                  onPreviewDateChange={handlePreviewDateChange}
-                  slots={
-                    props.slots?.day ? { day: props.slots.day } : undefined
-                  }
-                />
-              </div>
-
-              {props.slots?.startAside}
+        <div {...panelsBind}>
+          <div
+            className={cn("flex min-w-max flex-1 items-stretch", {
+              "pb-2.5": isVertical,
+            })}
+          >
+            <div {...startBind}>
+              <CalendarDate
+                {...shared}
+                range
+                value={value}
+                viewDate={viewDate}
+                onChange={handleChange}
+                previewDate={previewDate}
+                startOfWeek={merged.startOfWeek}
+                disableDates={merged.disableDates}
+                disableYears={merged.disableYears}
+                hideWeekdays={merged.hideWeekdays}
+                disableMonths={merged.disableMonths}
+                hideOutsideDays={merged.hideOutsideDays}
+                onViewDateChange={handleStartViewDateChange}
+                onPreviewDateChange={handlePreviewDateChange}
+                slots={props.slots?.day ? { day: props.slots.day } : undefined}
+              />
             </div>
+
+            {props.slots?.startAside}
+          </div>
+
+          <Divider
+            className={isVertical ? "mx-2.5" : undefined}
+            orientation={isVertical ? "horizontal" : "vertical"}
+          />
+
+          <div
+            className={cn("flex min-w-max flex-1 flex-col", {
+              "pt-2.5": isVertical,
+            })}
+          >
+            {isVertical && view === "date" && endMonthButton ? (
+              <div {...endHeaderBind}>{endMonthButton}</div>
+            ) : null}
 
             <div className="flex min-w-max flex-1 items-stretch">
               <div {...endBind}>
-                {isVertical && endMonthButton ? (
-                  <div {...endHeaderBind}>{endMonthButton}</div>
-                ) : null}
-
                 <CalendarDate
                   {...shared}
                   range
@@ -198,21 +222,20 @@ function CalendarRange(props: CalendarRangeProps) {
               {props.slots?.endAside}
             </div>
           </div>
-        )}
+        </div>
 
         {view === "month" && (
           <div className={monthYearBind}>
             <CalendarMonth
               {...shared}
-              key={monthTarget}
               year={monthPanelYear}
               value={monthPanelValue}
               onChange={handleMonthSelect}
               disableMonths={merged.disableMonths}
               classes={{
-                root: "h-full",
-                month: "min-h-16",
+                month: "min-h-0",
                 grid: "h-full auto-rows-fr",
+                root: "h-full min-h-0 flex-1",
               }}
             />
           </div>
@@ -228,9 +251,9 @@ function CalendarRange(props: CalendarRangeProps) {
               onChange={handleYearSelect}
               disableYears={merged.disableYears}
               classes={{
-                root: "h-full",
-                year: "min-h-16",
+                year: "min-h-0",
                 grid: "h-full auto-rows-fr",
+                root: "h-full min-h-0 flex-1",
               }}
             />
           </div>

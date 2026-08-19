@@ -19,8 +19,8 @@ const libDefaults = {
 test("it should expose context defaults from useStepper", () => {
   const { result } = renderHook(() => useStepper({}, libDefaults));
 
-  expect(result.current.contextValue.activeStep).toBe(0);
   expect(result.current.contextValue.linear).toBe(true);
+  expect(result.current.contextValue.activeStep).toBe(0);
   expect(result.current.contextValue.orientation).toBe("horizontal");
 });
 

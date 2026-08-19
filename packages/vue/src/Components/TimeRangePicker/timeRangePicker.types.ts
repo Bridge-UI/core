@@ -5,7 +5,6 @@ import type { HTMLAttributes, Slot } from "vue";
 import type {
   DisableTimesInput,
   FieldOverlayFooterSlotProps,
-  RangePickerOrientation,
   TimeRangeValue,
 } from "@bridge-ui/core/Domain";
 import type { TimeColor, TimeRounded } from "@bridge-ui/core/Tokens";
@@ -214,13 +213,6 @@ export interface TimeRangePickerOwnProps {
    * @default undefined
    */
   minTime?: Date;
-
-  /**
-   * Layout of start / end time panels.
-   *
-   * @default "horizontal"
-   */
-  orientation?: RangePickerOrientation;
 
   /**
    * Prevents selection.

@@ -1,7 +1,8 @@
 # CalendarRange
 
-Dual-month calendar for selecting a date range. Shared year/month selectors with
-two date panels (`orientation="horizontal"` side-by-side, or `"vertical"` stacked).
+Dual-month calendar for selecting a date range. Year sits on the left and nav
+on the right; month selectors sit inward from the header midpoint
+(`orientation="horizontal"` side-by-side, or `"vertical"` stacked).
 
 ## Import
 
@@ -36,7 +37,7 @@ import { CalendarRange } from "@bridge-ui/react/Components/CalendarRange";
 ```tsx
 <CalendarRange
   customProps={{
-    panels: { className: "gap-4" },
+    startHeader: { className: "pr-2" },
     root: { "data-testid": "calendar-range" },
   }}
 />

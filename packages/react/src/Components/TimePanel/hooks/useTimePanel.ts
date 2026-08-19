@@ -403,7 +403,7 @@ export function useTimePanel(
         onClick: () => onSelect(item.value),
       },
       cn({
-        "w-full cursor-pointer px-3 py-2 text-sm transition-all duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
+        "w-full cursor-pointer px-3 py-2 text-sm transition-colors duration-150 ease-in-out outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed": true,
         [roundedClass ?? ""]: true,
         [color?.base ?? ""]: item.state === "base" || item.state === "hover",
         [color?.hover ?? ""]: item.state === "base" || item.state === "hover",
