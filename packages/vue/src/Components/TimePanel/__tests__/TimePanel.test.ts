@@ -18,9 +18,9 @@ test("it should emit change when an hour is selected", async () => {
     props: { value: new Date(2021, 4, 21, 14, 30) },
   });
 
-  const hour = wrapper.findAll("button").find((node) => node.text() === "15");
+  const hour = wrapper.find('button[aria-label="Hour 15"]');
 
-  await hour?.trigger("click");
+  await hour.trigger("click");
 
   expect(wrapper.emitted("change")).toBeTruthy();
 });
@@ -30,9 +30,9 @@ test("it should mark the selected hour", () => {
     props: { value: new Date(2021, 4, 21, 14, 30) },
   });
 
-  const hour = wrapper.findAll("button").find((node) => node.text() === "14");
+  const hour = wrapper.find('button[aria-label="Hour 14"]');
 
-  expect(hour?.attributes("aria-pressed")).toBe("true");
+  expect(hour.attributes("aria-pressed")).toBe("true");
 });
 
 test("it should render AM/PM when ampm is set", () => {

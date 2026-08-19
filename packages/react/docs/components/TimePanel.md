@@ -46,6 +46,8 @@ import { TimePanel } from "@bridge-ui/react/Components/TimePanel";
 
 Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
+Columns use `bridge-scroll-fade-y` and `bridge-hide-scrollbar` by default. Add `bridge-scroll-fade-none` via `classes.column` to disable the fade. See [Scroll utilities](../ScrollUtilities.md).
+
 ## Events
 
 | Callback   | Type                            | Description                   |

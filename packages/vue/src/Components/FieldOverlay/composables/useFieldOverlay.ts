@@ -14,6 +14,7 @@ import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
 import type { FieldOverlayOwnProps } from "@/Components/FieldOverlay/fieldOverlay.types";
 import type { MenuOwnProps } from "@/Components/Menu/menu.types";
 import type { ModalOwnProps } from "@/Components/Modal/modal.types";
+import { mergePartBind } from "@/Utils";
 import { useBreakpoint } from "@/Utils/useBreakpoint";
 
 function withDialogPanelClasses<T extends ModalOwnProps | DrawerOwnProps>(
@@ -84,9 +85,17 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
         disableRestoreFocus: true,
         ...props.customProps?.drawer,
       },
-      // Paper already scrolls vertically. `overflow-x-auto` scrolls dual
-      // calendars / time columns when they exceed the sheet width.
-      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch p-0",
+    );
+  });
+
+  const drawerScrollerBind = computed(() => {
+    return mergePartBind(
+      props.customProps?.drawerScroller,
+      {},
+      cn({
+        "flex min-w-0 w-full flex-col overflow-x-auto overflow-y-hidden bridge-scroll-fade-x bridge-hide-scrollbar": true,
+      }),
     );
   });
 
@@ -95,6 +104,7 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
     modalBind,
     drawerBind,
     resolvedOverlay,
+    drawerScrollerBind,
   };
 }
 

@@ -1,0 +1,223 @@
+/**
+ * Scroll utilities (`bridge-scroll-fade-*`, `bridge-scroll-fade-none`,
+ * `bridge-soft-scrollbar`, `bridge-hide-scrollbar`). Imported by
+ * `@bridge-ui/react/theme.css` and
+ * `@bridge-ui/vue/theme.css`.
+ */
+
+@property --bridge-scroll-fade-t {
+  inherits: false;
+  initial-value: 0px;
+  syntax: "<length-percentage>";
+}
+
+@property --bridge-scroll-fade-b {
+  inherits: false;
+  initial-value: 0px;
+  syntax: "<length-percentage>";
+}
+
+@property --bridge-scroll-fade-s {
+  inherits: false;
+  initial-value: 0px;
+  syntax: "<length-percentage>";
+}
+
+@property --bridge-scroll-fade-e {
+  inherits: false;
+  initial-value: 0px;
+  syntax: "<length-percentage>";
+}
+
+@property --bridge-scroll-fade-mask {
+  syntax: "*";
+  inherits: false;
+}
+
+@theme inline {
+  @keyframes bridge-scroll-fade-reveal-t {
+    from {
+      --bridge-scroll-fade-t: 0px;
+    }
+
+    to {
+      --bridge-scroll-fade-t: var(
+        --_bridge-scroll-fade-size-t,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
+  }
+
+  @keyframes bridge-scroll-fade-reveal-b {
+    from {
+      --bridge-scroll-fade-b: var(
+        --_bridge-scroll-fade-size-b,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
+
+    to {
+      --bridge-scroll-fade-b: 0px;
+    }
+  }
+
+  @keyframes bridge-scroll-fade-reveal-s {
+    from {
+      --bridge-scroll-fade-s: 0px;
+    }
+
+    to {
+      --bridge-scroll-fade-s: var(
+        --_bridge-scroll-fade-size-s,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
+  }
+
+  @keyframes bridge-scroll-fade-reveal-e {
+    from {
+      --bridge-scroll-fade-e: var(
+        --_bridge-scroll-fade-size-e,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
+
+    to {
+      --bridge-scroll-fade-e: 0px;
+    }
+  }
+}
+
+@utility bridge-scroll-fade {
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: var(--bridge-scroll-fade-mask, var(--bridge-scroll-fade-block));
+  -webkit-mask-image: var(
+    --bridge-scroll-fade-mask,
+    var(--bridge-scroll-fade-block)
+  );
+  --_bridge-scroll-fade-size-t: var(
+    --bridge-scroll-fade-size,
+    min(12%, calc(var(--spacing) * 10))
+  );
+  --_bridge-scroll-fade-size-b: var(
+    --bridge-scroll-fade-size,
+    min(12%, calc(var(--spacing) * 10))
+  );
+  --bridge-scroll-fade-block: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--bridge-scroll-fade-t, 0px),
+    #000 calc(100% - var(--bridge-scroll-fade-b, 0px)),
+    transparent 100%
+  );
+
+  @supports (animation-timeline: scroll()) {
+    animation:
+      bridge-scroll-fade-reveal-t 1ms ease-in-out,
+      bridge-scroll-fade-reveal-b 1ms ease-in-out;
+    animation-timeline: scroll(self y), scroll(self y);
+    animation-range:
+      0 var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)),
+      calc(100% - var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)))
+        100%;
+    animation-fill-mode: both;
+  }
+}
+
+@utility bridge-scroll-fade-y {
+  @apply bridge-scroll-fade;
+}
+
+@utility bridge-scroll-fade-x {
+  mask-repeat: no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: var(--bridge-scroll-fade-mask, var(--bridge-scroll-fade-inline));
+  -webkit-mask-image: var(
+    --bridge-scroll-fade-mask,
+    var(--bridge-scroll-fade-inline)
+  );
+  --_bridge-scroll-fade-size-s: var(
+    --bridge-scroll-fade-size,
+    min(12%, calc(var(--spacing) * 10))
+  );
+  --_bridge-scroll-fade-size-e: var(
+    --bridge-scroll-fade-size,
+    min(12%, calc(var(--spacing) * 10))
+  );
+  --bridge-scroll-fade-inline: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--bridge-scroll-fade-s, 0px),
+    #000 calc(100% - var(--bridge-scroll-fade-e, 0px)),
+    transparent 100%
+  );
+
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    --bridge-scroll-fade-inline: linear-gradient(
+      to left,
+      transparent 0,
+      #000 var(--bridge-scroll-fade-s, 0px),
+      #000 calc(100% - var(--bridge-scroll-fade-e, 0px)),
+      transparent 100%
+    );
+  }
+
+  @supports (animation-timeline: scroll()) {
+    animation:
+      bridge-scroll-fade-reveal-s 1ms ease-in-out,
+      bridge-scroll-fade-reveal-e 1ms ease-in-out;
+    animation-timeline: scroll(self inline), scroll(self inline);
+    animation-range:
+      0 var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)),
+      calc(100% - var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)))
+        100%;
+    animation-fill-mode: both;
+  }
+}
+
+@utility bridge-soft-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-dark-300) transparent;
+
+  &::-webkit-scrollbar {
+    @apply h-1.5 w-1.5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-dark-300 rounded-full;
+  }
+
+  &::-webkit-scrollbar-button {
+    @apply hidden;
+  }
+
+  &::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+  }
+
+  @variant dark {
+    scrollbar-color: var(--color-dark-600) transparent;
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-dark-600;
+    }
+  }
+}
+
+@utility bridge-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility bridge-scroll-fade-none {
+  --bridge-scroll-fade-mask: none;
+}

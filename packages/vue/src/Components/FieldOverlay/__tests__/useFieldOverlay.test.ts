@@ -116,7 +116,8 @@ test("it should apply panel padding and layout on drawer and modal", () => {
   expect(drawerPanel).toContain("flex-col");
   expect(drawerPanel).toContain("items-stretch");
   expect(drawerPanel).toContain("max-h-[90dvh]");
-  expect(drawerPanel).toContain("overflow-x-auto");
+  expect(drawerPanel).not.toContain("overflow-x-auto");
+  expect(drawerPanel).not.toContain("bridge-scroll-fade-x");
 
   expect(modalPanel).toContain("p-0");
   expect(modalPanel).toContain("w-fit");
@@ -140,6 +141,30 @@ test("it should scroll drawer content inside the paper panel", () => {
   });
 
   expect(drawerBind.value.scroll).toBe("paper");
+});
+
+test("it should fade horizontal overflow on a nested drawer scroller", () => {
+  const { drawerScrollerBind } = mountUseFieldOverlay({
+    overlay: "drawer",
+  });
+
+  expect(drawerScrollerBind.value.class).toContain("flex");
+  expect(drawerScrollerBind.value.class).toContain("min-w-0");
+  expect(drawerScrollerBind.value.class).toContain("flex-col");
+  expect(drawerScrollerBind.value.class).toContain("overflow-x-auto");
+  expect(drawerScrollerBind.value.class).toContain("overflow-y-hidden");
+  expect(drawerScrollerBind.value.class).toContain("bridge-scroll-fade-x");
+  expect(drawerScrollerBind.value.class).toContain("bridge-hide-scrollbar");
+});
+
+test("it should merge customProps.drawerScroller onto the nested scroller", () => {
+  const { drawerScrollerBind } = mountUseFieldOverlay({
+    overlay: "drawer",
+    customProps: { drawerScroller: { class: "bg-red-50" } },
+  });
+
+  expect(drawerScrollerBind.value.class).toContain("bg-red-50");
+  expect(drawerScrollerBind.value.class).toContain("bridge-scroll-fade-x");
 });
 
 test("it should forward customProps.menu onto menuBind", () => {

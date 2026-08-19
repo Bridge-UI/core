@@ -435,7 +435,7 @@ export function useTimePanel(
       customProps.value?.column,
       {},
       cn({
-        "box-border flex h-full min-w-0 flex-1 flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-dark-300 dark:[&::-webkit-scrollbar-thumb]:bg-dark-600": true,
+        "box-border flex h-full min-w-0 flex-1 flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto bridge-scroll-fade-y bridge-hide-scrollbar": true,
         [TIME_PANEL_COLUMN_MIN_WIDTH_CLASS]: true,
         [mergedClasses.value.column ?? ""]: true,
       }),
@@ -445,6 +445,7 @@ export function useTimePanel(
   const getItemBind = (
     item: TimePanelItem,
     onSelect: (value: TimePanelItem["value"]) => void,
+    ariaLabel: string,
   ) => {
     const color = colorClass.value;
 
@@ -452,6 +453,7 @@ export function useTimePanel(
       customProps.value?.item,
       {
         type: "button" as const,
+        "aria-label": ariaLabel,
         disabled: item.disabled,
         "aria-pressed": item.selected,
         onClick: () => onSelect(item.value),
@@ -469,35 +471,51 @@ export function useTimePanel(
   };
 
   const getHourBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectHour(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectHour(value);
+        }
+      },
+      `Hour ${item.label}`,
+    );
   };
 
   const getMinuteBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectMinute(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectMinute(value);
+        }
+      },
+      `Minute ${item.label}`,
+    );
   };
 
   const getSecondBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectSecond(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectSecond(value);
+        }
+      },
+      `Second ${item.label}`,
+    );
   };
 
   const getMeridiemBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (value === "AM" || value === "PM") {
-        selectMeridiem(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (value === "AM" || value === "PM") {
+          selectMeridiem(value);
+        }
+      },
+      String(item.label),
+    );
   };
 
   const showMeridiem = computed(() => {

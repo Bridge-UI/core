@@ -70,6 +70,17 @@ test("it should keep a compact width with flexible columns by default", () => {
   expect(rootBind.value.class).not.toContain("w-full");
   expect(columnBind.value.class).toContain("flex-1");
   expect(columnBind.value.class).toContain("min-w-[3.75rem]");
+  expect(columnBind.value.class).toContain("bridge-scroll-fade-y");
+  expect(columnBind.value.class).toContain("bridge-hide-scrollbar");
+});
+
+test("it should disable the column fade when classes.column includes bridge-scroll-fade-none", () => {
+  const { columnBind } = mountUseTimePanel({
+    classes: { column: "bridge-scroll-fade-none" },
+  });
+
+  expect(columnBind.value.class).toContain("bridge-scroll-fade-y");
+  expect(columnBind.value.class).toContain("bridge-scroll-fade-none");
 });
 
 test("it should fill available width when fill is set", () => {

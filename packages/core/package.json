@@ -61,10 +61,16 @@
     "./Tokens": {
       "import": "./dist/Tokens/index.js",
       "types": "./dist/Tokens/index.d.ts"
+    },
+    "./utilities.css": {
+      "style": "./src/utilities.css",
+      "import": "./src/utilities.css",
+      "default": "./src/utilities.css"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src/utilities.css"
   ],
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",

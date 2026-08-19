@@ -2,9 +2,10 @@
 
 Switches between `Menu`, `Modal`, and `Drawer` shells for field pickers and listboxes.
 Dialog shells size to the picker: `modal` uses `w-fit` up to the viewport;
-`drawer` is full width and up to `90dvh`, and scrolls horizontally when dual
-calendars or time columns overflow. Nested pickers flush the bottom radius in a
-drawer so the shell meets the screen edge.
+`drawer` is full width and up to `90dvh`. Dual calendars and time columns that
+overflow the sheet width scroll on an inner scroller (`bridge-scroll-fade-x`).
+Vertical fade comes from `scroll="paper"`. Nested pickers flush the bottom
+radius in a drawer so the shell meets the screen edge.
 
 ## Import
 
@@ -38,7 +39,7 @@ import { FieldOverlay } from "@bridge-ui/vue/Components/FieldOverlay";
 
 ### customProps
 
-Forward props to the active shell via `customProps.menu`, `customProps.modal`, or `customProps.drawer`. Menu-only options such as `anchorEl`, `placement`, `disableAutoFocus`, and `rounded` go through `customProps.menu`.
+Forward props to the active shell via `customProps.menu`, `customProps.modal`, or `customProps.drawer`. The drawer inner scroller accepts `customProps.drawerScroller`. Menu-only options such as `anchorEl`, `placement`, `disableAutoFocus`, and `rounded` go through `customProps.menu`.
 
 ```vue
 <FieldOverlay
@@ -64,6 +65,16 @@ Forward props to the active shell via `customProps.menu`, `customProps.modal`, o
 >
   <PickerContent />
 </FieldOverlay>
+
+<FieldOverlay
+  v-model="open"
+  overlay="drawer"
+  :custom-props="{
+    drawerScroller: { class: 'bridge-scroll-fade-none' },
+  }"
+>
+  <PickerContent />
+</FieldOverlay>
 ```
 
 ### Footer close
@@ -79,10 +90,10 @@ overlay. Use the picker slot callbacks in custom footers so Apply still commits.
 
 ## Props
 
-| Prop          | Type                      | Default  | Description                                                |
-| ------------- | ------------------------- | -------- | ---------------------------------------------------------- |
-| `customProps` | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`). |
-| `overlay`     | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.       |
+| Prop          | Type                      | Default  | Description                                                                                           |
+| ------------- | ------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `customProps` | `FieldOverlayCustomProps` | —        | Extra props for nested shells (`menu`, `modal`, `drawer`) and the drawer scroller (`drawerScroller`). |
+| `overlay`     | `FieldOverlayMode`        | `"auto"` | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                                  |
 
 ### v-model
 

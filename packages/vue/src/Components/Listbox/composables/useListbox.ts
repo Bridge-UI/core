@@ -166,7 +166,8 @@ export function useListbox(
       merged.value.customProps?.scroll,
       {},
       cn({
-        "min-h-0 overflow-y-auto overscroll-contain": !disableMaxHeight,
+        "min-h-0 overflow-y-auto overscroll-contain bridge-soft-scrollbar":
+          !disableMaxHeight,
         [maxHeightClass]: !disableMaxHeight,
         [mergedClasses.value.scroll ?? ""]: true,
       }),

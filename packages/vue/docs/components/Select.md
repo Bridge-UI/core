@@ -2,6 +2,8 @@
 
 Dropdown select with single/multiple value, search, and async data.
 
+The options list uses `bridge-soft-scrollbar`. See [Scroll utilities](../ScrollUtilities.md).
+
 ## Import
 
 ```ts
