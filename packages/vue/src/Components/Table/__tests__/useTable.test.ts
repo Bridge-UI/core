@@ -39,8 +39,8 @@ test("it should expose table defaults from useTable", () => {
   expect(result.contextValue.value.striped).toBe(false);
   expect(result.contextValue.value.hoverable).toBe(false);
   expect(result.contextValue.value.stickyHeader).toBe(false);
-  expect(result.tableBind.value.class).toContain("w-full");
-  expect(result.rootBind.value.class).toContain("overflow-auto");
+  expect(result.tableBind.value.class).toContain("min-w-full");
+  expect(result.rootBind.value.class).toContain("overflow-x-auto");
 });
 
 test("it should pass striped hover and sticky flags into context", () => {
@@ -55,7 +55,9 @@ test("it should pass striped hover and sticky flags into context", () => {
   expect(result.contextValue.value.striped).toBe(true);
   expect(result.contextValue.value.hoverable).toBe(true);
   expect(result.contextValue.value.stickyHeader).toBe(true);
-  expect(result.tableBind.value.class).not.toContain("w-full");
+  expect(result.tableBind.value.class).not.toContain("min-w-full");
+  expect(result.tableBind.value.class).toContain("border-separate");
+  expect(result.rootBind.value.class).not.toContain("overflow-x-auto");
 });
 
 test("it should apply bordered chrome on the wrapper", () => {

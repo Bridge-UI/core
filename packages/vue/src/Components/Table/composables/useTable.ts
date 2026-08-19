@@ -142,6 +142,7 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
       split.value.inheritedAttrs,
       {
         class: cn({
+          "overflow-x-auto": merged.value.stickyHeader !== true,
           [get(sizeItem.value, "root") ?? ""]: true,
           [get(variantItem.value, "root") ?? ""]: true,
           [get(mergedClasses.value, "root") ?? ""]: true,
@@ -151,14 +152,19 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
   });
 
   const tableBind = computed(() => {
+    const tableVariantClass =
+      merged.value.stickyHeader === true
+        ? get(variantItem.value, "tableSticky")
+        : get(variantItem.value, "table");
+
     return mergePartBind(
       merged.value.customProps?.table,
       {},
       {
         class: cn({
-          "w-full": merged.value.full === true,
+          "min-w-full": merged.value.full === true,
           [get(sizeItem.value, "table") ?? ""]: true,
-          [get(variantItem.value, "table") ?? ""]: true,
+          [tableVariantClass ?? ""]: true,
           [get(mergedClasses.value, "table") ?? ""]: true,
         }),
       },

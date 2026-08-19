@@ -69,6 +69,8 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 
 ### Dense + sticky header
 
+`sticky-header` pins header cells to the nearest scrollport (usually the page). The wrapper skips overflow so the header can stick. For a boxed scroll area, set `overflow-auto` and a max height on `classes.root`.
+
 ```vue
 <Table size="sm" sticky-header />
 ```

@@ -109,13 +109,13 @@ test("it should stripe and hover body rows only", () => {
   const footerRow = wrapper.find("tfoot tr");
 
   expect(
-    bodyRow.classes().some((name) => name.includes("odd:bg-dark-500")),
+    bodyRow.classes().some((name) => name.includes("even:bg-dark-50")),
   ).toBe(true);
   expect(
     bodyRow.classes().some((name) => name.includes("hover:bg-dark-500")),
   ).toBe(true);
   expect(
-    headerRow.classes().some((name) => name.includes("odd:bg-dark-500")),
+    headerRow.classes().some((name) => name.includes("even:bg-dark-50")),
   ).toBe(false);
   expect(
     footerRow.classes().some((name) => name.includes("hover:bg-dark-500")),
@@ -125,7 +125,10 @@ test("it should stripe and hover body rows only", () => {
 test("it should stick header cells when stickyHeader is set", () => {
   const wrapper = mountTable({ props: { stickyHeader: true } });
 
+  expect(wrapper.find("div").classes()).not.toContain("overflow-x-auto");
+  expect(wrapper.find("table").classes()).toContain("border-separate");
   expect(wrapper.find("th").classes()).toContain("sticky");
+  expect(wrapper.find("th").classes()).toContain("backdrop-blur");
   expect(wrapper.find("td").classes()).not.toContain("sticky");
 });
 
@@ -143,11 +146,12 @@ test("it should align numeric cells to the end with tabular nums", () => {
 test("it should keep the table full width by default", () => {
   const wrapper = mountTable();
 
-  expect(wrapper.find("table").classes()).toContain("w-full");
+  expect(wrapper.find("div").classes()).toContain("overflow-x-auto");
+  expect(wrapper.find("table").classes()).toContain("min-w-full");
 });
 
 test("it should omit full width when full is false", () => {
   const wrapper = mountTable({ props: { full: false } });
 
-  expect(wrapper.find("table").classes()).not.toContain("w-full");
+  expect(wrapper.find("table").classes()).not.toContain("min-w-full");
 });
