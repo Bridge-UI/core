@@ -825,7 +825,6 @@ export interface TimeRangePickerConfigBase {
     error: boolean;
     fill: boolean;
     interval: number;
-    orientation: "vertical" | "horizontal";
     rounded: keyof TimeRounded;
     showFooter: boolean;
     showSeconds: boolean;

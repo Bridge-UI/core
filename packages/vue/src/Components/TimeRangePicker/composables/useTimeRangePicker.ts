@@ -58,7 +58,6 @@ const timeRangePickerBridgeKeys = [
   "showFooter",
   "startTitle",
   "customProps",
-  "orientation",
   "showSeconds",
   "defaultValue",
   "disableTimes",
@@ -66,7 +65,7 @@ const timeRangePickerBridgeKeys = [
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "orientation" | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -241,8 +240,16 @@ export function useTimeRangePicker(
     );
   });
 
-  const isVertical = computed(() => {
-    return merged.value.orientation === "vertical";
+  const titlesBind = computed(() => {
+    return cn({
+      "flex w-full px-2.5": true,
+    });
+  });
+
+  const titleGapBind = computed(() => {
+    return cn({
+      "w-px shrink-0": true,
+    });
   });
 
   const panelsBind = computed(() => {
@@ -250,9 +257,7 @@ export function useTimeRangePicker(
       customProps.value?.panels,
       {},
       cn({
-        "flex w-full gap-2 px-2.5": true,
-        "flex-row": !isVertical.value,
-        "flex-col": isVertical.value,
+        "flex w-full flex-row px-2.5 pb-2.5": true,
         [mergedClasses.value.panels ?? ""]: true,
       }),
     );
@@ -263,7 +268,7 @@ export function useTimeRangePicker(
       customProps.value?.start,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col pr-2.5": true,
         [mergedClasses.value.start ?? ""]: true,
       }),
     );
@@ -274,7 +279,7 @@ export function useTimeRangePicker(
       customProps.value?.end,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col pl-2.5": true,
         [mergedClasses.value.end ?? ""]: true,
       }),
     );
@@ -282,13 +287,14 @@ export function useTimeRangePicker(
 
   const titleClass = computed(() => {
     return cn({
-      "px-2 py-2 text-center text-xs font-medium tracking-wide text-dark-500 uppercase dark:text-dark-400": true,
+      "min-w-0 flex-1 px-2 py-2 text-center text-xs font-medium tracking-wide text-dark-500 uppercase dark:text-dark-400": true,
     });
   });
 
   const startTitleBind = computed(() => {
     return cn({
       [titleClass.value]: true,
+      "pr-2.5": true,
       [mergedClasses.value.startTitle ?? ""]: true,
     });
   });
@@ -296,6 +302,7 @@ export function useTimeRangePicker(
   const endTitleBind = computed(() => {
     return cn({
       [titleClass.value]: true,
+      "pl-2.5": true,
       [mergedClasses.value.endTitle ?? ""]: true,
     });
   });
@@ -321,9 +328,11 @@ export function useTimeRangePicker(
     rootBind,
     startBind,
     footerBind,
+    titlesBind,
     panelsBind,
     showFooter,
     handleApply,
+    titleGapBind,
     displayValue,
     handleCancel,
     endTitleBind,

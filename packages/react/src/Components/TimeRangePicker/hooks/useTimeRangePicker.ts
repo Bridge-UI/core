@@ -50,7 +50,6 @@ const timeRangePickerBridgeKeys = [
   "showFooter",
   "startTitle",
   "customProps",
-  "orientation",
   "showSeconds",
   "defaultValue",
   "disableTimes",
@@ -58,7 +57,7 @@ const timeRangePickerBridgeKeys = [
 
 type TimeRangePickerLibDefaults = LibDefaultsShape<
   TimeRangePickerOwnProps,
-  "ampm" | "color" | "rounded" | "interval" | "orientation" | "showSeconds"
+  "ampm" | "color" | "rounded" | "interval" | "showSeconds"
 >;
 
 type TimeRangePickerMerged = MergeLibDefaults<
@@ -211,8 +210,16 @@ export function useTimeRangePicker(
     );
   });
 
-  const isVertical = derived(() => {
-    return merged.orientation === "vertical";
+  const titlesBind = derived(() => {
+    return cn({
+      "flex w-full px-2.5": true,
+    });
+  });
+
+  const titleGapBind = derived(() => {
+    return cn({
+      "w-px shrink-0": true,
+    });
   });
 
   const panelsBind = derived(() => {
@@ -220,9 +227,7 @@ export function useTimeRangePicker(
       customProps?.panels,
       {},
       cn({
-        "flex w-full gap-2 px-2.5": true,
-        "flex-row": !isVertical,
-        "flex-col": isVertical,
+        "flex w-full flex-row px-2.5 pb-2.5": true,
         [mergedClasses.panels ?? ""]: true,
       }),
     );
@@ -233,7 +238,7 @@ export function useTimeRangePicker(
       customProps?.start,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col pr-2.5": true,
         [mergedClasses.start ?? ""]: true,
       }),
     );
@@ -244,7 +249,7 @@ export function useTimeRangePicker(
       customProps?.end,
       {},
       cn({
-        "flex min-w-0 flex-1 flex-col gap-1": true,
+        "flex min-w-0 flex-1 flex-col pl-2.5": true,
         [mergedClasses.end ?? ""]: true,
       }),
     );
@@ -252,13 +257,14 @@ export function useTimeRangePicker(
 
   const titleClass = derived(() => {
     return cn({
-      "px-2 py-2 text-center text-xs font-medium tracking-wide text-dark-500 uppercase dark:text-dark-400": true,
+      "min-w-0 flex-1 px-2 py-2 text-center text-xs font-medium tracking-wide text-dark-500 uppercase dark:text-dark-400": true,
     });
   });
 
   const startTitleBind = derived(() => {
     return cn({
       [titleClass]: true,
+      "pr-2.5": true,
       [mergedClasses.startTitle ?? ""]: true,
     });
   });
@@ -266,6 +272,7 @@ export function useTimeRangePicker(
   const endTitleBind = derived(() => {
     return cn({
       [titleClass]: true,
+      "pl-2.5": true,
       [mergedClasses.endTitle ?? ""]: true,
     });
   });
@@ -287,8 +294,10 @@ export function useTimeRangePicker(
     rootBind,
     startBind,
     footerBind,
+    titlesBind,
     panelsBind,
     handleApply,
+    titleGapBind,
     displayValue,
     handleCancel,
     endTitleBind,
