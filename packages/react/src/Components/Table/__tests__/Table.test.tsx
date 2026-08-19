@@ -87,16 +87,21 @@ test("it should stripe and hover body rows only", () => {
   const headerRow = container.querySelector("thead tr");
   const footerRow = container.querySelector("tfoot tr");
 
-  expect(bodyRows[0]?.className).toContain("odd:bg-dark-500");
+  expect(bodyRows[0]?.className).toContain("even:bg-dark-50");
   expect(bodyRows[0]?.className).toContain("hover:bg-dark-500");
-  expect(headerRow?.className).not.toContain("odd:bg-dark-500");
+  expect(headerRow?.className).not.toContain("even:bg-dark-50");
   expect(footerRow?.className).not.toContain("hover:bg-dark-500");
 });
 
 test("it should stick header cells when stickyHeader is set", () => {
   const { container } = render(<SampleTable stickyHeader />);
 
+  expect(container.firstElementChild?.className).not.toContain(
+    "overflow-x-auto",
+  );
+  expect(screen.getByRole("table").className).toContain("border-separate");
   expect(container.querySelector("th")?.className).toContain("sticky");
+  expect(container.querySelector("th")?.className).toContain("backdrop-blur");
   expect(container.querySelector("td")?.className).not.toContain("sticky");
 });
 
@@ -113,13 +118,14 @@ test("it should align numeric cells to the end with tabular nums", () => {
 });
 
 test("it should keep the table full width by default", () => {
-  render(<SampleTable />);
+  const { container } = render(<SampleTable />);
 
-  expect(screen.getByRole("table").className).toContain("w-full");
+  expect(container.firstElementChild?.className).toContain("overflow-x-auto");
+  expect(screen.getByRole("table").className).toContain("min-w-full");
 });
 
 test("it should omit full width when full is false", () => {
   render(<SampleTable full={false} />);
 
-  expect(screen.getByRole("table").className).not.toContain("w-full");
+  expect(screen.getByRole("table").className).not.toContain("min-w-full");
 });

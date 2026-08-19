@@ -388,7 +388,7 @@ export interface TableOwnProps {
   customProps?: TableCustomProps;
 
   /**
-   * Full width of the container.
+   * Stretch the table to at least the wrapper width.
    *
    * @default true
    */
@@ -409,7 +409,7 @@ export interface TableOwnProps {
   size?: MergeProps<TableSize, TableSizeOverrides>;
 
   /**
-   * Sticky `thead` inside the scroll container.
+   * Stick header cells to the top of the nearest scrollport (usually the page).
    *
    * @default false
    */
