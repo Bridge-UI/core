@@ -38,6 +38,7 @@ In templates, use kebab-case attrs (`start-icon`, `custom-props`, `error-message
 | Date-time range               | `.ai/docs/components/DateTimeRangeField.md`, `DateTimeRangePicker.md` |
 | Color                         | `.ai/docs/components/ColorField.md`, `ColorPicker.md`                 |
 | Spinner / skeleton / progress | `.ai/docs/components/Spinner.md`, `Skeleton.md`, `Progress.md`        |
+| Scroll fade / scrollbar       | `.ai/docs/ScrollUtilities.md`                                         |
 | Index                         | `.ai/docs/README.md`                                                  |
 
 ## Hard rules

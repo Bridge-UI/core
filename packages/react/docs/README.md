@@ -70,6 +70,10 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [useModalAction](./components/useModalAction.md)
 - [useSnackbarAction](./components/useSnackbarAction.md)
 
+## Theme CSS
+
+- [Scroll utilities](./ScrollUtilities.md)
+
 ## Examples (adapters)
 
 - [`examples/i18n-dictionary.ts`](./examples/i18n-dictionary.ts)

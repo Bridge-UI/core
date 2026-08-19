@@ -2,6 +2,8 @@
 
 Combobox with single/multiple value, search, async data, and optional free-solo input.
 
+The options list uses `bridge-soft-scrollbar`. See [Scroll utilities](../ScrollUtilities.md).
+
 ## Import
 
 ```ts

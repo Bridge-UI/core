@@ -96,27 +96,27 @@ import { Drawer } from "@bridge-ui/vue/Components/Drawer";
 
 ## Props
 
-| Prop                  | Type                | Default | Description                                                                                |
-| --------------------- | ------------------- | ------- | ------------------------------------------------------------------------------------------ |
-| `ariaLabel`           | `string`            | —       | Accessible name for the dialog (`aria-label`).                                             |
-| `ariaLabelledBy`      | `string`            | —       | Id of the element that labels the dialog (`aria-labelledby`).                              |
-| `autoFocus`           | `boolean`           | `false` | When true, focuses the first focusable element inside the drawer on open.                  |
-| `blur`                | `DrawerBlur`        | "none"  | Backdrop blur on the overlay.                                                              |
-| `classes`             | `DrawerClasses`     | —       | The classes to apply to the drawer.                                                        |
-| `closeOnEscape`       | `boolean`           | `true`  | Whether the drawer closes on escape key press.                                             |
-| `closeOnOverlay`      | `boolean`           | `true`  | Whether the drawer closes on overlay click.                                                |
-| `customProps`         | `DrawerCustomProps` | —       | Props forwarded to each drawer part.                                                       |
-| `disableEnforceFocus` | `boolean`           | `false` | When true, focus is not trapped inside the drawer while open.                              |
-| `disableRestoreFocus` | `boolean`           | `false` | When true, focus is not restored to the previously focused element on close.               |
-| `disableScrollLock`   | `boolean`           | `false` | When true, body scroll is not locked while the drawer is open.                             |
-| `hideBackdrop`        | `boolean`           | `false` | When true, the backdrop overlay is not rendered.                                           |
-| `keepMounted`         | `boolean`           | `false` | When true, the drawer stays mounted in the DOM after closing (hidden).                     |
-| `persistent`          | `boolean`           | `false` | When true, escape and overlay clicks do not close the drawer.                              |
-| `placement`           | `DrawerPlacement`   | "left"  | Edge the panel docks to.                                                                   |
-| `scroll`              | `DrawerScroll`      | "paper" | Where scroll happens: the page (`body`) or the drawer panel (`paper`).                     |
-| `size`                | `DrawerSize`        | "md"    | Panel size along the placement axis (width for `left`/`right`, height for `top`/`bottom`). |
-| `teleportTo`          | `string \| false`   | "body"  | Where to teleport the drawer. Pass `false` to render in place.                             |
-| `transition`          | `DrawerTransition`  | "slide" | Enter/leave animation for overlay and panel.                                               |
+| Prop                  | Type                | Default | Description                                                                                                                             |
+| --------------------- | ------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `ariaLabel`           | `string`            | —       | Accessible name for the dialog (`aria-label`).                                                                                          |
+| `ariaLabelledBy`      | `string`            | —       | Id of the element that labels the dialog (`aria-labelledby`).                                                                           |
+| `autoFocus`           | `boolean`           | `false` | When true, focuses the first focusable element inside the drawer on open.                                                               |
+| `blur`                | `DrawerBlur`        | "none"  | Backdrop blur on the overlay.                                                                                                           |
+| `classes`             | `DrawerClasses`     | —       | The classes to apply to the drawer.                                                                                                     |
+| `closeOnEscape`       | `boolean`           | `true`  | Whether the drawer closes on escape key press.                                                                                          |
+| `closeOnOverlay`      | `boolean`           | `true`  | Whether the drawer closes on overlay click.                                                                                             |
+| `customProps`         | `DrawerCustomProps` | —       | Props forwarded to each drawer part.                                                                                                    |
+| `disableEnforceFocus` | `boolean`           | `false` | When true, focus is not trapped inside the drawer while open.                                                                           |
+| `disableRestoreFocus` | `boolean`           | `false` | When true, focus is not restored to the previously focused element on close.                                                            |
+| `disableScrollLock`   | `boolean`           | `false` | When true, body scroll is not locked while the drawer is open.                                                                          |
+| `hideBackdrop`        | `boolean`           | `false` | When true, the backdrop overlay is not rendered.                                                                                        |
+| `keepMounted`         | `boolean`           | `false` | When true, the drawer stays mounted in the DOM after closing (hidden).                                                                  |
+| `persistent`          | `boolean`           | `false` | When true, escape and overlay clicks do not close the drawer.                                                                           |
+| `placement`           | `DrawerPlacement`   | "left"  | Edge the panel docks to.                                                                                                                |
+| `scroll`              | `DrawerScroll`      | "paper" | Where scroll happens: the page (`body`) or the drawer panel (`paper`). `paper` uses `bridge-scroll-fade-y` and `bridge-hide-scrollbar`. |
+| `size`                | `DrawerSize`        | "md"    | Panel size along the placement axis (width for `left`/`right`, height for `top`/`bottom`).                                              |
+| `teleportTo`          | `string \| false`   | "body"  | Where to teleport the drawer. Pass `false` to render in place.                                                                          |
+| `transition`          | `DrawerTransition`  | "slide" | Enter/leave animation for overlay and panel.                                                                                            |
 
 ### v-model
 

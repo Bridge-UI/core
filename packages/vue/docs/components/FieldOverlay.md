@@ -2,9 +2,10 @@
 
 Switches between `Menu`, `Modal`, and `Drawer` shells for field pickers and listboxes.
 Dialog shells size to the picker: `modal` uses `w-fit` up to the viewport;
-`drawer` is full width and up to `90dvh`, and scrolls horizontally when dual
-calendars or time columns overflow. Nested pickers flush the bottom radius in a
-drawer so the shell meets the screen edge.
+`drawer` is full width and up to `90dvh`. Dual calendars and time columns that
+overflow the sheet width scroll on an inner scroller (`bridge-scroll-fade-x`).
+Vertical fade comes from `scroll="paper"`. Nested pickers flush the bottom
+radius in a drawer so the shell meets the screen edge.
 
 ## Import
 
