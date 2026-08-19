@@ -10,12 +10,20 @@ test("it should render time columns", () => {
 test("it should highlight the selected hour", () => {
   cy.mount(TimePanel, { props: { value: new Date(2021, 4, 21, 14, 30) } });
 
-  cy.contains("button", "14").should("have.attr", "aria-pressed", "true");
+  cy.get('button[aria-label="Hour 14"]').should(
+    "have.attr",
+    "aria-pressed",
+    "true",
+  );
 });
 
 test("it should scroll a column and select a time", () => {
   cy.mount(TimePanel, { props: { value: new Date(2021, 4, 21, 14, 30) } });
 
-  cy.contains("button", "23").click();
-  cy.contains("button", "23").should("have.attr", "aria-pressed", "true");
+  cy.get('button[aria-label="Hour 23"]').click();
+  cy.get('button[aria-label="Hour 23"]').should(
+    "have.attr",
+    "aria-pressed",
+    "true",
+  );
 });

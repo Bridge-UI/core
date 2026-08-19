@@ -445,6 +445,7 @@ export function useTimePanel(
   const getItemBind = (
     item: TimePanelItem,
     onSelect: (value: TimePanelItem["value"]) => void,
+    ariaLabel: string,
   ) => {
     const color = colorClass.value;
 
@@ -452,6 +453,7 @@ export function useTimePanel(
       customProps.value?.item,
       {
         type: "button" as const,
+        "aria-label": ariaLabel,
         disabled: item.disabled,
         "aria-pressed": item.selected,
         onClick: () => onSelect(item.value),
@@ -469,35 +471,51 @@ export function useTimePanel(
   };
 
   const getHourBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectHour(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectHour(value);
+        }
+      },
+      `Hour ${item.label}`,
+    );
   };
 
   const getMinuteBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectMinute(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectMinute(value);
+        }
+      },
+      `Minute ${item.label}`,
+    );
   };
 
   const getSecondBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (typeof value === "number") {
-        selectSecond(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (typeof value === "number") {
+          selectSecond(value);
+        }
+      },
+      `Second ${item.label}`,
+    );
   };
 
   const getMeridiemBind = (item: TimePanelItem) => {
-    return getItemBind(item, (value) => {
-      if (value === "AM" || value === "PM") {
-        selectMeridiem(value);
-      }
-    });
+    return getItemBind(
+      item,
+      (value) => {
+        if (value === "AM" || value === "PM") {
+          selectMeridiem(value);
+        }
+      },
+      String(item.label),
+    );
   };
 
   const showMeridiem = computed(() => {
