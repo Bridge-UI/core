@@ -54,6 +54,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [Spinner](./components/Spinner.md)
 - [Stepper](./components/Stepper.md)
 - [Switch](./components/Switch.md)
+- [Table](./components/Table.md)
 - [Tabs](./components/Tabs.md)
 - [Textarea](./components/Textarea.md)
 - [TextField](./components/TextField.md)
