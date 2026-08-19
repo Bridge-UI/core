@@ -86,6 +86,9 @@ test("it should apply default scroll classes", () => {
 
   expect(result.current.scrollBind.className).toContain("max-h-60");
   expect(result.current.scrollBind.className).toContain("overflow-y-auto");
+  expect(result.current.scrollBind.className).toContain(
+    "bridge-soft-scrollbar",
+  );
 });
 
 test("it should paint a surface when overlay resolves to a dialog", () => {
@@ -153,6 +156,9 @@ test("it should disable max height when disableMaxHeight is true", () => {
 
   expect(result.current.scrollBind.className).not.toContain("max-h-60");
   expect(result.current.scrollBind.className).not.toContain("overflow-y-auto");
+  expect(result.current.scrollBind.className).not.toContain(
+    "bridge-soft-scrollbar",
+  );
 });
 
 test("it should return default size as md", () => {

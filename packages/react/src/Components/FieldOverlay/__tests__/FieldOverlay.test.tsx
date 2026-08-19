@@ -97,6 +97,27 @@ test("it should render drawer dialog when overlay is drawer", () => {
   expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 });
 
+test("it should fade horizontal overflow on a nested drawer scroller", () => {
+  render(
+    <FieldOverlay
+      show
+      overlay="drawer"
+      customProps={{ drawer: { transition: "none" } }}
+    >
+      <span>Drawer picker</span>
+    </FieldOverlay>,
+  );
+
+  const panel = document.querySelector('[role="dialog"]');
+  const scroller = panel?.querySelector(".bridge-scroll-fade-x");
+
+  expect(panel?.className).not.toContain("bridge-scroll-fade-x");
+  expect(scroller).not.toBeNull();
+  expect(scroller?.className).toContain("overflow-x-auto");
+  expect(scroller?.className).toContain("overflow-y-hidden");
+  expect(scroller?.className).toContain("bridge-hide-scrollbar");
+});
+
 test("it should resolve auto to menu on desktop", () => {
   mockViewport(1280);
 

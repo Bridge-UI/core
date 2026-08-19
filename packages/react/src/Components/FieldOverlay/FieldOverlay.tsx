@@ -14,8 +14,14 @@ import { Modal } from "@/Components/Modal";
 
 function FieldOverlay(props: FieldOverlayProps) {
   const { onShowChange } = props;
-  const { children, menuProps, modalProps, drawerProps, resolvedOverlay } =
-    useFieldOverlay(props);
+  const {
+    children,
+    menuProps,
+    modalProps,
+    drawerProps,
+    resolvedOverlay,
+    drawerScrollerClass,
+  } = useFieldOverlay(props);
 
   const footer = useMemo((): FieldOverlayFooterContextValue => {
     return {
@@ -32,7 +38,9 @@ function FieldOverlay(props: FieldOverlayProps) {
     resolvedOverlay === "modal" ? (
       <Modal {...modalProps}>{children}</Modal>
     ) : resolvedOverlay === "drawer" ? (
-      <Drawer {...drawerProps}>{children}</Drawer>
+      <Drawer {...drawerProps}>
+        <div className={drawerScrollerClass}>{children}</div>
+      </Drawer>
     ) : (
       <Menu {...menuProps}>{children}</Menu>
     );

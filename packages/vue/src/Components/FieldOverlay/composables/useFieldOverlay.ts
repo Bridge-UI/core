@@ -84,10 +84,15 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
         disableRestoreFocus: true,
         ...props.customProps?.drawer,
       },
-      // Paper already scrolls vertically. `overflow-x-auto` scrolls dual
-      // calendars / time columns when they exceed the sheet width.
-      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch overflow-x-auto p-0",
+      "flex h-auto max-h-[90dvh] w-full flex-col items-stretch p-0",
     );
+  });
+
+  const drawerScrollerClass = computed(() => {
+    return cn({
+      "min-w-0 w-full overflow-x-auto overflow-y-hidden bridge-scroll-fade-x bridge-hide-scrollbar":
+        true,
+    });
   });
 
   return {
@@ -95,6 +100,7 @@ export function useFieldOverlay(props: FieldOverlayOwnProps) {
     modalBind,
     drawerBind,
     resolvedOverlay,
+    drawerScrollerClass,
   };
 }
 

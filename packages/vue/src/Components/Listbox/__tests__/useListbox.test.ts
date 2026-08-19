@@ -103,6 +103,7 @@ test("it should apply default scroll classes", () => {
 
   expect(scrollBind.value.class).toContain("max-h-60");
   expect(scrollBind.value.class).toContain("overflow-y-auto");
+  expect(scrollBind.value.class).toContain("bridge-soft-scrollbar");
 });
 
 test("it should paint a surface when overlay resolves to a dialog", () => {
@@ -162,6 +163,7 @@ test("it should disable max height when disableMaxHeight is true", () => {
 
   expect(scrollBind.value.class).not.toContain("max-h-60");
   expect(scrollBind.value.class).not.toContain("overflow-y-auto");
+  expect(scrollBind.value.class).not.toContain("bridge-soft-scrollbar");
 });
 
 test("it should apply scroll classes when props are reactive like defineProps", () => {

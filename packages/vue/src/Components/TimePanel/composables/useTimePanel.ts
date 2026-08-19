@@ -435,7 +435,7 @@ export function useTimePanel(
       customProps.value?.column,
       {},
       cn({
-        "box-border flex h-full min-w-0 flex-1 flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-corner]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-dark-300 dark:[&::-webkit-scrollbar-thumb]:bg-dark-600": true,
+        "box-border flex h-full min-w-0 flex-1 flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto bridge-scroll-fade-y bridge-hide-scrollbar": true,
         [TIME_PANEL_COLUMN_MIN_WIDTH_CLASS]: true,
         [mergedClasses.value.column ?? ""]: true,
       }),

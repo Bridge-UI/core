@@ -26,8 +26,13 @@ const props = withDefaults(defineProps<FieldOverlayOwnProps>(), {
 
 const model = defineModel<boolean>({ default: false });
 
-const { menuBind, modalBind, drawerBind, resolvedOverlay } =
-  useFieldOverlay(props);
+const {
+  menuBind,
+  modalBind,
+  drawerBind,
+  resolvedOverlay,
+  drawerScrollerClass,
+} = useFieldOverlay(props);
 
 provide(FIELD_OVERLAY_INJECTION_KEY, {
   apply: () => {
@@ -75,6 +80,8 @@ function handleClose() {
     v-on:close="handleClose"
     v-on:show-change="handleShowChange"
   >
-    <slot />
+    <div :class="drawerScrollerClass">
+      <slot />
+    </div>
   </Drawer>
 </template>

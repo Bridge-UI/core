@@ -338,7 +338,8 @@ export function useDrawer(
           "relative rounded-none": true,
           [placementPanelClass.value ?? ""]: true,
           [sizeClass.value ?? ""]: true,
-          "overflow-y-auto": scrollMode.value === "paper",
+          "overflow-y-auto bridge-scroll-fade-y bridge-hide-scrollbar":
+            scrollMode.value === "paper",
           [panelTransitionClass.value]: transitionEnabled.value,
           [get(mergedClasses.value, "panel") ?? ""]: true,
         }),

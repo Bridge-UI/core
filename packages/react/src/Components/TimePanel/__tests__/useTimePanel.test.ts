@@ -62,6 +62,22 @@ test("it should keep a compact width with flexible columns by default", () => {
   expect(result.current.rootBind.className).not.toContain("w-full");
   expect(result.current.columnBind.className).toContain("flex-1");
   expect(result.current.columnBind.className).toContain("min-w-[3.75rem]");
+  expect(result.current.columnBind.className).toContain("bridge-scroll-fade-y");
+  expect(result.current.columnBind.className).toContain(
+    "bridge-hide-scrollbar",
+  );
+});
+
+test("it should disable the column fade when classes.column includes bridge-scroll-fade-none", () => {
+  const { result } = renderUseTimePanel({
+    value: new Date(2021, 4, 21, 9, 30),
+    classes: { column: "bridge-scroll-fade-none" },
+  });
+
+  expect(result.current.columnBind.className).toContain("bridge-scroll-fade-y");
+  expect(result.current.columnBind.className).toContain(
+    "bridge-scroll-fade-none",
+  );
 });
 
 test("it should fill available width when fill is set", () => {

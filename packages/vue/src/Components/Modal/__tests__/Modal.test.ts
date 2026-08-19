@@ -536,5 +536,7 @@ test("it should scroll inside panel when scroll is paper", () => {
   const panel = document.body.querySelector('[role="dialog"]');
 
   expect(panel?.className).toContain("overflow-y-auto");
+  expect(panel?.className).toContain("bridge-scroll-fade-y");
+  expect(panel?.className).toContain("bridge-hide-scrollbar");
   expect(panel?.className).toContain("max-h-[calc(100dvh-2rem)]");
 });

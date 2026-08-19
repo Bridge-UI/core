@@ -534,7 +534,8 @@ export function useModal(
         className: cn({
           "relative w-full": true,
           [sizeClass ?? ""]: true,
-          "max-h-[calc(100dvh-2rem)] overflow-y-auto": scrollMode === "paper",
+          "max-h-[calc(100dvh-2rem)] overflow-y-auto bridge-scroll-fade-y bridge-hide-scrollbar":
+            scrollMode === "paper",
           [panelTransitionClass]: transitionEnabled,
           [get(mergedClasses, "panel") ?? ""]: true,
         }),
