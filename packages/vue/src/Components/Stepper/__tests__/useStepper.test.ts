@@ -42,8 +42,8 @@ function mountUseStepper(
 test("it should expose context defaults from useStepper", () => {
   const { result } = mountUseStepper({}, ref(0));
 
-  expect(result.contextValue.value.activeStep).toBe(0);
   expect(result.contextValue.value.linear).toBe(true);
+  expect(result.contextValue.value.activeStep).toBe(0);
   expect(result.contextValue.value.orientation).toBe("horizontal");
 });
 
