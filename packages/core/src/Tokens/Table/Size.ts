@@ -18,7 +18,7 @@ export interface TableSizeItem {
   "head": string;
 
   /**
-   * Classes for the overflow wrapper.
+   * Classes for the wrapper around `<table>`.
    */
   "root": string;
 
@@ -55,22 +55,25 @@ export const sizeProps: TableSize = {
   "md": {
     "root": "",
     "table": "text-sm",
-    "head": "px-3 py-2.5 text-sm font-semibold",
+    "head": "px-3 py-3.5 text-sm font-semibold",
     "caption": "py-2 text-sm text-dark-500 dark:text-dark-400",
-    "cell": "px-3 py-2.5 text-sm text-dark-700 dark:text-dark-200",
+    "cell":
+      "whitespace-nowrap px-3 py-4 text-sm text-dark-500 dark:text-dark-400",
   },
   "sm": {
     "root": "",
     "table": "text-xs",
-    "head": "px-2 py-1.5 text-xs font-semibold",
+    "head": "px-2 py-2 text-xs font-semibold",
     "caption": "py-1.5 text-xs text-dark-500 dark:text-dark-400",
-    "cell": "px-2 py-1.5 text-xs text-dark-700 dark:text-dark-200",
+    "cell":
+      "whitespace-nowrap px-2 py-2.5 text-xs text-dark-500 dark:text-dark-400",
   },
   "lg": {
     "root": "",
     "table": "text-base",
-    "head": "px-4 py-3 text-base font-semibold",
+    "head": "px-4 py-4 text-base font-semibold",
     "caption": "py-2.5 text-base text-dark-500 dark:text-dark-400",
-    "cell": "px-4 py-3 text-base text-dark-700 dark:text-dark-200",
+    "cell":
+      "whitespace-nowrap px-4 py-4 text-base text-dark-500 dark:text-dark-400",
   },
 };
