@@ -60,7 +60,7 @@ test("it should call onChange when a range is selected", () => {
   expect(onChange).toHaveBeenCalled();
 });
 
-test("it should highlight the end month when opening from the end month selector", () => {
+test("it should highlight the start month when opening from the end month selector", () => {
   render(
     <CalendarRange
       onViewDateChange={() => {}}
@@ -70,14 +70,17 @@ test("it should highlight the end month when opening from the end month selector
 
   fireEvent.click(screen.getByRole("button", { name: "Select end month" }));
 
+  expect(screen.getByRole("button", { name: "Select month" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Select end month" })).toBeTruthy();
+
   const june = screen.getByRole("button", { name: /june/i });
   const may = screen.getByRole("button", { name: /may/i });
 
-  expect(june.getAttribute("aria-pressed")).toBe("true");
-  expect(may.getAttribute("aria-pressed")).toBe("false");
+  expect(may.getAttribute("aria-pressed")).toBe("true");
+  expect(june.getAttribute("aria-pressed")).toBe("false");
 });
 
-test("it should move the end panel when selecting a month from the end selector", () => {
+test("it should apply the selected month to the start calendar from either selector", () => {
   const onViewDateChange = vi.fn();
 
   render(
@@ -92,55 +95,7 @@ test("it should move the end panel when selecting a month from the end selector"
 
   expect(onViewDateChange).toHaveBeenCalled();
   const next = onViewDateChange.mock.calls.at(-1)?.[0] as Date;
-  // End month August => start viewDate is July (month index 6)
-  expect(next.getMonth()).toBe(6);
-});
-
-test("it should update uncontrolled end month from the end selector", () => {
-  render(
-    <CalendarRange
-      defaultValue={[new Date(2021, 4, 1), new Date(2021, 4, 10)]}
-    />,
-  );
-
-  expect(
-    screen.getByRole("button", { name: "Select month" }).textContent,
-  ).toContain("May");
-  expect(
-    screen.getByRole("button", { name: "Select end month" }).textContent,
-  ).toContain("June");
-
-  fireEvent.click(screen.getByRole("button", { name: "Select end month" }));
-  fireEvent.click(screen.getByRole("button", { name: /august/i }));
-
-  expect(
-    screen.getByRole("button", { name: "Select month" }).textContent,
-  ).toContain("July");
-  expect(
-    screen.getByRole("button", { name: "Select end month" }).textContent,
-  ).toContain("August");
-});
-
-test("it should switch the highlighted month when opening the other selector", () => {
-  render(
-    <CalendarRange
-      onViewDateChange={() => {}}
-      viewDate={new Date(2021, 4, 1)}
-    />,
-  );
-
-  fireEvent.click(screen.getByRole("button", { name: "Select month" }));
-  expect(
-    screen.getByRole("button", { name: /may/i }).getAttribute("aria-pressed"),
-  ).toBe("true");
-
-  fireEvent.click(screen.getByRole("button", { name: "Select end month" }));
-  expect(
-    screen.getByRole("button", { name: /june/i }).getAttribute("aria-pressed"),
-  ).toBe("true");
-  expect(
-    screen.getByRole("button", { name: /may/i }).getAttribute("aria-pressed"),
-  ).toBe("false");
+  expect(next.getMonth()).toBe(7);
 });
 
 test("it should update uncontrolled start month from the start selector", () => {
@@ -161,17 +116,27 @@ test("it should update uncontrolled start month from the start selector", () => 
   ).toContain("September");
 });
 
-test("it should keep end month in the header when horizontal", () => {
-  const { container } = render(<CalendarRange orientation="horizontal" />);
+test("it should keep end month over the end calendar when horizontal", () => {
+  render(
+    <CalendarRange
+      orientation="horizontal"
+      onViewDateChange={() => {}}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
 
-  const header = container.firstElementChild?.firstElementChild;
-  expect(
-    header?.querySelector('[aria-label="Select end month"]'),
-  ).not.toBeNull();
+  expect(screen.getByRole("separator")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Select end month" })).toBeTruthy();
 });
 
 test("it should move end month below the start panel when vertical", () => {
-  const { container } = render(<CalendarRange orientation="vertical" />);
+  const { container } = render(
+    <CalendarRange
+      orientation="vertical"
+      onViewDateChange={() => {}}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
 
   const header = container.firstElementChild?.firstElementChild;
   expect(header?.querySelector('[aria-label="Select end month"]')).toBeNull();

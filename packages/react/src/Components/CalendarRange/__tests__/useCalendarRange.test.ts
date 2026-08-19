@@ -35,7 +35,7 @@ test("it should default end view one month after start", () => {
   expect(result.current.endViewDate.getMonth()).toBe(5);
 });
 
-test("it should expose end month selector bind", () => {
+test("it should expose the end month selector bind", () => {
   const { result } = renderUseCalendarRange({
     onViewDateChange: () => {},
     viewDate: new Date(2021, 4, 1),
@@ -51,17 +51,22 @@ test("it should default to horizontal orientation", () => {
   const { result } = renderUseCalendarRange();
 
   expect(result.current.isVertical).toBe(false);
+  expect(result.current.monthYearBind).toContain("absolute");
   expect(result.current.endBind.className).toContain("flex-1");
   expect(result.current.merged.orientation).toBe("horizontal");
   expect(result.current.startBind.className).toContain("flex-1");
+  expect(result.current.bodyBind.className).toContain("relative");
   expect(result.current.monthsBind.className).toContain("flex-1");
   expect(result.current.panelsBind.className).toContain("w-full");
   expect(result.current.rootBind.className).toContain("min-w-max");
   expect(result.current.startBind.className).toContain("min-w-72");
+  expect(result.current.endHeaderBind.className).toContain("pl-4");
   expect(result.current.panelsBind.className).toContain("flex-row");
   expect(result.current.rootBind.className).not.toContain("w-full");
+  expect(result.current.endHeaderBind.className).toContain("flex-1");
+  expect(result.current.startHeaderBind.className).toContain("pr-4");
   expect(result.current.startBind.className).not.toContain("min-w-0");
-  expect(result.current.monthsBind.className).toContain("justify-between");
+  expect(result.current.monthsBind.className).toContain("justify-center");
 });
 
 test("it should fill available width when fill is set", () => {
@@ -91,8 +96,10 @@ test("it should stack panels when orientation is vertical", () => {
   expect(result.current.rootBind.className).toContain("min-w-max");
   expect(result.current.startBind.className).toContain("min-w-72");
   expect(result.current.panelsBind.className).toContain("flex-col");
-  expect(result.current.monthsBind.className).toContain("justify-start");
+  expect(result.current.endHeaderBind.className).not.toContain("flex-1");
+  expect(result.current.monthsBind.className).toContain("justify-center");
   expect(result.current.rootBind.className.split(/\s+/)).toContain("w-fit");
-  expect(result.current.monthsBind.className).not.toContain("justify-between");
+  expect(result.current.endHeaderBind.className).toContain("justify-center");
   expect(result.current.rootBind.className.split(/\s+/)).not.toContain("w-72");
+  expect(result.current.monthsBind.className).not.toContain("justify-between");
 });

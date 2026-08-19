@@ -1,7 +1,8 @@
 # CalendarRange
 
-Dual-month calendar for selecting a date range. Shared year/month selectors with
-two date panels (`orientation="horizontal"` side-by-side, or `"vertical"` stacked).
+Dual-month calendar for selecting a date range. Year sits on the left and nav
+on the right; month selectors sit inward from the header midpoint
+(`orientation="horizontal"` side-by-side, or `"vertical"` stacked).
 
 ## Import
 
@@ -28,7 +29,7 @@ import { CalendarRange } from "@bridge-ui/vue/Components/CalendarRange";
 ```vue
 <CalendarRange
   :custom-props="{
-    panels: { class: 'gap-4' },
+    startHeader: { class: 'pr-2' },
     root: { 'data-testid': 'calendar-range' },
   }"
 />

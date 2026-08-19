@@ -86,11 +86,6 @@ const {
           :disable-years="merged.disableYears"
           :disable-months="merged.disableMonths"
           :hide-outside-days="merged.hideOutsideDays"
-          :custom-props="{
-            end: { class: 'pr-2.5' },
-            start: { class: 'pr-2.5' },
-            panels: { class: 'gap-0' },
-          }"
         >
           <template #day="cell">
             <slot name="day" v-bind="cell">{{ cell.label }}</slot>

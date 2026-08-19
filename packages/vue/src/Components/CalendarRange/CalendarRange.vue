@@ -16,6 +16,7 @@ import type {
 } from "@/Components/CalendarRange/calendarRange.types";
 import { useCalendarRange } from "@/Components/CalendarRange/composables/useCalendarRange";
 import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
+import { Divider } from "@/Components/Divider";
 import { Icon } from "@/Components/Icon";
 
 defineOptions({ inheritAttrs: false });
@@ -46,7 +47,6 @@ const {
   endViewDate,
   previewDate,
   navIconBind,
-  monthTarget,
   handleChange,
   yearPageSize,
   endMonthLabel,
@@ -57,6 +57,7 @@ const {
   monthPanelYear,
   todayButtonBind,
   monthPanelValue,
+  startHeaderBind,
   yearSelectorBind,
   handleYearSelect,
   showYearSelector,
@@ -93,66 +94,124 @@ function chevronClass(open: boolean) {
 <template>
   <div v-bind="rootBind">
     <div v-bind="headerBind">
-      <div class="flex shrink-0 items-center justify-start">
-        <button v-if="showYearSelector" v-bind="yearSelectorBind">
-          <span>{{ yearLabel }}</span>
+      <div
+        v-if="view === 'year' || (isVertical && view === 'date')"
+        class="grid w-full grid-cols-[1fr_auto_1fr] items-center"
+      >
+        <div class="flex justify-start">
+          <button v-if="showYearSelector" v-bind="yearSelectorBind">
+            <span>{{ yearLabel }}</span>
 
-          <Icon
-            size="2xs"
-            icon="chevronDown"
-            v-bind="navIconBind"
-            :class="chevronClass(view === 'year')"
-          />
-        </button>
-      </div>
-
-      <div v-bind="monthsBind">
-        <button v-if="showMonthSelector" v-bind="monthSelectorBind">
-          <span>{{ monthLabel }}</span>
-
-          <Icon
-            size="2xs"
-            icon="chevronDown"
-            v-bind="navIconBind"
-            :class="chevronClass(view === 'month' && monthTarget === 'start')"
-          />
-        </button>
-
-        <button
-          v-bind="endMonthSelectorBind"
-          v-if="showMonthSelector && !isVertical"
-        >
-          <span>{{ endMonthLabel }}</span>
-
-          <Icon
-            size="2xs"
-            icon="chevronDown"
-            v-bind="navIconBind"
-            :class="chevronClass(view === 'month' && monthTarget === 'end')"
-          />
-        </button>
-      </div>
-
-      <div class="flex shrink-0 items-center justify-end">
-        <div class="flex shrink-0 items-center">
-          <button v-bind="previousButtonBind">
-            <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
-          </button>
-
-          <button v-bind="todayButtonBind">
-            <span class="size-2 rounded-full bg-slate-600 dark:bg-slate-300" />
-          </button>
-
-          <button v-bind="nextButtonBind">
-            <Icon size="sm" icon="chevronRight" v-bind="navIconBind" />
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              v-bind="navIconBind"
+              :class="chevronClass(view === 'year')"
+            />
           </button>
         </div>
+
+        <div v-bind="monthsBind">
+          <button
+            v-bind="monthSelectorBind"
+            v-if="showMonthSelector && view === 'date'"
+          >
+            <span>{{ monthLabel }}</span>
+
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              v-bind="navIconBind"
+              :class="chevronClass(false)"
+            />
+          </button>
+        </div>
+
+        <div class="flex justify-end">
+          <div class="flex shrink-0 items-center">
+            <button v-bind="previousButtonBind">
+              <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
+            </button>
+
+            <button v-bind="todayButtonBind">
+              <span
+                class="size-2 rounded-full bg-slate-600 dark:bg-slate-300"
+              />
+            </button>
+
+            <button v-bind="nextButtonBind">
+              <Icon size="sm" icon="chevronRight" v-bind="navIconBind" />
+            </button>
+          </div>
+        </div>
       </div>
+
+      <template v-else>
+        <div v-bind="startHeaderBind">
+          <button v-if="showYearSelector" v-bind="yearSelectorBind">
+            <span>{{ yearLabel }}</span>
+
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              v-bind="navIconBind"
+              :class="chevronClass(false)"
+            />
+          </button>
+
+          <div class="ml-auto">
+            <button v-if="showMonthSelector" v-bind="monthSelectorBind">
+              <span>{{ monthLabel }}</span>
+
+              <Icon
+                size="2xs"
+                icon="chevronDown"
+                v-bind="navIconBind"
+                :class="chevronClass(view === 'month')"
+              />
+            </button>
+          </div>
+        </div>
+
+        <div v-bind="endHeaderBind">
+          <button v-if="showMonthSelector" v-bind="endMonthSelectorBind">
+            <span>{{ endMonthLabel }}</span>
+
+            <Icon
+              size="2xs"
+              icon="chevronDown"
+              v-bind="navIconBind"
+              :class="chevronClass(view === 'month')"
+            />
+          </button>
+
+          <div class="ml-auto">
+            <div class="flex shrink-0 items-center">
+              <button v-bind="previousButtonBind">
+                <Icon size="sm" icon="chevronLeft" v-bind="navIconBind" />
+              </button>
+
+              <button v-bind="todayButtonBind">
+                <span
+                  class="size-2 rounded-full bg-slate-600 dark:bg-slate-300"
+                />
+              </button>
+
+              <button v-bind="nextButtonBind">
+                <Icon size="sm" icon="chevronRight" v-bind="navIconBind" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
     <div v-bind="bodyBind">
-      <div v-bind="panelsBind" v-if="view === 'date'">
-        <div class="flex min-w-max flex-1 items-stretch">
+      <div v-bind="panelsBind">
+        <div
+          :class="isVertical ? 'pb-2.5' : undefined"
+          class="flex min-w-max flex-1 items-stretch"
+        >
           <div v-bind="startBind">
             <CalendarDate
               v-bind="shared"
@@ -179,59 +238,71 @@ function chevronClass(open: boolean) {
           <slot name="startAside" />
         </div>
 
-        <div class="flex min-w-max flex-1 items-stretch">
-          <div v-bind="endBind">
-            <div v-bind="endHeaderBind" v-if="isVertical && showMonthSelector">
-              <button v-bind="endMonthSelectorBind">
-                <span>{{ endMonthLabel }}</span>
+        <Divider
+          :class="isVertical ? 'mx-2.5' : undefined"
+          :orientation="isVertical ? 'horizontal' : 'vertical'"
+        />
 
-                <Icon
-                  size="2xs"
-                  icon="chevronDown"
-                  v-bind="navIconBind"
-                  :class="chevronClass(false)"
-                />
-              </button>
-            </div>
+        <div
+          class="flex min-w-max flex-1 flex-col"
+          :class="isVertical ? 'pt-2.5' : undefined"
+        >
+          <div
+            v-bind="endHeaderBind"
+            v-if="isVertical && view === 'date' && showMonthSelector"
+          >
+            <button v-bind="endMonthSelectorBind">
+              <span>{{ endMonthLabel }}</span>
 
-            <CalendarDate
-              v-bind="shared"
-              range
-              :value="value"
-              :view-date="endViewDate"
-              v-on:change="handleChange"
-              :preview-date="previewDate"
-              :start-of-week="merged.startOfWeek"
-              :disable-dates="merged.disableDates"
-              :disable-years="merged.disableYears"
-              :hide-weekdays="merged.hideWeekdays"
-              :disable-months="merged.disableMonths"
-              :hide-outside-days="merged.hideOutsideDays"
-              v-on:view-date-change="handleEndViewDateChange"
-              v-on:preview-date-change="handlePreviewDateChange"
-            >
-              <template #day="cell">
-                <slot name="day" v-bind="cell">{{ cell.label }}</slot>
-              </template>
-            </CalendarDate>
+              <Icon
+                size="2xs"
+                icon="chevronDown"
+                v-bind="navIconBind"
+                :class="chevronClass(false)"
+              />
+            </button>
           </div>
 
-          <slot name="endAside" />
+          <div class="flex min-w-max flex-1 items-stretch">
+            <div v-bind="endBind">
+              <CalendarDate
+                v-bind="shared"
+                range
+                :value="value"
+                :view-date="endViewDate"
+                v-on:change="handleChange"
+                :preview-date="previewDate"
+                :start-of-week="merged.startOfWeek"
+                :disable-dates="merged.disableDates"
+                :disable-years="merged.disableYears"
+                :hide-weekdays="merged.hideWeekdays"
+                :disable-months="merged.disableMonths"
+                :hide-outside-days="merged.hideOutsideDays"
+                v-on:view-date-change="handleEndViewDateChange"
+                v-on:preview-date-change="handlePreviewDateChange"
+              >
+                <template #day="cell">
+                  <slot name="day" v-bind="cell">{{ cell.label }}</slot>
+                </template>
+              </CalendarDate>
+            </div>
+
+            <slot name="endAside" />
+          </div>
         </div>
       </div>
 
-      <div :class="monthYearBind" v-else-if="view === 'month'">
+      <div :class="monthYearBind" v-if="view === 'month'">
         <CalendarMonth
           v-bind="shared"
-          :key="monthTarget"
           :year="monthPanelYear"
           :value="monthPanelValue"
           v-on:change="handleMonthSelect"
           :disable-months="merged.disableMonths"
           :classes="{
-            root: 'h-full',
+            root: 'h-full min-h-0 flex-1',
             grid: 'h-full auto-rows-fr',
-            month: 'min-h-16',
+            month: 'min-h-0',
           }"
         />
       </div>
@@ -245,9 +316,9 @@ function chevronClass(open: boolean) {
           v-on:change="handleYearSelect"
           :disable-years="merged.disableYears"
           :classes="{
-            root: 'h-full',
+            root: 'h-full min-h-0 flex-1',
             grid: 'h-full auto-rows-fr',
-            year: 'min-h-16',
+            year: 'min-h-0',
           }"
         />
       </div>
