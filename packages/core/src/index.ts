@@ -83,6 +83,7 @@ export type {
   TabItemConfigOverrides,
   TabListConfigOverrides,
   TabPanelConfigOverrides,
+  TableConfigOverrides,
   TabsConfigOverrides,
   TextFieldConfigOverrides,
   TextareaConfigOverrides,
@@ -691,6 +692,19 @@ export type {
   SwitchSize,
   SwitchSizeItem,
 } from "@/Tokens/Switch";
+export {
+  alignProps as tableAlignProps,
+  sizeProps as tableSizeProps,
+  variantProps as tableVariantProps,
+} from "@/Tokens/Table";
+export type {
+  TableAlign,
+  TableAlignItem,
+  TableSize,
+  TableSizeItem,
+  TableVariant,
+  TableVariantItem,
+} from "@/Tokens/Table";
 export {
   colorProps as tabsColorProps,
   orientationProps as tabsOrientationProps,

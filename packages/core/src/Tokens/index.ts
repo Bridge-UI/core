@@ -345,6 +345,19 @@ export type {
   SwitchSizeItem,
 } from "@/Tokens/Switch";
 export {
+  alignProps as tableAlignProps,
+  sizeProps as tableSizeProps,
+  variantProps as tableVariantProps,
+} from "@/Tokens/Table";
+export type {
+  TableAlign,
+  TableAlignItem,
+  TableSize,
+  TableSizeItem,
+  TableVariant,
+  TableVariantItem,
+} from "@/Tokens/Table";
+export {
   colorProps as tabsColorProps,
   orientationProps as tabsOrientationProps,
   sizeProps as tabsSizeProps,
