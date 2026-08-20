@@ -22,9 +22,6 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 export const DATATABLE_STICKY_WIDTH_PX = 160;
 
 /**
- * Pagination variant that pairs with a DataTable chrome variant.
- */
-/**
  * Pagination region alignment (`justify-*`) for `paginationAlign`.
  */
 export const DATATABLE_PAGINATION_ALIGN = {
@@ -420,7 +417,7 @@ export function getDataTableColumnAccessor<T>(
 export function getDataTableDefaultCellContent(
   accessor: unknown,
 ): null | string {
-  if (accessor == null || accessor === "") {
+  if (isNil(accessor) || accessor === "") {
     return null;
   }
 
