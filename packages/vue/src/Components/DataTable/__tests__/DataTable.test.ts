@@ -75,8 +75,9 @@ test("it should emit update:sorting when a sortable header is clicked", async ()
     props: { rows, columns },
   });
 
-  await wrapper.find("th button").trigger("click");
+  await wrapper.find("th[aria-sort]").trigger("click");
 
+  expect(wrapper.find("th[aria-sort]").classes()).toContain("cursor-pointer");
   expect(wrapper.emitted("update:sorting")?.[0]).toEqual([
     { id: "role", desc: false },
   ]);
@@ -139,12 +140,30 @@ test("it should show the empty slot when there are no rows", () => {
   expect(wrapper.text()).toContain("No users");
 });
 
+test("it should render a default empty state", () => {
+  const wrapper = mountDataTable({
+    props: { columns, rows: [] },
+  });
+
+  expect(wrapper.text()).toContain("No data");
+});
+
+test("it should render the footer slot below the table", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+    slots: { footer: "Here is footer" },
+  });
+
+  expect(wrapper.text()).toContain("Here is footer");
+});
+
 test("it should mark the table busy when loading", () => {
   const wrapper = mountDataTable({
     props: { rows, columns, loading: true },
   });
 
   expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
+  expect(wrapper.text()).toContain("Ada Lovelace");
 });
 
 test("it should emit a replaced selection in single mode", async () => {
@@ -272,6 +291,12 @@ test("it should pin a sticky start column", () => {
     .find((header) => header.text().includes("Name"));
 
   expect((nameHeader?.element as HTMLElement).style.left).toBe("0px");
+  expect(
+    nameHeader
+      ?.classes()
+      .some((name) => name.includes("after:translate-x-full")),
+  ).toBe(false);
+  expect(wrapper.find("table").classes()).toContain("border-separate");
 });
 
 test("it should truncate ellipsis cells", () => {
@@ -359,6 +384,46 @@ test("it should render expanded slot content", () => {
   expect(wrapper.text()).toContain("Detail Ada Lovelace");
 });
 
+test("it should omit the expand cell border when collapsed", () => {
+  const wrapper = mountDataTable({
+    slots: {
+      expanded: ({ row }: { row: User }) => `Detail ${row.name}`,
+    },
+    props: {
+      rows,
+      columns,
+      expanded: [],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  const expandCell = wrapper
+    .findAll("td")
+    .find((cell) => cell.attributes("colspan"));
+
+  expect(expandCell?.classes()).toContain("border-0");
+});
+
+test("it should keep the expand cell border when open", () => {
+  const wrapper = mountDataTable({
+    slots: {
+      expanded: ({ row }: { row: User }) => `Detail ${row.name}`,
+    },
+    props: {
+      rows,
+      columns,
+      expanded: ["1"],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  const expandCell = wrapper
+    .findAll("td")
+    .find((cell) => cell.attributes("colspan"));
+
+  expect(expandCell?.classes()).not.toContain("border-0");
+});
+
 test("it should render a summary footer", () => {
   const wrapper = mountDataTable({
     props: {
@@ -400,7 +465,9 @@ test("it should stick header cells when stickyHeader is set", () => {
   });
 
   expect(wrapper.find("th").classes()).toContain("sticky");
+  expect(wrapper.find("th").classes()).toContain("bg-dark-100");
   expect(wrapper.find("th").classes()).not.toContain("overflow-hidden");
+  expect((wrapper.find("th").element as HTMLElement).style.top).toBe("0px");
   expect(wrapper.find("table").classes()).toContain("border-separate");
   expect(wrapper.find("table").element.parentElement?.className).not.toContain(
     "overflow-x-auto",
@@ -414,6 +481,25 @@ test("it should box sticky header overflow on the table wrapper", () => {
       columns,
       stickyHeader: "boxed",
       classes: { wrapper: "max-h-96" },
+    },
+  });
+
+  expect(wrapper.find("th").classes()).toContain("sticky");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "overflow-auto",
+  );
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "max-h-96",
+  );
+});
+
+test("it should box sticky header overflow from classes.root", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      stickyHeader: "boxed",
+      classes: { root: "max-h-96" },
     },
   });
 

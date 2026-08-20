@@ -29,10 +29,6 @@ const emit = defineEmits<{
 const ariaLabel = computed(() => {
   return props.kind === "page" ? "Select all rows" : "Select row";
 });
-
-const radioModel = computed(() => {
-  return props.checked ? props.value : undefined;
-});
 </script>
 
 <template>
@@ -54,8 +50,8 @@ const radioModel = computed(() => {
     :value="value"
     hide-error-message
     :aria-label="ariaLabel"
-    :model-value="radioModel"
     v-bind="radioProps"
+    :model-value="checked ? value : ''"
     v-on:update:model-value="() => emit('change', true)"
   />
 </template>

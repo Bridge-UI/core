@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, and `hoverable` are forwarded to `Table`. Chrome tokens (`size`, `variant`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, `hoverable`, and `rounded` are forwarded to `Table`. Chrome tokens (`size`, `variant`, `rounded`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -52,7 +52,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable :full="false" :rows="users" :columns="columns" />
 ```
 
-`sticky-header` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper`:
+`sticky-header` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper` or `classes.root`:
 
 ```vue
 <DataTable sticky-header :rows="users" :columns="columns" />
@@ -120,11 +120,14 @@ When `page` and `page-count` are set, DataTable does not sort or filter `rows` l
 />
 ```
 
-### Empty and loading
+### Empty, loading, and footer
+
+Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the table visible and overlays a spinner (`#loading` replaces the spinner). `#footer` renders below the table, above pagination:
 
 ```vue
 <DataTable :rows="[]" :columns="columns" :loading="isLoading">
   <template #empty>No users</template>
+  <template #footer>Here is footer</template>
 </DataTable>
 ```
 

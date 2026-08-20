@@ -4,6 +4,7 @@ import { computed, useId, useSlots, type VNodeChild } from "vue";
 
 // ** Core Imports
 import type { DataTableFilters } from "@bridge-ui/core/Domain";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useDataTable } from "@/Components/DataTable/composables/useDataTable";
@@ -75,7 +76,9 @@ const {
   rootBind,
   emptyBind,
   showEmpty,
+  showFooter,
   tableProps,
+  footerBind,
   getHeadBind,
   headerViews,
   loadingBind,
@@ -88,8 +91,8 @@ const {
   getHeadAlign,
   getCellAlign,
   onTogglePage,
-  onToggleSort,
   summaryCells,
+  expandEnabled,
   paginationBind,
   selectAllState,
   showPagination,
@@ -105,6 +108,7 @@ const {
   {
     size: "md",
     full: true,
+    rounded: "lg",
     loading: false,
     striped: false,
     variant: "plain",
@@ -169,163 +173,193 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       />
     </div>
 
-    <Table v-bind="tableProps">
-      <TableHeader v-bind="merged.customProps?.header">
-        <TableRow v-bind="merged.customProps?.row">
-          <TableHead
-            :key="header.id"
-            :align="getHeadAlign(header)"
-            v-bind="getHeadBind(header)"
-            v-for="header in headerViews"
-          >
-            <DataTableSelection
-              kind="page"
-              :size="checkboxSize"
-              v-on:change="onTogglePage"
-              :checked="selectAllState.checked"
-              :indeterminate="selectAllState.indeterminate"
-              :checkbox-props="merged.customProps?.checkbox"
-              v-if="header.isSelection && selectionMultiple"
-            />
-
-            <div
-              v-else-if="!header.isSelection && !header.isExpand"
-              class="flex min-w-0 items-center gap-1.5 overflow-hidden leading-none"
+    <div class="relative">
+      <Table v-bind="tableProps">
+        <TableHeader v-bind="merged.customProps?.header">
+          <TableRow v-bind="merged.customProps?.row">
+            <TableHead
+              :key="header.id"
+              :align="getHeadAlign(header)"
+              v-bind="getHeadBind(header)"
+              v-for="header in headerViews"
             >
-              <DataTableSortButton
-                v-if="header.sortable"
-                :icon="header.sortIcon"
-                v-on:click="onToggleSort(header.id)"
-              >
-                <DataTableChild :node="header.header" />
-              </DataTableSortButton>
-
-              <DataTableChild v-else :node="header.header" />
-
-              <DataTableFilterMenu
-                :column-id="header.id"
-                v-if="header.filterable"
-                :active="header.filterActive"
-                :values="header.filterValues"
-                :options="header.filterOptions"
-                :multiple="header.filterMultiple"
-                v-on:apply="(values) => onCommitColumnFilter(header.id, values)"
+              <DataTableSelection
+                kind="page"
+                :size="checkboxSize"
+                v-on:change="onTogglePage"
+                :checked="selectAllState.checked"
+                :indeterminate="selectAllState.indeterminate"
+                :checkbox-props="merged.customProps?.checkbox"
+                v-if="header.isSelection && selectionMultiple"
               />
-            </div>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
 
-      <TableBody v-bind="merged.customProps?.body">
-        <TableRow v-if="merged.loading && $slots.loading === undefined">
-          <TableCell align="center" :colspan="columnCount">
-            <div v-bind="loadingBind">
-              <Spinner v-bind="merged.customProps?.spinner" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <TableRow v-else-if="merged.loading && $slots.loading">
-          <TableCell align="center" :colspan="columnCount">
-            <div v-bind="loadingBind">
-              <slot name="loading" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <TableRow v-if="showEmpty">
-          <TableCell align="center" :colspan="columnCount">
-            <div v-bind="emptyBind">
-              <slot name="empty" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <template v-if="!merged.loading">
-          <template :key="row.id" v-for="row in rowViews">
-            <TableRow v-bind="merged.customProps?.row">
-              <TableCell
-                :key="cell.id"
-                v-for="cell in row.cells"
-                :align="getCellAlign(cell)"
-                v-bind="getCellBind(cell)"
+              <div
+                v-else-if="!header.isSelection && !header.isExpand"
+                class="flex w-full min-w-0 items-center gap-1.5 overflow-hidden leading-none"
               >
-                <DataTableSelection
-                  kind="row"
-                  :value="row.id"
-                  :size="checkboxSize"
-                  :name="selectionName"
-                  :checked="row.selected"
-                  v-if="cell.isSelection"
-                  :multiple="selectionMultiple"
-                  :radio-props="merged.customProps?.radio"
-                  :checkbox-props="merged.customProps?.checkbox"
-                  v-on:change="(checked) => onToggleRow(row.id, checked)"
-                />
-
-                <button
-                  type="button"
-                  aria-label="Expand row"
-                  v-else-if="cell.isExpand"
-                  :aria-expanded="row.expanded"
-                  v-on:click="onToggleExpand(row.id, !row.expanded)"
-                  class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+                <DataTableSortButton
+                  v-if="header.sortable"
+                  :sort="header.ariaSort"
                 >
-                  <Icon
-                    size="sm"
-                    :icon="row.expanded ? 'chevronDown' : 'chevronRight'"
-                  />
-                </button>
+                  <DataTableChild :node="header.header" />
+                </DataTableSortButton>
 
-                <Tooltip
-                  :content="cell.tooltip"
-                  v-else-if="cell.ellipsis && cell.tooltip"
-                  :custom-props="{
-                    trigger: { class: 'block min-w-0 w-full max-w-full' },
+                <DataTableChild v-else :node="header.header" />
+
+                <DataTableFilterMenu
+                  :column-id="header.id"
+                  v-if="header.filterable"
+                  :active="header.filterActive"
+                  :values="header.filterValues"
+                  :options="header.filterOptions"
+                  :multiple="header.filterMultiple"
+                  v-on:apply="
+                    (values) => onCommitColumnFilter(header.id, values)
+                  "
+                />
+              </div>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody v-bind="merged.customProps?.body">
+          <TableRow v-if="showEmpty">
+            <TableCell align="center" :colspan="columnCount">
+              <div v-bind="emptyBind">
+                <slot name="empty">
+                  <span
+                    class="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600"
+                  >
+                    <span
+                      class="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900"
+                    />
+                  </span>
+                  No data
+                </slot>
+              </div>
+            </TableCell>
+          </TableRow>
+
+          <template v-if="!showEmpty">
+            <template :key="row.id" v-for="row in rowViews">
+              <TableRow v-bind="merged.customProps?.row">
+                <TableCell
+                  :key="cell.id"
+                  v-for="cell in row.cells"
+                  :align="getCellAlign(cell)"
+                  v-bind="getCellBind(cell)"
+                >
+                  <DataTableSelection
+                    kind="row"
+                    :value="row.id"
+                    :size="checkboxSize"
+                    :name="selectionName"
+                    :checked="row.selected"
+                    v-if="cell.isSelection"
+                    :multiple="selectionMultiple"
+                    :radio-props="merged.customProps?.radio"
+                    :checkbox-props="merged.customProps?.checkbox"
+                    v-on:change="(checked) => onToggleRow(row.id, checked)"
+                  />
+
+                  <button
+                    type="button"
+                    aria-label="Expand row"
+                    v-else-if="cell.isExpand"
+                    :aria-expanded="row.expanded"
+                    v-on:click="onToggleExpand(row.id, !row.expanded)"
+                    class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+                  >
+                    <span
+                      :class="{ 'rotate-90': row.expanded }"
+                      class="inline-flex transition-transform duration-200 motion-reduce:transition-none"
+                    >
+                      <Icon size="sm" icon="chevronRight" />
+                    </span>
+                  </button>
+
+                  <Tooltip
+                    :content="cell.tooltip"
+                    v-else-if="cell.ellipsis && cell.tooltip"
+                    :custom-props="{
+                      trigger: { class: 'block min-w-0 w-full max-w-full' },
+                    }"
+                  >
+                    <template #trigger>
+                      <div
+                        class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+                      >
+                        <DataTableChild :node="renderItemCell(row, cell)" />
+                      </div>
+                    </template>
+                  </Tooltip>
+
+                  <div
+                    v-else-if="cell.ellipsis"
+                    class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+                  >
+                    <DataTableChild :node="renderItemCell(row, cell)" />
+                  </div>
+
+                  <DataTableChild v-else :node="renderItemCell(row, cell)" />
+                </TableCell>
+              </TableRow>
+
+              <TableRow v-if="expandEnabled">
+                <TableCell
+                  :colspan="columnCount"
+                  :classes="{
+                    root: cn({
+                      'p-0': true,
+                      'border-0': !row.expanded,
+                    }),
                   }"
                 >
-                  <template #trigger>
-                    <div
-                      class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
-                    >
-                      <DataTableChild :node="renderItemCell(row, cell)" />
+                  <div
+                    :aria-hidden="!row.expanded"
+                    :class="
+                      cn({
+                        'grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none': true,
+                        'grid-rows-[1fr]': row.expanded,
+                        'grid-rows-[0fr]': !row.expanded,
+                      })
+                    "
+                  >
+                    <div class="min-h-0 overflow-hidden">
+                      <div class="p-3">
+                        <slot name="expanded" :row="row.original" />
+                      </div>
                     </div>
-                  </template>
-                </Tooltip>
-
-                <div
-                  v-else-if="cell.ellipsis"
-                  class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
-                >
-                  <DataTableChild :node="renderItemCell(row, cell)" />
-                </div>
-
-                <DataTableChild v-else :node="renderItemCell(row, cell)" />
-              </TableCell>
-            </TableRow>
-
-            <TableRow v-if="row.expanded">
-              <TableCell :colspan="columnCount">
-                <slot name="expanded" :row="row.original" />
-              </TableCell>
-            </TableRow>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </template>
           </template>
-        </template>
-      </TableBody>
+        </TableBody>
 
-      <TableFooter v-if="summaryCells" v-bind="merged.customProps?.footer">
-        <TableRow v-bind="merged.customProps?.row">
-          <TableCell
-            :key="cell.id"
-            :align="getCellAlign(cell)"
-            v-bind="getCellBind(cell)"
-            v-for="cell in summaryCells"
-          >
-            <DataTableChild :node="cell.content" />
-          </TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        <TableFooter v-if="summaryCells">
+          <TableRow v-bind="merged.customProps?.row">
+            <TableCell
+              :key="cell.id"
+              :align="getCellAlign(cell)"
+              v-bind="getCellBind(cell)"
+              v-for="cell in summaryCells"
+            >
+              <DataTableChild :node="cell.content" />
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+      <div v-bind="loadingBind" v-if="merged.loading">
+        <slot name="loading">
+          <Spinner v-bind="merged.customProps?.spinner" />
+        </slot>
+      </div>
+    </div>
+
+    <div v-if="showFooter" v-bind="footerBind">
+      <slot name="footer" />
+    </div>
 
     <div v-if="showPagination" v-bind="paginationBind">
       <slot name="pagination">

@@ -20,6 +20,7 @@ import {
   PhEyeSlash,
   PhFunnel,
   PhInfo,
+  PhMagnifyingGlass,
   PhPalette,
   PhSpinnerGap,
   PhUser,
@@ -53,6 +54,7 @@ const icons = {
   chevronDown: PhCaretDown,
   chevronLeft: PhCaretLeft,
   calendar: PhCalendarDots,
+  search: PhMagnifyingGlass,
   chevronRight: PhCaretRight,
   chevronUpDown: PhCaretUpDown,
 } satisfies Record<SemanticIconName, unknown>;

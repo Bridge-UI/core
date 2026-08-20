@@ -14,6 +14,7 @@ import type {
 } from "@bridge-ui/core/Domain";
 import type {
   TableAlign,
+  TableRounded,
   TableSize,
   TableVariant,
 } from "@bridge-ui/core/Tokens";
@@ -26,6 +27,7 @@ import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
 import type {
   TableAlignOverrides,
+  TableRoundedOverrides,
   TableSizeOverrides,
   TableVariantOverrides,
 } from "@/Components/Table/table.types";
@@ -88,7 +90,7 @@ export interface DataTableClasses {
   empty?: string;
 
   /**
-   * Classes merged onto the summary footer rowgroup.
+   * Classes merged onto the footer region below the table.
    */
   footer?: string;
 
@@ -168,7 +170,7 @@ export interface DataTableCustomProps {
   empty?: HTMLAttributes;
 
   /**
-   * Props forwarded to the summary footer rowgroup.
+   * Props forwarded to the footer region below the table.
    *
    * @default undefined
    */
@@ -380,6 +382,13 @@ export interface DataTableOwnProps<T> {
   paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
 
   /**
+   * Corner radius of the table wrapper, header, and footer.
+   *
+   * @default "lg"
+   */
+  rounded?: MergeProps<TableRounded, TableRoundedOverrides>;
+
+  /**
    * Current page of data (or the full set when not paging on the server).
    *
    * @default []
@@ -416,7 +425,7 @@ export interface DataTableOwnProps<T> {
 
   /**
    * Stick header cells to the page (`true`) or inside the wrapper (`"boxed"`).
-   * For boxed, set a max height on `classes.wrapper`.
+   * For boxed, set a max height on `classes.wrapper` or `classes.root`.
    *
    * @default false
    */
@@ -443,7 +452,7 @@ export interface DataTableOwnProps<T> {
  */
 export interface DataTableSlots<T = unknown> {
   /**
-   * Shown when `rows` is empty and the table is not loading.
+   * Shown when `rows` is empty.
    */
   empty?: Slot<undefined>;
 
@@ -453,12 +462,17 @@ export interface DataTableSlots<T = unknown> {
   expanded?: Slot<{ row: T }>;
 
   /**
+   * Region below the table, above pagination.
+   */
+  footer?: Slot<undefined>;
+
+  /**
    * Catch-all cell slot when `#item.{columnId}` is not set.
    */
   item?: Slot<DataTableItemSlotProps<T>>;
 
   /**
-   * Replaces the default spinner when `loading` is set.
+   * Overlay shown when `loading` is set. Defaults to a centered spinner.
    */
   loading?: Slot<undefined>;
 

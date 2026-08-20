@@ -129,12 +129,13 @@ function onApply() {
         <TextField
           size="sm"
           hide-error-message
+          start-icon="search"
           v-model="filterQuery"
           aria-label="Search in filters"
           placeholder="Search in filters"
         />
       </div>
-      <div class="flex max-h-60 flex-col gap-0.5 overflow-y-auto">
+      <div class="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
         <div
           role="menuitemcheckbox"
           :aria-checked="allSelected"

@@ -10,6 +10,7 @@ import type { DataTableColumn } from "@/Components/DataTable/dataTable.types";
 const libDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   loading: false,
   striped: false,
   variant: "plain",

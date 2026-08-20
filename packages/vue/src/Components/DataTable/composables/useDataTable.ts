@@ -24,7 +24,16 @@ import {
   map,
   omit,
 } from "es-toolkit/compat";
-import { computed, useAttrs, useSlots, type Ref, type VNodeChild } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  ref,
+  useAttrs,
+  useSlots,
+  type Ref,
+  type VNode,
+  type VNodeChild,
+} from "vue";
 
 // ** Core Imports
 import {
@@ -40,6 +49,7 @@ import {
   getDataTableSelectAllState,
   getDataTableSortIcon,
   getDataTableStickyInsets,
+  getDataTableStickyPing,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
@@ -94,6 +104,7 @@ const dataTableBridgeKeys = [
   "columns",
   "filters",
   "loading",
+  "rounded",
   "sorting",
   "striped",
   "variant",
@@ -109,11 +120,23 @@ const dataTableBridgeKeys = [
   "paginationAlign",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
+/**
+ * Whether a header click landed on filter or selection chrome.
+ */
+function isDataTableHeadChromeEvent(event: Event) {
+  const target = event.target;
+
+  return (
+    target instanceof Element && Boolean(target.closest("button, input, a"))
+  );
+}
+
 type DataTableLibDefaults = LibDefaultsShape<
   DataTableOwnProps<unknown>,
   | "full"
   | "size"
   | "loading"
+  | "rounded"
   | "striped"
   | "variant"
   | "hoverable"
@@ -558,7 +581,11 @@ export function useDataTable<T>(
   });
 
   const showEmpty = computed(() => {
-    return !merged.value.loading && rowViews.value.length === 0;
+    return rowViews.value.length === 0;
+  });
+
+  const showFooter = computed(() => {
+    return vueSlots.footer !== undefined;
   });
 
   const paginationVariant = computed(() => {
@@ -568,24 +595,114 @@ export function useDataTable<T>(
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
-        [get(mergedClasses.value, "root") ?? ""]: true,
+        [!stickyHeaderBoxed.value
+          ? (get(mergedClasses.value, "root") ?? "")
+          : ""]: true,
       }),
     });
+  });
+
+  const hasStickyColumns = computed(() => {
+    return headerViews.value.some((header) => {
+      return Boolean(header.stickyStyle);
+    });
+  });
+
+  const stickyPing = ref({ end: false, start: false });
+
+  let tableScrollObserver: undefined | ResizeObserver;
+
+  function applyStickyPing(el: null | HTMLElement) {
+    const next = el
+      ? getDataTableStickyPing(el.scrollLeft, el.scrollWidth, el.clientWidth)
+      : { end: false, start: false };
+
+    if (
+      stickyPing.value.end !== next.end ||
+      stickyPing.value.start !== next.start
+    ) {
+      stickyPing.value = next;
+    }
+  }
+
+  function bindTableScrollEl(el: null | HTMLElement) {
+    tableScrollObserver?.disconnect();
+    tableScrollObserver = undefined;
+    applyStickyPing(el);
+
+    if (!el || typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    tableScrollObserver = new ResizeObserver(() => {
+      applyStickyPing(el);
+    });
+    tableScrollObserver.observe(el);
+  }
+
+  function onTableScroll(event: Event) {
+    const userOnScroll = customProps.value?.wrapper?.onScroll;
+
+    if (isFunction(userOnScroll)) {
+      userOnScroll(event);
+    }
+
+    const target = event.currentTarget;
+
+    if (target instanceof HTMLElement) {
+      applyStickyPing(target);
+    }
+  }
+
+  function callWrapperVnodeHook(
+    key: "onVnodeMounted" | "onVnodeUnmounted",
+    vnode: VNode,
+  ) {
+    const hook = (
+      customProps.value?.wrapper as
+        undefined | Record<string, (vnode: VNode) => void>
+    )?.[key];
+
+    if (isFunction(hook)) {
+      hook(vnode);
+    }
+  }
+
+  function onTableRootMounted(vnode: VNode) {
+    callWrapperVnodeHook("onVnodeMounted", vnode);
+
+    const el = vnode.el;
+    bindTableScrollEl(el instanceof HTMLElement ? el : null);
+  }
+
+  function onTableRootUnmounted(vnode: VNode) {
+    callWrapperVnodeHook("onVnodeUnmounted", vnode);
+    bindTableScrollEl(null);
+  }
+
+  onBeforeUnmount(() => {
+    bindTableScrollEl(null);
   });
 
   const tableProps = computed(() => {
     return {
       size: merged.value.size,
       variant: merged.value.variant,
+      rounded: merged.value.rounded,
       full: merged.value.full !== false,
       striped: merged.value.striped === true,
       stickyHeader: stickyHeaderEnabled.value,
       hoverable: merged.value.hoverable === true,
       customProps: {
-        root: customProps.value?.wrapper,
         table: {
           ...customProps.value?.table,
           "aria-busy": merged.value.loading || undefined,
+        },
+        root: {
+          ...customProps.value?.wrapper,
+          onScroll: onTableScroll,
+          onVnodeMounted: onTableRootMounted,
+          onVnodeUnmounted: onTableRootUnmounted,
         },
       },
       classes: {
@@ -593,12 +710,18 @@ export function useDataTable<T>(
         body: get(mergedClasses.value, "body"),
         cell: get(mergedClasses.value, "cell"),
         head: get(mergedClasses.value, "head"),
-        table: get(mergedClasses.value, "table"),
-        footer: get(mergedClasses.value, "footer"),
         header: get(mergedClasses.value, "header"),
+        table: cn({
+          "border-separate border-spacing-0":
+            hasStickyColumns.value && !stickyHeaderEnabled.value,
+          [get(mergedClasses.value, "table") ?? ""]: true,
+        }),
         root: cn({
           "overflow-auto": stickyHeaderBoxed.value,
           [get(mergedClasses.value, "wrapper") ?? ""]: true,
+          [stickyHeaderBoxed.value
+            ? (get(mergedClasses.value, "root") ?? "")
+            : ""]: true,
         }),
       },
     };
@@ -617,11 +740,19 @@ export function useDataTable<T>(
       view.width,
       view.isExpand || view.isSelection,
     );
+    const headerSticky = header && stickyHeaderEnabled.value;
 
     return {
       ...(width ? { width, minWidth: width } : {}),
       ...view.stickyStyle,
-      ...(header && view.stickyStyle ? { zIndex: 20 } : {}),
+      ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
+      ...(headerSticky
+        ? {
+            top: 0,
+            position: "sticky" as const,
+            zIndex: view.stickyStyle ? 20 : 11,
+          }
+        : {}),
     };
   }
 
@@ -638,27 +769,65 @@ export function useDataTable<T>(
   }
 
   function getHeadBind(header: DataTableHeaderView) {
+    const isChrome = header.isSelection || header.isExpand;
+    const isStartPing =
+      header.sticky === "start" && header.stickyEdge && stickyPing.value.start;
+
     return mergePartBind(
       customProps.value?.head,
       {},
       {
         style: getColumnLayoutStyle(header, true),
+        tabindex: header.sortable ? 0 : undefined,
         "aria-sort": header.sortable ? header.ariaSort : undefined,
+        onClick: header.sortable
+          ? (event: MouseEvent) => {
+              if (isDataTableHeadChromeEvent(event)) {
+                return;
+              }
+
+              onToggleSort(header.id);
+            }
+          : undefined,
+        onKeydown: header.sortable
+          ? (event: KeyboardEvent) => {
+              if (isDataTableHeadChromeEvent(event)) {
+                return;
+              }
+
+              if (event.key !== "Enter" && event.key !== " ") {
+                return;
+              }
+
+              event.preventDefault();
+              onToggleSort(header.id);
+            }
+          : undefined,
         class: cn({
           "min-w-0": true,
-          [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
-            header.stickyStyle,
-          ),
-          "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
-            header.sticky === "start" && header.stickyEdge,
-          "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
-            header.sticky === "end" && header.stickyEdge,
+          "border-e-0": isChrome,
+          "sticky z-20": Boolean(header.stickyStyle),
+          "after:hidden": isChrome && !isStartPing,
+          "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
+            header.sortable,
+          [get(variantItem.value, "cellStickyEdgeStart") ?? ""]:
+            header.sticky === "start" &&
+            header.stickyEdge &&
+            stickyPing.value.start,
+          [get(variantItem.value, "cellStickyEdgeEnd") ?? ""]:
+            header.sticky === "end" &&
+            header.stickyEdge &&
+            stickyPing.value.end,
         }),
       },
     );
   }
 
   function getCellBind(cell: DataTableCellView) {
+    const isChrome = cell.isSelection || cell.isExpand;
+    const isStartPing =
+      cell.sticky === "start" && cell.stickyEdge && stickyPing.value.start;
+
     return mergePartBind(
       customProps.value?.cell,
       {},
@@ -666,13 +835,17 @@ export function useDataTable<T>(
         style: getColumnLayoutStyle(cell),
         class: cn({
           "min-w-0": true,
+          "border-e-0": isChrome,
+          "after:hidden": isChrome && !isStartPing,
           [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
             cell.stickyStyle,
           ),
-          "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
-            cell.sticky === "start" && cell.stickyEdge,
-          "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
-            cell.sticky === "end" && cell.stickyEdge,
+          [get(variantItem.value, "cellStickyEdgeStart") ?? ""]:
+            cell.sticky === "start" &&
+            cell.stickyEdge &&
+            stickyPing.value.start,
+          [get(variantItem.value, "cellStickyEdgeEnd") ?? ""]:
+            cell.sticky === "end" && cell.stickyEdge && stickyPing.value.end,
         }),
       },
     );
@@ -697,6 +870,7 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
+          "flex flex-col items-center justify-center gap-2 py-12 text-sm text-dark-400 dark:text-dark-500": true,
           [get(mergedClasses.value, "empty") ?? ""]: true,
         }),
       },
@@ -709,8 +883,21 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex justify-center py-6": true,
+          "absolute inset-0 z-30 flex items-center justify-center bg-white/60 dark:bg-dark-900/60": true,
           [get(mergedClasses.value, "loading") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const footerBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      {
+        class: cn({
+          "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-300": true,
+          [get(mergedClasses.value, "footer") ?? ""]: true,
         }),
       },
     );
@@ -837,7 +1024,9 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    showFooter,
     tableProps,
+    footerBind,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -852,6 +1041,7 @@ export function useDataTable<T>(
     onTogglePage,
     onToggleSort,
     summaryCells,
+    expandEnabled,
     paginationBind,
     selectAllState,
     showPagination,
