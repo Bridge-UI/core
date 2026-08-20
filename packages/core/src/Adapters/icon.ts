@@ -24,6 +24,7 @@ export const SEMANTIC_ICON_NAMES = [
   "clock",
   "error",
   "eyeOff",
+  "filter",
   "loader",
   "palette",
   "success",

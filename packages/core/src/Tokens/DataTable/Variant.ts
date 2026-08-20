@@ -16,6 +16,11 @@ export interface DataTableVariantItem {
   "cell": string;
 
   /**
+   * Extra classes when a column is horizontally sticky.
+   */
+  "cellSticky": string;
+
+  /**
    * Classes for header cells.
    */
   "head": string;
@@ -91,6 +96,7 @@ export const variantProps: DataTableVariant = {
     "root": "relative rounded-lg",
     "cell": "text-dark-700 dark:text-dark-200",
     "header": "bg-dark-500/5 dark:bg-dark-500/10",
+    "cellSticky": "sticky z-[1] bg-white dark:bg-dark-900",
     "rowStriped": "even:bg-dark-50 dark:even:bg-dark-800/40",
     "rowHover": "hover:bg-dark-500/10 dark:hover:bg-dark-500/15",
     "head":
@@ -103,6 +109,7 @@ export const variantProps: DataTableVariant = {
     "body": "",
     "table": "",
     "root": "relative",
+    "cellSticky": "sticky z-[1] bg-white dark:bg-dark-900",
     "rowStriped": "even:bg-dark-50 dark:even:bg-dark-800/40",
     "header": "border-b border-dark-300 dark:border-dark-700",
     "rowHover": "hover:bg-dark-500/5 dark:hover:bg-dark-500/10",
@@ -118,6 +125,7 @@ export const variantProps: DataTableVariant = {
     "body": "",
     "table": "",
     "header": "bg-dark-50 dark:bg-dark-800/60",
+    "cellSticky": "sticky z-[1] bg-white dark:bg-dark-800",
     "rowStriped": "even:bg-dark-50 dark:even:bg-dark-800/40",
     "rowHover": "hover:bg-dark-500/5 dark:hover:bg-dark-500/10",
     "headSticky":

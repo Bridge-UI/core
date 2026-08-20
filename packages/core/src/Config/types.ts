@@ -613,6 +613,7 @@ export interface DataTableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
+    selectionMode: "single" | "multiple";
     size: keyof DataTableSize;
     stickyHeader: boolean;
     striped: boolean;

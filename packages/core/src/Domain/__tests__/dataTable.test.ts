@@ -3,21 +3,37 @@ import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
+  DATATABLE_CHROME_COLUMN_WIDTH_PX,
+  DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_SELECTION_COLUMN_ID,
+  DATATABLE_STICKY_WIDTH_PX,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnFilterValues,
   getDataTableColumnTrack,
+  getDataTableColumnWidthPx,
   getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
+  getDataTableStickyInsets,
+  isDataTableColumnFilterable,
+  isDataTableColumnFiltered,
+  isDataTableExpandEnabled,
   isDataTableSelectionEnabled,
+  isDataTableSelectionMultiple,
   isDataTableServerPaged,
+  isDataTableVisibilityEnabled,
   resolveDataTableRowId,
   rowSelectionToIds,
   selectionToRowSelection,
+  setDataTableColumnFilter,
+  setDataTableRowSelection,
+  toggleDataTableColumnVisibility,
+  toggleDataTableFilterDraft,
   toggleDataTablePageSelection,
+  toggleDataTableRowExpansion,
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
@@ -131,6 +147,62 @@ describe("getDataTableGridTemplate", () => {
     expect(
       getDataTableGridTemplate([{ isSelection: true }, {}, { width: 160 }]),
     ).toBe("3rem minmax(0, 1fr) 160px");
+    expect(getDataTableGridTemplate([{ isExpand: true }])).toBe("3rem");
+  });
+});
+
+describe("getDataTableColumnWidthPx", () => {
+  test("it should parse px rem and chrome widths", () => {
+    expect(getDataTableColumnWidthPx(120)).toBe(120);
+    expect(getDataTableColumnWidthPx("8rem")).toBe(128);
+    expect(getDataTableColumnWidthPx("100px")).toBe(100);
+    expect(getDataTableColumnWidthPx(undefined)).toBe(
+      DATATABLE_STICKY_WIDTH_PX,
+    );
+    expect(getDataTableColumnWidthPx(undefined, true)).toBe(
+      DATATABLE_CHROME_COLUMN_WIDTH_PX,
+    );
+  });
+});
+
+describe("getDataTableStickyInsets", () => {
+  test("it should pin start and end columns with offsets", () => {
+    const insets = getDataTableStickyInsets(
+      [
+        { isSelection: true, id: DATATABLE_SELECTION_COLUMN_ID },
+        { id: "name", width: 120, sticky: "start" },
+        { id: "role" },
+        { width: 80, id: "actions", sticky: "end" },
+      ],
+      1,
+    );
+
+    expect(insets.name?.edge).toBe(true);
+    expect(insets.name?.style?.left).toBe(48);
+    expect(insets.role?.style).toBeUndefined();
+    expect(insets.actions?.style?.right).toBe(0);
+    expect(insets[DATATABLE_SELECTION_COLUMN_ID]?.style?.left).toBe(0);
+  });
+});
+
+describe("toggleDataTableColumnVisibility", () => {
+  test("it should hide a column and keep one visible", () => {
+    expect(DATATABLE_EXPAND_COLUMN_ID).toBe("__bridge-expand");
+    expect(isDataTableVisibilityEnabled([], true)).toBe(true);
+    expect(isDataTableExpandEnabled(undefined, false, true)).toBe(true);
+    expect(
+      toggleDataTableColumnVisibility([], "role", true, ["name", "role"]),
+    ).toEqual(["role"]);
+    expect(toggleDataTableColumnVisibility([], "name", true, ["name"])).toEqual(
+      [],
+    );
+  });
+});
+
+describe("toggleDataTableRowExpansion", () => {
+  test("it should add or remove an expanded row id", () => {
+    expect(toggleDataTableRowExpansion([], "a", true)).toEqual(["a"]);
+    expect(toggleDataTableRowExpansion(["a"], "a", false)).toEqual([]);
   });
 });
 
@@ -186,5 +258,46 @@ describe("toggleDataTablePageSelection", () => {
     expect(
       toggleDataTablePageSelection(["z", "a", "b"], ["a", "b"], false),
     ).toEqual(["z"]);
+  });
+});
+
+describe("setDataTableRowSelection", () => {
+  test("it should replace the selection in single mode", () => {
+    expect(setDataTableRowSelection(["a"], "b", true, "single")).toEqual(["b"]);
+    expect(setDataTableRowSelection(["a"], "a", false, "single")).toEqual([]);
+  });
+
+  test("it should toggle ids in multiple mode", () => {
+    expect(isDataTableSelectionMultiple(undefined)).toBe(true);
+    expect(isDataTableSelectionMultiple("single")).toBe(false);
+    expect(setDataTableRowSelection(["a"], "b", true)).toEqual(["a", "b"]);
+    expect(setDataTableRowSelection(["a", "b"], "a", false)).toEqual(["b"]);
+  });
+});
+
+describe("setDataTableColumnFilter", () => {
+  test("it should set or omit a column key", () => {
+    expect(
+      isDataTableColumnFilterable({ filters: [{ label: "A", value: "a" }] }),
+    ).toBe(true);
+    expect(isDataTableColumnFilterable({ filters: [] })).toBe(false);
+    expect(getDataTableColumnFilterValues({ role: ["a"] }, "role")).toEqual([
+      "a",
+    ]);
+    expect(isDataTableColumnFiltered({ role: ["a"] }, "name")).toBe(false);
+    expect(setDataTableColumnFilter({ role: ["a"] }, "name", ["b"])).toEqual({
+      role: ["a"],
+      name: ["b"],
+    });
+    expect(setDataTableColumnFilter({ role: ["a"] }, "role", [])).toEqual({});
+  });
+});
+
+describe("toggleDataTableFilterDraft", () => {
+  test("it should toggle values or replace in single-select", () => {
+    expect(toggleDataTableFilterDraft(["a"], "b", true)).toEqual(["a", "b"]);
+    expect(toggleDataTableFilterDraft(["a", "b"], "a", false)).toEqual(["b"]);
+    expect(toggleDataTableFilterDraft(["a"], "b", true, false)).toEqual(["b"]);
+    expect(toggleDataTableFilterDraft(["a"], "a", false, false)).toEqual([]);
   });
 });

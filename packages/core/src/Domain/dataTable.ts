@@ -2,9 +2,24 @@
 import { fromPairs, get, isNil } from "es-toolkit/compat";
 
 /**
+ * Internal column id for the row-expand control column.
+ */
+export const DATATABLE_EXPAND_COLUMN_ID = "__bridge-expand";
+
+/**
  * Internal column id for the selection checkbox column.
  */
 export const DATATABLE_SELECTION_COLUMN_ID = "__bridge-selection";
+
+/**
+ * Width in px used for expand/selection tracks when computing sticky offsets.
+ */
+export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
+
+/**
+ * Fallback width in px for sticky columns without a parseable `width`.
+ */
+export const DATATABLE_STICKY_WIDTH_PX = 160;
 
 /**
  * Pagination variant that pairs with a DataTable chrome variant.
@@ -31,11 +46,71 @@ export type DataTableSorting = null | {
 };
 
 /**
+ * One option in a column filter menu. `children` render as a nested group.
+ */
+export type DataTableFilterOption = {
+  /**
+   * Nested options shown in a submenu.
+   */
+  children?: DataTableFilterOption[];
+
+  /**
+   * Visible label in the filter menu.
+   */
+  label: string;
+
+  /**
+   * Value stored in `filters[columnId]` when selected.
+   */
+  value: string;
+};
+
+/**
+ * Controlled column filters: column id → selected option values.
+ */
+export type DataTableFilters = Record<string, string[]>;
+
+/**
+ * Row selection chrome: radios (`single`) or checkboxes (`multiple`).
+ */
+export type DataTableSelectionMode = "single" | "multiple";
+
+/**
+ * Pin a column to the inline start or end while the grid scrolls.
+ */
+export type DataTableStickyEdge = "end" | "start";
+
+/**
+ * Sticky insets for one visible column.
+ */
+export type DataTableStickyInset = {
+  /**
+   * Whether this column is the last start pin or the first end pin.
+   */
+  edge: boolean;
+
+  /**
+   * Resolved sticky edge after chrome auto-pin.
+   */
+  sticky?: DataTableStickyEdge;
+
+  /**
+   * `position: sticky` plus `left` / `right` offsets.
+   */
+  style?: {
+    left?: number;
+    position: "sticky";
+    right?: number;
+    zIndex: number;
+  };
+};
+
+/**
  * Shared column fields. Framework packages add `header` / `cell` renderers.
  */
 export type DataTableColumnBase<T> = {
   /**
-   * Value used for client-side sorting. Defaults to `row[id]`.
+   * Value used for client-side sorting and filtering. Defaults to `row[id]`.
    */
   accessor?: (row: T) => unknown;
 
@@ -43,6 +118,32 @@ export type DataTableColumnBase<T> = {
    * Text alignment for the header and cells.
    */
   align?: "end" | "start" | "center";
+
+  /**
+   * Truncate overflowing cell text and show the full value in a tooltip.
+   *
+   * @default false
+   */
+  ellipsis?: boolean;
+
+  /**
+   * When false, the filter menu allows only one value. Default is multiple.
+   *
+   * @default true
+   */
+  filterMultiple?: boolean;
+
+  /**
+   * Filter menu options. Presence enables the header filter trigger.
+   */
+  filters?: DataTableFilterOption[];
+
+  /**
+   * When false, the column cannot be toggled in the columns menu.
+   *
+   * @default true
+   */
+  hideable?: boolean;
 
   /**
    * Stable column id (also the default accessor key).
@@ -53,6 +154,11 @@ export type DataTableColumnBase<T> = {
    * Whether the column can be sorted.
    */
   sortable?: boolean;
+
+  /**
+   * Pin the column while the grid scrolls horizontally.
+   */
+  sticky?: DataTableStickyEdge;
 
   /**
    * Optional column width as a CSS grid track (`px` number or CSS length).
@@ -194,9 +300,9 @@ export function getDataTableColumnAccessor<T>(
  */
 export function getDataTableColumnTrack(
   width: number | string | undefined,
-  isSelection = false,
+  isChrome = false,
 ): string {
-  if (isSelection) {
+  if (isChrome) {
     return "3rem";
   }
 
@@ -216,6 +322,7 @@ export function getDataTableColumnTrack(
  */
 export function getDataTableGridTemplate(
   columns: ReadonlyArray<{
+    isExpand?: boolean;
     isSelection?: boolean;
     width?: number | string;
   }>,
@@ -226,9 +333,186 @@ export function getDataTableGridTemplate(
 
   return columns
     .map((column) => {
-      return getDataTableColumnTrack(column.width, column.isSelection === true);
+      return getDataTableColumnTrack(
+        column.width,
+        column.isSelection === true || column.isExpand === true,
+      );
     })
     .join(" ");
+}
+
+/**
+ * Width in px for sticky offset math.
+ */
+export function getDataTableColumnWidthPx(
+  width: number | string | undefined,
+  isChrome = false,
+): number {
+  if (isChrome) {
+    return DATATABLE_CHROME_COLUMN_WIDTH_PX;
+  }
+
+  if (typeof width === "number") {
+    return width;
+  }
+
+  if (typeof width === "string") {
+    const px = /^(\d+(?:\.\d+)?)px$/.exec(width);
+
+    if (px) {
+      return Number(px[1]);
+    }
+
+    const rem = /^(\d+(?:\.\d+)?)rem$/.exec(width);
+
+    if (rem) {
+      return Number(rem[1]) * 16;
+    }
+  }
+
+  return DATATABLE_STICKY_WIDTH_PX;
+}
+
+/**
+ * Sticky `left` / `right` insets for visible columns. Chrome columns pin to
+ * start when any data column uses `sticky: "start"`.
+ */
+export function getDataTableStickyInsets(
+  columns: ReadonlyArray<{
+    id: string;
+    isExpand?: boolean;
+    isSelection?: boolean;
+    sticky?: DataTableStickyEdge;
+    width?: number | string;
+  }>,
+  zIndex: number,
+): Record<string, DataTableStickyInset> {
+  const pinChrome = columns.some((column) => {
+    return (
+      column.sticky === "start" &&
+      column.isExpand !== true &&
+      column.isSelection !== true
+    );
+  });
+
+  const resolved = columns.map((column) => {
+    const isChrome = column.isExpand === true || column.isSelection === true;
+    const sticky =
+      column.sticky ?? (isChrome && pinChrome ? "start" : undefined);
+
+    return {
+      ...column,
+      sticky,
+      isChrome,
+      widthPx: getDataTableColumnWidthPx(column.width, isChrome),
+    };
+  });
+
+  let startOffset = 0;
+  const leftById: Record<string, number> = {};
+
+  for (const column of resolved) {
+    if (column.sticky === "start") {
+      leftById[column.id] = startOffset;
+      startOffset += column.widthPx;
+    }
+  }
+
+  let endOffset = 0;
+  const rightById: Record<string, number> = {};
+
+  for (let index = resolved.length - 1; index >= 0; index -= 1) {
+    const column = resolved[index];
+
+    if (column?.sticky === "end") {
+      rightById[column.id] = endOffset;
+      endOffset += column.widthPx;
+    }
+  }
+
+  const lastStart = [...resolved].reverse().find((column) => {
+    return column.sticky === "start";
+  })?.id;
+  const firstEnd = resolved.find((column) => {
+    return column.sticky === "end";
+  })?.id;
+
+  return fromPairs(
+    resolved.map((column) => {
+      if (!column.sticky) {
+        return [column.id, { edge: false }];
+      }
+
+      const inset: DataTableStickyInset = {
+        sticky: column.sticky,
+        edge: column.id === lastStart || column.id === firstEnd,
+        style: {
+          zIndex,
+          position: "sticky",
+          ...(column.sticky === "start"
+            ? { left: leftById[column.id] }
+            : { right: rightById[column.id] }),
+        },
+      };
+
+      return [column.id, inset];
+    }),
+  );
+}
+
+/**
+ * Whether expand chrome should render.
+ */
+export function isDataTableExpandEnabled(
+  expanded: string[] | undefined,
+  hasExpandedHandler: boolean,
+  hasExpandedSlot: boolean,
+): boolean {
+  return expanded !== undefined || hasExpandedHandler || hasExpandedSlot;
+}
+
+/**
+ * Whether the columns menu should render.
+ */
+export function isDataTableVisibilityEnabled(
+  hiddenColumns: string[] | undefined,
+  hasVisibilityHandler: boolean,
+): boolean {
+  return hiddenColumns !== undefined || hasVisibilityHandler;
+}
+
+/**
+ * Adds or removes a hideable column id. Keeps at least one column visible.
+ */
+export function toggleDataTableColumnVisibility(
+  hiddenIds: string[],
+  columnId: string,
+  hide: boolean,
+  columnIds: string[],
+): string[] {
+  const next = hide
+    ? hiddenIds.includes(columnId)
+      ? hiddenIds
+      : [...hiddenIds, columnId]
+    : hiddenIds.filter((id) => {
+        return id !== columnId;
+      });
+  const visible = columnIds.filter((id) => {
+    return !next.includes(id);
+  });
+
+  return visible.length === 0 ? hiddenIds : next;
+}
+
+/**
+ * Adds or removes an expanded row id.
+ */
+export function toggleDataTableRowExpansion(
+  expandedIds: string[],
+  rowId: string,
+  expanded: boolean,
+): string[] {
+  return toggleDataTableRowSelection(expandedIds, rowId, expanded);
 }
 
 /**
@@ -291,6 +575,31 @@ export function toggleDataTableRowSelection(
 }
 
 /**
+ * Updates row selection for `single` (radio) or `multiple` (checkbox) mode.
+ */
+export function setDataTableRowSelection(
+  selectedIds: string[],
+  rowId: string,
+  selected: boolean,
+  mode: DataTableSelectionMode = "multiple",
+): string[] {
+  if (mode === "single") {
+    return selected ? [rowId] : [];
+  }
+
+  return toggleDataTableRowSelection(selectedIds, rowId, selected);
+}
+
+/**
+ * Whether selection chrome uses checkboxes and select-all.
+ */
+export function isDataTableSelectionMultiple(
+  mode: undefined | DataTableSelectionMode,
+): boolean {
+  return mode !== "single";
+}
+
+/**
  * Selects or clears every id on the current page, preserving off-page ids.
  */
 export function toggleDataTablePageSelection(
@@ -304,4 +613,74 @@ export function toggleDataTablePageSelection(
   });
 
   return selectAll ? [...rest, ...pageIds] : rest;
+}
+
+/**
+ * Whether a column shows a filter trigger.
+ */
+export function isDataTableColumnFilterable(
+  column: undefined | Pick<DataTableColumnBase<unknown>, "filters">,
+): boolean {
+  return Boolean(column?.filters && column.filters.length > 0);
+}
+
+/**
+ * Selected filter values for `columnId`.
+ */
+export function getDataTableColumnFilterValues(
+  filters: undefined | DataTableFilters,
+  columnId: string,
+): string[] {
+  return get(filters, columnId) ?? [];
+}
+
+/**
+ * Whether `columnId` has at least one selected filter value.
+ */
+export function isDataTableColumnFiltered(
+  filters: undefined | DataTableFilters,
+  columnId: string,
+): boolean {
+  return getDataTableColumnFilterValues(filters, columnId).length > 0;
+}
+
+/**
+ * Toggles a draft filter value. Single-select replaces the draft.
+ */
+export function toggleDataTableFilterDraft(
+  draft: string[],
+  value: string,
+  selected: boolean,
+  multiple = true,
+): string[] {
+  if (!multiple) {
+    return selected ? [value] : [];
+  }
+
+  if (selected) {
+    return draft.includes(value) ? draft : [...draft, value];
+  }
+
+  return draft.filter((item) => {
+    return item !== value;
+  });
+}
+
+/**
+ * Sets or clears the selected values for one column in `filters`.
+ */
+export function setDataTableColumnFilter(
+  filters: undefined | DataTableFilters,
+  columnId: string,
+  values: string[],
+): DataTableFilters {
+  const next = { ...(filters ?? {}) };
+
+  if (values.length === 0) {
+    delete next[columnId];
+  } else {
+    next[columnId] = values;
+  }
+
+  return next;
 }
