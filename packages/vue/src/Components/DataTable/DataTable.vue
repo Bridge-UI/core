@@ -13,14 +13,6 @@ import type {
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Spinner } from "@/Components/Spinner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/Components/Table";
 
 defineSlots<DataTableSlots>();
 
@@ -43,21 +35,30 @@ const sorting = defineModel<DataTableSorting>("sorting");
 
 const {
   merged,
-  colSpan,
   rowViews,
   rootBind,
   emptyBind,
   showEmpty,
-  tableProps,
+  tableBind,
+  getHeadBind,
   headerViews,
   loadingBind,
   onToggleRow,
   toolbarBind,
+  bodyRowBind,
+  getCellBind,
+  spanRowBind,
+  wrapperBind,
+  serverPaged,
   onTogglePage,
   onToggleSort,
+  spanCellBind,
+  bodyGroupBind,
+  headerRowBind,
   paginationBind,
   selectAllState,
   showPagination,
+  headerGroupBind,
   paginationVariant,
 } = useDataTable(
   props,
@@ -101,102 +102,107 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       <slot name="toolbar" />
     </div>
 
-    <Table v-bind="tableProps" :aria-busy="merged.loading || undefined">
-      <TableHeader>
-        <TableRow>
-          <TableHead
-            :key="header.id"
-            v-for="header in headerViews"
-            :align="header.isSelection ? 'center' : header.align"
-            :aria-sort="header.sortable ? header.ariaSort : undefined"
-            :style="header.width ? { width: header.width } : undefined"
-          >
-            <Checkbox
-              :size="checkboxSize"
-              v-if="header.isSelection"
-              aria-label="Select all rows"
-              :model-value="selectAllState.checked"
-              :indeterminate="selectAllState.indeterminate"
-              v-bind="merged.customProps?.checkbox"
-              v-on:update:model-value="
-                (checked) => onTogglePage(Boolean(checked))
-              "
-            />
-
-            <button
-              type="button"
-              v-else-if="header.sortable"
-              v-on:click="onToggleSort(header.id)"
-              class="inline-flex items-center gap-1"
-            >
-              <DataTableChild :node="header.header" />
-              <Icon size="sm" :icon="header.sortIcon" />
-            </button>
-
-            <DataTableChild v-else :node="header.header" />
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-
-      <TableBody>
-        <TableRow v-if="merged.loading && $slots.loading === undefined">
-          <TableCell align="center" :colspan="colSpan">
-            <div v-bind="loadingBind">
-              <Spinner v-bind="merged.customProps?.spinner" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <TableRow v-else-if="merged.loading && $slots.loading">
-          <TableCell align="center" :colspan="colSpan">
-            <div v-bind="loadingBind">
-              <slot name="loading" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <TableRow v-if="showEmpty">
-          <TableCell align="center" :colspan="colSpan">
-            <div v-bind="emptyBind">
-              <slot name="empty" />
-            </div>
-          </TableCell>
-        </TableRow>
-
-        <template v-if="!merged.loading">
-          <TableRow :key="row.id" v-for="row in rowViews">
-            <TableCell
-              :key="cell.id"
-              v-for="cell in row.cells"
-              :align="cell.isSelection ? 'center' : cell.align"
-              :style="cell.width ? { width: cell.width } : undefined"
+    <div v-bind="wrapperBind">
+      <div v-bind="tableBind">
+        <div v-bind="headerGroupBind">
+          <div v-bind="headerRowBind">
+            <div
+              :key="header.id"
+              v-bind="getHeadBind(header)"
+              v-for="header in headerViews"
             >
               <Checkbox
                 :size="checkboxSize"
-                aria-label="Select row"
-                v-if="cell.isSelection"
-                :model-value="row.selected"
+                v-if="header.isSelection"
+                aria-label="Select all rows"
+                :model-value="selectAllState.checked"
+                :indeterminate="selectAllState.indeterminate"
                 v-bind="merged.customProps?.checkbox"
                 v-on:update:model-value="
-                  (checked) => onToggleRow(row.id, Boolean(checked))
+                  (checked) => onTogglePage(Boolean(checked))
                 "
               />
 
-              <DataTableChild v-else :node="cell.content" />
-            </TableCell>
-          </TableRow>
-        </template>
-      </TableBody>
-    </Table>
+              <button
+                type="button"
+                v-else-if="header.sortable"
+                v-on:click="onToggleSort(header.id)"
+                class="inline-flex items-center gap-1"
+              >
+                <DataTableChild :node="header.header" />
+                <Icon size="sm" :icon="header.sortIcon" />
+              </button>
+
+              <DataTableChild v-else :node="header.header" />
+            </div>
+          </div>
+        </div>
+
+        <div v-bind="bodyGroupBind">
+          <div
+            v-bind="spanRowBind"
+            v-if="merged.loading && $slots.loading === undefined"
+          >
+            <div v-bind="spanCellBind">
+              <div v-bind="loadingBind">
+                <Spinner v-bind="merged.customProps?.spinner" />
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-bind="spanRowBind"
+            v-else-if="merged.loading && $slots.loading"
+          >
+            <div v-bind="spanCellBind">
+              <div v-bind="loadingBind">
+                <slot name="loading" />
+              </div>
+            </div>
+          </div>
+
+          <div v-if="showEmpty" v-bind="spanRowBind">
+            <div v-bind="spanCellBind">
+              <div v-bind="emptyBind">
+                <slot name="empty" />
+              </div>
+            </div>
+          </div>
+
+          <template v-if="!merged.loading">
+            <div :key="row.id" v-bind="bodyRowBind" v-for="row in rowViews">
+              <div
+                :key="cell.id"
+                v-for="cell in row.cells"
+                v-bind="getCellBind(cell)"
+              >
+                <Checkbox
+                  :size="checkboxSize"
+                  aria-label="Select row"
+                  v-if="cell.isSelection"
+                  :model-value="row.selected"
+                  v-bind="merged.customProps?.checkbox"
+                  v-on:update:model-value="
+                    (checked) => onToggleRow(row.id, Boolean(checked))
+                  "
+                />
+
+                <DataTableChild v-else :node="cell.content" />
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
 
     <div v-if="showPagination" v-bind="paginationBind">
       <slot name="pagination">
         <Pagination
+          v-if="serverPaged"
           v-bind="merged.customProps?.pagination"
           v-model="paginationPage"
           :count="merged.pageCount"
           :variant="paginationVariant"
-          v-if="merged.page != null && merged.pageCount != null"
         />
       </slot>
     </div>

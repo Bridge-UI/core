@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid on top of `Table`: columns, rows, sorting, selection, empty/loading, and pagination wiring. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. Layout is CSS grid (`div` + table ARIA roles) so cells can flex, stick, and resize. DataTable owns its chrome tokens (`plain` / `ghost` / `bordered`, `size`, `striped`, `hoverable`); defaults match `Table` but registry overrides are independent. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -26,7 +26,7 @@ import { DataTable } from "@bridge-ui/vue/Components/DataTable";
 
 ### Variants
 
-Same chrome as `Table`. Built-in `Pagination` follows the matching variant unless the `pagination` slot overrides it:
+DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows the matching variant unless the `pagination` slot overrides it:
 
 ```vue
 <DataTable :rows="users" variant="plain" :columns="columns" />
@@ -69,9 +69,9 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
     <Pagination
       mode="simple"
       :has-next="Boolean(nextCursor)"
+      v-on:next="fetchPage(nextCursor)"
       :has-previous="Boolean(prevCursor)"
-      @next="fetchPage(nextCursor)"
-      @previous="fetchPage(prevCursor)"
+      v-on:previous="fetchPage(prevCursor)"
     />
   </template>
 </DataTable>

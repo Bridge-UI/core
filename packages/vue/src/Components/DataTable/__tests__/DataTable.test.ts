@@ -48,11 +48,11 @@ test("it should render headers and cells from columns and rows", () => {
     props: { rows, columns },
   });
 
-  expect(wrapper.text()).toContain("Role");
   expect(wrapper.text()).toContain("Name");
+  expect(wrapper.text()).toContain("Role");
   expect(wrapper.text()).toContain("Alan Turing");
   expect(wrapper.text()).toContain("Ada Lovelace");
-  expect(wrapper.find("table").exists()).toBe(true);
+  expect(wrapper.find('[role="table"]').exists()).toBe(true);
 });
 
 test("it should apply the bordered variant on the table wrapper", () => {
@@ -60,9 +60,9 @@ test("it should apply the bordered variant on the table wrapper", () => {
     props: { rows, columns, variant: "bordered" },
   });
 
-  expect(wrapper.find("table").element.parentElement?.className).toContain(
-    "ring-1",
-  );
+  expect(
+    wrapper.find('[role="table"]').element.parentElement?.className,
+  ).toContain("ring-1");
 });
 
 test("it should emit update:sorting when a sortable header is clicked", async () => {
@@ -70,7 +70,7 @@ test("it should emit update:sorting when a sortable header is clicked", async ()
     props: { rows, columns },
   });
 
-  await wrapper.find("th button").trigger("click");
+  await wrapper.find('[role="columnheader"] button').trigger("click");
 
   expect(wrapper.emitted("update:sorting")?.[0]).toEqual([
     { id: "role", desc: false },
@@ -86,9 +86,9 @@ test("it should set aria-sort when sorting is controlled", () => {
     },
   });
 
-  expect(wrapper.find("th[aria-sort]").attributes("aria-sort")).toBe(
-    "descending",
-  );
+  expect(
+    wrapper.find('[role="columnheader"][aria-sort]').attributes("aria-sort"),
+  ).toBe("descending");
 });
 
 test("it should emit update:selection when a row is selected", async () => {
@@ -139,7 +139,5 @@ test("it should mark the table busy when loading", () => {
     props: { rows, columns, loading: true },
   });
 
-  expect(
-    wrapper.find("table").element.parentElement?.getAttribute("aria-busy"),
-  ).toBe("true");
+  expect(wrapper.find('[role="table"]').attributes("aria-busy")).toBe("true");
 });
