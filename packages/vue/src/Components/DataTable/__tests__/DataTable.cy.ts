@@ -32,3 +32,29 @@ test("it should render the bordered variant", () => {
 
   cy.get('[role="table"]').parent().should("have.class", "ring-1");
 });
+
+test("it should render radios in single selection mode", () => {
+  cy.mount(DataTable, {
+    props: {
+      columns,
+      selection: [],
+      selectionMode: "single",
+      getRowId: (row: User) => row.id,
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.get('input[type="radio"][aria-label="Select row"]').should("be.visible");
+});
+
+test("it should render the columns toolbar control", () => {
+  cy.mount(DataTable, {
+    props: {
+      columns,
+      hiddenColumns: [],
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.contains("button", "Columns").should("be.visible");
+});

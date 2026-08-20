@@ -1,33 +1,51 @@
 // ** External Imports
 import {
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useVueTable,
   type ColumnDef,
+  type ColumnFiltersState,
   type RowSelectionState,
   type SortingState,
+  type VisibilityState,
 } from "@tanstack/vue-table";
-import { get, omit } from "es-toolkit/compat";
+import { fromPairs, get, omit } from "es-toolkit/compat";
 import { computed, useAttrs, useSlots, type Ref, type VNodeChild } from "vue";
 
 // ** Core Imports
 import {
+  DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnFilterValues,
   getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
+  getDataTableStickyInsets,
+  isDataTableColumnFilterable,
+  isDataTableColumnFiltered,
+  isDataTableExpandEnabled,
   isDataTableSelectionEnabled,
+  isDataTableSelectionMultiple,
   isDataTableServerPaged,
+  isDataTableVisibilityEnabled,
   resolveDataTableRowId,
   rowSelectionToIds,
   selectionToRowSelection,
+  setDataTableColumnFilter,
+  setDataTableRowSelection,
+  toggleDataTableColumnVisibility,
   toggleDataTablePageSelection,
-  toggleDataTableRowSelection,
+  toggleDataTableRowExpansion,
   toggleDataTableSorting,
+  type DataTableFilterOption,
+  type DataTableFilters,
   type DataTableSorting,
+  type DataTableStickyEdge,
+  type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
 import {
   dataTableAlignProps as alignProps,
@@ -62,16 +80,20 @@ const dataTableBridgeKeys = [
   "size",
   "classes",
   "columns",
+  "filters",
   "loading",
   "sorting",
   "striped",
   "variant",
+  "expanded",
   "getRowId",
   "hoverable",
   "pageCount",
   "selection",
   "customProps",
   "stickyHeader",
+  "hiddenColumns",
+  "selectionMode",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
 type DataTableLibDefaults = LibDefaultsShape<
@@ -83,6 +105,7 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "variant"
   | "hoverable"
   | "stickyHeader"
+  | "selectionMode"
 >;
 
 type DataTableMerged<T> = MergeLibDefaults<
@@ -93,32 +116,72 @@ type DataTableMerged<T> = MergeLibDefaults<
 export type DataTableHeaderView = {
   align?: DataTableColumn<unknown>["align"];
   ariaSort: ReturnType<typeof getDataTableAriaSort>;
+  ellipsis: boolean;
+  filterable: boolean;
+  filterActive: boolean;
+  filterMultiple: boolean;
+  filterOptions: DataTableFilterOption[];
+  filterValues: string[];
   header: VNodeChild;
+  hideable: boolean;
   id: string;
+  isExpand: boolean;
   isSelection: boolean;
   sortable: boolean;
   sortIcon: ReturnType<typeof getDataTableSortIcon>;
+  sticky?: DataTableStickyEdge;
+  stickyEdge: boolean;
+  stickyStyle?: DataTableStickyInset["style"];
   width?: number | string;
 };
 
 export type DataTableCellView = {
   align?: DataTableColumn<unknown>["align"];
   content: VNodeChild;
+  ellipsis: boolean;
   id: string;
+  isExpand: boolean;
   isSelection: boolean;
+  sticky?: DataTableStickyEdge;
+  stickyEdge: boolean;
+  stickyStyle?: DataTableStickyInset["style"];
+  tooltip?: string;
   width?: number | string;
 };
 
-export type DataTableRowView = {
+export type DataTableRowView<T = unknown> = {
   cells: DataTableCellView[];
+  expanded: boolean;
   id: string;
+  original: T;
   selected: boolean;
 };
 
+export type DataTableVisibilityItem = {
+  hidden: boolean;
+  hideable: boolean;
+  id: string;
+  label: string;
+};
+
 export type DataTableModels = {
+  expanded: Ref<string[] | undefined>;
+  filters: Ref<undefined | DataTableFilters>;
+  hiddenColumns: Ref<string[] | undefined>;
   page: Ref<number | undefined>;
   selection: Ref<string[] | undefined>;
   sorting: Ref<undefined | DataTableSorting>;
+};
+
+const chromeColumn = {
+  enableHiding: false,
+  enableSorting: false,
+  cell: () => {
+    return null;
+  },
+  header: () => {
+    return null;
+  },
 };
 
 export function useDataTable<T>(
@@ -136,8 +199,11 @@ export function useDataTable<T>(
         ...attrs,
         ...props,
         page: models.page.value,
+        filters: models.filters.value,
         sorting: models.sorting.value,
+        expanded: models.expanded.value,
         selection: models.selection.value,
+        hiddenColumns: models.hiddenColumns.value,
       },
     });
   });
@@ -208,6 +274,25 @@ export function useDataTable<T>(
     );
   });
 
+  const expandEnabled = computed(() => {
+    return isDataTableExpandEnabled(
+      models.expanded.value,
+      attrs["onUpdate:expanded"] !== undefined,
+      vueSlots.expanded !== undefined,
+    );
+  });
+
+  const visibilityEnabled = computed(() => {
+    return isDataTableVisibilityEnabled(
+      models.hiddenColumns.value,
+      attrs["onUpdate:hiddenColumns"] !== undefined,
+    );
+  });
+
+  const selectionMultiple = computed(() => {
+    return isDataTableSelectionMultiple(merged.value.selectionMode);
+  });
+
   const serverPaged = computed(() => {
     return isDataTableServerPaged(merged.value.page, merged.value.pageCount);
   });
@@ -218,17 +303,34 @@ export function useDataTable<T>(
       : [];
   });
 
+  const columnFilters = computed((): ColumnFiltersState => {
+    return Object.entries(models.filters.value ?? {}).map(([id, value]) => {
+      return { id, value };
+    });
+  });
+
   const rowSelection = computed((): RowSelectionState => {
     return selectionToRowSelection(models.selection.value);
   });
 
+  const columnVisibility = computed((): VisibilityState => {
+    return fromPairs(
+      (models.hiddenColumns.value ?? []).map((id) => {
+        return [id, false];
+      }),
+    );
+  });
+
   const sortedRowModel = getSortedRowModel();
+  const filteredRowModel = getFilteredRowModel();
 
   const columnDefs = computed((): ColumnDef<T>[] => {
     const defs: ColumnDef<T>[] = columns.value.map((column) => {
       return {
         id: column.id,
         enableSorting: column.sortable === true,
+        enableHiding: column.hideable !== false,
+        enableColumnFilter: isDataTableColumnFilterable(column),
         header: () => {
           return column.header;
         },
@@ -238,26 +340,34 @@ export function useDataTable<T>(
         accessorFn: (row) => {
           return getDataTableColumnAccessor(row, column);
         },
+        filterFn: (row, columnId, filterValue) => {
+          const values = Array.isArray(filterValue) ? filterValue : [];
+
+          if (values.length === 0) {
+            return true;
+          }
+
+          return values.includes(String(row.getValue(columnId) ?? ""));
+        },
       };
     });
+    const leading: ColumnDef<T>[] = [];
 
-    if (!selectionEnabled.value) {
-      return defs;
+    if (selectionEnabled.value) {
+      leading.push({
+        ...chromeColumn,
+        id: DATATABLE_SELECTION_COLUMN_ID,
+      });
     }
 
-    return [
-      {
-        enableSorting: false,
-        id: DATATABLE_SELECTION_COLUMN_ID,
-        cell: () => {
-          return null;
-        },
-        header: () => {
-          return null;
-        },
-      },
-      ...defs,
-    ];
+    if (expandEnabled.value) {
+      leading.push({
+        ...chromeColumn,
+        id: DATATABLE_EXPAND_COLUMN_ID,
+      });
+    }
+
+    return [...leading, ...defs];
   });
 
   const table = useVueTable({
@@ -270,22 +380,26 @@ export function useDataTable<T>(
     get manualSorting() {
       return serverPaged.value;
     },
+    get manualFiltering() {
+      return serverPaged.value;
+    },
+    get enableHiding() {
+      return visibilityEnabled.value;
+    },
     get enableRowSelection() {
       return selectionEnabled.value;
+    },
+    get enableMultiRowSelection() {
+      return selectionMultiple.value;
     },
     get getSortedRowModel() {
       return serverPaged.value ? undefined : sortedRowModel;
     },
+    get getFilteredRowModel() {
+      return serverPaged.value ? undefined : filteredRowModel;
+    },
     getRowId: (row, index) => {
       return resolveDataTableRowId(row, index, merged.value.getRowId);
-    },
-    state: {
-      get sorting() {
-        return sortingState.value;
-      },
-      get rowSelection() {
-        return rowSelection.value;
-      },
     },
     onRowSelectionChange: (updater) => {
       const next =
@@ -299,6 +413,20 @@ export function useDataTable<T>(
       const first = next[0];
 
       models.sorting.value = first ? { id: first.id, desc: first.desc } : null;
+    },
+    state: {
+      get sorting() {
+        return sortingState.value;
+      },
+      get rowSelection() {
+        return rowSelection.value;
+      },
+      get columnFilters() {
+        return columnFilters.value;
+      },
+      get columnVisibility() {
+        return columnVisibility.value;
+      },
     },
   });
 
@@ -317,44 +445,103 @@ export function useDataTable<T>(
 
   const headerViews = computed((): DataTableHeaderView[] => {
     const headerGroup = table.getHeaderGroups()[0];
-
-    return (headerGroup?.headers ?? []).map((header) => {
+    const metas = (headerGroup?.headers ?? []).map((header) => {
       const column = columns.value.find((item) => {
         return item.id === header.column.id;
       });
-      const isSelection = header.column.id === DATATABLE_SELECTION_COLUMN_ID;
-      const ariaSort = column?.sortable
-        ? getDataTableAriaSort(models.sorting.value ?? null, header.column.id)
+
+      return {
+        column,
+        id: header.column.id,
+        width: column?.width,
+        sticky: column?.sticky,
+        isExpand: header.column.id === DATATABLE_EXPAND_COLUMN_ID,
+        isSelection: header.column.id === DATATABLE_SELECTION_COLUMN_ID,
+      };
+    });
+    const insets = getDataTableStickyInsets(
+      metas,
+      merged.value.stickyHeader === true ? 20 : 3,
+    );
+
+    return metas.map((meta) => {
+      const inset = get(insets, meta.id) as undefined | DataTableStickyInset;
+      const ariaSort = meta.column?.sortable
+        ? getDataTableAriaSort(models.sorting.value ?? null, meta.id)
         : "none";
 
       return {
         ariaSort,
-        isSelection,
-        id: header.column.id,
-        width: column?.width,
-        align: column?.align,
-        header: column?.header,
-        sortable: column?.sortable === true,
+        id: meta.id,
+        width: meta.width,
+        sticky: inset?.sticky,
+        isExpand: meta.isExpand,
+        align: meta.column?.align,
+        stickyStyle: inset?.style,
+        header: meta.column?.header,
+        isSelection: meta.isSelection,
+        stickyEdge: inset?.edge === true,
+        ellipsis: meta.column?.ellipsis === true,
+        sortable: meta.column?.sortable === true,
         sortIcon: getDataTableSortIcon(ariaSort),
+        hideable: meta.column?.hideable !== false,
+        filterOptions: meta.column?.filters ?? [],
+        filterable: isDataTableColumnFilterable(meta.column),
+        filterMultiple: meta.column?.filterMultiple !== false,
+        filterActive: isDataTableColumnFiltered(models.filters.value, meta.id),
+        filterValues: getDataTableColumnFilterValues(
+          models.filters.value,
+          meta.id,
+        ),
       };
     });
   });
 
-  const rowViews = computed((): DataTableRowView[] => {
+  const rowViews = computed((): DataTableRowView<T>[] => {
+    const insets = getDataTableStickyInsets(
+      headerViews.value.map((header) => {
+        return {
+          id: header.id,
+          width: header.width,
+          sticky: header.sticky,
+          isExpand: header.isExpand,
+          isSelection: header.isSelection,
+        };
+      }),
+      1,
+    );
+
     return table.getRowModel().rows.map((row) => {
       return {
         id: row.id,
+        original: row.original,
         selected: row.getIsSelected(),
+        expanded: (models.expanded.value ?? []).includes(row.id),
         cells: row.getVisibleCells().map((cell) => {
           const column = columns.value.find((item) => {
             return item.id === cell.column.id;
           });
+          const inset = get(insets, cell.column.id) as
+            undefined | DataTableStickyInset;
+          const accessor = column
+            ? getDataTableColumnAccessor(row.original, column)
+            : undefined;
+          const tooltip =
+            column?.ellipsis === true && accessor != null && accessor !== ""
+              ? String(accessor)
+              : undefined;
 
           return {
+            tooltip,
             id: cell.column.id,
             width: column?.width,
             align: column?.align,
+            sticky: inset?.sticky,
+            stickyStyle: inset?.style,
+            stickyEdge: inset?.edge === true,
+            ellipsis: column?.ellipsis === true,
             content: column ? column.cell(row.original) : null,
+            isExpand: cell.column.id === DATATABLE_EXPAND_COLUMN_ID,
             isSelection: cell.column.id === DATATABLE_SELECTION_COLUMN_ID,
           };
         }),
@@ -374,7 +561,7 @@ export function useDataTable<T>(
   });
 
   const showEmpty = computed(() => {
-    return !merged.value.loading && rows.value.length === 0;
+    return !merged.value.loading && rowViews.value.length === 0;
   });
 
   const paginationVariant = computed(() => {
@@ -516,7 +703,10 @@ export function useDataTable<T>(
   });
 
   function getHeadBind(header: DataTableHeaderView) {
-    const alignKey = header.isSelection ? "center" : (header.align ?? "start");
+    const alignKey =
+      header.isSelection || header.isExpand
+        ? "center"
+        : (header.align ?? "start");
     const alignItem = get(alignClasses.value, alignKey);
 
     return mergePartBind(
@@ -524,6 +714,7 @@ export function useDataTable<T>(
       {},
       {
         role: "columnheader",
+        style: header.stickyStyle,
         "aria-sort": header.sortable ? header.ariaSort : undefined,
         class: cn({
           "min-w-0": true,
@@ -531,15 +722,23 @@ export function useDataTable<T>(
           [get(alignItem, "head") ?? ""]: true,
           [get(variantItem.value, "head") ?? ""]: true,
           [get(mergedClasses.value, "head") ?? ""]: true,
+          [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
+            header.stickyStyle,
+          ),
           [get(variantItem.value, "headSticky") ?? ""]:
             merged.value.stickyHeader === true,
+          "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
+            header.sticky === "start" && header.stickyEdge,
+          "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
+            header.sticky === "end" && header.stickyEdge,
         }),
       },
     );
   }
 
   function getCellBind(cell: DataTableCellView) {
-    const alignKey = cell.isSelection ? "center" : (cell.align ?? "start");
+    const alignKey =
+      cell.isSelection || cell.isExpand ? "center" : (cell.align ?? "start");
     const alignItem = get(alignClasses.value, alignKey);
 
     return mergePartBind(
@@ -547,12 +746,20 @@ export function useDataTable<T>(
       {},
       {
         role: "cell",
+        style: cell.stickyStyle,
         class: cn({
           "min-w-0": true,
           [get(sizeItem.value, "cell") ?? ""]: true,
           [get(alignItem, "cell") ?? ""]: true,
           [get(variantItem.value, "cell") ?? ""]: true,
           [get(mergedClasses.value, "cell") ?? ""]: true,
+          [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
+            cell.stickyStyle,
+          ),
+          "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
+            cell.sticky === "start" && cell.stickyEdge,
+          "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
+            cell.sticky === "end" && cell.stickyEdge,
         }),
       },
     );
@@ -564,6 +771,7 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
+          "flex items-center justify-between gap-2": true,
           [get(mergedClasses.value, "toolbar") ?? ""]: true,
         }),
       },
@@ -616,10 +824,11 @@ export function useDataTable<T>(
   }
 
   function onToggleRow(rowId: string, selected: boolean) {
-    models.selection.value = toggleDataTableRowSelection(
+    models.selection.value = setDataTableRowSelection(
       models.selection.value ?? [],
       rowId,
       selected,
+      merged.value.selectionMode,
     );
   }
 
@@ -630,6 +839,98 @@ export function useDataTable<T>(
       selectAll,
     );
   }
+
+  function onCommitColumnFilter(columnId: string, values: string[]) {
+    models.filters.value = setDataTableColumnFilter(
+      models.filters.value,
+      columnId,
+      values,
+    );
+  }
+
+  function onToggleExpand(rowId: string, expanded: boolean) {
+    models.expanded.value = toggleDataTableRowExpansion(
+      models.expanded.value ?? [],
+      rowId,
+      expanded,
+    );
+  }
+
+  function onToggleColumnVisibility(columnId: string, hide: boolean) {
+    models.hiddenColumns.value = toggleDataTableColumnVisibility(
+      models.hiddenColumns.value ?? [],
+      columnId,
+      hide,
+      columns.value.map((column) => {
+        return column.id;
+      }),
+    );
+  }
+
+  const footerGroupBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.footer,
+      {},
+      {
+        role: "rowgroup",
+        class: cn({
+          [get(mergedClasses.value, "footer") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const summaryCells = computed((): null | DataTableCellView[] => {
+    const hasSummary = columns.value.some((column) => {
+      return column.summary !== undefined;
+    });
+
+    if (!hasSummary) {
+      return null;
+    }
+
+    const data = table.getRowModel().rows.map((row) => {
+      return row.original;
+    });
+
+    return headerViews.value.map((header) => {
+      const column = columns.value.find((item) => {
+        return item.id === header.id;
+      });
+
+      return {
+        id: header.id,
+        ellipsis: false,
+        tooltip: undefined,
+        width: header.width,
+        align: header.align,
+        sticky: header.sticky,
+        isExpand: header.isExpand,
+        stickyEdge: header.stickyEdge,
+        stickyStyle: header.stickyStyle,
+        isSelection: header.isSelection,
+        content:
+          header.isSelection || header.isExpand
+            ? null
+            : (column?.summary?.(data) ?? null),
+      };
+    });
+  });
+
+  const visibilityItems = computed((): DataTableVisibilityItem[] => {
+    return columns.value.map((column) => {
+      return {
+        id: column.id,
+        hideable: column.hideable !== false,
+        hidden: (models.hiddenColumns.value ?? []).includes(column.id),
+        label: typeof column.header === "string" ? column.header : column.id,
+      };
+    });
+  });
+
+  const showToolbar = computed(() => {
+    return Boolean(vueSlots.toolbar) || visibilityEnabled.value;
+  });
 
   return {
     merged,
@@ -649,16 +950,25 @@ export function useDataTable<T>(
     serverPaged,
     spanRowBind,
     wrapperBind,
+    showToolbar,
     onTogglePage,
     onToggleSort,
     spanCellBind,
+    summaryCells,
     bodyGroupBind,
     headerRowBind,
     paginationBind,
     selectAllState,
     showPagination,
+    onToggleExpand,
     headerGroupBind,
+    visibilityItems,
+    footerGroupBind,
     selectionEnabled,
     paginationVariant,
+    selectionMultiple,
+    visibilityEnabled,
+    onCommitColumnFilter,
+    onToggleColumnVisibility,
   };
 }

@@ -7,11 +7,15 @@ export type {
   DataTableColumnBase,
   DataTableCustomProps,
   DataTableEmits,
+  DataTableFilterOption,
+  DataTableFilters,
   DataTableOwnProps,
   DataTableProps,
+  DataTableSelectionMode,
   DataTableSizeOverrides,
   DataTableSlots,
   DataTableSorting,
+  DataTableStickyEdge,
   DataTableVariantOverrides,
 } from "@/Components/DataTable/dataTable.types";
 export { default as DataTable } from "@/Components/DataTable/DataTable.vue";

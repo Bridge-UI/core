@@ -85,4 +85,141 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
 </DataTable>
 ```
 
-Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` — the table engine is not exported.
+Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `hiddenColumns` / `expanded` — the table engine is not exported.
+
+### Columns
+
+There is no `#cell-name` slot. Customize cells with `columns[].cell` — a function that returns a string, `h(…)`, or Vue JSX:
+
+```ts
+import { h } from "vue";
+import { Badge } from "@bridge-ui/vue/Components/Badge";
+
+const columns = [
+  { id: "name", header: "Name", cell: (row) => row.name },
+  {
+    id: "role",
+    header: "Role",
+    cell: (row) => h(Badge, null, () => row.role),
+  },
+];
+```
+
+Table-level slots stay `empty` / `expanded` / `loading` / `pagination` / `toolbar`.
+
+### Selection
+
+`selectionMode="multiple"` (default) uses checkboxes and select-all. `selectionMode="single"` uses radios and keeps at most one id. `v-model:selection` is always `string[]`.
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  selection-mode="single"
+  v-model:selection="selected"
+  :get-row-id="(row) => row.id"
+/>
+```
+
+### Filters
+
+Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`). Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+
+```vue
+<DataTable :rows="users" :columns="columns" v-model:filters="filters" />
+```
+
+```ts
+const columns = [
+  {
+    id: "role",
+    header: "Role",
+    cell: (row) => row.role,
+    filters: [
+      { label: "Engineer", value: "Engineer" },
+      { label: "Researcher", value: "Researcher" },
+    ],
+  },
+];
+```
+
+Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` is still controlled — the app owns the fetch.
+
+### Sticky columns
+
+`sticky="start"` or `sticky="end"` pins a column while the grid scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
+
+```ts
+const columns = [
+  {
+    id: "name",
+    width: 160,
+    header: "Name",
+    sticky: "start",
+    cell: (row) => row.name,
+  },
+  { id: "role", header: "Role", cell: (row) => row.role },
+  {
+    id: "actions",
+    header: "Actions",
+    sticky: "end",
+    cell: (row) => row.id,
+  },
+];
+```
+
+### Ellipsis
+
+`ellipsis` truncates overflowing cell text. The tooltip uses the column accessor (or `row[id]`).
+
+```ts
+const columns = [
+  {
+    id: "name",
+    header: "Name",
+    ellipsis: true,
+    cell: (row) => row.name,
+  },
+];
+```
+
+### Column visibility
+
+Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** control in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
+
+```vue
+<DataTable :rows="users" :columns="columns" v-model:hidden-columns="hidden" />
+```
+
+### Expand
+
+Controlled `expanded` row ids. `#expanded="{ row }"` renders in a spanning row under the data row.
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  v-model:expanded="expanded"
+  :get-row-id="(row) => row.id"
+>
+  <template #expanded="{ row }">
+    {{ row.bio }}
+  </template>
+</DataTable>
+```
+
+### Summary
+
+Set `summary` on a column to render a footer row over the current (filtered) rows. Chrome cells stay empty.
+
+```ts
+const columns = [
+  { id: "name", header: "Name", cell: (row) => row.name },
+  {
+    id: "role",
+    header: "Role",
+    cell: (row) => row.role,
+    summary: (items) => `${items.length} roles`,
+  },
+];
+```

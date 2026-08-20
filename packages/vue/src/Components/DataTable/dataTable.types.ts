@@ -4,7 +4,11 @@ import type { HTMLAttributes, Slot, VNodeChild } from "vue";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableFilterOption,
+  DataTableFilters,
+  DataTableSelectionMode,
   DataTableSorting,
+  DataTableStickyEdge,
 } from "@bridge-ui/core/Domain";
 import type {
   DataTableAlign,
@@ -16,13 +20,21 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationOwnProps } from "@/Components/Pagination/pagination.types";
+import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
 
 export interface DataTableSizeOverrides {}
 export interface DataTableAlignOverrides {}
 export interface DataTableVariantOverrides {}
 
-export type { DataTableColumnBase, DataTableSorting };
+export type {
+  DataTableColumnBase,
+  DataTableFilterOption,
+  DataTableFilters,
+  DataTableSelectionMode,
+  DataTableSorting,
+  DataTableStickyEdge,
+};
 
 /**
  * Column definition with Vue renderers.
@@ -44,6 +56,11 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
    * Header content.
    */
   header: VNodeChild;
+
+  /**
+   * Footer cell for a summary row. Receives the current (filtered) rows.
+   */
+  summary?: (rows: T[]) => VNodeChild;
 };
 
 export interface DataTableClasses {
@@ -61,6 +78,11 @@ export interface DataTableClasses {
    * Classes merged onto the empty-state region.
    */
   empty?: string;
+
+  /**
+   * Classes merged onto the summary footer rowgroup.
+   */
+  footer?: string;
 
   /**
    * Classes merged onto header cells.
@@ -138,6 +160,13 @@ export interface DataTableCustomProps {
   empty?: HTMLAttributes;
 
   /**
+   * Props forwarded to the summary footer rowgroup.
+   *
+   * @default undefined
+   */
+  footer?: HTMLAttributes;
+
+  /**
    * Props forwarded to header cells.
    *
    * @default undefined
@@ -164,6 +193,13 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   pagination?: Partial<Omit<PaginationOwnProps, "count">>;
+
+  /**
+   * Extra props for selection radios (`selectionMode="single"`).
+   *
+   * @default undefined
+   */
+  radio?: Partial<Omit<RadioProps, "modelValue">>;
 
   /**
    * Props forwarded to the DataTable root.
@@ -210,6 +246,21 @@ export interface DataTableCustomProps {
 
 export interface DataTableEmits {
   /**
+   * Emitted when expanded row ids should update (`v-model:expanded`).
+   */
+  "update:expanded": [ids: string[]];
+
+  /**
+   * Emitted when column filters should update (`v-model:filters`).
+   */
+  "update:filters": [filters: DataTableFilters];
+
+  /**
+   * Emitted when hidden column ids should update (`v-model:hidden-columns`).
+   */
+  "update:hiddenColumns": [ids: string[]];
+
+  /**
    * Emitted when the numbered page should update (`v-model:page`).
    */
   "update:page": [page: number];
@@ -251,6 +302,20 @@ export interface DataTableOwnProps<T> {
   customProps?: DataTableCustomProps;
 
   /**
+   * Controlled expanded row ids.
+   *
+   * @default undefined
+   */
+  expanded?: string[];
+
+  /**
+   * Controlled column filters: column id → selected option values.
+   *
+   * @default undefined
+   */
+  filters?: DataTableFilters;
+
+  /**
    * Stretch the grid to at least the wrapper width.
    *
    * @default true
@@ -263,6 +328,13 @@ export interface DataTableOwnProps<T> {
    * @default undefined
    */
   getRowId?: (row: T) => string;
+
+  /**
+   * Controlled hidden column ids.
+   *
+   * @default undefined
+   */
+  hiddenColumns?: string[];
 
   /**
    * Row hover styles on the body.
@@ -307,6 +379,13 @@ export interface DataTableOwnProps<T> {
   selection?: string[];
 
   /**
+   * Row selection chrome: radios (`single`) or checkboxes (`multiple`).
+   *
+   * @default "multiple"
+   */
+  selectionMode?: DataTableSelectionMode;
+
+  /**
    * Cell padding / type scale.
    *
    * @default "md"
@@ -342,11 +421,16 @@ export interface DataTableOwnProps<T> {
   variant?: MergeProps<DataTableVariant, DataTableVariantOverrides>;
 }
 
-export interface DataTableSlots {
+export interface DataTableSlots<T = unknown> {
   /**
    * Shown when `rows` is empty and the table is not loading.
    */
   empty?: Slot<undefined>;
+
+  /**
+   * Rendered in a spanning row when a row is expanded.
+   */
+  expanded?: Slot<{ row: T }>;
 
   /**
    * Replaces the default spinner when `loading` is set.

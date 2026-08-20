@@ -2,6 +2,9 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
 import { DataTable } from "@/Components/DataTable";
 import type { DataTableColumn } from "@/Components/DataTable/dataTable.types";
@@ -12,6 +15,8 @@ afterEach(async () => {
   }
 
   await flushPromises();
+  resetLayerStackForTests();
+  document.body.innerHTML = "";
 });
 
 type User = { id: string; name: string; role: string };
@@ -140,4 +145,227 @@ test("it should mark the table busy when loading", () => {
   });
 
   expect(wrapper.find('[role="table"]').attributes("aria-busy")).toBe("true");
+});
+
+test("it should emit a replaced selection in single mode", async () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      selection: ["1"],
+      selectionMode: "single",
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  expect(
+    wrapper
+      .find('input[type="checkbox"][aria-label="Select all rows"]')
+      .exists(),
+  ).toBe(false);
+
+  const radios = wrapper.findAll(
+    'input[type="radio"][aria-label="Select row"]',
+  );
+
+  await radios[1]?.setValue(true);
+
+  expect(wrapper.emitted("update:selection")?.[0]).toEqual([["2"]]);
+});
+
+const filterColumns: DataTableColumn<User>[] = [
+  { id: "name", header: "Name", cell: (row) => row.name },
+  {
+    id: "role",
+    header: "Role",
+    cell: (row) => row.role,
+    filters: [
+      { label: "Engineer", value: "Engineer" },
+      { label: "Researcher", value: "Researcher" },
+    ],
+  },
+];
+
+test("it should emit update:filters when a column filter is applied", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: { rows, filters: {}, columns: filterColumns },
+  });
+
+  await wrapper.get('[aria-label="Filter column"]').trigger("click");
+  await flushPromises();
+
+  const option = document.body.querySelector(
+    'input[type="checkbox"]',
+  ) as null | HTMLInputElement;
+
+  option?.click();
+  await flushPromises();
+
+  const ok = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.trim() === "OK",
+  );
+
+  ok?.click();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:filters")?.[0]).toEqual([
+    { role: ["Engineer"] },
+  ]);
+});
+
+test("it should hide non-matching rows when a client filter is set", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: filterColumns,
+      filters: { role: ["Engineer"] },
+    },
+  });
+
+  expect(wrapper.text()).toContain("Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Alan Turing");
+});
+
+test("it should keep server-paged rows unfiltered locally", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      pageCount: 2,
+      columns: filterColumns,
+      filters: { role: ["Engineer"] },
+    },
+  });
+
+  expect(wrapper.text()).toContain("Alan Turing");
+  expect(wrapper.text()).toContain("Ada Lovelace");
+});
+
+test("it should pin a sticky start column", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          width: 120,
+          header: "Name",
+          sticky: "start",
+          cell: (row: User) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  const nameHeader = wrapper
+    .findAll('[role="columnheader"]')
+    .find((header) => header.text().includes("Name"));
+
+  expect((nameHeader?.element as HTMLElement).style.left).toBe("0px");
+});
+
+test("it should truncate ellipsis cells", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row: User) => row.name,
+        },
+      ],
+    },
+  });
+
+  expect(wrapper.get(".text-ellipsis").text()).toBe("Ada Lovelace");
+});
+
+test("it should hide columns listed in hiddenColumns", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, hiddenColumns: ["role"] },
+  });
+
+  expect(wrapper.text()).toContain("Name");
+  expect(wrapper.text()).not.toContain("Role");
+  expect(wrapper.text()).not.toContain("Engineer");
+});
+
+test("it should emit update:hiddenColumns from the columns menu", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: { rows, columns, hiddenColumns: [] },
+  });
+
+  await wrapper.get('[aria-haspopup="menu"]').trigger("click");
+  await flushPromises();
+
+  const option = Array.from(
+    document.body.querySelectorAll('input[type="checkbox"]'),
+  ).find((input) => {
+    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
+      "Role",
+    );
+  }) as undefined | HTMLInputElement;
+
+  option?.click();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should emit update:expanded when a row is expanded", async () => {
+  const wrapper = mountDataTable({
+    slots: {
+      expanded: ({ row }: { row: User }) => `Detail ${row.name}`,
+    },
+    props: {
+      rows,
+      columns,
+      expanded: [],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  await wrapper.get('[aria-label="Expand row"]').trigger("click");
+
+  expect(wrapper.emitted("update:expanded")?.[0]).toEqual([["1"]]);
+});
+
+test("it should render expanded slot content", () => {
+  const wrapper = mountDataTable({
+    slots: {
+      expanded: ({ row }: { row: User }) => `Detail ${row.name}`,
+    },
+    props: {
+      rows,
+      columns,
+      expanded: ["1"],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  expect(wrapper.text()).toContain("Detail Ada Lovelace");
+});
+
+test("it should render a summary footer", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        { id: "name", header: "Name", cell: (row: User) => row.name },
+        {
+          id: "role",
+          header: "Role",
+          cell: (row: User) => row.role,
+          summary: (items: User[]) => `${items.length} roles`,
+        },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("2 roles");
 });
