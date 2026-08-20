@@ -29,9 +29,9 @@ export function DataTableSortButton({
   const trigger = (
     <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 leading-none">
       <span className="min-w-0 truncate leading-none">{children}</span>
-      <span className="inline-flex h-4 w-3.5 shrink-0 flex-col items-center justify-center leading-none">
+      <span className="inline-flex h-6 w-5 shrink-0 flex-col items-center justify-center leading-none">
         <Icon
-          size="sm"
+          size="lg"
           icon="chevronUp"
           className={cn({
             "-mb-1": true,
@@ -40,7 +40,7 @@ export function DataTableSortButton({
           })}
         />
         <Icon
-          size="sm"
+          size="lg"
           icon="chevronDown"
           className={cn({
             "text-dark-800 dark:text-dark-100": ariaSort === "descending",
