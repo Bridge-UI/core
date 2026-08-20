@@ -105,8 +105,8 @@ export type DataTableItemSlotProps<T> = {
 /**
  * How `loading` is shown.
  *
- * `overlay` dims the table and centers a spin. `bar` draws a progress line
- * under the header.
+ * `overlay` dims the table and centers a spin. `bar` dims the table and draws
+ * a progress line under the header.
  */
 export type DataTableLoadingVariant = "bar" | "overlay";
 
