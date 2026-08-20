@@ -185,6 +185,8 @@ import type {
 import type {
   TableAlign,
   TableAlignItem,
+  TableRounded,
+  TableRoundedItem,
   TableSize,
   TableSizeItem,
   TableVariant,
@@ -608,6 +610,7 @@ export interface DataTableConfigBase {
     full: boolean;
     hoverable: boolean;
     paginationAlign: keyof TableAlign;
+    rounded: keyof TableRounded;
     selectionMode: "single" | "multiple";
     size: keyof TableSize;
     stickyHeader: "boxed" | boolean;
@@ -1333,6 +1336,7 @@ export interface TableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
+    rounded: keyof TableRounded;
     size: keyof TableSize;
     stickyHeader: boolean;
     striped: boolean;
@@ -1340,6 +1344,7 @@ export interface TableConfigBase {
   }>;
   tokens: Partial<{
     align: Record<string, TableAlignItem>;
+    rounded: Record<string, TableRoundedItem>;
     size: Record<string, TableSizeItem>;
     variant: Record<string, TableVariantItem>;
   }>;

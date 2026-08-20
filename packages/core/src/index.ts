@@ -152,7 +152,9 @@ export {
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
+  getDataTableSortTooltip,
   getDataTableStickyInsets,
+  getDataTableStickyPing,
   getPaginationItems,
   getSliderBarGeometry,
   getSliderPointerClientX,
@@ -271,6 +273,7 @@ export type {
   DataTableSorting,
   DataTableStickyEdge,
   DataTableStickyInset,
+  DataTableStickyPing,
   DatePickerMode,
   DatePickerModel,
   DateRangeValue,
@@ -743,12 +746,15 @@ export type {
 } from "@/Tokens/Switch";
 export {
   alignProps as tableAlignProps,
+  roundedProps as tableRoundedProps,
   sizeProps as tableSizeProps,
   variantProps as tableVariantProps,
 } from "@/Tokens/Table";
 export type {
   TableAlign,
   TableAlignItem,
+  TableRounded,
+  TableRoundedItem,
   TableSize,
   TableSizeItem,
   TableVariant,
