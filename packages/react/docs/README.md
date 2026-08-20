@@ -22,6 +22,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [Checkbox](./components/Checkbox.md)
 - [ColorField](./components/ColorField.md)
 - [ColorPicker](./components/ColorPicker.md)
+- [DataTable](./components/DataTable.md)
 - [DateField](./components/DateField.md)
 - [DatePicker](./components/DatePicker.md)
 - [DateRangeField](./components/DateRangeField.md)
