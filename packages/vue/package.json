@@ -80,7 +80,13 @@
     "docs"
   ],
   "peerDependencies": {
+    "@tanstack/vue-table": "^8.21.0",
     "vue": "^3.4.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/vue-table": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@bridge-ui/core": "^0.2.0",
@@ -105,6 +111,7 @@
     "@lucide/vue": "^1.30.0",
     "@phosphor-icons/vue": "^2.2.1",
     "@tabler/icons-vue": "^3.46.0",
+    "@tanstack/vue-table": "^8.21.3",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@types/luxon": "^3.7.4",
