@@ -10,7 +10,20 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { fromPairs, get, omit } from "es-toolkit/compat";
+import {
+  compact,
+  fromPairs,
+  get,
+  head,
+  isArray,
+  isEmpty,
+  isFunction,
+  isNil,
+  isString,
+  keyBy,
+  map,
+  omit,
+} from "es-toolkit/compat";
 import { useMemo, type CSSProperties, type ReactNode } from "react";
 
 // ** Core Imports
@@ -19,9 +32,10 @@ import {
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
   getDataTableDefaultCellContent,
-  getDataTableGridTemplate,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -32,6 +46,8 @@ import {
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
+  isDataTableStickyHeader,
+  isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   resolveDataTableRowId,
   rowSelectionToIds,
@@ -46,12 +62,7 @@ import {
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
-import {
-  dataTableAlignProps as alignProps,
-  dataTableSizeProps as sizeProps,
-  dataTableVariantProps as variantProps,
-  type DataTableAlign,
-} from "@bridge-ui/core/Tokens";
+import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -98,6 +109,7 @@ const dataTableBridgeKeys = [
   "selectionMode",
   "onFiltersChange",
   "onSortingChange",
+  "paginationAlign",
   "onExpandedChange",
   "onSelectionChange",
   "onHiddenColumnsChange",
@@ -121,6 +133,7 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "hoverable"
   | "stickyHeader"
   | "selectionMode"
+  | "paginationAlign"
 >;
 
 type DataTableMerged<T> = MergeLibDefaults<
@@ -212,10 +225,11 @@ export function useDataTable<T>(
     bridgeKeys: dataTableBridgeKeys,
   });
 
-  const { merged, entry: bridgeDataTable } = useBridgeUIComponent<
-    DataTableMerged<T>,
-    "DataTable"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeDataTable,
+  } = useBridgeUIComponent<DataTableMerged<T>, "DataTable">({
     libDefaults,
     props: componentProps,
     componentName: "DataTable",
@@ -238,30 +252,12 @@ export function useDataTable<T>(
     entry: bridgeDataTable,
   });
 
-  const sizeClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeDataTable?.tokens?.size,
-    );
-  }, [bridgeDataTable?.tokens?.size]);
-
   const variantClasses = useMemo(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeDataTable?.tokens?.variant,
+      get(components, ["Table", "tokens", "variant"]),
     );
-  }, [bridgeDataTable?.tokens?.variant]);
-
-  const alignClasses = useMemo(() => {
-    return mergeBridgeUILayeredClasses(
-      alignProps,
-      bridgeDataTable?.tokens?.align,
-    ) as DataTableAlign;
-  }, [bridgeDataTable?.tokens?.align]);
-
-  const sizeItem = derived(() => {
-    return get(sizeClasses, merged.size);
-  });
+  }, [components]);
 
   const variantItem = derived(() => {
     return get(variantClasses, merged.variant);
@@ -269,6 +265,10 @@ export function useDataTable<T>(
 
   const columns = derived(() => {
     return merged.columns ?? [];
+  });
+
+  const columnsById = derived(() => {
+    return keyBy(columns, "id");
   });
 
   const rows = derived(() => {
@@ -305,6 +305,14 @@ export function useDataTable<T>(
     return isDataTableServerPaged(merged.page, merged.pageCount);
   });
 
+  const stickyHeaderEnabled = derived(() => {
+    return isDataTableStickyHeader(merged.stickyHeader);
+  });
+
+  const stickyHeaderBoxed = derived(() => {
+    return isDataTableStickyHeaderBoxed(merged.stickyHeader);
+  });
+
   const sortingState = useMemo((): SortingState => {
     return merged.sorting
       ? [{ id: merged.sorting.id, desc: merged.sorting.desc }]
@@ -312,7 +320,7 @@ export function useDataTable<T>(
   }, [merged.sorting]);
 
   const columnFilters = useMemo((): ColumnFiltersState => {
-    return Object.entries(merged.filters ?? {}).map(([id, value]) => {
+    return map(merged.filters ?? {}, (value, id) => {
       return { id, value };
     });
   }, [merged.filters]);
@@ -346,9 +354,9 @@ export function useDataTable<T>(
           return getDataTableColumnAccessor(row, column);
         },
         filterFn: (row, columnId, filterValue) => {
-          const values = Array.isArray(filterValue) ? filterValue : [];
+          const values = isArray(filterValue) ? filterValue : [];
 
-          if (values.length === 0) {
+          if (isEmpty(values)) {
             return true;
           }
 
@@ -356,60 +364,47 @@ export function useDataTable<T>(
         },
       };
     });
-    const leading: ColumnDef<T>[] = [];
 
-    if (selectionEnabled) {
-      leading.push({
-        ...chromeColumn,
-        id: DATATABLE_SELECTION_COLUMN_ID,
-      });
-    }
-
-    if (expandEnabled) {
-      leading.push({
-        ...chromeColumn,
-        id: DATATABLE_EXPAND_COLUMN_ID,
-      });
-    }
-
-    return [...leading, ...defs];
+    return compact([
+      selectionEnabled
+        ? { ...chromeColumn, id: DATATABLE_SELECTION_COLUMN_ID }
+        : undefined,
+      expandEnabled
+        ? { ...chromeColumn, id: DATATABLE_EXPAND_COLUMN_ID }
+        : undefined,
+      ...defs,
+    ]);
   }, [columns, expandEnabled, selectionEnabled]);
 
   const table = useReactTable({
     data: rows,
     columns: columnDefs,
+    manualSorting: serverPaged,
+    enableSortingRemoval: true,
+    manualFiltering: serverPaged,
+    enableHiding: visibilityEnabled,
     getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: selectionEnabled,
+    enableMultiRowSelection: selectionMultiple,
+    getSortedRowModel: serverPaged ? undefined : getSortedRowModel(),
+    getFilteredRowModel: serverPaged ? undefined : getFilteredRowModel(),
+    getRowId: (row, index) => {
+      return resolveDataTableRowId(row, index, merged.getRowId);
+    },
     state: {
       rowSelection,
       columnFilters,
       columnVisibility,
       sorting: sortingState,
     },
-    ...(serverPaged
-      ? {}
-      : {
-          getSortedRowModel: getSortedRowModel(),
-          getFilteredRowModel: getFilteredRowModel(),
-        }),
-    manualSorting: serverPaged,
-    enableSortingRemoval: true,
-    manualFiltering: serverPaged,
-    enableHiding: visibilityEnabled,
-    enableRowSelection: selectionEnabled,
-    enableMultiRowSelection: selectionMultiple,
-    getRowId: (row, index) => {
-      return resolveDataTableRowId(row, index, merged.getRowId);
-    },
     onRowSelectionChange: (updater) => {
-      const next =
-        typeof updater === "function" ? updater(rowSelection) : updater;
+      const next = isFunction(updater) ? updater(rowSelection) : updater;
 
       merged.onSelectionChange?.(rowSelectionToIds(next));
     },
     onSortingChange: (updater) => {
-      const next =
-        typeof updater === "function" ? updater(sortingState) : updater;
-      const first = next[0];
+      const next = isFunction(updater) ? updater(sortingState) : updater;
+      const first = head(next);
 
       merged.onSortingChange?.(
         first ? { id: first.id, desc: first.desc } : null,
@@ -418,9 +413,7 @@ export function useDataTable<T>(
   });
 
   const pageIds = derived(() => {
-    return table.getRowModel().rows.map((row) => {
-      return row.id;
-    });
+    return map(table.getRowModel().rows, "id");
   });
 
   const selectAllState = derived(() => {
@@ -428,11 +421,10 @@ export function useDataTable<T>(
   });
 
   const headerViews = derived((): DataTableHeaderView[] => {
-    const headerGroup = table.getHeaderGroups()[0];
+    const headerGroup = head(table.getHeaderGroups());
     const metas = (headerGroup?.headers ?? []).map((header) => {
-      const column = columns.find((item) => {
-        return item.id === header.column.id;
-      });
+      const column = get(columnsById, header.column.id) as
+        undefined | DataTableColumn<T>;
 
       return {
         column,
@@ -445,7 +437,7 @@ export function useDataTable<T>(
     });
     const insets = getDataTableStickyInsets(
       metas,
-      merged.stickyHeader === true ? 20 : 3,
+      stickyHeaderEnabled ? 20 : 10,
     );
 
     return metas.map((meta) => {
@@ -496,19 +488,18 @@ export function useDataTable<T>(
       return {
         id: row.id,
         original: row.original,
-        selected: row.getIsSelected(),
         expanded: (merged.expanded ?? []).includes(row.id),
+        selected: (merged.selection ?? []).includes(row.id),
         cells: row.getVisibleCells().map((cell) => {
-          const column = columns.find((item) => {
-            return item.id === cell.column.id;
-          });
+          const column = get(columnsById, cell.column.id) as
+            undefined | DataTableColumn<T>;
           const inset = get(insets, cell.column.id) as
             undefined | DataTableStickyInset;
           const accessor = column
             ? getDataTableColumnAccessor(row.original, column)
             : undefined;
           const tooltip =
-            column?.ellipsis === true && accessor != null && accessor !== ""
+            column?.ellipsis === true && !isNil(accessor) && accessor !== ""
               ? String(accessor)
               : undefined;
 
@@ -533,11 +524,8 @@ export function useDataTable<T>(
     });
   });
 
-  const gridStyle = derived((): CSSProperties => {
-    return {
-      display: "grid",
-      gridTemplateColumns: getDataTableGridTemplate(headerViews),
-    };
+  const columnCount = derived(() => {
+    return headerViews.length;
   });
 
   const showPagination = derived(() => {
@@ -560,152 +548,80 @@ export function useDataTable<T>(
     });
   });
 
-  const wrapperBind = derived(() => {
-    return mergePartBind(
-      customProps?.wrapper,
-      {},
-      {
-        className: cn({
-          "overflow-x-auto": merged.stickyHeader !== true,
-          [get(sizeItem, "root") ?? ""]: true,
-          [get(variantItem, "root") ?? ""]: true,
+  const tableProps = derived(() => {
+    return {
+      size: merged.size,
+      variant: merged.variant,
+      full: merged.full !== false,
+      striped: merged.striped === true,
+      stickyHeader: stickyHeaderEnabled,
+      hoverable: merged.hoverable === true,
+      customProps: {
+        root: customProps?.wrapper,
+        table: {
+          ...customProps?.table,
+          "aria-busy": merged.loading || undefined,
+        },
+      },
+      classes: {
+        row: get(mergedClasses, "row"),
+        body: get(mergedClasses, "body"),
+        cell: get(mergedClasses, "cell"),
+        head: get(mergedClasses, "head"),
+        table: get(mergedClasses, "table"),
+        footer: get(mergedClasses, "footer"),
+        header: get(mergedClasses, "header"),
+        root: cn({
+          "overflow-auto": stickyHeaderBoxed,
           [get(mergedClasses, "wrapper") ?? ""]: true,
         }),
       },
-    );
+    };
   });
 
-  const tableBind = derived(() => {
-    return mergePartBind(
-      customProps?.table,
-      {},
-      {
-        role: "table",
-        "aria-busy": merged.loading || undefined,
-        className: cn({
-          "min-w-full": merged.full === true,
-          [get(sizeItem, "table") ?? ""]: true,
-          [get(mergedClasses, "table") ?? ""]: true,
-        }),
-      },
+  function getColumnLayoutStyle(
+    view: {
+      isExpand: boolean;
+      isSelection: boolean;
+      stickyStyle?: DataTableStickyInset["style"];
+      width?: number | string;
+    },
+    header = false,
+  ): CSSProperties {
+    const width = getDataTableColumnCssWidth(
+      view.width,
+      view.isExpand || view.isSelection,
     );
-  });
 
-  const headerGroupBind = derived(() => {
-    return mergePartBind(
-      customProps?.header,
-      {},
-      {
-        role: "rowgroup",
-        className: cn({
-          [get(variantItem, "header") ?? ""]: true,
-          [get(mergedClasses, "header") ?? ""]: true,
-        }),
-      },
-    );
-  });
+    return {
+      ...(width ? { width, minWidth: width } : {}),
+      ...view.stickyStyle,
+      ...(header && view.stickyStyle ? { zIndex: 20 } : {}),
+    };
+  }
 
-  const bodyGroupBind = derived(() => {
-    return mergePartBind(
-      customProps?.body,
-      {},
-      {
-        role: "rowgroup",
-        className: cn({
-          [get(variantItem, "body") ?? ""]: true,
-          [get(mergedClasses, "body") ?? ""]: true,
-        }),
-      },
-    );
-  });
+  function getHeadAlign(header: DataTableHeaderView) {
+    return header.isSelection || header.isExpand
+      ? "center"
+      : (header.align ?? "start");
+  }
 
-  const headerRowBind = derived(() => {
-    return mergePartBind(
-      customProps?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle,
-        className: cn({
-          [get(variantItem, "row") ?? ""]: true,
-          [get(mergedClasses, "row") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
-  const bodyRowBind = derived(() => {
-    return mergePartBind(
-      customProps?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle,
-        className: cn({
-          [get(variantItem, "row") ?? ""]: true,
-          [get(mergedClasses, "row") ?? ""]: true,
-          [get(variantItem, "rowHover") ?? ""]: merged.hoverable === true,
-          [get(variantItem, "rowStriped") ?? ""]: merged.striped === true,
-        }),
-      },
-    );
-  });
-
-  const spanRowBind = derived(() => {
-    return mergePartBind(
-      customProps?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle,
-        className: cn({
-          [get(variantItem, "row") ?? ""]: true,
-          [get(mergedClasses, "row") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
-  const spanCellBind = derived(() => {
-    return mergePartBind(
-      customProps?.cell,
-      {},
-      {
-        role: "cell",
-        style: { gridColumn: "1 / -1" },
-        className: cn({
-          "min-w-0": true,
-          "text-center": true,
-          [get(sizeItem, "cell") ?? ""]: true,
-          [get(variantItem, "cell") ?? ""]: true,
-          [get(mergedClasses, "cell") ?? ""]: true,
-        }),
-      },
-    );
-  });
+  function getCellAlign(cell: DataTableCellView) {
+    return cell.isSelection || cell.isExpand
+      ? "center"
+      : (cell.align ?? "start");
+  }
 
   function getHeadBind(header: DataTableHeaderView) {
-    const alignKey =
-      header.isSelection || header.isExpand
-        ? "center"
-        : (header.align ?? "start");
-    const alignItem = get(alignClasses, alignKey);
-
     return mergePartBind(
       customProps?.head,
       {},
       {
-        role: "columnheader",
-        style: header.stickyStyle,
+        style: getColumnLayoutStyle(header, true),
         "aria-sort": header.sortable ? header.ariaSort : undefined,
         className: cn({
           "min-w-0": true,
-          [get(sizeItem, "head") ?? ""]: true,
-          [get(alignItem, "head") ?? ""]: true,
-          [get(variantItem, "head") ?? ""]: true,
-          [get(mergedClasses, "head") ?? ""]: true,
           [get(variantItem, "cellSticky") ?? ""]: Boolean(header.stickyStyle),
-          [get(variantItem, "headSticky") ?? ""]: merged.stickyHeader === true,
           "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
             header.sticky === "start" && header.stickyEdge,
           "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
@@ -716,22 +632,13 @@ export function useDataTable<T>(
   }
 
   function getCellBind(cell: DataTableCellView) {
-    const alignKey =
-      cell.isSelection || cell.isExpand ? "center" : (cell.align ?? "start");
-    const alignItem = get(alignClasses, alignKey);
-
     return mergePartBind(
       customProps?.cell,
       {},
       {
-        role: "cell",
-        style: cell.stickyStyle,
+        style: getColumnLayoutStyle(cell),
         className: cn({
           "min-w-0": true,
-          [get(sizeItem, "cell") ?? ""]: true,
-          [get(alignItem, "cell") ?? ""]: true,
-          [get(variantItem, "cell") ?? ""]: true,
-          [get(mergedClasses, "cell") ?? ""]: true,
           [get(variantItem, "cellSticky") ?? ""]: Boolean(cell.stickyStyle),
           "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
             cell.sticky === "start" && cell.stickyEdge,
@@ -786,21 +693,9 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex justify-end py-3": true,
+          "flex py-3": true,
+          [getDataTablePaginationAlignClass(merged.paginationAlign)]: true,
           [get(mergedClasses, "pagination") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
-  const footerGroupBind = derived(() => {
-    return mergePartBind(
-      customProps?.footer,
-      {},
-      {
-        role: "rowgroup",
-        className: cn({
-          [get(mergedClasses, "footer") ?? ""]: true,
         }),
       },
     );
@@ -815,14 +710,11 @@ export function useDataTable<T>(
       return null;
     }
 
-    const data = table.getRowModel().rows.map((row) => {
-      return row.original;
-    });
+    const data = map(table.getRowModel().rows, "original");
 
     return headerViews.map((header) => {
-      const column = columns.find((item) => {
-        return item.id === header.id;
-      });
+      const column = get(columnsById, header.id) as
+        undefined | DataTableColumn<T>;
 
       return {
         id: header.id,
@@ -850,7 +742,7 @@ export function useDataTable<T>(
         id: column.id,
         hideable: column.hideable !== false,
         hidden: (merged.hiddenColumns ?? []).includes(column.id),
-        label: typeof column.header === "string" ? column.header : column.id,
+        label: isString(column.header) ? column.header : column.id,
       };
     });
   });
@@ -900,9 +792,7 @@ export function useDataTable<T>(
         merged.hiddenColumns ?? [],
         columnId,
         hide,
-        columns.map((column) => {
-          return column.id;
-        }),
+        map(columns, "id"),
       ),
     );
   }
@@ -915,31 +805,26 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    tableBind,
+    tableProps,
     getHeadBind,
     headerViews,
     loadingBind,
     onToggleRow,
     toolbarBind,
-    bodyRowBind,
     getCellBind,
+    columnCount,
     serverPaged,
-    spanRowBind,
-    wrapperBind,
     showToolbar,
+    getHeadAlign,
+    getCellAlign,
     onTogglePage,
     onToggleSort,
-    spanCellBind,
     summaryCells,
-    bodyGroupBind,
-    headerRowBind,
     paginationBind,
     selectAllState,
     showPagination,
     onToggleExpand,
-    headerGroupBind,
     visibilityItems,
-    footerGroupBind,
     selectionEnabled,
     paginationVariant,
     selectionMultiple,

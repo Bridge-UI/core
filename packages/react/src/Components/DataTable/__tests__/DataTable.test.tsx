@@ -158,7 +158,12 @@ test("it should render radios and replace the selection in single mode", () => {
     screen.queryByRole("checkbox", { name: "Select all rows" }),
   ).toBeNull();
 
-  fireEvent.click(screen.getAllByRole("radio", { name: "Select row" })[1]!);
+  const radios = screen.getAllByRole("radio", { name: "Select row" });
+
+  expect((radios[0] as HTMLInputElement).checked).toBe(true);
+  expect((radios[1] as HTMLInputElement).checked).toBe(false);
+
+  fireEvent.click(radios[1]!);
 
   expect(onSelectionChange).toHaveBeenCalledWith(["2"]);
 });
@@ -399,4 +404,56 @@ test("it should let an item slot override the column cell", () => {
 
   expect(screen.getByText("Slot Ada Lovelace")).toBeTruthy();
   expect(screen.queryByText("Cell Ada Lovelace")).toBeNull();
+});
+
+test("it should not stretch the table when full is false", () => {
+  render(<DataTable rows={rows} full={false} columns={columns} />);
+
+  expect(screen.getByRole("table").className).not.toContain("min-w-full");
+});
+
+test("it should stick header cells when stickyHeader is set", () => {
+  render(<DataTable rows={rows} stickyHeader columns={columns} />);
+
+  expect(screen.getAllByRole("columnheader")[0]?.className).toContain("sticky");
+  expect(screen.getAllByRole("columnheader")[0]?.className).not.toContain(
+    "overflow-hidden",
+  );
+  expect(screen.getByRole("table").className).toContain("border-separate");
+  expect(screen.getByRole("table").parentElement?.className).not.toContain(
+    "overflow-x-auto",
+  );
+});
+
+test("it should box sticky header overflow on the table wrapper", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      stickyHeader="boxed"
+      classes={{ wrapper: "max-h-96" }}
+    />,
+  );
+
+  expect(screen.getAllByRole("columnheader")[0]?.className).toContain("sticky");
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "overflow-auto",
+  );
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "max-h-96",
+  );
+});
+
+test("it should align built-in pagination at the start", () => {
+  const { container } = render(
+    <DataTable
+      page={1}
+      rows={rows}
+      pageCount={2}
+      columns={columns}
+      paginationAlign="start"
+    />,
+  );
+
+  expect(container.querySelector(".justify-start")).toBeTruthy();
 });

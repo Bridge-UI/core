@@ -10,11 +10,12 @@ import type {
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
+  DataTableStickyHeader,
 } from "@bridge-ui/core/Domain";
 import type {
-  DataTableAlign,
-  DataTableSize,
-  DataTableVariant,
+  TableAlign,
+  TableSize,
+  TableVariant,
 } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
@@ -23,10 +24,11 @@ import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
-
-export interface DataTableSizeOverrides {}
-export interface DataTableAlignOverrides {}
-export interface DataTableVariantOverrides {}
+import type {
+  TableAlignOverrides,
+  TableSizeOverrides,
+  TableVariantOverrides,
+} from "@/Components/Table/table.types";
 
 export type {
   DataTableColumnBase,
@@ -36,6 +38,7 @@ export type {
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
+  DataTableStickyHeader,
 };
 
 /**
@@ -47,7 +50,7 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
    *
    * @default "start"
    */
-  align?: MergeProps<DataTableAlign, DataTableAlignOverrides>;
+  align?: MergeProps<TableAlign, TableAlignOverrides>;
 
   /**
    * Cell renderer for a data row. Used when no `item.{id}` slot is set.
@@ -164,7 +167,7 @@ export interface DataTableClasses {
   row?: string;
 
   /**
-   * Classes merged onto the grid (`role="table"`).
+   * Classes merged onto the `<table>` element.
    */
   table?: string;
 
@@ -174,7 +177,7 @@ export interface DataTableClasses {
   toolbar?: string;
 
   /**
-   * Classes merged onto the chrome wrapper.
+   * Classes merged onto the table wrapper (`Table` root).
    */
   wrapper?: string;
 }
@@ -274,11 +277,11 @@ export interface DataTableCustomProps {
   spinner?: Partial<SpinnerProps>;
 
   /**
-   * Props forwarded to the grid (`role="table"`).
+   * Props forwarded to the `<table>` element.
    *
    * @default undefined
    */
-  table?: HTMLAttributes<HTMLDivElement>;
+  table?: HTMLAttributes<HTMLTableElement>;
 
   /**
    * Props forwarded to the toolbar region.
@@ -288,7 +291,7 @@ export interface DataTableCustomProps {
   toolbar?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the chrome wrapper.
+   * Props forwarded to the table wrapper (`Table` root).
    *
    * @default undefined
    */
@@ -296,7 +299,7 @@ export interface DataTableCustomProps {
 }
 
 /**
- * Opinionated data grid. Compose with `columns` / `rows`.
+ * Opinionated data table. Compose with `columns` / `rows`.
  */
 export interface DataTableOwnProps<T> {
   /**
@@ -335,7 +338,7 @@ export interface DataTableOwnProps<T> {
   filters?: DataTableFilters;
 
   /**
-   * Stretch the grid to at least the wrapper width.
+   * Stretch the table to at least the wrapper width.
    *
    * @default true
    */
@@ -384,6 +387,13 @@ export interface DataTableOwnProps<T> {
   pageCount?: number;
 
   /**
+   * Alignment of the built-in Pagination region.
+   *
+   * @default "end"
+   */
+  paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
+
+  /**
    * Current page of data (or the full set when not paging on the server).
    *
    * @default []
@@ -409,7 +419,7 @@ export interface DataTableOwnProps<T> {
    *
    * @default "md"
    */
-  size?: MergeProps<DataTableSize, DataTableSizeOverrides>;
+  size?: MergeProps<TableSize, TableSizeOverrides>;
 
   /**
    * `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar` regions.
@@ -426,11 +436,12 @@ export interface DataTableOwnProps<T> {
   sorting?: DataTableSorting;
 
   /**
-   * Stick header cells to the nearest scrollport (usually the page).
+   * Stick header cells to the page (`true`) or inside the wrapper (`"boxed"`).
+   * For boxed, set a max height on `classes.wrapper`.
    *
    * @default false
    */
-  stickyHeader?: boolean;
+  stickyHeader?: DataTableStickyHeader;
 
   /**
    * Alternating body row surfaces.
@@ -444,7 +455,7 @@ export interface DataTableOwnProps<T> {
    *
    * @default "plain"
    */
-  variant?: MergeProps<DataTableVariant, DataTableVariantOverrides>;
+  variant?: MergeProps<TableVariant, TableVariantOverrides>;
 }
 
 export interface DataTableSlots<T = unknown> {

@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. Layout is CSS grid (`div` + table ARIA roles) so cells can flex, stick, and resize. DataTable owns its chrome tokens (`plain` / `ghost` / `bordered`, `size`, `striped`, `hoverable`); defaults match `Table` but registry overrides are independent. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, and `hoverable` are forwarded to `Table`. Chrome tokens (`size`, `variant`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -47,6 +47,24 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped rows={users} columns={columns} />
 ```
 
+`full={false}` sizes columns to content instead of stretching the table:
+
+```tsx
+<DataTable full={false} rows={users} columns={columns} />
+```
+
+`stickyHeader` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper`:
+
+```tsx
+<DataTable stickyHeader rows={users} columns={columns} />
+<DataTable
+  rows={users}
+  columns={columns}
+  stickyHeader="boxed"
+  classes={{ wrapper: "max-h-96" }}
+/>
+```
+
 ### Selection + pagination
 
 Built-in Pagination when `page` / `pageCount` are set. `rows` is the current page (server fetch stays in the app):
@@ -82,6 +100,35 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
       />
     ),
   }}
+/>
+```
+
+Align the built-in Pagination with `paginationAlign` (`start` / `center` / `end`, default `end`):
+
+```tsx
+<DataTable
+  page={page}
+  rows={users}
+  columns={columns}
+  pageCount={pageCount}
+  paginationAlign="start"
+  onPageChange={setPage}
+/>
+```
+
+When `page` and `pageCount` are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` and fetch the current page in the app:
+
+```tsx
+<DataTable
+  page={page}
+  rows={pageRows}
+  filters={filters}
+  columns={columns}
+  sorting={sorting}
+  pageCount={pageCount}
+  onPageChange={setPage}
+  onFiltersChange={setFilters}
+  onSortingChange={setSorting}
 />
 ```
 
@@ -127,7 +174,7 @@ Cell content is the column accessor (`row[id]`, or `accessor`) unless you overri
 }
 ```
 
-Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar`.
+Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar`. `slots.item[id]` overrides `columns[].cell` for that column.
 
 ### Selection
 
@@ -146,7 +193,7 @@ Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, an
 
 ### Filters
 
-Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`). Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+Set `filters` on a column to show a funnel in that header. The panel can search options, uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
 ```tsx
 <DataTable
@@ -171,7 +218,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 ### Sticky columns
 
-`sticky="start"` or `sticky="end"` pins a column while the grid scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
+`sticky="start"` or `sticky="end"` pins a column while the table scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
 
 ```tsx
 <DataTable
