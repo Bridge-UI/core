@@ -19,7 +19,7 @@ import { CalendarDate } from "@bridge-ui/vue/Components/CalendarDate";
   range
   v-model="range"
   :view-date="month"
-  @view-date-change="month = $event"
+  v-on:view-date-change="month = $event"
 />
 ```
 

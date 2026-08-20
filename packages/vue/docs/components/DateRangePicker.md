@@ -21,7 +21,7 @@ import { DateRangePicker } from "@bridge-ui/vue/Components/DateRangePicker";
 
 <DateRangePicker orientation="vertical" />
 
-<DateRangePicker show-footer v-model="range" @cancel="() => {}" />
+<DateRangePicker show-footer v-model="range" v-on:cancel="() => {}" />
 ```
 
 ## Props

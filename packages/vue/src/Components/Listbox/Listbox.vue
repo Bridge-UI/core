@@ -360,7 +360,7 @@ function handleFooterCancel() {
             variant="flat"
             color="secondary"
             v-bind="cancelButtonProps"
-            @click="handleFooterCancel"
+            v-on:click="handleFooterCancel"
           >
             {{ cancelLabel }}
           </Button>
@@ -368,7 +368,7 @@ function handleFooterCancel() {
           <Button
             color="primary"
             v-bind="applyButtonProps"
-            @click="handleFooterApply"
+            v-on:click="handleFooterApply"
           >
             {{ applyLabel }}
           </Button>

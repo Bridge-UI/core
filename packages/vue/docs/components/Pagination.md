@@ -55,9 +55,9 @@ For APIs that do not expose a total page count:
 <Pagination
   mode="simple"
   aria-label="Pagination"
-  @next="fetchPage(nextCursor)"
   :has-next="Boolean(nextCursor)"
-  @previous="fetchPage(prevCursor)"
+  v-on:next="fetchPage(nextCursor)"
   :has-previous="Boolean(prevCursor)"
+  v-on:previous="fetchPage(prevCursor)"
 />
 ```

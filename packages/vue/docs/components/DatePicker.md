@@ -17,7 +17,7 @@ import { DatePicker } from "@bridge-ui/vue/Components/DatePicker";
 
 <DatePicker v-model="date" />
 
-<DatePicker range show-footer v-model="range" @cancel="() => {}" />
+<DatePicker range show-footer v-model="range" v-on:cancel="() => {}" />
 ```
 
 ### Custom footer
@@ -27,8 +27,8 @@ Call `apply()` to commit and close the overlay, or `cancel()` to discard and clo
 ```vue
 <DatePicker show-footer>
   <template #footer="{ apply, cancel }">
-    <button type="button" @click="cancel">Discard</button>
-    <button type="button" @click="apply">Save</button>
+    <button type="button" v-on:click="cancel">Discard</button>
+    <button type="button" v-on:click="apply">Save</button>
   </template>
 </DatePicker>
 ```
