@@ -41,6 +41,16 @@ test("it should not be checked when modelValue differs from value", () => {
   ).toBe(false);
 });
 
+test("it should not be checked when modelValue is unset", () => {
+  const wrapper = mount(Radio, {
+    props: { value: "a", endLabel: "Option A" },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
 test("it should emit update:modelValue with option value when selected", async () => {
   const wrapper = mount(Radio, {
     props: { value: "a", modelValue: "b", endLabel: "Option A" },
