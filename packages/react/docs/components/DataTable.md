@@ -134,7 +134,7 @@ When `page` and `pageCount` are set, DataTable does not sort or filter `rows` lo
 
 ### Empty, loading, and footer
 
-Empty rows show a default empty state; `slots.empty` replaces it. `loading` keeps the table visible and overlays a spinner (`slots.loading` replaces the spinner). `slots.footer` renders below the table, above pagination:
+Empty rows show a default empty state; `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above pagination:
 
 ```tsx
 <DataTable
@@ -145,6 +145,15 @@ Empty rows show a default empty state; `slots.empty` replaces it. `loading` keep
     empty: "No users",
     footer: "Here is footer",
   }}
+/>
+```
+
+```tsx
+<DataTable
+  rows={users}
+  columns={columns}
+  loading={isLoading}
+  loadingVariant="bar"
 />
 ```
 

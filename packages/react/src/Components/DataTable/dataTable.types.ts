@@ -7,6 +7,7 @@ import type {
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
+  DataTableLoadingVariant,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -23,8 +24,8 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
+import type { ProgressProps } from "@/Components/Progress/progress.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
-import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
 import type {
   TableAlignOverrides,
   TableRoundedOverrides,
@@ -37,6 +38,7 @@ export type {
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
+  DataTableLoadingVariant,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -251,6 +253,13 @@ export interface DataTableCustomProps {
   pagination?: Partial<Omit<PaginationProps, "page" | "count" | "onChange">>;
 
   /**
+   * Extra props for the built-in `Progress` (`loadingVariant="bar"`).
+   *
+   * @default undefined
+   */
+  progress?: Partial<ProgressProps>;
+
+  /**
    * Extra props for selection radios (`selectionMode="single"`).
    *
    * @default undefined
@@ -270,13 +279,6 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   row?: HTMLAttributes<HTMLDivElement>;
-
-  /**
-   * Extra props for the built-in `Spinner`.
-   *
-   * @default undefined
-   */
-  spinner?: Partial<SpinnerProps>;
 
   /**
    * Props forwarded to the `<table>` element.
@@ -373,6 +375,14 @@ export interface DataTableOwnProps<T> {
    * @default false
    */
   loading?: boolean;
+
+  /**
+   * How `loading` is shown. `overlay` dims the table; `bar` is a progress
+   * line under the header.
+   *
+   * @default "overlay"
+   */
+  loadingVariant?: DataTableLoadingVariant;
 
   /**
    * Controlled page for built-in numbered Pagination (1-based).
@@ -491,7 +501,8 @@ export interface DataTableSlots<T = unknown> {
   };
 
   /**
-   * Overlay shown when `loading` is set. Defaults to a centered spinner.
+   * Indicator shown when `loading` is set. Overlay defaults to a spin; bar
+   * defaults to `Progress` under the header.
    */
   loading?: ReactNode;
 

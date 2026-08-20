@@ -16,6 +16,7 @@ const libDefaults = {
   hoverable: false,
   stickyHeader: false,
   paginationAlign: "end",
+  loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
 

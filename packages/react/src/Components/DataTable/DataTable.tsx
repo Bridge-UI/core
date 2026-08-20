@@ -19,7 +19,7 @@ import {
 } from "@/Components/DataTable/hooks/useDataTable";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
-import { Spinner } from "@/Components/Spinner";
+import { Progress } from "@/Components/Progress";
 import {
   Table,
   TableBody,
@@ -41,6 +41,7 @@ const dataTableLibDefaults = {
   hoverable: false,
   stickyHeader: false,
   paginationAlign: "end",
+  loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
 
@@ -86,6 +87,21 @@ function DataTableCellContent({
   );
 }
 
+function DataTableLoadingSpin() {
+  return (
+    <span
+      role="status"
+      aria-label="Loading"
+      className="relative inline-block size-5 animate-spin motion-reduce:animate-none"
+    >
+      <span className="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400" />
+      <span className="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400" />
+      <span className="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+      <span className="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400" />
+    </span>
+  );
+}
+
 function DataTable<T>(props: DataTableProps<T>) {
   const {
     slots,
@@ -97,6 +113,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     showFooter,
     tableProps,
     footerBind,
+    loadingBar,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -208,6 +225,26 @@ function DataTable<T>(props: DataTableProps<T>) {
                 );
               })}
             </TableRow>
+            {merged.loading && loadingBar ? (
+              <TableRow classes={{ root: "h-0" }}>
+                <TableCell
+                  colSpan={columnCount}
+                  classes={{
+                    root: "relative h-0 border-0 p-0 after:hidden",
+                  }}
+                >
+                  <div {...loadingBind}>
+                    {slots?.loading ?? (
+                      <Progress
+                        size="xs"
+                        rounded="none"
+                        {...merged.customProps?.progress}
+                      />
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : null}
           </TableHeader>
 
           <TableBody {...merged.customProps?.body}>
@@ -359,9 +396,9 @@ function DataTable<T>(props: DataTableProps<T>) {
             </TableFooter>
           ) : null}
         </Table>
-        {merged.loading ? (
+        {merged.loading && !loadingBar ? (
           <div {...loadingBind}>
-            {slots?.loading ?? <Spinner {...merged.customProps?.spinner} />}
+            {slots?.loading ?? <DataTableLoadingSpin />}
           </div>
         ) : null}
       </div>

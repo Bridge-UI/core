@@ -155,11 +155,22 @@ test("it should render the footer slot below the table", () => {
   expect(screen.getByText("Here is footer")).toBeTruthy();
 });
 
-test("it should mark the table busy and show a spinner when loading", () => {
+test("it should mark the table busy and show a spin when loading", () => {
   render(<DataTable loading rows={rows} columns={columns} />);
 
   expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
+  expect(screen.getByRole("status", { name: "Loading" })).toBeTruthy();
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+});
+
+test("it should show a progress bar under the header when loadingVariant is bar", () => {
+  render(
+    <DataTable loading rows={rows} columns={columns} loadingVariant="bar" />,
+  );
+
+  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
+  expect(screen.getByRole("progressbar")).toBeTruthy();
+  expect(screen.queryByRole("status", { name: "Loading" })).toBeNull();
 });
 
 test("it should render radios and replace the selection in single mode", () => {
@@ -299,7 +310,7 @@ test("it should pin a sticky start column", () => {
   );
   expect(
     screen.getByRole("columnheader", { name: "Name" }).className,
-  ).not.toContain("after:translate-x-full");
+  ).not.toContain("before:translate-x-full");
   expect(screen.getByRole("table").className).toContain("border-separate");
 });
 
