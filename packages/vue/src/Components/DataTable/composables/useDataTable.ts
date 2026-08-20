@@ -10,7 +10,20 @@ import {
   type SortingState,
   type VisibilityState,
 } from "@tanstack/vue-table";
-import { fromPairs, get, omit } from "es-toolkit/compat";
+import {
+  compact,
+  fromPairs,
+  get,
+  head,
+  isArray,
+  isEmpty,
+  isFunction,
+  isNil,
+  isString,
+  keyBy,
+  map,
+  omit,
+} from "es-toolkit/compat";
 import { computed, useAttrs, useSlots, type Ref, type VNodeChild } from "vue";
 
 // ** Core Imports
@@ -19,9 +32,10 @@ import {
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
   getDataTableDefaultCellContent,
-  getDataTableGridTemplate,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -32,6 +46,8 @@ import {
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
+  isDataTableStickyHeader,
+  isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   resolveDataTableRowId,
   rowSelectionToIds,
@@ -48,12 +64,7 @@ import {
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
-import {
-  dataTableAlignProps as alignProps,
-  dataTableSizeProps as sizeProps,
-  dataTableVariantProps as variantProps,
-  type DataTableAlign,
-} from "@bridge-ui/core/Tokens";
+import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -95,6 +106,7 @@ const dataTableBridgeKeys = [
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
+  "paginationAlign",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
 type DataTableLibDefaults = LibDefaultsShape<
@@ -107,6 +119,7 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "hoverable"
   | "stickyHeader"
   | "selectionMode"
+  | "paginationAlign"
 >;
 
 type DataTableMerged<T> = MergeLibDefaults<
@@ -210,10 +223,11 @@ export function useDataTable<T>(
     });
   });
 
-  const { merged, entry: bridgeDataTable } = useBridgeUIComponent<
-    DataTableMerged<T>,
-    "DataTable"
-  >({
+  const {
+    merged,
+    components,
+    entry: bridgeDataTable,
+  } = useBridgeUIComponent<DataTableMerged<T>, "DataTable">({
     libDefaults,
     componentName: "DataTable",
     props: () => split.value.componentProps,
@@ -232,29 +246,11 @@ export function useDataTable<T>(
     props: () => split.value.componentProps,
   });
 
-  const sizeClasses = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      sizeProps,
-      bridgeDataTable.value?.tokens?.size,
-    );
-  });
-
   const variantClasses = computed(() => {
     return mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeDataTable.value?.tokens?.variant,
+      get(components.value, ["Table", "tokens", "variant"]),
     );
-  });
-
-  const alignClasses = computed(() => {
-    return mergeBridgeUILayeredClasses(
-      alignProps,
-      bridgeDataTable.value?.tokens?.align,
-    ) as DataTableAlign;
-  });
-
-  const sizeItem = computed(() => {
-    return get(sizeClasses.value, merged.value.size);
   });
 
   const variantItem = computed(() => {
@@ -263,6 +259,10 @@ export function useDataTable<T>(
 
   const columns = computed(() => {
     return merged.value.columns ?? [];
+  });
+
+  const columnsById = computed(() => {
+    return keyBy(columns.value, "id");
   });
 
   const rows = computed(() => {
@@ -299,6 +299,14 @@ export function useDataTable<T>(
     return isDataTableServerPaged(merged.value.page, merged.value.pageCount);
   });
 
+  const stickyHeaderEnabled = computed(() => {
+    return isDataTableStickyHeader(merged.value.stickyHeader);
+  });
+
+  const stickyHeaderBoxed = computed(() => {
+    return isDataTableStickyHeaderBoxed(merged.value.stickyHeader);
+  });
+
   const sortingState = computed((): SortingState => {
     return models.sorting.value
       ? [{ id: models.sorting.value.id, desc: models.sorting.value.desc }]
@@ -306,7 +314,7 @@ export function useDataTable<T>(
   });
 
   const columnFilters = computed((): ColumnFiltersState => {
-    return Object.entries(models.filters.value ?? {}).map(([id, value]) => {
+    return map(models.filters.value ?? {}, (value, id) => {
       return { id, value };
     });
   });
@@ -343,9 +351,9 @@ export function useDataTable<T>(
           return getDataTableColumnAccessor(row, column);
         },
         filterFn: (row, columnId, filterValue) => {
-          const values = Array.isArray(filterValue) ? filterValue : [];
+          const values = isArray(filterValue) ? filterValue : [];
 
-          if (values.length === 0) {
+          if (isEmpty(values)) {
             return true;
           }
 
@@ -353,23 +361,16 @@ export function useDataTable<T>(
         },
       };
     });
-    const leading: ColumnDef<T>[] = [];
 
-    if (selectionEnabled.value) {
-      leading.push({
-        ...chromeColumn,
-        id: DATATABLE_SELECTION_COLUMN_ID,
-      });
-    }
-
-    if (expandEnabled.value) {
-      leading.push({
-        ...chromeColumn,
-        id: DATATABLE_EXPAND_COLUMN_ID,
-      });
-    }
-
-    return [...leading, ...defs];
+    return compact([
+      selectionEnabled.value
+        ? { ...chromeColumn, id: DATATABLE_SELECTION_COLUMN_ID }
+        : undefined,
+      expandEnabled.value
+        ? { ...chromeColumn, id: DATATABLE_EXPAND_COLUMN_ID }
+        : undefined,
+      ...defs,
+    ]);
   });
 
   const table = useVueTable({
@@ -404,15 +405,13 @@ export function useDataTable<T>(
       return resolveDataTableRowId(row, index, merged.value.getRowId);
     },
     onRowSelectionChange: (updater) => {
-      const next =
-        typeof updater === "function" ? updater(rowSelection.value) : updater;
+      const next = isFunction(updater) ? updater(rowSelection.value) : updater;
 
       models.selection.value = rowSelectionToIds(next);
     },
     onSortingChange: (updater) => {
-      const next =
-        typeof updater === "function" ? updater(sortingState.value) : updater;
-      const first = next[0];
+      const next = isFunction(updater) ? updater(sortingState.value) : updater;
+      const first = head(next);
 
       models.sorting.value = first ? { id: first.id, desc: first.desc } : null;
     },
@@ -433,9 +432,7 @@ export function useDataTable<T>(
   });
 
   const pageIds = computed(() => {
-    return table.getRowModel().rows.map((row) => {
-      return row.id;
-    });
+    return map(table.getRowModel().rows, "id");
   });
 
   const selectAllState = computed(() => {
@@ -446,11 +443,10 @@ export function useDataTable<T>(
   });
 
   const headerViews = computed((): DataTableHeaderView[] => {
-    const headerGroup = table.getHeaderGroups()[0];
+    const headerGroup = head(table.getHeaderGroups());
     const metas = (headerGroup?.headers ?? []).map((header) => {
-      const column = columns.value.find((item) => {
-        return item.id === header.column.id;
-      });
+      const column = get(columnsById.value, header.column.id) as
+        undefined | DataTableColumn<T>;
 
       return {
         column,
@@ -463,7 +459,7 @@ export function useDataTable<T>(
     });
     const insets = getDataTableStickyInsets(
       metas,
-      merged.value.stickyHeader === true ? 20 : 3,
+      stickyHeaderEnabled.value ? 20 : 10,
     );
 
     return metas.map((meta) => {
@@ -517,19 +513,18 @@ export function useDataTable<T>(
       return {
         id: row.id,
         original: row.original,
-        selected: row.getIsSelected(),
         expanded: (models.expanded.value ?? []).includes(row.id),
+        selected: (models.selection.value ?? []).includes(row.id),
         cells: row.getVisibleCells().map((cell) => {
-          const column = columns.value.find((item) => {
-            return item.id === cell.column.id;
-          });
+          const column = get(columnsById.value, cell.column.id) as
+            undefined | DataTableColumn<T>;
           const inset = get(insets, cell.column.id) as
             undefined | DataTableStickyInset;
           const accessor = column
             ? getDataTableColumnAccessor(row.original, column)
             : undefined;
           const tooltip =
-            column?.ellipsis === true && accessor != null && accessor !== ""
+            column?.ellipsis === true && !isNil(accessor) && accessor !== ""
               ? String(accessor)
               : undefined;
 
@@ -554,11 +549,8 @@ export function useDataTable<T>(
     });
   });
 
-  const gridStyle = computed(() => {
-    return {
-      display: "grid",
-      gridTemplateColumns: getDataTableGridTemplate(headerViews.value),
-    };
+  const columnCount = computed(() => {
+    return headerViews.value.length;
   });
 
   const showPagination = computed(() => {
@@ -581,157 +573,82 @@ export function useDataTable<T>(
     });
   });
 
-  const wrapperBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.wrapper,
-      {},
-      {
-        class: cn({
-          "overflow-x-auto": merged.value.stickyHeader !== true,
-          [get(sizeItem.value, "root") ?? ""]: true,
-          [get(variantItem.value, "root") ?? ""]: true,
+  const tableProps = computed(() => {
+    return {
+      size: merged.value.size,
+      variant: merged.value.variant,
+      full: merged.value.full !== false,
+      striped: merged.value.striped === true,
+      stickyHeader: stickyHeaderEnabled.value,
+      hoverable: merged.value.hoverable === true,
+      customProps: {
+        root: customProps.value?.wrapper,
+        table: {
+          ...customProps.value?.table,
+          "aria-busy": merged.value.loading || undefined,
+        },
+      },
+      classes: {
+        row: get(mergedClasses.value, "row"),
+        body: get(mergedClasses.value, "body"),
+        cell: get(mergedClasses.value, "cell"),
+        head: get(mergedClasses.value, "head"),
+        table: get(mergedClasses.value, "table"),
+        footer: get(mergedClasses.value, "footer"),
+        header: get(mergedClasses.value, "header"),
+        root: cn({
+          "overflow-auto": stickyHeaderBoxed.value,
           [get(mergedClasses.value, "wrapper") ?? ""]: true,
         }),
       },
-    );
+    };
   });
 
-  const tableBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.table,
-      {},
-      {
-        role: "table",
-        "aria-busy": merged.value.loading || undefined,
-        class: cn({
-          "min-w-full": merged.value.full === true,
-          [get(sizeItem.value, "table") ?? ""]: true,
-          [get(mergedClasses.value, "table") ?? ""]: true,
-        }),
-      },
+  function getColumnLayoutStyle(
+    view: {
+      isExpand: boolean;
+      isSelection: boolean;
+      stickyStyle?: DataTableStickyInset["style"];
+      width?: number | string;
+    },
+    header = false,
+  ) {
+    const width = getDataTableColumnCssWidth(
+      view.width,
+      view.isExpand || view.isSelection,
     );
-  });
 
-  const headerGroupBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.header,
-      {},
-      {
-        role: "rowgroup",
-        class: cn({
-          [get(variantItem.value, "header") ?? ""]: true,
-          [get(mergedClasses.value, "header") ?? ""]: true,
-        }),
-      },
-    );
-  });
+    return {
+      ...(width ? { width, minWidth: width } : {}),
+      ...view.stickyStyle,
+      ...(header && view.stickyStyle ? { zIndex: 20 } : {}),
+    };
+  }
 
-  const bodyGroupBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.body,
-      {},
-      {
-        role: "rowgroup",
-        class: cn({
-          [get(variantItem.value, "body") ?? ""]: true,
-          [get(mergedClasses.value, "body") ?? ""]: true,
-        }),
-      },
-    );
-  });
+  function getHeadAlign(header: DataTableHeaderView) {
+    return header.isSelection || header.isExpand
+      ? "center"
+      : (header.align ?? "start");
+  }
 
-  const headerRowBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle.value,
-        class: cn({
-          [get(variantItem.value, "row") ?? ""]: true,
-          [get(mergedClasses.value, "row") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
-  const bodyRowBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle.value,
-        class: cn({
-          [get(variantItem.value, "row") ?? ""]: true,
-          [get(mergedClasses.value, "row") ?? ""]: true,
-          [get(variantItem.value, "rowHover") ?? ""]:
-            merged.value.hoverable === true,
-          [get(variantItem.value, "rowStriped") ?? ""]:
-            merged.value.striped === true,
-        }),
-      },
-    );
-  });
-
-  const spanRowBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.row,
-      {},
-      {
-        role: "row",
-        style: gridStyle.value,
-        class: cn({
-          [get(variantItem.value, "row") ?? ""]: true,
-          [get(mergedClasses.value, "row") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
-  const spanCellBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.cell,
-      {},
-      {
-        role: "cell",
-        style: { gridColumn: "1 / -1" },
-        class: cn({
-          "min-w-0": true,
-          "text-center": true,
-          [get(sizeItem.value, "cell") ?? ""]: true,
-          [get(variantItem.value, "cell") ?? ""]: true,
-          [get(mergedClasses.value, "cell") ?? ""]: true,
-        }),
-      },
-    );
-  });
+  function getCellAlign(cell: DataTableCellView) {
+    return cell.isSelection || cell.isExpand
+      ? "center"
+      : (cell.align ?? "start");
+  }
 
   function getHeadBind(header: DataTableHeaderView) {
-    const alignKey =
-      header.isSelection || header.isExpand
-        ? "center"
-        : (header.align ?? "start");
-    const alignItem = get(alignClasses.value, alignKey);
-
     return mergePartBind(
       customProps.value?.head,
       {},
       {
-        role: "columnheader",
-        style: header.stickyStyle,
+        style: getColumnLayoutStyle(header, true),
         "aria-sort": header.sortable ? header.ariaSort : undefined,
         class: cn({
           "min-w-0": true,
-          [get(sizeItem.value, "head") ?? ""]: true,
-          [get(alignItem, "head") ?? ""]: true,
-          [get(variantItem.value, "head") ?? ""]: true,
-          [get(mergedClasses.value, "head") ?? ""]: true,
           [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
             header.stickyStyle,
           ),
-          [get(variantItem.value, "headSticky") ?? ""]:
-            merged.value.stickyHeader === true,
           "shadow-[4px_0_8px_-4px_rgba(15,23,42,0.16)]":
             header.sticky === "start" && header.stickyEdge,
           "shadow-[-4px_0_8px_-4px_rgba(15,23,42,0.16)]":
@@ -742,22 +659,13 @@ export function useDataTable<T>(
   }
 
   function getCellBind(cell: DataTableCellView) {
-    const alignKey =
-      cell.isSelection || cell.isExpand ? "center" : (cell.align ?? "start");
-    const alignItem = get(alignClasses.value, alignKey);
-
     return mergePartBind(
       customProps.value?.cell,
       {},
       {
-        role: "cell",
-        style: cell.stickyStyle,
+        style: getColumnLayoutStyle(cell),
         class: cn({
           "min-w-0": true,
-          [get(sizeItem.value, "cell") ?? ""]: true,
-          [get(alignItem, "cell") ?? ""]: true,
-          [get(variantItem.value, "cell") ?? ""]: true,
-          [get(mergedClasses.value, "cell") ?? ""]: true,
           [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
             cell.stickyStyle,
           ),
@@ -814,7 +722,9 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex justify-end py-3": true,
+          "flex py-3": true,
+          [getDataTablePaginationAlignClass(merged.value.paginationAlign)]:
+            true,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
@@ -866,24 +776,9 @@ export function useDataTable<T>(
       models.hiddenColumns.value ?? [],
       columnId,
       hide,
-      columns.value.map((column) => {
-        return column.id;
-      }),
+      map(columns.value, "id"),
     );
   }
-
-  const footerGroupBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.footer,
-      {},
-      {
-        role: "rowgroup",
-        class: cn({
-          [get(mergedClasses.value, "footer") ?? ""]: true,
-        }),
-      },
-    );
-  });
 
   const summaryCells = computed((): null | DataTableCellView[] => {
     const hasSummary = columns.value.some((column) => {
@@ -894,14 +789,11 @@ export function useDataTable<T>(
       return null;
     }
 
-    const data = table.getRowModel().rows.map((row) => {
-      return row.original;
-    });
+    const data = map(table.getRowModel().rows, "original");
 
     return headerViews.value.map((header) => {
-      const column = columns.value.find((item) => {
-        return item.id === header.id;
-      });
+      const column = get(columnsById.value, header.id) as
+        undefined | DataTableColumn<T>;
 
       return {
         id: header.id,
@@ -928,8 +820,8 @@ export function useDataTable<T>(
       return {
         id: column.id,
         hideable: column.hideable !== false,
+        label: isString(column.header) ? column.header : column.id,
         hidden: (models.hiddenColumns.value ?? []).includes(column.id),
-        label: typeof column.header === "string" ? column.header : column.id,
       };
     });
   });
@@ -945,31 +837,26 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    tableBind,
+    tableProps,
     getHeadBind,
     headerViews,
     loadingBind,
     onToggleRow,
     toolbarBind,
-    bodyRowBind,
     getCellBind,
+    columnCount,
     serverPaged,
-    spanRowBind,
-    wrapperBind,
     showToolbar,
+    getHeadAlign,
+    getCellAlign,
     onTogglePage,
     onToggleSort,
-    spanCellBind,
     summaryCells,
-    bodyGroupBind,
-    headerRowBind,
     paginationBind,
     selectAllState,
     showPagination,
     onToggleExpand,
-    headerGroupBind,
     visibilityItems,
-    footerGroupBind,
     selectionEnabled,
     paginationVariant,
     selectionMultiple,

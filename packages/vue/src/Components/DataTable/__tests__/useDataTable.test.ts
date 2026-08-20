@@ -15,6 +15,7 @@ const libDefaults = {
   variant: "plain",
   hoverable: false,
   stickyHeader: false,
+  paginationAlign: "end",
   selectionMode: "multiple",
 } as const;
 

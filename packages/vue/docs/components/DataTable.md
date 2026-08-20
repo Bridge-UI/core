@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. Layout is CSS grid (`div` + table ARIA roles) so cells can flex, stick, and resize. DataTable owns its chrome tokens (`plain` / `ghost` / `bordered`, `size`, `striped`, `hoverable`); defaults match `Table` but registry overrides are independent. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, and `hoverable` are forwarded to `Table`. Chrome tokens (`size`, `variant`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -46,6 +46,24 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped :rows="users" :columns="columns" />
 ```
 
+`:full="false"` sizes columns to content instead of stretching the table:
+
+```vue
+<DataTable :full="false" :rows="users" :columns="columns" />
+```
+
+`sticky-header` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper`:
+
+```vue
+<DataTable sticky-header :rows="users" :columns="columns" />
+<DataTable
+  :rows="users"
+  :columns="columns"
+  sticky-header="boxed"
+  :classes="{ wrapper: 'max-h-96' }"
+/>
+```
+
 ### Selection + pagination
 
 Built-in Pagination when `page` / `pageCount` are set. `rows` is the current page (server fetch stays in the app):
@@ -77,6 +95,31 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
 </DataTable>
 ```
 
+Align the built-in Pagination with `pagination-align` (`start` / `center` / `end`, default `end`):
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  :page-count="pageCount"
+  pagination-align="start"
+  v-model:page="page"
+/>
+```
+
+When `page` and `page-count` are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` and fetch the current page in the app:
+
+```vue
+<DataTable
+  :rows="pageRows"
+  :columns="columns"
+  :page-count="pageCount"
+  v-model:page="page"
+  v-model:filters="filters"
+  v-model:sorting="sorting"
+/>
+```
+
 ### Empty and loading
 
 ```vue
@@ -106,7 +149,7 @@ const columns = [
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `item.{id}` / `loading` / `pagination` / `toolbar`.
+Table-level slots stay `empty` / `expanded` / `item.{id}` / `item` / `loading` / `pagination` / `toolbar`. `#item` is a catch-all when `#item.{id}` is not set.
 
 ### Selection
 
@@ -124,7 +167,7 @@ Table-level slots stay `empty` / `expanded` / `item.{id}` / `loading` / `paginat
 
 ### Filters
 
-Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`). Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+Set `filters` on a column to show a funnel in that header. The panel can search options, uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
 ```vue
 <DataTable :rows="users" :columns="columns" v-model:filters="filters" />
@@ -148,7 +191,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 ### Sticky columns
 
-`sticky="start"` or `sticky="end"` pins a column while the grid scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
+`sticky="start"` or `sticky="end"` pins a column while the table scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
 
 ```ts
 const columns = [

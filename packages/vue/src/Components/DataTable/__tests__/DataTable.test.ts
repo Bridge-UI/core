@@ -57,7 +57,7 @@ test("it should render headers and cells from columns and rows", () => {
   expect(wrapper.text()).toContain("Role");
   expect(wrapper.text()).toContain("Alan Turing");
   expect(wrapper.text()).toContain("Ada Lovelace");
-  expect(wrapper.find('[role="table"]').exists()).toBe(true);
+  expect(wrapper.find("table").exists()).toBe(true);
 });
 
 test("it should apply the bordered variant on the table wrapper", () => {
@@ -65,9 +65,9 @@ test("it should apply the bordered variant on the table wrapper", () => {
     props: { rows, columns, variant: "bordered" },
   });
 
-  expect(
-    wrapper.find('[role="table"]').element.parentElement?.className,
-  ).toContain("ring-1");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "ring-1",
+  );
 });
 
 test("it should emit update:sorting when a sortable header is clicked", async () => {
@@ -75,7 +75,7 @@ test("it should emit update:sorting when a sortable header is clicked", async ()
     props: { rows, columns },
   });
 
-  await wrapper.find('[role="columnheader"] button').trigger("click");
+  await wrapper.find("th button").trigger("click");
 
   expect(wrapper.emitted("update:sorting")?.[0]).toEqual([
     { id: "role", desc: false },
@@ -91,9 +91,9 @@ test("it should set aria-sort when sorting is controlled", () => {
     },
   });
 
-  expect(
-    wrapper.find('[role="columnheader"][aria-sort]').attributes("aria-sort"),
-  ).toBe("descending");
+  expect(wrapper.find("th[aria-sort]").attributes("aria-sort")).toBe(
+    "descending",
+  );
 });
 
 test("it should emit update:selection when a row is selected", async () => {
@@ -144,7 +144,7 @@ test("it should mark the table busy when loading", () => {
     props: { rows, columns, loading: true },
   });
 
-  expect(wrapper.find('[role="table"]').attributes("aria-busy")).toBe("true");
+  expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
 });
 
 test("it should emit a replaced selection in single mode", async () => {
@@ -167,6 +167,10 @@ test("it should emit a replaced selection in single mode", async () => {
   const radios = wrapper.findAll(
     'input[type="radio"][aria-label="Select row"]',
   );
+
+  expect(radios).toHaveLength(2);
+  expect((radios[0]?.element as HTMLInputElement).checked).toBe(true);
+  expect((radios[1]?.element as HTMLInputElement).checked).toBe(false);
 
   await radios[1]?.setValue(true);
 
@@ -195,9 +199,13 @@ test("it should emit update:filters when a column filter is applied", async () =
   await wrapper.get('[aria-label="Filter column"]').trigger("click");
   await flushPromises();
 
-  const option = document.body.querySelector(
-    'input[type="checkbox"]',
-  ) as null | HTMLInputElement;
+  const option = Array.from(
+    document.body.querySelectorAll('input[type="checkbox"]'),
+  ).find((input) => {
+    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
+      "Engineer",
+    );
+  }) as undefined | HTMLInputElement;
 
   option?.click();
   await flushPromises();
@@ -260,7 +268,7 @@ test("it should pin a sticky start column", () => {
   });
 
   const nameHeader = wrapper
-    .findAll('[role="columnheader"]')
+    .findAll("th")
     .find((header) => header.text().includes("Name"));
 
   expect((nameHeader?.element as HTMLElement).style.left).toBe("0px");
@@ -378,10 +386,85 @@ test("it should render accessor text when cell is omitted", () => {
   expect(wrapper.text()).toContain("Ada Lovelace");
 });
 
+test("it should not stretch the table when full is false", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, full: false },
+  });
+
+  expect(wrapper.find("table").classes()).not.toContain("min-w-full");
+});
+
+test("it should stick header cells when stickyHeader is set", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, stickyHeader: true },
+  });
+
+  expect(wrapper.find("th").classes()).toContain("sticky");
+  expect(wrapper.find("th").classes()).not.toContain("overflow-hidden");
+  expect(wrapper.find("table").classes()).toContain("border-separate");
+  expect(wrapper.find("table").element.parentElement?.className).not.toContain(
+    "overflow-x-auto",
+  );
+});
+
+test("it should box sticky header overflow on the table wrapper", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      stickyHeader: "boxed",
+      classes: { wrapper: "max-h-96" },
+    },
+  });
+
+  expect(wrapper.find("th").classes()).toContain("sticky");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "overflow-auto",
+  );
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "max-h-96",
+  );
+});
+
+test("it should align built-in pagination at the start", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      columns,
+      pageCount: 2,
+      paginationAlign: "start",
+    },
+  });
+
+  expect(wrapper.find(".justify-start").exists()).toBe(true);
+});
+
 test("it should let an item slot override the column cell", () => {
   const wrapper = mountDataTable({
     slots: {
       "item.name": ({ row }: { row: User }) => `Slot ${row.name}`,
+    },
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          cell: (row: User) => `Cell ${row.name}`,
+        },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("Slot Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Cell Ada Lovelace");
+});
+
+test("it should let a catch-all item slot override the column cell", () => {
+  const wrapper = mountDataTable({
+    slots: {
+      item: ({ row }: { row: User }) => `Slot ${row.name}`,
     },
     props: {
       rows,
