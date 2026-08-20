@@ -43,10 +43,10 @@ const tooltip = computed(() => {
           <slot />
         </span>
         <span
-          class="inline-flex h-4 w-3.5 shrink-0 flex-col items-center justify-center leading-none"
+          class="inline-flex h-6 w-5 shrink-0 flex-col items-center justify-center leading-none"
         >
           <Icon
-            size="sm"
+            size="lg"
             icon="chevronUp"
             :class="
               cn({
@@ -57,7 +57,7 @@ const tooltip = computed(() => {
             "
           />
           <Icon
-            size="sm"
+            size="lg"
             icon="chevronDown"
             :class="
               cn({
