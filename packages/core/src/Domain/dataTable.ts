@@ -103,6 +103,14 @@ export type DataTableItemSlotProps<T> = {
 };
 
 /**
+ * How `loading` is shown.
+ *
+ * `overlay` dims the table and centers a spin. `bar` draws a progress line
+ * under the header.
+ */
+export type DataTableLoadingVariant = "bar" | "overlay";
+
+/**
  * Row selection chrome: radios (`single`) or checkboxes (`multiple`).
  */
 export type DataTableSelectionMode = "single" | "multiple";

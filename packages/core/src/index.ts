@@ -266,6 +266,7 @@ export type {
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
+  DataTableLoadingVariant,
   DataTablePaginationAlignClass,
   DataTablePaginationVariant,
   DataTableSelectionMode,

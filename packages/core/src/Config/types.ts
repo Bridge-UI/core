@@ -609,6 +609,7 @@ export interface DataTableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
+    loadingVariant: "bar" | "overlay";
     paginationAlign: keyof TableAlign;
     rounded: keyof TableRounded;
     selectionMode: "single" | "multiple";
