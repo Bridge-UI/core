@@ -71,6 +71,21 @@ export type DataTableFilterOption = {
 export type DataTableFilters = Record<string, string[]>;
 
 /**
+ * Per-column cell slot props (`#item.{id}` / `slots.item[id]`).
+ */
+export type DataTableItemSlotProps<T> = {
+  /**
+   * Current data row.
+   */
+  row: T;
+
+  /**
+   * Column accessor value (`accessor` or `row[id]`).
+   */
+  value: unknown;
+};
+
+/**
  * Row selection chrome: radios (`single`) or checkboxes (`multiple`).
  */
 export type DataTableSelectionMode = "single" | "multiple";
@@ -293,6 +308,19 @@ export function getDataTableColumnAccessor<T>(
   }
 
   return get(row, column.id);
+}
+
+/**
+ * Default cell text when no `cell` renderer is set.
+ */
+export function getDataTableDefaultCellContent(
+  accessor: unknown,
+): null | string {
+  if (accessor == null || accessor === "") {
+    return null;
+  }
+
+  return String(accessor);
 }
 
 /**

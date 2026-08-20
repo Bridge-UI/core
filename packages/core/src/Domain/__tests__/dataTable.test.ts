@@ -13,6 +13,7 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
+  getDataTableDefaultCellContent,
   getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
@@ -129,6 +130,15 @@ describe("getDataTableColumnAccessor", () => {
         { id: "name", accessor: (row) => row.user.name },
       ),
     ).toBe("Ada");
+  });
+});
+
+describe("getDataTableDefaultCellContent", () => {
+  test("it should stringify accessors and skip empty values", () => {
+    expect(getDataTableDefaultCellContent(0)).toBe("0");
+    expect(getDataTableDefaultCellContent("")).toBe(null);
+    expect(getDataTableDefaultCellContent(null)).toBe(null);
+    expect(getDataTableDefaultCellContent("Ada")).toBe("Ada");
   });
 });
 
