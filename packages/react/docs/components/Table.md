@@ -90,7 +90,7 @@ Corner radius on the wrapper, header, and footer. Default `lg`.
 `stickyHeader` pins header cells to the nearest scrollport (usually the page). The wrapper skips overflow so the header can stick. For a boxed scroll area, set `overflow-auto` and a max height on `classes.root`.
 
 ```tsx
-<Table size="sm" stickyHeader>
+<Table stickyHeader size="sm">
   {/* … */}
 </Table>
 ```

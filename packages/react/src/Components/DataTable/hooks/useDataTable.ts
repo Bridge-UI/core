@@ -646,7 +646,7 @@ export function useDataTable<T>(
     return () => {
       observer.disconnect();
     };
-  }, [applyStickyPing, tableScrollEl]);
+  }, [tableScrollEl, applyStickyPing]);
 
   const tableProps = derived(() => {
     const hasStickyColumns = headerViews.some((header) => {

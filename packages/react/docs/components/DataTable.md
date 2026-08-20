@@ -32,7 +32,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 ```tsx
 <DataTable rows={users} variant="plain" columns={columns} />
 <DataTable rows={users} variant="ghost" columns={columns} />
-<DataTable rows={users} variant="bordered" columns={columns} />
+<DataTable rows={users} columns={columns} variant="bordered" />
 ```
 
 | DataTable `variant` | Pagination `variant` |
@@ -94,8 +94,8 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
       <Pagination
         mode="simple"
         hasNext={Boolean(nextCursor)}
-        onNext={() => fetchPage(nextCursor)}
         hasPrevious={Boolean(prevCursor)}
+        onNext={() => fetchPage(nextCursor)}
         onPrevious={() => fetchPage(prevCursor)}
       />
     ),
@@ -111,8 +111,8 @@ Align the built-in Pagination with `paginationAlign` (`start` / `center` / `end`
   rows={users}
   columns={columns}
   pageCount={pageCount}
-  paginationAlign="start"
   onPageChange={setPage}
+  paginationAlign="start"
 />
 ```
 
@@ -122,8 +122,8 @@ When `page` and `pageCount` are set, DataTable does not sort or filter `rows` lo
 <DataTable
   page={page}
   rows={pageRows}
-  filters={filters}
   columns={columns}
+  filters={filters}
   sorting={sorting}
   pageCount={pageCount}
   onPageChange={setPage}

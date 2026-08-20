@@ -158,9 +158,9 @@ test("it should render the footer slot below the table", () => {
 test("it should mark the table busy and show a spin when loading", () => {
   render(<DataTable loading rows={rows} columns={columns} />);
 
-  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
-  expect(screen.getByRole("status", { name: "Loading" })).toBeTruthy();
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+  expect(screen.getByRole("status", { name: "Loading" })).toBeTruthy();
+  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
 });
 
 test("it should show a progress bar under the header when loadingVariant is bar", () => {
@@ -168,10 +168,10 @@ test("it should show a progress bar under the header when loadingVariant is bar"
     <DataTable loading rows={rows} columns={columns} loadingVariant="bar" />,
   );
 
-  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
   expect(screen.getByRole("progressbar")).toBeTruthy();
   expect(document.querySelector(".bg-white\\/50")).toBeTruthy();
   expect(screen.queryByRole("status", { name: "Loading" })).toBeNull();
+  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
 });
 
 test("it should render radios and replace the selection in single mode", () => {
