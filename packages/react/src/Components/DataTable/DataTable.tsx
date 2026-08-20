@@ -10,8 +10,14 @@ import {
 // ** Local Imports
 import { Button } from "@/Components/Button";
 import { Checkbox } from "@/Components/Checkbox";
-import type { DataTableProps } from "@/Components/DataTable/dataTable.types";
-import { useDataTable } from "@/Components/DataTable/hooks/useDataTable";
+import type {
+  DataTableItemSlotProps,
+  DataTableProps,
+} from "@/Components/DataTable/dataTable.types";
+import {
+  useDataTable,
+  type DataTableCellView,
+} from "@/Components/DataTable/hooks/useDataTable";
 import { Icon } from "@/Components/Icon";
 import { Menu } from "@/Components/Menu";
 import { Pagination } from "@/Components/Pagination";
@@ -90,6 +96,18 @@ function DataTableFilterOptions({
       })}
     </>
   );
+}
+
+function resolveDataTableItemContent<T>(
+  slot: undefined | ((props: DataTableItemSlotProps<T>) => ReactNode),
+  row: T,
+  cell: DataTableCellView,
+): ReactNode {
+  if (slot) {
+    return slot({ row, value: cell.value });
+  }
+
+  return cell.content;
 }
 
 function DataTableCellContent({
@@ -427,7 +445,16 @@ function DataTable<T>(props: DataTableProps<T>) {
 
                           return (
                             <div key={cell.id} {...getCellBind(cell)}>
-                              <DataTableCellContent cell={cell} />
+                              <DataTableCellContent
+                                cell={{
+                                  ...cell,
+                                  content: resolveDataTableItemContent(
+                                    slots?.item?.[cell.id],
+                                    row.original,
+                                    cell,
+                                  ),
+                                }}
+                              />
                             </div>
                           );
                         })}

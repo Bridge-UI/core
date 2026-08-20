@@ -102,23 +102,32 @@ Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTab
 
 ### Columns
 
-Cell and header content come from `columns`. `cell` receives the row and may return a string or any React node:
+Cell content is the column accessor (`row[id]`, or `accessor`) unless you override it. `cell` on the column is for portable renderers. An `item` slot wins over `cell`.
 
 ```tsx
 <DataTable
   rows={users}
   columns={[
-    { id: "name", header: "Name", cell: (row) => row.name },
-    {
-      id: "role",
-      header: "Role",
-      cell: (row) => <Badge>{row.role}</Badge>,
-    },
+    { id: "name", header: "Name" },
+    { id: "role", header: "Role" },
   ]}
+  slots={{
+    item: {
+      role: ({ row }) => <Badge>{row.role}</Badge>,
+    },
+  }}
 />
 ```
 
-Table-level `slots` are chrome only (`empty`, `expanded`, `loading`, `pagination`, `toolbar`). There is no per-cell slot.
+```tsx
+{
+  id: "role",
+  header: "Role",
+  cell: (row) => <Badge>{row.role}</Badge>,
+}
+```
+
+Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar`.
 
 ### Selection
 

@@ -20,6 +20,7 @@ import {
   getDataTableAriaSort,
   getDataTableColumnAccessor,
   getDataTableColumnFilterValues,
+  getDataTableDefaultCellContent,
   getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
@@ -169,6 +170,7 @@ export type DataTableCellView = {
   stickyEdge: boolean;
   stickyStyle?: DataTableStickyInset["style"];
   tooltip?: string;
+  value?: unknown;
   width?: number | string;
 };
 
@@ -338,7 +340,7 @@ export function useDataTable<T>(
           return column.header;
         },
         cell: (info) => {
-          return column.cell(info.row.original);
+          return column.cell?.(info.row.original) ?? null;
         },
         accessorFn: (row) => {
           return getDataTableColumnAccessor(row, column);
@@ -512,6 +514,7 @@ export function useDataTable<T>(
 
           return {
             tooltip,
+            value: accessor,
             id: cell.column.id,
             width: column?.width,
             align: column?.align,
@@ -519,9 +522,11 @@ export function useDataTable<T>(
             stickyStyle: inset?.style,
             stickyEdge: inset?.edge === true,
             ellipsis: column?.ellipsis === true,
-            content: column ? column.cell(row.original) : null,
             isExpand: cell.column.id === DATATABLE_EXPAND_COLUMN_ID,
             isSelection: cell.column.id === DATATABLE_SELECTION_COLUMN_ID,
+            content: column?.cell
+              ? column.cell(row.original)
+              : getDataTableDefaultCellContent(accessor),
           };
         }),
       };
@@ -822,6 +827,7 @@ export function useDataTable<T>(
       return {
         id: header.id,
         ellipsis: false,
+        value: undefined,
         tooltip: undefined,
         width: header.width,
         align: header.align,

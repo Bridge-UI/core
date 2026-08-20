@@ -6,6 +6,7 @@ import type {
   DataTableColumnBase,
   DataTableFilterOption,
   DataTableFilters,
+  DataTableItemSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -31,6 +32,7 @@ export type {
   DataTableColumnBase,
   DataTableFilterOption,
   DataTableFilters,
+  DataTableItemSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -48,9 +50,12 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
   align?: MergeProps<DataTableAlign, DataTableAlignOverrides>;
 
   /**
-   * Cell renderer for a data row.
+   * Cell renderer for a data row. Used when no `item.{id}` slot is set.
+   * Defaults to the column accessor (or `row[id]`).
+   *
+   * @default undefined
    */
-  cell: (row: T) => ReactNode;
+  cell?: (row: T) => ReactNode;
 
   /**
    * Header content.
@@ -407,7 +412,7 @@ export interface DataTableOwnProps<T> {
   size?: MergeProps<DataTableSize, DataTableSizeOverrides>;
 
   /**
-   * `empty`, `expanded`, `loading`, `pagination`, and `toolbar` regions.
+   * `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar` regions.
    *
    * @default undefined
    */
@@ -452,6 +457,13 @@ export interface DataTableSlots<T = unknown> {
    * Rendered in a spanning row when a row is expanded.
    */
   expanded?: (row: T) => ReactNode;
+
+  /**
+   * Per-column cells. `item.role` overrides `columns[].cell` for `id: "role"`.
+   */
+  item?: {
+    [columnId: string]: (props: DataTableItemSlotProps<T>) => ReactNode;
+  };
 
   /**
    * Replaces the default spinner when `loading` is set.

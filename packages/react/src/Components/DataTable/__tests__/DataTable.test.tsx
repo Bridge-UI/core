@@ -371,3 +371,32 @@ test("it should render a summary footer", () => {
 
   expect(screen.getByText("2 roles")).toBeTruthy();
 });
+
+test("it should render accessor text when cell is omitted", () => {
+  render(<DataTable rows={rows} columns={[{ id: "name", header: "Name" }]} />);
+
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+});
+
+test("it should let an item slot override the column cell", () => {
+  render(
+    <DataTable
+      rows={rows}
+      slots={{
+        item: {
+          name: ({ row }) => `Slot ${row.name}`,
+        },
+      }}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          cell: (row) => `Cell ${row.name}`,
+        },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Slot Ada Lovelace")).toBeTruthy();
+  expect(screen.queryByText("Cell Ada Lovelace")).toBeNull();
+});
