@@ -117,6 +117,7 @@ const dataTableBridgeKeys = [
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
+  "loadingVariant",
   "paginationAlign",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
@@ -142,6 +143,7 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "hoverable"
   | "stickyHeader"
   | "selectionMode"
+  | "loadingVariant"
   | "paginationAlign"
 >;
 
@@ -770,8 +772,6 @@ export function useDataTable<T>(
 
   function getHeadBind(header: DataTableHeaderView) {
     const isChrome = header.isSelection || header.isExpand;
-    const isStartPing =
-      header.sticky === "start" && header.stickyEdge && stickyPing.value.start;
 
     return mergePartBind(
       customProps.value?.head,
@@ -807,7 +807,7 @@ export function useDataTable<T>(
           "min-w-0": true,
           "border-e-0": isChrome,
           "sticky z-20": Boolean(header.stickyStyle),
-          "after:hidden": isChrome && !isStartPing,
+          "after:hidden": isChrome,
           "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
             header.sortable,
           [get(variantItem.value, "cellStickyEdgeStart") ?? ""]:
@@ -825,8 +825,6 @@ export function useDataTable<T>(
 
   function getCellBind(cell: DataTableCellView) {
     const isChrome = cell.isSelection || cell.isExpand;
-    const isStartPing =
-      cell.sticky === "start" && cell.stickyEdge && stickyPing.value.start;
 
     return mergePartBind(
       customProps.value?.cell,
@@ -836,7 +834,7 @@ export function useDataTable<T>(
         class: cn({
           "min-w-0": true,
           "border-e-0": isChrome,
-          "after:hidden": isChrome && !isStartPing,
+          "after:hidden": isChrome,
           [get(variantItem.value, "cellSticky") ?? ""]: Boolean(
             cell.stickyStyle,
           ),
@@ -883,7 +881,10 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "absolute inset-0 z-30 flex items-center justify-center bg-white/60 dark:bg-dark-900/60": true,
+          "pointer-events-none absolute inset-x-0 top-0 z-30":
+            merged.value.loadingVariant === "bar",
+          "absolute inset-0 z-30 flex items-center justify-center bg-white/50 dark:bg-dark-900/50":
+            merged.value.loadingVariant !== "bar",
           [get(mergedClasses.value, "loading") ?? ""]: true,
         }),
       },
@@ -1053,5 +1054,6 @@ export function useDataTable<T>(
     visibilityEnabled,
     onCommitColumnFilter,
     onToggleColumnVisibility,
+    loadingBar: computed(() => merged.value.loadingVariant === "bar"),
   };
 }

@@ -163,7 +163,22 @@ test("it should mark the table busy when loading", () => {
   });
 
   expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
+  expect(wrapper.find('[role="status"][aria-label="Loading"]').exists()).toBe(
+    true,
+  );
   expect(wrapper.text()).toContain("Ada Lovelace");
+});
+
+test("it should show a progress bar under the header when loadingVariant is bar", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, loading: true, loadingVariant: "bar" },
+  });
+
+  expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
+  expect(wrapper.find('[role="progressbar"]').exists()).toBe(true);
+  expect(wrapper.find('[role="status"][aria-label="Loading"]').exists()).toBe(
+    false,
+  );
 });
 
 test("it should emit a replaced selection in single mode", async () => {
@@ -294,7 +309,7 @@ test("it should pin a sticky start column", () => {
   expect(
     nameHeader
       ?.classes()
-      .some((name) => name.includes("after:translate-x-full")),
+      .some((name) => name.includes("before:translate-x-full")),
   ).toBe(false);
   expect(wrapper.find("table").classes()).toContain("border-separate");
 });

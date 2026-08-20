@@ -122,13 +122,22 @@ When `page` and `page-count` are set, DataTable does not sort or filter `rows` l
 
 ### Empty, loading, and footer
 
-Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the table visible and overlays a spinner (`#loading` replaces the spinner). `#footer` renders below the table, above pagination:
+Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
 
 ```vue
 <DataTable :rows="[]" :columns="columns" :loading="isLoading">
   <template #empty>No users</template>
   <template #footer>Here is footer</template>
 </DataTable>
+```
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  :loading="isLoading"
+  loading-variant="bar"
+/>
 ```
 
 Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `hiddenColumns` / `expanded` — the table engine is not exported.

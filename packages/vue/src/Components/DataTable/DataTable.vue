@@ -20,7 +20,7 @@ import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
-import { Spinner } from "@/Components/Spinner";
+import { Progress } from "@/Components/Progress";
 import {
   Table,
   TableBody,
@@ -59,6 +59,7 @@ const props = withDefaults(
     hoverable: false,
     stickyHeader: false,
     paginationAlign: "end",
+    loadingVariant: "overlay",
   },
 );
 
@@ -79,6 +80,7 @@ const {
   showFooter,
   tableProps,
   footerBind,
+  loadingBar,
   getHeadBind,
   headerViews,
   loadingBind,
@@ -116,6 +118,7 @@ const {
     stickyHeader: false,
     paginationAlign: "end",
     selectionMode: "multiple",
+    loadingVariant: "overlay",
   },
   {
     page,
@@ -219,6 +222,27 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                 />
               </div>
             </TableHead>
+          </TableRow>
+          <TableRow
+            :classes="{ root: 'h-0' }"
+            v-if="merged.loading && loadingBar"
+          >
+            <TableCell
+              :colspan="columnCount"
+              :classes="{
+                root: 'relative h-0 border-0 p-0 after:hidden',
+              }"
+            >
+              <div v-bind="loadingBind">
+                <slot name="loading">
+                  <Progress
+                    size="xs"
+                    rounded="none"
+                    v-bind="merged.customProps?.progress"
+                  />
+                </slot>
+              </div>
+            </TableCell>
           </TableRow>
         </TableHeader>
 
@@ -350,9 +374,26 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      <div v-bind="loadingBind" v-if="merged.loading">
+      <div v-bind="loadingBind" v-if="merged.loading && !loadingBar">
         <slot name="loading">
-          <Spinner v-bind="merged.customProps?.spinner" />
+          <span
+            role="status"
+            aria-label="Loading"
+            class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
+          >
+            <span
+              class="absolute start-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
+            />
+            <span
+              class="absolute end-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
+            />
+            <span
+              class="absolute end-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
+            />
+            <span
+              class="absolute start-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
+            />
+          </span>
         </slot>
       </div>
     </div>
