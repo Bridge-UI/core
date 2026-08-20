@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid on top of `Table`: columns, rows, sorting, selection, empty/loading, and pagination wiring. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. Layout is CSS grid (`div` + table ARIA roles) so cells can flex, stick, and resize. DataTable owns its chrome tokens (`plain` / `ghost` / `bordered`, `size`, `striped`, `hoverable`); defaults match `Table` but registry overrides are independent. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -27,7 +27,7 @@ import { DataTable } from "@bridge-ui/react/Components/DataTable";
 
 ### Variants
 
-Same chrome as `Table`. Built-in `Pagination` follows the matching variant unless `slots.pagination` overrides it:
+DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows the matching variant unless `slots.pagination` overrides it:
 
 ```tsx
 <DataTable rows={users} variant="plain" columns={columns} />

@@ -8,13 +8,14 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { get, omit } from "es-toolkit/compat";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, type CSSProperties, type ReactNode } from "react";
 
 // ** Core Imports
 import {
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -28,7 +29,14 @@ import {
   toggleDataTableSorting,
 } from "@bridge-ui/core/Domain";
 import {
+  dataTableAlignProps as alignProps,
+  dataTableSizeProps as sizeProps,
+  dataTableVariantProps as variantProps,
+  type DataTableAlign,
+} from "@bridge-ui/core/Tokens";
+import {
   cn,
+  mergeBridgeUILayeredClasses,
   splitComponentProps,
   type LibDefaultsShape,
   type MergeLibDefaults,
@@ -40,7 +48,6 @@ import type {
   DataTableOwnProps,
   DataTableProps,
 } from "@/Components/DataTable/dataTable.types";
-import type { TableProps } from "@/Components/Table/table.types";
 import {
   derived,
   mergePartBind,
@@ -157,6 +164,35 @@ export function useDataTable<T>(
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     props: componentProps,
     entry: bridgeDataTable,
+  });
+
+  const sizeClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeDataTable?.tokens?.size,
+    );
+  }, [bridgeDataTable?.tokens?.size]);
+
+  const variantClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      variantProps,
+      bridgeDataTable?.tokens?.variant,
+    );
+  }, [bridgeDataTable?.tokens?.variant]);
+
+  const alignClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      alignProps,
+      bridgeDataTable?.tokens?.align,
+    ) as DataTableAlign;
+  }, [bridgeDataTable?.tokens?.align]);
+
+  const sizeItem = derived(() => {
+    return get(sizeClasses, merged.size);
+  });
+
+  const variantItem = derived(() => {
+    return get(variantClasses, merged.variant);
   });
 
   const columns = derived(() => {
@@ -313,8 +349,11 @@ export function useDataTable<T>(
     });
   });
 
-  const colSpan = derived(() => {
-    return Math.max(headerViews.length, 1);
+  const gridStyle = derived((): CSSProperties => {
+    return {
+      display: "grid",
+      gridTemplateColumns: getDataTableGridTemplate(headerViews),
+    };
   });
 
   const showPagination = derived(() => {
@@ -329,31 +368,6 @@ export function useDataTable<T>(
     return getDataTablePaginationVariant(merged.variant);
   });
 
-  const tableProps = derived(
-    (): Pick<
-      TableProps,
-      | "full"
-      | "size"
-      | "classes"
-      | "striped"
-      | "variant"
-      | "hoverable"
-      | "customProps"
-      | "stickyHeader"
-    > => {
-      return {
-        size: merged.size,
-        variant: merged.variant,
-        full: merged.full === true,
-        classes: merged.classes?.table,
-        customProps: customProps?.table,
-        striped: merged.striped === true,
-        hoverable: merged.hoverable === true,
-        stickyHeader: merged.stickyHeader === true,
-      };
-    },
-  );
-
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
@@ -361,6 +375,172 @@ export function useDataTable<T>(
       }),
     });
   });
+
+  const wrapperBind = derived(() => {
+    return mergePartBind(
+      customProps?.wrapper,
+      {},
+      {
+        className: cn({
+          "overflow-x-auto": merged.stickyHeader !== true,
+          [get(sizeItem, "root") ?? ""]: true,
+          [get(variantItem, "root") ?? ""]: true,
+          [get(mergedClasses, "wrapper") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const tableBind = derived(() => {
+    return mergePartBind(
+      customProps?.table,
+      {},
+      {
+        role: "table",
+        "aria-busy": merged.loading || undefined,
+        className: cn({
+          "min-w-full": merged.full === true,
+          [get(sizeItem, "table") ?? ""]: true,
+          [get(mergedClasses, "table") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const headerGroupBind = derived(() => {
+    return mergePartBind(
+      customProps?.header,
+      {},
+      {
+        role: "rowgroup",
+        className: cn({
+          [get(variantItem, "header") ?? ""]: true,
+          [get(mergedClasses, "header") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const bodyGroupBind = derived(() => {
+    return mergePartBind(
+      customProps?.body,
+      {},
+      {
+        role: "rowgroup",
+        className: cn({
+          [get(variantItem, "body") ?? ""]: true,
+          [get(mergedClasses, "body") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const headerRowBind = derived(() => {
+    return mergePartBind(
+      customProps?.row,
+      {},
+      {
+        role: "row",
+        style: gridStyle,
+        className: cn({
+          [get(variantItem, "row") ?? ""]: true,
+          [get(mergedClasses, "row") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const bodyRowBind = derived(() => {
+    return mergePartBind(
+      customProps?.row,
+      {},
+      {
+        role: "row",
+        style: gridStyle,
+        className: cn({
+          [get(variantItem, "row") ?? ""]: true,
+          [get(mergedClasses, "row") ?? ""]: true,
+          [get(variantItem, "rowHover") ?? ""]: merged.hoverable === true,
+          [get(variantItem, "rowStriped") ?? ""]: merged.striped === true,
+        }),
+      },
+    );
+  });
+
+  const spanRowBind = derived(() => {
+    return mergePartBind(
+      customProps?.row,
+      {},
+      {
+        role: "row",
+        style: gridStyle,
+        className: cn({
+          [get(variantItem, "row") ?? ""]: true,
+          [get(mergedClasses, "row") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const spanCellBind = derived(() => {
+    return mergePartBind(
+      customProps?.cell,
+      {},
+      {
+        role: "cell",
+        style: { gridColumn: "1 / -1" },
+        className: cn({
+          "min-w-0": true,
+          "text-center": true,
+          [get(sizeItem, "cell") ?? ""]: true,
+          [get(variantItem, "cell") ?? ""]: true,
+          [get(mergedClasses, "cell") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  function getHeadBind(header: DataTableHeaderView) {
+    const alignKey = header.isSelection ? "center" : (header.align ?? "start");
+    const alignItem = get(alignClasses, alignKey);
+
+    return mergePartBind(
+      customProps?.head,
+      {},
+      {
+        role: "columnheader",
+        "aria-sort": header.sortable ? header.ariaSort : undefined,
+        className: cn({
+          "min-w-0": true,
+          [get(sizeItem, "head") ?? ""]: true,
+          [get(alignItem, "head") ?? ""]: true,
+          [get(variantItem, "head") ?? ""]: true,
+          [get(mergedClasses, "head") ?? ""]: true,
+          [get(variantItem, "headSticky") ?? ""]: merged.stickyHeader === true,
+        }),
+      },
+    );
+  }
+
+  function getCellBind(cell: DataTableCellView) {
+    const alignKey = cell.isSelection ? "center" : (cell.align ?? "start");
+    const alignItem = get(alignClasses, alignKey);
+
+    return mergePartBind(
+      customProps?.cell,
+      {},
+      {
+        role: "cell",
+        className: cn({
+          "min-w-0": true,
+          [get(sizeItem, "cell") ?? ""]: true,
+          [get(alignItem, "cell") ?? ""]: true,
+          [get(variantItem, "cell") ?? ""]: true,
+          [get(mergedClasses, "cell") ?? ""]: true,
+        }),
+      },
+    );
+  }
 
   const toolbarBind = derived(() => {
     return mergePartBind(
@@ -433,23 +613,31 @@ export function useDataTable<T>(
   return {
     slots,
     merged,
-    colSpan,
     pageIds,
     rowViews,
     rootBind,
     emptyBind,
     showEmpty,
-    tableProps,
+    tableBind,
+    getHeadBind,
     headerViews,
     loadingBind,
     onToggleRow,
     toolbarBind,
+    bodyRowBind,
+    getCellBind,
     serverPaged,
+    spanRowBind,
+    wrapperBind,
     onTogglePage,
     onToggleSort,
+    spanCellBind,
+    bodyGroupBind,
+    headerRowBind,
     paginationBind,
     selectAllState,
     showPagination,
+    headerGroupBind,
     selectionEnabled,
     paginationVariant,
   };

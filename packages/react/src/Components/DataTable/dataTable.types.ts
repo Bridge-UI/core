@@ -6,26 +6,35 @@ import type {
   DataTableColumnBase,
   DataTableSorting,
 } from "@bridge-ui/core/Domain";
-import type { TableSize, TableVariant } from "@bridge-ui/core/Tokens";
+import type {
+  DataTableAlign,
+  DataTableSize,
+  DataTableVariant,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
-import type {
-  TableClasses,
-  TableCustomProps,
-  TableSizeOverrides,
-  TableVariantOverrides,
-} from "@/Components/Table/table.types";
+
+export interface DataTableSizeOverrides {}
+export interface DataTableAlignOverrides {}
+export interface DataTableVariantOverrides {}
 
 export type { DataTableColumnBase, DataTableSorting };
 
 /**
  * Column definition with React renderers.
  */
-export type DataTableColumn<T> = DataTableColumnBase<T> & {
+export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
+  /**
+   * Text alignment for the header and cells.
+   *
+   * @default "start"
+   */
+  align?: MergeProps<DataTableAlign, DataTableAlignOverrides>;
+
   /**
    * Cell renderer for a data row.
    */
@@ -62,9 +71,29 @@ export interface DataTableCallbacks {
 
 export interface DataTableClasses {
   /**
+   * Classes merged onto the body rowgroup.
+   */
+  body?: string;
+
+  /**
+   * Classes merged onto body cells.
+   */
+  cell?: string;
+
+  /**
    * Classes merged onto the empty-state region.
    */
   empty?: string;
+
+  /**
+   * Classes merged onto header cells.
+   */
+  head?: string;
+
+  /**
+   * Classes merged onto the header rowgroup.
+   */
+  header?: string;
 
   /**
    * Classes merged onto the loading region.
@@ -82,17 +111,41 @@ export interface DataTableClasses {
   root?: string;
 
   /**
-   * Classes forwarded to the composed `Table`.
+   * Classes merged onto rows.
    */
-  table?: TableClasses;
+  row?: string;
+
+  /**
+   * Classes merged onto the grid (`role="table"`).
+   */
+  table?: string;
 
   /**
    * Classes merged onto the toolbar region.
    */
   toolbar?: string;
+
+  /**
+   * Classes merged onto the chrome wrapper.
+   */
+  wrapper?: string;
 }
 
 export interface DataTableCustomProps {
+  /**
+   * Props forwarded to the body rowgroup.
+   *
+   * @default undefined
+   */
+  body?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to body cells.
+   *
+   * @default undefined
+   */
+  cell?: HTMLAttributes<HTMLDivElement>;
+
   /**
    * Extra props for selection checkboxes.
    *
@@ -108,6 +161,20 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   empty?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to header cells.
+   *
+   * @default undefined
+   */
+  head?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the header rowgroup.
+   *
+   * @default undefined
+   */
+  header?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the loading region.
@@ -131,6 +198,13 @@ export interface DataTableCustomProps {
   root?: HTMLAttributes<HTMLDivElement>;
 
   /**
+   * Props forwarded to rows.
+   *
+   * @default undefined
+   */
+  row?: HTMLAttributes<HTMLDivElement>;
+
+  /**
    * Extra props for the built-in `Spinner`.
    *
    * @default undefined
@@ -138,11 +212,11 @@ export interface DataTableCustomProps {
   spinner?: Partial<SpinnerProps>;
 
   /**
-   * Extra props forwarded to the composed `Table`.
+   * Props forwarded to the grid (`role="table"`).
    *
    * @default undefined
    */
-  table?: TableCustomProps;
+  table?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the toolbar region.
@@ -150,10 +224,17 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   toolbar?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the chrome wrapper.
+   *
+   * @default undefined
+   */
+  wrapper?: HTMLAttributes<HTMLDivElement>;
 }
 
 /**
- * Opinionated data grid. Compose with `columns` / `rows`; chrome comes from `Table`.
+ * Opinionated data grid. Compose with `columns` / `rows`.
  */
 export interface DataTableOwnProps<T> {
   /**
@@ -171,14 +252,14 @@ export interface DataTableOwnProps<T> {
   columns?: DataTableColumn<T>[];
 
   /**
-   * Extra props for internal parts (`table`, `pagination`, checkboxes, …).
+   * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
    *
    * @default undefined
    */
   customProps?: DataTableCustomProps;
 
   /**
-   * Stretch the composed table to at least the wrapper width.
+   * Stretch the grid to at least the wrapper width.
    *
    * @default true
    */
@@ -234,11 +315,11 @@ export interface DataTableOwnProps<T> {
   selection?: string[];
 
   /**
-   * Cell padding / type scale. Passed through to `Table`.
+   * Cell padding / type scale.
    *
    * @default "md"
    */
-  size?: MergeProps<TableSize, TableSizeOverrides>;
+  size?: MergeProps<DataTableSize, DataTableSizeOverrides>;
 
   /**
    * `empty`, `loading`, `pagination`, and `toolbar` regions.
@@ -273,7 +354,7 @@ export interface DataTableOwnProps<T> {
    *
    * @default "plain"
    */
-  variant?: MergeProps<TableVariant, TableVariantOverrides>;
+  variant?: MergeProps<DataTableVariant, DataTableVariantOverrides>;
 }
 
 export interface DataTableSlots {

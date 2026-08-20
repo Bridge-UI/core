@@ -30,19 +30,17 @@ const columns: DataTableColumn<User>[] = [
 test("it should render headers and cells from columns and rows", () => {
   render(<DataTable rows={rows} columns={columns} />);
 
-  expect(screen.getByText("Role")).toBeTruthy();
   expect(screen.getByText("Name")).toBeTruthy();
+  expect(screen.getByText("Role")).toBeTruthy();
   expect(screen.getByRole("table")).toBeTruthy();
   expect(screen.getByText("Alan Turing")).toBeTruthy();
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
 });
 
 test("it should apply the bordered variant on the table wrapper", () => {
-  const { container } = render(
-    <DataTable rows={rows} columns={columns} variant="bordered" />,
-  );
+  render(<DataTable rows={rows} columns={columns} variant="bordered" />);
 
-  expect(container.querySelector("table")?.parentElement?.className).toContain(
+  expect(screen.getByRole("table").parentElement?.className).toContain(
     "ring-1",
   );
 });
@@ -131,7 +129,5 @@ test("it should show the empty slot when there are no rows", () => {
 test("it should mark the table busy and show a spinner when loading", () => {
   render(<DataTable loading rows={rows} columns={columns} />);
 
-  expect(
-    screen.getByRole("table").parentElement?.getAttribute("aria-busy"),
-  ).toBe("true");
+  expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
 });

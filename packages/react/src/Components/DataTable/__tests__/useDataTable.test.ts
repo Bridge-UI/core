@@ -34,9 +34,9 @@ test("it should expose table defaults from useDataTable", () => {
   expect(result.current.showEmpty).toBe(false);
   expect(result.current.rowViews).toHaveLength(1);
   expect(result.current.showPagination).toBe(false);
+  expect(result.current.merged.variant).toBe("plain");
   expect(result.current.paginationVariant).toBe("text");
   expect(result.current.headerViews[0]?.id).toBe("name");
-  expect(result.current.tableProps.variant).toBe("plain");
 });
 
 test("it should enable selection views when selection is controlled", () => {

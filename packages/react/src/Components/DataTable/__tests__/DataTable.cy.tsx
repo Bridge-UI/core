@@ -13,9 +13,9 @@ test("it should render a data table in the browser", () => {
     <DataTable columns={columns} rows={[{ id: "1", name: "Ada Lovelace" }]} />,
   );
 
-  cy.get("table").should("be.visible");
-  cy.contains("Ada Lovelace").should("be.visible");
   cy.contains("Name").should("be.visible");
+  cy.get('[role="table"]').should("be.visible");
+  cy.contains("Ada Lovelace").should("be.visible");
 });
 
 test("it should render the bordered variant", () => {
@@ -27,5 +27,5 @@ test("it should render the bordered variant", () => {
     />,
   );
 
-  cy.get("table").parent().should("have.class", "ring-1");
+  cy.get('[role="table"]').parent().should("have.class", "ring-1");
 });
