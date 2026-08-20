@@ -190,7 +190,7 @@ export interface TableClasses {
   header?: string;
 
   /**
-   * Classes merged onto the overflow wrapper.
+   * Classes merged onto the wrapper around `<table>`.
    */
   root?: string;
 
@@ -207,7 +207,7 @@ export interface TableClasses {
 
 export interface TableCustomProps {
   /**
-   * Props forwarded to the overflow wrapper.
+   * Props forwarded to the wrapper around `<table>`.
    *
    * @default undefined
    */
