@@ -114,6 +114,17 @@ test("it should ignore defaultChecked when modelValue is bound", () => {
   ).toBe(false);
 });
 
+test("it should stay unchecked when v-model is bound and unset", () => {
+  const wrapper = mount(Radio, {
+    props: { value: "a", endLabel: "Option A" },
+    attrs: { "onUpdate:modelValue": () => undefined },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
 test("it should link label to control id", () => {
   const wrapper = mount(Radio, {
     attrs: { controlId: "plan-a" },

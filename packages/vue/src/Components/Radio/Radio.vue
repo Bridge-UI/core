@@ -24,8 +24,16 @@ const model = defineModel<number | string>();
 
 const uncontrolledChecked = ref(Boolean(props.defaultChecked));
 
+const isControlled = computed(() => {
+  return attrs["onUpdate:modelValue"] !== undefined || !isNil(model.value);
+});
+
 const modelRef = computed(() => {
-  if (isNil(model.value) && uncontrolledChecked.value) {
+  if (isControlled.value) {
+    return model.value;
+  }
+
+  if (uncontrolledChecked.value) {
     return props.value;
   }
 
