@@ -40,6 +40,30 @@ export type {
   RgbaColor,
 } from "@/Domain/color";
 export {
+  DATATABLE_PAGINATION_VARIANT,
+  DATATABLE_SELECTION_COLUMN_ID,
+  getDataTableAriaSort,
+  getDataTableColumnAccessor,
+  getDataTablePaginationVariant,
+  getDataTableSelectAllState,
+  getDataTableSortIcon,
+  isDataTableSelectionEnabled,
+  isDataTableServerPaged,
+  resolveDataTableRowId,
+  rowSelectionToIds,
+  selectionToRowSelection,
+  toggleDataTablePageSelection,
+  toggleDataTableRowSelection,
+  toggleDataTableSorting,
+} from "@/Domain/dataTable";
+export type {
+  DataTableAriaSort,
+  DataTableColumnBase,
+  DataTablePaginationVariant,
+  DataTableSortIcon,
+  DataTableSorting,
+} from "@/Domain/dataTable";
+export {
   DEFAULT_START_OF_WEEK,
   applyDateSelection,
   isDateDisabled,

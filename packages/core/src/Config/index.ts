@@ -40,6 +40,8 @@ export type {
   ColorFieldConfigOverrides,
   ColorPickerConfigBase,
   ColorPickerConfigOverrides,
+  DataTableConfigBase,
+  DataTableConfigOverrides,
   DateFieldConfigBase,
   DateFieldConfigOverrides,
   DatePickerConfigBase,

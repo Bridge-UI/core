@@ -346,6 +346,7 @@ export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface ColorFieldConfigOverrides {}
 export interface ColorPickerConfigOverrides {}
+export interface DataTableConfigOverrides {}
 export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
 export interface DateRangeFieldConfigOverrides {}
@@ -597,6 +598,18 @@ export interface CalendarConfigBase {
     color: Record<string, CalendarColorItem>;
     day: Partial<CalendarDay>;
     rounded: Record<string, string>;
+  }>;
+}
+
+export interface DataTableConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    full: boolean;
+    hoverable: boolean;
+    size: keyof TableSize;
+    stickyHeader: boolean;
+    striped: boolean;
+    variant: keyof TableVariant;
   }>;
 }
 
@@ -1446,6 +1459,7 @@ export type BridgeUIComponentsConfig = Partial<{
   ColorPicker: Partial<
     Overwrite<ColorPickerConfigBase, ColorPickerConfigOverrides>
   >;
+  DataTable: Partial<Overwrite<DataTableConfigBase, DataTableConfigOverrides>>;
   DateField: Partial<Overwrite<DateFieldConfigBase, DateFieldConfigOverrides>>;
   DatePicker: Partial<
     Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>
