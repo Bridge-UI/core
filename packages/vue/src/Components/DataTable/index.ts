@@ -9,6 +9,7 @@ export type {
   DataTableEmits,
   DataTableFilterOption,
   DataTableFilters,
+  DataTableItemSlotProps,
   DataTableOwnProps,
   DataTableProps,
   DataTableSelectionMode,

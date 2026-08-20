@@ -6,6 +6,7 @@ import type {
   DataTableColumnBase,
   DataTableFilterOption,
   DataTableFilters,
+  DataTableItemSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -31,6 +32,7 @@ export type {
   DataTableColumnBase,
   DataTableFilterOption,
   DataTableFilters,
+  DataTableItemSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -48,9 +50,12 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
   align?: MergeProps<DataTableAlign, DataTableAlignOverrides>;
 
   /**
-   * Cell renderer for a data row.
+   * Cell renderer for a data row. Used when no `#item.{id}` slot is set.
+   * Defaults to the column accessor (or `row[id]`).
+   *
+   * @default undefined
    */
-  cell: (row: T) => VNodeChild;
+  cell?: (row: T) => VNodeChild;
 
   /**
    * Header content.
@@ -421,6 +426,10 @@ export interface DataTableOwnProps<T> {
   variant?: MergeProps<DataTableVariant, DataTableVariantOverrides>;
 }
 
+/**
+ * Opinionated data grid slots. Per-column cells use `#item.{columnId}`
+ * (`row`, `value`) and override `columns[].cell`.
+ */
 export interface DataTableSlots<T = unknown> {
   /**
    * Shown when `rows` is empty and the table is not loading.

@@ -22,6 +22,7 @@ import { Button } from "@/Components/Button";
 import { Checkbox } from "@/Components/Checkbox";
 import { useDataTable } from "@/Components/DataTable/composables/useDataTable";
 import type {
+  DataTableItemSlotProps,
   DataTableOwnProps,
   DataTableSlots,
   DataTableSorting,
@@ -33,7 +34,11 @@ import { Radio } from "@/Components/Radio";
 import { Spinner } from "@/Components/Spinner";
 import { Tooltip } from "@/Components/Tooltip";
 
-defineSlots<DataTableSlots<T>>();
+defineSlots<
+  DataTableSlots<T> & {
+    [K in `item.${string}`]?: (props: DataTableItemSlotProps<T>) => VNodeChild;
+  }
+>();
 
 defineOptions({ inheritAttrs: false });
 
@@ -472,7 +477,13 @@ function onApplyColumnFilter(columnId: string) {
                       <div
                         class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
                       >
-                        <DataTableChild :node="cell.content" />
+                        <slot
+                          :row="row.original"
+                          :value="cell.value"
+                          :name="`item.${cell.id}`"
+                        >
+                          <DataTableChild :node="cell.content" />
+                        </slot>
                       </div>
                     </template>
                   </Tooltip>
@@ -481,10 +492,23 @@ function onApplyColumnFilter(columnId: string) {
                     v-else-if="cell.ellipsis"
                     class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
                   >
-                    <DataTableChild :node="cell.content" />
+                    <slot
+                      :row="row.original"
+                      :value="cell.value"
+                      :name="`item.${cell.id}`"
+                    >
+                      <DataTableChild :node="cell.content" />
+                    </slot>
                   </div>
 
-                  <DataTableChild v-else :node="cell.content" />
+                  <slot
+                    v-else
+                    :row="row.original"
+                    :value="cell.value"
+                    :name="`item.${cell.id}`"
+                  >
+                    <DataTableChild :node="cell.content" />
+                  </slot>
                 </div>
               </div>
 

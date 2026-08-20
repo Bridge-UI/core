@@ -369,3 +369,32 @@ test("it should render a summary footer", () => {
 
   expect(wrapper.text()).toContain("2 roles");
 });
+
+test("it should render accessor text when cell is omitted", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns: [{ id: "name", header: "Name" }] },
+  });
+
+  expect(wrapper.text()).toContain("Ada Lovelace");
+});
+
+test("it should let an item slot override the column cell", () => {
+  const wrapper = mountDataTable({
+    slots: {
+      "item.name": ({ row }: { row: User }) => `Slot ${row.name}`,
+    },
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          cell: (row: User) => `Cell ${row.name}`,
+        },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("Slot Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Cell Ada Lovelace");
+});

@@ -89,23 +89,24 @@ Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`.
 
 ### Columns
 
-There is no `#cell-name` slot. Customize cells with `columns[].cell` — a function that returns a string, `h(…)`, or Vue JSX:
+Cell content is the column accessor (`row[id]`, or `accessor`) unless you override it. `cell` on the column is for portable renderers (`h(…)` or JSX). `#item.{id}` wins over `cell` and stays in the template:
+
+```vue
+<DataTable :rows="users" :columns="columns">
+  <template #item.role="{ row }">
+    <Badge>{{ row.role }}</Badge>
+  </template>
+</DataTable>
+```
 
 ```ts
-import { h } from "vue";
-import { Badge } from "@bridge-ui/vue/Components/Badge";
-
 const columns = [
-  { id: "name", header: "Name", cell: (row) => row.name },
-  {
-    id: "role",
-    header: "Role",
-    cell: (row) => h(Badge, null, () => row.role),
-  },
+  { id: "name", header: "Name" },
+  { id: "role", header: "Role" },
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `loading` / `pagination` / `toolbar`.
+Table-level slots stay `empty` / `expanded` / `item.{id}` / `loading` / `pagination` / `toolbar`.
 
 ### Selection
 
