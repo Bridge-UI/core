@@ -100,6 +100,7 @@ export {
   COLOR_FORMATS,
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
+  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
@@ -147,6 +148,7 @@ export {
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -262,6 +264,7 @@ export type {
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
+  DataTablePaginationAlignClass,
   DataTablePaginationVariant,
   DataTableSelectionMode,
   DataTableSortIcon,
@@ -526,19 +529,6 @@ export type {
   ColorPickerSize,
   ColorPickerSizeItem,
 } from "@/Tokens/ColorPicker";
-export {
-  alignProps as dataTableAlignProps,
-  sizeProps as dataTableSizeProps,
-  variantProps as dataTableVariantProps,
-} from "@/Tokens/DataTable";
-export type {
-  DataTableAlign,
-  DataTableAlignItem,
-  DataTableSize,
-  DataTableSizeItem,
-  DataTableVariant,
-  DataTableVariantItem,
-} from "@/Tokens/DataTable";
 export {
   colorProps as dividerColorProps,
   orientationProps as dividerOrientationProps,

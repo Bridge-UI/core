@@ -69,13 +69,6 @@ import type {
   ColorPickerRounded,
   ColorPickerSizeItem,
 } from "@/Tokens/ColorPicker";
-import type {
-  DataTableAlignItem,
-  DataTableSize,
-  DataTableSizeItem,
-  DataTableVariant,
-  DataTableVariantItem,
-} from "@/Tokens/DataTable";
 import type { DividerColor, DividerOrientation } from "@/Tokens/Divider";
 import type {
   DrawerBlur,
@@ -190,6 +183,7 @@ import type {
   SwitchSize,
 } from "@/Tokens/Switch";
 import type {
+  TableAlign,
   TableAlignItem,
   TableSize,
   TableSizeItem,
@@ -613,16 +607,12 @@ export interface DataTableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
+    paginationAlign: keyof TableAlign;
     selectionMode: "single" | "multiple";
-    size: keyof DataTableSize;
-    stickyHeader: boolean;
+    size: keyof TableSize;
+    stickyHeader: "boxed" | boolean;
     striped: boolean;
-    variant: keyof DataTableVariant;
-  }>;
-  tokens: Partial<{
-    align: Record<string, DataTableAlignItem>;
-    size: Record<string, DataTableSizeItem>;
-    variant: Record<string, DataTableVariantItem>;
+    variant: keyof TableVariant;
   }>;
 }
 

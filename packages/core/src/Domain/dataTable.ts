@@ -1,5 +1,5 @@
 // ** External Imports
-import { fromPairs, get, isNil } from "es-toolkit/compat";
+import { compact, fromPairs, get, isNil } from "es-toolkit/compat";
 
 /**
  * Internal column id for the row-expand control column.
@@ -20,6 +20,18 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
  * Fallback width in px for sticky columns without a parseable `width`.
  */
 export const DATATABLE_STICKY_WIDTH_PX = 160;
+
+/**
+ * Pagination variant that pairs with a DataTable chrome variant.
+ */
+/**
+ * Pagination region alignment (`justify-*`) for `paginationAlign`.
+ */
+export const DATATABLE_PAGINATION_ALIGN = {
+  end: "justify-end",
+  start: "justify-start",
+  center: "justify-center",
+} as const;
 
 /**
  * Pagination variant that pairs with a DataTable chrome variant.
@@ -75,6 +87,11 @@ export type DataTableFilters = Record<string, string[]>;
  */
 export type DataTableItemSlotProps<T> = {
   /**
+   * Column id for the current cell.
+   */
+  id: string;
+
+  /**
    * Current data row.
    */
   row: T;
@@ -91,9 +108,15 @@ export type DataTableItemSlotProps<T> = {
 export type DataTableSelectionMode = "single" | "multiple";
 
 /**
- * Pin a column to the inline start or end while the grid scrolls.
+ * Pin a column to the inline start or end while the table scrolls.
  */
 export type DataTableStickyEdge = "end" | "start";
+
+/**
+ * Stick header cells. `true` pins to the page; `"boxed"` pins inside the
+ * table wrapper (set a max height on `classes.wrapper`).
+ */
+export type DataTableStickyHeader = "boxed" | boolean;
 
 /**
  * Sticky insets for one visible column.
@@ -182,6 +205,12 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
+ * Pagination region `justify-*` class paired with `paginationAlign`.
+ */
+export type DataTablePaginationAlignClass =
+  (typeof DATATABLE_PAGINATION_ALIGN)[keyof typeof DATATABLE_PAGINATION_ALIGN];
+
+/**
  * Pagination variant paired with a DataTable chrome variant.
  */
 export type DataTablePaginationVariant =
@@ -196,6 +225,15 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
  * Semantic icon for a sortable header given its `aria-sort`.
  */
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
+
+/**
+ * Maps `paginationAlign` to a flex `justify-*` class.
+ */
+export function getDataTablePaginationAlignClass(
+  align: string | undefined,
+): DataTablePaginationAlignClass {
+  return get(DATATABLE_PAGINATION_ALIGN, align ?? "end") ?? "justify-end";
+}
 
 /**
  * Maps a DataTable chrome variant to the matching Pagination variant.
@@ -266,6 +304,24 @@ export function isDataTableServerPaged(
 }
 
 /**
+ * Whether the header row should stick (`true` / `"boxed"`).
+ */
+export function isDataTableStickyHeader(
+  stickyHeader: undefined | DataTableStickyHeader,
+): boolean {
+  return stickyHeader === true || stickyHeader === "boxed";
+}
+
+/**
+ * Whether the header sticks inside the wrapper scrollport.
+ */
+export function isDataTableStickyHeaderBoxed(
+  stickyHeader: undefined | DataTableStickyHeader,
+): boolean {
+  return stickyHeader === "boxed";
+}
+
+/**
  * Whether selection chrome should render (controlled ids and/or a change handler).
  */
 export function isDataTableSelectionEnabled(
@@ -324,11 +380,30 @@ export function getDataTableDefaultCellContent(
 }
 
 /**
+ * CSS width for a native table column (`th` / `td` / `col`).
+ */
+export function getDataTableColumnCssWidth(
+  width: number | string | undefined,
+  isChrome = false,
+): string | undefined {
+  if (isChrome) {
+    return "3rem";
+  }
+
+  if (typeof width === "number") {
+    return `${width}px`;
+  }
+
+  return width;
+}
+
+/**
  * CSS grid track for a DataTable column.
  */
 export function getDataTableColumnTrack(
   width: number | string | undefined,
   isChrome = false,
+  full = true,
 ): string {
   if (isChrome) {
     return "3rem";
@@ -342,7 +417,7 @@ export function getDataTableColumnTrack(
     return width;
   }
 
-  return "minmax(0, 1fr)";
+  return full ? "minmax(0, 1fr)" : "max-content";
 }
 
 /**
@@ -354,9 +429,10 @@ export function getDataTableGridTemplate(
     isSelection?: boolean;
     width?: number | string;
   }>,
+  full = true,
 ): string {
   if (columns.length === 0) {
-    return "minmax(0, 1fr)";
+    return full ? "minmax(0, 1fr)" : "max-content";
   }
 
   return columns
@@ -364,6 +440,7 @@ export function getDataTableGridTemplate(
       return getDataTableColumnTrack(
         column.width,
         column.isSelection === true || column.isExpand === true,
+        full,
       );
     })
     .join(" ");
@@ -670,6 +747,83 @@ export function isDataTableColumnFiltered(
   columnId: string,
 ): boolean {
   return getDataTableColumnFilterValues(filters, columnId).length > 0;
+}
+
+/**
+ * Leaf values from a filter option tree, in display order.
+ */
+export function flattenDataTableFilterOptionValues(
+  options: DataTableFilterOption[],
+): string[] {
+  return options.flatMap((option) => {
+    if (option.children && option.children.length > 0) {
+      return flattenDataTableFilterOptionValues(option.children);
+    }
+
+    return [option.value];
+  });
+}
+
+/**
+ * Filters a filter-option tree by label. Matching groups keep all children.
+ */
+export function filterDataTableFilterOptions(
+  options: DataTableFilterOption[],
+  query: string,
+): DataTableFilterOption[] {
+  const normalized = query.trim().toLowerCase();
+
+  if (!normalized) {
+    return options;
+  }
+
+  return compact(
+    options.map((option) => {
+      const labelMatches = option.label.toLowerCase().includes(normalized);
+
+      if (option.children && option.children.length > 0) {
+        if (labelMatches) {
+          return option;
+        }
+
+        const children = filterDataTableFilterOptions(option.children, query);
+
+        if (children.length === 0) {
+          return undefined;
+        }
+
+        return { ...option, children };
+      }
+
+      return labelMatches ? option : undefined;
+    }),
+  );
+}
+
+/**
+ * Selects or clears every value in `values` on the filter draft.
+ */
+export function setDataTableFilterDraftAll(
+  draft: string[],
+  values: string[],
+  selected: boolean,
+): string[] {
+  if (selected) {
+    const seen = new Set(draft);
+
+    return [
+      ...draft,
+      ...values.filter((value) => {
+        return !seen.has(value);
+      }),
+    ];
+  }
+
+  const drop = new Set(values);
+
+  return draft.filter((item) => {
+    return !drop.has(item);
+  });
 }
 
 /**

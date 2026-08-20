@@ -5,16 +5,21 @@ import { describe, expect, test } from "vitest";
 import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
+  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
+  filterDataTableFilterOptions,
+  flattenDataTableFilterOptionValues,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -25,11 +30,14 @@ import {
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
+  isDataTableStickyHeader,
+  isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   resolveDataTableRowId,
   rowSelectionToIds,
   selectionToRowSelection,
   setDataTableColumnFilter,
+  setDataTableFilterDraftAll,
   setDataTableRowSelection,
   toggleDataTableColumnVisibility,
   toggleDataTableFilterDraft,
@@ -38,6 +46,16 @@ import {
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
+
+describe("getDataTablePaginationAlignClass", () => {
+  test("it should map paginationAlign to justify classes", () => {
+    expect(getDataTablePaginationAlignClass("start")).toBe("justify-start");
+    expect(getDataTablePaginationAlignClass("center")).toBe("justify-center");
+    expect(getDataTablePaginationAlignClass("unknown")).toBe("justify-end");
+    expect(getDataTablePaginationAlignClass(undefined)).toBe("justify-end");
+    expect(DATATABLE_PAGINATION_ALIGN.end).toBe("justify-end");
+  });
+});
 
 describe("getDataTablePaginationVariant", () => {
   test("it should map table chrome to pagination variants", () => {
@@ -103,6 +121,16 @@ describe("isDataTableServerPaged", () => {
   });
 });
 
+describe("isDataTableStickyHeader", () => {
+  test("it should enable page and boxed sticky headers", () => {
+    expect(isDataTableStickyHeader(true)).toBe(true);
+    expect(isDataTableStickyHeader("boxed")).toBe(true);
+    expect(isDataTableStickyHeader(false)).toBe(false);
+    expect(isDataTableStickyHeaderBoxed("boxed")).toBe(true);
+    expect(isDataTableStickyHeaderBoxed(true)).toBe(false);
+  });
+});
+
 describe("isDataTableSelectionEnabled", () => {
   test("it should enable when ids or a handler are present", () => {
     expect(isDataTableSelectionEnabled([], false)).toBe(true);
@@ -148,15 +176,25 @@ describe("getDataTableColumnTrack", () => {
     expect(getDataTableColumnTrack("8rem")).toBe("8rem");
     expect(getDataTableColumnTrack(undefined, true)).toBe("3rem");
     expect(getDataTableColumnTrack(undefined)).toBe("minmax(0, 1fr)");
+    expect(getDataTableColumnTrack(undefined, false, false)).toBe(
+      "max-content",
+    );
   });
 });
 
 describe("getDataTableGridTemplate", () => {
   test("it should join column tracks for a row", () => {
     expect(getDataTableGridTemplate([])).toBe("minmax(0, 1fr)");
+    expect(getDataTableGridTemplate([], false)).toBe("max-content");
     expect(
       getDataTableGridTemplate([{ isSelection: true }, {}, { width: 160 }]),
     ).toBe("3rem minmax(0, 1fr) 160px");
+    expect(
+      getDataTableGridTemplate(
+        [{ isSelection: true }, {}, { width: 160 }],
+        false,
+      ),
+    ).toBe("3rem max-content 160px");
     expect(getDataTableGridTemplate([{ isExpand: true }])).toBe("3rem");
   });
 });
@@ -309,5 +347,55 @@ describe("toggleDataTableFilterDraft", () => {
     expect(toggleDataTableFilterDraft(["a", "b"], "a", false)).toEqual(["b"]);
     expect(toggleDataTableFilterDraft(["a"], "b", true, false)).toEqual(["b"]);
     expect(toggleDataTableFilterDraft(["a"], "a", false, false)).toEqual([]);
+  });
+});
+
+describe("filterDataTableFilterOptions", () => {
+  const options = [
+    { label: "Engineer", value: "Engineer" },
+    {
+      label: "Science",
+      value: "science",
+      children: [
+        { label: "Researcher", value: "Researcher" },
+        { label: "Mathematician", value: "Mathematician" },
+      ],
+    },
+  ];
+
+  test("it should filter leaves and keep matching groups", () => {
+    expect(filterDataTableFilterOptions(options, "eng")).toEqual([
+      { label: "Engineer", value: "Engineer" },
+    ]);
+    expect(
+      filterDataTableFilterOptions(options, "science")[0]?.children,
+    ).toHaveLength(2);
+    expect(
+      flattenDataTableFilterOptionValues(
+        filterDataTableFilterOptions(options, "math"),
+      ),
+    ).toEqual(["Mathematician"]);
+  });
+});
+
+describe("setDataTableFilterDraftAll", () => {
+  test("it should add or remove a value set on the draft", () => {
+    expect(setDataTableFilterDraftAll(["a"], ["b", "c"], true)).toEqual([
+      "a",
+      "b",
+      "c",
+    ]);
+    expect(setDataTableFilterDraftAll(["a", "b"], ["b", "c"], false)).toEqual([
+      "a",
+    ]);
+  });
+});
+
+describe("getDataTableColumnCssWidth", () => {
+  test("it should resolve chrome, numeric, and CSS widths", () => {
+    expect(getDataTableColumnCssWidth(undefined)).toBeUndefined();
+    expect(getDataTableColumnCssWidth(120)).toBe("120px");
+    expect(getDataTableColumnCssWidth("8rem")).toBe("8rem");
+    expect(getDataTableColumnCssWidth(undefined, true)).toBe("3rem");
   });
 });
