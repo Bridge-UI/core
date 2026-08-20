@@ -183,6 +183,13 @@ import type {
   SwitchSize,
 } from "@/Tokens/Switch";
 import type {
+  TableAlignItem,
+  TableSize,
+  TableSizeItem,
+  TableVariant,
+  TableVariantItem,
+} from "@/Tokens/Table";
+import type {
   TabsColor,
   TabsColorItem,
   TabsOrientation,
@@ -376,6 +383,7 @@ export interface TabConfigOverrides {}
 export interface TabItemConfigOverrides {}
 export interface TabListConfigOverrides {}
 export interface TabPanelConfigOverrides {}
+export interface TableConfigOverrides {}
 export interface TabsConfigOverrides {}
 export interface TextareaConfigOverrides {}
 export interface TextFieldConfigOverrides {}
@@ -1304,6 +1312,23 @@ export interface TextFieldConfigBase {
   }>;
 }
 
+export interface TableConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    full: boolean;
+    hoverable: boolean;
+    size: keyof TableSize;
+    stickyHeader: boolean;
+    striped: boolean;
+    variant: keyof TableVariant;
+  }>;
+  tokens: Partial<{
+    align: Record<string, TableAlignItem>;
+    size: Record<string, TableSizeItem>;
+    variant: Record<string, TableVariantItem>;
+  }>;
+}
+
 export interface TabsConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1478,6 +1503,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Switch: Partial<Overwrite<SwitchConfigBase, SwitchConfigOverrides>>;
   Tab: Partial<Overwrite<TabConfigBase, TabConfigOverrides>>;
   TabItem: Partial<Overwrite<TabItemConfigBase, TabItemConfigOverrides>>;
+  Table: Partial<Overwrite<TableConfigBase, TableConfigOverrides>>;
   TabList: Partial<Overwrite<TabListConfigBase, TabListConfigOverrides>>;
   TabPanel: Partial<Overwrite<TabPanelConfigBase, TabPanelConfigOverrides>>;
   Tabs: Partial<Overwrite<TabsConfigBase, TabsConfigOverrides>>;

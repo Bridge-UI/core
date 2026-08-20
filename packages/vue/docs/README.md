@@ -54,6 +54,7 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 - [Spinner](./components/Spinner.md)
 - [Stepper](./components/Stepper.md)
 - [Switch](./components/Switch.md)
+- [Table](./components/Table.md)
 - [Tabs](./components/Tabs.md)
 - [Textarea](./components/Textarea.md)
 - [TextField](./components/TextField.md)

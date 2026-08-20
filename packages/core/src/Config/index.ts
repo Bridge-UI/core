@@ -113,6 +113,8 @@ export type {
   TabListConfigOverrides,
   TabPanelConfigBase,
   TabPanelConfigOverrides,
+  TableConfigBase,
+  TableConfigOverrides,
   TabsConfigBase,
   TabsConfigOverrides,
   TextFieldConfigBase,
