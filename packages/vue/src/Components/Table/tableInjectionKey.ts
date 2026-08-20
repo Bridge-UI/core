@@ -112,7 +112,7 @@ export type TableContextValue = {
   };
 
   /**
-   * Whether header cells stick inside the scroll container.
+   * Whether header cells stick to the nearest scrollport (usually the page).
    */
   stickyHeader: boolean;
 
