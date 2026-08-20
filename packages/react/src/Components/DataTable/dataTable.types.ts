@@ -377,8 +377,8 @@ export interface DataTableOwnProps<T> {
   loading?: boolean;
 
   /**
-   * How `loading` is shown. `overlay` dims the table; `bar` is a progress
-   * line under the header.
+   * How `loading` is shown. `overlay` dims the table; `bar` dims the table
+   * and draws a progress line under the header.
    *
    * @default "overlay"
    */

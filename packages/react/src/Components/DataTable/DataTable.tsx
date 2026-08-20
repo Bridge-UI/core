@@ -128,6 +128,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     onTogglePage,
     summaryCells,
     expandEnabled,
+    loadingBarBind,
     paginationBind,
     selectAllState,
     showPagination,
@@ -233,7 +234,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                     root: "relative h-0 border-0 p-0 after:hidden",
                   }}
                 >
-                  <div {...loadingBind}>
+                  <div {...loadingBarBind}>
                     {slots?.loading ?? (
                       <Progress
                         size="xs"
@@ -396,9 +397,9 @@ function DataTable<T>(props: DataTableProps<T>) {
             </TableFooter>
           ) : null}
         </Table>
-        {merged.loading && !loadingBar ? (
-          <div {...loadingBind}>
-            {slots?.loading ?? <DataTableLoadingSpin />}
+        {merged.loading ? (
+          <div {...loadingBind} aria-hidden={loadingBar || undefined}>
+            {!loadingBar ? (slots?.loading ?? <DataTableLoadingSpin />) : null}
           </div>
         ) : null}
       </div>

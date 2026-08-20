@@ -677,7 +677,10 @@ export function useDataTable<T>(
         body: get(mergedClasses, "body"),
         cell: get(mergedClasses, "cell"),
         head: get(mergedClasses, "head"),
-        header: get(mergedClasses, "header"),
+        header: cn({
+          "relative z-40": merged.loading && merged.loadingVariant === "bar",
+          [get(mergedClasses, "header") ?? ""]: true,
+        }),
         table: cn({
           "border-separate border-spacing-0":
             hasStickyColumns && !stickyHeaderEnabled,
@@ -836,11 +839,21 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "pointer-events-none absolute inset-x-0 top-0 z-30":
-            merged.loadingVariant === "bar",
-          "absolute inset-0 z-30 flex items-center justify-center bg-white/50 dark:bg-dark-900/50":
-            merged.loadingVariant !== "bar",
+          "absolute inset-0 z-30 bg-white/50 dark:bg-dark-900/50": true,
+          "flex items-center justify-center": merged.loadingVariant !== "bar",
           [get(mergedClasses, "loading") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
+  const loadingBarBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        className: cn({
+          "pointer-events-none absolute inset-x-0 top-0 z-40": true,
         }),
       },
     );
@@ -995,6 +1008,7 @@ export function useDataTable<T>(
     onToggleSort,
     summaryCells,
     expandEnabled,
+    loadingBarBind,
     paginationBind,
     selectAllState,
     showPagination,

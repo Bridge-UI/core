@@ -170,6 +170,7 @@ test("it should show a progress bar under the header when loadingVariant is bar"
 
   expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
   expect(screen.getByRole("progressbar")).toBeTruthy();
+  expect(document.querySelector(".bg-white\\/50")).toBeTruthy();
   expect(screen.queryByRole("status", { name: "Loading" })).toBeNull();
 });
 
