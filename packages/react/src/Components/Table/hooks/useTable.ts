@@ -137,9 +137,9 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
     };
   }, [
     sizeItem,
+    merged.full,
     variantItem,
     alignClasses,
-    merged.full,
     mergedClasses,
     merged.striped,
     merged.hoverable,
