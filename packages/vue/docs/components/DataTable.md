@@ -122,7 +122,7 @@ When `page` and `page-count` are set, DataTable does not sort or filter `rows` l
 
 ### Empty, loading, and footer
 
-Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
+Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
 
 ```vue
 <DataTable :rows="[]" :columns="columns" :loading="isLoading">

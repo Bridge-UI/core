@@ -95,6 +95,7 @@ const {
   onTogglePage,
   summaryCells,
   expandEnabled,
+  loadingBarBind,
   paginationBind,
   selectAllState,
   showPagination,
@@ -233,7 +234,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                 root: 'relative h-0 border-0 p-0 after:hidden',
               }"
             >
-              <div v-bind="loadingBind">
+              <div v-bind="loadingBarBind">
                 <slot name="loading">
                   <Progress
                     size="xs"
@@ -374,8 +375,12 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      <div v-bind="loadingBind" v-if="merged.loading && !loadingBar">
-        <slot name="loading">
+      <div
+        v-bind="loadingBind"
+        v-if="merged.loading"
+        :aria-hidden="loadingBar || undefined"
+      >
+        <slot name="loading" v-if="!loadingBar">
           <span
             role="status"
             aria-label="Loading"
