@@ -174,9 +174,9 @@ test("it should show a progress bar under the header when loadingVariant is bar"
     props: { rows, columns, loading: true, loadingVariant: "bar" },
   });
 
-  expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
-  expect(wrapper.find('[role="progressbar"]').exists()).toBe(true);
   expect(wrapper.find(".bg-white\\/50").exists()).toBe(true);
+  expect(wrapper.find('[role="progressbar"]').exists()).toBe(true);
+  expect(wrapper.find("table").attributes("aria-busy")).toBe("true");
   expect(wrapper.find('[role="status"][aria-label="Loading"]').exists()).toBe(
     false,
   );

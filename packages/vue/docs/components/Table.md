@@ -81,7 +81,7 @@ Corner radius on the wrapper, header, and footer. Default `lg`.
 `sticky-header` pins header cells to the nearest scrollport (usually the page). The wrapper skips overflow so the header can stick. For a boxed scroll area, set `overflow-auto` and a max height on `classes.root`.
 
 ```vue
-<Table size="sm" sticky-header />
+<Table sticky-header size="sm" />
 ```
 
 ### Numeric cells

@@ -1070,6 +1070,8 @@ export function useDataTable<T>(
     visibilityEnabled,
     onCommitColumnFilter,
     onToggleColumnVisibility,
-    loadingBar: computed(() => merged.value.loadingVariant === "bar"),
+    loadingBar: computed(() => {
+      return merged.value.loadingVariant === "bar";
+    }),
   };
 }

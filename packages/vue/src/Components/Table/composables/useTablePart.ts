@@ -51,7 +51,9 @@ export function useTablePart(props: TablePartProps, part: TablePartKind) {
   if (part !== "caption") {
     provide(
       TABLE_SECTION_INJECTION_KEY,
-      computed(() => part as TableSection),
+      computed(() => {
+        return part as TableSection;
+      }),
     );
   }
 

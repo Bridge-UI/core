@@ -101,9 +101,9 @@ Align the built-in Pagination with `pagination-align` (`start` / `center` / `end
 <DataTable
   :rows="users"
   :columns="columns"
+  v-model:page="page"
   :page-count="pageCount"
   pagination-align="start"
-  v-model:page="page"
 />
 ```
 
@@ -113,8 +113,8 @@ When `page` and `page-count` are set, DataTable does not sort or filter `rows` l
 <DataTable
   :rows="pageRows"
   :columns="columns"
-  :page-count="pageCount"
   v-model:page="page"
+  :page-count="pageCount"
   v-model:filters="filters"
   v-model:sorting="sorting"
 />
