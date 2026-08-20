@@ -23,7 +23,9 @@ import {
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
+  getDataTableSortTooltip,
   getDataTableStickyInsets,
+  getDataTableStickyPing,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
@@ -91,6 +93,13 @@ describe("getDataTableSortIcon", () => {
     expect(getDataTableSortIcon("none")).toBe("chevronUpDown");
     expect(getDataTableSortIcon("ascending")).toBe("chevronUp");
     expect(getDataTableSortIcon("descending")).toBe("chevronDown");
+    expect(getDataTableSortTooltip("none")).toBe("Click to sort ascending");
+    expect(getDataTableSortTooltip("ascending")).toBe(
+      "Click to sort descending",
+    );
+    expect(getDataTableSortTooltip("descending")).toBe(
+      "Click to cancel sorting",
+    );
   });
 });
 
@@ -124,6 +133,8 @@ describe("isDataTableServerPaged", () => {
 describe("isDataTableStickyHeader", () => {
   test("it should enable page and boxed sticky headers", () => {
     expect(isDataTableStickyHeader(true)).toBe(true);
+    expect(isDataTableStickyHeader("")).toBe(true);
+    expect(isDataTableStickyHeader("true")).toBe(true);
     expect(isDataTableStickyHeader("boxed")).toBe(true);
     expect(isDataTableStickyHeader(false)).toBe(false);
     expect(isDataTableStickyHeaderBoxed("boxed")).toBe(true);
@@ -230,6 +241,30 @@ describe("getDataTableStickyInsets", () => {
     expect(insets.role?.style).toBeUndefined();
     expect(insets.actions?.style?.right).toBe(0);
     expect(insets[DATATABLE_SELECTION_COLUMN_ID]?.style?.left).toBe(0);
+  });
+});
+
+describe("getDataTableStickyPing", () => {
+  test("it should hide both shadows when the grid does not overflow", () => {
+    expect(getDataTableStickyPing(0, 400, 400)).toEqual({
+      end: false,
+      start: false,
+    });
+  });
+
+  test("it should ping start after scrolling and end before the last pixel", () => {
+    expect(getDataTableStickyPing(0, 800, 400)).toEqual({
+      end: true,
+      start: false,
+    });
+    expect(getDataTableStickyPing(200, 800, 400)).toEqual({
+      end: true,
+      start: true,
+    });
+    expect(getDataTableStickyPing(400, 800, 400)).toEqual({
+      end: false,
+      start: true,
+    });
   });
 });
 

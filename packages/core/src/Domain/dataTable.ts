@@ -119,6 +119,24 @@ export type DataTableStickyEdge = "end" | "start";
 export type DataTableStickyHeader = "boxed" | boolean;
 
 /**
+ * Whether sticky column edge shadows should show.
+ *
+ * Start pins sit in their natural place at `scrollLeft === 0`. End pins sit in
+ * their natural place when the scrollport is at the end.
+ */
+export type DataTableStickyPing = {
+  /**
+   * Shadow on the first end-pinned column (not yet scrolled to the end).
+   */
+  end: boolean;
+
+  /**
+   * Shadow on the last start-pinned column (scrolled away from the start).
+   */
+  start: boolean;
+};
+
+/**
  * Sticky insets for one visible column.
  */
 export type DataTableStickyInset = {
@@ -276,6 +294,21 @@ export function getDataTableSortIcon(
 }
 
 /**
+ * Tooltip for a sortable header given its `aria-sort`.
+ */
+export function getDataTableSortTooltip(ariaSort: DataTableAriaSort): string {
+  if (ariaSort === "ascending") {
+    return "Click to sort descending";
+  }
+
+  if (ariaSort === "descending") {
+    return "Click to cancel sorting";
+  }
+
+  return "Click to sort ascending";
+}
+
+/**
  * Cycles sort for `columnId`: unsorted → asc → desc → unsorted.
  */
 export function toggleDataTableSorting(
@@ -305,11 +338,18 @@ export function isDataTableServerPaged(
 
 /**
  * Whether the header row should stick (`true` / `"boxed"`).
+ *
+ * Empty string covers Vue boolean attributes on a `boolean | "boxed"` prop.
  */
 export function isDataTableStickyHeader(
-  stickyHeader: undefined | DataTableStickyHeader,
+  stickyHeader: "" | "true" | undefined | DataTableStickyHeader,
 ): boolean {
-  return stickyHeader === true || stickyHeader === "boxed";
+  return (
+    stickyHeader === true ||
+    stickyHeader === "" ||
+    stickyHeader === "true" ||
+    stickyHeader === "boxed"
+  );
 }
 
 /**
@@ -563,6 +603,29 @@ export function getDataTableStickyInsets(
       return [column.id, inset];
     }),
   );
+}
+
+/** Pixel slack so subpixel scroll does not flicker the edge shadow. */
+const DATATABLE_STICKY_PING_EPSILON_PX = 1;
+
+/**
+ * Sticky column edge-shadow ping from a scrollport's overflow metrics.
+ */
+export function getDataTableStickyPing(
+  scrollLeft: number,
+  scrollWidth: number,
+  clientWidth: number,
+): DataTableStickyPing {
+  const maxScroll = Math.max(0, scrollWidth - clientWidth);
+
+  if (maxScroll <= DATATABLE_STICKY_PING_EPSILON_PX) {
+    return { end: false, start: false };
+  }
+
+  return {
+    start: scrollLeft > DATATABLE_STICKY_PING_EPSILON_PX,
+    end: scrollLeft < maxScroll - DATATABLE_STICKY_PING_EPSILON_PX,
+  };
 }
 
 /**

@@ -60,7 +60,9 @@ export {
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
+  getDataTableSortTooltip,
   getDataTableStickyInsets,
+  getDataTableStickyPing,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
@@ -97,6 +99,7 @@ export type {
   DataTableStickyEdge,
   DataTableStickyHeader,
   DataTableStickyInset,
+  DataTableStickyPing,
 } from "@/Domain/dataTable";
 export {
   DEFAULT_START_OF_WEEK,
