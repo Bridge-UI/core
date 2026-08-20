@@ -131,10 +131,10 @@ export const variantProps: TableVariant = {
       "relative border border-dark-200 text-dark-500 dark:border-dark-700 dark:text-dark-400",
     "head":
       "relative border border-dark-200 bg-dark-100 text-dark-900 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-100",
+    "cellStickyEdgeStart":
+      "before:pointer-events-none before:absolute before:inset-y-0 before:end-0 before:w-2.5 before:translate-x-full before:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
     "cellStickyEdgeEnd":
       "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-2.5 before:-translate-x-full before:shadow-[inset_-10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_-10px_0_8px_-8px_rgba(0,0,0,0.5)]",
-    "cellStickyEdgeStart":
-      "after:pointer-events-none after:absolute after:inset-y-0 after:end-0 after:w-2.5 after:translate-x-full after:bg-transparent after:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:after:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
   },
   "ghost": {
     "row": "",
@@ -153,10 +153,10 @@ export const variantProps: TableVariant = {
       "relative text-dark-700 after:pointer-events-none after:absolute after:inset-y-2.5 after:end-0 after:w-px after:bg-dark-200 last:after:hidden dark:text-dark-200 dark:after:bg-dark-600",
     "head":
       "relative bg-dark-100 text-dark-900 after:pointer-events-none after:absolute after:inset-y-2.5 after:end-0 after:w-px after:bg-dark-200 last:after:hidden dark:bg-dark-800 dark:text-dark-200 dark:after:bg-dark-600",
+    "cellStickyEdgeStart":
+      "before:pointer-events-none before:absolute before:inset-y-0 before:end-0 before:w-2.5 before:translate-x-full before:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
     "cellStickyEdgeEnd":
       "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-2.5 before:-translate-x-full before:shadow-[inset_-10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_-10px_0_8px_-8px_rgba(0,0,0,0.5)]",
-    "cellStickyEdgeStart":
-      "after:pointer-events-none after:absolute after:inset-y-0 after:end-0 after:w-2.5 after:translate-x-full after:bg-transparent after:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:after:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
   },
   "plain": {
     "row": "",
@@ -174,10 +174,10 @@ export const variantProps: TableVariant = {
       "border-b border-dark-300 bg-dark-100 dark:border-dark-700 dark:bg-dark-800",
     "cell":
       "relative border-b border-dark-200 text-dark-500 after:pointer-events-none after:absolute after:inset-y-2.5 after:end-0 after:w-px after:bg-dark-200 last:after:hidden dark:border-dark-700 dark:text-dark-400 dark:after:bg-dark-600",
+    "cellStickyEdgeStart":
+      "before:pointer-events-none before:absolute before:inset-y-0 before:end-0 before:w-2.5 before:translate-x-full before:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
     "cellStickyEdgeEnd":
       "before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-2.5 before:-translate-x-full before:shadow-[inset_-10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:before:shadow-[inset_-10px_0_8px_-8px_rgba(0,0,0,0.5)]",
-    "cellStickyEdgeStart":
-      "after:pointer-events-none after:absolute after:inset-y-0 after:end-0 after:w-2.5 after:translate-x-full after:bg-transparent after:shadow-[inset_10px_0_8px_-8px_rgba(15,23,42,0.18)] dark:after:shadow-[inset_10px_0_8px_-8px_rgba(0,0,0,0.5)]",
     "head":
       "relative border-b border-dark-300 bg-dark-100 text-dark-900 after:pointer-events-none after:absolute after:inset-y-2.5 after:end-0 after:w-px after:bg-dark-200 last:after:hidden dark:border-dark-700 dark:bg-dark-800 dark:text-dark-100 dark:after:bg-dark-600",
   },
