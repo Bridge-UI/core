@@ -58,10 +58,10 @@ test("it should render a semantic table with caption and cells", () => {
   render(<SampleTable />);
 
   expect(screen.getByRole("table")).toBeTruthy();
+  expect(screen.getByText("Total")).toBeTruthy();
+  expect(screen.getByText("Alan Turing")).toBeTruthy();
   expect(screen.getByText("Team roster")).toBeTruthy();
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
-  expect(screen.getByText("Alan Turing")).toBeTruthy();
-  expect(screen.getByText("Total")).toBeTruthy();
   expect(
     screen.getByRole("columnheader", { name: "Name" }).getAttribute("scope"),
   ).toBe("col");
@@ -76,8 +76,8 @@ test("it should apply the bordered variant on the wrapper", () => {
 test("it should apply the ghost variant on the wrapper", () => {
   const { container } = render(<SampleTable variant="ghost" />);
 
-  expect(container.firstElementChild?.className).toContain("rounded-lg");
   expect(container.firstElementChild?.className).not.toContain("ring-1");
+  expect(container.firstElementChild?.className).toContain("rounded-lg");
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -99,10 +99,10 @@ test("it should stick header cells when stickyHeader is set", () => {
   expect(container.firstElementChild?.className).not.toContain(
     "overflow-x-auto",
   );
-  expect(screen.getByRole("table").className).toContain("border-separate");
   expect(container.querySelector("th")?.className).toContain("sticky");
-  expect(container.querySelector("th")?.className).toContain("backdrop-blur");
   expect(container.querySelector("td")?.className).not.toContain("sticky");
+  expect(screen.getByRole("table").className).toContain("border-separate");
+  expect(container.querySelector("th")?.className).toContain("backdrop-blur");
 });
 
 test("it should align numeric cells to the end with tabular nums", () => {
@@ -112,16 +112,16 @@ test("it should align numeric cells to the end with tabular nums", () => {
   const numericCell = container.querySelector("tbody td:last-child");
 
   expect(numericHead.className).toContain("text-end");
-  expect(numericHead.className).toContain("tabular-nums");
   expect(numericCell?.className).toContain("text-end");
+  expect(numericHead.className).toContain("tabular-nums");
   expect(numericCell?.className).toContain("tabular-nums");
 });
 
 test("it should keep the table full width by default", () => {
   const { container } = render(<SampleTable />);
 
-  expect(container.firstElementChild?.className).toContain("overflow-x-auto");
   expect(screen.getByRole("table").className).toContain("min-w-full");
+  expect(container.firstElementChild?.className).toContain("overflow-x-auto");
 });
 
 test("it should omit full width when full is false", () => {
