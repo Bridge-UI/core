@@ -81,11 +81,11 @@ function mountTable(options: Parameters<typeof mount<typeof Table>>[1] = {}) {
 test("it should render a semantic table with caption and cells", () => {
   const wrapper = mountTable();
 
-  expect(wrapper.find("table").exists()).toBe(true);
+  expect(wrapper.text()).toContain("Total");
+  expect(wrapper.text()).toContain("Alan Turing");
   expect(wrapper.text()).toContain("Team roster");
   expect(wrapper.text()).toContain("Ada Lovelace");
-  expect(wrapper.text()).toContain("Alan Turing");
-  expect(wrapper.text()).toContain("Total");
+  expect(wrapper.find("table").exists()).toBe(true);
   expect(wrapper.find("th").attributes("scope")).toBe("col");
 });
 
@@ -98,8 +98,8 @@ test("it should apply the bordered variant on the wrapper", () => {
 test("it should apply the ghost variant on the wrapper", () => {
   const wrapper = mountTable({ props: { variant: "ghost" } });
 
-  expect(wrapper.find("div").classes()).toContain("rounded-lg");
   expect(wrapper.find("div").classes()).not.toContain("ring-1");
+  expect(wrapper.find("div").classes()).toContain("rounded-lg");
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -125,11 +125,11 @@ test("it should stripe and hover body rows only", () => {
 test("it should stick header cells when stickyHeader is set", () => {
   const wrapper = mountTable({ props: { stickyHeader: true } });
 
-  expect(wrapper.find("div").classes()).not.toContain("overflow-x-auto");
-  expect(wrapper.find("table").classes()).toContain("border-separate");
   expect(wrapper.find("th").classes()).toContain("sticky");
-  expect(wrapper.find("th").classes()).toContain("backdrop-blur");
   expect(wrapper.find("td").classes()).not.toContain("sticky");
+  expect(wrapper.find("th").classes()).toContain("backdrop-blur");
+  expect(wrapper.find("table").classes()).toContain("border-separate");
+  expect(wrapper.find("div").classes()).not.toContain("overflow-x-auto");
 });
 
 test("it should align numeric cells to the end with tabular nums", () => {
@@ -137,17 +137,17 @@ test("it should align numeric cells to the end with tabular nums", () => {
   const numericHead = wrapper.findAll("th")[1];
   const numericCell = wrapper.find("tbody td:last-child");
 
-  expect(numericHead?.classes()).toContain("text-end");
-  expect(numericHead?.classes()).toContain("tabular-nums");
   expect(numericCell.classes()).toContain("text-end");
+  expect(numericHead?.classes()).toContain("text-end");
   expect(numericCell.classes()).toContain("tabular-nums");
+  expect(numericHead?.classes()).toContain("tabular-nums");
 });
 
 test("it should keep the table full width by default", () => {
   const wrapper = mountTable();
 
-  expect(wrapper.find("div").classes()).toContain("overflow-x-auto");
   expect(wrapper.find("table").classes()).toContain("min-w-full");
+  expect(wrapper.find("div").classes()).toContain("overflow-x-auto");
 });
 
 test("it should omit full width when full is false", () => {
