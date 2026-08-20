@@ -9,6 +9,7 @@ import { useDataTable } from "@/Components/DataTable/hooks/useDataTable";
 const libDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   loading: false,
   striped: false,
   variant: "plain",

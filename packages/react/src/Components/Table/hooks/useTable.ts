@@ -5,6 +5,7 @@ import { useMemo } from "react";
 // ** Core Imports
 import {
   tableAlignProps as alignProps,
+  tableRoundedProps as roundedProps,
   tableSizeProps as sizeProps,
   tableVariantProps as variantProps,
   type TableAlign,
@@ -31,6 +32,7 @@ const tableBridgeKeys = [
   "full",
   "size",
   "classes",
+  "rounded",
   "striped",
   "variant",
   "hoverable",
@@ -40,7 +42,13 @@ const tableBridgeKeys = [
 
 type TableLibDefaults = LibDefaultsShape<
   TableOwnProps,
-  "full" | "size" | "striped" | "variant" | "hoverable" | "stickyHeader"
+  | "full"
+  | "size"
+  | "rounded"
+  | "striped"
+  | "variant"
+  | "hoverable"
+  | "stickyHeader"
 >;
 
 type TableMerged = MergeLibDefaults<TableOwnProps, TableLibDefaults>;
@@ -95,12 +103,23 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
     return mergeBridgeUILayeredClasses(alignProps, bridgeTable?.tokens?.align);
   }, [bridgeTable?.tokens?.align]);
 
+  const roundedClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeTable?.tokens?.rounded,
+    );
+  }, [bridgeTable?.tokens?.rounded]);
+
   const sizeItem = derived(() => {
     return get(sizeClasses, merged.size);
   });
 
   const variantItem = derived(() => {
     return get(variantClasses, merged.variant);
+  });
+
+  const roundedItem = derived(() => {
+    return get(roundedClasses, merged.rounded);
   });
 
   const contextValue = useMemo((): TableContextValue => {
@@ -129,6 +148,8 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
         variantCell: get(variantItem, "cell"),
         variantFooter: get(variantItem, "footer"),
         variantHeader: get(variantItem, "header"),
+        roundedFooter: get(roundedItem, "footer"),
+        roundedHeader: get(roundedItem, "header"),
         variantCaption: get(variantItem, "caption"),
         variantRowHover: get(variantItem, "rowHover"),
         variantRowStriped: get(variantItem, "rowStriped"),
@@ -136,6 +157,7 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
       },
     };
   }, [
+    roundedItem,
     sizeItem,
     merged.full,
     variantItem,
@@ -152,6 +174,7 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
         "overflow-x-auto": merged.stickyHeader !== true,
         [get(sizeItem, "root") ?? ""]: true,
         [get(variantItem, "root") ?? ""]: true,
+        [get(roundedItem, "root") ?? ""]: true,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
     });

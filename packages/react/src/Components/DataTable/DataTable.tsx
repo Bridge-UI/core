@@ -1,6 +1,9 @@
 // ** External Imports
 import { Fragment, useId, type ReactNode } from "react";
 
+// ** Core Imports
+import { cn } from "@bridge-ui/core/Utils";
+
 // ** Local Imports
 import type {
   DataTableItemSlotProps,
@@ -31,6 +34,7 @@ import { Tooltip } from "@/Components/Tooltip";
 const dataTableLibDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   loading: false,
   striped: false,
   variant: "plain",
@@ -90,7 +94,9 @@ function DataTable<T>(props: DataTableProps<T>) {
     rootBind,
     emptyBind,
     showEmpty,
+    showFooter,
     tableProps,
+    footerBind,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -103,8 +109,8 @@ function DataTable<T>(props: DataTableProps<T>) {
     getHeadAlign,
     getCellAlign,
     onTogglePage,
-    onToggleSort,
     summaryCells,
+    expandEnabled,
     paginationBind,
     selectAllState,
     showPagination,
@@ -134,217 +140,233 @@ function DataTable<T>(props: DataTableProps<T>) {
         </div>
       ) : null}
 
-      <Table {...tableProps}>
-        <TableHeader {...merged.customProps?.header}>
-          <TableRow {...merged.customProps?.row}>
-            {headerViews.map((header) => {
-              if (header.isSelection) {
+      <div className="relative">
+        <Table {...tableProps}>
+          <TableHeader {...merged.customProps?.header}>
+            <TableRow {...merged.customProps?.row}>
+              {headerViews.map((header) => {
+                if (header.isSelection) {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      align={getHeadAlign(header)}
+                      {...getHeadBind(header)}
+                    >
+                      {selectionMultiple ? (
+                        <DataTableSelection
+                          kind="page"
+                          size={checkboxSize}
+                          onChange={onTogglePage}
+                          checked={selectAllState.checked}
+                          indeterminate={selectAllState.indeterminate}
+                          checkboxProps={merged.customProps?.checkbox}
+                        />
+                      ) : null}
+                    </TableHead>
+                  );
+                }
+
+                if (header.isExpand) {
+                  return (
+                    <TableHead
+                      key={header.id}
+                      align={getHeadAlign(header)}
+                      {...getHeadBind(header)}
+                    />
+                  );
+                }
+
                 return (
                   <TableHead
                     key={header.id}
                     align={getHeadAlign(header)}
                     {...getHeadBind(header)}
                   >
-                    {selectionMultiple ? (
-                      <DataTableSelection
-                        kind="page"
-                        size={checkboxSize}
-                        onChange={onTogglePage}
-                        checked={selectAllState.checked}
-                        indeterminate={selectAllState.indeterminate}
-                        checkboxProps={merged.customProps?.checkbox}
-                      />
-                    ) : null}
+                    <div className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden leading-none">
+                      {header.sortable ? (
+                        <DataTableSortButton ariaSort={header.ariaSort}>
+                          {header.header}
+                        </DataTableSortButton>
+                      ) : (
+                        header.header
+                      )}
+
+                      {header.filterable ? (
+                        <DataTableFilterMenu
+                          columnId={header.id}
+                          active={header.filterActive}
+                          values={header.filterValues}
+                          options={header.filterOptions}
+                          multiple={header.filterMultiple}
+                          onApply={(values) => {
+                            onCommitColumnFilter(header.id, values);
+                          }}
+                        />
+                      ) : null}
+                    </div>
                   </TableHead>
                 );
-              }
+              })}
+            </TableRow>
+          </TableHeader>
 
-              if (header.isExpand) {
-                return (
-                  <TableHead
-                    key={header.id}
-                    align={getHeadAlign(header)}
-                    {...getHeadBind(header)}
-                  />
-                );
-              }
-
-              return (
-                <TableHead
-                  key={header.id}
-                  align={getHeadAlign(header)}
-                  {...getHeadBind(header)}
-                >
-                  <div className="flex min-w-0 items-center gap-1.5 overflow-hidden leading-none">
-                    {header.sortable ? (
-                      <DataTableSortButton
-                        icon={header.sortIcon}
-                        onClick={() => {
-                          onToggleSort(header.id);
-                        }}
-                      >
-                        {header.header}
-                      </DataTableSortButton>
-                    ) : (
-                      header.header
+          <TableBody {...merged.customProps?.body}>
+            {showEmpty ? (
+              <TableRow>
+                <TableCell align="center" colSpan={columnCount}>
+                  <div {...emptyBind}>
+                    {slots?.empty ?? (
+                      <>
+                        <span className="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600">
+                          <span className="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900" />
+                        </span>
+                        No data
+                      </>
                     )}
-
-                    {header.filterable ? (
-                      <DataTableFilterMenu
-                        columnId={header.id}
-                        active={header.filterActive}
-                        values={header.filterValues}
-                        options={header.filterOptions}
-                        multiple={header.filterMultiple}
-                        onApply={(values) => {
-                          onCommitColumnFilter(header.id, values);
-                        }}
-                      />
-                    ) : null}
                   </div>
-                </TableHead>
-              );
-            })}
-          </TableRow>
-        </TableHeader>
+                </TableCell>
+              </TableRow>
+            ) : null}
 
-        <TableBody {...merged.customProps?.body}>
-          {merged.loading && slots?.loading === undefined ? (
-            <TableRow>
-              <TableCell align="center" colSpan={columnCount}>
-                <div {...loadingBind}>
-                  <Spinner {...merged.customProps?.spinner} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ) : null}
+            {!showEmpty
+              ? rowViews.map((row) => {
+                  return (
+                    <Fragment key={row.id}>
+                      <TableRow {...merged.customProps?.row}>
+                        {row.cells.map((cell) => {
+                          if (cell.isSelection) {
+                            return (
+                              <TableCell
+                                key={cell.id}
+                                align={getCellAlign(cell)}
+                                {...getCellBind(cell)}
+                              >
+                                <DataTableSelection
+                                  kind="row"
+                                  value={row.id}
+                                  size={checkboxSize}
+                                  name={selectionName}
+                                  checked={row.selected}
+                                  multiple={selectionMultiple}
+                                  radioProps={merged.customProps?.radio}
+                                  checkboxProps={merged.customProps?.checkbox}
+                                  onChange={(checked) => {
+                                    onToggleRow(row.id, checked);
+                                  }}
+                                />
+                              </TableCell>
+                            );
+                          }
 
-          {merged.loading && slots?.loading ? (
-            <TableRow>
-              <TableCell align="center" colSpan={columnCount}>
-                <div {...loadingBind}>{slots.loading}</div>
-              </TableCell>
-            </TableRow>
-          ) : null}
+                          if (cell.isExpand) {
+                            return (
+                              <TableCell
+                                key={cell.id}
+                                align={getCellAlign(cell)}
+                                {...getCellBind(cell)}
+                              >
+                                <button
+                                  type="button"
+                                  aria-label="Expand row"
+                                  aria-expanded={row.expanded}
+                                  onClick={() => {
+                                    onToggleExpand(row.id, !row.expanded);
+                                  }}
+                                  className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+                                >
+                                  <span
+                                    className={cn({
+                                      "inline-flex transition-transform duration-200 motion-reduce:transition-none": true,
+                                      "rotate-90": row.expanded,
+                                    })}
+                                  >
+                                    <Icon size="sm" icon="chevronRight" />
+                                  </span>
+                                </button>
+                              </TableCell>
+                            );
+                          }
 
-          {showEmpty ? (
-            <TableRow>
-              <TableCell align="center" colSpan={columnCount}>
-                <div {...emptyBind}>{slots?.empty}</div>
-              </TableCell>
-            </TableRow>
-          ) : null}
-
-          {!merged.loading
-            ? rowViews.map((row) => {
-                return (
-                  <Fragment key={row.id}>
-                    <TableRow {...merged.customProps?.row}>
-                      {row.cells.map((cell) => {
-                        if (cell.isSelection) {
                           return (
                             <TableCell
                               key={cell.id}
                               align={getCellAlign(cell)}
                               {...getCellBind(cell)}
                             >
-                              <DataTableSelection
-                                kind="row"
-                                value={row.id}
-                                size={checkboxSize}
-                                name={selectionName}
-                                checked={row.selected}
-                                multiple={selectionMultiple}
-                                radioProps={merged.customProps?.radio}
-                                checkboxProps={merged.customProps?.checkbox}
-                                onChange={(checked) => {
-                                  onToggleRow(row.id, checked);
+                              <DataTableCellContent
+                                cell={{
+                                  ...cell,
+                                  content: resolveDataTableItemContent(
+                                    slots?.item?.[cell.id],
+                                    row.original,
+                                    cell,
+                                  ),
                                 }}
                               />
                             </TableCell>
                           );
-                        }
-
-                        if (cell.isExpand) {
-                          return (
-                            <TableCell
-                              key={cell.id}
-                              align={getCellAlign(cell)}
-                              {...getCellBind(cell)}
-                            >
-                              <button
-                                type="button"
-                                aria-label="Expand row"
-                                aria-expanded={row.expanded}
-                                onClick={() => {
-                                  onToggleExpand(row.id, !row.expanded);
-                                }}
-                                className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
-                              >
-                                <Icon
-                                  size="sm"
-                                  icon={
-                                    row.expanded
-                                      ? "chevronDown"
-                                      : "chevronRight"
-                                  }
-                                />
-                              </button>
-                            </TableCell>
-                          );
-                        }
-
-                        return (
-                          <TableCell
-                            key={cell.id}
-                            align={getCellAlign(cell)}
-                            {...getCellBind(cell)}
-                          >
-                            <DataTableCellContent
-                              cell={{
-                                ...cell,
-                                content: resolveDataTableItemContent(
-                                  slots?.item?.[cell.id],
-                                  row.original,
-                                  cell,
-                                ),
-                              }}
-                            />
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                    {row.expanded ? (
-                      <TableRow>
-                        <TableCell colSpan={columnCount}>
-                          {slots?.expanded?.(row.original)}
-                        </TableCell>
+                        })}
                       </TableRow>
-                    ) : null}
-                  </Fragment>
-                );
-              })
-            : null}
-        </TableBody>
+                      {expandEnabled ? (
+                        <TableRow>
+                          <TableCell
+                            colSpan={columnCount}
+                            classes={{
+                              root: cn({
+                                "p-0": true,
+                                "border-0": !row.expanded,
+                              }),
+                            }}
+                          >
+                            <div
+                              aria-hidden={!row.expanded}
+                              className={cn({
+                                "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none": true,
+                                "grid-rows-[1fr]": row.expanded,
+                                "grid-rows-[0fr]": !row.expanded,
+                              })}
+                            >
+                              <div className="min-h-0 overflow-hidden">
+                                <div className="p-3">
+                                  {slots?.expanded?.(row.original)}
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ) : null}
+                    </Fragment>
+                  );
+                })
+              : null}
+          </TableBody>
 
-        {summaryCells ? (
-          <TableFooter {...merged.customProps?.footer}>
-            <TableRow {...merged.customProps?.row}>
-              {summaryCells.map((cell) => {
-                return (
-                  <TableCell
-                    key={cell.id}
-                    align={getCellAlign(cell)}
-                    {...getCellBind(cell)}
-                  >
-                    {cell.content}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableFooter>
+          {summaryCells ? (
+            <TableFooter>
+              <TableRow {...merged.customProps?.row}>
+                {summaryCells.map((cell) => {
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      align={getCellAlign(cell)}
+                      {...getCellBind(cell)}
+                    >
+                      {cell.content}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableFooter>
+          ) : null}
+        </Table>
+        {merged.loading ? (
+          <div {...loadingBind}>
+            {slots?.loading ?? <Spinner {...merged.customProps?.spinner} />}
+          </div>
         ) : null}
-      </Table>
+      </div>
+
+      {showFooter ? <div {...footerBind}>{slots?.footer}</div> : null}
 
       {showPagination ? (
         <div {...paginationBind}>

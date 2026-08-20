@@ -1,6 +1,6 @@
 # DataTable
 
-Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, and `hoverable` are forwarded to `Table`. Chrome tokens (`size`, `variant`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
+Opinionated data grid: columns, rows, sorting, selection, empty/loading, and pagination wiring. DataTable composes `Table` (`<table>` / `thead` / `tbody`) for layout, sticky header, and column alignment. `size`, `variant`, `full`, `striped`, `hoverable`, and `rounded` are forwarded to `Table`. Chrome tokens (`size`, `variant`, `rounded`, column `align`) live on `Table`. Apps own the fetch; Bridge owns interaction and chrome.
 
 ## Import
 
@@ -53,7 +53,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable full={false} rows={users} columns={columns} />
 ```
 
-`stickyHeader` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper`:
+`stickyHeader` pins header cells to the page. `"boxed"` pins them inside the wrapper — set a max height on `classes.wrapper` or `classes.root`:
 
 ```tsx
 <DataTable stickyHeader rows={users} columns={columns} />
@@ -132,7 +132,9 @@ When `page` and `pageCount` are set, DataTable does not sort or filter `rows` lo
 />
 ```
 
-### Empty and loading
+### Empty, loading, and footer
+
+Empty rows show a default empty state; `slots.empty` replaces it. `loading` keeps the table visible and overlays a spinner (`slots.loading` replaces the spinner). `slots.footer` renders below the table, above pagination:
 
 ```tsx
 <DataTable
@@ -141,6 +143,7 @@ When `page` and `pageCount` are set, DataTable does not sort or filter `rows` lo
   loading={isLoading}
   slots={{
     empty: "No users",
+    footer: "Here is footer",
   }}
 />
 ```

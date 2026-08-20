@@ -9,6 +9,7 @@ import type {
 // ** Core Imports
 import type {
   TableAlign,
+  TableRounded,
   TableSize,
   TableVariant,
 } from "@bridge-ui/core/Tokens";
@@ -16,6 +17,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface TableSizeOverrides {}
 export interface TableAlignOverrides {}
+export interface TableRoundedOverrides {}
 export interface TableVariantOverrides {}
 
 export interface TableBodyClasses {
@@ -400,6 +402,13 @@ export interface TableOwnProps {
    * @default false
    */
   hoverable?: boolean;
+
+  /**
+   * Corner radius of the wrapper, header, and footer.
+   *
+   * @default "lg"
+   */
+  rounded?: MergeProps<TableRounded, TableRoundedOverrides>;
 
   /**
    * Cell padding / type scale.

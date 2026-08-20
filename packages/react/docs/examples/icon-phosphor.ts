@@ -20,6 +20,7 @@ import {
   EyeSlashIcon,
   FunnelIcon,
   InfoIcon,
+  MagnifyingGlassIcon,
   PaletteIcon,
   SpinnerGapIcon,
   UserIcon,
@@ -53,6 +54,7 @@ const icons = {
   chevronLeft: CaretLeftIcon,
   chevronDown: CaretDownIcon,
   calendar: CalendarDotsIcon,
+  search: MagnifyingGlassIcon,
   chevronRight: CaretRightIcon,
   chevronUpDown: CaretUpDownIcon,
 } satisfies Record<SemanticIconName, unknown>;

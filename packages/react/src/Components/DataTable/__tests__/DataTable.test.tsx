@@ -64,9 +64,12 @@ test("it should call onSortingChange when a sortable header is clicked", () => {
     />,
   );
 
-  fireEvent.click(screen.getByRole("button", { name: /Role/ }));
+  fireEvent.click(screen.getByRole("columnheader", { name: /Role/ }));
 
   expect(onSortingChange).toHaveBeenCalledWith({ id: "role", desc: false });
+  expect(
+    screen.getByRole("columnheader", { name: /Role/ }).className,
+  ).toContain("cursor-pointer");
   expect(
     screen
       .getByRole("columnheader", { name: /Role/ })
@@ -134,10 +137,29 @@ test("it should show the empty slot when there are no rows", () => {
   expect(screen.getByText("No users")).toBeTruthy();
 });
 
+test("it should render a default empty state", () => {
+  render(<DataTable rows={[]} columns={columns} />);
+
+  expect(screen.getByText("No data")).toBeTruthy();
+});
+
+test("it should render the footer slot below the table", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      slots={{ footer: "Here is footer" }}
+    />,
+  );
+
+  expect(screen.getByText("Here is footer")).toBeTruthy();
+});
+
 test("it should mark the table busy and show a spinner when loading", () => {
   render(<DataTable loading rows={rows} columns={columns} />);
 
   expect(screen.getByRole("table").getAttribute("aria-busy")).toBe("true");
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
 });
 
 test("it should render radios and replace the selection in single mode", () => {
@@ -275,6 +297,10 @@ test("it should pin a sticky start column", () => {
   expect(screen.getByRole("columnheader", { name: "Name" }).style.left).toBe(
     "0px",
   );
+  expect(
+    screen.getByRole("columnheader", { name: "Name" }).className,
+  ).not.toContain("after:translate-x-full");
+  expect(screen.getByRole("table").className).toContain("border-separate");
 });
 
 test("it should truncate ellipsis cells", () => {
@@ -358,6 +384,42 @@ test("it should render expanded slot content", () => {
   expect(screen.getByText("Detail Ada Lovelace")).toBeTruthy();
 });
 
+test("it should omit the expand cell border when collapsed", () => {
+  const { container } = render(
+    <DataTable
+      rows={rows}
+      expanded={[]}
+      columns={columns}
+      getRowId={(row) => row.id}
+      slots={{
+        expanded: (row) => `Detail ${row.name}`,
+      }}
+    />,
+  );
+
+  expect(container.querySelector("td[colspan]")?.className).toContain(
+    "border-0",
+  );
+});
+
+test("it should keep the expand cell border when open", () => {
+  const { container } = render(
+    <DataTable
+      rows={rows}
+      expanded={["1"]}
+      columns={columns}
+      getRowId={(row) => row.id}
+      slots={{
+        expanded: (row) => `Detail ${row.name}`,
+      }}
+    />,
+  );
+
+  expect(container.querySelector("td[colspan]")?.className).not.toContain(
+    "border-0",
+  );
+});
+
 test("it should render a summary footer", () => {
   render(
     <DataTable
@@ -416,9 +478,13 @@ test("it should stick header cells when stickyHeader is set", () => {
   render(<DataTable rows={rows} stickyHeader columns={columns} />);
 
   expect(screen.getAllByRole("columnheader")[0]?.className).toContain("sticky");
+  expect(screen.getAllByRole("columnheader")[0]?.className).toContain(
+    "bg-dark-100",
+  );
   expect(screen.getAllByRole("columnheader")[0]?.className).not.toContain(
     "overflow-hidden",
   );
+  expect(screen.getAllByRole("columnheader")[0]?.style.top).toBe("0px");
   expect(screen.getByRole("table").className).toContain("border-separate");
   expect(screen.getByRole("table").parentElement?.className).not.toContain(
     "overflow-x-auto",
@@ -432,6 +498,25 @@ test("it should box sticky header overflow on the table wrapper", () => {
       columns={columns}
       stickyHeader="boxed"
       classes={{ wrapper: "max-h-96" }}
+    />,
+  );
+
+  expect(screen.getAllByRole("columnheader")[0]?.className).toContain("sticky");
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "overflow-auto",
+  );
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "max-h-96",
+  );
+});
+
+test("it should box sticky header overflow from classes.root", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      stickyHeader="boxed"
+      classes={{ root: "max-h-96" }}
     />,
   );
 

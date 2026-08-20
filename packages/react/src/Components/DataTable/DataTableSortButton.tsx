@@ -2,33 +2,63 @@
 import type { ReactNode } from "react";
 
 // ** Core Imports
-import type { DataTableSortIcon } from "@bridge-ui/core/Domain";
+import {
+  getDataTableSortTooltip,
+  type DataTableAriaSort,
+} from "@bridge-ui/core/Domain";
+import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
+import { Tooltip } from "@/Components/Tooltip";
 
 /**
- * Internal sortable header trigger. Not part of the public API.
+ * Internal sortable header chrome. Click-to-sort lives on the `th`.
  */
 export function DataTableSortButton({
-  icon,
-  onClick,
+  ariaSort,
   children,
 }: {
+  ariaSort: DataTableAriaSort;
   children: ReactNode;
-  icon: DataTableSortIcon;
-  onClick: () => void;
 }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex min-w-0 cursor-pointer items-center gap-1.5 p-0 leading-none"
-    >
-      {children}
-      <span className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15">
-        <Icon size="sm" icon={icon} />
+  const resolveMessage = useResolveMessage();
+  const tooltip = resolveMessage(getDataTableSortTooltip(ariaSort));
+
+  const trigger = (
+    <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 leading-none">
+      <span className="min-w-0 truncate leading-none">{children}</span>
+      <span className="inline-flex h-4 w-3.5 shrink-0 flex-col items-center justify-center leading-none">
+        <Icon
+          size="sm"
+          icon="chevronUp"
+          className={cn({
+            "-mb-1": true,
+            "text-dark-800 dark:text-dark-100": ariaSort === "ascending",
+            "text-dark-300 dark:text-dark-600": ariaSort !== "ascending",
+          })}
+        />
+        <Icon
+          size="sm"
+          icon="chevronDown"
+          className={cn({
+            "text-dark-800 dark:text-dark-100": ariaSort === "descending",
+            "text-dark-300 dark:text-dark-600": ariaSort !== "descending",
+          })}
+        />
       </span>
-    </button>
+    </span>
+  );
+
+  return (
+    <Tooltip
+      content={tooltip}
+      slots={{ trigger }}
+      customProps={{
+        root: { className: "min-w-0 max-w-none flex-1" },
+        trigger: { className: "min-w-0 max-w-none flex-1" },
+      }}
+    />
   );
 }

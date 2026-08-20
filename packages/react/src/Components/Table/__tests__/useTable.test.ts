@@ -8,6 +8,7 @@ import { useTable } from "@/Components/Table/hooks/useTable";
 const libDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   striped: false,
   variant: "plain",
   hoverable: false,

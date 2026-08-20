@@ -93,8 +93,11 @@ export function useTablePart<K extends TablePartKind>(
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
+        "sticky top-0 z-20": part === "header" && table.stickyHeader,
         [sizeClass ?? ""]: true,
         [variantClass ?? ""]: true,
+        [table.tokenClasses.roundedHeader ?? ""]: part === "header",
+        [table.tokenClasses.roundedFooter ?? ""]: part === "footer",
         [registryClass ?? ""]: true,
         [componentProps.classes?.root ?? ""]: true,
       }),

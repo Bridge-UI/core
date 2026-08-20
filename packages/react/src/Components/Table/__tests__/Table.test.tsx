@@ -78,6 +78,14 @@ test("it should apply the ghost variant on the wrapper", () => {
 
   expect(container.firstElementChild?.className).not.toContain("ring-1");
   expect(container.firstElementChild?.className).toContain("rounded-lg");
+  expect(container.querySelector("th")?.className).toContain("after:w-px");
+});
+
+test("it should apply rounded none on the wrapper", () => {
+  const { container } = render(<SampleTable rounded="none" />);
+
+  expect(container.firstElementChild?.className).toContain("rounded-none");
+  expect(container.firstElementChild?.className).not.toContain("rounded-lg");
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -87,9 +95,9 @@ test("it should stripe and hover body rows only", () => {
   const headerRow = container.querySelector("thead tr");
   const footerRow = container.querySelector("tfoot tr");
 
-  expect(bodyRows[0]?.className).toContain("even:bg-dark-50");
+  expect(bodyRows[0]?.className).toContain("even:bg-dark-100");
   expect(bodyRows[0]?.className).toContain("hover:bg-dark-500");
-  expect(headerRow?.className).not.toContain("even:bg-dark-50");
+  expect(headerRow?.className).not.toContain("even:bg-dark-100");
   expect(footerRow?.className).not.toContain("hover:bg-dark-500");
 });
 
@@ -102,7 +110,8 @@ test("it should stick header cells when stickyHeader is set", () => {
   expect(container.querySelector("th")?.className).toContain("sticky");
   expect(container.querySelector("td")?.className).not.toContain("sticky");
   expect(screen.getByRole("table").className).toContain("border-separate");
-  expect(container.querySelector("th")?.className).toContain("backdrop-blur");
+  expect(container.querySelector("th")?.className).toContain("bg-dark-100");
+  expect(container.querySelector("thead")?.className).toContain("z-20");
 });
 
 test("it should align numeric cells to the end with tabular nums", () => {

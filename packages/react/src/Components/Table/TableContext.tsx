@@ -19,6 +19,16 @@ export type TableTokenClasses = {
   align: TableAlign;
 
   /**
+   * Footer corner radius classes.
+   */
+  roundedFooter?: string;
+
+  /**
+   * Header corner radius classes.
+   */
+  roundedHeader?: string;
+
+  /**
    * Caption size classes.
    */
   sizeCaption?: string;

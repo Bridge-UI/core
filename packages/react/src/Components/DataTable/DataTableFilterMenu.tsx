@@ -95,6 +95,7 @@ export function DataTableFilterMenu({
             size="sm"
             value={query}
             hideErrorMessage
+            startIcon="search"
             aria-label="Search in filters"
             placeholder="Search in filters"
             onChange={(event) => {
@@ -102,7 +103,7 @@ export function DataTableFilterMenu({
             }}
           />
         </div>
-        <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto">
+        <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
           {multiple && visibleValues.length > 0 ? (
             <div
               role="menuitemcheckbox"
