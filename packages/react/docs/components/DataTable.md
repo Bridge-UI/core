@@ -98,4 +98,157 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
 />
 ```
 
-Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` — the table engine is not exported.
+Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `hiddenColumns` / `expanded` — the table engine is not exported.
+
+### Columns
+
+Cell and header content come from `columns`. `cell` receives the row and may return a string or any React node:
+
+```tsx
+<DataTable
+  rows={users}
+  columns={[
+    { id: "name", header: "Name", cell: (row) => row.name },
+    {
+      id: "role",
+      header: "Role",
+      cell: (row) => <Badge>{row.role}</Badge>,
+    },
+  ]}
+/>
+```
+
+Table-level `slots` are chrome only (`empty`, `expanded`, `loading`, `pagination`, `toolbar`). There is no per-cell slot.
+
+### Selection
+
+`selectionMode="multiple"` (default) uses checkboxes and select-all. `selectionMode="single"` uses radios and keeps at most one id. `selection` is always `string[]`.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={columns}
+  selection={selected}
+  selectionMode="single"
+  getRowId={(row) => row.id}
+  onSelectionChange={setSelected}
+/>
+```
+
+### Filters
+
+Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`). Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+
+```tsx
+<DataTable
+  rows={users}
+  filters={filters}
+  onFiltersChange={setFilters}
+  columns={[
+    {
+      id: "role",
+      header: "Role",
+      cell: (row) => row.role,
+      filters: [
+        { label: "Engineer", value: "Engineer" },
+        { label: "Researcher", value: "Researcher" },
+      ],
+    },
+  ]}
+/>
+```
+
+Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` is still controlled — the app owns the fetch.
+
+### Sticky columns
+
+`sticky="start"` or `sticky="end"` pins a column while the grid scrolls horizontally. Selection and expand chrome pin to start when any data column uses `sticky="start"`.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={[
+    {
+      id: "name",
+      width: 160,
+      header: "Name",
+      sticky: "start",
+      cell: (row) => row.name,
+    },
+    { id: "role", header: "Role", cell: (row) => row.role },
+    {
+      id: "actions",
+      header: "Actions",
+      sticky: "end",
+      cell: (row) => row.id,
+    },
+  ]}
+/>
+```
+
+### Ellipsis
+
+`ellipsis` truncates overflowing cell text. The tooltip uses the column accessor (or `row[id]`).
+
+```tsx
+<DataTable
+  rows={users}
+  columns={[
+    {
+      id: "name",
+      header: "Name",
+      ellipsis: true,
+      cell: (row) => row.name,
+    },
+  ]}
+/>
+```
+
+### Column visibility
+
+Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** control in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={columns}
+  hiddenColumns={hidden}
+  onHiddenColumnsChange={setHidden}
+/>
+```
+
+### Expand
+
+Controlled `expanded` row ids. `slots.expanded` renders in a spanning row under the data row.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={columns}
+  expanded={expanded}
+  getRowId={(row) => row.id}
+  onExpandedChange={setExpanded}
+  slots={{
+    expanded: (row) => row.bio,
+  }}
+/>
+```
+
+### Summary
+
+Set `summary` on a column to render a footer row over the current (filtered) rows. Chrome cells stay empty.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={[
+    { id: "name", header: "Name", cell: (row) => row.name },
+    {
+      id: "role",
+      header: "Role",
+      cell: (row) => row.role,
+      summary: (items) => `${items.length} roles`,
+    },
+  ]}
+/>
+```

@@ -14,6 +14,7 @@ const libDefaults = {
   variant: "plain",
   hoverable: false,
   stickyHeader: false,
+  selectionMode: "multiple",
 } as const;
 
 type User = { id: string; name: string };
@@ -37,6 +38,7 @@ test("it should expose table defaults from useDataTable", () => {
   expect(result.current.merged.variant).toBe("plain");
   expect(result.current.paginationVariant).toBe("text");
   expect(result.current.headerViews[0]?.id).toBe("name");
+  expect(result.current.merged.selectionMode).toBe("multiple");
 });
 
 test("it should enable selection views when selection is controlled", () => {
@@ -73,4 +75,42 @@ test("it should map bordered chrome to outlined pagination", () => {
   expect(result.current.serverPaged).toBe(true);
   expect(result.current.showPagination).toBe(true);
   expect(result.current.paginationVariant).toBe("outlined");
+});
+
+test("it should expose sticky expand visibility and summary views", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        expanded: [],
+        hiddenColumns: ["role"],
+        rows: [{ id: "1", name: "Ada" }],
+        slots: {
+          expanded: (row) => row.name,
+        },
+        columns: [
+          {
+            id: "name",
+            width: 120,
+            header: "Name",
+            sticky: "start",
+            cell: (row) => row.name,
+            summary: (items) => String(items.length),
+          },
+          { id: "role", header: "Role", cell: (row) => row.name },
+        ],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.visibilityEnabled).toBe(true);
+  expect(result.current.headerViews[1]?.sticky).toBe("start");
+  expect(result.current.summaryCells?.[1]?.content).toBe("1");
+  expect(result.current.headerViews[1]?.stickyStyle?.left).toBe(48);
+  expect(result.current.headerViews.some((header) => header.isExpand)).toBe(
+    true,
+  );
+  expect(
+    result.current.headerViews.some((header) => header.id === "role"),
+  ).toBe(false);
 });

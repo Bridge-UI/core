@@ -4,7 +4,11 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableFilterOption,
+  DataTableFilters,
+  DataTableSelectionMode,
   DataTableSorting,
+  DataTableStickyEdge,
 } from "@bridge-ui/core/Domain";
 import type {
   DataTableAlign,
@@ -16,13 +20,21 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
+import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SpinnerProps } from "@/Components/Spinner/spinner.types";
 
 export interface DataTableSizeOverrides {}
 export interface DataTableAlignOverrides {}
 export interface DataTableVariantOverrides {}
 
-export type { DataTableColumnBase, DataTableSorting };
+export type {
+  DataTableColumnBase,
+  DataTableFilterOption,
+  DataTableFilters,
+  DataTableSelectionMode,
+  DataTableSorting,
+  DataTableStickyEdge,
+};
 
 /**
  * Column definition with React renderers.
@@ -44,9 +56,35 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
    * Header content.
    */
   header: ReactNode;
+
+  /**
+   * Footer cell for a summary row. Receives the current (filtered) rows.
+   */
+  summary?: (rows: T[]) => ReactNode;
 };
 
 export interface DataTableCallbacks {
+  /**
+   * Called when expanded row ids change.
+   *
+   * @default undefined
+   */
+  onExpandedChange?: (ids: string[]) => void;
+
+  /**
+   * Called when column filters change.
+   *
+   * @default undefined
+   */
+  onFiltersChange?: (filters: DataTableFilters) => void;
+
+  /**
+   * Called when hidden column ids change.
+   *
+   * @default undefined
+   */
+  onHiddenColumnsChange?: (ids: string[]) => void;
+
   /**
    * Called when the numbered page changes.
    *
@@ -84,6 +122,11 @@ export interface DataTableClasses {
    * Classes merged onto the empty-state region.
    */
   empty?: string;
+
+  /**
+   * Classes merged onto the summary footer rowgroup.
+   */
+  footer?: string;
 
   /**
    * Classes merged onto header cells.
@@ -163,6 +206,13 @@ export interface DataTableCustomProps {
   empty?: HTMLAttributes<HTMLDivElement>;
 
   /**
+   * Props forwarded to the summary footer rowgroup.
+   *
+   * @default undefined
+   */
+  footer?: HTMLAttributes<HTMLDivElement>;
+
+  /**
    * Props forwarded to header cells.
    *
    * @default undefined
@@ -189,6 +239,13 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   pagination?: Partial<Omit<PaginationProps, "page" | "count" | "onChange">>;
+
+  /**
+   * Extra props for selection radios (`selectionMode="single"`).
+   *
+   * @default undefined
+   */
+  radio?: Partial<Omit<RadioProps, "checked" | "onChange">>;
 
   /**
    * Props forwarded to the DataTable root.
@@ -259,6 +316,20 @@ export interface DataTableOwnProps<T> {
   customProps?: DataTableCustomProps;
 
   /**
+   * Controlled expanded row ids.
+   *
+   * @default undefined
+   */
+  expanded?: string[];
+
+  /**
+   * Controlled column filters: column id → selected option values.
+   *
+   * @default undefined
+   */
+  filters?: DataTableFilters;
+
+  /**
    * Stretch the grid to at least the wrapper width.
    *
    * @default true
@@ -271,6 +342,13 @@ export interface DataTableOwnProps<T> {
    * @default undefined
    */
   getRowId?: (row: T) => string;
+
+  /**
+   * Controlled hidden column ids.
+   *
+   * @default undefined
+   */
+  hiddenColumns?: string[];
 
   /**
    * Row hover styles on the body.
@@ -315,6 +393,13 @@ export interface DataTableOwnProps<T> {
   selection?: string[];
 
   /**
+   * Row selection chrome: radios (`single`) or checkboxes (`multiple`).
+   *
+   * @default "multiple"
+   */
+  selectionMode?: DataTableSelectionMode;
+
+  /**
    * Cell padding / type scale.
    *
    * @default "md"
@@ -322,11 +407,11 @@ export interface DataTableOwnProps<T> {
   size?: MergeProps<DataTableSize, DataTableSizeOverrides>;
 
   /**
-   * `empty`, `loading`, `pagination`, and `toolbar` regions.
+   * `empty`, `expanded`, `loading`, `pagination`, and `toolbar` regions.
    *
    * @default undefined
    */
-  slots?: DataTableSlots;
+  slots?: DataTableSlots<T>;
 
   /**
    * Controlled sort: one column, or `null` when unsorted.
@@ -357,11 +442,16 @@ export interface DataTableOwnProps<T> {
   variant?: MergeProps<DataTableVariant, DataTableVariantOverrides>;
 }
 
-export interface DataTableSlots {
+export interface DataTableSlots<T = unknown> {
   /**
    * Shown when `rows` is empty and the table is not loading.
    */
   empty?: ReactNode;
+
+  /**
+   * Rendered in a spanning row when a row is expanded.
+   */
+  expanded?: (row: T) => ReactNode;
 
   /**
    * Replaces the default spinner when `loading` is set.
