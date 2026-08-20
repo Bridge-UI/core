@@ -69,6 +69,13 @@ import type {
   ColorPickerRounded,
   ColorPickerSizeItem,
 } from "@/Tokens/ColorPicker";
+import type {
+  DataTableAlignItem,
+  DataTableSize,
+  DataTableSizeItem,
+  DataTableVariant,
+  DataTableVariantItem,
+} from "@/Tokens/DataTable";
 import type { DividerColor, DividerOrientation } from "@/Tokens/Divider";
 import type {
   DrawerBlur,
@@ -606,10 +613,15 @@ export interface DataTableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
-    size: keyof TableSize;
+    size: keyof DataTableSize;
     stickyHeader: boolean;
     striped: boolean;
-    variant: keyof TableVariant;
+    variant: keyof DataTableVariant;
+  }>;
+  tokens: Partial<{
+    align: Record<string, DataTableAlignItem>;
+    size: Record<string, DataTableSizeItem>;
+    variant: Record<string, DataTableVariantItem>;
   }>;
 }
 

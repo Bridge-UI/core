@@ -44,6 +44,8 @@ export {
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnTrack,
+  getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,

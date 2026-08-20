@@ -7,6 +7,8 @@ import {
   DATATABLE_SELECTION_COLUMN_ID,
   getDataTableAriaSort,
   getDataTableColumnAccessor,
+  getDataTableColumnTrack,
+  getDataTableGridTemplate,
   getDataTablePaginationVariant,
   getDataTableSelectAllState,
   getDataTableSortIcon,
@@ -22,10 +24,10 @@ import {
 
 describe("getDataTablePaginationVariant", () => {
   test("it should map table chrome to pagination variants", () => {
-    expect(getDataTablePaginationVariant("ghost")).toBe("ghost");
     expect(getDataTablePaginationVariant("plain")).toBe("text");
-    expect(getDataTablePaginationVariant(undefined)).toBe("text");
+    expect(getDataTablePaginationVariant("ghost")).toBe("ghost");
     expect(getDataTablePaginationVariant("unknown")).toBe("text");
+    expect(getDataTablePaginationVariant(undefined)).toBe("text");
     expect(getDataTablePaginationVariant("bordered")).toBe("outlined");
     expect(DATATABLE_PAGINATION_VARIANT.plain).toBe("text");
   });
@@ -78,17 +80,17 @@ describe("toggleDataTableSorting", () => {
 
 describe("isDataTableServerPaged", () => {
   test("it should require both page and pageCount", () => {
-    expect(isDataTableServerPaged(undefined, 4)).toBe(false);
-    expect(isDataTableServerPaged(1, undefined)).toBe(false);
     expect(isDataTableServerPaged(1, 4)).toBe(true);
+    expect(isDataTableServerPaged(1, undefined)).toBe(false);
+    expect(isDataTableServerPaged(undefined, 4)).toBe(false);
   });
 });
 
 describe("isDataTableSelectionEnabled", () => {
   test("it should enable when ids or a handler are present", () => {
-    expect(isDataTableSelectionEnabled(undefined, false)).toBe(false);
     expect(isDataTableSelectionEnabled([], false)).toBe(true);
     expect(isDataTableSelectionEnabled(undefined, true)).toBe(true);
+    expect(isDataTableSelectionEnabled(undefined, false)).toBe(false);
   });
 });
 
@@ -111,6 +113,24 @@ describe("getDataTableColumnAccessor", () => {
         { id: "name", accessor: (row) => row.user.name },
       ),
     ).toBe("Ada");
+  });
+});
+
+describe("getDataTableColumnTrack", () => {
+  test("it should map width and the selection column to grid tracks", () => {
+    expect(getDataTableColumnTrack(120)).toBe("120px");
+    expect(getDataTableColumnTrack("8rem")).toBe("8rem");
+    expect(getDataTableColumnTrack(undefined, true)).toBe("3rem");
+    expect(getDataTableColumnTrack(undefined)).toBe("minmax(0, 1fr)");
+  });
+});
+
+describe("getDataTableGridTemplate", () => {
+  test("it should join column tracks for a row", () => {
+    expect(getDataTableGridTemplate([])).toBe("minmax(0, 1fr)");
+    expect(
+      getDataTableGridTemplate([{ isSelection: true }, {}, { width: 160 }]),
+    ).toBe("3rem minmax(0, 1fr) 160px");
   });
 });
 
@@ -149,8 +169,8 @@ describe("getDataTableSelectAllState", () => {
 
 describe("toggleDataTableRowSelection", () => {
   test("it should add or remove a row id", () => {
-    expect(toggleDataTableRowSelection(["a"], "b", true)).toEqual(["a", "b"]);
     expect(toggleDataTableRowSelection(["a"], "a", true)).toEqual(["a"]);
+    expect(toggleDataTableRowSelection(["a"], "b", true)).toEqual(["a", "b"]);
     expect(toggleDataTableRowSelection(["a", "b"], "a", false)).toEqual(["b"]);
   });
 });

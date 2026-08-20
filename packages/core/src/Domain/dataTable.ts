@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { fromPairs, get, isNil } from "es-toolkit/compat";
 
 /**
  * Internal column id for the selection checkbox column.
@@ -7,7 +7,7 @@ import { get } from "es-toolkit/compat";
 export const DATATABLE_SELECTION_COLUMN_ID = "__bridge-selection";
 
 /**
- * Pagination variant that pairs with a DataTable / Table chrome variant.
+ * Pagination variant that pairs with a DataTable chrome variant.
  */
 export const DATATABLE_PAGINATION_VARIANT = {
   plain: "text",
@@ -55,13 +55,13 @@ export type DataTableColumnBase<T> = {
   sortable?: boolean;
 
   /**
-   * Optional column width (`th` / `td` style width).
+   * Optional column width as a CSS grid track (`px` number or CSS length).
    */
   width?: number | string;
 };
 
 /**
- * Pagination variant paired with a table chrome variant.
+ * Pagination variant paired with a DataTable chrome variant.
  */
 export type DataTablePaginationVariant =
   (typeof DATATABLE_PAGINATION_VARIANT)[keyof typeof DATATABLE_PAGINATION_VARIANT];
@@ -77,7 +77,7 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
 
 /**
- * Maps a table chrome variant to the matching Pagination variant.
+ * Maps a DataTable chrome variant to the matching Pagination variant.
  */
 export function getDataTablePaginationVariant(
   tableVariant: string | undefined,
@@ -141,7 +141,7 @@ export function isDataTableServerPaged(
   page: number | undefined,
   pageCount: number | undefined,
 ): boolean {
-  return page != null && pageCount != null;
+  return !isNil(page) && !isNil(pageCount);
 }
 
 /**
@@ -190,18 +190,54 @@ export function getDataTableColumnAccessor<T>(
 }
 
 /**
+ * CSS grid track for a DataTable column.
+ */
+export function getDataTableColumnTrack(
+  width: number | string | undefined,
+  isSelection = false,
+): string {
+  if (isSelection) {
+    return "3rem";
+  }
+
+  if (typeof width === "number") {
+    return `${width}px`;
+  }
+
+  if (width) {
+    return width;
+  }
+
+  return "minmax(0, 1fr)";
+}
+
+/**
+ * `grid-template-columns` value for a DataTable row.
+ */
+export function getDataTableGridTemplate(
+  columns: ReadonlyArray<{
+    isSelection?: boolean;
+    width?: number | string;
+  }>,
+): string {
+  if (columns.length === 0) {
+    return "minmax(0, 1fr)";
+  }
+
+  return columns
+    .map((column) => {
+      return getDataTableColumnTrack(column.width, column.isSelection === true);
+    })
+    .join(" ");
+}
+
+/**
  * Maps selected ids to a row selection record.
  */
 export function selectionToRowSelection(
   ids: string[] | undefined,
 ): Record<string, boolean> {
-  const record: Record<string, boolean> = {};
-
-  for (const id of ids ?? []) {
-    record[id] = true;
-  }
-
-  return record;
+  return fromPairs((ids ?? []).map((id) => [id, true]));
 }
 
 /**
