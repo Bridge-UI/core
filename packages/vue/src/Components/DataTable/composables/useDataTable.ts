@@ -251,6 +251,8 @@ const chromeColumn = {
   },
 };
 
+const EMPTY_ROWS: never[] = [];
+
 export function useDataTable<T>(
   props: DataTableOwnProps<T>,
   libDefaults: DataTableLibDefaults,
@@ -321,7 +323,7 @@ export function useDataTable<T>(
   });
 
   const rows = computed(() => {
-    return merged.value.rows ?? [];
+    return merged.value.rows ?? EMPTY_ROWS;
   });
 
   const selectionEnabled = computed(() => {
@@ -519,6 +521,7 @@ export function useDataTable<T>(
           row.original,
           columns.value,
           models.columnSearch.value,
+          hidden,
         )
       ) {
         return false;
@@ -694,7 +697,7 @@ export function useDataTable<T>(
   const showPerPage = computed(() => {
     return isDataTablePerPageEnabled(
       models.perPage.value,
-      false,
+      instance?.vnode.props?.["onUpdate:perPage"] !== undefined,
       Boolean(vueSlots.perPage),
     );
   });
@@ -711,10 +714,6 @@ export function useDataTable<T>(
 
   const showEmpty = computed(() => {
     return rowViews.value.length === 0;
-  });
-
-  const showFooter = computed(() => {
-    return vueSlots.footer !== undefined;
   });
 
   const paginationVariant = computed(() => {
@@ -1236,7 +1235,6 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    showFooter,
     tableProps,
     footerBind,
     showSearch,

@@ -24,7 +24,7 @@ const resolveMessage = useResolveMessage();
 </script>
 
 <template>
-  <Menu v-model="show" placement="bottom-end">
+  <Menu v-model="show" placement="bottom">
     <template #trigger>
       <DataTableToolbarButton
         icon="columns"

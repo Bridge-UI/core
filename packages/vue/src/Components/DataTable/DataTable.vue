@@ -37,6 +37,7 @@ import {
   TableRow,
 } from "@/Components/Table";
 import { Tooltip } from "@/Components/Tooltip";
+import { hasNamedSlot } from "@/Utils";
 
 defineSlots<
   DataTableSlots<T> & {
@@ -91,7 +92,6 @@ const {
   rootBind,
   emptyBind,
   showEmpty,
-  showFooter,
   tableProps,
   footerBind,
   loadingBar,
@@ -470,7 +470,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       </div>
     </div>
 
-    <div v-if="showFooter" v-bind="footerBind">
+    <div v-bind="footerBind" v-if="hasNamedSlot(tableSlots, 'footer')">
       <slot name="footer" />
     </div>
 
