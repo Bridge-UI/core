@@ -55,6 +55,7 @@ const menuBridgeKeys = [
   "rounded",
   "strategy",
   "placement",
+  "matchWidth",
   "persistent",
   "teleportTo",
   "customProps",
@@ -355,6 +356,7 @@ export function useMenu(
       offset: merged.offset,
       strategy: merged.strategy,
       placement: merged.placement,
+      matchWidth: merged.matchWidth === true,
       onReferenceHidden: () => {
         if (
           !allowReferenceHiddenCloseRef.current ||
@@ -542,7 +544,7 @@ export function useMenu(
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "relative inline-block text-left": hasTrigger,
+        "relative inline-flex": hasTrigger,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
     );
@@ -561,7 +563,7 @@ export function useMenu(
         onClickCapture: handleTriggerClick,
         "aria-controls": show ? menuId : undefined,
         className: cn({
-          "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
+          "inline-flex w-fit max-w-full cursor-pointer outline-hidden": true,
           [get(mergedClasses, "trigger") ?? ""]: true,
         }),
       },
@@ -581,7 +583,9 @@ export function useMenu(
         },
         "aria-hidden": isHiddenWhileMounted ? true : undefined,
         className: cn({
-          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
+          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden max-w-[calc(100vw-16px)]": true,
+          "min-w-0 w-full": merged.matchWidth === true,
+          "min-w-32 w-max": merged.matchWidth !== true,
           "invisible pointer-events-none": isHiddenWhileMounted,
           [roundedClass ?? ""]: true,
           [shadowClass ?? ""]: true,
