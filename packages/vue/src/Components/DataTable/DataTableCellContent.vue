@@ -12,9 +12,11 @@ defineProps<{
   tooltip?: string;
 }>();
 
+const tooltipShow = ref(false);
 const tooltipReady = ref(false);
 
-function markTooltipReady() {
+function openDeferredTooltip() {
+  tooltipShow.value = true;
   tooltipReady.value = true;
 }
 </script>
@@ -31,8 +33,8 @@ function markTooltipReady() {
 
   <div
     v-else-if="!tooltipReady"
-    v-on:focusin="markTooltipReady"
-    v-on:pointerenter="markTooltipReady"
+    v-on:focusin="openDeferredTooltip"
+    v-on:pointerenter="openDeferredTooltip"
     class="block min-w-0 w-full max-w-full"
   >
     <div class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
@@ -43,6 +45,7 @@ function markTooltipReady() {
   <Tooltip
     v-else
     :content="tooltip"
+    v-model="tooltipShow"
     :custom-props="{
       trigger: { class: 'block min-w-0 w-full max-w-full' },
     }"

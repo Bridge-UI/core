@@ -276,8 +276,8 @@ test("it should filter row views from the filters binding", () => {
   expect(result.rowViews.value[0]?.original.name).toBe("Ada");
 });
 
-test("it should write filters from onCommitColumnFilter", () => {
-  const models = createModels({ filters: ref({}) });
+test("it should write filters and reset page from onCommitColumnFilter", () => {
+  const models = createModels({ page: ref(2), filters: ref({}) });
   const { result } = mountUseDataTable(
     { rows: people, columns: peopleColumns },
     models,
@@ -285,6 +285,7 @@ test("it should write filters from onCommitColumnFilter", () => {
 
   result.onCommitColumnFilter("role", ["Engineer"], "");
 
+  expect(models.page.value).toBe(1);
   expect(models.filters.value).toEqual({ role: ["Engineer"] });
 });
 

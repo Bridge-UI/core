@@ -1152,6 +1152,10 @@ export function useDataTable<T>(
         query,
       );
     }
+
+    if (models.page.value !== 1) {
+      models.page.value = 1;
+    }
   }
 
   function onToggleExpand(rowId: string, expanded: boolean) {

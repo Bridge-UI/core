@@ -510,6 +510,30 @@ test("it should truncate ellipsis cells", () => {
   expect(wrapper.get(".text-ellipsis").text()).toBe("Ada Lovelace");
 });
 
+test("it should show the ellipsis tooltip on the first pointer enter", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row: User) => row.name,
+        },
+      ],
+    },
+  });
+
+  await wrapper.get(".block.min-w-0.w-full.max-w-full").trigger("pointerenter");
+  await flushPromises();
+
+  expect(
+    document.body.querySelector('[role="tooltip"]')?.textContent,
+  ).toContain("Ada Lovelace");
+});
+
 test("it should hide columns listed in hiddenColumns", () => {
   const wrapper = mountDataTable({
     props: { rows, columns, hiddenColumns: ["role"] },
