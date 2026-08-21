@@ -1,5 +1,11 @@
 // ** External Imports
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
@@ -166,6 +172,20 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
   expect(screen.getByRole("combobox")).toBeTruthy();
 });
 
+test("it should show the per-page Select when onPerPageChange is set", () => {
+  render(
+    <DataTable
+      page={1}
+      rows={rows}
+      pageCount={2}
+      columns={columns}
+      onPerPageChange={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByRole("combobox")).toBeTruthy();
+});
+
 test("it should render a custom perPage slot beside pagination", () => {
   render(
     <DataTable
@@ -288,6 +308,36 @@ test("it should call onFiltersChange when a column filter is applied", () => {
   expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
 });
 
+test("it should use radios for a single-select column filter", () => {
+  render(
+    <DataTable
+      rows={rows}
+      filters={{}}
+      columns={[
+        { id: "name", header: "Name", cell: (row) => row.name },
+        {
+          id: "role",
+          header: "Role",
+          filterMultiple: false,
+          cell: (row) => row.role,
+          filters: [
+            { label: "Engineer", value: "Engineer" },
+            { label: "Researcher", value: "Researcher" },
+          ],
+        },
+      ]}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Filter column" }));
+
+  expect(screen.getByRole("radio", { name: "Engineer" })).toBeTruthy();
+  expect(screen.getByRole("menuitemradio", { name: "Engineer" })).toBeTruthy();
+  expect(
+    screen.queryByRole("menuitemcheckbox", { name: "Engineer" }),
+  ).toBeNull();
+});
+
 test("it should call onColumnSearchChange when a column search is applied", () => {
   const onColumnSearchChange = vi.fn();
 
@@ -336,6 +386,28 @@ test("it should hide non-matching rows when a client column search is set", () =
 
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
   expect(screen.queryByText("Alan Turing")).toBeNull();
+});
+
+test("it should ignore column search on hidden columns", () => {
+  render(
+    <DataTable
+      rows={rows}
+      hiddenColumns={["name"]}
+      columnSearch={{ name: "Ada" }}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Engineer")).toBeTruthy();
+  expect(screen.getByText("Researcher")).toBeTruthy();
 });
 
 test("it should hide non-matching rows when a client filter is set", () => {
@@ -688,4 +760,74 @@ test("it should align built-in pagination at the start", () => {
   );
 
   expect(container.querySelector(".justify-start")).toBeTruthy();
+});
+
+test("it should sort rows when sorting is controlled", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      sorting={{ id: "role", desc: true }}
+    />,
+  );
+
+  const bodyRows = screen.getAllByRole("row").slice(1);
+
+  expect(bodyRows[0]?.textContent).toContain("Alan Turing");
+  expect(bodyRows[1]?.textContent).toContain("Ada Lovelace");
+});
+
+test("it should call onSearchChange from the toolbar search", () => {
+  const onSearchChange = vi.fn();
+
+  render(
+    <DataTable
+      search=""
+      rows={rows}
+      columns={columns}
+      onSearchChange={onSearchChange}
+    />,
+  );
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search" }), {
+    target: { value: "Ada" },
+  });
+
+  expect(onSearchChange).toHaveBeenCalledWith("Ada");
+});
+
+test("it should call onPerPageChange from the built-in Select", async () => {
+  const onPageChange = vi.fn();
+  const onPerPageChange = vi.fn();
+
+  render(
+    <DataTable
+      page={2}
+      rows={rows}
+      perPage={10}
+      pageCount={3}
+      columns={columns}
+      onPageChange={onPageChange}
+      onPerPageChange={onPerPageChange}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByRole("option", { name: "25" })).toBeTruthy();
+  });
+
+  fireEvent.click(screen.getByRole("option", { name: "25" }));
+
+  expect(onPageChange).toHaveBeenCalledWith(1);
+  expect(onPerPageChange).toHaveBeenCalledWith(25);
+});
+
+test("it should mark the controlled page as current", () => {
+  render(<DataTable page={2} rows={rows} pageCount={3} columns={columns} />);
+
+  expect(
+    screen.getByRole("button", { name: "Page 2" }).getAttribute("aria-current"),
+  ).toBe("page");
 });

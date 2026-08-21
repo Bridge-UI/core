@@ -1,6 +1,6 @@
 // ** External Imports
-import { cleanup, renderHook } from "@testing-library/react";
-import { afterEach, expect, test } from "vitest";
+import { act, cleanup, renderHook } from "@testing-library/react";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Local Imports
 import type { DataTableColumn } from "@/Components/DataTable/dataTable.types";
@@ -157,4 +157,232 @@ test("it should expose sticky expand visibility and summary views", () => {
   expect(
     result.current.headerViews.some((header) => header.id === "role"),
   ).toBe(false);
+});
+
+type Person = { id: string; name: string; role: string };
+
+const people: Person[] = [
+  { id: "1", name: "Ada", role: "Engineer" },
+  { id: "2", name: "Alan", role: "Researcher" },
+];
+
+const peopleColumns: DataTableColumn<Person>[] = [
+  { id: "name", header: "Name", sortable: true, cell: (row) => row.name },
+  {
+    id: "role",
+    header: "Role",
+    sortable: true,
+    cell: (row) => row.role,
+    filters: [
+      { label: "Engineer", value: "Engineer" },
+      { label: "Researcher", value: "Researcher" },
+    ],
+  },
+];
+
+test("it should sort row views from the sorting binding", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        columns: peopleColumns,
+        sorting: { id: "name", desc: true },
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.rowViews).toHaveLength(2);
+  expect(result.current.rowViews[0]?.original.name).toBe("Alan");
+  expect(result.current.rowViews[1]?.original.name).toBe("Ada");
+});
+
+test("it should emit onSortingChange from onToggleSort", () => {
+  const onSortingChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        onSortingChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onToggleSort("name");
+  });
+
+  expect(onSortingChange).toHaveBeenCalledWith({ id: "name", desc: false });
+});
+
+test("it should filter row views from the filters binding", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        columns: peopleColumns,
+        filters: { role: ["Engineer"] },
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.rowViews).toHaveLength(1);
+  expect(result.current.rowViews[0]?.original.name).toBe("Ada");
+});
+
+test("it should emit onFiltersChange from onCommitColumnFilter", () => {
+  const onFiltersChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        filters: {},
+        rows: people,
+        onFiltersChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onCommitColumnFilter("role", ["Engineer"], "");
+  });
+
+  expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
+});
+
+test("it should filter row views from the search binding", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        search: "Alan",
+        columns: peopleColumns,
+        onSearchChange: vi.fn(),
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.showSearch).toBe(true);
+  expect(result.current.rowViews).toHaveLength(1);
+  expect(result.current.rowViews[0]?.original.name).toBe("Alan");
+});
+
+test("it should emit search and reset page from onChangeSearch", () => {
+  const onPageChange = vi.fn();
+  const onSearchChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 2,
+        search: "",
+        rows: people,
+        onPageChange,
+        onSearchChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onChangeSearch("Ada");
+  });
+
+  expect(onPageChange).toHaveBeenCalledWith(1);
+  expect(onSearchChange).toHaveBeenCalledWith("Ada");
+});
+
+test("it should emit perPage and reset page from onChangePerPage", () => {
+  const onPageChange = vi.fn();
+  const onPerPageChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 2,
+        perPage: 10,
+        rows: people,
+        pageCount: 3,
+        onPageChange,
+        onPerPageChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onChangePerPage(25);
+  });
+
+  expect(result.current.showPerPage).toBe(true);
+  expect(onPageChange).toHaveBeenCalledWith(1);
+  expect(onPerPageChange).toHaveBeenCalledWith(25);
+});
+
+test("it should emit onPageChange from paginationSlotProps", () => {
+  const onPageChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        rows: people,
+        pageCount: 4,
+        onPageChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.paginationSlotProps.onPageChange(3);
+  });
+
+  expect(result.current.paginationSlotProps.page).toBe(1);
+  expect(onPageChange).toHaveBeenCalledWith(3);
+});
+
+test("it should hide columns from the hiddenColumns binding", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        columns: peopleColumns,
+        hiddenColumns: ["role"],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.visibilityEnabled).toBe(true);
+  expect(result.current.visibilityItems[1]?.hidden).toBe(true);
+  expect(
+    result.current.headerViews.some((header) => header.id === "role"),
+  ).toBe(false);
+});
+
+test("it should emit onHiddenColumnsChange from onToggleColumnVisibility", () => {
+  const onHiddenColumnsChange = vi.fn();
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        hiddenColumns: [],
+        onHiddenColumnsChange,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onToggleColumnVisibility("role", true);
+  });
+
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
 });
