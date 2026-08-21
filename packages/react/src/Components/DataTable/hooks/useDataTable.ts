@@ -977,20 +977,6 @@ export function useDataTable<T>(
                 );
               }
             : undefined,
-          className: cn({
-            "min-w-0": true,
-            "border-e-0": isChrome,
-            "sticky z-20": Boolean(header.stickyStyle),
-            "after:hidden": isChrome,
-            "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
-              header.sortable,
-            [get(variantItem, "cellStickyEdgeStart") ?? ""]:
-              header.sticky === "start" &&
-              header.stickyEdge &&
-              stickyPing.start,
-            [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
-              header.sticky === "end" && header.stickyEdge && stickyPing.end,
-          }),
           onKeyDown: header.sortable
             ? (event: ReactKeyboardEvent<HTMLTableCellElement>) => {
                 if (isDataTableHeadChromeEvent(event)) {
@@ -1010,6 +996,21 @@ export function useDataTable<T>(
                 );
               }
             : undefined,
+          className: cn({
+            "min-w-0": true,
+            relative: header.sortable,
+            "border-e-0": isChrome,
+            "sticky z-20": Boolean(header.stickyStyle),
+            "after:hidden": isChrome,
+            "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
+              header.sortable,
+            [get(variantItem, "cellStickyEdgeStart") ?? ""]:
+              header.sticky === "start" &&
+              header.stickyEdge &&
+              stickyPing.start,
+            [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
+              header.sticky === "end" && header.stickyEdge && stickyPing.end,
+          }),
         },
       );
     },

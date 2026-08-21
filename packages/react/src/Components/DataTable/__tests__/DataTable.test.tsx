@@ -1,5 +1,6 @@
 // ** External Imports
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -22,6 +23,7 @@ import type {
 afterEach(() => {
   cleanup();
   resetLayerStackForTests();
+  vi.useRealTimers();
 });
 
 type User = { id: string; name: string; role: string };
@@ -97,6 +99,28 @@ test("it should set aria-sort when sorting is controlled", () => {
       .getByRole("columnheader", { name: /Role/ })
       .getAttribute("aria-sort"),
   ).toBe("descending");
+});
+
+test("it should show the sort tooltip when hovering the header cell", async () => {
+  vi.useFakeTimers();
+
+  render(<DataTable rows={rows} columns={columns} />);
+
+  const header = screen.getByRole("columnheader", { name: /Role/ });
+  const trigger = header.querySelector(".absolute.inset-0.size-full");
+
+  expect(header.className).toContain("relative");
+  expect(trigger).toBeTruthy();
+
+  fireEvent.pointerEnter(trigger!);
+
+  await act(async () => {
+    vi.advanceTimersByTime(200);
+  });
+
+  expect(screen.getByRole("tooltip").textContent).toContain(
+    "Click to sort ascending",
+  );
 });
 
 test("it should toggle row selection", () => {

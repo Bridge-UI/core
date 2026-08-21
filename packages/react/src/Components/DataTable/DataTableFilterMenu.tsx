@@ -70,11 +70,11 @@ export function DataTableFilterMenu({
         setShow(next);
       }}
       customProps={{
-        root: {
-          className: "inline-flex items-center leading-none",
-        },
         trigger: {
           className: "inline-flex items-center leading-none",
+        },
+        root: {
+          className: "relative z-[2] inline-flex items-center leading-none",
         },
       }}
       slots={{
