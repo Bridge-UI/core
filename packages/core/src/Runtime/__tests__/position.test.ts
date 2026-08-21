@@ -47,6 +47,25 @@ function mountFloating(withArrow = false) {
   };
 }
 
+test("it should match the floating width to the reference when matchWidth is set", async () => {
+  const { floating, reference } = mountFloating();
+
+  mockRect(floating, { x: 0, y: 0, width: 240, height: 80 });
+  mockRect(reference, { x: 10, y: 20, width: 80, height: 40 });
+
+  const positionable = createPositionable({
+    floating,
+    reference,
+    offset: 4,
+    matchWidth: true,
+    placement: "bottom",
+  });
+
+  await positionable.update();
+
+  expect(floating.style.width).toBe("80px");
+});
+
 test("it should position the floating element relative to the reference", async () => {
   const { floating, reference } = mountFloating();
 
