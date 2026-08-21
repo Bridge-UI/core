@@ -4,7 +4,10 @@ import { expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
 // ** Local Imports
-import { useDataTable } from "@/Components/DataTable/composables/useDataTable";
+import {
+  useDataTable,
+  type DataTableModels,
+} from "@/Components/DataTable/composables/useDataTable";
 import type { DataTableColumn } from "@/Components/DataTable/dataTable.types";
 
 const libDefaults = {
@@ -27,9 +30,10 @@ const columns: DataTableColumn<User>[] = [
   { id: "name", header: "Name", cell: (row) => row.name },
 ];
 
-function mountUseDataTable(
-  props: Parameters<typeof useDataTable<User>>[0] = { columns },
-  models: Parameters<typeof useDataTable<User>>[2] = {
+function createModels(
+  overrides: Partial<DataTableModels> = {},
+): DataTableModels {
+  return {
     page: ref(undefined),
     search: ref(undefined),
     perPage: ref(undefined),
@@ -39,9 +43,15 @@ function mountUseDataTable(
     selection: ref(undefined),
     columnSearch: ref(undefined),
     hiddenColumns: ref(undefined),
-  },
+    ...overrides,
+  };
+}
+
+function mountUseDataTable<T>(
+  props: Parameters<typeof useDataTable<T>>[0],
+  models: DataTableModels = createModels(),
 ) {
-  let result!: ReturnType<typeof useDataTable<User>>;
+  let result!: ReturnType<typeof useDataTable<T>>;
 
   const Wrapper = defineComponent({
     setup() {
@@ -200,7 +210,6 @@ test("it should expose sticky expand visibility and summary views", () => {
       selection: ref(undefined),
       hiddenColumns: ref(["role"]),
       columnSearch: ref(undefined),
-      columnSearch: ref(undefined),
     },
   );
 
@@ -211,4 +220,146 @@ test("it should expose sticky expand visibility and summary views", () => {
     false,
   );
   expect(result.summaryCells.value?.[0]?.content).toBe("1");
+});
+
+type Person = { id: string; name: string; role: string };
+
+const people: Person[] = [
+  { id: "1", name: "Ada", role: "Engineer" },
+  { id: "2", name: "Alan", role: "Researcher" },
+];
+
+const peopleColumns: DataTableColumn<Person>[] = [
+  { id: "name", header: "Name", sortable: true, cell: (row) => row.name },
+  {
+    id: "role",
+    header: "Role",
+    sortable: true,
+    cell: (row) => row.role,
+    filters: [
+      { label: "Engineer", value: "Engineer" },
+      { label: "Researcher", value: "Researcher" },
+    ],
+  },
+];
+
+test("it should sort row views from the sorting binding", () => {
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    createModels({ sorting: ref({ id: "name", desc: true }) }),
+  );
+
+  expect(result.rowViews.value).toHaveLength(2);
+  expect(result.rowViews.value[0]?.original.name).toBe("Alan");
+  expect(result.rowViews.value[1]?.original.name).toBe("Ada");
+});
+
+test("it should write sorting from onToggleSort", () => {
+  const models = createModels();
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onToggleSort("name");
+
+  expect(models.sorting.value).toEqual({ id: "name", desc: false });
+});
+
+test("it should filter row views from the filters binding", () => {
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    createModels({ filters: ref({ role: ["Engineer"] }) }),
+  );
+
+  expect(result.rowViews.value).toHaveLength(1);
+  expect(result.rowViews.value[0]?.original.name).toBe("Ada");
+});
+
+test("it should write filters from onCommitColumnFilter", () => {
+  const models = createModels({ filters: ref({}) });
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onCommitColumnFilter("role", ["Engineer"], "");
+
+  expect(models.filters.value).toEqual({ role: ["Engineer"] });
+});
+
+test("it should filter row views from the search binding", () => {
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    createModels({ search: ref("Alan") }),
+  );
+
+  expect(result.showSearch.value).toBe(true);
+  expect(result.rowViews.value).toHaveLength(1);
+  expect(result.rowViews.value[0]?.original.name).toBe("Alan");
+});
+
+test("it should write search and reset page from onChangeSearch", () => {
+  const models = createModels({ page: ref(2), search: ref("") });
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onChangeSearch("Ada");
+
+  expect(models.page.value).toBe(1);
+  expect(models.search.value).toBe("Ada");
+});
+
+test("it should write perPage and reset page from onChangePerPage", () => {
+  const models = createModels({ page: ref(2), perPage: ref(10) });
+  const { result } = mountUseDataTable(
+    { rows: people, pageCount: 3, columns: peopleColumns },
+    models,
+  );
+
+  result.onChangePerPage(25);
+
+  expect(models.page.value).toBe(1);
+  expect(result.showPerPage.value).toBe(true);
+  expect(models.perPage.value).toBe(25);
+});
+
+test("it should write page from paginationSlotProps", () => {
+  const models = createModels({ page: ref(1) });
+  const { result } = mountUseDataTable(
+    { rows: people, pageCount: 4, columns: peopleColumns },
+    models,
+  );
+
+  result.paginationSlotProps.value.onPageChange(3);
+
+  expect(models.page.value).toBe(3);
+  expect(result.paginationSlotProps.value.page).toBe(3);
+});
+
+test("it should hide columns from the hiddenColumns binding", () => {
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    createModels({ hiddenColumns: ref(["role"]) }),
+  );
+
+  expect(result.visibilityEnabled.value).toBe(true);
+  expect(result.visibilityItems.value[1]?.hidden).toBe(true);
+  expect(result.headerViews.value.some((header) => header.id === "role")).toBe(
+    false,
+  );
+});
+
+test("it should write hiddenColumns from onToggleColumnVisibility", () => {
+  const models = createModels({ hiddenColumns: ref([]) });
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onToggleColumnVisibility("role", true);
+
+  expect(models.hiddenColumns.value).toEqual(["role"]);
 });

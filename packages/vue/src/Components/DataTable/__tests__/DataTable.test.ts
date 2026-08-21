@@ -163,6 +163,22 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
   expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
 });
 
+test("it should show the per-page Select when update:perPage is listened", () => {
+  const wrapper = mountDataTable({
+    attrs: {
+      "onUpdate:perPage": () => undefined,
+    },
+    props: {
+      rows,
+      page: 1,
+      columns,
+      pageCount: 2,
+    },
+  });
+
+  expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
+});
+
 test("it should render a custom perPage slot beside pagination", () => {
   const wrapper = mountDataTable({
     slots: { perPage: "Page size" },
@@ -306,6 +322,36 @@ test("it should emit update:filters when a column filter is applied", async () =
   ]);
 });
 
+test("it should use radios for a single-select column filter", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      filters: {},
+      columns: [
+        { id: "name", header: "Name", cell: (row: User) => row.name },
+        {
+          id: "role",
+          header: "Role",
+          filterMultiple: false,
+          cell: (row: User) => row.role,
+          filters: [
+            { label: "Engineer", value: "Engineer" },
+            { label: "Researcher", value: "Researcher" },
+          ],
+        },
+      ],
+    },
+  });
+
+  await wrapper.get('[aria-label="Filter column"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="menuitemradio"]')).not.toBeNull();
+  expect(document.body.querySelector('input[type="radio"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="menuitemcheckbox"]')).toBeNull();
+});
+
 test("it should emit update:columnSearch when a column search is applied", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
@@ -364,6 +410,28 @@ test("it should hide non-matching rows when a client column search is set", () =
 
   expect(wrapper.text()).toContain("Ada Lovelace");
   expect(wrapper.text()).not.toContain("Alan Turing");
+});
+
+test("it should ignore column search on hidden columns", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      hiddenColumns: ["name"],
+      columnSearch: { name: "Ada" },
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row: User) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("Engineer");
+  expect(wrapper.text()).toContain("Researcher");
 });
 
 test("it should hide non-matching rows when a client filter is set", () => {
@@ -683,6 +751,56 @@ test("it should align built-in pagination at the start", () => {
   expect(wrapper.find(".justify-start").exists()).toBe(true);
 });
 
+test("it should sort rows when sorting is controlled", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      sorting: { id: "role", desc: true },
+    },
+  });
+
+  const bodyRows = wrapper.findAll("tbody tr");
+
+  expect(bodyRows[0]?.text()).toContain("Alan Turing");
+  expect(bodyRows[1]?.text()).toContain("Ada Lovelace");
+});
+
+test("it should emit update:perPage from the built-in Select", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      page: 2,
+      columns,
+      perPage: 10,
+      pageCount: 3,
+    },
+  });
+
+  await wrapper.find('[role="combobox"]').trigger("click");
+  await flushPromises();
+
+  const option = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((item) => item.textContent?.trim() === "25");
+
+  option?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(wrapper.emitted("update:page")?.[0]).toEqual([1]);
+  expect(wrapper.emitted("update:perPage")?.[0]).toEqual([25]);
+});
+
+test("it should mark the controlled page as current", () => {
+  const wrapper = mountDataTable({
+    props: { rows, page: 2, columns, pageCount: 3 },
+  });
+
+  expect(
+    wrapper.find("button[aria-label='Page 2']").attributes("aria-current"),
+  ).toBe("page");
+});
 test("it should let an item slot override the column cell", () => {
   const wrapper = mountDataTable({
     slots: {
