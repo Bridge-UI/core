@@ -26,6 +26,7 @@ import {
 } from "es-toolkit/compat";
 import {
   computed,
+  getCurrentInstance,
   onBeforeUnmount,
   ref,
   useAttrs,
@@ -43,6 +44,7 @@ import {
   getDataTableColumnAccessor,
   getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
+  getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
@@ -56,24 +58,34 @@ import {
   isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
+  isDataTableColumnSearchable,
+  isDataTableColumnSearched,
   isDataTableExpandEnabled,
+  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
+  isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
+  matchDataTableSearch,
   resolveDataTableRowId,
+  rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
+  serializeDataTableCsv,
   setDataTableColumnFilter,
+  setDataTableColumnSearch,
   setDataTableRowSelection,
   sliceDataTablePage,
   toggleDataTableColumnVisibility,
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
+  type DataTableColumnSearch,
+  type DataTableExportPayload,
   type DataTableFilterOption,
   type DataTableFilters,
   type DataTablePaginationSlotProps,
@@ -82,6 +94,7 @@ import {
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
+import { hasDocument } from "@bridge-ui/core/Runtime";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -108,6 +121,7 @@ const dataTableBridgeKeys = [
   "page",
   "rows",
   "size",
+  "search",
   "classes",
   "columns",
   "filters",
@@ -124,6 +138,7 @@ const dataTableBridgeKeys = [
   "selection",
   "totalCount",
   "customProps",
+  "columnSearch",
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
@@ -177,6 +192,8 @@ export type DataTableHeaderView = {
   id: string;
   isExpand: boolean;
   isSelection: boolean;
+  searchable: boolean;
+  searchQuery: string;
   sortable: boolean;
   sortIcon: ReturnType<typeof getDataTableSortIcon>;
   sticky?: DataTableStickyEdge;
@@ -216,11 +233,13 @@ export type DataTableVisibilityItem = {
 };
 
 export type DataTableModels = {
+  columnSearch: Ref<undefined | DataTableColumnSearch>;
   expanded: Ref<string[] | undefined>;
   filters: Ref<undefined | DataTableFilters>;
   hiddenColumns: Ref<string[] | undefined>;
   page: Ref<number | undefined>;
   perPage: Ref<number | undefined>;
+  search: Ref<string | undefined>;
   selection: Ref<string[] | undefined>;
   sorting: Ref<undefined | DataTableSorting>;
 };
@@ -243,6 +262,7 @@ export function useDataTable<T>(
 ) {
   const attrs = useAttrs();
   const vueSlots = useSlots();
+  const instance = getCurrentInstance();
 
   const split = computed(() => {
     return splitComponentProps<DataTableProps<T>, typeof dataTableBridgeKeys>({
@@ -256,6 +276,7 @@ export function useDataTable<T>(
         sorting: models.sorting.value,
         expanded: models.expanded.value,
         selection: models.selection.value,
+        columnSearch: models.columnSearch.value,
         hiddenColumns: models.hiddenColumns.value,
       },
     });
@@ -486,15 +507,51 @@ export function useDataTable<T>(
     },
   });
 
-  const pagedRows = computed(() => {
+  const searchedRows = computed(() => {
     const source = table.getRowModel().rows;
 
-    if (!clientPaged.value) {
+    if (serverPaged.value) {
       return source;
     }
 
+    const query = models.search.value ?? "";
+    const hidden = models.hiddenColumns.value ?? [];
+
+    return source.filter((row) => {
+      if (
+        !rowMatchesDataTableColumnSearch(
+          row.original,
+          columns.value,
+          models.columnSearch.value,
+        )
+      ) {
+        return false;
+      }
+
+      if (query.trim().length === 0) {
+        return true;
+      }
+
+      return columns.value.some((column) => {
+        if (hidden.includes(column.id)) {
+          return false;
+        }
+
+        return matchDataTableSearch(
+          getDataTableColumnAccessor(row.original, column),
+          query,
+        );
+      });
+    });
+  });
+
+  const pagedRows = computed(() => {
+    if (!clientPaged.value) {
+      return searchedRows.value;
+    }
+
     return sliceDataTablePage(
-      source,
+      searchedRows.value,
       models.page.value ?? 1,
       resolvedPerPage.value,
     );
@@ -554,12 +611,19 @@ export function useDataTable<T>(
         hideable: meta.column?.hideable !== false,
         filterOptions: meta.column?.filters ?? [],
         filterable: isDataTableColumnFilterable(meta.column),
+        searchable: isDataTableColumnSearchable(meta.column),
         filterMultiple: meta.column?.filterMultiple !== false,
-        filterActive: isDataTableColumnFiltered(models.filters.value, meta.id),
+        searchQuery: getDataTableColumnSearch(
+          models.columnSearch.value,
+          meta.id,
+        ),
         filterValues: getDataTableColumnFilterValues(
           models.filters.value,
           meta.id,
         ),
+        filterActive:
+          isDataTableColumnFiltered(models.filters.value, meta.id) ||
+          isDataTableColumnSearched(models.columnSearch.value, meta.id),
       };
     });
   });
@@ -645,7 +709,7 @@ export function useDataTable<T>(
       clientPaged: clientPaged.value,
       pageCount: merged.value.pageCount,
       totalCount: merged.value.totalCount,
-      filteredCount: table.getRowModel().rows.length,
+      filteredCount: searchedRows.value.length,
     });
   });
 
@@ -1025,6 +1089,60 @@ export function useDataTable<T>(
     }
   }
 
+  function onChangeSearch(query: string) {
+    models.search.value = query;
+
+    if (models.page.value !== 1) {
+      models.page.value = 1;
+    }
+  }
+
+  const exportPayload = computed((): DataTableExportPayload<T> => {
+    const hidden = models.hiddenColumns.value ?? [];
+    const exportColumns = columns.value.filter((column) => {
+      return !hidden.includes(column.id);
+    });
+    const rows = map(searchedRows.value, "original") as T[];
+    const headers = exportColumns.map((column) => {
+      return isString(column.header) ? column.header : column.id;
+    });
+    const csvRows = rows.map((row) => {
+      return exportColumns.map((column) => {
+        return (
+          getDataTableDefaultCellContent(
+            getDataTableColumnAccessor(row, column),
+          ) ?? ""
+        );
+      });
+    });
+
+    return {
+      rows,
+      csv: serializeDataTableCsv(headers, csvRows),
+    };
+  });
+
+  function onExportClick() {
+    if (instance?.vnode.props?.onExport) {
+      return;
+    }
+
+    if (!hasDocument()) {
+      return;
+    }
+
+    const blob = new Blob([`\uFEFF${exportPayload.value.csv}`], {
+      type: "text/csv;charset=utf-8",
+    });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = href;
+    link.download = "export.csv";
+    link.click();
+    URL.revokeObjectURL(href);
+  }
+
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
     return {
       page: models.page.value ?? 1,
@@ -1055,12 +1173,29 @@ export function useDataTable<T>(
     );
   }
 
-  function onCommitColumnFilter(columnId: string, values: string[]) {
-    models.filters.value = setDataTableColumnFilter(
-      models.filters.value,
-      columnId,
-      values,
-    );
+  function onCommitColumnFilter(
+    columnId: string,
+    values: string[],
+    query: string,
+  ) {
+    const column = get(columnsById.value, columnId) as
+      undefined | DataTableColumn<T>;
+
+    if (column?.filters && column.filters.length > 0) {
+      models.filters.value = setDataTableColumnFilter(
+        models.filters.value,
+        columnId,
+        values,
+      );
+    }
+
+    if (isDataTableColumnSearchable(column)) {
+      models.columnSearch.value = setDataTableColumnSearch(
+        models.columnSearch.value,
+        columnId,
+        query,
+      );
+    }
   }
 
   function onToggleExpand(rowId: string, expanded: boolean) {
@@ -1089,7 +1224,7 @@ export function useDataTable<T>(
       return null;
     }
 
-    const data = map(table.getRowModel().rows, "original");
+    const data = map(searchedRows.value, "original");
 
     return headerViews.value.map((header) => {
       const column = get(columnsById.value, header.id) as
@@ -1126,8 +1261,28 @@ export function useDataTable<T>(
     });
   });
 
+  const showExport = computed(() => {
+    return isDataTableExportEnabled(
+      instance?.vnode.props?.onExport !== undefined,
+      vueSlots.export !== undefined,
+    );
+  });
+
+  const showSearch = computed(() => {
+    return isDataTableSearchEnabled(
+      models.search.value,
+      instance?.vnode.props?.["onUpdate:search"] !== undefined,
+      vueSlots.search !== undefined,
+    );
+  });
+
   const showToolbar = computed(() => {
-    return Boolean(vueSlots.toolbar) || visibilityEnabled.value;
+    return (
+      Boolean(vueSlots.toolbar) ||
+      visibilityEnabled.value ||
+      showExport.value ||
+      showSearch.value
+    );
   });
 
   return {
@@ -1137,9 +1292,11 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    showExport,
     showFooter,
     tableProps,
     footerBind,
+    showSearch,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -1156,7 +1313,10 @@ export function useDataTable<T>(
     onTogglePage,
     onToggleSort,
     summaryCells,
+    onExportClick,
+    exportPayload,
     expandEnabled,
+    onChangeSearch,
     loadingBarBind,
     paginationBind,
     selectAllState,

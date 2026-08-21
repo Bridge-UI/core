@@ -1,5 +1,5 @@
 // ** External Imports
-import { flushPromises, mount } from "@vue/test-utils";
+import { DOMWrapper, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 
 // ** Core Imports
@@ -306,6 +306,66 @@ test("it should emit update:filters when a column filter is applied", async () =
   ]);
 });
 
+test("it should emit update:columnSearch when a column search is applied", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columnSearch: {},
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row: User) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  await wrapper.get('[aria-label="Filter column"]').trigger("click");
+  await flushPromises();
+
+  const searchInput = document.body.querySelector('input[aria-label="Search"]');
+
+  expect(searchInput).toBeTruthy();
+  await new DOMWrapper(searchInput as HTMLInputElement).setValue("Ada");
+  await flushPromises();
+
+  const ok = Array.from(document.body.querySelectorAll("button")).find(
+    (button) => button.textContent?.trim() === "OK",
+  );
+
+  ok?.click();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:columnSearch")?.[0]).toEqual([
+    { name: "Ada" },
+  ]);
+});
+
+test("it should hide non-matching rows when a client column search is set", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columnSearch: { name: "Ada" },
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row: User) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Alan Turing");
+});
+
 test("it should hide non-matching rows when a client filter is set", () => {
   const wrapper = mountDataTable({
     props: {
@@ -413,6 +473,44 @@ test("it should emit update:hiddenColumns from the columns menu", async () => {
   await flushPromises();
 
   expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should emit export with csv of the current rows", async () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+    attrs: { onExport: () => undefined },
+  });
+
+  await wrapper.get('[aria-label="Export"]').trigger("click");
+
+  const payload = wrapper.emitted("export")?.[0]?.[0] as {
+    csv: string;
+    rows: User[];
+  };
+
+  expect(payload.rows).toEqual(rows);
+  expect(payload.csv).toContain("Ada Lovelace");
+});
+
+test("it should emit update:search from the toolbar search", async () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, search: "" },
+  });
+
+  await wrapper.get('[aria-label="Search"]').trigger("click");
+  await wrapper.get('input[aria-label="Search"]').setValue("Ada");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:search")?.[0]).toEqual(["Ada"]);
+});
+
+test("it should filter rows from the toolbar search", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns, search: "Ada" },
+  });
+
+  expect(wrapper.text()).toContain("Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Alan Turing");
 });
 
 test("it should emit update:expanded when a row is expanded", async () => {

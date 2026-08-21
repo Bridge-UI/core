@@ -171,7 +171,7 @@ Empty rows show a default empty state; `#empty` replaces it. `loading` keeps the
 />
 ```
 
-Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `hiddenColumns` / `expanded` — the table engine is not exported.
+Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
 
 ### Columns
 
@@ -192,7 +192,7 @@ const columns = [
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `item.{id}` / `item` / `loading` / `pagination` / `toolbar`. `#item` is a catch-all when `#item.{id}` is not set.
+Table-level slots stay `empty` / `expanded` / `export` / `item.{id}` / `item` / `loading` / `pagination` / `search` / `toolbar`. `#item` is a catch-all when `#item.{id}` is not set.
 
 ### Selection
 
@@ -210,14 +210,27 @@ Table-level slots stay `empty` / `expanded` / `item.{id}` / `item` / `loading` /
 
 ### Filters
 
-Set `filters` on a column to show a funnel in that header. The panel can search options, uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+
+Set `searchable` on a column to add a text field in that same menu. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
 
 ```vue
-<DataTable :rows="users" :columns="columns" v-model:filters="filters" />
+<DataTable
+  :rows="users"
+  :columns="columns"
+  v-model:filters="filters"
+  v-model:column-search="columnSearch"
+/>
 ```
 
 ```ts
 const columns = [
+  {
+    id: "name",
+    header: "Name",
+    searchable: true,
+    cell: (row) => row.name,
+  },
   {
     id: "role",
     header: "Role",
@@ -230,7 +243,7 @@ const columns = [
 ];
 ```
 
-Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` is still controlled — the app owns the fetch.
+Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` and `columnSearch` are still controlled — the app owns the fetch.
 
 ### Sticky columns
 
@@ -272,10 +285,26 @@ const columns = [
 
 ### Column visibility
 
-Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** control in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
+Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** icon in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 ```vue
 <DataTable :rows="users" :columns="columns" v-model:hidden-columns="hidden" />
+```
+
+### Search
+
+Pass `search` and/or listen to `update:search` to show a **Search** icon in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+
+```vue
+<DataTable :rows="users" :columns="columns" v-model:search="search" />
+```
+
+### Export
+
+Listen to `export` to show an **Export** icon. The payload includes CSV of the current (filtered) rows and visible columns. `#export` replaces the control.
+
+```vue
+<DataTable :rows="users" :columns="columns" v-on:export="onExport" />
 ```
 
 ### Expand

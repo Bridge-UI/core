@@ -4,7 +4,6 @@ import { computed, ref, watch } from "vue";
 
 // ** Core Imports
 import {
-  filterDataTableFilterOptions,
   flattenDataTableFilterOptionValues,
   setDataTableFilterDraftAll,
   toggleDataTableFilterDraft,
@@ -13,6 +12,7 @@ import {
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Button } from "@/Components/Button";
 import { Checkbox } from "@/Components/Checkbox";
 import DataTableFilterOptions from "@/Components/DataTable/DataTableFilterOptions.vue";
@@ -27,40 +27,42 @@ const props = defineProps<{
   columnId: string;
   multiple: boolean;
   options: DataTableFilterOption[];
+  searchable: boolean;
+  searchValue: string;
   values: string[];
 }>();
 
 const emit = defineEmits<{
-  apply: [values: string[]];
+  apply: [values: string[], query: string];
 }>();
 
 const show = ref(false);
 const filterDraft = ref<string[]>([]);
-const filterQuery = ref("");
-
-const visibleOptions = computed(() => {
-  return filterDataTableFilterOptions(props.options, filterQuery.value);
+const searchDraft = ref("");
+const resolveMessage = useResolveMessage();
+const searchLabel = computed(() => {
+  return resolveMessage("Search");
 });
 
-const visibleValues = computed(() => {
-  return flattenDataTableFilterOptionValues(visibleOptions.value);
+const optionValues = computed(() => {
+  return flattenDataTableFilterOptionValues(props.options);
 });
 
 const allSelected = computed(() => {
   return (
-    visibleValues.value.length > 0 &&
-    visibleValues.value.every((value) => {
+    optionValues.value.length > 0 &&
+    optionValues.value.every((value) => {
       return filterDraft.value.includes(value);
     })
   );
 });
 
 const allIndeterminate = computed(() => {
-  const selectedCount = visibleValues.value.filter((value) => {
+  const selectedCount = optionValues.value.filter((value) => {
     return filterDraft.value.includes(value);
   }).length;
 
-  return selectedCount > 0 && selectedCount < visibleValues.value.length;
+  return selectedCount > 0 && selectedCount < optionValues.value.length;
 });
 
 watch(show, (open) => {
@@ -68,7 +70,7 @@ watch(show, (open) => {
     return;
   }
 
-  filterQuery.value = "";
+  searchDraft.value = props.searchValue;
   filterDraft.value = [...props.values];
 });
 
@@ -84,17 +86,18 @@ function onToggleDraft(value: string, selected: boolean) {
 function onToggleDraftAll() {
   filterDraft.value = setDataTableFilterDraftAll(
     filterDraft.value,
-    visibleValues.value,
+    optionValues.value,
     !allSelected.value,
   );
 }
 
 function onResetDraft() {
   filterDraft.value = [];
+  searchDraft.value = "";
 }
 
 function onApply() {
-  emit("apply", filterDraft.value);
+  emit("apply", filterDraft.value, searchDraft.value);
   show.value = false;
 }
 </script>
@@ -125,22 +128,25 @@ function onApply() {
     </template>
 
     <div class="min-w-52 px-1 pb-0.5 pt-2.5">
-      <div class="px-1 pb-1.5">
+      <div v-if="searchable" class="px-1 pb-1.5">
         <TextField
           size="sm"
           hide-error-message
           start-icon="search"
-          v-model="filterQuery"
-          aria-label="Search in filters"
-          placeholder="Search in filters"
+          v-model="searchDraft"
+          :aria-label="searchLabel"
+          :placeholder="searchLabel"
         />
       </div>
-      <div class="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
+      <div
+        v-if="options.length > 0"
+        class="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2"
+      >
         <div
           role="menuitemcheckbox"
           :aria-checked="allSelected"
           v-on:click="onToggleDraftAll"
-          v-if="multiple && visibleValues.length > 0"
+          v-if="multiple && optionValues.length > 0"
           class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
         >
           <Checkbox
@@ -153,18 +159,12 @@ function onApply() {
           />
         </div>
         <DataTableFilterOptions
+          :options="options"
           :draft="filterDraft"
           :multiple="multiple"
-          :options="visibleOptions"
           v-on:toggle="onToggleDraft"
           :name="`filter-${columnId}`"
         />
-        <div
-          v-if="visibleOptions.length === 0"
-          class="px-2 py-1.5 text-sm text-dark-500 dark:text-dark-400"
-        >
-          No matching filters
-        </div>
       </div>
       <div
         class="flex justify-end gap-2 border-t border-dark-200 px-2 pb-1 pt-1.5 dark:border-dark-700"

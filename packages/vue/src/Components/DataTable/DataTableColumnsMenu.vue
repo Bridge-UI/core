@@ -3,9 +3,10 @@
 import { ref } from "vue";
 
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Checkbox } from "@/Components/Checkbox";
 import type { DataTableVisibilityItem } from "@/Components/DataTable/composables/useDataTable";
+import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
 import { Menu } from "@/Components/Menu";
 
 defineOptions({ inheritAttrs: false, name: "DataTableColumnsMenu" });
@@ -19,12 +20,16 @@ const emit = defineEmits<{
 }>();
 
 const show = ref(false);
+const resolveMessage = useResolveMessage();
 </script>
 
 <template>
   <Menu v-model="show" placement="bottom-end">
     <template #trigger>
-      <Button size="sm" variant="flat">Columns</Button>
+      <DataTableToolbarButton
+        icon="columns"
+        :label="resolveMessage('Columns')"
+      />
     </template>
     <div class="min-w-52 p-1">
       <div

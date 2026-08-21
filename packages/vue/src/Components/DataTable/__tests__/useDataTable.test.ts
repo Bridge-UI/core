@@ -31,11 +31,13 @@ function mountUseDataTable(
   props: Parameters<typeof useDataTable<User>>[0] = { columns },
   models: Parameters<typeof useDataTable<User>>[2] = {
     page: ref(undefined),
+    search: ref(undefined),
     perPage: ref(undefined),
     filters: ref(undefined),
     sorting: ref(undefined),
     expanded: ref(undefined),
     selection: ref(undefined),
+    columnSearch: ref(undefined),
     hiddenColumns: ref(undefined),
   },
 ) {
@@ -78,10 +80,12 @@ test("it should enable selection views when selection is controlled", () => {
     {
       page: ref(undefined),
       selection: ref(["1"]),
+      search: ref(undefined),
       perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
+      columnSearch: ref(undefined),
       hiddenColumns: ref(undefined),
     },
   );
@@ -101,11 +105,13 @@ test("it should map bordered chrome to outlined pagination", () => {
     },
     {
       page: ref(1),
+      search: ref(undefined),
       perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
       selection: ref(undefined),
+      columnSearch: ref(undefined),
       hiddenColumns: ref(undefined),
     },
   );
@@ -127,10 +133,12 @@ test("it should slice rows when page and perPage are set without totals", () => 
     {
       page: ref(2),
       perPage: ref(1),
+      search: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
       selection: ref(undefined),
+      columnSearch: ref(undefined),
       hiddenColumns: ref(undefined),
     },
   );
@@ -151,10 +159,12 @@ test("it should derive page count from totalCount and perPage", () => {
     {
       page: ref(1),
       perPage: ref(10),
+      search: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
       selection: ref(undefined),
+      columnSearch: ref(undefined),
       hiddenColumns: ref(undefined),
     },
   );
@@ -182,12 +192,15 @@ test("it should expose sticky expand visibility and summary views", () => {
     },
     {
       page: ref(undefined),
+      search: ref(undefined),
       perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
       selection: ref(undefined),
       hiddenColumns: ref(["role"]),
+      columnSearch: ref(undefined),
+      columnSearch: ref(undefined),
     },
   );
 

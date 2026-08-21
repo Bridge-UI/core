@@ -3,12 +3,17 @@
 import { computed, useId, useSlots, type VNodeChild } from "vue";
 
 // ** Core Imports
-import type { DataTableFilters } from "@bridge-ui/core/Domain";
+import type {
+  DataTableColumnSearch,
+  DataTableFilters,
+} from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { useDataTable } from "@/Components/DataTable/composables/useDataTable";
 import type {
+  DataTableEmits,
   DataTableItemSlotProps,
   DataTableOwnProps,
   DataTableSlots,
@@ -16,8 +21,10 @@ import type {
 } from "@/Components/DataTable/dataTable.types";
 import DataTableColumnsMenu from "@/Components/DataTable/DataTableColumnsMenu.vue";
 import DataTableFilterMenu from "@/Components/DataTable/DataTableFilterMenu.vue";
+import DataTableSearch from "@/Components/DataTable/DataTableSearch.vue";
 import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
+import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
@@ -46,11 +53,13 @@ const props = withDefaults(
     Omit<
       DataTableOwnProps<T>,
       | "page"
+      | "search"
       | "filters"
       | "perPage"
       | "sorting"
       | "expanded"
       | "selection"
+      | "columnSearch"
       | "hiddenColumns"
     >
   >(),
@@ -65,14 +74,19 @@ const props = withDefaults(
   },
 );
 
-const expanded = defineModel<string[]>("expanded");
-const filters = defineModel<DataTableFilters>("filters");
-const hiddenColumns = defineModel<string[]>("hiddenColumns");
+const tableSlots = useSlots();
+const resolveMessage = useResolveMessage();
+const emit = defineEmits<Pick<DataTableEmits<T>, "export">>();
+
 const page = defineModel<number>("page");
 const perPage = defineModel<number>("perPage");
+const expanded = defineModel<string[]>("expanded");
 const selection = defineModel<string[]>("selection");
+const filters = defineModel<DataTableFilters>("filters");
 const sorting = defineModel<DataTableSorting>("sorting");
-const tableSlots = useSlots();
+const hiddenColumns = defineModel<string[]>("hiddenColumns");
+const columnSearch = defineModel<DataTableColumnSearch>("columnSearch");
+const search = defineModel<string>("search");
 
 const {
   merged,
@@ -80,10 +94,12 @@ const {
   rootBind,
   emptyBind,
   showEmpty,
+  showExport,
   showFooter,
   tableProps,
   footerBind,
   loadingBar,
+  showSearch,
   getHeadBind,
   headerViews,
   loadingBind,
@@ -97,11 +113,14 @@ const {
   getCellAlign,
   onTogglePage,
   summaryCells,
+  onExportClick,
   expandEnabled,
+  exportPayload,
   loadingBarBind,
   paginationBind,
   selectAllState,
   showPagination,
+  onChangeSearch,
   onToggleExpand,
   visibilityItems,
   perPageSlotProps,
@@ -128,11 +147,13 @@ const {
   },
   {
     page,
+    search,
     perPage,
     filters,
     sorting,
     expanded,
     selection,
+    columnSearch,
     hiddenColumns,
   },
 );
@@ -140,6 +161,11 @@ const {
 const checkboxSize = computed(() => {
   return merged.value.size === "lg" ? "md" : "sm";
 });
+
+function handleExport() {
+  emit("export", exportPayload.value);
+  onExportClick();
+}
 
 function renderItemCell(
   row: { original: T },
@@ -182,11 +208,38 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       <div class="min-w-0 flex-1">
         <slot name="toolbar" />
       </div>
-      <DataTableColumnsMenu
-        :items="visibilityItems"
-        v-if="visibilityEnabled"
-        v-on:toggle="onToggleColumnVisibility"
-      />
+      <div class="flex shrink-0 items-center">
+        <DataTableColumnsMenu
+          :items="visibilityItems"
+          v-if="visibilityEnabled"
+          v-on:toggle="onToggleColumnVisibility"
+        />
+        <span
+          aria-hidden
+          class="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
+          v-if="visibilityEnabled && (showExport || showSearch)"
+        />
+        <slot name="export" v-if="showExport">
+          <DataTableToolbarButton
+            icon="download"
+            v-on:click="handleExport"
+            :label="resolveMessage('Export')"
+            :button-props="merged.customProps?.export"
+          />
+        </slot>
+        <span
+          aria-hidden
+          v-if="showExport && showSearch"
+          class="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
+        />
+        <slot name="search" v-if="showSearch">
+          <DataTableSearch
+            :model-value="search ?? ''"
+            v-on:update:model-value="onChangeSearch"
+            :field-props="merged.customProps?.search"
+          />
+        </slot>
+      </div>
     </div>
 
     <div class="relative">
@@ -228,9 +281,12 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                   :active="header.filterActive"
                   :values="header.filterValues"
                   :options="header.filterOptions"
+                  :searchable="header.searchable"
                   :multiple="header.filterMultiple"
+                  :search-value="header.searchQuery"
                   v-on:apply="
-                    (values) => onCommitColumnFilter(header.id, values)
+                    (values, query) =>
+                      onCommitColumnFilter(header.id, values, query)
                   "
                 />
               </div>
@@ -271,7 +327,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                       class="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900"
                     />
                   </span>
-                  No data
+                  {{ resolveMessage("No data") }}
                 </slot>
               </div>
             </TableCell>
@@ -387,6 +443,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           </TableRow>
         </TableFooter>
       </Table>
+
       <div
         v-bind="loadingBind"
         v-if="merged.loading"
@@ -399,16 +456,16 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
             class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
           >
             <span
-              class="absolute start-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
+              class="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
             />
             <span
-              class="absolute end-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
+              class="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
             />
             <span
-              class="absolute end-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
+              class="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
             />
             <span
-              class="absolute start-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
+              class="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
             />
           </span>
         </slot>
@@ -425,21 +482,22 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           size="sm"
           :clearable="false"
           aria-label="Rows per page"
-          v-bind="merged.customProps?.perPage"
           :options="perPageSelectOptions"
+          v-bind="merged.customProps?.perPage"
           :model-value="perPageSlotProps.perPage"
           v-on:update:model-value="
             (value) => perPageSlotProps.onPerPageChange(Number(value))
           "
         />
       </slot>
+
       <slot name="pagination" v-bind="paginationSlotProps">
         <Pagination
-          v-bind="merged.customProps?.pagination"
           v-model="paginationPage"
           :count="resolvedPageCount"
           v-if="resolvedPageCount !== undefined"
           :variant="paginationSlotProps.variant"
+          v-bind="merged.customProps?.pagination"
         />
       </slot>
     </div>

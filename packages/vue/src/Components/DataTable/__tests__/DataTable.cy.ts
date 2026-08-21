@@ -56,5 +56,5 @@ test("it should render the columns toolbar control", () => {
     },
   });
 
-  cy.contains("button", "Columns").should("be.visible");
+  cy.get('button[aria-label="Columns"]').should("be.visible");
 });

@@ -4,6 +4,8 @@ import type { HTMLAttributes, Slot, VNodeChild } from "vue";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableColumnSearch,
+  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -24,6 +26,7 @@ import type {
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationOwnProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
@@ -35,9 +38,12 @@ import type {
   TableSizeOverrides,
   TableVariantOverrides,
 } from "@/Components/Table/table.types";
+import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 
 export type {
   DataTableColumnBase,
+  DataTableColumnSearch,
+  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -97,6 +103,11 @@ export interface DataTableClasses {
   empty?: string;
 
   /**
+   * Classes merged onto the toolbar export control.
+   */
+  export?: string;
+
+  /**
    * Classes merged onto the footer region below the table.
    */
   footer?: string;
@@ -135,6 +146,11 @@ export interface DataTableClasses {
    * Classes merged onto rows.
    */
   row?: string;
+
+  /**
+   * Classes merged onto the toolbar search field.
+   */
+  search?: string;
 
   /**
    * Classes merged onto the `<table>` element.
@@ -180,6 +196,13 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   empty?: HTMLAttributes;
+
+  /**
+   * Extra props for the toolbar export control.
+   *
+   * @default undefined
+   */
+  export?: Partial<Omit<ButtonOwnProps, "icon">>;
 
   /**
    * Props forwarded to the footer region below the table.
@@ -252,6 +275,13 @@ export interface DataTableCustomProps {
   row?: HTMLAttributes;
 
   /**
+   * Extra props for the toolbar search field.
+   *
+   * @default undefined
+   */
+  search?: Partial<Omit<TextFieldOwnProps, "modelValue">>;
+
+  /**
    * Props forwarded to the `<table>` element.
    *
    * @default undefined
@@ -273,7 +303,18 @@ export interface DataTableCustomProps {
   wrapper?: HTMLAttributes;
 }
 
-export interface DataTableEmits {
+export interface DataTableEmits<T = unknown> {
+  /**
+   * Emitted when the toolbar export control is pressed. Receives CSV of the
+   * current (filtered) rows. When omitted, DataTable downloads the CSV.
+   */
+  export: [payload: DataTableExportPayload<T>];
+
+  /**
+   * Emitted when per-column text search should update (`v-model:column-search`).
+   */
+  "update:columnSearch": [search: DataTableColumnSearch];
+
   /**
    * Emitted when expanded row ids should update (`v-model:expanded`).
    */
@@ -299,6 +340,11 @@ export interface DataTableEmits {
    * DataTable also resets to page 1.
    */
   "update:perPage": [perPage: number];
+
+  /**
+   * Emitted when the toolbar search query should update (`v-model:search`).
+   */
+  "update:search": [query: string];
 
   /**
    * Emitted when selected row ids should update (`v-model:selection`).
@@ -328,6 +374,14 @@ export interface DataTableOwnProps<T> {
    * @default []
    */
   columns?: DataTableColumn<T>[];
+
+  /**
+   * Controlled per-column text search: column id → query. Set `searchable`
+   * on a column to show the field in that header's filter menu.
+   *
+   * @default undefined
+   */
+  columnSearch?: DataTableColumnSearch;
 
   /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
@@ -444,6 +498,14 @@ export interface DataTableOwnProps<T> {
   rows?: T[];
 
   /**
+   * Controlled toolbar search query. Filters visible columns client-side,
+   * or emits `update:search` only when server-paged.
+   *
+   * @default undefined
+   */
+  search?: string;
+
+  /**
    * Controlled selected row ids.
    *
    * @default undefined
@@ -518,6 +580,11 @@ export interface DataTableSlots<T = unknown> {
   expanded?: Slot<{ row: T }>;
 
   /**
+   * Replaces the toolbar export control.
+   */
+  export?: Slot<undefined>;
+
+  /**
    * Region below the table, above pagination.
    */
   footer?: Slot<undefined>;
@@ -544,6 +611,11 @@ export interface DataTableSlots<T = unknown> {
    * and `onPerPageChange`.
    */
   perPage?: Slot<DataTablePerPageSlotProps>;
+
+  /**
+   * Replaces the toolbar search field.
+   */
+  search?: Slot<undefined>;
 
   /**
    * Optional toolbar above the table.
