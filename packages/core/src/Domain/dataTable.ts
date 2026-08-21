@@ -1,5 +1,5 @@
 // ** External Imports
-import { compact, fromPairs, get, isNil } from "es-toolkit/compat";
+import { compact, drop, fromPairs, get, isNil, take } from "es-toolkit/compat";
 
 /**
  * Internal column id for the row-expand control column.
@@ -38,6 +38,12 @@ export const DATATABLE_PAGINATION_VARIANT = {
   ghost: "ghost",
   bordered: "outlined",
 } as const;
+
+/** Default page size options for the built-in per-page Select. */
+export const DATATABLE_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const;
+
+/** Fallback page size when `perPage` is missing or invalid. */
+export const DEFAULT_DATATABLE_PER_PAGE = 10;
 
 /**
  * Controlled sort: one column, or `null` when unsorted.
@@ -332,14 +338,181 @@ export function toggleDataTableSorting(
 }
 
 /**
- * Whether built-in numbered Pagination should render (`page` and `pageCount` set).
+ * Whether the app owns paging (`page` plus `pageCount` or `totalCount`).
+ *
+ * DataTable does not sort, filter, or slice `rows` locally in this mode.
  */
 export function isDataTableServerPaged(
   page: number | undefined,
   pageCount: number | undefined,
+  totalCount?: number | undefined,
 ): boolean {
-  return !isNil(page) && !isNil(pageCount);
+  return !isNil(page) && (!isNil(pageCount) || !isNil(totalCount));
 }
+
+/**
+ * Whether DataTable should slice filtered `rows` locally (`page` + `perPage`,
+ * without `pageCount` / `totalCount`).
+ */
+export function isDataTableClientPaged(
+  page: number | undefined,
+  perPage: number | undefined,
+  pageCount: number | undefined,
+  totalCount?: number | undefined,
+): boolean {
+  return (
+    !isNil(page) &&
+    !isNil(perPage) &&
+    !isDataTableServerPaged(page, pageCount, totalCount)
+  );
+}
+
+/**
+ * Whether the per-page Select (or `perPage` slot) should render.
+ */
+export function isDataTablePerPageEnabled(
+  perPage: number | undefined,
+  hasChangeHandler: boolean,
+  hasSlot: boolean,
+): boolean {
+  return !isNil(perPage) || hasChangeHandler || hasSlot;
+}
+
+/**
+ * Positive integer page size, or {@link DEFAULT_DATATABLE_PER_PAGE}.
+ */
+export function getDataTableResolvedPerPage(
+  perPage: number | undefined,
+): number {
+  if (isNil(perPage) || perPage < 1) {
+    return DEFAULT_DATATABLE_PER_PAGE;
+  }
+
+  return Math.floor(perPage);
+}
+
+/**
+ * Options for the per-page Select. Falls back to
+ * {@link DATATABLE_PER_PAGE_OPTIONS}.
+ */
+export function getDataTablePerPageOptions(options?: number[]): number[] {
+  const list = (options ?? []).filter((value) => {
+    return value >= 1;
+  });
+
+  if (list.length === 0) {
+    return [...DATATABLE_PER_PAGE_OPTIONS];
+  }
+
+  return list;
+}
+
+/**
+ * Per-page options including the current `perPage` when it is custom.
+ */
+export function getDataTablePerPageSelectOptions(
+  perPage: number,
+  options?: number[],
+): number[] {
+  const list = [...getDataTablePerPageOptions(options)];
+
+  if (!list.includes(perPage)) {
+    list.push(perPage);
+    list.sort((left, right) => {
+      return left - right;
+    });
+  }
+
+  return list;
+}
+
+/**
+ * Page count for built-in Pagination.
+ *
+ * `pageCount` wins over `totalCount`. Client paging uses `filteredCount`.
+ */
+export function getDataTableResolvedPageCount(input: {
+  clientPaged?: boolean;
+  filteredCount?: number;
+  pageCount?: number;
+  perPage?: number;
+  totalCount?: number;
+}): number | undefined {
+  if (!isNil(input.pageCount)) {
+    return input.pageCount;
+  }
+
+  const perPage = getDataTableResolvedPerPage(input.perPage);
+
+  if (!isNil(input.totalCount)) {
+    return Math.max(1, Math.ceil(input.totalCount / perPage));
+  }
+
+  if (input.clientPaged) {
+    return Math.max(1, Math.ceil((input.filteredCount ?? 0) / perPage));
+  }
+
+  return undefined;
+}
+
+/**
+ * One page of already-sorted/filtered rows for client paging.
+ */
+export function sliceDataTablePage<T>(
+  rows: T[],
+  page: number,
+  perPage: number,
+): T[] {
+  const size = getDataTableResolvedPerPage(perPage);
+  const start = (Math.max(page, 1) - 1) * size;
+
+  return take(drop(rows, start), size);
+}
+
+/**
+ * Slot props for the built-in numbered Pagination (or a custom `pagination` slot).
+ */
+export type DataTablePaginationSlotProps = {
+  /**
+   * Total pages (`Pagination` `count`).
+   */
+  count: number;
+
+  /**
+   * Called when the page should change.
+   */
+  onPageChange: (page: number) => void;
+
+  /**
+   * Current 1-based page.
+   */
+  page: number;
+
+  /**
+   * Pagination chrome paired with the table variant.
+   */
+  variant: DataTablePaginationVariant;
+};
+
+/**
+ * Slot props for the built-in per-page Select (or a custom `perPage` slot).
+ */
+export type DataTablePerPageSlotProps = {
+  /**
+   * Called when the page size should change (resets to page 1).
+   */
+  onPerPageChange: (perPage: number) => void;
+
+  /**
+   * Select options.
+   */
+  options: number[];
+
+  /**
+   * Current page size.
+   */
+  perPage: number;
+};
 
 /**
  * Whether the header row should stick (`true` / `"boxed"`).

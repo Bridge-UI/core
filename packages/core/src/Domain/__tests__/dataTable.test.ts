@@ -7,8 +7,10 @@ import {
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
+  DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
+  DEFAULT_DATATABLE_PER_PAGE,
   filterDataTableFilterOptions,
   flattenDataTableFilterOptionValues,
   getDataTableAriaSort,
@@ -21,14 +23,20 @@ import {
   getDataTableGridTemplate,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
+  getDataTablePerPageOptions,
+  getDataTablePerPageSelectOptions,
+  getDataTableResolvedPageCount,
+  getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSortIcon,
   getDataTableSortTooltip,
   getDataTableStickyInsets,
   getDataTableStickyPing,
+  isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
+  isDataTablePerPageEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
@@ -41,6 +49,7 @@ import {
   setDataTableColumnFilter,
   setDataTableFilterDraftAll,
   setDataTableRowSelection,
+  sliceDataTablePage,
   toggleDataTableColumnVisibility,
   toggleDataTableFilterDraft,
   toggleDataTablePageSelection,
@@ -123,10 +132,75 @@ describe("toggleDataTableSorting", () => {
 });
 
 describe("isDataTableServerPaged", () => {
-  test("it should require both page and pageCount", () => {
+  test("it should require page plus pageCount or totalCount", () => {
     expect(isDataTableServerPaged(1, 4)).toBe(true);
+    expect(isDataTableServerPaged(1, undefined, 40)).toBe(true);
     expect(isDataTableServerPaged(1, undefined)).toBe(false);
     expect(isDataTableServerPaged(undefined, 4)).toBe(false);
+  });
+});
+
+describe("isDataTableClientPaged", () => {
+  test("it should slice locally when page and perPage are set without totals", () => {
+    expect(isDataTableClientPaged(1, 10, undefined)).toBe(true);
+    expect(isDataTableClientPaged(1, 10, 4)).toBe(false);
+    expect(isDataTableClientPaged(1, 10, undefined, 40)).toBe(false);
+    expect(isDataTableClientPaged(1, undefined, undefined)).toBe(false);
+  });
+});
+
+describe("isDataTablePerPageEnabled", () => {
+  test("it should enable when perPage, a handler, or a slot is present", () => {
+    expect(isDataTablePerPageEnabled(10, false, false)).toBe(true);
+    expect(isDataTablePerPageEnabled(undefined, true, false)).toBe(true);
+    expect(isDataTablePerPageEnabled(undefined, false, true)).toBe(true);
+    expect(isDataTablePerPageEnabled(undefined, false, false)).toBe(false);
+  });
+});
+
+describe("getDataTableResolvedPerPage", () => {
+  test("it should fall back to the default for missing or invalid sizes", () => {
+    expect(getDataTableResolvedPerPage(25)).toBe(25);
+    expect(getDataTableResolvedPerPage(undefined)).toBe(
+      DEFAULT_DATATABLE_PER_PAGE,
+    );
+    expect(getDataTableResolvedPerPage(0)).toBe(DEFAULT_DATATABLE_PER_PAGE);
+  });
+});
+
+describe("getDataTableResolvedPageCount", () => {
+  test("it should prefer pageCount then totalCount then filtered rows", () => {
+    expect(
+      getDataTableResolvedPageCount({ pageCount: 4, totalCount: 40 }),
+    ).toBe(4);
+    expect(getDataTableResolvedPageCount({ perPage: 10, totalCount: 40 })).toBe(
+      4,
+    );
+    expect(
+      getDataTableResolvedPageCount({
+        perPage: 10,
+        clientPaged: true,
+        filteredCount: 23,
+      }),
+    ).toBe(3);
+    expect(getDataTableResolvedPageCount({})).toBe(undefined);
+  });
+});
+
+describe("getDataTablePerPageSelectOptions", () => {
+  test("it should insert a custom perPage into the option list", () => {
+    expect(getDataTablePerPageOptions()).toEqual([10, 25, 50, 100]);
+    expect(DATATABLE_PER_PAGE_OPTIONS).toEqual([10, 25, 50, 100]);
+    expect(getDataTablePerPageSelectOptions(15, [10, 25])).toEqual([
+      10, 15, 25,
+    ]);
+  });
+});
+
+describe("sliceDataTablePage", () => {
+  test("it should return the requested page of rows", () => {
+    expect(sliceDataTablePage(["a", "b", "c", "d"], 2, 2)).toEqual(["c", "d"]);
+    expect(sliceDataTablePage(["a", "b"], 1, 10)).toEqual(["a", "b"]);
   });
 });
 
