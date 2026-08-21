@@ -1064,17 +1064,23 @@ export function isDataTableColumnSearched(
 
 /**
  * Whether `row` matches every column text search (empty queries always match).
+ * Columns in `hiddenColumns` are skipped so a hidden query cannot keep filtering.
  */
 export function rowMatchesDataTableColumnSearch<T>(
   row: T,
   columns: Array<Pick<DataTableColumnBase<T>, "id" | "accessor">>,
   columnSearch: undefined | DataTableColumnSearch,
+  hiddenColumns?: string[],
 ): boolean {
   if (!columnSearch) {
     return true;
   }
 
   return columns.every((column) => {
+    if (hiddenColumns?.includes(column.id)) {
+      return true;
+    }
+
     return matchDataTableSearch(
       getDataTableColumnAccessor(row, column),
       getDataTableColumnSearch(columnSearch, column.id),

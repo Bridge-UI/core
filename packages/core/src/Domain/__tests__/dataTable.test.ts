@@ -503,6 +503,14 @@ describe("setDataTableColumnSearch", () => {
         { name: "ada" },
       ),
     ).toBe(false);
+    expect(
+      rowMatchesDataTableColumnSearch(
+        { role: "Researcher", name: "Alan Turing" },
+        columns,
+        { name: "ada" },
+        ["name"],
+      ),
+    ).toBe(true);
   });
 });
 
