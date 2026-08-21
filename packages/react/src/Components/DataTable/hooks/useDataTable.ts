@@ -50,13 +50,18 @@ import {
   getDataTableDefaultCellContent,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
+  getDataTablePerPageSelectOptions,
+  getDataTableResolvedPageCount,
+  getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSortIcon,
   getDataTableStickyInsets,
   getDataTableStickyPing,
+  isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
+  isDataTablePerPageEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
@@ -68,11 +73,14 @@ import {
   selectionToRowSelection,
   setDataTableColumnFilter,
   setDataTableRowSelection,
+  sliceDataTablePage,
   toggleDataTableColumnVisibility,
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
   type DataTableFilterOption,
+  type DataTablePaginationSlotProps,
+  type DataTablePerPageSlotProps,
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
@@ -108,6 +116,7 @@ const dataTableBridgeKeys = [
   "columns",
   "filters",
   "loading",
+  "perPage",
   "rounded",
   "sorting",
   "striped",
@@ -117,13 +126,16 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "totalCount",
   "customProps",
   "onPageChange",
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
   "loadingVariant",
+  "perPageOptions",
   "onFiltersChange",
+  "onPerPageChange",
   "onSortingChange",
   "paginationAlign",
   "onExpandedChange",
@@ -132,6 +144,7 @@ const dataTableBridgeKeys = [
 ] as const satisfies readonly (
   | "onPageChange"
   | "onFiltersChange"
+  | "onPerPageChange"
   | "onSortingChange"
   | "onExpandedChange"
   | "onSelectionChange"
@@ -173,6 +186,7 @@ type DataTableMerged<T> = MergeLibDefaults<
     DataTableProps<T>,
     | "onPageChange"
     | "onFiltersChange"
+    | "onPerPageChange"
     | "onSortingChange"
     | "onExpandedChange"
     | "onSelectionChange"
@@ -331,7 +345,24 @@ export function useDataTable<T>(
   });
 
   const serverPaged = derived(() => {
-    return isDataTableServerPaged(merged.page, merged.pageCount);
+    return isDataTableServerPaged(
+      merged.page,
+      merged.pageCount,
+      merged.totalCount,
+    );
+  });
+
+  const clientPaged = derived(() => {
+    return isDataTableClientPaged(
+      merged.page,
+      merged.perPage,
+      merged.pageCount,
+      merged.totalCount,
+    );
+  });
+
+  const resolvedPerPage = derived(() => {
+    return getDataTableResolvedPerPage(merged.perPage);
   });
 
   const stickyHeaderEnabled = derived(() => {
@@ -441,8 +472,18 @@ export function useDataTable<T>(
     },
   });
 
+  const pagedRows = derived(() => {
+    const source = table.getRowModel().rows;
+
+    if (!clientPaged) {
+      return source;
+    }
+
+    return sliceDataTablePage(source, merged.page ?? 1, resolvedPerPage);
+  });
+
   const pageIds = derived(() => {
-    return map(table.getRowModel().rows, "id");
+    return map(pagedRows, "id");
   });
 
   const selectAllState = derived(() => {
@@ -513,7 +554,7 @@ export function useDataTable<T>(
       1,
     );
 
-    return table.getRowModel().rows.map((row) => {
+    return pagedRows.map((row) => {
       return {
         id: row.id,
         original: row.original,
@@ -558,7 +599,30 @@ export function useDataTable<T>(
   });
 
   const showPagination = derived(() => {
-    return Boolean(slots?.pagination) || serverPaged;
+    return (
+      Boolean(slots?.pagination) ||
+      Boolean(slots?.perPage) ||
+      serverPaged ||
+      clientPaged
+    );
+  });
+
+  const showPerPage = derived(() => {
+    return isDataTablePerPageEnabled(
+      merged.perPage,
+      merged.onPerPageChange !== undefined,
+      slots?.perPage !== undefined,
+    );
+  });
+
+  const resolvedPageCount = derived(() => {
+    return getDataTableResolvedPageCount({
+      pageCount: merged.pageCount,
+      totalCount: merged.totalCount,
+      perPage: merged.perPage,
+      clientPaged,
+      filteredCount: table.getRowModel().rows.length,
+    });
   });
 
   const showEmpty = derived(() => {
@@ -878,7 +942,7 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex py-3": true,
+          "flex items-center gap-3 py-3": true,
           [getDataTablePaginationAlignClass(merged.paginationAlign)]: true,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
@@ -959,6 +1023,36 @@ export function useDataTable<T>(
     );
   }
 
+  function onChangePerPage(next: number) {
+    merged.onPerPageChange?.(next);
+
+    if (merged.page !== 1) {
+      merged.onPageChange?.(1);
+    }
+  }
+
+  const paginationSlotProps = derived((): DataTablePaginationSlotProps => {
+    return {
+      count: resolvedPageCount ?? 1,
+      onPageChange: (page) => {
+        merged.onPageChange?.(page);
+      },
+      page: merged.page ?? 1,
+      variant: paginationVariant,
+    };
+  });
+
+  const perPageSlotProps = derived((): DataTablePerPageSlotProps => {
+    return {
+      onPerPageChange: onChangePerPage,
+      options: getDataTablePerPageSelectOptions(
+        resolvedPerPage,
+        merged.perPageOptions,
+      ),
+      perPage: resolvedPerPage,
+    };
+  });
+
   function onCommitColumnFilter(columnId: string, values: string[]) {
     merged.onFiltersChange?.(
       setDataTableColumnFilter(merged.filters, columnId, values),
@@ -1000,7 +1094,9 @@ export function useDataTable<T>(
     toolbarBind,
     getCellBind,
     columnCount,
+    clientPaged,
     serverPaged,
+    showPerPage,
     showToolbar,
     getHeadAlign,
     getCellAlign,
@@ -1014,8 +1110,13 @@ export function useDataTable<T>(
     showPagination,
     onToggleExpand,
     visibilityItems,
+    onChangePerPage,
+    resolvedPerPage,
     selectionEnabled,
     paginationVariant,
+    perPageSlotProps,
+    resolvedPageCount,
+    paginationSlotProps,
     selectionMultiple,
     visibilityEnabled,
     onCommitColumnFilter,

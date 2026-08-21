@@ -80,6 +80,47 @@ test("it should map bordered chrome to outlined pagination", () => {
   expect(result.current.paginationVariant).toBe("outlined");
 });
 
+test("it should slice rows when page and perPage are set without totals", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 2,
+        perPage: 1,
+        columns,
+        rows: [
+          { id: "1", name: "Ada" },
+          { id: "2", name: "Alan" },
+        ],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.clientPaged).toBe(true);
+  expect(result.current.rowViews).toHaveLength(1);
+  expect(result.current.rowViews[0]?.original.name).toBe("Alan");
+  expect(result.current.resolvedPageCount).toBe(2);
+});
+
+test("it should derive page count from totalCount and perPage", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        perPage: 10,
+        columns,
+        totalCount: 23,
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.serverPaged).toBe(true);
+  expect(result.current.showPerPage).toBe(true);
+  expect(result.current.resolvedPageCount).toBe(3);
+});
+
 test("it should expose sticky expand visibility and summary views", () => {
   const { result } = renderHook(() =>
     useDataTable(

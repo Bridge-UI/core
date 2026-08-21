@@ -129,6 +129,60 @@ test("it should render built-in pagination when page and pageCount are set", () 
   expect(onPageChange).toHaveBeenCalledWith(2);
 });
 
+test("it should slice rows locally when page and perPage are set", () => {
+  render(
+    <DataTable
+      page={2}
+      perPage={1}
+      columns={columns}
+      rows={[
+        { id: "1", role: "Engineer", name: "Ada Lovelace" },
+        { id: "2", role: "Researcher", name: "Alan Turing" },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Alan Turing")).toBeTruthy();
+  expect(screen.queryByText("Ada Lovelace")).toBeNull();
+});
+
+test("it should paginate from totalCount when pageCount is omitted", () => {
+  const onPageChange = vi.fn();
+
+  render(
+    <DataTable
+      page={1}
+      perPage={10}
+      rows={rows}
+      columns={columns}
+      totalCount={20}
+      onPageChange={onPageChange}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Page 2" }));
+
+  expect(onPageChange).toHaveBeenCalledWith(2);
+  expect(screen.getByRole("combobox")).toBeTruthy();
+});
+
+test("it should render a custom perPage slot beside pagination", () => {
+  render(
+    <DataTable
+      page={1}
+      perPage={10}
+      rows={rows}
+      pageCount={2}
+      columns={columns}
+      slots={{ perPage: "Page size" }}
+    />,
+  );
+
+  expect(screen.getByText("Page size")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Page 2" })).toBeTruthy();
+  expect(screen.queryByRole("combobox")).toBeNull();
+});
+
 test("it should show the empty slot when there are no rows", () => {
   render(
     <DataTable rows={[]} columns={columns} slots={{ empty: "No users" }} />,

@@ -67,7 +67,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 
 ### Selection + pagination
 
-Built-in Pagination when `page` / `pageCount` are set. `rows` is the current page (server fetch stays in the app):
+Built-in Pagination when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `perPage` also renders a Select (`perPageOptions`, default 10 / 25 / 50 / 100). `slots.pagination` and `slots.perPage` replace each control:
 
 ```tsx
 <DataTable
@@ -82,7 +82,30 @@ Built-in Pagination when `page` / `pageCount` are set. `rows` is the current pag
 />
 ```
 
-Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
+Client paging slices `rows`. Server paging with a total uses `totalCount` instead of `pageCount`:
+
+```tsx
+<DataTable
+  page={page}
+  rows={users}
+  columns={columns}
+  perPage={perPage}
+  onPageChange={setPage}
+  onPerPageChange={setPerPage}
+/>
+
+<DataTable
+  page={page}
+  rows={pageRows}
+  columns={columns}
+  perPage={perPage}
+  totalCount={total}
+  onPageChange={setPage}
+  onPerPageChange={setPerPage}
+/>
+```
+
+Slot replaces the built-in Pagination and/or per-page Select (`slots.pagination` / `slots.perPage`; functions receive the same props as the built-ins):
 
 ```tsx
 <DataTable
@@ -98,6 +121,21 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
         onNext={() => fetchPage(nextCursor)}
         onPrevious={() => fetchPage(prevCursor)}
       />
+    ),
+    perPage: ({ perPage, options, onPerPageChange }) => (
+      <select
+        value={perPage}
+        aria-label="Rows per page"
+        onChange={(event) => {
+          onPerPageChange(Number(event.target.value));
+        }}
+      >
+        {options.map((value) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </select>
     ),
   }}
 />
@@ -116,7 +154,7 @@ Align the built-in Pagination with `paginationAlign` (`start` / `center` / `end`
 />
 ```
 
-When `page` and `pageCount` are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` and fetch the current page in the app:
+When `page` and `pageCount` (or `totalCount`) are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` / `perPage` and fetch the current page in the app:
 
 ```tsx
 <DataTable

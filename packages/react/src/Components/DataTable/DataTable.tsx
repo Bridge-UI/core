@@ -1,4 +1,5 @@
 // ** External Imports
+import { isFunction } from "es-toolkit/compat";
 import { Fragment, useId, type ReactNode } from "react";
 
 // ** Core Imports
@@ -20,6 +21,7 @@ import {
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
+import { Select } from "@/Components/Select";
 import {
   Table,
   TableBody,
@@ -44,6 +46,22 @@ const dataTableLibDefaults = {
   loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
+
+function renderDataTableSlot<P>(
+  slot: undefined | ReactNode | ((props: P) => ReactNode),
+  props: P,
+  fallback: ReactNode,
+): ReactNode {
+  if (slot === undefined) {
+    return fallback;
+  }
+
+  if (isFunction(slot)) {
+    return slot(props);
+  }
+
+  return slot;
+}
 
 function resolveDataTableItemContent<T>(
   slot: undefined | ((props: DataTableItemSlotProps<T>) => ReactNode),
@@ -121,7 +139,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     toolbarBind,
     getCellBind,
     columnCount,
-    serverPaged,
+    showPerPage,
     showToolbar,
     getHeadAlign,
     getCellAlign,
@@ -134,7 +152,9 @@ function DataTable<T>(props: DataTableProps<T>) {
     showPagination,
     onToggleExpand,
     visibilityItems,
-    paginationVariant,
+    perPageSlotProps,
+    resolvedPageCount,
+    paginationSlotProps,
     selectionMultiple,
     visibilityEnabled,
     onCommitColumnFilter,
@@ -408,16 +428,44 @@ function DataTable<T>(props: DataTableProps<T>) {
 
       {showPagination ? (
         <div {...paginationBind}>
-          {slots?.pagination ??
-            (serverPaged ? (
+          {showPerPage
+            ? renderDataTableSlot(
+                slots?.perPage,
+                perPageSlotProps,
+                <Select
+                  size="sm"
+                  clearable={false}
+                  aria-label="Rows per page"
+                  {...merged.customProps?.perPage}
+                  value={perPageSlotProps.perPage}
+                  onChange={(value) => {
+                    const next = Number(value);
+
+                    if (!Number.isFinite(next) || next < 1) {
+                      return;
+                    }
+
+                    perPageSlotProps.onPerPageChange(next);
+                  }}
+                  options={perPageSlotProps.options.map((value) => {
+                    return { value, label: String(value) };
+                  })}
+                />,
+              )
+            : null}
+          {renderDataTableSlot(
+            slots?.pagination,
+            paginationSlotProps,
+            resolvedPageCount !== undefined ? (
               <Pagination
-                page={merged.page}
-                count={merged.pageCount}
-                variant={paginationVariant}
+                page={paginationSlotProps.page}
+                count={paginationSlotProps.count}
+                variant={paginationSlotProps.variant}
                 {...merged.customProps?.pagination}
-                onChange={merged.onPageChange}
+                onChange={paginationSlotProps.onPageChange}
               />
-            ) : null)}
+            ) : null,
+          )}
         </div>
       ) : null}
     </div>

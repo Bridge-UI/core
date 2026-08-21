@@ -8,6 +8,8 @@ import type {
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
+  DataTablePaginationSlotProps,
+  DataTablePerPageSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -26,6 +28,7 @@ import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressProps } from "@/Components/Progress/progress.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
+import type { SelectProps } from "@/Components/Select/select.types";
 import type {
   TableAlignOverrides,
   TableRoundedOverrides,
@@ -39,6 +42,8 @@ export type {
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
+  DataTablePaginationSlotProps,
+  DataTablePerPageSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -105,6 +110,13 @@ export interface DataTableCallbacks {
   onPageChange?: (page: number) => void;
 
   /**
+   * Called when the page size changes. DataTable also resets to page 1.
+   *
+   * @default undefined
+   */
+  onPerPageChange?: (perPage: number) => void;
+
+  /**
    * Called when selected row ids change.
    *
    * @default undefined
@@ -159,6 +171,11 @@ export interface DataTableClasses {
    * Classes merged onto the pagination region.
    */
   pagination?: string;
+
+  /**
+   * Classes merged onto the per-page Select.
+   */
+  perPage?: string;
 
   /**
    * Classes merged onto the DataTable root.
@@ -251,6 +268,13 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   pagination?: Partial<Omit<PaginationProps, "page" | "count" | "onChange">>;
+
+  /**
+   * Extra props for the built-in per-page `Select`.
+   *
+   * @default undefined
+   */
+  perPage?: Partial<Omit<SelectProps, "value" | "options" | "onChange">>;
 
   /**
    * Extra props for the built-in `Progress` (`loadingVariant="bar"`).
@@ -392,7 +416,7 @@ export interface DataTableOwnProps<T> {
   page?: number;
 
   /**
-   * Total pages for built-in numbered Pagination.
+   * Total pages for built-in numbered Pagination. Use this or `totalCount`.
    *
    * @default undefined
    */
@@ -404,6 +428,21 @@ export interface DataTableOwnProps<T> {
    * @default "end"
    */
   paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
+
+  /**
+   * Page size. With `page` and no `pageCount`/`totalCount`, slices `rows`
+   * locally. With server paging, only drives the per-page Select.
+   *
+   * @default undefined
+   */
+  perPage?: number;
+
+  /**
+   * Options for the built-in per-page Select.
+   *
+   * @default [10, 25, 50, 100]
+   */
+  perPageOptions?: number[];
 
   /**
    * Corner radius of the table wrapper, header, and footer.
@@ -441,7 +480,7 @@ export interface DataTableOwnProps<T> {
   size?: MergeProps<TableSize, TableSizeOverrides>;
 
   /**
-   * `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, and `toolbar` regions.
+   * `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`, and `toolbar` regions.
    *
    * @default undefined
    */
@@ -468,6 +507,14 @@ export interface DataTableOwnProps<T> {
    * @default false
    */
   striped?: boolean;
+
+  /**
+   * Total item count when the app owns paging. Derives page count with
+   * `perPage`. Use this or `pageCount`, not both (`pageCount` wins).
+   *
+   * @default undefined
+   */
+  totalCount?: number;
 
   /**
    * Chrome treatment. Built-in Pagination follows the matching variant.
@@ -507,9 +554,16 @@ export interface DataTableSlots<T = unknown> {
   loading?: ReactNode;
 
   /**
-   * Replaces the built-in numbered Pagination (no auto variant).
+   * Replaces the built-in numbered Pagination (no auto variant). A function
+   * receives page / count / `onPageChange`.
    */
-  pagination?: ReactNode;
+  pagination?: ReactNode | ((props: DataTablePaginationSlotProps) => ReactNode);
+
+  /**
+   * Replaces the built-in per-page Select. A function receives `perPage` /
+   * options / `onPerPageChange`.
+   */
+  perPage?: ReactNode | ((props: DataTablePerPageSlotProps) => ReactNode);
 
   /**
    * Optional toolbar above the table.

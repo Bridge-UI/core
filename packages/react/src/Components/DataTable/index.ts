@@ -11,6 +11,8 @@ export type {
   DataTableItemSlotProps,
   DataTableLoadingVariant,
   DataTableOwnProps,
+  DataTablePaginationSlotProps,
+  DataTablePerPageSlotProps,
   DataTableProps,
   DataTableSelectionMode,
   DataTableSlots,
