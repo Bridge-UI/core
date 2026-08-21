@@ -56,6 +56,7 @@ const menuBridgeKeys = [
   "rounded",
   "strategy",
   "placement",
+  "matchWidth",
   "persistent",
   "teleportTo",
   "customProps",
@@ -324,6 +325,7 @@ export function useMenu(
       offset: merged.value.offset,
       strategy: merged.value.strategy,
       placement: merged.value.placement,
+      matchWidth: merged.value.matchWidth === true,
       onReferenceHidden: () => {
         if (!allowReferenceHiddenClose || !canClose.value || !show.value) {
           return;
@@ -463,7 +465,7 @@ export function useMenu(
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "relative inline-block text-left": true,
+        "relative inline-flex": true,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     );
@@ -482,7 +484,7 @@ export function useMenu(
         onClickCapture: handleTriggerClick,
         "aria-controls": show.value ? menuId : undefined,
         class: cn({
-          "inline-block w-fit max-w-full cursor-pointer outline-hidden": true,
+          "inline-flex w-fit max-w-full cursor-pointer outline-hidden": true,
           [get(mergedClasses.value, "trigger") ?? ""]: true,
         }),
       },
@@ -502,7 +504,9 @@ export function useMenu(
         },
         "aria-hidden": isHiddenWhileMounted.value ? true : undefined,
         class: cn({
-          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden min-w-32 w-max max-w-[calc(100vw-16px)]": true,
+          "bg-white text-dark-900 dark:bg-dark-800 dark:text-dark-100 ring-1 ring-black/5 dark:ring-white/10 outline-hidden overflow-hidden max-w-[calc(100vw-16px)]": true,
+          "min-w-0 w-full": merged.value.matchWidth === true,
+          "min-w-32 w-max": merged.value.matchWidth !== true,
           "invisible pointer-events-none": isHiddenWhileMounted.value,
           [roundedClass.value ?? ""]: true,
           [shadowClass.value ?? ""]: true,

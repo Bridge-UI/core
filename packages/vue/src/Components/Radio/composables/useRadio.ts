@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
@@ -94,7 +94,9 @@ export function useRadio(
   });
 
   const isChecked = computed(() => {
-    return toValue(modelValue) === merged.value.value;
+    const selected = toValue(modelValue);
+
+    return !isNil(selected) && selected === merged.value.value;
   });
 
   const colorClasses = computed(() => {

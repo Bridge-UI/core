@@ -2,7 +2,7 @@
 name: bridge-ui-components
 description: >-
   Use Bridge UI Vue components — Button, Avatar, Card, Alert, Accordion, Badge, Icon,
-  Link, List, Table, Tabs, Spinner, Skeleton, Progress, Stepper, Pagination, TextField, Select,
+  Link, List, Table, DataTable, Tabs, Spinner, Skeleton, Progress, Stepper, Pagination, TextField, Select,
   Autocomplete, DateField, DatePicker, DateRangeField, DateRangePicker,
   TimeField, TimePicker, DateTimeField, DateTimePicker, ColorField, ColorPicker,
   classes, customProps, slots. Use when building UI with Bridge components.
@@ -28,6 +28,7 @@ In templates, use kebab-case attrs (`start-icon`, `custom-props`, `error-message
 | Icon                          | `.ai/docs/components/Icon.md`                                         |
 | Lists                         | `.ai/docs/components/List.md`                                         |
 | Table                         | `.ai/docs/components/Table.md`                                        |
+| DataTable                     | `.ai/docs/components/DataTable.md`                                    |
 | Tabs                          | `.ai/docs/components/Tabs.md`                                         |
 | Text input                    | `.ai/docs/components/TextField.md`                                    |
 | Select / autocomplete         | `.ai/docs/components/Select.md`, `Autocomplete.md`                    |

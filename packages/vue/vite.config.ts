@@ -80,6 +80,7 @@ export default defineConfig({
         "@lucide/vue",
         "tailwind-merge",
         /^@bridge-ui\/core/,
+        "@tanstack/vue-table",
       ],
     },
   },

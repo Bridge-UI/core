@@ -7,6 +7,7 @@ import {
   hide,
   offset,
   shift,
+  size,
   type Placement,
 } from "@floating-ui/dom";
 import { constant, isFunction } from "es-toolkit/compat";
@@ -25,6 +26,10 @@ export type PositionStrategy = "fixed" | "absolute";
 export type PositionOptions = {
   arrow?: HTMLElement | (() => null | undefined | HTMLElement);
   floating: HTMLElement;
+  /**
+   * When true, the floating panel width matches the reference.
+   */
+  matchWidth?: boolean;
   offset?: number;
   onReferenceHidden?: () => void;
   placement?: Placement;
@@ -64,6 +69,7 @@ export function createPositionable(options: PositionOptions): PositionHandle {
   const reference = options.reference;
   const onReferenceHidden = options.onReferenceHidden;
   const shiftCrossAxis = options.shiftCrossAxis ?? true;
+  const matchWidth = options.matchWidth === true;
 
   let offsetValue = options.offset ?? 4;
   let cleanup: null | (() => void) = null;
@@ -87,6 +93,18 @@ export function createPositionable(options: PositionOptions): PositionHandle {
       shift({ padding: 8, crossAxis: shiftCrossAxis }),
       hide({ padding: -100 }),
     ];
+
+    if (matchWidth) {
+      middleware.push(
+        size({
+          apply({ rects, elements }) {
+            Object.assign(elements.floating.style, {
+              width: `${rects.reference.width}px`,
+            });
+          },
+        }),
+      );
+    }
 
     if (arrowEl) {
       middleware.splice(

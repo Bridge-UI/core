@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<TableOwnProps>(), {
 const { rootBind, tableBind } = useTable(props, {
   size: "md",
   full: true,
+  rounded: "lg",
   striped: false,
   variant: "plain",
   hoverable: false,

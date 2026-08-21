@@ -41,6 +41,16 @@ test("it should not be checked when modelValue differs from value", () => {
   ).toBe(false);
 });
 
+test("it should not be checked when modelValue is unset", () => {
+  const wrapper = mount(Radio, {
+    props: { value: "a", endLabel: "Option A" },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
 test("it should emit update:modelValue with option value when selected", async () => {
   const wrapper = mount(Radio, {
     props: { value: "a", modelValue: "b", endLabel: "Option A" },
@@ -97,6 +107,17 @@ test("it should ignore defaultChecked when modelValue is bound", () => {
       defaultChecked: true,
       endLabel: "Option A",
     },
+  });
+
+  expect(
+    (wrapper.find('input[type="radio"]').element as HTMLInputElement).checked,
+  ).toBe(false);
+});
+
+test("it should stay unchecked when v-model is bound and unset", () => {
+  const wrapper = mount(Radio, {
+    props: { value: "a", endLabel: "Option A" },
+    attrs: { "onUpdate:modelValue": () => undefined },
   });
 
   expect(

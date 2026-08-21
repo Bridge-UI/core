@@ -102,6 +102,13 @@ test("it should include rounded and shadow classes on content bind", () => {
   expect(result.current.contentBind.className).toContain("rounded-lg");
 });
 
+test("it should stretch the panel to the trigger when matchWidth is set", () => {
+  const { result } = renderUseMenu({ matchWidth: true });
+
+  expect(result.current.contentBind.className).toContain("w-full");
+  expect(result.current.contentBind.className).not.toContain("w-max");
+});
+
 test("it should not lock body scroll by default", () => {
   renderUseMenu({}, { show: true });
 

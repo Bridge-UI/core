@@ -140,6 +140,13 @@ export interface MenuOwnProps {
   keepMounted?: boolean;
 
   /**
+   * When true, the panel width matches the trigger / anchor.
+   *
+   * @default false
+   */
+  matchWidth?: boolean;
+
+  /**
    * Gap between the trigger and the menu panel (px).
    *
    * @default 4

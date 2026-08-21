@@ -5,6 +5,7 @@ import { computed, provide, useAttrs } from "vue";
 // ** Core Imports
 import {
   tableAlignProps as alignProps,
+  tableRoundedProps as roundedProps,
   tableSizeProps as sizeProps,
   tableVariantProps as variantProps,
   type TableAlign,
@@ -33,6 +34,7 @@ const tableBridgeKeys = [
   "full",
   "size",
   "classes",
+  "rounded",
   "striped",
   "variant",
   "hoverable",
@@ -42,7 +44,13 @@ const tableBridgeKeys = [
 
 type TableLibDefaults = LibDefaultsShape<
   TableOwnProps,
-  "full" | "size" | "striped" | "variant" | "hoverable" | "stickyHeader"
+  | "full"
+  | "size"
+  | "rounded"
+  | "striped"
+  | "variant"
+  | "hoverable"
+  | "stickyHeader"
 >;
 
 type TableMerged = MergeLibDefaults<TableOwnProps, TableLibDefaults>;
@@ -92,12 +100,23 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
     );
   });
 
+  const roundedClasses = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeTable.value?.tokens?.rounded,
+    );
+  });
+
   const sizeItem = computed(() => {
     return get(sizeClasses.value, merged.value.size);
   });
 
   const variantItem = computed(() => {
     return get(variantClasses.value, merged.value.variant);
+  });
+
+  const roundedItem = computed(() => {
+    return get(roundedClasses.value, merged.value.rounded);
   });
 
   const contextValue = computed((): TableContextValue => {
@@ -126,6 +145,8 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
         variantCell: get(variantItem.value, "cell"),
         variantFooter: get(variantItem.value, "footer"),
         variantHeader: get(variantItem.value, "header"),
+        roundedFooter: get(roundedItem.value, "footer"),
+        roundedHeader: get(roundedItem.value, "header"),
         variantCaption: get(variantItem.value, "caption"),
         variantRowHover: get(variantItem.value, "rowHover"),
         variantRowStriped: get(variantItem.value, "rowStriped"),
@@ -145,6 +166,7 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
           "overflow-x-auto": merged.value.stickyHeader !== true,
           [get(sizeItem.value, "root") ?? ""]: true,
           [get(variantItem.value, "root") ?? ""]: true,
+          [get(roundedItem.value, "root") ?? ""]: true,
           [get(mergedClasses.value, "root") ?? ""]: true,
         }),
       },

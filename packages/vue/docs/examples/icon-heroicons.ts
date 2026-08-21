@@ -6,6 +6,7 @@
 
 // ** External Imports
 import {
+  ArrowDownTrayIcon,
   ArrowPathIcon,
   BellIcon,
   CalendarDaysIcon,
@@ -21,9 +22,12 @@ import {
   ExclamationTriangleIcon,
   EyeIcon,
   EyeSlashIcon,
+  FunnelIcon,
   InformationCircleIcon,
+  MagnifyingGlassIcon,
   SwatchIcon,
   UserIcon,
+  ViewColumnsIcon,
   XCircleIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/outline";
@@ -40,12 +44,16 @@ const icons = {
   check: CheckIcon,
   clock: ClockIcon,
   error: XCircleIcon,
+  filter: FunnelIcon,
   palette: SwatchIcon,
   eyeOff: EyeSlashIcon,
   loader: ArrowPathIcon,
   success: CheckCircleIcon,
   chevronUp: ChevronUpIcon,
+  columns: ViewColumnsIcon,
   calendar: CalendarDaysIcon,
+  download: ArrowDownTrayIcon,
+  search: MagnifyingGlassIcon,
   info: InformationCircleIcon,
   alert: ExclamationCircleIcon,
   chevronDown: ChevronDownIcon,

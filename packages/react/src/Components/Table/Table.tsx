@@ -6,6 +6,7 @@ import type { TableProps } from "@/Components/Table/table.types";
 const tableLibDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   striped: false,
   variant: "plain",
   hoverable: false,

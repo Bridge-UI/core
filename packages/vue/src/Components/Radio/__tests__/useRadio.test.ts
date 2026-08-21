@@ -54,6 +54,12 @@ test("it should not be checked when model differs from value", () => {
   expect(isChecked.value).toBe(false);
 });
 
+test("it should not be checked when model is unset", () => {
+  const { isChecked } = mountUseRadio({ value: "a" });
+
+  expect(isChecked.value).toBe(false);
+});
+
 test("it should set radio type on inputBind", () => {
   const { inputBind } = mountUseRadio({ value: "a" });
 

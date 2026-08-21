@@ -67,12 +67,21 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 <Table striped variant="bordered" />
 ```
 
+### Rounded
+
+Corner radius on the wrapper, header, and footer. Default `lg`.
+
+```vue
+<Table rounded="none" />
+<Table rounded="xl" variant="ghost" />
+```
+
 ### Dense + sticky header
 
 `sticky-header` pins header cells to the nearest scrollport (usually the page). The wrapper skips overflow so the header can stick. For a boxed scroll area, set `overflow-auto` and a max height on `classes.root`.
 
 ```vue
-<Table size="sm" sticky-header />
+<Table sticky-header size="sm" />
 ```
 
 ### Numeric cells

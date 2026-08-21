@@ -183,7 +183,10 @@ import type {
   SwitchSize,
 } from "@/Tokens/Switch";
 import type {
+  TableAlign,
   TableAlignItem,
+  TableRounded,
+  TableRoundedItem,
   TableSize,
   TableSizeItem,
   TableVariant,
@@ -346,6 +349,7 @@ export interface CheckboxConfigOverrides {}
 export interface ChipConfigOverrides {}
 export interface ColorFieldConfigOverrides {}
 export interface ColorPickerConfigOverrides {}
+export interface DataTableConfigOverrides {}
 export interface DateFieldConfigOverrides {}
 export interface DatePickerConfigOverrides {}
 export interface DateRangeFieldConfigOverrides {}
@@ -597,6 +601,22 @@ export interface CalendarConfigBase {
     color: Record<string, CalendarColorItem>;
     day: Partial<CalendarDay>;
     rounded: Record<string, string>;
+  }>;
+}
+
+export interface DataTableConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    full: boolean;
+    hoverable: boolean;
+    loadingVariant: "bar" | "overlay";
+    paginationAlign: keyof TableAlign;
+    rounded: keyof TableRounded;
+    selectionMode: "single" | "multiple";
+    size: keyof TableSize;
+    stickyHeader: "boxed" | boolean;
+    striped: boolean;
+    variant: keyof TableVariant;
   }>;
 }
 
@@ -1317,6 +1337,7 @@ export interface TableConfigBase {
   defaultProps: Partial<{
     full: boolean;
     hoverable: boolean;
+    rounded: keyof TableRounded;
     size: keyof TableSize;
     stickyHeader: boolean;
     striped: boolean;
@@ -1324,6 +1345,7 @@ export interface TableConfigBase {
   }>;
   tokens: Partial<{
     align: Record<string, TableAlignItem>;
+    rounded: Record<string, TableRoundedItem>;
     size: Record<string, TableSizeItem>;
     variant: Record<string, TableVariantItem>;
   }>;
@@ -1446,6 +1468,7 @@ export type BridgeUIComponentsConfig = Partial<{
   ColorPicker: Partial<
     Overwrite<ColorPickerConfigBase, ColorPickerConfigOverrides>
   >;
+  DataTable: Partial<Overwrite<DataTableConfigBase, DataTableConfigOverrides>>;
   DateField: Partial<Overwrite<DateFieldConfigBase, DateFieldConfigOverrides>>;
   DatePicker: Partial<
     Overwrite<DatePickerConfigBase, DatePickerConfigOverrides>

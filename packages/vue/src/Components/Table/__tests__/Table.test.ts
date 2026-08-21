@@ -100,6 +100,14 @@ test("it should apply the ghost variant on the wrapper", () => {
 
   expect(wrapper.find("div").classes()).not.toContain("ring-1");
   expect(wrapper.find("div").classes()).toContain("rounded-lg");
+  expect(wrapper.find("th").classes()).toContain("after:w-px");
+});
+
+test("it should apply rounded none on the wrapper", () => {
+  const wrapper = mountTable({ props: { rounded: "none" } });
+
+  expect(wrapper.find("div").classes()).toContain("rounded-none");
+  expect(wrapper.find("div").classes()).not.toContain("rounded-lg");
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -109,7 +117,7 @@ test("it should stripe and hover body rows only", () => {
   const footerRow = wrapper.find("tfoot tr");
 
   expect(
-    bodyRow.classes().some((name) => name.includes("even:bg-dark-50")),
+    bodyRow.classes().some((name) => name.includes("even:bg-dark-100")),
   ).toBe(true);
   expect(
     bodyRow.classes().some((name) => name.includes("hover:bg-dark-500")),
@@ -127,7 +135,8 @@ test("it should stick header cells when stickyHeader is set", () => {
 
   expect(wrapper.find("th").classes()).toContain("sticky");
   expect(wrapper.find("td").classes()).not.toContain("sticky");
-  expect(wrapper.find("th").classes()).toContain("backdrop-blur");
+  expect(wrapper.find("th").classes()).toContain("bg-dark-100");
+  expect(wrapper.find("thead").classes()).toContain("z-20");
   expect(wrapper.find("table").classes()).toContain("border-separate");
   expect(wrapper.find("div").classes()).not.toContain("overflow-x-auto");
 });

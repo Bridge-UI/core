@@ -64,8 +64,8 @@ Replaces Cancel / Apply on the nested picker. `apply()` commits and closes; `can
 ```vue
 <DateField overlay="modal">
   <template #footer="{ apply, cancel }">
-    <button type="button" @click="cancel">Discard</button>
-    <button type="button" @click="apply">Save</button>
+    <button type="button" v-on:click="cancel">Discard</button>
+    <button type="button" v-on:click="apply">Save</button>
   </template>
 </DateField>
 ```

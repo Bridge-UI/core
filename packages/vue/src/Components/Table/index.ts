@@ -39,6 +39,7 @@ export type {
   TableHeaderSlots,
   TableOwnProps,
   TableProps,
+  TableRoundedOverrides,
   TableRowClasses,
   TableRowCustomProps,
   TableRowOwnProps,

@@ -51,7 +51,9 @@ export function useTablePart(props: TablePartProps, part: TablePartKind) {
   if (part !== "caption") {
     provide(
       TABLE_SECTION_INJECTION_KEY,
-      computed(() => part as TableSection),
+      computed(() => {
+        return part as TableSection;
+      }),
     );
   }
 
@@ -80,8 +82,11 @@ export function useTablePart(props: TablePartProps, part: TablePartKind) {
       split.value.inheritedAttrs,
       {
         class: cn({
+          "sticky top-0 z-20": part === "header" && table.stickyHeader,
           [sizeClass ?? ""]: true,
           [variantClass ?? ""]: true,
+          [table.tokenClasses.roundedHeader ?? ""]: part === "header",
+          [table.tokenClasses.roundedFooter ?? ""]: part === "footer",
           [table.mergedClasses[part] ?? ""]: true,
           [split.value.componentProps.classes?.root ?? ""]: true,
         }),

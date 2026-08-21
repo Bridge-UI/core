@@ -10,6 +10,7 @@ import type { TableOwnProps } from "@/Components/Table/table.types";
 const libDefaults = {
   size: "md",
   full: true,
+  rounded: "lg",
   striped: false,
   variant: "plain",
   hoverable: false,
