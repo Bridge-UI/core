@@ -3,9 +3,11 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 import { defineComponent, h, ref } from "vue";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
 import { useMenu, type MenuOwnProps } from "@/Components/Menu";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(async () => {
   await flushPromises();
@@ -105,6 +107,13 @@ test("it should include rounded and shadow classes on content bind", () => {
 
   expect(result.contentBind.value.class).toContain("shadow-sm");
   expect(result.contentBind.value.class).toContain("rounded-lg");
+});
+
+test("it should stretch the panel to the trigger when matchWidth is set", () => {
+  const { result } = mountUseMenu({ matchWidth: true });
+
+  expect(result.contentBind.value.class).toContain("w-full");
+  expect(result.contentBind.value.class).not.toContain("w-max");
 });
 
 test("it should not lock body scroll by default", async () => {
