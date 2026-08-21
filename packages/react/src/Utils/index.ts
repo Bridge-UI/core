@@ -1,6 +1,6 @@
 // ** External Imports
-import { get, isNil } from "es-toolkit/compat";
-import { useMemo } from "react";
+import { get, has, isNil, keys } from "es-toolkit/compat";
+import { useMemo, useRef } from "react";
 
 // ** Core Imports
 import type { BridgeUIComponentsConfig } from "@bridge-ui/core/Config";
@@ -42,6 +42,41 @@ export function derived<T>(getter: () => T): T {
 }
 
 /**
+ * True when both objects have the same own keys and values (`===`).
+ */
+function shallowEqual(left: object, right: object) {
+  if (left === right) {
+    return true;
+  }
+
+  const leftKeys = keys(left);
+
+  if (leftKeys.length !== keys(right).length) {
+    return false;
+  }
+
+  const leftRecord = left as Record<string, unknown>;
+  const rightRecord = right as Record<string, unknown>;
+
+  return leftKeys.every((key) => {
+    return has(right, key) && leftRecord[key] === rightRecord[key];
+  });
+}
+
+/**
+ * Keeps the previous object identity when all own values are shallow-equal.
+ */
+function useShallowStable<T extends object>(value: T): T {
+  const ref = useRef(value);
+
+  if (!shallowEqual(ref.current, value)) {
+    ref.current = value;
+  }
+
+  return ref.current;
+}
+
+/**
  * Merges React-specific classes into the `className` attribute.
  */
 export const mergePartBind = createMergePartBind("className");
@@ -69,7 +104,10 @@ export function useBridgeUIComponent<
 }): UseBridgeUIComponentReturn<P, K> {
   const bridge = useBridgeUI();
 
+  const stableProps = useShallowStable(props);
+  const stableLibDefaults = useShallowStable(libDefaults ?? {});
   const components = isNil(bridge) ? null : (bridge.components ?? null);
+  const resolvedLibDefaults = libDefaults ? stableLibDefaults : undefined;
 
   const entry = componentName
     ? (get(components, componentName) as undefined | RegistryEntryFor<K>)
@@ -77,17 +115,17 @@ export function useBridgeUIComponent<
 
   const merged = useMemo(() => {
     return mergePropsWithBridgeUIDefaults({
-      props,
       components,
-      libDefaults,
       componentName,
+      props: stableProps,
+      libDefaults: resolvedLibDefaults,
       formDefaults: bridge?.global.formDefaults,
     }) as P;
   }, [
-    props,
     components,
-    libDefaults,
+    stableProps,
     componentName,
+    resolvedLibDefaults,
     bridge?.global.formDefaults,
   ]);
 

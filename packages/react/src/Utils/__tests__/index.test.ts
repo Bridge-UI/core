@@ -7,10 +7,50 @@ import { expect, test } from "vitest";
 import { BridgeUIProvider } from "@/Provider";
 import {
   derived,
+  useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
   useFieldShowFooter,
   usePickerFill,
 } from "@/Utils";
+
+test("it should keep merged identity when props are shallow-equal", () => {
+  const { result, rerender } = renderHook(
+    (props: { size?: string }) => {
+      return useBridgeUIComponent({
+        props,
+        componentName: "Button",
+        libDefaults: { size: "md" },
+      });
+    },
+    { initialProps: { size: "md" } },
+  );
+
+  const first = result.current.merged;
+
+  rerender({ size: "md" });
+
+  expect(result.current.merged).toBe(first);
+});
+
+test("it should remake merged when a prop value changes", () => {
+  const { result, rerender } = renderHook(
+    (props: { size?: string }) => {
+      return useBridgeUIComponent({
+        props,
+        componentName: "Button",
+        libDefaults: { size: "md" },
+      });
+    },
+    { initialProps: { size: "md" } },
+  );
+
+  const first = result.current.merged;
+
+  rerender({ size: "lg" });
+
+  expect(result.current.merged).not.toBe(first);
+  expect(result.current.merged).toMatchObject({ size: "lg" });
+});
 
 test("it should run the getter and return its value from derived", () => {
   let runs = 0;
