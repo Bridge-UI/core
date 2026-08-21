@@ -192,7 +192,7 @@ const columns = [
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `item.{id}` / `item` / `loading` / `pagination` / `search` / `toolbar` / `toolbarActions`. `#item` is a catch-all when `#item.{id}` is not set.
+Table-level slots stay `empty` / `expanded` / `footer` / `item.{id}` / `item` / `loading` / `pagination` / `perPage` / `search` / `toolbar` / `toolbarActions`. `#item` is a catch-all when `#item.{id}` is not set.
 
 ### Selection
 
