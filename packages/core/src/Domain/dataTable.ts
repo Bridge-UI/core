@@ -637,16 +637,6 @@ export function isDataTableSearchEnabled(
 }
 
 /**
- * Whether the toolbar export control should render.
- */
-export function isDataTableExportEnabled(
-  hasChangeHandler: boolean,
-  hasSlot: boolean,
-): boolean {
-  return hasChangeHandler || hasSlot;
-}
-
-/**
  * Whether `value` matches a global search query (case-insensitive contains).
  */
 export function matchDataTableSearch(value: unknown, query: string): boolean {
@@ -662,48 +652,6 @@ export function matchDataTableSearch(value: unknown, query: string): boolean {
 
   return String(value).toLowerCase().includes(needle);
 }
-
-/**
- * Escapes one CSV field (`"` / commas / newlines).
- */
-function escapeDataTableCsvField(value: string): string {
-  if (!/["\n\r,]/.test(value)) {
-    return value;
-  }
-
-  return `"${value.replaceAll('"', '""')}"`;
-}
-
-/**
- * Builds a CSV document from header labels and row cells.
- */
-export function serializeDataTableCsv(
-  headers: string[],
-  rows: string[][],
-): string {
-  const headerLine = headers.map(escapeDataTableCsvField).join(",");
-  
-  const body = rows.map((cells) => {
-    return cells.map(escapeDataTableCsvField).join(",");
-  });
-
-  return [headerLine, ...body].join("\r\n");
-}
-
-/**
- * Payload for the toolbar export control.
- */
-export type DataTableExportPayload<T = unknown> = {
-  /**
-   * CSV of the current (filtered) rows and visible data columns.
-   */
-  csv: string;
-
-  /**
-   * Rows included in the export (filtered, not sliced to the page).
-   */
-  rows: T[];
-};
 
 /**
  * CSS width for a native table column (`th` / `td` / `col`).

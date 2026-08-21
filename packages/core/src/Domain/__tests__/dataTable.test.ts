@@ -39,7 +39,6 @@ import {
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
   isDataTableExpandEnabled,
-  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -53,7 +52,6 @@ import {
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
-  serializeDataTableCsv,
   setDataTableColumnFilter,
   setDataTableColumnSearch,
   setDataTableFilterDraftAll,
@@ -273,29 +271,12 @@ describe("matchDataTableSearch", () => {
   });
 });
 
-describe("serializeDataTableCsv", () => {
-  test("it should join headers and escape quoted fields", () => {
-    expect(serializeDataTableCsv(["Name"], [["Ada"]])).toBe("Name\r\nAda");
-    expect(serializeDataTableCsv(["Name"], [['A, "B"']])).toBe(
-      'Name\r\n"A, ""B"""',
-    );
-  });
-});
-
 describe("isDataTableSearchEnabled", () => {
   test("it should enable when search, a handler, or a slot is present", () => {
     expect(isDataTableSearchEnabled("", false, false)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, true, false)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, false, true)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, false, false)).toBe(false);
-  });
-});
-
-describe("isDataTableExportEnabled", () => {
-  test("it should enable when a handler or a slot is present", () => {
-    expect(isDataTableExportEnabled(true, false)).toBe(true);
-    expect(isDataTableExportEnabled(false, true)).toBe(true);
-    expect(isDataTableExportEnabled(false, false)).toBe(false);
   });
 });
 
