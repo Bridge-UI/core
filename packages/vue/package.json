@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/vue",
@@ -89,7 +89,7 @@
     }
   },
   "dependencies": {
-    "@bridge-ui/core": "^0.2.0",
+    "@bridge-ui/core": "^0.3.0",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.50.0",
     "tailwind-merge": "^3.6.0"
@@ -111,9 +111,9 @@
     "@lucide/vue": "^1.30.0",
     "@phosphor-icons/vue": "^2.2.1",
     "@tabler/icons-vue": "^3.46.0",
-    "@tanstack/vue-table": "^8.21.3",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/vue-table": "^8.21.3",
     "@types/luxon": "^3.7.4",
     "@types/node": "^24.13.3",
     "@vue/language-core": "^3.3.9",
