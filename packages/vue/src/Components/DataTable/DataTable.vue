@@ -46,8 +46,8 @@ const props = withDefaults(
     Omit<
       DataTableOwnProps<T>,
       | "page"
-      | "perPage"
       | "filters"
+      | "perPage"
       | "sorting"
       | "expanded"
       | "selection"
@@ -106,9 +106,9 @@ const {
   visibilityItems,
   perPageSlotProps,
   resolvedPageCount,
-  paginationSlotProps,
   selectionMultiple,
   visibilityEnabled,
+  paginationSlotProps,
   onCommitColumnFilter,
   onToggleColumnVisibility,
 } = useDataTable(
@@ -435,10 +435,10 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       </slot>
       <slot name="pagination" v-bind="paginationSlotProps">
         <Pagination
-          v-if="resolvedPageCount !== undefined"
           v-bind="merged.customProps?.pagination"
           v-model="paginationPage"
           :count="resolvedPageCount"
+          v-if="resolvedPageCount !== undefined"
           :variant="paginationSlotProps.variant"
         />
       </slot>

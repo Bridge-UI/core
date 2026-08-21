@@ -152,10 +152,10 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
   render(
     <DataTable
       page={1}
-      perPage={10}
       rows={rows}
-      columns={columns}
+      perPage={10}
       totalCount={20}
+      columns={columns}
       onPageChange={onPageChange}
     />,
   );
@@ -170,8 +170,8 @@ test("it should render a custom perPage slot beside pagination", () => {
   render(
     <DataTable
       page={1}
-      perPage={10}
       rows={rows}
+      perPage={10}
       pageCount={2}
       columns={columns}
       slots={{ perPage: "Page size" }}

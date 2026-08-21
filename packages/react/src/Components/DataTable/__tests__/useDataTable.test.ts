@@ -85,8 +85,8 @@ test("it should slice rows when page and perPage are set without totals", () => 
     useDataTable(
       {
         page: 2,
-        perPage: 1,
         columns,
+        perPage: 1,
         rows: [
           { id: "1", name: "Ada" },
           { id: "2", name: "Alan" },
@@ -107,8 +107,8 @@ test("it should derive page count from totalCount and perPage", () => {
     useDataTable(
       {
         page: 1,
-        perPage: 10,
         columns,
+        perPage: 10,
         totalCount: 23,
         rows: [{ id: "1", name: "Ada" }],
       },

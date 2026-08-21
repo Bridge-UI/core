@@ -77,8 +77,8 @@ test("it should enable selection views when selection is controlled", () => {
     },
     {
       page: ref(undefined),
-      perPage: ref(undefined),
       selection: ref(["1"]),
+      perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),

@@ -641,10 +641,10 @@ export function useDataTable<T>(
 
   const resolvedPageCount = computed(() => {
     return getDataTableResolvedPageCount({
-      pageCount: merged.value.pageCount,
-      totalCount: merged.value.totalCount,
       perPage: models.perPage.value,
       clientPaged: clientPaged.value,
+      pageCount: merged.value.pageCount,
+      totalCount: merged.value.totalCount,
       filteredCount: table.getRowModel().rows.length,
     });
   });
@@ -1027,23 +1027,23 @@ export function useDataTable<T>(
 
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
     return {
+      page: models.page.value ?? 1,
+      variant: paginationVariant.value,
       count: resolvedPageCount.value ?? 1,
       onPageChange: (nextPage) => {
         models.page.value = nextPage;
       },
-      page: models.page.value ?? 1,
-      variant: paginationVariant.value,
     };
   });
 
   const perPageSlotProps = computed((): DataTablePerPageSlotProps => {
     return {
+      perPage: resolvedPerPage.value,
       onPerPageChange: onChangePerPage,
       options: getDataTablePerPageSelectOptions(
         resolvedPerPage.value,
         merged.value.perPageOptions,
       ),
-      perPage: resolvedPerPage.value,
     };
   });
 
@@ -1166,12 +1166,12 @@ export function useDataTable<T>(
     onChangePerPage,
     resolvedPerPage,
     selectionEnabled,
-    paginationVariant,
     perPageSlotProps,
+    paginationVariant,
     resolvedPageCount,
-    paginationSlotProps,
     selectionMultiple,
     visibilityEnabled,
+    paginationSlotProps,
     onCommitColumnFilter,
     onToggleColumnVisibility,
     loadingBar: computed(() => {

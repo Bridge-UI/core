@@ -48,7 +48,7 @@ const dataTableLibDefaults = {
 } as const;
 
 function renderDataTableSlot<P>(
-  slot: undefined | ReactNode | ((props: P) => ReactNode),
+  slot: ReactNode | undefined | ((props: P) => ReactNode),
   props: P,
   fallback: ReactNode,
 ): ReactNode {
@@ -154,9 +154,9 @@ function DataTable<T>(props: DataTableProps<T>) {
     visibilityItems,
     perPageSlotProps,
     resolvedPageCount,
-    paginationSlotProps,
     selectionMultiple,
     visibilityEnabled,
+    paginationSlotProps,
     onCommitColumnFilter,
     onToggleColumnVisibility,
   } = useDataTable(props, dataTableLibDefaults);
@@ -438,6 +438,9 @@ function DataTable<T>(props: DataTableProps<T>) {
                   aria-label="Rows per page"
                   {...merged.customProps?.perPage}
                   value={perPageSlotProps.perPage}
+                  options={perPageSlotProps.options.map((value) => {
+                    return { value, label: String(value) };
+                  })}
                   onChange={(value) => {
                     const next = Number(value);
 
@@ -447,9 +450,6 @@ function DataTable<T>(props: DataTableProps<T>) {
 
                     perPageSlotProps.onPerPageChange(next);
                   }}
-                  options={perPageSlotProps.options.map((value) => {
-                    return { value, label: String(value) };
-                  })}
                 />,
               )
             : null}

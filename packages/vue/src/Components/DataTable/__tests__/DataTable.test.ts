@@ -151,8 +151,8 @@ test("it should slice rows locally when page and perPage are set", () => {
 test("it should paginate from totalCount when pageCount is omitted", () => {
   const wrapper = mountDataTable({
     props: {
-      page: 1,
       rows,
+      page: 1,
       columns,
       perPage: 10,
       totalCount: 20,
@@ -165,14 +165,14 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
 
 test("it should render a custom perPage slot beside pagination", () => {
   const wrapper = mountDataTable({
+    slots: { perPage: "Page size" },
     props: {
-      page: 1,
       rows,
+      page: 1,
       columns,
       perPage: 10,
       pageCount: 2,
     },
-    slots: { perPage: "Page size" },
   });
 
   expect(wrapper.text()).toContain("Page size");
