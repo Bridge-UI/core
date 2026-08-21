@@ -552,6 +552,27 @@ test("it should render toolbarActions beside search", () => {
   expect(screen.getByRole("textbox", { name: "Search" })).toBeTruthy();
 });
 
+test("it should keep table rows when a sibling setState rerenders the parent", () => {
+  function Page() {
+    const [label, setLabel] = useState("Print");
+
+    return (
+      <div>
+        <button type="button" onClick={() => setLabel("Printed")}>
+          {label}
+        </button>
+        <DataTable rows={rows} columns={columns} />
+      </div>
+    );
+  }
+
+  render(<Page />);
+  fireEvent.click(screen.getByRole("button", { name: "Print" }));
+
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Printed" })).toBeTruthy();
+});
+
 test("it should filter rows from the toolbar search", () => {
   render(
     <DataTable

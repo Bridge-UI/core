@@ -6,6 +6,7 @@ import {
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type OnChangeFn,
   type RowSelectionState,
   type SortingState,
   type VisibilityState,
@@ -274,6 +275,59 @@ const chromeColumn = {
 };
 
 const EMPTY_ROWS: never[] = [];
+const EMPTY_COLUMNS: never[] = [];
+const EMPTY_IDS: string[] = [];
+const dataTableCoreRowModel = getCoreRowModel();
+const dataTableSortedRowModel = getSortedRowModel();
+const dataTableFilteredRowModel = getFilteredRowModel();
+
+function getDataTableHeadAlign(header: {
+  align?: DataTableColumn<unknown>["align"];
+  isExpand: boolean;
+  isSelection: boolean;
+}) {
+  return header.isSelection || header.isExpand
+    ? "center"
+    : (header.align ?? "start");
+}
+
+function getDataTableCellAlign(cell: {
+  align?: DataTableColumn<unknown>["align"];
+  isExpand: boolean;
+  isSelection: boolean;
+}) {
+  return cell.isSelection || cell.isExpand ? "center" : (cell.align ?? "start");
+}
+
+function getDataTableColumnLayoutStyle(
+  view: {
+    isExpand: boolean;
+    isSelection: boolean;
+    stickyStyle?: DataTableStickyInset["style"];
+    width?: number | string;
+  },
+  stickyHeaderEnabled: boolean,
+  header = false,
+): CSSProperties {
+  const width = getDataTableColumnCssWidth(
+    view.width,
+    view.isExpand || view.isSelection,
+  );
+  const headerSticky = header && stickyHeaderEnabled;
+
+  return {
+    ...(width ? { width, minWidth: width } : {}),
+    ...view.stickyStyle,
+    ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
+    ...(headerSticky
+      ? {
+          top: 0,
+          position: "sticky",
+          zIndex: view.stickyStyle ? 20 : 11,
+        }
+      : {}),
+  };
+}
 
 export function useDataTable<T>(
   props: DataTableProps<T>,
@@ -305,9 +359,12 @@ export function useDataTable<T>(
     return merged.slots;
   });
 
-  const rootInheritedAttrs = derived(() => {
+  const mergedRef = useRef(merged);
+  mergedRef.current = merged;
+
+  const rootInheritedAttrs = useMemo(() => {
     return omit(inheritedAttrs, ["children"]);
-  });
+  }, [inheritedAttrs]);
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({
     props: componentProps,
@@ -326,16 +383,28 @@ export function useDataTable<T>(
   });
 
   const columns = derived(() => {
-    return merged.columns ?? [];
-  });
-
-  const columnsById = derived(() => {
-    return keyBy(columns, "id");
+    return merged.columns ?? EMPTY_COLUMNS;
   });
 
   const rows = derived(() => {
     return merged.rows ?? EMPTY_ROWS;
   });
+
+  const hiddenColumns = derived(() => {
+    return merged.hiddenColumns ?? EMPTY_IDS;
+  });
+
+  const expandedIds = derived(() => {
+    return merged.expanded ?? EMPTY_IDS;
+  });
+
+  const selectionIds = derived(() => {
+    return merged.selection ?? EMPTY_IDS;
+  });
+
+  const columnsById = useMemo(() => {
+    return keyBy(columns, "id");
+  }, [columns]);
 
   const selectionEnabled = derived(() => {
     return isDataTableSelectionEnabled(
@@ -410,11 +479,20 @@ export function useDataTable<T>(
 
   const columnVisibility = useMemo((): VisibilityState => {
     return fromPairs(
-      (merged.hiddenColumns ?? []).map((id) => {
+      hiddenColumns.map((id) => {
         return [id, false];
       }),
     );
-  }, [merged.hiddenColumns]);
+  }, [hiddenColumns]);
+
+  const tableState = useMemo(() => {
+    return {
+      rowSelection,
+      columnFilters,
+      columnVisibility,
+      sorting: sortingState,
+    };
+  }, [columnFilters, columnVisibility, rowSelection, sortingState]);
 
   const columnDefs = useMemo((): ColumnDef<T>[] => {
     const defs: ColumnDef<T>[] = columns.map((column) => {
@@ -455,59 +533,71 @@ export function useDataTable<T>(
     ]);
   }, [columns, expandEnabled, selectionEnabled]);
 
+  const getRowId = useCallback((row: T, index: number) => {
+    return resolveDataTableRowId(row, index, mergedRef.current.getRowId);
+  }, []);
+
+  const onRowSelectionChange = useCallback<OnChangeFn<RowSelectionState>>(
+    (updater) => {
+      const current = selectionToRowSelection(mergedRef.current.selection);
+      const next = isFunction(updater) ? updater(current) : updater;
+
+      mergedRef.current.onSelectionChange?.(rowSelectionToIds(next));
+    },
+    [],
+  );
+
+  const onSortingChange = useCallback<OnChangeFn<SortingState>>((updater) => {
+    const current = mergedRef.current.sorting
+      ? [
+          {
+            id: mergedRef.current.sorting.id,
+            desc: mergedRef.current.sorting.desc,
+          },
+        ]
+      : [];
+    const next = isFunction(updater) ? updater(current) : updater;
+    const first = head(next);
+
+    mergedRef.current.onSortingChange?.(
+      first ? { id: first.id, desc: first.desc } : null,
+    );
+  }, []);
+
   const table = useReactTable({
+    getRowId,
     data: rows,
+    onSortingChange,
+    state: tableState,
     columns: columnDefs,
+    onRowSelectionChange,
     manualSorting: serverPaged,
     enableSortingRemoval: true,
     manualFiltering: serverPaged,
     enableHiding: visibilityEnabled,
-    getCoreRowModel: getCoreRowModel(),
     enableRowSelection: selectionEnabled,
+    getCoreRowModel: dataTableCoreRowModel,
     enableMultiRowSelection: selectionMultiple,
-    getSortedRowModel: serverPaged ? undefined : getSortedRowModel(),
-    getFilteredRowModel: serverPaged ? undefined : getFilteredRowModel(),
-    getRowId: (row, index) => {
-      return resolveDataTableRowId(row, index, merged.getRowId);
-    },
-    state: {
-      rowSelection,
-      columnFilters,
-      columnVisibility,
-      sorting: sortingState,
-    },
-    onRowSelectionChange: (updater) => {
-      const next = isFunction(updater) ? updater(rowSelection) : updater;
-
-      merged.onSelectionChange?.(rowSelectionToIds(next));
-    },
-    onSortingChange: (updater) => {
-      const next = isFunction(updater) ? updater(sortingState) : updater;
-      const first = head(next);
-
-      merged.onSortingChange?.(
-        first ? { id: first.id, desc: first.desc } : null,
-      );
-    },
+    getSortedRowModel: serverPaged ? undefined : dataTableSortedRowModel,
+    getFilteredRowModel: serverPaged ? undefined : dataTableFilteredRowModel,
   });
 
-  const searchedRows = derived(() => {
-    const source = table.getRowModel().rows;
+  const tableRowModelRows = table.getRowModel().rows;
 
+  const searchedRows = useMemo(() => {
     if (serverPaged) {
-      return source;
+      return tableRowModelRows;
     }
 
     const query = merged.search ?? "";
-    const hidden = merged.hiddenColumns ?? [];
 
-    return source.filter((row) => {
+    return tableRowModelRows.filter((row) => {
       if (
         !rowMatchesDataTableColumnSearch(
           row.original,
           columns,
           merged.columnSearch,
-          hidden,
+          hiddenColumns,
         )
       ) {
         return false;
@@ -518,7 +608,7 @@ export function useDataTable<T>(
       }
 
       return columns.some((column) => {
-        if (hidden.includes(column.id)) {
+        if (hiddenColumns.includes(column.id)) {
           return false;
         }
 
@@ -528,25 +618,32 @@ export function useDataTable<T>(
         );
       });
     });
-  });
+  }, [
+    columns,
+    serverPaged,
+    hiddenColumns,
+    merged.search,
+    tableRowModelRows,
+    merged.columnSearch,
+  ]);
 
-  const pagedRows = derived(() => {
+  const pagedRows = useMemo(() => {
     if (!clientPaged) {
       return searchedRows;
     }
 
     return sliceDataTablePage(searchedRows, merged.page ?? 1, resolvedPerPage);
-  });
+  }, [clientPaged, merged.page, resolvedPerPage, searchedRows]);
 
-  const pageIds = derived(() => {
+  const pageIds = useMemo(() => {
     return map(pagedRows, "id");
-  });
+  }, [pagedRows]);
 
-  const selectAllState = derived(() => {
-    return getDataTableSelectAllState(pageIds, merged.selection ?? []);
-  });
+  const selectAllState = useMemo(() => {
+    return getDataTableSelectAllState(pageIds, selectionIds);
+  }, [pageIds, selectionIds]);
 
-  const headerViews = derived((): DataTableHeaderView[] => {
+  const headerViews = useMemo((): DataTableHeaderView[] => {
     const headerGroup = head(table.getHeaderGroups());
     const metas = (headerGroup?.headers ?? []).map((header) => {
       const column = get(columnsById, header.column.id) as
@@ -598,9 +695,19 @@ export function useDataTable<T>(
           isDataTableColumnSearched(merged.columnSearch, meta.id),
       };
     });
-  });
+  }, [
+    columnDefs,
+    columnsById,
+    sortingState,
+    merged.filters,
+    merged.sorting,
+    columnVisibility,
+    tableRowModelRows,
+    merged.columnSearch,
+    stickyHeaderEnabled,
+  ]);
 
-  const rowViews = derived((): DataTableRowView<T>[] => {
+  const rowViews = useMemo((): DataTableRowView<T>[] => {
     const insets = getDataTableStickyInsets(
       headerViews.map((header) => {
         return {
@@ -618,8 +725,8 @@ export function useDataTable<T>(
       return {
         id: row.id,
         original: row.original,
-        expanded: (merged.expanded ?? []).includes(row.id),
-        selected: (merged.selection ?? []).includes(row.id),
+        expanded: expandedIds.includes(row.id),
+        selected: selectionIds.includes(row.id),
         cells: row.getVisibleCells().map((cell) => {
           const column = get(columnsById, cell.column.id) as
             undefined | DataTableColumn<T>;
@@ -652,7 +759,7 @@ export function useDataTable<T>(
         }),
       };
     });
-  });
+  }, [columnsById, expandedIds, headerViews, pagedRows, selectionIds]);
 
   const columnCount = derived(() => {
     return headerViews.length;
@@ -675,7 +782,7 @@ export function useDataTable<T>(
     );
   });
 
-  const resolvedPageCount = derived(() => {
+  const resolvedPageCount = useMemo(() => {
     return getDataTableResolvedPageCount({
       clientPaged,
       perPage: merged.perPage,
@@ -683,7 +790,13 @@ export function useDataTable<T>(
       totalCount: merged.totalCount,
       filteredCount: searchedRows.length,
     });
-  });
+  }, [
+    clientPaged,
+    merged.perPage,
+    merged.pageCount,
+    merged.totalCount,
+    searchedRows.length,
+  ]);
 
   const showEmpty = derived(() => {
     return rowViews.length === 0;
@@ -693,13 +806,13 @@ export function useDataTable<T>(
     return getDataTablePaginationVariant(merged.variant);
   });
 
-  const rootBind = derived(() => {
+  const rootBind = useMemo(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
         [!stickyHeaderBoxed ? (get(mergedClasses, "root") ?? "") : ""]: true,
       }),
     });
-  });
+  }, [customProps?.root, mergedClasses, rootInheritedAttrs, stickyHeaderBoxed]);
 
   const [stickyPing, setStickyPing] = useState({ end: false, start: false });
   const [tableScrollEl, setTableScrollElState] = useState<null | HTMLElement>(
@@ -768,7 +881,7 @@ export function useDataTable<T>(
     };
   }, [tableScrollEl, applyStickyPing]);
 
-  const tableProps = derived(() => {
+  const tableProps = useMemo(() => {
     const hasStickyColumns = headerViews.some((header) => {
       return Boolean(header.stickyStyle);
     });
@@ -813,121 +926,150 @@ export function useDataTable<T>(
         }),
       },
     };
-  });
+  }, [
+    headerViews,
+    merged.full,
+    merged.size,
+    mergedClasses,
+    onTableScroll,
+    merged.loading,
+    merged.rounded,
+    merged.striped,
+    merged.variant,
+    merged.hoverable,
+    setTableScrollEl,
+    stickyHeaderBoxed,
+    customProps?.table,
+    stickyHeaderEnabled,
+    customProps?.wrapper,
+    merged.loadingVariant,
+  ]);
 
-  function getColumnLayoutStyle(
-    view: {
-      isExpand: boolean;
-      isSelection: boolean;
-      stickyStyle?: DataTableStickyInset["style"];
-      width?: number | string;
+  const getHeadAlign = getDataTableHeadAlign;
+  const getCellAlign = getDataTableCellAlign;
+
+  const getHeadBind = useCallback(
+    (header: DataTableHeaderView) => {
+      const isChrome = header.isSelection || header.isExpand;
+
+      return mergePartBind(
+        customProps?.head,
+        {},
+        {
+          tabIndex: header.sortable ? 0 : undefined,
+          "aria-sort": header.sortable ? header.ariaSort : undefined,
+          style: getDataTableColumnLayoutStyle(
+            header,
+            stickyHeaderEnabled,
+            true,
+          ),
+          onClick: header.sortable
+            ? (event: ReactMouseEvent<HTMLTableCellElement>) => {
+                if (isDataTableHeadChromeEvent(event)) {
+                  return;
+                }
+
+                mergedRef.current.onSortingChange?.(
+                  toggleDataTableSorting(
+                    mergedRef.current.sorting ?? null,
+                    header.id,
+                  ),
+                );
+              }
+            : undefined,
+          className: cn({
+            "min-w-0": true,
+            "border-e-0": isChrome,
+            "sticky z-20": Boolean(header.stickyStyle),
+            "after:hidden": isChrome,
+            "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
+              header.sortable,
+            [get(variantItem, "cellStickyEdgeStart") ?? ""]:
+              header.sticky === "start" &&
+              header.stickyEdge &&
+              stickyPing.start,
+            [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
+              header.sticky === "end" && header.stickyEdge && stickyPing.end,
+          }),
+          onKeyDown: header.sortable
+            ? (event: ReactKeyboardEvent<HTMLTableCellElement>) => {
+                if (isDataTableHeadChromeEvent(event)) {
+                  return;
+                }
+
+                if (event.key !== "Enter" && event.key !== " ") {
+                  return;
+                }
+
+                event.preventDefault();
+                mergedRef.current.onSortingChange?.(
+                  toggleDataTableSorting(
+                    mergedRef.current.sorting ?? null,
+                    header.id,
+                  ),
+                );
+              }
+            : undefined,
+        },
+      );
     },
-    header = false,
-  ): CSSProperties {
-    const width = getDataTableColumnCssWidth(
-      view.width,
-      view.isExpand || view.isSelection,
-    );
-    const headerSticky = header && stickyHeaderEnabled;
-
-    return {
-      ...(width ? { width, minWidth: width } : {}),
-      ...view.stickyStyle,
-      ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
-      ...(headerSticky
-        ? {
-            top: 0,
-            position: "sticky",
-            zIndex: view.stickyStyle ? 20 : 11,
-          }
-        : {}),
-    };
-  }
-
-  function getHeadAlign(header: DataTableHeaderView) {
-    return header.isSelection || header.isExpand
-      ? "center"
-      : (header.align ?? "start");
-  }
-
-  function getCellAlign(cell: DataTableCellView) {
-    return cell.isSelection || cell.isExpand
-      ? "center"
-      : (cell.align ?? "start");
-  }
-
-  function getHeadBind(header: DataTableHeaderView) {
-    const isChrome = header.isSelection || header.isExpand;
-
-    return mergePartBind(
+    [
+      merged.size,
+      variantItem,
+      merged.loading,
+      merged.rounded,
+      merged.striped,
+      merged.variant,
+      stickyPing.end,
       customProps?.head,
-      {},
-      {
-        style: getColumnLayoutStyle(header, true),
-        tabIndex: header.sortable ? 0 : undefined,
-        "aria-sort": header.sortable ? header.ariaSort : undefined,
-        onClick: header.sortable
-          ? (event: ReactMouseEvent<HTMLTableCellElement>) => {
-              if (isDataTableHeadChromeEvent(event)) {
-                return;
-              }
+      merged.hoverable,
+      stickyPing.start,
+      merged.stickyHeader,
+      stickyHeaderEnabled,
+      merged.loadingVariant,
+    ],
+  );
 
-              onToggleSort(header.id);
-            }
-          : undefined,
-        onKeyDown: header.sortable
-          ? (event: ReactKeyboardEvent<HTMLTableCellElement>) => {
-              if (isDataTableHeadChromeEvent(event)) {
-                return;
-              }
+  const getCellBind = useCallback(
+    (cell: DataTableCellView) => {
+      const isChrome = cell.isSelection || cell.isExpand;
 
-              if (event.key !== "Enter" && event.key !== " ") {
-                return;
-              }
-
-              event.preventDefault();
-              onToggleSort(header.id);
-            }
-          : undefined,
-        className: cn({
-          "min-w-0": true,
-          "border-e-0": isChrome,
-          "sticky z-20": Boolean(header.stickyStyle),
-          "after:hidden": isChrome,
-          "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
-            header.sortable,
-          [get(variantItem, "cellStickyEdgeStart") ?? ""]:
-            header.sticky === "start" && header.stickyEdge && stickyPing.start,
-          [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
-            header.sticky === "end" && header.stickyEdge && stickyPing.end,
-        }),
-      },
-    );
-  }
-
-  function getCellBind(cell: DataTableCellView) {
-    const isChrome = cell.isSelection || cell.isExpand;
-
-    return mergePartBind(
+      return mergePartBind(
+        customProps?.cell,
+        {},
+        {
+          style: getDataTableColumnLayoutStyle(cell, stickyHeaderEnabled),
+          className: cn({
+            "min-w-0": true,
+            "border-e-0": isChrome,
+            "after:hidden": isChrome,
+            [get(variantItem, "cellSticky") ?? ""]: Boolean(cell.stickyStyle),
+            [get(variantItem, "cellStickyEdgeStart") ?? ""]:
+              cell.sticky === "start" && cell.stickyEdge && stickyPing.start,
+            [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
+              cell.sticky === "end" && cell.stickyEdge && stickyPing.end,
+          }),
+        },
+      );
+    },
+    [
+      merged.size,
+      variantItem,
+      merged.loading,
+      merged.rounded,
+      merged.striped,
+      merged.variant,
+      stickyPing.end,
       customProps?.cell,
-      {},
-      {
-        style: getColumnLayoutStyle(cell),
-        className: cn({
-          "min-w-0": true,
-          "border-e-0": isChrome,
-          "after:hidden": isChrome,
-          [get(variantItem, "cellSticky") ?? ""]: Boolean(cell.stickyStyle),
-          [get(variantItem, "cellStickyEdgeStart") ?? ""]:
-            cell.sticky === "start" && cell.stickyEdge && stickyPing.start,
-          [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
-            cell.sticky === "end" && cell.stickyEdge && stickyPing.end,
-        }),
-      },
-    );
-  }
+      merged.hoverable,
+      stickyPing.start,
+      merged.stickyHeader,
+      stickyHeaderEnabled,
+      merged.loadingVariant,
+    ],
+  );
 
-  const toolbarBind = derived(() => {
+  const toolbarBind = useMemo(() => {
     return mergePartBind(
       customProps?.toolbar,
       {},
@@ -938,9 +1080,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, [customProps?.toolbar, mergedClasses]);
 
-  const emptyBind = derived(() => {
+  const emptyBind = useMemo(() => {
     return mergePartBind(
       customProps?.empty,
       {},
@@ -951,9 +1093,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, [customProps?.empty, mergedClasses]);
 
-  const loadingBind = derived(() => {
+  const loadingBind = useMemo(() => {
     return mergePartBind(
       customProps?.loading,
       {},
@@ -965,9 +1107,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, [customProps?.loading, merged.loadingVariant, mergedClasses]);
 
-  const loadingBarBind = derived(() => {
+  const loadingBarBind = useMemo(() => {
     return mergePartBind(
       {},
       {},
@@ -977,9 +1119,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, []);
 
-  const footerBind = derived(() => {
+  const footerBind = useMemo(() => {
     return mergePartBind(
       customProps?.footer,
       {},
@@ -990,9 +1132,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, [customProps?.footer, mergedClasses]);
 
-  const paginationBind = derived(() => {
+  const paginationBind = useMemo(() => {
     return mergePartBind(
       {},
       {},
@@ -1006,9 +1148,9 @@ export function useDataTable<T>(
         }),
       },
     );
-  });
+  }, [merged.paginationAlign, mergedClasses, showPerPage]);
 
-  const summaryCells = derived((): null | DataTableCellView[] => {
+  const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {
       return column.summary !== undefined;
     });
@@ -1041,18 +1183,18 @@ export function useDataTable<T>(
             : (column?.summary?.(data) ?? null),
       };
     });
-  });
+  }, [columns, columnsById, headerViews, searchedRows]);
 
-  const visibilityItems = derived((): DataTableVisibilityItem[] => {
+  const visibilityItems = useMemo((): DataTableVisibilityItem[] => {
     return columns.map((column) => {
       return {
         id: column.id,
         hideable: column.hideable !== false,
-        hidden: (merged.hiddenColumns ?? []).includes(column.id),
+        hidden: hiddenColumns.includes(column.id),
         label: isString(column.header) ? column.header : column.id,
       };
     });
-  });
+  }, [columns, hiddenColumns]);
 
   const showSearch = derived(() => {
     return isDataTableSearchEnabled(
@@ -1071,57 +1213,64 @@ export function useDataTable<T>(
     );
   });
 
-  function onToggleSort(columnId: string) {
-    merged.onSortingChange?.(
-      toggleDataTableSorting(merged.sorting ?? null, columnId),
+  const onToggleSort = useCallback((columnId: string) => {
+    mergedRef.current.onSortingChange?.(
+      toggleDataTableSorting(mergedRef.current.sorting ?? null, columnId),
     );
-  }
+  }, []);
 
-  function onToggleRow(rowId: string, selected: boolean) {
-    merged.onSelectionChange?.(
+  const onToggleRow = useCallback((rowId: string, selected: boolean) => {
+    mergedRef.current.onSelectionChange?.(
       setDataTableRowSelection(
-        merged.selection ?? [],
+        mergedRef.current.selection ?? [],
         rowId,
         selected,
-        merged.selectionMode,
+        mergedRef.current.selectionMode,
       ),
     );
-  }
+  }, []);
 
-  function onTogglePage(selectAll: boolean) {
-    merged.onSelectionChange?.(
-      toggleDataTablePageSelection(merged.selection ?? [], pageIds, selectAll),
-    );
-  }
+  const onTogglePage = useCallback(
+    (selectAll: boolean) => {
+      mergedRef.current.onSelectionChange?.(
+        toggleDataTablePageSelection(
+          mergedRef.current.selection ?? [],
+          pageIds,
+          selectAll,
+        ),
+      );
+    },
+    [pageIds],
+  );
 
-  function onChangePerPage(next: number) {
-    merged.onPerPageChange?.(next);
+  const onChangePerPage = useCallback((next: number) => {
+    mergedRef.current.onPerPageChange?.(next);
 
-    if (merged.page !== 1) {
-      merged.onPageChange?.(1);
+    if (mergedRef.current.page !== 1) {
+      mergedRef.current.onPageChange?.(1);
     }
-  }
+  }, []);
 
-  function onChangeSearch(query: string) {
-    merged.onSearchChange?.(query);
+  const onChangeSearch = useCallback((query: string) => {
+    mergedRef.current.onSearchChange?.(query);
 
-    if (merged.page !== 1) {
-      merged.onPageChange?.(1);
+    if (mergedRef.current.page !== 1) {
+      mergedRef.current.onPageChange?.(1);
     }
-  }
+  }, []);
 
-  const paginationSlotProps = derived((): DataTablePaginationSlotProps => {
+  const paginationSlotProps = useMemo((): DataTablePaginationSlotProps => {
     return {
       page: merged.page ?? 1,
       variant: paginationVariant,
       count: resolvedPageCount ?? 1,
       onPageChange: (page) => {
-        merged.onPageChange?.(page);
+        mergedRef.current.onPageChange?.(page);
       },
     };
-  });
+  }, [merged.page, paginationVariant, resolvedPageCount]);
 
-  const perPageSlotProps = derived((): DataTablePerPageSlotProps => {
+  const perPageSlotProps = useMemo((): DataTablePerPageSlotProps => {
     return {
       perPage: resolvedPerPage,
       onPerPageChange: onChangePerPage,
@@ -1130,44 +1279,55 @@ export function useDataTable<T>(
         merged.perPageOptions,
       ),
     };
-  });
+  }, [merged.perPageOptions, onChangePerPage, resolvedPerPage]);
 
-  function onCommitColumnFilter(
-    columnId: string,
-    values: string[],
-    query: string,
-  ) {
-    const column = get(columnsById, columnId) as undefined | DataTableColumn<T>;
+  const onCommitColumnFilter = useCallback(
+    (columnId: string, values: string[], query: string) => {
+      const column = get(columnsById, columnId) as
+        undefined | DataTableColumn<T>;
 
-    if (column?.filters && column.filters.length > 0) {
-      merged.onFiltersChange?.(
-        setDataTableColumnFilter(merged.filters, columnId, values),
-      );
-    }
+      if (column?.filters && column.filters.length > 0) {
+        mergedRef.current.onFiltersChange?.(
+          setDataTableColumnFilter(mergedRef.current.filters, columnId, values),
+        );
+      }
 
-    if (isDataTableColumnSearchable(column)) {
-      merged.onColumnSearchChange?.(
-        setDataTableColumnSearch(merged.columnSearch, columnId, query),
-      );
-    }
-  }
+      if (isDataTableColumnSearchable(column)) {
+        mergedRef.current.onColumnSearchChange?.(
+          setDataTableColumnSearch(
+            mergedRef.current.columnSearch,
+            columnId,
+            query,
+          ),
+        );
+      }
+    },
+    [columnsById],
+  );
 
-  function onToggleExpand(rowId: string, expanded: boolean) {
-    merged.onExpandedChange?.(
-      toggleDataTableRowExpansion(merged.expanded ?? [], rowId, expanded),
-    );
-  }
-
-  function onToggleColumnVisibility(columnId: string, hide: boolean) {
-    merged.onHiddenColumnsChange?.(
-      toggleDataTableColumnVisibility(
-        merged.hiddenColumns ?? [],
-        columnId,
-        hide,
-        map(columns, "id"),
+  const onToggleExpand = useCallback((rowId: string, expanded: boolean) => {
+    mergedRef.current.onExpandedChange?.(
+      toggleDataTableRowExpansion(
+        mergedRef.current.expanded ?? [],
+        rowId,
+        expanded,
       ),
     );
-  }
+  }, []);
+
+  const onToggleColumnVisibility = useCallback(
+    (columnId: string, hide: boolean) => {
+      mergedRef.current.onHiddenColumnsChange?.(
+        toggleDataTableColumnVisibility(
+          mergedRef.current.hiddenColumns ?? [],
+          columnId,
+          hide,
+          map(columns, "id"),
+        ),
+      );
+    },
+    [columns],
+  );
 
   return {
     slots,

@@ -30,6 +30,26 @@ afterEach(() => {
   cleanup();
 });
 
+test("it should keep row views stable when rerendered with the same data", () => {
+  const props = { columns, rows: [{ id: "1", name: "Ada" }] };
+  const { result, rerender } = renderHook(
+    (next: typeof props) => {
+      return useDataTable(next, libDefaults);
+    },
+    { initialProps: props },
+  );
+
+  const firstRows = result.current.rowViews;
+  const firstBind = result.current.getCellBind;
+  const firstHeaders = result.current.headerViews;
+
+  rerender(props);
+
+  expect(result.current.rowViews).toBe(firstRows);
+  expect(result.current.getCellBind).toBe(firstBind);
+  expect(result.current.headerViews).toBe(firstHeaders);
+});
+
 test("it should expose table defaults from useDataTable", () => {
   const { result } = renderHook(() =>
     useDataTable({ columns, rows: [{ id: "1", name: "Ada" }] }, libDefaults),
