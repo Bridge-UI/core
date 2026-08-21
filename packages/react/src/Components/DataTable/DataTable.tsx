@@ -6,14 +6,17 @@ import { Fragment, useId, type ReactNode } from "react";
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DataTableItemSlotProps,
   DataTableProps,
 } from "@/Components/DataTable/dataTable.types";
 import { DataTableColumnsMenu } from "@/Components/DataTable/DataTableColumnsMenu";
 import { DataTableFilterMenu } from "@/Components/DataTable/DataTableFilterMenu";
+import { DataTableSearch } from "@/Components/DataTable/DataTableSearch";
 import { DataTableSelection } from "@/Components/DataTable/DataTableSelection";
 import { DataTableSortButton } from "@/Components/DataTable/DataTableSortButton";
+import { DataTableToolbarButton } from "@/Components/DataTable/DataTableToolbarButton";
 import {
   useDataTable,
   type DataTableCellView,
@@ -128,10 +131,12 @@ function DataTable<T>(props: DataTableProps<T>) {
     rootBind,
     emptyBind,
     showEmpty,
+    showExport,
     showFooter,
     tableProps,
     footerBind,
     loadingBar,
+    showSearch,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -145,11 +150,13 @@ function DataTable<T>(props: DataTableProps<T>) {
     getCellAlign,
     onTogglePage,
     summaryCells,
+    onExportClick,
     expandEnabled,
     loadingBarBind,
     paginationBind,
     selectAllState,
     showPagination,
+    onChangeSearch,
     onToggleExpand,
     visibilityItems,
     perPageSlotProps,
@@ -162,6 +169,7 @@ function DataTable<T>(props: DataTableProps<T>) {
   } = useDataTable(props, dataTableLibDefaults);
 
   const selectionName = useId();
+  const resolveMessage = useResolveMessage();
   const checkboxSize = merged.size === "lg" ? "md" : "sm";
 
   return (
@@ -169,12 +177,45 @@ function DataTable<T>(props: DataTableProps<T>) {
       {showToolbar ? (
         <div {...toolbarBind}>
           <div className="min-w-0 flex-1">{slots?.toolbar}</div>
-          {visibilityEnabled ? (
-            <DataTableColumnsMenu
-              items={visibilityItems}
-              onToggle={onToggleColumnVisibility}
-            />
-          ) : null}
+          <div className="flex shrink-0 items-center">
+            {visibilityEnabled ? (
+              <DataTableColumnsMenu
+                items={visibilityItems}
+                onToggle={onToggleColumnVisibility}
+              />
+            ) : null}
+            {visibilityEnabled && (showExport || showSearch) ? (
+              <span
+                aria-hidden
+                className="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
+              />
+            ) : null}
+            {showExport
+              ? (slots?.export ?? (
+                  <DataTableToolbarButton
+                    icon="download"
+                    onClick={onExportClick}
+                    label={resolveMessage("Export")}
+                    buttonProps={merged.customProps?.export}
+                  />
+                ))
+              : null}
+            {showExport && showSearch ? (
+              <span
+                aria-hidden
+                className="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
+              />
+            ) : null}
+            {showSearch
+              ? (slots?.search ?? (
+                  <DataTableSearch
+                    onChange={onChangeSearch}
+                    value={merged.search ?? ""}
+                    fieldProps={merged.customProps?.search}
+                  />
+                ))
+              : null}
+          </div>
         </div>
       ) : null}
 
@@ -235,9 +276,11 @@ function DataTable<T>(props: DataTableProps<T>) {
                           active={header.filterActive}
                           values={header.filterValues}
                           options={header.filterOptions}
+                          searchable={header.searchable}
                           multiple={header.filterMultiple}
-                          onApply={(values) => {
-                            onCommitColumnFilter(header.id, values);
+                          searchValue={header.searchQuery}
+                          onApply={(values, query) => {
+                            onCommitColumnFilter(header.id, values, query);
                           }}
                         />
                       ) : null}
@@ -278,7 +321,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                         <span className="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600">
                           <span className="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900" />
                         </span>
-                        No data
+                        {resolveMessage("No data")}
                       </>
                     )}
                   </div>
@@ -453,6 +496,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                 />,
               )
             : null}
+
           {renderDataTableSlot(
             slots?.pagination,
             paginationSlotProps,

@@ -288,6 +288,56 @@ test("it should call onFiltersChange when a column filter is applied", () => {
   expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
 });
 
+test("it should call onColumnSearchChange when a column search is applied", () => {
+  const onColumnSearchChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columnSearch={{}}
+      onColumnSearchChange={onColumnSearchChange}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Filter column" }));
+  fireEvent.change(screen.getByRole("textbox", { name: "Search" }), {
+    target: { value: "Ada" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "OK" }));
+
+  expect(onColumnSearchChange).toHaveBeenCalledWith({ name: "Ada" });
+});
+
+test("it should hide non-matching rows when a client column search is set", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columnSearch={{ name: "Ada" }}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+  expect(screen.queryByText("Alan Turing")).toBeNull();
+});
+
 test("it should hide non-matching rows when a client filter is set", () => {
   render(
     <DataTable
@@ -411,6 +461,32 @@ test("it should toggle a column from the columns menu", () => {
   fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
 
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should emit onExport with csv of the current rows", () => {
+  const onExport = vi.fn();
+
+  render(<DataTable rows={rows} columns={columns} onExport={onExport} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Export" }));
+
+  expect(onExport).toHaveBeenCalledTimes(1);
+  expect(onExport.mock.calls[0]?.[0]?.rows).toEqual(rows);
+  expect(String(onExport.mock.calls[0]?.[0]?.csv)).toContain("Ada Lovelace");
+});
+
+test("it should filter rows from the toolbar search", () => {
+  render(
+    <DataTable
+      rows={rows}
+      search="Ada"
+      columns={columns}
+      onSearchChange={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+  expect(screen.queryByText("Alan Turing")).toBeNull();
 });
 
 test("it should expand a row from the expand control", () => {

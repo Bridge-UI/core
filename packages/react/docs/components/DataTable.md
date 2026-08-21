@@ -195,7 +195,7 @@ Empty rows show a default empty state; `slots.empty` replaces it. `loading` keep
 />
 ```
 
-Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `hiddenColumns` / `expanded` — the table engine is not exported.
+Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
 
 ### Columns
 
@@ -224,7 +224,7 @@ Cell content is the column accessor (`row[id]`, or `accessor`) unless you overri
 }
 ```
 
-Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, and `toolbar`. `slots.item[id]` overrides `columns[].cell` for that column.
+Table-level `slots` are `empty`, `expanded`, `export`, `footer`, `item`, `loading`, `pagination`, `perPage`, `search`, and `toolbar`. `slots.item[id]` overrides `columns[].cell` for that column.
 
 ### Selection
 
@@ -243,14 +243,24 @@ Table-level `slots` are `empty`, `expanded`, `item`, `loading`, `pagination`, an
 
 ### Filters
 
-Set `filters` on a column to show a funnel in that header. The panel can search options, uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
+
+Set `searchable` on a column to add a text field in that same menu. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
 
 ```tsx
 <DataTable
   rows={users}
   filters={filters}
+  columnSearch={columnSearch}
   onFiltersChange={setFilters}
+  onColumnSearchChange={setColumnSearch}
   columns={[
+    {
+      id: "name",
+      header: "Name",
+      searchable: true,
+      cell: (row) => row.name,
+    },
     {
       id: "role",
       header: "Role",
@@ -264,7 +274,7 @@ Set `filters` on a column to show a funnel in that header. The panel can search 
 />
 ```
 
-Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` is still controlled — the app owns the fetch.
+Client-side filtering applies when the table is not server-paged (`page` + `pageCount`). With server paging, `filters` and `columnSearch` are still controlled — the app owns the fetch.
 
 ### Sticky columns
 
@@ -312,7 +322,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 ### Column visibility
 
-Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** control in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
+Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 ```tsx
 <DataTable
@@ -321,6 +331,27 @@ Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** contro
   hiddenColumns={hidden}
   onHiddenColumnsChange={setHidden}
 />
+```
+
+### Search
+
+Pass `search` and/or `onSearchChange` to show a **Search** icon in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+
+```tsx
+<DataTable
+  rows={users}
+  search={search}
+  columns={columns}
+  onSearchChange={setSearch}
+/>
+```
+
+### Export
+
+Pass `onExport` to show an **Export** icon. The handler receives CSV of the current (filtered) rows and visible columns. `slots.export` replaces the control.
+
+```tsx
+<DataTable rows={users} columns={columns} onExport={onExport} />
 ```
 
 ### Expand

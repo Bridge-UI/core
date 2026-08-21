@@ -4,6 +4,8 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableColumnSearch,
+  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -24,6 +26,7 @@ import type {
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import type { ButtonProps } from "@/Components/Button/button.types";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressProps } from "@/Components/Progress/progress.types";
@@ -35,9 +38,12 @@ import type {
   TableSizeOverrides,
   TableVariantOverrides,
 } from "@/Components/Table/table.types";
+import type { TextFieldProps } from "@/Components/TextField/textField.types";
 
 export type {
   DataTableColumnBase,
+  DataTableColumnSearch,
+  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -80,13 +86,28 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
   summary?: (rows: T[]) => ReactNode;
 };
 
-export interface DataTableCallbacks {
+export interface DataTableCallbacks<T = unknown> {
+  /**
+   * Called when per-column text search queries change.
+   *
+   * @default undefined
+   */
+  onColumnSearchChange?: (search: DataTableColumnSearch) => void;
+
   /**
    * Called when expanded row ids change.
    *
    * @default undefined
    */
   onExpandedChange?: (ids: string[]) => void;
+
+  /**
+   * Called when the toolbar export control is pressed. Receives CSV of the
+   * current (filtered) rows. When omitted, DataTable downloads the CSV.
+   *
+   * @default undefined
+   */
+  onExport?: (payload: DataTableExportPayload<T>) => void;
 
   /**
    * Called when column filters change.
@@ -115,6 +136,13 @@ export interface DataTableCallbacks {
    * @default undefined
    */
   onPerPageChange?: (perPage: number) => void;
+
+  /**
+   * Called when the toolbar search query changes.
+   *
+   * @default undefined
+   */
+  onSearchChange?: (query: string) => void;
 
   /**
    * Called when selected row ids change.
@@ -146,6 +174,11 @@ export interface DataTableClasses {
    * Classes merged onto the empty-state region.
    */
   empty?: string;
+
+  /**
+   * Classes merged onto the toolbar export control.
+   */
+  export?: string;
 
   /**
    * Classes merged onto the footer region below the table.
@@ -186,6 +219,11 @@ export interface DataTableClasses {
    * Classes merged onto rows.
    */
   row?: string;
+
+  /**
+   * Classes merged onto the toolbar search field.
+   */
+  search?: string;
 
   /**
    * Classes merged onto the `<table>` element.
@@ -233,6 +271,15 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   empty?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Extra props for the toolbar export control.
+   *
+   * @default undefined
+   */
+  export?: Partial<
+    Omit<Extract<ButtonProps, { as?: "button" }>, "icon" | "onClick">
+  >;
 
   /**
    * Props forwarded to the footer region below the table.
@@ -305,6 +352,13 @@ export interface DataTableCustomProps {
   row?: HTMLAttributes<HTMLDivElement>;
 
   /**
+   * Extra props for the toolbar search field.
+   *
+   * @default undefined
+   */
+  search?: Partial<Omit<TextFieldProps, "value" | "onChange">>;
+
+  /**
    * Props forwarded to the `<table>` element.
    *
    * @default undefined
@@ -343,6 +397,14 @@ export interface DataTableOwnProps<T> {
    * @default []
    */
   columns?: DataTableColumn<T>[];
+
+  /**
+   * Controlled per-column text search: column id → query. Set `searchable`
+   * on a column to show the field in that header's filter menu.
+   *
+   * @default undefined
+   */
+  columnSearch?: DataTableColumnSearch;
 
   /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
@@ -459,6 +521,14 @@ export interface DataTableOwnProps<T> {
   rows?: T[];
 
   /**
+   * Controlled toolbar search query. Filters visible columns client-side,
+   * or emits `onSearchChange` only when server-paged.
+   *
+   * @default undefined
+   */
+  search?: string;
+
+  /**
    * Controlled selected row ids.
    *
    * @default undefined
@@ -536,6 +606,11 @@ export interface DataTableSlots<T = unknown> {
   expanded?: (row: T) => ReactNode;
 
   /**
+   * Replaces the toolbar export control.
+   */
+  export?: ReactNode;
+
+  /**
    * Region below the table, above pagination.
    */
   footer?: ReactNode;
@@ -566,12 +641,17 @@ export interface DataTableSlots<T = unknown> {
   perPage?: ReactNode | ((props: DataTablePerPageSlotProps) => ReactNode);
 
   /**
+   * Replaces the toolbar search field.
+   */
+  search?: ReactNode;
+
+  /**
    * Optional toolbar above the table.
    */
   toolbar?: ReactNode;
 }
 
 export type DataTableProps<T = unknown> = MergeHtmlProps<
-  DataTableOwnProps<T> & DataTableCallbacks,
+  DataTableOwnProps<T> & DataTableCallbacks<T>,
   HTMLAttributes<HTMLDivElement>
 >;

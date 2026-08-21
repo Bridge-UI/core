@@ -3,7 +3,6 @@ import { useState } from "react";
 
 // ** Core Imports
 import {
-  filterDataTableFilterOptions,
   flattenDataTableFilterOptionValues,
   setDataTableFilterDraftAll,
   toggleDataTableFilterDraft,
@@ -12,6 +11,7 @@ import {
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Button } from "@/Components/Button";
 import { Checkbox } from "@/Components/Checkbox";
 import { DataTableFilterOptions } from "@/Components/DataTable/DataTableFilterOptions";
@@ -29,27 +29,31 @@ export function DataTableFilterMenu({
   options,
   columnId,
   multiple,
+  searchable,
+  searchValue,
 }: {
   active: boolean;
   columnId: string;
   multiple: boolean;
-  onApply: (values: string[]) => void;
+  onApply: (values: string[], query: string) => void;
   options: DataTableFilterOption[];
+  searchable: boolean;
+  searchValue: string;
   values: string[];
 }) {
+  const resolveMessage = useResolveMessage();
   const [show, setShow] = useState(false);
   const [draft, setDraft] = useState<string[]>([]);
   const [query, setQuery] = useState("");
-
-  const visibleOptions = filterDataTableFilterOptions(options, query);
-  const visibleValues = flattenDataTableFilterOptionValues(visibleOptions);
+  const searchLabel = resolveMessage("Search");
+  const optionValues = flattenDataTableFilterOptionValues(options);
   const allSelected =
-    visibleValues.length > 0 &&
-    visibleValues.every((value) => {
+    optionValues.length > 0 &&
+    optionValues.every((value) => {
       return draft.includes(value);
     });
   const allIndeterminate =
-    visibleValues.some((value) => {
+    optionValues.some((value) => {
       return draft.includes(value);
     }) && !allSelected;
 
@@ -59,7 +63,7 @@ export function DataTableFilterMenu({
       placement="bottom-end"
       onShowChange={(next) => {
         if (next) {
-          setQuery("");
+          setQuery(searchValue);
           setDraft([...values]);
         }
 
@@ -90,73 +94,73 @@ export function DataTableFilterMenu({
       }}
     >
       <div className="min-w-52 px-1 pb-0.5 pt-2.5">
-        <div className="px-1 pb-1.5">
-          <TextField
-            size="sm"
-            value={query}
-            hideErrorMessage
-            startIcon="search"
-            aria-label="Search in filters"
-            placeholder="Search in filters"
-            onChange={(event) => {
-              setQuery(event.currentTarget.value);
-            }}
-          />
-        </div>
-        <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
-          {multiple && visibleValues.length > 0 ? (
-            <div
-              role="menuitemcheckbox"
-              aria-checked={allSelected}
-              className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
-              onClick={() => {
+        {searchable ? (
+          <div className="px-1 pb-1.5">
+            <TextField
+              size="sm"
+              value={query}
+              hideErrorMessage
+              startIcon="search"
+              aria-label={searchLabel}
+              placeholder={searchLabel}
+              onChange={(event) => {
+                setQuery(event.target.value);
+              }}
+            />
+          </div>
+        ) : null}
+        {options.length > 0 ? (
+          <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
+            {multiple && optionValues.length > 0 ? (
+              <div
+                role="menuitemcheckbox"
+                aria-checked={allSelected}
+                className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+                onClick={() => {
+                  setDraft((current) => {
+                    return setDataTableFilterDraftAll(
+                      current,
+                      optionValues,
+                      !allSelected,
+                    );
+                  });
+                }}
+              >
+                <Checkbox
+                  size="sm"
+                  hideErrorMessage
+                  checked={allSelected}
+                  endLabel="Select all items"
+                  indeterminate={allIndeterminate}
+                  classes={{ root: "pointer-events-none" }}
+                />
+              </div>
+            ) : null}
+            <DataTableFilterOptions
+              draft={draft}
+              options={options}
+              multiple={multiple}
+              name={`filter-${columnId}`}
+              onToggle={(value, selected) => {
                 setDraft((current) => {
-                  return setDataTableFilterDraftAll(
+                  return toggleDataTableFilterDraft(
                     current,
-                    visibleValues,
-                    !allSelected,
+                    value,
+                    selected,
+                    multiple,
                   );
                 });
               }}
-            >
-              <Checkbox
-                size="sm"
-                hideErrorMessage
-                checked={allSelected}
-                endLabel="Select all items"
-                indeterminate={allIndeterminate}
-                classes={{ root: "pointer-events-none" }}
-              />
-            </div>
-          ) : null}
-          <DataTableFilterOptions
-            draft={draft}
-            multiple={multiple}
-            options={visibleOptions}
-            name={`filter-${columnId}`}
-            onToggle={(value, selected) => {
-              setDraft((current) => {
-                return toggleDataTableFilterDraft(
-                  current,
-                  value,
-                  selected,
-                  multiple,
-                );
-              });
-            }}
-          />
-          {visibleOptions.length === 0 ? (
-            <div className="px-2 py-1.5 text-sm text-dark-500 dark:text-dark-400">
-              No matching filters
-            </div>
-          ) : null}
-        </div>
+            />
+          </div>
+        ) : null}
         <div className="flex justify-end gap-2 border-t border-dark-200 px-2 pb-1 pt-1.5 dark:border-dark-700">
           <Button
             size="sm"
             variant="flat"
             onClick={() => {
               setDraft([]);
+              setQuery("");
             }}
           >
             Reset
@@ -164,7 +168,7 @@ export function DataTableFilterMenu({
           <Button
             size="sm"
             onClick={() => {
-              onApply(draft);
+              onApply(draft, query);
               setShow(false);
             }}
           >

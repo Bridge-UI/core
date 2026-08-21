@@ -6,6 +6,7 @@
 
 // ** External Imports
 import {
+  ArrowDownTrayIcon,
   ArrowPathIcon,
   BellIcon,
   CalendarDaysIcon,
@@ -26,6 +27,7 @@ import {
   MagnifyingGlassIcon,
   SwatchIcon,
   UserIcon,
+  ViewColumnsIcon,
   XCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -48,7 +50,9 @@ const icons = {
   loader: ArrowPathIcon,
   success: CheckCircleIcon,
   chevronUp: ChevronUpIcon,
+  columns: ViewColumnsIcon,
   calendar: CalendarDaysIcon,
+  download: ArrowDownTrayIcon,
   search: MagnifyingGlassIcon,
   info: InformationCircleIcon,
   alert: ExclamationCircleIcon,

@@ -47,6 +47,7 @@ import {
   getDataTableColumnAccessor,
   getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
+  getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
@@ -60,30 +61,40 @@ import {
   isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
+  isDataTableColumnSearchable,
+  isDataTableColumnSearched,
   isDataTableExpandEnabled,
+  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
+  isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
+  matchDataTableSearch,
   resolveDataTableRowId,
+  rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
+  serializeDataTableCsv,
   setDataTableColumnFilter,
+  setDataTableColumnSearch,
   setDataTableRowSelection,
   sliceDataTablePage,
   toggleDataTableColumnVisibility,
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
+  type DataTableExportPayload,
   type DataTableFilterOption,
   type DataTablePaginationSlotProps,
   type DataTablePerPageSlotProps,
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
+import { hasDocument } from "@bridge-ui/core/Runtime";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -112,6 +123,7 @@ const dataTableBridgeKeys = [
   "rows",
   "size",
   "slots",
+  "search",
   "classes",
   "columns",
   "filters",
@@ -123,16 +135,19 @@ const dataTableBridgeKeys = [
   "variant",
   "expanded",
   "getRowId",
+  "onExport",
   "hoverable",
   "pageCount",
   "selection",
   "totalCount",
   "customProps",
+  "columnSearch",
   "onPageChange",
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
   "loadingVariant",
+  "onSearchChange",
   "perPageOptions",
   "onFiltersChange",
   "onPerPageChange",
@@ -140,14 +155,18 @@ const dataTableBridgeKeys = [
   "paginationAlign",
   "onExpandedChange",
   "onSelectionChange",
+  "onColumnSearchChange",
   "onHiddenColumnsChange",
 ] as const satisfies readonly (
+  | "onExport"
   | "onPageChange"
+  | "onSearchChange"
   | "onFiltersChange"
   | "onPerPageChange"
   | "onSortingChange"
   | "onExpandedChange"
   | "onSelectionChange"
+  | "onColumnSearchChange"
   | "onHiddenColumnsChange"
   | keyof DataTableOwnProps<unknown>
 )[];
@@ -184,12 +203,15 @@ type DataTableMerged<T> = MergeLibDefaults<
 > &
   Pick<
     DataTableProps<T>,
+    | "onExport"
     | "onPageChange"
+    | "onSearchChange"
     | "onFiltersChange"
     | "onPerPageChange"
     | "onSortingChange"
     | "onExpandedChange"
     | "onSelectionChange"
+    | "onColumnSearchChange"
     | "onHiddenColumnsChange"
   >;
 
@@ -207,6 +229,8 @@ export type DataTableHeaderView = {
   id: string;
   isExpand: boolean;
   isSelection: boolean;
+  searchable: boolean;
+  searchQuery: string;
   sortable: boolean;
   sortIcon: ReturnType<typeof getDataTableSortIcon>;
   sticky?: DataTableStickyEdge;
@@ -472,14 +496,50 @@ export function useDataTable<T>(
     },
   });
 
-  const pagedRows = derived(() => {
+  const searchedRows = derived(() => {
     const source = table.getRowModel().rows;
 
-    if (!clientPaged) {
+    if (serverPaged) {
       return source;
     }
 
-    return sliceDataTablePage(source, merged.page ?? 1, resolvedPerPage);
+    const query = merged.search ?? "";
+    const hidden = merged.hiddenColumns ?? [];
+
+    return source.filter((row) => {
+      if (
+        !rowMatchesDataTableColumnSearch(
+          row.original,
+          columns,
+          merged.columnSearch,
+        )
+      ) {
+        return false;
+      }
+
+      if (query.trim().length === 0) {
+        return true;
+      }
+
+      return columns.some((column) => {
+        if (hidden.includes(column.id)) {
+          return false;
+        }
+
+        return matchDataTableSearch(
+          getDataTableColumnAccessor(row.original, column),
+          query,
+        );
+      });
+    });
+  });
+
+  const pagedRows = derived(() => {
+    if (!clientPaged) {
+      return searchedRows;
+    }
+
+    return sliceDataTablePage(searchedRows, merged.page ?? 1, resolvedPerPage);
   });
 
   const pageIds = derived(() => {
@@ -533,9 +593,13 @@ export function useDataTable<T>(
         hideable: meta.column?.hideable !== false,
         filterOptions: meta.column?.filters ?? [],
         filterable: isDataTableColumnFilterable(meta.column),
+        searchable: isDataTableColumnSearchable(meta.column),
         filterMultiple: meta.column?.filterMultiple !== false,
-        filterActive: isDataTableColumnFiltered(merged.filters, meta.id),
+        searchQuery: getDataTableColumnSearch(merged.columnSearch, meta.id),
         filterValues: getDataTableColumnFilterValues(merged.filters, meta.id),
+        filterActive:
+          isDataTableColumnFiltered(merged.filters, meta.id) ||
+          isDataTableColumnSearched(merged.columnSearch, meta.id),
       };
     });
   });
@@ -621,7 +685,7 @@ export function useDataTable<T>(
       perPage: merged.perPage,
       pageCount: merged.pageCount,
       totalCount: merged.totalCount,
-      filteredCount: table.getRowModel().rows.length,
+      filteredCount: searchedRows.length,
     });
   });
 
@@ -959,7 +1023,7 @@ export function useDataTable<T>(
       return null;
     }
 
-    const data = map(table.getRowModel().rows, "original");
+    const data = map(searchedRows, "original");
 
     return headerViews.map((header) => {
       const column = get(columnsById, header.id) as
@@ -996,8 +1060,50 @@ export function useDataTable<T>(
     });
   });
 
+  const showExport = derived(() => {
+    return isDataTableExportEnabled(
+      merged.onExport !== undefined,
+      slots?.export !== undefined,
+    );
+  });
+
+  const showSearch = derived(() => {
+    return isDataTableSearchEnabled(
+      merged.search,
+      merged.onSearchChange !== undefined,
+      slots?.search !== undefined,
+    );
+  });
+
   const showToolbar = derived(() => {
-    return Boolean(slots?.toolbar) || visibilityEnabled;
+    return (
+      Boolean(slots?.toolbar) || visibilityEnabled || showExport || showSearch
+    );
+  });
+
+  const exportPayload = derived((): DataTableExportPayload<T> => {
+    const hidden = merged.hiddenColumns ?? [];
+    const exportColumns = columns.filter((column) => {
+      return !hidden.includes(column.id);
+    });
+    const rows = map(searchedRows, "original") as T[];
+    const headers = exportColumns.map((column) => {
+      return isString(column.header) ? column.header : column.id;
+    });
+    const csvRows = rows.map((row) => {
+      return exportColumns.map((column) => {
+        return (
+          getDataTableDefaultCellContent(
+            getDataTableColumnAccessor(row, column),
+          ) ?? ""
+        );
+      });
+    });
+
+    return {
+      rows,
+      csv: serializeDataTableCsv(headers, csvRows),
+    };
   });
 
   function onToggleSort(columnId: string) {
@@ -1031,6 +1137,37 @@ export function useDataTable<T>(
     }
   }
 
+  function onChangeSearch(query: string) {
+    merged.onSearchChange?.(query);
+
+    if (merged.page !== 1) {
+      merged.onPageChange?.(1);
+    }
+  }
+
+  function onExportClick() {
+    if (merged.onExport) {
+      merged.onExport(exportPayload);
+
+      return;
+    }
+
+    if (!hasDocument()) {
+      return;
+    }
+
+    const blob = new Blob([`\uFEFF${exportPayload.csv}`], {
+      type: "text/csv;charset=utf-8",
+    });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = href;
+    link.download = "export.csv";
+    link.click();
+    URL.revokeObjectURL(href);
+  }
+
   const paginationSlotProps = derived((): DataTablePaginationSlotProps => {
     return {
       page: merged.page ?? 1,
@@ -1053,10 +1190,24 @@ export function useDataTable<T>(
     };
   });
 
-  function onCommitColumnFilter(columnId: string, values: string[]) {
-    merged.onFiltersChange?.(
-      setDataTableColumnFilter(merged.filters, columnId, values),
-    );
+  function onCommitColumnFilter(
+    columnId: string,
+    values: string[],
+    query: string,
+  ) {
+    const column = get(columnsById, columnId) as undefined | DataTableColumn<T>;
+
+    if (column?.filters && column.filters.length > 0) {
+      merged.onFiltersChange?.(
+        setDataTableColumnFilter(merged.filters, columnId, values),
+      );
+    }
+
+    if (isDataTableColumnSearchable(column)) {
+      merged.onColumnSearchChange?.(
+        setDataTableColumnSearch(merged.columnSearch, columnId, query),
+      );
+    }
   }
 
   function onToggleExpand(rowId: string, expanded: boolean) {
@@ -1084,9 +1235,11 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    showExport,
     showFooter,
     tableProps,
     footerBind,
+    showSearch,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -1103,7 +1256,9 @@ export function useDataTable<T>(
     onTogglePage,
     onToggleSort,
     summaryCells,
+    onExportClick,
     expandEnabled,
+    onChangeSearch,
     loadingBarBind,
     paginationBind,
     selectAllState,

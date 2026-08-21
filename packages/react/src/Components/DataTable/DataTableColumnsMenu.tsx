@@ -2,8 +2,9 @@
 import { useState } from "react";
 
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Checkbox } from "@/Components/Checkbox";
+import { DataTableToolbarButton } from "@/Components/DataTable/DataTableToolbarButton";
 import type { DataTableVisibilityItem } from "@/Components/DataTable/hooks/useDataTable";
 import { Menu } from "@/Components/Menu";
 
@@ -18,6 +19,7 @@ export function DataTableColumnsMenu({
   onToggle: (columnId: string, hide: boolean) => void;
 }) {
   const [show, setShow] = useState(false);
+  const resolveMessage = useResolveMessage();
 
   return (
     <Menu
@@ -26,9 +28,10 @@ export function DataTableColumnsMenu({
       onShowChange={setShow}
       slots={{
         trigger: (
-          <Button size="sm" variant="flat">
-            Columns
-          </Button>
+          <DataTableToolbarButton
+            icon="columns"
+            label={resolveMessage("Columns")}
+          />
         ),
       }}
     >
