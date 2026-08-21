@@ -21,6 +21,7 @@ import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue"
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
+import { Select } from "@/Components/Select";
 import {
   Table,
   TableBody,
@@ -45,6 +46,7 @@ const props = withDefaults(
     Omit<
       DataTableOwnProps<T>,
       | "page"
+      | "perPage"
       | "filters"
       | "sorting"
       | "expanded"
@@ -67,6 +69,7 @@ const expanded = defineModel<string[]>("expanded");
 const filters = defineModel<DataTableFilters>("filters");
 const hiddenColumns = defineModel<string[]>("hiddenColumns");
 const page = defineModel<number>("page");
+const perPage = defineModel<number>("perPage");
 const selection = defineModel<string[]>("selection");
 const sorting = defineModel<DataTableSorting>("sorting");
 const tableSlots = useSlots();
@@ -88,7 +91,7 @@ const {
   toolbarBind,
   getCellBind,
   columnCount,
-  serverPaged,
+  showPerPage,
   showToolbar,
   getHeadAlign,
   getCellAlign,
@@ -101,7 +104,9 @@ const {
   showPagination,
   onToggleExpand,
   visibilityItems,
-  paginationVariant,
+  perPageSlotProps,
+  resolvedPageCount,
+  paginationSlotProps,
   selectionMultiple,
   visibilityEnabled,
   onCommitColumnFilter,
@@ -123,6 +128,7 @@ const {
   },
   {
     page,
+    perPage,
     filters,
     sorting,
     expanded,
@@ -155,6 +161,12 @@ const paginationPage = computed({
   set: (value: number) => {
     page.value = value;
   },
+});
+
+const perPageSelectOptions = computed(() => {
+  return perPageSlotProps.value.options.map((value) => {
+    return { value, label: String(value) };
+  });
 });
 
 const selectionName = useId();
@@ -408,13 +420,26 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
     </div>
 
     <div v-if="showPagination" v-bind="paginationBind">
-      <slot name="pagination">
+      <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
+        <Select
+          size="sm"
+          :clearable="false"
+          aria-label="Rows per page"
+          v-bind="merged.customProps?.perPage"
+          :options="perPageSelectOptions"
+          :model-value="perPageSlotProps.perPage"
+          v-on:update:model-value="
+            (value) => perPageSlotProps.onPerPageChange(Number(value))
+          "
+        />
+      </slot>
+      <slot name="pagination" v-bind="paginationSlotProps">
         <Pagination
-          v-if="serverPaged"
+          v-if="resolvedPageCount !== undefined"
           v-bind="merged.customProps?.pagination"
           v-model="paginationPage"
-          :count="merged.pageCount"
-          :variant="paginationVariant"
+          :count="resolvedPageCount"
+          :variant="paginationSlotProps.variant"
         />
       </slot>
     </div>

@@ -31,6 +31,7 @@ function mountUseDataTable(
   props: Parameters<typeof useDataTable<User>>[0] = { columns },
   models: Parameters<typeof useDataTable<User>>[2] = {
     page: ref(undefined),
+    perPage: ref(undefined),
     filters: ref(undefined),
     sorting: ref(undefined),
     expanded: ref(undefined),
@@ -76,6 +77,7 @@ test("it should enable selection views when selection is controlled", () => {
     },
     {
       page: ref(undefined),
+      perPage: ref(undefined),
       selection: ref(["1"]),
       filters: ref(undefined),
       sorting: ref(undefined),
@@ -99,6 +101,7 @@ test("it should map bordered chrome to outlined pagination", () => {
     },
     {
       page: ref(1),
+      perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),
@@ -110,6 +113,55 @@ test("it should map bordered chrome to outlined pagination", () => {
   expect(result.serverPaged.value).toBe(true);
   expect(result.showPagination.value).toBe(true);
   expect(result.paginationVariant.value).toBe("outlined");
+});
+
+test("it should slice rows when page and perPage are set without totals", () => {
+  const { result } = mountUseDataTable(
+    {
+      columns,
+      rows: [
+        { id: "1", name: "Ada" },
+        { id: "2", name: "Alan" },
+      ],
+    },
+    {
+      page: ref(2),
+      perPage: ref(1),
+      filters: ref(undefined),
+      sorting: ref(undefined),
+      expanded: ref(undefined),
+      selection: ref(undefined),
+      hiddenColumns: ref(undefined),
+    },
+  );
+
+  expect(result.clientPaged.value).toBe(true);
+  expect(result.rowViews.value).toHaveLength(1);
+  expect(result.rowViews.value[0]?.original.name).toBe("Alan");
+  expect(result.resolvedPageCount.value).toBe(2);
+});
+
+test("it should derive page count from totalCount and perPage", () => {
+  const { result } = mountUseDataTable(
+    {
+      columns,
+      totalCount: 23,
+      rows: [{ id: "1", name: "Ada" }],
+    },
+    {
+      page: ref(1),
+      perPage: ref(10),
+      filters: ref(undefined),
+      sorting: ref(undefined),
+      expanded: ref(undefined),
+      selection: ref(undefined),
+      hiddenColumns: ref(undefined),
+    },
+  );
+
+  expect(result.serverPaged.value).toBe(true);
+  expect(result.showPerPage.value).toBe(true);
+  expect(result.resolvedPageCount.value).toBe(3);
 });
 
 test("it should expose sticky expand visibility and summary views", () => {
@@ -130,6 +182,7 @@ test("it should expose sticky expand visibility and summary views", () => {
     },
     {
       page: ref(undefined),
+      perPage: ref(undefined),
       filters: ref(undefined),
       sorting: ref(undefined),
       expanded: ref(undefined),

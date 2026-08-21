@@ -131,6 +131,55 @@ test("it should emit update:page when a page button is clicked", async () => {
   expect(wrapper.emitted("update:page")?.[0]).toEqual([2]);
 });
 
+test("it should slice rows locally when page and perPage are set", () => {
+  const wrapper = mountDataTable({
+    props: {
+      page: 2,
+      columns,
+      perPage: 1,
+      rows: [
+        { id: "1", role: "Engineer", name: "Ada Lovelace" },
+        { id: "2", role: "Researcher", name: "Alan Turing" },
+      ],
+    },
+  });
+
+  expect(wrapper.text()).toContain("Alan Turing");
+  expect(wrapper.text()).not.toContain("Ada Lovelace");
+});
+
+test("it should paginate from totalCount when pageCount is omitted", () => {
+  const wrapper = mountDataTable({
+    props: {
+      page: 1,
+      rows,
+      columns,
+      perPage: 10,
+      totalCount: 20,
+    },
+  });
+
+  expect(wrapper.find("button[aria-label='Page 2']").exists()).toBe(true);
+  expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
+});
+
+test("it should render a custom perPage slot beside pagination", () => {
+  const wrapper = mountDataTable({
+    props: {
+      page: 1,
+      rows,
+      columns,
+      perPage: 10,
+      pageCount: 2,
+    },
+    slots: { perPage: "Page size" },
+  });
+
+  expect(wrapper.text()).toContain("Page size");
+  expect(wrapper.find("button[aria-label='Page 2']").exists()).toBe(true);
+  expect(wrapper.find('[role="combobox"]').exists()).toBe(false);
+});
+
 test("it should show the empty slot when there are no rows", () => {
   const wrapper = mountDataTable({
     props: { columns, rows: [] },

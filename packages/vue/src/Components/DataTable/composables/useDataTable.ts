@@ -46,13 +46,18 @@ import {
   getDataTableDefaultCellContent,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
+  getDataTablePerPageSelectOptions,
+  getDataTableResolvedPageCount,
+  getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSortIcon,
   getDataTableStickyInsets,
   getDataTableStickyPing,
+  isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
   isDataTableExpandEnabled,
+  isDataTablePerPageEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
@@ -64,12 +69,15 @@ import {
   selectionToRowSelection,
   setDataTableColumnFilter,
   setDataTableRowSelection,
+  sliceDataTablePage,
   toggleDataTableColumnVisibility,
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
   type DataTableFilterOption,
   type DataTableFilters,
+  type DataTablePaginationSlotProps,
+  type DataTablePerPageSlotProps,
   type DataTableSorting,
   type DataTableStickyEdge,
   type DataTableStickyInset,
@@ -104,6 +112,7 @@ const dataTableBridgeKeys = [
   "columns",
   "filters",
   "loading",
+  "perPage",
   "rounded",
   "sorting",
   "striped",
@@ -113,11 +122,13 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "totalCount",
   "customProps",
   "stickyHeader",
   "hiddenColumns",
   "selectionMode",
   "loadingVariant",
+  "perPageOptions",
   "paginationAlign",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
@@ -209,6 +220,7 @@ export type DataTableModels = {
   filters: Ref<undefined | DataTableFilters>;
   hiddenColumns: Ref<string[] | undefined>;
   page: Ref<number | undefined>;
+  perPage: Ref<number | undefined>;
   selection: Ref<string[] | undefined>;
   sorting: Ref<undefined | DataTableSorting>;
 };
@@ -239,6 +251,7 @@ export function useDataTable<T>(
         ...attrs,
         ...props,
         page: models.page.value,
+        perPage: models.perPage.value,
         filters: models.filters.value,
         sorting: models.sorting.value,
         expanded: models.expanded.value,
@@ -321,7 +334,24 @@ export function useDataTable<T>(
   });
 
   const serverPaged = computed(() => {
-    return isDataTableServerPaged(merged.value.page, merged.value.pageCount);
+    return isDataTableServerPaged(
+      models.page.value,
+      merged.value.pageCount,
+      merged.value.totalCount,
+    );
+  });
+
+  const clientPaged = computed(() => {
+    return isDataTableClientPaged(
+      models.page.value,
+      models.perPage.value,
+      merged.value.pageCount,
+      merged.value.totalCount,
+    );
+  });
+
+  const resolvedPerPage = computed(() => {
+    return getDataTableResolvedPerPage(models.perPage.value);
   });
 
   const stickyHeaderEnabled = computed(() => {
@@ -456,8 +486,22 @@ export function useDataTable<T>(
     },
   });
 
+  const pagedRows = computed(() => {
+    const source = table.getRowModel().rows;
+
+    if (!clientPaged.value) {
+      return source;
+    }
+
+    return sliceDataTablePage(
+      source,
+      models.page.value ?? 1,
+      resolvedPerPage.value,
+    );
+  });
+
   const pageIds = computed(() => {
-    return map(table.getRowModel().rows, "id");
+    return map(pagedRows.value, "id");
   });
 
   const selectAllState = computed(() => {
@@ -534,7 +578,7 @@ export function useDataTable<T>(
       1,
     );
 
-    return table.getRowModel().rows.map((row) => {
+    return pagedRows.value.map((row) => {
       return {
         id: row.id,
         original: row.original,
@@ -579,7 +623,30 @@ export function useDataTable<T>(
   });
 
   const showPagination = computed(() => {
-    return Boolean(vueSlots.pagination) || serverPaged.value;
+    return (
+      Boolean(vueSlots.pagination) ||
+      Boolean(vueSlots.perPage) ||
+      serverPaged.value ||
+      clientPaged.value
+    );
+  });
+
+  const showPerPage = computed(() => {
+    return isDataTablePerPageEnabled(
+      models.perPage.value,
+      false,
+      Boolean(vueSlots.perPage),
+    );
+  });
+
+  const resolvedPageCount = computed(() => {
+    return getDataTableResolvedPageCount({
+      pageCount: merged.value.pageCount,
+      totalCount: merged.value.totalCount,
+      perPage: models.perPage.value,
+      clientPaged: clientPaged.value,
+      filteredCount: table.getRowModel().rows.length,
+    });
   });
 
   const showEmpty = computed(() => {
@@ -925,7 +992,7 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex py-3": true,
+          "flex items-center gap-3 py-3": true,
           [getDataTablePaginationAlignClass(merged.value.paginationAlign)]:
             true,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
@@ -949,6 +1016,36 @@ export function useDataTable<T>(
       merged.value.selectionMode,
     );
   }
+
+  function onChangePerPage(next: number) {
+    models.perPage.value = next;
+
+    if (models.page.value !== 1) {
+      models.page.value = 1;
+    }
+  }
+
+  const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
+    return {
+      count: resolvedPageCount.value ?? 1,
+      onPageChange: (nextPage) => {
+        models.page.value = nextPage;
+      },
+      page: models.page.value ?? 1,
+      variant: paginationVariant.value,
+    };
+  });
+
+  const perPageSlotProps = computed((): DataTablePerPageSlotProps => {
+    return {
+      onPerPageChange: onChangePerPage,
+      options: getDataTablePerPageSelectOptions(
+        resolvedPerPage.value,
+        merged.value.perPageOptions,
+      ),
+      perPage: resolvedPerPage.value,
+    };
+  });
 
   function onTogglePage(selectAll: boolean) {
     models.selection.value = toggleDataTablePageSelection(
@@ -1050,7 +1147,9 @@ export function useDataTable<T>(
     toolbarBind,
     getCellBind,
     columnCount,
+    clientPaged,
     serverPaged,
+    showPerPage,
     showToolbar,
     getHeadAlign,
     getCellAlign,
@@ -1064,8 +1163,13 @@ export function useDataTable<T>(
     showPagination,
     onToggleExpand,
     visibilityItems,
+    onChangePerPage,
+    resolvedPerPage,
     selectionEnabled,
     paginationVariant,
+    perPageSlotProps,
+    resolvedPageCount,
+    paginationSlotProps,
     selectionMultiple,
     visibilityEnabled,
     onCommitColumnFilter,

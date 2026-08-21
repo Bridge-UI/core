@@ -66,7 +66,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 
 ### Selection + pagination
 
-Built-in Pagination when `page` / `pageCount` are set. `rows` is the current page (server fetch stays in the app):
+Built-in Pagination when `page` is set with `page-count` or `total-count` (server fetch stays in the app). `page` + `per-page` without those totals slices `rows` locally. `per-page` also renders a Select (`per-page-options`, default 10 / 25 / 50 / 100). `#pagination` and `#perPage` replace each control:
 
 ```vue
 <DataTable
@@ -79,7 +79,26 @@ Built-in Pagination when `page` / `pageCount` are set. `rows` is the current pag
 />
 ```
 
-Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
+Client paging slices `rows`. Server paging with a total uses `total-count` instead of `page-count`:
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  v-model:page="page"
+  v-model:per-page="perPage"
+/>
+
+<DataTable
+  :rows="pageRows"
+  :columns="columns"
+  v-model:page="page"
+  :total-count="total"
+  v-model:per-page="perPage"
+/>
+```
+
+Slot replaces the built-in Pagination and/or per-page Select (`#pagination` / `#perPage`; slot props match the built-ins):
 
 ```vue
 <DataTable :rows="users" :columns="columns" :get-row-id="(row) => row.id">
@@ -91,6 +110,18 @@ Slot replaces the built-in control (cursor / `mode="simple"`, custom chrome):
       :has-previous="Boolean(prevCursor)"
       v-on:previous="fetchPage(prevCursor)"
     />
+  </template>
+
+  <template #per-page="{ perPage, options, onPerPageChange }">
+    <select
+      :value="perPage"
+      aria-label="Rows per page"
+      v-on:change="onPerPageChange(Number($event.target.value))"
+    >
+      <option v-for="value in options" :key="value" :value="value">
+        {{ value }}
+      </option>
+    </select>
   </template>
 </DataTable>
 ```
@@ -107,7 +138,7 @@ Align the built-in Pagination with `pagination-align` (`start` / `center` / `end
 />
 ```
 
-When `page` and `page-count` are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` and fetch the current page in the app:
+When `page` and `page-count` (or `total-count`) are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` / `per-page` and fetch the current page in the app:
 
 ```vue
 <DataTable

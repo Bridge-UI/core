@@ -8,6 +8,8 @@ import type {
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
+  DataTablePaginationSlotProps,
+  DataTablePerPageSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -26,6 +28,7 @@ import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationOwnProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
+import type { SelectOwnProps } from "@/Components/Select/select.types";
 import type {
   TableAlignOverrides,
   TableRoundedOverrides,
@@ -39,6 +42,8 @@ export type {
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
+  DataTablePaginationSlotProps,
+  DataTablePerPageSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -115,6 +120,11 @@ export interface DataTableClasses {
    * Classes merged onto the pagination region.
    */
   pagination?: string;
+
+  /**
+   * Classes merged onto the per-page Select.
+   */
+  perPage?: string;
 
   /**
    * Classes merged onto the DataTable root.
@@ -207,6 +217,13 @@ export interface DataTableCustomProps {
   pagination?: Partial<Omit<PaginationOwnProps, "count">>;
 
   /**
+   * Extra props for the built-in per-page `Select`.
+   *
+   * @default undefined
+   */
+  perPage?: Partial<Omit<SelectOwnProps, "options">>;
+
+  /**
    * Extra props for the built-in `Progress` (`loadingVariant="bar"`).
    *
    * @default undefined
@@ -276,6 +293,12 @@ export interface DataTableEmits {
    * Emitted when the numbered page should update (`v-model:page`).
    */
   "update:page": [page: number];
+
+  /**
+   * Emitted when the page size should update (`v-model:per-page`).
+   * DataTable also resets to page 1.
+   */
+  "update:perPage": [perPage: number];
 
   /**
    * Emitted when selected row ids should update (`v-model:selection`).
@@ -378,7 +401,7 @@ export interface DataTableOwnProps<T> {
   page?: number;
 
   /**
-   * Total pages for built-in numbered Pagination.
+   * Total pages for built-in numbered Pagination. Use this or `totalCount`.
    *
    * @default undefined
    */
@@ -390,6 +413,21 @@ export interface DataTableOwnProps<T> {
    * @default "end"
    */
   paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
+
+  /**
+   * Page size. With `page` and no `pageCount`/`totalCount`, slices `rows`
+   * locally. With server paging, only drives the per-page Select.
+   *
+   * @default undefined
+   */
+  perPage?: number;
+
+  /**
+   * Options for the built-in per-page Select.
+   *
+   * @default [10, 25, 50, 100]
+   */
+  perPageOptions?: number[];
 
   /**
    * Corner radius of the table wrapper, header, and footer.
@@ -449,6 +487,14 @@ export interface DataTableOwnProps<T> {
   striped?: boolean;
 
   /**
+   * Total item count when the app owns paging. Derives page count with
+   * `perPage`. Use this or `pageCount`, not both (`pageCount` wins).
+   *
+   * @default undefined
+   */
+  totalCount?: number;
+
+  /**
    * Chrome treatment. Built-in Pagination follows the matching variant.
    *
    * @default "plain"
@@ -488,9 +534,16 @@ export interface DataTableSlots<T = unknown> {
   loading?: Slot<undefined>;
 
   /**
-   * Replaces the built-in numbered Pagination (no auto variant).
+   * Replaces the built-in numbered Pagination (no auto variant). Receives
+   * `page`, `count`, `variant`, and `onPageChange`.
    */
-  pagination?: Slot<undefined>;
+  pagination?: Slot<DataTablePaginationSlotProps>;
+
+  /**
+   * Replaces the built-in per-page Select. Receives `perPage`, `options`,
+   * and `onPerPageChange`.
+   */
+  perPage?: Slot<DataTablePerPageSlotProps>;
 
   /**
    * Optional toolbar above the table.
