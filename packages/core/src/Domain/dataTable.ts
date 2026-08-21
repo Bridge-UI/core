@@ -1,5 +1,20 @@
 // ** External Imports
-import { compact, drop, fromPairs, get, isNil, take } from "es-toolkit/compat";
+import {
+  compact,
+  difference,
+  drop,
+  findLast,
+  fromPairs,
+  get,
+  intersection,
+  isNil,
+  isNumber,
+  isString,
+  omit,
+  take,
+  union,
+  without,
+} from "es-toolkit/compat";
 
 /**
  * Internal column id for the row-expand control column.
@@ -84,6 +99,11 @@ export type DataTableFilterOption = {
  * Controlled column filters: column id → selected option values.
  */
 export type DataTableFilters = Record<string, string[]>;
+
+/**
+ * Controlled per-column text search: column id → query.
+ */
+export type DataTableColumnSearch = Record<string, string>;
 
 /**
  * Per-column cell slot props (`#item.{id}` / `slots.item[id]`).
@@ -216,6 +236,14 @@ export type DataTableColumnBase<T> = {
    * Stable column id (also the default accessor key).
    */
   id: string;
+
+  /**
+   * When true, the header filter menu includes a text search for this column.
+   * The query is stored in `columnSearch[id]`, not used to filter menu options.
+   *
+   * @default false
+   */
+  searchable?: boolean;
 
   /**
    * Whether the column can be sorted.
@@ -414,16 +442,15 @@ export function getDataTablePerPageSelectOptions(
   perPage: number,
   options?: number[],
 ): number[] {
-  const list = [...getDataTablePerPageOptions(options)];
+  const list = getDataTablePerPageOptions(options);
 
-  if (!list.includes(perPage)) {
-    list.push(perPage);
-    list.sort((left, right) => {
-      return left - right;
-    });
+  if (list.includes(perPage)) {
+    return list;
   }
 
-  return list;
+  return [...list, perPage].sort((left, right) => {
+    return left - right;
+  });
 }
 
 /**
@@ -464,6 +491,7 @@ export function sliceDataTablePage<T>(
   perPage: number,
 ): T[] {
   const size = getDataTableResolvedPerPage(perPage);
+
   const start = (Math.max(page, 1) - 1) * size;
 
   return take(drop(rows, start), size);
@@ -563,7 +591,7 @@ export function resolveDataTableRowId<T>(
 
   const id = get(row, "id");
 
-  if (typeof id === "string" || typeof id === "number") {
+  if (isString(id) || isNumber(id)) {
     return String(id);
   }
 
@@ -596,6 +624,86 @@ export function getDataTableDefaultCellContent(
 
   return String(accessor);
 }
+
+/**
+ * Whether the toolbar search control should render.
+ */
+export function isDataTableSearchEnabled(
+  search: string | undefined,
+  hasChangeHandler: boolean,
+  hasSlot: boolean,
+): boolean {
+  return !isNil(search) || hasChangeHandler || hasSlot;
+}
+
+/**
+ * Whether the toolbar export control should render.
+ */
+export function isDataTableExportEnabled(
+  hasChangeHandler: boolean,
+  hasSlot: boolean,
+): boolean {
+  return hasChangeHandler || hasSlot;
+}
+
+/**
+ * Whether `value` matches a global search query (case-insensitive contains).
+ */
+export function matchDataTableSearch(value: unknown, query: string): boolean {
+  const needle = query.trim().toLowerCase();
+
+  if (needle.length === 0) {
+    return true;
+  }
+
+  if (isNil(value) || value === "") {
+    return false;
+  }
+
+  return String(value).toLowerCase().includes(needle);
+}
+
+/**
+ * Escapes one CSV field (`"` / commas / newlines).
+ */
+function escapeDataTableCsvField(value: string): string {
+  if (!/["\n\r,]/.test(value)) {
+    return value;
+  }
+
+  return `"${value.replaceAll('"', '""')}"`;
+}
+
+/**
+ * Builds a CSV document from header labels and row cells.
+ */
+export function serializeDataTableCsv(
+  headers: string[],
+  rows: string[][],
+): string {
+  const headerLine = headers.map(escapeDataTableCsvField).join(",");
+  
+  const body = rows.map((cells) => {
+    return cells.map(escapeDataTableCsvField).join(",");
+  });
+
+  return [headerLine, ...body].join("\r\n");
+}
+
+/**
+ * Payload for the toolbar export control.
+ */
+export type DataTableExportPayload<T = unknown> = {
+  /**
+   * CSV of the current (filtered) rows and visible data columns.
+   */
+  csv: string;
+
+  /**
+   * Rows included in the export (filtered, not sliced to the page).
+   */
+  rows: T[];
+};
 
 /**
  * CSS width for a native table column (`th` / `td` / `col`).
@@ -753,7 +861,7 @@ export function getDataTableStickyInsets(
     }
   }
 
-  const lastStart = [...resolved].reverse().find((column) => {
+  const lastStart = findLast(resolved, (column) => {
     return column.sticky === "start";
   })?.id;
   const firstEnd = resolved.find((column) => {
@@ -837,15 +945,9 @@ export function toggleDataTableColumnVisibility(
   columnIds: string[],
 ): string[] {
   const next = hide
-    ? hiddenIds.includes(columnId)
-      ? hiddenIds
-      : [...hiddenIds, columnId]
-    : hiddenIds.filter((id) => {
-        return id !== columnId;
-      });
-  const visible = columnIds.filter((id) => {
-    return !next.includes(id);
-  });
+    ? union(hiddenIds, [columnId])
+    : without(hiddenIds, columnId);
+  const visible = difference(columnIds, next);
 
   return visible.length === 0 ? hiddenIds : next;
 }
@@ -892,9 +994,7 @@ export function getDataTableSelectAllState(
     return { checked: false, indeterminate: false };
   }
 
-  const selectedOnPage = pageIds.filter((id) => {
-    return selectedIds.includes(id);
-  });
+  const selectedOnPage = intersection(pageIds, selectedIds);
 
   return {
     checked: selectedOnPage.length === pageIds.length,
@@ -911,13 +1011,7 @@ export function toggleDataTableRowSelection(
   rowId: string,
   selected: boolean,
 ): string[] {
-  if (selected) {
-    return selectedIds.includes(rowId) ? selectedIds : [...selectedIds, rowId];
-  }
-
-  return selectedIds.filter((id) => {
-    return id !== rowId;
-  });
+  return selected ? union(selectedIds, [rowId]) : without(selectedIds, rowId);
 }
 
 /**
@@ -953,21 +1047,31 @@ export function toggleDataTablePageSelection(
   pageIds: string[],
   selectAll: boolean,
 ): string[] {
-  const pageSet = new Set(pageIds);
-  const rest = selectedIds.filter((id) => {
-    return !pageSet.has(id);
-  });
+  const rest = difference(selectedIds, pageIds);
 
-  return selectAll ? [...rest, ...pageIds] : rest;
+  return selectAll ? union(rest, pageIds) : rest;
 }
 
 /**
- * Whether a column shows a filter trigger.
+ * Whether a column shows a filter trigger (discrete options and/or search).
  */
 export function isDataTableColumnFilterable(
-  column: undefined | Pick<DataTableColumnBase<unknown>, "filters">,
+  column:
+    undefined | Pick<DataTableColumnBase<unknown>, "filters" | "searchable">,
 ): boolean {
-  return Boolean(column?.filters && column.filters.length > 0);
+  return (
+    Boolean(column?.filters && column.filters.length > 0) ||
+    column?.searchable === true
+  );
+}
+
+/**
+ * Whether a column shows the text search field in the filter menu.
+ */
+export function isDataTableColumnSearchable(
+  column: undefined | Pick<DataTableColumnBase<unknown>, "searchable">,
+): boolean {
+  return column?.searchable === true;
 }
 
 /**
@@ -988,6 +1092,46 @@ export function isDataTableColumnFiltered(
   columnId: string,
 ): boolean {
   return getDataTableColumnFilterValues(filters, columnId).length > 0;
+}
+
+/**
+ * Text search query for `columnId`.
+ */
+export function getDataTableColumnSearch(
+  columnSearch: undefined | DataTableColumnSearch,
+  columnId: string,
+): string {
+  return get(columnSearch, columnId) ?? "";
+}
+
+/**
+ * Whether `columnId` has a non-empty text search query.
+ */
+export function isDataTableColumnSearched(
+  columnSearch: undefined | DataTableColumnSearch,
+  columnId: string,
+): boolean {
+  return getDataTableColumnSearch(columnSearch, columnId).trim().length > 0;
+}
+
+/**
+ * Whether `row` matches every column text search (empty queries always match).
+ */
+export function rowMatchesDataTableColumnSearch<T>(
+  row: T,
+  columns: Array<Pick<DataTableColumnBase<T>, "id" | "accessor">>,
+  columnSearch: undefined | DataTableColumnSearch,
+): boolean {
+  if (!columnSearch) {
+    return true;
+  }
+
+  return columns.every((column) => {
+    return matchDataTableSearch(
+      getDataTableColumnAccessor(row, column),
+      getDataTableColumnSearch(columnSearch, column.id),
+    );
+  });
 }
 
 /**
@@ -1049,22 +1193,7 @@ export function setDataTableFilterDraftAll(
   values: string[],
   selected: boolean,
 ): string[] {
-  if (selected) {
-    const seen = new Set(draft);
-
-    return [
-      ...draft,
-      ...values.filter((value) => {
-        return !seen.has(value);
-      }),
-    ];
-  }
-
-  const drop = new Set(values);
-
-  return draft.filter((item) => {
-    return !drop.has(item);
-  });
+  return selected ? union(draft, values) : difference(draft, values);
 }
 
 /**
@@ -1080,13 +1209,7 @@ export function toggleDataTableFilterDraft(
     return selected ? [value] : [];
   }
 
-  if (selected) {
-    return draft.includes(value) ? draft : [...draft, value];
-  }
-
-  return draft.filter((item) => {
-    return item !== value;
-  });
+  return selected ? union(draft, [value]) : without(draft, value);
 }
 
 /**
@@ -1097,13 +1220,24 @@ export function setDataTableColumnFilter(
   columnId: string,
   values: string[],
 ): DataTableFilters {
-  const next = { ...(filters ?? {}) };
-
   if (values.length === 0) {
-    delete next[columnId];
-  } else {
-    next[columnId] = values;
+    return omit(filters ?? {}, columnId);
   }
 
-  return next;
+  return { ...(filters ?? {}), [columnId]: values };
+}
+
+/**
+ * Sets or clears the text query for one column in `columnSearch`.
+ */
+export function setDataTableColumnSearch(
+  columnSearch: undefined | DataTableColumnSearch,
+  columnId: string,
+  query: string,
+): DataTableColumnSearch {
+  if (query.trim().length === 0) {
+    return omit(columnSearch ?? {}, columnId);
+  }
+
+  return { ...(columnSearch ?? {}), [columnId]: query };
 }

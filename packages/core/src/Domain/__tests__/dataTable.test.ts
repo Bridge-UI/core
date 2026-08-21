@@ -17,6 +17,7 @@ import {
   getDataTableColumnAccessor,
   getDataTableColumnCssWidth,
   getDataTableColumnFilterValues,
+  getDataTableColumnSearch,
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
@@ -35,18 +36,26 @@ import {
   isDataTableClientPaged,
   isDataTableColumnFilterable,
   isDataTableColumnFiltered,
+  isDataTableColumnSearchable,
+  isDataTableColumnSearched,
   isDataTableExpandEnabled,
+  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
+  isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
   isDataTableSelectionMultiple,
   isDataTableServerPaged,
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
+  matchDataTableSearch,
   resolveDataTableRowId,
+  rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
+  serializeDataTableCsv,
   setDataTableColumnFilter,
+  setDataTableColumnSearch,
   setDataTableFilterDraftAll,
   setDataTableRowSelection,
   sliceDataTablePage,
@@ -255,6 +264,41 @@ describe("getDataTableDefaultCellContent", () => {
   });
 });
 
+describe("matchDataTableSearch", () => {
+  test("it should match case-insensitive contains and ignore empty queries", () => {
+    expect(matchDataTableSearch("Ada", "")).toBe(true);
+    expect(matchDataTableSearch("Ada", "ad")).toBe(true);
+    expect(matchDataTableSearch(null, "ad")).toBe(false);
+    expect(matchDataTableSearch("Ada", "xyz")).toBe(false);
+  });
+});
+
+describe("serializeDataTableCsv", () => {
+  test("it should join headers and escape quoted fields", () => {
+    expect(serializeDataTableCsv(["Name"], [["Ada"]])).toBe("Name\r\nAda");
+    expect(serializeDataTableCsv(["Name"], [['A, "B"']])).toBe(
+      'Name\r\n"A, ""B"""',
+    );
+  });
+});
+
+describe("isDataTableSearchEnabled", () => {
+  test("it should enable when search, a handler, or a slot is present", () => {
+    expect(isDataTableSearchEnabled("", false, false)).toBe(true);
+    expect(isDataTableSearchEnabled(undefined, true, false)).toBe(true);
+    expect(isDataTableSearchEnabled(undefined, false, true)).toBe(true);
+    expect(isDataTableSearchEnabled(undefined, false, false)).toBe(false);
+  });
+});
+
+describe("isDataTableExportEnabled", () => {
+  test("it should enable when a handler or a slot is present", () => {
+    expect(isDataTableExportEnabled(true, false)).toBe(true);
+    expect(isDataTableExportEnabled(false, true)).toBe(true);
+    expect(isDataTableExportEnabled(false, false)).toBe(false);
+  });
+});
+
 describe("getDataTableColumnTrack", () => {
   test("it should map width and the selection column to grid tracks", () => {
     expect(getDataTableColumnTrack(120)).toBe("120px");
@@ -438,6 +482,9 @@ describe("setDataTableColumnFilter", () => {
       isDataTableColumnFilterable({ filters: [{ label: "A", value: "a" }] }),
     ).toBe(true);
     expect(isDataTableColumnFilterable({ filters: [] })).toBe(false);
+    expect(isDataTableColumnFilterable({ searchable: true })).toBe(true);
+    expect(isDataTableColumnSearchable({ searchable: true })).toBe(true);
+    expect(isDataTableColumnSearchable({ searchable: false })).toBe(false);
     expect(getDataTableColumnFilterValues({ role: ["a"] }, "role")).toEqual([
       "a",
     ]);
@@ -447,6 +494,34 @@ describe("setDataTableColumnFilter", () => {
       name: ["b"],
     });
     expect(setDataTableColumnFilter({ role: ["a"] }, "role", [])).toEqual({});
+  });
+});
+
+describe("setDataTableColumnSearch", () => {
+  const columns = [{ id: "name" }, { id: "role" }];
+
+  test("it should set or omit a column query and match rows", () => {
+    expect(getDataTableColumnSearch({ name: "Ada" }, "name")).toBe("Ada");
+    expect(isDataTableColumnSearched({ name: "Ada" }, "role")).toBe(false);
+    expect(setDataTableColumnSearch({ name: "Ada" }, "role", "eng")).toEqual({
+      name: "Ada",
+      role: "eng",
+    });
+    expect(setDataTableColumnSearch({ name: "Ada" }, "name", "  ")).toEqual({});
+    expect(
+      rowMatchesDataTableColumnSearch(
+        { role: "Engineer", name: "Ada Lovelace" },
+        columns,
+        { name: "ada" },
+      ),
+    ).toBe(true);
+    expect(
+      rowMatchesDataTableColumnSearch(
+        { role: "Researcher", name: "Alan Turing" },
+        columns,
+        { name: "ada" },
+      ),
+    ).toBe(false);
   });
 });
 
