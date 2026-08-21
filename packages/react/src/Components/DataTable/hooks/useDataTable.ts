@@ -1301,6 +1301,10 @@ export function useDataTable<T>(
           ),
         );
       }
+
+      if (mergedRef.current.page !== 1) {
+        mergedRef.current.onPageChange?.(1);
+      }
     },
     [columnsById],
   );

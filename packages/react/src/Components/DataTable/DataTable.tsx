@@ -85,6 +85,7 @@ function DataTableCellContent({
 }: {
   cell: { content: ReactNode; ellipsis: boolean; tooltip?: string };
 }) {
+  const [tooltipShow, setTooltipShow] = useState(false);
   const [tooltipReady, setTooltipReady] = useState(false);
 
   if (!cell.ellipsis) {
@@ -101,16 +102,17 @@ function DataTableCellContent({
     return truncated;
   }
 
+  const openDeferredTooltip = () => {
+    setTooltipReady(true);
+    setTooltipShow(true);
+  };
+
   if (!tooltipReady) {
     return (
       <div
+        onFocusCapture={openDeferredTooltip}
+        onPointerEnter={openDeferredTooltip}
         className="block min-w-0 w-full max-w-full"
-        onFocusCapture={() => {
-          setTooltipReady(true);
-        }}
-        onPointerEnter={() => {
-          setTooltipReady(true);
-        }}
       >
         {truncated}
       </div>
@@ -119,7 +121,9 @@ function DataTableCellContent({
 
   return (
     <Tooltip
+      show={tooltipShow}
       content={cell.tooltip}
+      onShowChange={setTooltipShow}
       slots={{ trigger: truncated }}
       customProps={{
         trigger: { className: "block min-w-0 w-full max-w-full" },

@@ -253,13 +253,16 @@ test("it should filter row views from the filters binding", () => {
   expect(result.current.rowViews[0]?.original.name).toBe("Ada");
 });
 
-test("it should emit onFiltersChange from onCommitColumnFilter", () => {
+test("it should emit filters and reset page from onCommitColumnFilter", () => {
+  const onPageChange = vi.fn();
   const onFiltersChange = vi.fn();
   const { result } = renderHook(() =>
     useDataTable(
       {
+        page: 2,
         filters: {},
         rows: people,
+        onPageChange,
         onFiltersChange,
         columns: peopleColumns,
       },
@@ -271,6 +274,7 @@ test("it should emit onFiltersChange from onCommitColumnFilter", () => {
     result.current.onCommitColumnFilter("role", ["Engineer"], "");
   });
 
+  expect(onPageChange).toHaveBeenCalledWith(1);
   expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
 });
 

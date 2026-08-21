@@ -509,6 +509,26 @@ test("it should truncate ellipsis cells", () => {
   expect(screen.getByText("Ada Lovelace").className).toContain("text-ellipsis");
 });
 
+test("it should show the ellipsis tooltip on the first pointer enter", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          ellipsis: true,
+          cell: (row) => row.name,
+        },
+      ]}
+    />,
+  );
+
+  fireEvent.pointerEnter(screen.getByText("Ada Lovelace").parentElement!);
+
+  expect(screen.getByRole("tooltip").textContent).toContain("Ada Lovelace");
+});
+
 test("it should hide columns listed in hiddenColumns", () => {
   render(<DataTable rows={rows} columns={columns} hiddenColumns={["role"]} />);
 
