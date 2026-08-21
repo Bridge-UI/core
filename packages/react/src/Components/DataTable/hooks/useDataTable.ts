@@ -273,6 +273,8 @@ const chromeColumn = {
   },
 };
 
+const EMPTY_ROWS: never[] = [];
+
 export function useDataTable<T>(
   props: DataTableProps<T>,
   libDefaults: DataTableLibDefaults,
@@ -332,7 +334,7 @@ export function useDataTable<T>(
   });
 
   const rows = derived(() => {
-    return merged.rows ?? [];
+    return merged.rows ?? EMPTY_ROWS;
   });
 
   const selectionEnabled = derived(() => {
@@ -505,6 +507,7 @@ export function useDataTable<T>(
           row.original,
           columns,
           merged.columnSearch,
+          hidden,
         )
       ) {
         return false;
@@ -684,10 +687,6 @@ export function useDataTable<T>(
 
   const showEmpty = derived(() => {
     return rowViews.length === 0;
-  });
-
-  const showFooter = derived(() => {
-    return slots?.footer !== undefined;
   });
 
   const paginationVariant = derived(() => {
@@ -1178,7 +1177,6 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    showFooter,
     tableProps,
     footerBind,
     showSearch,

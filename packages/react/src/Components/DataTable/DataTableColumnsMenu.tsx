@@ -24,7 +24,7 @@ export function DataTableColumnsMenu({
   return (
     <Menu
       show={show}
-      placement="bottom-end"
+      placement="bottom"
       onShowChange={setShow}
       slots={{
         trigger: (

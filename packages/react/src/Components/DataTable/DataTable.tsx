@@ -34,6 +34,7 @@ import {
   TableRow,
 } from "@/Components/Table";
 import { Tooltip } from "@/Components/Tooltip";
+import { hasNamedSlot } from "@/Utils";
 
 const dataTableLibDefaults = {
   size: "md",
@@ -130,7 +131,6 @@ function DataTable<T>(props: DataTableProps<T>) {
     rootBind,
     emptyBind,
     showEmpty,
-    showFooter,
     tableProps,
     footerBind,
     loadingBar,
@@ -449,7 +449,9 @@ function DataTable<T>(props: DataTableProps<T>) {
         ) : null}
       </div>
 
-      {showFooter ? <div {...footerBind}>{slots?.footer}</div> : null}
+      {hasNamedSlot(slots, "footer") ? (
+        <div {...footerBind}>{slots?.footer}</div>
+      ) : null}
 
       {showPagination ? (
         <div {...paginationBind}>

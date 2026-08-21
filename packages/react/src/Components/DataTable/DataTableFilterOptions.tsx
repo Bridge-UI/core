@@ -50,8 +50,8 @@ export function DataTableFilterOptions({
         return (
           <div
             key={option.value}
-            role="menuitemcheckbox"
             aria-checked={selected}
+            role={multiple ? "menuitemcheckbox" : "menuitemradio"}
             onClick={() => {
               onToggle(option.value, !selected);
             }}
