@@ -18,6 +18,7 @@ import type {
   DataTableSlots,
   DataTableSorting,
 } from "@/Components/DataTable/dataTable.types";
+import DataTableCellContent from "@/Components/DataTable/DataTableCellContent.vue";
 import DataTableColumnsMenu from "@/Components/DataTable/DataTableColumnsMenu.vue";
 import DataTableFilterMenu from "@/Components/DataTable/DataTableFilterMenu.vue";
 import DataTableSearch from "@/Components/DataTable/DataTableSearch.vue";
@@ -36,7 +37,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/Components/Table";
-import { Tooltip } from "@/Components/Tooltip";
 import { hasNamedSlot } from "@/Utils";
 
 defineSlots<
@@ -369,30 +369,13 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                     </span>
                   </button>
 
-                  <Tooltip
-                    :content="cell.tooltip"
-                    v-else-if="cell.ellipsis && cell.tooltip"
-                    :custom-props="{
-                      trigger: { class: 'block min-w-0 w-full max-w-full' },
-                    }"
-                  >
-                    <template #trigger>
-                      <div
-                        class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
-                      >
-                        <DataTableChild :node="renderItemCell(row, cell)" />
-                      </div>
-                    </template>
-                  </Tooltip>
-
-                  <div
-                    v-else-if="cell.ellipsis"
-                    class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+                  <DataTableCellContent
+                    v-else
+                    :tooltip="cell.tooltip"
+                    :ellipsis="cell.ellipsis"
                   >
                     <DataTableChild :node="renderItemCell(row, cell)" />
-                  </div>
-
-                  <DataTableChild v-else :node="renderItemCell(row, cell)" />
+                  </DataTableCellContent>
                 </TableCell>
               </TableRow>
 

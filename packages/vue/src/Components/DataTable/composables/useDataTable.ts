@@ -252,6 +252,11 @@ const chromeColumn = {
 };
 
 const EMPTY_ROWS: never[] = [];
+const EMPTY_COLUMNS: never[] = [];
+const EMPTY_IDS: string[] = [];
+const dataTableCoreRowModel = getCoreRowModel();
+const dataTableSortedRowModel = getSortedRowModel();
+const dataTableFilteredRowModel = getFilteredRowModel();
 
 export function useDataTable<T>(
   props: DataTableOwnProps<T>,
@@ -315,7 +320,7 @@ export function useDataTable<T>(
   });
 
   const columns = computed(() => {
-    return merged.value.columns ?? [];
+    return merged.value.columns ?? EMPTY_COLUMNS;
   });
 
   const columnsById = computed(() => {
@@ -397,16 +402,17 @@ export function useDataTable<T>(
     return selectionToRowSelection(models.selection.value);
   });
 
+  const hiddenColumns = computed(() => {
+    return models.hiddenColumns.value ?? EMPTY_IDS;
+  });
+
   const columnVisibility = computed((): VisibilityState => {
     return fromPairs(
-      (models.hiddenColumns.value ?? []).map((id) => {
+      hiddenColumns.value.map((id) => {
         return [id, false];
       }),
     );
   });
-
-  const sortedRowModel = getSortedRowModel();
-  const filteredRowModel = getFilteredRowModel();
 
   const columnDefs = computed((): ColumnDef<T>[] => {
     const defs: ColumnDef<T>[] = columns.value.map((column) => {
@@ -450,7 +456,7 @@ export function useDataTable<T>(
   const table = useVueTable({
     data: rows,
     enableSortingRemoval: true,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: dataTableCoreRowModel,
     get columns() {
       return columnDefs.value;
     },
@@ -470,13 +476,13 @@ export function useDataTable<T>(
       return selectionMultiple.value;
     },
     get getSortedRowModel() {
-      return serverPaged.value ? undefined : sortedRowModel;
-    },
-    get getFilteredRowModel() {
-      return serverPaged.value ? undefined : filteredRowModel;
+      return serverPaged.value ? undefined : dataTableSortedRowModel;
     },
     getRowId: (row, index) => {
       return resolveDataTableRowId(row, index, merged.value.getRowId);
+    },
+    get getFilteredRowModel() {
+      return serverPaged.value ? undefined : dataTableFilteredRowModel;
     },
     onRowSelectionChange: (updater) => {
       const next = isFunction(updater) ? updater(rowSelection.value) : updater;
@@ -513,7 +519,7 @@ export function useDataTable<T>(
     }
 
     const query = models.search.value ?? "";
-    const hidden = models.hiddenColumns.value ?? [];
+    const hidden = hiddenColumns.value;
 
     return source.filter((row) => {
       if (
@@ -1205,8 +1211,8 @@ export function useDataTable<T>(
       return {
         id: column.id,
         hideable: column.hideable !== false,
+        hidden: hiddenColumns.value.includes(column.id),
         label: isString(column.header) ? column.header : column.id,
-        hidden: (models.hiddenColumns.value ?? []).includes(column.id),
       };
     });
   });
