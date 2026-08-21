@@ -107,7 +107,7 @@ function onApply() {
     v-model="show"
     placement="bottom"
     :custom-props="{
-      root: { class: 'inline-flex items-center leading-none' },
+      root: { class: 'relative z-[2] inline-flex items-center leading-none' },
       trigger: { class: 'inline-flex items-center leading-none' },
     }"
   >

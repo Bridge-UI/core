@@ -941,6 +941,7 @@ export function useDataTable<T>(
           : undefined,
         class: cn({
           "min-w-0": true,
+          relative: header.sortable,
           "border-e-0": isChrome,
           "sticky z-20": Boolean(header.stickyStyle),
           "after:hidden": isChrome,

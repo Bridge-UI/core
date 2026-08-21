@@ -262,7 +262,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
               <div
                 v-else-if="!header.isSelection && !header.isExpand"
-                class="flex w-full min-w-0 items-center gap-1.5 overflow-hidden leading-none"
+                class="flex w-full min-w-0 items-center gap-1.5 leading-none"
               >
                 <DataTableSortButton
                   v-if="header.sortable"

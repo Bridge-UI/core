@@ -1,6 +1,6 @@
 // ** External Imports
 import { DOMWrapper, flushPromises, mount } from "@vue/test-utils";
-import { afterEach, expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -17,6 +17,7 @@ afterEach(async () => {
   await flushPromises();
   resetLayerStackForTests();
   document.body.innerHTML = "";
+  vi.useRealTimers();
 });
 
 type User = { id: string; name: string; role: string };
@@ -95,6 +96,29 @@ test("it should set aria-sort when sorting is controlled", () => {
   expect(wrapper.find("th[aria-sort]").attributes("aria-sort")).toBe(
     "descending",
   );
+});
+
+test("it should show the sort tooltip when hovering the header cell", async () => {
+  vi.useFakeTimers();
+
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: { rows, columns },
+  });
+
+  const header = wrapper.find("th[aria-sort]");
+  const trigger = header.find(".absolute.inset-0.size-full");
+
+  expect(header.classes()).toContain("relative");
+  expect(trigger.exists()).toBe(true);
+
+  await trigger.trigger("pointerenter");
+  vi.advanceTimersByTime(200);
+  await flushPromises();
+
+  expect(
+    document.body.querySelector('[role="tooltip"]')?.textContent,
+  ).toContain("Click to sort ascending");
 });
 
 test("it should emit update:selection when a row is selected", async () => {
