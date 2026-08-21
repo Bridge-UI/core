@@ -475,21 +475,16 @@ test("it should emit update:hiddenColumns from the columns menu", async () => {
   expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
 });
 
-test("it should emit export with csv of the current rows", async () => {
+test("it should render toolbarActions beside search", () => {
   const wrapper = mountDataTable({
-    props: { rows, columns },
-    attrs: { onExport: () => undefined },
+    props: { rows, columns, search: "" },
+    slots: {
+      toolbarActions: "<button type='button'>Print</button>",
+    },
   });
 
-  await wrapper.get('[aria-label="Export"]').trigger("click");
-
-  const payload = wrapper.emitted("export")?.[0]?.[0] as {
-    csv: string;
-    rows: User[];
-  };
-
-  expect(payload.rows).toEqual(rows);
-  expect(payload.csv).toContain("Ada Lovelace");
+  expect(wrapper.get("button").text()).toBe("Print");
+  expect(wrapper.get('input[aria-label="Search"]').exists()).toBe(true);
 });
 
 test("it should emit update:search from the toolbar search", async () => {
@@ -497,7 +492,6 @@ test("it should emit update:search from the toolbar search", async () => {
     props: { rows, columns, search: "" },
   });
 
-  await wrapper.get('[aria-label="Search"]').trigger("click");
   await wrapper.get('input[aria-label="Search"]').setValue("Ada");
   await flushPromises();
 

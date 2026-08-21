@@ -5,7 +5,6 @@ import type { HTMLAttributes, Slot, VNodeChild } from "vue";
 import type {
   DataTableColumnBase,
   DataTableColumnSearch,
-  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -26,7 +25,6 @@ import type {
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationOwnProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressOwnProps } from "@/Components/Progress/progress.types";
@@ -43,7 +41,6 @@ import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 export type {
   DataTableColumnBase,
   DataTableColumnSearch,
-  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -101,11 +98,6 @@ export interface DataTableClasses {
    * Classes merged onto the empty-state region.
    */
   empty?: string;
-
-  /**
-   * Classes merged onto the toolbar export control.
-   */
-  export?: string;
 
   /**
    * Classes merged onto the footer region below the table.
@@ -196,13 +188,6 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   empty?: HTMLAttributes;
-
-  /**
-   * Extra props for the toolbar export control.
-   *
-   * @default undefined
-   */
-  export?: Partial<Omit<ButtonOwnProps, "icon">>;
 
   /**
    * Props forwarded to the footer region below the table.
@@ -303,13 +288,7 @@ export interface DataTableCustomProps {
   wrapper?: HTMLAttributes;
 }
 
-export interface DataTableEmits<T = unknown> {
-  /**
-   * Emitted when the toolbar export control is pressed. Receives CSV of the
-   * current (filtered) rows. When omitted, DataTable downloads the CSV.
-   */
-  export: [payload: DataTableExportPayload<T>];
-
+export interface DataTableEmits {
   /**
    * Emitted when per-column text search should update (`v-model:column-search`).
    */
@@ -580,11 +559,6 @@ export interface DataTableSlots<T = unknown> {
   expanded?: Slot<{ row: T }>;
 
   /**
-   * Replaces the toolbar export control.
-   */
-  export?: Slot<undefined>;
-
-  /**
    * Region below the table, above pagination.
    */
   footer?: Slot<undefined>;
@@ -618,9 +592,14 @@ export interface DataTableSlots<T = unknown> {
   search?: Slot<undefined>;
 
   /**
-   * Optional toolbar above the table.
+   * Leading toolbar region (left of Columns / Search).
    */
   toolbar?: Slot<undefined>;
+
+  /**
+   * Extra controls beside Columns and Search in the toolbar end cluster.
+   */
+  toolbarActions?: Slot<undefined>;
 }
 
 export type DataTableProps<T = unknown> = MergeHtmlProps<

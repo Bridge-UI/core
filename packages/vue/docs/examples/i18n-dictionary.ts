@@ -20,10 +20,10 @@ const MESSAGES: Record<string, Record<string, string>> = {
   "en-US": {},
   "pt-BR": {
     "Close": "Fechar",
-    "Export": "Exportar",
     "Columns": "Colunas",
     "Search": "Pesquisar",
     "No data": "Sem dados",
+    "Per page:": "Por página:",
     "Loading...": "Carregando...",
     "No options": "Nenhuma opção",
     "Hide password": "Ocultar senha",

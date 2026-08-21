@@ -105,7 +105,7 @@ function onApply() {
 <template>
   <Menu
     v-model="show"
-    placement="bottom-end"
+    placement="bottom"
     :custom-props="{
       root: { class: 'inline-flex items-center leading-none' },
       trigger: { class: 'inline-flex items-center leading-none' },
@@ -169,7 +169,7 @@ function onApply() {
       <div
         class="flex justify-end gap-2 border-t border-dark-200 px-2 pb-1 pt-1.5 dark:border-dark-700"
       >
-        <Button size="sm" variant="flat" v-on:click="onResetDraft">
+        <Button size="sm" variant="outline" v-on:click="onResetDraft">
           Reset
         </Button>
         <Button size="sm" v-on:click="onApply">OK</Button>

@@ -61,7 +61,6 @@ import {
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
   isDataTableExpandEnabled,
-  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -75,7 +74,6 @@ import {
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
-  serializeDataTableCsv,
   setDataTableColumnFilter,
   setDataTableColumnSearch,
   setDataTableRowSelection,
@@ -85,7 +83,6 @@ import {
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
   type DataTableColumnSearch,
-  type DataTableExportPayload,
   type DataTableFilterOption,
   type DataTableFilters,
   type DataTablePaginationSlotProps,
@@ -94,7 +91,6 @@ import {
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
-import { hasDocument } from "@bridge-ui/core/Runtime";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -990,7 +986,7 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex items-center justify-between gap-2": true,
+          "flex items-center justify-between gap-3 pb-3": true,
           [get(mergedClasses.value, "toolbar") ?? ""]: true,
         }),
       },
@@ -1056,9 +1052,10 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex items-center gap-3 py-3": true,
+          "flex w-full items-center gap-4 py-3": true,
+          "justify-between": showPerPage.value,
           [getDataTablePaginationAlignClass(merged.value.paginationAlign)]:
-            true,
+            !showPerPage.value,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
@@ -1095,52 +1092,6 @@ export function useDataTable<T>(
     if (models.page.value !== 1) {
       models.page.value = 1;
     }
-  }
-
-  const exportPayload = computed((): DataTableExportPayload<T> => {
-    const hidden = models.hiddenColumns.value ?? [];
-    const exportColumns = columns.value.filter((column) => {
-      return !hidden.includes(column.id);
-    });
-    const rows = map(searchedRows.value, "original") as T[];
-    const headers = exportColumns.map((column) => {
-      return isString(column.header) ? column.header : column.id;
-    });
-    const csvRows = rows.map((row) => {
-      return exportColumns.map((column) => {
-        return (
-          getDataTableDefaultCellContent(
-            getDataTableColumnAccessor(row, column),
-          ) ?? ""
-        );
-      });
-    });
-
-    return {
-      rows,
-      csv: serializeDataTableCsv(headers, csvRows),
-    };
-  });
-
-  function onExportClick() {
-    if (instance?.vnode.props?.onExport) {
-      return;
-    }
-
-    if (!hasDocument()) {
-      return;
-    }
-
-    const blob = new Blob([`\uFEFF${exportPayload.value.csv}`], {
-      type: "text/csv;charset=utf-8",
-    });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = href;
-    link.download = "export.csv";
-    link.click();
-    URL.revokeObjectURL(href);
   }
 
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
@@ -1261,13 +1212,6 @@ export function useDataTable<T>(
     });
   });
 
-  const showExport = computed(() => {
-    return isDataTableExportEnabled(
-      instance?.vnode.props?.onExport !== undefined,
-      vueSlots.export !== undefined,
-    );
-  });
-
   const showSearch = computed(() => {
     return isDataTableSearchEnabled(
       models.search.value,
@@ -1279,8 +1223,8 @@ export function useDataTable<T>(
   const showToolbar = computed(() => {
     return (
       Boolean(vueSlots.toolbar) ||
+      Boolean(vueSlots.toolbarActions) ||
       visibilityEnabled.value ||
-      showExport.value ||
       showSearch.value
     );
   });
@@ -1292,7 +1236,6 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    showExport,
     showFooter,
     tableProps,
     footerBind,
@@ -1313,8 +1256,6 @@ export function useDataTable<T>(
     onTogglePage,
     onToggleSort,
     summaryCells,
-    onExportClick,
-    exportPayload,
     expandEnabled,
     onChangeSearch,
     loadingBarBind,

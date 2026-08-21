@@ -192,7 +192,7 @@ const columns = [
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `export` / `item.{id}` / `item` / `loading` / `pagination` / `search` / `toolbar`. `#item` is a catch-all when `#item.{id}` is not set.
+Table-level slots stay `empty` / `expanded` / `item.{id}` / `item` / `loading` / `pagination` / `search` / `toolbar` / `toolbarActions`. `#item` is a catch-all when `#item.{id}` is not set.
 
 ### Selection
 
@@ -293,18 +293,22 @@ Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns
 
 ### Search
 
-Pass `search` and/or listen to `update:search` to show a **Search** icon in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+Pass `search` and/or listen to `update:search` to show a search field in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
 
 ```vue
 <DataTable :rows="users" :columns="columns" v-model:search="search" />
 ```
 
-### Export
+### Toolbar
 
-Listen to `export` to show an **Export** icon. The payload includes CSV of the current (filtered) rows and visible columns. `#export` replaces the control.
+`#toolbar` is the leading region (left). `#toolbar-actions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled.
 
 ```vue
-<DataTable :rows="users" :columns="columns" v-on:export="onExport" />
+<DataTable :rows="users" :columns="columns" v-model:search="search">
+  <template #toolbar-actions>
+    <Button v-on:click="onPrint">Print</Button>
+  </template>
+</DataTable>
 ```
 
 ### Expand

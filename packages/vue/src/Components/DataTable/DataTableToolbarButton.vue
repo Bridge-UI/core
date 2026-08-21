@@ -8,7 +8,7 @@ defineOptions({ inheritAttrs: false, name: "DataTableToolbarButton" });
 
 defineProps<{
   buttonProps?: Partial<Omit<ButtonOwnProps, "icon">>;
-  icon: "search" | "columns" | "download";
+  icon: "columns";
   label: string;
 }>();
 

@@ -13,7 +13,6 @@ import { cn } from "@bridge-ui/core/Utils";
 import { useResolveMessage } from "@/Adapters/I18n";
 import { useDataTable } from "@/Components/DataTable/composables/useDataTable";
 import type {
-  DataTableEmits,
   DataTableItemSlotProps,
   DataTableOwnProps,
   DataTableSlots,
@@ -24,7 +23,6 @@ import DataTableFilterMenu from "@/Components/DataTable/DataTableFilterMenu.vue"
 import DataTableSearch from "@/Components/DataTable/DataTableSearch.vue";
 import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
-import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
@@ -76,7 +74,6 @@ const props = withDefaults(
 
 const tableSlots = useSlots();
 const resolveMessage = useResolveMessage();
-const emit = defineEmits<Pick<DataTableEmits<T>, "export">>();
 
 const page = defineModel<number>("page");
 const perPage = defineModel<number>("perPage");
@@ -94,7 +91,6 @@ const {
   rootBind,
   emptyBind,
   showEmpty,
-  showExport,
   showFooter,
   tableProps,
   footerBind,
@@ -113,9 +109,7 @@ const {
   getCellAlign,
   onTogglePage,
   summaryCells,
-  onExportClick,
   expandEnabled,
-  exportPayload,
   loadingBarBind,
   paginationBind,
   selectAllState,
@@ -162,11 +156,6 @@ const checkboxSize = computed(() => {
   return merged.value.size === "lg" ? "md" : "sm";
 });
 
-function handleExport() {
-  emit("export", exportPayload.value);
-  onExportClick();
-}
-
 function renderItemCell(
   row: { original: T },
   cell: { content: VNodeChild; id: string; value?: unknown },
@@ -195,6 +184,25 @@ const perPageSelectOptions = computed(() => {
   });
 });
 
+const perPageSelectCustom = computed(() => {
+  const fromProps = merged.value.customProps?.perPage?.customProps;
+
+  return {
+    ...fromProps,
+    listbox: {
+      showCheckmark: false,
+      ...fromProps?.listbox,
+      customProps: {
+        ...fromProps?.listbox?.customProps,
+        menu: {
+          matchWidth: true,
+          ...fromProps?.listbox?.customProps?.menu,
+        },
+      },
+    },
+  };
+});
+
 const selectionName = useId();
 
 const DataTableChild = (childProps: { node?: VNodeChild }) => {
@@ -208,30 +216,20 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       <div class="min-w-0 flex-1">
         <slot name="toolbar" />
       </div>
-      <div class="flex shrink-0 items-center">
-        <DataTableColumnsMenu
-          :items="visibilityItems"
+
+      <div class="flex shrink-0 items-center gap-2">
+        <div
           v-if="visibilityEnabled"
-          v-on:toggle="onToggleColumnVisibility"
-        />
-        <span
-          aria-hidden
-          class="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
-          v-if="visibilityEnabled && (showExport || showSearch)"
-        />
-        <slot name="export" v-if="showExport">
-          <DataTableToolbarButton
-            icon="download"
-            v-on:click="handleExport"
-            :label="resolveMessage('Export')"
-            :button-props="merged.customProps?.export"
+          class="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-900"
+        >
+          <DataTableColumnsMenu
+            :items="visibilityItems"
+            v-on:toggle="onToggleColumnVisibility"
           />
-        </slot>
-        <span
-          aria-hidden
-          v-if="showExport && showSearch"
-          class="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
-        />
+        </div>
+
+        <slot name="toolbarActions" />
+
         <slot name="search" v-if="showSearch">
           <DataTableSearch
             :model-value="search ?? ''"
@@ -478,17 +476,31 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
     <div v-if="showPagination" v-bind="paginationBind">
       <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
-        <Select
-          size="sm"
-          :clearable="false"
-          aria-label="Rows per page"
-          :options="perPageSelectOptions"
-          v-bind="merged.customProps?.perPage"
-          :model-value="perPageSlotProps.perPage"
-          v-on:update:model-value="
-            (value) => perPageSlotProps.onPerPageChange(Number(value))
-          "
-        />
+        <div class="flex shrink-0 items-center gap-2">
+          <span
+            class="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400"
+          >
+            {{ resolveMessage("Per page:") }}
+          </span>
+          <Select
+            size="sm"
+            v-bind="merged.customProps?.perPage"
+            overlay="menu"
+            :clearable="false"
+            hide-error-message
+            aria-label="Per page"
+            :options="perPageSelectOptions"
+            :custom-props="perPageSelectCustom"
+            :model-value="perPageSlotProps.perPage"
+            v-on:update:model-value="
+              (value) => perPageSlotProps.onPerPageChange(Number(value))
+            "
+            :classes="{
+              ...merged.customProps?.perPage?.classes,
+              root: cn('w-20', merged.customProps?.perPage?.classes?.root),
+            }"
+          />
+        </div>
       </slot>
 
       <slot name="pagination" v-bind="paginationSlotProps">
