@@ -60,7 +60,7 @@ export function DataTableFilterMenu({
   return (
     <Menu
       show={show}
-      placement="bottom-end"
+      placement="bottom"
       onShowChange={(next) => {
         if (next) {
           setQuery(searchValue);
@@ -157,7 +157,7 @@ export function DataTableFilterMenu({
         <div className="flex justify-end gap-2 border-t border-dark-200 px-2 pb-1 pt-1.5 dark:border-dark-700">
           <Button
             size="sm"
-            variant="flat"
+            variant="outline"
             onClick={() => {
               setDraft([]);
               setQuery("");

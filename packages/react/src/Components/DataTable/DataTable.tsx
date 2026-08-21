@@ -16,7 +16,6 @@ import { DataTableFilterMenu } from "@/Components/DataTable/DataTableFilterMenu"
 import { DataTableSearch } from "@/Components/DataTable/DataTableSearch";
 import { DataTableSelection } from "@/Components/DataTable/DataTableSelection";
 import { DataTableSortButton } from "@/Components/DataTable/DataTableSortButton";
-import { DataTableToolbarButton } from "@/Components/DataTable/DataTableToolbarButton";
 import {
   useDataTable,
   type DataTableCellView,
@@ -131,7 +130,6 @@ function DataTable<T>(props: DataTableProps<T>) {
     rootBind,
     emptyBind,
     showEmpty,
-    showExport,
     showFooter,
     tableProps,
     footerBind,
@@ -150,7 +148,6 @@ function DataTable<T>(props: DataTableProps<T>) {
     getCellAlign,
     onTogglePage,
     summaryCells,
-    onExportClick,
     expandEnabled,
     loadingBarBind,
     paginationBind,
@@ -171,41 +168,26 @@ function DataTable<T>(props: DataTableProps<T>) {
   const selectionName = useId();
   const resolveMessage = useResolveMessage();
   const checkboxSize = merged.size === "lg" ? "md" : "sm";
+  const perPageCustom = merged.customProps?.perPage;
 
   return (
     <div {...rootBind}>
       {showToolbar ? (
         <div {...toolbarBind}>
           <div className="min-w-0 flex-1">{slots?.toolbar}</div>
-          <div className="flex shrink-0 items-center">
+
+          <div className="flex shrink-0 items-center gap-2">
             {visibilityEnabled ? (
-              <DataTableColumnsMenu
-                items={visibilityItems}
-                onToggle={onToggleColumnVisibility}
-              />
+              <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-900">
+                <DataTableColumnsMenu
+                  items={visibilityItems}
+                  onToggle={onToggleColumnVisibility}
+                />
+              </div>
             ) : null}
-            {visibilityEnabled && (showExport || showSearch) ? (
-              <span
-                aria-hidden
-                className="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
-              />
-            ) : null}
-            {showExport
-              ? (slots?.export ?? (
-                  <DataTableToolbarButton
-                    icon="download"
-                    onClick={onExportClick}
-                    label={resolveMessage("Export")}
-                    buttonProps={merged.customProps?.export}
-                  />
-                ))
-              : null}
-            {showExport && showSearch ? (
-              <span
-                aria-hidden
-                className="mx-1 h-5 w-px bg-dark-200 dark:bg-dark-700"
-              />
-            ) : null}
+
+            {slots?.toolbarActions}
+
             {showSearch
               ? (slots?.search ?? (
                   <DataTableSearch
@@ -475,25 +457,51 @@ function DataTable<T>(props: DataTableProps<T>) {
             ? renderDataTableSlot(
                 slots?.perPage,
                 perPageSlotProps,
-                <Select
-                  size="sm"
-                  clearable={false}
-                  aria-label="Rows per page"
-                  {...merged.customProps?.perPage}
-                  value={perPageSlotProps.perPage}
-                  options={perPageSlotProps.options.map((value) => {
-                    return { value, label: String(value) };
-                  })}
-                  onChange={(value) => {
-                    const next = Number(value);
+                <div className="flex shrink-0 items-center gap-2">
+                  <span className="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400">
+                    {resolveMessage("Per page:")}
+                  </span>
+                  <Select
+                    size="sm"
+                    hideErrorMessage
+                    clearable={false}
+                    aria-label="Per page"
+                    {...perPageCustom}
+                    overlay="menu"
+                    value={perPageSlotProps.perPage}
+                    options={perPageSlotProps.options.map((value) => {
+                      return { value, label: String(value) };
+                    })}
+                    classes={{
+                      ...perPageCustom?.classes,
+                      root: cn("w-20", perPageCustom?.classes?.root),
+                    }}
+                    onChange={(value) => {
+                      const next = Number(value);
 
-                    if (!Number.isFinite(next) || next < 1) {
-                      return;
-                    }
+                      if (!Number.isFinite(next) || next < 1) {
+                        return;
+                      }
 
-                    perPageSlotProps.onPerPageChange(next);
-                  }}
-                />,
+                      perPageSlotProps.onPerPageChange(next);
+                    }}
+                    customProps={{
+                      ...perPageCustom?.customProps,
+                      listbox: {
+                        showCheckmark: false,
+                        ...perPageCustom?.customProps?.listbox,
+                        customProps: {
+                          ...perPageCustom?.customProps?.listbox?.customProps,
+                          menu: {
+                            matchWidth: true,
+                            ...perPageCustom?.customProps?.listbox?.customProps
+                              ?.menu,
+                          },
+                        },
+                      },
+                    }}
+                  />
+                </div>,
               )
             : null}
 

@@ -64,7 +64,6 @@ import {
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
   isDataTableExpandEnabled,
-  isDataTableExportEnabled,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -78,7 +77,6 @@ import {
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
   selectionToRowSelection,
-  serializeDataTableCsv,
   setDataTableColumnFilter,
   setDataTableColumnSearch,
   setDataTableRowSelection,
@@ -87,14 +85,12 @@ import {
   toggleDataTablePageSelection,
   toggleDataTableRowExpansion,
   toggleDataTableSorting,
-  type DataTableExportPayload,
   type DataTableFilterOption,
   type DataTablePaginationSlotProps,
   type DataTablePerPageSlotProps,
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
-import { hasDocument } from "@bridge-ui/core/Runtime";
 import { tableVariantProps as variantProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -135,7 +131,6 @@ const dataTableBridgeKeys = [
   "variant",
   "expanded",
   "getRowId",
-  "onExport",
   "hoverable",
   "pageCount",
   "selection",
@@ -158,7 +153,6 @@ const dataTableBridgeKeys = [
   "onColumnSearchChange",
   "onHiddenColumnsChange",
 ] as const satisfies readonly (
-  | "onExport"
   | "onPageChange"
   | "onSearchChange"
   | "onFiltersChange"
@@ -203,7 +197,6 @@ type DataTableMerged<T> = MergeLibDefaults<
 > &
   Pick<
     DataTableProps<T>,
-    | "onExport"
     | "onPageChange"
     | "onSearchChange"
     | "onFiltersChange"
@@ -941,7 +934,7 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex items-center justify-between gap-2": true,
+          "flex items-center justify-between gap-3 pb-3": true,
           [get(mergedClasses, "toolbar") ?? ""]: true,
         }),
       },
@@ -1006,8 +999,10 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex items-center gap-3 py-3": true,
-          [getDataTablePaginationAlignClass(merged.paginationAlign)]: true,
+          "flex w-full items-center gap-4 py-3": true,
+          "justify-between": showPerPage,
+          [getDataTablePaginationAlignClass(merged.paginationAlign)]:
+            !showPerPage,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
@@ -1060,13 +1055,6 @@ export function useDataTable<T>(
     });
   });
 
-  const showExport = derived(() => {
-    return isDataTableExportEnabled(
-      merged.onExport !== undefined,
-      slots?.export !== undefined,
-    );
-  });
-
   const showSearch = derived(() => {
     return isDataTableSearchEnabled(
       merged.search,
@@ -1077,33 +1065,11 @@ export function useDataTable<T>(
 
   const showToolbar = derived(() => {
     return (
-      Boolean(slots?.toolbar) || visibilityEnabled || showExport || showSearch
+      Boolean(slots?.toolbar) ||
+      Boolean(slots?.toolbarActions) ||
+      visibilityEnabled ||
+      showSearch
     );
-  });
-
-  const exportPayload = derived((): DataTableExportPayload<T> => {
-    const hidden = merged.hiddenColumns ?? [];
-    const exportColumns = columns.filter((column) => {
-      return !hidden.includes(column.id);
-    });
-    const rows = map(searchedRows, "original") as T[];
-    const headers = exportColumns.map((column) => {
-      return isString(column.header) ? column.header : column.id;
-    });
-    const csvRows = rows.map((row) => {
-      return exportColumns.map((column) => {
-        return (
-          getDataTableDefaultCellContent(
-            getDataTableColumnAccessor(row, column),
-          ) ?? ""
-        );
-      });
-    });
-
-    return {
-      rows,
-      csv: serializeDataTableCsv(headers, csvRows),
-    };
   });
 
   function onToggleSort(columnId: string) {
@@ -1143,29 +1109,6 @@ export function useDataTable<T>(
     if (merged.page !== 1) {
       merged.onPageChange?.(1);
     }
-  }
-
-  function onExportClick() {
-    if (merged.onExport) {
-      merged.onExport(exportPayload);
-
-      return;
-    }
-
-    if (!hasDocument()) {
-      return;
-    }
-
-    const blob = new Blob([`\uFEFF${exportPayload.csv}`], {
-      type: "text/csv;charset=utf-8",
-    });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = href;
-    link.download = "export.csv";
-    link.click();
-    URL.revokeObjectURL(href);
   }
 
   const paginationSlotProps = derived((): DataTablePaginationSlotProps => {
@@ -1235,7 +1178,6 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
-    showExport,
     showFooter,
     tableProps,
     footerBind,
@@ -1256,7 +1198,6 @@ export function useDataTable<T>(
     onTogglePage,
     onToggleSort,
     summaryCells,
-    onExportClick,
     expandEnabled,
     onChangeSearch,
     loadingBarBind,

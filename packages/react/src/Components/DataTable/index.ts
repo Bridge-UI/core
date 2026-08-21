@@ -7,7 +7,6 @@ export type {
   DataTableColumnBase,
   DataTableColumnSearch,
   DataTableCustomProps,
-  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,

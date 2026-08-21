@@ -224,7 +224,7 @@ Cell content is the column accessor (`row[id]`, or `accessor`) unless you overri
 }
 ```
 
-Table-level `slots` are `empty`, `expanded`, `export`, `footer`, `item`, `loading`, `pagination`, `perPage`, `search`, and `toolbar`. `slots.item[id]` overrides `columns[].cell` for that column.
+Table-level `slots` are `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`, `search`, `toolbar`, and `toolbarActions`. `slots.item[id]` overrides `columns[].cell` for that column.
 
 ### Selection
 
@@ -335,7 +335,7 @@ Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon i
 
 ### Search
 
-Pass `search` and/or `onSearchChange` to show a **Search** icon in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+Pass `search` and/or `onSearchChange` to show a search field in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
 
 ```tsx
 <DataTable
@@ -346,12 +346,20 @@ Pass `search` and/or `onSearchChange` to show a **Search** icon in the toolbar. 
 />
 ```
 
-### Export
+### Toolbar
 
-Pass `onExport` to show an **Export** icon. The handler receives CSV of the current (filtered) rows and visible columns. `slots.export` replaces the control.
+`slots.toolbar` is the leading region (left). `slots.toolbarActions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled.
 
 ```tsx
-<DataTable rows={users} columns={columns} onExport={onExport} />
+<DataTable
+  rows={users}
+  search={search}
+  columns={columns}
+  onSearchChange={setSearch}
+  slots={{
+    toolbarActions: <Button onClick={onPrint}>Print</Button>,
+  }}
+/>
 ```
 
 ### Expand

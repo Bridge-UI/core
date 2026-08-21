@@ -463,16 +463,21 @@ test("it should toggle a column from the columns menu", () => {
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
 });
 
-test("it should emit onExport with csv of the current rows", () => {
-  const onExport = vi.fn();
+test("it should render toolbarActions beside search", () => {
+  render(
+    <DataTable
+      search=""
+      rows={rows}
+      columns={columns}
+      onSearchChange={vi.fn()}
+      slots={{
+        toolbarActions: <button type="button">Print</button>,
+      }}
+    />,
+  );
 
-  render(<DataTable rows={rows} columns={columns} onExport={onExport} />);
-
-  fireEvent.click(screen.getByRole("button", { name: "Export" }));
-
-  expect(onExport).toHaveBeenCalledTimes(1);
-  expect(onExport.mock.calls[0]?.[0]?.rows).toEqual(rows);
-  expect(String(onExport.mock.calls[0]?.[0]?.csv)).toContain("Ada Lovelace");
+  expect(screen.getByRole("button", { name: "Print" })).toBeTruthy();
+  expect(screen.getByRole("textbox", { name: "Search" })).toBeTruthy();
 });
 
 test("it should filter rows from the toolbar search", () => {

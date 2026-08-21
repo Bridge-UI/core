@@ -5,7 +5,6 @@ import type { HTMLAttributes, ReactNode } from "react";
 import type {
   DataTableColumnBase,
   DataTableColumnSearch,
-  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -26,7 +25,6 @@ import type {
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { ButtonProps } from "@/Components/Button/button.types";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 import type { ProgressProps } from "@/Components/Progress/progress.types";
@@ -43,7 +41,6 @@ import type { TextFieldProps } from "@/Components/TextField/textField.types";
 export type {
   DataTableColumnBase,
   DataTableColumnSearch,
-  DataTableExportPayload,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
@@ -86,7 +83,7 @@ export type DataTableColumn<T> = Omit<DataTableColumnBase<T>, "align"> & {
   summary?: (rows: T[]) => ReactNode;
 };
 
-export interface DataTableCallbacks<T = unknown> {
+export interface DataTableCallbacks {
   /**
    * Called when per-column text search queries change.
    *
@@ -100,14 +97,6 @@ export interface DataTableCallbacks<T = unknown> {
    * @default undefined
    */
   onExpandedChange?: (ids: string[]) => void;
-
-  /**
-   * Called when the toolbar export control is pressed. Receives CSV of the
-   * current (filtered) rows. When omitted, DataTable downloads the CSV.
-   *
-   * @default undefined
-   */
-  onExport?: (payload: DataTableExportPayload<T>) => void;
 
   /**
    * Called when column filters change.
@@ -174,11 +163,6 @@ export interface DataTableClasses {
    * Classes merged onto the empty-state region.
    */
   empty?: string;
-
-  /**
-   * Classes merged onto the toolbar export control.
-   */
-  export?: string;
 
   /**
    * Classes merged onto the footer region below the table.
@@ -271,15 +255,6 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   empty?: HTMLAttributes<HTMLDivElement>;
-
-  /**
-   * Extra props for the toolbar export control.
-   *
-   * @default undefined
-   */
-  export?: Partial<
-    Omit<Extract<ButtonProps, { as?: "button" }>, "icon" | "onClick">
-  >;
 
   /**
    * Props forwarded to the footer region below the table.
@@ -550,7 +525,8 @@ export interface DataTableOwnProps<T> {
   size?: MergeProps<TableSize, TableSizeOverrides>;
 
   /**
-   * `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`, and `toolbar` regions.
+   * `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`,
+   * `search`, `toolbar`, and `toolbarActions` regions.
    *
    * @default undefined
    */
@@ -606,11 +582,6 @@ export interface DataTableSlots<T = unknown> {
   expanded?: (row: T) => ReactNode;
 
   /**
-   * Replaces the toolbar export control.
-   */
-  export?: ReactNode;
-
-  /**
    * Region below the table, above pagination.
    */
   footer?: ReactNode;
@@ -646,12 +617,17 @@ export interface DataTableSlots<T = unknown> {
   search?: ReactNode;
 
   /**
-   * Optional toolbar above the table.
+   * Leading toolbar region (left of Columns / Search).
    */
   toolbar?: ReactNode;
+
+  /**
+   * Extra controls beside Columns and Search in the toolbar end cluster.
+   */
+  toolbarActions?: ReactNode;
 }
 
 export type DataTableProps<T = unknown> = MergeHtmlProps<
-  DataTableOwnProps<T> & DataTableCallbacks<T>,
+  DataTableOwnProps<T> & DataTableCallbacks,
   HTMLAttributes<HTMLDivElement>
 >;
