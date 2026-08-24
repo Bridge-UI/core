@@ -68,30 +68,37 @@ export function DataTableColumnsMenu({
             "px-1 pb-0.5 pt-1": showFooterResolved,
           })}
         >
-          {items.map((item) => {
-            const hidden = isHidden(item);
+          <div
+            className={cn({
+              "flex max-h-60 flex-col overflow-y-auto overscroll-contain bridge-soft-scrollbar": true,
+              "pb-2": showFooterResolved,
+            })}
+          >
+            {items.map((item) => {
+              const hidden = isHidden(item);
 
-            return (
-              <div
-                key={item.id}
-                aria-checked={!hidden}
-                role="menuitemcheckbox"
-                onClick={() => {
-                  onToggleItem(item);
-                }}
-                className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
-              >
-                <Checkbox
-                  hideErrorMessage
-                  checked={!hidden}
-                  size={controlSize}
-                  endLabel={item.label}
-                  disabled={!item.hideable}
-                  classes={{ root: "pointer-events-none" }}
-                />
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={item.id}
+                  aria-checked={!hidden}
+                  role="menuitemcheckbox"
+                  onClick={() => {
+                    onToggleItem(item);
+                  }}
+                  className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+                >
+                  <Checkbox
+                    hideErrorMessage
+                    checked={!hidden}
+                    size={controlSize}
+                    endLabel={item.label}
+                    disabled={!item.hideable}
+                    classes={{ root: "pointer-events-none" }}
+                  />
+                </div>
+              );
+            })}
+          </div>
 
           {showFooterResolved ? (
             <div className="flex justify-end gap-2 border-t border-dark-200 px-2 pb-1 pt-1.5 dark:border-dark-700">

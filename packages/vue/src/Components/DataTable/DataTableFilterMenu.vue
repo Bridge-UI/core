@@ -169,7 +169,7 @@ function onApply() {
 
         <div
           v-if="options.length > 0"
-          class="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2"
+          class="flex max-h-60 flex-col gap-0.5 overflow-y-auto overscroll-contain pb-2 bridge-soft-scrollbar"
         >
           <div
             role="menuitemcheckbox"

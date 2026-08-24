@@ -72,21 +72,30 @@ const {
         "
       >
         <div
-          :key="item.id"
-          v-for="item in items"
-          role="menuitemcheckbox"
-          :aria-checked="!isHidden(item)"
-          v-on:click="onToggleItem(item)"
-          class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+          :class="
+            cn({
+              'flex max-h-60 flex-col overflow-y-auto overscroll-contain bridge-soft-scrollbar': true,
+              'pb-2': showFooterResolved,
+            })
+          "
         >
-          <Checkbox
-            hide-error-message
-            :size="controlSize"
-            :end-label="item.label"
-            :disabled="!item.hideable"
-            :model-value="!isHidden(item)"
-            :classes="{ root: 'pointer-events-none' }"
-          />
+          <div
+            :key="item.id"
+            v-for="item in items"
+            role="menuitemcheckbox"
+            :aria-checked="!isHidden(item)"
+            v-on:click="onToggleItem(item)"
+            class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+          >
+            <Checkbox
+              hide-error-message
+              :size="controlSize"
+              :end-label="item.label"
+              :disabled="!item.hideable"
+              :model-value="!isHidden(item)"
+              :classes="{ root: 'pointer-events-none' }"
+            />
+          </div>
         </div>
 
         <div

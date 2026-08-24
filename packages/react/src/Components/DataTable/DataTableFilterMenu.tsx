@@ -145,7 +145,7 @@ export function DataTableFilterMenu({
           ) : null}
 
           {options.length > 0 ? (
-            <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto pb-2">
+            <div className="flex max-h-60 flex-col gap-0.5 overflow-y-auto overscroll-contain pb-2 bridge-soft-scrollbar">
               {multiple && optionValues.length > 0 ? (
                 <div
                   role="menuitemcheckbox"
