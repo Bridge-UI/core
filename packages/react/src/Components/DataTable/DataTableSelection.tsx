@@ -1,8 +1,10 @@
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Checkbox } from "@/Components/Checkbox";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { DataTableCustomProps } from "@/Components/DataTable/dataTable.types";
 import { Radio } from "@/Components/Radio";
+import { derived } from "@/Utils";
 
 /**
  * Internal row / page selection control. Not part of the public API.
@@ -30,7 +32,15 @@ export function DataTableSelection({
   size: CheckboxProps["size"];
   value?: string;
 }) {
-  const ariaLabel = kind === "page" ? "Select all rows" : "Select row";
+  const resolveMessage = useResolveMessage();
+
+  const ariaLabel = derived(() => {
+    if (kind === "page") {
+      return resolveMessage("Select all rows");
+    }
+
+    return resolveMessage("Select row");
+  });
 
   if (kind === "page" || multiple) {
     return (

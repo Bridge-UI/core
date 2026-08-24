@@ -4,6 +4,7 @@ import type { HTMLAttributes, Slot, VNodeChild } from "vue";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,
@@ -15,6 +16,7 @@ import type {
   DataTableSorting,
   DataTableStickyEdge,
   DataTableStickyHeader,
+  FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 import type {
   TableAlign,
@@ -40,6 +42,7 @@ import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 
 export type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,
@@ -363,6 +366,23 @@ export interface DataTableOwnProps<T> {
   columnSearch?: DataTableColumnSearch;
 
   /**
+   * Overlay shell for the column visibility panel. `auto` uses `menu` on
+   * desktop and `drawer` on mobile.
+   *
+   * @default "auto"
+   */
+  columnsOverlay?: FieldOverlayMode;
+
+  /**
+   * Shows Reset / OK on the column visibility overlay. Unset defaults to
+   * `true` for `modal` / `drawer` shells (`false` for `menu`). Selection
+   * stays draft until OK.
+   *
+   * @default undefined
+   */
+  columnsShowFooter?: boolean;
+
+  /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
    *
    * @default undefined
@@ -375,6 +395,14 @@ export interface DataTableOwnProps<T> {
    * @default undefined
    */
   expanded?: string[];
+
+  /**
+   * Overlay shell for column filter panels. `auto` uses `menu` on desktop
+   * and `drawer` on mobile.
+   *
+   * @default "auto"
+   */
+  filterOverlay?: FieldOverlayMode;
 
   /**
    * Controlled column filters: column id → selected option values.
@@ -439,13 +467,6 @@ export interface DataTableOwnProps<T> {
    * @default undefined
    */
   pageCount?: number;
-
-  /**
-   * Alignment of the built-in Pagination region.
-   *
-   * @default "end"
-   */
-  paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
 
   /**
    * Page size. With `page` and no `pageCount`/`totalCount`, slices `rows`

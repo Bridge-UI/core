@@ -53,6 +53,33 @@ test("it should render headers and cells from columns and rows", () => {
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
 });
 
+test("it should merge column classes onto header and cells", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          cell: (row) => row.name,
+          classes: {
+            cell: "col-cell",
+            header: "col-header",
+          },
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  expect(
+    screen.getByRole("columnheader", { name: "Name" }).className,
+  ).toContain("col-header");
+  expect(
+    screen.getByRole("cell", { name: "Ada Lovelace" }).className,
+  ).toContain("col-cell");
+});
+
 test("it should apply the bordered variant on the table wrapper", () => {
   render(<DataTable rows={rows} columns={columns} variant="bordered" />);
 
@@ -332,6 +359,23 @@ test("it should call onFiltersChange when a column filter is applied", () => {
   expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
 });
 
+test("it should open column filters in a modal when filterOverlay is modal", () => {
+  render(
+    <DataTable
+      rows={rows}
+      filters={{}}
+      filterOverlay="modal"
+      columns={filterColumns}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Filter column" }));
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(screen.getByRole("checkbox", { name: "Engineer" })).toBeTruthy();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
+});
+
 test("it should use radios for a single-select column filter", () => {
   render(
     <DataTable
@@ -510,6 +554,9 @@ test("it should pin a sticky start column", () => {
     "0px",
   );
   expect(
+    screen.getByRole("columnheader", { name: "Name" }).style.maxWidth,
+  ).toBe("120px");
+  expect(
     screen.getByRole("columnheader", { name: "Name" }).className,
   ).not.toContain("before:translate-x-full");
   expect(screen.getByRole("table").className).toContain("border-separate");
@@ -569,6 +616,7 @@ test("it should toggle a column from the columns menu", () => {
       rows={rows}
       columns={columns}
       hiddenColumns={[]}
+      columnsOverlay="menu"
       onHiddenColumnsChange={onHiddenColumnsChange}
     />,
   );
@@ -576,7 +624,92 @@ test("it should toggle a column from the columns menu", () => {
   fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
   fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
 
+  expect(screen.queryByRole("button", { name: "OK" })).toBeNull();
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should commit column visibility from the columns menu footer", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
+
+  expect(onHiddenColumnsChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "OK" }));
+
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should reset hideable columns from the columns menu footer", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      columnsOverlay="modal"
+      hiddenColumns={["role"]}
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+
+  expect(onHiddenColumnsChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "OK" }));
+
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith([]);
+});
+
+test("it should toggle columns live when columnsShowFooter is false", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+      columnsShowFooter={false}
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
+
+  expect(screen.queryByRole("button", { name: "OK" })).toBeNull();
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should open column visibility in a modal when columnsOverlay is modal", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+
+  expect(screen.getByRole("checkbox", { name: "Role" })).toBeTruthy();
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {
@@ -813,18 +946,27 @@ test("it should box sticky header overflow from classes.root", () => {
   );
 });
 
-test("it should align built-in pagination at the start", () => {
+test("it should pin built-in pagination to the end", () => {
+  const { container } = render(
+    <DataTable page={1} rows={rows} pageCount={2} columns={columns} />,
+  );
+
+  expect(container.querySelector(".sm\\:justify-end")).toBeTruthy();
+  expect(container.querySelector(".sm\\:justify-between")).toBeNull();
+});
+
+test("it should spread per-page and pagination across the footer", () => {
   const { container } = render(
     <DataTable
       page={1}
       rows={rows}
+      perPage={10}
       pageCount={2}
       columns={columns}
-      paginationAlign="start"
     />,
   );
 
-  expect(container.querySelector(".justify-start")).toBeTruthy();
+  expect(container.querySelector(".sm\\:justify-between")).toBeTruthy();
 });
 
 test("it should sort rows when sorting is controlled", () => {

@@ -4,6 +4,7 @@ export type {
   DataTableClasses,
   DataTableColumn,
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableCustomProps,
   DataTableEmits,

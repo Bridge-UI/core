@@ -183,7 +183,6 @@ import type {
   SwitchSize,
 } from "@/Tokens/Switch";
 import type {
-  TableAlign,
   TableAlignItem,
   TableRounded,
   TableRoundedItem,
@@ -610,7 +609,6 @@ export interface DataTableConfigBase {
     full: boolean;
     hoverable: boolean;
     loadingVariant: "bar" | "overlay";
-    paginationAlign: keyof TableAlign;
     rounded: keyof TableRounded;
     selectionMode: "single" | "multiple";
     size: keyof TableSize;

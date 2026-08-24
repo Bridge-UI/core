@@ -46,7 +46,6 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
-  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -136,11 +135,13 @@ const dataTableBridgeKeys = [
   "customProps",
   "columnSearch",
   "stickyHeader",
+  "filterOverlay",
   "hiddenColumns",
   "selectionMode",
+  "columnsOverlay",
   "loadingVariant",
   "perPageOptions",
-  "paginationAlign",
+  "columnsShowFooter",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
 /**
@@ -164,9 +165,10 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "variant"
   | "hoverable"
   | "stickyHeader"
+  | "filterOverlay"
   | "selectionMode"
+  | "columnsOverlay"
   | "loadingVariant"
-  | "paginationAlign"
 >;
 
 type DataTableMerged<T> = MergeLibDefaults<
@@ -177,6 +179,7 @@ type DataTableMerged<T> = MergeLibDefaults<
 export type DataTableHeaderView = {
   align?: DataTableColumn<unknown>["align"];
   ariaSort: ReturnType<typeof getDataTableAriaSort>;
+  classes?: DataTableColumn<unknown>["classes"];
   ellipsis: boolean;
   filterable: boolean;
   filterActive: boolean;
@@ -200,6 +203,7 @@ export type DataTableHeaderView = {
 
 export type DataTableCellView = {
   align?: DataTableColumn<unknown>["align"];
+  classes?: DataTableColumn<unknown>["classes"];
   content: VNodeChild;
   ellipsis: boolean;
   id: string;
@@ -608,6 +612,7 @@ export function useDataTable<T>(
         align: meta.column?.align,
         stickyStyle: inset?.style,
         header: meta.column?.header,
+        classes: meta.column?.classes,
         isSelection: meta.isSelection,
         stickyEdge: inset?.edge === true,
         ellipsis: meta.column?.ellipsis === true,
@@ -673,6 +678,7 @@ export function useDataTable<T>(
             width: column?.width,
             align: column?.align,
             sticky: inset?.sticky,
+            classes: column?.classes,
             stickyStyle: inset?.style,
             stickyEdge: inset?.edge === true,
             ellipsis: column?.ellipsis === true,
@@ -881,7 +887,7 @@ export function useDataTable<T>(
     const headerSticky = header && stickyHeaderEnabled.value;
 
     return {
-      ...(width ? { width, minWidth: width } : {}),
+      ...(width ? { width, maxWidth: width } : {}),
       ...view.stickyStyle,
       ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
       ...(headerSticky
@@ -955,6 +961,7 @@ export function useDataTable<T>(
             header.sticky === "end" &&
             header.stickyEdge &&
             stickyPing.value.end,
+          [header.classes?.header ?? ""]: true,
         }),
       },
     );
@@ -981,6 +988,7 @@ export function useDataTable<T>(
             stickyPing.value.start,
           [get(variantItem.value, "cellStickyEdgeEnd") ?? ""]:
             cell.sticky === "end" && cell.stickyEdge && stickyPing.value.end,
+          [cell.classes?.cell ?? ""]: true,
         }),
       },
     );
@@ -1058,10 +1066,9 @@ export function useDataTable<T>(
       {},
       {
         class: cn({
-          "flex w-full items-center gap-4 py-3": true,
-          "justify-between": showPerPage.value,
-          [getDataTablePaginationAlignClass(merged.value.paginationAlign)]:
-            !showPerPage.value,
+          "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "sm:justify-end": !showPerPage.value,
+          "sm:justify-between": showPerPage.value,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
@@ -1176,6 +1183,10 @@ export function useDataTable<T>(
     );
   }
 
+  function onHiddenColumnsChange(ids: string[]) {
+    models.hiddenColumns.value = ids;
+  }
+
   const summaryCells = computed((): null | DataTableCellView[] => {
     const hasSummary = columns.value.some((column) => {
       return column.summary !== undefined;
@@ -1199,6 +1210,7 @@ export function useDataTable<T>(
         width: header.width,
         align: header.align,
         sticky: header.sticky,
+        classes: header.classes,
         isExpand: header.isExpand,
         stickyEdge: header.stickyEdge,
         stickyStyle: header.stickyStyle,
@@ -1283,6 +1295,7 @@ export function useDataTable<T>(
     visibilityEnabled,
     paginationSlotProps,
     onCommitColumnFilter,
+    onHiddenColumnsChange,
     onToggleColumnVisibility,
     loadingBar: computed(() => {
       return merged.value.loadingVariant === "bar";

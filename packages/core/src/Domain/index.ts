@@ -42,7 +42,6 @@ export type {
 export {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
-  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -59,10 +58,11 @@ export {
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
-  getDataTablePaginationAlignClass,
+  getDataTableHiddenColumnIds,
   getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
+  getDataTableResetHiddenColumnIds,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
@@ -104,12 +104,12 @@ export {
 export type {
   DataTableAriaSort,
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
-  DataTablePaginationAlignClass,
   DataTablePaginationSlotProps,
   DataTablePaginationVariant,
   DataTablePerPageSlotProps,
@@ -159,6 +159,7 @@ export {
 } from "@/Domain/otp";
 export type { OtpDigitsUpdate, OtpInputType } from "@/Domain/otp";
 export {
+  getFieldOverlayControlSize,
   isFieldOverlayDialog,
   resolveFieldOverlay,
   resolveFieldPickerClassName,

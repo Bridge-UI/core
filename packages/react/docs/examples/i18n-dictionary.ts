@@ -19,18 +19,24 @@ import type { I18nAdapter } from "@bridge-ui/core/Adapters";
 const MESSAGES: Record<string, Record<string, string>> = {
   "en-US": {},
   "pt-BR": {
+    "OK": "OK",
     "Close": "Fechar",
+    "Reset": "Redefinir",
     "Columns": "Colunas",
     "Search": "Pesquisar",
     "No data": "Sem dados",
     "Per page:": "Por página:",
     "Loading...": "Carregando...",
     "No options": "Nenhuma opção",
+    "Select row": "Selecionar linha",
     "Hide password": "Ocultar senha",
     "Show password": "Mostrar senha",
+    "Filter column": "Filtrar coluna",
     "Clear selection": "Limpar seleção",
     "Decrement value": "Diminuir valor",
     "Increment value": "Aumentar valor",
+    "Select all rows": "Selecionar todas as linhas",
+    "Select all items": "Selecionar todos os itens",
   },
 };
 

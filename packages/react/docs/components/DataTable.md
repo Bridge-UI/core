@@ -47,7 +47,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped rows={users} columns={columns} />
 ```
 
-`full={false}` sizes columns to content instead of stretching the table:
+`full={false}` sizes columns to content instead of stretching the table. Default `full` stretches the table to the wrapper width:
 
 ```tsx
 <DataTable full={false} rows={users} columns={columns} />
@@ -138,19 +138,6 @@ Slot replaces the built-in Pagination and/or per-page Select (`slots.pagination`
       </select>
     ),
   }}
-/>
-```
-
-Align the built-in Pagination with `paginationAlign` (`start` / `center` / `end`, default `end`):
-
-```tsx
-<DataTable
-  page={page}
-  rows={users}
-  columns={columns}
-  pageCount={pageCount}
-  onPageChange={setPage}
-  paginationAlign="start"
 />
 ```
 
@@ -245,7 +232,19 @@ Table-level `slots` are `empty`, `expanded`, `footer`, `item`, `loading`, `pagin
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
-Set `searchable` on a column to add a text field in that same menu. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+Set `searchable` on a column to add a text field in that same overlay. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+
+Column filters open in a `FieldOverlay`. Default `filterOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+
+```tsx
+<DataTable
+  rows={users}
+  filters={filters}
+  columns={columns}
+  filterOverlay="drawer"
+  onFiltersChange={setFilters}
+/>
+```
 
 ```tsx
 <DataTable
@@ -286,7 +285,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
   columns={[
     {
       id: "name",
-      width: 160,
+      width: 120,
       header: "Name",
       sticky: "start",
       cell: (row) => row.name,
@@ -320,15 +319,41 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 />
 ```
 
+### Column classes
+
+`classes.header` and `classes.cell` merge onto that column’s `th` / `td`. Use width utilities for breakpoint-based sizing. Do not set `width` on the same column when the class should control width — inline `width` wins.
+
+```tsx
+<DataTable
+  rows={users}
+  columns={[
+    {
+      id: "name",
+      header: "Name",
+      cell: (row) => row.name,
+      classes: {
+        cell: "w-24 sm:w-40",
+        header: "w-24 sm:w-40",
+      },
+    },
+  ]}
+/>
+```
+
 ### Column visibility
 
 Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
+
+The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
+
+When unset, `columnsShowFooter` is `true` for `modal` / `drawer` (`false` for `menu`). Reset restores hideable columns; OK commits and closes. Closing without OK discards.
 
 ```tsx
 <DataTable
   rows={users}
   columns={columns}
   hiddenColumns={hidden}
+  columnsOverlay="drawer"
   onHiddenColumnsChange={setHidden}
 />
 ```

@@ -67,6 +67,15 @@ export function isFieldOverlayDialog(overlay: ResolvedFieldOverlay): boolean {
 }
 
 /**
+ * Control size for overlay chrome. Dialogs (`drawer` / `modal`) use `md`.
+ */
+export function getFieldOverlayControlSize(
+  overlay: ResolvedFieldOverlay,
+): "md" | "sm" {
+  return isFieldOverlayDialog(overlay) ? "md" : "sm";
+}
+
+/**
  * Whether a date / time picker fills its overlay or container width.
  * Explicit `fill` wins (instance prop, then registry `defaultProps`).
  * Unset: `true` for `drawer`, `false` for `menu` / `modal` and for

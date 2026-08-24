@@ -34,16 +34,7 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 /**
  * Fallback width in px for sticky columns without a parseable `width`.
  */
-export const DATATABLE_STICKY_WIDTH_PX = 160;
-
-/**
- * Pagination region alignment (`justify-*`) for `paginationAlign`.
- */
-export const DATATABLE_PAGINATION_ALIGN = {
-  end: "justify-end",
-  start: "justify-start",
-  center: "justify-center",
-} as const;
+export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
  * Pagination variant that pairs with a DataTable chrome variant.
@@ -193,6 +184,25 @@ export type DataTableStickyInset = {
 };
 
 /**
+ * Extra classes for a column's header cell and body/footer cells.
+ */
+export type DataTableColumnClasses = {
+  /**
+   * Classes merged onto body and footer cells.
+   *
+   * @default undefined
+   */
+  cell?: string;
+
+  /**
+   * Classes merged onto the header cell.
+   *
+   * @default undefined
+   */
+  header?: string;
+};
+
+/**
  * Shared column fields. Framework packages add `header` / `cell` renderers.
  */
 export type DataTableColumnBase<T> = {
@@ -205,6 +215,15 @@ export type DataTableColumnBase<T> = {
    * Text alignment for the header and cells.
    */
   align?: "end" | "start" | "center";
+
+  /**
+   * Extra classes for this column's header and cells. Use width utilities
+   * here for breakpoint-based sizing. Inline `width` still wins over class
+   * width when both are set.
+   *
+   * @default undefined
+   */
+  classes?: DataTableColumnClasses;
 
   /**
    * Truncate overflowing cell text and show the full value in a tooltip.
@@ -262,12 +281,6 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
- * Pagination region `justify-*` class paired with `paginationAlign`.
- */
-export type DataTablePaginationAlignClass =
-  (typeof DATATABLE_PAGINATION_ALIGN)[keyof typeof DATATABLE_PAGINATION_ALIGN];
-
-/**
  * Pagination variant paired with a DataTable chrome variant.
  */
 export type DataTablePaginationVariant =
@@ -282,15 +295,6 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
  * Semantic icon for a sortable header given its `aria-sort`.
  */
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
-
-/**
- * Maps `paginationAlign` to a flex `justify-*` class.
- */
-export function getDataTablePaginationAlignClass(
-  align: string | undefined,
-): DataTablePaginationAlignClass {
-  return get(DATATABLE_PAGINATION_ALIGN, align ?? "end") ?? "justify-end";
-}
 
 /**
  * Maps a DataTable chrome variant to the matching Pagination variant.
@@ -881,6 +885,36 @@ export function isDataTableVisibilityEnabled(
   hasVisibilityHandler: boolean,
 ): boolean {
   return hiddenColumns !== undefined || hasVisibilityHandler;
+}
+
+/**
+ * Hidden column ids from visibility items.
+ */
+export function getDataTableHiddenColumnIds(
+  items: { hidden: boolean; id: string }[],
+): string[] {
+  return items
+    .filter((item) => {
+      return item.hidden;
+    })
+    .map((item) => {
+      return item.id;
+    });
+}
+
+/**
+ * Hidden ids after Reset: only columns that cannot be shown (`hideable: false`).
+ */
+export function getDataTableResetHiddenColumnIds(
+  items: { hideable: boolean; id: string }[],
+): string[] {
+  return items
+    .filter((item) => {
+      return !item.hideable;
+    })
+    .map((item) => {
+      return item.id;
+    });
 }
 
 /**

@@ -68,8 +68,10 @@ const props = withDefaults(
     striped: false,
     hoverable: false,
     stickyHeader: false,
-    paginationAlign: "end",
+    filterOverlay: "auto",
+    columnsOverlay: "auto",
     loadingVariant: "overlay",
+    columnsShowFooter: undefined,
   },
 );
 
@@ -78,13 +80,13 @@ const resolveMessage = useResolveMessage();
 
 const page = defineModel<number>("page");
 const perPage = defineModel<number>("perPage");
+const search = defineModel<string>("search");
 const expanded = defineModel<string[]>("expanded");
 const selection = defineModel<string[]>("selection");
 const filters = defineModel<DataTableFilters>("filters");
 const sorting = defineModel<DataTableSorting>("sorting");
 const hiddenColumns = defineModel<string[]>("hiddenColumns");
 const columnSearch = defineModel<DataTableColumnSearch>("columnSearch");
-const search = defineModel<string>("search");
 
 const {
   merged,
@@ -123,7 +125,7 @@ const {
   visibilityEnabled,
   paginationSlotProps,
   onCommitColumnFilter,
-  onToggleColumnVisibility,
+  onHiddenColumnsChange,
 } = useDataTable(
   props,
   {
@@ -135,7 +137,8 @@ const {
     variant: "plain",
     hoverable: false,
     stickyHeader: false,
-    paginationAlign: "end",
+    filterOverlay: "auto",
+    columnsOverlay: "auto",
     selectionMode: "multiple",
     loadingVariant: "overlay",
   },
@@ -224,7 +227,9 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
         >
           <DataTableColumnsMenu
             :items="visibilityItems"
-            v-on:toggle="onToggleColumnVisibility"
+            :overlay="merged.columnsOverlay"
+            v-on:change="onHiddenColumnsChange"
+            :show-footer="merged.columnsShowFooter"
           />
         </div>
 
@@ -278,6 +283,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                   v-if="header.filterable"
                   :active="header.filterActive"
                   :values="header.filterValues"
+                  :overlay="merged.filterOverlay"
                   :options="header.filterOptions"
                   :searchable="header.searchable"
                   :multiple="header.filterMultiple"

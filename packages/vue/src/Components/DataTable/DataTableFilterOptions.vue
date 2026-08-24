@@ -8,21 +8,29 @@ import { Radio } from "@/Components/Radio";
 
 defineOptions({ inheritAttrs: false, name: "DataTableFilterOptions" });
 
-const props = defineProps<{
-  draft: string[];
-  multiple: boolean;
-  name: string;
-  options: DataTableFilterOption[];
-}>();
+const props = withDefaults(
+  defineProps<{
+    draft: string[];
+    multiple: boolean;
+    name: string;
+    options: DataTableFilterOption[];
+    size?: "md" | "sm";
+  }>(),
+  {
+    size: "sm",
+  },
+);
 
 const emit = defineEmits<{
   toggle: [value: string, selected: boolean];
 }>();
 
 function isSelected(value: string) {
-  return props.multiple
-    ? props.draft.includes(value)
-    : props.draft[0] === value;
+  if (props.multiple) {
+    return props.draft.includes(value);
+  }
+
+  return props.draft[0] === value;
 }
 </script>
 
@@ -37,6 +45,7 @@ function isSelected(value: string) {
       <div class="ps-2">
         <DataTableFilterOptions
           :name="name"
+          :size="size"
           :draft="draft"
           :multiple="multiple"
           :options="option.children"
@@ -52,7 +61,7 @@ function isSelected(value: string) {
       class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
     >
       <Checkbox
-        size="sm"
+        :size="size"
         v-if="multiple"
         hide-error-message
         :end-label="option.label"
@@ -61,8 +70,8 @@ function isSelected(value: string) {
       />
       <Radio
         v-else
-        size="sm"
         :name="name"
+        :size="size"
         hide-error-message
         :value="option.value"
         :model-value="draft[0]"

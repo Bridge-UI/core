@@ -47,7 +47,8 @@ const dataTableLibDefaults = {
   variant: "plain",
   hoverable: false,
   stickyHeader: false,
-  paginationAlign: "end",
+  filterOverlay: "auto",
+  columnsOverlay: "auto",
   loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
@@ -161,12 +162,14 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
   getHeadAlign,
   onTogglePage,
   checkboxProps,
+  filterOverlay,
   selectAllState,
   selectionMultiple,
   onCommitColumnFilter,
 }: {
   checkboxProps?: DataTableCustomProps["checkbox"];
   checkboxSize: "md" | "sm";
+  filterOverlay?: DataTableProps<unknown>["filterOverlay"];
   getHeadAlign: (
     header: DataTableHeaderView,
   ) => "center" | DataTableHeaderView["align"];
@@ -216,6 +219,7 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
         {header.filterable ? (
           <DataTableFilterMenu
             columnId={header.id}
+            overlay={filterOverlay}
             active={header.filterActive}
             values={header.filterValues}
             options={header.filterOptions}
@@ -383,7 +387,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     visibilityEnabled,
     paginationSlotProps,
     onCommitColumnFilter,
-    onToggleColumnVisibility,
+    onHiddenColumnsChange,
   } = useDataTable(props, dataTableLibDefaults);
 
   const selectionName = useId();
@@ -402,7 +406,9 @@ function DataTable<T>(props: DataTableProps<T>) {
               <div className="inline-flex items-center rounded-lg border border-dark-200 bg-white p-0.5 dark:border-dark-700 dark:bg-dark-900">
                 <DataTableColumnsMenu
                   items={visibilityItems}
-                  onToggle={onToggleColumnVisibility}
+                  overlay={merged.columnsOverlay}
+                  onChange={onHiddenColumnsChange}
+                  showFooter={merged.columnsShowFooter}
                 />
               </div>
             ) : null}
@@ -436,6 +442,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                     checkboxSize={checkboxSize}
                     onTogglePage={onTogglePage}
                     selectAllState={selectAllState}
+                    filterOverlay={merged.filterOverlay}
                     selectionMultiple={selectionMultiple}
                     onCommitColumnFilter={onCommitColumnFilter}
                     checkboxProps={merged.customProps?.checkbox}

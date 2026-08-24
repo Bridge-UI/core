@@ -19,7 +19,6 @@ export function DataTableSearch({
   value: string;
 }) {
   const resolveMessage = useResolveMessage();
-  const label = resolveMessage("Search");
 
   return (
     <TextField
@@ -27,8 +26,8 @@ export function DataTableSearch({
       value={value}
       hideErrorMessage
       startIcon="search"
-      aria-label={label}
-      placeholder={label}
+      aria-label={resolveMessage("Search")}
+      placeholder={resolveMessage("Search")}
       {...fieldProps}
       onChange={(event) => {
         onChange(event.target.value);

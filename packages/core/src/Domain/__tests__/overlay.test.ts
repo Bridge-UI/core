@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 
 // ** Local Imports
 import {
+  getFieldOverlayControlSize,
   isFieldOverlayDialog,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
@@ -84,6 +85,14 @@ describe("isFieldOverlayDialog", () => {
     expect(isFieldOverlayDialog("menu")).toBe(false);
     expect(isFieldOverlayDialog("modal")).toBe(true);
     expect(isFieldOverlayDialog("drawer")).toBe(true);
+  });
+});
+
+describe("getFieldOverlayControlSize", () => {
+  test("it should use md for dialog shells", () => {
+    expect(getFieldOverlayControlSize("menu")).toBe("sm");
+    expect(getFieldOverlayControlSize("modal")).toBe("md");
+    expect(getFieldOverlayControlSize("drawer")).toBe("md");
   });
 });
 

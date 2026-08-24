@@ -49,6 +49,26 @@ function mountDataTable(
   return wrapper;
 }
 
+function findOverlayCheckbox(label: string) {
+  return Array.from(
+    document.body.querySelectorAll('input[type="checkbox"]'),
+  ).find((input) => {
+    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
+      label,
+    );
+  }) as undefined | HTMLInputElement;
+}
+
+function clickOverlayButton(label: string) {
+  const button = Array.from(document.body.querySelectorAll("button")).find(
+    (item) => {
+      return item.textContent?.trim() === label;
+    },
+  );
+
+  button?.click();
+}
+
 test("it should render headers and cells from columns and rows", () => {
   const wrapper = mountDataTable({
     props: { rows, columns },
@@ -59,6 +79,29 @@ test("it should render headers and cells from columns and rows", () => {
   expect(wrapper.text()).toContain("Alan Turing");
   expect(wrapper.text()).toContain("Ada Lovelace");
   expect(wrapper.find("table").exists()).toBe(true);
+});
+
+test("it should merge column classes onto header and cells", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          cell: (row: User) => row.name,
+          classes: {
+            cell: "col-cell",
+            header: "col-header",
+          },
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  expect(wrapper.get("th").classes()).toContain("col-header");
+  expect(wrapper.get("td").classes()).toContain("col-cell");
 });
 
 test("it should apply the bordered variant on the table wrapper", () => {
@@ -346,6 +389,24 @@ test("it should emit update:filters when a column filter is applied", async () =
   ]);
 });
 
+test("it should open column filters in a modal when filterOverlay is modal", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      filters: {},
+      filterOverlay: "modal",
+      columns: filterColumns,
+    },
+  });
+
+  await wrapper.get('[aria-label="Filter column"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
+});
+
 test("it should use radios for a single-select column filter", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
@@ -508,6 +569,7 @@ test("it should pin a sticky start column", () => {
     .find((header) => header.text().includes("Name"));
 
   expect((nameHeader?.element as HTMLElement).style.left).toBe("0px");
+  expect((nameHeader?.element as HTMLElement).style.maxWidth).toBe("120px");
   expect(
     nameHeader
       ?.classes()
@@ -571,24 +633,122 @@ test("it should hide columns listed in hiddenColumns", () => {
 test("it should emit update:hiddenColumns from the columns menu", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
-    props: { rows, columns, hiddenColumns: [] },
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "menu",
+    },
   });
 
-  await wrapper.get('[aria-haspopup="menu"]').trigger("click");
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
   await flushPromises();
 
-  const option = Array.from(
-    document.body.querySelectorAll('input[type="checkbox"]'),
-  ).find((input) => {
-    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
-      "Role",
-    );
-  }) as undefined | HTMLInputElement;
+  const option = findOverlayCheckbox("Role");
 
   option?.click();
   await flushPromises();
 
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some((button) => {
+      return button.textContent?.trim() === "OK";
+    }),
+  ).toBe(false);
   expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should commit column visibility from the columns menu footer", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  findOverlayCheckbox("Role")?.click();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")).toBeUndefined();
+
+  clickOverlayButton("OK");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should reset hideable columns from the columns menu footer", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: ["role"],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  clickOverlayButton("Reset");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")).toBeUndefined();
+
+  clickOverlayButton("OK");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([[]]);
+});
+
+test("it should toggle columns live when columnsShowFooter is false", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+      columnsShowFooter: false,
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  findOverlayCheckbox("Role")?.click();
+  await flushPromises();
+
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some((button) => {
+      return button.textContent?.trim() === "OK";
+    }),
+  ).toBe(false);
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should open column visibility in a modal when columnsOverlay is modal", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {
@@ -785,18 +945,32 @@ test("it should box sticky header overflow from classes.root", () => {
   );
 });
 
-test("it should align built-in pagination at the start", () => {
+test("it should pin built-in pagination to the end", () => {
   const wrapper = mountDataTable({
     props: {
       rows,
       page: 1,
       columns,
       pageCount: 2,
-      paginationAlign: "start",
     },
   });
 
-  expect(wrapper.find(".justify-start").exists()).toBe(true);
+  expect(wrapper.find(".sm\\:justify-end").exists()).toBe(true);
+  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(false);
+});
+
+test("it should spread per-page and pagination across the footer", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 2,
+    },
+  });
+
+  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(true);
 });
 
 test("it should sort rows when sorting is controlled", () => {

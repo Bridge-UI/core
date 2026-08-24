@@ -5,7 +5,6 @@ import { describe, expect, test } from "vitest";
 import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
-  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -22,10 +21,11 @@ import {
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
-  getDataTablePaginationAlignClass,
+  getDataTableHiddenColumnIds,
   getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
+  getDataTableResetHiddenColumnIds,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
@@ -64,16 +64,6 @@ import {
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
-
-describe("getDataTablePaginationAlignClass", () => {
-  test("it should map paginationAlign to justify classes", () => {
-    expect(getDataTablePaginationAlignClass("start")).toBe("justify-start");
-    expect(getDataTablePaginationAlignClass("center")).toBe("justify-center");
-    expect(getDataTablePaginationAlignClass("unknown")).toBe("justify-end");
-    expect(getDataTablePaginationAlignClass(undefined)).toBe("justify-end");
-    expect(DATATABLE_PAGINATION_ALIGN.end).toBe("justify-end");
-  });
-});
 
 describe("getDataTablePaginationVariant", () => {
   test("it should map table chrome to pagination variants", () => {
@@ -364,6 +354,28 @@ describe("getDataTableStickyPing", () => {
       end: false,
       start: true,
     });
+  });
+});
+
+describe("getDataTableHiddenColumnIds", () => {
+  test("it should collect hidden column ids", () => {
+    expect(
+      getDataTableHiddenColumnIds([
+        { id: "name", hidden: false },
+        { id: "role", hidden: true },
+      ]),
+    ).toEqual(["role"]);
+  });
+});
+
+describe("getDataTableResetHiddenColumnIds", () => {
+  test("it should keep only columns that cannot be shown", () => {
+    expect(
+      getDataTableResetHiddenColumnIds([
+        { id: "name", hideable: false },
+        { id: "role", hideable: true },
+      ]),
+    ).toEqual(["name"]);
   });
 });
 

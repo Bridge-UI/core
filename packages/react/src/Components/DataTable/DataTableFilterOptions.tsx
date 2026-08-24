@@ -4,6 +4,7 @@ import type { DataTableFilterOption } from "@bridge-ui/core/Domain";
 // ** Local Imports
 import { Checkbox } from "@/Components/Checkbox";
 import { Radio } from "@/Components/Radio";
+import { derived } from "@/Utils";
 
 /**
  * Internal nested filter option list. Not part of the public API.
@@ -14,12 +15,14 @@ export function DataTableFilterOptions({
   options,
   multiple,
   onToggle,
+  size = "sm",
 }: {
   draft: string[];
   multiple: boolean;
   name: string;
   onToggle: (value: string, selected: boolean) => void;
   options: DataTableFilterOption[];
+  size?: "md" | "sm";
 }) {
   return (
     <>
@@ -30,9 +33,11 @@ export function DataTableFilterOptions({
               <div className="px-2 py-1 text-xs font-medium text-dark-500 dark:text-dark-400">
                 {option.label}
               </div>
+
               <div className="ps-2">
                 <DataTableFilterOptions
                   name={name}
+                  size={size}
                   draft={draft}
                   multiple={multiple}
                   onToggle={onToggle}
@@ -43,9 +48,13 @@ export function DataTableFilterOptions({
           );
         }
 
-        const selected = multiple
-          ? draft.includes(option.value)
-          : draft[0] === option.value;
+        const selected = derived(() => {
+          if (multiple) {
+            return draft.includes(option.value);
+          }
+
+          return draft[0] === option.value;
+        });
 
         return (
           <div
@@ -59,7 +68,7 @@ export function DataTableFilterOptions({
           >
             {multiple ? (
               <Checkbox
-                size="sm"
+                size={size}
                 hideErrorMessage
                 checked={selected}
                 endLabel={option.label}
@@ -67,7 +76,7 @@ export function DataTableFilterOptions({
               />
             ) : (
               <Radio
-                size="sm"
+                size={size}
                 name={name}
                 hideErrorMessage
                 checked={selected}
