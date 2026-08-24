@@ -5,15 +5,15 @@ import { describe, expect, test } from "vitest";
 import { controlVariantProps } from "@/Tokens/NumberField/ControlVariant";
 
 describe("controlVariantProps", () => {
-  test("it should expose default, split, and stacked layouts", () => {
+  test("it should expose inline, split, and stacked layouts", () => {
     expect(Object.keys(controlVariantProps).sort()).toEqual([
-      "default",
+      "inline",
       "split",
       "stacked",
     ]);
   });
 
-  test("it should stack default controls in a column at the end", () => {
+  test("it should stack controls in a column at the end", () => {
     expect(controlVariantProps.stacked.startGroup).toBe("");
     expect(controlVariantProps.stacked.button).toContain("min-w-8");
     expect(controlVariantProps.stacked.endGroup).toContain("my-0.5");
@@ -21,10 +21,10 @@ describe("controlVariantProps", () => {
     expect(controlVariantProps.stacked.endGroup).toContain("flex-col");
   });
 
-  test("it should place default controls in a row at the end", () => {
-    expect(controlVariantProps.default.startGroup).toBe("");
-    expect(controlVariantProps.default.button).toContain("min-w-8");
-    expect(controlVariantProps.default.endGroup).toContain("flex-row");
+  test("it should place inline controls in a row at the end", () => {
+    expect(controlVariantProps.inline.startGroup).toBe("");
+    expect(controlVariantProps.inline.button).toContain("min-w-8");
+    expect(controlVariantProps.inline.endGroup).toContain("flex-row");
   });
 
   test("it should place split decrement on the start side", () => {

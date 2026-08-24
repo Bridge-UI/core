@@ -70,7 +70,7 @@ export interface NumberFieldOwnProps extends Omit<
   /**
    * Layout of the increment and decrement controls.
    *
-   * `stacked` places them in a column at the end. `default` places them in a
+   * `stacked` places them in a column at the end. `inline` places them in a
    * row at the end. `split` places decrement at the start and increment at the
    * end.
    *

@@ -18,8 +18,8 @@ describe("getNumberFieldStepper", () => {
     expect(getNumberFieldStepper("stacked")).toEqual(getNumberFieldStepper());
   });
 
-  test("it should place decrement before increment in the default row", () => {
-    expect(getNumberFieldStepper("default")).toEqual({
+  test("it should place decrement before increment in the inline row", () => {
+    expect(getNumberFieldStepper("inline")).toEqual({
       isSplit: false,
       incrementFirst: false,
       incrementIcon: "chevronUp",
@@ -43,8 +43,8 @@ describe("resolveNumberFieldStepperIconSize", () => {
     expect(resolveNumberFieldStepperIconSize("md", "stacked")).toBe("xs");
   });
 
-  test("it should use sm icons for default and split md fields", () => {
-    expect(resolveNumberFieldStepperIconSize("md", "default")).toBe("sm");
+  test("it should use sm icons for inline and split md fields", () => {
+    expect(resolveNumberFieldStepperIconSize("md", "inline")).toBe("sm");
     expect(resolveNumberFieldStepperIconSize("md", "split")).toBe("sm");
   });
 

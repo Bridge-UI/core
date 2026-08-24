@@ -25,7 +25,7 @@ export interface NumberFieldControlVariant {
   /**
    * Decrement and increment in a row at the end of the field.
    */
-  "default": NumberFieldControlVariantItem;
+  "inline": NumberFieldControlVariantItem;
 
   /**
    * Decrement at the start of the field and increment at the end.
@@ -49,7 +49,7 @@ export const controlVariantProps: NumberFieldControlVariant = {
     "endGroup":
       "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden my-0.5 me-0.5 flex-col gap-px",
   },
-  "default": {
+  "inline": {
     "startGroup": "",
     "button":
       "bridge-field-adornment-button inline-flex min-h-0 min-w-8 items-center justify-center self-stretch",
