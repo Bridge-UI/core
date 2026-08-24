@@ -24,6 +24,7 @@ export function DataTableSortButton({
   children: ReactNode;
 }) {
   const resolveMessage = useResolveMessage();
+
   const tooltip = resolveMessage(getDataTableSortTooltip(ariaSort));
 
   return (

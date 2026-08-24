@@ -50,7 +50,6 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
-  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -140,8 +139,10 @@ const dataTableBridgeKeys = [
   "columnSearch",
   "onPageChange",
   "stickyHeader",
+  "filterOverlay",
   "hiddenColumns",
   "selectionMode",
+  "columnsOverlay",
   "loadingVariant",
   "onSearchChange",
   "perPageOptions",
@@ -187,7 +188,9 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "variant"
   | "hoverable"
   | "stickyHeader"
+  | "filterOverlay"
   | "selectionMode"
+  | "columnsOverlay"
   | "loadingVariant"
   | "paginationAlign"
 >;
@@ -316,7 +319,7 @@ function getDataTableColumnLayoutStyle(
   const headerSticky = header && stickyHeaderEnabled;
 
   return {
-    ...(width ? { width, minWidth: width } : {}),
+    ...(width ? { width, maxWidth: width } : {}),
     ...view.stickyStyle,
     ...(header && view.stickyStyle && !headerSticky ? { zIndex: 20 } : {}),
     ...(headerSticky
@@ -1136,15 +1139,22 @@ export function useDataTable<T>(
   }, [customProps?.footer, mergedClasses]);
 
   const paginationBind = useMemo(() => {
+    const perPageVisible = showPerPage;
+    const paginationAlign = merged.paginationAlign;
+
     return mergePartBind(
       {},
       {},
       {
         className: cn({
-          "flex w-full items-center gap-4 py-3": true,
-          "justify-between": showPerPage,
-          [getDataTablePaginationAlignClass(merged.paginationAlign)]:
-            !showPerPage,
+          "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "sm:justify-between": perPageVisible,
+          "sm:justify-start": !perPageVisible && paginationAlign === "start",
+          "sm:justify-center": !perPageVisible && paginationAlign === "center",
+          "sm:justify-end":
+            !perPageVisible &&
+            paginationAlign !== "start" &&
+            paginationAlign !== "center",
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },

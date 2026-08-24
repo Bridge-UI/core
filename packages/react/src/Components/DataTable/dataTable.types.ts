@@ -15,6 +15,7 @@ import type {
   DataTableSorting,
   DataTableStickyEdge,
   DataTableStickyHeader,
+  FieldOverlayMode,
 } from "@bridge-ui/core/Domain";
 import type {
   TableAlign,
@@ -382,6 +383,14 @@ export interface DataTableOwnProps<T> {
   columnSearch?: DataTableColumnSearch;
 
   /**
+   * Overlay shell for the column visibility panel. `auto` uses `menu` on
+   * desktop and `drawer` on mobile.
+   *
+   * @default "auto"
+   */
+  columnsOverlay?: FieldOverlayMode;
+
+  /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
    *
    * @default undefined
@@ -394,6 +403,14 @@ export interface DataTableOwnProps<T> {
    * @default undefined
    */
   expanded?: string[];
+
+  /**
+   * Overlay shell for column filter panels. `auto` uses `menu` on desktop
+   * and `drawer` on mobile.
+   *
+   * @default "auto"
+   */
+  filterOverlay?: FieldOverlayMode;
 
   /**
    * Controlled column filters: column id → selected option values.

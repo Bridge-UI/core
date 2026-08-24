@@ -1,4 +1,5 @@
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import { Button } from "@/Components/Button";
 import type { ButtonProps } from "@/Components/Button/button.types";
 import { Tooltip } from "@/Components/Tooltip";
@@ -15,7 +16,7 @@ export function DataTableToolbarButton({
   buttonProps?: Partial<
     Omit<Extract<ButtonProps, { as?: "button" }>, "icon" | "onClick">
   >;
-  icon: "columns";
+  icon: IconSource;
   label: string;
   onClick?: () => void;
 }) {

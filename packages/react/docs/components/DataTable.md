@@ -47,7 +47,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped rows={users} columns={columns} />
 ```
 
-`full={false}` sizes columns to content instead of stretching the table:
+`full={false}` sizes columns to content instead of stretching the table. Default `full` stretches from the `sm` breakpoint; below that, columns size to content so more of the table stays on screen:
 
 ```tsx
 <DataTable full={false} rows={users} columns={columns} />
@@ -245,7 +245,19 @@ Table-level `slots` are `empty`, `expanded`, `footer`, `item`, `loading`, `pagin
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
-Set `searchable` on a column to add a text field in that same menu. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+Set `searchable` on a column to add a text field in that same overlay. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+
+Column filters open in a `FieldOverlay`. Default `filterOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+
+```tsx
+<DataTable
+  rows={users}
+  filters={filters}
+  columns={columns}
+  filterOverlay="drawer"
+  onFiltersChange={setFilters}
+/>
+```
 
 ```tsx
 <DataTable
@@ -286,7 +298,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
   columns={[
     {
       id: "name",
-      width: 160,
+      width: 120,
       header: "Name",
       sticky: "start",
       cell: (row) => row.name,
@@ -324,11 +336,14 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
+The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+
 ```tsx
 <DataTable
   rows={users}
   columns={columns}
   hiddenColumns={hidden}
+  columnsOverlay="drawer"
   onHiddenColumnsChange={setHidden}
 />
 ```

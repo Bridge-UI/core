@@ -332,6 +332,22 @@ test("it should call onFiltersChange when a column filter is applied", () => {
   expect(onFiltersChange).toHaveBeenCalledWith({ role: ["Engineer"] });
 });
 
+test("it should open column filters in a modal when filterOverlay is modal", () => {
+  render(
+    <DataTable
+      rows={rows}
+      filters={{}}
+      filterOverlay="modal"
+      columns={filterColumns}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Filter column" }));
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(screen.getByRole("checkbox", { name: "Engineer" })).toBeTruthy();
+});
+
 test("it should use radios for a single-select column filter", () => {
   render(
     <DataTable
@@ -510,6 +526,9 @@ test("it should pin a sticky start column", () => {
     "0px",
   );
   expect(
+    screen.getByRole("columnheader", { name: "Name" }).style.maxWidth,
+  ).toBe("120px");
+  expect(
     screen.getByRole("columnheader", { name: "Name" }).className,
   ).not.toContain("before:translate-x-full");
   expect(screen.getByRole("table").className).toContain("border-separate");
@@ -577,6 +596,22 @@ test("it should toggle a column from the columns menu", () => {
   fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
 
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should open column visibility in a modal when columnsOverlay is modal", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+
+  expect(screen.getByRole("checkbox", { name: "Role" })).toBeTruthy();
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {
@@ -824,7 +859,7 @@ test("it should align built-in pagination at the start", () => {
     />,
   );
 
-  expect(container.querySelector(".justify-start")).toBeTruthy();
+  expect(container.querySelector(".sm\\:justify-start")).toBeTruthy();
 });
 
 test("it should sort rows when sorting is controlled", () => {
