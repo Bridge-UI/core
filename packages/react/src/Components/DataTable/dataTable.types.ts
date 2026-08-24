@@ -4,6 +4,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,
@@ -41,6 +42,7 @@ import type { TextFieldProps } from "@/Components/TextField/textField.types";
 
 export type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,

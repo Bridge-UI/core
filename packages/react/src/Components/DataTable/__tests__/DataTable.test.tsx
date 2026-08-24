@@ -53,6 +53,33 @@ test("it should render headers and cells from columns and rows", () => {
   expect(screen.getByText("Ada Lovelace")).toBeTruthy();
 });
 
+test("it should merge column classes onto header and cells", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          cell: (row) => row.name,
+          classes: {
+            cell: "col-cell",
+            header: "col-header",
+          },
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  expect(
+    screen.getByRole("columnheader", { name: "Name" }).className,
+  ).toContain("col-header");
+  expect(
+    screen.getByRole("cell", { name: "Ada Lovelace" }).className,
+  ).toContain("col-cell");
+});
+
 test("it should apply the bordered variant on the table wrapper", () => {
   render(<DataTable rows={rows} columns={columns} variant="bordered" />);
 

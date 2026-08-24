@@ -215,6 +215,7 @@ type DataTableMerged<T> = MergeLibDefaults<
 export type DataTableHeaderView = {
   align?: DataTableColumn<unknown>["align"];
   ariaSort: ReturnType<typeof getDataTableAriaSort>;
+  classes?: DataTableColumn<unknown>["classes"];
   ellipsis: boolean;
   filterable: boolean;
   filterActive: boolean;
@@ -238,6 +239,7 @@ export type DataTableHeaderView = {
 
 export type DataTableCellView = {
   align?: DataTableColumn<unknown>["align"];
+  classes?: DataTableColumn<unknown>["classes"];
   content: ReactNode;
   ellipsis: boolean;
   id: string;
@@ -681,6 +683,7 @@ export function useDataTable<T>(
         align: meta.column?.align,
         stickyStyle: inset?.style,
         header: meta.column?.header,
+        classes: meta.column?.classes,
         isSelection: meta.isSelection,
         stickyEdge: inset?.edge === true,
         ellipsis: meta.column?.ellipsis === true,
@@ -750,6 +753,7 @@ export function useDataTable<T>(
             width: column?.width,
             align: column?.align,
             sticky: inset?.sticky,
+            classes: column?.classes,
             stickyStyle: inset?.style,
             stickyEdge: inset?.edge === true,
             ellipsis: column?.ellipsis === true,
@@ -1013,6 +1017,7 @@ export function useDataTable<T>(
               stickyPing.start,
             [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
               header.sticky === "end" && header.stickyEdge && stickyPing.end,
+            [header.classes?.header ?? ""]: true,
           }),
         },
       );
@@ -1052,6 +1057,7 @@ export function useDataTable<T>(
               cell.sticky === "start" && cell.stickyEdge && stickyPing.start,
             [get(variantItem, "cellStickyEdgeEnd") ?? ""]:
               cell.sticky === "end" && cell.stickyEdge && stickyPing.end,
+            [cell.classes?.cell ?? ""]: true,
           }),
         },
       );
@@ -1184,6 +1190,7 @@ export function useDataTable<T>(
         width: header.width,
         align: header.align,
         sticky: header.sticky,
+        classes: header.classes,
         isExpand: header.isExpand,
         stickyEdge: header.stickyEdge,
         stickyStyle: header.stickyStyle,
