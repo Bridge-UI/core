@@ -155,6 +155,7 @@ declare module "@bridge-ui/core/Config" {
         | "rounded"
         | "variant"
         | "showErrorIcon"
+        | "controlVariant"
         | "hideErrorMessage"
       >
     >;

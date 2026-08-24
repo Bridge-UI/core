@@ -8,7 +8,20 @@ import { useNumberField } from "@/Components/NumberField";
 test("it should return empty input value when no value is set", () => {
   const { result } = renderHook(() => useNumberField({}));
 
+  expect(result.current.isSplit).toBe(false);
   expect(result.current.inputBind.value).toBe("");
+  expect(result.current.incrementFirst).toBe(true);
+});
+
+test("it should expose split stepper flags when controlVariant is split", () => {
+  const { result } = renderHook(() =>
+    useNumberField({ controlVariant: "split" }),
+  );
+
+  expect(result.current.isSplit).toBe(true);
+  expect(result.current.incrementFirst).toBe(false);
+  expect(result.current.incrementIcon).toBe("plus");
+  expect(result.current.decrementIcon).toBe("minus");
 });
 
 test("it should reflect controlled value", () => {

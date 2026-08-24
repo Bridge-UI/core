@@ -55,3 +55,45 @@ test("it should render a label when label prop is provided", () => {
 
   expect(screen.getByText("Quantity")).toBeTruthy();
 });
+
+test("it should stack increment above decrement by default", () => {
+  render(<NumberField />);
+
+  const increment = screen.getByRole("button", { name: "Increment value" });
+  const decrement = screen.getByRole("button", { name: "Decrement value" });
+
+  expect(increment.compareDocumentPosition(decrement)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+  expect(increment.querySelector(".lucide-chevron-up")).not.toBeNull();
+  expect(decrement.querySelector(".lucide-chevron-down")).not.toBeNull();
+});
+
+test("it should place decrement before increment for inline controls", () => {
+  render(<NumberField controlVariant="inline" />);
+
+  const increment = screen.getByRole("button", { name: "Increment value" });
+  const decrement = screen.getByRole("button", { name: "Decrement value" });
+
+  expect(decrement.compareDocumentPosition(increment)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+});
+
+test("it should place decrement before the input when split", () => {
+  const { container } = render(<NumberField controlVariant="split" />);
+
+  const input = container.querySelector("input");
+  const increment = screen.getByRole("button", { name: "Increment value" });
+  const decrement = screen.getByRole("button", { name: "Decrement value" });
+
+  expect(input).not.toBeNull();
+  expect(decrement.compareDocumentPosition(input!)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+  expect(input!.compareDocumentPosition(increment)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+  expect(decrement.querySelector(".lucide-minus")).not.toBeNull();
+  expect(increment.querySelector(".lucide-plus")).not.toBeNull();
+});

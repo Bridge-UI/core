@@ -1,10 +1,27 @@
 // ** External Imports
-import { isEmpty, isNaN, isNil, isNumber, isString } from "es-toolkit/compat";
+import {
+  get,
+  isEmpty,
+  isNaN,
+  isNil,
+  isNumber,
+  isString,
+} from "es-toolkit/compat";
 import type { ChangeEvent } from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core/Utils";
+import {
+  getNumberFieldStepper,
+  resolveNumberFieldStepperIconSize,
+} from "@bridge-ui/core/Domain";
+import { numberFieldControlVariantProps as controlVariantProps } from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/hooks/useFormField";
@@ -18,6 +35,21 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+
+type NumberFieldRegistryProps = Pick<
+  NumberFieldProps,
+  "classes" | "controlVariant"
+>;
+
+type NumberFieldLibDefaults = LibDefaultsShape<
+  NumberFieldRegistryProps,
+  "controlVariant"
+>;
+
+type NumberFieldMerged = MergeLibDefaults<
+  NumberFieldRegistryProps,
+  NumberFieldLibDefaults
+>;
 
 function toNumericValue(
   raw: NumberFieldProps["value"] | NumberFieldProps["defaultValue"],
@@ -57,21 +89,49 @@ export function useNumberField(props: NumberFieldProps) {
     step = 1,
     customProps,
     defaultValue,
+    controlVariant: controlVariantProp,
     ...formFieldProps
   } = props;
 
-  const { entry } = useBridgeUIComponent<
-    Pick<NumberFieldProps, "classes">,
+  const registryProps = useMemo((): NumberFieldRegistryProps => {
+    return {
+      classes,
+      controlVariant: controlVariantProp,
+    };
+  }, [classes, controlVariantProp]);
+
+  const { entry, merged: numberFieldMerged } = useBridgeUIComponent<
+    NumberFieldMerged,
     "NumberField"
   >({
-    props: { classes },
+    props: registryProps,
     componentName: "NumberField",
+    libDefaults: {
+      controlVariant: "stacked",
+    },
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<NumberFieldClasses>({
     entry,
-    props: { classes },
+    props: registryProps,
   });
+
+  const controlVariant = numberFieldMerged.controlVariant ?? "stacked";
+
+  const controlVariantClasses = useMemo(() => {
+    return mergeBridgeUILayeredClasses(
+      controlVariantProps,
+      entry?.tokens?.controlVariant,
+    );
+  }, [entry?.tokens?.controlVariant]);
+
+  const controlVariantItem = derived(() => {
+    return (
+      get(controlVariantClasses, controlVariant) ?? controlVariantProps.stacked
+    );
+  });
+
+  const stepper = getNumberFieldStepper(controlVariant);
 
   const [internalValue, setInternalValue] = useState<number | undefined>(() => {
     return toNumericValue(defaultValue);
@@ -161,8 +221,13 @@ export function useNumberField(props: NumberFieldProps) {
     },
     {
       componentName: "NumberField",
-      reservedSlots: () => ["end"],
+      reservedSlots: () => (stepper.isSplit ? ["start", "end"] : ["end"]),
     },
+  );
+
+  const stepperIconSize = resolveNumberFieldStepperIconSize(
+    formField.merged.size,
+    controlVariant,
   );
 
   const inputBind = derived(() => {
@@ -189,5 +254,11 @@ export function useNumberField(props: NumberFieldProps) {
     increment,
     inputBind,
     mergedClasses,
+    stepperIconSize,
+    controlVariantItem,
+    isSplit: stepper.isSplit,
+    decrementIcon: stepper.decrementIcon,
+    incrementIcon: stepper.incrementIcon,
+    incrementFirst: stepper.incrementFirst,
   };
 }

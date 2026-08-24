@@ -2,7 +2,8 @@
 import type { ButtonHTMLAttributes, InputHTMLAttributes } from "react";
 
 // ** Core Imports
-import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
+import type { NumberFieldControlVariant } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {
@@ -12,6 +13,8 @@ import type {
   FormFieldSlots,
 } from "@/Components/FormField/formField.types";
 import type { IconProps } from "@/Components/Icon";
+
+export interface NumberFieldControlVariantOverrides {}
 
 export interface NumberFieldClasses extends FormFieldClasses {
   /**
@@ -63,6 +66,20 @@ export interface NumberFieldOwnProps extends Omit<
    * The classes to apply to the number field.
    */
   classes?: NumberFieldClasses;
+
+  /**
+   * Layout of the increment and decrement controls.
+   *
+   * `stacked` places them in a column at the end. `inline` places them in a
+   * row at the end. `split` places decrement at the start and increment at the
+   * end.
+   *
+   * @default "stacked"
+   */
+  controlVariant?: MergeProps<
+    NumberFieldControlVariant,
+    NumberFieldControlVariantOverrides
+  >;
 
   /**
    * Extra props for FormField parts and the stepper buttons.

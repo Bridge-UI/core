@@ -146,6 +146,11 @@ export type {
   StartOfWeek,
 } from "@/Domain/date";
 export {
+  getNumberFieldStepper,
+  resolveNumberFieldStepperIconSize,
+} from "@/Domain/numberField";
+export type { NumberFieldStepper } from "@/Domain/numberField";
+export {
   DEFAULT_OTP_LENGTH,
   applyOtpInput,
   applyOtpKeyNavigation,

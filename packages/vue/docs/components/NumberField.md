@@ -28,6 +28,16 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 />
 ```
 
+### Control variants
+
+```vue
+<NumberField label="Stacked" />
+
+<NumberField label="Split" control-variant="split" />
+
+<NumberField label="Inline" control-variant="inline" />
+```
+
 ### Min, max, and step
 
 ```vue
@@ -51,12 +61,13 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 
 ### NumberField-specific
 
-| Prop      | Type                 | Default | Description                               |
-| --------- | -------------------- | ------- | ----------------------------------------- |
-| `classes` | `NumberFieldClasses` | —       | The classes to apply to the number field. |
-| `max`     | `number`             | —       | The maximum value.                        |
-| `min`     | `number`             | —       | The minimum value.                        |
-| `step`    | `number`             | 1       | The step increment value.                 |
+| Prop             | Type                               | Default     | Description                                                                                  |
+| ---------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| `classes`        | `NumberFieldClasses`               | —           | The classes to apply to the number field.                                                    |
+| `controlVariant` | `"inline" \| "split" \| "stacked"` | `"stacked"` | Layout of increment and decrement controls. `split` uses minus/plus icons on opposite sides. |
+| `max`            | `number`                           | —           | The maximum value.                                                                           |
+| `min`            | `number`                           | —           | The minimum value.                                                                           |
+| `step`           | `number`                           | 1           | The step increment value.                                                                    |
 
 ### v-model
 

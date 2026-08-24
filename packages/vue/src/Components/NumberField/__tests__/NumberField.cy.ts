@@ -58,3 +58,13 @@ test("it should not render error icon when error is set", () => {
 
   cy.get(".lucide-circle-alert").should("not.exist");
 });
+
+test("it should render plus and minus icons when split", () => {
+  cy.mount(NumberField, {
+    attrs: { "aria-label": "Amount" },
+    props: { controlVariant: "split" },
+  });
+
+  cy.get('button[aria-label="Decrement value"] .lucide-minus').should("exist");
+  cy.get('button[aria-label="Increment value"] .lucide-plus').should("exist");
+});

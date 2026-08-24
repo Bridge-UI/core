@@ -172,13 +172,14 @@
 
 /**
  * FormField slot adornments (`bridge-start-adornment` / `bridge-end-adornment`).
- * Parent `.group/field` sets `data-bridge-rounded` from FormField `rounded`.
+ * Parent `.group/field` sets `data-bridge-rounded` from FormField `rounded`
+ * (omitted on the underlined variant).
  * Suffix `!` overrides Button/Badge `rounded-*` from the utilities layer.
  */
 @layer components {
   .bridge-end-adornment,
   .bridge-start-adornment {
-    @apply h-full min-h-0 rounded-none!;
+    @apply min-h-0 rounded-none!;
   }
 
   [data-bridge-rounded="none"] .bridge-start-adornment {

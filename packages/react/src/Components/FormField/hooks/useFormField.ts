@@ -511,7 +511,9 @@ export function useFormField(
     return mergePartBind(
       customProps?.container,
       {
-        "data-bridge-rounded": merged.rounded ?? "md",
+        ...(isUnderlined
+          ? {}
+          : { "data-bridge-rounded": merged.rounded ?? "md" }),
       },
       cn({
         "group/field relative flex flex-row items-stretch overflow-hidden":

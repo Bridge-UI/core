@@ -219,6 +219,11 @@ export type {
   ModalTransition,
   ModalTransitionLayer,
 } from "@/Tokens/Modal";
+export { controlVariantProps as numberFieldControlVariantProps } from "@/Tokens/NumberField";
+export type {
+  NumberFieldControlVariant,
+  NumberFieldControlVariantItem,
+} from "@/Tokens/NumberField";
 export {
   colorProps as otpFieldColorProps,
   roundedProps as otpFieldRoundedProps,

@@ -29,9 +29,22 @@ function mountUseNumberField(
 
 test("it should return undefined stringModel when no value is set", () => {
   const model = ref<null | number | undefined>(undefined);
-  const { stringModel } = mountUseNumberField(model);
+  const { isSplit, stringModel, incrementFirst } = mountUseNumberField(model);
 
+  expect(isSplit.value).toBe(false);
+  expect(incrementFirst.value).toBe(true);
   expect(stringModel.value).toBeUndefined();
+});
+
+test("it should expose split stepper flags when controlVariant is split", () => {
+  const model = ref<null | number | undefined>(undefined);
+  const { isSplit, incrementIcon, decrementIcon, incrementFirst } =
+    mountUseNumberField(model, { controlVariant: "split" });
+
+  expect(isSplit.value).toBe(true);
+  expect(incrementFirst.value).toBe(false);
+  expect(incrementIcon.value).toBe("plus");
+  expect(decrementIcon.value).toBe("minus");
 });
 
 test("it should reflect model value", () => {

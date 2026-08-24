@@ -19,12 +19,7 @@ import type {
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
-import {
-  mergePartBind,
-  presentSlotNames,
-  resolveFieldAdornmentIconSize,
-  useHoldRepeat,
-} from "@/Utils";
+import { mergePartBind, presentSlotNames, useHoldRepeat } from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
@@ -53,12 +48,18 @@ const value = computed({
 const resolveMessage = useResolveMessage();
 
 const {
+  isSplit,
   decrement,
   formField,
   increment,
   inputBind,
   stringModel,
+  decrementIcon,
+  incrementIcon,
   mergedClasses,
+  incrementFirst,
+  stepperIconSize,
+  controlVariantItem,
 } = useNumberField(props, value, {
   onChange: (next) => emit("change", next),
 });
@@ -77,8 +78,18 @@ const decrementHold = useHoldRepeat(
   }),
 );
 
-const stepperIconSize = computed(() => {
-  return resolveFieldAdornmentIconSize(props.size);
+const chromeSlotNames = computed(() => {
+  return FORM_FIELD_CHROME_SLOT_NAMES.filter((name) => {
+    if (name === "end") {
+      return false;
+    }
+
+    if (name === "start" && isSplit.value) {
+      return false;
+    }
+
+    return true;
+  });
 });
 
 const incrementBind = computed(() => {
@@ -94,7 +105,7 @@ const incrementBind = computed(() => {
       onLostpointercapture: incrementHold.onPressLostPointerCapture,
     },
     cn({
-      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+      [controlVariantItem.value.button]: true,
       [mergedClasses.value.increment ?? ""]: true,
     }),
   );
@@ -113,7 +124,7 @@ const decrementBind = computed(() => {
       onLostpointercapture: decrementHold.onPressLostPointerCapture,
     },
     cn({
-      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
+      [controlVariantItem.value.button]: true,
       [mergedClasses.value.decrement ?? ""]: true,
     }),
   );
@@ -124,33 +135,48 @@ const decrementBind = computed(() => {
   <FormField :field="formField">
     <template
       #[name]="slotData"
-      v-for="name in presentSlotNames(
-        FORM_FIELD_CHROME_SLOT_NAMES.filter((n) => n !== 'end'),
-        $slots,
-      )"
+      v-for="name in presentSlotNames(chromeSlotNames, $slots)"
     >
       <slot :name="name" v-bind="slotData || {}" />
     </template>
 
     <input v-model="stringModel" v-bind="inputBind" />
 
-    <template #end>
-      <div
-        class="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden"
-      >
-        <button v-bind="incrementBind">
+    <template #start v-if="isSplit">
+      <div :class="controlVariantItem.startGroup">
+        <button v-bind="decrementBind">
           <Icon
-            icon="chevronUp"
+            :icon="decrementIcon"
+            :size="stepperIconSize"
+            v-bind="props.customProps?.decrementIcon"
+          />
+        </button>
+      </div>
+    </template>
+
+    <template #end>
+      <div :class="controlVariantItem.endGroup">
+        <button v-if="incrementFirst" v-bind="incrementBind">
+          <Icon
+            :icon="incrementIcon"
             :size="stepperIconSize"
             v-bind="props.customProps?.incrementIcon"
           />
         </button>
 
-        <button v-bind="decrementBind">
+        <button v-if="!isSplit" v-bind="decrementBind">
           <Icon
-            icon="chevronDown"
+            :icon="decrementIcon"
             :size="stepperIconSize"
             v-bind="props.customProps?.decrementIcon"
+          />
+        </button>
+
+        <button v-if="!incrementFirst" v-bind="incrementBind">
+          <Icon
+            :icon="incrementIcon"
+            :size="stepperIconSize"
+            v-bind="props.customProps?.incrementIcon"
           />
         </button>
       </div>

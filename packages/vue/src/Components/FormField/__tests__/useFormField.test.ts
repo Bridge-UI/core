@@ -188,6 +188,18 @@ test("it should expose variantKey for underlined variant", () => {
   expect(variantKey.value).toBe("underlined");
 });
 
+test("it should set data-bridge-rounded on the container", () => {
+  const { containerBind } = mountUseFormField();
+
+  expect(containerBind.value["data-bridge-rounded"]).toBe("md");
+});
+
+test("it should omit data-bridge-rounded when variant is underlined", () => {
+  const { containerBind } = mountUseFormField({ variant: "underlined" });
+
+  expect(containerBind.value["data-bridge-rounded"]).toBeUndefined();
+});
+
 test("it should not set aria-describedby when error is true without errorMessage", () => {
   const { inputBind } = mountUseFormField({ error: true });
 
