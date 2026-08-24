@@ -4,6 +4,7 @@ import type { HTMLAttributes, Slot, VNodeChild } from "vue";
 // ** Core Imports
 import type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,
@@ -41,6 +42,7 @@ import type { TextFieldOwnProps } from "@/Components/TextField/textField.types";
 
 export type {
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,

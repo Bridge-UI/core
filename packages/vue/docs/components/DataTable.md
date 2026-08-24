@@ -294,6 +294,24 @@ const columns = [
 ];
 ```
 
+### Column classes
+
+`classes.header` and `classes.cell` merge onto that column’s `th` / `td`. Use width utilities for breakpoint-based sizing. Do not set `width` on the same column when the class should control width — inline `width` wins.
+
+```ts
+const columns = [
+  {
+    id: "name",
+    header: "Name",
+    cell: (row) => row.name,
+    classes: {
+      cell: "w-24 sm:w-40",
+      header: "w-24 sm:w-40",
+    },
+  },
+];
+```
+
 ### Column visibility
 
 Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** icon in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.

@@ -61,6 +61,29 @@ test("it should render headers and cells from columns and rows", () => {
   expect(wrapper.find("table").exists()).toBe(true);
 });
 
+test("it should merge column classes onto header and cells", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          cell: (row: User) => row.name,
+          classes: {
+            cell: "col-cell",
+            header: "col-header",
+          },
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  expect(wrapper.get("th").classes()).toContain("col-header");
+  expect(wrapper.get("td").classes()).toContain("col-cell");
+});
+
 test("it should apply the bordered variant on the table wrapper", () => {
   const wrapper = mountDataTable({
     props: { rows, columns, variant: "bordered" },
