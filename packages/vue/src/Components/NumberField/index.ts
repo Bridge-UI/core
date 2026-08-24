@@ -3,6 +3,7 @@ export { useNumberField } from "@/Components/NumberField/composables/useNumberFi
 export type { UseNumberFieldOptions } from "@/Components/NumberField/composables/useNumberField";
 export type {
   NumberFieldClasses,
+  NumberFieldControlVariantOverrides,
   NumberFieldCustomProps,
   NumberFieldEmits,
   NumberFieldOwnProps,

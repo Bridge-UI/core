@@ -1,9 +1,19 @@
 // ** External Imports
-import { isNil } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import { computed, useAttrs, type Ref } from "vue";
 
 // ** Core Imports
-import { cn } from "@bridge-ui/core/Utils";
+import {
+  getNumberFieldStepper,
+  resolveNumberFieldStepperIconSize,
+} from "@bridge-ui/core/Domain";
+import { numberFieldControlVariantProps as controlVariantProps } from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useFormField } from "@/Components/FormField/composables/useFormField";
@@ -21,6 +31,21 @@ export type UseNumberFieldOptions = {
   onChange?: (value: number) => void;
 };
 
+type NumberFieldRegistryProps = Pick<
+  NumberFieldOwnProps,
+  "classes" | "controlVariant"
+>;
+
+type NumberFieldLibDefaults = LibDefaultsShape<
+  NumberFieldRegistryProps,
+  "controlVariant"
+>;
+
+type NumberFieldMerged = MergeLibDefaults<
+  NumberFieldRegistryProps,
+  NumberFieldLibDefaults
+>;
+
 /**
  * Composes `NumberField` form chrome, input bind, registry classes, and stepper logic.
  */
@@ -34,17 +59,44 @@ export function useNumberField(
     return props.step ?? 1;
   });
 
-  const { entry } = useBridgeUIComponent<
-    Pick<NumberFieldOwnProps, "classes">,
+  const registryProps = computed((): NumberFieldRegistryProps => {
+    return {
+      classes: props.classes,
+      controlVariant: props.controlVariant,
+    };
+  });
+
+  const { entry, merged: numberFieldMerged } = useBridgeUIComponent<
+    NumberFieldMerged,
     "NumberField"
   >({
     componentName: "NumberField",
-    props: () => ({ classes: props.classes }),
+    props: () => registryProps.value,
+    libDefaults: {
+      controlVariant: "stacked",
+    },
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<NumberFieldClasses>({
     entry,
-    props: () => ({ classes: props.classes }),
+    props: () => registryProps.value,
+  });
+
+  const controlVariant = computed(() => {
+    return numberFieldMerged.value.controlVariant ?? "stacked";
+  });
+
+  const stepper = computed(() => {
+    return getNumberFieldStepper(controlVariant.value);
+  });
+
+  const controlVariantItem = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      controlVariantProps,
+      entry.value?.tokens?.controlVariant,
+    );
+
+    return get(classes, controlVariant.value) ?? controlVariantProps.stacked;
   });
 
   const formField = useFormField(
@@ -55,6 +107,7 @@ export function useNumberField(
         step: _step,
         classes: _classes,
         defaultValue: _defaultValue,
+        controlVariant: _controlVariant,
         ...rest
       } = props;
 
@@ -74,9 +127,18 @@ export function useNumberField(
     },
     {
       componentName: "NumberField",
-      reservedSlots: () => ["end"],
+      reservedSlots: () => {
+        return stepper.value.isSplit ? ["start", "end"] : ["end"];
+      },
     },
   );
+
+  const stepperIconSize = computed(() => {
+    return resolveNumberFieldStepperIconSize(
+      formField.merged.value.size,
+      controlVariant.value,
+    );
+  });
 
   const inputBind = computed(() => {
     return mergePartBind(
@@ -159,5 +221,11 @@ export function useNumberField(
     inputBind,
     stringModel,
     mergedClasses,
+    stepperIconSize,
+    controlVariantItem,
+    isSplit: computed(() => stepper.value.isSplit),
+    decrementIcon: computed(() => stepper.value.decrementIcon),
+    incrementIcon: computed(() => stepper.value.incrementIcon),
+    incrementFirst: computed(() => stepper.value.incrementFirst),
   };
 }

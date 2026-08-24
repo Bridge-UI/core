@@ -107,3 +107,35 @@ test("it should render a label when label prop is provided", () => {
 
   expect(wrapper.text()).toContain("Quantity");
 });
+
+test("it should stack increment above decrement by default", () => {
+  const wrapper = mount(NumberField);
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons[0]?.attributes("aria-label")).toBe("Increment value");
+  expect(buttons[1]?.attributes("aria-label")).toBe("Decrement value");
+});
+
+test("it should place decrement before increment for default controls", () => {
+  const wrapper = mount(NumberField, {
+    props: { controlVariant: "default" },
+  });
+  const buttons = wrapper.findAll("button");
+
+  expect(buttons[0]?.attributes("aria-label")).toBe("Decrement value");
+  expect(buttons[1]?.attributes("aria-label")).toBe("Increment value");
+});
+
+test("it should place decrement before the input when split", () => {
+  const wrapper = mount(NumberField, { props: { controlVariant: "split" } });
+  const decrement = wrapper.find('button[aria-label="Decrement value"]');
+  const increment = wrapper.find('button[aria-label="Increment value"]');
+  const input = wrapper.find("input");
+
+  expect(decrement.element.compareDocumentPosition(input.element)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+  expect(input.element.compareDocumentPosition(increment.element)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+});
