@@ -49,6 +49,26 @@ function mountDataTable(
   return wrapper;
 }
 
+function findOverlayCheckbox(label: string) {
+  return Array.from(
+    document.body.querySelectorAll('input[type="checkbox"]'),
+  ).find((input) => {
+    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
+      label,
+    );
+  }) as undefined | HTMLInputElement;
+}
+
+function clickOverlayButton(label: string) {
+  const button = Array.from(document.body.querySelectorAll("button")).find(
+    (item) => {
+      return item.textContent?.trim() === label;
+    },
+  );
+
+  button?.click();
+}
+
 test("it should render headers and cells from columns and rows", () => {
   const wrapper = mountDataTable({
     props: { rows, columns },
@@ -613,23 +633,103 @@ test("it should hide columns listed in hiddenColumns", () => {
 test("it should emit update:hiddenColumns from the columns menu", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
-    props: { rows, columns, hiddenColumns: [] },
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "menu",
+    },
   });
 
   await wrapper.get('[aria-label="Columns"]').trigger("click");
   await flushPromises();
 
-  const option = Array.from(
-    document.body.querySelectorAll('input[type="checkbox"]'),
-  ).find((input) => {
-    return (input.closest("div")?.parentElement?.textContent ?? "").includes(
-      "Role",
-    );
-  }) as undefined | HTMLInputElement;
+  const option = findOverlayCheckbox("Role");
 
   option?.click();
   await flushPromises();
 
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some((button) => {
+      return button.textContent?.trim() === "OK";
+    }),
+  ).toBe(false);
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should commit column visibility from the columns menu footer", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  findOverlayCheckbox("Role")?.click();
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")).toBeUndefined();
+
+  clickOverlayButton("OK");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should reset hideable columns from the columns menu footer", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: ["role"],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  clickOverlayButton("Reset");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")).toBeUndefined();
+
+  clickOverlayButton("OK");
+  await flushPromises();
+
+  expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([[]]);
+});
+
+test("it should toggle columns live when columnsShowFooter is false", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+      columnsShowFooter: false,
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  findOverlayCheckbox("Role")?.click();
+  await flushPromises();
+
+  expect(
+    Array.from(document.body.querySelectorAll("button")).some((button) => {
+      return button.textContent?.trim() === "OK";
+    }),
+  ).toBe(false);
   expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
 });
 

@@ -393,6 +393,15 @@ export interface DataTableOwnProps<T> {
   columnsOverlay?: FieldOverlayMode;
 
   /**
+   * Shows Reset / OK on the column visibility overlay. Unset defaults to
+   * `true` for `modal` / `drawer` shells (`false` for `menu`). Selection
+   * stays draft until OK.
+   *
+   * @default undefined
+   */
+  columnsShowFooter?: boolean;
+
+  /**
    * Extra props for internal parts (`table`, `wrapper`, checkboxes, …).
    *
    * @default undefined

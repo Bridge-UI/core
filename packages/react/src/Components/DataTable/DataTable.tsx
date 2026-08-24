@@ -388,7 +388,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     visibilityEnabled,
     paginationSlotProps,
     onCommitColumnFilter,
-    onToggleColumnVisibility,
+    onHiddenColumnsChange,
   } = useDataTable(props, dataTableLibDefaults);
 
   const selectionName = useId();
@@ -408,7 +408,8 @@ function DataTable<T>(props: DataTableProps<T>) {
                 <DataTableColumnsMenu
                   items={visibilityItems}
                   overlay={merged.columnsOverlay}
-                  onToggle={onToggleColumnVisibility}
+                  onChange={onHiddenColumnsChange}
+                  showFooter={merged.columnsShowFooter}
                 />
               </div>
             ) : null}

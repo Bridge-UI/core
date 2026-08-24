@@ -357,7 +357,9 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
-The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
+
+When unset, `columnsShowFooter` is `true` for `modal` / `drawer` (`false` for `menu`). Reset restores hideable columns; OK commits and closes. Closing without OK discards.
 
 ```tsx
 <DataTable

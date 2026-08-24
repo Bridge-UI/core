@@ -152,6 +152,7 @@ const dataTableBridgeKeys = [
   "onSortingChange",
   "paginationAlign",
   "onExpandedChange",
+  "columnsShowFooter",
   "onSelectionChange",
   "onColumnSearchChange",
   "onHiddenColumnsChange",
@@ -1345,6 +1346,10 @@ export function useDataTable<T>(
     [columns],
   );
 
+  const onHiddenColumnsChange = useCallback((ids: string[]) => {
+    mergedRef.current.onHiddenColumnsChange?.(ids);
+  }, []);
+
   return {
     slots,
     merged,
@@ -1390,6 +1395,7 @@ export function useDataTable<T>(
     visibilityEnabled,
     paginationSlotProps,
     onCommitColumnFilter,
+    onHiddenColumnsChange,
     onToggleColumnVisibility,
     loadingBar: merged.loadingVariant === "bar",
   };

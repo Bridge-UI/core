@@ -616,6 +616,7 @@ test("it should toggle a column from the columns menu", () => {
       rows={rows}
       columns={columns}
       hiddenColumns={[]}
+      columnsOverlay="menu"
       onHiddenColumnsChange={onHiddenColumnsChange}
     />,
   );
@@ -623,6 +624,74 @@ test("it should toggle a column from the columns menu", () => {
   fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
   fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
 
+  expect(screen.queryByRole("button", { name: "OK" })).toBeNull();
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should commit column visibility from the columns menu footer", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
+
+  expect(onHiddenColumnsChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "OK" }));
+
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should reset hideable columns from the columns menu footer", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      columnsOverlay="modal"
+      hiddenColumns={["role"]}
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+
+  expect(onHiddenColumnsChange).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole("button", { name: "OK" }));
+
+  expect(onHiddenColumnsChange).toHaveBeenCalledWith([]);
+});
+
+test("it should toggle columns live when columnsShowFooter is false", () => {
+  const onHiddenColumnsChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      hiddenColumns={[]}
+      columnsOverlay="modal"
+      columnsShowFooter={false}
+      onHiddenColumnsChange={onHiddenColumnsChange}
+    />,
+  );
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
+
+  expect(screen.queryByRole("button", { name: "OK" })).toBeNull();
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
 });
 

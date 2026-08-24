@@ -316,7 +316,9 @@ const columns = [
 
 Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** icon in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
-The panel opens in a `FieldOverlay`. Default `columns-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+The panel opens in a `FieldOverlay`. Default `columns-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
+
+When unset, `columns-show-footer` is `true` for `modal` / `drawer` (`false` for `menu`). Reset restores hideable columns; OK commits and closes. Closing without OK discards.
 
 ```vue
 <DataTable

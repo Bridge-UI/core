@@ -143,6 +143,7 @@ const dataTableBridgeKeys = [
   "loadingVariant",
   "perPageOptions",
   "paginationAlign",
+  "columnsShowFooter",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
 /**
@@ -1186,6 +1187,10 @@ export function useDataTable<T>(
     );
   }
 
+  function onHiddenColumnsChange(ids: string[]) {
+    models.hiddenColumns.value = ids;
+  }
+
   const summaryCells = computed((): null | DataTableCellView[] => {
     const hasSummary = columns.value.some((column) => {
       return column.summary !== undefined;
@@ -1294,6 +1299,7 @@ export function useDataTable<T>(
     visibilityEnabled,
     paginationSlotProps,
     onCommitColumnFilter,
+    onHiddenColumnsChange,
     onToggleColumnVisibility,
     loadingBar: computed(() => {
       return merged.value.loadingVariant === "bar";

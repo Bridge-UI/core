@@ -22,10 +22,12 @@ import {
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
+  getDataTableHiddenColumnIds,
   getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
+  getDataTableResetHiddenColumnIds,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
@@ -366,6 +368,28 @@ describe("getDataTableStickyPing", () => {
       end: false,
       start: true,
     });
+  });
+});
+
+describe("getDataTableHiddenColumnIds", () => {
+  test("it should collect hidden column ids", () => {
+    expect(
+      getDataTableHiddenColumnIds([
+        { id: "name", hidden: false },
+        { id: "role", hidden: true },
+      ]),
+    ).toEqual(["role"]);
+  });
+});
+
+describe("getDataTableResetHiddenColumnIds", () => {
+  test("it should keep only columns that cannot be shown", () => {
+    expect(
+      getDataTableResetHiddenColumnIds([
+        { id: "name", hideable: false },
+        { id: "role", hideable: true },
+      ]),
+    ).toEqual(["name"]);
   });
 });
 

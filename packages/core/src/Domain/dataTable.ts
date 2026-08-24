@@ -912,6 +912,36 @@ export function isDataTableVisibilityEnabled(
 }
 
 /**
+ * Hidden column ids from visibility items.
+ */
+export function getDataTableHiddenColumnIds(
+  items: { hidden: boolean; id: string }[],
+): string[] {
+  return items
+    .filter((item) => {
+      return item.hidden;
+    })
+    .map((item) => {
+      return item.id;
+    });
+}
+
+/**
+ * Hidden ids after Reset: only columns that cannot be shown (`hideable: false`).
+ */
+export function getDataTableResetHiddenColumnIds(
+  items: { hideable: boolean; id: string }[],
+): string[] {
+  return items
+    .filter((item) => {
+      return !item.hideable;
+    })
+    .map((item) => {
+      return item.id;
+    });
+}
+
+/**
  * Adds or removes a hideable column id. Keeps at least one column visible.
  */
 export function toggleDataTableColumnVisibility(

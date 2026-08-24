@@ -72,6 +72,7 @@ const props = withDefaults(
     columnsOverlay: "auto",
     paginationAlign: "end",
     loadingVariant: "overlay",
+    columnsShowFooter: undefined,
   },
 );
 
@@ -125,7 +126,7 @@ const {
   visibilityEnabled,
   paginationSlotProps,
   onCommitColumnFilter,
-  onToggleColumnVisibility,
+  onHiddenColumnsChange,
 } = useDataTable(
   props,
   {
@@ -229,7 +230,8 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           <DataTableColumnsMenu
             :items="visibilityItems"
             :overlay="merged.columnsOverlay"
-            v-on:toggle="onToggleColumnVisibility"
+            v-on:change="onHiddenColumnsChange"
+            :show-footer="merged.columnsShowFooter"
           />
         </div>
 
