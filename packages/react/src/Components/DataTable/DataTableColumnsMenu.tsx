@@ -2,7 +2,11 @@
 import { useRef, useState } from "react";
 
 // ** Core Imports
-import type { FieldOverlayMode } from "@bridge-ui/core/Domain";
+import {
+  getFieldOverlayControlSize,
+  resolveFieldOverlay,
+  type FieldOverlayMode,
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
@@ -10,6 +14,7 @@ import { Checkbox } from "@/Components/Checkbox";
 import { DataTableToolbarButton } from "@/Components/DataTable/DataTableToolbarButton";
 import type { DataTableVisibilityItem } from "@/Components/DataTable/hooks/useDataTable";
 import { FieldOverlay } from "@/Components/FieldOverlay";
+import { derived, useBreakpoint } from "@/Utils";
 
 /**
  * Internal column visibility overlay. Not part of the public API.
@@ -23,9 +28,16 @@ export function DataTableColumnsMenu({
   onToggle: (columnId: string, hide: boolean) => void;
   overlay?: FieldOverlayMode;
 }) {
+  const breakpoint = useBreakpoint();
   const [show, setShow] = useState(false);
   const resolveMessage = useResolveMessage();
   const triggerRef = useRef<HTMLSpanElement>(null);
+
+  const controlSize = derived(() => {
+    return getFieldOverlayControlSize(
+      resolveFieldOverlay(overlay, breakpoint.mobile),
+    );
+  });
 
   return (
     <span className="relative inline-flex items-center">
@@ -69,8 +81,8 @@ export function DataTableColumnsMenu({
                 }}
               >
                 <Checkbox
-                  size="sm"
                   hideErrorMessage
+                  size={controlSize}
                   endLabel={item.label}
                   checked={!item.hidden}
                   disabled={!item.hideable}

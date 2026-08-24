@@ -162,6 +162,7 @@ export {
   getDataTableSortTooltip,
   getDataTableStickyInsets,
   getDataTableStickyPing,
+  getFieldOverlayControlSize,
   getPaginationItems,
   getSliderBarGeometry,
   getSliderPointerClientX,

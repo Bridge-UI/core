@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 // ** Core Imports
 import {
   flattenDataTableFilterOptionValues,
+  getFieldOverlayControlSize,
+  resolveFieldOverlay,
   setDataTableFilterDraftAll,
   toggleDataTableFilterDraft,
   type DataTableFilterOption,
@@ -19,7 +21,7 @@ import { DataTableFilterOptions } from "@/Components/DataTable/DataTableFilterOp
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { Icon } from "@/Components/Icon";
 import { TextField } from "@/Components/TextField";
-import { derived } from "@/Utils";
+import { derived, useBreakpoint } from "@/Utils";
 
 /**
  * Internal column filter overlay. Not part of the public API.
@@ -45,6 +47,7 @@ export function DataTableFilterMenu({
   searchValue: string;
   values: string[];
 }) {
+  const breakpoint = useBreakpoint();
   const [query, setQuery] = useState("");
   const [show, setShow] = useState(false);
   const resolveMessage = useResolveMessage();
@@ -53,6 +56,12 @@ export function DataTableFilterMenu({
 
   const optionValues = derived(() => {
     return flattenDataTableFilterOptionValues(options);
+  });
+
+  const controlSize = derived(() => {
+    return getFieldOverlayControlSize(
+      resolveFieldOverlay(overlay, breakpoint.mobile),
+    );
   });
 
   const allSelected = derived(() => {
@@ -122,9 +131,9 @@ export function DataTableFilterMenu({
           {searchable ? (
             <div className="px-1 pb-1.5">
               <TextField
-                size="sm"
                 value={query}
                 hideErrorMessage
+                size={controlSize}
                 startIcon="search"
                 aria-label={resolveMessage("Search")}
                 placeholder={resolveMessage("Search")}
@@ -153,8 +162,8 @@ export function DataTableFilterMenu({
                   }}
                 >
                   <Checkbox
-                    size="sm"
                     hideErrorMessage
+                    size={controlSize}
                     checked={allSelected}
                     indeterminate={allIndeterminate}
                     classes={{ root: "pointer-events-none" }}
@@ -166,6 +175,7 @@ export function DataTableFilterMenu({
               <DataTableFilterOptions
                 draft={draft}
                 options={options}
+                size={controlSize}
                 multiple={multiple}
                 name={`filter-${columnId}`}
                 onToggle={(value, selected) => {

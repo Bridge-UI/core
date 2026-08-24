@@ -5,6 +5,8 @@ import { computed, ref, watch } from "vue";
 // ** Core Imports
 import {
   flattenDataTableFilterOptionValues,
+  getFieldOverlayControlSize,
+  resolveFieldOverlay,
   setDataTableFilterDraftAll,
   toggleDataTableFilterDraft,
   type DataTableFilterOption,
@@ -20,6 +22,7 @@ import DataTableFilterOptions from "@/Components/DataTable/DataTableFilterOption
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { Icon } from "@/Components/Icon";
 import { TextField } from "@/Components/TextField";
+import { useBreakpoint } from "@/Utils";
 
 defineOptions({ inheritAttrs: false, name: "DataTableFilterMenu" });
 
@@ -45,12 +48,19 @@ const emit = defineEmits<{
 
 const show = ref(false);
 const searchDraft = ref("");
+const breakpoint = useBreakpoint();
 const filterDraft = ref<string[]>([]);
 const resolveMessage = useResolveMessage();
 const triggerRef = ref<null | HTMLButtonElement>(null);
 
 const optionValues = computed(() => {
   return flattenDataTableFilterOptionValues(props.options);
+});
+
+const controlSize = computed(() => {
+  return getFieldOverlayControlSize(
+    resolveFieldOverlay(props.overlay, breakpoint.mobile),
+  );
 });
 
 const allSelected = computed(() => {
@@ -148,9 +158,9 @@ function onApply() {
       >
         <div v-if="searchable" class="px-1 pb-1.5">
           <TextField
-            size="sm"
             hide-error-message
             start-icon="search"
+            :size="controlSize"
             v-model="searchDraft"
             :aria-label="resolveMessage('Search')"
             :placeholder="resolveMessage('Search')"
@@ -169,8 +179,8 @@ function onApply() {
             class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
           >
             <Checkbox
-              size="sm"
               hide-error-message
+              :size="controlSize"
               :model-value="allSelected"
               :indeterminate="allIndeterminate"
               :classes="{ root: 'pointer-events-none' }"
@@ -180,6 +190,7 @@ function onApply() {
 
           <DataTableFilterOptions
             :options="options"
+            :size="controlSize"
             :draft="filterDraft"
             :multiple="multiple"
             v-on:toggle="onToggleDraft"

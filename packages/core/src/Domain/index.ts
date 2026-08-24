@@ -160,6 +160,7 @@ export {
 } from "@/Domain/otp";
 export type { OtpDigitsUpdate, OtpInputType } from "@/Domain/otp";
 export {
+  getFieldOverlayControlSize,
   isFieldOverlayDialog,
   resolveFieldOverlay,
   resolveFieldPickerClassName,

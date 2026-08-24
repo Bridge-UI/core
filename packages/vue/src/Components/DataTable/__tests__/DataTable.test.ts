@@ -384,6 +384,7 @@ test("it should open column filters in a modal when filterOverlay is modal", asy
   await flushPromises();
 
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should use radios for a single-select column filter", async () => {
@@ -647,6 +648,7 @@ test("it should open column visibility in a modal when columnsOverlay is modal",
   await flushPromises();
 
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {

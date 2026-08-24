@@ -15,12 +15,14 @@ export function DataTableFilterOptions({
   options,
   multiple,
   onToggle,
+  size = "sm",
 }: {
   draft: string[];
   multiple: boolean;
   name: string;
   onToggle: (value: string, selected: boolean) => void;
   options: DataTableFilterOption[];
+  size?: "md" | "sm";
 }) {
   return (
     <>
@@ -35,6 +37,7 @@ export function DataTableFilterOptions({
               <div className="ps-2">
                 <DataTableFilterOptions
                   name={name}
+                  size={size}
                   draft={draft}
                   multiple={multiple}
                   onToggle={onToggle}
@@ -65,7 +68,7 @@ export function DataTableFilterOptions({
           >
             {multiple ? (
               <Checkbox
-                size="sm"
+                size={size}
                 hideErrorMessage
                 checked={selected}
                 endLabel={option.label}
@@ -73,7 +76,7 @@ export function DataTableFilterOptions({
               />
             ) : (
               <Radio
-                size="sm"
+                size={size}
                 name={name}
                 hideErrorMessage
                 checked={selected}

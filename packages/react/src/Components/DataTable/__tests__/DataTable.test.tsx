@@ -373,6 +373,7 @@ test("it should open column filters in a modal when filterOverlay is modal", () 
 
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
   expect(screen.getByRole("checkbox", { name: "Engineer" })).toBeTruthy();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should use radios for a single-select column filter", () => {
@@ -639,6 +640,7 @@ test("it should open column visibility in a modal when columnsOverlay is modal",
 
   expect(screen.getByRole("checkbox", { name: "Role" })).toBeTruthy();
   expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.body.querySelector('[role="dialog"] .w-5')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {

@@ -3,7 +3,11 @@
 import { computed, ref } from "vue";
 
 // ** Core Imports
-import type { FieldOverlayMode } from "@bridge-ui/core/Domain";
+import {
+  getFieldOverlayControlSize,
+  resolveFieldOverlay,
+  type FieldOverlayMode,
+} from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
@@ -11,10 +15,11 @@ import { Checkbox } from "@/Components/Checkbox";
 import type { DataTableVisibilityItem } from "@/Components/DataTable/composables/useDataTable";
 import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
 import { FieldOverlay } from "@/Components/FieldOverlay";
+import { useBreakpoint } from "@/Utils";
 
 defineOptions({ inheritAttrs: false, name: "DataTableColumnsMenu" });
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     items: DataTableVisibilityItem[];
     overlay?: FieldOverlayMode;
@@ -29,8 +34,15 @@ const emit = defineEmits<{
 }>();
 
 const show = ref(false);
+const breakpoint = useBreakpoint();
 const resolveMessage = useResolveMessage();
 const triggerRef = ref<null | HTMLSpanElement>(null);
+
+const controlSize = computed(() => {
+  return getFieldOverlayControlSize(
+    resolveFieldOverlay(props.overlay, breakpoint.mobile),
+  );
+});
 
 const overlayCustomProps = computed(() => {
   return {
@@ -73,8 +85,8 @@ function onToggleShow() {
           class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
         >
           <Checkbox
-            size="sm"
             hide-error-message
+            :size="controlSize"
             :end-label="item.label"
             :disabled="!item.hideable"
             :model-value="!item.hidden"
