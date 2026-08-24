@@ -33,9 +33,9 @@ export function useDataTableColumnsMenu({
 }) {
   const breakpoint = useBreakpoint();
   const [show, setShow] = useState(false);
-  const triggerRef = useRef<HTMLSpanElement>(null);
-  const draftHiddenIds = useRef<string[]>([]);
   const [, setDraftRevision] = useState(0);
+  const draftHiddenIds = useRef<string[]>([]);
+  const triggerRef = useRef<HTMLSpanElement>(null);
 
   const overlayResolved = derived(() => {
     return resolveFieldOverlay(overlay, breakpoint.mobile);
