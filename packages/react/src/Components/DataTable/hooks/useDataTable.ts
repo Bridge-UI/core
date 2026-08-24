@@ -28,6 +28,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -73,6 +74,7 @@ import {
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   matchDataTableSearch,
+  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
@@ -887,6 +889,21 @@ export function useDataTable<T>(
     };
   }, [tableScrollEl, applyStickyPing]);
 
+  const [paginationInline, setPaginationInline] = useState(false);
+  const [paginationEl, setPaginationEl] = useState<null | HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (!paginationEl) {
+      return;
+    }
+
+    return observeDataTablePaginationInline(paginationEl, (inline) => {
+      setPaginationInline((prev) => {
+        return prev === inline ? prev : inline;
+      });
+    });
+  }, [paginationEl]);
+
   const tableProps = useMemo(() => {
     const hasStickyColumns = headerViews.some((header) => {
       return Boolean(header.stickyStyle);
@@ -1161,17 +1178,26 @@ export function useDataTable<T>(
       {},
       {},
       {
+        ref: setPaginationEl,
         className: cn({
-          "flex flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
+          "flex-col justify-center": showPerPage && !paginationInline,
+          "flex-row": !showPerPage || paginationInline,
+          "justify-end": !showPerPage,
+          "justify-between": showPerPage && paginationInline,
           "w-full": merged.full !== false,
           "w-0 min-w-full": merged.full === false,
-          "sm:justify-end": !showPerPage,
-          "sm:justify-between": showPerPage,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [merged.full, showPerPage, mergedClasses]);
+  }, [
+    merged.full,
+    showPerPage,
+    mergedClasses,
+    setPaginationEl,
+    paginationInline,
+  ]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {

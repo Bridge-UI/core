@@ -141,10 +141,8 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.current.showPerPage).toBe(true);
   expect(result.current.resolvedPageCount).toBe(3);
   expect(result.current.paginationBind.className).toContain("flex-col");
-  expect(result.current.paginationBind.className).toContain("sm:flex-row");
-  expect(result.current.paginationBind.className).toContain(
-    "sm:justify-between",
-  );
+  expect(result.current.paginationBind.className).toContain("justify-center");
+  expect(result.current.paginationBind.className).not.toContain("flex-row");
 });
 
 test("it should shrink the frame and pagination when full is false", () => {

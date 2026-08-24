@@ -184,10 +184,8 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.showPerPage.value).toBe(true);
   expect(result.resolvedPageCount.value).toBe(3);
   expect(String(result.paginationBind.value.class)).toContain("flex-col");
-  expect(String(result.paginationBind.value.class)).toContain("sm:flex-row");
-  expect(String(result.paginationBind.value.class)).toContain(
-    "sm:justify-between",
-  );
+  expect(String(result.paginationBind.value.class)).toContain("justify-center");
+  expect(String(result.paginationBind.value.class)).not.toContain("flex-row");
 });
 
 test("it should shrink the frame and pagination when full is false", () => {

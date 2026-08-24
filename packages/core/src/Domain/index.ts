@@ -42,6 +42,7 @@ export type {
 export {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
+  DATATABLE_PAGINATION_GAP_PX,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -76,6 +77,7 @@ export {
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
   isDataTableExpandEnabled,
+  isDataTablePaginationInline,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -85,6 +87,7 @@ export {
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   matchDataTableSearch,
+  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,

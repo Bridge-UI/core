@@ -984,8 +984,8 @@ test("it should pin built-in pagination to the end", () => {
     },
   });
 
-  expect(wrapper.find(".sm\\:justify-end").exists()).toBe(true);
-  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(false);
+  expect(wrapper.find(".justify-end").exists()).toBe(true);
+  expect(wrapper.find(".justify-between").exists()).toBe(false);
 });
 
 test("it should spread per-page and pagination across the footer", () => {
@@ -999,7 +999,11 @@ test("it should spread per-page and pagination across the footer", () => {
     },
   });
 
-  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(true);
+  expect(wrapper.find(".justify-end").exists()).toBe(false);
+  expect(
+    wrapper.find(".justify-between").exists() ||
+      wrapper.find(".flex-col").exists(),
+  ).toBe(true);
 });
 
 test("it should sort rows when sorting is controlled", () => {

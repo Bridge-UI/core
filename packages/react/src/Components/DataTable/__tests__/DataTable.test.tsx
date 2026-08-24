@@ -982,8 +982,8 @@ test("it should pin built-in pagination to the end", () => {
     <DataTable page={1} rows={rows} pageCount={2} columns={columns} />,
   );
 
-  expect(container.querySelector(".sm\\:justify-end")).toBeTruthy();
-  expect(container.querySelector(".sm\\:justify-between")).toBeNull();
+  expect(container.querySelector(".justify-end")).toBeTruthy();
+  expect(container.querySelector(".justify-between")).toBeNull();
 });
 
 test("it should spread per-page and pagination across the footer", () => {
@@ -997,7 +997,11 @@ test("it should spread per-page and pagination across the footer", () => {
     />,
   );
 
-  expect(container.querySelector(".sm\\:justify-between")).toBeTruthy();
+  expect(container.querySelector(".justify-end")).toBeNull();
+  expect(
+    container.querySelector(".justify-between") ??
+      container.querySelector(".flex-col"),
+  ).toBeTruthy();
 });
 
 test("it should sort rows when sorting is controlled", () => {
