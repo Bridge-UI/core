@@ -69,8 +69,8 @@ test("it should stack increment above decrement by default", () => {
   expect(decrement.querySelector(".lucide-chevron-down")).not.toBeNull();
 });
 
-test("it should place decrement before increment for default controls", () => {
-  render(<NumberField controlVariant="default" />);
+test("it should place decrement before increment for inline controls", () => {
+  render(<NumberField controlVariant="inline" />);
 
   const increment = screen.getByRole("button", { name: "Increment value" });
   const decrement = screen.getByRole("button", { name: "Decrement value" });

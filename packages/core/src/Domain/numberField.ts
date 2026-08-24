@@ -65,7 +65,7 @@ export function getNumberFieldStepper(
     };
   }
 
-  if (controlVariant === "default") {
+  if (controlVariant === "inline") {
     return {
       isSplit: false,
       incrementFirst: false,

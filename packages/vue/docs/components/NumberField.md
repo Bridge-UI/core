@@ -35,7 +35,7 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 
 <NumberField label="Split" control-variant="split" />
 
-<NumberField label="Default" control-variant="default" />
+<NumberField label="Inline" control-variant="inline" />
 ```
 
 ### Min, max, and step
@@ -61,13 +61,13 @@ import { NumberField } from "@bridge-ui/vue/Components/NumberField";
 
 ### NumberField-specific
 
-| Prop             | Type                                | Default     | Description                                                                                  |
-| ---------------- | ----------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
-| `classes`        | `NumberFieldClasses`                | —           | The classes to apply to the number field.                                                    |
-| `controlVariant` | `"default" \| "split" \| "stacked"` | `"stacked"` | Layout of increment and decrement controls. `split` uses minus/plus icons on opposite sides. |
-| `max`            | `number`                            | —           | The maximum value.                                                                           |
-| `min`            | `number`                            | —           | The minimum value.                                                                           |
-| `step`           | `number`                            | 1           | The step increment value.                                                                    |
+| Prop             | Type                               | Default     | Description                                                                                  |
+| ---------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
+| `classes`        | `NumberFieldClasses`               | —           | The classes to apply to the number field.                                                    |
+| `controlVariant` | `"inline" \| "split" \| "stacked"` | `"stacked"` | Layout of increment and decrement controls. `split` uses minus/plus icons on opposite sides. |
+| `max`            | `number`                           | —           | The maximum value.                                                                           |
+| `min`            | `number`                           | —           | The minimum value.                                                                           |
+| `step`           | `number`                           | 1           | The step increment value.                                                                    |
 
 ### v-model
 

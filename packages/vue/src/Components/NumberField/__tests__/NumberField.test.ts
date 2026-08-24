@@ -116,9 +116,9 @@ test("it should stack increment above decrement by default", () => {
   expect(buttons[1]?.attributes("aria-label")).toBe("Decrement value");
 });
 
-test("it should place decrement before increment for default controls", () => {
+test("it should place decrement before increment for inline controls", () => {
   const wrapper = mount(NumberField, {
-    props: { controlVariant: "default" },
+    props: { controlVariant: "inline" },
   });
   const buttons = wrapper.findAll("button");
 
