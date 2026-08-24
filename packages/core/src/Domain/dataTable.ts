@@ -37,15 +37,6 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
- * Pagination region alignment (`sm:justify-*`) for `paginationAlign`.
- */
-export const DATATABLE_PAGINATION_ALIGN = {
-  end: "sm:justify-end",
-  start: "sm:justify-start",
-  center: "sm:justify-center",
-} as const;
-
-/**
  * Pagination variant that pairs with a DataTable chrome variant.
  */
 export const DATATABLE_PAGINATION_VARIANT = {
@@ -290,12 +281,6 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
- * Pagination region `sm:justify-*` class paired with `paginationAlign`.
- */
-export type DataTablePaginationAlignClass =
-  (typeof DATATABLE_PAGINATION_ALIGN)[keyof typeof DATATABLE_PAGINATION_ALIGN];
-
-/**
  * Pagination variant paired with a DataTable chrome variant.
  */
 export type DataTablePaginationVariant =
@@ -310,15 +295,6 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
  * Semantic icon for a sortable header given its `aria-sort`.
  */
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
-
-/**
- * Maps `paginationAlign` to a flex `sm:justify-*` class.
- */
-export function getDataTablePaginationAlignClass(
-  align: string | undefined,
-): DataTablePaginationAlignClass {
-  return get(DATATABLE_PAGINATION_ALIGN, align ?? "end") ?? "sm:justify-end";
-}
 
 /**
  * Maps a DataTable chrome variant to the matching Pagination variant.

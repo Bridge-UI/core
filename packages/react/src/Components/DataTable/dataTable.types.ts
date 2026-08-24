@@ -488,13 +488,6 @@ export interface DataTableOwnProps<T> {
   pageCount?: number;
 
   /**
-   * Alignment of the built-in Pagination region.
-   *
-   * @default "end"
-   */
-  paginationAlign?: MergeProps<TableAlign, TableAlignOverrides>;
-
-  /**
    * Page size. With `page` and no `pageCount`/`totalCount`, slices `rows`
    * locally. With server paging, only drives the per-page Select.
    *

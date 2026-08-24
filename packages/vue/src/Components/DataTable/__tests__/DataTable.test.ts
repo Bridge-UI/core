@@ -945,18 +945,32 @@ test("it should box sticky header overflow from classes.root", () => {
   );
 });
 
-test("it should align built-in pagination at the start", () => {
+test("it should pin built-in pagination to the end", () => {
   const wrapper = mountDataTable({
     props: {
       rows,
       page: 1,
       columns,
       pageCount: 2,
-      paginationAlign: "start",
     },
   });
 
-  expect(wrapper.find(".sm\\:justify-start").exists()).toBe(true);
+  expect(wrapper.find(".sm\\:justify-end").exists()).toBe(true);
+  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(false);
+});
+
+test("it should spread per-page and pagination across the footer", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 2,
+    },
+  });
+
+  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(true);
 });
 
 test("it should sort rows when sorting is controlled", () => {

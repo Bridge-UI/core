@@ -42,7 +42,6 @@ export type {
 export {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
-  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -60,7 +59,6 @@ export {
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
-  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
@@ -112,7 +110,6 @@ export type {
   DataTableFilters,
   DataTableItemSlotProps,
   DataTableLoadingVariant,
-  DataTablePaginationAlignClass,
   DataTablePaginationSlotProps,
   DataTablePaginationVariant,
   DataTablePerPageSlotProps,

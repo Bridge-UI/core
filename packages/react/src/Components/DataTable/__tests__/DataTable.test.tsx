@@ -946,18 +946,27 @@ test("it should box sticky header overflow from classes.root", () => {
   );
 });
 
-test("it should align built-in pagination at the start", () => {
+test("it should pin built-in pagination to the end", () => {
+  const { container } = render(
+    <DataTable page={1} rows={rows} pageCount={2} columns={columns} />,
+  );
+
+  expect(container.querySelector(".sm\\:justify-end")).toBeTruthy();
+  expect(container.querySelector(".sm\\:justify-between")).toBeNull();
+});
+
+test("it should spread per-page and pagination across the footer", () => {
   const { container } = render(
     <DataTable
       page={1}
       rows={rows}
+      perPage={10}
       pageCount={2}
       columns={columns}
-      paginationAlign="start"
     />,
   );
 
-  expect(container.querySelector(".sm\\:justify-start")).toBeTruthy();
+  expect(container.querySelector(".sm\\:justify-between")).toBeTruthy();
 });
 
 test("it should sort rows when sorting is controlled", () => {

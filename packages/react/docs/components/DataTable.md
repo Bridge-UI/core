@@ -141,19 +141,6 @@ Slot replaces the built-in Pagination and/or per-page Select (`slots.pagination`
 />
 ```
 
-Align the built-in Pagination with `paginationAlign` (`start` / `center` / `end`, default `end`):
-
-```tsx
-<DataTable
-  page={page}
-  rows={users}
-  columns={columns}
-  pageCount={pageCount}
-  onPageChange={setPage}
-  paginationAlign="start"
-/>
-```
-
 When `page` and `pageCount` (or `totalCount`) are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` / `perPage` and fetch the current page in the app:
 
 ```tsx

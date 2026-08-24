@@ -50,7 +50,6 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
-  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -150,7 +149,6 @@ const dataTableBridgeKeys = [
   "onFiltersChange",
   "onPerPageChange",
   "onSortingChange",
-  "paginationAlign",
   "onExpandedChange",
   "columnsShowFooter",
   "onSelectionChange",
@@ -194,7 +192,6 @@ type DataTableLibDefaults = LibDefaultsShape<
   | "selectionMode"
   | "columnsOverlay"
   | "loadingVariant"
-  | "paginationAlign"
 >;
 
 type DataTableMerged<T> = MergeLibDefaults<
@@ -1153,14 +1150,13 @@ export function useDataTable<T>(
       {
         className: cn({
           "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "sm:justify-end": !showPerPage,
           "sm:justify-between": showPerPage,
-          [getDataTablePaginationAlignClass(merged.paginationAlign)]:
-            !showPerPage,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [showPerPage, mergedClasses, merged.paginationAlign]);
+  }, [showPerPage, mergedClasses]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {

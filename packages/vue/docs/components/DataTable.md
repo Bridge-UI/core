@@ -126,18 +126,6 @@ Slot replaces the built-in Pagination and/or per-page Select (`#pagination` / `#
 </DataTable>
 ```
 
-Align the built-in Pagination with `pagination-align` (`start` / `center` / `end`, default `end`):
-
-```vue
-<DataTable
-  :rows="users"
-  :columns="columns"
-  v-model:page="page"
-  :page-count="pageCount"
-  pagination-align="start"
-/>
-```
-
 When `page` and `page-count` (or `total-count`) are set, DataTable does not sort or filter `rows` locally — bind `sorting` / `filters` / `page` / `per-page` and fetch the current page in the app:
 
 ```vue

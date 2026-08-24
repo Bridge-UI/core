@@ -21,7 +21,6 @@ const libDefaults = {
   stickyHeader: false,
   filterOverlay: "auto",
   columnsOverlay: "auto",
-  paginationAlign: "end",
   loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
@@ -186,6 +185,9 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.resolvedPageCount.value).toBe(3);
   expect(String(result.paginationBind.value.class)).toContain("flex-col");
   expect(String(result.paginationBind.value.class)).toContain("sm:flex-row");
+  expect(String(result.paginationBind.value.class)).toContain(
+    "sm:justify-between",
+  );
 });
 
 test("it should expose sticky expand visibility and summary views", () => {

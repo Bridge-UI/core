@@ -5,7 +5,6 @@ import { describe, expect, test } from "vitest";
 import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
-  DATATABLE_PAGINATION_ALIGN,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -23,7 +22,6 @@ import {
   getDataTableDefaultCellContent,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
-  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
@@ -66,18 +64,6 @@ import {
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
-
-describe("getDataTablePaginationAlignClass", () => {
-  test("it should map paginationAlign to justify classes", () => {
-    expect(getDataTablePaginationAlignClass("start")).toBe("sm:justify-start");
-    expect(getDataTablePaginationAlignClass("center")).toBe(
-      "sm:justify-center",
-    );
-    expect(getDataTablePaginationAlignClass("unknown")).toBe("sm:justify-end");
-    expect(getDataTablePaginationAlignClass(undefined)).toBe("sm:justify-end");
-    expect(DATATABLE_PAGINATION_ALIGN.end).toBe("sm:justify-end");
-  });
-});
 
 describe("getDataTablePaginationVariant", () => {
   test("it should map table chrome to pagination variants", () => {

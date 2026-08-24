@@ -17,7 +17,6 @@ const libDefaults = {
   stickyHeader: false,
   filterOverlay: "auto",
   columnsOverlay: "auto",
-  paginationAlign: "end",
   loadingVariant: "overlay",
   selectionMode: "multiple",
 } as const;
