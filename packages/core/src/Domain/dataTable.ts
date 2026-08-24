@@ -34,7 +34,7 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 /**
  * Fallback width in px for sticky columns without a parseable `width`.
  */
-export const DATATABLE_STICKY_WIDTH_PX = 160;
+export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
  * Pagination region alignment (`justify-*`) for `paginationAlign`.
