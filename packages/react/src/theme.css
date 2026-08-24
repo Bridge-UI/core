@@ -178,7 +178,7 @@
 @layer components {
   .bridge-end-adornment,
   .bridge-start-adornment {
-    @apply h-full min-h-0 rounded-none!;
+    @apply min-h-0 rounded-none!;
   }
 
   [data-bridge-rounded="none"] .bridge-start-adornment {

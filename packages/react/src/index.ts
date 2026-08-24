@@ -423,6 +423,7 @@ export type {
 export { NumberField, useNumberField } from "@/Components/NumberField";
 export type {
   NumberFieldClasses,
+  NumberFieldControlVariantOverrides,
   NumberFieldCustomProps,
   NumberFieldOwnProps,
   NumberFieldProps,

@@ -10,17 +10,24 @@ import { FormField } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
 import { useNumberField } from "@/Components/NumberField/hooks/useNumberField";
 import type { NumberFieldProps } from "@/Components/NumberField/numberField.types";
-import {
-  mergePartBind,
-  resolveFieldAdornmentIconSize,
-  useHoldRepeat,
-} from "@/Utils";
+import { mergePartBind, useHoldRepeat } from "@/Utils";
 
 function NumberField(props: NumberFieldProps) {
   const resolveMessage = useResolveMessage();
 
-  const { formField, increment, decrement, inputBind, mergedClasses } =
-    useNumberField(props);
+  const {
+    isSplit,
+    decrement,
+    formField,
+    increment,
+    inputBind,
+    decrementIcon,
+    incrementIcon,
+    mergedClasses,
+    incrementFirst,
+    stepperIconSize,
+    controlVariantItem,
+  } = useNumberField(props);
 
   const incrementHold = useHoldRepeat(increment, {
     disabled: props.disabled,
@@ -34,7 +41,54 @@ function NumberField(props: NumberFieldProps) {
   const decrementProps = props.customProps?.decrement;
   const incrementIconProps = props.customProps?.incrementIcon;
   const decrementIconProps = props.customProps?.decrementIcon;
-  const stepperIconSize = resolveFieldAdornmentIconSize(props.size);
+
+  const incrementButton = (
+    <button
+      {...mergePartBind(
+        incrementProps,
+        {
+          type: "button",
+          disabled: props.disabled,
+          "aria-label": resolveMessage("Increment value"),
+          ...incrementHold.handlers,
+        },
+        cn({
+          [controlVariantItem.button]: true,
+          [mergedClasses.increment ?? ""]: true,
+        }),
+      )}
+    >
+      <Icon
+        icon={incrementIcon}
+        size={stepperIconSize}
+        {...incrementIconProps}
+      />
+    </button>
+  );
+
+  const decrementButton = (
+    <button
+      {...mergePartBind(
+        decrementProps,
+        {
+          type: "button",
+          disabled: props.disabled,
+          "aria-label": resolveMessage("Decrement value"),
+          ...decrementHold.handlers,
+        },
+        cn({
+          [controlVariantItem.button]: true,
+          [mergedClasses.decrement ?? ""]: true,
+        }),
+      )}
+    >
+      <Icon
+        icon={decrementIcon}
+        size={stepperIconSize}
+        {...decrementIconProps}
+      />
+    </button>
+  );
 
   return (
     <FormField
@@ -42,52 +96,23 @@ function NumberField(props: NumberFieldProps) {
         ...formField,
         slots: {
           ...props.slots,
+          ...(isSplit
+            ? {
+                start: (
+                  <Fragment>
+                    <div className={controlVariantItem.startGroup}>
+                      {decrementButton}
+                    </div>
+                  </Fragment>
+                ),
+              }
+            : {}),
           end: (
             <Fragment>
-              <div className="bridge-end-adornment flex h-full min-w-9 flex-col gap-px overflow-hidden">
-                <button
-                  {...mergePartBind(
-                    incrementProps,
-                    {
-                      type: "button",
-                      disabled: props.disabled,
-                      "aria-label": resolveMessage("Increment value"),
-                      ...incrementHold.handlers,
-                    },
-                    cn({
-                      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
-                      [mergedClasses.increment ?? ""]: true,
-                    }),
-                  )}
-                >
-                  <Icon
-                    icon="chevronUp"
-                    size={stepperIconSize}
-                    {...incrementIconProps}
-                  />
-                </button>
-
-                <button
-                  {...mergePartBind(
-                    decrementProps,
-                    {
-                      type: "button",
-                      disabled: props.disabled,
-                      "aria-label": resolveMessage("Decrement value"),
-                      ...decrementHold.handlers,
-                    },
-                    cn({
-                      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center": true,
-                      [mergedClasses.decrement ?? ""]: true,
-                    }),
-                  )}
-                >
-                  <Icon
-                    icon="chevronDown"
-                    size={stepperIconSize}
-                    {...decrementIconProps}
-                  />
-                </button>
+              <div className={controlVariantItem.endGroup}>
+                {incrementFirst ? incrementButton : null}
+                {isSplit ? null : decrementButton}
+                {incrementFirst ? null : incrementButton}
               </div>
             </Fragment>
           ),
