@@ -112,6 +112,10 @@ import type {
   ModalTransitionLayer,
 } from "@/Tokens/Modal";
 import type {
+  NumberFieldControlVariant,
+  NumberFieldControlVariantItem,
+} from "@/Tokens/NumberField";
+import type {
   OtpFieldColor,
   OtpFieldColorItem,
   OtpFieldRounded,
@@ -1024,6 +1028,7 @@ export interface NumberFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof FormFieldColor;
+    controlVariant: keyof NumberFieldControlVariant;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
     showErrorIcon: boolean;
@@ -1032,6 +1037,7 @@ export interface NumberFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
+    controlVariant: Record<string, NumberFieldControlVariantItem>;
     rounded: Record<string, FormFieldRoundedItem>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
