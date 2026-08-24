@@ -104,6 +104,7 @@ export {
 export type {
   DataTableAriaSort,
   DataTableColumnBase,
+  DataTableColumnClasses,
   DataTableColumnSearch,
   DataTableFilterOption,
   DataTableFilters,

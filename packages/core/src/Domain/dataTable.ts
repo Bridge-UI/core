@@ -193,6 +193,25 @@ export type DataTableStickyInset = {
 };
 
 /**
+ * Extra classes for a column's header cell and body/footer cells.
+ */
+export type DataTableColumnClasses = {
+  /**
+   * Classes merged onto body and footer cells.
+   *
+   * @default undefined
+   */
+  cell?: string;
+
+  /**
+   * Classes merged onto the header cell.
+   *
+   * @default undefined
+   */
+  header?: string;
+};
+
+/**
  * Shared column fields. Framework packages add `header` / `cell` renderers.
  */
 export type DataTableColumnBase<T> = {
@@ -205,6 +224,15 @@ export type DataTableColumnBase<T> = {
    * Text alignment for the header and cells.
    */
   align?: "end" | "start" | "center";
+
+  /**
+   * Extra classes for this column's header and cells. Use width utilities
+   * here for breakpoint-based sizing. Inline `width` still wins over class
+   * width when both are set.
+   *
+   * @default undefined
+   */
+  classes?: DataTableColumnClasses;
 
   /**
    * Truncate overflowing cell text and show the full value in a tooltip.
