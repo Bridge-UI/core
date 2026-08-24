@@ -8,8 +8,8 @@ import { useNumberField } from "@/Components/NumberField";
 test("it should return empty input value when no value is set", () => {
   const { result } = renderHook(() => useNumberField({}));
 
-  expect(result.current.inputBind.value).toBe("");
   expect(result.current.isSplit).toBe(false);
+  expect(result.current.inputBind.value).toBe("");
   expect(result.current.incrementFirst).toBe(true);
 });
 
