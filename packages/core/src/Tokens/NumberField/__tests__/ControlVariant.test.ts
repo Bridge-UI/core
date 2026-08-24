@@ -17,8 +17,8 @@ describe("controlVariantProps", () => {
     expect(controlVariantProps.stacked.startGroup).toBe("");
     expect(controlVariantProps.stacked.button).toContain("min-w-8");
     expect(controlVariantProps.stacked.endGroup).toContain("my-0.5");
-    expect(controlVariantProps.stacked.endGroup).toContain("flex-col");
     expect(controlVariantProps.stacked.endGroup).toContain("h-auto!");
+    expect(controlVariantProps.stacked.endGroup).toContain("flex-col");
   });
 
   test("it should place default controls in a row at the end", () => {
