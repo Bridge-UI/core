@@ -216,6 +216,9 @@ test("it should shrink the frame and pagination when full is false", () => {
     "w-0",
   );
   expect(String(result.paginationBind.value.class)).toContain("min-w-full");
+  expect(String(result.paginationBind.value.class).split(/\s+/)).not.toContain(
+    "w-full",
+  );
 });
 
 test("it should expose sticky expand visibility and summary views", () => {

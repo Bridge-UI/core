@@ -42,10 +42,10 @@ test("it should pass striped hover and sticky flags into context", () => {
   expect(result.current.contextValue.striped).toBe(true);
   expect(result.current.contextValue.hoverable).toBe(true);
   expect(result.current.contextValue.stickyHeader).toBe(true);
+  expect(result.current.wrapBind.className).toContain("w-fit");
   expect(result.current.tableBind.className).not.toContain("min-w-full");
   expect(result.current.tableBind.className).toContain("border-separate");
   expect(result.current.rootBind.className).not.toContain("overflow-x-auto");
-  expect(result.current.wrapBind.className).toContain("w-fit");
 });
 
 test("it should shrink-wrap the outer wrapper when full is false", () => {

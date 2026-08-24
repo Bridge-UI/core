@@ -97,3 +97,50 @@ test("it should set aria-sort on a sorted column", () => {
 
   cy.get("th[aria-sort='descending']").should("be.visible");
 });
+
+test("it should shrink-wrap when full is false", () => {
+  cy.mount(DataTable, {
+    props: {
+      columns,
+      full: false,
+      variant: "bordered",
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.get("table").parent().should("have.class", "ring-1");
+  cy.get("table").parent().parent().should("have.class", "w-fit");
+});
+
+test("it should stack per-page and pagination when they overflow", () => {
+  cy.mount(DataTable, {
+    attrs: { style: "width: 220px" },
+    props: {
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 8,
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.contains("Per page:").closest(".gap-3").should("have.class", "flex-col");
+});
+
+test("it should keep per-page and pagination inline when they fit", () => {
+  cy.mount(DataTable, {
+    attrs: { style: "width: 960px" },
+    props: {
+      page: 1,
+      columns,
+      perPage: 10,
+      pageCount: 8,
+      rows: [{ id: "1", name: "Ada Lovelace" }],
+    },
+  });
+
+  cy.contains("Per page:")
+    .closest(".gap-3")
+    .should("have.class", "flex-row")
+    .and("have.class", "justify-between");
+});
