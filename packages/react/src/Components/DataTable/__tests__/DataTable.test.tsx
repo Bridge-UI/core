@@ -888,7 +888,38 @@ test("it should let an item slot override the column cell", () => {
 test("it should not stretch the table when full is false", () => {
   render(<DataTable rows={rows} full={false} columns={columns} />);
 
-  expect(screen.getByRole("table").className).not.toContain("min-w-full");
+  const table = screen.getByRole("table");
+
+  expect(table.className).not.toContain("min-w-full");
+  expect(table.parentElement?.parentElement?.className).toContain("w-fit");
+});
+
+test("it should align pagination to the table when full is false", () => {
+  render(
+    <DataTable
+      page={1}
+      perPage={4}
+      rows={rows}
+      full={false}
+      pageCount={2}
+      columns={columns}
+      variant="bordered"
+      onPerPageChange={vi.fn()}
+    />,
+  );
+
+  const table = screen.getByRole("table");
+  const perPage = screen.getByRole("combobox");
+  let pagination: null | HTMLElement = perPage;
+
+  while (pagination && !pagination.className.split(/\s+/).includes("w-0")) {
+    pagination = pagination.parentElement;
+  }
+
+  expect(table.parentElement?.className).toContain("ring-1");
+  expect(pagination?.className).toContain("min-w-full");
+  expect(pagination?.parentElement?.contains(table)).toBe(true);
+  expect(pagination?.parentElement?.className).toContain("w-fit");
 });
 
 test("it should stick header cells when stickyHeader is set", () => {

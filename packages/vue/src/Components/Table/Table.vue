@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<TableOwnProps>(), {
   stickyHeader: false,
 });
 
-const { rootBind, tableBind } = useTable(props, {
+const { wrapBind, rootBind, tableBind } = useTable(props, {
   size: "md",
   full: true,
   rounded: "lg",
@@ -26,9 +26,11 @@ const { rootBind, tableBind } = useTable(props, {
 </script>
 
 <template>
-  <div v-bind="rootBind">
-    <table v-bind="tableBind">
-      <slot />
-    </table>
+  <div v-bind="wrapBind">
+    <div v-bind="rootBind">
+      <table v-bind="tableBind">
+        <slot />
+      </table>
+    </div>
   </div>
 </template>

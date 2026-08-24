@@ -356,6 +356,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     rootBind,
     emptyBind,
     showEmpty,
+    frameBind,
     tableProps,
     footerBind,
     loadingBar,
@@ -428,254 +429,258 @@ function DataTable<T>(props: DataTableProps<T>) {
         </div>
       ) : null}
 
-      <div className="relative">
-        <Table {...tableProps}>
-          <TableHeader {...merged.customProps?.header}>
-            <TableRow {...merged.customProps?.row}>
-              {headerViews.map((header) => {
-                return (
-                  <DataTableHeadCell
-                    key={header.id}
-                    header={header}
-                    getHeadBind={getHeadBind}
-                    getHeadAlign={getHeadAlign}
-                    checkboxSize={checkboxSize}
-                    onTogglePage={onTogglePage}
-                    selectAllState={selectAllState}
-                    filterOverlay={merged.filterOverlay}
-                    selectionMultiple={selectionMultiple}
-                    onCommitColumnFilter={onCommitColumnFilter}
-                    checkboxProps={merged.customProps?.checkbox}
-                  />
-                );
-              })}
-            </TableRow>
-            {merged.loading && loadingBar ? (
-              <TableRow classes={{ root: "h-0" }}>
-                <TableCell
-                  colSpan={columnCount}
-                  classes={{
-                    root: "relative h-0 border-0 p-0 after:hidden",
-                  }}
-                >
-                  <div {...loadingBarBind}>
-                    {slots?.loading ?? (
-                      <Progress
-                        size="xs"
-                        rounded="none"
-                        {...merged.customProps?.progress}
-                      />
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : null}
-          </TableHeader>
-
-          <TableBody {...merged.customProps?.body}>
-            {showEmpty ? (
-              <TableRow>
-                <TableCell align="center" colSpan={columnCount}>
-                  <div {...emptyBind}>
-                    {slots?.empty ?? (
-                      <>
-                        <span className="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600">
-                          <span className="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900" />
-                        </span>
-                        {resolveMessage("No data")}
-                      </>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : null}
-
-            {!showEmpty
-              ? rowViews.map((row) => {
-                  return (
-                    <Fragment key={row.id}>
-                      <TableRow {...merged.customProps?.row}>
-                        {row.cells.map((cell) => {
-                          if (cell.isSelection) {
-                            return (
-                              <DataTableSelectionCell
-                                cell={cell}
-                                key={cell.id}
-                                rowId={row.id}
-                                selected={row.selected}
-                                getCellBind={getCellBind}
-                                onToggleRow={onToggleRow}
-                                getCellAlign={getCellAlign}
-                                checkboxSize={checkboxSize}
-                                selectionName={selectionName}
-                                selectionMultiple={selectionMultiple}
-                                radioProps={merged.customProps?.radio}
-                                checkboxProps={merged.customProps?.checkbox}
-                              />
-                            );
-                          }
-
-                          if (cell.isExpand) {
-                            return (
-                              <DataTableExpandCell
-                                cell={cell}
-                                key={cell.id}
-                                rowId={row.id}
-                                expanded={row.expanded}
-                                getCellBind={getCellBind}
-                                getCellAlign={getCellAlign}
-                                onToggleExpand={onToggleExpand}
-                              />
-                            );
-                          }
-
-                          return (
-                            <DataTableBodyCell
-                              cell={cell}
-                              key={cell.id}
-                              getCellBind={getCellBind}
-                              getCellAlign={getCellAlign}
-                              content={resolveDataTableItemContent(
-                                slots?.item?.[cell.id],
-                                row.original,
-                                cell,
-                              )}
-                            />
-                          );
-                        })}
-                      </TableRow>
-                      {expandEnabled ? (
-                        <TableRow>
-                          <TableCell
-                            colSpan={columnCount}
-                            classes={{
-                              root: cn({
-                                "p-0": true,
-                                "border-0": !row.expanded,
-                              }),
-                            }}
-                          >
-                            <div
-                              aria-hidden={!row.expanded}
-                              className={cn({
-                                "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none": true,
-                                "grid-rows-[1fr]": row.expanded,
-                                "grid-rows-[0fr]": !row.expanded,
-                              })}
-                            >
-                              <div className="min-h-0 overflow-hidden">
-                                <div className="p-3">
-                                  {slots?.expanded?.(row.original)}
-                                </div>
-                              </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ) : null}
-                    </Fragment>
-                  );
-                })
-              : null}
-          </TableBody>
-
-          {summaryCells ? (
-            <TableFooter>
+      <div {...frameBind}>
+        <div className="relative">
+          <Table {...tableProps}>
+            <TableHeader {...merged.customProps?.header}>
               <TableRow {...merged.customProps?.row}>
-                {summaryCells.map((cell) => {
+                {headerViews.map((header) => {
                   return (
-                    <TableCell
-                      key={cell.id}
-                      align={getCellAlign(cell)}
-                      {...getCellBind(cell)}
-                    >
-                      {cell.content}
-                    </TableCell>
+                    <DataTableHeadCell
+                      key={header.id}
+                      header={header}
+                      getHeadBind={getHeadBind}
+                      getHeadAlign={getHeadAlign}
+                      checkboxSize={checkboxSize}
+                      onTogglePage={onTogglePage}
+                      selectAllState={selectAllState}
+                      filterOverlay={merged.filterOverlay}
+                      selectionMultiple={selectionMultiple}
+                      onCommitColumnFilter={onCommitColumnFilter}
+                      checkboxProps={merged.customProps?.checkbox}
+                    />
                   );
                 })}
               </TableRow>
-            </TableFooter>
+              {merged.loading && loadingBar ? (
+                <TableRow classes={{ root: "h-0" }}>
+                  <TableCell
+                    colSpan={columnCount}
+                    classes={{
+                      root: "relative h-0 border-0 p-0 after:hidden",
+                    }}
+                  >
+                    <div {...loadingBarBind}>
+                      {slots?.loading ?? (
+                        <Progress
+                          size="xs"
+                          rounded="none"
+                          {...merged.customProps?.progress}
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : null}
+            </TableHeader>
+
+            <TableBody {...merged.customProps?.body}>
+              {showEmpty ? (
+                <TableRow>
+                  <TableCell align="center" colSpan={columnCount}>
+                    <div {...emptyBind}>
+                      {slots?.empty ?? (
+                        <>
+                          <span className="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600">
+                            <span className="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900" />
+                          </span>
+                          {resolveMessage("No data")}
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : null}
+
+              {!showEmpty
+                ? rowViews.map((row) => {
+                    return (
+                      <Fragment key={row.id}>
+                        <TableRow {...merged.customProps?.row}>
+                          {row.cells.map((cell) => {
+                            if (cell.isSelection) {
+                              return (
+                                <DataTableSelectionCell
+                                  cell={cell}
+                                  key={cell.id}
+                                  rowId={row.id}
+                                  selected={row.selected}
+                                  getCellBind={getCellBind}
+                                  onToggleRow={onToggleRow}
+                                  getCellAlign={getCellAlign}
+                                  checkboxSize={checkboxSize}
+                                  selectionName={selectionName}
+                                  selectionMultiple={selectionMultiple}
+                                  radioProps={merged.customProps?.radio}
+                                  checkboxProps={merged.customProps?.checkbox}
+                                />
+                              );
+                            }
+
+                            if (cell.isExpand) {
+                              return (
+                                <DataTableExpandCell
+                                  cell={cell}
+                                  key={cell.id}
+                                  rowId={row.id}
+                                  expanded={row.expanded}
+                                  getCellBind={getCellBind}
+                                  getCellAlign={getCellAlign}
+                                  onToggleExpand={onToggleExpand}
+                                />
+                              );
+                            }
+
+                            return (
+                              <DataTableBodyCell
+                                cell={cell}
+                                key={cell.id}
+                                getCellBind={getCellBind}
+                                getCellAlign={getCellAlign}
+                                content={resolveDataTableItemContent(
+                                  slots?.item?.[cell.id],
+                                  row.original,
+                                  cell,
+                                )}
+                              />
+                            );
+                          })}
+                        </TableRow>
+                        {expandEnabled ? (
+                          <TableRow>
+                            <TableCell
+                              colSpan={columnCount}
+                              classes={{
+                                root: cn({
+                                  "p-0": true,
+                                  "border-0": !row.expanded,
+                                }),
+                              }}
+                            >
+                              <div
+                                aria-hidden={!row.expanded}
+                                className={cn({
+                                  "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none": true,
+                                  "grid-rows-[1fr]": row.expanded,
+                                  "grid-rows-[0fr]": !row.expanded,
+                                })}
+                              >
+                                <div className="min-h-0 overflow-hidden">
+                                  <div className="p-3">
+                                    {slots?.expanded?.(row.original)}
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ) : null}
+                      </Fragment>
+                    );
+                  })
+                : null}
+            </TableBody>
+
+            {summaryCells ? (
+              <TableFooter>
+                <TableRow {...merged.customProps?.row}>
+                  {summaryCells.map((cell) => {
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        align={getCellAlign(cell)}
+                        {...getCellBind(cell)}
+                      >
+                        {cell.content}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              </TableFooter>
+            ) : null}
+          </Table>
+          {merged.loading ? (
+            <div {...loadingBind} aria-hidden={loadingBar || undefined}>
+              {!loadingBar
+                ? (slots?.loading ?? <DataTableLoadingSpin />)
+                : null}
+            </div>
           ) : null}
-        </Table>
-        {merged.loading ? (
-          <div {...loadingBind} aria-hidden={loadingBar || undefined}>
-            {!loadingBar ? (slots?.loading ?? <DataTableLoadingSpin />) : null}
+        </div>
+
+        {hasNamedSlot(slots, "footer") ? (
+          <div {...footerBind}>{slots?.footer}</div>
+        ) : null}
+
+        {showPagination ? (
+          <div {...paginationBind}>
+            {showPerPage
+              ? renderDataTableSlot(
+                  slots?.perPage,
+                  perPageSlotProps,
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400">
+                      {resolveMessage("Per page:")}
+                    </span>
+                    <Select
+                      size="sm"
+                      hideErrorMessage
+                      clearable={false}
+                      aria-label="Per page"
+                      {...perPageCustom}
+                      overlay="menu"
+                      value={perPageSlotProps.perPage}
+                      options={perPageSlotProps.options.map((value) => {
+                        return { value, label: String(value) };
+                      })}
+                      classes={{
+                        ...perPageCustom?.classes,
+                        root: cn("w-20", perPageCustom?.classes?.root),
+                      }}
+                      onChange={(value) => {
+                        const next = Number(value);
+
+                        if (!Number.isFinite(next) || next < 1) {
+                          return;
+                        }
+
+                        perPageSlotProps.onPerPageChange(next);
+                      }}
+                      customProps={{
+                        ...perPageCustom?.customProps,
+                        listbox: {
+                          showCheckmark: false,
+                          ...perPageCustom?.customProps?.listbox,
+                          customProps: {
+                            ...perPageCustom?.customProps?.listbox?.customProps,
+                            menu: {
+                              matchWidth: true,
+                              ...perPageCustom?.customProps?.listbox
+                                ?.customProps?.menu,
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </div>,
+                )
+              : null}
+
+            {renderDataTableSlot(
+              slots?.pagination,
+              paginationSlotProps,
+              resolvedPageCount !== undefined ? (
+                <Pagination
+                  page={paginationSlotProps.page}
+                  count={paginationSlotProps.count}
+                  variant={paginationSlotProps.variant}
+                  {...merged.customProps?.pagination}
+                  onChange={paginationSlotProps.onPageChange}
+                />
+              ) : null,
+            )}
           </div>
         ) : null}
       </div>
-
-      {hasNamedSlot(slots, "footer") ? (
-        <div {...footerBind}>{slots?.footer}</div>
-      ) : null}
-
-      {showPagination ? (
-        <div {...paginationBind}>
-          {showPerPage
-            ? renderDataTableSlot(
-                slots?.perPage,
-                perPageSlotProps,
-                <div className="flex shrink-0 items-center gap-2">
-                  <span className="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400">
-                    {resolveMessage("Per page:")}
-                  </span>
-                  <Select
-                    size="sm"
-                    hideErrorMessage
-                    clearable={false}
-                    aria-label="Per page"
-                    {...perPageCustom}
-                    overlay="menu"
-                    value={perPageSlotProps.perPage}
-                    options={perPageSlotProps.options.map((value) => {
-                      return { value, label: String(value) };
-                    })}
-                    classes={{
-                      ...perPageCustom?.classes,
-                      root: cn("w-20", perPageCustom?.classes?.root),
-                    }}
-                    onChange={(value) => {
-                      const next = Number(value);
-
-                      if (!Number.isFinite(next) || next < 1) {
-                        return;
-                      }
-
-                      perPageSlotProps.onPerPageChange(next);
-                    }}
-                    customProps={{
-                      ...perPageCustom?.customProps,
-                      listbox: {
-                        showCheckmark: false,
-                        ...perPageCustom?.customProps?.listbox,
-                        customProps: {
-                          ...perPageCustom?.customProps?.listbox?.customProps,
-                          menu: {
-                            matchWidth: true,
-                            ...perPageCustom?.customProps?.listbox?.customProps
-                              ?.menu,
-                          },
-                        },
-                      },
-                    }}
-                  />
-                </div>,
-              )
-            : null}
-
-          {renderDataTableSlot(
-            slots?.pagination,
-            paginationSlotProps,
-            resolvedPageCount !== undefined ? (
-              <Pagination
-                page={paginationSlotProps.page}
-                count={paginationSlotProps.count}
-                variant={paginationSlotProps.variant}
-                {...merged.customProps?.pagination}
-                onChange={paginationSlotProps.onPageChange}
-              />
-            ) : null,
-          )}
-        </div>
-      ) : null}
     </div>
   );
 }

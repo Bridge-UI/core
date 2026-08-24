@@ -94,6 +94,7 @@ const {
   rootBind,
   emptyBind,
   showEmpty,
+  frameBind,
   tableProps,
   footerBind,
   loadingBar,
@@ -245,262 +246,264 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
       </div>
     </div>
 
-    <div class="relative">
-      <Table v-bind="tableProps">
-        <TableHeader v-bind="merged.customProps?.header">
-          <TableRow v-bind="merged.customProps?.row">
-            <TableHead
-              :key="header.id"
-              :align="getHeadAlign(header)"
-              v-bind="getHeadBind(header)"
-              v-for="header in headerViews"
-            >
-              <DataTableSelection
-                kind="page"
-                :size="checkboxSize"
-                v-on:change="onTogglePage"
-                :checked="selectAllState.checked"
-                :indeterminate="selectAllState.indeterminate"
-                :checkbox-props="merged.customProps?.checkbox"
-                v-if="header.isSelection && selectionMultiple"
-              />
-
-              <div
-                v-else-if="!header.isSelection && !header.isExpand"
-                class="flex w-full min-w-0 items-center gap-1.5 leading-none"
+    <div v-bind="frameBind">
+      <div class="relative">
+        <Table v-bind="tableProps">
+          <TableHeader v-bind="merged.customProps?.header">
+            <TableRow v-bind="merged.customProps?.row">
+              <TableHead
+                :key="header.id"
+                :align="getHeadAlign(header)"
+                v-bind="getHeadBind(header)"
+                v-for="header in headerViews"
               >
-                <DataTableSortButton
-                  v-if="header.sortable"
-                  :sort="header.ariaSort"
-                >
-                  <DataTableChild :node="header.header" />
-                </DataTableSortButton>
-
-                <DataTableChild v-else :node="header.header" />
-
-                <DataTableFilterMenu
-                  :column-id="header.id"
-                  v-if="header.filterable"
-                  :active="header.filterActive"
-                  :values="header.filterValues"
-                  :overlay="merged.filterOverlay"
-                  :options="header.filterOptions"
-                  :searchable="header.searchable"
-                  :multiple="header.filterMultiple"
-                  :search-value="header.searchQuery"
-                  v-on:apply="
-                    (values, query) =>
-                      onCommitColumnFilter(header.id, values, query)
-                  "
+                <DataTableSelection
+                  kind="page"
+                  :size="checkboxSize"
+                  v-on:change="onTogglePage"
+                  :checked="selectAllState.checked"
+                  :indeterminate="selectAllState.indeterminate"
+                  :checkbox-props="merged.customProps?.checkbox"
+                  v-if="header.isSelection && selectionMultiple"
                 />
-              </div>
-            </TableHead>
-          </TableRow>
-          <TableRow
-            :classes="{ root: 'h-0' }"
-            v-if="merged.loading && loadingBar"
-          >
-            <TableCell
-              :colspan="columnCount"
-              :classes="{
-                root: 'relative h-0 border-0 p-0 after:hidden',
-              }"
-            >
-              <div v-bind="loadingBarBind">
-                <slot name="loading">
-                  <Progress
-                    size="xs"
-                    rounded="none"
-                    v-bind="merged.customProps?.progress"
-                  />
-                </slot>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableHeader>
 
-        <TableBody v-bind="merged.customProps?.body">
-          <TableRow v-if="showEmpty">
-            <TableCell align="center" :colspan="columnCount">
-              <div v-bind="emptyBind">
-                <slot name="empty">
-                  <span
-                    class="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600"
-                  >
-                    <span
-                      class="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900"
-                    />
-                  </span>
-                  {{ resolveMessage("No data") }}
-                </slot>
-              </div>
-            </TableCell>
-          </TableRow>
-
-          <template v-if="!showEmpty">
-            <template :key="row.id" v-for="row in rowViews">
-              <TableRow v-bind="merged.customProps?.row">
-                <TableCell
-                  :key="cell.id"
-                  v-for="cell in row.cells"
-                  :align="getCellAlign(cell)"
-                  v-bind="getCellBind(cell)"
+                <div
+                  v-else-if="!header.isSelection && !header.isExpand"
+                  class="flex w-full min-w-0 items-center gap-1.5 leading-none"
                 >
-                  <DataTableSelection
-                    kind="row"
-                    :value="row.id"
-                    :size="checkboxSize"
-                    :name="selectionName"
-                    :checked="row.selected"
-                    v-if="cell.isSelection"
-                    :multiple="selectionMultiple"
-                    :radio-props="merged.customProps?.radio"
-                    :checkbox-props="merged.customProps?.checkbox"
-                    v-on:change="(checked) => onToggleRow(row.id, checked)"
-                  />
-
-                  <button
-                    type="button"
-                    aria-label="Expand row"
-                    v-else-if="cell.isExpand"
-                    :aria-expanded="row.expanded"
-                    v-on:click="onToggleExpand(row.id, !row.expanded)"
-                    class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+                  <DataTableSortButton
+                    v-if="header.sortable"
+                    :sort="header.ariaSort"
                   >
-                    <span
-                      :class="{ 'rotate-90': row.expanded }"
-                      class="inline-flex transition-transform duration-200 motion-reduce:transition-none"
-                    >
-                      <Icon size="sm" icon="chevronRight" />
-                    </span>
-                  </button>
+                    <DataTableChild :node="header.header" />
+                  </DataTableSortButton>
 
-                  <DataTableCellContent
-                    v-else
-                    :tooltip="cell.tooltip"
-                    :ellipsis="cell.ellipsis"
-                  >
-                    <DataTableChild :node="renderItemCell(row, cell)" />
-                  </DataTableCellContent>
-                </TableCell>
-              </TableRow>
+                  <DataTableChild v-else :node="header.header" />
 
-              <TableRow v-if="expandEnabled">
-                <TableCell
-                  :colspan="columnCount"
-                  :classes="{
-                    root: cn({
-                      'p-0': true,
-                      'border-0': !row.expanded,
-                    }),
-                  }"
-                >
-                  <div
-                    :aria-hidden="!row.expanded"
-                    :class="
-                      cn({
-                        'grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none': true,
-                        'grid-rows-[1fr]': row.expanded,
-                        'grid-rows-[0fr]': !row.expanded,
-                      })
+                  <DataTableFilterMenu
+                    :column-id="header.id"
+                    v-if="header.filterable"
+                    :active="header.filterActive"
+                    :values="header.filterValues"
+                    :overlay="merged.filterOverlay"
+                    :options="header.filterOptions"
+                    :searchable="header.searchable"
+                    :multiple="header.filterMultiple"
+                    :search-value="header.searchQuery"
+                    v-on:apply="
+                      (values, query) =>
+                        onCommitColumnFilter(header.id, values, query)
                     "
+                  />
+                </div>
+              </TableHead>
+            </TableRow>
+            <TableRow
+              :classes="{ root: 'h-0' }"
+              v-if="merged.loading && loadingBar"
+            >
+              <TableCell
+                :colspan="columnCount"
+                :classes="{
+                  root: 'relative h-0 border-0 p-0 after:hidden',
+                }"
+              >
+                <div v-bind="loadingBarBind">
+                  <slot name="loading">
+                    <Progress
+                      size="xs"
+                      rounded="none"
+                      v-bind="merged.customProps?.progress"
+                    />
+                  </slot>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody v-bind="merged.customProps?.body">
+            <TableRow v-if="showEmpty">
+              <TableCell align="center" :colspan="columnCount">
+                <div v-bind="emptyBind">
+                  <slot name="empty">
+                    <span
+                      class="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600"
+                    >
+                      <span
+                        class="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900"
+                      />
+                    </span>
+                    {{ resolveMessage("No data") }}
+                  </slot>
+                </div>
+              </TableCell>
+            </TableRow>
+
+            <template v-if="!showEmpty">
+              <template :key="row.id" v-for="row in rowViews">
+                <TableRow v-bind="merged.customProps?.row">
+                  <TableCell
+                    :key="cell.id"
+                    v-for="cell in row.cells"
+                    :align="getCellAlign(cell)"
+                    v-bind="getCellBind(cell)"
                   >
-                    <div class="min-h-0 overflow-hidden">
-                      <div class="p-3">
-                        <slot name="expanded" :row="row.original" />
+                    <DataTableSelection
+                      kind="row"
+                      :value="row.id"
+                      :size="checkboxSize"
+                      :name="selectionName"
+                      :checked="row.selected"
+                      v-if="cell.isSelection"
+                      :multiple="selectionMultiple"
+                      :radio-props="merged.customProps?.radio"
+                      :checkbox-props="merged.customProps?.checkbox"
+                      v-on:change="(checked) => onToggleRow(row.id, checked)"
+                    />
+
+                    <button
+                      type="button"
+                      aria-label="Expand row"
+                      v-else-if="cell.isExpand"
+                      :aria-expanded="row.expanded"
+                      v-on:click="onToggleExpand(row.id, !row.expanded)"
+                      class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+                    >
+                      <span
+                        :class="{ 'rotate-90': row.expanded }"
+                        class="inline-flex transition-transform duration-200 motion-reduce:transition-none"
+                      >
+                        <Icon size="sm" icon="chevronRight" />
+                      </span>
+                    </button>
+
+                    <DataTableCellContent
+                      v-else
+                      :tooltip="cell.tooltip"
+                      :ellipsis="cell.ellipsis"
+                    >
+                      <DataTableChild :node="renderItemCell(row, cell)" />
+                    </DataTableCellContent>
+                  </TableCell>
+                </TableRow>
+
+                <TableRow v-if="expandEnabled">
+                  <TableCell
+                    :colspan="columnCount"
+                    :classes="{
+                      root: cn({
+                        'p-0': true,
+                        'border-0': !row.expanded,
+                      }),
+                    }"
+                  >
+                    <div
+                      :aria-hidden="!row.expanded"
+                      :class="
+                        cn({
+                          'grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none': true,
+                          'grid-rows-[1fr]': row.expanded,
+                          'grid-rows-[0fr]': !row.expanded,
+                        })
+                      "
+                    >
+                      <div class="min-h-0 overflow-hidden">
+                        <div class="p-3">
+                          <slot name="expanded" :row="row.original" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-              </TableRow>
+                  </TableCell>
+                </TableRow>
+              </template>
             </template>
-          </template>
-        </TableBody>
+          </TableBody>
 
-        <TableFooter v-if="summaryCells">
-          <TableRow v-bind="merged.customProps?.row">
-            <TableCell
-              :key="cell.id"
-              :align="getCellAlign(cell)"
-              v-bind="getCellBind(cell)"
-              v-for="cell in summaryCells"
+          <TableFooter v-if="summaryCells">
+            <TableRow v-bind="merged.customProps?.row">
+              <TableCell
+                :key="cell.id"
+                :align="getCellAlign(cell)"
+                v-bind="getCellBind(cell)"
+                v-for="cell in summaryCells"
+              >
+                <DataTableChild :node="cell.content" />
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+
+        <div
+          v-bind="loadingBind"
+          v-if="merged.loading"
+          :aria-hidden="loadingBar || undefined"
+        >
+          <slot name="loading" v-if="!loadingBar">
+            <span
+              role="status"
+              aria-label="Loading"
+              class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
             >
-              <DataTableChild :node="cell.content" />
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+              <span
+                class="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
+              />
+              <span
+                class="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
+              />
+              <span
+                class="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
+              />
+              <span
+                class="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
+              />
+            </span>
+          </slot>
+        </div>
+      </div>
 
-      <div
-        v-bind="loadingBind"
-        v-if="merged.loading"
-        :aria-hidden="loadingBar || undefined"
-      >
-        <slot name="loading" v-if="!loadingBar">
-          <span
-            role="status"
-            aria-label="Loading"
-            class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
-          >
+      <div v-bind="footerBind" v-if="hasNamedSlot(tableSlots, 'footer')">
+        <slot name="footer" />
+      </div>
+
+      <div v-if="showPagination" v-bind="paginationBind">
+        <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
+          <div class="flex shrink-0 items-center gap-2">
             <span
-              class="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400"
+              class="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400"
+            >
+              {{ resolveMessage("Per page:") }}
+            </span>
+            <Select
+              size="sm"
+              v-bind="merged.customProps?.perPage"
+              overlay="menu"
+              :clearable="false"
+              hide-error-message
+              aria-label="Per page"
+              :options="perPageSelectOptions"
+              :custom-props="perPageSelectCustom"
+              :model-value="perPageSlotProps.perPage"
+              v-on:update:model-value="
+                (value) => perPageSlotProps.onPerPageChange(Number(value))
+              "
+              :classes="{
+                ...merged.customProps?.perPage?.classes,
+                root: cn('w-20', merged.customProps?.perPage?.classes?.root),
+              }"
             />
-            <span
-              class="absolute inset-e-0 top-0 size-2 rounded-full bg-primary-500 opacity-50 dark:bg-primary-400"
-            />
-            <span
-              class="absolute inset-e-0 bottom-0 size-2 rounded-full bg-primary-500 dark:bg-primary-400"
-            />
-            <span
-              class="absolute inset-s-0 bottom-0 size-2 rounded-full bg-primary-500 opacity-70 dark:bg-primary-400"
-            />
-          </span>
+          </div>
+        </slot>
+
+        <slot name="pagination" v-bind="paginationSlotProps">
+          <Pagination
+            v-model="paginationPage"
+            :count="resolvedPageCount"
+            v-if="resolvedPageCount !== undefined"
+            :variant="paginationSlotProps.variant"
+            v-bind="merged.customProps?.pagination"
+          />
         </slot>
       </div>
-    </div>
-
-    <div v-bind="footerBind" v-if="hasNamedSlot(tableSlots, 'footer')">
-      <slot name="footer" />
-    </div>
-
-    <div v-if="showPagination" v-bind="paginationBind">
-      <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
-        <div class="flex shrink-0 items-center gap-2">
-          <span
-            class="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400"
-          >
-            {{ resolveMessage("Per page:") }}
-          </span>
-          <Select
-            size="sm"
-            v-bind="merged.customProps?.perPage"
-            overlay="menu"
-            :clearable="false"
-            hide-error-message
-            aria-label="Per page"
-            :options="perPageSelectOptions"
-            :custom-props="perPageSelectCustom"
-            :model-value="perPageSlotProps.perPage"
-            v-on:update:model-value="
-              (value) => perPageSlotProps.onPerPageChange(Number(value))
-            "
-            :classes="{
-              ...merged.customProps?.perPage?.classes,
-              root: cn('w-20', merged.customProps?.perPage?.classes?.root),
-            }"
-          />
-        </div>
-      </slot>
-
-      <slot name="pagination" v-bind="paginationSlotProps">
-        <Pagination
-          v-model="paginationPage"
-          :count="resolvedPageCount"
-          v-if="resolvedPageCount !== undefined"
-          :variant="paginationSlotProps.variant"
-          v-bind="merged.customProps?.pagination"
-        />
-      </slot>
     </div>
   </div>
 </template>

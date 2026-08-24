@@ -92,22 +92,32 @@ test("it should render a semantic table with caption and cells", () => {
 test("it should apply the bordered variant on the wrapper", () => {
   const wrapper = mountTable({ props: { variant: "bordered" } });
 
-  expect(wrapper.find("div").classes()).toContain("ring-1");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "ring-1",
+  );
 });
 
 test("it should apply the ghost variant on the wrapper", () => {
   const wrapper = mountTable({ props: { variant: "ghost" } });
 
-  expect(wrapper.find("div").classes()).not.toContain("ring-1");
-  expect(wrapper.find("div").classes()).toContain("rounded-lg");
+  expect(wrapper.find("table").element.parentElement?.className).not.toContain(
+    "ring-1",
+  );
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "rounded-lg",
+  );
   expect(wrapper.find("th").classes()).toContain("after:w-px");
 });
 
 test("it should apply rounded none on the wrapper", () => {
   const wrapper = mountTable({ props: { rounded: "none" } });
 
-  expect(wrapper.find("div").classes()).toContain("rounded-none");
-  expect(wrapper.find("div").classes()).not.toContain("rounded-lg");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "rounded-none",
+  );
+  expect(wrapper.find("table").element.parentElement?.className).not.toContain(
+    "rounded-lg",
+  );
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -156,11 +166,16 @@ test("it should keep the table full width by default", () => {
   const wrapper = mountTable();
 
   expect(wrapper.find("table").classes()).toContain("min-w-full");
-  expect(wrapper.find("div").classes()).toContain("overflow-x-auto");
+  expect(wrapper.find("table").element.parentElement?.className).toContain(
+    "overflow-x-auto",
+  );
 });
 
 test("it should omit full width when full is false", () => {
   const wrapper = mountTable({ props: { full: false } });
 
   expect(wrapper.find("table").classes()).not.toContain("min-w-full");
+  expect(
+    wrapper.find("table").element.parentElement?.parentElement?.className,
+  ).toContain("w-fit");
 });

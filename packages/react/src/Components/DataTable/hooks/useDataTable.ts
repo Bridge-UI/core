@@ -1130,18 +1130,31 @@ export function useDataTable<T>(
     );
   }, []);
 
+  const frameBind = useMemo(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        className: cn({
+          "w-fit min-w-0 max-w-full": merged.full === false,
+        }),
+      },
+    );
+  }, [merged.full]);
+
   const footerBind = useMemo(() => {
     return mergePartBind(
       customProps?.footer,
       {},
       {
         className: cn({
+          "w-0 min-w-full": merged.full === false,
           "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-300": true,
           [get(mergedClasses, "footer") ?? ""]: true,
         }),
       },
     );
-  }, [customProps?.footer, mergedClasses]);
+  }, [customProps?.footer, merged.full, mergedClasses]);
 
   const paginationBind = useMemo(() => {
     return mergePartBind(
@@ -1149,14 +1162,16 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "flex flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
+          "w-full": merged.full !== false,
+          "w-0 min-w-full": merged.full === false,
           "sm:justify-end": !showPerPage,
           "sm:justify-between": showPerPage,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [showPerPage, mergedClasses]);
+  }, [merged.full, showPerPage, mergedClasses]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {
@@ -1354,6 +1369,7 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    frameBind,
     tableProps,
     footerBind,
     showSearch,

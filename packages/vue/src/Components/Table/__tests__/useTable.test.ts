@@ -59,6 +59,15 @@ test("it should pass striped hover and sticky flags into context", () => {
   expect(result.tableBind.value.class).not.toContain("min-w-full");
   expect(result.tableBind.value.class).toContain("border-separate");
   expect(result.rootBind.value.class).not.toContain("overflow-x-auto");
+  expect(result.wrapBind.value.class).toContain("w-fit");
+});
+
+test("it should shrink-wrap the outer wrapper when full is false", () => {
+  const { result } = mountUseTable({ full: false });
+
+  expect(result.wrapBind.value.class).toContain("w-fit");
+  expect(result.rootBind.value.class).not.toContain("w-fit");
+  expect(result.rootBind.value.class).toContain("overflow-x-auto");
 });
 
 test("it should apply bordered chrome on the wrapper", () => {

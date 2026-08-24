@@ -147,6 +147,29 @@ test("it should derive page count from totalCount and perPage", () => {
   );
 });
 
+test("it should shrink the frame and pagination when full is false", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        columns,
+        perPage: 10,
+        full: false,
+        totalCount: 23,
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.frameBind.className).toContain("w-fit");
+  expect(result.current.paginationBind.className.split(/\s+/)).toContain("w-0");
+  expect(result.current.paginationBind.className).toContain("min-w-full");
+  expect(result.current.paginationBind.className.split(/\s+/)).not.toContain(
+    "w-full",
+  );
+});
+
 test("it should expose sticky expand visibility and summary views", () => {
   const { result } = renderHook(() =>
     useDataTable(

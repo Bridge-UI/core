@@ -47,7 +47,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped rows={users} columns={columns} />
 ```
 
-`full={false}` sizes columns to content instead of stretching the table. Default `full` stretches the table to the wrapper width:
+`full={false}` sizes columns to content instead of stretching the table. The bordered wrapper, per-page select, and pagination follow that width. Default `full` stretches the table to the wrapper width:
 
 ```tsx
 <DataTable full={false} rows={users} columns={columns} />

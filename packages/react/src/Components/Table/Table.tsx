@@ -14,15 +14,17 @@ const tableLibDefaults = {
 } as const;
 
 function Table(props: TableProps) {
-  const { children, rootBind, tableBind, contextValue } = useTable(
+  const { children, wrapBind, rootBind, tableBind, contextValue } = useTable(
     props,
     tableLibDefaults,
   );
 
   return (
     <TableContext.Provider value={contextValue}>
-      <div {...rootBind}>
-        <table {...tableBind}>{children}</table>
+      <div {...wrapBind}>
+        <div {...rootBind}>
+          <table {...tableBind}>{children}</table>
+        </div>
       </div>
     </TableContext.Provider>
   );
