@@ -1,19 +1,28 @@
 <script setup lang="ts">
 // ** External Imports
-import { ref } from "vue";
+import { computed, ref } from "vue";
+
+// ** Core Imports
+import type { FieldOverlayMode } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Checkbox } from "@/Components/Checkbox";
 import type { DataTableVisibilityItem } from "@/Components/DataTable/composables/useDataTable";
 import DataTableToolbarButton from "@/Components/DataTable/DataTableToolbarButton.vue";
-import { Menu } from "@/Components/Menu";
+import { FieldOverlay } from "@/Components/FieldOverlay";
 
 defineOptions({ inheritAttrs: false, name: "DataTableColumnsMenu" });
 
-defineProps<{
-  items: DataTableVisibilityItem[];
-}>();
+withDefaults(
+  defineProps<{
+    items: DataTableVisibilityItem[];
+    overlay?: FieldOverlayMode;
+  }>(),
+  {
+    overlay: "auto",
+  },
+);
 
 const emit = defineEmits<{
   toggle: [columnId: string, hide: boolean];
@@ -21,34 +30,58 @@ const emit = defineEmits<{
 
 const show = ref(false);
 const resolveMessage = useResolveMessage();
+const triggerRef = ref<null | HTMLSpanElement>(null);
+
+const overlayCustomProps = computed(() => {
+  return {
+    menu: {
+      anchorEl: triggerRef.value,
+      placement: "bottom" as const,
+    },
+  };
+});
+
+function onToggleShow() {
+  show.value = !show.value;
+}
 </script>
 
 <template>
-  <Menu v-model="show" placement="bottom">
-    <template #trigger>
+  <span class="relative inline-flex items-center">
+    <span ref="triggerRef" class="inline-flex">
       <DataTableToolbarButton
         icon="columns"
+        v-on:click="onToggleShow"
         :label="resolveMessage('Columns')"
       />
-    </template>
-    <div class="min-w-52 p-1">
+    </span>
+
+    <FieldOverlay
+      v-model="show"
+      :overlay="overlay"
+      :custom-props="overlayCustomProps"
+    >
       <div
-        :key="item.id"
-        v-for="item in items"
-        role="menuitemcheckbox"
-        :aria-checked="!item.hidden"
-        v-on:click="item.hideable && emit('toggle', item.id, !item.hidden)"
-        class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+        class="min-w-52 overflow-hidden rounded-md bg-white p-1 shadow-lg ring-1 ring-black/5 dark:bg-dark-800 dark:ring-white/10"
       >
-        <Checkbox
-          size="sm"
-          hide-error-message
-          :end-label="item.label"
-          :disabled="!item.hideable"
-          :model-value="!item.hidden"
-          :classes="{ root: 'pointer-events-none' }"
-        />
+        <div
+          :key="item.id"
+          v-for="item in items"
+          role="menuitemcheckbox"
+          :aria-checked="!item.hidden"
+          v-on:click="item.hideable && emit('toggle', item.id, !item.hidden)"
+          class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+        >
+          <Checkbox
+            size="sm"
+            hide-error-message
+            :end-label="item.label"
+            :disabled="!item.hideable"
+            :model-value="!item.hidden"
+            :classes="{ root: 'pointer-events-none' }"
+          />
+        </div>
       </div>
-    </div>
-  </Menu>
+    </FieldOverlay>
+  </span>
 </template>

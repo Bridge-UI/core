@@ -46,7 +46,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped :rows="users" :columns="columns" />
 ```
 
-`:full="false"` sizes columns to content instead of stretching the table:
+`:full="false"` sizes columns to content instead of stretching the table. Default `full` stretches from the `sm` breakpoint; below that, columns size to content so more of the table stays on screen:
 
 ```vue
 <DataTable :full="false" :rows="users" :columns="columns" />
@@ -212,7 +212,18 @@ Table-level slots stay `empty` / `expanded` / `footer` / `item.{id}` / `item` / 
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
-Set `searchable` on a column to add a text field in that same menu. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+Set `searchable` on a column to add a text field in that same overlay. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+
+Column filters open in a `FieldOverlay`. Default `filter-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+
+```vue
+<DataTable
+  :rows="users"
+  :columns="columns"
+  filter-overlay="drawer"
+  v-model:filters="filters"
+/>
+```
 
 ```vue
 <DataTable
@@ -253,7 +264,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 const columns = [
   {
     id: "name",
-    width: 160,
+    width: 120,
     header: "Name",
     sticky: "start",
     cell: (row) => row.name,
@@ -287,8 +298,15 @@ const columns = [
 
 Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** icon in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
+The panel opens in a `FieldOverlay`. Default `columns-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
+
 ```vue
-<DataTable :rows="users" :columns="columns" v-model:hidden-columns="hidden" />
+<DataTable
+  :rows="users"
+  :columns="columns"
+  columns-overlay="drawer"
+  v-model:hidden-columns="hidden"
+/>
 ```
 
 ### Search

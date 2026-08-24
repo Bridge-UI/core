@@ -3,6 +3,7 @@
 import { computed } from "vue";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import { Checkbox } from "@/Components/Checkbox";
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
 import type { DataTableCustomProps } from "@/Components/DataTable/dataTable.types";
@@ -26,8 +27,14 @@ const emit = defineEmits<{
   change: [checked: boolean];
 }>();
 
+const resolveMessage = useResolveMessage();
+
 const ariaLabel = computed(() => {
-  return props.kind === "page" ? "Select all rows" : "Select row";
+  if (props.kind === "page") {
+    return resolveMessage("Select all rows");
+  }
+
+  return resolveMessage("Select row");
 });
 </script>
 

@@ -68,6 +68,8 @@ const props = withDefaults(
     striped: false,
     hoverable: false,
     stickyHeader: false,
+    filterOverlay: "auto",
+    columnsOverlay: "auto",
     paginationAlign: "end",
     loadingVariant: "overlay",
   },
@@ -78,13 +80,13 @@ const resolveMessage = useResolveMessage();
 
 const page = defineModel<number>("page");
 const perPage = defineModel<number>("perPage");
+const search = defineModel<string>("search");
 const expanded = defineModel<string[]>("expanded");
 const selection = defineModel<string[]>("selection");
 const filters = defineModel<DataTableFilters>("filters");
 const sorting = defineModel<DataTableSorting>("sorting");
 const hiddenColumns = defineModel<string[]>("hiddenColumns");
 const columnSearch = defineModel<DataTableColumnSearch>("columnSearch");
-const search = defineModel<string>("search");
 
 const {
   merged,
@@ -135,6 +137,8 @@ const {
     variant: "plain",
     hoverable: false,
     stickyHeader: false,
+    filterOverlay: "auto",
+    columnsOverlay: "auto",
     paginationAlign: "end",
     selectionMode: "multiple",
     loadingVariant: "overlay",
@@ -224,6 +228,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
         >
           <DataTableColumnsMenu
             :items="visibilityItems"
+            :overlay="merged.columnsOverlay"
             v-on:toggle="onToggleColumnVisibility"
           />
         </div>
@@ -278,6 +283,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                   v-if="header.filterable"
                   :active="header.filterActive"
                   :values="header.filterValues"
+                  :overlay="merged.filterOverlay"
                   :options="header.filterOptions"
                   :searchable="header.searchable"
                   :multiple="header.filterMultiple"

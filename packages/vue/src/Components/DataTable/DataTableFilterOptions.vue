@@ -20,9 +20,11 @@ const emit = defineEmits<{
 }>();
 
 function isSelected(value: string) {
-  return props.multiple
-    ? props.draft.includes(value)
-    : props.draft[0] === value;
+  if (props.multiple) {
+    return props.draft.includes(value);
+  }
+
+  return props.draft[0] === value;
 }
 </script>
 

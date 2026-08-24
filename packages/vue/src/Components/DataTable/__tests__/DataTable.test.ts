@@ -346,6 +346,23 @@ test("it should emit update:filters when a column filter is applied", async () =
   ]);
 });
 
+test("it should open column filters in a modal when filterOverlay is modal", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      filters: {},
+      filterOverlay: "modal",
+      columns: filterColumns,
+    },
+  });
+
+  await wrapper.get('[aria-label="Filter column"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
+});
+
 test("it should use radios for a single-select column filter", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
@@ -508,6 +525,7 @@ test("it should pin a sticky start column", () => {
     .find((header) => header.text().includes("Name"));
 
   expect((nameHeader?.element as HTMLElement).style.left).toBe("0px");
+  expect((nameHeader?.element as HTMLElement).style.maxWidth).toBe("120px");
   expect(
     nameHeader
       ?.classes()
@@ -574,7 +592,7 @@ test("it should emit update:hiddenColumns from the columns menu", async () => {
     props: { rows, columns, hiddenColumns: [] },
   });
 
-  await wrapper.get('[aria-haspopup="menu"]').trigger("click");
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
   await flushPromises();
 
   const option = Array.from(
@@ -589,6 +607,23 @@ test("it should emit update:hiddenColumns from the columns menu", async () => {
   await flushPromises();
 
   expect(wrapper.emitted("update:hiddenColumns")?.[0]).toEqual([["role"]]);
+});
+
+test("it should open column visibility in a modal when columnsOverlay is modal", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: {
+      rows,
+      columns,
+      hiddenColumns: [],
+      columnsOverlay: "modal",
+    },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('[role="dialog"]')).not.toBeNull();
 });
 
 test("it should render toolbarActions beside search", () => {
@@ -796,7 +831,7 @@ test("it should align built-in pagination at the start", () => {
     },
   });
 
-  expect(wrapper.find(".justify-start").exists()).toBe(true);
+  expect(wrapper.find(".sm\\:justify-start").exists()).toBe(true);
 });
 
 test("it should sort rows when sorting is controlled", () => {

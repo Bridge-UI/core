@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import { Button } from "@/Components/Button";
 import type { ButtonOwnProps } from "@/Components/Button/button.types";
 import { Tooltip } from "@/Components/Tooltip";
@@ -8,7 +9,7 @@ defineOptions({ inheritAttrs: false, name: "DataTableToolbarButton" });
 
 defineProps<{
   buttonProps?: Partial<Omit<ButtonOwnProps, "icon">>;
-  icon: "columns";
+  icon: IconSource;
   label: string;
 }>();
 
