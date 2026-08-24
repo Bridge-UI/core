@@ -46,7 +46,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 <DataTable striped :rows="users" :columns="columns" />
 ```
 
-`:full="false"` sizes columns to content instead of stretching the table. Default `full` stretches from the `sm` breakpoint; below that, columns size to content so more of the table stays on screen:
+`:full="false"` sizes columns to content instead of stretching the table. Default `full` stretches the table to the wrapper width:
 
 ```vue
 <DataTable :full="false" :rows="users" :columns="columns" />

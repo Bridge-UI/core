@@ -155,14 +155,12 @@ test("it should align numeric cells to the end with tabular nums", () => {
 test("it should keep the table full width by default", () => {
   const wrapper = mountTable();
 
-  expect(wrapper.find("table").classes()).toContain("w-max");
+  expect(wrapper.find("table").classes()).toContain("min-w-full");
   expect(wrapper.find("div").classes()).toContain("overflow-x-auto");
-  expect(wrapper.find("table").classes()).toContain("sm:min-w-full");
 });
 
 test("it should omit full width when full is false", () => {
   const wrapper = mountTable({ props: { full: false } });
 
-  expect(wrapper.find("table").classes()).not.toContain("w-max");
-  expect(wrapper.find("table").classes()).not.toContain("sm:min-w-full");
+  expect(wrapper.find("table").classes()).not.toContain("min-w-full");
 });

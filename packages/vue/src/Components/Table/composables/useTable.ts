@@ -184,7 +184,7 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
       {},
       {
         class: cn({
-          "w-max sm:min-w-full": merged.value.full === true,
+          "min-w-full": merged.value.full === true,
           [get(sizeItem.value, "table") ?? ""]: true,
           [tableVariantClass ?? ""]: true,
           [get(mergedClasses.value, "table") ?? ""]: true,
