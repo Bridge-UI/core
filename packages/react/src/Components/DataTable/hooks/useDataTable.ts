@@ -50,6 +50,7 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -1145,27 +1146,20 @@ export function useDataTable<T>(
   }, [customProps?.footer, mergedClasses]);
 
   const paginationBind = useMemo(() => {
-    const perPageVisible = showPerPage;
-    const paginationAlign = merged.paginationAlign;
-
     return mergePartBind(
       {},
       {},
       {
         className: cn({
           "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
-          "sm:justify-between": perPageVisible,
-          "sm:justify-start": !perPageVisible && paginationAlign === "start",
-          "sm:justify-center": !perPageVisible && paginationAlign === "center",
-          "sm:justify-end":
-            !perPageVisible &&
-            paginationAlign !== "start" &&
-            paginationAlign !== "center",
+          "sm:justify-between": showPerPage,
+          [getDataTablePaginationAlignClass(merged.paginationAlign)]:
+            !showPerPage,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [merged.paginationAlign, mergedClasses, showPerPage]);
+  }, [showPerPage, mergedClasses, merged.paginationAlign]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {

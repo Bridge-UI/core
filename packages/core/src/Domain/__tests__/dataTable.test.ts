@@ -67,11 +67,13 @@ import {
 
 describe("getDataTablePaginationAlignClass", () => {
   test("it should map paginationAlign to justify classes", () => {
-    expect(getDataTablePaginationAlignClass("start")).toBe("justify-start");
-    expect(getDataTablePaginationAlignClass("center")).toBe("justify-center");
-    expect(getDataTablePaginationAlignClass("unknown")).toBe("justify-end");
-    expect(getDataTablePaginationAlignClass(undefined)).toBe("justify-end");
-    expect(DATATABLE_PAGINATION_ALIGN.end).toBe("justify-end");
+    expect(getDataTablePaginationAlignClass("start")).toBe("sm:justify-start");
+    expect(getDataTablePaginationAlignClass("center")).toBe(
+      "sm:justify-center",
+    );
+    expect(getDataTablePaginationAlignClass("unknown")).toBe("sm:justify-end");
+    expect(getDataTablePaginationAlignClass(undefined)).toBe("sm:justify-end");
+    expect(DATATABLE_PAGINATION_ALIGN.end).toBe("sm:justify-end");
   });
 });
 

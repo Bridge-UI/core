@@ -37,12 +37,12 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
- * Pagination region alignment (`justify-*`) for `paginationAlign`.
+ * Pagination region alignment (`sm:justify-*`) for `paginationAlign`.
  */
 export const DATATABLE_PAGINATION_ALIGN = {
-  end: "justify-end",
-  start: "justify-start",
-  center: "justify-center",
+  end: "sm:justify-end",
+  start: "sm:justify-start",
+  center: "sm:justify-center",
 } as const;
 
 /**
@@ -290,7 +290,7 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
- * Pagination region `justify-*` class paired with `paginationAlign`.
+ * Pagination region `sm:justify-*` class paired with `paginationAlign`.
  */
 export type DataTablePaginationAlignClass =
   (typeof DATATABLE_PAGINATION_ALIGN)[keyof typeof DATATABLE_PAGINATION_ALIGN];
@@ -312,12 +312,12 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
 
 /**
- * Maps `paginationAlign` to a flex `justify-*` class.
+ * Maps `paginationAlign` to a flex `sm:justify-*` class.
  */
 export function getDataTablePaginationAlignClass(
   align: string | undefined,
 ): DataTablePaginationAlignClass {
-  return get(DATATABLE_PAGINATION_ALIGN, align ?? "end") ?? "justify-end";
+  return get(DATATABLE_PAGINATION_ALIGN, align ?? "end") ?? "sm:justify-end";
 }
 
 /**

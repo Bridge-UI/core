@@ -46,6 +46,7 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
+  getDataTablePaginationAlignClass,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
@@ -1062,22 +1063,15 @@ export function useDataTable<T>(
   });
 
   const paginationBind = computed(() => {
-    const perPageVisible = showPerPage.value;
-    const paginationAlign = merged.value.paginationAlign;
-
     return mergePartBind(
       {},
       {},
       {
         class: cn({
           "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
-          "sm:justify-between": perPageVisible,
-          "sm:justify-start": !perPageVisible && paginationAlign === "start",
-          "sm:justify-center": !perPageVisible && paginationAlign === "center",
-          "sm:justify-end":
-            !perPageVisible &&
-            paginationAlign !== "start" &&
-            paginationAlign !== "center",
+          "sm:justify-between": showPerPage.value,
+          [getDataTablePaginationAlignClass(merged.value.paginationAlign)]:
+            !showPerPage.value,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
