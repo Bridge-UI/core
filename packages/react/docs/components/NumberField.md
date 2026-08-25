@@ -68,13 +68,13 @@ import { NumberField } from "@bridge-ui/react/Components/NumberField";
 
 ### NumberField-specific
 
-| Prop             | Type                               | Default     | Description                                                                                  |
-| ---------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------- |
-| `classes`        | `NumberFieldClasses`               | —           | The classes to apply to the number field.                                                    |
-| `controlVariant` | `"inline" \| "split" \| "stacked"` | `"stacked"` | Layout of increment and decrement controls. `split` uses minus/plus icons on opposite sides. |
-| `max`            | `number`                           | —           | The maximum value.                                                                           |
-| `min`            | `number`                           | —           | The minimum value.                                                                           |
-| `step`           | `number`                           | 1           | The step increment value.                                                                    |
+| Prop             | Type                               | Default     | Description                                                                                            |
+| ---------------- | ---------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------ |
+| `classes`        | `NumberFieldClasses`               | —           | The classes to apply to the number field.                                                              |
+| `controlVariant` | `"inline" \| "split" \| "stacked"` | `"stacked"` | Layout of increment and decrement controls. `split` uses minus/plus icons and occupies the start slot. |
+| `max`            | `number`                           | —           | The maximum value.                                                                                     |
+| `min`            | `number`                           | —           | The minimum value.                                                                                     |
+| `step`           | `number`                           | 1           | The step increment value.                                                                              |
 
 ### Binding
 

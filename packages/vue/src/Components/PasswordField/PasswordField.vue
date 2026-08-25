@@ -68,7 +68,7 @@ const toggleBind = computed(() => {
         : resolveMessage("Show password"),
     },
     cn({
-      "bridge-end-adornment bridge-field-adornment-button inline-flex h-auto! min-h-0 self-stretch overflow-hidden my-0.5 me-0.5 items-center justify-center px-2.5": true,
+      "bridge-end-adornment bridge-field-adornment-button inline-flex h-auto! min-h-0 self-stretch overflow-hidden items-center justify-center px-2.5": true,
       [mergedClasses.value.toggle ?? ""]: true,
     }),
   );
