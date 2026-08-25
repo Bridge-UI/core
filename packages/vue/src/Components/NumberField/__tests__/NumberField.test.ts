@@ -91,6 +91,15 @@ test("it should not forward defaultValue to the native input", () => {
   expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
 });
 
+test("it should not forward modelValue to the native input", () => {
+  const wrapper = mount(NumberField, {
+    props: { modelValue: 3 },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("3");
+  expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
+});
+
 test("it should disable stepper buttons when disabled", () => {
   const wrapper = mount(NumberField, { props: { disabled: true } });
 

@@ -370,6 +370,15 @@ test("it should not forward defaultValue to the native input", () => {
   expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
 });
 
+test("it should not forward modelValue to the native input", () => {
+  const wrapper = mount(TextField, {
+    props: { modelValue: "hello" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+  expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
+});
+
 test("it should update modelValue when input changes", async () => {
   const wrapper = mount(TextField, {
     props: {

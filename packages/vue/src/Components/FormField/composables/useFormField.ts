@@ -390,7 +390,11 @@ export function useFormField(
         "aria-describedby": ariaDescribedBy.value,
         "aria-invalid": invalidated.value || undefined,
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, [
+        "class",
+        "modelValue",
+        "onUpdate:modelValue",
+      ]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl.value && !isStacked.value,

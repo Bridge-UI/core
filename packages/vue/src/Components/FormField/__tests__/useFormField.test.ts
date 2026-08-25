@@ -170,6 +170,12 @@ test("it should be readonly when readonly prop is true", () => {
   expect(inputBind.value.readonly).toBe(true);
 });
 
+test("it should not forward modelValue to the input bind", () => {
+  const { inputBind } = mountUseFormField({}, { modelValue: 3 });
+
+  expect(inputBind.value.modelValue).toBeUndefined();
+});
+
 test("it should expose variantKey for filled variant", () => {
   const { variantKey } = mountUseFormField({ variant: "filled" });
 
