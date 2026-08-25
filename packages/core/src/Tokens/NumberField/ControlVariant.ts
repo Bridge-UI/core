@@ -57,10 +57,10 @@ export const controlVariantProps: NumberFieldControlVariant = {
       "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-row items-stretch",
   },
   "split": {
-    "button":
-      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
     "endGroup":
       "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-col",
+    "button":
+      "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
     "startGroup":
       "bridge-start-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-col",
   },
