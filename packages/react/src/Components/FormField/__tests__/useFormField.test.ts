@@ -156,12 +156,16 @@ test("it should set data-bridge-rounded on the container", () => {
   const { result } = renderUseFormField();
 
   expect(result.current.containerBind["data-bridge-rounded"]).toBe("md");
+  expect(result.current.containerBind["data-bridge-variant"]).toBe("outline");
 });
 
-test("it should omit data-bridge-rounded when variant is underlined", () => {
+test("it should keep data-bridge-rounded when variant is underlined", () => {
   const { result } = renderUseFormField({ variant: "underlined" });
 
-  expect(result.current.containerBind["data-bridge-rounded"]).toBeUndefined();
+  expect(result.current.containerBind["data-bridge-rounded"]).toBe("md");
+  expect(result.current.containerBind["data-bridge-variant"]).toBe(
+    "underlined",
+  );
 });
 
 test("it should not set aria-describedby when error is true without errorMessage", () => {

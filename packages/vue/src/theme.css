@@ -172,94 +172,70 @@
 
 /**
  * FormField slot adornments (`bridge-start-adornment` / `bridge-end-adornment`).
- * Parent `.group/field` sets `data-bridge-rounded` from FormField `rounded`
- * (omitted on the underlined variant).
+ * Parent `.group/field` sets `--bridge-adornment-radius` from `data-bridge-rounded`.
+ * Default: round the inline side. Underlined: block-start corner only.
  * Suffix `!` overrides Button/Badge `rounded-*` from the utilities layer.
  */
 @layer components {
+  .group\/field[data-bridge-rounded="xs"] {
+    --bridge-adornment-radius: var(--radius-xs);
+  }
+
+  .group\/field[data-bridge-rounded="sm"] {
+    --bridge-adornment-radius: var(--radius-sm);
+  }
+
+  .group\/field[data-bridge-rounded="md"] {
+    --bridge-adornment-radius: var(--radius-md);
+  }
+
+  .group\/field[data-bridge-rounded="lg"] {
+    --bridge-adornment-radius: var(--radius-lg);
+  }
+
+  .group\/field[data-bridge-rounded="xl"] {
+    --bridge-adornment-radius: var(--radius-xl);
+  }
+
+  .group\/field[data-bridge-rounded="2xl"] {
+    --bridge-adornment-radius: var(--radius-2xl);
+  }
+
+  .group\/field[data-bridge-rounded="3xl"] {
+    --bridge-adornment-radius: var(--radius-3xl);
+  }
+
+  .group\/field[data-bridge-rounded="4xl"] {
+    --bridge-adornment-radius: var(--radius-4xl);
+  }
+
+  .group\/field[data-bridge-rounded="none"] {
+    --bridge-adornment-radius: var(--radius-none);
+  }
+
+  .group\/field[data-bridge-rounded="full"] {
+    --bridge-adornment-radius: var(--radius-full);
+  }
+
   .bridge-end-adornment,
   .bridge-start-adornment {
     @apply min-h-0 rounded-none!;
   }
 
-  [data-bridge-rounded="none"] .bridge-start-adornment {
-    @apply rounded-s-none! rounded-e-none!;
+  .bridge-end-adornment {
+    @apply rounded-e-(--bridge-adornment-radius)!;
   }
 
-  [data-bridge-rounded="xs"] .bridge-start-adornment {
-    @apply rounded-s-xs! rounded-e-none!;
+  .bridge-start-adornment {
+    @apply rounded-s-(--bridge-adornment-radius)!;
   }
 
-  [data-bridge-rounded="sm"] .bridge-start-adornment {
-    @apply rounded-s-sm! rounded-e-none!;
+  .group\/field[data-bridge-variant="underlined"] .bridge-end-adornment {
+    @apply rounded-ee-none!;
   }
 
-  [data-bridge-rounded="md"] .bridge-start-adornment {
-    @apply rounded-s-md! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="lg"] .bridge-start-adornment {
-    @apply rounded-s-lg! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="xl"] .bridge-start-adornment {
-    @apply rounded-s-xl! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="2xl"] .bridge-start-adornment {
-    @apply rounded-s-2xl! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="3xl"] .bridge-start-adornment {
-    @apply rounded-s-3xl! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="4xl"] .bridge-start-adornment {
-    @apply rounded-s-4xl! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="full"] .bridge-start-adornment {
-    @apply rounded-s-full! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="none"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-none!;
-  }
-
-  [data-bridge-rounded="xs"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-xs!;
-  }
-
-  [data-bridge-rounded="sm"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-sm!;
-  }
-
-  [data-bridge-rounded="md"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-md!;
-  }
-
-  [data-bridge-rounded="lg"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-lg!;
-  }
-
-  [data-bridge-rounded="xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-xl!;
-  }
-
-  [data-bridge-rounded="2xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-2xl!;
-  }
-
-  [data-bridge-rounded="3xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-3xl!;
-  }
-
-  [data-bridge-rounded="4xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-4xl!;
-  }
-
-  [data-bridge-rounded="full"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-full!;
+  .group\/field[data-bridge-variant="underlined"] .bridge-start-adornment {
+    @apply rounded-es-none!;
   }
 
   .bridge-field-adornment-button {

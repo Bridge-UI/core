@@ -82,7 +82,6 @@ import type {
   FormFieldColor,
   FormFieldColorItem,
   FormFieldRounded,
-  FormFieldRoundedItem,
   FormFieldSize,
   FormFieldSizeItem,
   FormFieldVariant,
@@ -567,7 +566,7 @@ export interface ColorFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -645,7 +644,7 @@ export interface DateFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -692,7 +691,7 @@ export interface DateRangeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -740,7 +739,7 @@ export interface DateTimeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -785,7 +784,7 @@ export interface TimeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -841,7 +840,7 @@ export interface TimeRangeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -887,7 +886,7 @@ export interface DateTimeRangeFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1038,7 +1037,7 @@ export interface NumberFieldConfigBase {
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
     controlVariant: Record<string, NumberFieldControlVariantItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1100,7 +1099,7 @@ export interface PasswordFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1156,7 +1155,7 @@ export interface AutocompleteConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1175,7 +1174,7 @@ export interface SelectConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1312,7 +1311,7 @@ export interface TextareaConfigBase {
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
     resize: Record<string, string>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;
@@ -1330,7 +1329,7 @@ export interface TextFieldConfigBase {
   }>;
   tokens: Partial<{
     color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, FormFieldRoundedItem>;
+    rounded: Record<string, string>;
     size: Record<string, FormFieldSizeItem>;
     variant: Record<string, FormFieldVariantItem>;
   }>;

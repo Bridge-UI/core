@@ -588,7 +588,6 @@ export type {
   FormFieldColor,
   FormFieldColorItem,
   FormFieldRounded,
-  FormFieldRoundedItem,
   FormFieldSize,
   FormFieldSizeItem,
   FormFieldVariant,
