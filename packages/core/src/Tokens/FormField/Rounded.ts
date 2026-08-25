@@ -1,121 +1,70 @@
-export interface FormFieldRoundedItem {
-  /**
-   * End adornment color classes.
-   */
-  "end": string;
-
-  /**
-   * Input text color classes.
-   */
-  "input": string;
-
-  /**
-   * Start adornment color classes.
-   */
-  "start": string;
-}
-
+/**
+ * Border radius tokens for FormField.
+ */
 export interface FormFieldRounded {
   /**
    * Border radius classes for the `2xl` token.
    */
-  "2xl": FormFieldRoundedItem;
+  "2xl": string;
 
   /**
    * Border radius classes for the `3xl` token.
    */
-  "3xl": FormFieldRoundedItem;
+  "3xl": string;
 
   /**
    * Border radius classes for the `4xl` token.
    */
-  "4xl": FormFieldRoundedItem;
+  "4xl": string;
 
   /**
    * Full width or fully rounded token.
    */
-  "full": FormFieldRoundedItem;
+  "full": string;
 
   /**
    * Border radius classes for the `lg` token.
    */
-  "lg": FormFieldRoundedItem;
+  "lg": string;
 
   /**
    * Border radius classes for the `md` token.
    */
-  "md": FormFieldRoundedItem;
+  "md": string;
 
   /**
    * No effect (empty token).
    */
-  "none": FormFieldRoundedItem;
+  "none": string;
 
   /**
    * Border radius classes for the `sm` token.
    */
-  "sm": FormFieldRoundedItem;
+  "sm": string;
 
   /**
    * Border radius classes for the `xl` token.
    */
-  "xl": FormFieldRoundedItem;
+  "xl": string;
 
   /**
    * Border radius classes for the `xs` token.
    */
-  "xs": FormFieldRoundedItem;
+  "xs": string;
 }
 
+/**
+ * Default border radius classes for the FormField input container.
+ */
 export const roundedProps: FormFieldRounded = {
-  "xs": {
-    "end": "rounded-e-xs",
-    "input": "rounded-xs",
-    "start": "rounded-s-xs",
-  },
-  "sm": {
-    "end": "rounded-e-sm",
-    "input": "rounded-sm",
-    "start": "rounded-s-sm",
-  },
-  "md": {
-    "end": "rounded-e-md",
-    "input": "rounded-md",
-    "start": "rounded-s-md",
-  },
-  "lg": {
-    "end": "rounded-e-lg",
-    "input": "rounded-lg",
-    "start": "rounded-s-lg",
-  },
-  "xl": {
-    "end": "rounded-e-xl",
-    "input": "rounded-xl",
-    "start": "rounded-s-xl",
-  },
-  "none": {
-    "end": "rounded-none",
-    "input": "rounded-none",
-    "start": "rounded-none",
-  },
-  "2xl": {
-    "end": "rounded-e-2xl",
-    "input": "rounded-2xl",
-    "start": "rounded-s-2xl",
-  },
-  "3xl": {
-    "end": "rounded-e-3xl",
-    "input": "rounded-3xl",
-    "start": "rounded-s-3xl",
-  },
-  "4xl": {
-    "end": "rounded-e-4xl",
-    "input": "rounded-4xl",
-    "start": "rounded-s-4xl",
-  },
-  "full": {
-    "end": "rounded-e-full",
-    "input": "rounded-full",
-    "start": "rounded-s-full",
-  },
+  "xs": "rounded-xs",
+  "sm": "rounded-sm",
+  "md": "rounded-md",
+  "lg": "rounded-lg",
+  "xl": "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
+  "4xl": "rounded-4xl",
+  "none": "rounded-none",
+  "full": "rounded-full",
 };

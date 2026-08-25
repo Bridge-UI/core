@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
@@ -23,11 +22,14 @@ import {
   mergePartBind,
   presentSlotNames,
   resolveFieldAdornmentIconSize,
+  useOptionalModel,
 } from "@/Utils";
 
 defineSlots<PasswordFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const resolveMessage = useResolveMessage();
 
 const emit = defineEmits<PasswordFieldEmits>();
 
@@ -39,17 +41,7 @@ const props = withDefaults(defineProps<PasswordFieldOwnProps>(), {
 
 const uncontrolledValue = ref<null | string | undefined>(props.defaultValue);
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
-
-const resolveMessage = useResolveMessage();
+const value = useOptionalModel(model, uncontrolledValue);
 
 const { formField, inputBind, isVisible, mergedClasses, toggleVisibility } =
   usePasswordField(props, {

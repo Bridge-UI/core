@@ -243,3 +243,4 @@ export type {
   HoldRepeatAction,
   UseHoldRepeatOptions,
 } from "@/Utils/useHoldRepeat";
+export { useOptionalModel } from "@/Utils/useOptionalModel";

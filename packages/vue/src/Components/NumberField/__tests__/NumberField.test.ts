@@ -1,6 +1,7 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { defineComponent, ref } from "vue";
 
 // ** Local Imports
 import { NumberField } from "@/Components/NumberField";
@@ -89,6 +90,61 @@ test("it should not forward defaultValue to the native input", () => {
   });
 
   expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
+});
+
+test("it should not forward modelValue to the native input", () => {
+  const wrapper = mount(NumberField, {
+    props: { modelValue: 3 },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("3");
+  expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
+});
+
+test("it should clear the input when v-model is set to null", async () => {
+  const Host = defineComponent({
+    components: { NumberField },
+    setup() {
+      const boundValue = ref<null | number>(10);
+
+      return { boundValue };
+    },
+    template: `
+      <NumberField v-model="boundValue" />
+      <button type="button" v-on:click="boundValue = null">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("10");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
+});
+
+test("it should ignore defaultValue when v-model is cleared to null", async () => {
+  const Host = defineComponent({
+    components: { NumberField },
+    setup() {
+      const boundValue = ref<null | number>(10);
+
+      return { boundValue };
+    },
+    template: `
+      <NumberField v-model="boundValue" :defaultValue="5" />
+      <button type="button" v-on:click="boundValue = null">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("10");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
 });
 
 test("it should disable stepper buttons when disabled", () => {

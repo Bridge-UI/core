@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref, type ComponentPublicInstance } from "vue";
+import { ref, type ComponentPublicInstance } from "vue";
 
 // ** Core Imports
 import {
@@ -20,7 +19,7 @@ import type {
   SliderSlots,
 } from "@/Components/Slider/slider.types";
 import { Tooltip } from "@/Components/Tooltip";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<SliderSlots>();
 
@@ -63,15 +62,7 @@ const uncontrolledValue = ref<number | SliderRangeValue>(
   }),
 );
 
-const value = computed({
-  set: (next: number | SliderRangeValue) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: (): number | SliderRangeValue => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const thumbRefs = ref<[null | HTMLButtonElement, null | HTMLButtonElement]>([
   null,

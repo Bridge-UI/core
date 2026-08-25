@@ -2,6 +2,7 @@
 import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { defineComponent, ref } from "vue";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -368,6 +369,61 @@ test("it should not forward defaultValue to the native input", () => {
   });
 
   expect(wrapper.find("input").attributes("defaultvalue")).toBeUndefined();
+});
+
+test("it should not forward modelValue to the native input", () => {
+  const wrapper = mount(TextField, {
+    props: { modelValue: "hello" },
+  });
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+  expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
+});
+
+test("it should clear the input when v-model is set to null", async () => {
+  const Host = defineComponent({
+    components: { TextField },
+    setup() {
+      const boundValue = ref<null | string>("hello");
+
+      return { boundValue };
+    },
+    template: `
+      <TextField v-model="boundValue" />
+      <button type="button" v-on:click="boundValue = null">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
+});
+
+test("it should ignore defaultValue when v-model is cleared to null", async () => {
+  const Host = defineComponent({
+    components: { TextField },
+    setup() {
+      const boundValue = ref<null | string>("hello");
+
+      return { boundValue };
+    },
+    template: `
+      <TextField v-model="boundValue" defaultValue="fallback" />
+      <button type="button" v-on:click="boundValue = null">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
 });
 
 test("it should update modelValue when input changes", async () => {

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, provide, ref, useTemplateRef } from "vue";
+import { provide, ref, useTemplateRef } from "vue";
 
 // ** Core Imports
 import { cn } from "@bridge-ui/core/Utils";
@@ -28,6 +27,7 @@ import {
   hasNamedSlot,
   mergeNestedComponentProps,
   presentSlotNames,
+  useOptionalModel,
 } from "@/Utils";
 
 defineSlots<AutocompleteSlots>();
@@ -53,15 +53,7 @@ const uncontrolledValue = ref<null | undefined | SelectValue | SelectValue[]>(
   props.defaultValue,
 );
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const triggerRef = useTemplateRef<HTMLInputElement | HTMLTextAreaElement>(
   "trigger",

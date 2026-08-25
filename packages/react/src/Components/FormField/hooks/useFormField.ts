@@ -342,7 +342,6 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-dark-500": true,
-        [roundedClasses?.end ?? ""]: !isUnderlined && !isStacked,
         [colorPalette?.end ?? ""]: true,
         [mergedClasses.end ?? ""]: true,
       }),
@@ -428,7 +427,6 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-dark-400": true,
-        [roundedClasses?.start ?? ""]: !isUnderlined && !isStacked,
         [colorPalette?.start ?? ""]: true,
         [mergedClasses.start ?? ""]: true,
       }),
@@ -511,9 +509,8 @@ export function useFormField(
     return mergePartBind(
       customProps?.container,
       {
-        ...(isUnderlined
-          ? {}
-          : { "data-bridge-rounded": merged.rounded ?? "md" }),
+        "data-bridge-variant": variantKey,
+        "data-bridge-rounded": merged.rounded ?? "md",
       },
       cn({
         "group/field relative flex flex-row items-stretch overflow-hidden":
@@ -527,7 +524,7 @@ export function useFormField(
         [sizeClasses?.containerTextarea ?? ""]:
           isTextareaControl && !isTextareaLikeInput,
         [variantClasses?.container ?? ""]: true,
-        [roundedClasses?.input ?? ""]: !isUnderlined,
+        [roundedClasses ?? ""]: !isUnderlined,
         [containerSpacing ?? ""]: true,
         [containerColorFocus ?? ""]: true,
         "rounded-none": isUnderlined,

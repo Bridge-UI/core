@@ -170,16 +170,51 @@
   }
 }
 
-/**
- * FormField slot adornments (`bridge-start-adornment` / `bridge-end-adornment`).
- * Parent `.group/field` sets `data-bridge-rounded` from FormField `rounded`
- * (omitted on the underlined variant).
- * Suffix `!` overrides Button/Badge `rounded-*` from the utilities layer.
- */
+/* Adornment radius from `data-bridge-rounded`. Underlined: top corner only. */
 @layer components {
   .bridge-end-adornment,
   .bridge-start-adornment {
     @apply min-h-0 rounded-none!;
+  }
+
+  [data-bridge-rounded="none"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xs"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xs!;
+  }
+
+  [data-bridge-rounded="sm"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-sm!;
+  }
+
+  [data-bridge-rounded="md"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-md!;
+  }
+
+  [data-bridge-rounded="lg"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-lg!;
+  }
+
+  [data-bridge-rounded="xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xl!;
+  }
+
+  [data-bridge-rounded="2xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-2xl!;
+  }
+
+  [data-bridge-rounded="3xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-3xl!;
+  }
+
+  [data-bridge-rounded="4xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-4xl!;
+  }
+
+  [data-bridge-rounded="full"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-full!;
   }
 
   [data-bridge-rounded="none"] .bridge-start-adornment {
@@ -222,44 +257,12 @@
     @apply rounded-s-full! rounded-e-none!;
   }
 
-  [data-bridge-rounded="none"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-none!;
+  [data-bridge-variant="underlined"] .bridge-end-adornment {
+    @apply rounded-ee-none!;
   }
 
-  [data-bridge-rounded="xs"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-xs!;
-  }
-
-  [data-bridge-rounded="sm"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-sm!;
-  }
-
-  [data-bridge-rounded="md"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-md!;
-  }
-
-  [data-bridge-rounded="lg"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-lg!;
-  }
-
-  [data-bridge-rounded="xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-xl!;
-  }
-
-  [data-bridge-rounded="2xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-2xl!;
-  }
-
-  [data-bridge-rounded="3xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-3xl!;
-  }
-
-  [data-bridge-rounded="4xl"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-4xl!;
-  }
-
-  [data-bridge-rounded="full"] .bridge-end-adornment {
-    @apply rounded-s-none! rounded-e-full!;
+  [data-bridge-variant="underlined"] .bridge-start-adornment {
+    @apply rounded-es-none!;
   }
 
   .bridge-field-adornment-button {

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
@@ -18,13 +17,17 @@ import {
   FormField,
 } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<ColorFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
 const model = defineModel<null | string>();
+
+const resolveMessage = useResolveMessage();
+
+const emit = defineEmits<ColorFieldEmits>();
 
 const props = withDefaults(defineProps<ColorFieldOwnProps>(), {
   clearable: true,
@@ -34,21 +37,9 @@ const props = withDefaults(defineProps<ColorFieldOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<ColorFieldEmits>();
-
-const resolveMessage = useResolveMessage();
-
 const uncontrolledValue = ref<null | string>(props.defaultValue ?? null);
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   open,

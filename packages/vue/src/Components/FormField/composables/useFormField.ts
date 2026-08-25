@@ -342,8 +342,6 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-dark-500": true,
-        [roundedClasses.value?.end ?? ""]:
-          !isUnderlined.value && !isStacked.value,
         [colorPalette.value?.end ?? ""]: true,
         [mergedClasses.value.end ?? ""]: true,
       }),
@@ -392,7 +390,11 @@ export function useFormField(
         "aria-describedby": ariaDescribedBy.value,
         "aria-invalid": invalidated.value || undefined,
       },
-      omit(split.value.inheritedAttrs, ["class"]),
+      omit(split.value.inheritedAttrs, [
+        "class",
+        "modelValue",
+        "onUpdate:modelValue",
+      ]),
       cn({
         "flex-1 min-w-0 min-h-0 bg-transparent border-0 shadow-none": true,
         "h-full": !isTextareaControl.value && !isStacked.value,
@@ -431,8 +433,6 @@ export function useFormField(
       cn({
         "shrink-0 self-center flex items-center whitespace-nowrap select-none pointer-events-none": true,
         "text-dark-400": true,
-        [roundedClasses.value?.start ?? ""]:
-          !isUnderlined.value && !isStacked.value,
         [colorPalette.value?.start ?? ""]: true,
         [mergedClasses.value.start ?? ""]: true,
       }),
@@ -534,9 +534,8 @@ export function useFormField(
     return mergePartBind(
       customProps.value?.container,
       {
-        ...(isUnderlined.value
-          ? {}
-          : { "data-bridge-rounded": merged.value.rounded ?? "md" }),
+        "data-bridge-variant": variantKey.value,
+        "data-bridge-rounded": merged.value.rounded ?? "md",
       },
       cn({
         "group/field relative flex flex-row items-stretch overflow-hidden":
@@ -551,7 +550,7 @@ export function useFormField(
         [sizeClasses.value?.containerTextarea ?? ""]:
           isTextareaControl.value && !isTextareaLikeInput.value,
         [variantClasses.value?.container ?? ""]: true,
-        [roundedClasses.value?.input ?? ""]: !isUnderlined.value,
+        [roundedClasses.value ?? ""]: !isUnderlined.value,
         [containerSpacing.value ?? ""]: true,
         [containerColorFocus.value ?? ""]: true,
         "rounded-none": isUnderlined.value,
