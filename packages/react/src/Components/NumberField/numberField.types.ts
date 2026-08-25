@@ -72,7 +72,7 @@ export interface NumberFieldOwnProps extends Omit<
    *
    * `stacked` places them in a column at the end. `inline` places them in a
    * row at the end. `split` places decrement at the start and increment at the
-   * end.
+   * end, and reserves the start slot (`start` / `startIcon`) for decrement.
    *
    * @default "stacked"
    */

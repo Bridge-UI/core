@@ -16,15 +16,17 @@ describe("controlVariantProps", () => {
   test("it should stack controls in a column at the end", () => {
     expect(controlVariantProps.stacked.startGroup).toBe("");
     expect(controlVariantProps.stacked.button).toContain("min-w-8");
-    expect(controlVariantProps.stacked.endGroup).toContain("my-0.5");
     expect(controlVariantProps.stacked.endGroup).toContain("h-auto!");
     expect(controlVariantProps.stacked.endGroup).toContain("flex-col");
+    expect(controlVariantProps.stacked.endGroup).not.toContain("my-0.5");
   });
 
   test("it should place inline controls in a row at the end", () => {
     expect(controlVariantProps.inline.startGroup).toBe("");
     expect(controlVariantProps.inline.button).toContain("min-w-8");
+    expect(controlVariantProps.inline.endGroup).toContain("min-w-9");
     expect(controlVariantProps.inline.endGroup).toContain("flex-row");
+    expect(controlVariantProps.inline.endGroup).not.toContain("min-w-0");
   });
 
   test("it should place split decrement on the start side", () => {

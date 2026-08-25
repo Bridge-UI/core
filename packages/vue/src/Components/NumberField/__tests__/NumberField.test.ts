@@ -132,6 +132,8 @@ test("it should place decrement before the input when split", () => {
   const increment = wrapper.find('button[aria-label="Increment value"]');
   const input = wrapper.find("input");
 
+  expect(increment.find(".lucide-plus").exists()).toBe(true);
+  expect(decrement.find(".lucide-minus").exists()).toBe(true);
   expect(decrement.element.compareDocumentPosition(input.element)).toBe(
     Node.DOCUMENT_POSITION_FOLLOWING,
   );

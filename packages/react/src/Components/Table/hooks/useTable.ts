@@ -168,6 +168,18 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
     merged.stickyHeader,
   ]);
 
+  const wrapBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        className: cn({
+          "w-fit min-w-0 max-w-full": merged.full === false,
+        }),
+      },
+    );
+  });
+
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       className: cn({
@@ -203,6 +215,7 @@ export function useTable(props: TableProps, libDefaults: TableLibDefaults) {
   return {
     merged,
     children,
+    wrapBind,
     rootBind,
     tableBind,
     contextValue,

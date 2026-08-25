@@ -5,6 +5,7 @@ import { describe, expect, test } from "vitest";
 import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
+  DATATABLE_PAGINATION_GAP_PX,
   DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
@@ -39,6 +40,7 @@ import {
   isDataTableColumnSearchable,
   isDataTableColumnSearched,
   isDataTableExpandEnabled,
+  isDataTablePaginationInline,
   isDataTablePerPageEnabled,
   isDataTableSearchEnabled,
   isDataTableSelectionEnabled,
@@ -73,6 +75,18 @@ describe("getDataTablePaginationVariant", () => {
     expect(getDataTablePaginationVariant(undefined)).toBe("text");
     expect(getDataTablePaginationVariant("bordered")).toBe("outlined");
     expect(DATATABLE_PAGINATION_VARIANT.plain).toBe("text");
+  });
+});
+
+describe("isDataTablePaginationInline", () => {
+  test("it should fit one child or when children plus gap fit the bar", () => {
+    expect(isDataTablePaginationInline(200, [80])).toBe(true);
+    expect(isDataTablePaginationInline(200, [80, 80])).toBe(true);
+    expect(isDataTablePaginationInline(170, [80, 80])).toBe(false);
+    expect(
+      isDataTablePaginationInline(172, [80, 80], DATATABLE_PAGINATION_GAP_PX),
+    ).toBe(true);
+    expect(isDataTablePaginationInline(0, [0, 0])).toBe(false);
   });
 });
 

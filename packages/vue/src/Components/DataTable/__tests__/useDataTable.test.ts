@@ -184,9 +184,40 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.showPerPage.value).toBe(true);
   expect(result.resolvedPageCount.value).toBe(3);
   expect(String(result.paginationBind.value.class)).toContain("flex-col");
-  expect(String(result.paginationBind.value.class)).toContain("sm:flex-row");
-  expect(String(result.paginationBind.value.class)).toContain(
-    "sm:justify-between",
+  expect(String(result.paginationBind.value.class)).toContain("justify-center");
+  expect(String(result.paginationBind.value.class)).not.toContain("flex-row");
+});
+
+test("it should shrink the frame and pagination when full is false", () => {
+  const { result } = mountUseDataTable(
+    {
+      page: 1,
+      columns,
+      perPage: 10,
+      full: false,
+      totalCount: 23,
+      rows: [{ id: "1", name: "Ada" }],
+    },
+    {
+      page: ref(1),
+      perPage: ref(10),
+      search: ref(undefined),
+      filters: ref(undefined),
+      sorting: ref(undefined),
+      expanded: ref(undefined),
+      selection: ref(undefined),
+      columnSearch: ref(undefined),
+      hiddenColumns: ref(undefined),
+    },
+  );
+
+  expect(String(result.frameBind.value.class)).toContain("w-fit");
+  expect(String(result.paginationBind.value.class).split(/\s+/)).toContain(
+    "w-0",
+  );
+  expect(String(result.paginationBind.value.class)).toContain("min-w-full");
+  expect(String(result.paginationBind.value.class).split(/\s+/)).not.toContain(
+    "w-full",
   );
 });
 

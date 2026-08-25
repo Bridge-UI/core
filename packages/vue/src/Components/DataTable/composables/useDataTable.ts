@@ -69,6 +69,7 @@ import {
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   matchDataTableSearch,
+  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
@@ -780,6 +781,33 @@ export function useDataTable<T>(
     tableScrollObserver.observe(el);
   }
 
+  const paginationInline = ref(false);
+  let unobservePaginationFit: undefined | (() => void);
+
+  function bindPaginationEl(el: null | HTMLElement) {
+    unobservePaginationFit?.();
+    unobservePaginationFit = undefined;
+
+    if (!el) {
+      return;
+    }
+
+    unobservePaginationFit = observeDataTablePaginationInline(el, (inline) => {
+      if (paginationInline.value !== inline) {
+        paginationInline.value = inline;
+      }
+    });
+  }
+
+  function onPaginationMounted(vnode: VNode) {
+    const node = vnode.el;
+    bindPaginationEl(node instanceof HTMLElement ? node : null);
+  }
+
+  function onPaginationUnmounted() {
+    bindPaginationEl(null);
+  }
+
   function onTableScroll(event: Event) {
     const userOnScroll = customProps.value?.wrapper?.onScroll;
 
@@ -822,6 +850,7 @@ export function useDataTable<T>(
 
   onBeforeUnmount(() => {
     bindTableScrollEl(null);
+    bindPaginationEl(null);
   });
 
   const tableProps = computed(() => {
@@ -1047,12 +1076,25 @@ export function useDataTable<T>(
     );
   });
 
+  const frameBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        class: cn({
+          "w-fit min-w-0 max-w-full": merged.value.full === false,
+        }),
+      },
+    );
+  });
+
   const footerBind = computed(() => {
     return mergePartBind(
       customProps.value?.footer,
       {},
       {
         class: cn({
+          "w-0 min-w-full": merged.value.full === false,
           "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-300": true,
           [get(mergedClasses.value, "footer") ?? ""]: true,
         }),
@@ -1065,10 +1107,17 @@ export function useDataTable<T>(
       {},
       {},
       {
+        onVnodeMounted: onPaginationMounted,
+        onVnodeUnmounted: onPaginationUnmounted,
         class: cn({
-          "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
-          "sm:justify-end": !showPerPage.value,
-          "sm:justify-between": showPerPage.value,
+          "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
+          "flex-col justify-center":
+            showPerPage.value && !paginationInline.value,
+          "flex-row": !showPerPage.value || paginationInline.value,
+          "justify-end": !showPerPage.value,
+          "justify-between": showPerPage.value && paginationInline.value,
+          "w-full": merged.value.full !== false,
+          "w-0 min-w-full": merged.value.full === false,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
         }),
       },
@@ -1258,6 +1307,7 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    frameBind,
     tableProps,
     footerBind,
     showSearch,

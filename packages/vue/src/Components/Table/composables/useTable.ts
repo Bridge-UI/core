@@ -157,6 +157,18 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
 
   provide(TABLE_INJECTION_KEY, contextValue);
 
+  const wrapBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        class: cn({
+          "w-fit min-w-0 max-w-full": merged.value.full === false,
+        }),
+      },
+    );
+  });
+
   const rootBind = computed(() => {
     return mergePartBind(
       merged.value.customProps?.root,
@@ -195,6 +207,7 @@ export function useTable(props: TableOwnProps, libDefaults: TableLibDefaults) {
 
   return {
     merged,
+    wrapBind,
     rootBind,
     tableBind,
     contextValue,

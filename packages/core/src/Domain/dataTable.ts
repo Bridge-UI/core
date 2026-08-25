@@ -3,14 +3,18 @@ import {
   compact,
   difference,
   drop,
+  filter,
   findLast,
+  forEach,
   fromPairs,
   get,
   intersection,
   isNil,
   isNumber,
   isString,
+  map,
   omit,
+  sum,
   take,
   union,
   without,
@@ -35,6 +39,11 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
  * Fallback width in px for sticky columns without a parseable `width`.
  */
 export const DATATABLE_STICKY_WIDTH_PX = 120;
+
+/**
+ * Row gap in px between per-page and pagination (`gap-3`).
+ */
+export const DATATABLE_PAGINATION_GAP_PX = 12;
 
 /**
  * Pagination variant that pairs with a DataTable chrome variant.
@@ -303,6 +312,91 @@ export function getDataTablePaginationVariant(
   tableVariant: string | undefined,
 ): DataTablePaginationVariant {
   return get(DATATABLE_PAGINATION_VARIANT, tableVariant ?? "plain") ?? "text";
+}
+
+/**
+ * Whether per-page and pagination fit on one row of `containerWidth`.
+ */
+export function isDataTablePaginationInline(
+  containerWidth: number,
+  childWidths: readonly number[],
+  gapPx = DATATABLE_PAGINATION_GAP_PX,
+): boolean {
+  if (childWidths.length <= 1) {
+    return true;
+  }
+
+  const used = sum(childWidths) + gapPx * (childWidths.length - 1);
+
+  return used <= containerWidth;
+}
+
+function measureDataTablePaginationInline(container: HTMLElement): boolean {
+  const children = filter(container.children, (node): node is HTMLElement => {
+    return node instanceof HTMLElement;
+  });
+
+  return isDataTablePaginationInline(
+    container.clientWidth,
+    map(children, "offsetWidth"),
+  );
+}
+
+/**
+ * Watches the pagination bar and reports when per-page and pagination fit
+ * on one row. Returns a disconnect callback.
+ */
+export function observeDataTablePaginationInline(
+  container: HTMLElement,
+  onChange: (inline: boolean) => void,
+): () => void {
+  let last: boolean | undefined;
+
+  const emit = () => {
+    const next = measureDataTablePaginationInline(container);
+
+    if (last === next) {
+      return;
+    }
+
+    last = next;
+    onChange(next);
+  };
+
+  emit();
+
+  if (typeof ResizeObserver === "undefined") {
+    return () => {};
+  }
+
+  const resizeObserver = new ResizeObserver(emit);
+
+  const observeTree = () => {
+    resizeObserver.disconnect();
+    resizeObserver.observe(container);
+    forEach(container.children, (node) => {
+      if (node instanceof Element) {
+        resizeObserver.observe(node);
+      }
+    });
+  };
+
+  observeTree();
+
+  let mutationObserver: undefined | MutationObserver;
+
+  if (typeof MutationObserver !== "undefined") {
+    mutationObserver = new MutationObserver(() => {
+      observeTree();
+      emit();
+    });
+    mutationObserver.observe(container, { subtree: true, childList: true });
+  }
+
+  return () => {
+    resizeObserver.disconnect();
+    mutationObserver?.disconnect();
+  };
 }
 
 /**

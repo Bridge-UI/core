@@ -412,7 +412,8 @@ export interface DataTableOwnProps<T> {
   filters?: DataTableFilters;
 
   /**
-   * Stretch the table to at least the wrapper width.
+   * Stretch the table to at least the wrapper width. When `false`, the
+   * wrapper hugs column content, and pagination / per-page follow that width.
    *
    * @default true
    */

@@ -68,24 +68,34 @@ test("it should render a semantic table with caption and cells", () => {
 });
 
 test("it should apply the bordered variant on the wrapper", () => {
-  const { container } = render(<SampleTable variant="bordered" />);
+  render(<SampleTable variant="bordered" />);
 
-  expect(container.firstElementChild?.className).toContain("ring-1");
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "ring-1",
+  );
 });
 
 test("it should apply the ghost variant on the wrapper", () => {
   const { container } = render(<SampleTable variant="ghost" />);
 
-  expect(container.firstElementChild?.className).not.toContain("ring-1");
-  expect(container.firstElementChild?.className).toContain("rounded-lg");
+  expect(screen.getByRole("table").parentElement?.className).not.toContain(
+    "ring-1",
+  );
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "rounded-lg",
+  );
   expect(container.querySelector("th")?.className).toContain("after:w-px");
 });
 
 test("it should apply rounded none on the wrapper", () => {
-  const { container } = render(<SampleTable rounded="none" />);
+  render(<SampleTable rounded="none" />);
 
-  expect(container.firstElementChild?.className).toContain("rounded-none");
-  expect(container.firstElementChild?.className).not.toContain("rounded-lg");
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "rounded-none",
+  );
+  expect(screen.getByRole("table").parentElement?.className).not.toContain(
+    "rounded-lg",
+  );
 });
 
 test("it should stripe and hover body rows only", () => {
@@ -127,14 +137,19 @@ test("it should align numeric cells to the end with tabular nums", () => {
 });
 
 test("it should keep the table full width by default", () => {
-  const { container } = render(<SampleTable />);
+  render(<SampleTable />);
 
   expect(screen.getByRole("table").className).toContain("min-w-full");
-  expect(container.firstElementChild?.className).toContain("overflow-x-auto");
+  expect(screen.getByRole("table").parentElement?.className).toContain(
+    "overflow-x-auto",
+  );
 });
 
 test("it should omit full width when full is false", () => {
   render(<SampleTable full={false} />);
 
   expect(screen.getByRole("table").className).not.toContain("min-w-full");
+  expect(
+    screen.getByRole("table").parentElement?.parentElement?.className,
+  ).toContain("w-fit");
 });

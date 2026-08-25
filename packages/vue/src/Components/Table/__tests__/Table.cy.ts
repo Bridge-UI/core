@@ -59,3 +59,13 @@ test("it should render bordered and ghost variants", () => {
 
   cy.get("table").parent().should("have.class", "rounded-lg");
 });
+
+test("it should shrink-wrap when full is false", () => {
+  cy.mount(Table, {
+    slots: basicSlots(),
+    props: { full: false },
+  });
+
+  cy.get("table").parent().should("have.class", "overflow-x-auto");
+  cy.get("table").parent().parent().should("have.class", "w-fit");
+});

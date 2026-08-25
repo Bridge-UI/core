@@ -141,9 +141,30 @@ test("it should derive page count from totalCount and perPage", () => {
   expect(result.current.showPerPage).toBe(true);
   expect(result.current.resolvedPageCount).toBe(3);
   expect(result.current.paginationBind.className).toContain("flex-col");
-  expect(result.current.paginationBind.className).toContain("sm:flex-row");
-  expect(result.current.paginationBind.className).toContain(
-    "sm:justify-between",
+  expect(result.current.paginationBind.className).toContain("justify-center");
+  expect(result.current.paginationBind.className).not.toContain("flex-row");
+});
+
+test("it should shrink the frame and pagination when full is false", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        columns,
+        perPage: 10,
+        full: false,
+        totalCount: 23,
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.frameBind.className).toContain("w-fit");
+  expect(result.current.paginationBind.className.split(/\s+/)).toContain("w-0");
+  expect(result.current.paginationBind.className).toContain("min-w-full");
+  expect(result.current.paginationBind.className.split(/\s+/)).not.toContain(
+    "w-full",
   );
 });
 

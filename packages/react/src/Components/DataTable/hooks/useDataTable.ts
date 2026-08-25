@@ -28,6 +28,7 @@ import {
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -73,6 +74,7 @@ import {
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
   matchDataTableSearch,
+  observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
   rowSelectionToIds,
@@ -887,6 +889,21 @@ export function useDataTable<T>(
     };
   }, [tableScrollEl, applyStickyPing]);
 
+  const [paginationInline, setPaginationInline] = useState(false);
+  const [paginationEl, setPaginationEl] = useState<null | HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (!paginationEl) {
+      return;
+    }
+
+    return observeDataTablePaginationInline(paginationEl, (inline) => {
+      setPaginationInline((prev) => {
+        return prev === inline ? prev : inline;
+      });
+    });
+  }, [paginationEl]);
+
   const tableProps = useMemo(() => {
     const hasStickyColumns = headerViews.some((header) => {
       return Boolean(header.stickyStyle);
@@ -1130,33 +1147,57 @@ export function useDataTable<T>(
     );
   }, []);
 
+  const frameBind = useMemo(() => {
+    return mergePartBind(
+      {},
+      {},
+      {
+        className: cn({
+          "w-fit min-w-0 max-w-full": merged.full === false,
+        }),
+      },
+    );
+  }, [merged.full]);
+
   const footerBind = useMemo(() => {
     return mergePartBind(
       customProps?.footer,
       {},
       {
         className: cn({
+          "w-0 min-w-full": merged.full === false,
           "border-t border-dark-200 bg-dark-50 px-3 py-2.5 text-sm text-dark-600 dark:border-dark-700 dark:bg-dark-800 dark:text-dark-300": true,
           [get(mergedClasses, "footer") ?? ""]: true,
         }),
       },
     );
-  }, [customProps?.footer, mergedClasses]);
+  }, [customProps?.footer, merged.full, mergedClasses]);
 
   const paginationBind = useMemo(() => {
     return mergePartBind(
       {},
       {},
       {
+        ref: setPaginationEl,
         className: cn({
-          "flex w-full flex-col items-center justify-center gap-3 py-3 sm:flex-row sm:gap-4": true,
-          "sm:justify-end": !showPerPage,
-          "sm:justify-between": showPerPage,
+          "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
+          "flex-col justify-center": showPerPage && !paginationInline,
+          "flex-row": !showPerPage || paginationInline,
+          "justify-end": !showPerPage,
+          "justify-between": showPerPage && paginationInline,
+          "w-full": merged.full !== false,
+          "w-0 min-w-full": merged.full === false,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [showPerPage, mergedClasses]);
+  }, [
+    merged.full,
+    showPerPage,
+    mergedClasses,
+    setPaginationEl,
+    paginationInline,
+  ]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {
@@ -1354,6 +1395,7 @@ export function useDataTable<T>(
     rootBind,
     emptyBind,
     showEmpty,
+    frameBind,
     tableProps,
     footerBind,
     showSearch,

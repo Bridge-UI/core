@@ -390,7 +390,8 @@ export interface TableOwnProps {
   customProps?: TableCustomProps;
 
   /**
-   * Stretch the table to at least the wrapper width.
+   * Stretch the table to at least the wrapper width. When `false`, the
+   * wrapper hugs column content instead of spanning the parent.
    *
    * @default true
    */

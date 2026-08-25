@@ -889,7 +889,36 @@ test("it should not stretch the table when full is false", () => {
     props: { rows, columns, full: false },
   });
 
-  expect(wrapper.find("table").classes()).not.toContain("min-w-full");
+  const table = wrapper.find("table");
+
+  expect(table.classes()).not.toContain("min-w-full");
+  expect(table.element.parentElement?.parentElement?.className).toContain(
+    "w-fit",
+  );
+});
+
+test("it should align pagination to the table when full is false", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      page: 1,
+      columns,
+      perPage: 4,
+      full: false,
+      pageCount: 2,
+      variant: "bordered",
+    },
+  });
+
+  const table = wrapper.find("table");
+  const pagination = wrapper
+    .findAll("div")
+    .find((node) => node.classes().includes("w-0"));
+
+  expect(table.element.parentElement?.className).toContain("ring-1");
+  expect(pagination?.classes()).toContain("min-w-full");
+  expect(pagination?.element.parentElement?.contains(table.element)).toBe(true);
+  expect(pagination?.element.parentElement?.className).toContain("w-fit");
 });
 
 test("it should stick header cells when stickyHeader is set", () => {
@@ -955,8 +984,8 @@ test("it should pin built-in pagination to the end", () => {
     },
   });
 
-  expect(wrapper.find(".sm\\:justify-end").exists()).toBe(true);
-  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(false);
+  expect(wrapper.find(".justify-end").exists()).toBe(true);
+  expect(wrapper.find(".justify-between").exists()).toBe(false);
 });
 
 test("it should spread per-page and pagination across the footer", () => {
@@ -970,7 +999,11 @@ test("it should spread per-page and pagination across the footer", () => {
     },
   });
 
-  expect(wrapper.find(".sm\\:justify-between").exists()).toBe(true);
+  expect(wrapper.find(".justify-end").exists()).toBe(false);
+  expect(
+    wrapper.find(".justify-between").exists() ||
+      wrapper.find(".flex-col").exists(),
+  ).toBe(true);
 });
 
 test("it should sort rows when sorting is controlled", () => {

@@ -47,21 +47,21 @@ export const controlVariantProps: NumberFieldControlVariant = {
     "button":
       "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
     "endGroup":
-      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden my-0.5 me-0.5 flex-col gap-px",
+      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-col gap-px",
   },
   "inline": {
     "startGroup": "",
     "button":
       "bridge-field-adornment-button inline-flex min-h-0 min-w-8 items-center justify-center self-stretch",
     "endGroup":
-      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden my-0.5 me-0.5 min-w-0 flex-row items-stretch",
+      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-row items-stretch",
   },
   "split": {
+    "endGroup":
+      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-col",
     "button":
       "bridge-field-adornment-button inline-flex min-h-0 min-w-8 flex-1 items-center justify-center",
-    "endGroup":
-      "bridge-end-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden my-0.5 me-0.5 flex-col",
     "startGroup":
-      "bridge-start-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden my-0.5 ms-0.5 flex-col",
+      "bridge-start-adornment h-auto! flex min-h-0 min-w-9 self-stretch overflow-hidden flex-col",
   },
 };
