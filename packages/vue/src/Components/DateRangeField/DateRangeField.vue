@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 // ** Core Imports
 import type { DateRangeValue } from "@bridge-ui/core/Domain";
@@ -21,11 +20,15 @@ import {
   FormField,
 } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<DateRangeFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const resolveMessage = useResolveMessage();
+
+const emit = defineEmits<DateRangeFieldEmits>();
 
 const model = defineModel<null | DateRangeValue>();
 
@@ -36,23 +39,11 @@ const props = withDefaults(defineProps<DateRangeFieldOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DateRangeFieldEmits>();
-
-const resolveMessage = useResolveMessage();
-
 const uncontrolledValue = ref<null | DateRangeValue>(
   props.defaultValue ?? null,
 );
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   open,

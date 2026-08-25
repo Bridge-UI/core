@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 // ** Local Imports
 import {
@@ -13,7 +12,7 @@ import type {
   TextFieldOwnProps,
   TextFieldSlots,
 } from "@/Components/TextField/textField.types";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<TextFieldSlots>();
 
@@ -27,15 +26,7 @@ const props = withDefaults(defineProps<TextFieldOwnProps>(), {
 
 const uncontrolledValue = ref<null | string | undefined>(props.defaultValue);
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const { formField, inputBind } = useTextField(props);
 </script>

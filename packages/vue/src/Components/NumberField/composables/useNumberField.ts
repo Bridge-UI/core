@@ -162,7 +162,7 @@ export function useNumberField(
   const stringModel = computed({
     get: () => {
       if (isNil(currentValue.value)) {
-        return undefined;
+        return "";
       }
 
       return String(currentValue.value);

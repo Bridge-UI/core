@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 // ** Core Imports
 import type { TimeRangeValue } from "@bridge-ui/core/Domain";
@@ -21,11 +20,15 @@ import type {
   TimeRangeFieldSlots,
 } from "@/Components/TimeRangeField/timeRangeField.types";
 import { TimeRangePicker } from "@/Components/TimeRangePicker";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<TimeRangeFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const resolveMessage = useResolveMessage();
+
+const emit = defineEmits<TimeRangeFieldEmits>();
 
 const model = defineModel<null | TimeRangeValue>();
 
@@ -36,23 +39,11 @@ const props = withDefaults(defineProps<TimeRangeFieldOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<TimeRangeFieldEmits>();
-
-const resolveMessage = useResolveMessage();
-
 const uncontrolledValue = ref<null | TimeRangeValue>(
   props.defaultValue ?? null,
 );
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   open,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
 import { computed, ref } from "vue";
 
 // ** Core Imports
@@ -19,11 +18,18 @@ import type {
   NumberFieldOwnProps,
   NumberFieldSlots,
 } from "@/Components/NumberField/numberField.types";
-import { mergePartBind, presentSlotNames, useHoldRepeat } from "@/Utils";
+import {
+  mergePartBind,
+  presentSlotNames,
+  useHoldRepeat,
+  useOptionalModel,
+} from "@/Utils";
 
 defineSlots<NumberFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
+
+const resolveMessage = useResolveMessage();
 
 const emit = defineEmits<NumberFieldEmits>();
 
@@ -35,17 +41,7 @@ const props = withDefaults(defineProps<NumberFieldOwnProps>(), {
 
 const uncontrolledValue = ref<null | number | undefined>(props.defaultValue);
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
-
-const resolveMessage = useResolveMessage();
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   isSplit,

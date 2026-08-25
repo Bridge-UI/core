@@ -2,6 +2,7 @@
 import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { defineComponent, ref } from "vue";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -377,6 +378,29 @@ test("it should not forward modelValue to the native input", () => {
 
   expect(wrapper.find("input").element.value).toBe("hello");
   expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
+});
+
+test("it should clear the input when v-model is set to undefined", async () => {
+  const Host = defineComponent({
+    components: { TextField },
+    setup() {
+      const boundValue = ref<string | undefined>("hello");
+
+      return { boundValue };
+    },
+    template: `
+      <TextField v-model="boundValue" />
+      <button type="button" v-on:click="boundValue = undefined">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("hello");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
 });
 
 test("it should update modelValue when input changes", async () => {

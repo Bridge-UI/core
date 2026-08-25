@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
-import { isUndefined } from "es-toolkit/compat";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
@@ -18,13 +17,17 @@ import {
   FormField,
 } from "@/Components/FormField";
 import { Icon } from "@/Components/Icon";
-import { presentSlotNames } from "@/Utils";
+import { presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<DateTimeFieldSlots>();
 
 defineOptions({ inheritAttrs: false });
 
 const model = defineModel<Date | null>();
+
+const resolveMessage = useResolveMessage();
+
+const emit = defineEmits<DateTimeFieldEmits>();
 
 const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
   clearable: true,
@@ -33,21 +36,9 @@ const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
   showFooter: undefined,
 });
 
-const emit = defineEmits<DateTimeFieldEmits>();
-
-const resolveMessage = useResolveMessage();
-
 const uncontrolledValue = ref<Date | null>(props.defaultValue ?? null);
 
-const value = computed({
-  set: (next) => {
-    model.value = next;
-    uncontrolledValue.value = next;
-  },
-  get: () => {
-    return isUndefined(model.value) ? uncontrolledValue.value : model.value;
-  },
-});
+const value = useOptionalModel(model, uncontrolledValue);
 
 const {
   open,
