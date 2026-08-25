@@ -4,14 +4,13 @@
 @source "./Components";
 @source "../../core/dist/Tokens";
 
-/* Always emit — Tailwind omits unused custom properties. */
+/* Emitted for JS (`useBreakpoint`) — Tailwind otherwise omits unused --breakpoint-* vars. */
 @theme static {
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
-  --bridge-adornment-radius: var(--radius-md);
 }
 
 @theme inline {
@@ -173,64 +172,96 @@
 
 /* Adornment radius from `data-bridge-rounded`. Underlined: top corner only. */
 @layer components {
-  .group\/field[data-bridge-rounded="xs"] {
-    --bridge-adornment-radius: var(--radius-xs);
-  }
-
-  .group\/field[data-bridge-rounded="sm"] {
-    --bridge-adornment-radius: var(--radius-sm);
-  }
-
-  .group\/field[data-bridge-rounded="md"] {
-    --bridge-adornment-radius: var(--radius-md);
-  }
-
-  .group\/field[data-bridge-rounded="lg"] {
-    --bridge-adornment-radius: var(--radius-lg);
-  }
-
-  .group\/field[data-bridge-rounded="xl"] {
-    --bridge-adornment-radius: var(--radius-xl);
-  }
-
-  .group\/field[data-bridge-rounded="2xl"] {
-    --bridge-adornment-radius: var(--radius-2xl);
-  }
-
-  .group\/field[data-bridge-rounded="3xl"] {
-    --bridge-adornment-radius: var(--radius-3xl);
-  }
-
-  .group\/field[data-bridge-rounded="4xl"] {
-    --bridge-adornment-radius: var(--radius-4xl);
-  }
-
-  .group\/field[data-bridge-rounded="none"] {
-    --bridge-adornment-radius: var(--radius-none);
-  }
-
-  .group\/field[data-bridge-rounded="full"] {
-    --bridge-adornment-radius: var(--radius-full);
-  }
-
   .bridge-end-adornment,
   .bridge-start-adornment {
     @apply min-h-0 rounded-none!;
   }
 
-  .bridge-end-adornment {
-    @apply rounded-e-(--bridge-adornment-radius)!;
+  [data-bridge-rounded="none"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-none!;
   }
 
-  .bridge-start-adornment {
-    @apply rounded-s-(--bridge-adornment-radius)!;
+  [data-bridge-rounded="xs"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xs!;
   }
 
-  .group\/field[data-bridge-variant="underlined"] .bridge-end-adornment {
+  [data-bridge-rounded="sm"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-sm!;
+  }
+
+  [data-bridge-rounded="md"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-md!;
+  }
+
+  [data-bridge-rounded="lg"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-lg!;
+  }
+
+  [data-bridge-rounded="xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-xl!;
+  }
+
+  [data-bridge-rounded="2xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-2xl!;
+  }
+
+  [data-bridge-rounded="3xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-3xl!;
+  }
+
+  [data-bridge-rounded="4xl"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-4xl!;
+  }
+
+  [data-bridge-rounded="full"] .bridge-end-adornment {
+    @apply rounded-s-none! rounded-e-full!;
+  }
+
+  [data-bridge-rounded="none"] .bridge-start-adornment {
+    @apply rounded-s-none! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xs"] .bridge-start-adornment {
+    @apply rounded-s-xs! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="sm"] .bridge-start-adornment {
+    @apply rounded-s-sm! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="md"] .bridge-start-adornment {
+    @apply rounded-s-md! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="lg"] .bridge-start-adornment {
+    @apply rounded-s-lg! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="xl"] .bridge-start-adornment {
+    @apply rounded-s-xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="2xl"] .bridge-start-adornment {
+    @apply rounded-s-2xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="3xl"] .bridge-start-adornment {
+    @apply rounded-s-3xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="4xl"] .bridge-start-adornment {
+    @apply rounded-s-4xl! rounded-e-none!;
+  }
+
+  [data-bridge-rounded="full"] .bridge-start-adornment {
+    @apply rounded-s-full! rounded-e-none!;
+  }
+
+  [data-bridge-variant="underlined"] .bridge-end-adornment {
     @apply rounded-ee-none!;
   }
 
-  .group\/field[data-bridge-variant="underlined"] .bridge-start-adornment {
+  [data-bridge-variant="underlined"] .bridge-start-adornment {
     @apply rounded-es-none!;
   }
 
