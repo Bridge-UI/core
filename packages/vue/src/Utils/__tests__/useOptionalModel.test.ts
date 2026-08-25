@@ -14,7 +14,7 @@ const OptionalModelHost = defineComponent({
   },
   setup(props) {
     const model = useModel(props, "modelValue");
-    const uncontrolled = ref<string | undefined>(undefined);
+    const uncontrolled = ref<null | string | undefined>(undefined);
     const value = useOptionalModel(model, uncontrolled);
 
     return { value };
@@ -46,17 +46,17 @@ test("it should use v-model when it is bound", () => {
   expect(wrapper.find("input").element.value).toBe("hello");
 });
 
-test("it should clear when v-model is set to undefined", async () => {
+test("it should clear when v-model is set to null", async () => {
   const Host = defineComponent({
     components: { OptionalModelHost },
     setup() {
-      const boundValue = ref<string | undefined>("hello");
+      const boundValue = ref<null | string>("hello");
 
       return { boundValue };
     },
     template: `
       <OptionalModelHost v-model="boundValue" />
-      <button type="button" v-on:click="boundValue = undefined">Clear</button>
+      <button type="button" v-on:click="boundValue = null">Clear</button>
     `,
   });
 

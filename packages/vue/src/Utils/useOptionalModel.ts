@@ -4,7 +4,7 @@ import { computed, type Ref, type WritableComputedRef } from "vue";
 
 /**
  * Optional `v-model` that keeps `defaultValue` when unbound, and stays empty
- * when the parent sets the bound model to `undefined`.
+ * when the parent sets the bound model to `null`.
  */
 export function useOptionalModel<T>(
   model: Ref<undefined | NoInfer<T>>,

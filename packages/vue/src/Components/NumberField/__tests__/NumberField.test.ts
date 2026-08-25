@@ -101,17 +101,40 @@ test("it should not forward modelValue to the native input", () => {
   expect(wrapper.find("input").attributes("modelvalue")).toBeUndefined();
 });
 
-test("it should clear the input when v-model is set to undefined", async () => {
+test("it should clear the input when v-model is set to null", async () => {
   const Host = defineComponent({
     components: { NumberField },
     setup() {
-      const boundValue = ref<number | undefined>(10);
+      const boundValue = ref<null | number>(10);
 
       return { boundValue };
     },
     template: `
       <NumberField v-model="boundValue" />
-      <button type="button" v-on:click="boundValue = undefined">Clear</button>
+      <button type="button" v-on:click="boundValue = null">Clear</button>
+    `,
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.find("input").element.value).toBe("10");
+
+  await wrapper.find("button").trigger("click");
+
+  expect(wrapper.find("input").element.value).toBe("");
+});
+
+test("it should ignore defaultValue when v-model is cleared to null", async () => {
+  const Host = defineComponent({
+    components: { NumberField },
+    setup() {
+      const boundValue = ref<null | number>(10);
+
+      return { boundValue };
+    },
+    template: `
+      <NumberField v-model="boundValue" :defaultValue="5" />
+      <button type="button" v-on:click="boundValue = null">Clear</button>
     `,
   });
 

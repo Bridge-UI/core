@@ -32,8 +32,8 @@ test("it should return an empty stringModel when no value is set", () => {
   const { isSplit, stringModel, incrementFirst } = mountUseNumberField(model);
 
   expect(isSplit.value).toBe(false);
-  expect(incrementFirst.value).toBe(true);
   expect(stringModel.value).toBe("");
+  expect(incrementFirst.value).toBe(true);
 });
 
 test("it should expose split stepper flags when controlVariant is split", () => {
