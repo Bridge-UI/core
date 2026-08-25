@@ -4,13 +4,14 @@
 @source "./Components";
 @source "../../core/dist/Tokens";
 
-/* Emitted for JS (`useBreakpoint`) — Tailwind otherwise omits unused --breakpoint-* vars. */
+/* Always emit — Tailwind omits unused custom properties. */
 @theme static {
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
+  --bridge-adornment-radius: var(--radius-md);
 }
 
 @theme inline {
@@ -170,12 +171,7 @@
   }
 }
 
-/**
- * FormField slot adornments (`bridge-start-adornment` / `bridge-end-adornment`).
- * Parent `.group/field` sets `--bridge-adornment-radius` from `data-bridge-rounded`.
- * Default: round the inline side. Underlined: block-start corner only.
- * Suffix `!` overrides Button/Badge `rounded-*` from the utilities layer.
- */
+/* Adornment radius from `data-bridge-rounded`. Underlined: top corner only. */
 @layer components {
   .group\/field[data-bridge-rounded="xs"] {
     --bridge-adornment-radius: var(--radius-xs);
