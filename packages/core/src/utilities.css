@@ -34,55 +34,66 @@
   inherits: false;
 }
 
-@keyframes bridge-scroll-fade-reveal-t {
-  from {
-    --bridge-scroll-fade-t: 0px;
+@theme inline {
+  --animate-bridge-scroll-fade-reveal-t: bridge-scroll-fade-reveal-t 1ms
+    ease-in-out both;
+  --animate-bridge-scroll-fade-reveal-b: bridge-scroll-fade-reveal-b 1ms
+    ease-in-out both;
+  --animate-bridge-scroll-fade-reveal-s: bridge-scroll-fade-reveal-s 1ms
+    ease-in-out both;
+  --animate-bridge-scroll-fade-reveal-e: bridge-scroll-fade-reveal-e 1ms
+    ease-in-out both;
+
+  @keyframes bridge-scroll-fade-reveal-t {
+    from {
+      --bridge-scroll-fade-t: 0px;
+    }
+
+    to {
+      --bridge-scroll-fade-t: var(
+        --_bridge-scroll-fade-size-t,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
   }
 
-  to {
-    --bridge-scroll-fade-t: var(
-      --_bridge-scroll-fade-size-t,
-      var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
-    );
-  }
-}
+  @keyframes bridge-scroll-fade-reveal-b {
+    from {
+      --bridge-scroll-fade-b: var(
+        --_bridge-scroll-fade-size-b,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
 
-@keyframes bridge-scroll-fade-reveal-b {
-  from {
-    --bridge-scroll-fade-b: var(
-      --_bridge-scroll-fade-size-b,
-      var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
-    );
+    to {
+      --bridge-scroll-fade-b: 0px;
+    }
   }
 
-  to {
-    --bridge-scroll-fade-b: 0px;
-  }
-}
+  @keyframes bridge-scroll-fade-reveal-s {
+    from {
+      --bridge-scroll-fade-s: 0px;
+    }
 
-@keyframes bridge-scroll-fade-reveal-s {
-  from {
-    --bridge-scroll-fade-s: 0px;
-  }
-
-  to {
-    --bridge-scroll-fade-s: var(
-      --_bridge-scroll-fade-size-s,
-      var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
-    );
-  }
-}
-
-@keyframes bridge-scroll-fade-reveal-e {
-  from {
-    --bridge-scroll-fade-e: var(
-      --_bridge-scroll-fade-size-e,
-      var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
-    );
+    to {
+      --bridge-scroll-fade-s: var(
+        --_bridge-scroll-fade-size-s,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
   }
 
-  to {
-    --bridge-scroll-fade-e: 0px;
+  @keyframes bridge-scroll-fade-reveal-e {
+    from {
+      --bridge-scroll-fade-e: var(
+        --_bridge-scroll-fade-size-e,
+        var(--bridge-scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+      );
+    }
+
+    to {
+      --bridge-scroll-fade-e: 0px;
+    }
   }
 }
 
@@ -112,21 +123,21 @@
     transparent 100%
   );
 
+  @supports (animation-timeline: scroll()) {
+    animation:
+      bridge-scroll-fade-reveal-t 1ms ease-in-out both,
+      bridge-scroll-fade-reveal-b 1ms ease-in-out both;
+  }
+
   @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
-    animation-fill-mode: both;
-    animation-duration: 1ms, 1ms;
-    animation-name: bridge-scroll-fade-reveal-t, bridge-scroll-fade-reveal-b;
     animation-timeline: scroll(self y), scroll(self y);
-    animation-timing-function: ease-in-out, ease-in-out;
     animation-range:
       0 var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)),
       calc(100% - var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)))
         100%;
   }
 
-  @supports not (
-    (animation-timeline: scroll()) and (animation-range: 0% 100%)
-  ) {
+  @supports not (animation-timeline: scroll()) {
     --bridge-scroll-fade-t: var(--_bridge-scroll-fade-size-t);
     --bridge-scroll-fade-b: var(--_bridge-scroll-fade-size-b);
   }
@@ -172,21 +183,21 @@
     );
   }
 
+  @supports (animation-timeline: scroll()) {
+    animation:
+      bridge-scroll-fade-reveal-s 1ms ease-in-out both,
+      bridge-scroll-fade-reveal-e 1ms ease-in-out both;
+  }
+
   @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
-    animation-fill-mode: both;
-    animation-duration: 1ms, 1ms;
-    animation-name: bridge-scroll-fade-reveal-s, bridge-scroll-fade-reveal-e;
     animation-timeline: scroll(self inline), scroll(self inline);
-    animation-timing-function: ease-in-out, ease-in-out;
     animation-range:
       0 var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)),
       calc(100% - var(--bridge-scroll-fade-reveal, calc(var(--spacing) * 24)))
         100%;
   }
 
-  @supports not (
-    (animation-timeline: scroll()) and (animation-range: 0% 100%)
-  ) {
+  @supports not (animation-timeline: scroll()) {
     --bridge-scroll-fade-s: var(--_bridge-scroll-fade-size-s);
     --bridge-scroll-fade-e: var(--_bridge-scroll-fade-size-e);
   }
