@@ -73,7 +73,7 @@ Put background and border on a wrapper; put `bridge-scroll-fade-*` on the inner 
 
 - Scroll-aware when the browser supports scroll-driven animations: crisp start edge at rest, both edges mid-scroll, crisp end edge at the end.
 - If content does not overflow, no fade.
-- Without scroll-driven animations, no fade. Wheel / keyboard / programmatic scroll still work.
+- Without scroll-driven animations, both edges fade statically. Wheel / keyboard / programmatic scroll still work.
 - `bridge-scroll-fade-x` follows reading direction (RTL included).
 
 ## TimePanel
