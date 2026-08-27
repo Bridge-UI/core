@@ -148,16 +148,14 @@ test("it should return to today's month without selecting a date", () => {
   fireEvent.click(screen.getByRole("button", { name: "Select year" }));
   fireEvent.click(screen.getByRole("button", { name: "Today" }));
 
+  expect(onChange).not.toHaveBeenCalled();
+  expect(screen.getByRole("grid")).toBeTruthy();
+  expect(screen.getByRole("button", { current: "date" }).textContent).toBe(
+    String(today.getDate()),
+  );
   expect(
     screen.getByRole("button", { name: "Select year" }).textContent,
   ).toContain(String(today.getFullYear()));
-  expect(screen.getByRole("grid")).toBeTruthy();
-  expect(
-    screen
-      .getByRole("button", { name: String(today.getDate()) })
-      .getAttribute("aria-current"),
-  ).toBe("date");
-  expect(onChange).not.toHaveBeenCalled();
 });
 
 test("it should open on the controlled value month when remounted", () => {
