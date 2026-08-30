@@ -127,6 +127,21 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 <ListSection inset title="With icons below" />
 ```
 
+### Icon only
+
+Hide section labels and item text so only `slots.start` remains. Use with `Sidebar` `collapsible="icon"`.
+
+```tsx
+<List iconOnly>
+  <ListSection title="Application" />
+  <ListItem
+    interactive
+    primary="Home"
+    slots={{ start: <Icon icon="user" /> }}
+  />
+</List>
+```
+
 ## Props (`List`)
 
 | Prop          | Type                    | Default | Description                                                                        |
@@ -136,6 +151,7 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 | `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
 | `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
 | `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
+| `iconOnly`    | `boolean`               | `false` | Hide section labels and item text so only leading icons remain.                    |
 | `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                        |
 
 ## Props (`ListItem`)
@@ -172,4 +188,4 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 
 ## Related components
 
-Menu, Select
+Menu, Select, Sidebar

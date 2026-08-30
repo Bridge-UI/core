@@ -66,6 +66,34 @@ test("it should provide dense context to descendants", () => {
   expect(injectedDense).toBe("true");
 });
 
+test("it should provide iconOnly context to descendants", () => {
+  let injectedIconOnly = "missing";
+
+  const Probe = defineComponent({
+    setup() {
+      const context = inject(LIST_INJECTION_KEY, null);
+
+      injectedIconOnly = String(
+        context ? toValue(context).iconOnly : "missing",
+      );
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      useList({ iconOnly: true });
+
+      return () => h(Probe);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(injectedIconOnly).toBe("true");
+});
+
 test("it should merge class into root bind", () => {
   const { rootBind } = mountUseList({ class: "custom-list" });
 

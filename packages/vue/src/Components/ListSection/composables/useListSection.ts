@@ -59,6 +59,10 @@ export function useListSection(props: ListSectionOwnProps) {
     return listContext ? toValue(listContext).dense : false;
   });
 
+  const isIconOnly = computed(() => {
+    return listContext ? toValue(listContext).iconOnly : false;
+  });
+
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, []);
   });
@@ -102,5 +106,6 @@ export function useListSection(props: ListSectionOwnProps) {
     merged,
     rootBind,
     titleBind,
+    isIconOnly,
   };
 }

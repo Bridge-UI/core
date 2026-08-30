@@ -6,7 +6,12 @@ import { useListSection } from "@/Components/ListSection/hooks/useListSection";
 import type { ListSectionProps } from "@/Components/ListSection/listSection.types";
 
 function ListSection(props: ListSectionProps) {
-  const { label, merged, rootBind, titleBind } = useListSection(props);
+  const { label, merged, rootBind, titleBind, isIconOnly } =
+    useListSection(props);
+
+  if (isIconOnly) {
+    return null;
+  }
 
   if (merged.as === "div") {
     return <div {...titleBind}>{label}</div>;

@@ -19,6 +19,7 @@ const listBridgeKeys = [
   "dense",
   "nested",
   "classes",
+  "iconOnly",
   "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
@@ -52,6 +53,7 @@ export function useList(props: ListOwnProps) {
   const contextValue = computed(() => {
     return {
       dense: merged.value.dense === true,
+      iconOnly: merged.value.iconOnly === true,
     };
   });
 

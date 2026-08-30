@@ -29,6 +29,12 @@ test("it should expose dense context value", () => {
   expect(result.current.contextValue.dense).toBe(true);
 });
 
+test("it should expose iconOnly context value", () => {
+  const { result } = renderUseList({ iconOnly: true });
+
+  expect(result.current.contextValue.iconOnly).toBe(true);
+});
+
 test("it should merge className into root bind", () => {
   const { result } = renderUseList({ className: "custom-list" });
 

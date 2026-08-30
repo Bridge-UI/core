@@ -68,3 +68,14 @@ test("it should render a div root when as prop is div", () => {
 
   expect(wrapper.element.tagName).toBe("DIV");
 });
+
+test("it should hide the section when parent List is iconOnly", () => {
+  const Host = defineComponent({
+    components: { List, ListSection },
+    template: '<List icon-only><ListSection title="Application" /></List>',
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.text()).not.toContain("Application");
+});

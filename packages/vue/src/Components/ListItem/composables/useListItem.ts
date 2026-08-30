@@ -182,7 +182,15 @@ export function useListItem(
     return listContext ? toValue(listContext).dense : false;
   });
 
+  const isIconOnly = computed(() => {
+    return listContext ? toValue(listContext).iconOnly : false;
+  });
+
   const hasPrimary = computed(() => {
+    if (isIconOnly.value) {
+      return false;
+    }
+
     return (
       hasNamedSlot(slots, "primary") ||
       hasNamedSlot(slots, "default") ||
@@ -191,6 +199,10 @@ export function useListItem(
   });
 
   const hasSecondary = computed(() => {
+    if (isIconOnly.value) {
+      return false;
+    }
+
     return hasNamedSlot(slots, "secondary") || Boolean(merged.value.secondary);
   });
 
@@ -215,6 +227,10 @@ export function useListItem(
   });
 
   const hasEnd = computed(() => {
+    if (isIconOnly.value) {
+      return false;
+    }
+
     return hasNamedSlot(slots, "end") || resolvedSelectedIcon.value != null;
   });
 
@@ -261,6 +277,10 @@ export function useListItem(
         "aria-selected": isListboxOption.value
           ? listboxSelected.value
           : undefined,
+        "aria-label":
+          isIconOnly.value && typeof merged.value.primary === "string"
+            ? merged.value.primary
+            : undefined,
         onMousedown: isListboxOption.value
           ? (event: MouseEvent) => {
               event.preventDefault();
@@ -276,7 +296,8 @@ export function useListItem(
         class: cn({
           "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.value.disabled,
-          "px-4": true,
+          "px-4": !isIconOnly.value,
+          "justify-center px-2": isIconOnly.value,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
@@ -316,7 +337,8 @@ export function useListItem(
       "flex w-full min-w-0 gap-x-3": true,
       "items-center text-dark-900 dark:text-dark-100":
         !merged.value.interactive,
-      "px-4": !merged.value.interactive,
+      "px-4": !merged.value.interactive && !isIconOnly.value,
+      "justify-center px-2": !merged.value.interactive && isIconOnly.value,
       "py-2": !merged.value.interactive && !isDense.value,
       "py-1.5": !merged.value.interactive && isDense.value,
     });
@@ -402,6 +424,7 @@ export function useListItem(
     rowClass,
     startBind,
     hasPrimary,
+    isIconOnly,
     contentBind,
     primaryBind,
     hasSecondary,

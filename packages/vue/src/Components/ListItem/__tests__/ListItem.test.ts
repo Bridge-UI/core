@@ -123,3 +123,19 @@ test("it should apply divider border on the root item", () => {
 
   expect(wrapper.classes().join(" ")).toContain("border-b");
 });
+
+test("it should hide primary text and set aria-label when List is iconOnly", () => {
+  const wrapper = mount(
+    defineComponent({
+      components: { List, ListItem },
+      template: `
+        <List icon-only>
+          <ListItem interactive primary="Home" />
+        </List>
+      `,
+    }),
+  );
+
+  expect(wrapper.text()).not.toContain("Home");
+  expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe("Home");
+});

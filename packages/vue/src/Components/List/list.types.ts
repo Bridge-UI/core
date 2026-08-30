@@ -51,6 +51,14 @@ export interface ListOwnProps {
   dense?: boolean;
 
   /**
+   * Hide section labels and item text so only leading icons remain.
+   * Bind from `useSidebar().state === "collapsed"` when the sidebar uses `collapsible="icon"`.
+   *
+   * @default false
+   */
+  iconOnly?: boolean;
+
+  /**
    * When true, indents the list for nested navigation/submenus.
    *
    * @default false

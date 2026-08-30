@@ -66,6 +66,10 @@ export function useListSection(props: ListSectionProps) {
     return listContext?.dense ?? false;
   });
 
+  const isIconOnly = derived(() => {
+    return listContext?.iconOnly ?? false;
+  });
+
   const label = derived(() => {
     return merged.title ?? children;
   });
@@ -110,5 +114,6 @@ export function useListSection(props: ListSectionProps) {
     merged,
     rootBind,
     titleBind,
+    isIconOnly,
   };
 }

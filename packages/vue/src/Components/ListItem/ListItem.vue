@@ -34,6 +34,7 @@ const {
   rowClass,
   startBind,
   hasPrimary,
+  isIconOnly,
   contentBind,
   primaryBind,
   hasSecondary,
@@ -56,7 +57,7 @@ const rootTag = computed(() => {
           <slot name="start" />
         </div>
 
-        <div v-bind="contentBind">
+        <div v-if="!isIconOnly" v-bind="contentBind">
           <span v-if="hasPrimary" v-bind="primaryBind">
             <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 
@@ -93,7 +94,7 @@ const rootTag = computed(() => {
         <slot name="start" />
       </div>
 
-      <div v-bind="contentBind">
+      <div v-if="!isIconOnly" v-bind="contentBind">
         <span v-if="hasPrimary" v-bind="primaryBind">
           <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 

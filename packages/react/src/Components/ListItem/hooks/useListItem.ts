@@ -166,13 +166,25 @@ export function useListItem(
     return merged.dense ?? listContext?.dense ?? false;
   });
 
+  const isIconOnly = derived(() => {
+    return listContext?.iconOnly ?? false;
+  });
+
   const hasPrimary = derived(() => {
+    if (isIconOnly) {
+      return false;
+    }
+
     return (
       hasSlotOrProp(slots, "primary", merged.primary) || isPropPresent(children)
     );
   });
 
   const hasSecondary = derived(() => {
+    if (isIconOnly) {
+      return false;
+    }
+
     return hasSlotOrProp(slots, "secondary", merged.secondary);
   });
 
@@ -205,6 +217,10 @@ export function useListItem(
   ]);
 
   const hasEnd = derived(() => {
+    if (isIconOnly) {
+      return false;
+    }
+
     return hasNamedSlot(slots, "end") || resolvedSelectedIcon != null;
   });
 
@@ -223,6 +239,18 @@ export function useListItem(
     });
   });
 
+  const accessibleName = derived(() => {
+    if (!isIconOnly) {
+      return undefined;
+    }
+
+    if (typeof merged.primary === "string") {
+      return merged.primary;
+    }
+
+    return undefined;
+  });
+
   const interactiveBind = derived(() => {
     const interactive = merged.interactive || isListboxOption;
 
@@ -234,6 +262,7 @@ export function useListItem(
       customProps?.interactive,
       {},
       {
+        "aria-label": accessibleName,
         role: isListboxOption ? "option" : merged.role,
         "aria-disabled": merged.disabled ? true : undefined,
         tabIndex: merged.disabled || isListboxOption ? -1 : 0,
@@ -254,7 +283,8 @@ export function useListItem(
         className: cn({
           "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.disabled,
-          "px-4": true,
+          "px-4": !isIconOnly,
+          "justify-center px-2": isIconOnly,
           "py-2": !isDense,
           "py-1.5": isDense,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
@@ -285,7 +315,8 @@ export function useListItem(
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
       "items-center text-dark-900 dark:text-dark-100": !merged.interactive,
-      "px-4": !merged.interactive,
+      "px-4": !merged.interactive && !isIconOnly,
+      "justify-center px-2": !merged.interactive && isIconOnly,
       "py-2": !merged.interactive && !isDense,
       "py-1.5": !merged.interactive && isDense,
     });
@@ -397,6 +428,7 @@ export function useListItem(
     rootBind,
     startBind,
     hasPrimary,
+    isIconOnly,
     contentBind,
     primaryBind,
     rowClassName,

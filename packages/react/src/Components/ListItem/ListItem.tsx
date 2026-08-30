@@ -13,6 +13,7 @@ function ListItemRow({
   endBind,
   startBind,
   hasPrimary,
+  isIconOnly,
   contentBind,
   primaryBind,
   hasSecondary,
@@ -29,13 +30,15 @@ function ListItemRow({
         <div {...startBind}>{slots?.start}</div>
       ) : null}
 
-      <div {...contentBind}>
-        {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}
+      {!isIconOnly ? (
+        <div {...contentBind}>
+          {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}
 
-        {hasSecondary ? (
-          <span {...secondaryBind}>{secondaryContent}</span>
-        ) : null}
-      </div>
+          {hasSecondary ? (
+            <span {...secondaryBind}>{secondaryContent}</span>
+          ) : null}
+        </div>
+      ) : null}
 
       {hasEnd ? (
         <div {...endBind}>

@@ -1,10 +1,14 @@
 // ** External Imports
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
+
+afterEach(() => {
+  cleanup();
+});
 
 test("it should render primary text from the primary prop", () => {
   render(<ListItem primary="Edit item" />);
@@ -78,4 +82,17 @@ test("it should apply divider border on the root item", () => {
   const root = container.querySelector("li");
 
   expect(root?.className.includes("border-b")).toBe(true);
+});
+
+test("it should hide primary text and set aria-label when List is iconOnly", () => {
+  render(
+    <List iconOnly>
+      <ListItem interactive primary="Home" />
+    </List>,
+  );
+
+  expect(screen.queryByText("Home")).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
+  ).toBe("Home");
 });
