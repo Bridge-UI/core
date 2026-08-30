@@ -95,12 +95,12 @@ test("it should apply end alignment classes when align is end", () => {
   expect(wrapper.find(".ms-auto").exists()).toBe(true);
 });
 
-test("it should render action and secondaryAction slots", () => {
+test("it should render multiple buttons in the action slot", () => {
   const wrapper = mount(EmptyState, {
     props: { title: "No projects yet" },
     slots: {
-      action: "<button type='button'>New project</button>",
-      secondaryAction: "<button type='button'>Learn more</button>",
+      action:
+        "<button type='button'>New project</button><button type='button'>Learn more</button>",
     },
   });
 

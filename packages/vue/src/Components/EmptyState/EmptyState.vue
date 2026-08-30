@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ** External Imports
+import { computed } from "vue";
+
 // ** Local Imports
 import { useEmptyState } from "@/Components/EmptyState/composables/useEmptyState";
 import type {
@@ -34,14 +37,15 @@ const {
   align: "center",
   mediaDecorative: true,
 });
+
+const hasMedia = computed(() => {
+  return hasNamedSlot(slots, "media") || isPropPresent(merged.value.icon);
+});
 </script>
 
 <template>
   <div v-bind="rootBind">
-    <div
-      v-bind="mediaBind"
-      v-if="hasNamedSlot(slots, 'media') || isPropPresent(merged.icon)"
-    >
+    <div v-if="hasMedia" v-bind="mediaBind">
       <slot name="media" v-if="hasNamedSlot(slots, 'media')" />
 
       <Icon v-bind="iconBind" :icon="merged.icon" v-else-if="merged.icon" />
@@ -70,15 +74,8 @@ const {
       </template>
     </div>
 
-    <div
-      v-bind="actionsBind"
-      v-if="
-        hasNamedSlot(slots, 'action') || hasNamedSlot(slots, 'secondaryAction')
-      "
-    >
+    <div v-bind="actionsBind" v-if="hasNamedSlot(slots, 'action')">
       <slot name="action" />
-
-      <slot name="secondaryAction" />
     </div>
   </div>
 </template>

@@ -62,8 +62,6 @@ Use `title-as` when the page outline needs a heading. The default is `p` so the 
   </template>
   <template #action>
     <Button color="primary">New project</Button>
-  </template>
-  <template #secondary-action>
     <Button variant="flat">Learn more</Button>
   </template>
 </EmptyState>

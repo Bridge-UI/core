@@ -95,13 +95,17 @@ test("it should apply end alignment classes when align is end", () => {
   expect(container.querySelector(".ms-auto")).not.toBeNull();
 });
 
-test("it should render action and secondaryAction slots", () => {
+test("it should render multiple buttons in the action slot", () => {
   render(
     <EmptyState
       title="No projects yet"
       slots={{
-        action: <button type="button">New project</button>,
-        secondaryAction: <button type="button">Learn more</button>,
+        action: (
+          <>
+            <button type="button">New project</button>
+            <button type="button">Learn more</button>
+          </>
+        ),
       }}
     />,
   );

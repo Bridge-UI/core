@@ -2,7 +2,7 @@
 import type { EmptyStateProps } from "@/Components/EmptyState/emptyState.types";
 import { useEmptyState } from "@/Components/EmptyState/hooks/useEmptyState";
 import { Icon } from "@/Components/Icon";
-import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
+import { derived, hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 function EmptyState(props: EmptyStateProps) {
   const {
@@ -22,9 +22,10 @@ function EmptyState(props: EmptyStateProps) {
   });
 
   const TitleTag = merged.titleAs;
-  const hasMedia = hasNamedSlot(slots, "media") || Boolean(merged.icon);
-  const hasActions =
-    hasNamedSlot(slots, "action") || hasNamedSlot(slots, "secondaryAction");
+
+  const hasMedia = derived(() => {
+    return hasNamedSlot(slots, "media") || Boolean(merged.icon);
+  });
 
   return (
     <div {...rootBind}>
@@ -52,11 +53,8 @@ function EmptyState(props: EmptyStateProps) {
         </div>
       ) : null}
 
-      {hasActions ? (
-        <div {...actionsBind}>
-          {slots?.action}
-          {slots?.secondaryAction}
-        </div>
+      {hasNamedSlot(slots, "action") ? (
+        <div {...actionsBind}>{slots?.action}</div>
       ) : null}
     </div>
   );

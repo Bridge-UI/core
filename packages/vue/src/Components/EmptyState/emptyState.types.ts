@@ -149,7 +149,7 @@ export interface EmptyStateOwnProps {
 
 export interface EmptyStateSlots {
   /**
-   * Primary action (e.g. a `Button`).
+   * Action row (e.g. one or more `Button`s).
    */
   action?: Slot<undefined>;
 
@@ -162,11 +162,6 @@ export interface EmptyStateSlots {
    * Illustration or icon above the title. Replaces the `icon` prop.
    */
   media?: Slot<undefined>;
-
-  /**
-   * Secondary action next to `action`.
-   */
-  secondaryAction?: Slot<undefined>;
 
   /**
    * Replaces the default title copy.

@@ -57,8 +57,12 @@ Use `titleAs` when the page outline needs a heading. The default is `p` so the b
   description="Create your first project to get started."
   slots={{
     media: <Icon icon="search" />,
-    action: <Button color="primary">New project</Button>,
-    secondaryAction: <Button variant="flat">Learn more</Button>,
+    action: (
+      <>
+        <Button color="primary">New project</Button>
+        <Button variant="flat">Learn more</Button>
+      </>
+    ),
   }}
 />
 ```
@@ -112,7 +116,7 @@ Override the DataTable default with a richer `EmptyState` via `slots.empty`.
 | `icon`            | `IconSource`            | —          | Default media icon. Use `slots.media` to replace it.                                                                          |
 | `mediaDecorative` | `boolean`               | `true`     | When true, the media wrapper is hidden from assistive tech.                                                                   |
 | `size`            | `EmptyStateSize`        | `"md"`     | Spacing and typography scale (`sm`, `md`, `lg`).                                                                              |
-| `slots`           | `EmptyStateSlots`       | —          | `media`, `title`, `description`, `action`, `secondaryAction`.                                                                 |
+| `slots`           | `EmptyStateSlots`       | —          | `media`, `title`, `description`, `action`.                                                                                    |
 | `title`           | `ReactNode`             | —          | Primary heading copy.                                                                                                         |
 | `titleAs`         | `"p" \| "h1"` … `"h6"`  | `"p"`      | Element used to render `title`.                                                                                               |
 
