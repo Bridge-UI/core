@@ -38,13 +38,14 @@ test("it should render the default icon when icon is provided", () => {
 
 test("it should hide decorative media from assistive tech", () => {
   const wrapper = mount(EmptyState, {
-    props: { icon: "search", title: "No results" },
+    props: {
+      icon: "search",
+      title: "No results",
+      customProps: { media: { id: "empty-media" } },
+    },
   });
 
-  const media = wrapper.find(".text-dark-400");
-
-  expect(media.exists()).toBe(true);
-  expect(media.attributes("aria-hidden")).toBe("true");
+  expect(wrapper.find("#empty-media").attributes("aria-hidden")).toBe("true");
 });
 
 test("it should not hide media when mediaDecorative is false", () => {
@@ -53,10 +54,11 @@ test("it should not hide media when mediaDecorative is false", () => {
       icon: "search",
       title: "No results",
       mediaDecorative: false,
+      customProps: { media: { id: "empty-media" } },
     },
   });
 
-  expect(wrapper.find(".text-dark-400").attributes("aria-hidden")).toBe(
+  expect(wrapper.find("#empty-media").attributes("aria-hidden")).toBe(
     undefined,
   );
 });
@@ -85,6 +87,14 @@ test("it should apply start alignment classes when align is start", () => {
   expect(wrapper.find(".items-start").exists()).toBe(true);
 });
 
+test("it should apply end alignment classes when align is end", () => {
+  const wrapper = mount(EmptyState, {
+    props: { align: "end", title: "No results" },
+  });
+
+  expect(wrapper.find(".ms-auto").exists()).toBe(true);
+});
+
 test("it should render action and secondaryAction slots", () => {
   const wrapper = mount(EmptyState, {
     props: { title: "No projects yet" },
@@ -94,8 +104,26 @@ test("it should render action and secondaryAction slots", () => {
     },
   });
 
-  expect(wrapper.text()).toContain("New project");
   expect(wrapper.text()).toContain("Learn more");
+  expect(wrapper.text()).toContain("New project");
+});
+
+test("it should render title and description slots instead of props", () => {
+  const wrapper = mount(EmptyState, {
+    props: {
+      title: "Prop title",
+      description: "Prop description",
+    },
+    slots: {
+      title: "Slot title",
+      description: "Slot description",
+    },
+  });
+
+  expect(wrapper.text()).toContain("Slot title");
+  expect(wrapper.text()).toContain("Slot description");
+  expect(wrapper.text()).not.toContain("Prop title");
+  expect(wrapper.text()).not.toContain("Prop description");
 });
 
 test("it should render media slot instead of the icon prop", () => {
@@ -104,8 +132,8 @@ test("it should render media slot instead of the icon prop", () => {
     props: { icon: "search", title: "No results" },
   });
 
-  expect(wrapper.text()).toContain("Custom media");
   expect(wrapper.find("svg").exists()).toBe(false);
+  expect(wrapper.text()).toContain("Custom media");
 });
 
 test("it should merge class with root classes", () => {

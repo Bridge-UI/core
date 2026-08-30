@@ -59,6 +59,32 @@ test("it should include start alignment classes when align is start", () => {
   expect(result.current.rootBind.className).toContain("items-start");
 });
 
+test("it should include end alignment classes when align is end", () => {
+  const { result } = renderUseEmptyState({ align: "end" });
+
+  expect(result.current.rootBind.className).toContain("ms-auto");
+});
+
+test("it should set iconBind size from the size token", () => {
+  const { result } = renderUseEmptyState();
+
+  expect(result.current.iconBind.size).toBe("xl");
+});
+
+test("it should set compact iconBind size when size is sm", () => {
+  const { result } = renderUseEmptyState({ size: "sm" });
+
+  expect(result.current.iconBind.size).toBe("lg");
+});
+
+test("it should let customProps.icon.size override the token size", () => {
+  const { result } = renderUseEmptyState({
+    customProps: { icon: { size: "xs" } },
+  });
+
+  expect(result.current.iconBind.size).toBe("xs");
+});
+
 test("it should mark media as hidden when mediaDecorative is true", () => {
   const { result } = renderUseEmptyState();
 

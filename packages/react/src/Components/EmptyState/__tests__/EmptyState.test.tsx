@@ -1,6 +1,10 @@
 // ** External Imports
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, expect, test } from "vitest";
+
+afterEach(() => {
+  cleanup();
+});
 
 // ** Local Imports
 import { EmptyState } from "@/Components/EmptyState";
@@ -85,6 +89,12 @@ test("it should apply start alignment classes when align is start", () => {
   expect(container.querySelector(".items-start")).not.toBeNull();
 });
 
+test("it should apply end alignment classes when align is end", () => {
+  const { container } = render(<EmptyState align="end" title="No results" />);
+
+  expect(container.querySelector(".ms-auto")).not.toBeNull();
+});
+
 test("it should render action and secondaryAction slots", () => {
   render(
     <EmptyState
@@ -96,8 +106,26 @@ test("it should render action and secondaryAction slots", () => {
     />,
   );
 
-  expect(screen.getByText("New project")).toBeTruthy();
   expect(screen.getByText("Learn more")).toBeTruthy();
+  expect(screen.getByText("New project")).toBeTruthy();
+});
+
+test("it should render title and description slots instead of props", () => {
+  render(
+    <EmptyState
+      title="Prop title"
+      description="Prop description"
+      slots={{
+        title: "Slot title",
+        description: "Slot description",
+      }}
+    />,
+  );
+
+  expect(screen.getByText("Slot title")).toBeTruthy();
+  expect(screen.getByText("Slot description")).toBeTruthy();
+  expect(screen.queryByText("Prop title")).toBeNull();
+  expect(screen.queryByText("Prop description")).toBeNull();
 });
 
 test("it should render media slot instead of the icon prop", () => {
@@ -109,8 +137,8 @@ test("it should render media slot instead of the icon prop", () => {
     />,
   );
 
-  expect(screen.getByText("Custom media")).toBeTruthy();
   expect(container.querySelector("svg")).toBeNull();
+  expect(screen.getByText("Custom media")).toBeTruthy();
 });
 
 test("it should merge className with root classes", () => {
