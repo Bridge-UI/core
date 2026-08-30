@@ -152,6 +152,14 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
+import type {
+  SidebarCollapsible,
+  SidebarCollapsibleItem,
+  SidebarSide,
+  SidebarVariant,
+  SidebarVariantItem,
+  SidebarWidth,
+} from "@/Tokens/Sidebar";
 import type { SkeletonRounded } from "@/Tokens/Skeleton";
 import type {
   SliderColor,
@@ -384,6 +392,7 @@ export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
 export interface SelectConfigOverrides {}
+export interface SidebarConfigOverrides {}
 export interface SkeletonConfigOverrides {}
 export interface SliderConfigOverrides {}
 export interface SnackbarConfigOverrides {}
@@ -1228,6 +1237,22 @@ export interface ProgressConfigBase {
   }>;
 }
 
+export interface SidebarConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    collapsible: keyof SidebarCollapsible;
+    defaultOpen: boolean;
+    side: keyof SidebarSide;
+    variant: keyof SidebarVariant;
+  }>;
+  tokens: Partial<{
+    collapsible: Record<string, SidebarCollapsibleItem>;
+    side: Record<string, string>;
+    variant: Record<string, SidebarVariantItem>;
+    width: Partial<SidebarWidth>;
+  }>;
+}
+
 export interface SkeletonConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1543,6 +1568,7 @@ export type BridgeUIComponentsConfig = Partial<{
   Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
+  Sidebar: Partial<Overwrite<SidebarConfigBase, SidebarConfigOverrides>>;
   Skeleton: Partial<Overwrite<SkeletonConfigBase, SkeletonConfigOverrides>>;
   Slider: Partial<Overwrite<SliderConfigBase, SliderConfigOverrides>>;
   Snackbar: Partial<Overwrite<SnackbarConfigBase, SnackbarConfigOverrides>>;

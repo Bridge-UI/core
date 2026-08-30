@@ -75,6 +75,7 @@ export type {
   ProgressConfigOverrides,
   RadioConfigOverrides,
   SelectConfigOverrides,
+  SidebarConfigOverrides,
   SkeletonConfigOverrides,
   SliderConfigOverrides,
   SpinnerConfigOverrides,
@@ -116,6 +117,9 @@ export {
   DEFAULT_SLIDER_STEP,
   DEFAULT_SPINNER_THICKNESS,
   DEFAULT_START_OF_WEEK,
+  SIDEBAR_WIDTH_ICON_VAR,
+  SIDEBAR_WIDTH_MOBILE_VAR,
+  SIDEBAR_WIDTH_VAR,
   SPINNER_VIEWBOX_SIZE,
   applyDateSelection,
   applyOtpInput,
@@ -166,6 +170,7 @@ export {
   getFieldOverlayControlSize,
   getNumberFieldStepper,
   getPaginationItems,
+  getSidebarPanelId,
   getSliderBarGeometry,
   getSliderPointerClientX,
   getSliderPrecision,
@@ -238,6 +243,8 @@ export {
   resolveSelectAsyncDebounce,
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
+  resolveSidebarCollapsibleData,
+  resolveSidebarState,
   resolveSliderBounds,
   resolveSliderDefaultValue,
   resolveStartOfWeek,
@@ -251,6 +258,8 @@ export {
   setDataTableColumnFilter,
   setDataTableColumnSearch,
   setDataTableRowSelection,
+  shouldRenderSidebarAsDrawer,
+  shouldToggleDesktopSidebar,
   sliceDataTablePage,
   snapMinutes,
   snapSliderValue,
@@ -272,6 +281,7 @@ export {
   toggleDataTableRowExpansion,
   toggleDataTableRowSelection,
   toggleDataTableSorting,
+  toggleSidebarOpen,
   unitFromPointer,
   valueToPercent,
   writeSliderRangeThumb,
@@ -330,6 +340,8 @@ export type {
   SelectOptionKeys,
   SelectOptionLike,
   SelectValue,
+  SidebarCollapsibleMode,
+  SidebarState,
   SliderBarGeometry,
   SliderBounds,
   SliderRangeValue,
@@ -712,6 +724,20 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
+export {
+  collapsibleProps as sidebarCollapsibleProps,
+  sideProps as sidebarSideProps,
+  variantProps as sidebarVariantProps,
+  widthProps as sidebarWidthProps,
+} from "@/Tokens/Sidebar";
+export type {
+  SidebarCollapsible,
+  SidebarCollapsibleItem,
+  SidebarSide,
+  SidebarVariant,
+  SidebarVariantItem,
+  SidebarWidth,
+} from "@/Tokens/Sidebar";
 export { roundedProps as skeletonRoundedProps } from "@/Tokens/Skeleton";
 export type { SkeletonRounded } from "@/Tokens/Skeleton";
 export {
