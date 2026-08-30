@@ -263,9 +263,18 @@ test("it should show the empty slot when there are no rows", () => {
 });
 
 test("it should render a default empty state", () => {
-  render(<DataTable rows={[]} columns={columns} />);
+  const { container } = render(<DataTable rows={[]} columns={columns} />);
 
   expect(screen.getByText("No data")).toBeTruthy();
+  expect(container.querySelector(".max-w-md")).not.toBeNull();
+});
+
+test("it should scale the default empty state with the table size", () => {
+  const { container } = render(
+    <DataTable rows={[]} size="sm" columns={columns} />,
+  );
+
+  expect(container.querySelector(".max-w-sm")).not.toBeNull();
 });
 
 test("it should render the footer slot below the table", () => {

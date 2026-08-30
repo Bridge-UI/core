@@ -278,6 +278,15 @@ test("it should render a default empty state", () => {
   });
 
   expect(wrapper.text()).toContain("No data");
+  expect(wrapper.find(".max-w-md").exists()).toBe(true);
+});
+
+test("it should scale the default empty state with the table size", () => {
+  const wrapper = mountDataTable({
+    props: { columns, rows: [], size: "sm" },
+  });
+
+  expect(wrapper.find(".max-w-sm").exists()).toBe(true);
 });
 
 test("it should render the footer slot below the table", () => {

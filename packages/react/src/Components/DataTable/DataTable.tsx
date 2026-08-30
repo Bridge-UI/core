@@ -22,6 +22,7 @@ import {
   type DataTableCellView,
   type DataTableHeaderView,
 } from "@/Components/DataTable/hooks/useDataTable";
+import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
@@ -480,12 +481,10 @@ function DataTable<T>(props: DataTableProps<T>) {
                   <TableCell align="center" colSpan={columnCount}>
                     <div {...emptyBind}>
                       {slots?.empty ?? (
-                        <>
-                          <span className="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600">
-                            <span className="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900" />
-                          </span>
-                          {resolveMessage("No data")}
-                        </>
+                        <EmptyState
+                          size={merged.size}
+                          title={resolveMessage("No data")}
+                        />
                       )}
                     </div>
                   </TableCell>

@@ -159,7 +159,7 @@ When `page` and `pageCount` (or `totalCount`) are set, DataTable does not sort o
 
 ### Empty, loading, and footer
 
-Empty rows show a default empty state; `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above pagination:
+Empty rows render `EmptyState` at the table `size`, with the i18n title `"No data"`. `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above pagination:
 
 ```tsx
 <DataTable

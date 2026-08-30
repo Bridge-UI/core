@@ -1114,7 +1114,7 @@ export function useDataTable<T>(
       {},
       {
         className: cn({
-          "flex flex-col items-center justify-center gap-2 py-12 text-sm text-dark-400 dark:text-dark-500": true,
+          "w-full": true,
           [get(mergedClasses, "empty") ?? ""]: true,
         }),
       },

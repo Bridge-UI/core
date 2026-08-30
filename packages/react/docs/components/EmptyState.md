@@ -65,7 +65,7 @@ Use `titleAs` when the page outline needs a heading. The default is `p` so the b
 
 ### DataTable
 
-Replace the default empty copy with `EmptyState` via `slots.empty`.
+Override the DataTable default with a richer `EmptyState` via `slots.empty`.
 
 ```tsx
 <DataTable

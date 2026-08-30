@@ -24,6 +24,7 @@ import DataTableFilterMenu from "@/Components/DataTable/DataTableFilterMenu.vue"
 import DataTableSearch from "@/Components/DataTable/DataTableSearch.vue";
 import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
+import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
 import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
@@ -326,14 +327,10 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
               <TableCell align="center" :colspan="columnCount">
                 <div v-bind="emptyBind">
                   <slot name="empty">
-                    <span
-                      class="relative mb-1 block h-10 w-12 rounded-md border-2 border-dark-300 dark:border-dark-600"
-                    >
-                      <span
-                        class="absolute -top-1.5 left-2 right-2 h-2 rounded-sm border-2 border-dark-300 bg-white dark:border-dark-600 dark:bg-dark-900"
-                      />
-                    </span>
-                    {{ resolveMessage("No data") }}
+                    <EmptyState
+                      :size="merged.size"
+                      :title="resolveMessage('No data')"
+                    />
                   </slot>
                 </div>
               </TableCell>

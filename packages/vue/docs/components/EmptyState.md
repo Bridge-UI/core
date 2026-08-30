@@ -71,7 +71,7 @@ Use `title-as` when the page outline needs a heading. The default is `p` so the 
 
 ### DataTable
 
-Replace the default empty copy with `EmptyState` via `#empty`.
+Override the DataTable default with a richer `EmptyState` via `#empty`.
 
 ```vue
 <DataTable :rows="[]" :columns="columns">
