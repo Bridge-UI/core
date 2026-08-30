@@ -552,6 +552,42 @@ export type {
   SelectSlots,
   SelectValue,
 } from "@/Components/Select";
+export {
+  Sidebar,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+  useSidebarInset,
+  useSidebarProvider,
+  useSidebarShell,
+  useSidebarTrigger,
+} from "@/Components/Sidebar";
+export type {
+  SidebarClasses,
+  SidebarCollapsibleOverrides,
+  SidebarContextValue,
+  SidebarCustomProps,
+  SidebarInsetClasses,
+  SidebarInsetCustomProps,
+  SidebarInsetOwnProps,
+  SidebarInsetProps,
+  SidebarInsetSlots,
+  SidebarOwnProps,
+  SidebarProps,
+  SidebarProviderClasses,
+  SidebarProviderCustomProps,
+  SidebarProviderEmits,
+  SidebarProviderOwnProps,
+  SidebarProviderProps,
+  SidebarProviderSlots,
+  SidebarSideOverrides,
+  SidebarSlots,
+  SidebarTriggerOwnProps,
+  SidebarTriggerProps,
+  SidebarTriggerSlots,
+  SidebarVariantOverrides,
+} from "@/Components/Sidebar";
 export { Skeleton, useSkeleton } from "@/Components/Skeleton";
 export type {
   SkeletonClasses,
