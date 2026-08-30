@@ -35,6 +35,13 @@ import type {
 import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
+import type {
+  SidebarClasses,
+  SidebarInsetClasses,
+  SidebarProps,
+  SidebarProviderClasses,
+  SidebarProviderProps,
+} from "@/Components/Sidebar";
 import type { SkeletonClasses, SkeletonProps } from "@/Components/Skeleton";
 import type { SliderClasses, SliderProps } from "@/Components/Slider";
 import type { SnackbarClasses, SnackbarProps } from "@/Components/Snackbar";
@@ -248,6 +255,14 @@ declare module "@bridge-ui/core/Config" {
         | "showErrorIcon"
         | "hideErrorMessage"
       >
+    >;
+  }
+
+  interface SidebarConfigOverrides {
+    classes: SidebarClasses & SidebarInsetClasses & SidebarProviderClasses;
+    defaultProps: Partial<
+      Pick<SidebarProps, "side" | "variant" | "ariaLabel" | "collapsible"> &
+        Pick<SidebarProviderProps, "open" | "defaultOpen">
     >;
   }
 
