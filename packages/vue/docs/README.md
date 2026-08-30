@@ -33,6 +33,7 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 - [DateTimeRangePicker](./components/DateTimeRangePicker.md)
 - [Divider](./components/Divider.md)
 - [Drawer](./components/Drawer.md)
+- [EmptyState](./components/EmptyState.md)
 - [FormControl](./components/FormControl.md)
 - [FormField](./components/FormField.md)
 - [I18n](./components/I18n.md)

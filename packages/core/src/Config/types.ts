@@ -79,6 +79,11 @@ import type {
   DrawerTransitionLayer,
 } from "@/Tokens/Drawer";
 import type {
+  EmptyStateAlign,
+  EmptyStateSize,
+  EmptyStateSizeItem,
+} from "@/Tokens/EmptyState";
+import type {
   FormFieldColor,
   FormFieldColorItem,
   FormFieldRounded,
@@ -362,6 +367,7 @@ export interface DateTimeRangeFieldConfigOverrides {}
 export interface DateTimeRangePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
+export interface EmptyStateConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
@@ -1023,6 +1029,20 @@ export interface DrawerConfigBase {
   }>;
 }
 
+export interface EmptyStateConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    align: keyof EmptyStateAlign;
+    mediaDecorative: boolean;
+    size: keyof EmptyStateSize;
+    titleAs: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
+  }>;
+  tokens: Partial<{
+    align: Record<string, string>;
+    size: Record<string, EmptyStateSizeItem>;
+  }>;
+}
+
 export interface NumberFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1496,6 +1516,9 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Divider: Partial<Overwrite<DividerConfigBase, DividerConfigOverrides>>;
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
+  EmptyState: Partial<
+    Overwrite<EmptyStateConfigBase, EmptyStateConfigOverrides>
+  >;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;

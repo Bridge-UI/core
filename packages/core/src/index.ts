@@ -61,6 +61,7 @@ export type {
   Direction,
   DividerConfigOverrides,
   DrawerConfigOverrides,
+  EmptyStateConfigOverrides,
   IconConfigOverrides,
   LabelConfigOverrides,
   LinkConfigOverrides,
@@ -578,6 +579,15 @@ export type {
   DrawerTransition,
   DrawerTransitionLayer,
 } from "@/Tokens/Drawer";
+export {
+  alignProps as emptyStateAlignProps,
+  sizeProps as emptyStateSizeProps,
+} from "@/Tokens/EmptyState";
+export type {
+  EmptyStateAlign,
+  EmptyStateSize,
+  EmptyStateSizeItem,
+} from "@/Tokens/EmptyState";
 export {
   colorProps as formFieldColorProps,
   roundedProps as formFieldRoundedProps,

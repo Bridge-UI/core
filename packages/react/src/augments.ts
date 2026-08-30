@@ -11,6 +11,10 @@ import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
 import type { DividerClasses, DividerProps } from "@/Components/Divider";
+import type {
+  EmptyStateClasses,
+  EmptyStateProps,
+} from "@/Components/EmptyState";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
@@ -104,6 +108,13 @@ declare module "@bridge-ui/core/Config" {
   interface DividerConfigOverrides {
     classes: DividerClasses;
     defaultProps: Partial<Pick<DividerProps, "color" | "orientation">>;
+  }
+
+  interface EmptyStateConfigOverrides {
+    classes: EmptyStateClasses;
+    defaultProps: Partial<
+      Pick<EmptyStateProps, "size" | "align" | "titleAs" | "mediaDecorative">
+    >;
   }
 
   interface IconConfigOverrides {
