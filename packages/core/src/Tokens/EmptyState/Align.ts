@@ -23,6 +23,6 @@ export interface EmptyStateAlign {
  */
 export const alignProps: EmptyStateAlign = {
   "start": "items-start text-start",
-  "end": "ml-auto items-end text-end",
+  "end": "ms-auto items-end text-end",
   "center": "mx-auto items-center text-center",
 };

@@ -1,3 +1,6 @@
+// ** Local Imports
+import type { IconSize } from "@/Tokens/Icon";
+
 /**
  * Per-token sizing for empty-state root, media, copy, and actions.
  */
@@ -15,7 +18,7 @@ export interface EmptyStateSizeItem {
   /**
    * Icon size token for the default `icon` (`Icon` `size` prop).
    */
-  "icon": string;
+  "icon": keyof IconSize;
 
   /**
    * Classes for the media wrapper.

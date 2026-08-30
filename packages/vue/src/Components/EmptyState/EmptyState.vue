@@ -1,14 +1,11 @@
 <script setup lang="ts">
-// ** External Imports
-import { computed } from "vue";
-
 // ** Local Imports
 import { useEmptyState } from "@/Components/EmptyState/composables/useEmptyState";
 import type {
   EmptyStateOwnProps,
   EmptyStateSlots,
 } from "@/Components/EmptyState/emptyState.types";
-import { Icon, type IconProps } from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
 
 defineSlots<EmptyStateSlots>();
@@ -26,7 +23,6 @@ const {
   slots,
   merged,
   iconBind,
-  iconSize,
   rootBind,
   titleBind,
   mediaBind,
@@ -38,33 +34,17 @@ const {
   align: "center",
   mediaDecorative: true,
 });
-
-const hasMedia = computed(() => {
-  return hasNamedSlot(slots, "media") || isPropPresent(merged.value.icon);
-});
-
-const hasActions = computed(() => {
-  return (
-    hasNamedSlot(slots, "action") || hasNamedSlot(slots, "secondaryAction")
-  );
-});
-
-const resolvedIconSize = computed(() => {
-  return iconSize.value as IconProps["size"];
-});
 </script>
 
 <template>
   <div v-bind="rootBind">
-    <div v-if="hasMedia" v-bind="mediaBind">
+    <div
+      v-bind="mediaBind"
+      v-if="hasNamedSlot(slots, 'media') || isPropPresent(merged.icon)"
+    >
       <slot name="media" v-if="hasNamedSlot(slots, 'media')" />
 
-      <Icon
-        v-bind="iconBind"
-        :icon="merged.icon"
-        v-else-if="merged.icon"
-        :size="resolvedIconSize"
-      />
+      <Icon v-bind="iconBind" :icon="merged.icon" v-else-if="merged.icon" />
     </div>
 
     <component
@@ -90,7 +70,12 @@ const resolvedIconSize = computed(() => {
       </template>
     </div>
 
-    <div v-if="hasActions" v-bind="actionsBind">
+    <div
+      v-bind="actionsBind"
+      v-if="
+        hasNamedSlot(slots, 'action') || hasNamedSlot(slots, 'secondaryAction')
+      "
+    >
       <slot name="action" />
 
       <slot name="secondaryAction" />

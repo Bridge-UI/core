@@ -1,7 +1,7 @@
 // ** Local Imports
 import type { EmptyStateProps } from "@/Components/EmptyState/emptyState.types";
 import { useEmptyState } from "@/Components/EmptyState/hooks/useEmptyState";
-import { Icon, type IconProps } from "@/Components/Icon";
+import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
 
 function EmptyState(props: EmptyStateProps) {
@@ -9,7 +9,6 @@ function EmptyState(props: EmptyStateProps) {
     slots,
     merged,
     iconBind,
-    iconSize,
     rootBind,
     titleBind,
     mediaBind,
@@ -34,11 +33,7 @@ function EmptyState(props: EmptyStateProps) {
           {hasNamedSlot(slots, "media") ? (
             slots?.media
           ) : merged.icon != null ? (
-            <Icon
-              icon={merged.icon}
-              size={iconSize as IconProps["size"]}
-              {...iconBind}
-            />
+            <Icon icon={merged.icon} {...iconBind} />
           ) : null}
         </div>
       ) : null}

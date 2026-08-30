@@ -6,6 +6,7 @@ import { computed, useAttrs, useSlots } from "vue";
 import {
   emptyStateAlignProps as alignProps,
   emptyStateSizeProps as sizeProps,
+  type IconSize,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -98,10 +99,6 @@ export function useEmptyState(
     return get(classes, merged.value.align);
   });
 
-  const iconSize = computed(() => {
-    return get(sizeItem.value, "icon") ?? "md";
-  });
-
   const actionsBind = computed(() => {
     return mergePartBind(
       customProps.value?.actions,
@@ -128,10 +125,13 @@ export function useEmptyState(
     return mergePartBind(
       customProps.value?.icon,
       {},
-      cn({
-        "shrink-0": true,
-        [get(mergedClasses.value, "icon") ?? ""]: true,
-      }),
+      {
+        size: (get(sizeItem.value, "icon") ?? "md") as keyof IconSize,
+        class: cn({
+          "shrink-0": true,
+          [get(mergedClasses.value, "icon") ?? ""]: true,
+        }),
+      },
     );
   });
 
@@ -176,7 +176,6 @@ export function useEmptyState(
     slots,
     merged,
     iconBind,
-    iconSize,
     rootBind,
     titleBind,
     mediaBind,

@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import {
   emptyStateAlignProps as alignProps,
   emptyStateSizeProps as sizeProps,
+  type IconSize,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -105,10 +106,6 @@ export function useEmptyState(
     return get(classes, merged.align);
   }, [merged.align, bridgeEmptyState?.tokens?.align]);
 
-  const iconSize = derived(() => {
-    return get(sizeItem, "icon") ?? "md";
-  });
-
   const actionsBind = derived(() => {
     return mergePartBind(
       customProps?.actions,
@@ -135,10 +132,13 @@ export function useEmptyState(
     return mergePartBind(
       customProps?.icon,
       {},
-      cn({
-        "shrink-0": true,
-        [get(mergedClasses, "icon") ?? ""]: true,
-      }),
+      {
+        size: (get(sizeItem, "icon") ?? "md") as keyof IconSize,
+        className: cn({
+          "shrink-0": true,
+          [get(mergedClasses, "icon") ?? ""]: true,
+        }),
+      },
     );
   });
 
@@ -183,7 +183,6 @@ export function useEmptyState(
     slots,
     merged,
     iconBind,
-    iconSize,
     rootBind,
     titleBind,
     mediaBind,
