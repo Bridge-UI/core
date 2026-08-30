@@ -33,6 +33,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [DateTimeRangePicker](./components/DateTimeRangePicker.md)
 - [Divider](./components/Divider.md)
 - [Drawer](./components/Drawer.md)
+- [EmptyState](./components/EmptyState.md)
 - [FormControl](./components/FormControl.md)
 - [FormField](./components/FormField.md)
 - [I18n](./components/I18n.md)
