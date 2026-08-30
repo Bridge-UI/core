@@ -156,6 +156,15 @@ export type {
   DrawerTransitionLayer,
 } from "@/Tokens/Drawer";
 export {
+  alignProps as emptyStateAlignProps,
+  sizeProps as emptyStateSizeProps,
+} from "@/Tokens/EmptyState";
+export type {
+  EmptyStateAlign,
+  EmptyStateSize,
+  EmptyStateSizeItem,
+} from "@/Tokens/EmptyState";
+export {
   colorProps as formFieldColorProps,
   roundedProps as formFieldRoundedProps,
   sizeProps as formFieldSizeProps,

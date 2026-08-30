@@ -63,6 +63,8 @@ export type {
   DividerConfigOverrides,
   DrawerConfigBase,
   DrawerConfigOverrides,
+  EmptyStateConfigBase,
+  EmptyStateConfigOverrides,
   IconConfigBase,
   IconConfigOverrides,
   LabelConfigBase,
