@@ -134,4 +134,4 @@ import { Drawer } from "@bridge-ui/vue/Components/Drawer";
 
 ## Related components
 
-Card, useDialogAction, useDrawerAction, useModalAction
+Card, Sidebar, useDialogAction, useDrawerAction, useModalAction

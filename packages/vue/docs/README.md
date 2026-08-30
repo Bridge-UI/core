@@ -50,6 +50,7 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 - [Progress](./components/Progress.md)
 - [Radio](./components/Radio.md)
 - [Select](./components/Select.md)
+- [Sidebar](./components/Sidebar.md)
 - [Skeleton](./components/Skeleton.md)
 - [Slider](./components/Slider.md)
 - [Snackbar](./components/Snackbar.md)
