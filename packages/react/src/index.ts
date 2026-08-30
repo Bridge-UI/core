@@ -328,6 +328,16 @@ export type {
   DrawerSizeOverrides,
   DrawerTransitionOverrides,
 } from "@/Components/Drawer";
+export { EmptyState, useEmptyState } from "@/Components/EmptyState";
+export type {
+  EmptyStateAlignOverrides,
+  EmptyStateClasses,
+  EmptyStateCustomProps,
+  EmptyStateOwnProps,
+  EmptyStateProps,
+  EmptyStateSizeOverrides,
+  EmptyStateSlots,
+} from "@/Components/EmptyState";
 export { FieldOverlay, useFieldOverlay } from "@/Components/FieldOverlay";
 export type {
   FieldOverlayCustomProps,

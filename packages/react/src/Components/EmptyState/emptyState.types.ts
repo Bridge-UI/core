@@ -1,0 +1,187 @@
+// ** External Imports
+import type { HTMLAttributes, ReactNode } from "react";
+
+// ** Core Imports
+import type { EmptyStateAlign, EmptyStateSize } from "@bridge-ui/core/Tokens";
+import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
+
+// ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
+import type { IconProps } from "@/Components/Icon";
+
+export interface EmptyStateSizeOverrides {}
+export interface EmptyStateAlignOverrides {}
+
+export interface EmptyStateClasses {
+  /**
+   * The classes to apply to the actions row.
+   */
+  actions?: string;
+
+  /**
+   * The classes to apply to the description.
+   */
+  description?: string;
+
+  /**
+   * The classes to apply to the default `Icon`.
+   */
+  icon?: string;
+
+  /**
+   * The classes to apply to the media wrapper.
+   */
+  media?: string;
+
+  /**
+   * The classes to apply to the root.
+   */
+  root?: string;
+
+  /**
+   * The classes to apply to the title.
+   */
+  title?: string;
+}
+
+export interface EmptyStateCustomProps {
+  /**
+   * Props forwarded to the actions row.
+   */
+  actions?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the description container.
+   */
+  description?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the default `Icon` (`icon` is set by the empty state).
+   */
+  icon?: Partial<Omit<IconProps, "icon">>;
+
+  /**
+   * Props forwarded to the media wrapper.
+   */
+  media?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the root container.
+   */
+  root?: HTMLAttributes<HTMLDivElement>;
+
+  /**
+   * Props forwarded to the title element.
+   */
+  title?: HTMLAttributes<HTMLElement>;
+}
+
+/**
+ * Placeholder when a list, table, or view has no data.
+ * Does not set `role` by default — pass `role="status"` when the empty
+ * state is a live update.
+ */
+export interface EmptyStateOwnProps {
+  /**
+   * Horizontal alignment of the stack.
+   *
+   * @default "center"
+   */
+  align?: MergeProps<EmptyStateAlign, EmptyStateAlignOverrides>;
+
+  /**
+   * The classes to apply to the empty state.
+   *
+   * @default undefined
+   */
+  classes?: EmptyStateClasses;
+
+  /**
+   * Extra props for internal parts (`media`, `title`, `description`, etc.).
+   * Root HTML attributes stay on the component top level.
+   *
+   * @default undefined
+   */
+  customProps?: EmptyStateCustomProps;
+
+  /**
+   * Supporting copy below the title.
+   *
+   * @default undefined
+   */
+  description?: ReactNode;
+
+  /**
+   * Default media icon. Use `slots.media` to replace it with custom markup.
+   *
+   * @default undefined
+   */
+  icon?: IconSource;
+
+  /**
+   * When true, the media wrapper is hidden from assistive tech (`aria-hidden`).
+   *
+   * @default true
+   */
+  mediaDecorative?: boolean;
+
+  /**
+   * Spacing and typography scale.
+   *
+   * @default "md"
+   */
+  size?: MergeProps<EmptyStateSize, EmptyStateSizeOverrides>;
+
+  /**
+   * The slots to apply to the empty state.
+   *
+   * @default undefined
+   */
+  slots?: EmptyStateSlots;
+
+  /**
+   * Primary heading copy.
+   *
+   * @default undefined
+   */
+  title?: ReactNode;
+
+  /**
+   * Element used to render `title`. Use a heading when the page outline needs it.
+   *
+   * @default "p"
+   */
+  titleAs?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div";
+}
+
+export interface EmptyStateSlots {
+  /**
+   * Primary action (e.g. a `Button`).
+   */
+  action?: ReactNode;
+
+  /**
+   * Replaces the default description copy.
+   */
+  description?: ReactNode;
+
+  /**
+   * Illustration or icon above the title. Replaces the `icon` prop.
+   */
+  media?: ReactNode;
+
+  /**
+   * Secondary action next to `action`.
+   */
+  secondaryAction?: ReactNode;
+
+  /**
+   * Replaces the default title copy.
+   */
+  title?: ReactNode;
+}
+
+export type EmptyStateProps = MergeHtmlProps<
+  EmptyStateOwnProps,
+  HTMLAttributes<HTMLDivElement>
+>;
