@@ -1,5 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
+import { toMerged } from "es-toolkit/object";
 import { useId, useLayoutEffect, useMemo } from "react";
 
 // ** Core Imports
@@ -12,6 +13,8 @@ import {
   sidebarCollapsibleProps as collapsibleProps,
   sidebarSideProps as sideProps,
   sidebarVariantProps as variantProps,
+  sidebarWidthProps as widthProps,
+  type SidebarWidth,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -238,6 +241,15 @@ export function useSidebarShell(
     );
   });
 
+  const mobileWidth = derived(() => {
+    const widthItem = toMerged(
+      widthProps,
+      bridgeSidebar?.tokens?.width ?? {},
+    ) as SidebarWidth;
+
+    return widthItem.mobile;
+  });
+
   return {
     slots,
     merged,
@@ -250,6 +262,7 @@ export function useSidebarShell(
     headerBind,
     footerBind,
     contentBind,
+    mobileWidth,
     showAsDrawer,
     isMobile: sidebar.isMobile,
     openMobile: sidebar.openMobile,

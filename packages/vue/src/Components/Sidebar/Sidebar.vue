@@ -34,6 +34,7 @@ const {
   contentBind,
   showAsDrawer,
   setOpenMobile,
+  drawerPanelStyle,
 } = useSidebarShell(props, {
   side: "left",
   variant: "sidebar",
@@ -74,9 +75,9 @@ const {
     @update:model-value="setOpenMobile"
     :custom-props="{
       panel: {
-        id: showAsDrawer ? panelId : undefined,
         class: 'p-0',
-        style: { width: 'var(--bridge-sidebar-width-mobile)' },
+        style: drawerPanelStyle,
+        id: showAsDrawer ? panelId : undefined,
       },
     }"
   >

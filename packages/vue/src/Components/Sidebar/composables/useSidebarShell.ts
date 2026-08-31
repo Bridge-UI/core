@@ -1,5 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
+import { toMerged } from "es-toolkit/object";
 import { computed, useAttrs, useId, useSlots, watch } from "vue";
 
 // ** Core Imports
@@ -12,6 +13,8 @@ import {
   sidebarCollapsibleProps as collapsibleProps,
   sidebarSideProps as sideProps,
   sidebarVariantProps as variantProps,
+  sidebarWidthProps as widthProps,
+  type SidebarWidth,
 } from "@bridge-ui/core/Tokens";
 import {
   cn,
@@ -233,6 +236,22 @@ export function useSidebarShell(
     );
   });
 
+  const mobileWidth = computed(() => {
+    const widthItem = toMerged(
+      widthProps,
+      bridgeSidebar.value?.tokens?.width ?? {},
+    ) as SidebarWidth;
+
+    return widthItem.mobile;
+  });
+
+  const drawerPanelStyle = computed(() => {
+    return {
+      width: mobileWidth.value,
+      maxWidth: `min(${mobileWidth.value}, 88vw)`,
+    };
+  });
+
   return {
     slots,
     merged,
@@ -244,7 +263,9 @@ export function useSidebarShell(
     headerBind,
     footerBind,
     contentBind,
+    mobileWidth,
     showAsDrawer,
+    drawerPanelStyle,
     isMobile: computed(() => {
       return sidebar.value.isMobile;
     }),

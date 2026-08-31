@@ -51,6 +51,7 @@ function Sidebar(props: SidebarProps) {
     footerBind,
     openMobile,
     contentBind,
+    mobileWidth,
     showAsDrawer,
     setOpenMobile,
   } = useSidebarShell(props, sidebarLibDefaults);
@@ -86,7 +87,8 @@ function Sidebar(props: SidebarProps) {
               className: "p-0",
               id: showAsDrawer ? panelId : undefined,
               style: {
-                width: "var(--bridge-sidebar-width-mobile)",
+                width: mobileWidth,
+                maxWidth: `min(${mobileWidth}, 88vw)`,
               },
             },
           }}
