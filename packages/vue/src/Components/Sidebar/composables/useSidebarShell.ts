@@ -180,7 +180,7 @@ export function useSidebarShell(
         inert: offcanvasCollapsed ? true : undefined,
         id: showAsDrawer.value ? undefined : panelId,
         class: cn({
-          "fixed inset-y-0 z-10 hidden h-svh w-[var(--bridge-sidebar-width)] overflow-hidden transition-[left,right,width] duration-200 ease-linear md:flex": true,
+          "fixed inset-y-0 z-10 hidden h-full w-[var(--bridge-sidebar-width)] overflow-hidden transition-[left,right,width] duration-200 ease-linear md:flex": true,
           [sideClass.value ?? ""]: true,
           [get(collapsibleItem.value, "panel") ?? ""]: true,
         }),

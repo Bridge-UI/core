@@ -38,12 +38,13 @@ test("it should collapse when the trigger is clicked", () => {
   cy.get("[data-state='collapsed']").should("exist");
 });
 
-test("it should render header slot content", () => {
+test("it should render header and footer slot content", () => {
   cy.mount(
     <SidebarProvider>
       <Sidebar
         slots={{
           header: <div>Brand</div>,
+          footer: <div>Account</div>,
         }}
       >
         Nav
@@ -55,6 +56,7 @@ test("it should render header slot content", () => {
   );
 
   cy.contains("Brand").should("exist");
+  cy.contains("Account").should("exist");
 });
 
 test("it should inert the aside when offcanvas is collapsed", () => {
