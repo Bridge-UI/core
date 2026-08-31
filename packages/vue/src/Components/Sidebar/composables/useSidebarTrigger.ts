@@ -3,6 +3,7 @@ import { omit } from "es-toolkit/compat";
 import { computed, useAttrs, type useSlots } from "vue";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import { useSidebar } from "@/Components/Sidebar/composables/useSidebar";
 import { hasNamedSlot } from "@/Utils";
 
@@ -12,6 +13,14 @@ export function useSidebarTrigger(slots: ReturnType<typeof useSlots>) {
 
   const hasDefaultSlot = computed(() => {
     return hasNamedSlot(slots, "default");
+  });
+
+  const icon = computed((): undefined | IconSource => {
+    if (hasDefaultSlot.value) {
+      return undefined;
+    }
+
+    return "panelLeft";
   });
 
   const expanded = computed(() => {
@@ -51,6 +60,7 @@ export function useSidebarTrigger(slots: ReturnType<typeof useSlots>) {
   };
 
   return {
+    icon,
     expanded,
     iconClass,
     ariaLabel,

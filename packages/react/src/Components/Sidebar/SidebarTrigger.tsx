@@ -4,12 +4,20 @@ import { useSidebarTrigger } from "@/Components/Sidebar/hooks/useSidebarTrigger"
 import type { SidebarTriggerProps } from "@/Components/Sidebar/sidebar.types";
 
 function SidebarTrigger(props: SidebarTriggerProps) {
-  const { side, panelId, children, expanded, handleClick, rootInheritedAttrs } =
-    useSidebarTrigger(props);
+  const {
+    icon,
+    side,
+    panelId,
+    children,
+    expanded,
+    handleClick,
+    rootInheritedAttrs,
+  } = useSidebarTrigger(props);
 
   return (
     <Button
       {...rootInheritedAttrs}
+      icon={icon}
       color="dark"
       type="button"
       density="mini"
@@ -17,7 +25,6 @@ function SidebarTrigger(props: SidebarTriggerProps) {
       onClick={handleClick}
       aria-expanded={expanded}
       aria-controls={panelId || undefined}
-      icon={children ? undefined : "panelLeft"}
       aria-label={props["aria-label"] ?? "Toggle sidebar"}
       classes={{
         icon: side === "right" ? "rotate-180 rtl:rotate-0" : "rtl:rotate-180",
