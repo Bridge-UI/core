@@ -1,9 +1,11 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement, type ReactNode } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
 import { useList, type ListProps } from "@/Components/List";
+import { ListContext } from "@/Components/List/ListContext";
 
 function renderUseList(props: ListProps = {}) {
   return renderHook(() => useList(props));
@@ -31,6 +33,20 @@ test("it should expose dense context value", () => {
 
 test("it should expose iconOnly context value", () => {
   const { result } = renderUseList({ iconOnly: true });
+
+  expect(result.current.contextValue.iconOnly).toBe(true);
+});
+
+test("it should inherit iconOnly from parent List context", () => {
+  const { result } = renderHook(() => useList({}), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return createElement(
+        ListContext.Provider,
+        { value: { dense: false, iconOnly: true } },
+        children,
+      );
+    },
+  });
 
   expect(result.current.contextValue.iconOnly).toBe(true);
 });

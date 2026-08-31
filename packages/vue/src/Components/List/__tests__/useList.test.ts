@@ -94,6 +94,42 @@ test("it should provide iconOnly context to descendants", () => {
   expect(injectedIconOnly).toBe("true");
 });
 
+test("it should inherit iconOnly from parent List context", () => {
+  let injectedIconOnly = "missing";
+
+  const Probe = defineComponent({
+    setup() {
+      const context = inject(LIST_INJECTION_KEY, null);
+
+      injectedIconOnly = String(
+        context ? toValue(context).iconOnly : "missing",
+      );
+
+      return () => h("div");
+    },
+  });
+
+  const Inner = defineComponent({
+    setup() {
+      useList({});
+
+      return () => h(Probe);
+    },
+  });
+
+  const Outer = defineComponent({
+    setup() {
+      useList({ iconOnly: true });
+
+      return () => h(Inner);
+    },
+  });
+
+  mount(Outer);
+
+  expect(injectedIconOnly).toBe("true");
+});
+
 test("it should merge class into root bind", () => {
   const { rootBind } = mountUseList({ class: "custom-list" });
 

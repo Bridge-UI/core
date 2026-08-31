@@ -5,6 +5,7 @@ import { get, omit } from "es-toolkit/compat";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useListContext } from "@/Components/List/ListContext";
 import type { ListOwnProps, ListProps } from "@/Components/List/list.types";
 import {
   derived,
@@ -23,6 +24,8 @@ const listBridgeKeys = [
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
 export function useList(props: ListProps) {
+  const parentList = useListContext();
+
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ListProps,
     typeof listBridgeKeys
@@ -55,7 +58,7 @@ export function useList(props: ListProps) {
   const contextValue = derived(() => {
     return {
       dense: merged.dense === true,
-      iconOnly: merged.iconOnly === true,
+      iconOnly: merged.iconOnly === true || parentList?.iconOnly === true,
     };
   });
 

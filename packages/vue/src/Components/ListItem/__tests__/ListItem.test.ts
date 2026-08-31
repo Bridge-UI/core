@@ -139,3 +139,23 @@ test("it should hide primary text and set aria-label when List is iconOnly", () 
   expect(wrapper.text()).not.toContain("Home");
   expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe("Home");
 });
+
+test("it should inherit iconOnly in a nested List", () => {
+  const wrapper = mount(
+    defineComponent({
+      components: { List, ListItem },
+      template: `
+        <List icon-only>
+          <List nested>
+            <ListItem interactive primary="Nested" />
+          </List>
+        </List>
+      `,
+    }),
+  );
+
+  expect(wrapper.text()).not.toContain("Nested");
+  expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe(
+    "Nested",
+  );
+});

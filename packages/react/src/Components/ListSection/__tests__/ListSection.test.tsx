@@ -87,3 +87,15 @@ test("it should hide the section when parent List is iconOnly", () => {
 
   expect(screen.queryByText("Application")).toBeNull();
 });
+
+test("it should hide the section when an ancestor List is iconOnly", () => {
+  render(
+    <List iconOnly>
+      <List nested>
+        <ListSection title="Nested" />
+      </List>
+    </List>,
+  );
+
+  expect(screen.queryByText("Nested")).toBeNull();
+});

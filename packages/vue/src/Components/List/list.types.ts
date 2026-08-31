@@ -52,7 +52,8 @@ export interface ListOwnProps {
 
   /**
    * Hide section labels and item text so only leading icons remain.
-   * Bind from `useSidebar().state === "collapsed"` when the sidebar uses `collapsible="icon"`.
+   * Nested `List` inherits this from the parent. Bind from
+   * `useSidebar().state === "collapsed"` when the sidebar uses `collapsible="icon"`.
    *
    * @default false
    */

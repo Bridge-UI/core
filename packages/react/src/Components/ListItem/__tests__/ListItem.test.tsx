@@ -96,3 +96,18 @@ test("it should hide primary text and set aria-label when List is iconOnly", () 
     screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
   ).toBe("Home");
 });
+
+test("it should inherit iconOnly in a nested List", () => {
+  render(
+    <List iconOnly>
+      <List nested>
+        <ListItem interactive primary="Nested" />
+      </List>
+    </List>,
+  );
+
+  expect(screen.queryByText("Nested")).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Nested" }).getAttribute("aria-label"),
+  ).toBe("Nested");
+});

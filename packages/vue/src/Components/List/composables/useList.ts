@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, provide, useAttrs } from "vue";
+import { computed, inject, provide, useAttrs } from "vue";
 
 // ** Core Imports
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -25,6 +25,7 @@ const listBridgeKeys = [
 
 export function useList(props: ListOwnProps) {
   const attrs = useAttrs();
+  const parentList = inject(LIST_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ListProps, typeof listBridgeKeys>({
@@ -53,7 +54,8 @@ export function useList(props: ListOwnProps) {
   const contextValue = computed(() => {
     return {
       dense: merged.value.dense === true,
-      iconOnly: merged.value.iconOnly === true,
+      iconOnly:
+        merged.value.iconOnly === true || parentList?.value.iconOnly === true,
     };
   });
 

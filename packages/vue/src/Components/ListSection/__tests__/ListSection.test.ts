@@ -79,3 +79,15 @@ test("it should hide the section when parent List is iconOnly", () => {
 
   expect(wrapper.text()).not.toContain("Application");
 });
+
+test("it should hide the section when an ancestor List is iconOnly", () => {
+  const Host = defineComponent({
+    components: { List, ListSection },
+    template:
+      '<List icon-only><List nested><ListSection title="Nested" /></List></List>',
+  });
+
+  const wrapper = mount(Host);
+
+  expect(wrapper.text()).not.toContain("Nested");
+});
