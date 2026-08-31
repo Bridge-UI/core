@@ -77,83 +77,6 @@ test("it should expose interactive bind when interactive is true", () => {
   expect(interactiveBind.value?.class).toContain("cursor-pointer");
 });
 
-test("it should use a compact rounded hit target when List is iconOnly", () => {
-  let result!: ReturnType<typeof useListItem>;
-
-  const Consumer = defineComponent({
-    setup() {
-      result = useListItem(
-        { primary: "Home", interactive: true },
-        libDefaults,
-        {},
-      );
-
-      return () => h("div");
-    },
-  });
-
-  const Wrapper = defineComponent({
-    setup() {
-      provide(
-        LIST_INJECTION_KEY,
-        computed(() => {
-          return { dense: false, iconOnly: true };
-        }),
-      );
-
-      return () => h(Consumer);
-    },
-  });
-
-  mount(Wrapper);
-
-  expect(result.interactiveBind.value?.class).toContain("h-8");
-  expect(result.interactiveBind.value?.class).toContain("w-full");
-  expect(result.interactiveBind.value?.class).toContain("px-2");
-  expect(result.interactiveBind.value?.class).not.toContain("size-8");
-  expect(result.interactiveBind.value?.class).not.toContain("justify-center");
-  expect(result.interactiveBind.value?.class).toContain("rounded-lg");
-});
-
-test("it should collapse secondary rows to a square hit when List is iconOnly", () => {
-  let result!: ReturnType<typeof useListItem>;
-
-  const Consumer = defineComponent({
-    setup() {
-      result = useListItem(
-        {
-          interactive: true,
-          primary: "Acme Inc",
-          secondary: "Enterprise",
-        },
-        libDefaults,
-        {},
-      );
-
-      return () => h("div");
-    },
-  });
-
-  const Wrapper = defineComponent({
-    setup() {
-      provide(
-        LIST_INJECTION_KEY,
-        computed(() => {
-          return { dense: false, iconOnly: true };
-        }),
-      );
-
-      return () => h(Consumer);
-    },
-  });
-
-  mount(Wrapper);
-
-  expect(result.interactiveBind.value?.class).toContain("size-8");
-  expect(result.interactiveBind.value?.class).not.toContain("px-2");
-  expect(result.interactiveBind.value?.class).not.toContain("w-full");
-});
-
 test("it should apply dense padding on interactive bind", () => {
   const { interactiveBind } = mountUseListItem({
     dense: true,
@@ -185,7 +108,7 @@ test("it should inherit dense padding from parent List context", () => {
       provide(
         LIST_INJECTION_KEY,
         computed(() => {
-          return { dense: true, iconOnly: false };
+          return { dense: true };
         }),
       );
 

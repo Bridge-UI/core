@@ -9,10 +9,11 @@ import { cn } from "@bridge-ui/core/Utils";
 import List from "@/Components/List/List.vue";
 import type { ListOwnProps } from "@/Components/List/list.types";
 import { useSidebarList } from "@/Components/Sidebar/composables/useSidebarList";
+import type { SidebarListOwnProps } from "@/Components/Sidebar/sidebar.types";
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ListOwnProps>();
+const props = defineProps<ListOwnProps & SidebarListOwnProps>();
 
 const attrs = useAttrs();
 
@@ -24,7 +25,9 @@ const listBind = computed(() => {
   return {
     ...attrs,
     ...listProps,
-    iconOnly: resolvedIconOnly.value,
+    ...(props.nested === true && resolvedIconOnly.value
+      ? { hidden: true as const }
+      : {}),
     classes: {
       ...classes,
       root: cn(rootClassName.value, classes?.root),

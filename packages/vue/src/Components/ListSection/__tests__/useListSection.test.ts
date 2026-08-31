@@ -77,7 +77,7 @@ test("it should inherit dense padding from parent List context", () => {
       provide(
         LIST_INJECTION_KEY,
         computed(() => {
-          return { dense: true, iconOnly: false };
+          return { dense: true };
         }),
       );
 

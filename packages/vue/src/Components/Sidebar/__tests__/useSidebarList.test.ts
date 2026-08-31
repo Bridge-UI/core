@@ -104,3 +104,27 @@ test("it should apply a nested start-edge guide line", async () => {
   expect(result.rootClassName.value).toContain("ml-3.5");
   expect(result.rootClassName.value).toContain("border-l");
 });
+
+test("it should hide nested lists when the icon rail is collapsed", async () => {
+  let result!: ReturnType<typeof useSidebarList>;
+
+  const Probe = defineComponent({
+    setup() {
+      result = useSidebarList({ nested: true });
+
+      return () => h("div");
+    },
+  });
+
+  mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () =>
+        h(Sidebar, { collapsible: "icon" }, { default: () => h(Probe) }),
+    },
+  });
+
+  await nextTick();
+
+  expect(result.rootClassName.value).toContain("hidden");
+});

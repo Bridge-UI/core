@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { computed, inject, provide, useAttrs } from "vue";
+import { computed, provide, useAttrs } from "vue";
 
 // ** Core Imports
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
@@ -19,13 +19,11 @@ const listBridgeKeys = [
   "dense",
   "nested",
   "classes",
-  "iconOnly",
   "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
 export function useList(props: ListOwnProps) {
   const attrs = useAttrs();
-  const parentList = inject(LIST_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ListProps, typeof listBridgeKeys>({
@@ -54,16 +52,10 @@ export function useList(props: ListOwnProps) {
   const contextValue = computed(() => {
     return {
       dense: merged.value.dense === true,
-      iconOnly:
-        merged.value.iconOnly === true || parentList?.value.iconOnly === true,
     };
   });
 
   provide(LIST_INJECTION_KEY, contextValue);
-
-  const hideNestedSubmenu = computed(() => {
-    return merged.value.nested === true && contextValue.value.iconOnly;
-  });
 
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, []);
@@ -71,11 +63,9 @@ export function useList(props: ListOwnProps) {
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
-      hidden: hideNestedSubmenu.value ? true : undefined,
       class: cn({
         "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
         "pl-4": merged.value.nested,
-        hidden: hideNestedSubmenu.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
     });

@@ -12,15 +12,11 @@ import {
 
 function renderUseListSection(
   props: ListSectionProps = {},
-  context: null | { dense: boolean; iconOnly?: boolean } = null,
+  context: null | { dense: boolean } = null,
 ) {
   return renderHook(() => useListSection(props), {
     wrapper: ({ children }) =>
-      createElement(
-        ListContext.Provider,
-        { value: context ? { iconOnly: false, ...context } : null },
-        children,
-      ),
+      createElement(ListContext.Provider, { value: context }, children),
   });
 }
 

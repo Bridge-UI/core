@@ -5,7 +5,6 @@ import { get, omit } from "es-toolkit/compat";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useListContext } from "@/Components/List/ListContext";
 import type { ListOwnProps, ListProps } from "@/Components/List/list.types";
 import {
   derived,
@@ -19,13 +18,10 @@ const listBridgeKeys = [
   "dense",
   "nested",
   "classes",
-  "iconOnly",
   "customProps",
 ] as const satisfies readonly (keyof ListOwnProps)[];
 
 export function useList(props: ListProps) {
-  const parentList = useListContext();
-
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ListProps,
     typeof listBridgeKeys
@@ -58,12 +54,7 @@ export function useList(props: ListProps) {
   const contextValue = derived(() => {
     return {
       dense: merged.dense === true,
-      iconOnly: merged.iconOnly === true || parentList?.iconOnly === true,
     };
-  });
-
-  const hideNestedSubmenu = derived(() => {
-    return merged.nested === true && contextValue.iconOnly;
   });
 
   const customProps = derived(() => {
@@ -72,11 +63,9 @@ export function useList(props: ListProps) {
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      hidden: hideNestedSubmenu ? true : undefined,
       className: cn({
         "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
         "pl-4": merged.nested,
-        hidden: hideNestedSubmenu,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
     });

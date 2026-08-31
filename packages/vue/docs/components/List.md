@@ -125,31 +125,15 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 <ListSection inset title="With icons below" />
 ```
 
-### Icon only
-
-Hide section labels and clip item text so only the `start` slot remains. Nested `List` is hidden.
-
-```vue
-<List icon-only>
-  <ListSection title="Application" />
-  <ListItem interactive primary="Home">
-    <template #start>
-      <Icon icon="user" />
-    </template>
-  </ListItem>
-</List>
-```
-
 ## Props (`List`)
 
-| Prop          | Type                    | Default | Description                                                                                   |
-| ------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                                     |
-| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                             |
-| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                            |
-| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root.            |
-| `iconOnly`    | `boolean`               | `false` | Hide section labels and clip item text so only leading icons remain. Nested `List` is hidden. |
-| `nested`      | `boolean`               | `false` | Indents the list for nested navigation.                                                       |
+| Prop          | Type                    | Default | Description                                                                        |
+| ------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------- |
+| `as`          | `"nav" \| "ol" \| "ul"` | "ul"    | The element to render as.                                                          |
+| `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
+| `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
+| `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
+| `nested`      | `boolean`               | `false` | Indents the list for nested navigation.                                            |
 
 ## Props (`ListItem`)
 

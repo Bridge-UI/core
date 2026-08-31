@@ -97,3 +97,16 @@ test("it should apply a taller hit when secondary is set", async () => {
   expect(itemClasses.value.interactive).toContain("py-2");
   expect(itemClasses.value.interactive).toContain("min-h-12");
 });
+
+test("it should apply a compact hit when the icon rail is collapsed", async () => {
+  const { itemClasses } = mountUseSidebarListItem(
+    { primary: "Home" },
+    { collapsible: "icon" },
+    { defaultOpen: false },
+  );
+
+  await nextTick();
+
+  expect(itemClasses.value.interactive).toContain("h-8");
+  expect(itemClasses.value.content).toContain("hidden");
+});

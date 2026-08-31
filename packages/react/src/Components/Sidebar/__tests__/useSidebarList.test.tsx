@@ -63,3 +63,11 @@ test("it should apply a nested start-edge guide line", () => {
   expect(result.current.rootClassName).toContain("ml-3.5");
   expect(result.current.rootClassName).toContain("border-l");
 });
+
+test("it should hide nested lists when the icon rail is collapsed", () => {
+  const { result } = renderHook(() => useSidebarList({ nested: true }), {
+    wrapper: collapsedIconWrapper,
+  });
+
+  expect(result.current.rootClassName).toContain("hidden");
+});

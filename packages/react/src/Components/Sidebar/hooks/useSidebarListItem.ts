@@ -6,8 +6,9 @@ import {
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { SidebarListItemProps } from "@/Components/Sidebar/sidebar.types";
 import { useSidebar } from "@/Components/Sidebar/SidebarContext";
+import { useSidebarListContext } from "@/Components/Sidebar/SidebarListContext";
+import type { SidebarListItemProps } from "@/Components/Sidebar/sidebar.types";
 import { derived, isPropPresent } from "@/Utils";
 
 /**
@@ -20,17 +21,24 @@ export function useSidebarListItem(
   >,
 ) {
   const sidebar = useSidebar();
+  const list = useSidebarListContext();
+
+  const iconOnly = derived(() => {
+    if (list) {
+      return list.iconOnly;
+    }
+
+    return isSidebarIconOnly({
+      state: sidebar.state,
+      isMobile: sidebar.isMobile,
+      collapsible: sidebar.collapsible,
+    });
+  });
 
   const tooltip = derived(() => {
     if (props.tooltip !== undefined) {
       return props.tooltip;
     }
-
-    const iconOnly = isSidebarIconOnly({
-      state: sidebar.state,
-      isMobile: sidebar.isMobile,
-      collapsible: sidebar.collapsible,
-    });
 
     if (!iconOnly || typeof props.primary !== "string") {
       return undefined;
@@ -47,15 +55,24 @@ export function useSidebarListItem(
     return resolveSidebarListTooltipPlacement(sidebar.side);
   });
 
+  const accessibleName = derived(() => {
+    if (!iconOnly || typeof props.primary !== "string") {
+      return undefined;
+    }
+
+    return props.primary;
+  });
+
   const itemClasses = derived(() => {
-    const iconOnly = isSidebarIconOnly({
-      state: sidebar.state,
-      isMobile: sidebar.isMobile,
-      collapsible: sidebar.collapsible,
-    });
     const hasSecondary = isPropPresent(props.secondary);
 
     return {
+      end: cn({
+        hidden: iconOnly,
+      }),
+      content: cn({
+        hidden: iconOnly,
+      }),
       start: cn({
         "items-center justify-center": true,
       }),
@@ -64,9 +81,12 @@ export function useSidebarListItem(
           !iconOnly,
         "min-h-12 py-2": !iconOnly && hasSecondary,
         "min-h-8 py-0": !iconOnly && !hasSecondary,
+        "overflow-hidden rounded-lg py-0": iconOnly,
+        "size-8": iconOnly && hasSecondary,
+        "h-8 w-full px-2": iconOnly && !hasSecondary,
       }),
     };
   });
 
-  return { tooltip, itemClasses, tooltipPlacement };
+  return { tooltip, itemClasses, accessibleName, tooltipPlacement };
 }

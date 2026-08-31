@@ -93,3 +93,14 @@ test("it should apply a taller hit when secondary is set", () => {
   expect(result.current.itemClasses.interactive).toContain("py-2");
   expect(result.current.itemClasses.interactive).toContain("min-h-12");
 });
+
+test("it should apply a compact hit when the icon rail is collapsed", () => {
+  const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return collapsedIconWrapper({ children });
+    },
+  });
+
+  expect(result.current.itemClasses.interactive).toContain("h-8");
+  expect(result.current.itemClasses.content).toContain("hidden");
+});

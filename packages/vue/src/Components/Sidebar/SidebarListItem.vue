@@ -27,6 +27,7 @@ const slots = useSlots();
 
 const {
   itemClasses,
+  accessibleName,
   tooltip: resolvedTooltip,
   tooltipPlacement: resolvedTooltipPlacement,
 } = useSidebarListItem(props);
@@ -34,6 +35,7 @@ const {
 const listItemBind = computed(() => {
   const {
     classes,
+    customProps,
     tooltip: _tooltip,
     tooltipPlacement: _placement,
     ...itemProps
@@ -43,9 +45,18 @@ const listItemBind = computed(() => {
     ...attrs,
     ...itemProps,
     ...(resolvedTooltip.value ? { as: "div" as const } : {}),
+    customProps: {
+      ...customProps,
+      interactive: {
+        ...(accessibleName.value ? { "aria-label": accessibleName.value } : {}),
+        ...customProps?.interactive,
+      },
+    },
     classes: {
       ...classes,
+      end: cn(itemClasses.value.end, classes?.end),
       start: cn(itemClasses.value.start, classes?.start),
+      content: cn(itemClasses.value.content, classes?.content),
       interactive: cn(itemClasses.value.interactive, classes?.interactive),
     },
   };

@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
+import { ListSection } from "@/Components/ListSection";
 import {
   Sidebar,
   SidebarInset,
@@ -197,4 +198,44 @@ test("it should apply nav chrome on SidebarList and SidebarListItem", () => {
   expect(container.querySelector("ul")?.className).toContain("gap-1");
   expect(item.className).toContain("min-h-8");
   expect(item.className).toContain("rounded-lg");
+});
+
+test("it should hide nested SidebarList when the icon rail is collapsed", () => {
+  const { container } = render(
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar collapsible="icon">
+        <SidebarList>
+          <SidebarListItem interactive primary="Home" />
+          <SidebarList nested>
+            <SidebarListItem interactive primary="Nested" />
+          </SidebarList>
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  expect(container.querySelectorAll("ul")[1]?.hasAttribute("hidden")).toBe(
+    true,
+  );
+});
+
+test("it should hide ListSection when the icon rail is collapsed", () => {
+  render(
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar collapsible="icon">
+        <SidebarList>
+          <ListSection title="Application" />
+          <SidebarListItem interactive primary="Home" />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  expect(screen.queryByText("Application")).toBeNull();
 });

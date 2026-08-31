@@ -137,6 +137,16 @@ export interface SidebarListItemOwnProps {
   tooltipPlacement?: PositionPlacement;
 }
 
+export interface SidebarListOwnProps {
+  /**
+   * Collapse items to leading icons. Defaults to the collapsed icon rail.
+   * Nested `SidebarList` is hidden. `ListSection` labels are hidden.
+   *
+   * @default undefined
+   */
+  iconOnly?: boolean;
+}
+
 /**
  * Persistent app-shell sidebar panel. Mount under `SidebarProvider` with
  * `SidebarInset`. Put `SidebarList` / `Accordion` in `children`.
@@ -305,7 +315,7 @@ export type SidebarTriggerProps = MergeHtmlProps<
  * `List` bound to the nearest `Sidebar`. Sets `iconOnly` when the icon rail
  * is collapsed on desktop.
  */
-export type SidebarListProps = ListProps;
+export type SidebarListProps = ListProps & SidebarListOwnProps;
 
 /**
  * `ListItem` bound to the nearest `Sidebar`. Shows `primary` in a tooltip

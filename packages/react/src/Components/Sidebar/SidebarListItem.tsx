@@ -9,24 +9,35 @@ import { Tooltip } from "@/Components/Tooltip";
 
 function SidebarListItem({
   classes,
+  customProps,
   tooltip: tooltipProp,
   tooltipPlacement: tooltipPlacementProp,
   ...props
 }: SidebarListItemProps) {
-  const { tooltip, itemClasses, tooltipPlacement } = useSidebarListItem({
-    tooltip: tooltipProp,
-    primary: props.primary,
-    secondary: props.secondary,
-    tooltipPlacement: tooltipPlacementProp,
-  });
+  const { tooltip, itemClasses, accessibleName, tooltipPlacement } =
+    useSidebarListItem({
+      tooltip: tooltipProp,
+      primary: props.primary,
+      secondary: props.secondary,
+      tooltipPlacement: tooltipPlacementProp,
+    });
 
   const item = (
     <ListItem
       {...props}
       as={tooltip ? "div" : props.as}
+      customProps={{
+        ...customProps,
+        interactive: {
+          "aria-label": accessibleName,
+          ...customProps?.interactive,
+        },
+      }}
       classes={{
         ...classes,
+        end: cn(itemClasses.end, classes?.end),
         start: cn(itemClasses.start, classes?.start),
+        content: cn(itemClasses.content, classes?.content),
         interactive: cn(itemClasses.interactive, classes?.interactive),
       }}
     />

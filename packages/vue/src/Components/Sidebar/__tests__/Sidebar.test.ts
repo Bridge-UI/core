@@ -4,6 +4,7 @@ import { expect, test } from "vitest";
 import { defineComponent, h, nextTick } from "vue";
 
 // ** Local Imports
+import { ListSection } from "@/Components/ListSection";
 import {
   Sidebar,
   SidebarInset,
@@ -222,4 +223,83 @@ test("it should apply nav chrome on SidebarList and SidebarListItem", async () =
   expect(wrapper.find("ul").classes()).toContain("gap-1");
   expect(home.classes()).toContain("min-h-8");
   expect(home.classes()).toContain("rounded-lg");
+});
+
+test("it should hide nested SidebarList when the icon rail is collapsed", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "icon" },
+          {
+            default: () =>
+              h(SidebarList, null, {
+                default: () => [
+                  h(SidebarListItem, {
+                    primary: "Home",
+                    interactive: true,
+                  }),
+                  h(
+                    SidebarList,
+                    { nested: true },
+                    {
+                      default: () =>
+                        h(SidebarListItem, {
+                          primary: "Nested",
+                          interactive: true,
+                        }),
+                    },
+                  ),
+                ],
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  const lists = wrapper.findAll("ul");
+
+  expect(lists[1]?.classes()).toContain("hidden");
+  expect(lists[1]?.attributes("hidden")).toBeDefined();
+});
+
+test("it should hide ListSection when the icon rail is collapsed", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "icon" },
+          {
+            default: () =>
+              h(SidebarList, null, {
+                default: () => [
+                  h(ListSection, { title: "Application" }),
+                  h(SidebarListItem, {
+                    primary: "Home",
+                    interactive: true,
+                  }),
+                ],
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  expect(wrapper.text()).not.toContain("Application");
 });

@@ -3,7 +3,6 @@ import { createContext, useContext } from "react";
 
 export type ListContextValue = {
   dense: boolean;
-  iconOnly: boolean;
 };
 
 export const ListContext = createContext<null | ListContextValue>(null);

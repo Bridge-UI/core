@@ -77,25 +77,3 @@ test("it should render a div root when as prop is div", () => {
   expect(container.querySelector("li")).toBeNull();
   expect(container.querySelector("div[role='presentation']")).not.toBeNull();
 });
-
-test("it should hide the section when parent List is iconOnly", () => {
-  render(
-    <List iconOnly>
-      <ListSection title="Application" />
-    </List>,
-  );
-
-  expect(screen.queryByText("Application")).toBeNull();
-});
-
-test("it should hide the section when an ancestor List is iconOnly", () => {
-  render(
-    <List iconOnly>
-      <List nested>
-        <ListSection title="Nested" />
-      </List>
-    </List>,
-  );
-
-  expect(screen.queryByText("Nested")).toBeNull();
-});

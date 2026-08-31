@@ -182,10 +182,6 @@ export function useListItem(
     return listContext ? toValue(listContext).dense : false;
   });
 
-  const isIconOnly = computed(() => {
-    return listContext ? toValue(listContext).iconOnly : false;
-  });
-
   const hasPrimary = computed(() => {
     return (
       hasNamedSlot(slots, "primary") ||
@@ -199,10 +195,6 @@ export function useListItem(
   });
 
   const hasSecondary = computed(() => {
-    if (isIconOnly.value) {
-      return false;
-    }
-
     return hasSecondaryLabel.value;
   });
 
@@ -227,10 +219,6 @@ export function useListItem(
   });
 
   const hasEnd = computed(() => {
-    if (isIconOnly.value) {
-      return false;
-    }
-
     return hasNamedSlot(slots, "end") || resolvedSelectedIcon.value != null;
   });
 
@@ -277,10 +265,6 @@ export function useListItem(
         "aria-selected": isListboxOption.value
           ? listboxSelected.value
           : undefined,
-        "aria-label":
-          isIconOnly.value && typeof merged.value.primary === "string"
-            ? merged.value.primary
-            : undefined,
         onMousedown: isListboxOption.value
           ? (event: MouseEvent) => {
               event.preventDefault();
@@ -294,15 +278,10 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-3 px-4 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.value.disabled,
-          "px-4": !isIconOnly.value,
-          "py-2": !isDense.value && !isIconOnly.value,
-          "py-1.5": isDense.value && !isIconOnly.value,
-          "overflow-hidden": isIconOnly.value,
-          "size-8": isIconOnly.value && hasSecondaryLabel.value,
-          "h-8 w-full px-2": isIconOnly.value && !hasSecondaryLabel.value,
-          "rounded-lg": isIconOnly.value,
+          "py-2": !isDense.value,
+          "py-1.5": isDense.value,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.value.disabled && !isListboxOption.value,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
@@ -338,19 +317,10 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "items-center text-dark-900 dark:text-dark-100":
+      "items-center px-4 text-dark-900 dark:text-dark-100":
         !merged.value.interactive,
-      "px-4": !merged.value.interactive && !isIconOnly.value,
-      "py-2": !merged.value.interactive && !isDense.value && !isIconOnly.value,
-      "py-1.5": !merged.value.interactive && isDense.value && !isIconOnly.value,
-      "size-8 overflow-hidden":
-        !merged.value.interactive &&
-        isIconOnly.value &&
-        hasSecondaryLabel.value,
-      "h-8 overflow-hidden":
-        !merged.value.interactive &&
-        isIconOnly.value &&
-        !hasSecondaryLabel.value,
+      "py-2": !merged.value.interactive && !isDense.value,
+      "py-1.5": !merged.value.interactive && isDense.value,
     });
   });
 
@@ -360,7 +330,6 @@ export function useListItem(
       {},
       cn({
         "flex shrink-0 text-dark-600 dark:text-dark-300": true,
-        "items-center justify-center": isIconOnly.value,
         [get(mergedClasses.value, "start") ?? ""]: true,
       }),
     );
@@ -371,8 +340,7 @@ export function useListItem(
       customProps.value?.content,
       {},
       cn({
-        "min-w-0 flex-1": !isIconOnly.value,
-        hidden: isIconOnly.value,
+        "min-w-0 flex-1": true,
         [get(mergedClasses.value, "content") ?? ""]: true,
       }),
     );
@@ -436,7 +404,6 @@ export function useListItem(
     rowClass,
     startBind,
     hasPrimary,
-    isIconOnly,
     contentBind,
     primaryBind,
     hasSecondary,

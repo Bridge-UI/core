@@ -123,38 +123,3 @@ test("it should apply divider border on the root item", () => {
 
   expect(wrapper.classes().join(" ")).toContain("border-b");
 });
-
-test("it should set aria-label when List is iconOnly", () => {
-  const wrapper = mount(
-    defineComponent({
-      components: { List, ListItem },
-      template: `
-        <List icon-only>
-          <ListItem interactive primary="Home" />
-        </List>
-      `,
-    }),
-  );
-
-  expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe("Home");
-});
-
-test("it should hide nested lists when an ancestor is iconOnly", () => {
-  const wrapper = mount(
-    defineComponent({
-      components: { List, ListItem },
-      template: `
-        <List icon-only>
-          <List nested>
-            <ListItem interactive primary="Nested" />
-          </List>
-        </List>
-      `,
-    }),
-  );
-
-  const nested = wrapper.findAll("ul")[1];
-
-  expect(nested?.classes()).toContain("hidden");
-  expect(nested?.attributes("hidden")).toBeDefined();
-});

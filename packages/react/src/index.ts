@@ -527,6 +527,7 @@ export type {
   SidebarInsetProps,
   SidebarListItemOwnProps,
   SidebarListItemProps,
+  SidebarListOwnProps,
   SidebarListProps,
   SidebarOwnProps,
   SidebarProps,

@@ -83,28 +83,3 @@ test("it should apply divider border on the root item", () => {
 
   expect(root?.className.includes("border-b")).toBe(true);
 });
-
-test("it should set aria-label when List is iconOnly", () => {
-  render(
-    <List iconOnly>
-      <ListItem interactive primary="Home" />
-    </List>,
-  );
-
-  expect(
-    screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
-  ).toBe("Home");
-});
-
-test("it should hide nested lists when an ancestor is iconOnly", () => {
-  const { container } = render(
-    <List iconOnly>
-      <List nested>
-        <ListItem interactive primary="Nested" />
-      </List>
-    </List>,
-  );
-
-  expect(container.querySelector("ul ul")?.hasAttribute("hidden")).toBe(true);
-  expect(screen.queryByRole("button", { name: "Nested" })).toBeNull();
-});

@@ -19,14 +19,14 @@ const libDefaults = {
 
 function renderUseListItem(
   props: ListItemProps = {},
-  context: null | { dense: boolean; iconOnly?: boolean } = null,
+  context: null | { dense: boolean } = null,
   options: { registrySelectedIcon?: null | typeof Star } = {},
 ) {
   return renderHook(() => useListItem(props, libDefaults), {
     wrapper: ({ children }) => {
       const withList = createElement(
         ListContext.Provider,
-        { value: context ? { iconOnly: false, ...context } : null },
+        { value: context },
         children,
       );
 
@@ -67,37 +67,6 @@ test("it should expose interactive bind when interactive is true", () => {
   expect(result.current.interactiveBind?.role).toBe("button");
   expect(result.current.interactiveBind?.className).toContain("px-4");
   expect(result.current.interactiveBind?.className).toContain("cursor-pointer");
-});
-
-test("it should use a compact rounded hit target when List is iconOnly", () => {
-  const { result } = renderUseListItem(
-    { primary: "Home", interactive: true },
-    { dense: false, iconOnly: true },
-  );
-
-  expect(result.current.interactiveBind?.className).toContain("h-8");
-  expect(result.current.interactiveBind?.className).toContain("w-full");
-  expect(result.current.interactiveBind?.className).toContain("px-2");
-  expect(result.current.interactiveBind?.className).not.toContain("size-8");
-  expect(result.current.interactiveBind?.className).not.toContain(
-    "justify-center",
-  );
-  expect(result.current.interactiveBind?.className).toContain("rounded-lg");
-});
-
-test("it should collapse secondary rows to a square hit when List is iconOnly", () => {
-  const { result } = renderUseListItem(
-    {
-      interactive: true,
-      primary: "Acme Inc",
-      secondary: "Enterprise",
-    },
-    { dense: false, iconOnly: true },
-  );
-
-  expect(result.current.interactiveBind?.className).toContain("size-8");
-  expect(result.current.interactiveBind?.className).not.toContain("px-2");
-  expect(result.current.interactiveBind?.className).not.toContain("w-full");
 });
 
 test("it should apply dense padding on interactive bind", () => {

@@ -12,7 +12,6 @@ const props = withDefaults(defineProps<ListOwnProps>(), {
   as: "ul",
   dense: false,
   nested: false,
-  iconOnly: false,
 });
 
 const { merged, rootBind } = useList(props);
