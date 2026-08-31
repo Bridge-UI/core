@@ -2,10 +2,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test } from "vitest";
 
-afterEach(() => {
-  cleanup();
-});
-
 // ** Local Imports
 import {
   Sidebar,
@@ -15,6 +11,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
+
+afterEach(() => {
+  cleanup();
+});
 
 function AppShell({
   open,
@@ -47,9 +47,9 @@ function AppShell({
 test("it should render the sidebar aside and main inset", () => {
   render(<AppShell />);
 
-  expect(screen.getByRole("complementary", { name: "Sidebar" })).toBeTruthy();
   expect(screen.getByText("Home")).toBeTruthy();
   expect(screen.getByText("Main")).toBeTruthy();
+  expect(screen.getByRole("complementary", { name: "Sidebar" })).toBeTruthy();
 });
 
 test("it should default to expanded desktop state", () => {
@@ -176,4 +176,25 @@ test("it should collapse SidebarList items when the icon rail is collapsed", () 
   expect(
     screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
   ).toBe("Home");
+});
+
+test("it should apply nav chrome on SidebarList and SidebarListItem", () => {
+  const { container } = render(
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarList>
+          <SidebarListItem interactive primary="Home" />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  const item = screen.getByRole("button", { name: "Home" });
+
+  expect(container.querySelector("ul")?.className).toContain("gap-1");
+  expect(item.className).toContain("min-h-8");
+  expect(item.className).toContain("rounded-lg");
 });

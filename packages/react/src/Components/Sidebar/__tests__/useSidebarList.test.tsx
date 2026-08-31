@@ -45,3 +45,21 @@ test("it should allow iconOnly to be overridden", () => {
 
   expect(result.current.iconOnly).toBe(false);
 });
+
+test("it should apply stacked nav chrome on the list root", () => {
+  const { result } = renderHook(() => useSidebarList({}), {
+    wrapper: expandedIconWrapper,
+  });
+
+  expect(result.current.rootClassName).toContain("px-2");
+  expect(result.current.rootClassName).toContain("gap-1");
+});
+
+test("it should apply a nested start-edge guide line", () => {
+  const { result } = renderHook(() => useSidebarList({ nested: true }), {
+    wrapper: expandedIconWrapper,
+  });
+
+  expect(result.current.rootClassName).toContain("ml-3.5");
+  expect(result.current.rootClassName).toContain("border-l");
+});

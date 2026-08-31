@@ -65,9 +65,7 @@ test("it should expose interactive bind when interactive is true", () => {
   });
 
   expect(result.current.interactiveBind?.role).toBe("button");
-  expect(result.current.interactiveBind?.className).toContain("px-2");
-  expect(result.current.interactiveBind?.className).toContain("min-h-8");
-  expect(result.current.interactiveBind?.className).toContain("rounded-lg");
+  expect(result.current.interactiveBind?.className).toContain("px-4");
   expect(result.current.interactiveBind?.className).toContain("cursor-pointer");
 });
 
@@ -85,7 +83,6 @@ test("it should use a compact rounded hit target when List is iconOnly", () => {
     "justify-center",
   );
   expect(result.current.interactiveBind?.className).toContain("rounded-lg");
-  expect(result.current.tooltipContent).toBeUndefined();
 });
 
 test("it should collapse secondary rows to a square hit when List is iconOnly", () => {
@@ -103,30 +100,6 @@ test("it should collapse secondary rows to a square hit when List is iconOnly", 
   expect(result.current.interactiveBind?.className).not.toContain("w-full");
 });
 
-test("it should use a taller hit target when secondary text is set", () => {
-  const { result } = renderUseListItem({
-    interactive: true,
-    primary: "Acme Inc",
-    secondary: "Enterprise",
-  });
-
-  expect(result.current.interactiveBind?.className).toContain("min-h-12");
-  expect(result.current.interactiveBind?.className).toContain("py-2");
-  expect(result.current.interactiveBind?.className).not.toContain("min-h-8");
-});
-
-test("it should expose tooltip content when tooltip is set", () => {
-  const { result } = renderUseListItem({
-    primary: "Home",
-    tooltip: "Home",
-    interactive: true,
-    tooltipPlacement: "right",
-  });
-
-  expect(result.current.tooltipContent).toBe("Home");
-  expect(result.current.tooltipPlacement).toBe("right");
-});
-
 test("it should apply dense padding on interactive bind", () => {
   const { result } = renderUseListItem({
     dense: true,
@@ -134,8 +107,8 @@ test("it should apply dense padding on interactive bind", () => {
     primary: "Dense item",
   });
 
-  expect(result.current.interactiveBind?.className).toContain("min-h-7");
-  expect(result.current.interactiveBind?.className).not.toContain("min-h-8");
+  expect(result.current.interactiveBind?.className).toContain("py-1.5");
+  expect(result.current.interactiveBind?.className).not.toContain("py-2");
 });
 
 test("it should inherit dense padding from parent List context", () => {
@@ -144,7 +117,7 @@ test("it should inherit dense padding from parent List context", () => {
     { dense: true },
   );
 
-  expect(result.current.interactiveBind?.className).toContain("min-h-7");
+  expect(result.current.interactiveBind?.className).toContain("py-1.5");
 });
 
 test("it should apply selected styles on interactive bind", () => {

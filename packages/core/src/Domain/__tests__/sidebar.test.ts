@@ -77,10 +77,34 @@ describe("SIDEBAR_DESKTOP_BREAKPOINT", () => {
 
 describe("isSidebarIconOnly", () => {
   test("it should be true only on a collapsed desktop icon rail", () => {
-    expect(isSidebarIconOnly(false, "icon", "collapsed")).toBe(true);
-    expect(isSidebarIconOnly(true, "icon", "collapsed")).toBe(false);
-    expect(isSidebarIconOnly(false, "icon", "expanded")).toBe(false);
-    expect(isSidebarIconOnly(false, "offcanvas", "collapsed")).toBe(false);
+    expect(
+      isSidebarIconOnly({
+        isMobile: false,
+        state: "collapsed",
+        collapsible: "icon",
+      }),
+    ).toBe(true);
+    expect(
+      isSidebarIconOnly({
+        isMobile: true,
+        state: "collapsed",
+        collapsible: "icon",
+      }),
+    ).toBe(false);
+    expect(
+      isSidebarIconOnly({
+        isMobile: false,
+        state: "expanded",
+        collapsible: "icon",
+      }),
+    ).toBe(false);
+    expect(
+      isSidebarIconOnly({
+        isMobile: false,
+        state: "collapsed",
+        collapsible: "offcanvas",
+      }),
+    ).toBe(false);
   });
 });
 

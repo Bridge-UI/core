@@ -2,6 +2,7 @@
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
+import type { PositionPlacement } from "@bridge-ui/core/Runtime";
 import type {
   SidebarCollapsible,
   SidebarSide,
@@ -116,6 +117,24 @@ export interface SidebarInsetOwnProps {
    * @default undefined
    */
   customProps?: SidebarInsetCustomProps;
+}
+
+export interface SidebarListItemOwnProps {
+  /**
+   * Tooltip label for the whole hit target. When omitted, string `primary`
+   * is used while the icon rail is collapsed.
+   *
+   * @default undefined
+   */
+  tooltip?: string;
+
+  /**
+   * Placement of {@link SidebarListItemOwnProps.tooltip}. Defaults to the
+   * side opposite the rail.
+   *
+   * @default undefined
+   */
+  tooltipPlacement?: PositionPlacement;
 }
 
 /**
@@ -292,4 +311,4 @@ export type SidebarListProps = ListProps;
  * `ListItem` bound to the nearest `Sidebar`. Shows `primary` in a tooltip
  * when the icon rail is collapsed.
  */
-export type SidebarListItemProps = ListItemProps;
+export type SidebarListItemProps = ListItemProps & SidebarListItemOwnProps;

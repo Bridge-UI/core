@@ -245,11 +245,11 @@ Renders a `Button`. Forwards native button attributes. Default accessible name i
 
 ## Props (`SidebarList`)
 
-Same as `List`. Sets `icon-only` when the icon rail is collapsed on desktop. Override with `icon-only`. Nested `SidebarList` is hidden while collapsed.
+Same as `List`. Sets `icon-only` when the icon rail is collapsed on desktop. Applies stacked nav chrome (gap, compact rows, nested guide). Override with `icon-only`. Nested `SidebarList` is hidden while collapsed.
 
 ## Props (`SidebarListItem`)
 
-Same as `ListItem`. When the icon rail is collapsed, string `primary` is shown in a tooltip on the whole row.
+Same as `ListItem`, plus `tooltip` / `tooltip-placement`. Applies compact nav chrome. When the icon rail is collapsed, string `primary` is shown in a tooltip on the whole row.
 
 ## `useSidebar`
 

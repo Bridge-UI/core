@@ -107,13 +107,20 @@ export function useSidebarProvider(
   });
 
   const breakpoint = useBreakpoint();
-  const isMobile = breakpoint.lessThan(SIDEBAR_DESKTOP_BREAKPOINT);
+  const isMobile = derived(() => {
+    return breakpoint.lessThan(SIDEBAR_DESKTOP_BREAKPOINT);
+  });
 
-  const isOpenControlled = props.open !== undefined;
+  const isOpenControlled = derived(() => {
+    return props.open !== undefined;
+  });
+
   const [uncontrolledOpen, setUncontrolledOpen] = useState(
     () => merged.defaultOpen,
   );
-  const open = isOpenControlled ? Boolean(props.open) : uncontrolledOpen;
+  const open = derived(() => {
+    return isOpenControlled ? Boolean(props.open) : uncontrolledOpen;
+  });
 
   const [openMobile, setOpenMobile] = useState(false);
   const [layout, setLayoutState] = useState<SidebarLayout>(defaultLayout);
@@ -159,7 +166,9 @@ export function useSidebarProvider(
     setOpen(toggleSidebarOpen(open));
   }, [isMobile, layout.collapsible, open, setOpen]);
 
-  const state = resolveSidebarState(open, layout.collapsible);
+  const state = derived(() => {
+    return resolveSidebarState(open, layout.collapsible);
+  });
 
   const widthItem = useMemo((): SidebarWidth => {
     return toMerged(widthProps, bridgeSidebar?.tokens?.width ?? {});

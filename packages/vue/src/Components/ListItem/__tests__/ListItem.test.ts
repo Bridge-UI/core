@@ -42,8 +42,8 @@ test("it should apply dense padding when dense prop is set", () => {
 
   const interactive = wrapper.find('[role="menuitem"]');
 
-  expect(interactive.classes()).toContain("min-h-7");
-  expect(interactive.classes()).not.toContain("min-h-8");
+  expect(interactive.classes()).toContain("py-1.5");
+  expect(interactive.classes()).not.toContain("py-2");
 });
 
 test("it should inherit dense padding from parent List", () => {
@@ -56,8 +56,8 @@ test("it should inherit dense padding from parent List", () => {
   const wrapper = mount(Host);
   const interactive = wrapper.find('[role="menuitem"]');
 
-  expect(interactive.classes()).toContain("min-h-7");
-  expect(interactive.classes()).not.toContain("min-h-8");
+  expect(interactive.classes()).toContain("py-1.5");
+  expect(interactive.classes()).not.toContain("py-2");
 });
 
 test("it should apply selected styles when selected is true", () => {

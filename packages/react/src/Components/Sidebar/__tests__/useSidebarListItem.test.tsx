@@ -60,3 +60,36 @@ test("it should omit the tooltip when the rail is expanded", () => {
 
   expect(result.current.tooltip).toBeUndefined();
 });
+
+test("it should apply compact nav chrome when the rail is expanded", () => {
+  const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return (
+        <SidebarProvider>
+          <Sidebar collapsible="icon">{children}</Sidebar>
+        </SidebarProvider>
+      );
+    },
+  });
+
+  expect(result.current.itemClasses.interactive).toContain("min-h-8");
+  expect(result.current.itemClasses.interactive).toContain("rounded-lg");
+});
+
+test("it should apply a taller hit when secondary is set", () => {
+  const { result } = renderHook(
+    () => useSidebarListItem({ primary: "Acme Inc", secondary: "Enterprise" }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => {
+        return (
+          <SidebarProvider>
+            <Sidebar collapsible="icon">{children}</Sidebar>
+          </SidebarProvider>
+        );
+      },
+    },
+  );
+
+  expect(result.current.itemClasses.interactive).toContain("py-2");
+  expect(result.current.itemClasses.interactive).toContain("min-h-12");
+});

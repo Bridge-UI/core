@@ -155,9 +155,9 @@ test("it should apply plain variant classes on the root", () => {
 
   const trigger = screen.getByRole("button", { name: "One" });
 
-  expect(trigger.className).toContain("py-1.5");
   expect(trigger.className).toContain("px-2");
   expect(trigger.className).toContain("min-h-8");
+  expect(trigger.className).toContain("py-1.5");
   expect(trigger.className).not.toContain("text-primary-700");
 
   const panel = screen.getByRole("region", { hidden: true });

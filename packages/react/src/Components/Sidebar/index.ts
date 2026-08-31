@@ -1,4 +1,5 @@
 // ** Exports
+export { useSidebar } from "@/Components/Sidebar/hooks/useSidebar";
 export { useSidebarInset } from "@/Components/Sidebar/hooks/useSidebarInset";
 export { useSidebarList } from "@/Components/Sidebar/hooks/useSidebarList";
 export { useSidebarListItem } from "@/Components/Sidebar/hooks/useSidebarListItem";
@@ -14,6 +15,7 @@ export type {
   SidebarInsetCustomProps,
   SidebarInsetOwnProps,
   SidebarInsetProps,
+  SidebarListItemOwnProps,
   SidebarListItemProps,
   SidebarListProps,
   SidebarOwnProps,
@@ -31,7 +33,6 @@ export type {
 } from "@/Components/Sidebar/sidebar.types";
 export {
   SidebarContext,
-  useSidebar,
   type SidebarContextValue,
   type SidebarLayout,
 } from "@/Components/Sidebar/SidebarContext";

@@ -15,18 +15,14 @@ test("it should apply list root classes", () => {
   const { result } = renderUseList();
 
   expect(result.current.rootBind.className).toContain("m-0");
-  expect(result.current.rootBind.className).toContain("px-2");
   expect(result.current.rootBind.className).toContain("py-2");
   expect(result.current.rootBind.className).toContain("list-none");
-  expect(result.current.rootBind.className).toContain("flex");
-  expect(result.current.rootBind.className).toContain("gap-1");
 });
 
-test("it should apply nested indent and a start-edge guide line", () => {
+test("it should apply nested indent when nested is true", () => {
   const { result } = renderUseList({ nested: true });
 
-  expect(result.current.rootBind.className).toContain("border-l");
-  expect(result.current.rootBind.className).toContain("ml-3.5");
+  expect(result.current.rootBind.className).toContain("pl-4");
 });
 
 test("it should expose dense context value", () => {

@@ -11,7 +11,7 @@ import {
 } from "@/Components/Sidebar";
 
 function mountUseSidebarListItem(
-  itemProps: { primary?: string } = {},
+  itemProps: { primary?: string; secondary?: string } = {},
   sidebarProps: {
     collapsible?: "icon" | "none" | "offcanvas";
     side?: "left" | "right";
@@ -72,4 +72,28 @@ test("it should omit the tooltip when the rail is expanded", async () => {
   await nextTick();
 
   expect(tooltip.value).toBeUndefined();
+});
+
+test("it should apply compact nav chrome when the rail is expanded", async () => {
+  const { itemClasses } = mountUseSidebarListItem(
+    { primary: "Home" },
+    { collapsible: "icon" },
+  );
+
+  await nextTick();
+
+  expect(itemClasses.value.interactive).toContain("min-h-8");
+  expect(itemClasses.value.interactive).toContain("rounded-lg");
+});
+
+test("it should apply a taller hit when secondary is set", async () => {
+  const { itemClasses } = mountUseSidebarListItem(
+    { primary: "Acme Inc", secondary: "Enterprise" },
+    { collapsible: "icon" },
+  );
+
+  await nextTick();
+
+  expect(itemClasses.value.interactive).toContain("py-2");
+  expect(itemClasses.value.interactive).toContain("min-h-12");
 });

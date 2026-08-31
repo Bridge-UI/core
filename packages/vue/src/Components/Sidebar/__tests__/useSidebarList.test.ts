@@ -71,3 +71,36 @@ test("it should allow iconOnly to be overridden", async () => {
 
   expect(iconOnly.value).toBe(false);
 });
+
+test("it should apply stacked nav chrome on the list root", async () => {
+  const { rootClassName } = mountUseSidebarList({}, { collapsible: "icon" });
+
+  await nextTick();
+
+  expect(rootClassName.value).toContain("px-2");
+  expect(rootClassName.value).toContain("gap-1");
+});
+
+test("it should apply a nested start-edge guide line", async () => {
+  let result!: ReturnType<typeof useSidebarList>;
+
+  const Probe = defineComponent({
+    setup() {
+      result = useSidebarList({ nested: true });
+
+      return () => h("div");
+    },
+  });
+
+  mount(SidebarProvider, {
+    slots: {
+      default: () =>
+        h(Sidebar, { collapsible: "icon" }, { default: () => h(Probe) }),
+    },
+  });
+
+  await nextTick();
+
+  expect(result.rootClassName.value).toContain("ml-3.5");
+  expect(result.rootClassName.value).toContain("border-l");
+});

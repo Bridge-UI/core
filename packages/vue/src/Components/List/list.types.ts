@@ -59,8 +59,7 @@ export interface ListOwnProps {
   iconOnly?: boolean;
 
   /**
-   * When true, indents the list and draws a start-edge guide line
-   * for nested navigation.
+   * When true, indents the list for nested navigation/submenus.
    *
    * @default false
    */

@@ -22,7 +22,7 @@ test("it should inherit dense padding from parent List", () => {
     </List>,
   );
 
-  cy.get('[role="menuitem"]').should("have.class", "min-h-7");
+  cy.get('[role="menuitem"]').should("have.class", "py-1.5");
 });
 
 test("it should apply selected styles when selected is true", () => {

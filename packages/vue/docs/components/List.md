@@ -91,7 +91,7 @@ Selected rows show a check icon by default. Customize it with `selectedIcon` on 
 
 ### Nested
 
-`nested` indents the list and draws a start-edge guide line under the parent row.
+`nested` indents the list for nested navigation.
 
 ```vue
 <List>
@@ -149,7 +149,7 @@ Hide section labels and clip item text so only the `start` slot remains. Nested 
 | `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                            |
 | `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root.            |
 | `iconOnly`    | `boolean`               | `false` | Hide section labels and clip item text so only leading icons remain. Nested `List` is hidden. |
-| `nested`      | `boolean`               | `false` | Indents the list and draws a start-edge guide line for nested navigation.                     |
+| `nested`      | `boolean`               | `false` | Indents the list for nested navigation.                                                       |
 
 ## Props (`ListItem`)
 

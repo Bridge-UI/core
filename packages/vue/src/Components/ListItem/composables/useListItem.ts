@@ -44,14 +44,12 @@ const listItemBridgeKeys = [
   "classes",
   "divider",
   "primary",
-  "tooltip",
   "disabled",
   "selected",
   "secondary",
   "customProps",
   "interactive",
   "selectedIcon",
-  "tooltipPlacement",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role">;
@@ -296,18 +294,15 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex min-w-0 items-center text-left text-dark-900 outline-hidden transition-[width,height,padding] duration-200 ease-linear dark:text-dark-100": true,
-          "overflow-hidden": true,
-          "w-full gap-x-2 px-2": !isIconOnly.value,
+          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "cursor-pointer select-none": !merged.value.disabled,
+          "px-4": !isIconOnly.value,
+          "py-2": !isDense.value && !isIconOnly.value,
+          "py-1.5": isDense.value && !isIconOnly.value,
+          "overflow-hidden": isIconOnly.value,
           "size-8": isIconOnly.value && hasSecondaryLabel.value,
           "h-8 w-full px-2": isIconOnly.value && !hasSecondaryLabel.value,
-          "rounded-lg": true,
-          "cursor-pointer select-none": !merged.value.disabled,
-          "min-h-12 py-2":
-            hasSecondaryLabel.value && !isDense.value && !isIconOnly.value,
-          "min-h-8":
-            !hasSecondaryLabel.value && !isDense.value && !isIconOnly.value,
-          "min-h-7": isDense.value && !isIconOnly.value,
+          "rounded-lg": isIconOnly.value,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.value.disabled && !isListboxOption.value,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
@@ -342,10 +337,12 @@ export function useListItem(
 
   const rowClass = computed(() => {
     return cn({
-      "flex min-w-0 items-center": true,
-      "w-full gap-x-2": !isIconOnly.value,
-      "text-dark-900 dark:text-dark-100": !merged.value.interactive,
-      "px-2": !merged.value.interactive && !isIconOnly.value,
+      "flex w-full min-w-0 gap-x-3": true,
+      "items-center text-dark-900 dark:text-dark-100":
+        !merged.value.interactive,
+      "px-4": !merged.value.interactive && !isIconOnly.value,
+      "py-2": !merged.value.interactive && !isDense.value && !isIconOnly.value,
+      "py-1.5": !merged.value.interactive && isDense.value && !isIconOnly.value,
       "size-8 overflow-hidden":
         !merged.value.interactive &&
         isIconOnly.value &&
@@ -354,18 +351,6 @@ export function useListItem(
         !merged.value.interactive &&
         isIconOnly.value &&
         !hasSecondaryLabel.value,
-      "min-h-12 py-2":
-        !merged.value.interactive &&
-        hasSecondaryLabel.value &&
-        !isDense.value &&
-        !isIconOnly.value,
-      "min-h-8":
-        !merged.value.interactive &&
-        !hasSecondaryLabel.value &&
-        !isDense.value &&
-        !isIconOnly.value,
-      "min-h-7":
-        !merged.value.interactive && isDense.value && !isIconOnly.value,
     });
   });
 
@@ -374,7 +359,8 @@ export function useListItem(
       customProps.value?.start,
       {},
       cn({
-        "flex shrink-0 items-center justify-center text-dark-600 dark:text-dark-300": true,
+        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
+        "items-center justify-center": isIconOnly.value,
         [get(mergedClasses.value, "start") ?? ""]: true,
       }),
     );
@@ -442,21 +428,6 @@ export function useListItem(
     );
   });
 
-  const tooltipContent = computed(() => {
-    if (
-      typeof merged.value.tooltip !== "string" ||
-      merged.value.tooltip.length === 0
-    ) {
-      return undefined;
-    }
-
-    return merged.value.tooltip;
-  });
-
-  const tooltipPlacement = computed(() => {
-    return merged.value.tooltipPlacement ?? "top";
-  });
-
   return {
     merged,
     hasEnd,
@@ -470,10 +441,8 @@ export function useListItem(
     primaryBind,
     hasSecondary,
     secondaryBind,
-    tooltipContent,
     interactiveBind,
     selectedIconBind,
-    tooltipPlacement,
     resolvedSelectedIcon,
   };
 }

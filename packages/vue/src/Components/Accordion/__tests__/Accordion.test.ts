@@ -192,9 +192,9 @@ test("it should apply plain variant classes on the root", () => {
 
   const trigger = wrapper.get("button");
 
-  expect(trigger.classes()).toContain("py-1.5");
   expect(trigger.classes()).toContain("px-2");
   expect(trigger.classes()).toContain("min-h-8");
+  expect(trigger.classes()).toContain("py-1.5");
   expect(trigger.classes().join(" ")).not.toContain("text-primary-700");
 
   const panel = wrapper.get('[role="region"]');

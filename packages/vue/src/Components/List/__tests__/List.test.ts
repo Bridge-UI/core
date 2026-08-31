@@ -14,11 +14,10 @@ test("it should render the root element", () => {
   expect(wrapper.classes()).toContain("list-none");
 });
 
-test("it should apply nested indent and a start-edge guide line", () => {
+test("it should apply nested indent when nested is true", () => {
   const wrapper = mount(List, { props: { nested: true } });
 
-  expect(wrapper.classes()).toContain("border-l");
-  expect(wrapper.classes()).toContain("ml-3.5");
+  expect(wrapper.classes()).toContain("pl-4");
 });
 
 test("it should render default slot content", () => {

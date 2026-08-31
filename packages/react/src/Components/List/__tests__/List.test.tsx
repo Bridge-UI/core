@@ -16,15 +16,10 @@ test("it should render the root element", () => {
   expect(root?.classList.contains("list-none")).toBe(true);
 });
 
-test("it should apply nested indent and a start-edge guide line", () => {
+test("it should apply nested indent when nested is true", () => {
   const { container } = render(<List nested />);
 
-  expect(container.querySelector("ul")?.classList.contains("border-l")).toBe(
-    true,
-  );
-  expect(container.querySelector("ul")?.classList.contains("ml-3.5")).toBe(
-    true,
-  );
+  expect(container.querySelector("ul")?.classList.contains("pl-4")).toBe(true);
 });
 
 test("it should render children", () => {

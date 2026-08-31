@@ -5,7 +5,6 @@ import { createElement } from "react";
 import { Icon } from "@/Components/Icon";
 import { useListItem } from "@/Components/ListItem/hooks/useListItem";
 import type { ListItemProps } from "@/Components/ListItem/listItem.types";
-import { Tooltip } from "@/Components/Tooltip";
 import { hasNamedSlot } from "@/Utils";
 
 function ListItemRow({
@@ -64,21 +63,11 @@ function ListItem(props: ListItemProps) {
   ) : (
     row
   );
-  const body = listItemState.tooltipContent ? (
-    <Tooltip
-      slots={{ trigger: hit }}
-      content={listItemState.tooltipContent}
-      placement={listItemState.tooltipPlacement}
-      classes={{ root: "flex w-full min-w-0", trigger: "flex w-full min-w-0" }}
-    />
-  ) : (
-    hit
-  );
 
   return createElement(
     listItemState.merged.as ?? "li",
     listItemState.rootBind,
-    body,
+    hit,
   );
 }
 

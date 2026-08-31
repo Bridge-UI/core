@@ -139,10 +139,9 @@ export function useSidebarShell(
     return get(classes, merged.side);
   }, [merged.side, bridgeSidebar?.tokens?.side]);
 
-  const collapsibleData = resolveSidebarCollapsibleData(
-    sidebar.state,
-    merged.collapsible,
-  );
+  const collapsibleData = derived(() => {
+    return resolveSidebarCollapsibleData(sidebar.state, merged.collapsible);
+  });
 
   const showAsDrawer = derived(() => {
     return shouldRenderSidebarAsDrawer(sidebar.isMobile) && sidebar.openMobile;

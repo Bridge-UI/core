@@ -94,11 +94,15 @@ export function shouldToggleDesktopSidebar(
  * Whether rail lists should collapse to icons.
  * False below the desktop breakpoint so the overlay drawer keeps labels.
  */
-export function isSidebarIconOnly(
-  isMobile: boolean,
-  collapsible: SidebarCollapsibleMode,
-  state: SidebarState,
-): boolean {
+export function isSidebarIconOnly({
+  state,
+  isMobile,
+  collapsible,
+}: {
+  collapsible: SidebarCollapsibleMode;
+  isMobile: boolean;
+  state: SidebarState;
+}): boolean {
   return !isMobile && collapsible === "icon" && state === "collapsed";
 }
 

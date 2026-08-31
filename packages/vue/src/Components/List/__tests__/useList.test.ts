@@ -30,18 +30,14 @@ test("it should apply list root classes", () => {
   const { rootBind } = mountUseList();
 
   expect(rootBind.value.class).toContain("m-0");
-  expect(rootBind.value.class).toContain("px-2");
   expect(rootBind.value.class).toContain("py-2");
   expect(rootBind.value.class).toContain("list-none");
-  expect(rootBind.value.class).toContain("flex");
-  expect(rootBind.value.class).toContain("gap-1");
 });
 
-test("it should apply nested indent and a start-edge guide line", () => {
+test("it should apply nested indent when nested is true", () => {
   const { rootBind } = mountUseList({ nested: true });
 
-  expect(rootBind.value.class).toContain("border-l");
-  expect(rootBind.value.class).toContain("ml-3.5");
+  expect(rootBind.value.class).toContain("pl-4");
 });
 
 test("it should provide dense context to descendants", () => {

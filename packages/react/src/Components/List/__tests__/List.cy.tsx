@@ -9,11 +9,10 @@ test("it should render the root element", () => {
   cy.get("ul").should("have.class", "py-2");
 });
 
-test("it should apply nested indent and a start-edge guide line", () => {
+test("it should apply nested indent when nested is true", () => {
   cy.mount(<List nested />);
 
-  cy.get("ul").should("have.class", "border-l");
-  cy.get("ul").should("have.class", "ml-3.5");
+  cy.get("ul").should("have.class", "pl-4");
 });
 
 test("it should render children", () => {
