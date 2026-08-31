@@ -8,6 +8,11 @@ export interface AccordionVariantItem {
   "item": string;
 
   /**
+   * Classes for the expandable panel region.
+   */
+  "panel": string;
+
+  /**
    * Classes for the accordion root.
    */
   "root": string;
@@ -36,7 +41,7 @@ export interface AccordionVariant {
   "outlined": AccordionVariantItem;
 
   /**
-   * Quiet layout: soft spacing and hover, no borders.
+   * Quiet layout: List-like padding and hover, no borders or expanded accent.
    */
   "plain": AccordionVariantItem;
 
@@ -51,13 +56,16 @@ export interface AccordionVariant {
  */
 export const variantProps: AccordionVariant = {
   "plain": {
-    "root": "flex flex-col gap-1",
-    "item": "overflow-hidden rounded-lg",
+    "item": "",
+    "root": "flex flex-col gap-1 px-2 py-2",
+    "panel":
+      "ml-3.5 translate-x-px border-l border-dark-200 p-0 py-0.5 pl-2.5 dark:border-dark-700",
     "trigger":
-      "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
+      "rounded-lg min-h-8 px-2 py-1.5 text-dark-700 hover:bg-black/5 dark:text-dark-200 dark:hover:bg-white/10",
   },
   "default": {
     "item": "",
+    "panel": "",
     "trigger":
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
     "root":
@@ -67,11 +75,13 @@ export const variantProps: AccordionVariant = {
     "root": "flex flex-col gap-2",
     "item":
       "overflow-hidden rounded-lg border border-dark-200 dark:border-dark-700",
+    "panel": "",
     "trigger":
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
   },
   "outlined": {
     "item": "",
+    "panel": "",
     "trigger":
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
     "root":

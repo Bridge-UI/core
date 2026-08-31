@@ -224,9 +224,14 @@ export function useAccordion(
         triggerSize: get(sizeItem, "trigger"),
         rootVariant: get(variantItem, "root"),
         itemVariant: get(variantItem, "item"),
+        panelVariant: get(variantItem, "panel"),
         triggerVariant: get(variantItem, "trigger"),
-        colorIndicator: get(colorItem, "indicator"),
-        colorTriggerExpanded: get(colorItem, "triggerExpanded"),
+        colorIndicator:
+          merged.variant === "plain" ? undefined : get(colorItem, "indicator"),
+        colorTriggerExpanded:
+          merged.variant === "plain"
+            ? undefined
+            : get(colorItem, "triggerExpanded"),
       },
     };
   }, [
@@ -237,6 +242,7 @@ export function useAccordion(
     focusTrigger,
     itemValues,
     merged.disabled,
+    merged.variant,
     multiple,
     registerItem,
     sizeItem,

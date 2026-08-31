@@ -261,7 +261,7 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
   const collapseBind = computed(() => {
     return {
       class: cn({
-        "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none": true,
+        "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none group-data-[collapsible=icon]:hidden": true,
         "grid-rows-[1fr]": expanded.value,
         "grid-rows-[0fr]": !expanded.value,
       }),
@@ -288,6 +288,7 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
         ),
         class: cn({
           [accordionContextRef.value.tokenClasses.panelSize ?? ""]: true,
+          [accordionContextRef.value.tokenClasses.panelVariant ?? ""]: true,
           [get(mergedClasses.value, "panel") ?? ""]: true,
         }),
       },

@@ -228,7 +228,7 @@ export function useAccordionItem(props: AccordionItemProps) {
   const collapseBind = derived(() => {
     return {
       className: cn({
-        "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none": true,
+        "grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none group-data-[collapsible=icon]:hidden": true,
         "grid-rows-[1fr]": expanded,
         "grid-rows-[0fr]": !expanded,
       }),
@@ -252,6 +252,7 @@ export function useAccordionItem(props: AccordionItemProps) {
         "aria-labelledby": getAccordionTriggerId(accordion.id, value),
         className: cn({
           [accordion.tokenClasses.panelSize ?? ""]: true,
+          [accordion.tokenClasses.panelVariant ?? ""]: true,
           [get(mergedClasses, "panel") ?? ""]: true,
         }),
       },

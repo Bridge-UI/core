@@ -199,9 +199,16 @@ export function useAccordion(
         triggerSize: get(sizeItem.value, "trigger"),
         rootVariant: get(variantItem.value, "root"),
         itemVariant: get(variantItem.value, "item"),
+        panelVariant: get(variantItem.value, "panel"),
         triggerVariant: get(variantItem.value, "trigger"),
-        colorIndicator: get(colorItem.value, "indicator"),
-        colorTriggerExpanded: get(colorItem.value, "triggerExpanded"),
+        colorIndicator:
+          merged.value.variant === "plain"
+            ? undefined
+            : get(colorItem.value, "indicator"),
+        colorTriggerExpanded:
+          merged.value.variant === "plain"
+            ? undefined
+            : get(colorItem.value, "triggerExpanded"),
       },
     };
   });

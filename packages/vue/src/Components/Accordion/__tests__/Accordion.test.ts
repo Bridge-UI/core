@@ -189,6 +189,19 @@ test("it should apply plain variant classes on the root", () => {
   expect(className).toContain("gap-1");
   expect(className).not.toContain("border");
   expect(className).not.toContain("divide-y");
+
+  const trigger = wrapper.get("button");
+
+  expect(trigger.classes()).toContain("py-1.5");
+  expect(trigger.classes()).toContain("px-2");
+  expect(trigger.classes()).toContain("min-h-8");
+  expect(trigger.classes().join(" ")).not.toContain("text-primary-700");
+
+  const panel = wrapper.get('[role="region"]');
+
+  expect(panel.classes()).toContain("border-l");
+  expect(panel.classes()).toContain("p-0");
+  expect(panel.classes()).not.toContain("pb-4");
 });
 
 test("it should apply separated variant classes on the root", () => {

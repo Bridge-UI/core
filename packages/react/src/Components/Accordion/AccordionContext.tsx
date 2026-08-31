@@ -63,6 +63,7 @@ export type AccordionContextValue = {
     itemSize?: string;
     itemVariant?: string;
     panelSize?: string;
+    panelVariant?: string;
     rootSize?: string;
     rootVariant?: string;
     triggerSize?: string;
