@@ -6,10 +6,10 @@ import { useListSection } from "@/Components/ListSection/hooks/useListSection";
 import type { ListSectionProps } from "@/Components/ListSection/listSection.types";
 
 function ListSection(props: ListSectionProps) {
-  const { label, merged, rootBind, titleBind, isIconOnly } =
+  const { label, merged, rootBind, isHidden, titleBind } =
     useListSection(props);
 
-  if (isIconOnly) {
+  if (isHidden) {
     return null;
   }
 

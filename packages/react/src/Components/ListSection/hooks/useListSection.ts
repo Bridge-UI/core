@@ -10,7 +10,7 @@ import type {
   ListSectionOwnProps,
   ListSectionProps,
 } from "@/Components/ListSection/listSection.types";
-import { useSidebarListContext } from "@/Components/Sidebar/SidebarListContext";
+import { useListSectionContext } from "@/Components/ListSection/ListSectionContext";
 import {
   derived,
   mergePartBind,
@@ -29,7 +29,7 @@ const listSectionBridgeKeys = [
 
 export function useListSection(props: ListSectionProps) {
   const listContext = useListContext();
-  const sidebarList = useSidebarListContext();
+  const listSection = useListSectionContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ListSectionProps,
@@ -68,8 +68,8 @@ export function useListSection(props: ListSectionProps) {
     return listContext?.dense ?? false;
   });
 
-  const isIconOnly = derived(() => {
-    return sidebarList?.iconOnly ?? false;
+  const isHidden = derived(() => {
+    return listSection?.hidden ?? false;
   });
 
   const label = derived(() => {
@@ -115,7 +115,7 @@ export function useListSection(props: ListSectionProps) {
     label,
     merged,
     rootBind,
+    isHidden,
     titleBind,
-    isIconOnly,
   };
 }

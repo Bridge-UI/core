@@ -11,7 +11,7 @@ import type {
   ListSectionOwnProps,
   ListSectionProps,
 } from "@/Components/ListSection/listSection.types";
-import { SIDEBAR_LIST_INJECTION_KEY } from "@/Components/Sidebar/sidebarListInjectionKey";
+import { LIST_SECTION_INJECTION_KEY } from "@/Components/ListSection/listSectionInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -31,7 +31,7 @@ export function useListSection(props: ListSectionOwnProps) {
   const attrs = useAttrs();
 
   const listContext = inject(LIST_INJECTION_KEY, null);
-  const sidebarList = inject(SIDEBAR_LIST_INJECTION_KEY, null);
+  const listSection = inject(LIST_SECTION_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ListSectionProps, typeof listSectionBridgeKeys>({
@@ -61,8 +61,8 @@ export function useListSection(props: ListSectionOwnProps) {
     return listContext ? toValue(listContext).dense : false;
   });
 
-  const isIconOnly = computed(() => {
-    return sidebarList ? toValue(sidebarList).iconOnly : false;
+  const isHidden = computed(() => {
+    return listSection ? toValue(listSection).hidden : false;
   });
 
   const rootInheritedAttrs = computed(() => {
@@ -107,7 +107,7 @@ export function useListSection(props: ListSectionOwnProps) {
   return {
     merged,
     rootBind,
+    isHidden,
     titleBind,
-    isIconOnly,
   };
 }

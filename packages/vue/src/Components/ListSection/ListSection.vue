@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<ListSectionOwnProps>(), {
   sticky: false,
 });
 
-const { merged, rootBind, titleBind, isIconOnly } = useListSection(props);
+const { merged, rootBind, isHidden, titleBind } = useListSection(props);
 
 const rootTag = computed(() => {
   return merged.value.as ?? "li";
@@ -30,7 +30,7 @@ const rootTag = computed(() => {
 </script>
 
 <template>
-  <template v-if="!isIconOnly">
+  <template v-if="!isHidden">
     <div v-bind="titleBind" v-if="rootTag === 'div'">
       <slot v-if="hasNamedSlot(slots, 'default')" />
 
