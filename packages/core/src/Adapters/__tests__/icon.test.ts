@@ -25,6 +25,7 @@ function createTestIconAdapter(
 describe("isSemanticIconName", () => {
   test("it should return true for default semantic names", () => {
     expect(isSemanticIconName("clear")).toBe(true);
+    expect(isSemanticIconName("inbox")).toBe(true);
     expect(isSemanticIconName("chevronUpDown")).toBe(true);
   });
 

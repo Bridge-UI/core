@@ -482,6 +482,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                     <div {...emptyBind}>
                       {slots?.empty ?? (
                         <EmptyState
+                          icon="inbox"
                           size={merged.size}
                           title={resolveMessage("No data")}
                         />
