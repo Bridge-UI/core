@@ -1,7 +1,7 @@
 {
   "type": "module",
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "BridgeUI",
   "sideEffects": false,
   "name": "@bridge-ui/react",
@@ -90,7 +90,7 @@
     }
   },
   "dependencies": {
-    "@bridge-ui/core": "^0.5.0",
+    "@bridge-ui/core": "^0.5.1",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.50.0",
     "tailwind-merge": "^3.6.0"
