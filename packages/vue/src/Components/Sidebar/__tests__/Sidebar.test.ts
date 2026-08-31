@@ -53,6 +53,31 @@ test("it should render the sidebar aside and main inset", () => {
   expect(wrapper.text()).toContain("Main");
 });
 
+test("it should render the default toggle icon on the trigger", () => {
+  const wrapper = mount(AppShell);
+  const button = wrapper.get("button[aria-label='Toggle sidebar']");
+
+  expect(button.find("svg").exists()).toBe(true);
+});
+
+test("it should replace the default toggle icon when a slot is provided", () => {
+  const wrapper = mount(SidebarProvider, {
+    slots: {
+      default: () => [
+        h(Sidebar, null, { default: () => "Nav" }),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger, null, { default: () => "Menu" }),
+        }),
+      ],
+    },
+  });
+
+  const button = wrapper.get("button[aria-label='Toggle sidebar']");
+
+  expect(button.text()).toContain("Menu");
+  expect(button.find("svg").exists()).toBe(false);
+});
+
 test("it should default to expanded desktop state", () => {
   const wrapper = mount(AppShell);
 

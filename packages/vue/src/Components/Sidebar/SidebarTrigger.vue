@@ -19,6 +19,7 @@ defineProps<SidebarTriggerOwnProps>();
 const slots = useSlots();
 
 const {
+  icon,
   attrs,
   panelId,
   expanded,
@@ -33,6 +34,7 @@ const {
   <Button
     v-bind="attrs"
     color="dark"
+    :icon="icon"
     type="button"
     density="mini"
     variant="light"
@@ -41,8 +43,9 @@ const {
     :aria-expanded="expanded"
     :classes="{ icon: iconClass }"
     :aria-controls="panelId || undefined"
-    :icon="hasDefaultSlot ? undefined : 'panelLeft'"
   >
-    <slot v-if="hasDefaultSlot" />
+    <template #default v-if="hasDefaultSlot">
+      <slot />
+    </template>
   </Button>
 </template>

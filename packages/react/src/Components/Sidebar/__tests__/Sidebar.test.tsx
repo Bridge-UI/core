@@ -120,6 +120,30 @@ test("it should mark the trigger as expanded by default", () => {
   ).toBe("true");
 });
 
+test("it should render the default toggle icon on the trigger", () => {
+  const { container } = render(<AppShell />);
+
+  expect(
+    container.querySelector("button[aria-label='Toggle sidebar'] svg"),
+  ).not.toBeNull();
+});
+
+test("it should replace the default toggle icon when children are provided", () => {
+  render(
+    <SidebarProvider>
+      <Sidebar>Nav</Sidebar>
+      <SidebarInset>
+        <SidebarTrigger>Menu</SidebarTrigger>
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  const trigger = screen.getByRole("button", { name: "Toggle sidebar" });
+
+  expect(trigger.textContent).toContain("Menu");
+  expect(trigger.querySelector("svg")).toBeNull();
+});
+
 test("it should dock the left aside and slide it off-canvas by offsetting left", () => {
   const { container } = render(<AppShell />);
   const aside = container.querySelector("aside");

@@ -6,6 +6,7 @@ import type { MouseEvent } from "react";
 import { splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import type { IconSource } from "@/Adapters/Icon";
 import type {
   SidebarTriggerOwnProps,
   SidebarTriggerProps,
@@ -32,6 +33,14 @@ export function useSidebarTrigger(props: SidebarTriggerProps) {
     return props.children;
   });
 
+  const icon = derived((): undefined | IconSource => {
+    if (children) {
+      return undefined;
+    }
+
+    return "panelLeft";
+  });
+
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, ["children", "onClick"]);
   });
@@ -53,6 +62,7 @@ export function useSidebarTrigger(props: SidebarTriggerProps) {
   });
 
   return {
+    icon,
     children,
     expanded,
     handleClick,
