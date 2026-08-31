@@ -41,7 +41,7 @@ export interface AccordionVariant {
   "outlined": AccordionVariantItem;
 
   /**
-   * Quiet layout: List-like padding and hover, no borders or expanded accent.
+   * Quiet layout: soft spacing and hover, no borders.
    */
   "plain": AccordionVariantItem;
 
@@ -82,9 +82,9 @@ export const variantProps: AccordionVariant = {
   "plain": {
     "item": "",
     "root": "flex flex-col gap-1 px-2 py-2",
-    "panel":
-      "ml-3.5 translate-x-px border-l border-dark-200 p-0 py-0.5 pl-2.5 dark:border-dark-700",
     "trigger":
       "rounded-lg min-h-8 px-2 py-1.5 text-dark-700 hover:bg-black/5 dark:text-dark-200 dark:hover:bg-white/10",
+    "panel":
+      "ml-3.5 translate-x-px border-l border-dark-200 p-0 py-0.5 pl-2.5 group-data-[collapsible=icon]:hidden dark:border-dark-700",
   },
 };

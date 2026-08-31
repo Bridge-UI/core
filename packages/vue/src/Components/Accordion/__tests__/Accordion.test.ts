@@ -199,9 +199,10 @@ test("it should apply plain variant classes on the root", () => {
 
   const panel = wrapper.get('[role="region"]');
 
-  expect(panel.classes()).toContain("border-l");
   expect(panel.classes()).toContain("p-0");
+  expect(panel.classes()).toContain("border-l");
   expect(panel.classes()).not.toContain("pb-4");
+  expect(panel.classes()).toContain("group-data-[collapsible=icon]:hidden");
 });
 
 test("it should apply separated variant classes on the root", () => {
