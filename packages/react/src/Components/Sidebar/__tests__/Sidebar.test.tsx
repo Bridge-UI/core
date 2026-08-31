@@ -129,3 +129,19 @@ test("it should apply data-side from the side prop", () => {
 
   expect(container.querySelector('[data-side="right"]')).not.toBeNull();
 });
+
+test("it should inert the aside when offcanvas is collapsed", () => {
+  const { container } = render(<AppShell />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Toggle sidebar" }));
+
+  expect(container.querySelector("aside")?.hasAttribute("inert")).toBe(true);
+});
+
+test("it should not inert the aside when icon mode is collapsed", () => {
+  const { container } = render(<AppShell collapsible="icon" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Toggle sidebar" }));
+
+  expect(container.querySelector("aside")?.hasAttribute("inert")).toBe(false);
+});

@@ -10,7 +10,7 @@ import { hasNamedSlot } from "@/Utils";
 
 defineSlots<SidebarSlots>();
 
-defineOptions({ inheritAttrs: false, name: "Sidebar" });
+defineOptions({ name: "Sidebar", inheritAttrs: false });
 
 const props = withDefaults(defineProps<SidebarOwnProps>(), {
   side: "left",

@@ -87,8 +87,8 @@ export function useSidebarShell(
     panelId,
     merged.side,
     merged.variant,
-    merged.collapsible,
     sidebar.setLayout,
+    merged.collapsible,
   ]);
 
   const slots = derived(() => {
@@ -175,6 +175,8 @@ export function useSidebarShell(
   });
 
   const asideBind = derived(() => {
+    const offcanvasCollapsed = collapsibleData === "offcanvas";
+
     return mergePartBind(
       {},
       {},
@@ -182,6 +184,7 @@ export function useSidebarShell(
         "data-side": merged.side,
         "aria-label": merged.ariaLabel,
         id: showAsDrawer ? undefined : panelId,
+        inert: offcanvasCollapsed ? true : undefined,
         className: cn({
           "fixed inset-y-0 z-10 hidden h-svh w-[var(--bridge-sidebar-width)] transition-[inset-inline-start,inset-inline-end,width] duration-200 ease-linear md:flex": true,
           [sideClass ?? ""]: true,

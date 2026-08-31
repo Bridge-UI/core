@@ -56,3 +56,18 @@ test("it should render header slot content", () => {
 
   cy.contains("Brand").should("exist");
 });
+
+test("it should inert the aside when offcanvas is collapsed", () => {
+  cy.mount(
+    <SidebarProvider>
+      <Sidebar>Home</Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+        Main
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  cy.get("button[aria-label='Toggle sidebar']").click();
+  cy.get("aside").should("have.attr", "inert");
+});

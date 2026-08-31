@@ -144,8 +144,8 @@ export function useSidebarShell(
 
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
-      "data-state": sidebar.value.state,
       "data-side": merged.value.side,
+      "data-state": sidebar.value.state,
       "data-variant": merged.value.variant,
       "data-collapsible": collapsibleData.value,
       "data-mobile": sidebar.value.isMobile ? "true" : "false",
@@ -169,12 +169,15 @@ export function useSidebarShell(
   });
 
   const asideBind = computed(() => {
+    const offcanvasCollapsed = collapsibleData.value === "offcanvas";
+
     return mergePartBind(
       {},
       {},
       {
         "data-side": merged.value.side,
         "aria-label": merged.value.ariaLabel,
+        inert: offcanvasCollapsed ? true : undefined,
         id: showAsDrawer.value ? undefined : panelId,
         class: cn({
           "fixed inset-y-0 z-10 hidden h-svh w-[var(--bridge-sidebar-width)] transition-[inset-inline-start,inset-inline-end,width] duration-200 ease-linear md:flex": true,
@@ -242,8 +245,12 @@ export function useSidebarShell(
     footerBind,
     contentBind,
     showAsDrawer,
-    isMobile: computed(() => sidebar.value.isMobile),
-    openMobile: computed(() => sidebar.value.openMobile),
+    isMobile: computed(() => {
+      return sidebar.value.isMobile;
+    }),
+    openMobile: computed(() => {
+      return sidebar.value.openMobile;
+    }),
     setOpenMobile: (next: boolean) => {
       sidebar.value.setOpenMobile(next);
     },

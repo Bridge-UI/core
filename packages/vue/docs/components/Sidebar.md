@@ -165,12 +165,13 @@ const sidebar = useSidebar();
 
 ## Props (`SidebarProvider`)
 
-| Prop          | Type                         | Default | Description                                  |
-| ------------- | ---------------------------- | ------- | -------------------------------------------- |
-| `classes`     | `SidebarProviderClasses`     | —       | Part classes (`root`).                       |
-| `customProps` | `SidebarProviderCustomProps` | —       | Extra props for the layout wrapper.          |
-| `defaultOpen` | `boolean`                    | `true`  | Uncontrolled initial desktop expanded state. |
-| `v-model`     | `boolean`                    | —       | Controlled desktop expanded state.           |
+| Prop               | Type                         | Default | Description                                  |
+| ------------------ | ---------------------------- | ------- | -------------------------------------------- |
+| `classes`          | `SidebarProviderClasses`     | —       | Part classes (`root`).                       |
+| `customProps`      | `SidebarProviderCustomProps` | —       | Extra props for the layout wrapper.          |
+| `defaultOpen`      | `boolean`                    | `true`  | Uncontrolled initial desktop expanded state. |
+| `v-model`          | `boolean`                    | —       | Controlled desktop expanded state.           |
+| `v-on:open-change` | `(open: boolean)`            | —       | Emitted when desktop `open` should change.   |
 
 ## Props (`Sidebar`)
 
@@ -185,11 +186,11 @@ const sidebar = useSidebar();
 
 ## Slots (`Sidebar`)
 
-| Slot      | Description                            |
-| --------- | -------------------------------------- |
-| `default` | Rail content (`List` / `Accordion`).   |
-| `footer`  | Sticky footer.                         |
-| `header`  | Sticky header.                         |
+| Slot      | Description                          |
+| --------- | ------------------------------------ |
+| `default` | Rail content (`List` / `Accordion`). |
+| `footer`  | Sticky footer.                       |
+| `header`  | Sticky header.                       |
 
 ## Props (`SidebarInset`)
 
@@ -222,6 +223,7 @@ Must be called under `SidebarProvider`. Returns a computed context object (`side
 ## Accessibility
 
 - Desktop panel is an `aside` with `aria-label`
+- Offcanvas collapsed panel is `inert` (out of the tab order)
 - Mobile uses `Drawer` (dialog, overlay, Escape)
 - Trigger sets `aria-expanded` and `aria-controls`
 - `List` `icon-only` copies string `primary` to `aria-label`

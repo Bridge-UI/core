@@ -13,6 +13,10 @@ import {
 
 const AppShell = defineComponent({
   props: {
+    side: {
+      type: String,
+      default: "left",
+    },
     collapsible: {
       type: String,
       default: "offcanvas",
@@ -24,7 +28,10 @@ const AppShell = defineComponent({
         default: () => [
           h(
             Sidebar,
-            { collapsible: props.collapsible as "offcanvas" },
+            {
+              side: props.side as "left" | "right",
+              collapsible: props.collapsible as "icon" | "none" | "offcanvas",
+            },
             { default: () => h("nav", "Home") },
           ),
           h(SidebarInset, null, {
@@ -74,9 +81,9 @@ test("it should render header and footer slots", () => {
           Sidebar,
           {},
           {
+            default: () => "Nav",
             footer: () => h("div", "User"),
             header: () => h("div", "Brand"),
-            default: () => "Nav",
           },
         ),
         h(SidebarInset, null, {
@@ -100,4 +107,45 @@ test("it should mark the trigger as expanded by default", async () => {
       .get("button[aria-label='Toggle sidebar']")
       .attributes("aria-expanded"),
   ).toBe("true");
+});
+
+test("it should emit openChange when the trigger is clicked", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { modelValue: true },
+    slots: {
+      default: () => [
+        h(Sidebar, null, { default: () => h("nav", "Home") }),
+        h(SidebarInset, null, {
+          default: () => [h(SidebarTrigger), h("p", "Main")],
+        }),
+      ],
+    },
+  });
+
+  await wrapper.get("button[aria-label='Toggle sidebar']").trigger("click");
+
+  expect(wrapper.emitted("openChange")).toEqual([[false]]);
+  expect(wrapper.emitted("update:modelValue")).toEqual([[false]]);
+});
+
+test("it should apply data-side from the side prop", () => {
+  const wrapper = mount(AppShell, { props: { side: "right" } });
+
+  expect(wrapper.find("[data-side='right']").exists()).toBe(true);
+});
+
+test("it should inert the aside when offcanvas is collapsed", async () => {
+  const wrapper = mount(AppShell);
+
+  await wrapper.get("button[aria-label='Toggle sidebar']").trigger("click");
+
+  expect(wrapper.find("aside").attributes("inert")).toBeDefined();
+});
+
+test("it should not inert the aside when icon mode is collapsed", async () => {
+  const wrapper = mount(AppShell, { props: { collapsible: "icon" } });
+
+  await wrapper.get("button[aria-label='Toggle sidebar']").trigger("click");
+
+  expect(wrapper.find("aside").attributes("inert")).toBeUndefined();
 });

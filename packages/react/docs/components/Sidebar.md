@@ -162,14 +162,14 @@ function Nav() {
 
 ## Props (`SidebarProvider`)
 
-| Prop           | Type                      | Default | Description                                  |
-| -------------- | ------------------------- | ------- | -------------------------------------------- |
-| `children`     | `ReactNode`               | —       | `Sidebar`, `SidebarInset`, and other shell.  |
-| `classes`      | `SidebarProviderClasses`  | —       | Part classes (`root`).                       |
-| `customProps`  | `SidebarProviderCustomProps` | —    | Extra props for the layout wrapper.          |
-| `defaultOpen`  | `boolean`                 | `true`  | Uncontrolled initial desktop expanded state. |
-| `onOpenChange` | `(open: boolean) => void` | —       | Called when desktop `open` should change.    |
-| `open`         | `boolean`                 | —       | Controlled desktop expanded state.           |
+| Prop           | Type                         | Default | Description                                  |
+| -------------- | ---------------------------- | ------- | -------------------------------------------- |
+| `children`     | `ReactNode`                  | —       | `Sidebar`, `SidebarInset`, and other shell.  |
+| `classes`      | `SidebarProviderClasses`     | —       | Part classes (`root`).                       |
+| `customProps`  | `SidebarProviderCustomProps` | —       | Extra props for the layout wrapper.          |
+| `defaultOpen`  | `boolean`                    | `true`  | Uncontrolled initial desktop expanded state. |
+| `onOpenChange` | `(open: boolean) => void`    | —       | Called when desktop `open` should change.    |
+| `open`         | `boolean`                    | —       | Controlled desktop expanded state.           |
 
 ## Props (`Sidebar`)
 
@@ -216,6 +216,7 @@ Must be called under `SidebarProvider`.
 ## Accessibility
 
 - Desktop panel is an `aside` with `aria-label`
+- Offcanvas collapsed panel is `inert` (out of the tab order)
 - Mobile uses `Drawer` (dialog, overlay, Escape)
 - Trigger sets `aria-expanded` and `aria-controls`
 - `List` `iconOnly` copies string `primary` to `aria-label`
