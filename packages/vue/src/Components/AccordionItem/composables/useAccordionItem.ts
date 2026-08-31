@@ -288,6 +288,7 @@ export function useAccordionItem(props: AccordionItemOwnProps) {
         ),
         class: cn({
           [accordionContextRef.value.tokenClasses.panelSize ?? ""]: true,
+          [accordionContextRef.value.tokenClasses.panelVariant ?? ""]: true,
           [get(mergedClasses.value, "panel") ?? ""]: true,
         }),
       },

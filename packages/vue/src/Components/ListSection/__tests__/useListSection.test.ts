@@ -30,6 +30,7 @@ test("it should apply section title classes", () => {
   const { titleBind } = mountUseListSection({ title: "Settings" });
 
   expect(titleBind.value.role).toBe("presentation");
+  expect(titleBind.value.class).toContain("px-2");
   expect(titleBind.value.class).toContain("text-xs");
   expect(titleBind.value.class).toContain("uppercase");
 });

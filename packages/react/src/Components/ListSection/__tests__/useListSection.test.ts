@@ -24,6 +24,7 @@ test("it should apply section title classes", () => {
   const { result } = renderUseListSection({ title: "Settings" });
 
   expect(result.current.titleBind.role).toBe("presentation");
+  expect(result.current.titleBind.className).toContain("px-2");
   expect(result.current.titleBind.className).toContain("text-xs");
   expect(result.current.titleBind.className).toContain("uppercase");
 });

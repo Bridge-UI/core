@@ -11,6 +11,7 @@ import type {
   ListSectionOwnProps,
   ListSectionProps,
 } from "@/Components/ListSection/listSection.types";
+import { LIST_SECTION_INJECTION_KEY } from "@/Components/ListSection/listSectionInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -30,6 +31,7 @@ export function useListSection(props: ListSectionOwnProps) {
   const attrs = useAttrs();
 
   const listContext = inject(LIST_INJECTION_KEY, null);
+  const listSection = inject(LIST_SECTION_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ListSectionProps, typeof listSectionBridgeKeys>({
@@ -57,6 +59,10 @@ export function useListSection(props: ListSectionOwnProps) {
 
   const isDense = computed(() => {
     return listContext ? toValue(listContext).dense : false;
+  });
+
+  const isHidden = computed(() => {
+    return listSection ? toValue(listSection).hidden : false;
   });
 
   const rootInheritedAttrs = computed(() => {
@@ -87,7 +93,7 @@ export function useListSection(props: ListSectionOwnProps) {
       {
         role: "presentation",
         class: cn({
-          "bg-white px-4 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-800 dark:text-dark-300": true,
+          "bg-white px-2 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-800 dark:text-dark-300": true,
           "sticky top-0 z-10": merged.value.sticky && isDivRoot.value,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,
@@ -101,6 +107,7 @@ export function useListSection(props: ListSectionOwnProps) {
   return {
     merged,
     rootBind,
+    isHidden,
     titleBind,
   };
 }

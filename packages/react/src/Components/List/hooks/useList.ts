@@ -62,15 +62,13 @@ export function useList(props: ListProps) {
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(
-      customProps?.root,
-      rootInheritedAttrs,
-      cn({
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      className: cn({
         "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
         "pl-4": merged.nested,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
-    );
+    });
   });
 
   return {

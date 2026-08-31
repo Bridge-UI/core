@@ -29,13 +29,15 @@ function ListItemRow({
         <div {...startBind}>{slots?.start}</div>
       ) : null}
 
-      <div {...contentBind}>
-        {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}
+      {hasPrimary || hasSecondary ? (
+        <div {...contentBind}>
+          {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}
 
-        {hasSecondary ? (
-          <span {...secondaryBind}>{secondaryContent}</span>
-        ) : null}
-      </div>
+          {hasSecondary ? (
+            <span {...secondaryBind}>{secondaryContent}</span>
+          ) : null}
+        </div>
+      ) : null}
 
       {hasEnd ? (
         <div {...endBind}>

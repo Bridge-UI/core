@@ -288,6 +288,20 @@ export type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
+export {
+  collapsibleProps as sidebarCollapsibleProps,
+  sideProps as sidebarSideProps,
+  variantProps as sidebarVariantProps,
+  widthProps as sidebarWidthProps,
+} from "@/Tokens/Sidebar";
+export type {
+  SidebarCollapsible,
+  SidebarCollapsibleItem,
+  SidebarSide,
+  SidebarVariant,
+  SidebarVariantItem,
+  SidebarWidth,
+} from "@/Tokens/Sidebar";
 export { roundedProps as skeletonRoundedProps } from "@/Tokens/Skeleton";
 export type { SkeletonRounded } from "@/Tokens/Skeleton";
 export {

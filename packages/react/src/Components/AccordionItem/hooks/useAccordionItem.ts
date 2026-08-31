@@ -252,6 +252,7 @@ export function useAccordionItem(props: AccordionItemProps) {
         "aria-labelledby": getAccordionTriggerId(accordion.id, value),
         className: cn({
           [accordion.tokenClasses.panelSize ?? ""]: true,
+          [accordion.tokenClasses.panelVariant ?? ""]: true,
           [get(mergedClasses, "panel") ?? ""]: true,
         }),
       },

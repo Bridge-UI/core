@@ -171,4 +171,4 @@ import { Drawer } from "@bridge-ui/react/Components/Drawer";
 
 ## Related components
 
-Card, [useDrawerAction](./useDrawerAction.md), useDialogAction, useModalAction
+Card, Sidebar, [useDrawerAction](./useDrawerAction.md), useDialogAction, useModalAction

@@ -36,6 +36,7 @@ export const SEMANTIC_ICON_NAMES = [
   "calendar",
   "download",
   "chevronUp",
+  "panelLeft",
   "chevronDown",
   "chevronLeft",
   "chevronRight",

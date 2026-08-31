@@ -56,7 +56,7 @@ const rootTag = computed(() => {
           <slot name="start" />
         </div>
 
-        <div v-bind="contentBind">
+        <div v-bind="contentBind" v-if="hasPrimary || hasSecondary">
           <span v-if="hasPrimary" v-bind="primaryBind">
             <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 
@@ -93,7 +93,7 @@ const rootTag = computed(() => {
         <slot name="start" />
       </div>
 
-      <div v-bind="contentBind">
+      <div v-bind="contentBind" v-if="hasPrimary || hasSecondary">
         <span v-if="hasPrimary" v-bind="primaryBind">
           <slot name="primary" v-if="hasNamedSlot(slots, 'primary')" />
 

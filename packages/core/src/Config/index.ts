@@ -97,6 +97,8 @@ export type {
   RadioConfigOverrides,
   SelectConfigBase,
   SelectConfigOverrides,
+  SidebarConfigBase,
+  SidebarConfigOverrides,
   SkeletonConfigBase,
   SkeletonConfigOverrides,
   SliderConfigBase,

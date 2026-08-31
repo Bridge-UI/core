@@ -229,6 +229,21 @@ export type {
   SelectValue,
 } from "@/Domain/select";
 export {
+  SIDEBAR_DESKTOP_BREAKPOINT,
+  SIDEBAR_WIDTH_ICON_VAR,
+  SIDEBAR_WIDTH_MOBILE_VAR,
+  SIDEBAR_WIDTH_VAR,
+  getSidebarPanelId,
+  isSidebarIconOnly,
+  resolveSidebarCollapsibleData,
+  resolveSidebarListTooltipPlacement,
+  resolveSidebarState,
+  shouldRenderSidebarAsDrawer,
+  shouldToggleDesktopSidebar,
+  toggleSidebarOpen,
+} from "@/Domain/sidebar";
+export type { SidebarCollapsibleMode, SidebarState } from "@/Domain/sidebar";
+export {
   DEFAULT_SLIDER_MAX,
   DEFAULT_SLIDER_MIN,
   DEFAULT_SLIDER_STEP,

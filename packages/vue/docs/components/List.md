@@ -164,4 +164,4 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 
 ## Related components
 
-Menu, Select
+Menu, Select, Sidebar

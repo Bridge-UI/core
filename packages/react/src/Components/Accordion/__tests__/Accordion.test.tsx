@@ -152,6 +152,20 @@ test("it should apply plain variant classes on the root", () => {
   expect(className).toContain("gap-1");
   expect(className).not.toContain("border");
   expect(className).not.toContain("divide-y");
+
+  const trigger = screen.getByRole("button", { name: "One" });
+
+  expect(trigger.className).toContain("px-2");
+  expect(trigger.className).toContain("min-h-8");
+  expect(trigger.className).toContain("py-1.5");
+  expect(trigger.className).not.toContain("text-primary-700");
+
+  const panel = screen.getByRole("region", { hidden: true });
+
+  expect(panel.className).toContain("p-0");
+  expect(panel.className).toContain("border-l");
+  expect(panel.className).not.toContain("pb-4");
+  expect(panel.className).toContain("group-data-[collapsible=icon]:hidden");
 });
 
 test("it should apply separated variant classes on the root", () => {

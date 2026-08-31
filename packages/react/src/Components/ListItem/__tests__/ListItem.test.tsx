@@ -1,10 +1,14 @@
 // ** External Imports
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
+
+afterEach(() => {
+  cleanup();
+});
 
 test("it should render primary text from the primary prop", () => {
   render(<ListItem primary="Edit item" />);

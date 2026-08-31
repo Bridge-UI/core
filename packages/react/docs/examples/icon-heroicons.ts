@@ -8,6 +8,7 @@
 import {
   ArrowDownTrayIcon,
   ArrowPathIcon,
+  Bars3Icon,
   BellIcon,
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -51,6 +52,7 @@ const icons = {
   filter: FunnelIcon,
   palette: SwatchIcon,
   eyeOff: EyeSlashIcon,
+  panelLeft: Bars3Icon,
   loader: ArrowPathIcon,
   success: CheckCircleIcon,
   chevronUp: ChevronUpIcon,

@@ -1,10 +1,14 @@
 // ** External Imports
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListSection } from "@/Components/ListSection";
+
+afterEach(() => {
+  cleanup();
+});
 
 test("it should render the title from the title prop", () => {
   render(<ListSection title="Section title" />);

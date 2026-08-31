@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<ListSectionOwnProps>(), {
   sticky: false,
 });
 
-const { merged, rootBind, titleBind } = useListSection(props);
+const { merged, rootBind, isHidden, titleBind } = useListSection(props);
 
 const rootTag = computed(() => {
   return merged.value.as ?? "li";
@@ -30,21 +30,23 @@ const rootTag = computed(() => {
 </script>
 
 <template>
-  <div v-bind="titleBind" v-if="rootTag === 'div'">
-    <slot v-if="hasNamedSlot(slots, 'default')" />
-
-    <template v-else-if="isPropPresent(merged.title)">
-      {{ merged.title }}
-    </template>
-  </div>
-
-  <component v-else :is="rootTag" v-bind="rootBind">
-    <div v-bind="titleBind">
+  <template v-if="!isHidden">
+    <div v-bind="titleBind" v-if="rootTag === 'div'">
       <slot v-if="hasNamedSlot(slots, 'default')" />
 
       <template v-else-if="isPropPresent(merged.title)">
         {{ merged.title }}
       </template>
     </div>
-  </component>
+
+    <component v-else :is="rootTag" v-bind="rootBind">
+      <div v-bind="titleBind">
+        <slot v-if="hasNamedSlot(slots, 'default')" />
+
+        <template v-else-if="isPropPresent(merged.title)">
+          {{ merged.title }}
+        </template>
+      </div>
+    </component>
+  </template>
 </template>
