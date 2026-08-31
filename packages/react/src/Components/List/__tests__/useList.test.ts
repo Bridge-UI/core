@@ -17,7 +17,7 @@ test("it should apply list root classes", () => {
   expect(result.current.rootBind.className).toContain("list-none");
 });
 
-test("it should apply nested indent when nested is true", () => {
+test("it should apply nested indent on root bind", () => {
   const { result } = renderUseList({ nested: true });
 
   expect(result.current.rootBind.className).toContain("pl-4");

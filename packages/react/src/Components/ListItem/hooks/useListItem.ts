@@ -172,12 +172,8 @@ export function useListItem(
     );
   });
 
-  const hasSecondaryLabel = derived(() => {
-    return hasSlotOrProp(slots, "secondary", merged.secondary);
-  });
-
   const hasSecondary = derived(() => {
-    return hasSecondaryLabel;
+    return hasSlotOrProp(slots, "secondary", merged.secondary);
   });
 
   const isListboxOption = listboxOption != null;
@@ -256,8 +252,9 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-3 px-4 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.disabled,
+          "px-4": true,
           "py-2": !isDense,
           "py-1.5": isDense,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
@@ -287,7 +284,8 @@ export function useListItem(
   const rowClassName = derived(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "items-center px-4 text-dark-900 dark:text-dark-100": !merged.interactive,
+      "items-center text-dark-900 dark:text-dark-100": !merged.interactive,
+      "px-4": !merged.interactive,
       "py-2": !merged.interactive && !isDense,
       "py-1.5": !merged.interactive && isDense,
     });

@@ -34,7 +34,7 @@ test("it should apply list root classes", () => {
   expect(rootBind.value.class).toContain("list-none");
 });
 
-test("it should apply nested indent when nested is true", () => {
+test("it should apply nested indent on root bind", () => {
   const { rootBind } = mountUseList({ nested: true });
 
   expect(rootBind.value.class).toContain("pl-4");

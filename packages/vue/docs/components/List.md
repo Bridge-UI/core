@@ -91,8 +91,6 @@ Selected rows show a check icon by default. Customize it with `selectedIcon` on 
 
 ### Nested
 
-`nested` indents the list for nested navigation.
-
 ```vue
 <List>
   <ListItem primary="Documents" />
@@ -133,7 +131,7 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 | `classes`     | `ListClasses`           | —       | The classes to apply to the list.                                                  |
 | `customProps` | `ListCustomProps`       | —       | Props forwarded to each list part.                                                 |
 | `dense`       | `boolean`               | `false` | Compact vertical spacing on items (`ListItem` / `ListSection`), not the list root. |
-| `nested`      | `boolean`               | `false` | Indents the list for nested navigation.                                            |
+| `nested`      | `boolean`               | `false` | When true, indents the list for nested navigation/submenus.                        |
 
 ## Props (`ListItem`)
 
@@ -142,7 +140,7 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 | `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                          |
 | `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                  |
 | `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                 |
-| `dense`        | `boolean`                            | —        | Compact row height. Inherits `dense` from parent `List` when omitted.              |
+| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.        |
 | `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                          |
 | `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                   |
 | `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.     |

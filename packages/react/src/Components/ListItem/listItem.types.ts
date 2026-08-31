@@ -127,7 +127,7 @@ export interface ListItemOwnProps {
   customProps?: ListItemCustomProps;
 
   /**
-   * Compact row height. Inherits `dense` from parent `List` when omitted.
+   * Compact vertical padding. Inherits `dense` from parent `List` when omitted.
    *
    * @default undefined
    */

@@ -190,12 +190,8 @@ export function useListItem(
     );
   });
 
-  const hasSecondaryLabel = computed(() => {
-    return hasNamedSlot(slots, "secondary") || Boolean(merged.value.secondary);
-  });
-
   const hasSecondary = computed(() => {
-    return hasSecondaryLabel.value;
+    return hasNamedSlot(slots, "secondary") || Boolean(merged.value.secondary);
   });
 
   const resolvedSelectedIcon = computed((): null | IconSource => {
@@ -278,8 +274,9 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-3 px-4 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.value.disabled,
+          "px-4": true,
           "py-2": !isDense.value,
           "py-1.5": isDense.value,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
@@ -317,8 +314,9 @@ export function useListItem(
   const rowClass = computed(() => {
     return cn({
       "flex w-full min-w-0 gap-x-3": true,
-      "items-center px-4 text-dark-900 dark:text-dark-100":
+      "items-center text-dark-900 dark:text-dark-100":
         !merged.value.interactive,
+      "px-4": !merged.value.interactive,
       "py-2": !merged.value.interactive && !isDense.value,
       "py-1.5": !merged.value.interactive && isDense.value,
     });

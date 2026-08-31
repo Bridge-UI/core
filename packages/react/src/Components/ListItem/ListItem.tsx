@@ -58,16 +58,15 @@ function ListItem(props: ListItemProps) {
   });
 
   const row = <ListItemRow {...listItemState} />;
-  const hit = listItemState.interactiveBind ? (
-    <div {...listItemState.interactiveBind}>{row}</div>
-  ) : (
-    row
-  );
 
   return createElement(
     listItemState.merged.as ?? "li",
     listItemState.rootBind,
-    hit,
+    listItemState.interactiveBind ? (
+      <div {...listItemState.interactiveBind}>{row}</div>
+    ) : (
+      row
+    ),
   );
 }
 
