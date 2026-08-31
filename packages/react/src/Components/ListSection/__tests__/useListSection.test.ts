@@ -12,11 +12,15 @@ import {
 
 function renderUseListSection(
   props: ListSectionProps = {},
-  context: null | { dense: boolean } = null,
+  context: null | { dense: boolean; iconOnly?: boolean } = null,
 ) {
   return renderHook(() => useListSection(props), {
     wrapper: ({ children }) =>
-      createElement(ListContext.Provider, { value: context }, children),
+      createElement(
+        ListContext.Provider,
+        { value: context ? { iconOnly: false, ...context } : null },
+        children,
+      ),
   });
 }
 
@@ -24,6 +28,7 @@ test("it should apply section title classes", () => {
   const { result } = renderUseListSection({ title: "Settings" });
 
   expect(result.current.titleBind.role).toBe("presentation");
+  expect(result.current.titleBind.className).toContain("px-2");
   expect(result.current.titleBind.className).toContain("text-xs");
   expect(result.current.titleBind.className).toContain("uppercase");
 });

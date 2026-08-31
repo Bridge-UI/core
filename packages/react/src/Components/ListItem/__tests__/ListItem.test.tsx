@@ -33,8 +33,8 @@ test("it should inherit dense padding from parent List", () => {
 
   const interactive = container.querySelector('[role="menuitem"]');
 
-  expect(interactive?.classList.contains("py-2")).toBe(false);
-  expect(interactive?.classList.contains("py-1.5")).toBe(true);
+  expect(interactive?.classList.contains("min-h-8")).toBe(false);
+  expect(interactive?.classList.contains("min-h-7")).toBe(true);
 });
 
 test("it should apply selected styles when selected is true", () => {
@@ -84,21 +84,20 @@ test("it should apply divider border on the root item", () => {
   expect(root?.className.includes("border-b")).toBe(true);
 });
 
-test("it should hide primary text and set aria-label when List is iconOnly", () => {
+test("it should set aria-label when List is iconOnly", () => {
   render(
     <List iconOnly>
       <ListItem interactive primary="Home" />
     </List>,
   );
 
-  expect(screen.queryByText("Home")).toBeNull();
   expect(
     screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
   ).toBe("Home");
 });
 
-test("it should inherit iconOnly in a nested List", () => {
-  render(
+test("it should hide nested lists when an ancestor is iconOnly", () => {
+  const { container } = render(
     <List iconOnly>
       <List nested>
         <ListItem interactive primary="Nested" />
@@ -106,8 +105,6 @@ test("it should inherit iconOnly in a nested List", () => {
     </List>,
   );
 
-  expect(screen.queryByText("Nested")).toBeNull();
-  expect(
-    screen.getByRole("button", { name: "Nested" }).getAttribute("aria-label"),
-  ).toBe("Nested");
+  expect(container.querySelector("ul ul")?.hasAttribute("hidden")).toBe(true);
+  expect(screen.queryByRole("button", { name: "Nested" })).toBeNull();
 });

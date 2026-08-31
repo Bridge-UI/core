@@ -30,6 +30,7 @@ test("it should apply section title classes", () => {
   const { titleBind } = mountUseListSection({ title: "Settings" });
 
   expect(titleBind.value.role).toBe("presentation");
+  expect(titleBind.value.class).toContain("px-2");
   expect(titleBind.value.class).toContain("text-xs");
   expect(titleBind.value.class).toContain("uppercase");
 });
@@ -76,7 +77,7 @@ test("it should inherit dense padding from parent List context", () => {
       provide(
         LIST_INJECTION_KEY,
         computed(() => {
-          return { dense: true };
+          return { dense: true, iconOnly: false };
         }),
       );
 

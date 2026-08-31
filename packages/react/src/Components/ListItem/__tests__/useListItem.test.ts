@@ -19,14 +19,14 @@ const libDefaults = {
 
 function renderUseListItem(
   props: ListItemProps = {},
-  context: null | { dense: boolean } = null,
+  context: null | { dense: boolean; iconOnly?: boolean } = null,
   options: { registrySelectedIcon?: null | typeof Star } = {},
 ) {
   return renderHook(() => useListItem(props, libDefaults), {
     wrapper: ({ children }) => {
       const withList = createElement(
         ListContext.Provider,
-        { value: context },
+        { value: context ? { iconOnly: false, ...context } : null },
         children,
       );
 
@@ -65,8 +65,66 @@ test("it should expose interactive bind when interactive is true", () => {
   });
 
   expect(result.current.interactiveBind?.role).toBe("button");
-  expect(result.current.interactiveBind?.className).toContain("px-4");
+  expect(result.current.interactiveBind?.className).toContain("px-2");
+  expect(result.current.interactiveBind?.className).toContain("min-h-8");
+  expect(result.current.interactiveBind?.className).toContain("rounded-lg");
   expect(result.current.interactiveBind?.className).toContain("cursor-pointer");
+});
+
+test("it should use a compact rounded hit target when List is iconOnly", () => {
+  const { result } = renderUseListItem(
+    { primary: "Home", interactive: true },
+    { dense: false, iconOnly: true },
+  );
+
+  expect(result.current.interactiveBind?.className).toContain("h-8");
+  expect(result.current.interactiveBind?.className).toContain("w-full");
+  expect(result.current.interactiveBind?.className).toContain("px-2");
+  expect(result.current.interactiveBind?.className).not.toContain("size-8");
+  expect(result.current.interactiveBind?.className).not.toContain(
+    "justify-center",
+  );
+  expect(result.current.interactiveBind?.className).toContain("rounded-lg");
+  expect(result.current.tooltipContent).toBeUndefined();
+});
+
+test("it should collapse secondary rows to a square hit when List is iconOnly", () => {
+  const { result } = renderUseListItem(
+    {
+      primary: "Acme Inc",
+      secondary: "Enterprise",
+      interactive: true,
+    },
+    { dense: false, iconOnly: true },
+  );
+
+  expect(result.current.interactiveBind?.className).toContain("size-8");
+  expect(result.current.interactiveBind?.className).not.toContain("px-2");
+  expect(result.current.interactiveBind?.className).not.toContain("w-full");
+});
+
+test("it should use a taller hit target when secondary text is set", () => {
+  const { result } = renderUseListItem({
+    primary: "Acme Inc",
+    secondary: "Enterprise",
+    interactive: true,
+  });
+
+  expect(result.current.interactiveBind?.className).toContain("min-h-12");
+  expect(result.current.interactiveBind?.className).toContain("py-2");
+  expect(result.current.interactiveBind?.className).not.toContain("min-h-8");
+});
+
+test("it should expose tooltip content when tooltip is set", () => {
+  const { result } = renderUseListItem({
+    primary: "Home",
+    tooltip: "Home",
+    interactive: true,
+    tooltipPlacement: "right",
+  });
+
+  expect(result.current.tooltipContent).toBe("Home");
+  expect(result.current.tooltipPlacement).toBe("right");
 });
 
 test("it should apply dense padding on interactive bind", () => {
@@ -76,8 +134,8 @@ test("it should apply dense padding on interactive bind", () => {
     primary: "Dense item",
   });
 
-  expect(result.current.interactiveBind?.className).toContain("py-1.5");
-  expect(result.current.interactiveBind?.className).not.toContain("py-2");
+  expect(result.current.interactiveBind?.className).toContain("min-h-7");
+  expect(result.current.interactiveBind?.className).not.toContain("min-h-8");
 });
 
 test("it should inherit dense padding from parent List context", () => {
@@ -86,7 +144,7 @@ test("it should inherit dense padding from parent List context", () => {
     { dense: true },
   );
 
-  expect(result.current.interactiveBind?.className).toContain("py-1.5");
+  expect(result.current.interactiveBind?.className).toContain("min-h-7");
 });
 
 test("it should apply selected styles on interactive bind", () => {

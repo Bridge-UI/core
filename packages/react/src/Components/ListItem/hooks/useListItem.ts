@@ -39,12 +39,14 @@ const listItemBridgeKeys = [
   "classes",
   "divider",
   "primary",
+  "tooltip",
   "disabled",
   "selected",
   "secondary",
   "customProps",
   "interactive",
   "selectedIcon",
+  "tooltipPlacement",
 ] as const satisfies readonly (keyof ListItemOwnProps)[];
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role">;
@@ -171,13 +173,13 @@ export function useListItem(
   });
 
   const hasPrimary = derived(() => {
-    if (isIconOnly) {
-      return false;
-    }
-
     return (
       hasSlotOrProp(slots, "primary", merged.primary) || isPropPresent(children)
     );
+  });
+
+  const hasSecondaryLabel = derived(() => {
+    return hasSlotOrProp(slots, "secondary", merged.secondary);
   });
 
   const hasSecondary = derived(() => {
@@ -185,7 +187,7 @@ export function useListItem(
       return false;
     }
 
-    return hasSlotOrProp(slots, "secondary", merged.secondary);
+    return hasSecondaryLabel;
   });
 
   const isListboxOption = listboxOption != null;
@@ -281,12 +283,16 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex min-w-0 items-center text-left text-dark-900 outline-hidden transition-[width,height,padding] duration-200 ease-linear dark:text-dark-100": true,
+          "overflow-hidden": true,
+          "w-full gap-x-2 px-2": !isIconOnly,
+          "size-8": isIconOnly && hasSecondaryLabel,
+          "h-8 w-full px-2": isIconOnly && !hasSecondaryLabel,
+          "rounded-lg": true,
           "cursor-pointer select-none": !merged.disabled,
-          "px-4": !isIconOnly,
-          "justify-center px-2": isIconOnly,
-          "py-2": !isDense,
-          "py-1.5": isDense,
+          "min-h-12 py-2": hasSecondaryLabel && !isDense && !isIconOnly,
+          "min-h-8": !hasSecondaryLabel && !isDense && !isIconOnly,
+          "min-h-7": isDense && !isIconOnly,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.disabled && !isListboxOption,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
@@ -313,12 +319,19 @@ export function useListItem(
 
   const rowClassName = derived(() => {
     return cn({
-      "flex w-full min-w-0 gap-x-3": true,
-      "items-center text-dark-900 dark:text-dark-100": !merged.interactive,
-      "px-4": !merged.interactive && !isIconOnly,
-      "justify-center px-2": !merged.interactive && isIconOnly,
-      "py-2": !merged.interactive && !isDense,
-      "py-1.5": !merged.interactive && isDense,
+      "flex min-w-0 items-center": true,
+      "w-full gap-x-2": !isIconOnly,
+      "text-dark-900 dark:text-dark-100": !merged.interactive,
+      "px-2": !merged.interactive && !isIconOnly,
+      "size-8 overflow-hidden":
+        !merged.interactive && isIconOnly && hasSecondaryLabel,
+      "h-8 overflow-hidden":
+        !merged.interactive && isIconOnly && !hasSecondaryLabel,
+      "min-h-12 py-2":
+        !merged.interactive && hasSecondaryLabel && !isDense && !isIconOnly,
+      "min-h-8":
+        !merged.interactive && !hasSecondaryLabel && !isDense && !isIconOnly,
+      "min-h-7": !merged.interactive && isDense && !isIconOnly,
     });
   });
 
@@ -327,7 +340,7 @@ export function useListItem(
       customProps?.start,
       {},
       cn({
-        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
+        "flex shrink-0 items-center justify-center text-dark-600 dark:text-dark-300": true,
         [get(mergedClasses, "start") ?? ""]: true,
       }),
     );
@@ -338,7 +351,8 @@ export function useListItem(
       customProps?.content,
       {},
       cn({
-        "min-w-0 flex-1": true,
+        "min-w-0 flex-1": !isIconOnly,
+        hidden: isIconOnly,
         [get(mergedClasses, "content") ?? ""]: true,
       }),
     );
@@ -420,6 +434,18 @@ export function useListItem(
     return null;
   });
 
+  const tooltipContent = derived(() => {
+    if (typeof merged.tooltip !== "string" || merged.tooltip.length === 0) {
+      return undefined;
+    }
+
+    return merged.tooltip;
+  });
+
+  const tooltipPlacement = derived(() => {
+    return merged.tooltipPlacement ?? ("top" as const);
+  });
+
   return {
     slots,
     merged,
@@ -435,9 +461,11 @@ export function useListItem(
     hasSecondary,
     secondaryBind,
     primaryContent,
+    tooltipContent,
     interactiveBind,
     secondaryContent,
     selectedIconBind,
+    tooltipPlacement,
     resolvedSelectedIcon,
   };
 }

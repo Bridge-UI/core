@@ -3,6 +3,7 @@ import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type { ListboxValue } from "@bridge-ui/core/Domain";
+import type { PositionPlacement } from "@bridge-ui/core/Runtime";
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
@@ -127,7 +128,7 @@ export interface ListItemOwnProps {
   customProps?: ListItemCustomProps;
 
   /**
-   * Compact vertical padding. Inherits `dense` from parent `List` when omitted.
+   * Compact row height. Inherits `dense` from parent `List` when omitted.
    *
    * @default undefined
    */
@@ -196,6 +197,20 @@ export interface ListItemOwnProps {
    * @default undefined
    */
   slots?: ListItemSlots;
+
+  /**
+   * Tooltip label for the whole hit target.
+   *
+   * @internal
+   */
+  tooltip?: string;
+
+  /**
+   * Placement of {@link ListItemOwnProps.tooltip}.
+   *
+   * @internal
+   */
+  tooltipPlacement?: PositionPlacement;
 
   /**
    * When set inside a `Listbox`, registers this row as a selectable option.

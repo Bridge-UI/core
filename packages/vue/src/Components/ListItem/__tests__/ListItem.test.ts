@@ -42,8 +42,8 @@ test("it should apply dense padding when dense prop is set", () => {
 
   const interactive = wrapper.find('[role="menuitem"]');
 
-  expect(interactive.classes()).toContain("py-1.5");
-  expect(interactive.classes()).not.toContain("py-2");
+  expect(interactive.classes()).toContain("min-h-7");
+  expect(interactive.classes()).not.toContain("min-h-8");
 });
 
 test("it should inherit dense padding from parent List", () => {
@@ -56,8 +56,8 @@ test("it should inherit dense padding from parent List", () => {
   const wrapper = mount(Host);
   const interactive = wrapper.find('[role="menuitem"]');
 
-  expect(interactive.classes()).toContain("py-1.5");
-  expect(interactive.classes()).not.toContain("py-2");
+  expect(interactive.classes()).toContain("min-h-7");
+  expect(interactive.classes()).not.toContain("min-h-8");
 });
 
 test("it should apply selected styles when selected is true", () => {
@@ -124,7 +124,7 @@ test("it should apply divider border on the root item", () => {
   expect(wrapper.classes().join(" ")).toContain("border-b");
 });
 
-test("it should hide primary text and set aria-label when List is iconOnly", () => {
+test("it should set aria-label when List is iconOnly", () => {
   const wrapper = mount(
     defineComponent({
       components: { List, ListItem },
@@ -136,11 +136,10 @@ test("it should hide primary text and set aria-label when List is iconOnly", () 
     }),
   );
 
-  expect(wrapper.text()).not.toContain("Home");
   expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe("Home");
 });
 
-test("it should inherit iconOnly in a nested List", () => {
+test("it should hide nested lists when an ancestor is iconOnly", () => {
   const wrapper = mount(
     defineComponent({
       components: { List, ListItem },
@@ -154,8 +153,8 @@ test("it should inherit iconOnly in a nested List", () => {
     }),
   );
 
-  expect(wrapper.text()).not.toContain("Nested");
-  expect(wrapper.find('[role="button"]').attributes("aria-label")).toBe(
-    "Nested",
-  );
+  const nested = wrapper.findAll("ul")[1];
+
+  expect(nested?.classes()).toContain("hidden");
+  expect(nested?.attributes("hidden")).toBeDefined();
 });

@@ -5,6 +5,7 @@ import { createElement } from "react";
 import { Icon } from "@/Components/Icon";
 import { useListItem } from "@/Components/ListItem/hooks/useListItem";
 import type { ListItemProps } from "@/Components/ListItem/listItem.types";
+import { Tooltip } from "@/Components/Tooltip";
 import { hasNamedSlot } from "@/Utils";
 
 function ListItemRow({
@@ -13,7 +14,6 @@ function ListItemRow({
   endBind,
   startBind,
   hasPrimary,
-  isIconOnly,
   contentBind,
   primaryBind,
   hasSecondary,
@@ -30,7 +30,7 @@ function ListItemRow({
         <div {...startBind}>{slots?.start}</div>
       ) : null}
 
-      {!isIconOnly ? (
+      {hasPrimary || hasSecondary ? (
         <div {...contentBind}>
           {hasPrimary ? <span {...primaryBind}>{primaryContent}</span> : null}
 
@@ -59,15 +59,26 @@ function ListItem(props: ListItemProps) {
   });
 
   const row = <ListItemRow {...listItemState} />;
+  const hit = listItemState.interactiveBind ? (
+    <div {...listItemState.interactiveBind}>{row}</div>
+  ) : (
+    row
+  );
+  const body = listItemState.tooltipContent ? (
+    <Tooltip
+      slots={{ trigger: hit }}
+      content={listItemState.tooltipContent}
+      placement={listItemState.tooltipPlacement}
+      classes={{ root: "flex w-full min-w-0", trigger: "flex w-full min-w-0" }}
+    />
+  ) : (
+    hit
+  );
 
   return createElement(
     listItemState.merged.as ?? "li",
     listItemState.rootBind,
-    listItemState.interactiveBind ? (
-      <div {...listItemState.interactiveBind}>{row}</div>
-    ) : (
-      row
-    ),
+    body,
   );
 }
 

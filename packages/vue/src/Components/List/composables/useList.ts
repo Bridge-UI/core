@@ -61,20 +61,27 @@ export function useList(props: ListOwnProps) {
 
   provide(LIST_INJECTION_KEY, contextValue);
 
+  const hideNestedSubmenu = computed(() => {
+    return merged.value.nested === true && contextValue.value.iconOnly;
+  });
+
   const rootInheritedAttrs = computed(() => {
     return omit(split.value.inheritedAttrs, []);
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.root,
-      rootInheritedAttrs.value,
-      cn({
-        "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
-        "pl-4": merged.value.nested,
+    return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
+      hidden: hideNestedSubmenu.value ? true : undefined,
+      class: cn({
+        "m-0 flex list-none flex-col gap-0.5 text-dark-900 dark:text-dark-100":
+          true,
+        "px-2 py-2": !merged.value.nested,
+        "ml-3.5 translate-x-px border-l border-dark-200 py-0.5 pl-2.5 dark:border-dark-700":
+          merged.value.nested,
+        hidden: hideNestedSubmenu.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),
-    );
+    });
   });
 
   return {

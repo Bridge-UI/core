@@ -30,14 +30,18 @@ test("it should apply list root classes", () => {
   const { rootBind } = mountUseList();
 
   expect(rootBind.value.class).toContain("m-0");
+  expect(rootBind.value.class).toContain("px-2");
   expect(rootBind.value.class).toContain("py-2");
   expect(rootBind.value.class).toContain("list-none");
+  expect(rootBind.value.class).toContain("flex");
+  expect(rootBind.value.class).toContain("gap-0.5");
 });
 
-test("it should apply nested indent on root bind", () => {
+test("it should apply nested indent and a start-edge guide line", () => {
   const { rootBind } = mountUseList({ nested: true });
 
-  expect(rootBind.value.class).toContain("pl-4");
+  expect(rootBind.value.class).toContain("border-l");
+  expect(rootBind.value.class).toContain("ml-3.5");
 });
 
 test("it should provide dense context to descendants", () => {
@@ -128,6 +132,31 @@ test("it should inherit iconOnly from parent List context", () => {
   mount(Outer);
 
   expect(injectedIconOnly).toBe("true");
+});
+
+test("it should hide nested lists when an ancestor is iconOnly", () => {
+  let result!: ReturnType<typeof useList>;
+
+  const Inner = defineComponent({
+    setup() {
+      result = useList({ nested: true });
+
+      return () => h("div");
+    },
+  });
+
+  const Outer = defineComponent({
+    setup() {
+      useList({ iconOnly: true });
+
+      return () => h(Inner);
+    },
+  });
+
+  mount(Outer);
+
+  expect(result.rootBind.value.hidden).toBe(true);
+  expect(result.rootBind.value.class).toContain("hidden");
 });
 
 test("it should merge class into root bind", () => {

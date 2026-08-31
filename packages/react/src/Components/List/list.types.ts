@@ -59,16 +59,16 @@ export interface ListOwnProps {
   dense?: boolean;
 
   /**
-   * Hide section labels and item text so only leading icons remain.
-   * Nested `List` inherits this from the parent. Bind from
-   * `useSidebar().state === "collapsed"` when the sidebar uses `collapsible="icon"`.
+   * Hide section labels and clip item text so only leading icons remain.
+   * Nested `List` is hidden.
    *
    * @default false
    */
   iconOnly?: boolean;
 
   /**
-   * When true, indents the list for nested navigation/submenus.
+   * When true, indents the list and draws a start-edge guide line
+   * for nested navigation.
    *
    * @default false
    */
