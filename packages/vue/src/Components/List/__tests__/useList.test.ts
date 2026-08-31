@@ -34,7 +34,7 @@ test("it should apply list root classes", () => {
   expect(rootBind.value.class).toContain("py-2");
   expect(rootBind.value.class).toContain("list-none");
   expect(rootBind.value.class).toContain("flex");
-  expect(rootBind.value.class).toContain("gap-0.5");
+  expect(rootBind.value.class).toContain("gap-1");
 });
 
 test("it should apply nested indent and a start-edge guide line", () => {

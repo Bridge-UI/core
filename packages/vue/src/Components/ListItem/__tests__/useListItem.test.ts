@@ -125,9 +125,9 @@ test("it should collapse secondary rows to a square hit when List is iconOnly", 
     setup() {
       result = useListItem(
         {
+          interactive: true,
           primary: "Acme Inc",
           secondary: "Enterprise",
-          interactive: true,
         },
         libDefaults,
         {},
@@ -159,9 +159,9 @@ test("it should collapse secondary rows to a square hit when List is iconOnly", 
 
 test("it should use a taller hit target when secondary text is set", () => {
   const { interactiveBind } = mountUseListItem({
+    interactive: true,
     primary: "Acme Inc",
     secondary: "Enterprise",
-    interactive: true,
   });
 
   expect(interactiveBind.value?.class).toContain("min-h-12");

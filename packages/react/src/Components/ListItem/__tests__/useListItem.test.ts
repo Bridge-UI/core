@@ -91,9 +91,9 @@ test("it should use a compact rounded hit target when List is iconOnly", () => {
 test("it should collapse secondary rows to a square hit when List is iconOnly", () => {
   const { result } = renderUseListItem(
     {
+      interactive: true,
       primary: "Acme Inc",
       secondary: "Enterprise",
-      interactive: true,
     },
     { dense: false, iconOnly: true },
   );
@@ -105,9 +105,9 @@ test("it should collapse secondary rows to a square hit when List is iconOnly", 
 
 test("it should use a taller hit target when secondary text is set", () => {
   const { result } = renderUseListItem({
+    interactive: true,
     primary: "Acme Inc",
     secondary: "Enterprise",
-    interactive: true,
   });
 
   expect(result.current.interactiveBind?.className).toContain("min-h-12");

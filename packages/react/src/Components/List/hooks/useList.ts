@@ -74,8 +74,7 @@ export function useList(props: ListProps) {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
       hidden: hideNestedSubmenu ? true : undefined,
       className: cn({
-        "m-0 flex list-none flex-col gap-0.5 text-dark-900 dark:text-dark-100":
-          true,
+        "m-0 flex list-none flex-col gap-1 text-dark-900 dark:text-dark-100": true,
         "px-2 py-2": !merged.nested,
         "ml-3.5 translate-x-px border-l border-dark-200 py-0.5 pl-2.5 dark:border-dark-700":
           merged.nested,
