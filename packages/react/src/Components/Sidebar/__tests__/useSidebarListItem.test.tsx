@@ -61,6 +61,36 @@ test("it should omit the tooltip when the rail is expanded", () => {
   expect(result.current.tooltip).toBeUndefined();
 });
 
+test("it should omit an explicit tooltip when the rail is expanded", () => {
+  const { result } = renderHook(
+    () => useSidebarListItem({ primary: "Home", tooltip: "Go home" }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => {
+        return (
+          <SidebarProvider>
+            <Sidebar collapsible="icon">{children}</Sidebar>
+          </SidebarProvider>
+        );
+      },
+    },
+  );
+
+  expect(result.current.tooltip).toBeUndefined();
+});
+
+test("it should use an explicit tooltip when the icon rail is collapsed", () => {
+  const { result } = renderHook(
+    () => useSidebarListItem({ primary: "Home", tooltip: "Go home" }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => {
+        return collapsedIconWrapper({ children });
+      },
+    },
+  );
+
+  expect(result.current.tooltip).toBe("Go home");
+});
+
 test("it should apply compact nav chrome when the rail is expanded", () => {
   const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
     wrapper: ({ children }: { children: ReactNode }) => {

@@ -11,7 +11,7 @@ import {
 } from "@/Components/Sidebar";
 
 function mountUseSidebarListItem(
-  itemProps: { primary?: string; secondary?: string } = {},
+  itemProps: { primary?: string; secondary?: string; tooltip?: string } = {},
   sidebarProps: {
     collapsible?: "icon" | "none" | "offcanvas";
     side?: "left" | "right";
@@ -72,6 +72,29 @@ test("it should omit the tooltip when the rail is expanded", async () => {
   await nextTick();
 
   expect(tooltip.value).toBeUndefined();
+});
+
+test("it should omit an explicit tooltip when the rail is expanded", async () => {
+  const { tooltip } = mountUseSidebarListItem(
+    { primary: "Home", tooltip: "Go home" },
+    { collapsible: "icon" },
+  );
+
+  await nextTick();
+
+  expect(tooltip.value).toBeUndefined();
+});
+
+test("it should use an explicit tooltip when the icon rail is collapsed", async () => {
+  const { tooltip } = mountUseSidebarListItem(
+    { primary: "Home", tooltip: "Go home" },
+    { collapsible: "icon" },
+    { defaultOpen: false },
+  );
+
+  await nextTick();
+
+  expect(tooltip.value).toBe("Go home");
 });
 
 test("it should apply compact nav chrome when the rail is expanded", async () => {

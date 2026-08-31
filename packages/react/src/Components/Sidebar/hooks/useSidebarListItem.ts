@@ -36,11 +36,15 @@ export function useSidebarListItem(
   });
 
   const tooltip = derived(() => {
-    if (props.tooltip !== undefined) {
-      return props.tooltip;
+    if (!iconOnly) {
+      return undefined;
     }
 
-    if (!iconOnly || typeof props.primary !== "string") {
+    if (props.tooltip !== undefined) {
+      return props.tooltip || undefined;
+    }
+
+    if (typeof props.primary !== "string") {
       return undefined;
     }
 

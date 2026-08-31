@@ -39,11 +39,15 @@ export function useSidebarListItem(
   });
 
   const tooltip = computed(() => {
-    if (props.tooltip !== undefined) {
-      return props.tooltip;
+    if (!iconOnly.value) {
+      return undefined;
     }
 
-    if (!iconOnly.value || typeof props.primary !== "string") {
+    if (props.tooltip !== undefined) {
+      return props.tooltip || undefined;
+    }
+
+    if (typeof props.primary !== "string") {
       return undefined;
     }
 

@@ -121,8 +121,8 @@ export interface SidebarInsetSlots {
 
 export interface SidebarListItemOwnProps {
   /**
-   * Tooltip label for the whole hit target. When omitted, string `primary`
-   * is used while the icon rail is collapsed.
+   * Tooltip label while the icon rail is collapsed. When omitted, string
+   * `primary` is used. Has no effect on the mobile drawer or an expanded rail.
    *
    * @default undefined
    */

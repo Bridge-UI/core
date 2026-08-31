@@ -237,7 +237,7 @@ Same as `List`, plus `iconOnly`. Sets `iconOnly` when the icon rail is collapsed
 
 ## Props (`SidebarListItem`)
 
-Same as `ListItem`, plus `tooltip` / `tooltipPlacement`. Applies compact nav chrome. When the icon rail is collapsed, string `primary` is shown in a tooltip on the whole row.
+Same as `ListItem`, plus `tooltip` / `tooltipPlacement`. Applies compact nav chrome. Tooltips only show while the icon rail is collapsed (`primary`, or `tooltip` to override).
 
 ## `useSidebar`
 

@@ -204,19 +204,6 @@ test("it should collapse header rows with secondary to a square hit", async () =
           Sidebar,
           { collapsible: "icon" },
           {
-            header: () =>
-              h(
-                SidebarList,
-                { classes: { root: "p-0" } },
-                {
-                  default: () =>
-                    h(SidebarListItem, {
-                      primary: "Acme Inc",
-                      interactive: true,
-                      secondary: "Enterprise",
-                    }),
-                },
-              ),
             default: () =>
               h(SidebarList, null, {
                 default: () =>
@@ -225,6 +212,19 @@ test("it should collapse header rows with secondary to a square hit", async () =
                     interactive: true,
                   }),
               }),
+            header: () =>
+              h(
+                SidebarList,
+                { classes: { root: "p-0" } },
+                {
+                  default: () =>
+                    h(SidebarListItem, {
+                      interactive: true,
+                      primary: "Acme Inc",
+                      secondary: "Enterprise",
+                    }),
+                },
+              ),
           },
         ),
         h(SidebarInset, null, {
