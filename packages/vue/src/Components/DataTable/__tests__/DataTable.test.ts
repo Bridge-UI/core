@@ -278,6 +278,7 @@ test("it should render a default empty state", () => {
   });
 
   expect(wrapper.text()).toContain("No data");
+  expect(wrapper.find("svg").exists()).toBe(true);
   expect(wrapper.find(".max-w-md").exists()).toBe(true);
 });
 

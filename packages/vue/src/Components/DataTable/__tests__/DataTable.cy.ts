@@ -21,6 +21,18 @@ test("it should render a data table in the browser", () => {
   cy.contains("Ada Lovelace").should("be.visible");
 });
 
+test("it should render the default empty state", () => {
+  cy.mount(DataTable, {
+    props: {
+      columns,
+      rows: [],
+    },
+  });
+
+  cy.get("svg").should("be.visible");
+  cy.contains("No data").should("be.visible");
+});
+
 test("it should render the bordered variant", () => {
   cy.mount(DataTable, {
     props: {

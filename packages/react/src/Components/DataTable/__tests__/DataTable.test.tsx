@@ -266,6 +266,7 @@ test("it should render a default empty state", () => {
   const { container } = render(<DataTable rows={[]} columns={columns} />);
 
   expect(screen.getByText("No data")).toBeTruthy();
+  expect(container.querySelector("svg")).not.toBeNull();
   expect(container.querySelector(".max-w-md")).not.toBeNull();
 });
 

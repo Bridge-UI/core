@@ -328,6 +328,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                 <div v-bind="emptyBind">
                   <slot name="empty">
                     <EmptyState
+                      icon="inbox"
                       :size="merged.size"
                       :title="resolveMessage('No data')"
                     />

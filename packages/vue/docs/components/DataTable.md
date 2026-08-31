@@ -141,7 +141,7 @@ When `page` and `page-count` (or `total-count`) are set, DataTable does not sort
 
 ### Empty, loading, and footer
 
-Empty rows render `EmptyState` at the table `size`, with the i18n title `"No data"`. `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
+Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
 
 ```vue
 <DataTable :rows="[]" :columns="columns" :loading="isLoading">
