@@ -1,6 +1,6 @@
 # Sidebar
 
-Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `SidebarInset` as siblings. Put `List` / `Accordion` in the default slot. On small viewports the panel opens as a `Drawer`.
+Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `SidebarInset` as siblings. Put `SidebarList` / `Accordion` in the default slot. On small viewports the panel opens as a `Drawer`.
 
 ## Import
 
@@ -8,6 +8,8 @@ Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `Sidebar
 import {
   Sidebar,
   SidebarInset,
+  SidebarList,
+  SidebarListItem,
   SidebarProvider,
   SidebarTrigger,
   useSidebar,
@@ -27,10 +29,10 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 ```vue
 <SidebarProvider>
   <Sidebar>
-    <List>
-      <ListItem interactive primary="Home" />
-      <ListItem interactive primary="Settings" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+      <SidebarListItem interactive primary="Settings" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -41,17 +43,53 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 
 ### Header and footer
 
+Put brand and account rows in `#header` / `#footer`. `SidebarList` collapses those rows to the start avatar. The end chevron hides while collapsed. Header and footer lists use `classes.root` `p-0` because those slots are already padded.
+
+```vue
+<template>
+  <SidebarList :classes="{ root: 'p-0' }">
+    <SidebarListItem interactive primary="Acme Inc" secondary="Enterprise">
+      <template #end>
+        <Icon icon="chevronUpDown" />
+      </template>
+      <template #start>
+        <Avatar size="sm" rounded="lg" fallback="A" color="primary" />
+      </template>
+    </SidebarListItem>
+  </SidebarList>
+</template>
+```
+
+```vue
+<template>
+  <SidebarList :classes="{ root: 'p-0' }">
+    <SidebarListItem
+      interactive
+      primary="Ada Lovelace"
+      secondary="ada@example.com"
+    >
+      <template #end>
+        <Icon icon="chevronUpDown" />
+      </template>
+      <template #start>
+        <Avatar size="sm" rounded="lg" fallback="AL" />
+      </template>
+    </SidebarListItem>
+  </SidebarList>
+</template>
+```
+
 ```vue
 <SidebarProvider>
-  <Sidebar>
+  <Sidebar collapsible="icon">
     <template #header>
-      <div>Acme</div>
+      <Brand />
     </template>
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
     <template #footer>
-      <ListItem interactive primary="Account" />
+      <Account />
     </template>
   </Sidebar>
   <SidebarInset>
@@ -63,29 +101,31 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 
 ### Icon collapse
 
-Bind `List` `icon-only` from `useSidebar` when `collapsible="icon"`. Wrap items in `Tooltip` if you want a label while collapsed. `useSidebar` must run under `SidebarProvider`.
+Use `SidebarList` / `SidebarListItem` when `collapsible="icon"`. Collapsed items keep `primary` as an `aria-label` and show it in a `Tooltip` on the whole item. Nested `SidebarList` is hidden. The mobile drawer keeps labels.
 
 ```vue
-<script setup>
-const sidebar = useSidebar();
-</script>
-
 <template>
-  <List :icon-only="sidebar.state === 'collapsed'">
+  <SidebarList>
     <ListSection title="Application" />
-    <ListItem interactive primary="Home">
+    <SidebarListItem interactive primary="Home">
       <template #start>
         <Icon icon="user" />
       </template>
-    </ListItem>
-  </List>
+    </SidebarListItem>
+  </SidebarList>
 </template>
 ```
 
 ```vue
 <SidebarProvider>
   <Sidebar collapsible="icon">
+    <template #header>
+      <Brand />
+    </template>
     <Nav />
+    <template #footer>
+      <Account />
+    </template>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -99,9 +139,9 @@ const sidebar = useSidebar();
 ```vue
 <SidebarProvider v-model="open">
   <Sidebar>
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -115,9 +155,9 @@ const sidebar = useSidebar();
 ```vue
 <SidebarProvider>
   <Sidebar side="right">
-    <List>
-      <ListItem interactive primary="Inbox" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Inbox" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -131,9 +171,9 @@ const sidebar = useSidebar();
 ```vue
 <SidebarProvider>
   <Sidebar variant="inset">
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -147,12 +187,12 @@ const sidebar = useSidebar();
 ```vue
 <SidebarProvider>
   <Sidebar>
-    <Accordion>
+    <Accordion variant="plain">
       <AccordionItem title="Projects" value="projects">
-        <List>
-          <ListItem interactive primary="Alpha" />
-          <ListItem interactive primary="Beta" />
-        </List>
+        <SidebarList :classes="{ root: 'p-0' }">
+          <SidebarListItem interactive primary="Alpha" />
+          <SidebarListItem interactive primary="Beta" />
+        </SidebarList>
       </AccordionItem>
     </Accordion>
   </Sidebar>
@@ -186,11 +226,11 @@ const sidebar = useSidebar();
 
 ## Slots (`Sidebar`)
 
-| Slot      | Description                          |
-| --------- | ------------------------------------ |
-| `default` | Rail content (`List` / `Accordion`). |
-| `footer`  | Sticky footer.                       |
-| `header`  | Sticky header.                       |
+| Slot      | Description                                 |
+| --------- | ------------------------------------------- |
+| `default` | Rail content (`SidebarList` / `Accordion`). |
+| `footer`  | Sticky footer.                              |
+| `header`  | Sticky header.                              |
 
 ## Props (`SidebarInset`)
 
@@ -203,6 +243,14 @@ const sidebar = useSidebar();
 
 Renders a `Button`. Forwards native button attributes. Default accessible name is `Toggle sidebar`.
 
+## Props (`SidebarList`)
+
+Same as `List`. Sets `icon-only` when the icon rail is collapsed on desktop. Override with `icon-only`. Nested `SidebarList` is hidden while collapsed.
+
+## Props (`SidebarListItem`)
+
+Same as `ListItem`. When the icon rail is collapsed, string `primary` is shown in a tooltip on the whole row.
+
 ## `useSidebar`
 
 Must be called under `SidebarProvider`. Returns a computed context object (`sidebar.value.open`, …).
@@ -210,7 +258,7 @@ Must be called under `SidebarProvider`. Returns a computed context object (`side
 | Field           | Type                              | Description                                    |
 | --------------- | --------------------------------- | ---------------------------------------------- |
 | `collapsible`   | `"icon" \| "none" \| "offcanvas"` | Mode from the nearest `Sidebar`.               |
-| `isMobile`      | `boolean`                         | Viewport is below the mobile breakpoint.       |
+| `isMobile`      | `boolean`                         | Viewport is below `md` (desktop rail CSS).     |
 | `open`          | `boolean`                         | Desktop expanded state.                        |
 | `openMobile`    | `boolean`                         | Mobile drawer visibility.                      |
 | `setOpen`       | `(open: boolean) => void`         | Sets desktop `open`.                           |
@@ -226,8 +274,8 @@ Must be called under `SidebarProvider`. Returns a computed context object (`side
 - Offcanvas collapsed panel is `inert` (out of the tab order)
 - Mobile uses `Drawer` (dialog, overlay, Escape)
 - Trigger sets `aria-expanded` and `aria-controls`
-- `List` `icon-only` copies string `primary` to `aria-label`
+- `SidebarListItem` copies string `primary` to `aria-label` when collapsed
 
 ## Related components
 
-Accordion, Button, Drawer, List, ListItem, ListSection, Tooltip
+Accordion, Avatar, Button, Drawer, List, ListItem, ListSection, Tooltip

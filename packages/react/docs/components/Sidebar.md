@@ -1,6 +1,6 @@
 # Sidebar
 
-Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `SidebarInset` as siblings. Put `List` / `Accordion` in the rail. On small viewports the panel opens as a `Drawer`.
+Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `SidebarInset` as siblings. Put `SidebarList` / `Accordion` in the rail. On small viewports the panel opens as a `Drawer`.
 
 ## Import
 
@@ -8,6 +8,8 @@ Persistent app-shell rail. Mount `SidebarProvider` around `Sidebar` and `Sidebar
 import {
   Sidebar,
   SidebarInset,
+  SidebarList,
+  SidebarListItem,
   SidebarProvider,
   SidebarTrigger,
   useSidebar,
@@ -27,10 +29,10 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 ```tsx
 <SidebarProvider>
   <Sidebar>
-    <List>
-      <ListItem interactive primary="Home" />
-      <ListItem interactive primary="Settings" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+      <SidebarListItem interactive primary="Settings" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -41,48 +43,52 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 
 ### Header and footer
 
-```tsx
-<SidebarProvider>
-  <Sidebar
-    slots={{
-      header: <div>Acme</div>,
-      footer: <ListItem interactive primary="Account" />,
-    }}
-  >
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
-  </Sidebar>
-  <SidebarInset>
-    <SidebarTrigger />
-    {children}
-  </SidebarInset>
-</SidebarProvider>
-```
-
-### Icon collapse
-
-Bind `List` `iconOnly` from `useSidebar` when `collapsible="icon"`. Wrap items in `Tooltip` if you want a label while collapsed. `useSidebar` must run under `SidebarProvider`.
+Put brand and account rows in `slots.header` / `slots.footer`. `SidebarList` collapses those rows to the start avatar. The end chevron hides while collapsed. Header and footer lists use `classes.root` `p-0` because those slots are already padded.
 
 ```tsx
-function Nav() {
-  const { state } = useSidebar();
-
+function Brand() {
   return (
-    <List iconOnly={state === "collapsed"}>
-      <ListSection title="Application" />
-      <ListItem
+    <SidebarList classes={{ root: "p-0" }}>
+      <SidebarListItem
         interactive
-        primary="Home"
-        slots={{ start: <Icon icon="user" /> }}
+        primary="Acme Inc"
+        secondary="Enterprise"
+        slots={{
+          end: <Icon icon="chevronUpDown" />,
+          start: <Avatar size="sm" rounded="lg" fallback="A" color="primary" />,
+        }}
       />
-    </List>
+    </SidebarList>
+  );
+}
+
+function Account() {
+  return (
+    <SidebarList classes={{ root: "p-0" }}>
+      <SidebarListItem
+        interactive
+        primary="Ada Lovelace"
+        secondary="ada@example.com"
+        slots={{
+          end: <Icon icon="chevronUpDown" />,
+          start: <Avatar size="sm" rounded="lg" fallback="AL" />,
+        }}
+      />
+    </SidebarList>
   );
 }
 
 <SidebarProvider>
-  <Sidebar collapsible="icon">
-    <Nav />
+  <Sidebar
+    collapsible="icon"
+    slots={{
+      header: <Brand />,
+      footer: <Account />,
+    }}
+  >
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -91,14 +97,43 @@ function Nav() {
 </SidebarProvider>;
 ```
 
+### Icon collapse
+
+Use `SidebarList` / `SidebarListItem` when `collapsible="icon"`. Collapsed items keep `primary` as an `aria-label` and show it in a `Tooltip` on the whole item. Nested `SidebarList` is hidden. The mobile drawer keeps labels.
+
+```tsx
+<SidebarProvider>
+  <Sidebar
+    collapsible="icon"
+    slots={{
+      header: <Brand />,
+      footer: <Account />,
+    }}
+  >
+    <SidebarList>
+      <ListSection title="Application" />
+      <SidebarListItem
+        interactive
+        primary="Home"
+        slots={{ start: <Icon icon="user" /> }}
+      />
+    </SidebarList>
+  </Sidebar>
+  <SidebarInset>
+    <SidebarTrigger />
+    {children}
+  </SidebarInset>
+</SidebarProvider>
+```
+
 ### Controlled
 
 ```tsx
 <SidebarProvider open={open} onOpenChange={setOpen}>
   <Sidebar>
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -112,9 +147,9 @@ function Nav() {
 ```tsx
 <SidebarProvider>
   <Sidebar side="right">
-    <List>
-      <ListItem interactive primary="Inbox" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Inbox" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -128,9 +163,9 @@ function Nav() {
 ```tsx
 <SidebarProvider>
   <Sidebar variant="inset">
-    <List>
-      <ListItem interactive primary="Home" />
-    </List>
+    <SidebarList>
+      <SidebarListItem interactive primary="Home" />
+    </SidebarList>
   </Sidebar>
   <SidebarInset>
     <SidebarTrigger />
@@ -144,12 +179,12 @@ function Nav() {
 ```tsx
 <SidebarProvider>
   <Sidebar>
-    <Accordion>
+    <Accordion variant="plain">
       <AccordionItem title="Projects" value="projects">
-        <List>
-          <ListItem interactive primary="Alpha" />
-          <ListItem interactive primary="Beta" />
-        </List>
+        <SidebarList classes={{ root: "p-0" }}>
+          <SidebarListItem interactive primary="Alpha" />
+          <SidebarListItem interactive primary="Beta" />
+        </SidebarList>
       </AccordionItem>
     </Accordion>
   </Sidebar>
@@ -176,7 +211,7 @@ function Nav() {
 | Prop          | Type                              | Default       | Description                                            |
 | ------------- | --------------------------------- | ------------- | ------------------------------------------------------ |
 | `ariaLabel`   | `string`                          | `"Sidebar"`   | Accessible name for the `aside` and the mobile drawer. |
-| `children`    | `ReactNode`                       | —             | Rail content (`List` / `Accordion`).                   |
+| `children`    | `ReactNode`                       | —             | Rail content (`SidebarList` / `Accordion`).            |
 | `classes`     | `SidebarClasses`                  | —             | Part classes (`root`, `header`, `content`, …).         |
 | `collapsible` | `"icon" \| "none" \| "offcanvas"` | `"offcanvas"` | How the desktop rail hides.                            |
 | `customProps` | `SidebarCustomProps`              | —             | Extra props for internal parts.                        |
@@ -196,6 +231,14 @@ function Nav() {
 
 Renders a `Button`. Forwards native button attributes. Default accessible name is `Toggle sidebar`.
 
+## Props (`SidebarList`)
+
+Same as `List`. Sets `iconOnly` when the icon rail is collapsed on desktop. Override with `iconOnly`. Nested `SidebarList` is hidden while collapsed.
+
+## Props (`SidebarListItem`)
+
+Same as `ListItem`. When the icon rail is collapsed, string `primary` is shown in a tooltip on the whole row.
+
 ## `useSidebar`
 
 Must be called under `SidebarProvider`.
@@ -203,7 +246,7 @@ Must be called under `SidebarProvider`.
 | Field           | Type                              | Description                                    |
 | --------------- | --------------------------------- | ---------------------------------------------- |
 | `collapsible`   | `"icon" \| "none" \| "offcanvas"` | Mode from the nearest `Sidebar`.               |
-| `isMobile`      | `boolean`                         | Viewport is below the mobile breakpoint.       |
+| `isMobile`      | `boolean`                         | Viewport is below `md` (desktop rail CSS).     |
 | `open`          | `boolean`                         | Desktop expanded state.                        |
 | `openMobile`    | `boolean`                         | Mobile drawer visibility.                      |
 | `setOpen`       | `(open: boolean) => void`         | Sets desktop `open`.                           |
@@ -219,8 +262,8 @@ Must be called under `SidebarProvider`.
 - Offcanvas collapsed panel is `inert` (out of the tab order)
 - Mobile uses `Drawer` (dialog, overlay, Escape)
 - Trigger sets `aria-expanded` and `aria-controls`
-- `List` `iconOnly` copies string `primary` to `aria-label`
+- `SidebarListItem` copies string `primary` to `aria-label` when collapsed
 
 ## Related components
 
-Accordion, Button, Drawer, List, ListItem, ListSection, Tooltip
+Accordion, Avatar, Button, Drawer, List, ListItem, ListSection, Tooltip
