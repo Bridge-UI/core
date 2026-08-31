@@ -10,6 +10,8 @@ afterEach(() => {
 import {
   Sidebar,
   SidebarInset,
+  SidebarList,
+  SidebarListItem,
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
@@ -117,6 +119,17 @@ test("it should mark the trigger as expanded by default", () => {
   ).toBe("true");
 });
 
+test("it should dock the left aside and slide it off-canvas by offsetting left", () => {
+  const { container } = render(<AppShell />);
+  const aside = container.querySelector("aside");
+
+  expect(aside?.className).toContain("left-0");
+  expect(aside?.className).toContain("overflow-hidden");
+  expect(aside?.className).toContain(
+    "left-[calc(var(--bridge-sidebar-width)*-1)]",
+  );
+});
+
 test("it should apply data-side from the side prop", () => {
   const { container } = render(
     <SidebarProvider>
@@ -144,4 +157,23 @@ test("it should not inert the aside when icon mode is collapsed", () => {
   fireEvent.click(screen.getByRole("button", { name: "Toggle sidebar" }));
 
   expect(container.querySelector("aside")?.hasAttribute("inert")).toBe(false);
+});
+
+test("it should collapse SidebarList items when the icon rail is collapsed", () => {
+  render(
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar collapsible="icon">
+        <SidebarList>
+          <SidebarListItem interactive primary="Home" />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  expect(
+    screen.getByRole("button", { name: "Home" }).getAttribute("aria-label"),
+  ).toBe("Home");
 });

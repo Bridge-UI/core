@@ -41,7 +41,7 @@ const {
     :aria-expanded="expanded"
     :classes="{ icon: iconClass }"
     :aria-controls="panelId || undefined"
-    :icon="hasDefaultSlot ? undefined : 'chevronLeft'"
+    :icon="hasDefaultSlot ? undefined : 'panelLeft'"
   >
     <slot v-if="hasDefaultSlot" />
   </Button>

@@ -14,9 +14,9 @@ export interface SidebarSide {
 }
 
 /**
- * Logical-property placement for the fixed desktop panel.
+ * Physical left/right docking for the fixed desktop panel (`side` is left/right).
  */
 export const sideProps: SidebarSide = {
-  "left": "data-[side=left]:inset-inline-start-0",
-  "right": "data-[side=right]:inset-inline-end-0",
+  "left": "left-0",
+  "right": "right-0",
 };

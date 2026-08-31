@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState, type CSSProperties } from "react";
 import {
   resolveSidebarState,
   shouldToggleDesktopSidebar,
+  SIDEBAR_DESKTOP_BREAKPOINT,
   SIDEBAR_WIDTH_ICON_VAR,
   SIDEBAR_WIDTH_MOBILE_VAR,
   SIDEBAR_WIDTH_VAR,
@@ -106,7 +107,7 @@ export function useSidebarProvider(
   });
 
   const breakpoint = useBreakpoint();
-  const isMobile = breakpoint.mobile;
+  const isMobile = breakpoint.lessThan(SIDEBAR_DESKTOP_BREAKPOINT);
 
   const isOpenControlled = props.open !== undefined;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(

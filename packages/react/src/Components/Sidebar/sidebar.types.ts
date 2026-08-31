@@ -9,6 +9,10 @@ import type {
 } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
+// ** Local Imports
+import type { ListProps } from "@/Components/List/list.types";
+import type { ListItemProps } from "@/Components/ListItem/listItem.types";
+
 export interface SidebarSideOverrides {}
 export interface SidebarVariantOverrides {}
 export interface SidebarCollapsibleOverrides {}
@@ -116,7 +120,7 @@ export interface SidebarInsetOwnProps {
 
 /**
  * Persistent app-shell sidebar panel. Mount under `SidebarProvider` with
- * `SidebarInset`. Put `List` / `Accordion` in `children`.
+ * `SidebarInset`. Put `SidebarList` / `Accordion` in `children`.
  */
 export interface SidebarOwnProps {
   /**
@@ -277,3 +281,15 @@ export type SidebarTriggerProps = MergeHtmlProps<
   SidebarTriggerOwnProps,
   ButtonHTMLAttributes<HTMLButtonElement>
 >;
+
+/**
+ * `List` bound to the nearest `Sidebar`. Sets `iconOnly` when the icon rail
+ * is collapsed on desktop.
+ */
+export type SidebarListProps = ListProps;
+
+/**
+ * `ListItem` bound to the nearest `Sidebar`. Shows `primary` in a tooltip
+ * when the icon rail is collapsed.
+ */
+export type SidebarListItemProps = ListItemProps;

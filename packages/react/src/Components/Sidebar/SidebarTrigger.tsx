@@ -17,7 +17,7 @@ function SidebarTrigger(props: SidebarTriggerProps) {
       onClick={handleClick}
       aria-expanded={expanded}
       aria-controls={panelId || undefined}
-      icon={children ? undefined : "chevronLeft"}
+      icon={children ? undefined : "panelLeft"}
       aria-label={props["aria-label"] ?? "Toggle sidebar"}
       classes={{
         icon: side === "right" ? "rotate-180 rtl:rotate-0" : "rtl:rotate-180",

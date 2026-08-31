@@ -21,7 +21,7 @@ export interface SidebarCollapsibleItem {
  */
 export interface SidebarCollapsible {
   /**
-   * Collapse to icons. Labels hide via `List` `iconOnly`.
+   * Collapse to icons. Labels hide via `SidebarList`.
    */
   "icon": SidebarCollapsibleItem;
 
@@ -50,8 +50,9 @@ export const collapsibleProps: SidebarCollapsible = {
       "group-data-[collapsible=icon]:w-[var(--bridge-sidebar-width-icon)]",
   },
   "offcanvas": {
-    "gap": "group-data-[collapsible=offcanvas]:w-0",
+    "gap":
+      "group-data-[collapsible=offcanvas]:w-0 group-data-[collapsible=offcanvas]:overflow-hidden",
     "panel":
-      "group-data-[collapsible=offcanvas]:data-[side=left]:inset-inline-start-[calc(var(--bridge-sidebar-width)*-1)] group-data-[collapsible=offcanvas]:data-[side=right]:inset-inline-end-[calc(var(--bridge-sidebar-width)*-1)]",
+      "group-data-[collapsible=offcanvas]:data-[side=left]:left-[calc(var(--bridge-sidebar-width)*-1)] group-data-[collapsible=offcanvas]:data-[side=right]:right-[calc(var(--bridge-sidebar-width)*-1)]",
   },
 };

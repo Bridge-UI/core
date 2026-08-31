@@ -110,6 +110,7 @@ const icons = {
   columns: faTableColumns,
   chevronUpDown: faUpDown,
   calendar: faCalendarDays,
+  panelLeft: faTableColumns,
   search: faMagnifyingGlass,
   alert: faCircleExclamation,
   chevronDown: faChevronDown,

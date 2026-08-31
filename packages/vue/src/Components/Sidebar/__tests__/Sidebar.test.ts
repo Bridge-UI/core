@@ -7,6 +7,8 @@ import { defineComponent, h, nextTick } from "vue";
 import {
   Sidebar,
   SidebarInset,
+  SidebarList,
+  SidebarListItem,
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
@@ -128,6 +130,15 @@ test("it should emit openChange when the trigger is clicked", async () => {
   expect(wrapper.emitted("update:modelValue")).toEqual([[false]]);
 });
 
+test("it should dock the left aside and slide it off-canvas by offsetting left", () => {
+  const wrapper = mount(AppShell);
+  const asideClass = wrapper.find("aside").classes().join(" ");
+
+  expect(asideClass).toContain("left-0");
+  expect(asideClass).toContain("overflow-hidden");
+  expect(asideClass).toContain("left-[calc(var(--bridge-sidebar-width)*-1)]");
+});
+
 test("it should apply data-side from the side prop", () => {
   const wrapper = mount(AppShell, { props: { side: "right" } });
 
@@ -148,4 +159,37 @@ test("it should not inert the aside when icon mode is collapsed", async () => {
   await wrapper.get("button[aria-label='Toggle sidebar']").trigger("click");
 
   expect(wrapper.find("aside").attributes("inert")).toBeUndefined();
+});
+
+test("it should collapse SidebarList items when the icon rail is collapsed", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "icon" },
+          {
+            default: () =>
+              h(SidebarList, null, {
+                default: () =>
+                  h(SidebarListItem, {
+                    primary: "Home",
+                    interactive: true,
+                  }),
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  expect(wrapper.get('[aria-label="Home"]').attributes("aria-label")).toBe(
+    "Home",
+  );
 });

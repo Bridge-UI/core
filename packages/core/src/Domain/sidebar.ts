@@ -19,6 +19,13 @@ export const SIDEBAR_WIDTH_ICON_VAR = "--bridge-sidebar-width-icon";
 export const SIDEBAR_WIDTH_MOBILE_VAR = "--bridge-sidebar-width-mobile";
 
 /**
+ * Tailwind breakpoint at which the desktop rail is shown (`md:` on the shell).
+ * The overlay `Drawer` is used below this width, not the global `sm` mobile flag,
+ * so the rail is not blank between `sm` and `md`.
+ */
+export const SIDEBAR_DESKTOP_BREAKPOINT = "md";
+
+/**
  * Collapsible modes accepted by {@link resolveSidebarState}.
  */
 export type SidebarCollapsibleMode = "icon" | "none" | "offcanvas";
@@ -81,4 +88,25 @@ export function shouldToggleDesktopSidebar(
   collapsible: SidebarCollapsibleMode,
 ): boolean {
   return collapsible !== "none";
+}
+
+/**
+ * Whether rail lists should collapse to icons.
+ * False below the desktop breakpoint so the overlay drawer keeps labels.
+ */
+export function isSidebarIconOnly(
+  isMobile: boolean,
+  collapsible: SidebarCollapsibleMode,
+  state: SidebarState,
+): boolean {
+  return !isMobile && collapsible === "icon" && state === "collapsed";
+}
+
+/**
+ * Tooltip placement for collapsed icon-rail items. Opposite the dock edge.
+ */
+export function resolveSidebarListTooltipPlacement(
+  side: "left" | "right",
+): "left" | "right" {
+  return side === "right" ? "left" : "right";
 }

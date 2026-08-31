@@ -1,0 +1,62 @@
+// ** External Imports
+import { renderHook } from "@testing-library/react";
+import type { ReactNode } from "react";
+import { expect, test } from "vitest";
+
+// ** Local Imports
+import {
+  Sidebar,
+  SidebarProvider,
+  useSidebarListItem,
+} from "@/Components/Sidebar";
+
+function collapsedIconWrapper({
+  side,
+  children,
+}: {
+  children: ReactNode;
+  side?: "left" | "right";
+}) {
+  return (
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar side={side} collapsible="icon">
+        {children}
+      </Sidebar>
+    </SidebarProvider>
+  );
+}
+
+test("it should use primary as tooltip when the icon rail is collapsed", () => {
+  const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return collapsedIconWrapper({ children });
+    },
+  });
+
+  expect(result.current.tooltip).toBe("Home");
+  expect(result.current.tooltipPlacement).toBe("right");
+});
+
+test("it should place the tooltip opposite a right rail", () => {
+  const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return collapsedIconWrapper({ children, side: "right" });
+    },
+  });
+
+  expect(result.current.tooltipPlacement).toBe("left");
+});
+
+test("it should omit the tooltip when the rail is expanded", () => {
+  const { result } = renderHook(() => useSidebarListItem({ primary: "Home" }), {
+    wrapper: ({ children }: { children: ReactNode }) => {
+      return (
+        <SidebarProvider>
+          <Sidebar collapsible="icon">{children}</Sidebar>
+        </SidebarProvider>
+      );
+    },
+  });
+
+  expect(result.current.tooltip).toBeUndefined();
+});

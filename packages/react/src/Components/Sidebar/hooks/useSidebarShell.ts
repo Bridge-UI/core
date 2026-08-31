@@ -186,7 +186,7 @@ export function useSidebarShell(
         id: showAsDrawer ? undefined : panelId,
         inert: offcanvasCollapsed ? true : undefined,
         className: cn({
-          "fixed inset-y-0 z-10 hidden h-svh w-[var(--bridge-sidebar-width)] transition-[inset-inline-start,inset-inline-end,width] duration-200 ease-linear md:flex": true,
+          "fixed inset-y-0 z-10 hidden h-svh w-[var(--bridge-sidebar-width)] overflow-hidden transition-[left,right,width] duration-200 ease-linear md:flex": true,
           [sideClass ?? ""]: true,
           [get(collapsibleItem, "panel") ?? ""]: true,
         }),
@@ -199,7 +199,7 @@ export function useSidebarShell(
       customProps?.panel,
       {},
       cn({
-        "flex h-full w-full flex-col": true,
+        "flex h-full w-full flex-col overflow-hidden": true,
         [get(variantItem, "panel") ?? ""]: true,
         [get(mergedClasses, "panel") ?? ""]: true,
       }),
@@ -211,7 +211,7 @@ export function useSidebarShell(
       customProps?.header,
       {},
       cn({
-        "flex shrink-0 flex-col gap-2 p-2": true,
+        "flex shrink-0 flex-col gap-2 px-2 py-2.5": true,
         [get(mergedClasses, "header") ?? ""]: true,
       }),
     );
@@ -233,7 +233,7 @@ export function useSidebarShell(
       customProps?.footer,
       {},
       cn({
-        "flex shrink-0 flex-col gap-2 p-2": true,
+        "flex shrink-0 flex-col gap-2 px-2 py-2.5": true,
         [get(mergedClasses, "footer") ?? ""]: true,
       }),
     );

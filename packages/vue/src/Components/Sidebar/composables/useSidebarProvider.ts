@@ -14,6 +14,7 @@ import {
 import {
   resolveSidebarState,
   shouldToggleDesktopSidebar,
+  SIDEBAR_DESKTOP_BREAKPOINT,
   SIDEBAR_WIDTH_ICON_VAR,
   SIDEBAR_WIDTH_MOBILE_VAR,
   SIDEBAR_WIDTH_VAR,
@@ -109,7 +110,7 @@ export function useSidebarProvider(
   });
 
   const isMobile = computed(() => {
-    return breakpoint.mobile;
+    return breakpoint.lessThan(SIDEBAR_DESKTOP_BREAKPOINT);
   });
 
   const internalOpen = ref(merged.value.defaultOpen);
