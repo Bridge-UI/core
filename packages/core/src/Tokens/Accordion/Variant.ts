@@ -55,14 +55,6 @@ export interface AccordionVariant {
  * Default accordion variant class maps.
  */
 export const variantProps: AccordionVariant = {
-  "plain": {
-    "item": "",
-    "root": "flex flex-col gap-1 px-2 py-2",
-    "panel":
-      "ml-3.5 translate-x-px border-l border-dark-200 p-0 py-0.5 pl-2.5 dark:border-dark-700",
-    "trigger":
-      "rounded-lg min-h-8 px-2 py-1.5 text-dark-700 hover:bg-black/5 dark:text-dark-200 dark:hover:bg-white/10",
-  },
   "default": {
     "item": "",
     "panel": "",
@@ -72,10 +64,10 @@ export const variantProps: AccordionVariant = {
       "divide-y divide-dark-200 border-y border-dark-200 dark:divide-dark-700 dark:border-dark-700",
   },
   "separated": {
+    "panel": "",
     "root": "flex flex-col gap-2",
     "item":
       "overflow-hidden rounded-lg border border-dark-200 dark:border-dark-700",
-    "panel": "",
     "trigger":
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
   },
@@ -86,5 +78,13 @@ export const variantProps: AccordionVariant = {
       "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
     "root":
       "overflow-hidden rounded-lg border border-dark-200 divide-y divide-dark-200 dark:border-dark-700 dark:divide-dark-700",
+  },
+  "plain": {
+    "item": "",
+    "root": "flex flex-col gap-1 px-2 py-2",
+    "panel":
+      "ml-3.5 translate-x-px border-l border-dark-200 p-0 py-0.5 pl-2.5 dark:border-dark-700",
+    "trigger":
+      "rounded-lg min-h-8 px-2 py-1.5 text-dark-700 hover:bg-black/5 dark:text-dark-200 dark:hover:bg-white/10",
   },
 };
