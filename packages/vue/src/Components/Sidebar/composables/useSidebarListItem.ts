@@ -84,8 +84,8 @@ export function useSidebarListItem(
           !iconOnly.value,
         "min-h-12 py-2": !iconOnly.value && hasSecondary,
         "min-h-8 py-0": !iconOnly.value && !hasSecondary,
-        "overflow-hidden rounded-lg py-0": iconOnly.value,
-        "size-8": iconOnly.value && hasSecondary,
+        "gap-0 overflow-hidden rounded-lg p-0": iconOnly.value,
+        "size-8 justify-center": iconOnly.value && hasSecondary,
         "h-8 w-full px-2": iconOnly.value && !hasSecondary,
       }),
     };

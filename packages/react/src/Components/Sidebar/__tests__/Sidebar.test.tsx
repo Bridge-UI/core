@@ -179,6 +179,40 @@ test("it should collapse SidebarList items when the icon rail is collapsed", () 
   ).toBe("Home");
 });
 
+test("it should collapse header rows with secondary to a square hit", () => {
+  render(
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar
+        collapsible="icon"
+        slots={{
+          header: (
+            <SidebarList classes={{ root: "p-0" }}>
+              <SidebarListItem
+                interactive
+                primary="Acme Inc"
+                secondary="Enterprise"
+              />
+            </SidebarList>
+          ),
+        }}
+      >
+        <SidebarList>
+          <SidebarListItem interactive primary="Home" />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  const item = screen.getByRole("button", { name: "Acme Inc" });
+
+  expect(item.className).toContain("size-8");
+  expect(item.className).toContain("p-0");
+  expect(item.className).not.toMatch(/\bpx-4\b/);
+});
+
 test("it should apply nav chrome on SidebarList and SidebarListItem", () => {
   const { container } = render(
     <SidebarProvider>

@@ -195,6 +195,54 @@ test("it should collapse SidebarList items when the icon rail is collapsed", asy
   );
 });
 
+test("it should collapse header rows with secondary to a square hit", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "icon" },
+          {
+            header: () =>
+              h(
+                SidebarList,
+                { classes: { root: "p-0" } },
+                {
+                  default: () =>
+                    h(SidebarListItem, {
+                      primary: "Acme Inc",
+                      interactive: true,
+                      secondary: "Enterprise",
+                    }),
+                },
+              ),
+            default: () =>
+              h(SidebarList, null, {
+                default: () =>
+                  h(SidebarListItem, {
+                    primary: "Home",
+                    interactive: true,
+                  }),
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  const item = wrapper.get('[aria-label="Acme Inc"]');
+
+  expect(item.classes()).toContain("size-8");
+  expect(item.classes()).toContain("p-0");
+  expect(item.classes()).not.toContain("px-4");
+});
+
 test("it should apply nav chrome on SidebarList and SidebarListItem", async () => {
   const wrapper = mount(SidebarProvider, {
     slots: {

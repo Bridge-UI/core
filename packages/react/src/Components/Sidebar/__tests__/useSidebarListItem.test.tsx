@@ -104,3 +104,19 @@ test("it should apply a compact hit when the icon rail is collapsed", () => {
   expect(result.current.itemClasses.interactive).toContain("h-8");
   expect(result.current.itemClasses.content).toContain("hidden");
 });
+
+test("it should square the hit when secondary is set on the icon rail", () => {
+  const { result } = renderHook(
+    () => useSidebarListItem({ primary: "Acme Inc", secondary: "Enterprise" }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => {
+        return collapsedIconWrapper({ children });
+      },
+    },
+  );
+
+  expect(result.current.itemClasses.interactive).toContain("size-8");
+  expect(result.current.itemClasses.interactive).toContain("p-0");
+  expect(result.current.itemClasses.content).toContain("hidden");
+  expect(result.current.itemClasses.end).toContain("hidden");
+});

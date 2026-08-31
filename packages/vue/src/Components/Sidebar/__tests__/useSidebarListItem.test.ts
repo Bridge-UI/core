@@ -110,3 +110,18 @@ test("it should apply a compact hit when the icon rail is collapsed", async () =
   expect(itemClasses.value.interactive).toContain("h-8");
   expect(itemClasses.value.content).toContain("hidden");
 });
+
+test("it should square the hit when secondary is set on the icon rail", async () => {
+  const { itemClasses } = mountUseSidebarListItem(
+    { primary: "Acme Inc", secondary: "Enterprise" },
+    { collapsible: "icon" },
+    { defaultOpen: false },
+  );
+
+  await nextTick();
+
+  expect(itemClasses.value.interactive).toContain("size-8");
+  expect(itemClasses.value.interactive).toContain("p-0");
+  expect(itemClasses.value.content).toContain("hidden");
+  expect(itemClasses.value.end).toContain("hidden");
+});
