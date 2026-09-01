@@ -1,7 +1,7 @@
 ---
 name: bridge-ui-components
 description: >-
-  Use Bridge UI React components — Button, Avatar, Card, Alert, Accordion, Badge, Icon,
+  Use Bridge UI React components — Button, ButtonGroup, Avatar, Card, Alert, Accordion, Badge, Icon,
   Link, List, Table, DataTable, Tabs, Spinner, Skeleton, EmptyState, Sidebar, Progress, Stepper, Pagination, TextField, Select,
   Autocomplete, DateField, DatePicker, DateRangeField, DateRangePicker,
   TimeField, TimePicker, DateTimeField, DateTimePicker, ColorField, ColorPicker,
@@ -16,7 +16,7 @@ Do **not** invent APIs. Copy examples from `.ai/docs/components/{Component}.md` 
 
 | Need                          | Doc                                                                   |
 | ----------------------------- | --------------------------------------------------------------------- |
-| Actions                       | `.ai/docs/components/Button.md`                                       |
+| Actions                       | `.ai/docs/components/Button.md`, `ButtonGroup.md`                     |
 | Surfaces / modal body         | `.ai/docs/components/Card.md`                                         |
 | Avatar                        | `.ai/docs/components/Avatar.md`                                       |
 | Badge                         | `.ai/docs/components/Badge.md`                                        |

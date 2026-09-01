@@ -89,4 +89,4 @@ import { Button } from "@bridge-ui/react/Components/Button";
 
 ## Related components
 
-Link, Icon
+Link, Icon, ButtonGroup

@@ -90,4 +90,4 @@ import { Button } from "@bridge-ui/vue/Components/Button";
 
 ## Related components
 
-Link, Icon
+Link, Icon, ButtonGroup
