@@ -640,3 +640,36 @@ export function mergeListboxOptionsByValue(
 ): ListboxOption[] {
   return Object.values(keyBy(flatten(lists), (option) => String(option.value)));
 }
+
+/**
+ * Inserts `option` or replaces the existing entry with the same value.
+ * Returns the same array when nothing changed.
+ */
+export function upsertListboxOption(
+  list: ListboxOption[],
+  option: ListboxOption,
+): ListboxOption[] {
+  const index = list.findIndex((entry) => {
+    return String(entry.value) === String(option.value);
+  });
+
+  if (index < 0) {
+    return [...list, option];
+  }
+
+  const current = list[index];
+
+  if (
+    current?.label === option.label &&
+    current.description === option.description &&
+    Boolean(current.disabled) === Boolean(option.disabled)
+  ) {
+    return list;
+  }
+
+  const next = [...list];
+
+  next[index] = option;
+
+  return next;
+}

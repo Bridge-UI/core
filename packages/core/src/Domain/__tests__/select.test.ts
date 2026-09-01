@@ -24,6 +24,7 @@ import {
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
+  upsertListboxOption,
 } from "@/Domain/select";
 
 const keys = {
@@ -505,6 +506,29 @@ describe("mergeListboxOptionsByValue", () => {
         [{ value: "low", label: "low" }],
         [{ value: "low", label: "Low" }],
       ),
+    ).toEqual([{ value: "low", label: "Low" }]);
+  });
+});
+
+describe("upsertListboxOption", () => {
+  test("it should append a new option", () => {
+    expect(
+      upsertListboxOption([{ value: "low", label: "Low" }], {
+        value: "high",
+        label: "High",
+      }),
+    ).toEqual([
+      { value: "low", label: "Low" },
+      { value: "high", label: "High" },
+    ]);
+  });
+
+  test("it should replace the label for an existing value", () => {
+    expect(
+      upsertListboxOption([{ value: "low", label: "low" }], {
+        value: "low",
+        label: "Low",
+      }),
     ).toEqual([{ value: "low", label: "Low" }]);
   });
 });

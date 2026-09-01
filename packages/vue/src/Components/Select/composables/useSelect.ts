@@ -225,7 +225,7 @@ export function useSelect(
   }
 
   const hasComposedList = computed(() => {
-    return defaultSlotIsComposedList() && !selectMerged.value.options?.length;
+    return defaultSlotIsComposedList();
   });
 
   const composedOptionsFromSlot = computed(() => {
@@ -270,8 +270,8 @@ export function useSelect(
   const resolvedOptions = computed(() => {
     if (hasComposedList.value) {
       return mergeListboxOptionsByValue(
-        composedOptionsFromSlot.value,
         registeredOptions.value,
+        composedOptionsFromSlot.value,
       );
     }
 
@@ -1012,11 +1012,16 @@ export function useSelect(
 
     if (
       current.length === options.length &&
-      current.every(
-        (option, index) =>
-          String(option.value) === String(options[index]?.value) &&
-          option.label === options[index]?.label,
-      )
+      current.every((option, index) => {
+        const next = options[index];
+
+        return (
+          option.label === next?.label &&
+          option.description === next?.description &&
+          String(option.value) === String(next?.value) &&
+          Boolean(option.disabled) === Boolean(next?.disabled)
+        );
+      })
     ) {
       return;
     }

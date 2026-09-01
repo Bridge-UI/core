@@ -117,13 +117,13 @@ export function useSelect(
   const breakpoint = useBreakpoint();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const containerRef = useRef<null | HTMLElement>(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [draftValues, setDraftValues] = useState<SelectValue[]>([]);
-  const containerRef = useRef<null | HTMLElement>(null);
 
   const [asyncLoading, setAsyncLoading] = useState(false);
-  const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
   const asyncSearchRef = useRef<null | SelectAsyncSearch>(null);
+  const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
   const [resolvedSelected, setResolvedSelected] = useState<SelectOption[]>([]);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<SelectProps["value"]>(defaultValue);
@@ -187,11 +187,16 @@ export function useSelect(
       setRegisteredOptions((current) => {
         if (
           current.length === options.length &&
-          current.every(
-            (option, index) =>
-              String(option.value) === String(options[index]?.value) &&
-              option.label === options[index]?.label,
-          )
+          current.every((option, index) => {
+            const next = options[index];
+
+            return (
+              option.label === next?.label &&
+              option.description === next?.description &&
+              String(option.value) === String(next?.value) &&
+              Boolean(option.disabled) === Boolean(next?.disabled)
+            );
+          })
         ) {
           return current;
         }
@@ -202,7 +207,7 @@ export function useSelect(
     [],
   );
 
-  const hasComposedChildren = selectMerged.children != null;
+  const hasComposedChildren = !isNil(selectMerged.children);
 
   const composedOptionsFromChildren = useMemo(() => {
     return collectComposedListboxOptions(selectMerged.children);
@@ -245,8 +250,8 @@ export function useSelect(
   const resolvedOptions = useMemo(() => {
     if (hasComposedChildren) {
       return mergeListboxOptionsByValue(
-        composedOptionsFromChildren,
         registeredOptions,
+        composedOptionsFromChildren,
       );
     }
 

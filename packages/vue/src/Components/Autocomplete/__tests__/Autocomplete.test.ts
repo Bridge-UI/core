@@ -261,6 +261,28 @@ test("it should render grouped options with section titles", async () => {
   expect(document.body.textContent).toContain("Active");
 });
 
+test("it should display composed ListItem primary in the trigger when closed", () => {
+  mountAutocomplete({
+    props: {
+      options: [],
+      modelValue: "low",
+    },
+    slots: {
+      default: () => [
+        h(ListSection, { title: "Severity" }),
+        h(ListItem, { value: "low", primary: "Low" }),
+        h(ListItem, { value: "medium", primary: "Medium" }),
+      ],
+    },
+  });
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Low");
+});
+
 test("it should select from composed default slot", async () => {
   const onChange = vi.fn();
 

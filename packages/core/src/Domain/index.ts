@@ -213,6 +213,7 @@ export {
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
+  upsertListboxOption,
 } from "@/Domain/select";
 export type {
   ComposedListboxItemProps,

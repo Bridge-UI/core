@@ -7,6 +7,7 @@ import {
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
+  upsertListboxOption,
   type ListboxOption,
   type ListboxValue,
 } from "@bridge-ui/core/Domain";
@@ -120,7 +121,7 @@ function Listbox({
     return flattenListboxOptions(resolvedEntries);
   }, [resolvedEntries]);
 
-  const hasComposedChildren = children != null;
+  const hasComposedChildren = !isNil(children);
 
   const showEmptyState =
     !loading &&
@@ -180,13 +181,11 @@ function Listbox({
   }, [onCancel, onShowChange]);
 
   const registerOption = useCallback((option: ListboxOption) => {
-    const alreadyRegistered = registeredOptionsRef.current.some(
-      (entry) => String(entry.value) === String(option.value),
-    );
+    const next = upsertListboxOption(registeredOptionsRef.current, option);
 
-    if (!alreadyRegistered) {
-      registeredOptionsRef.current = [...registeredOptionsRef.current, option];
-      setRegisteredOptions(registeredOptionsRef.current);
+    if (next !== registeredOptionsRef.current) {
+      registeredOptionsRef.current = next;
+      setRegisteredOptions(next);
     }
 
     return () => {

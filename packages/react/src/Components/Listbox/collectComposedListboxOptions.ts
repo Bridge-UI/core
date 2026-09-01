@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import { Children, isValidElement, type ReactNode } from "react";
 
 // ** Core Imports
@@ -34,7 +35,7 @@ export function collectComposedListboxOptions(
       options.push(option);
     }
 
-    if (props.children != null) {
+    if (!isNil(props.children)) {
       options.push(...collectComposedListboxOptions(props.children));
     }
   });
