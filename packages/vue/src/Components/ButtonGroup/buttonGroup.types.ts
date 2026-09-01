@@ -3,8 +3,8 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  ButtonColor,
   ButtonDensity,
-  ButtonGroupColor,
   ButtonGroupOrientation,
   ButtonRounded,
   ButtonSize,
@@ -14,13 +14,13 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type {
+  ButtonColorOverrides,
   ButtonDensityOverrides,
   ButtonRoundedOverrides,
   ButtonSizeOverrides,
   ButtonVariantOverrides,
 } from "@/Components/Button/button.types";
 
-export interface ButtonGroupColorOverrides {}
 export interface ButtonGroupOrientationOverrides {}
 
 export interface ButtonGroupClasses {
@@ -53,11 +53,11 @@ export interface ButtonGroupOwnProps {
   classes?: ButtonGroupClasses;
 
   /**
-   * Semantic color of the divider. Nested `Button` children inherit it when set.
+   * Color applied to nested `Button` children when set. The divider follows the button text color.
    *
    * @default "primary"
    */
-  color?: MergeProps<ButtonGroupColor, ButtonGroupColorOverrides>;
+  color?: MergeProps<ButtonColor, ButtonColorOverrides>;
 
   /**
    * Extra props for internal parts.
@@ -98,7 +98,7 @@ export interface ButtonGroupOwnProps {
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
   /**
-   * Draw a full-height divider between adjacent children. The fill follows `variant`.
+   * Draw a full-height divider between adjacent children. The fill matches the button text color.
    *
    * @default true
    */

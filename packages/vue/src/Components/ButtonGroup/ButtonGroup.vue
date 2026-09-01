@@ -17,9 +17,9 @@ const props = withDefaults(defineProps<ButtonGroupOwnProps>(), {
 
 const { rootBind } = useButtonGroup(props, {
   full: false,
+  separator: true,
   color: "primary",
   variant: "solid",
-  separator: true,
   orientation: "horizontal",
 });
 </script>

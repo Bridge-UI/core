@@ -1,7 +1,6 @@
 // ** Exports
 export type {
   ButtonGroupClasses,
-  ButtonGroupColorOverrides,
   ButtonGroupCustomProps,
   ButtonGroupOrientationOverrides,
   ButtonGroupOwnProps,

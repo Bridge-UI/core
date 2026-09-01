@@ -14,6 +14,7 @@ export interface ButtonGroupOrientationItem {
 
   /**
    * Full-height divider geometry when `separator` is true.
+   * Fill uses `currentColor` so it tracks the `Button` label color.
    */
   "separator": string;
 }
@@ -43,7 +44,7 @@ export const orientationProps: ButtonGroupOrientation = {
     "join":
       "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:-ms-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-s-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-e-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-s-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-e-none",
     "separator":
-      "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:relative [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-s-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-e-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-s-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-e-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:pointer-events-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:absolute [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:inset-y-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:start-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:w-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:content-['']",
+      "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:relative [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-s-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-e-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-s-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-e-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:pointer-events-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:absolute [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:inset-y-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:start-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:w-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:bg-current [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:content-['']",
   },
   "vertical": {
     "root":
@@ -51,6 +52,6 @@ export const orientationProps: ButtonGroupOrientation = {
     "join":
       "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:-mt-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-t-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-b-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-t-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-b-none",
     "separator":
-      "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:relative [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-t-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-b-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-t-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-b-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:pointer-events-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:absolute [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:inset-x-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:top-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:h-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:content-['']",
+      "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:relative [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-t-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-b-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-t-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-b-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:pointer-events-none [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:absolute [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:inset-x-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:top-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:h-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:bg-current [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:before:content-['']",
   },
 };

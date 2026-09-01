@@ -3,10 +3,7 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import {
-  buttonGroupColorProps as colorProps,
-  buttonGroupOrientationProps as orientationProps,
-} from "@bridge-ui/core/Tokens";
+import { buttonGroupOrientationProps as orientationProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -133,24 +130,6 @@ export function useButtonGroup(
     bridgeButtonGroup?.defaultProps,
   ]);
 
-  const colorItem = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeButtonGroup?.tokens?.color,
-    );
-
-    return get(classes, [
-      contextValue.color ?? merged.color,
-      contextValue.variant ?? merged.variant,
-    ]);
-  }, [
-    merged.color,
-    merged.variant,
-    contextValue.color,
-    contextValue.variant,
-    bridgeButtonGroup?.tokens?.color,
-  ]);
-
   const rootBind = derived(() => {
     const separatorOn = merged.separator === true;
 
@@ -161,7 +140,6 @@ export function useButtonGroup(
         [get(orientationItem, "root") ?? ""]: true,
         [get(orientationItem, "join") ?? ""]: !separatorOn,
         [get(orientationItem, "separator") ?? ""]: separatorOn,
-        [colorItem ?? ""]: separatorOn,
         [mergedClasses.root ?? ""]: true,
         "w-full [&>*]:flex-1": merged.full === true,
       }),

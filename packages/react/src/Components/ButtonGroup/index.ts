@@ -2,7 +2,6 @@
 export { default as ButtonGroup } from "@/Components/ButtonGroup/ButtonGroup";
 export type {
   ButtonGroupClasses,
-  ButtonGroupColorOverrides,
   ButtonGroupCustomProps,
   ButtonGroupOrientationOverrides,
   ButtonGroupOwnProps,

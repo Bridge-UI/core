@@ -69,11 +69,11 @@ test("it should draw a hairline between children by default", () => {
     .classes()
     .join(" ");
 
-  expect(className).toContain("before:w-px");
-  expect(className).toContain("before:inset-y-0");
   expect(className).not.toContain("-ms-px");
   expect(className).not.toContain("gap-px");
-  expect(className).toContain("before:bg-white/25");
+  expect(className).toContain("before:w-px");
+  expect(className).toContain("before:inset-y-0");
+  expect(className).toContain("before:bg-current");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
@@ -90,7 +90,7 @@ test("it should overlap adjacent children when separator is false", () => {
   expect(className).not.toContain("before:w-px");
 });
 
-test("it should color the hairline from the group variant", () => {
+test("it should color the hairline from the button text color", () => {
   const wrapper = mountButtonGroup({
     props: { variant: "outline" },
   });
@@ -99,19 +99,7 @@ test("it should color the hairline from the group variant", () => {
     .classes()
     .join(" ");
 
-  expect(className).toContain("before:bg-primary-600");
-});
-
-test("it should color the hairline when color is set", () => {
-  const wrapper = mountButtonGroup({
-    props: { color: "error", variant: "outline" },
-  });
-  const className = wrapper
-    .find('[data-slot="button-group"]')
-    .classes()
-    .join(" ");
-
-  expect(className).toContain("before:bg-error-600");
+  expect(className).toContain("before:bg-current");
 });
 
 test("it should stretch to full width when full is set", () => {
@@ -283,7 +271,7 @@ test("it should draw the parent variant divider inside nested groups", () => {
 
   const groups = wrapper.findAll('[data-slot="button-group"]');
 
-  expect(groups[1]?.classes().join(" ")).toContain("before:bg-primary-600");
+  expect(groups[1]?.classes().join(" ")).toContain("before:bg-current");
 });
 
 test("it should keep the group variant on mini buttons and stretch their height", () => {
@@ -308,7 +296,48 @@ test("it should keep the group variant on mini buttons and stretch their height"
     .join(" ");
 
   expect(className).toContain("h-auto");
+  expect(className).toContain("min-h-7");
   expect(className).toContain("bg-primary-500");
   expect(className).toContain("border-transparent");
-  expect(className).not.toContain("h-7");
+  expect(className.split(/\s+/).includes("h-7")).toBe(false);
+});
+
+test("it should keep mini size when the group density is mini", () => {
+  const wrapper = mount(ButtonGroup, {
+    props: { density: "mini", variant: "outline" },
+    slots: {
+      default: () => h(Button, null, { default: () => "B" }),
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const className = wrapper.find("button").classes();
+
+  expect(className).toContain("w-7");
+  expect(className).toContain("h-7");
+  expect(className).toContain("min-w-7");
+  expect(className).not.toContain("h-auto");
+});
+
+test("it should keep mini size in a vertical group", () => {
+  const wrapper = mount(ButtonGroup, {
+    slots: {
+      default: () => h(Button, null, { default: () => "B" }),
+    },
+    props: {
+      density: "mini",
+      variant: "outline",
+      orientation: "vertical",
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const className = wrapper.find("button").classes();
+
+  expect(className).toContain("w-7");
+  expect(className).toContain("h-7");
+  expect(className).toContain("min-w-7");
+  expect(className).toContain("min-h-7");
 });

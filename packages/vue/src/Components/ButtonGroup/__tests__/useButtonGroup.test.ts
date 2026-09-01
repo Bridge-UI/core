@@ -1,11 +1,10 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { computed, defineComponent, h, provide } from "vue";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import {
-  BUTTON_GROUP_INJECTION_KEY,
   useButtonGroup,
   type ButtonGroupOwnProps,
   type ButtonGroupProps,
@@ -13,9 +12,9 @@ import {
 
 const libDefaults = {
   full: false,
+  separator: true,
   color: "primary",
   variant: "solid",
-  separator: true,
   orientation: "horizontal",
 } satisfies Partial<ButtonGroupOwnProps>;
 
@@ -112,11 +111,11 @@ test("it should include nested group spacing classes on rootBind", () => {
 test("it should draw a hairline on the default orientation", () => {
   const { rootBind } = mountUseButtonGroup();
 
-  expect(rootBind.value.class).toContain("before:w-px");
-  expect(rootBind.value.class).toContain("before:inset-y-0");
   expect(rootBind.value.class).not.toContain("-ms-px");
   expect(rootBind.value.class).not.toContain("gap-px");
-  expect(rootBind.value.class).toContain("before:bg-white/25");
+  expect(rootBind.value.class).toContain("before:w-px");
+  expect(rootBind.value.class).toContain("before:inset-y-0");
+  expect(rootBind.value.class).toContain("before:bg-current");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
@@ -127,58 +126,14 @@ test("it should overlap adjacent children when separator is false", () => {
   expect(rootBind.value.class).not.toContain("before:w-px");
 });
 
-test("it should color the hairline from the group variant", () => {
+test("it should fill the hairline with the button text color", () => {
   const { rootBind } = mountUseButtonGroup({ variant: "outline" });
 
-  expect(rootBind.value.class).toContain("before:bg-primary-600");
-});
-
-test("it should use a light divider fill when variant is light", () => {
-  const { rootBind } = mountUseButtonGroup({ variant: "light" });
-
-  expect(rootBind.value.class).toContain("before:bg-white/50");
-});
-
-test("it should color the hairline when color is set", () => {
-  const { rootBind } = mountUseButtonGroup({
-    color: "error",
-    variant: "outline",
-  });
-
-  expect(rootBind.value.class).toContain("before:bg-error-600");
+  expect(rootBind.value.class).toContain("before:bg-current");
 });
 
 test("it should apply a vertical hairline when orientation is vertical", () => {
   const { rootBind } = mountUseButtonGroup({ orientation: "vertical" });
 
   expect(rootBind.value.class).toContain("before:h-px");
-});
-
-test("it should inherit divider fill from parent ButtonGroup variant", () => {
-  let result!: ReturnType<typeof useButtonGroup>;
-
-  const Consumer = defineComponent({
-    setup() {
-      result = useButtonGroup({}, libDefaults);
-
-      return () => h("div");
-    },
-  });
-
-  const Wrapper = defineComponent({
-    setup() {
-      provide(
-        BUTTON_GROUP_INJECTION_KEY,
-        computed(() => {
-          return { variant: "outline" as const };
-        }),
-      );
-
-      return () => h(Consumer);
-    },
-  });
-
-  mount(Wrapper);
-
-  expect(result.rootBind.value.class).toContain("before:bg-primary-600");
 });

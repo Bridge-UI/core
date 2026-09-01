@@ -5,9 +5,9 @@ import { useButtonGroup } from "@/Components/ButtonGroup/hooks/useButtonGroup";
 
 const buttonGroupLibDefaults = {
   full: false,
+  separator: true,
   color: "primary",
   variant: "solid",
-  separator: true,
   orientation: "horizontal",
 } as const;
 

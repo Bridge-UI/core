@@ -134,7 +134,6 @@ export {
 } from "@/Components/ButtonGroup";
 export type {
   ButtonGroupClasses,
-  ButtonGroupColorOverrides,
   ButtonGroupContextValue,
   ButtonGroupCustomProps,
   ButtonGroupOrientationOverrides,

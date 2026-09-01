@@ -57,11 +57,11 @@ test("it should draw a hairline between children by default", () => {
   const className =
     container.querySelector('[data-slot="button-group"]')?.className ?? "";
 
-  expect(className).toContain("before:w-px");
-  expect(className).toContain("before:inset-y-0");
   expect(className).not.toContain("-ms-px");
   expect(className).not.toContain("gap-px");
-  expect(className).toContain("before:bg-white/25");
+  expect(className).toContain("before:w-px");
+  expect(className).toContain("before:inset-y-0");
+  expect(className).toContain("before:bg-current");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
@@ -79,7 +79,7 @@ test("it should overlap adjacent children when separator is false", () => {
   expect(className).not.toContain("before:w-px");
 });
 
-test("it should color the hairline from the group variant", () => {
+test("it should color the hairline from the button text color", () => {
   const { container } = render(
     <ButtonGroup variant="outline">
       <Button>Copy</Button>
@@ -89,20 +89,7 @@ test("it should color the hairline from the group variant", () => {
   const className =
     container.querySelector('[data-slot="button-group"]')?.className ?? "";
 
-  expect(className).toContain("before:bg-primary-600");
-});
-
-test("it should color the hairline when color is set", () => {
-  const { container } = render(
-    <ButtonGroup color="error" variant="outline">
-      <Button>Copy</Button>
-    </ButtonGroup>,
-  );
-
-  const className =
-    container.querySelector('[data-slot="button-group"]')?.className ?? "";
-
-  expect(className).toContain("before:bg-error-600");
+  expect(className).toContain("before:bg-current");
 });
 
 test("it should stretch to full width when full is set", () => {
@@ -248,16 +235,47 @@ test("it should keep the group variant on mini buttons and stretch their height"
   render(
     <ButtonGroup>
       <Button>Save</Button>
-      <Button density="mini" icon={CircleAlert} aria-label="More" />
+      <Button density="mini" aria-label="More" icon={CircleAlert} />
     </ButtonGroup>,
   );
 
   const className = screen.getByRole("button", { name: "More" }).className;
 
   expect(className).toContain("h-auto");
+  expect(className).toContain("min-h-7");
   expect(className).toContain("bg-primary-500");
   expect(className).toContain("border-transparent");
-  expect(className).not.toContain("h-7");
+  expect(className.split(/\s+/).includes("h-7")).toBe(false);
+});
+
+test("it should keep mini size when the group density is mini", () => {
+  render(
+    <ButtonGroup density="mini" variant="outline">
+      <Button>B</Button>
+    </ButtonGroup>,
+  );
+
+  const className = screen.getByRole("button").className;
+
+  expect(className.split(/\s+/).includes("w-7")).toBe(true);
+  expect(className.split(/\s+/).includes("h-7")).toBe(true);
+  expect(className.split(/\s+/).includes("h-auto")).toBe(false);
+  expect(className.split(/\s+/).includes("min-w-7")).toBe(true);
+});
+
+test("it should keep mini size in a vertical group", () => {
+  render(
+    <ButtonGroup density="mini" variant="outline" orientation="vertical">
+      <Button>B</Button>
+    </ButtonGroup>,
+  );
+
+  const className = screen.getByRole("button").className;
+
+  expect(className.split(/\s+/).includes("w-7")).toBe(true);
+  expect(className.split(/\s+/).includes("h-7")).toBe(true);
+  expect(className.split(/\s+/).includes("min-w-7")).toBe(true);
+  expect(className.split(/\s+/).includes("min-h-7")).toBe(true);
 });
 
 test("it should draw the parent variant divider inside nested groups", () => {
@@ -272,5 +290,5 @@ test("it should draw the parent variant divider inside nested groups", () => {
 
   const groups = container.querySelectorAll('[data-slot="button-group"]');
 
-  expect(groups[1]?.className).toContain("before:bg-primary-600");
+  expect(groups[1]?.className).toContain("before:bg-current");
 });

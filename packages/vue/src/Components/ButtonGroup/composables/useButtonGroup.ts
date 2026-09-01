@@ -3,10 +3,7 @@ import { get } from "es-toolkit/compat";
 import { computed, inject, provide, useAttrs } from "vue";
 
 // ** Core Imports
-import {
-  buttonGroupColorProps as colorProps,
-  buttonGroupOrientationProps as orientationProps,
-} from "@bridge-ui/core/Tokens";
+import { buttonGroupOrientationProps as orientationProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -115,18 +112,6 @@ export function useButtonGroup(
     };
   });
 
-  const colorItem = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeButtonGroup.value?.tokens?.color,
-    );
-
-    return get(classes, [
-      contextValue.value.color ?? merged.value.color,
-      contextValue.value.variant ?? merged.value.variant,
-    ]);
-  });
-
   provide(BUTTON_GROUP_INJECTION_KEY, contextValue);
 
   const rootBind = computed(() => {
@@ -139,7 +124,6 @@ export function useButtonGroup(
         [get(orientationItem.value, "root") ?? ""]: true,
         [get(orientationItem.value, "join") ?? ""]: !separatorOn,
         [get(orientationItem.value, "separator") ?? ""]: separatorOn,
-        [colorItem.value ?? ""]: separatorOn,
         [mergedClasses.value.root ?? ""]: true,
         "w-full [&>*]:flex-1": merged.value.full === true,
       }),
