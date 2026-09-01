@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNull, omit } from "es-toolkit/compat";
+import { get, isNil, isNull, omit } from "es-toolkit/compat";
 import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
@@ -78,7 +78,7 @@ export function useListItem(
     componentName: "ListItem",
   });
 
-  const hasListboxContext = listboxContext != null;
+  const hasListboxContext = !isNil(listboxContext);
 
   const listboxOption = useMemo((): null | ListboxOption => {
     if (!hasListboxContext) {
@@ -172,7 +172,7 @@ export function useListItem(
     return hasSlotOrProp(slots, "secondary", merged.secondary);
   });
 
-  const isListboxOption = listboxOption != null;
+  const isListboxOption = !isNil(listboxOption);
   const isInteractiveRow = Boolean(merged.interactive || isListboxOption);
 
   const resolvedSelectedIcon = useMemo((): null | IconSource => {
@@ -247,7 +247,8 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "text-sm": !isListboxOption,
           "cursor-pointer select-none": !merged.disabled,
           "px-2": !isListboxOption,
           "py-1.5": !isListboxOption && !isDense,
@@ -312,11 +313,12 @@ export function useListItem(
     return mergePartBind(
       customProps?.primary,
       {},
-      cn(
-        "block truncate text-sm font-medium leading-none",
-        listboxContext?.sizeClasses?.primary,
-        get(mergedClasses, "primary"),
-      ),
+      cn({
+        "block truncate leading-none": true,
+        [listboxContext?.sizeClasses?.primary ?? ""]: isListboxOption,
+        "text-sm font-medium": !isListboxOption,
+        [get(mergedClasses, "primary") ?? ""]: true,
+      }),
     );
   });
 
@@ -324,11 +326,12 @@ export function useListItem(
     return mergePartBind(
       customProps?.secondary,
       {},
-      cn(
-        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400",
-        listboxContext?.sizeClasses?.secondary,
-        get(mergedClasses, "secondary"),
-      ),
+      cn({
+        "block truncate text-dark-500 dark:text-dark-400": true,
+        [listboxContext?.sizeClasses?.secondary ?? ""]: isListboxOption,
+        "mt-0.5 text-xs": !isListboxOption,
+        [get(mergedClasses, "secondary") ?? ""]: true,
+      }),
     );
   });
 
@@ -348,12 +351,12 @@ export function useListItem(
       customProps?.selectedIcon,
       {},
       {
-        size: "sm" as const,
-        className: cn(
-          "block shrink-0",
-          listboxContext?.checkClass,
-          get(mergedClasses, "selectedIcon"),
-        ),
+        ...(isListboxOption ? {} : { size: "sm" as const }),
+        className: cn({
+          "block shrink-0": true,
+          [listboxContext?.checkClass ?? ""]: isListboxOption,
+          [get(mergedClasses, "selectedIcon") ?? ""]: true,
+        }),
       },
     );
   });

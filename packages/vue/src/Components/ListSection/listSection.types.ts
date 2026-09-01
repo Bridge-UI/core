@@ -79,7 +79,8 @@ export interface ListSectionOwnProps {
 
 export interface ListSectionSlots {
   /**
-   * Section label content. Overrides `title` when provided.
+   * Section label content. Overrides `title` when provided. Nested items
+   * belong as siblings of `ListSection`, not inside this slot.
    */
   default?: Slot<undefined>;
 }

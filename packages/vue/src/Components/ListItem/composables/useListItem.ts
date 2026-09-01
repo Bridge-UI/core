@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNull, omit } from "es-toolkit/compat";
+import { get, isNil, isNull, omit } from "es-toolkit/compat";
 import {
   computed,
   getCurrentInstance,
@@ -68,7 +68,7 @@ export function useListItem(
 
   const listContext = inject(LIST_INJECTION_KEY, null);
   const listboxContextRef = inject(LISTBOX_INJECTION_KEY, null);
-  const hasListboxContext = listboxContextRef != null;
+  const hasListboxContext = !isNil(listboxContextRef);
 
   const split = computed(() => {
     return splitComponentProps<ListItemProps, typeof listItemBridgeKeys>({
@@ -135,7 +135,7 @@ export function useListItem(
   });
 
   const isListboxOption = computed(() => {
-    return listboxOption.value != null;
+    return !isNil(listboxOption.value);
   });
 
   const listboxSelected = computed(() => {
@@ -279,7 +279,8 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "text-sm": !isListboxOption.value,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-2": !isListboxOption.value,
           "py-1.5": !isListboxOption.value && !isDense.value,
@@ -353,11 +354,13 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.primary,
       {},
-      cn(
-        "block truncate text-sm font-medium leading-none",
-        listboxContext.value?.sizeClasses?.primary,
-        get(mergedClasses.value, "primary"),
-      ),
+      cn({
+        "block truncate leading-none": true,
+        [listboxContext.value?.sizeClasses?.primary ?? ""]:
+          isListboxOption.value,
+        "text-sm font-medium": !isListboxOption.value,
+        [get(mergedClasses.value, "primary") ?? ""]: true,
+      }),
     );
   });
 
@@ -365,11 +368,13 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.secondary,
       {},
-      cn(
-        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400",
-        listboxContext.value?.sizeClasses?.secondary,
-        get(mergedClasses.value, "secondary"),
-      ),
+      cn({
+        "block truncate text-dark-500 dark:text-dark-400": true,
+        [listboxContext.value?.sizeClasses?.secondary ?? ""]:
+          isListboxOption.value,
+        "mt-0.5 text-xs": !isListboxOption.value,
+        [get(mergedClasses.value, "secondary") ?? ""]: true,
+      }),
     );
   });
 
@@ -389,12 +394,12 @@ export function useListItem(
       customProps.value?.selectedIcon,
       {},
       {
-        size: "sm" as const,
-        class: cn(
-          "block shrink-0",
-          listboxContext.value?.checkClass,
-          get(mergedClasses.value, "selectedIcon"),
-        ),
+        ...(isListboxOption.value ? {} : { size: "sm" as const }),
+        class: cn({
+          "block shrink-0": true,
+          [listboxContext.value?.checkClass ?? ""]: isListboxOption.value,
+          [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
+        }),
       },
     );
   });

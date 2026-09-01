@@ -33,8 +33,8 @@ test("it should inherit dense padding from parent List", () => {
 
   const interactive = container.querySelector('[role="menuitem"]');
 
-  expect(interactive?.classList.contains("py-1.5")).toBe(false);
   expect(interactive?.classList.contains("py-1")).toBe(true);
+  expect(interactive?.classList.contains("py-1.5")).toBe(false);
   expect(interactive?.classList.contains("rounded-md")).toBe(true);
 });
 
