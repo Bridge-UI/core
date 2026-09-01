@@ -217,7 +217,10 @@ export function useButton(
         "shrink-0": isMini.value,
         [sizeClass.value ?? ""]: true,
         [roundedClass.value ?? ""]: true,
-        "h-auto": !isNil(groupContext),
+        "h-auto":
+          isMini.value &&
+          !isNil(groupContext) &&
+          groupContext.value?.density !== "mini",
         "border border-transparent":
           !isNil(groupContext) && variantKey.value !== "outline",
         "w-full": !isMini.value && merged.value.full,

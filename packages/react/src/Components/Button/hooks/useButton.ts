@@ -220,7 +220,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
         "shrink-0": isMini,
         [sizeClass ?? ""]: true,
         [roundedClass ?? ""]: true,
-        "h-auto": !isNil(group),
+        "h-auto": isMini && !isNil(group) && group?.density !== "mini",
         "border border-transparent": !isNil(group) && variantKey !== "outline",
         "w-full": !isMini && merged.full,
         "w-fit": !isMini && !merged.full,

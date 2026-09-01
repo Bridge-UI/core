@@ -261,9 +261,42 @@ test("it should not force flat variant on mini buttons inside a ButtonGroup", ()
 
   mount(Wrapper);
 
-  expect(result.rootBind.value.class).toContain("bg-primary-500");
   expect(result.rootBind.value.class).toContain("h-auto");
-  expect(result.rootBind.value.class).not.toContain("h-7");
+  expect(result.rootBind.value.class).toContain("min-h-7");
+  expect(result.rootBind.value.class).toContain("bg-primary-500");
+  expect(result.rootBind.value.class.split(/\s+/).includes("h-7")).toBe(false);
+});
+
+test("it should keep mini height when ButtonGroup density is mini", () => {
+  let result!: ReturnType<typeof useButton>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useButton({ density: "mini", icon: CircleAlert }, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        BUTTON_GROUP_INJECTION_KEY,
+        computed(() => {
+          return { density: "mini" as const };
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.rootBind.value.class.split(/\s+/).includes("h-7")).toBe(true);
+  expect(result.rootBind.value.class.split(/\s+/).includes("h-auto")).toBe(
+    false,
+  );
 });
 
 test("it should inherit appearance from ButtonGroup context", () => {
