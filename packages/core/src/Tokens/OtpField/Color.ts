@@ -11,6 +11,7 @@ export interface OtpFieldColorItem {
 }
 
 export interface OtpFieldColor {
+  "black": OtpFieldColorItem;
   "dark": OtpFieldColorItem;
   "error": OtpFieldColorItem;
   "info": OtpFieldColorItem;
@@ -48,5 +49,9 @@ export const colorProps: OtpFieldColor = {
   "secondary": {
     "pin": "focus-within:ring-secondary-600",
     "underlined": "focus-within:border-secondary-600",
+  },
+  "black": {
+    "pin": "focus-within:ring-black dark:focus-within:ring-white",
+    "underlined": "focus-within:border-black dark:focus-within:border-white",
   },
 };

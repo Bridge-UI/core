@@ -34,6 +34,7 @@ import { Divider } from "@bridge-ui/react/Components/Divider";
 
 ```tsx
 <Divider color="primary" />
+<Divider color="black" />
 <Divider color="error" />
 ```
 

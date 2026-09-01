@@ -44,6 +44,14 @@ test("it should apply primary color when color is primary", () => {
   expect(wrapper.find("hr").classes()).toContain("bg-primary-200");
 });
 
+test("it should apply black color when color is black", () => {
+  const wrapper = mount(Divider, {
+    props: { color: "black" },
+  });
+
+  expect(wrapper.find("hr").classes()).toContain("bg-black");
+});
+
 test("it should expose separator role", () => {
   const wrapper = mount(Divider);
 

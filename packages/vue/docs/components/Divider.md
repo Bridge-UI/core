@@ -34,6 +34,7 @@ import { Divider } from "@bridge-ui/vue/Components/Divider";
 
 ```vue
 <Divider color="primary" />
+<Divider color="black" />
 <Divider color="error" />
 ```
 

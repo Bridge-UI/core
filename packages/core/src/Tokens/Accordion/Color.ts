@@ -18,6 +18,11 @@ export interface AccordionColorItem {
  */
 export interface AccordionColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": AccordionColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": AccordionColorItem;
@@ -57,6 +62,10 @@ export interface AccordionColor {
  * Default accordion color maps (expanded accent).
  */
 export const colorProps: AccordionColor = {
+  "black": {
+    "indicator": "text-black dark:text-white",
+    "triggerExpanded": "text-black dark:text-white",
+  },
   "dark": {
     "indicator": "text-dark-800 dark:text-dark-100",
     "triggerExpanded": "text-dark-900 dark:text-dark-50",

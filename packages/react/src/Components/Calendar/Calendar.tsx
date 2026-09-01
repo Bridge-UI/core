@@ -101,7 +101,7 @@ function Calendar(props: CalendarProps) {
             </button>
 
             <button {...todayButtonBind}>
-              <span className="size-2 rounded-full bg-slate-600 dark:bg-slate-300" />
+              <span className="size-2 rounded-full bg-dark-600 dark:bg-dark-300" />
             </button>
 
             <button {...nextButtonBind}>

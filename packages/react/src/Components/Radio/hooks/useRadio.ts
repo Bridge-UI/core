@@ -193,7 +193,8 @@ export function useRadio(props: RadioProps, libDefaults: RadioLibDefaults) {
       customProps?.dot,
       {},
       cn({
-        "rounded-full bg-white transition-transform duration-100": true,
+        "rounded-full transition-transform duration-100": true,
+        [colorClasses?.dot ?? "bg-white"]: true,
         "scale-0": !checked,
         "scale-100": checked,
         "h-[42%] w-[42%]": true,

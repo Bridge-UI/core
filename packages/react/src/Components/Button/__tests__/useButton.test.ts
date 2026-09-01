@@ -164,6 +164,14 @@ test("it should honor explicit variant when density is mini", () => {
   expect(result.current.rootBind.className).toContain("bg-primary-500");
 });
 
+test("it should apply black high-contrast solid classes", () => {
+  const { result } = renderUseButton({ color: "black" });
+
+  expect(result.current.rootBind.className).toContain("bg-black");
+  expect(result.current.rootBind.className).toContain("text-white");
+  expect(result.current.rootBind.className).toContain("dark:bg-white");
+});
+
 test("it should not include full width class when density is mini", () => {
   const { result } = renderUseButton({
     full: true,

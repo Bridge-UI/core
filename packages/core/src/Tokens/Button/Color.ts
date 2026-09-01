@@ -22,6 +22,11 @@ export interface ButtonColorItem {
 
 export interface ButtonColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": ButtonColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": ButtonColorItem;
@@ -58,6 +63,14 @@ export interface ButtonColor {
 }
 
 export const flatProps: ButtonColor = {
+  "black": {
+    "base": "text-black dark:text-white",
+    "selected": "text-black bg-black/10 dark:text-white dark:bg-white/10",
+    "hover":
+      "hover:text-black hover:bg-black/10 dark:hover:text-white dark:hover:bg-white/10",
+    "focus":
+      "focus:ring-offset-0 focus:text-black focus:bg-black/10 focus:ring-black dark:focus:text-white dark:focus:bg-white/10 dark:focus:ring-white",
+  },
   "info": {
     "base": "text-info-600",
     "selected":
@@ -124,6 +137,14 @@ export const flatProps: ButtonColor = {
 };
 
 export const lightProps: ButtonColor = {
+  "black": {
+    "base": "text-black bg-black/10 dark:bg-white/10 dark:text-white",
+    "selected": "text-black bg-black/20 dark:text-white dark:bg-white/20",
+    "hover":
+      "hover:text-black hover:bg-black/20 dark:hover:text-white dark:hover:bg-white/20",
+    "focus":
+      "focus:ring-offset-2 focus:text-black focus:bg-black/20 focus:ring-black/40 dark:focus:text-white dark:focus:bg-white/20 dark:focus:ring-white/40",
+  },
   "dark": {
     "base":
       "text-dark-600 bg-dark-300/60 dark:bg-dark-600/60 dark:text-dark-400",
@@ -247,9 +268,25 @@ export const solidProps: ButtonColor = {
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-secondary-600 focus:ring-secondary-600 dark:focus:bg-secondary-600 dark:focus:ring-secondary-600",
   },
+  "black": {
+    "base": "text-white bg-black dark:bg-white dark:text-black",
+    "selected": "text-white bg-black/80 dark:bg-white/80 dark:text-black",
+    "hover":
+      "hover:text-white hover:bg-black/80 dark:hover:bg-white/80 dark:hover:text-black",
+    "focus":
+      "focus:text-white focus:ring-offset-2 focus:bg-black/80 focus:ring-black dark:focus:bg-white/80 dark:focus:text-black dark:focus:ring-white",
+  },
 };
 
 export const outlineProps: ButtonColor = {
+  "black": {
+    "selected": "text-black bg-black/10 dark:text-white dark:bg-white/10",
+    "base": "text-black border border-black dark:text-white dark:border-white",
+    "hover":
+      "hover:text-black hover:bg-black/10 dark:hover:text-white dark:hover:bg-white/10",
+    "focus":
+      "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-black focus:bg-black/10 focus:ring-black dark:focus:text-white dark:focus:bg-white/10 dark:focus:ring-white",
+  },
   "info": {
     "base": "text-info-600 border border-info-600",
     "selected":

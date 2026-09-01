@@ -22,6 +22,11 @@ export interface SwitchColorItem {
 
 export interface SwitchColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": SwitchColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": SwitchColorItem;
@@ -99,5 +104,11 @@ export const colorProps: SwitchColor = {
     "focus": "ring-secondary-500/30",
     "trackChecked": "bg-secondary-600",
     "track": "bg-dark-200 dark:bg-dark-700",
+  },
+  "black": {
+    "thumb": "bg-white dark:bg-black",
+    "track": "bg-dark-200 dark:bg-dark-700",
+    "trackChecked": "bg-black dark:bg-white",
+    "focus": "ring-black/30 dark:ring-white/30",
   },
 };

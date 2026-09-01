@@ -20,6 +20,8 @@ import { Badge } from "@bridge-ui/react/Components/Badge";
 <Badge variant="flat" color="success">
   Active
 </Badge>
+
+<Badge color="black">Black</Badge>
 ```
 
 ### Custom classes

@@ -17,6 +17,11 @@ export interface BadgeColorItem {
 
 export interface BadgeColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": BadgeColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": BadgeColorItem;
@@ -53,6 +58,10 @@ export interface BadgeColor {
 }
 
 export const flatProps: BadgeColor = {
+  "black": {
+    "text": "text-black dark:text-white",
+    "background": "bg-black/5 dark:bg-white/10",
+  },
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
     "background": "bg-dark-50 dark:bg-dark-900/70",
@@ -112,9 +121,18 @@ export const solidProps: BadgeColor = {
     "text": "text-white",
     "background": "bg-secondary-500",
   },
+  "black": {
+    "text": "text-white dark:text-black",
+    "background": "bg-black dark:bg-white",
+  },
 };
 
 export const outlineProps: BadgeColor = {
+  "black": {
+    "background": "bg-transparent",
+    "text": "text-black dark:text-white",
+    "border": "border border-black dark:border-white",
+  },
   "dark": {
     "background": "bg-transparent",
     "text": "text-dark-700 dark:text-dark-300",

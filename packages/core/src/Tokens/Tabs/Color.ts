@@ -19,6 +19,11 @@ export interface TabsColorItem {
  */
 export interface TabsColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": TabsColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": TabsColorItem;
@@ -59,6 +64,11 @@ export interface TabsColor {
  * No `border-*` here — that would recolor `divide-x` in `enclosed`.
  */
 export const colorProps: TabsColor = {
+  "black": {
+    "tabSelectedSoft": "bg-black/10 dark:bg-white/10",
+    "tabSelected":
+      "text-black hover:text-black dark:text-white dark:hover:text-white",
+  },
   "dark": {
     "tabSelectedSoft": "bg-dark-500/10 dark:bg-dark-500/20",
     "tabSelected":

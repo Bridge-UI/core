@@ -34,6 +34,11 @@ export interface StepperColorItem {
  */
 export interface StepperColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": StepperColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": StepperColorItem;
@@ -73,6 +78,14 @@ export interface StepperColor {
  * Default stepper color maps (active / completed accent).
  */
 export const colorProps: StepperColor = {
+  "black": {
+    "label": "text-black dark:text-white",
+    "connector": "bg-black dark:bg-white",
+    "completedHover": "group-hover:bg-black/80 dark:group-hover:bg-white/80",
+    "indicator": "border-black text-black dark:border-white dark:text-white",
+    "completed":
+      "border-transparent bg-black text-white dark:bg-white dark:text-black",
+  },
   "info": {
     "label": "text-info-600 dark:text-info-400",
     "connector": "bg-info-600 dark:bg-info-400",

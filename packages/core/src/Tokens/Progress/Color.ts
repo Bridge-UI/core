@@ -17,6 +17,11 @@ export interface ProgressColorItem {
 
 export interface ProgressColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": ProgressColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": ProgressColorItem;
@@ -53,6 +58,11 @@ export interface ProgressColor {
 }
 
 export const colorProps: ProgressColor = {
+  "black": {
+    "bar": "bg-black dark:bg-white",
+    "track": "bg-black/20 dark:bg-white/20",
+    "buffer": "bg-black/30 dark:bg-white/30",
+  },
   "dark": {
     "bar": "bg-dark-500 dark:bg-dark-400",
     "track": "bg-dark-200 dark:bg-dark-800",

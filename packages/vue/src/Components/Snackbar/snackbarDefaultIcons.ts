@@ -8,6 +8,7 @@ import type { IconSource } from "@/Adapters/Icon";
 export const snackbarDefaultIcons: Record<keyof SnackbarColor, IconSource> = {
   dark: "info",
   info: "alert",
+  black: "info",
   error: "error",
   primary: "bell",
   secondary: "info",

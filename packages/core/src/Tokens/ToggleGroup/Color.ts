@@ -19,6 +19,11 @@ export interface ToggleGroupColorItem {
  */
 export interface ToggleGroupColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": ToggleGroupColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": ToggleGroupColorItem;
@@ -58,6 +63,11 @@ export interface ToggleGroupColor {
  * Default toggle group color maps (selected only).
  */
 export const colorProps: ToggleGroupColor = {
+  "black": {
+    "itemSelectedSoft": "bg-black/10 dark:bg-white/10",
+    "itemSelected":
+      "text-black hover:text-black dark:text-white dark:hover:text-white",
+  },
   "dark": {
     "itemSelectedSoft": "bg-dark-500/10 dark:bg-dark-500/20",
     "itemSelected":

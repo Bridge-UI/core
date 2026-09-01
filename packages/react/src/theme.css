@@ -21,18 +21,18 @@
   /* Panel-max radius for large panels (`rounded="full"` on Menu / Card / …) */
   --radius-panel-full: 2.5rem;
 
-  /* Dark (slate) */
-  --color-dark-50: var(--color-slate-50);
-  --color-dark-100: var(--color-slate-100);
-  --color-dark-200: var(--color-slate-200);
-  --color-dark-300: var(--color-slate-300);
-  --color-dark-400: var(--color-slate-400);
-  --color-dark-500: var(--color-slate-500);
-  --color-dark-600: var(--color-slate-600);
-  --color-dark-700: var(--color-slate-700);
-  --color-dark-800: var(--color-slate-800);
-  --color-dark-900: var(--color-slate-900);
-  --color-dark-950: var(--color-slate-950);
+  /* Dark (zinc) */
+  --color-dark-50: var(--color-zinc-50);
+  --color-dark-100: var(--color-zinc-100);
+  --color-dark-200: var(--color-zinc-200);
+  --color-dark-300: var(--color-zinc-300);
+  --color-dark-400: var(--color-zinc-400);
+  --color-dark-500: var(--color-zinc-500);
+  --color-dark-600: var(--color-zinc-600);
+  --color-dark-700: var(--color-zinc-700);
+  --color-dark-800: var(--color-zinc-800);
+  --color-dark-900: var(--color-zinc-900);
+  --color-dark-950: var(--color-zinc-950);
 
   /* Primary (teal) */
   --color-primary-50: var(--color-teal-50);

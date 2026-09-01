@@ -27,6 +27,11 @@ export interface AlertColorItem {
 
 export interface AlertColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": AlertColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": AlertColorItem;
@@ -63,6 +68,11 @@ export interface AlertColor {
 }
 
 export const flatProps: AlertColor = {
+  "black": {
+    "text": "text-black dark:text-white",
+    "iconColor": "text-black dark:text-white",
+    "background": "bg-black/5 dark:bg-white/10",
+  },
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
     "background": "bg-dark-50 dark:bg-dark-900/70",
@@ -101,6 +111,11 @@ export const flatProps: AlertColor = {
 };
 
 export const solidProps: AlertColor = {
+  "black": {
+    "text": "text-white dark:text-black",
+    "background": "bg-black dark:bg-white",
+    "iconColor": "text-white dark:text-black",
+  },
   "dark": {
     "text": "text-white dark:text-black",
     "iconColor": "text-white dark:text-black",
@@ -150,6 +165,12 @@ export const outlineProps: AlertColor = {
     "border": "border border-info-600",
     "text": "text-info-800 dark:text-info-600",
     "iconColor": "text-info-800 dark:text-info-600",
+  },
+  "black": {
+    "background": "bg-transparent",
+    "text": "text-black dark:text-white",
+    "iconColor": "text-black dark:text-white",
+    "border": "border border-black dark:border-white",
   },
   "error": {
     "background": "bg-transparent",

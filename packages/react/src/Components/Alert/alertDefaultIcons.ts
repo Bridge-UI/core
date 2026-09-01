@@ -8,6 +8,7 @@ import type { IconSource } from "@/Adapters/Icon";
 export const alertDefaultIcons: Record<keyof AlertColor, IconSource> = {
   dark: "info",
   info: "alert",
+  black: "info",
   error: "error",
   primary: "bell",
   secondary: "info",

@@ -12,6 +12,11 @@ export interface TooltipColorItem {
 
 export interface TooltipColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": TooltipColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": TooltipColorItem;
@@ -67,6 +72,10 @@ export const colorProps: TooltipColor = {
   "warning": {
     "arrow": "bg-warning-600",
     "content": "bg-warning-600 text-white",
+  },
+  "black": {
+    "arrow": "bg-black dark:bg-white",
+    "content": "bg-black text-white dark:bg-white dark:text-black",
   },
   "dark": {
     "arrow": "bg-dark-900 dark:bg-dark-100",

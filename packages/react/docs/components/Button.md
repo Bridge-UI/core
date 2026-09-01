@@ -15,6 +15,8 @@ import { Button } from "@bridge-ui/react/Components/Button";
 ```tsx
 <Button color="primary">Click me</Button>
 
+<Button color="black">Black</Button>
+
 <Button startIcon={Plus} variant="outline">
   With icon
 </Button>

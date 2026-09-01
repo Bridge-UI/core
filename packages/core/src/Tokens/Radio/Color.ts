@@ -10,12 +10,22 @@ export interface RadioColorItem {
   "checked": string;
 
   /**
+   * Inner dot fill when selected.
+   */
+  "dot"?: string;
+
+  /**
    * Focus ring classes.
    */
   "focus": string;
 }
 
 export interface RadioColor {
+  /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": RadioColorItem;
+
   /**
    * `dark` semantic color palette.
    */
@@ -87,5 +97,11 @@ export const colorProps: RadioColor = {
     "focus": "ring-secondary-500/30",
     "base": "border-dark-300 dark:border-dark-600",
     "checked": "bg-secondary-600 border-secondary-600",
+  },
+  "black": {
+    "dot": "bg-white dark:bg-black",
+    "focus": "ring-black/30 dark:ring-white/30",
+    "base": "border-dark-300 dark:border-dark-600",
+    "checked": "bg-black border-black dark:bg-white dark:border-white",
   },
 };

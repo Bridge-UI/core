@@ -212,7 +212,7 @@ export function useCheckbox(
       customProps?.icon,
       {},
       cn({
-        "text-white": true,
+        [colorClasses?.icon ?? "text-white"]: true,
         [mergedClasses.icon ?? ""]: true,
       }),
     );
