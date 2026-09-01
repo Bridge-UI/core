@@ -90,6 +90,7 @@ export {
 } from "@/Tokens/ButtonGroup";
 export type {
   ButtonGroupColor,
+  ButtonGroupColorItem,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
 } from "@/Tokens/ButtonGroup";

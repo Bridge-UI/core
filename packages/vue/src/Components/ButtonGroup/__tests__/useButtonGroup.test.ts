@@ -12,7 +12,8 @@ import {
 
 const libDefaults = {
   full: false,
-  color: "dark",
+  color: "primary",
+  variant: "solid",
   separator: true,
   orientation: "horizontal",
 } satisfies Partial<ButtonGroupOwnProps>;
@@ -37,7 +38,7 @@ test("it should merge default orientation", () => {
   const { merged } = mountUseButtonGroup();
 
   expect(merged.value.full).toBe(false);
-  expect(merged.value.color).toBe("dark");
+  expect(merged.value.color).toBe("primary");
   expect(merged.value.separator).toBe(true);
   expect(merged.value.orientation).toBe("horizontal");
 });
@@ -111,22 +112,39 @@ test("it should draw a hairline on the default orientation", () => {
   const { rootBind } = mountUseButtonGroup();
 
   expect(rootBind.value.class).toContain("before:w-px");
+  expect(rootBind.value.class).toContain("before:inset-y-0");
   expect(rootBind.value.class).not.toContain("-ms-px");
   expect(rootBind.value.class).not.toContain("gap-px");
-  expect(rootBind.value.class).toContain("before:bg-dark-200");
+  expect(rootBind.value.class).toContain("before:bg-white/25");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
   const { rootBind } = mountUseButtonGroup({ separator: false });
 
   expect(rootBind.value.class).toContain("-ms-px");
+  expect(rootBind.value.class).toContain("border-e-0");
   expect(rootBind.value.class).not.toContain("before:w-px");
 });
 
-test("it should color the hairline when color is set", () => {
-  const { rootBind } = mountUseButtonGroup({ color: "primary" });
+test("it should color the hairline from the group variant", () => {
+  const { rootBind } = mountUseButtonGroup({ variant: "outline" });
 
-  expect(rootBind.value.class).toContain("before:bg-primary-200");
+  expect(rootBind.value.class).toContain("before:bg-primary-600");
+});
+
+test("it should use a light divider fill when variant is light", () => {
+  const { rootBind } = mountUseButtonGroup({ variant: "light" });
+
+  expect(rootBind.value.class).toContain("before:bg-white/50");
+});
+
+test("it should color the hairline when color is set", () => {
+  const { rootBind } = mountUseButtonGroup({
+    color: "error",
+    variant: "outline",
+  });
+
+  expect(rootBind.value.class).toContain("before:bg-error-600");
 });
 
 test("it should apply a vertical hairline when orientation is vertical", () => {

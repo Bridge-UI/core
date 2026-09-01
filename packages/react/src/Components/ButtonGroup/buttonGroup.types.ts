@@ -60,9 +60,9 @@ export interface ButtonGroupOwnProps {
   classes?: ButtonGroupClasses;
 
   /**
-   * Color of the hairline. Nested `Button` children inherit it when set.
+   * Semantic color of the divider. Nested `Button` children inherit it when set.
    *
-   * @default "dark"
+   * @default "primary"
    */
   color?: MergeProps<ButtonGroupColor, ButtonGroupColorOverrides>;
 
@@ -105,7 +105,7 @@ export interface ButtonGroupOwnProps {
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
   /**
-   * Draw a hairline between adjacent children.
+   * Draw a full-height divider between adjacent children. The fill follows `variant`.
    *
    * @default true
    */

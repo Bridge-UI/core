@@ -181,6 +181,23 @@ test("it should set aria-pressed and selected classes when selected", () => {
   expect(result.current.rootBind.className).toContain("bg-primary-400/25");
 });
 
+test("it should not force flat variant on mini buttons inside a ButtonGroup", () => {
+  const { result } = renderHook(
+    () =>
+      useButton(
+        { density: "mini", icon: CircleAlert },
+        libDefaults as Parameters<typeof useButton>[1],
+      ),
+    {
+      wrapper: ({ children }) =>
+        createElement(ButtonGroupContext.Provider, { value: {} }, children),
+    },
+  );
+
+  expect(result.current.rootBind.className).toContain("bg-primary-500");
+  expect(result.current.rootBind.className).toContain("h-full");
+});
+
 test("it should inherit appearance from ButtonGroup context", () => {
   const { result } = renderHook(
     () => useButton({}, libDefaults as Parameters<typeof useButton>[1]),

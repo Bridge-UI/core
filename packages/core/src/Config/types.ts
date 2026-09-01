@@ -45,6 +45,7 @@ import type {
 } from "@/Tokens/Button";
 import type {
   ButtonGroupColor,
+  ButtonGroupColorItem,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
 } from "@/Tokens/ButtonGroup";
@@ -541,7 +542,7 @@ export interface ButtonGroupConfigBase {
     variant: keyof ButtonVariant;
   }>;
   tokens: Partial<{
-    color: Record<string, string>;
+    color: Record<string, ButtonGroupColorItem>;
     orientation: Record<string, ButtonGroupOrientationItem>;
   }>;
 }

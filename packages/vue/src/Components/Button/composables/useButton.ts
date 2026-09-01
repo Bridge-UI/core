@@ -170,6 +170,10 @@ export function useButton(
       return resolvedProps.value.variant;
     }
 
+    if (!isNil(groupContext)) {
+      return merged.value.variant;
+    }
+
     return isMini.value ? "flat" : merged.value.variant;
   });
 
@@ -213,6 +217,7 @@ export function useButton(
         "shrink-0": isMini.value,
         [sizeClass.value ?? ""]: true,
         [roundedClass.value ?? ""]: true,
+        "h-full": !isNil(groupContext),
         "w-full": !isMini.value && merged.value.full,
         "w-fit": !isMini.value && !merged.value.full,
         "group hover:shadow-xs": !isMini.value,

@@ -175,8 +175,12 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
       return resolvedProps.variant;
     }
 
+    if (!isNil(group)) {
+      return merged.variant;
+    }
+
     return isMini ? "flat" : merged.variant;
-  }, [isMini, merged.variant, resolvedProps.variant]);
+  }, [group, isMini, merged.variant, resolvedProps.variant]);
 
   const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -216,6 +220,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
         "shrink-0": isMini,
         [sizeClass ?? ""]: true,
         [roundedClass ?? ""]: true,
+        "h-full": !isNil(group),
         "w-full": !isMini && merged.full,
         "w-fit": !isMini && !merged.full,
         "group hover:shadow-xs": !isMini,

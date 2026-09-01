@@ -1,4 +1,5 @@
 // ** External Imports
+import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 import { h } from "vue";
@@ -69,9 +70,10 @@ test("it should draw a hairline between children by default", () => {
     .join(" ");
 
   expect(className).toContain("before:w-px");
+  expect(className).toContain("before:inset-y-0");
   expect(className).not.toContain("-ms-px");
   expect(className).not.toContain("gap-px");
-  expect(className).toContain("before:bg-dark-200");
+  expect(className).toContain("before:bg-white/25");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
@@ -84,19 +86,32 @@ test("it should overlap adjacent children when separator is false", () => {
     .join(" ");
 
   expect(className).toContain("-ms-px");
+  expect(className).toContain("border-e-0");
   expect(className).not.toContain("before:w-px");
 });
 
-test("it should color the hairline when color is set", () => {
+test("it should color the hairline from the group variant", () => {
   const wrapper = mountButtonGroup({
-    props: { color: "primary" },
+    props: { variant: "outline" },
   });
   const className = wrapper
     .find('[data-slot="button-group"]')
     .classes()
     .join(" ");
 
-  expect(className).toContain("before:bg-primary-200");
+  expect(className).toContain("before:bg-primary-600");
+});
+
+test("it should color the hairline when color is set", () => {
+  const wrapper = mountButtonGroup({
+    props: { color: "error", variant: "outline" },
+  });
+  const className = wrapper
+    .find('[data-slot="button-group"]')
+    .classes()
+    .join(" ");
+
+  expect(className).toContain("before:bg-error-600");
 });
 
 test("it should stretch to full width when full is set", () => {
@@ -243,4 +258,29 @@ test("it should inherit size through a nested group", () => {
 
   expect(className).toContain("px-3");
   expect(className).toContain("border-primary-600");
+});
+
+test("it should keep the group variant on mini buttons and stretch their height", () => {
+  const wrapper = mount(ButtonGroup, {
+    slots: {
+      default: () => [
+        h(Button, null, { default: () => "Save" }),
+        h(Button, {
+          density: "mini",
+          icon: CircleAlert,
+          "aria-label": "More",
+        }),
+      ],
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const className = wrapper
+    .find('button[aria-label="More"]')
+    .classes()
+    .join(" ");
+
+  expect(className).toContain("bg-primary-500");
+  expect(className).toContain("h-full");
 });

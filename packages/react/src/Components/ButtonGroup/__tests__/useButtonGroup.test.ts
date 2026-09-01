@@ -12,7 +12,8 @@ import {
 
 const libDefaults = {
   full: false,
-  color: "dark",
+  color: "primary",
+  variant: "solid",
   separator: true,
   orientation: "horizontal",
 } as const satisfies Partial<ButtonGroupOwnProps>;
@@ -27,7 +28,7 @@ test("it should merge default orientation", () => {
   const { result } = renderUseButtonGroup();
 
   expect(result.current.merged.full).toBe(false);
-  expect(result.current.merged.color).toBe("dark");
+  expect(result.current.merged.color).toBe("primary");
   expect(result.current.merged.separator).toBe(true);
   expect(result.current.merged.orientation).toBe("horizontal");
 });
@@ -102,22 +103,39 @@ test("it should draw a hairline on the default orientation", () => {
   const { result } = renderUseButtonGroup();
 
   expect(result.current.rootBind.className).toContain("before:w-px");
+  expect(result.current.rootBind.className).toContain("before:inset-y-0");
   expect(result.current.rootBind.className).not.toContain("-ms-px");
   expect(result.current.rootBind.className).not.toContain("gap-px");
-  expect(result.current.rootBind.className).toContain("before:bg-dark-200");
+  expect(result.current.rootBind.className).toContain("before:bg-white/25");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
   const { result } = renderUseButtonGroup({ separator: false });
 
   expect(result.current.rootBind.className).toContain("-ms-px");
+  expect(result.current.rootBind.className).toContain("border-e-0");
   expect(result.current.rootBind.className).not.toContain("before:w-px");
 });
 
-test("it should color the hairline when color is set", () => {
-  const { result } = renderUseButtonGroup({ color: "primary" });
+test("it should color the hairline from the group variant", () => {
+  const { result } = renderUseButtonGroup({ variant: "outline" });
 
-  expect(result.current.rootBind.className).toContain("before:bg-primary-200");
+  expect(result.current.rootBind.className).toContain("before:bg-primary-600");
+});
+
+test("it should use a light divider fill when variant is light", () => {
+  const { result } = renderUseButtonGroup({ variant: "light" });
+
+  expect(result.current.rootBind.className).toContain("before:bg-white/50");
+});
+
+test("it should color the hairline when color is set", () => {
+  const { result } = renderUseButtonGroup({
+    color: "error",
+    variant: "outline",
+  });
+
+  expect(result.current.rootBind.className).toContain("before:bg-error-600");
 });
 
 test("it should apply a vertical hairline when orientation is vertical", () => {

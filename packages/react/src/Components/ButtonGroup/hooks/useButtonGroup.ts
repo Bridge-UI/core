@@ -47,7 +47,7 @@ const buttonGroupBridgeKeys = [
 
 type ButtonGroupLibDefaults = LibDefaultsShape<
   ButtonGroupOwnProps,
-  "full" | "color" | "separator" | "orientation"
+  "full" | "color" | "variant" | "separator" | "orientation"
 >;
 
 type ButtonGroupMerged = MergeLibDefaults<
@@ -109,8 +109,8 @@ export function useButtonGroup(
       bridgeButtonGroup?.tokens?.color,
     );
 
-    return get(classes, merged.color);
-  }, [merged.color, bridgeButtonGroup?.tokens?.color]);
+    return get(classes, [merged.color, merged.variant]);
+  }, [merged.color, merged.variant, bridgeButtonGroup?.tokens?.color]);
 
   const contextValue = useMemo((): ButtonGroupContextValue => {
     const registryDefaults = bridgeButtonGroup?.defaultProps;

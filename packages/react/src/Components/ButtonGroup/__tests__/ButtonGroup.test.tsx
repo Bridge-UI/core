@@ -1,5 +1,6 @@
 // ** External Imports
 import { cleanup, render, screen } from "@testing-library/react";
+import { CircleAlert } from "lucide-react";
 import { afterEach, expect, test } from "vitest";
 
 afterEach(() => {
@@ -57,9 +58,10 @@ test("it should draw a hairline between children by default", () => {
     container.querySelector('[data-slot="button-group"]')?.className ?? "";
 
   expect(className).toContain("before:w-px");
+  expect(className).toContain("before:inset-y-0");
   expect(className).not.toContain("-ms-px");
   expect(className).not.toContain("gap-px");
-  expect(className).toContain("before:bg-dark-200");
+  expect(className).toContain("before:bg-white/25");
 });
 
 test("it should overlap adjacent children when separator is false", () => {
@@ -73,12 +75,13 @@ test("it should overlap adjacent children when separator is false", () => {
     container.querySelector('[data-slot="button-group"]')?.className ?? "";
 
   expect(className).toContain("-ms-px");
+  expect(className).toContain("border-e-0");
   expect(className).not.toContain("before:w-px");
 });
 
-test("it should color the hairline when color is set", () => {
+test("it should color the hairline from the group variant", () => {
   const { container } = render(
-    <ButtonGroup color="primary">
+    <ButtonGroup variant="outline">
       <Button>Copy</Button>
     </ButtonGroup>,
   );
@@ -86,7 +89,20 @@ test("it should color the hairline when color is set", () => {
   const className =
     container.querySelector('[data-slot="button-group"]')?.className ?? "";
 
-  expect(className).toContain("before:bg-primary-200");
+  expect(className).toContain("before:bg-primary-600");
+});
+
+test("it should color the hairline when color is set", () => {
+  const { container } = render(
+    <ButtonGroup color="error" variant="outline">
+      <Button>Copy</Button>
+    </ButtonGroup>,
+  );
+
+  const className =
+    container.querySelector('[data-slot="button-group"]')?.className ?? "";
+
+  expect(className).toContain("before:bg-error-600");
 });
 
 test("it should stretch to full width when full is set", () => {
@@ -226,4 +242,18 @@ test("it should inherit size through a nested group", () => {
 
   expect(className).toContain("px-3");
   expect(className).toContain("border-primary-600");
+});
+
+test("it should keep the group variant on mini buttons and stretch their height", () => {
+  render(
+    <ButtonGroup>
+      <Button>Save</Button>
+      <Button density="mini" icon={CircleAlert} aria-label="More" />
+    </ButtonGroup>,
+  );
+
+  const className = screen.getByRole("button", { name: "More" }).className;
+
+  expect(className).toContain("bg-primary-500");
+  expect(className).toContain("h-full");
 });

@@ -46,7 +46,7 @@ const buttonGroupBridgeKeys = [
 
 type ButtonGroupLibDefaults = LibDefaultsShape<
   ButtonGroupOwnProps,
-  "full" | "color" | "separator" | "orientation"
+  "full" | "color" | "variant" | "separator" | "orientation"
 >;
 
 type ButtonGroupMerged = MergeLibDefaults<
@@ -104,7 +104,7 @@ export function useButtonGroup(
       bridgeButtonGroup.value?.tokens?.color,
     );
 
-    return get(classes, merged.value.color);
+    return get(classes, [merged.value.color, merged.value.variant]);
   });
 
   const contextValue = computed((): ButtonGroupContextValue => {

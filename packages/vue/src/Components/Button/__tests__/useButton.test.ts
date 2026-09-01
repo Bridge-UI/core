@@ -235,6 +235,36 @@ test("it should render as anchor when as is a", () => {
   expect(wrapper.find("button").exists()).toBe(false);
 });
 
+test("it should not force flat variant on mini buttons inside a ButtonGroup", () => {
+  let result!: ReturnType<typeof useButton>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useButton({ density: "mini", icon: CircleAlert }, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        BUTTON_GROUP_INJECTION_KEY,
+        computed(() => {
+          return {};
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.rootBind.value.class).toContain("bg-primary-500");
+  expect(result.rootBind.value.class).toContain("h-full");
+});
+
 test("it should inherit appearance from ButtonGroup context", () => {
   let result!: ReturnType<typeof useButton>;
 

@@ -1,6 +1,6 @@
 # ButtonGroup
 
-Groups related action buttons in a joined strip with a hairline between children. Set `size`, `variant`, `color`, `density`, or `rounded` on the group to apply them to nested `Button` children. A `Button` can still override any of those props. Set `selected` on a `Button` to show a pressed state. Use `ToggleGroup` when the controls select a value.
+Groups related action buttons in a joined strip with a full-height divider between children. The divider fill follows `variant`. Set `size`, `variant`, `color`, `density`, or `rounded` on the group to apply them to nested `Button` children. A `Button` can still override any of those props. Set `selected` on a `Button` to show a pressed state. Use `ToggleGroup` when the controls select a value.
 
 ## Import
 
@@ -105,13 +105,13 @@ Nest groups to space clusters of actions. Joined edges stay inside each inner gr
 | Prop          | Type                     | Default        | Description                                                        |
 | ------------- | ------------------------ | -------------- | ------------------------------------------------------------------ |
 | `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.                                    |
-| `color`       | `ButtonGroupColor`       | `"dark"`       | Color of the hairline. Nested buttons inherit it when this is set. |
+| `color`       | `ButtonGroupColor`       | `"primary"`    | Color of the divider. Nested buttons inherit it when this is set.  |
 | `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.                                    |
 | `density`     | `ButtonDensity`          | —              | Density applied to nested buttons unless they set `density`.       |
 | `full`        | `boolean`                | `false`        | Stretch the group to the container width.                          |
 | `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.                                   |
 | `rounded`     | `ButtonRounded`          | —              | Roundness applied to nested buttons unless they set `rounded`.     |
-| `separator`   | `boolean`                | `true`         | Draw a hairline between adjacent children.                         |
+| `separator`   | `boolean`                | `true`         | Draw a full-height divider between adjacent children.              |
 | `size`        | `ButtonSize`             | —              | Size applied to nested buttons unless they set `size`.             |
 | `variant`     | `ButtonVariant`          | —              | Variant applied to nested buttons unless they set `variant`.       |
 
