@@ -1,0 +1,43 @@
+// ** Local Imports
+import { Button } from "@/Components/Button";
+import { ButtonGroup, ButtonGroupText } from "@/Components/ButtonGroup";
+
+test("it should render a button group in the browser", () => {
+  cy.mount(
+    <ButtonGroup aria-label="Export">
+      <Button variant="outline">Copy</Button>
+      <Button variant="outline">Paste</Button>
+    </ButtonGroup>,
+  );
+
+  cy.get('[role="group"]')
+    .should("exist")
+    .and("have.attr", "aria-label", "Export")
+    .and("have.class", "flex-row")
+    .and("have.class", "gap-px");
+
+  cy.contains("button", "Copy").should("be.visible");
+  cy.contains("button", "Paste").should("be.visible");
+});
+
+test("it should apply vertical orientation", () => {
+  cy.mount(
+    <ButtonGroup aria-label="Zoom" orientation="vertical">
+      <Button>+</Button>
+      <Button>-</Button>
+    </ButtonGroup>,
+  );
+
+  cy.get('[role="group"]').should("have.class", "flex-col");
+});
+
+test("it should render ButtonGroupText", () => {
+  cy.mount(
+    <ButtonGroup aria-label="Currency">
+      <ButtonGroupText>USD</ButtonGroupText>
+      <Button variant="outline">Pay</Button>
+    </ButtonGroup>,
+  );
+
+  cy.contains("USD").should("be.visible").and("have.prop", "tagName", "SPAN");
+});

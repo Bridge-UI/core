@@ -123,6 +123,24 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
+export {
+  ButtonGroup,
+  ButtonGroupText,
+  useButtonGroup,
+  useButtonGroupText,
+} from "@/Components/ButtonGroup";
+export type {
+  ButtonGroupClasses,
+  ButtonGroupColorOverrides,
+  ButtonGroupCustomProps,
+  ButtonGroupOrientationOverrides,
+  ButtonGroupOwnProps,
+  ButtonGroupProps,
+  ButtonGroupTextClasses,
+  ButtonGroupTextCustomProps,
+  ButtonGroupTextOwnProps,
+  ButtonGroupTextProps,
+} from "@/Components/ButtonGroup";
 export { Calendar, useCalendar } from "@/Components/Calendar";
 export type {
   CalendarCallbacks,
