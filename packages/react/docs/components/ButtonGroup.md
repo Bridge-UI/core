@@ -1,14 +1,11 @@
 # ButtonGroup
 
-Groups related action controls in a single attached strip, with a divider between each child. Size, color, and variant stay on each `Button`. Use `ToggleGroup` when the controls select a value.
+Groups related action buttons in a single attached strip, with a divider between each child. Size, color, and variant stay on each `Button`. Use `ToggleGroup` when the controls select a value.
 
 ## Import
 
 ```ts
-import {
-  ButtonGroup,
-  ButtonGroupText,
-} from "@bridge-ui/react/Components/ButtonGroup";
+import { ButtonGroup } from "@bridge-ui/react/Components/ButtonGroup";
 ```
 
 ## Examples
@@ -72,15 +69,6 @@ Nest groups to space clusters of actions. Dividers stay inside each inner group.
 </ButtonGroup>
 ```
 
-### Text
-
-```tsx
-<ButtonGroup aria-label="Amount">
-  <ButtonGroupText>USD</ButtonGroupText>
-  <Button variant="outline">Pay</Button>
-</ButtonGroup>
-```
-
 ### Full width
 
 ```tsx
@@ -92,25 +80,14 @@ Nest groups to space clusters of actions. Dividers stay inside each inner group.
 
 ## Props
 
-### ButtonGroup
-
-| Prop          | Type                     | Default        | Description                                 |
-| ------------- | ------------------------ | -------------- | ------------------------------------------- |
-| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.             |
-| `color`       | `ButtonGroupColor`       | `"dark"`       | Fill color of the divider between children. |
-| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.             |
-| `full`        | `boolean`                | `false`        | Stretch the group to the container width.   |
-| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.            |
+| Prop          | Type                     | Default        | Description                               |
+| ------------- | ------------------------ | -------------- | ----------------------------------------- |
+| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.           |
+| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.           |
+| `full`        | `boolean`                | `false`        | Stretch the group to the container width. |
+| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.          |
 
 Pass `aria-label` or `aria-labelledby` on the group.
-
-### ButtonGroupText
-
-| Prop          | Type                         | Default  | Description                     |
-| ------------- | ---------------------------- | -------- | ------------------------------- |
-| `as`          | `"span" \| "label"`          | `"span"` | The element to render as.       |
-| `classes`     | `ButtonGroupTextClasses`     | —        | Classes for text parts.         |
-| `customProps` | `ButtonGroupTextCustomProps` | —        | Extra props for internal parts. |
 
 ## Related components
 
