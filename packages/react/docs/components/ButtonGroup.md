@@ -45,7 +45,7 @@ Size is set on each `Button`, not on the group.
 
 ### Nested
 
-Nest groups to space clusters of actions. Dividers stay inside each inner group.
+Nest groups to space clusters of actions. Dividers stay inside each inner group. Keep inner groups as the only direct children of the outer group — mixing loose `Button` children with nested groups removes the hairline divider between all children.
 
 ```tsx
 <ButtonGroup aria-label="Editor">
