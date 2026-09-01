@@ -13,6 +13,11 @@ export interface ButtonColorItem {
    * Hover state classes.
    */
   "hover": string;
+
+  /**
+   * Selected / pressed state classes.
+   */
+  "selected": string;
 }
 
 export interface ButtonColor {
@@ -55,6 +60,8 @@ export interface ButtonColor {
 export const flatProps: ButtonColor = {
   "info": {
     "base": "text-info-600",
+    "selected":
+      "text-info-700 bg-info-400/25 dark:text-info-500 dark:bg-info-600/15",
     "hover":
       "hover:text-info-700 hover:bg-info-400/25 dark:hover:text-info-500 dark:hover:bg-info-600/15",
     "focus":
@@ -62,6 +69,8 @@ export const flatProps: ButtonColor = {
   },
   "error": {
     "base": "text-error-600",
+    "selected":
+      "text-error-700 bg-error-400/25 dark:text-error-500 dark:bg-error-600/15",
     "hover":
       "hover:text-error-700 hover:bg-error-400/25 dark:hover:text-error-500 dark:hover:bg-error-600/15",
     "focus":
@@ -69,6 +78,8 @@ export const flatProps: ButtonColor = {
   },
   "dark": {
     "base": "text-dark-600 dark:text-dark-400",
+    "selected":
+      "text-dark-700 bg-dark-400/25 dark:text-dark-300/90 dark:bg-dark-600/15",
     "hover":
       "hover:text-dark-700 hover:bg-dark-400/25 dark:hover:text-dark-300/90 dark:hover:bg-dark-600/15",
     "focus":
@@ -76,6 +87,8 @@ export const flatProps: ButtonColor = {
   },
   "primary": {
     "base": "text-primary-600",
+    "selected":
+      "text-primary-700 bg-primary-400/25 dark:text-primary-500 dark:bg-primary-600/15",
     "hover":
       "hover:text-primary-700 hover:bg-primary-400/25 dark:hover:text-primary-500 dark:hover:bg-primary-600/15",
     "focus":
@@ -83,24 +96,30 @@ export const flatProps: ButtonColor = {
   },
   "warning": {
     "base": "text-warning-600",
+    "selected":
+      "text-warning-700 bg-warning-300/25 dark:text-warning-500 dark:bg-warning-600/15",
     "hover":
       "hover:text-warning-700 hover:bg-warning-300/25 dark:hover:text-warning-500 dark:hover:bg-warning-600/15",
     "focus":
       "focus:ring-offset-0 focus:text-warning-700 focus:bg-warning-400/25 focus:ring-warning-600 dark:focus:text-warning-500 dark:focus:bg-warning-600/15 dark:focus:ring-warning-700",
   },
-  "secondary": {
-    "base": "text-secondary-600",
-    "hover":
-      "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-500 dark:hover:bg-secondary-600/15",
-    "focus":
-      "focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-500 dark:focus:bg-secondary-600/15 dark:focus:ring-secondary-700",
-  },
   "success": {
     "base": "text-success-600 dark:text-success-500/90",
+    "selected":
+      "text-success-700 bg-success-400/25 dark:text-success-500 dark:bg-success-600/15",
     "hover":
       "hover:text-success-700 hover:bg-success-400/25 dark:hover:text-success-500 dark:hover:bg-success-600/15",
     "focus":
       "focus:ring-offset-0 focus:text-success-700 focus:bg-success-400/25 focus:ring-success-600 dark:focus:text-success-500 dark:focus:bg-success-600/15 dark:focus:ring-success-700",
+  },
+  "secondary": {
+    "base": "text-secondary-600",
+    "selected":
+      "text-secondary-700 bg-secondary-400/25 dark:text-secondary-500 dark:bg-secondary-600/15",
+    "hover":
+      "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-500 dark:hover:bg-secondary-600/15",
+    "focus":
+      "focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-500 dark:focus:bg-secondary-600/15 dark:focus:ring-secondary-700",
   },
 };
 
@@ -108,6 +127,8 @@ export const lightProps: ButtonColor = {
   "dark": {
     "base":
       "text-dark-600 bg-dark-300/60 dark:bg-dark-600/60 dark:text-dark-400",
+    "selected":
+      "text-dark-800 bg-dark-400/60 dark:text-dark-400 dark:bg-dark-500/30",
     "hover":
       "hover:text-dark-800 hover:bg-dark-400/60 dark:hover:text-dark-400 dark:hover:bg-dark-500/30",
     "focus":
@@ -116,6 +137,8 @@ export const lightProps: ButtonColor = {
   "info": {
     "base":
       "text-info-600 bg-info-300/60 dark:bg-info-600/60 dark:text-info-400",
+    "selected":
+      "text-info-800 bg-info-400/60 dark:text-info-400 dark:bg-info-500/30",
     "hover":
       "hover:text-info-800 hover:bg-info-400/60 dark:hover:text-info-400 dark:hover:bg-info-500/30",
     "focus":
@@ -124,6 +147,8 @@ export const lightProps: ButtonColor = {
   "error": {
     "base":
       "text-error-600 bg-error-300/60 dark:bg-error-600/60 dark:text-error-500",
+    "selected":
+      "text-error-800 bg-error-400/60 dark:text-error-400 dark:bg-error-500/30",
     "hover":
       "hover:text-error-800 hover:bg-error-400/60 dark:hover:text-error-400 dark:hover:bg-error-500/30",
     "focus":
@@ -132,6 +157,8 @@ export const lightProps: ButtonColor = {
   "primary": {
     "base":
       "text-primary-600 bg-primary-300/60 dark:bg-primary-600/60 dark:text-primary-400",
+    "selected":
+      "text-primary-800 bg-primary-400/60 dark:text-primary-400 dark:bg-primary-500/30",
     "hover":
       "hover:text-primary-800 hover:bg-primary-400/60 dark:hover:text-primary-400 dark:hover:bg-primary-500/30",
     "focus":
@@ -140,6 +167,8 @@ export const lightProps: ButtonColor = {
   "success": {
     "base":
       "text-success-600 bg-success-300/60 dark:bg-success-600/60 dark:text-success-500",
+    "selected":
+      "text-success-800 bg-success-400/60 dark:text-success-400 dark:bg-success-500/30",
     "hover":
       "hover:text-success-800 hover:bg-success-400/60 dark:hover:text-success-400 dark:hover:bg-success-500/30",
     "focus":
@@ -148,6 +177,8 @@ export const lightProps: ButtonColor = {
   "warning": {
     "base":
       "text-warning-600 bg-warning-300/60 dark:bg-warning-600/60 dark:text-warning-500",
+    "selected":
+      "text-warning-800 bg-warning-400/60 dark:text-warning-400 dark:bg-warning-500/30",
     "hover":
       "hover:text-warning-800 hover:bg-warning-400/60 dark:hover:text-warning-400 dark:hover:bg-warning-500/30",
     "focus":
@@ -156,6 +187,8 @@ export const lightProps: ButtonColor = {
   "secondary": {
     "base":
       "text-secondary-600 bg-secondary-300/60 dark:bg-secondary-600/60 dark:text-secondary-400",
+    "selected":
+      "text-secondary-800 bg-secondary-400/60 dark:text-secondary-400 dark:bg-secondary-500/30",
     "hover":
       "hover:text-secondary-800 hover:bg-secondary-400/60 dark:hover:text-secondary-400 dark:hover:bg-secondary-500/30",
     "focus":
@@ -166,42 +199,49 @@ export const lightProps: ButtonColor = {
 export const solidProps: ButtonColor = {
   "dark": {
     "base": "text-white bg-dark-500 dark:bg-dark-700",
+    "selected": "text-white bg-dark-600 dark:bg-dark-600",
     "hover": "hover:text-white hover:bg-dark-600 dark:hover:bg-dark-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-dark-600 focus:ring-dark-600 dark:focus:bg-dark-600 dark:focus:ring-dark-600",
   },
   "info": {
     "base": "text-white bg-info-500 dark:bg-info-700",
+    "selected": "text-white bg-info-600 dark:bg-info-600",
     "hover": "hover:text-white hover:bg-info-600 dark:hover:bg-info-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-info-600 focus:ring-info-600 dark:focus:bg-info-600 dark:focus:ring-info-600",
   },
   "error": {
     "base": "text-white bg-error-500 dark:bg-error-700",
+    "selected": "text-white bg-error-600 dark:bg-error-600",
     "hover": "hover:text-white hover:bg-error-600 dark:hover:bg-error-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-error-600 focus:ring-error-600 dark:focus:bg-error-600 dark:focus:ring-error-600",
   },
   "primary": {
     "base": "text-white bg-primary-500 dark:bg-primary-700",
+    "selected": "text-white bg-primary-600 dark:bg-primary-600",
     "hover": "hover:text-white hover:bg-primary-600 dark:hover:bg-primary-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-primary-600 focus:ring-primary-600 dark:focus:bg-primary-600 dark:focus:ring-primary-600",
   },
   "success": {
     "base": "text-white bg-success-500 dark:bg-success-700",
+    "selected": "text-white bg-success-600 dark:bg-success-600",
     "hover": "hover:text-white hover:bg-success-600 dark:hover:bg-success-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-success-600 focus:ring-success-600 dark:focus:bg-success-600 dark:focus:ring-success-600",
   },
   "warning": {
     "base": "text-white bg-warning-500 dark:bg-warning-700",
+    "selected": "text-white bg-warning-600 dark:bg-warning-600",
     "hover": "hover:text-white hover:bg-warning-600 dark:hover:bg-warning-600",
     "focus":
       "focus:text-white focus:ring-offset-2 focus:bg-warning-600 focus:ring-warning-600 dark:focus:bg-warning-600 dark:focus:ring-warning-600",
   },
   "secondary": {
     "base": "text-white bg-secondary-500 dark:bg-secondary-700",
+    "selected": "text-white bg-secondary-600 dark:bg-secondary-600",
     "hover":
       "hover:text-white hover:bg-secondary-600 dark:hover:bg-secondary-600",
     "focus":
@@ -212,6 +252,8 @@ export const solidProps: ButtonColor = {
 export const outlineProps: ButtonColor = {
   "info": {
     "base": "text-info-600 border border-info-600",
+    "selected":
+      "text-info-700 bg-info-400/25 dark:text-info-500 dark:bg-info-600/15",
     "hover":
       "hover:text-info-700 hover:bg-info-400/25 dark:hover:text-info-500 dark:hover:bg-info-600/15",
     "focus":
@@ -219,6 +261,8 @@ export const outlineProps: ButtonColor = {
   },
   "error": {
     "base": "text-error-600 border border-error-600",
+    "selected":
+      "text-error-700 bg-error-400/25 dark:text-error-500 dark:bg-error-600/15",
     "hover":
       "hover:text-error-700 hover:bg-error-400/25 dark:hover:text-error-500 dark:hover:bg-error-600/15",
     "focus":
@@ -226,6 +270,8 @@ export const outlineProps: ButtonColor = {
   },
   "primary": {
     "base": "text-primary-600 border border-primary-600",
+    "selected":
+      "text-primary-700 bg-primary-400/25 dark:text-primary-500 dark:bg-primary-600/15",
     "hover":
       "hover:text-primary-700 hover:bg-primary-400/25 dark:hover:text-primary-500 dark:hover:bg-primary-600/15",
     "focus":
@@ -233,12 +279,16 @@ export const outlineProps: ButtonColor = {
   },
   "warning": {
     "base": "text-warning-600 border border-warning-600",
+    "selected":
+      "text-warning-700 bg-warning-400/25 dark:text-warning-500 dark:bg-warning-600/15",
     "hover":
       "hover:text-warning-700 hover:bg-warning-400/25 dark:hover:text-warning-500 dark:hover:bg-warning-600/15",
     "focus":
       "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-warning-700 focus:bg-warning-400/25 focus:ring-warning-600 dark:focus:text-warning-500 dark:focus:bg-warning-600/15 dark:focus:ring-warning-700",
   },
   "dark": {
+    "selected":
+      "text-dark-700 bg-dark-400/25 dark:text-dark-300/90 dark:bg-dark-400/15",
     "base":
       "text-dark-600 border border-dark-600 dark:text-dark-400 dark:border-dark-400",
     "hover":
@@ -248,12 +298,16 @@ export const outlineProps: ButtonColor = {
   },
   "secondary": {
     "base": "text-secondary-600 border border-secondary-600",
+    "selected":
+      "text-secondary-700 bg-secondary-400/25 dark:text-secondary-500 dark:bg-secondary-600/15",
     "hover":
       "hover:text-secondary-700 hover:bg-secondary-400/25 dark:hover:text-secondary-500 dark:hover:bg-secondary-600/15",
     "focus":
       "focus:border-transparent dark:focus:border-transparent focus:ring-offset-0 focus:text-secondary-700 focus:bg-secondary-400/25 focus:ring-secondary-600 dark:focus:text-secondary-500 dark:focus:bg-secondary-600/15 dark:focus:ring-secondary-700",
   },
   "success": {
+    "selected":
+      "text-success-700 bg-success-400/25 dark:text-success-500 dark:bg-success-600/15",
     "base":
       "text-success-600 border border-success-600 dark:text-success-500/90 dark:border-success-500/80",
     "hover":

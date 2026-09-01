@@ -177,6 +177,13 @@ export interface ButtonOwnProps {
   rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
 
   /**
+   * Whether the button is in a selected / pressed state.
+   *
+   * @default false
+   */
+  selected?: boolean;
+
+  /**
    * The size of the button.
    *
    * @default "md"

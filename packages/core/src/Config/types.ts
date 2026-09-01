@@ -44,6 +44,10 @@ import type {
   ButtonVariant,
 } from "@/Tokens/Button";
 import type {
+  ButtonGroupOrientation,
+  ButtonGroupOrientationItem,
+} from "@/Tokens/ButtonGroup";
+import type {
   CalendarColor,
   CalendarColorItem,
   CalendarDay,
@@ -358,6 +362,7 @@ export interface BadgeConfigOverrides {}
 export interface BreadcrumbConfigOverrides {}
 export interface BreadcrumbItemConfigOverrides {}
 export interface ButtonConfigOverrides {}
+export interface ButtonGroupConfigOverrides {}
 export interface CalendarConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
@@ -519,6 +524,23 @@ export interface ButtonConfigBase {
     density: Record<string, Record<string, string>>;
     rounded: Record<string, string>;
     variant: Record<string, Record<string, ButtonColorItem>>;
+  }>;
+}
+
+export interface ButtonGroupConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ButtonColor;
+    density: keyof ButtonDensity;
+    full: boolean;
+    orientation: keyof ButtonGroupOrientation;
+    rounded: keyof ButtonRounded;
+    separator: boolean;
+    size: keyof ButtonSize;
+    variant: keyof ButtonVariant;
+  }>;
+  tokens: Partial<{
+    orientation: Record<string, ButtonGroupOrientationItem>;
   }>;
 }
 
@@ -1506,6 +1528,9 @@ export type BridgeUIComponentsConfig = Partial<{
     Overwrite<BreadcrumbItemConfigBase, BreadcrumbItemConfigOverrides>
   >;
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
+  ButtonGroup: Partial<
+    Overwrite<ButtonGroupConfigBase, ButtonGroupConfigOverrides>
+  >;
   Calendar: Partial<Overwrite<CalendarConfigBase, CalendarConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
   Checkbox: Partial<Overwrite<CheckboxConfigBase, CheckboxConfigOverrides>>;

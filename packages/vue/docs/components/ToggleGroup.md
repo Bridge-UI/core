@@ -1,6 +1,6 @@
 # ToggleGroup
 
-Segmented control for one or more labeled options in a shared track. Single selection by default; set `multiple` for multi-select. Use `Switch` for on/off. Compose with `ToggleItem`.
+Segmented control for one or more labeled options in a shared track. Single selection by default; set `multiple` for multi-select. Use `ButtonGroup` for grouped actions that do not select a value. Use `Switch` for on/off. Compose with `ToggleItem`.
 
 ## Import
 

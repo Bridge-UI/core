@@ -36,13 +36,13 @@ export interface ButtonSize {
 }
 
 export const miniSizeProps: ButtonSize = {
-  "sm": "text-xs w-6 h-6",
-  "md": "text-xs w-7 h-7",
-  "lg": "text-sm w-8 h-8",
-  "xl": "text-sm w-9 h-9",
-  "xs": "text-2xs w-5 h-5",
-  "2xs": "text-2xs w-4 h-4",
-  "2xl": "text-base w-10 h-10",
+  "sm": "text-xs w-6 h-6 min-w-6 min-h-6",
+  "md": "text-xs w-7 h-7 min-w-7 min-h-7",
+  "lg": "text-sm w-8 h-8 min-w-8 min-h-8",
+  "xl": "text-sm w-9 h-9 min-w-9 min-h-9",
+  "xs": "text-2xs w-5 h-5 min-w-5 min-h-5",
+  "2xs": "text-2xs w-4 h-4 min-w-4 min-h-4",
+  "2xl": "text-base w-10 h-10 min-w-10 min-h-10",
 };
 
 export const defaultSizeProps: ButtonSize = {

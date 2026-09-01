@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, includes, isNil } from "es-toolkit/compat";
-import { computed, useAttrs } from "vue";
+import { computed, inject, useAttrs } from "vue";
 
 // ** Core Imports
 import {
@@ -22,6 +22,7 @@ import type {
   ButtonOwnProps,
   ButtonProps,
 } from "@/Components/Button/button.types";
+import { BUTTON_GROUP_INJECTION_KEY } from "@/Components/ButtonGroup/buttonGroupInjectionKey";
 import {
   mergePartBind,
   useBridgeUIComponent,
@@ -43,6 +44,7 @@ const buttonBridgeKeys = [
   "rounded",
   "variant",
   "disabled",
+  "selected",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
@@ -59,6 +61,7 @@ export function useButton(
   libDefaults: ButtonLibDefaults,
 ) {
   const attrs = useAttrs();
+  const groupContext = inject(BUTTON_GROUP_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ButtonProps, typeof buttonBridgeKeys>({
@@ -67,13 +70,27 @@ export function useButton(
     });
   });
 
+  const resolvedProps = computed(() => {
+    const componentProps = split.value.componentProps;
+    const group = groupContext?.value;
+
+    return {
+      ...componentProps,
+      size: componentProps.size ?? group?.size,
+      color: componentProps.color ?? group?.color,
+      density: componentProps.density ?? group?.density,
+      rounded: componentProps.rounded ?? group?.rounded,
+      variant: componentProps.variant ?? group?.variant,
+    };
+  });
+
   const { merged, entry: bridgeButton } = useBridgeUIComponent<
     ButtonMerged,
     "Button"
   >({
     libDefaults,
     componentName: "Button",
-    props: () => split.value.componentProps,
+    props: () => resolvedProps.value,
   });
 
   const customProps = computed(() => {
@@ -149,8 +166,12 @@ export function useButton(
   });
 
   const variantKey = computed(() => {
-    if (!isNil(split.value.componentProps.variant)) {
-      return split.value.componentProps.variant;
+    if (!isNil(resolvedProps.value.variant)) {
+      return resolvedProps.value.variant;
+    }
+
+    if (!isNil(groupContext)) {
+      return merged.value.variant;
     }
 
     return isMini.value ? "flat" : merged.value.variant;
@@ -186,21 +207,31 @@ export function useButton(
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.root,
-      split.value.inheritedAttrs,
-      cn({
+    return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
+      "aria-pressed": isNil(merged.value.selected)
+        ? undefined
+        : merged.value.selected,
+      class: cn({
         "inline-flex items-center justify-center": true,
         "cursor-pointer outline-none outline-hidden": true,
         "shrink-0": isMini.value,
         [sizeClass.value ?? ""]: true,
         [roundedClass.value ?? ""]: true,
+        "h-auto":
+          isMini.value &&
+          !isNil(groupContext) &&
+          groupContext.value?.density !== "mini",
+        "border border-transparent":
+          !isNil(groupContext) && variantKey.value !== "outline",
         "w-full": !isMini.value && merged.value.full,
         "w-fit": !isMini.value && !merged.value.full,
         "group hover:shadow-xs": !isMini.value,
         [get(colorClasses.value, "base") ?? ""]: true,
         [get(colorClasses.value, "hover") ?? ""]: true,
         [get(colorClasses.value, "focus") ?? ""]: true,
+        [get(colorClasses.value, "selected") ?? ""]:
+          merged.value.selected === true,
+        "relative z-10": merged.value.selected === true,
         "transition-all ease-in-out duration-200": true,
         "focus:ring-2": true,
         "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
@@ -208,7 +239,7 @@ export function useButton(
         "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
         [mergedClasses.value.root ?? ""]: true,
       }),
-    );
+    });
   });
 
   const endIconBind = computed(() => {

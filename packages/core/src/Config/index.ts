@@ -28,6 +28,8 @@ export type {
   BridgeUIOptions,
   ButtonConfigBase,
   ButtonConfigOverrides,
+  ButtonGroupConfigBase,
+  ButtonGroupConfigOverrides,
   CalendarConfigBase,
   CalendarConfigOverrides,
   CardConfigBase,

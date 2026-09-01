@@ -2,6 +2,7 @@
 import { renderHook } from "@testing-library/react";
 import { isString } from "es-toolkit/compat";
 import { CircleAlert } from "lucide-react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -10,6 +11,7 @@ import {
   type ButtonOwnProps,
   type ButtonProps,
 } from "@/Components/Button";
+import { ButtonGroupContext } from "@/Components/ButtonGroup/ButtonGroupContext";
 
 const libDefaults = {
   size: "md",
@@ -170,4 +172,97 @@ test("it should not include full width class when density is mini", () => {
   });
 
   expect(result.current.rootBind.className).not.toContain("w-full");
+});
+
+test("it should set aria-pressed and selected classes when selected", () => {
+  const { result } = renderUseButton({ selected: true, variant: "outline" });
+
+  expect(result.current.rootBind["aria-pressed"]).toBe(true);
+  expect(result.current.rootBind.className).toContain("bg-primary-400/25");
+});
+
+test("it should not force flat variant on mini buttons inside a ButtonGroup", () => {
+  const { result } = renderHook(
+    () =>
+      useButton(
+        { density: "mini", icon: CircleAlert },
+        libDefaults as Parameters<typeof useButton>[1],
+      ),
+    {
+      wrapper: ({ children }) =>
+        createElement(ButtonGroupContext.Provider, { value: {} }, children),
+    },
+  );
+
+  expect(result.current.rootBind.className).toContain("h-auto");
+  expect(result.current.rootBind.className).toContain("min-h-7");
+  expect(result.current.rootBind.className).toContain("bg-primary-500");
+  expect(result.current.rootBind.className.split(/\s+/).includes("h-7")).toBe(
+    false,
+  );
+});
+
+test("it should keep mini height when ButtonGroup density is mini", () => {
+  const { result } = renderHook(
+    () =>
+      useButton(
+        { density: "mini", icon: CircleAlert },
+        libDefaults as Parameters<typeof useButton>[1],
+      ),
+    {
+      wrapper: ({ children }) =>
+        createElement(
+          ButtonGroupContext.Provider,
+          { value: { density: "mini" } },
+          children,
+        ),
+    },
+  );
+
+  expect(result.current.rootBind.className.split(/\s+/).includes("h-7")).toBe(
+    true,
+  );
+  expect(
+    result.current.rootBind.className.split(/\s+/).includes("h-auto"),
+  ).toBe(false);
+});
+
+test("it should inherit appearance from ButtonGroup context", () => {
+  const { result } = renderHook(
+    () => useButton({}, libDefaults as Parameters<typeof useButton>[1]),
+    {
+      wrapper: ({ children }) =>
+        createElement(
+          ButtonGroupContext.Provider,
+          { value: { size: "sm", variant: "outline" } },
+          children,
+        ),
+    },
+  );
+
+  expect(result.current.merged.size).toBe("sm");
+  expect(result.current.merged.color).toBe("primary");
+  expect(result.current.merged.variant).toBe("outline");
+});
+
+test("it should let button props override ButtonGroup context", () => {
+  const { result } = renderHook(
+    () =>
+      useButton(
+        { size: "lg", color: "error" },
+        libDefaults as Parameters<typeof useButton>[1],
+      ),
+    {
+      wrapper: ({ children }) =>
+        createElement(
+          ButtonGroupContext.Provider,
+          { value: { size: "sm", color: "dark", variant: "outline" } },
+          children,
+        ),
+    },
+  );
+
+  expect(result.current.merged.size).toBe("lg");
+  expect(result.current.merged.color).toBe("error");
+  expect(result.current.merged.variant).toBe("outline");
 });

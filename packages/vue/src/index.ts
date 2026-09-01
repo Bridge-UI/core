@@ -127,6 +127,20 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
+export {
+  BUTTON_GROUP_INJECTION_KEY,
+  ButtonGroup,
+  useButtonGroup,
+} from "@/Components/ButtonGroup";
+export type {
+  ButtonGroupClasses,
+  ButtonGroupContextValue,
+  ButtonGroupCustomProps,
+  ButtonGroupOrientationOverrides,
+  ButtonGroupOwnProps,
+  ButtonGroupProps,
+  ButtonGroupSlots,
+} from "@/Components/ButtonGroup";
 export { Calendar, useCalendar } from "@/Components/Calendar";
 export type {
   CalendarClasses,

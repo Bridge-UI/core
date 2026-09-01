@@ -7,6 +7,10 @@ import type {
 import type { AvatarClasses, AvatarProps } from "@/Components/Avatar";
 import type { BadgeClasses, BadgeProps } from "@/Components/Badge";
 import type { ButtonClasses, ButtonProps } from "@/Components/Button";
+import type {
+  ButtonGroupClasses,
+  ButtonGroupProps,
+} from "@/Components/ButtonGroup";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
 import type { ChipClasses, ChipProps } from "@/Components/Chip";
@@ -90,6 +94,23 @@ declare module "@bridge-ui/core/Config" {
     classes: ButtonClasses;
     defaultProps: Partial<
       Pick<ButtonProps, "size" | "color" | "density" | "rounded" | "variant">
+    >;
+  }
+
+  interface ButtonGroupConfigOverrides {
+    classes: ButtonGroupClasses;
+    defaultProps: Partial<
+      Pick<
+        ButtonGroupProps,
+        | "full"
+        | "size"
+        | "color"
+        | "density"
+        | "rounded"
+        | "variant"
+        | "separator"
+        | "orientation"
+      >
     >;
   }
 

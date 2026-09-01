@@ -13,6 +13,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 - [BridgeUIProvider](./components/BridgeUIProvider.md)
 - [Breadcrumb](./components/Breadcrumb.md)
 - [Button](./components/Button.md)
+- [ButtonGroup](./components/ButtonGroup.md)
 - [Calendar](./components/Calendar.md)
 - [CalendarDate](./components/CalendarDate.md)
 - [CalendarMonth](./components/CalendarMonth.md)

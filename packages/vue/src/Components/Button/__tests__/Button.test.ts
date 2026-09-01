@@ -220,3 +220,13 @@ test("it should omit type when rendered as an anchor", () => {
 
   expect(wrapper.find("a").attributes("type")).toBeUndefined();
 });
+
+test("it should mark the button as pressed when selected", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Bold" },
+    props: { selected: true, variant: "outline" },
+  });
+
+  expect(wrapper.find("button").attributes("aria-pressed")).toBe("true");
+  expect(wrapper.find("button").classes()).toContain("bg-primary-400/25");
+});
