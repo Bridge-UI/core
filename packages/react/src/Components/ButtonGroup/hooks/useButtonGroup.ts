@@ -103,15 +103,6 @@ export function useButtonGroup(
     return get(classes, merged.orientation);
   }, [merged.orientation, bridgeButtonGroup?.tokens?.orientation]);
 
-  const colorItem = useMemo(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeButtonGroup?.tokens?.color,
-    );
-
-    return get(classes, [merged.color, merged.variant]);
-  }, [merged.color, merged.variant, bridgeButtonGroup?.tokens?.color]);
-
   const contextValue = useMemo((): ButtonGroupContextValue => {
     const registryDefaults = bridgeButtonGroup?.defaultProps;
 
@@ -140,6 +131,24 @@ export function useButtonGroup(
     componentProps.rounded,
     componentProps.variant,
     bridgeButtonGroup?.defaultProps,
+  ]);
+
+  const colorItem = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeButtonGroup?.tokens?.color,
+    );
+
+    return get(classes, [
+      contextValue.color ?? merged.color,
+      contextValue.variant ?? merged.variant,
+    ]);
+  }, [
+    merged.color,
+    merged.variant,
+    contextValue.color,
+    contextValue.variant,
+    bridgeButtonGroup?.tokens?.color,
   ]);
 
   const rootBind = derived(() => {

@@ -1,10 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { defineComponent, h } from "vue";
+import { computed, defineComponent, h, provide } from "vue";
 
 // ** Local Imports
 import {
+  BUTTON_GROUP_INJECTION_KEY,
   useButtonGroup,
   type ButtonGroupOwnProps,
   type ButtonGroupProps,
@@ -151,4 +152,33 @@ test("it should apply a vertical hairline when orientation is vertical", () => {
   const { rootBind } = mountUseButtonGroup({ orientation: "vertical" });
 
   expect(rootBind.value.class).toContain("before:h-px");
+});
+
+test("it should inherit divider fill from parent ButtonGroup variant", () => {
+  let result!: ReturnType<typeof useButtonGroup>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useButtonGroup({}, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        BUTTON_GROUP_INJECTION_KEY,
+        computed(() => {
+          return { variant: "outline" as const };
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.rootBind.value.class).toContain("before:bg-primary-600");
 });

@@ -98,15 +98,6 @@ export function useButtonGroup(
     return get(classes, merged.value.orientation);
   });
 
-  const colorItem = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeButtonGroup.value?.tokens?.color,
-    );
-
-    return get(classes, [merged.value.color, merged.value.variant]);
-  });
-
   const contextValue = computed((): ButtonGroupContextValue => {
     const componentProps = split.value.componentProps;
     const registryDefaults = bridgeButtonGroup.value?.defaultProps;
@@ -122,6 +113,18 @@ export function useButtonGroup(
       variant:
         componentProps.variant ?? registryDefaults?.variant ?? parent?.variant,
     };
+  });
+
+  const colorItem = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeButtonGroup.value?.tokens?.color,
+    );
+
+    return get(classes, [
+      contextValue.value.color ?? merged.value.color,
+      contextValue.value.variant ?? merged.value.variant,
+    ]);
   });
 
   provide(BUTTON_GROUP_INJECTION_KEY, contextValue);

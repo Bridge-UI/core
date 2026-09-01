@@ -39,7 +39,7 @@ export interface ButtonGroupOrientation {
 export const orientationProps: ButtonGroupOrientation = {
   "horizontal": {
     "root":
-      "inline-flex w-fit flex-row items-stretch isolate [&>*]:h-full [&>*]:hover:relative [&>*]:hover:z-10 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2",
+      "inline-flex w-fit flex-row items-stretch isolate [&>*]:hover:relative [&>*]:hover:z-10 [&>*]:focus-visible:relative [&>*]:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2",
     "join":
       "[&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:-ms-px [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:border-s-0 [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:border-e-0 [&:not(:has(>[data-slot=button-group]))>:not(:first-child)]:rounded-s-none [&:not(:has(>[data-slot=button-group]))>:not(:last-child)]:rounded-e-none",
     "separator":

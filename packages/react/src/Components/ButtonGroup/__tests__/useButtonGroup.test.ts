@@ -1,6 +1,7 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
 import { isString } from "es-toolkit/compat";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -9,6 +10,7 @@ import {
   type ButtonGroupOwnProps,
   type ButtonGroupProps,
 } from "@/Components/ButtonGroup";
+import { ButtonGroupContext } from "@/Components/ButtonGroup/ButtonGroupContext";
 
 const libDefaults = {
   full: false,
@@ -153,4 +155,21 @@ test("it should expose inherited button props on contextValue", () => {
   expect(result.current.contextValue.size).toBe("sm");
   expect(result.current.contextValue.color).toBeUndefined();
   expect(result.current.contextValue.variant).toBe("outline");
+});
+
+test("it should inherit divider fill from parent ButtonGroup variant", () => {
+  const { result } = renderHook(
+    () =>
+      useButtonGroup({}, libDefaults as Parameters<typeof useButtonGroup>[1]),
+    {
+      wrapper: ({ children }) =>
+        createElement(
+          ButtonGroupContext.Provider,
+          { value: { variant: "outline" } },
+          children,
+        ),
+    },
+  );
+
+  expect(result.current.rootBind.className).toContain("before:bg-primary-600");
 });

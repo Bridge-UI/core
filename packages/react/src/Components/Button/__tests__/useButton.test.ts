@@ -195,7 +195,8 @@ test("it should not force flat variant on mini buttons inside a ButtonGroup", ()
   );
 
   expect(result.current.rootBind.className).toContain("bg-primary-500");
-  expect(result.current.rootBind.className).toContain("h-full");
+  expect(result.current.rootBind.className).toContain("h-auto");
+  expect(result.current.rootBind.className).not.toContain("h-7");
 });
 
 test("it should inherit appearance from ButtonGroup context", () => {

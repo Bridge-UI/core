@@ -260,6 +260,32 @@ test("it should inherit size through a nested group", () => {
   expect(className).toContain("border-primary-600");
 });
 
+test("it should draw the parent variant divider inside nested groups", () => {
+  const wrapper = mount(ButtonGroup, {
+    props: { variant: "outline", "aria-label": "Editor" },
+    slots: {
+      default: () => [
+        h(
+          ButtonGroup,
+          {},
+          {
+            default: () => [
+              h(Button, null, { default: () => "Bold" }),
+              h(Button, null, { default: () => "Italic" }),
+            ],
+          },
+        ),
+      ],
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const groups = wrapper.findAll('[data-slot="button-group"]');
+
+  expect(groups[1]?.classes().join(" ")).toContain("before:bg-primary-600");
+});
+
 test("it should keep the group variant on mini buttons and stretch their height", () => {
   const wrapper = mount(ButtonGroup, {
     slots: {
@@ -282,5 +308,7 @@ test("it should keep the group variant on mini buttons and stretch their height"
     .join(" ");
 
   expect(className).toContain("bg-primary-500");
-  expect(className).toContain("h-full");
+  expect(className).toContain("h-auto");
+  expect(className).toContain("border-transparent");
+  expect(className).not.toContain("h-7");
 });

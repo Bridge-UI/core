@@ -217,7 +217,9 @@ export function useButton(
         "shrink-0": isMini.value,
         [sizeClass.value ?? ""]: true,
         [roundedClass.value ?? ""]: true,
-        "h-full": !isNil(groupContext),
+        "h-auto": !isNil(groupContext),
+        "border border-transparent":
+          !isNil(groupContext) && variantKey.value !== "outline",
         "w-full": !isMini.value && merged.value.full,
         "w-fit": !isMini.value && !merged.value.full,
         "group hover:shadow-xs": !isMini.value,

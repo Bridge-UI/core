@@ -58,7 +58,7 @@ import { ButtonGroup } from "@bridge-ui/react/Components/ButtonGroup";
 
 ### Nested
 
-Nest groups to space clusters of actions. Joined edges stay inside each inner group. Appearance props cascade through nested groups.
+Nest groups to space clusters of actions. Joined edges and dividers stay inside each inner group. Appearance props cascade through nested groups.
 
 ```tsx
 <ButtonGroup variant="outline" aria-label="Editor">

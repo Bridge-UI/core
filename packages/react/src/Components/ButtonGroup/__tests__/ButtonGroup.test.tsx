@@ -255,5 +255,22 @@ test("it should keep the group variant on mini buttons and stretch their height"
   const className = screen.getByRole("button", { name: "More" }).className;
 
   expect(className).toContain("bg-primary-500");
-  expect(className).toContain("h-full");
+  expect(className).toContain("h-auto");
+  expect(className).toContain("border-transparent");
+  expect(className).not.toContain("h-7");
+});
+
+test("it should draw the parent variant divider inside nested groups", () => {
+  const { container } = render(
+    <ButtonGroup variant="outline" aria-label="Editor">
+      <ButtonGroup>
+        <Button>Bold</Button>
+        <Button>Italic</Button>
+      </ButtonGroup>
+    </ButtonGroup>,
+  );
+
+  const groups = container.querySelectorAll('[data-slot="button-group"]');
+
+  expect(groups[1]?.className).toContain("before:bg-primary-600");
 });
