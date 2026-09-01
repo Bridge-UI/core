@@ -39,3 +39,29 @@ test("it should apply vertical orientation", () => {
 
   cy.get('[role="group"]').should("have.class", "flex-col");
 });
+
+test("it should render nested button groups", () => {
+  cy.mount(ButtonGroup, {
+    props: { "aria-label": "Editor" },
+    slots: {
+      default: () => [
+        h(ButtonGroup, null, {
+          default: () => [
+            h(Button, { variant: "outline" }, { default: () => "Bold" }),
+            h(Button, { variant: "outline" }, { default: () => "Italic" }),
+          ],
+        }),
+        h(ButtonGroup, null, {
+          default: () => [
+            h(Button, { variant: "outline" }, { default: () => "Undo" }),
+            h(Button, { variant: "outline" }, { default: () => "Redo" }),
+          ],
+        }),
+      ],
+    },
+  });
+
+  cy.get('[role="group"]').should("have.length", 3);
+  cy.contains("button", "Bold").should("be.visible");
+  cy.contains("button", "Undo").should("be.visible");
+});

@@ -47,8 +47,8 @@ test("it should apply horizontal orientation by default", () => {
   const wrapper = mountButtonGroup();
   const root = wrapper.find('[data-slot="button-group"]');
 
-  expect(root.classes()).toContain("flex-row");
   expect(root.classes()).toContain("gap-px");
+  expect(root.classes()).toContain("flex-row");
 });
 
 test("it should apply vertical orientation when orientation is vertical", () => {
@@ -115,4 +115,24 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
 
   expect(root.classes()).toContain("mt-8");
   expect(root.classes()).not.toContain("mt-2");
+});
+
+test("it should render nested groups as clustered children", () => {
+  const wrapper = mount(ButtonGroup, {
+    props: { "aria-label": "Editor" },
+    slots: {
+      default: () => [
+        h(ButtonGroup, null, {
+          default: () => [h(Button, null, { default: () => "Bold" })],
+        }),
+        h(ButtonGroup, null, {
+          default: () => [h(Button, null, { default: () => "Undo" })],
+        }),
+      ],
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  expect(wrapper.findAll('[data-slot="button-group"]').length).toBe(3);
 });

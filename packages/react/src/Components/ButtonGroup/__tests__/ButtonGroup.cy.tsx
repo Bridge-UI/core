@@ -30,3 +30,22 @@ test("it should apply vertical orientation", () => {
 
   cy.get('[role="group"]').should("have.class", "flex-col");
 });
+
+test("it should render nested button groups", () => {
+  cy.mount(
+    <ButtonGroup aria-label="Editor">
+      <ButtonGroup>
+        <Button variant="outline">Bold</Button>
+        <Button variant="outline">Italic</Button>
+      </ButtonGroup>
+      <ButtonGroup>
+        <Button variant="outline">Undo</Button>
+        <Button variant="outline">Redo</Button>
+      </ButtonGroup>
+    </ButtonGroup>,
+  );
+
+  cy.get('[role="group"]').should("have.length", 3);
+  cy.contains("button", "Bold").should("be.visible");
+  cy.contains("button", "Undo").should("be.visible");
+});

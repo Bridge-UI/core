@@ -24,8 +24,8 @@ function renderUseButtonGroup(props: ButtonGroupProps = {}) {
 test("it should merge default orientation", () => {
   const { result } = renderUseButtonGroup();
 
-  expect(result.current.merged.orientation).toBe("horizontal");
   expect(result.current.merged.full).toBe(false);
+  expect(result.current.merged.orientation).toBe("horizontal");
 });
 
 test("it should override orientation when prop is passed", () => {
@@ -84,4 +84,18 @@ test("it should apply full width classes when full is set", () => {
   const { result } = renderUseButtonGroup({ full: true });
 
   expect(result.current.rootBind.className).toContain("w-full");
+});
+
+test("it should include nested group spacing classes on rootBind", () => {
+  const { result } = renderUseButtonGroup();
+
+  expect(result.current.rootBind.className).toContain(
+    "has-[>[data-slot=button-group]]:gap-2",
+  );
+  expect(result.current.rootBind.className).toContain(
+    "has-[>[data-slot=button-group]]:bg-transparent",
+  );
+  expect(result.current.rootBind.className).toContain(
+    "has-[>[data-slot=button-group]]:dark:bg-transparent",
+  );
 });

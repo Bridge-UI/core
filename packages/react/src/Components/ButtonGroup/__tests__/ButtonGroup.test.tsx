@@ -30,8 +30,8 @@ test("it should apply horizontal orientation by default", () => {
 
   const root = container.querySelector('[data-slot="button-group"]');
 
-  expect(root?.classList.contains("flex-row")).toBe(true);
   expect(root?.classList.contains("gap-px")).toBe(true);
+  expect(root?.classList.contains("flex-row")).toBe(true);
 });
 
 test("it should apply vertical orientation when orientation is vertical", () => {
@@ -112,4 +112,21 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
 
   expect(root?.classList.contains("mt-8")).toBe(true);
   expect(root?.classList.contains("mt-2")).toBe(false);
+});
+
+test("it should render nested groups as clustered children", () => {
+  const { container } = render(
+    <ButtonGroup aria-label="Editor">
+      <ButtonGroup>
+        <Button>Bold</Button>
+      </ButtonGroup>
+      <ButtonGroup>
+        <Button>Undo</Button>
+      </ButtonGroup>
+    </ButtonGroup>,
+  );
+
+  expect(container.querySelectorAll('[data-slot="button-group"]').length).toBe(
+    3,
+  );
 });
