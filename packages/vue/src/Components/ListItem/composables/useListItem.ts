@@ -12,7 +12,10 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { ListboxOption } from "@bridge-ui/core/Domain";
+import {
+  listboxOptionFromComposedItem,
+  type ListboxOption,
+} from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
@@ -88,16 +91,16 @@ export function useListItem(
   });
 
   const listboxOption = computed((): null | ListboxOption => {
-    if (merged.value.value == null || !hasListboxContext) {
+    if (!hasListboxContext) {
       return null;
     }
 
-    return {
+    return listboxOptionFromComposedItem({
       value: merged.value.value,
-      description: merged.value.secondary,
-      disabled: Boolean(merged.value.disabled),
-      label: merged.value.primary ?? String(merged.value.value),
-    };
+      primary: merged.value.primary,
+      disabled: merged.value.disabled,
+      secondary: merged.value.secondary,
+    });
   });
 
   let unregister: undefined | (() => void);

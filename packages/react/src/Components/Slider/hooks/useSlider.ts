@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, pick } from "es-toolkit/compat";
+import { get, isNil, isNumber, pick } from "es-toolkit/compat";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
@@ -242,7 +242,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
         }
 
         const single = snapSliderValue(
-          typeof next === "number" ? next : bounds.min,
+          isNumber(next) ? next : bounds.min,
           bounds.min,
           bounds.max,
           bounds.step,
@@ -256,7 +256,7 @@ export function useSlider(props: SliderProps, libDefaults: SliderLibDefaults) {
       }
 
       return snapSliderValue(
-        typeof next === "number" ? next : bounds.min,
+        isNumber(next) ? next : bounds.min,
         bounds.min,
         bounds.max,
         bounds.step,

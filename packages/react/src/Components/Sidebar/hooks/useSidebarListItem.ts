@@ -1,3 +1,6 @@
+// ** External Imports
+import { isString } from "es-toolkit/compat";
+
 // ** Core Imports
 import {
   isSidebarIconOnly,
@@ -44,7 +47,7 @@ export function useSidebarListItem(
       return props.tooltip || undefined;
     }
 
-    if (typeof props.primary !== "string") {
+    if (!isString(props.primary)) {
       return undefined;
     }
 
@@ -60,7 +63,7 @@ export function useSidebarListItem(
   });
 
   const accessibleName = derived(() => {
-    if (!iconOnly || typeof props.primary !== "string") {
+    if (!iconOnly || !isString(props.primary)) {
       return undefined;
     }
 

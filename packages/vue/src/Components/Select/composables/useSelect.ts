@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, isObjectLike, isSymbol, omit } from "es-toolkit/compat";
 import {
   Comment,
   computed,
@@ -182,13 +182,13 @@ export function useSelect(
   const registeredOptions = ref<SelectOption[]>([]);
 
   function isSelectOptionNode(node: unknown): boolean {
-    if (!node || typeof node !== "object") {
+    if (!isObjectLike(node)) {
       return false;
     }
 
     const type = (node as { type?: unknown }).type;
 
-    if (!type || typeof type !== "object") {
+    if (!isObjectLike(type)) {
       return false;
     }
 
@@ -206,7 +206,7 @@ export function useSelect(
     const nodes = slots.default?.({}) ?? [];
 
     return nodes.some((node) => {
-      if (!node || typeof node !== "object") {
+      if (!isObjectLike(node)) {
         return false;
       }
 
@@ -216,7 +216,7 @@ export function useSelect(
         return false;
       }
 
-      if (typeof type === "symbol") {
+      if (isSymbol(type)) {
         return false;
       }
 

@@ -1,5 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
+import { isString } from "es-toolkit/compat";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
@@ -44,7 +45,7 @@ test("it should override variant when prop is passed", () => {
 test("it should compute root class as a non-empty string", () => {
   const { rootBind } = mountUseCard();
 
-  expect(typeof rootBind.value.class).toBe("string");
+  expect(isString(rootBind.value.class)).toBe(true);
   expect(rootBind.value.class.length).toBeGreaterThan(0);
 });
 

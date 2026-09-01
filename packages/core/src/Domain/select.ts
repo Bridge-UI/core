@@ -3,7 +3,10 @@ import {
   debounce,
   flatten,
   get,
+  isArray,
   isNil,
+  isNumber,
+  isObjectLike,
   isString,
   keyBy,
 } from "es-toolkit/compat";
@@ -185,7 +188,7 @@ export type SelectOptionLike = string | SelectOption | Record<string, unknown>;
 export type SelectValue = number | string;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return isObjectLike(value) && !isArray(value);
 }
 
 /**
@@ -194,11 +197,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export function isListboxOptionGroup(
   value: unknown,
 ): value is ListboxOptionGroup {
-  return (
-    isRecord(value) &&
-    typeof value.title === "string" &&
-    Array.isArray(value.options)
-  );
+  return isRecord(value) && isString(value.title) && isArray(value.options);
 }
 
 /**
@@ -297,7 +296,7 @@ export function normalizeSelectOption(
   item: SelectOptionInput,
   keys: SelectOptionKeys,
 ): SelectOption {
-  if (typeof item === "string" || typeof item === "number") {
+  if (isString(item) || isNumber(item)) {
     const label = String(item);
 
     return { label, value: item };

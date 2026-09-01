@@ -1,3 +1,6 @@
+// ** External Imports
+import { isFunction } from "es-toolkit/compat";
+
 // ** Local Imports
 import { hasDocument } from "@/Runtime/env";
 
@@ -208,7 +211,7 @@ export function createFocusTrap(options: FocusTrapOptions): FocusTrap {
       if (
         disableRestoreFocus ||
         !previouslyFocused ||
-        typeof previouslyFocused.focus !== "function"
+        !isFunction(previouslyFocused.focus)
       ) {
         return;
       }

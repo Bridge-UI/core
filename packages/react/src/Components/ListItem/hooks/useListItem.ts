@@ -3,7 +3,10 @@ import { get, isNull, omit } from "es-toolkit/compat";
 import { useEffect, useMemo, type MouseEvent } from "react";
 
 // ** Core Imports
-import type { ListboxOption } from "@bridge-ui/core/Domain";
+import {
+  listboxOptionFromComposedItem,
+  type ListboxOption,
+} from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
@@ -78,23 +81,16 @@ export function useListItem(
   const hasListboxContext = listboxContext != null;
 
   const listboxOption = useMemo((): null | ListboxOption => {
-    if (merged.value == null || !hasListboxContext) {
+    if (!hasListboxContext) {
       return null;
     }
 
-    const label =
-      typeof merged.primary === "string"
-        ? merged.primary
-        : String(merged.value);
-    const description =
-      typeof merged.secondary === "string" ? merged.secondary : undefined;
-
-    return {
-      label,
-      description,
+    return listboxOptionFromComposedItem({
       value: merged.value,
-      disabled: Boolean(merged.disabled),
-    };
+      primary: merged.primary,
+      disabled: merged.disabled,
+      secondary: merged.secondary,
+    });
   }, [
     merged.value,
     merged.primary,

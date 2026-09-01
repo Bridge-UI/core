@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // ** External Imports
+import { isString } from "es-toolkit/compat";
 import { computed } from "vue";
 
 // ** Local Imports
@@ -62,7 +63,7 @@ const hasTabItems = computed(() => {
             <RenderFn :fn="item.slots.start" />
           </template>
 
-          <template v-if="typeof item.label === 'string'">
+          <template v-if="isString(item.label)">
             {{ item.label }}
           </template>
 

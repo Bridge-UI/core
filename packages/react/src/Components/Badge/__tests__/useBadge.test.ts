@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { isString } from "es-toolkit/compat";
 import { expect, test } from "vitest";
 
 // ** Local Imports
@@ -39,7 +40,7 @@ test("it should override color when prop is passed", () => {
 test("it should compute rootBind className as a non-empty string", () => {
   const { result } = renderUseBadge();
 
-  expect(typeof result.current.rootBind.className).toBe("string");
+  expect(isString(result.current.rootBind.className)).toBe(true);
   expect(result.current.rootBind.className.length).toBeGreaterThan(0);
 });
 

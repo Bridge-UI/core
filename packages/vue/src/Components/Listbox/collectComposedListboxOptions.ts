@@ -1,3 +1,6 @@
+// ** External Imports
+import { isArray, isFunction, isNil, isObjectLike } from "es-toolkit/compat";
+
 // ** Core Imports
 import {
   listboxOptionFromComposedItem,
@@ -19,10 +22,10 @@ type ComposedVNode = {
  */
 export function collectComposedListboxOptions(nodes: unknown): ListboxOption[] {
   const options: ListboxOption[] = [];
-  const list = Array.isArray(nodes) ? nodes : nodes == null ? [] : [nodes];
+  const list = isArray(nodes) ? nodes : isNil(nodes) ? [] : [nodes];
 
   for (const node of list) {
-    if (!node || typeof node !== "object") {
+    if (!isObjectLike(node)) {
       continue;
     }
 
@@ -38,19 +41,17 @@ export function collectComposedListboxOptions(nodes: unknown): ListboxOption[] {
       options.push(option);
     }
 
-    if (Array.isArray(vnode.children)) {
+    if (isArray(vnode.children)) {
       options.push(...collectComposedListboxOptions(vnode.children));
       continue;
     }
 
-    if (
-      vnode.children &&
-      typeof vnode.children === "object" &&
-      "default" in (vnode.children as object)
-    ) {
-      const childSlot = (vnode.children as { default?: () => unknown }).default;
+    const slotChildren = vnode.children;
 
-      if (typeof childSlot === "function") {
+    if (isObjectLike(slotChildren) && "default" in (slotChildren as object)) {
+      const childSlot = (slotChildren as { default?: () => unknown }).default;
+
+      if (isFunction(childSlot)) {
         options.push(...collectComposedListboxOptions(childSlot()));
       }
     }

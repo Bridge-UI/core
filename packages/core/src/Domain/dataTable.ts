@@ -762,7 +762,7 @@ export function getDataTableColumnCssWidth(
     return "3rem";
   }
 
-  if (typeof width === "number") {
+  if (isNumber(width)) {
     return `${width}px`;
   }
 
@@ -781,7 +781,7 @@ export function getDataTableColumnTrack(
     return "3rem";
   }
 
-  if (typeof width === "number") {
+  if (isNumber(width)) {
     return `${width}px`;
   }
 
@@ -829,11 +829,11 @@ export function getDataTableColumnWidthPx(
     return DATATABLE_CHROME_COLUMN_WIDTH_PX;
   }
 
-  if (typeof width === "number") {
+  if (isNumber(width)) {
     return width;
   }
 
-  if (typeof width === "string") {
+  if (isString(width)) {
     const px = /^(\d+(?:\.\d+)?)px$/.exec(width);
 
     if (px) {

@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit, pick } from "es-toolkit/compat";
+import { get, isNumber, omit, pick } from "es-toolkit/compat";
 import {
   computed,
   ref,
@@ -243,7 +243,7 @@ export function useSlider(
       }
 
       const single = snapSliderValue(
-        typeof raw === "number" ? raw : currentBounds.min,
+        isNumber(raw) ? raw : currentBounds.min,
         currentBounds.min,
         currentBounds.max,
         currentBounds.step,
@@ -262,7 +262,7 @@ export function useSlider(
     }
 
     return snapSliderValue(
-      typeof raw === "number" ? raw : currentBounds.min,
+      isNumber(raw) ? raw : currentBounds.min,
       currentBounds.min,
       currentBounds.max,
       currentBounds.step,
