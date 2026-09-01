@@ -267,7 +267,41 @@ test("it should apply size classes to option rows", async () => {
   const option = screen.getByRole("option", { name: "Apple" });
 
   expect(option.className).toContain("px-2");
+  expect(option.className).toContain("text-xs");
   expect(screen.getByText("Apple").className).toContain("text-xs");
+  expect(screen.getByText("Apple").className).toContain("font-medium");
+});
+
+test("it should match List item type on default md options", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="test-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Apple")).toBeTruthy();
+  });
+
+  const option = screen.getByRole("option", { name: "Apple" });
+  const label = screen.getByText("Apple");
+
+  expect(label.className).toContain("text-sm");
+  expect(option.className).toContain("text-sm");
+  expect(label.className).toContain("font-medium");
+  expect(label.className).toContain("leading-none");
+  expect(option.className).toContain("leading-none");
 });
 
 test("it should render section headers from entries", async () => {

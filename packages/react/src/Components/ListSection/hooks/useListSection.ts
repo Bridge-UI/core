@@ -102,13 +102,13 @@ export function useListSection(props: ListSectionProps) {
       {
         role: "presentation",
         className: cn({
-          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
           "sticky top-0 z-10 bg-white dark:bg-dark-800":
             merged.sticky && isDivRoot,
           "px-2": isNil(listboxContext),
           "py-1": isNil(listboxContext) && isDense,
           "py-1.5": isNil(listboxContext) && !isDense,
           [listboxContext?.sizeClasses?.option ?? ""]: !isNil(listboxContext),
+          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
           "pl-14": merged.inset,
           [get(mergedClasses, "title") ?? ""]: true,
         }),

@@ -99,7 +99,6 @@ export function useListSection(props: ListSectionOwnProps) {
       {
         role: "presentation",
         class: cn({
-          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
           "sticky top-0 z-10 bg-white dark:bg-dark-800":
             merged.value.sticky && isDivRoot.value,
           "px-2": isNil(listboxContextRef),
@@ -107,6 +106,7 @@ export function useListSection(props: ListSectionOwnProps) {
           "py-1.5": isNil(listboxContextRef) && !isDense.value,
           [listboxContext.value?.sizeClasses?.option ?? ""]:
             !isNil(listboxContextRef),
+          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
           "pl-14": merged.value.inset,
           [get(mergedClasses.value, "title") ?? ""]: true,
         }),

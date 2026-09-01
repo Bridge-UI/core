@@ -184,7 +184,30 @@ test("it should apply size classes to option rows", async () => {
   );
 
   expect(option?.className).toContain("px-2");
+  expect(option?.className).toContain("text-xs");
   expect(primary?.className).toContain("text-xs");
+  expect(primary?.className).toContain("font-medium");
+});
+
+test("it should match List item type on default md options", async () => {
+  mountListbox({
+    props: {
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const option = document.body.querySelector('[role="option"]');
+  const primary = Array.from(document.body.querySelectorAll("span")).find(
+    (el) => el.textContent === "Active",
+  );
+
+  expect(option?.className).toContain("text-sm");
+  expect(primary?.className).toContain("text-sm");
+  expect(option?.className).toContain("leading-none");
+  expect(primary?.className).toContain("font-medium");
+  expect(primary?.className).toContain("leading-none");
 });
 
 test("it should render section headers from entries", async () => {
