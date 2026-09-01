@@ -1,5 +1,12 @@
 // ** External Imports
-import { debounce, get, isNil } from "es-toolkit/compat";
+import {
+  debounce,
+  flatten,
+  get,
+  isNil,
+  isString,
+  keyBy,
+} from "es-toolkit/compat";
 
 /**
  * Default debounce delay (ms) for async select search while typing.
@@ -577,4 +584,60 @@ export function commitFreeSoloValue(
   }
 
   return trimmed;
+}
+
+/**
+ * Props used to resolve a listbox option from composed `ListItem` children.
+ */
+export type ComposedListboxItemProps = {
+  /**
+   * Whether the option is disabled.
+   */
+  disabled?: boolean;
+
+  /**
+   * Option label. Used when it is a string.
+   */
+  primary?: unknown;
+
+  /**
+   * Secondary line below the label. Used when it is a string.
+   */
+  secondary?: unknown;
+
+  /**
+   * Option value.
+   */
+  value?: ListboxValue;
+};
+
+/**
+ * Builds a listbox option from composed ListItem-like props.
+ * Uses `primary` as the label when it is a string; otherwise falls back to `value`.
+ */
+export function listboxOptionFromComposedItem(
+  item: ComposedListboxItemProps,
+): null | ListboxOption {
+  if (isNil(item.value) || item.value === "") {
+    return null;
+  }
+
+  const label = isString(item.primary) ? item.primary : String(item.value);
+  const description = isString(item.secondary) ? item.secondary : undefined;
+
+  return {
+    label,
+    description,
+    value: item.value,
+    disabled: Boolean(item.disabled),
+  };
+}
+
+/**
+ * Merges option lists by value. Later lists overwrite earlier ones.
+ */
+export function mergeListboxOptionsByValue(
+  ...lists: ListboxOption[][]
+): ListboxOption[] {
+  return Object.values(keyBy(flatten(lists), (option) => String(option.value)));
 }

@@ -13,7 +13,9 @@ import {
   filterListboxEntries,
   flattenListboxOptions,
   isListboxOptionGroup,
+  listboxOptionFromComposedItem,
   mapListboxEntriesToRows,
+  mergeListboxOptionsByValue,
   mergeSelectAsyncOptions,
   normalizeListboxEntries,
   normalizeSelectOption,
@@ -464,5 +466,45 @@ describe("commitFreeSoloValue", () => {
 
   test("it should skip duplicates in multiple mode", () => {
     expect(commitFreeSoloValue("apple", ["apple"], true)).toBeNull();
+  });
+});
+
+describe("listboxOptionFromComposedItem", () => {
+  test("it should use primary as the label when it is a string", () => {
+    expect(
+      listboxOptionFromComposedItem({
+        value: "low",
+        primary: "Low",
+      }),
+    ).toEqual({
+      value: "low",
+      label: "Low",
+      disabled: false,
+      description: undefined,
+    });
+  });
+
+  test("it should fall back to the value when primary is not a string", () => {
+    expect(listboxOptionFromComposedItem({ value: "low" })).toEqual({
+      value: "low",
+      label: "low",
+      disabled: false,
+      description: undefined,
+    });
+  });
+
+  test("it should return null when value is missing", () => {
+    expect(listboxOptionFromComposedItem({ primary: "Low" })).toBeNull();
+  });
+});
+
+describe("mergeListboxOptionsByValue", () => {
+  test("it should let later lists overwrite labels for the same value", () => {
+    expect(
+      mergeListboxOptionsByValue(
+        [{ value: "low", label: "low" }],
+        [{ value: "low", label: "Low" }],
+      ),
+    ).toEqual([{ value: "low", label: "Low" }]);
   });
 });

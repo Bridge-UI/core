@@ -311,6 +311,18 @@ test("it should filter within grouped options and drop empty sections", async ()
   });
 });
 
+test("it should display composed ListItem primary in the trigger when closed", () => {
+  render(
+    <Select value="low" aria-label="Priority">
+      <ListSection title="Severity" />
+      <ListItem value="low" primary="Low" />
+      <ListItem value="medium" primary="Medium" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe("Low");
+});
+
 test("it should select from composed ListSection and ListItem children", async () => {
   const onChange = vi.fn();
 

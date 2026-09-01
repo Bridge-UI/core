@@ -15,6 +15,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
@@ -40,6 +41,7 @@ import {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
+import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
 import {
   highlightCurrentSelection,
   useListboxNavigation,
@@ -178,12 +180,17 @@ export function useSelect(
 
   const handleRegisteredOptionsChange = useCallback(
     (options: SelectOption[]) => {
+      if (options.length === 0) {
+        return;
+      }
+
       setRegisteredOptions((current) => {
         if (
           current.length === options.length &&
           current.every(
             (option, index) =>
-              String(option.value) === String(options[index]?.value),
+              String(option.value) === String(options[index]?.value) &&
+              option.label === options[index]?.label,
           )
         ) {
           return current;
@@ -196,6 +203,10 @@ export function useSelect(
   );
 
   const hasComposedChildren = selectMerged.children != null;
+
+  const composedOptionsFromChildren = useMemo(() => {
+    return collectComposedListboxOptions(selectMerged.children);
+  }, [selectMerged.children]);
 
   const resolvedEntries = useMemo((): ListboxEntry[] => {
     if (hasComposedChildren) {
@@ -233,11 +244,19 @@ export function useSelect(
 
   const resolvedOptions = useMemo(() => {
     if (hasComposedChildren) {
-      return registeredOptions;
+      return mergeListboxOptionsByValue(
+        composedOptionsFromChildren,
+        registeredOptions,
+      );
     }
 
     return flattenListboxOptions(resolvedEntries);
-  }, [resolvedEntries, registeredOptions, hasComposedChildren]);
+  }, [
+    resolvedEntries,
+    registeredOptions,
+    hasComposedChildren,
+    composedOptionsFromChildren,
+  ]);
 
   const selectedValues = useMemo((): SelectValue[] => {
     const value = modelValue;

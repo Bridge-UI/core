@@ -22,6 +22,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
@@ -55,6 +56,7 @@ import {
   useFormField,
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
+import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
 import { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 import {
   hasNamedSlot,
@@ -231,6 +233,14 @@ export function useAutocomplete(
     );
   });
 
+  const composedOptionsFromSlot = computed(() => {
+    if (!hasComposedList.value) {
+      return [];
+    }
+
+    return collectComposedListboxOptions(slots.default?.({}) ?? []);
+  });
+
   const resolvedEntries = computed((): ListboxEntry[] => {
     if (hasComposedList.value) {
       return [];
@@ -264,7 +274,10 @@ export function useAutocomplete(
 
   const resolvedOptions = computed(() => {
     if (hasComposedList.value) {
-      return registeredOptions.value;
+      return mergeListboxOptionsByValue(
+        composedOptionsFromSlot.value,
+        registeredOptions.value,
+      );
     }
 
     return flattenListboxOptions(resolvedEntries.value);
@@ -1064,13 +1077,18 @@ export function useAutocomplete(
   });
 
   function handleRegisteredOptionsChange(options: SelectOption[]) {
+    if (options.length === 0) {
+      return;
+    }
+
     const current = registeredOptions.value;
 
     if (
       current.length === options.length &&
       current.every(
         (option, index) =>
-          String(option.value) === String(options[index]?.value),
+          String(option.value) === String(options[index]?.value) &&
+          option.label === options[index]?.label,
       )
     ) {
       return;
