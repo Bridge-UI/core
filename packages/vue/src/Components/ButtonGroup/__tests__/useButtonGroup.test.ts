@@ -39,8 +39,8 @@ test("it should merge default orientation", () => {
   const { merged } = mountUseButtonGroup();
 
   expect(merged.value.full).toBe(false);
-  expect(merged.value.color).toBe("primary");
   expect(merged.value.separator).toBe(true);
+  expect(merged.value.color).toBe("primary");
   expect(merged.value.orientation).toBe("horizontal");
 });
 

@@ -102,18 +102,18 @@ Nest groups to space clusters of actions. Joined edges and dividers stay inside 
 
 ## Props
 
-| Prop          | Type                     | Default        | Description                                                        |
-| ------------- | ------------------------ | -------------- | ------------------------------------------------------------------ |
-| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.                                    |
-| `color`       | `ButtonGroupColor`       | `"primary"`    | Color of the divider. Nested buttons inherit it when this is set.  |
-| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.                                    |
-| `density`     | `ButtonDensity`          | —              | Density applied to nested buttons unless they set `density`.       |
-| `full`        | `boolean`                | `false`        | Stretch the group to the container width.                          |
-| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.                                   |
-| `rounded`     | `ButtonRounded`          | —              | Roundness applied to nested buttons unless they set `rounded`.     |
-| `separator`   | `boolean`                | `true`         | Draw a full-height divider between adjacent children.              |
-| `size`        | `ButtonSize`             | —              | Size applied to nested buttons unless they set `size`.             |
-| `variant`     | `ButtonVariant`          | —              | Variant applied to nested buttons unless they set `variant`.       |
+| Prop          | Type                     | Default        | Description                                                       |
+| ------------- | ------------------------ | -------------- | ----------------------------------------------------------------- |
+| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.                                   |
+| `color`       | `ButtonGroupColor`       | `"primary"`    | Color of the divider. Nested buttons inherit it when this is set. |
+| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.                                   |
+| `density`     | `ButtonDensity`          | —              | Density applied to nested buttons unless they set `density`.      |
+| `full`        | `boolean`                | `false`        | Stretch the group to the container width.                         |
+| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.                                  |
+| `rounded`     | `ButtonRounded`          | —              | Roundness applied to nested buttons unless they set `rounded`.    |
+| `separator`   | `boolean`                | `true`         | Draw a full-height divider between adjacent children.             |
+| `size`        | `ButtonSize`             | —              | Size applied to nested buttons unless they set `size`.            |
+| `variant`     | `ButtonVariant`          | —              | Variant applied to nested buttons unless they set `variant`.      |
 
 Pass `aria-label` or `aria-labelledby` on the group.
 

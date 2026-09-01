@@ -30,8 +30,8 @@ test("it should merge default orientation", () => {
   const { result } = renderUseButtonGroup();
 
   expect(result.current.merged.full).toBe(false);
-  expect(result.current.merged.color).toBe("primary");
   expect(result.current.merged.separator).toBe(true);
+  expect(result.current.merged.color).toBe("primary");
   expect(result.current.merged.orientation).toBe("horizontal");
 });
 

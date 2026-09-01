@@ -307,8 +307,8 @@ test("it should keep the group variant on mini buttons and stretch their height"
     .classes()
     .join(" ");
 
-  expect(className).toContain("bg-primary-500");
   expect(className).toContain("h-auto");
+  expect(className).toContain("bg-primary-500");
   expect(className).toContain("border-transparent");
   expect(className).not.toContain("h-7");
 });
