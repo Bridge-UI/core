@@ -62,11 +62,11 @@ export function useFieldOverlay(props: FieldOverlayProps) {
       ...menuFromProps,
       classes: {
         ...menuFromProps?.classes,
-        content: cn(
-          menuFromProps?.classes?.content,
+        content: cn({
+          [menuFromProps?.classes?.content ?? ""]: true,
           // Nested picker / listbox paints the surface, like modal / drawer.
-          "overflow-visible rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent",
-        ),
+          "overflow-visible rounded-none bg-transparent shadow-none ring-0 dark:bg-transparent": true,
+        }),
       },
     };
   }, [show, onShowChange, customProps?.menu]);
