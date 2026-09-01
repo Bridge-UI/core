@@ -1,14 +1,10 @@
 // ** External Imports
-import type { HTMLAttributes, LabelHTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type {
-  ButtonGroupColor,
-  ButtonGroupOrientation,
-} from "@bridge-ui/core/Tokens";
+import type { ButtonGroupOrientation } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
-export interface ButtonGroupColorOverrides {}
 export interface ButtonGroupOrientationOverrides {}
 
 export interface ButtonGroupClasses {
@@ -28,12 +24,12 @@ export interface ButtonGroupCustomProps {
 }
 
 /**
- * Groups related action controls with a divider between each child.
- * Compose with `Button` and `ButtonGroupText`.
+ * Groups related action buttons with a divider between each child.
+ * Compose with `Button`. Size, color, and variant stay on each button.
  */
 export interface ButtonGroupOwnProps {
   /**
-   * The children to render (`Button`, `ButtonGroupText`, nested `ButtonGroup`).
+   * The children to render (`Button`, nested `ButtonGroup`).
    *
    * @default undefined
    */
@@ -45,13 +41,6 @@ export interface ButtonGroupOwnProps {
    * @default undefined
    */
   classes?: ButtonGroupClasses;
-
-  /**
-   * Fill color of the divider between children.
-   *
-   * @default "dark"
-   */
-  color?: MergeProps<ButtonGroupColor, ButtonGroupColorOverrides>;
 
   /**
    * Extra props for internal parts.
@@ -78,66 +67,7 @@ export interface ButtonGroupOwnProps {
   >;
 }
 
-export interface ButtonGroupTextClasses {
-  /**
-   * Classes merged onto the text root.
-   */
-  root?: string;
-}
-
-export interface ButtonGroupTextCustomProps {
-  /**
-   * Props forwarded to the root element.
-   *
-   * @default undefined
-   */
-  root?: HTMLAttributes<HTMLElement>;
-}
-
-/**
- * Static text (or label) that sits flush with grouped buttons.
- */
-export interface ButtonGroupTextOwnProps {
-  /**
-   * The element to render as.
-   *
-   * @default "span"
-   */
-  as?: "span" | "label";
-
-  /**
-   * The children to render inside the text.
-   *
-   * @default undefined
-   */
-  children?: ReactNode;
-
-  /**
-   * Classes for text parts.
-   *
-   * @default undefined
-   */
-  classes?: ButtonGroupTextClasses;
-
-  /**
-   * Extra props for internal parts.
-   *
-   * @default undefined
-   */
-  customProps?: ButtonGroupTextCustomProps;
-}
-
 export type ButtonGroupProps = MergeHtmlProps<
   ButtonGroupOwnProps,
   HTMLAttributes<HTMLDivElement>
 >;
-
-export type ButtonGroupTextProps =
-  | MergeHtmlProps<
-      ButtonGroupTextOwnProps & { as?: "span" },
-      HTMLAttributes<HTMLSpanElement>
-    >
-  | MergeHtmlProps<
-      ButtonGroupTextOwnProps & { as: "label" },
-      LabelHTMLAttributes<HTMLLabelElement>
-    >;

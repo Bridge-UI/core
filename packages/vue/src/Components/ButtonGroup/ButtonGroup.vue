@@ -16,7 +16,6 @@ const props = withDefaults(defineProps<ButtonGroupOwnProps>(), {
 
 const { rootBind } = useButtonGroup(props, {
   full: false,
-  color: "dark",
   orientation: "horizontal",
 });
 </script>

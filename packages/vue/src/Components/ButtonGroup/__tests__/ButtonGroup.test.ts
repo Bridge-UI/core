@@ -5,7 +5,7 @@ import { h } from "vue";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
-import { ButtonGroup, ButtonGroupText } from "@/Components/ButtonGroup";
+import { ButtonGroup } from "@/Components/ButtonGroup";
 
 afterEach(() => {
   while (mountedWrappers.length > 0) {
@@ -61,21 +61,11 @@ test("it should apply vertical orientation when orientation is vertical", () => 
   );
 });
 
-test("it should apply dark divider color by default", () => {
+test("it should apply a hairline divider between children", () => {
   const wrapper = mountButtonGroup();
 
   expect(wrapper.find('[data-slot="button-group"]').classes()).toContain(
     "bg-dark-200",
-  );
-});
-
-test("it should apply primary divider color when color is primary", () => {
-  const wrapper = mountButtonGroup({
-    props: { color: "primary" },
-  });
-
-  expect(wrapper.find('[data-slot="button-group"]').classes()).toContain(
-    "bg-primary-200",
   );
 });
 
@@ -125,41 +115,4 @@ test("it should apply user class after classes.root (tailwind-merge)", () => {
 
   expect(root.classes()).toContain("mt-8");
   expect(root.classes()).not.toContain("mt-2");
-});
-
-test("it should render ButtonGroupText as a span by default", () => {
-  const wrapper = mount(ButtonGroup, {
-    slots: {
-      default: () => [
-        h(ButtonGroupText, null, { default: () => "USD" }),
-        h(Button, null, { default: () => "Pay" }),
-      ],
-    },
-  });
-
-  mountedWrappers.push(wrapper);
-
-  expect(wrapper.find("span").text()).toBe("USD");
-});
-
-test("it should render ButtonGroupText as a label when as is label", () => {
-  const wrapper = mount(ButtonGroup, {
-    slots: {
-      default: () => [
-        h(
-          ButtonGroupText,
-          { as: "label", for: "amount" },
-          { default: () => "USD" },
-        ),
-        h(Button, null, { default: () => "Pay" }),
-      ],
-    },
-  });
-
-  mountedWrappers.push(wrapper);
-
-  const text = wrapper.find("label");
-
-  expect(text.text()).toBe("USD");
-  expect(text.attributes("for")).toBe("amount");
 });

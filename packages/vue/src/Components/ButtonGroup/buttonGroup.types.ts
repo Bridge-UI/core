@@ -2,13 +2,9 @@
 import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
-import type {
-  ButtonGroupColor,
-  ButtonGroupOrientation,
-} from "@bridge-ui/core/Tokens";
+import type { ButtonGroupOrientation } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
-export interface ButtonGroupColorOverrides {}
 export interface ButtonGroupOrientationOverrides {}
 
 export interface ButtonGroupClasses {
@@ -28,8 +24,8 @@ export interface ButtonGroupCustomProps {
 }
 
 /**
- * Groups related action controls with a divider between each child.
- * Compose with `Button` and `ButtonGroupText`.
+ * Groups related action buttons with a divider between each child.
+ * Compose with `Button`. Size, color, and variant stay on each button.
  */
 export interface ButtonGroupOwnProps {
   /**
@@ -38,13 +34,6 @@ export interface ButtonGroupOwnProps {
    * @default undefined
    */
   classes?: ButtonGroupClasses;
-
-  /**
-   * Fill color of the divider between children.
-   *
-   * @default "dark"
-   */
-  color?: MergeProps<ButtonGroupColor, ButtonGroupColorOverrides>;
 
   /**
    * Extra props for internal parts.
@@ -73,66 +62,12 @@ export interface ButtonGroupOwnProps {
 
 export interface ButtonGroupSlots {
   /**
-   * Grouped controls (`Button`, `ButtonGroupText`, nested `ButtonGroup`).
-   */
-  default?: Slot<undefined>;
-}
-
-export interface ButtonGroupTextClasses {
-  /**
-   * Classes merged onto the text root.
-   */
-  root?: string;
-}
-
-export interface ButtonGroupTextCustomProps {
-  /**
-   * Props forwarded to the root element.
-   *
-   * @default undefined
-   */
-  root?: HTMLAttributes;
-}
-
-/**
- * Static text (or label) that sits flush with grouped buttons.
- */
-export interface ButtonGroupTextOwnProps {
-  /**
-   * The element to render as.
-   *
-   * @default "span"
-   */
-  as?: "span" | "label";
-
-  /**
-   * Classes for text parts.
-   *
-   * @default undefined
-   */
-  classes?: ButtonGroupTextClasses;
-
-  /**
-   * Extra props for internal parts.
-   *
-   * @default undefined
-   */
-  customProps?: ButtonGroupTextCustomProps;
-}
-
-export interface ButtonGroupTextSlots {
-  /**
-   * Text content.
+   * Grouped controls (`Button`, nested `ButtonGroup`).
    */
   default?: Slot<undefined>;
 }
 
 export type ButtonGroupProps = MergeHtmlProps<
   ButtonGroupOwnProps,
-  HTMLAttributes
->;
-
-export type ButtonGroupTextProps = MergeHtmlProps<
-  ButtonGroupTextOwnProps,
   HTMLAttributes
 >;

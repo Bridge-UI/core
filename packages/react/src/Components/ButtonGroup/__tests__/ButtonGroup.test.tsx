@@ -8,7 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
-import { ButtonGroup, ButtonGroupText } from "@/Components/ButtonGroup";
+import { ButtonGroup } from "@/Components/ButtonGroup";
 
 test("it should render a group with role group", () => {
   render(
@@ -46,7 +46,7 @@ test("it should apply vertical orientation when orientation is vertical", () => 
   expect(root?.classList.contains("flex-col")).toBe(true);
 });
 
-test("it should apply dark divider color by default", () => {
+test("it should apply a hairline divider between children", () => {
   const { container } = render(
     <ButtonGroup>
       <Button>Copy</Button>
@@ -57,20 +57,6 @@ test("it should apply dark divider color by default", () => {
     container
       .querySelector('[data-slot="button-group"]')
       ?.classList.contains("bg-dark-200"),
-  ).toBe(true);
-});
-
-test("it should apply primary divider color when color is primary", () => {
-  const { container } = render(
-    <ButtonGroup color="primary">
-      <Button>Copy</Button>
-    </ButtonGroup>,
-  );
-
-  expect(
-    container
-      .querySelector('[data-slot="button-group"]')
-      ?.classList.contains("bg-primary-200"),
   ).toBe(true);
 });
 
@@ -126,33 +112,4 @@ test("it should apply user className after classes.root (tailwind-merge)", () =>
 
   expect(root?.classList.contains("mt-8")).toBe(true);
   expect(root?.classList.contains("mt-2")).toBe(false);
-});
-
-test("it should render ButtonGroupText as a span by default", () => {
-  render(
-    <ButtonGroup>
-      <ButtonGroupText>USD</ButtonGroupText>
-      <Button>Pay</Button>
-    </ButtonGroup>,
-  );
-
-  const text = screen.getByText("USD");
-
-  expect(text.tagName).toBe("SPAN");
-});
-
-test("it should render ButtonGroupText as a label when as is label", () => {
-  render(
-    <ButtonGroup>
-      <ButtonGroupText as="label" htmlFor="amount">
-        USD
-      </ButtonGroupText>
-      <Button>Pay</Button>
-    </ButtonGroup>,
-  );
-
-  const text = screen.getByText("USD");
-
-  expect(text.tagName).toBe("LABEL");
-  expect(text.getAttribute("for")).toBe("amount");
 });

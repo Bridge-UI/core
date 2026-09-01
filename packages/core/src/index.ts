@@ -44,7 +44,6 @@ export type {
   BridgeUIOptions,
   ButtonConfigOverrides,
   ButtonGroupConfigOverrides,
-  ButtonGroupTextConfigOverrides,
   CalendarConfigOverrides,
   CardConfigOverrides,
   CheckboxConfigOverrides,
@@ -525,16 +524,10 @@ export type {
   ButtonSize,
   ButtonVariant,
 } from "@/Tokens/Button";
-export {
-  colorProps as buttonGroupColorProps,
-  orientationProps as buttonGroupOrientationProps,
-  textProps as buttonGroupTextProps,
-} from "@/Tokens/ButtonGroup";
+export { orientationProps as buttonGroupOrientationProps } from "@/Tokens/ButtonGroup";
 export type {
-  ButtonGroupColor,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
-  ButtonGroupTextItem,
 } from "@/Tokens/ButtonGroup";
 export {
   colorProps as calendarColorProps,

@@ -10,8 +10,6 @@ import type { ButtonClasses, ButtonProps } from "@/Components/Button";
 import type {
   ButtonGroupClasses,
   ButtonGroupProps,
-  ButtonGroupTextClasses,
-  ButtonGroupTextProps,
 } from "@/Components/ButtonGroup";
 import type { CardClasses, CardProps } from "@/Components/Card";
 import type { CheckboxClasses, CheckboxProps } from "@/Components/Checkbox";
@@ -101,14 +99,7 @@ declare module "@bridge-ui/core/Config" {
 
   interface ButtonGroupConfigOverrides {
     classes: ButtonGroupClasses;
-    defaultProps: Partial<
-      Pick<ButtonGroupProps, "full" | "color" | "orientation">
-    >;
-  }
-
-  interface ButtonGroupTextConfigOverrides {
-    classes: ButtonGroupTextClasses;
-    defaultProps: Partial<Pick<ButtonGroupTextProps, "as">>;
+    defaultProps: Partial<Pick<ButtonGroupProps, "full" | "orientation">>;
   }
 
   interface CardConfigOverrides {

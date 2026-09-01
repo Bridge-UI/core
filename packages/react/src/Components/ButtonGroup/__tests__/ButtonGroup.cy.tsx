@@ -1,6 +1,6 @@
 // ** Local Imports
 import { Button } from "@/Components/Button";
-import { ButtonGroup, ButtonGroupText } from "@/Components/ButtonGroup";
+import { ButtonGroup } from "@/Components/ButtonGroup";
 
 test("it should render a button group in the browser", () => {
   cy.mount(
@@ -29,15 +29,4 @@ test("it should apply vertical orientation", () => {
   );
 
   cy.get('[role="group"]').should("have.class", "flex-col");
-});
-
-test("it should render ButtonGroupText", () => {
-  cy.mount(
-    <ButtonGroup aria-label="Currency">
-      <ButtonGroupText>USD</ButtonGroupText>
-      <Button variant="outline">Pay</Button>
-    </ButtonGroup>,
-  );
-
-  cy.contains("USD").should("be.visible").and("have.prop", "tagName", "SPAN");
 });

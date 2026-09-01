@@ -3,10 +3,7 @@ import { get } from "es-toolkit/compat";
 import { computed, useAttrs } from "vue";
 
 // ** Core Imports
-import {
-  buttonGroupColorProps as colorProps,
-  buttonGroupOrientationProps as orientationProps,
-} from "@bridge-ui/core/Tokens";
+import { buttonGroupOrientationProps as orientationProps } from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -29,7 +26,6 @@ import {
 
 const buttonGroupBridgeKeys = [
   "full",
-  "color",
   "classes",
   "customProps",
   "orientation",
@@ -37,7 +33,7 @@ const buttonGroupBridgeKeys = [
 
 type ButtonGroupLibDefaults = LibDefaultsShape<
   ButtonGroupOwnProps,
-  "full" | "color" | "orientation"
+  "full" | "orientation"
 >;
 
 type ButtonGroupMerged = MergeLibDefaults<
@@ -46,7 +42,7 @@ type ButtonGroupMerged = MergeLibDefaults<
 >;
 
 /**
- * Builds bind props for a grouped set of action controls.
+ * Builds bind props for a grouped set of action buttons.
  */
 export function useButtonGroup(
   props: ButtonGroupOwnProps,
@@ -79,15 +75,6 @@ export function useButtonGroup(
     return merged.value.customProps;
   });
 
-  const colorClass = computed(() => {
-    const classes = mergeBridgeUILayeredClasses(
-      colorProps,
-      bridgeButtonGroup.value?.tokens?.color,
-    );
-
-    return get(classes, merged.value.color);
-  });
-
   const orientationItem = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       orientationProps,
@@ -102,7 +89,6 @@ export function useButtonGroup(
       role: "group",
       "data-slot": "button-group",
       class: cn({
-        [colorClass.value ?? ""]: true,
         [get(orientationItem.value, "root") ?? ""]: true,
         [mergedClasses.value.root ?? ""]: true,
         "w-full [&>*]:flex-1": merged.value.full === true,

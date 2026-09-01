@@ -6,20 +6,13 @@ import { defineComponent, h } from "vue";
 // ** Local Imports
 import {
   useButtonGroup,
-  useButtonGroupText,
   type ButtonGroupOwnProps,
-  type ButtonGroupTextOwnProps,
 } from "@/Components/ButtonGroup";
 
 const libDefaults = {
   full: false,
-  color: "dark",
   orientation: "horizontal",
 } satisfies Partial<ButtonGroupOwnProps>;
-
-const textLibDefaults = {
-  as: "span",
-} satisfies Partial<ButtonGroupTextOwnProps>;
 
 function mountUseButtonGroup(props: Partial<ButtonGroupOwnProps> = {}) {
   let result!: ReturnType<typeof useButtonGroup>;
@@ -37,34 +30,11 @@ function mountUseButtonGroup(props: Partial<ButtonGroupOwnProps> = {}) {
   return result;
 }
 
-function mountUseButtonGroupText(props: Partial<ButtonGroupTextOwnProps> = {}) {
-  let result!: ReturnType<typeof useButtonGroupText>;
-
-  const Wrapper = defineComponent({
-    setup() {
-      result = useButtonGroupText(props, textLibDefaults);
-
-      return () => h("div");
-    },
-  });
-
-  mount(Wrapper);
-
-  return result;
-}
-
-test("it should merge default color and orientation", () => {
+test("it should merge default orientation", () => {
   const { merged } = mountUseButtonGroup();
 
-  expect(merged.value.color).toBe("dark");
   expect(merged.value.orientation).toBe("horizontal");
   expect(merged.value.full).toBe(false);
-});
-
-test("it should override color when prop is passed", () => {
-  const { merged } = mountUseButtonGroup({ color: "primary" });
-
-  expect(merged.value.color).toBe("primary");
 });
 
 test("it should override orientation when prop is passed", () => {
@@ -101,12 +71,6 @@ test("it should apply vertical orientation classes", () => {
   expect(rootBind.value.class).toContain("flex-col");
 });
 
-test("it should apply primary color class when color is primary", () => {
-  const { rootBind } = mountUseButtonGroup({ color: "primary" });
-
-  expect(rootBind.value.class).toContain("bg-primary-200");
-});
-
 test("it should set group role and data-slot on rootBind", () => {
   const { rootBind } = mountUseButtonGroup();
 
@@ -118,17 +82,4 @@ test("it should apply full width classes when full is set", () => {
   const { rootBind } = mountUseButtonGroup({ full: true });
 
   expect(rootBind.value.class).toContain("w-full");
-});
-
-test("it should default ButtonGroupText tag to span", () => {
-  const { tag, rootBind } = mountUseButtonGroupText();
-
-  expect(tag.value).toBe("span");
-  expect(rootBind.value.class).toContain("inline-flex");
-});
-
-test("it should override ButtonGroupText tag when as is label", () => {
-  const { tag } = mountUseButtonGroupText({ as: "label" });
-
-  expect(tag.value).toBe("label");
 });

@@ -30,8 +30,6 @@ export type {
   ButtonConfigOverrides,
   ButtonGroupConfigBase,
   ButtonGroupConfigOverrides,
-  ButtonGroupTextConfigBase,
-  ButtonGroupTextConfigOverrides,
   CalendarConfigBase,
   CalendarConfigOverrides,
   CardConfigBase,

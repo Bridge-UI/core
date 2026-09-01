@@ -44,10 +44,8 @@ import type {
   ButtonVariant,
 } from "@/Tokens/Button";
 import type {
-  ButtonGroupColor,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
-  ButtonGroupTextItem,
 } from "@/Tokens/ButtonGroup";
 import type {
   CalendarColor,
@@ -365,7 +363,6 @@ export interface BreadcrumbConfigOverrides {}
 export interface BreadcrumbItemConfigOverrides {}
 export interface ButtonConfigOverrides {}
 export interface ButtonGroupConfigOverrides {}
-export interface ButtonGroupTextConfigOverrides {}
 export interface CalendarConfigOverrides {}
 export interface CardConfigOverrides {}
 export interface CheckboxConfigOverrides {}
@@ -533,23 +530,11 @@ export interface ButtonConfigBase {
 export interface ButtonGroupConfigBase {
   classes: object;
   defaultProps: Partial<{
-    color: keyof ButtonGroupColor;
     full: boolean;
     orientation: keyof ButtonGroupOrientation;
   }>;
   tokens: Partial<{
-    color: Record<string, string>;
     orientation: Record<string, ButtonGroupOrientationItem>;
-  }>;
-}
-
-export interface ButtonGroupTextConfigBase {
-  classes: object;
-  defaultProps: Partial<{
-    as: "span" | "label";
-  }>;
-  tokens: Partial<{
-    text: ButtonGroupTextItem;
   }>;
 }
 
@@ -1539,9 +1524,6 @@ export type BridgeUIComponentsConfig = Partial<{
   Button: Partial<Overwrite<ButtonConfigBase, ButtonConfigOverrides>>;
   ButtonGroup: Partial<
     Overwrite<ButtonGroupConfigBase, ButtonGroupConfigOverrides>
-  >;
-  ButtonGroupText: Partial<
-    Overwrite<ButtonGroupTextConfigBase, ButtonGroupTextConfigOverrides>
   >;
   Calendar: Partial<Overwrite<CalendarConfigBase, CalendarConfigOverrides>>;
   Card: Partial<Overwrite<CardConfigBase, CardConfigOverrides>>;
