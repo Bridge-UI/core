@@ -279,8 +279,7 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
-          "text-sm": !isListboxOption.value,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-2": !isListboxOption.value,
           "py-1.5": !isListboxOption.value && !isDense.value,
@@ -313,6 +312,7 @@ export function useListItem(
           [get(mergedClasses.value, "interactive") ?? ""]: true,
           [listboxContext.value?.sizeClasses?.option ?? ""]:
             isListboxOption.value,
+          "leading-none": true,
         }),
       },
     );
@@ -320,7 +320,7 @@ export function useListItem(
 
   const rowClass = computed(() => {
     return cn({
-      "flex w-full min-w-0 items-center gap-x-2": true,
+      "flex w-full min-w-0 items-center gap-x-2 leading-none": true,
       "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow.value,
       "px-2": !isInteractiveRow.value,
       "py-1.5": !isInteractiveRow.value && !isDense.value,
@@ -355,11 +355,11 @@ export function useListItem(
       customProps.value?.primary,
       {},
       cn({
-        "block truncate leading-none": true,
+        "block truncate text-sm font-medium": true,
         [listboxContext.value?.sizeClasses?.primary ?? ""]:
           isListboxOption.value,
-        "text-sm font-medium": !isListboxOption.value,
         [get(mergedClasses.value, "primary") ?? ""]: true,
+        "leading-none": true,
       }),
     );
   });
@@ -369,10 +369,9 @@ export function useListItem(
       customProps.value?.secondary,
       {},
       cn({
-        "block truncate text-dark-500 dark:text-dark-400": true,
+        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400": true,
         [listboxContext.value?.sizeClasses?.secondary ?? ""]:
           isListboxOption.value,
-        "mt-0.5 text-xs": !isListboxOption.value,
         [get(mergedClasses.value, "secondary") ?? ""]: true,
       }),
     );

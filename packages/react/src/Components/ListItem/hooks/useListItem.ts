@@ -247,8 +247,7 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
-          "text-sm": !isListboxOption,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.disabled,
           "px-2": !isListboxOption,
           "py-1.5": !isListboxOption && !isDense,
@@ -272,6 +271,7 @@ export function useListItem(
           "opacity-50 pointer-events-none": merged.disabled,
           [get(mergedClasses, "interactive") ?? ""]: true,
           [listboxContext?.sizeClasses?.option ?? ""]: isListboxOption,
+          "leading-none": true,
         }),
       },
     );
@@ -279,7 +279,7 @@ export function useListItem(
 
   const rowClassName = derived(() => {
     return cn({
-      "flex w-full min-w-0 items-center gap-x-2": true,
+      "flex w-full min-w-0 items-center gap-x-2 leading-none": true,
       "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow,
       "px-2": !isInteractiveRow,
       "py-1.5": !isInteractiveRow && !isDense,
@@ -314,10 +314,10 @@ export function useListItem(
       customProps?.primary,
       {},
       cn({
-        "block truncate leading-none": true,
+        "block truncate text-sm font-medium": true,
         [listboxContext?.sizeClasses?.primary ?? ""]: isListboxOption,
-        "text-sm font-medium": !isListboxOption,
         [get(mergedClasses, "primary") ?? ""]: true,
+        "leading-none": true,
       }),
     );
   });
@@ -327,9 +327,8 @@ export function useListItem(
       customProps?.secondary,
       {},
       cn({
-        "block truncate text-dark-500 dark:text-dark-400": true,
+        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400": true,
         [listboxContext?.sizeClasses?.secondary ?? ""]: isListboxOption,
-        "mt-0.5 text-xs": !isListboxOption,
         [get(mergedClasses, "secondary") ?? ""]: true,
       }),
     );
