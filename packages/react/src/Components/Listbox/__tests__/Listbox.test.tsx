@@ -266,7 +266,7 @@ test("it should apply size classes to option rows", async () => {
 
   const option = screen.getByRole("option", { name: "Apple" });
 
-  expect(option.className).toContain("px-3");
+  expect(option.className).toContain("px-2");
   expect(screen.getByText("Apple").className).toContain("text-xs");
 });
 
@@ -351,6 +351,33 @@ test("it should render composed ListSection and ListItem children", async () => 
   expect(onSelect).toHaveBeenCalledWith(
     expect.objectContaining({ label: "Apple", value: "apple" }),
   );
+});
+
+test("it should apply listbox size padding once on composed ListItem options", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox show anchorEl={anchorRef} listboxId="test-listbox">
+          <ListItem value="apple" primary="Apple" />
+        </Listbox>
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("option", { name: "Apple" })).toBeTruthy();
+  });
+
+  const option = screen.getByRole("option", { name: "Apple" });
+  const row = option.querySelector(":scope > div");
+
+  expect(option.className).toContain("py-1.5");
+  expect(row?.className).not.toContain("py-1.5");
+  expect(row?.className).not.toContain("px-2");
 });
 
 test("it should show footer actions when showFooter is set", async () => {

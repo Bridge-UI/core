@@ -297,14 +297,11 @@ function Listbox({
           <div {...scrollBind}>
             <ListboxContext.Provider value={listboxContext}>
               <List
-                dense
                 role="listbox"
                 id={listboxId}
                 aria-labelledby={labelledBy}
                 aria-multiselectable={multiple || undefined}
-                {...mergeNestedComponentProps(listProps, {
-                  className: "p-0",
-                })}
+                {...mergeNestedComponentProps(listProps)}
               >
                 {hasComposedChildren
                   ? children

@@ -177,6 +177,7 @@ export function useListItem(
   });
 
   const isListboxOption = listboxOption != null;
+  const isInteractiveRow = Boolean(merged.interactive || isListboxOption);
 
   const resolvedSelectedIcon = useMemo((): null | IconSource => {
     if (isListboxOption) {
@@ -224,9 +225,7 @@ export function useListItem(
   });
 
   const interactiveBind = derived(() => {
-    const interactive = merged.interactive || isListboxOption;
-
-    if (!interactive) {
+    if (!isInteractiveRow) {
       return null;
     }
 
@@ -252,11 +251,11 @@ export function useListItem(
             }
           : undefined,
         className: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
           "cursor-pointer select-none": !merged.disabled,
-          "px-4": true,
-          "py-2": !isDense,
-          "py-1.5": isDense,
+          "px-2": !isListboxOption,
+          "py-1.5": !isListboxOption && !isDense,
+          "py-1": !isListboxOption && isDense,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.disabled && !isListboxOption,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
@@ -275,7 +274,7 @@ export function useListItem(
             isListboxOption && listboxHighlighted && !listboxSelected,
           "opacity-50 pointer-events-none": merged.disabled,
           [get(mergedClasses, "interactive") ?? ""]: true,
-          [listboxContext?.sizeClasses?.option ?? ""]: true,
+          [listboxContext?.sizeClasses?.option ?? ""]: isListboxOption,
         }),
       },
     );
@@ -283,11 +282,11 @@ export function useListItem(
 
   const rowClassName = derived(() => {
     return cn({
-      "flex w-full min-w-0 gap-x-3": true,
-      "items-center text-dark-900 dark:text-dark-100": !merged.interactive,
-      "px-4": !merged.interactive,
-      "py-2": !merged.interactive && !isDense,
-      "py-1.5": !merged.interactive && isDense,
+      "flex w-full min-w-0 items-center gap-x-2": true,
+      "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow,
+      "px-2": !isInteractiveRow,
+      "py-1.5": !isInteractiveRow && !isDense,
+      "py-1": !isInteractiveRow && isDense,
     });
   });
 
@@ -296,7 +295,7 @@ export function useListItem(
       customProps?.start,
       {},
       cn({
-        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
+        "flex shrink-0 items-center text-dark-600 dark:text-dark-300": true,
         [get(mergedClasses, "start") ?? ""]: true,
       }),
     );
@@ -318,7 +317,7 @@ export function useListItem(
       customProps?.primary,
       {},
       cn(
-        "block truncate text-sm font-medium",
+        "block truncate text-sm font-medium leading-none",
         listboxContext?.sizeClasses?.primary,
         get(mergedClasses, "primary"),
       ),
@@ -355,7 +354,7 @@ export function useListItem(
       {
         size: "sm" as const,
         className: cn(
-          "shrink-0",
+          "block shrink-0",
           listboxContext?.checkClass,
           get(mergedClasses, "selectedIcon"),
         ),

@@ -78,7 +78,7 @@ export function useListSection(props: ListSectionOwnProps) {
       customProps.value?.root,
       rootInheritedAttrs.value,
       cn({
-        "list-none": true,
+        "mt-1 list-none first:mt-0": true,
         "sticky top-0 z-10 bg-white dark:bg-dark-800":
           merged.value.sticky && !isDivRoot.value,
         [get(mergedClasses.value, "root") ?? ""]: true,
@@ -93,10 +93,11 @@ export function useListSection(props: ListSectionOwnProps) {
       {
         role: "presentation",
         class: cn({
-          "bg-white px-2 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-800 dark:text-dark-300": true,
-          "sticky top-0 z-10": merged.value.sticky && isDivRoot.value,
-          "py-2": !isDense.value,
-          "py-1.5": isDense.value,
+          "px-2 text-xs font-medium text-dark-500 dark:text-dark-400": true,
+          "sticky top-0 z-10 bg-white dark:bg-dark-800":
+            merged.value.sticky && isDivRoot.value,
+          "py-1.5": !isDense.value,
+          "py-1": isDense.value,
           "pl-14": merged.value.inset,
           [get(mergedClasses.value, "title") ?? ""]: true,
         }),

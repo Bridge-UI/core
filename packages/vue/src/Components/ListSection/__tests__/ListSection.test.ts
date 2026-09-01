@@ -58,7 +58,7 @@ test("it should inherit dense padding from parent List", () => {
 
   const wrapper = mount(Host);
 
-  expect(wrapper.find('[role="presentation"]').classes()).toContain("py-1.5");
+  expect(wrapper.find('[role="presentation"]').classes()).toContain("py-1");
 });
 
 test("it should render a div root when as prop is div", () => {

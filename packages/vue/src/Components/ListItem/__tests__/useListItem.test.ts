@@ -73,8 +73,19 @@ test("it should expose interactive bind when interactive is true", () => {
   });
 
   expect(interactiveBind.value?.role).toBe("button");
-  expect(interactiveBind.value?.class).toContain("px-4");
+  expect(interactiveBind.value?.class).toContain("px-2");
+  expect(interactiveBind.value?.class).toContain("rounded-md");
   expect(interactiveBind.value?.class).toContain("cursor-pointer");
+});
+
+test("it should not pad the inner row when interactive is true", () => {
+  const { rowClass } = mountUseListItem({
+    interactive: true,
+    primary: "Action",
+  });
+
+  expect(rowClass.value).not.toContain("px-2");
+  expect(rowClass.value).not.toContain("py-1.5");
 });
 
 test("it should apply dense padding on interactive bind", () => {
@@ -84,8 +95,8 @@ test("it should apply dense padding on interactive bind", () => {
     primary: "Dense item",
   });
 
-  expect(interactiveBind.value?.class).toContain("py-1.5");
-  expect(interactiveBind.value?.class).not.toContain("py-2");
+  expect(interactiveBind.value?.class).toContain("py-1");
+  expect(interactiveBind.value?.class).not.toContain("py-1.5");
 });
 
 test("it should inherit dense padding from parent List context", () => {
@@ -118,7 +129,7 @@ test("it should inherit dense padding from parent List context", () => {
 
   mount(Wrapper);
 
-  expect(result.interactiveBind.value?.class).toContain("py-1.5");
+  expect(result.interactiveBind.value?.class).toContain("py-1");
 });
 
 test("it should apply selected styles on interactive bind", () => {

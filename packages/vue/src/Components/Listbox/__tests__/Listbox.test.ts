@@ -183,7 +183,7 @@ test("it should apply size classes to option rows", async () => {
     (el) => el.textContent === "Active",
   );
 
-  expect(option?.className).toContain("px-3");
+  expect(option?.className).toContain("px-2");
   expect(primary?.className).toContain("text-xs");
 });
 
@@ -257,6 +257,29 @@ test("it should render composed ListSection and ListItem children", async () => 
   await flushPromises();
 
   expect(onSelect).toHaveBeenCalled();
+});
+
+test("it should apply listbox size padding once on composed ListItem options", async () => {
+  mountListbox({
+    props: {
+      options: [],
+      modelValue: true,
+    },
+    slots: {
+      default: () => h(ListItem, { value: "active", primary: "Active" }),
+    },
+  });
+
+  await flushPromises();
+
+  const option = Array.from(
+    document.body.querySelectorAll('[role="option"]'),
+  ).find((el) => el.textContent?.includes("Active"));
+  const row = option?.querySelector(":scope > div");
+
+  expect(option?.className).toContain("py-1.5");
+  expect(row?.className).not.toContain("py-1.5");
+  expect(row?.className).not.toContain("px-2");
 });
 
 test("it should show footer actions when showFooter is set", async () => {

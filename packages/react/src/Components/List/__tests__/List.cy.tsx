@@ -6,7 +6,7 @@ test("it should render the root element", () => {
 
   cy.get("ul").should("exist");
   cy.get("ul").should("have.class", "list-none");
-  cy.get("ul").should("have.class", "py-2");
+  cy.get("ul").should("have.class", "p-1");
 });
 
 test("it should apply nested indent when nested is true", () => {

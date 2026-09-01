@@ -32,7 +32,9 @@ test("it should apply section title classes", () => {
   expect(titleBind.value.role).toBe("presentation");
   expect(titleBind.value.class).toContain("px-2");
   expect(titleBind.value.class).toContain("text-xs");
-  expect(titleBind.value.class).toContain("uppercase");
+  expect(titleBind.value.class).toContain("font-medium");
+  expect(titleBind.value.class).toContain("py-1.5");
+  expect(titleBind.value.class).not.toContain("uppercase");
 });
 
 test("it should apply sticky classes on root when sticky is true", () => {
@@ -87,5 +89,6 @@ test("it should inherit dense padding from parent List context", () => {
 
   mount(Wrapper);
 
-  expect(result.titleBind.value.class).toContain("py-1.5");
+  expect(result.titleBind.value.class).toContain("py-1");
+  expect(result.titleBind.value.class).not.toContain("py-1.5");
 });

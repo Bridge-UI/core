@@ -84,116 +84,116 @@ export interface ListboxSize {
 }
 
 export const sizeProps: ListboxSize = {
-  "2xl": {
-    "menu": {
-      "check": "size-5",
-      "option": "px-5 py-3",
-      "secondary": "mt-0.5 text-sm",
-      "message": "px-5 py-4 text-lg",
-      "primary": "text-lg font-medium",
-    },
-    "panel": {
-      "check": "size-5",
-      "option": "px-5 py-3",
-      "secondary": "mt-0.5 text-sm",
-      "message": "px-5 py-4 text-lg",
-      "primary": "text-lg font-medium",
-    },
-  },
   "md": {
     "panel": {
       "check": "size-4",
-      "option": "px-4 py-2",
       "secondary": "mt-0.5 text-xs",
-      "message": "px-4 py-3 text-sm",
+      "message": "px-2 py-3 text-sm",
       "primary": "text-sm font-medium",
+      "option": "px-2 py-2 leading-none",
     },
     "menu": {
       "check": "size-4",
-      "option": "px-4 py-1.5",
       "secondary": "mt-0.5 text-xs",
-      "message": "px-4 py-3 text-sm",
+      "message": "px-2 py-3 text-sm",
       "primary": "text-sm font-medium",
+      "option": "px-2 py-1.5 leading-none",
     },
   },
-  "xs": {
+  "2xl": {
     "menu": {
-      "check": "size-3",
-      "option": "px-3 py-1",
-      "message": "px-3 py-2 text-xs",
-      "secondary": "mt-0.5 text-2xs",
-      "primary": "text-xs font-medium",
-    },
-    "panel": {
-      "check": "size-3.5",
-      "option": "px-3 py-1.5",
-      "secondary": "mt-0.5 text-2xs",
-      "primary": "text-xs font-medium",
-      "message": "px-3 py-2.5 text-xs",
-    },
-  },
-  "lg": {
-    "menu": {
-      "check": "size-4",
-      "option": "px-4 py-2",
-      "secondary": "mt-0.5 text-xs",
-      "message": "px-4 py-3 text-sm",
-      "primary": "text-sm font-medium",
-    },
-    "panel": {
       "check": "size-5",
-      "option": "px-4 py-2.5",
       "secondary": "mt-0.5 text-sm",
-      "primary": "text-base font-medium",
-      "message": "px-4 py-3.5 text-base",
-    },
-  },
-  "xl": {
-    "panel": {
-      "check": "size-5",
-      "option": "px-5 py-3",
-      "secondary": "mt-0.5 text-sm",
-      "message": "px-5 py-4 text-lg",
+      "message": "px-3 py-3 text-lg",
       "primary": "text-lg font-medium",
+      "option": "px-3 py-2.5 leading-none",
     },
-    "menu": {
+    "panel": {
       "check": "size-5",
-      "option": "px-4 py-2.5",
       "secondary": "mt-0.5 text-sm",
-      "primary": "text-base font-medium",
-      "message": "px-4 py-3.5 text-base",
+      "message": "px-3 py-3 text-lg",
+      "primary": "text-lg font-medium",
+      "option": "px-3 py-2.5 leading-none",
     },
   },
   "2xs": {
     "panel": {
       "check": "size-3",
-      "option": "px-3 py-1",
-      "message": "px-3 py-2 text-xs",
+      "message": "px-2 py-2 text-xs",
       "secondary": "mt-0.5 text-2xs",
       "primary": "text-xs font-medium",
+      "option": "px-2 py-1 leading-none",
     },
     "menu": {
       "check": "size-3",
-      "option": "px-2.5 py-1",
       "secondary": "mt-0.5 text-2xs",
-      "message": "px-2.5 py-2 text-2xs",
+      "message": "px-2 py-2 text-2xs",
       "primary": "text-2xs font-medium",
+      "option": "px-2 py-1 leading-none",
+    },
+  },
+  "xs": {
+    "menu": {
+      "check": "size-3",
+      "message": "px-2 py-2 text-xs",
+      "secondary": "mt-0.5 text-2xs",
+      "primary": "text-xs font-medium",
+      "option": "px-2 py-1 leading-none",
+    },
+    "panel": {
+      "check": "size-3.5",
+      "secondary": "mt-0.5 text-2xs",
+      "primary": "text-xs font-medium",
+      "message": "px-2 py-2.5 text-xs",
+      "option": "px-2 py-1.5 leading-none",
+    },
+  },
+  "lg": {
+    "menu": {
+      "check": "size-4",
+      "secondary": "mt-0.5 text-xs",
+      "message": "px-2 py-3 text-sm",
+      "primary": "text-sm font-medium",
+      "option": "px-2 py-2 leading-none",
+    },
+    "panel": {
+      "check": "size-5",
+      "secondary": "mt-0.5 text-sm",
+      "primary": "text-base font-medium",
+      "message": "px-2 py-3.5 text-base",
+      "option": "px-2 py-2.5 leading-none",
     },
   },
   "sm": {
     "panel": {
       "check": "size-4",
-      "option": "px-4 py-1.5",
       "secondary": "mt-0.5 text-xs",
-      "message": "px-4 py-3 text-sm",
+      "message": "px-2 py-3 text-sm",
       "primary": "text-sm font-medium",
+      "option": "px-2 py-1.5 leading-none",
     },
     "menu": {
       "check": "size-3.5",
-      "option": "px-3 py-1.5",
       "secondary": "mt-0.5 text-2xs",
       "primary": "text-xs font-medium",
-      "message": "px-3 py-2.5 text-xs",
+      "message": "px-2 py-2.5 text-xs",
+      "option": "px-2 py-1.5 leading-none",
+    },
+  },
+  "xl": {
+    "panel": {
+      "check": "size-5",
+      "secondary": "mt-0.5 text-sm",
+      "message": "px-3 py-3 text-lg",
+      "primary": "text-lg font-medium",
+      "option": "px-3 py-2.5 leading-none",
+    },
+    "menu": {
+      "check": "size-5",
+      "secondary": "mt-0.5 text-sm",
+      "primary": "text-base font-medium",
+      "message": "px-2 py-3.5 text-base",
+      "option": "px-2 py-2.5 leading-none",
     },
   },
 };

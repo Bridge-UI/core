@@ -28,5 +28,5 @@ test("it should inherit dense padding from parent List", () => {
     </List>,
   );
 
-  cy.get('[role="presentation"]').should("have.class", "py-1.5");
+  cy.get('[role="presentation"]').should("have.class", "py-1");
 });

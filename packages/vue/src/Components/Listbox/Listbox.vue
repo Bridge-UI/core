@@ -258,14 +258,11 @@ const progressBind = computed(() => {
 
 const listBind = computed(() => {
   return {
-    dense: true,
     role: "listbox",
     id: props.listboxId,
     "aria-labelledby": props.labelledBy,
     "aria-multiselectable": props.multiple || undefined,
-    ...mergeNestedComponentProps(listProps.value, {
-      class: "p-0",
-    }),
+    ...mergeNestedComponentProps(listProps.value),
   };
 });
 
