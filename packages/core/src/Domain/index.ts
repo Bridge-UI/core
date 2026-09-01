@@ -68,7 +68,7 @@ export {
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSortIcon,
-  getDataTableSortTooltip,
+  getDataTableSortLabel,
   getDataTableStickyInsets,
   getDataTableStickyPing,
   isDataTableClientPaged,

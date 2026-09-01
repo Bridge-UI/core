@@ -4,7 +4,7 @@ import { computed } from "vue";
 
 // ** Core Imports
 import {
-  getDataTableSortTooltip,
+  getDataTableSortLabel,
   type DataTableAriaSort,
 } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
@@ -12,7 +12,6 @@ import { cn } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
-import { Tooltip } from "@/Components/Tooltip";
 
 defineOptions({ inheritAttrs: false, name: "DataTableSortButton" });
 
@@ -20,19 +19,24 @@ const props = defineProps<{
   sort: DataTableAriaSort;
 }>();
 
+const emit = defineEmits<{
+  click: [];
+}>();
+
 const resolveMessage = useResolveMessage();
 
-const tooltip = computed(() => {
-  return resolveMessage(getDataTableSortTooltip(props.sort));
+const label = computed(() => {
+  return resolveMessage(getDataTableSortLabel(props.sort));
 });
 </script>
 
 <template>
-  <span class="inline-flex min-w-0 flex-1 items-center gap-1.5 leading-none">
-    <span class="min-w-0 truncate leading-none">
-      <slot />
-    </span>
-
+  <button
+    type="button"
+    :aria-label="label"
+    v-on:click="emit('click')"
+    class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+  >
     <span
       class="inline-flex h-6 w-5 shrink-0 flex-col items-center justify-center leading-none"
     >
@@ -59,17 +63,5 @@ const tooltip = computed(() => {
         "
       />
     </span>
-  </span>
-
-  <Tooltip
-    :content="tooltip"
-    :custom-props="{
-      root: { class: 'absolute inset-0 z-[1] max-w-none' },
-      trigger: { class: 'absolute inset-0 size-full max-w-none' },
-    }"
-  >
-    <template #trigger>
-      <span class="size-full" />
-    </template>
-  </Tooltip>
+  </button>
 </template>

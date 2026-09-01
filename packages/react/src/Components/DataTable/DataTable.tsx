@@ -162,6 +162,7 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
   checkboxSize,
   getHeadAlign,
   onTogglePage,
+  onToggleSort,
   checkboxProps,
   filterOverlay,
   selectAllState,
@@ -182,6 +183,7 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
     query: string,
   ) => void;
   onTogglePage: (selectAll: boolean) => void;
+  onToggleSort: (columnId: string) => void;
   selectAllState: { checked: boolean; indeterminate: boolean };
   selectionMultiple: boolean;
 }) {
@@ -209,13 +211,16 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
   return (
     <TableHead align={getHeadAlign(header)} {...getHeadBind(header)}>
       <div className="flex w-full min-w-0 items-center gap-1.5 leading-none">
+        <span className="min-w-0 truncate leading-none">{header.header}</span>
+
         {header.sortable ? (
-          <DataTableSortButton ariaSort={header.ariaSort}>
-            {header.header}
-          </DataTableSortButton>
-        ) : (
-          header.header
-        )}
+          <DataTableSortButton
+            ariaSort={header.ariaSort}
+            onClick={() => {
+              onToggleSort(header.id);
+            }}
+          />
+        ) : null}
 
         {header.filterable ? (
           <DataTableFilterMenu
@@ -374,6 +379,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     getHeadAlign,
     getCellAlign,
     onTogglePage,
+    onToggleSort,
     summaryCells,
     expandEnabled,
     loadingBarBind,
@@ -444,6 +450,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                       getHeadAlign={getHeadAlign}
                       checkboxSize={checkboxSize}
                       onTogglePage={onTogglePage}
+                      onToggleSort={onToggleSort}
                       selectAllState={selectAllState}
                       filterOverlay={merged.filterOverlay}
                       selectionMultiple={selectionMultiple}

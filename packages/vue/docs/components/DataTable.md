@@ -196,6 +196,10 @@ Table-level slots stay `empty` / `expanded` / `footer` / `item.{id}` / `item` / 
 />
 ```
 
+### Sorting
+
+Set `sortable` on a column to show a sort button in that header, matching the filter control. Clicks cycle unsorted → ascending → descending → unsorted. Bind `v-model:sorting`. The header cell keeps `aria-sort`.
+
 ### Filters
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.

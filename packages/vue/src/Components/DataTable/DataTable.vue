@@ -112,6 +112,7 @@ const {
   getHeadAlign,
   getCellAlign,
   onTogglePage,
+  onToggleSort,
   summaryCells,
   expandEnabled,
   loadingBarBind,
@@ -272,14 +273,15 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                   v-else-if="!header.isSelection && !header.isExpand"
                   class="flex w-full min-w-0 items-center gap-1.5 leading-none"
                 >
+                  <span class="min-w-0 truncate leading-none">
+                    <DataTableChild :node="header.header" />
+                  </span>
+
                   <DataTableSortButton
                     v-if="header.sortable"
                     :sort="header.ariaSort"
-                  >
-                    <DataTableChild :node="header.header" />
-                  </DataTableSortButton>
-
-                  <DataTableChild v-else :node="header.header" />
+                    v-on:click="onToggleSort(header.id)"
+                  />
 
                   <DataTableFilterMenu
                     :column-id="header.id"

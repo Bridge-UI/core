@@ -34,8 +34,6 @@ import {
   useState,
   type CSSProperties,
   type HTMLAttributes,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type Ref,
   type UIEvent,
@@ -107,6 +105,7 @@ import type {
   DataTableColumn,
   DataTableOwnProps,
   DataTableProps,
+  DataTableSorting,
 } from "@/Components/DataTable/dataTable.types";
 import {
   derived,
@@ -168,17 +167,6 @@ const dataTableBridgeKeys = [
   | "onHiddenColumnsChange"
   | keyof DataTableOwnProps<unknown>
 )[];
-
-/**
- * Whether a header click landed on filter or selection chrome.
- */
-function isDataTableHeadChromeEvent(event: { target: null | EventTarget }) {
-  const target = event.target;
-
-  return (
-    target instanceof Element && Boolean(target.closest("button, input, a"))
-  );
-}
 
 type DataTableLibDefaults = LibDefaultsShape<
   DataTableOwnProps<unknown>,
@@ -368,6 +356,24 @@ export function useDataTable<T>(
   const mergedRef = useRef(merged);
   mergedRef.current = merged;
 
+  const [uncontrolledSorting, setUncontrolledSorting] =
+    useState<DataTableSorting>(null);
+  const uncontrolledSortingRef = useRef(uncontrolledSorting);
+  uncontrolledSortingRef.current = uncontrolledSorting;
+
+  const resolvedSorting = derived(() => {
+    return merged.sorting !== undefined ? merged.sorting : uncontrolledSorting;
+  });
+
+  const applySorting = useCallback((next: DataTableSorting) => {
+    mergedRef.current.onSortingChange?.(next);
+
+    if (mergedRef.current.sorting === undefined) {
+      uncontrolledSortingRef.current = next;
+      setUncontrolledSorting(next);
+    }
+  }, []);
+
   const rootInheritedAttrs = useMemo(() => {
     return omit(inheritedAttrs, ["children"]);
   }, [inheritedAttrs]);
@@ -468,10 +474,10 @@ export function useDataTable<T>(
   });
 
   const sortingState = useMemo((): SortingState => {
-    return merged.sorting
-      ? [{ id: merged.sorting.id, desc: merged.sorting.desc }]
+    return resolvedSorting
+      ? [{ id: resolvedSorting.id, desc: resolvedSorting.desc }]
       : [];
-  }, [merged.sorting]);
+  }, [resolvedSorting]);
 
   const columnFilters = useMemo((): ColumnFiltersState => {
     return map(merged.filters ?? {}, (value, id) => {
@@ -553,22 +559,22 @@ export function useDataTable<T>(
     [],
   );
 
-  const onSortingChange = useCallback<OnChangeFn<SortingState>>((updater) => {
-    const current = mergedRef.current.sorting
-      ? [
-          {
-            id: mergedRef.current.sorting.id,
-            desc: mergedRef.current.sorting.desc,
-          },
-        ]
-      : [];
-    const next = isFunction(updater) ? updater(current) : updater;
-    const first = head(next);
+  const onSortingChange = useCallback<OnChangeFn<SortingState>>(
+    (updater) => {
+      const currentSorting =
+        mergedRef.current.sorting !== undefined
+          ? (mergedRef.current.sorting ?? null)
+          : uncontrolledSortingRef.current;
+      const current = currentSorting
+        ? [{ id: currentSorting.id, desc: currentSorting.desc }]
+        : [];
+      const next = isFunction(updater) ? updater(current) : updater;
+      const first = head(next);
 
-    mergedRef.current.onSortingChange?.(
-      first ? { id: first.id, desc: first.desc } : null,
-    );
-  }, []);
+      applySorting(first ? { id: first.id, desc: first.desc } : null);
+    },
+    [applySorting],
+  );
 
   const table = useReactTable({
     getRowId,
@@ -672,7 +678,7 @@ export function useDataTable<T>(
     return metas.map((meta) => {
       const inset = get(insets, meta.id) as undefined | DataTableStickyInset;
       const ariaSort = meta.column?.sortable
-        ? getDataTableAriaSort(merged.sorting ?? null, meta.id)
+        ? getDataTableAriaSort(resolvedSorting ?? null, meta.id)
         : "none";
 
       return {
@@ -707,7 +713,7 @@ export function useDataTable<T>(
     columnsById,
     sortingState,
     merged.filters,
-    merged.sorting,
+    resolvedSorting,
     columnVisibility,
     tableRowModelRows,
     merged.columnSearch,
@@ -979,54 +985,17 @@ export function useDataTable<T>(
         customProps?.head,
         {},
         {
-          tabIndex: header.sortable ? 0 : undefined,
           "aria-sort": header.sortable ? header.ariaSort : undefined,
           style: getDataTableColumnLayoutStyle(
             header,
             stickyHeaderEnabled,
             true,
           ),
-          onClick: header.sortable
-            ? (event: ReactMouseEvent<HTMLTableCellElement>) => {
-                if (isDataTableHeadChromeEvent(event)) {
-                  return;
-                }
-
-                mergedRef.current.onSortingChange?.(
-                  toggleDataTableSorting(
-                    mergedRef.current.sorting ?? null,
-                    header.id,
-                  ),
-                );
-              }
-            : undefined,
-          onKeyDown: header.sortable
-            ? (event: ReactKeyboardEvent<HTMLTableCellElement>) => {
-                if (isDataTableHeadChromeEvent(event)) {
-                  return;
-                }
-
-                if (event.key !== "Enter" && event.key !== " ") {
-                  return;
-                }
-
-                event.preventDefault();
-                mergedRef.current.onSortingChange?.(
-                  toggleDataTableSorting(
-                    mergedRef.current.sorting ?? null,
-                    header.id,
-                  ),
-                );
-              }
-            : undefined,
           className: cn({
             "min-w-0": true,
-            relative: header.sortable,
             "border-e-0": isChrome,
             "sticky z-20": Boolean(header.stickyStyle),
             "after:hidden": isChrome,
-            "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
-              header.sortable,
             [get(variantItem, "cellStickyEdgeStart") ?? ""]:
               header.sticky === "start" &&
               header.stickyEdge &&
@@ -1263,11 +1232,17 @@ export function useDataTable<T>(
     );
   });
 
-  const onToggleSort = useCallback((columnId: string) => {
-    mergedRef.current.onSortingChange?.(
-      toggleDataTableSorting(mergedRef.current.sorting ?? null, columnId),
-    );
-  }, []);
+  const onToggleSort = useCallback(
+    (columnId: string) => {
+      const current =
+        mergedRef.current.sorting !== undefined
+          ? (mergedRef.current.sorting ?? null)
+          : uncontrolledSortingRef.current;
+
+      applySorting(toggleDataTableSorting(current, columnId));
+    },
+    [applySorting],
+  );
 
   const onToggleRow = useCallback((rowId: string, selected: boolean) => {
     mergedRef.current.onSelectionChange?.(

@@ -31,7 +31,7 @@ import {
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
   getDataTableSortIcon,
-  getDataTableSortTooltip,
+  getDataTableSortLabel,
   getDataTableStickyInsets,
   getDataTableStickyPing,
   isDataTableClientPaged,
@@ -113,13 +113,14 @@ describe("getDataTableSortIcon", () => {
     expect(getDataTableSortIcon("none")).toBe("chevronUpDown");
     expect(getDataTableSortIcon("ascending")).toBe("chevronUp");
     expect(getDataTableSortIcon("descending")).toBe("chevronDown");
-    expect(getDataTableSortTooltip("none")).toBe("Click to sort ascending");
-    expect(getDataTableSortTooltip("ascending")).toBe(
-      "Click to sort descending",
-    );
-    expect(getDataTableSortTooltip("descending")).toBe(
-      "Click to cancel sorting",
-    );
+  });
+});
+
+describe("getDataTableSortLabel", () => {
+  test("it should map aria-sort to the next sort action", () => {
+    expect(getDataTableSortLabel("none")).toBe("Sort ascending");
+    expect(getDataTableSortLabel("ascending")).toBe("Sort descending");
+    expect(getDataTableSortLabel("descending")).toBe("Cancel sorting");
   });
 });
 
