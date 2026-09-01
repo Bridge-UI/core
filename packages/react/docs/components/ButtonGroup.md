@@ -1,6 +1,6 @@
 # ButtonGroup
 
-Groups related action buttons in a single attached strip, with a divider between each child. Size, color, and variant stay on each `Button`. Use `ToggleGroup` when the controls select a value.
+Groups related action buttons in a joined strip with a hairline between children. Set `size`, `variant`, `color`, `density`, or `rounded` on the group to apply them to nested `Button` children. A `Button` can still override any of those props. Set `selected` on a `Button` to show a pressed state. Use `ToggleGroup` when the controls select a value.
 
 ## Import
 
@@ -13,49 +13,62 @@ import { ButtonGroup } from "@bridge-ui/react/Components/ButtonGroup";
 ### Usage
 
 ```tsx
-<ButtonGroup aria-label="Export">
-  <Button variant="outline">Copy</Button>
-  <Button variant="outline">Paste</Button>
+<ButtonGroup variant="outline" aria-label="Export">
+  <Button>Copy</Button>
+  <Button>Paste</Button>
 </ButtonGroup>
 ```
 
 ### Orientation
 
 ```tsx
-<ButtonGroup aria-label="Zoom" orientation="vertical">
-  <Button variant="outline">+</Button>
-  <Button variant="outline">-</Button>
+<ButtonGroup variant="outline" aria-label="Zoom" orientation="vertical">
+  <Button>+</Button>
+  <Button>-</Button>
 </ButtonGroup>
 ```
 
 ### Size
 
-Size is set on each `Button`, not on the group.
+```tsx
+<ButtonGroup size="sm" variant="outline" aria-label="Small">
+  <Button>One</Button>
+  <Button>Two</Button>
+</ButtonGroup>
+```
+
+### Selected
 
 ```tsx
-<ButtonGroup aria-label="Small">
-  <Button size="sm" variant="outline">
-    One
-  </Button>
-  <Button size="sm" variant="outline">
-    Two
-  </Button>
+<ButtonGroup variant="outline" aria-label="Range">
+  <Button>Last 3 months</Button>
+  <Button selected>Last 30 days</Button>
+  <Button>Last 7 days</Button>
+</ButtonGroup>
+```
+
+### Color
+
+```tsx
+<ButtonGroup color="primary" variant="outline" aria-label="Export">
+  <Button>Copy</Button>
+  <Button>Paste</Button>
 </ButtonGroup>
 ```
 
 ### Nested
 
-Nest groups to space clusters of actions. Dividers stay inside each inner group. Keep inner groups as the only direct children of the outer group — mixing loose `Button` children with nested groups removes the hairline divider between all children.
+Nest groups to space clusters of actions. Joined edges stay inside each inner group. Appearance props cascade through nested groups.
 
 ```tsx
-<ButtonGroup aria-label="Editor">
+<ButtonGroup variant="outline" aria-label="Editor">
   <ButtonGroup>
-    <Button variant="outline">Bold</Button>
-    <Button variant="outline">Italic</Button>
+    <Button>Bold</Button>
+    <Button>Italic</Button>
   </ButtonGroup>
   <ButtonGroup>
-    <Button variant="outline">Undo</Button>
-    <Button variant="outline">Redo</Button>
+    <Button>Undo</Button>
+    <Button>Redo</Button>
   </ButtonGroup>
 </ButtonGroup>
 ```
@@ -72,20 +85,35 @@ Nest groups to space clusters of actions. Dividers stay inside each inner group.
 ### Full width
 
 ```tsx
-<ButtonGroup full aria-label="Export">
-  <Button variant="outline">Copy</Button>
-  <Button variant="outline">Paste</Button>
+<ButtonGroup full variant="outline" aria-label="Export">
+  <Button>Copy</Button>
+  <Button>Paste</Button>
+</ButtonGroup>
+```
+
+### No separator
+
+```tsx
+<ButtonGroup variant="outline" separator={false} aria-label="Export">
+  <Button>Copy</Button>
+  <Button>Paste</Button>
 </ButtonGroup>
 ```
 
 ## Props
 
-| Prop          | Type                     | Default        | Description                               |
-| ------------- | ------------------------ | -------------- | ----------------------------------------- |
-| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.           |
-| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.           |
-| `full`        | `boolean`                | `false`        | Stretch the group to the container width. |
-| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.          |
+| Prop          | Type                     | Default        | Description                                                        |
+| ------------- | ------------------------ | -------------- | ------------------------------------------------------------------ |
+| `classes`     | `ButtonGroupClasses`     | —              | Classes for button group parts.                                    |
+| `color`       | `ButtonGroupColor`       | `"dark"`       | Color of the hairline. Nested buttons inherit it when this is set. |
+| `customProps` | `ButtonGroupCustomProps` | —              | Extra props for internal parts.                                    |
+| `density`     | `ButtonDensity`          | —              | Density applied to nested buttons unless they set `density`.       |
+| `full`        | `boolean`                | `false`        | Stretch the group to the container width.                          |
+| `orientation` | `ButtonGroupOrientation` | `"horizontal"` | Layout orientation of the group.                                   |
+| `rounded`     | `ButtonRounded`          | —              | Roundness applied to nested buttons unless they set `rounded`.     |
+| `separator`   | `boolean`                | `true`         | Draw a hairline between adjacent children.                         |
+| `size`        | `ButtonSize`             | —              | Size applied to nested buttons unless they set `size`.             |
+| `variant`     | `ButtonVariant`          | —              | Variant applied to nested buttons unless they set `variant`.       |
 
 Pass `aria-label` or `aria-labelledby` on the group.
 

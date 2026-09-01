@@ -84,8 +84,12 @@ export type {
   ButtonSize,
   ButtonVariant,
 } from "@/Tokens/Button";
-export { orientationProps as buttonGroupOrientationProps } from "@/Tokens/ButtonGroup";
+export {
+  colorProps as buttonGroupColorProps,
+  orientationProps as buttonGroupOrientationProps,
+} from "@/Tokens/ButtonGroup";
 export type {
+  ButtonGroupColor,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
 } from "@/Tokens/ButtonGroup";

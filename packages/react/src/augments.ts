@@ -99,7 +99,19 @@ declare module "@bridge-ui/core/Config" {
 
   interface ButtonGroupConfigOverrides {
     classes: ButtonGroupClasses;
-    defaultProps: Partial<Pick<ButtonGroupProps, "full" | "orientation">>;
+    defaultProps: Partial<
+      Pick<
+        ButtonGroupProps,
+        | "full"
+        | "size"
+        | "color"
+        | "density"
+        | "rounded"
+        | "variant"
+        | "separator"
+        | "orientation"
+      >
+    >;
   }
 
   interface CardConfigOverrides {

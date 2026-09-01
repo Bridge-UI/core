@@ -3,7 +3,10 @@ import { get } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import { buttonGroupOrientationProps as orientationProps } from "@bridge-ui/core/Tokens";
+import {
+  buttonGroupColorProps as colorProps,
+  buttonGroupOrientationProps as orientationProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -13,6 +16,10 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import {
+  useButtonGroupContext,
+  type ButtonGroupContextValue,
+} from "@/Components/ButtonGroup/ButtonGroupContext";
 import type {
   ButtonGroupClasses,
   ButtonGroupOwnProps,
@@ -27,14 +34,20 @@ import {
 
 const buttonGroupBridgeKeys = [
   "full",
+  "size",
+  "color",
   "classes",
+  "density",
+  "rounded",
+  "variant",
+  "separator",
   "customProps",
   "orientation",
 ] as const satisfies readonly (keyof ButtonGroupOwnProps)[];
 
 type ButtonGroupLibDefaults = LibDefaultsShape<
   ButtonGroupOwnProps,
-  "full" | "orientation"
+  "full" | "color" | "separator" | "orientation"
 >;
 
 type ButtonGroupMerged = MergeLibDefaults<
@@ -49,6 +62,8 @@ export function useButtonGroup(
   props: ButtonGroupProps,
   libDefaults: ButtonGroupLibDefaults,
 ) {
+  const parentGroup = useButtonGroupContext();
+
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ButtonGroupProps,
     typeof buttonGroupBridgeKeys
@@ -88,12 +103,56 @@ export function useButtonGroup(
     return get(classes, merged.orientation);
   }, [merged.orientation, bridgeButtonGroup?.tokens?.orientation]);
 
+  const colorItem = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeButtonGroup?.tokens?.color,
+    );
+
+    return get(classes, merged.color);
+  }, [merged.color, bridgeButtonGroup?.tokens?.color]);
+
+  const contextValue = useMemo((): ButtonGroupContextValue => {
+    const registryDefaults = bridgeButtonGroup?.defaultProps;
+
+    return {
+      size: componentProps.size ?? registryDefaults?.size ?? parentGroup?.size,
+      color:
+        componentProps.color ?? registryDefaults?.color ?? parentGroup?.color,
+      density:
+        componentProps.density ??
+        registryDefaults?.density ??
+        parentGroup?.density,
+      rounded:
+        componentProps.rounded ??
+        registryDefaults?.rounded ??
+        parentGroup?.rounded,
+      variant:
+        componentProps.variant ??
+        registryDefaults?.variant ??
+        parentGroup?.variant,
+    };
+  }, [
+    parentGroup,
+    componentProps.size,
+    componentProps.color,
+    componentProps.density,
+    componentProps.rounded,
+    componentProps.variant,
+    bridgeButtonGroup?.defaultProps,
+  ]);
+
   const rootBind = derived(() => {
+    const separatorOn = merged.separator === true;
+
     return mergePartBind(customProps?.root, inheritedAttrs, {
       role: "group",
       "data-slot": "button-group",
       className: cn({
         [get(orientationItem, "root") ?? ""]: true,
+        [get(orientationItem, "join") ?? ""]: !separatorOn,
+        [get(orientationItem, "separator") ?? ""]: separatorOn,
+        [colorItem ?? ""]: separatorOn,
         [mergedClasses.root ?? ""]: true,
         "w-full [&>*]:flex-1": merged.full === true,
       }),
@@ -104,5 +163,6 @@ export function useButtonGroup(
     merged,
     children,
     rootBind,
+    contextValue,
   };
 }

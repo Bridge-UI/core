@@ -3,10 +3,11 @@ import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { isString } from "es-toolkit/compat";
 import { expect, test } from "vitest";
-import { defineComponent, h } from "vue";
+import { computed, defineComponent, h, provide } from "vue";
 
 // ** Local Imports
 import { Button, useButton, type ButtonOwnProps } from "@/Components/Button";
+import { BUTTON_GROUP_INJECTION_KEY } from "@/Components/ButtonGroup/buttonGroupInjectionKey";
 
 const libDefaults = {
   size: "md",
@@ -157,6 +158,13 @@ test("it should not include full width class when density is mini", () => {
   expect(rootBind.value.class).not.toContain("w-full");
 });
 
+test("it should set aria-pressed and selected classes when selected", () => {
+  const { rootBind } = mountUseButton({ selected: true, variant: "outline" });
+
+  expect(rootBind.value["aria-pressed"]).toBe(true);
+  expect(rootBind.value.class).toContain("bg-primary-400/25");
+});
+
 test("it should render start icon when startIcon is set and not loading", () => {
   const wrapper = mount(Button, {
     slots: { default: "Label" },
@@ -225,4 +233,70 @@ test("it should render as anchor when as is a", () => {
 
   expect(wrapper.find("a").exists()).toBe(true);
   expect(wrapper.find("button").exists()).toBe(false);
+});
+
+test("it should inherit appearance from ButtonGroup context", () => {
+  let result!: ReturnType<typeof useButton>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useButton({}, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        BUTTON_GROUP_INJECTION_KEY,
+        computed(() => {
+          return { size: "sm" as const, variant: "outline" as const };
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.merged.value.size).toBe("sm");
+  expect(result.merged.value.color).toBe("primary");
+  expect(result.merged.value.variant).toBe("outline");
+});
+
+test("it should let button props override ButtonGroup context", () => {
+  let result!: ReturnType<typeof useButton>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useButton({ size: "lg", color: "error" }, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  const Wrapper = defineComponent({
+    setup() {
+      provide(
+        BUTTON_GROUP_INJECTION_KEY,
+        computed(() => {
+          return {
+            size: "sm" as const,
+            color: "dark" as const,
+            variant: "outline" as const,
+          };
+        }),
+      );
+
+      return () => h(Consumer);
+    },
+  });
+
+  mount(Wrapper);
+
+  expect(result.merged.value.size).toBe("lg");
+  expect(result.merged.value.color).toBe("error");
+  expect(result.merged.value.variant).toBe("outline");
 });

@@ -13,8 +13,7 @@ test("it should render a button group in the browser", () => {
   cy.get('[role="group"]')
     .should("exist")
     .and("have.attr", "aria-label", "Export")
-    .and("have.class", "flex-row")
-    .and("have.class", "gap-px");
+    .and("have.class", "flex-row");
 
   cy.contains("button", "Copy").should("be.visible");
   cy.contains("button", "Paste").should("be.visible");

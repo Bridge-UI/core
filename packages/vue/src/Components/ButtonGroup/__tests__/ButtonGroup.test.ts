@@ -47,8 +47,8 @@ test("it should apply horizontal orientation by default", () => {
   const wrapper = mountButtonGroup();
   const root = wrapper.find('[data-slot="button-group"]');
 
-  expect(root.classes()).toContain("gap-px");
   expect(root.classes()).toContain("flex-row");
+  expect(root.classes().join(" ")).toContain("before:w-px");
 });
 
 test("it should apply vertical orientation when orientation is vertical", () => {
@@ -61,12 +61,42 @@ test("it should apply vertical orientation when orientation is vertical", () => 
   );
 });
 
-test("it should apply a hairline divider between children", () => {
+test("it should draw a hairline between children by default", () => {
   const wrapper = mountButtonGroup();
+  const className = wrapper
+    .find('[data-slot="button-group"]')
+    .classes()
+    .join(" ");
 
-  expect(wrapper.find('[data-slot="button-group"]').classes()).toContain(
-    "bg-dark-200",
-  );
+  expect(className).toContain("before:w-px");
+  expect(className).not.toContain("-ms-px");
+  expect(className).not.toContain("gap-px");
+  expect(className).toContain("before:bg-dark-200");
+});
+
+test("it should overlap adjacent children when separator is false", () => {
+  const wrapper = mountButtonGroup({
+    props: { separator: false },
+  });
+  const className = wrapper
+    .find('[data-slot="button-group"]')
+    .classes()
+    .join(" ");
+
+  expect(className).toContain("-ms-px");
+  expect(className).not.toContain("before:w-px");
+});
+
+test("it should color the hairline when color is set", () => {
+  const wrapper = mountButtonGroup({
+    props: { color: "primary" },
+  });
+  const className = wrapper
+    .find('[data-slot="button-group"]')
+    .classes()
+    .join(" ");
+
+  expect(className).toContain("before:bg-primary-200");
 });
 
 test("it should stretch to full width when full is set", () => {
@@ -135,4 +165,82 @@ test("it should render nested groups as clustered children", () => {
   mountedWrappers.push(wrapper);
 
   expect(wrapper.findAll('[data-slot="button-group"]').length).toBe(3);
+});
+
+test("it should apply group variant to nested buttons", () => {
+  const wrapper = mountButtonGroup({
+    props: { variant: "outline" },
+  });
+
+  expect(wrapper.find("button").classes().join(" ")).toContain(
+    "border-primary-600",
+  );
+});
+
+test("it should apply group size to nested buttons", () => {
+  const wrapper = mountButtonGroup({
+    props: { size: "sm", variant: "outline" },
+  });
+
+  expect(wrapper.find("button").classes().join(" ")).toContain("px-3");
+});
+
+test("it should let a nested button override the group size", () => {
+  const wrapper = mount(ButtonGroup, {
+    props: { size: "sm", variant: "outline" },
+    slots: {
+      default: () => [h(Button, { size: "lg" }, { default: () => "Copy" })],
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const className = wrapper.find("button").classes().join(" ");
+
+  expect(className).toContain("py-2.5");
+  expect(className).not.toContain("px-3");
+});
+
+test("it should keep button color when group color is unset", () => {
+  const wrapper = mountButtonGroup({
+    props: { variant: "outline" },
+  });
+
+  expect(wrapper.find("button").classes().join(" ")).toContain(
+    "text-primary-600",
+  );
+});
+
+test("it should apply group color to nested buttons when color is set", () => {
+  const wrapper = mountButtonGroup({
+    props: { color: "error", variant: "outline" },
+  });
+
+  expect(wrapper.find("button").classes().join(" ")).toContain(
+    "text-error-600",
+  );
+});
+
+test("it should inherit size through a nested group", () => {
+  const wrapper = mount(ButtonGroup, {
+    props: { size: "sm" },
+    slots: {
+      default: () => [
+        h(
+          ButtonGroup,
+          { variant: "outline" },
+          {
+            default: () => [h(Button, null, { default: () => "Bold" })],
+          },
+        ),
+      ],
+    },
+  });
+
+  mountedWrappers.push(wrapper);
+
+  const className = wrapper.find("button").classes().join(" ");
+
+  expect(className).toContain("px-3");
+  expect(className).toContain("border-primary-600");
 });

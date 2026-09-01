@@ -12,6 +12,8 @@ import {
 
 const libDefaults = {
   full: false,
+  color: "dark",
+  separator: true,
   orientation: "horizontal",
 } satisfies Partial<ButtonGroupOwnProps>;
 
@@ -35,6 +37,8 @@ test("it should merge default orientation", () => {
   const { merged } = mountUseButtonGroup();
 
   expect(merged.value.full).toBe(false);
+  expect(merged.value.color).toBe("dark");
+  expect(merged.value.separator).toBe(true);
   expect(merged.value.orientation).toBe("horizontal");
 });
 
@@ -101,10 +105,32 @@ test("it should include nested group spacing classes on rootBind", () => {
   expect(rootBind.value.class).toContain(
     "has-[>[data-slot=button-group]]:gap-2",
   );
-  expect(rootBind.value.class).toContain(
-    "has-[>[data-slot=button-group]]:bg-transparent",
-  );
-  expect(rootBind.value.class).toContain(
-    "has-[>[data-slot=button-group]]:dark:bg-transparent",
-  );
+});
+
+test("it should draw a hairline on the default orientation", () => {
+  const { rootBind } = mountUseButtonGroup();
+
+  expect(rootBind.value.class).toContain("before:w-px");
+  expect(rootBind.value.class).not.toContain("-ms-px");
+  expect(rootBind.value.class).not.toContain("gap-px");
+  expect(rootBind.value.class).toContain("before:bg-dark-200");
+});
+
+test("it should overlap adjacent children when separator is false", () => {
+  const { rootBind } = mountUseButtonGroup({ separator: false });
+
+  expect(rootBind.value.class).toContain("-ms-px");
+  expect(rootBind.value.class).not.toContain("before:w-px");
+});
+
+test("it should color the hairline when color is set", () => {
+  const { rootBind } = mountUseButtonGroup({ color: "primary" });
+
+  expect(rootBind.value.class).toContain("before:bg-primary-200");
+});
+
+test("it should apply a vertical hairline when orientation is vertical", () => {
+  const { rootBind } = mountUseButtonGroup({ orientation: "vertical" });
+
+  expect(rootBind.value.class).toContain("before:h-px");
 });

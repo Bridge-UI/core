@@ -12,10 +12,13 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ButtonGroupOwnProps>(), {
   full: false,
+  separator: true,
 });
 
 const { rootBind } = useButtonGroup(props, {
   full: false,
+  color: "dark",
+  separator: true,
   orientation: "horizontal",
 });
 </script>

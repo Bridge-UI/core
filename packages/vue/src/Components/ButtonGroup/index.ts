@@ -1,6 +1,7 @@
 // ** Exports
 export type {
   ButtonGroupClasses,
+  ButtonGroupColorOverrides,
   ButtonGroupCustomProps,
   ButtonGroupOrientationOverrides,
   ButtonGroupOwnProps,
@@ -8,4 +9,8 @@ export type {
   ButtonGroupSlots,
 } from "@/Components/ButtonGroup/buttonGroup.types";
 export { default as ButtonGroup } from "@/Components/ButtonGroup/ButtonGroup.vue";
+export {
+  BUTTON_GROUP_INJECTION_KEY,
+  type ButtonGroupContextValue,
+} from "@/Components/ButtonGroup/buttonGroupInjectionKey";
 export { useButtonGroup } from "@/Components/ButtonGroup/composables/useButtonGroup";

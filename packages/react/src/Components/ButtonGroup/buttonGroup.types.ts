@@ -2,9 +2,25 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { ButtonGroupOrientation } from "@bridge-ui/core/Tokens";
+import type {
+  ButtonDensity,
+  ButtonGroupColor,
+  ButtonGroupOrientation,
+  ButtonRounded,
+  ButtonSize,
+  ButtonVariant,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
+// ** Local Imports
+import type {
+  ButtonDensityOverrides,
+  ButtonRoundedOverrides,
+  ButtonSizeOverrides,
+  ButtonVariantOverrides,
+} from "@/Components/Button/button.types";
+
+export interface ButtonGroupColorOverrides {}
 export interface ButtonGroupOrientationOverrides {}
 
 export interface ButtonGroupClasses {
@@ -24,8 +40,9 @@ export interface ButtonGroupCustomProps {
 }
 
 /**
- * Groups related action buttons with a divider between each child.
- * Compose with `Button`. Size, color, and variant stay on each button.
+ * Groups related action buttons in a joined strip.
+ * Compose with `Button`. Size, color, density, rounded, and variant
+ * cascade to nested buttons unless they override them.
  */
 export interface ButtonGroupOwnProps {
   /**
@@ -43,11 +60,25 @@ export interface ButtonGroupOwnProps {
   classes?: ButtonGroupClasses;
 
   /**
+   * Color of the hairline. Nested `Button` children inherit it when set.
+   *
+   * @default "dark"
+   */
+  color?: MergeProps<ButtonGroupColor, ButtonGroupColorOverrides>;
+
+  /**
    * Extra props for internal parts.
    *
    * @default undefined
    */
   customProps?: ButtonGroupCustomProps;
+
+  /**
+   * Density applied to nested `Button` children unless they set `density`.
+   *
+   * @default undefined
+   */
+  density?: MergeProps<ButtonDensity, ButtonDensityOverrides>;
 
   /**
    * Stretch the group to the container width.
@@ -65,6 +96,34 @@ export interface ButtonGroupOwnProps {
     ButtonGroupOrientation,
     ButtonGroupOrientationOverrides
   >;
+
+  /**
+   * Roundness applied to nested `Button` children unless they set `rounded`.
+   *
+   * @default undefined
+   */
+  rounded?: MergeProps<ButtonRounded, ButtonRoundedOverrides>;
+
+  /**
+   * Draw a hairline between adjacent children.
+   *
+   * @default true
+   */
+  separator?: boolean;
+
+  /**
+   * Size applied to nested `Button` children unless they set `size`.
+   *
+   * @default undefined
+   */
+  size?: MergeProps<ButtonSize, ButtonSizeOverrides>;
+
+  /**
+   * Variant applied to nested `Button` children unless they set `variant`.
+   *
+   * @default undefined
+   */
+  variant?: MergeProps<ButtonVariant, ButtonVariantOverrides>;
 }
 
 export type ButtonGroupProps = MergeHtmlProps<

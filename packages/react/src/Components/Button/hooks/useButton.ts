@@ -22,6 +22,7 @@ import type {
   ButtonOwnProps,
   ButtonProps,
 } from "@/Components/Button/button.types";
+import { useButtonGroupContext } from "@/Components/ButtonGroup/ButtonGroupContext";
 import {
   derived,
   mergePartBind,
@@ -44,6 +45,7 @@ const buttonBridgeKeys = [
   "rounded",
   "variant",
   "disabled",
+  "selected",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
@@ -56,6 +58,8 @@ type ButtonLibDefaults = LibDefaultsShape<
 type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
 
 export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
+  const group = useButtonGroupContext();
+
   const { componentProps, inheritedAttrs } = splitComponentProps<
     ButtonProps,
     typeof buttonBridgeKeys
@@ -64,12 +68,21 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     bridgeKeys: buttonBridgeKeys,
   });
 
+  const resolvedProps = {
+    ...componentProps,
+    size: componentProps.size ?? group?.size,
+    color: componentProps.color ?? group?.color,
+    density: componentProps.density ?? group?.density,
+    rounded: componentProps.rounded ?? group?.rounded,
+    variant: componentProps.variant ?? group?.variant,
+  };
+
   const { merged, entry: bridgeButton } = useBridgeUIComponent<
     ButtonMerged,
     "Button"
   >({
     libDefaults,
-    props: componentProps,
+    props: resolvedProps,
     componentName: "Button",
   });
 
@@ -158,12 +171,12 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   }, [merged.size, merged.density, bridgeButton?.tokens?.density]);
 
   const variantKey = useMemo(() => {
-    if (!isNil(componentProps.variant)) {
-      return componentProps.variant;
+    if (!isNil(resolvedProps.variant)) {
+      return resolvedProps.variant;
     }
 
     return isMini ? "flat" : merged.variant;
-  }, [isMini, merged.variant, componentProps.variant]);
+  }, [isMini, merged.variant, resolvedProps.variant]);
 
   const colorClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
@@ -195,10 +208,9 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(
-      customProps?.root,
-      rootInheritedAttrs,
-      cn({
+    return mergePartBind(customProps?.root, rootInheritedAttrs, {
+      "aria-pressed": isNil(merged.selected) ? undefined : merged.selected,
+      className: cn({
         "inline-flex items-center justify-center": true,
         "cursor-pointer outline-none outline-hidden": true,
         "shrink-0": isMini,
@@ -210,6 +222,8 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
         [get(colorClasses, "base") ?? ""]: true,
         [get(colorClasses, "hover") ?? ""]: true,
         [get(colorClasses, "focus") ?? ""]: true,
+        [get(colorClasses, "selected") ?? ""]: merged.selected === true,
+        "relative z-10": merged.selected === true,
         "transition-all ease-in-out duration-200": true,
         "focus:ring-2": true,
         "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
@@ -217,7 +231,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
         "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
         [mergedClasses.root ?? ""]: true,
       }),
-    );
+    });
   });
 
   const endIconBind = derived(() => {

@@ -44,6 +44,7 @@ import type {
   ButtonVariant,
 } from "@/Tokens/Button";
 import type {
+  ButtonGroupColor,
   ButtonGroupOrientation,
   ButtonGroupOrientationItem,
 } from "@/Tokens/ButtonGroup";
@@ -530,10 +531,17 @@ export interface ButtonConfigBase {
 export interface ButtonGroupConfigBase {
   classes: object;
   defaultProps: Partial<{
+    color: keyof ButtonGroupColor;
+    density: keyof ButtonDensity;
     full: boolean;
     orientation: keyof ButtonGroupOrientation;
+    rounded: keyof ButtonRounded;
+    separator: boolean;
+    size: keyof ButtonSize;
+    variant: keyof ButtonVariant;
   }>;
   tokens: Partial<{
+    color: Record<string, string>;
     orientation: Record<string, ButtonGroupOrientationItem>;
   }>;
 }

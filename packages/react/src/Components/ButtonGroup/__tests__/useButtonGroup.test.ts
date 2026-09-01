@@ -12,6 +12,8 @@ import {
 
 const libDefaults = {
   full: false,
+  color: "dark",
+  separator: true,
   orientation: "horizontal",
 } as const satisfies Partial<ButtonGroupOwnProps>;
 
@@ -25,6 +27,8 @@ test("it should merge default orientation", () => {
   const { result } = renderUseButtonGroup();
 
   expect(result.current.merged.full).toBe(false);
+  expect(result.current.merged.color).toBe("dark");
+  expect(result.current.merged.separator).toBe(true);
   expect(result.current.merged.orientation).toBe("horizontal");
 });
 
@@ -92,10 +96,43 @@ test("it should include nested group spacing classes on rootBind", () => {
   expect(result.current.rootBind.className).toContain(
     "has-[>[data-slot=button-group]]:gap-2",
   );
-  expect(result.current.rootBind.className).toContain(
-    "has-[>[data-slot=button-group]]:bg-transparent",
-  );
-  expect(result.current.rootBind.className).toContain(
-    "has-[>[data-slot=button-group]]:dark:bg-transparent",
-  );
+});
+
+test("it should draw a hairline on the default orientation", () => {
+  const { result } = renderUseButtonGroup();
+
+  expect(result.current.rootBind.className).toContain("before:w-px");
+  expect(result.current.rootBind.className).not.toContain("-ms-px");
+  expect(result.current.rootBind.className).not.toContain("gap-px");
+  expect(result.current.rootBind.className).toContain("before:bg-dark-200");
+});
+
+test("it should overlap adjacent children when separator is false", () => {
+  const { result } = renderUseButtonGroup({ separator: false });
+
+  expect(result.current.rootBind.className).toContain("-ms-px");
+  expect(result.current.rootBind.className).not.toContain("before:w-px");
+});
+
+test("it should color the hairline when color is set", () => {
+  const { result } = renderUseButtonGroup({ color: "primary" });
+
+  expect(result.current.rootBind.className).toContain("before:bg-primary-200");
+});
+
+test("it should apply a vertical hairline when orientation is vertical", () => {
+  const { result } = renderUseButtonGroup({ orientation: "vertical" });
+
+  expect(result.current.rootBind.className).toContain("before:h-px");
+});
+
+test("it should expose inherited button props on contextValue", () => {
+  const { result } = renderUseButtonGroup({
+    size: "sm",
+    variant: "outline",
+  });
+
+  expect(result.current.contextValue.size).toBe("sm");
+  expect(result.current.contextValue.color).toBeUndefined();
+  expect(result.current.contextValue.variant).toBe("outline");
 });

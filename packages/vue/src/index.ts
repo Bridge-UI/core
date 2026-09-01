@@ -127,9 +127,15 @@ export type {
   ButtonSlots,
   ButtonVariantOverrides,
 } from "@/Components/Button";
-export { ButtonGroup, useButtonGroup } from "@/Components/ButtonGroup";
+export {
+  BUTTON_GROUP_INJECTION_KEY,
+  ButtonGroup,
+  useButtonGroup,
+} from "@/Components/ButtonGroup";
 export type {
   ButtonGroupClasses,
+  ButtonGroupColorOverrides,
+  ButtonGroupContextValue,
   ButtonGroupCustomProps,
   ButtonGroupOrientationOverrides,
   ButtonGroupOwnProps,

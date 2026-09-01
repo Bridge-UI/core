@@ -194,3 +194,16 @@ test("it should omit type when rendered as an anchor", () => {
 
   expect(link.getAttribute("type")).toBeNull();
 });
+
+test("it should mark the button as pressed when selected", () => {
+  render(
+    <Button selected variant="outline">
+      Bold
+    </Button>,
+  );
+
+  const button = screen.getByRole("button", { name: "Bold" });
+
+  expect(button.getAttribute("aria-pressed")).toBe("true");
+  expect(button.classList.contains("bg-primary-400/25")).toBe(true);
+});

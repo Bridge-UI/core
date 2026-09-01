@@ -1,9 +1,12 @@
 // ** External Imports
 import { get } from "es-toolkit/compat";
-import { computed, useAttrs } from "vue";
+import { computed, inject, provide, useAttrs } from "vue";
 
 // ** Core Imports
-import { buttonGroupOrientationProps as orientationProps } from "@bridge-ui/core/Tokens";
+import {
+  buttonGroupColorProps as colorProps,
+  buttonGroupOrientationProps as orientationProps,
+} from "@bridge-ui/core/Tokens";
 import {
   cn,
   mergeBridgeUILayeredClasses,
@@ -19,6 +22,10 @@ import type {
   ButtonGroupProps,
 } from "@/Components/ButtonGroup/buttonGroup.types";
 import {
+  BUTTON_GROUP_INJECTION_KEY,
+  type ButtonGroupContextValue,
+} from "@/Components/ButtonGroup/buttonGroupInjectionKey";
+import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -26,14 +33,20 @@ import {
 
 const buttonGroupBridgeKeys = [
   "full",
+  "size",
+  "color",
   "classes",
+  "density",
+  "rounded",
+  "variant",
+  "separator",
   "customProps",
   "orientation",
 ] as const satisfies readonly (keyof ButtonGroupOwnProps)[];
 
 type ButtonGroupLibDefaults = LibDefaultsShape<
   ButtonGroupOwnProps,
-  "full" | "orientation"
+  "full" | "color" | "separator" | "orientation"
 >;
 
 type ButtonGroupMerged = MergeLibDefaults<
@@ -49,6 +62,7 @@ export function useButtonGroup(
   libDefaults: ButtonGroupLibDefaults,
 ) {
   const attrs = useAttrs();
+  const parentGroup = inject(BUTTON_GROUP_INJECTION_KEY, null);
 
   const split = computed(() => {
     return splitComponentProps<ButtonGroupProps, typeof buttonGroupBridgeKeys>({
@@ -84,12 +98,45 @@ export function useButtonGroup(
     return get(classes, merged.value.orientation);
   });
 
+  const colorItem = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeButtonGroup.value?.tokens?.color,
+    );
+
+    return get(classes, merged.value.color);
+  });
+
+  const contextValue = computed((): ButtonGroupContextValue => {
+    const componentProps = split.value.componentProps;
+    const registryDefaults = bridgeButtonGroup.value?.defaultProps;
+    const parent = parentGroup?.value;
+
+    return {
+      size: componentProps.size ?? registryDefaults?.size ?? parent?.size,
+      color: componentProps.color ?? registryDefaults?.color ?? parent?.color,
+      density:
+        componentProps.density ?? registryDefaults?.density ?? parent?.density,
+      rounded:
+        componentProps.rounded ?? registryDefaults?.rounded ?? parent?.rounded,
+      variant:
+        componentProps.variant ?? registryDefaults?.variant ?? parent?.variant,
+    };
+  });
+
+  provide(BUTTON_GROUP_INJECTION_KEY, contextValue);
+
   const rootBind = computed(() => {
+    const separatorOn = merged.value.separator === true;
+
     return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
       role: "group",
       "data-slot": "button-group",
       class: cn({
         [get(orientationItem.value, "root") ?? ""]: true,
+        [get(orientationItem.value, "join") ?? ""]: !separatorOn,
+        [get(orientationItem.value, "separator") ?? ""]: separatorOn,
+        [colorItem.value ?? ""]: separatorOn,
         [mergedClasses.value.root ?? ""]: true,
         "w-full [&>*]:flex-1": merged.value.full === true,
       }),
