@@ -85,7 +85,7 @@ export function DataTableColumnsMenu({
                   onClick={() => {
                     onToggleItem(item);
                   }}
-                  className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+                  className="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-black/5 dark:hover:bg-white/10"
                 >
                   <Checkbox
                     hideErrorMessage

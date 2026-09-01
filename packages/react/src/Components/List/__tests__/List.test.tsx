@@ -12,7 +12,7 @@ test("it should render the root element", () => {
 
   expect(root).not.toBeNull();
   expect(root?.classList.contains("m-0")).toBe(true);
-  expect(root?.classList.contains("py-2")).toBe(true);
+  expect(root?.classList.contains("p-1")).toBe(true);
   expect(root?.classList.contains("list-none")).toBe(true);
 });
 

@@ -165,7 +165,7 @@ test("it should return default size as md", () => {
   const { result } = renderUseListbox();
 
   expect(result.current.merged.size).toBe("md");
-  expect(result.current.sizeClasses?.option).toContain("px-4");
+  expect(result.current.sizeClasses?.option).toContain("px-2");
   expect(result.current.sizeClasses?.option).toContain("py-1.5");
   expect(result.current.messageBind.className).toContain("text-sm");
 });
@@ -185,7 +185,7 @@ test("it should apply size classes when size is overridden", () => {
 
   expect(result.current.merged.size).toBe("xs");
   expect(result.current.checkClass).toContain("size-3");
-  expect(result.current.sizeClasses?.option).toContain("px-3");
+  expect(result.current.sizeClasses?.option).toContain("px-2");
   expect(result.current.sizeClasses?.primary).toContain("text-xs");
   expect(result.current.messageBind.className).toContain("text-xs");
 });

@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 // ** External Imports
+import { isFunction } from "es-toolkit/compat";
 import { describe, expect, test } from "vitest";
 
 // ** Local Imports
@@ -175,7 +176,7 @@ describe("observeTimePanelSelectedScroll", () => {
 
     const disconnect = observeTimePanelSelectedScroll(root);
 
-    expect(typeof disconnect).toBe("function");
+    expect(isFunction(disconnect)).toBe(true);
     disconnect();
   });
 });

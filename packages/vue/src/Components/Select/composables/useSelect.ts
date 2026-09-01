@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, isObjectLike, isSymbol, omit } from "es-toolkit/compat";
 import {
   Comment,
   computed,
@@ -21,6 +21,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
@@ -46,6 +47,7 @@ import {
   useFormField,
 } from "@/Components/FormField/composables/useFormField";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
+import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
 import { useListboxNavigation } from "@/Components/Listbox/composables/useListboxNavigation";
 import type {
   SelectClasses,
@@ -180,13 +182,13 @@ export function useSelect(
   const registeredOptions = ref<SelectOption[]>([]);
 
   function isSelectOptionNode(node: unknown): boolean {
-    if (!node || typeof node !== "object") {
+    if (!isObjectLike(node)) {
       return false;
     }
 
     const type = (node as { type?: unknown }).type;
 
-    if (!type || typeof type !== "object") {
+    if (!isObjectLike(type)) {
       return false;
     }
 
@@ -204,7 +206,7 @@ export function useSelect(
     const nodes = slots.default?.({}) ?? [];
 
     return nodes.some((node) => {
-      if (!node || typeof node !== "object") {
+      if (!isObjectLike(node)) {
         return false;
       }
 
@@ -214,7 +216,7 @@ export function useSelect(
         return false;
       }
 
-      if (typeof type === "symbol") {
+      if (isSymbol(type)) {
         return false;
       }
 
@@ -223,7 +225,15 @@ export function useSelect(
   }
 
   const hasComposedList = computed(() => {
-    return defaultSlotIsComposedList() && !selectMerged.value.options?.length;
+    return defaultSlotIsComposedList();
+  });
+
+  const composedOptionsFromSlot = computed(() => {
+    if (!hasComposedList.value) {
+      return [];
+    }
+
+    return collectComposedListboxOptions(slots.default?.({}) ?? []);
   });
 
   const resolvedEntries = computed((): ListboxEntry[] => {
@@ -259,7 +269,10 @@ export function useSelect(
 
   const resolvedOptions = computed(() => {
     if (hasComposedList.value) {
-      return registeredOptions.value;
+      return mergeListboxOptionsByValue(
+        registeredOptions.value,
+        composedOptionsFromSlot.value,
+      );
     }
 
     return flattenListboxOptions(resolvedEntries.value);
@@ -991,14 +1004,24 @@ export function useSelect(
   });
 
   function handleRegisteredOptionsChange(options: SelectOption[]) {
+    if (options.length === 0) {
+      return;
+    }
+
     const current = registeredOptions.value;
 
     if (
       current.length === options.length &&
-      current.every(
-        (option, index) =>
-          String(option.value) === String(options[index]?.value),
-      )
+      current.every((option, index) => {
+        const next = options[index];
+
+        return (
+          option.label === next?.label &&
+          option.description === next?.description &&
+          String(option.value) === String(next?.value) &&
+          Boolean(option.disabled) === Boolean(next?.disabled)
+        );
+      })
     ) {
       return;
     }

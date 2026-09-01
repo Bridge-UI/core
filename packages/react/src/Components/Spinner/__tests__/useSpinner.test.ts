@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { isNumber } from "es-toolkit/compat";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
@@ -112,7 +113,7 @@ test("it should apply determinate stroke dash style", () => {
     variant: "determinate",
   });
 
-  expect(result.current.circleBind.style?.strokeDashoffset).toBeTypeOf(
-    "number",
+  expect(isNumber(result.current.circleBind.style?.strokeDashoffset)).toBe(
+    true,
   );
 });

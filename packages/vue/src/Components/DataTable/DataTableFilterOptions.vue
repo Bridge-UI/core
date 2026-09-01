@@ -58,7 +58,7 @@ function isSelected(value: string) {
       :aria-checked="isSelected(option.value)"
       :role="multiple ? 'menuitemcheckbox' : 'menuitemradio'"
       v-on:click="emit('toggle', option.value, !isSelected(option.value))"
-      class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-dark-500/5 dark:hover:bg-dark-500/10"
+      class="flex w-full cursor-pointer items-center rounded-md px-2 py-1.5 text-start hover:bg-black/5 dark:hover:bg-white/10"
     >
       <Checkbox
         :size="size"

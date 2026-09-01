@@ -311,6 +311,68 @@ test("it should filter within grouped options and drop empty sections", async ()
   });
 });
 
+test("it should display composed ListItem primary in the trigger when closed", () => {
+  render(
+    <Select value="low" aria-label="Priority">
+      <ListSection title="Severity" />
+      <ListItem value="low" primary="Low" />
+      <ListItem value="medium" primary="Medium" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe("Low");
+});
+
+test("it should prefer composed ListItem primary over options labels", () => {
+  render(
+    <Select
+      value="low"
+      aria-label="Priority"
+      options={[{ value: "low", label: "low" }]}
+    >
+      <ListItem value="low" primary="Low" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe("Low");
+});
+
+test("it should update the trigger when composed primary changes", async () => {
+  const { rerender } = render(
+    <Select value="low" aria-label="Priority">
+      <ListItem value="low" primary="Low" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe("Low");
+
+  rerender(
+    <Select value="low" aria-label="Priority">
+      <ListItem value="low" primary="Lowest" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe(
+    "Lowest",
+  );
+
+  fireEvent.click(screen.getByRole("combobox").closest(".group\\/field")!);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  rerender(
+    <Select value="low" aria-label="Priority">
+      <ListItem value="low" primary="Critical" />
+    </Select>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe(
+    "Critical",
+  );
+});
+
 test("it should select from composed ListSection and ListItem children", async () => {
   const onChange = vi.fn();
 

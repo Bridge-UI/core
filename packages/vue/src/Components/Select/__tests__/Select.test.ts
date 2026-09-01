@@ -319,6 +319,92 @@ test("it should render grouped options with section titles", async () => {
   expect(document.body.textContent).toContain("Active");
 });
 
+test("it should display composed ListItem primary in the trigger when closed", () => {
+  mountSelect({
+    props: {
+      options: [],
+      modelValue: "low",
+    },
+    slots: {
+      default: () => [
+        h(ListSection, { title: "Severity" }),
+        h(ListItem, { value: "low", primary: "Low" }),
+        h(ListItem, { value: "medium", primary: "Medium" }),
+      ],
+    },
+  });
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Low");
+});
+
+test("it should prefer composed ListItem primary over options labels", () => {
+  mountSelect({
+    slots: {
+      default: () => [h(ListItem, { value: "low", primary: "Low" })],
+    },
+    props: {
+      modelValue: "low",
+      options: [{ value: "low", label: "low" }],
+    },
+  });
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Low");
+});
+
+test("it should update the trigger when composed primary changes", async () => {
+  const primary = ref("Low");
+
+  const Host = defineComponent({
+    setup() {
+      return () => {
+        return h(
+          SelectField,
+          {
+            options: [],
+            modelValue: "low",
+          },
+          {
+            default: () => {
+              return [h(ListItem, { value: "low", primary: primary.value })];
+            },
+          },
+        );
+      };
+    },
+  });
+
+  const wrapper = mount(Host, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  const combobox = document.body.querySelector(
+    '[role="combobox"]',
+  ) as HTMLInputElement;
+
+  expect(combobox.value).toBe("Low");
+
+  primary.value = "Lowest";
+  await flushPromises();
+
+  expect(combobox.value).toBe("Lowest");
+
+  await combobox.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  primary.value = "Critical";
+  await flushPromises();
+
+  expect(combobox.value).toBe("Critical");
+});
+
 test("it should select from composed default slot", async () => {
   const onChange = vi.fn();
 

@@ -25,8 +25,10 @@ test("it should apply section title classes", () => {
 
   expect(result.current.titleBind.role).toBe("presentation");
   expect(result.current.titleBind.className).toContain("px-2");
+  expect(result.current.titleBind.className).toContain("py-1.5");
   expect(result.current.titleBind.className).toContain("text-xs");
-  expect(result.current.titleBind.className).toContain("uppercase");
+  expect(result.current.titleBind.className).toContain("font-medium");
+  expect(result.current.titleBind.className).not.toContain("uppercase");
 });
 
 test("it should apply sticky classes on root when sticky is true", () => {
@@ -58,14 +60,16 @@ test("it should inherit dense padding from parent List context", () => {
     { dense: true },
   );
 
-  expect(result.current.titleBind.className).toContain("py-1.5");
-  expect(result.current.titleBind.className).not.toContain("py-2");
+  expect(result.current.titleBind.className).toContain("py-1");
+  expect(result.current.titleBind.className).not.toContain("py-1.5");
 });
 
 test("it should apply list-none on root bind", () => {
   const { result } = renderUseListSection({ title: "Section" });
 
+  expect(result.current.rootBind.className).toContain("mt-1");
   expect(result.current.rootBind.className).toContain("list-none");
+  expect(result.current.rootBind.className).toContain("first:mt-0");
 });
 
 test("it should prefer title prop over children for label", () => {

@@ -15,6 +15,7 @@ import {
   createSelectAsyncSearch,
   filterListboxEntries,
   flattenListboxOptions,
+  mergeListboxOptionsByValue,
   normalizeListboxEntries,
   normalizeSelectOptions,
   resolveFieldOverlay,
@@ -40,6 +41,7 @@ import {
   formFieldBridgeKeys,
   useFormField,
 } from "@/Components/FormField/hooks/useFormField";
+import { collectComposedListboxOptions } from "@/Components/Listbox/collectComposedListboxOptions";
 import {
   highlightCurrentSelection,
   useListboxNavigation,
@@ -115,13 +117,13 @@ export function useSelect(
   const breakpoint = useBreakpoint();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const containerRef = useRef<null | HTMLElement>(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [draftValues, setDraftValues] = useState<SelectValue[]>([]);
-  const containerRef = useRef<null | HTMLElement>(null);
 
   const [asyncLoading, setAsyncLoading] = useState(false);
-  const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
   const asyncSearchRef = useRef<null | SelectAsyncSearch>(null);
+  const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
   const [resolvedSelected, setResolvedSelected] = useState<SelectOption[]>([]);
   const [uncontrolledValue, setUncontrolledValue] =
     useState<SelectProps["value"]>(defaultValue);
@@ -178,13 +180,23 @@ export function useSelect(
 
   const handleRegisteredOptionsChange = useCallback(
     (options: SelectOption[]) => {
+      if (options.length === 0) {
+        return;
+      }
+
       setRegisteredOptions((current) => {
         if (
           current.length === options.length &&
-          current.every(
-            (option, index) =>
-              String(option.value) === String(options[index]?.value),
-          )
+          current.every((option, index) => {
+            const next = options[index];
+
+            return (
+              option.label === next?.label &&
+              option.description === next?.description &&
+              String(option.value) === String(next?.value) &&
+              Boolean(option.disabled) === Boolean(next?.disabled)
+            );
+          })
         ) {
           return current;
         }
@@ -195,7 +207,11 @@ export function useSelect(
     [],
   );
 
-  const hasComposedChildren = selectMerged.children != null;
+  const hasComposedChildren = !isNil(selectMerged.children);
+
+  const composedOptionsFromChildren = useMemo(() => {
+    return collectComposedListboxOptions(selectMerged.children);
+  }, [selectMerged.children]);
 
   const resolvedEntries = useMemo((): ListboxEntry[] => {
     if (hasComposedChildren) {
@@ -233,11 +249,19 @@ export function useSelect(
 
   const resolvedOptions = useMemo(() => {
     if (hasComposedChildren) {
-      return registeredOptions;
+      return mergeListboxOptionsByValue(
+        registeredOptions,
+        composedOptionsFromChildren,
+      );
     }
 
     return flattenListboxOptions(resolvedEntries);
-  }, [resolvedEntries, registeredOptions, hasComposedChildren]);
+  }, [
+    resolvedEntries,
+    registeredOptions,
+    hasComposedChildren,
+    composedOptionsFromChildren,
+  ]);
 
   const selectedValues = useMemo((): SelectValue[] => {
     const value = modelValue;

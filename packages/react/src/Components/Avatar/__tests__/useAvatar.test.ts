@@ -1,5 +1,6 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { isString } from "es-toolkit/compat";
 import { createElement } from "react";
 import { expect, test } from "vitest";
 
@@ -66,7 +67,7 @@ test("it should default resolved icon to user", () => {
 test("it should compute rootBind className as a non-empty string", () => {
   const { result } = renderUseAvatar();
 
-  expect(typeof result.current.rootBind.className).toBe("string");
+  expect(isString(result.current.rootBind.className)).toBe(true);
   expect(result.current.rootBind.className.length).toBeGreaterThan(0);
 });
 

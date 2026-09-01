@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNumber, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
@@ -474,7 +474,7 @@ export function useTimePanel(
     return getItemBind(
       item,
       (value) => {
-        if (typeof value === "number") {
+        if (isNumber(value)) {
           selectHour(value);
         }
       },
@@ -486,7 +486,7 @@ export function useTimePanel(
     return getItemBind(
       item,
       (value) => {
-        if (typeof value === "number") {
+        if (isNumber(value)) {
           selectMinute(value);
         }
       },
@@ -498,7 +498,7 @@ export function useTimePanel(
     return getItemBind(
       item,
       (value) => {
-        if (typeof value === "number") {
+        if (isNumber(value)) {
           selectSecond(value);
         }
       },

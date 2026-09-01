@@ -1,4 +1,5 @@
 // ** External Imports
+import { isString } from "es-toolkit/compat";
 import { computed, inject } from "vue";
 
 // ** Core Imports
@@ -47,7 +48,7 @@ export function useSidebarListItem(
       return props.tooltip || undefined;
     }
 
-    if (typeof props.primary !== "string") {
+    if (!isString(props.primary)) {
       return undefined;
     }
 
@@ -63,7 +64,7 @@ export function useSidebarListItem(
   });
 
   const accessibleName = computed(() => {
-    if (!iconOnly.value || typeof props.primary !== "string") {
+    if (!iconOnly.value || !isString(props.primary)) {
       return undefined;
     }
 

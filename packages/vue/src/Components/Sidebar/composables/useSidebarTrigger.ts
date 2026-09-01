@@ -1,5 +1,5 @@
 // ** External Imports
-import { omit } from "es-toolkit/compat";
+import { isFunction, isString, omit } from "es-toolkit/compat";
 import { computed, useAttrs, type useSlots } from "vue";
 
 // ** Local Imports
@@ -38,7 +38,7 @@ export function useSidebarTrigger(slots: ReturnType<typeof useSlots>) {
   const ariaLabel = computed(() => {
     const label = attrs["aria-label"];
 
-    return typeof label === "string" ? label : "Toggle sidebar";
+    return isString(label) ? label : "Toggle sidebar";
   });
 
   const rootAttrs = computed(() => {
@@ -48,7 +48,7 @@ export function useSidebarTrigger(slots: ReturnType<typeof useSlots>) {
   const handleClick = (event: MouseEvent) => {
     const onClick = attrs.onClick;
 
-    if (typeof onClick === "function") {
+    if (isFunction(onClick)) {
       onClick(event);
     }
 

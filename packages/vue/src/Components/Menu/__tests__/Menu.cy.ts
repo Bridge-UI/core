@@ -81,7 +81,7 @@ test("it should render List and ListItem inside the menu panel", () => {
     slots: {
       trigger: () => h(Button, null, () => "Open"),
       default: () =>
-        h(List, { dense: true, class: "p-0" }, () => [
+        h(List, { dense: true }, () => [
           h(ListItem, {
             role: "menuitem",
             interactive: true,

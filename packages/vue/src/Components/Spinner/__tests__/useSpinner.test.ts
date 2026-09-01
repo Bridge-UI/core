@@ -1,5 +1,6 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
+import { isNumber } from "es-toolkit/compat";
 import { expect, test } from "vitest";
 import { defineComponent, h } from "vue";
 
@@ -124,5 +125,5 @@ test("it should apply determinate stroke dash style", () => {
     variant: "determinate",
   });
 
-  expect(circleBind.value.style?.strokeDashoffset).toBeTypeOf("number");
+  expect(isNumber(circleBind.value.style?.strokeDashoffset)).toBe(true);
 });

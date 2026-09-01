@@ -8,6 +8,7 @@ import {
   entriesFromListboxOptions,
   flattenListboxOptions,
   mapListboxEntriesToRows,
+  upsertListboxOption,
   type ListboxOption,
   type ListboxValue,
 } from "@bridge-ui/core/Domain";
@@ -139,12 +140,10 @@ function handleSelect(option: ListboxOption) {
 }
 
 function registerOption(option: ListboxOption) {
-  const alreadyRegistered = registeredOptions.value.some(
-    (entry) => String(entry.value) === String(option.value),
-  );
+  const next = upsertListboxOption(registeredOptions.value, option);
 
-  if (!alreadyRegistered) {
-    registeredOptions.value = [...registeredOptions.value, option];
+  if (next !== registeredOptions.value) {
+    registeredOptions.value = next;
   }
 
   return () => {
@@ -258,14 +257,11 @@ const progressBind = computed(() => {
 
 const listBind = computed(() => {
   return {
-    dense: true,
     role: "listbox",
     id: props.listboxId,
     "aria-labelledby": props.labelledBy,
     "aria-multiselectable": props.multiple || undefined,
-    ...mergeNestedComponentProps(listProps.value, {
-      class: "p-0",
-    }),
+    ...mergeNestedComponentProps(listProps.value),
   };
 });
 

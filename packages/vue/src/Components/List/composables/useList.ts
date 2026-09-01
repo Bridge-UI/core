@@ -64,7 +64,7 @@ export function useList(props: ListOwnProps) {
   const rootBind = computed(() => {
     return mergePartBind(customProps.value?.root, rootInheritedAttrs.value, {
       class: cn({
-        "m-0 list-none py-2 text-dark-900 dark:text-dark-100": true,
+        "m-0 flex list-none flex-col gap-0.5 p-1 text-dark-900 dark:text-dark-100": true,
         "pl-4": merged.value.nested,
         [get(mergedClasses.value, "root") ?? ""]: true,
       }),

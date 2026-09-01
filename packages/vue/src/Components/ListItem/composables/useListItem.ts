@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNull, omit } from "es-toolkit/compat";
+import { get, isNil, isNull, omit } from "es-toolkit/compat";
 import {
   computed,
   getCurrentInstance,
@@ -12,7 +12,10 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { ListboxOption } from "@bridge-ui/core/Domain";
+import {
+  listboxOptionFromComposedItem,
+  type ListboxOption,
+} from "@bridge-ui/core/Domain";
 import {
   cn,
   splitComponentProps,
@@ -65,7 +68,7 @@ export function useListItem(
 
   const listContext = inject(LIST_INJECTION_KEY, null);
   const listboxContextRef = inject(LISTBOX_INJECTION_KEY, null);
-  const hasListboxContext = listboxContextRef != null;
+  const hasListboxContext = !isNil(listboxContextRef);
 
   const split = computed(() => {
     return splitComponentProps<ListItemProps, typeof listItemBridgeKeys>({
@@ -88,16 +91,16 @@ export function useListItem(
   });
 
   const listboxOption = computed((): null | ListboxOption => {
-    if (merged.value.value == null || !hasListboxContext) {
+    if (!hasListboxContext) {
       return null;
     }
 
-    return {
+    return listboxOptionFromComposedItem({
       value: merged.value.value,
-      description: merged.value.secondary,
-      disabled: Boolean(merged.value.disabled),
-      label: merged.value.primary ?? String(merged.value.value),
-    };
+      primary: merged.value.primary,
+      disabled: merged.value.disabled,
+      secondary: merged.value.secondary,
+    });
   });
 
   let unregister: undefined | (() => void);
@@ -132,7 +135,7 @@ export function useListItem(
   });
 
   const isListboxOption = computed(() => {
-    return listboxOption.value != null;
+    return !isNil(listboxOption.value);
   });
 
   const listboxSelected = computed(() => {
@@ -242,10 +245,12 @@ export function useListItem(
     });
   });
 
-  const interactiveBind = computed(() => {
-    const interactive = merged.value.interactive || isListboxOption.value;
+  const isInteractiveRow = computed(() => {
+    return Boolean(merged.value.interactive || isListboxOption.value);
+  });
 
-    if (!interactive) {
+  const interactiveBind = computed(() => {
+    if (!isInteractiveRow.value) {
       return null;
     }
 
@@ -274,11 +279,12 @@ export function useListItem(
             }
           : undefined,
         class: cn({
-          "flex w-full min-w-0 items-center gap-x-3 text-left text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left leading-none text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "text-sm": !isListboxOption.value,
           "cursor-pointer select-none": !merged.value.disabled,
-          "px-4": true,
-          "py-2": !isDense.value,
-          "py-1.5": isDense.value,
+          "px-2": !isListboxOption.value,
+          "py-1.5": !isListboxOption.value && !isDense.value,
+          "py-1": !isListboxOption.value && isDense.value,
           "hover:bg-black/5 focus-visible:bg-black/5 dark:hover:bg-white/10 dark:focus-visible:bg-white/10":
             !merged.value.disabled && !isListboxOption.value,
           "bg-dark-100 font-medium text-dark-900 dark:bg-white/15 dark:text-white":
@@ -305,7 +311,8 @@ export function useListItem(
             !listboxSelected.value,
           "opacity-50 pointer-events-none": merged.value.disabled,
           [get(mergedClasses.value, "interactive") ?? ""]: true,
-          [listboxContext.value?.sizeClasses?.option ?? ""]: true,
+          [listboxContext.value?.sizeClasses?.option ?? ""]:
+            isListboxOption.value,
         }),
       },
     );
@@ -313,12 +320,11 @@ export function useListItem(
 
   const rowClass = computed(() => {
     return cn({
-      "flex w-full min-w-0 gap-x-3": true,
-      "items-center text-dark-900 dark:text-dark-100":
-        !merged.value.interactive,
-      "px-4": !merged.value.interactive,
-      "py-2": !merged.value.interactive && !isDense.value,
-      "py-1.5": !merged.value.interactive && isDense.value,
+      "flex w-full min-w-0 items-center gap-x-2": true,
+      "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow.value,
+      "px-2": !isInteractiveRow.value,
+      "py-1.5": !isInteractiveRow.value && !isDense.value,
+      "py-1": !isInteractiveRow.value && isDense.value,
     });
   });
 
@@ -327,7 +333,7 @@ export function useListItem(
       customProps.value?.start,
       {},
       cn({
-        "flex shrink-0 text-dark-600 dark:text-dark-300": true,
+        "flex shrink-0 items-center text-dark-600 dark:text-dark-300": true,
         [get(mergedClasses.value, "start") ?? ""]: true,
       }),
     );
@@ -348,11 +354,13 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.primary,
       {},
-      cn(
-        "block truncate text-sm font-medium",
-        listboxContext.value?.sizeClasses?.primary,
-        get(mergedClasses.value, "primary"),
-      ),
+      cn({
+        "block truncate leading-none": true,
+        [listboxContext.value?.sizeClasses?.primary ?? ""]:
+          isListboxOption.value,
+        "text-sm font-medium": !isListboxOption.value,
+        [get(mergedClasses.value, "primary") ?? ""]: true,
+      }),
     );
   });
 
@@ -360,11 +368,13 @@ export function useListItem(
     return mergePartBind(
       customProps.value?.secondary,
       {},
-      cn(
-        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400",
-        listboxContext.value?.sizeClasses?.secondary,
-        get(mergedClasses.value, "secondary"),
-      ),
+      cn({
+        "block truncate text-dark-500 dark:text-dark-400": true,
+        [listboxContext.value?.sizeClasses?.secondary ?? ""]:
+          isListboxOption.value,
+        "mt-0.5 text-xs": !isListboxOption.value,
+        [get(mergedClasses.value, "secondary") ?? ""]: true,
+      }),
     );
   });
 
@@ -384,12 +394,12 @@ export function useListItem(
       customProps.value?.selectedIcon,
       {},
       {
-        size: "sm" as const,
-        class: cn(
-          "shrink-0",
-          listboxContext.value?.checkClass,
-          get(mergedClasses.value, "selectedIcon"),
-        ),
+        ...(isListboxOption.value ? {} : { size: "sm" as const }),
+        class: cn({
+          "block shrink-0": true,
+          [listboxContext.value?.checkClass ?? ""]: isListboxOption.value,
+          [get(mergedClasses.value, "selectedIcon") ?? ""]: true,
+        }),
       },
     );
   });

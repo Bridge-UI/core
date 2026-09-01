@@ -278,6 +278,18 @@ test("it should select from composed ListSection and ListItem children", async (
   expect(onChange).toHaveBeenCalledWith("apple");
 });
 
+test("it should display composed ListItem primary in the trigger when closed", () => {
+  render(
+    <Autocomplete value="low" aria-label="Priority">
+      <ListSection title="Severity" />
+      <ListItem value="low" primary="Low" />
+      <ListItem value="medium" primary="Medium" />
+    </Autocomplete>,
+  );
+
+  expect((screen.getByRole("combobox") as HTMLInputElement).value).toBe("Low");
+});
+
 test("it should commit free-solo text on Enter by default", async () => {
   const onChange = vi.fn();
 

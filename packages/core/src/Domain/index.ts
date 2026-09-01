@@ -202,7 +202,9 @@ export {
   filterListboxEntries,
   flattenListboxOptions,
   isListboxOptionGroup,
+  listboxOptionFromComposedItem,
   mapListboxEntriesToRows,
+  mergeListboxOptionsByValue,
   mergeSelectAsyncOptions,
   normalizeListboxEntries,
   normalizeSelectOption,
@@ -211,8 +213,10 @@ export {
   resolveSelectAsyncLimit,
   resolveSelectAsyncOptions,
   selectValuesEqual,
+  upsertListboxOption,
 } from "@/Domain/select";
 export type {
+  ComposedListboxItemProps,
   ListboxEntry,
   ListboxOption,
   ListboxOptionGroup,

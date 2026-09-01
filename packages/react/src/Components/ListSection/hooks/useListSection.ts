@@ -1,11 +1,12 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 
 // ** Core Imports
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useListContext } from "@/Components/List/ListContext";
+import { useListboxContext } from "@/Components/Listbox/ListboxContext";
 import type {
   ListSectionOwnProps,
   ListSectionProps,
@@ -29,6 +30,7 @@ const listSectionBridgeKeys = [
 
 export function useListSection(props: ListSectionProps) {
   const listContext = useListContext();
+  const listboxContext = useListboxContext();
   const listSection = useListSectionContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -85,7 +87,7 @@ export function useListSection(props: ListSectionProps) {
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "list-none": true,
+        "mt-1 list-none first:mt-0": true,
         "sticky top-0 z-10 bg-white dark:bg-dark-800":
           merged.sticky && !isDivRoot,
         [get(mergedClasses, "root") ?? ""]: true,
@@ -100,10 +102,13 @@ export function useListSection(props: ListSectionProps) {
       {
         role: "presentation",
         className: cn({
-          "bg-white px-2 text-xs font-semibold tracking-wide text-dark-500 uppercase dark:bg-dark-800 dark:text-dark-300": true,
-          "sticky top-0 z-10": merged.sticky && isDivRoot,
-          "py-2": !isDense,
-          "py-1.5": isDense,
+          "text-xs font-medium text-dark-500 dark:text-dark-400": true,
+          "sticky top-0 z-10 bg-white dark:bg-dark-800":
+            merged.sticky && isDivRoot,
+          "px-2": isNil(listboxContext),
+          "py-1": isNil(listboxContext) && isDense,
+          "py-1.5": isNil(listboxContext) && !isDense,
+          [listboxContext?.sizeClasses?.option ?? ""]: !isNil(listboxContext),
           "pl-14": merged.inset,
           [get(mergedClasses, "title") ?? ""]: true,
         }),

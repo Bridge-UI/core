@@ -1,5 +1,5 @@
 // ** External Imports
-import { isArray, isNil } from "es-toolkit/compat";
+import { isArray, isFunction, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
 import type { DateAdapter, DateAdapterContext } from "@/Adapters/date";
@@ -132,7 +132,7 @@ export function isDateDisabled<TDate>(
     return false;
   }
 
-  if (typeof disableDates === "function") {
+  if (isFunction(disableDates)) {
     return (disableDates as (value: TDate) => boolean)(date);
   }
 

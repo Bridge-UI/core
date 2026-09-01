@@ -67,7 +67,7 @@ test("it should inherit dense padding from parent List", () => {
   expect(
     container
       .querySelector('[role="presentation"]')
-      ?.classList.contains("py-1.5"),
+      ?.classList.contains("py-1"),
   ).toBe(true);
 });
 

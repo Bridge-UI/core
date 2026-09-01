@@ -40,7 +40,8 @@ export interface ListSectionOwnProps {
   as?: "li" | "div";
 
   /**
-   * The children to render. Use `title` for plain text.
+   * Section label. Use `title` for plain text. Nested items belong as
+   * siblings of `ListSection`, not as children of this slot.
    *
    * @default undefined
    */

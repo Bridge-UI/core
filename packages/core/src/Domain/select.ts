@@ -1,5 +1,15 @@
 // ** External Imports
-import { debounce, get, isNil } from "es-toolkit/compat";
+import {
+  debounce,
+  flatten,
+  get,
+  isArray,
+  isNil,
+  isNumber,
+  isObjectLike,
+  isString,
+  keyBy,
+} from "es-toolkit/compat";
 
 /**
  * Default debounce delay (ms) for async select search while typing.
@@ -178,7 +188,7 @@ export type SelectOptionLike = string | SelectOption | Record<string, unknown>;
 export type SelectValue = number | string;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return isObjectLike(value) && !isArray(value);
 }
 
 /**
@@ -187,11 +197,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export function isListboxOptionGroup(
   value: unknown,
 ): value is ListboxOptionGroup {
-  return (
-    isRecord(value) &&
-    typeof value.title === "string" &&
-    Array.isArray(value.options)
-  );
+  return isRecord(value) && isString(value.title) && isArray(value.options);
 }
 
 /**
@@ -290,7 +296,7 @@ export function normalizeSelectOption(
   item: SelectOptionInput,
   keys: SelectOptionKeys,
 ): SelectOption {
-  if (typeof item === "string" || typeof item === "number") {
+  if (isString(item) || isNumber(item)) {
     const label = String(item);
 
     return { label, value: item };
@@ -577,4 +583,93 @@ export function commitFreeSoloValue(
   }
 
   return trimmed;
+}
+
+/**
+ * Props used to resolve a listbox option from composed `ListItem` children.
+ */
+export type ComposedListboxItemProps = {
+  /**
+   * Whether the option is disabled.
+   */
+  disabled?: boolean;
+
+  /**
+   * Option label. Used when it is a string.
+   */
+  primary?: unknown;
+
+  /**
+   * Secondary line below the label. Used when it is a string.
+   */
+  secondary?: unknown;
+
+  /**
+   * Option value.
+   */
+  value?: ListboxValue;
+};
+
+/**
+ * Builds a listbox option from composed ListItem-like props.
+ * Uses `primary` as the label when it is a string; otherwise falls back to `value`.
+ */
+export function listboxOptionFromComposedItem(
+  item: ComposedListboxItemProps,
+): null | ListboxOption {
+  if (isNil(item.value) || item.value === "") {
+    return null;
+  }
+
+  const label = isString(item.primary) ? item.primary : String(item.value);
+  const description = isString(item.secondary) ? item.secondary : undefined;
+
+  return {
+    label,
+    description,
+    value: item.value,
+    disabled: Boolean(item.disabled),
+  };
+}
+
+/**
+ * Merges option lists by value. Later lists overwrite earlier ones.
+ */
+export function mergeListboxOptionsByValue(
+  ...lists: ListboxOption[][]
+): ListboxOption[] {
+  return Object.values(keyBy(flatten(lists), (option) => String(option.value)));
+}
+
+/**
+ * Inserts `option` or replaces the existing entry with the same value.
+ * Returns the same array when nothing changed.
+ */
+export function upsertListboxOption(
+  list: ListboxOption[],
+  option: ListboxOption,
+): ListboxOption[] {
+  const index = list.findIndex((entry) => {
+    return String(entry.value) === String(option.value);
+  });
+
+  if (index < 0) {
+    return [...list, option];
+  }
+
+  const current = list[index];
+
+  if (
+    current?.label === option.label &&
+    current.description === option.description &&
+    Boolean(current.disabled) === Boolean(option.disabled)
+  ) {
+    return list;
+  }
+
+  const next = [...list];
+
+  next[index] = option;
+
+  return next;
 }
