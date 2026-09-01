@@ -431,18 +431,18 @@ export function getDataTableSortIcon(
 }
 
 /**
- * Tooltip for a sortable header given its `aria-sort`.
+ * Accessible label for a sort button given its `aria-sort`.
  */
-export function getDataTableSortTooltip(ariaSort: DataTableAriaSort): string {
+export function getDataTableSortLabel(ariaSort: DataTableAriaSort): string {
   if (ariaSort === "ascending") {
-    return "Click to sort descending";
+    return "Sort descending";
   }
 
   if (ariaSort === "descending") {
-    return "Click to cancel sorting";
+    return "Cancel sorting";
   }
 
-  return "Click to sort ascending";
+  return "Sort ascending";
 }
 
 /**

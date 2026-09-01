@@ -114,17 +114,47 @@ test("it should apply the bordered variant on the table wrapper", () => {
   );
 });
 
-test("it should emit update:sorting when a sortable header is clicked", async () => {
+test("it should emit update:sorting when the sort button is clicked", async () => {
   const wrapper = mountDataTable({
     props: { rows, columns },
   });
 
-  await wrapper.find("th[aria-sort]").trigger("click");
+  await wrapper.get('[aria-label="Sort ascending"]').trigger("click");
 
-  expect(wrapper.find("th[aria-sort]").classes()).toContain("cursor-pointer");
+  expect(wrapper.find("th[aria-sort]").classes()).not.toContain(
+    "cursor-pointer",
+  );
+  expect(wrapper.find('[role="tooltip"]').exists()).toBe(false);
   expect(wrapper.emitted("update:sorting")?.[0]).toEqual([
     { id: "role", desc: false },
   ]);
+});
+
+test("it should not sort when the header label is clicked", async () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+  });
+
+  await wrapper.get("th[aria-sort]").trigger("click");
+
+  expect(wrapper.emitted("update:sorting")).toBeUndefined();
+});
+
+test("it should sort rows when the sort button is clicked without v-model:sorting", async () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+  });
+
+  await wrapper.get('[aria-label="Sort ascending"]').trigger("click");
+  await wrapper.get('[aria-label="Sort descending"]').trigger("click");
+
+  const bodyRows = wrapper.findAll("tbody tr");
+
+  expect(wrapper.find("th[aria-sort]").attributes("aria-sort")).toBe(
+    "descending",
+  );
+  expect(bodyRows[0]?.text()).toContain("Alan Turing");
+  expect(bodyRows[1]?.text()).toContain("Ada Lovelace");
 });
 
 test("it should set aria-sort when sorting is controlled", () => {
@@ -139,29 +169,6 @@ test("it should set aria-sort when sorting is controlled", () => {
   expect(wrapper.find("th[aria-sort]").attributes("aria-sort")).toBe(
     "descending",
   );
-});
-
-test("it should show the sort tooltip when hovering the header cell", async () => {
-  vi.useFakeTimers();
-
-  const wrapper = mountDataTable({
-    attachTo: document.body,
-    props: { rows, columns },
-  });
-
-  const header = wrapper.find("th[aria-sort]");
-  const trigger = header.find(".absolute.inset-0.size-full");
-
-  expect(header.classes()).toContain("relative");
-  expect(trigger.exists()).toBe(true);
-
-  await trigger.trigger("pointerenter");
-  vi.advanceTimersByTime(200);
-  await flushPromises();
-
-  expect(
-    document.body.querySelector('[role="tooltip"]')?.textContent,
-  ).toContain("Click to sort ascending");
 });
 
 test("it should emit update:selection when a row is selected", async () => {

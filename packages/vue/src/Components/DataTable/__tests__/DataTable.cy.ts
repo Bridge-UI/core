@@ -108,6 +108,7 @@ test("it should set aria-sort on a sorted column", () => {
   });
 
   cy.get("th[aria-sort='descending']").should("be.visible");
+  cy.get('button[aria-label="Cancel sorting"]').should("be.visible");
 });
 
 test("it should shrink-wrap when full is false", () => {

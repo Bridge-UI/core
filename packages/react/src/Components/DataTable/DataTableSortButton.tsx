@@ -1,9 +1,6 @@
-// ** External Imports
-import type { ReactNode } from "react";
-
 // ** Core Imports
 import {
-  getDataTableSortTooltip,
+  getDataTableSortLabel,
   type DataTableAriaSort,
 } from "@bridge-ui/core/Domain";
 import { cn } from "@bridge-ui/core/Utils";
@@ -11,57 +8,46 @@ import { cn } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import { Icon } from "@/Components/Icon";
-import { Tooltip } from "@/Components/Tooltip";
 
 /**
- * Internal sortable header chrome. Click-to-sort and the tooltip live on the `th`.
+ * Internal sort control. Same chrome as the column filter button.
  */
 export function DataTableSortButton({
+  onClick,
   ariaSort,
-  children,
 }: {
   ariaSort: DataTableAriaSort;
-  children: ReactNode;
+  onClick: () => void;
 }) {
   const resolveMessage = useResolveMessage();
 
-  const tooltip = resolveMessage(getDataTableSortTooltip(ariaSort));
-
   return (
-    <>
-      <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 leading-none">
-        <span className="min-w-0 truncate leading-none">{children}</span>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={resolveMessage(getDataTableSortLabel(ariaSort))}
+      className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
+    >
+      <span className="inline-flex h-6 w-5 shrink-0 flex-col items-center justify-center leading-none">
+        <Icon
+          size="lg"
+          icon="chevronUp"
+          className={cn({
+            "-mb-1": true,
+            "text-dark-800 dark:text-dark-100": ariaSort === "ascending",
+            "text-dark-300 dark:text-dark-600": ariaSort !== "ascending",
+          })}
+        />
 
-        <span className="inline-flex h-6 w-5 shrink-0 flex-col items-center justify-center leading-none">
-          <Icon
-            size="lg"
-            icon="chevronUp"
-            className={cn({
-              "-mb-1": true,
-              "text-dark-800 dark:text-dark-100": ariaSort === "ascending",
-              "text-dark-300 dark:text-dark-600": ariaSort !== "ascending",
-            })}
-          />
-
-          <Icon
-            size="lg"
-            icon="chevronDown"
-            className={cn({
-              "text-dark-800 dark:text-dark-100": ariaSort === "descending",
-              "text-dark-300 dark:text-dark-600": ariaSort !== "descending",
-            })}
-          />
-        </span>
+        <Icon
+          size="lg"
+          icon="chevronDown"
+          className={cn({
+            "text-dark-800 dark:text-dark-100": ariaSort === "descending",
+            "text-dark-300 dark:text-dark-600": ariaSort !== "descending",
+          })}
+        />
       </span>
-
-      <Tooltip
-        content={tooltip}
-        slots={{ trigger: <span className="size-full" /> }}
-        customProps={{
-          root: { className: "absolute inset-0 z-[1] max-w-none" },
-          trigger: { className: "absolute inset-0 size-full max-w-none" },
-        }}
-      />
-    </>
+    </button>
   );
 }

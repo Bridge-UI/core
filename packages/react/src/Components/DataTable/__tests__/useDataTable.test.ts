@@ -264,6 +264,29 @@ test("it should emit onSortingChange from onToggleSort", () => {
   expect(onSortingChange).toHaveBeenCalledWith({ id: "name", desc: false });
 });
 
+test("it should sort row views from onToggleSort when sorting is uncontrolled", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        rows: people,
+        columns: peopleColumns,
+      },
+      libDefaults,
+    ),
+  );
+
+  act(() => {
+    result.current.onToggleSort("name");
+  });
+
+  act(() => {
+    result.current.onToggleSort("name");
+  });
+
+  expect(result.current.rowViews[0]?.original.name).toBe("Alan");
+  expect(result.current.rowViews[1]?.original.name).toBe("Ada");
+});
+
 test("it should filter row views from the filters binding", () => {
   const { result } = renderHook(() =>
     useDataTable(

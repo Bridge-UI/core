@@ -1,6 +1,5 @@
 // ** External Imports
 import {
-  act,
   cleanup,
   fireEvent,
   render,
@@ -88,7 +87,7 @@ test("it should apply the bordered variant on the table wrapper", () => {
   );
 });
 
-test("it should call onSortingChange when a sortable header is clicked", () => {
+test("it should call onSortingChange when the sort button is clicked", () => {
   const onSortingChange = vi.fn();
 
   render(
@@ -99,17 +98,51 @@ test("it should call onSortingChange when a sortable header is clicked", () => {
     />,
   );
 
-  fireEvent.click(screen.getByRole("columnheader", { name: /Role/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Sort ascending" }));
 
   expect(onSortingChange).toHaveBeenCalledWith({ id: "role", desc: false });
   expect(
     screen.getByRole("columnheader", { name: /Role/ }).className,
-  ).toContain("cursor-pointer");
+  ).not.toContain("cursor-pointer");
   expect(
     screen
       .getByRole("columnheader", { name: /Role/ })
       .getAttribute("aria-sort"),
-  ).toBe("none");
+  ).toBe("ascending");
+  expect(screen.queryByRole("tooltip")).toBeNull();
+});
+
+test("it should not sort when the header label is clicked", () => {
+  const onSortingChange = vi.fn();
+
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      onSortingChange={onSortingChange}
+    />,
+  );
+
+  fireEvent.click(screen.getByText("Role"));
+
+  expect(onSortingChange).not.toHaveBeenCalled();
+});
+
+test("it should sort rows when the sort button is clicked without onSortingChange", () => {
+  render(<DataTable rows={rows} columns={columns} />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Sort ascending" }));
+  fireEvent.click(screen.getByRole("button", { name: "Sort descending" }));
+
+  const bodyRows = screen.getAllByRole("row").slice(1);
+
+  expect(
+    screen
+      .getByRole("columnheader", { name: /Role/ })
+      .getAttribute("aria-sort"),
+  ).toBe("descending");
+  expect(bodyRows[0]?.textContent).toContain("Alan Turing");
+  expect(bodyRows[1]?.textContent).toContain("Ada Lovelace");
 });
 
 test("it should set aria-sort when sorting is controlled", () => {
@@ -126,28 +159,6 @@ test("it should set aria-sort when sorting is controlled", () => {
       .getByRole("columnheader", { name: /Role/ })
       .getAttribute("aria-sort"),
   ).toBe("descending");
-});
-
-test("it should show the sort tooltip when hovering the header cell", async () => {
-  vi.useFakeTimers();
-
-  render(<DataTable rows={rows} columns={columns} />);
-
-  const header = screen.getByRole("columnheader", { name: /Role/ });
-  const trigger = header.querySelector(".absolute.inset-0.size-full");
-
-  expect(header.className).toContain("relative");
-  expect(trigger).toBeTruthy();
-
-  fireEvent.pointerEnter(trigger!);
-
-  await act(async () => {
-    vi.advanceTimersByTime(200);
-  });
-
-  expect(screen.getByRole("tooltip").textContent).toContain(
-    "Click to sort ascending",
-  );
 });
 
 test("it should toggle row selection", () => {

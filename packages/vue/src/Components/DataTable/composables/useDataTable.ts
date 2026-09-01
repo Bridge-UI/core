@@ -145,17 +145,6 @@ const dataTableBridgeKeys = [
   "columnsShowFooter",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
-/**
- * Whether a header click landed on filter or selection chrome.
- */
-function isDataTableHeadChromeEvent(event: Event) {
-  const target = event.target;
-
-  return (
-    target instanceof Element && Boolean(target.closest("button, input, a"))
-  );
-}
-
 type DataTableLibDefaults = LibDefaultsShape<
   DataTableOwnProps<unknown>,
   | "full"
@@ -949,39 +938,12 @@ export function useDataTable<T>(
       {},
       {
         style: getColumnLayoutStyle(header, true),
-        tabindex: header.sortable ? 0 : undefined,
         "aria-sort": header.sortable ? header.ariaSort : undefined,
-        onClick: header.sortable
-          ? (event: MouseEvent) => {
-              if (isDataTableHeadChromeEvent(event)) {
-                return;
-              }
-
-              onToggleSort(header.id);
-            }
-          : undefined,
-        onKeydown: header.sortable
-          ? (event: KeyboardEvent) => {
-              if (isDataTableHeadChromeEvent(event)) {
-                return;
-              }
-
-              if (event.key !== "Enter" && event.key !== " ") {
-                return;
-              }
-
-              event.preventDefault();
-              onToggleSort(header.id);
-            }
-          : undefined,
         class: cn({
           "min-w-0": true,
-          relative: header.sortable,
           "border-e-0": isChrome,
           "sticky z-20": Boolean(header.stickyStyle),
           "after:hidden": isChrome,
-          "cursor-pointer hover:bg-dark-500/10 dark:hover:bg-dark-500/15":
-            header.sortable,
           [get(variantItem.value, "cellStickyEdgeStart") ?? ""]:
             header.sticky === "start" &&
             header.stickyEdge &&
