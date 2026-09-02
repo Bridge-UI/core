@@ -22,6 +22,11 @@ export interface FormFieldColorItem {
 
 export interface FormFieldColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": FormFieldColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": FormFieldColorItem;
@@ -99,5 +104,11 @@ export const colorProps: FormFieldColor = {
     "end": "group-focus-within:text-secondary-500",
     "start": "group-focus-within:text-secondary-500",
     "underlined": "focus-within:border-secondary-600",
+  },
+  "black": {
+    "input": "focus-within:ring-black dark:focus-within:ring-white",
+    "underlined": "focus-within:border-black dark:focus-within:border-white",
+    "end": "group-focus-within:text-black dark:group-focus-within:text-white",
+    "start": "group-focus-within:text-black dark:group-focus-within:text-white",
   },
 };

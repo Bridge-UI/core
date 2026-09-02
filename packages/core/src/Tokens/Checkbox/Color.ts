@@ -13,9 +13,19 @@ export interface CheckboxColorItem {
    * Focus ring classes.
    */
   "focus": string;
+
+  /**
+   * Check glyph color when selected.
+   */
+  "icon"?: string;
 }
 
 export interface CheckboxColor {
+  /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": CheckboxColorItem;
+
   /**
    * `dark` semantic color palette.
    */
@@ -87,5 +97,11 @@ export const colorProps: CheckboxColor = {
     "focus": "ring-secondary-500/30",
     "base": "border-dark-300 dark:border-dark-600",
     "checked": "bg-secondary-600 border-secondary-600",
+  },
+  "black": {
+    "icon": "text-white dark:text-black",
+    "focus": "ring-black/30 dark:ring-white/30",
+    "base": "border-dark-300 dark:border-dark-600",
+    "checked": "bg-black border-black dark:bg-white dark:border-white",
   },
 };

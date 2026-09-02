@@ -12,6 +12,11 @@ export interface LinkColorItem {
 
 export interface LinkColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": LinkColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": LinkColorItem;
@@ -48,6 +53,10 @@ export interface LinkColor {
 }
 
 export const colorProps: LinkColor = {
+  "black": {
+    "base": "text-black dark:text-white",
+    "hover": "hover:text-black/70 dark:hover:text-white/70",
+  },
   "dark": {
     "base": "text-dark-600 dark:text-dark-400",
     "hover": "hover:text-dark-800 dark:hover:text-dark-200",

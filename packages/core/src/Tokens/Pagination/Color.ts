@@ -24,6 +24,11 @@ export interface PaginationColorItem {
  */
 export interface PaginationColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": PaginationColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": PaginationColorItem;
@@ -63,6 +68,13 @@ export interface PaginationColor {
  * Default pagination color maps (selected only).
  */
 export const colorProps: PaginationColor = {
+  "black": {
+    "itemSelectedSoft": "bg-black/10 dark:bg-white/10",
+    "itemSelectedAccent":
+      "border-black text-black hover:border-black hover:text-black dark:border-white dark:text-white dark:hover:border-white dark:hover:text-white",
+    "itemSelectedFilled":
+      "bg-black text-white ring-black hover:bg-black hover:text-white dark:bg-white dark:text-black dark:ring-white dark:hover:bg-white dark:hover:text-black",
+  },
   "info": {
     "itemSelectedSoft": "bg-info-500/15 dark:bg-info-500/20",
     "itemSelectedFilled":

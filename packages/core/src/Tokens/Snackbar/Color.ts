@@ -22,6 +22,11 @@ export interface SnackbarColorItem {
 
 export interface SnackbarColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": SnackbarColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": SnackbarColorItem;
@@ -58,6 +63,11 @@ export interface SnackbarColor {
 }
 
 export const colorProps: SnackbarColor = {
+  "black": {
+    "iconColor": "text-black dark:text-white",
+    "progressColor": "bg-black dark:bg-white",
+    "titleColor": "text-black dark:text-white",
+  },
   "dark": {
     "iconColor": "text-dark-800 dark:text-dark-200",
     "progressColor": "bg-dark-500 dark:bg-dark-400",

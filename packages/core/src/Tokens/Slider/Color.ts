@@ -22,6 +22,11 @@ export interface SliderColorItem {
 
 export interface SliderColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": SliderColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": SliderColorItem;
@@ -93,6 +98,12 @@ export const colorProps: SliderColor = {
     "track": "bg-dark-200 dark:bg-dark-700",
     "bar": "bg-warning-600 dark:bg-warning-400",
     "thumb": "border-warning-600 dark:border-warning-400 bg-white",
+  },
+  "black": {
+    "bar": "bg-black dark:bg-white",
+    "track": "bg-dark-200 dark:bg-dark-700",
+    "focus": "ring-black/30 dark:ring-white/30",
+    "thumb": "border-black dark:border-white bg-white dark:bg-black",
   },
   "secondary": {
     "focus": "ring-secondary-500/30",

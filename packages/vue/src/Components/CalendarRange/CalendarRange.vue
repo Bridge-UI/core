@@ -134,9 +134,7 @@ function chevronClass(open: boolean) {
             </button>
 
             <button v-bind="todayButtonBind">
-              <span
-                class="size-2 rounded-full bg-slate-600 dark:bg-slate-300"
-              />
+              <span class="size-2 rounded-full bg-dark-600 dark:bg-dark-300" />
             </button>
 
             <button v-bind="nextButtonBind">
@@ -193,7 +191,7 @@ function chevronClass(open: boolean) {
 
               <button v-bind="todayButtonBind">
                 <span
-                  class="size-2 rounded-full bg-slate-600 dark:bg-slate-300"
+                  class="size-2 rounded-full bg-dark-600 dark:bg-dark-300"
                 />
               </button>
 

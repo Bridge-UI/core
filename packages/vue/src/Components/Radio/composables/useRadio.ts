@@ -168,7 +168,8 @@ export function useRadio(
       customProps.value?.dot,
       {},
       cn({
-        "rounded-full bg-white transition-transform duration-100": true,
+        "rounded-full transition-transform duration-100": true,
+        [colorClasses.value?.dot ?? "bg-white"]: true,
         "scale-0": !isChecked.value,
         "scale-100": isChecked.value,
         "h-[42%] w-[42%]": true,

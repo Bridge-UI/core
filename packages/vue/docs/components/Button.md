@@ -15,6 +15,8 @@ import { Button } from "@bridge-ui/vue/Components/Button";
 ```vue
 <Button color="primary">Click me</Button>
 
+<Button color="black">Black</Button>
+
 <Button variant="outline" :start-icon="Plus">
   With icon
 </Button>

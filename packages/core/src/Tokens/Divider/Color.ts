@@ -1,5 +1,10 @@
 export interface DividerColor {
   /**
+   * `black` high-contrast fill (black / white only).
+   */
+  "black": string;
+
+  /**
    * `dark` semantic fill color.
    */
   "dark": string;
@@ -40,6 +45,7 @@ export interface DividerColor {
  * `* { border-color: … }` cannot wash out semantic colors.
  */
 export const colorProps: DividerColor = {
+  "black": "bg-black dark:bg-white",
   "dark": "bg-dark-200 dark:bg-dark-600",
   "info": "bg-info-200 dark:bg-info-700",
   "error": "bg-error-200 dark:bg-error-700",

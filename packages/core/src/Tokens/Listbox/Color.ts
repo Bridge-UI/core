@@ -32,6 +32,11 @@ export interface ListboxColorItem {
 
 export interface ListboxColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": ListboxColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": ListboxColorItem;
@@ -68,6 +73,16 @@ export interface ListboxColor {
 }
 
 export const colorProps: ListboxColor = {
+  "black": {
+    "check": "text-black dark:text-white",
+    "value": "text-black dark:text-white",
+    "highlighted": "bg-black/5 dark:bg-white/10",
+    "hover": "hover:bg-black/5 dark:hover:bg-white/10",
+    "clear":
+      "text-dark-400 hover:text-black dark:text-dark-500 dark:hover:text-white",
+    "selected":
+      "bg-black/10 font-medium text-black hover:bg-black/15 dark:bg-white/15 dark:text-white dark:hover:bg-white/20",
+  },
   "info": {
     "check": "text-info-600 dark:text-info-400",
     "value": "text-info-700 dark:text-info-300",

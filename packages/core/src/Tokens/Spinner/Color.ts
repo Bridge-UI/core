@@ -12,6 +12,11 @@ export interface SpinnerColorItem {
 
 export interface SpinnerColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": SpinnerColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": SpinnerColorItem;
@@ -48,6 +53,10 @@ export interface SpinnerColor {
 }
 
 export const colorProps: SpinnerColor = {
+  "black": {
+    "circle": "stroke-black dark:stroke-white",
+    "track": "stroke-black/20 dark:stroke-white/20",
+  },
   "dark": {
     "track": "stroke-dark-200 dark:stroke-dark-800",
     "circle": "stroke-dark-500 dark:stroke-dark-400",

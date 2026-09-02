@@ -26,6 +26,12 @@ test("it should apply primary color", () => {
   cy.get("hr").should("have.class", "bg-primary-200");
 });
 
+test("it should apply black color", () => {
+  cy.mount(<Divider color="black" />);
+
+  cy.get("hr").should("have.class", "bg-black");
+});
+
 test("it should merge custom className", () => {
   cy.mount(<Divider className="my-4" />);
 

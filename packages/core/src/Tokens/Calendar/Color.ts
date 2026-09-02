@@ -40,6 +40,11 @@ export interface CalendarColorItem {
  */
 export interface CalendarColor {
   /**
+   * `black` high-contrast selection (black / white only).
+   */
+  "black": CalendarColorItem;
+
+  /**
    * `dark` semantic selection color.
    */
   "dark": CalendarColorItem;
@@ -80,12 +85,23 @@ export interface CalendarColor {
  * Mirrors WireUI datetime-picker month / year / day tile classes.
  */
 export const colorProps: CalendarColor = {
+  "black": {
+    "base": "bg-transparent text-dark-700 dark:text-dark-100",
+    "disabled":
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
+    "soft":
+      "border border-black/10 bg-black/5 font-medium text-dark-600 shadow-xs dark:border-white/20 dark:bg-white/10 dark:text-dark-200",
+    "selected":
+      "bg-black font-semibold text-white hover:bg-black/80 data-[preview]:bg-black dark:bg-white dark:text-black dark:hover:bg-white/80 dark:data-[preview]:bg-white",
+    "hover":
+      "hover:bg-black/10 hover:text-black data-[preview]:bg-black/10 data-[preview]:text-black dark:hover:bg-white/10 dark:hover:text-white dark:data-[preview]:bg-white/10 dark:data-[preview]:text-white",
+  },
   "dark": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-dark-100 bg-dark-50 font-medium text-slate-600 shadow-xs dark:border-dark-700 dark:bg-dark-900/40 dark:text-dark-200",
+      "border border-dark-100 bg-dark-50 font-medium text-dark-600 shadow-xs dark:border-dark-700 dark:bg-dark-900/40 dark:text-dark-200",
     "selected":
       "bg-dark-500 font-semibold text-white hover:bg-dark-400 data-[preview]:bg-dark-500 dark:bg-dark-400 dark:hover:bg-dark-300 dark:data-[preview]:bg-dark-400",
     "hover":
@@ -94,9 +110,9 @@ export const colorProps: CalendarColor = {
   "info": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-info-100 bg-info-50 font-medium text-slate-600 shadow-xs dark:border-info-800 dark:bg-info-950/40 dark:text-dark-200",
+      "border border-info-100 bg-info-50 font-medium text-dark-600 shadow-xs dark:border-info-800 dark:bg-info-950/40 dark:text-dark-200",
     "selected":
       "bg-info-500 font-semibold text-white hover:bg-info-400 data-[preview]:bg-info-500 dark:bg-info-500 dark:hover:bg-info-400 dark:data-[preview]:bg-info-500",
     "hover":
@@ -105,9 +121,9 @@ export const colorProps: CalendarColor = {
   "error": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-error-100 bg-error-50 font-medium text-slate-600 shadow-xs dark:border-error-800 dark:bg-error-950/40 dark:text-dark-200",
+      "border border-error-100 bg-error-50 font-medium text-dark-600 shadow-xs dark:border-error-800 dark:bg-error-950/40 dark:text-dark-200",
     "selected":
       "bg-error-500 font-semibold text-white hover:bg-error-400 data-[preview]:bg-error-500 dark:bg-error-500 dark:hover:bg-error-400 dark:data-[preview]:bg-error-500",
     "hover":
@@ -116,9 +132,9 @@ export const colorProps: CalendarColor = {
   "primary": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-primary-100 bg-primary-50 font-medium text-slate-600 shadow-xs dark:border-primary-800 dark:bg-primary-950/40 dark:text-dark-200",
+      "border border-primary-100 bg-primary-50 font-medium text-dark-600 shadow-xs dark:border-primary-800 dark:bg-primary-950/40 dark:text-dark-200",
     "selected":
       "bg-primary-500 font-semibold text-white hover:bg-primary-400 data-[preview]:bg-primary-500 dark:bg-primary-500 dark:hover:bg-primary-400 dark:data-[preview]:bg-primary-500",
     "hover":
@@ -127,9 +143,9 @@ export const colorProps: CalendarColor = {
   "success": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-success-100 bg-success-50 font-medium text-slate-600 shadow-xs dark:border-success-800 dark:bg-success-950/40 dark:text-dark-200",
+      "border border-success-100 bg-success-50 font-medium text-dark-600 shadow-xs dark:border-success-800 dark:bg-success-950/40 dark:text-dark-200",
     "selected":
       "bg-success-500 font-semibold text-white hover:bg-success-400 data-[preview]:bg-success-500 dark:bg-success-500 dark:hover:bg-success-400 dark:data-[preview]:bg-success-500",
     "hover":
@@ -138,9 +154,9 @@ export const colorProps: CalendarColor = {
   "warning": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-warning-100 bg-warning-50 font-medium text-slate-600 shadow-xs dark:border-warning-800 dark:bg-warning-950/40 dark:text-dark-200",
+      "border border-warning-100 bg-warning-50 font-medium text-dark-600 shadow-xs dark:border-warning-800 dark:bg-warning-950/40 dark:text-dark-200",
     "selected":
       "bg-warning-500 font-semibold text-white hover:bg-warning-400 data-[preview]:bg-warning-500 dark:bg-warning-500 dark:hover:bg-warning-400 dark:data-[preview]:bg-warning-500",
     "hover":
@@ -149,9 +165,9 @@ export const colorProps: CalendarColor = {
   "secondary": {
     "base": "bg-transparent text-dark-700 dark:text-dark-100",
     "disabled":
-      "cursor-not-allowed border border-slate-200 bg-slate-200 opacity-50 dark:border-slate-700 dark:bg-slate-800",
+      "cursor-not-allowed border border-dark-200 bg-dark-200 opacity-50 dark:border-dark-700 dark:bg-dark-800",
     "soft":
-      "border border-secondary-100 bg-secondary-50 font-medium text-slate-600 shadow-xs dark:border-secondary-800 dark:bg-secondary-950/40 dark:text-dark-200",
+      "border border-secondary-100 bg-secondary-50 font-medium text-dark-600 shadow-xs dark:border-secondary-800 dark:bg-secondary-950/40 dark:text-dark-200",
     "selected":
       "bg-secondary-500 font-semibold text-white hover:bg-secondary-400 data-[preview]:bg-secondary-500 dark:bg-secondary-500 dark:hover:bg-secondary-400 dark:data-[preview]:bg-secondary-500",
     "hover":

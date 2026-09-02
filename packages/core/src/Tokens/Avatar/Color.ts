@@ -12,6 +12,11 @@ export interface AvatarColorItem {
 
 export interface AvatarColor {
   /**
+   * `black` high-contrast palette (black / white only).
+   */
+  "black": AvatarColorItem;
+
+  /**
    * `dark` semantic color palette.
    */
   "dark": AvatarColorItem;
@@ -48,6 +53,10 @@ export interface AvatarColor {
 }
 
 export const colorProps: AvatarColor = {
+  "black": {
+    "text": "text-white dark:text-black",
+    "background": "bg-black dark:bg-white",
+  },
   "dark": {
     "text": "text-dark-800 dark:text-dark-200",
     "background": "bg-dark-100 dark:bg-dark-800",

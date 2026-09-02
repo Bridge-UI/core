@@ -50,6 +50,14 @@ test("it should apply primary color when color is primary", () => {
   ).toBe(true);
 });
 
+test("it should apply black color when color is black", () => {
+  const { container } = render(<Divider color="black" />);
+
+  expect(container.querySelector("hr")?.classList.contains("bg-black")).toBe(
+    true,
+  );
+});
+
 test("it should expose separator role", () => {
   const { container } = render(<Divider />);
 
