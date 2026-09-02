@@ -42,17 +42,17 @@ test("it should expose first and last binds from useDataTablePagination", () => 
   const { result } = mountUseDataTablePagination({ count: 7 }, ref(2));
 
   expect(result.page.value).toBe(2);
-  expect(result.firstBind.value.disabled).toBe(false);
   expect(result.lastBind.value.disabled).toBe(false);
-  expect(result.prevBind.value.disabled).toBe(false);
   expect(result.nextBind.value.disabled).toBe(false);
+  expect(result.prevBind.value.disabled).toBe(false);
+  expect(result.firstBind.value.disabled).toBe(false);
 });
 
 test("it should disable first and previous on the first page", () => {
   const { result } = mountUseDataTablePagination({ count: 7 }, ref(1));
 
-  expect(result.firstBind.value.disabled).toBe(true);
   expect(result.prevBind.value.disabled).toBe(true);
+  expect(result.firstBind.value.disabled).toBe(true);
 });
 
 test("it should disable last and next on the last page", () => {

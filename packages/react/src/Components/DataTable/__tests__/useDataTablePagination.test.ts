@@ -22,10 +22,10 @@ test("it should expose first and last binds from useDataTablePagination", () => 
   );
 
   expect(result.current.page).toBe(2);
-  expect(result.current.firstBind.disabled).toBe(false);
   expect(result.current.lastBind.disabled).toBe(false);
-  expect(result.current.prevBind.disabled).toBe(false);
   expect(result.current.nextBind.disabled).toBe(false);
+  expect(result.current.prevBind.disabled).toBe(false);
+  expect(result.current.firstBind.disabled).toBe(false);
 });
 
 test("it should disable first and previous on the first page", () => {
@@ -33,8 +33,8 @@ test("it should disable first and previous on the first page", () => {
     useDataTablePagination({ page: 1, count: 7 }, libDefaults),
   );
 
-  expect(result.current.firstBind.disabled).toBe(true);
   expect(result.current.prevBind.disabled).toBe(true);
+  expect(result.current.firstBind.disabled).toBe(true);
 });
 
 test("it should disable last and next on the last page", () => {

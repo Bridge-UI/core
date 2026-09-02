@@ -145,7 +145,7 @@ export function useDataTablePagination(
 
   const goLast = useCallback(() => {
     setPage(merged.count ?? 1);
-  }, [merged.count, setPage]);
+  }, [setPage, merged.count]);
 
   const prevDisabled = derived(() => {
     return merged.disabled || page <= 1;
