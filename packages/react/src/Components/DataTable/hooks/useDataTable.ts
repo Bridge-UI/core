@@ -49,11 +49,13 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
+  getDataTableFooterLayout,
   getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
+  getDataTableSelectionTotal,
   getDataTableSortIcon,
   getDataTableStickyInsets,
   getDataTableStickyPing,
@@ -88,6 +90,7 @@ import {
   type DataTableFilterOption,
   type DataTablePaginationSlotProps,
   type DataTablePerPageSlotProps,
+  type DataTableSelectedSlotProps,
   type DataTableStickyEdge,
   type DataTableStickyInset,
 } from "@bridge-ui/core/Domain";
@@ -788,6 +791,10 @@ export function useDataTable<T>(
     );
   });
 
+  const showSelected = derived(() => {
+    return selectionEnabled;
+  });
+
   const showPerPage = derived(() => {
     return isDataTablePerPageEnabled(
       merged.perPage,
@@ -811,6 +818,14 @@ export function useDataTable<T>(
     merged.totalCount,
     searchedRows.length,
   ]);
+
+  const showPager = derived(() => {
+    return Boolean(slots?.pagination) || resolvedPageCount !== undefined;
+  });
+
+  const showFooterBar = derived(() => {
+    return showSelected || showPagination;
+  });
 
   const showEmpty = derived(() => {
     return rowViews.length === 0;
@@ -1142,6 +1157,28 @@ export function useDataTable<T>(
     );
   }, [customProps?.footer, merged.full, mergedClasses]);
 
+  const selectedBind = useMemo(() => {
+    return mergePartBind(
+      customProps?.selected,
+      {},
+      {
+        className: cn({
+          "min-w-0 flex-1 text-sm text-dark-500 dark:text-dark-400": true,
+          [get(mergedClasses, "selected") ?? ""]: true,
+        }),
+      },
+    );
+  }, [customProps?.selected, mergedClasses]);
+
+  const footerLayout = useMemo(() => {
+    return getDataTableFooterLayout({
+      showPager,
+      showPerPage,
+      showSelected,
+      inline: paginationInline,
+    });
+  }, [paginationInline, showPager, showPerPage, showSelected]);
+
   const paginationBind = useMemo(() => {
     return mergePartBind(
       {},
@@ -1150,23 +1187,19 @@ export function useDataTable<T>(
         ref: setPaginationEl,
         className: cn({
           "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
-          "flex-col justify-center": showPerPage && !paginationInline,
-          "flex-row": !showPerPage || paginationInline,
-          "justify-end": !showPerPage,
-          "justify-between": showPerPage && paginationInline,
+          "flex-col": footerLayout.stack,
+          "flex-row": !footerLayout.stack,
+          "justify-center": footerLayout.justify === "center",
+          "justify-end": footerLayout.justify === "end",
+          "justify-between": footerLayout.justify === "between",
+          "justify-start": footerLayout.justify === "start",
           "w-full": merged.full !== false,
           "w-0 min-w-full": merged.full === false,
           [get(mergedClasses, "pagination") ?? ""]: true,
         }),
       },
     );
-  }, [
-    merged.full,
-    showPerPage,
-    mergedClasses,
-    setPaginationEl,
-    paginationInline,
-  ]);
+  }, [merged.full, mergedClasses, footerLayout, setPaginationEl]);
 
   const summaryCells = useMemo((): null | DataTableCellView[] => {
     const hasSummary = columns.some((column) => {
@@ -1295,6 +1328,16 @@ export function useDataTable<T>(
     };
   }, [merged.page, paginationVariant, resolvedPageCount]);
 
+  const selectedSlotProps = useMemo((): DataTableSelectedSlotProps => {
+    return {
+      selectedCount: selectionIds.length,
+      totalCount: getDataTableSelectionTotal({
+        totalCount: merged.totalCount,
+        filteredCount: searchedRows.length,
+      }),
+    };
+  }, [merged.totalCount, searchedRows.length, selectionIds]);
+
   const perPageSlotProps = useMemo((): DataTablePerPageSlotProps => {
     return {
       perPage: resolvedPerPage,
@@ -1371,6 +1414,7 @@ export function useDataTable<T>(
     emptyBind,
     showEmpty,
     frameBind,
+    showPager,
     tableProps,
     footerBind,
     showSearch,
@@ -1385,11 +1429,14 @@ export function useDataTable<T>(
     serverPaged,
     showPerPage,
     showToolbar,
+    selectedBind,
+    showSelected,
     getHeadAlign,
     getCellAlign,
     onTogglePage,
     onToggleSort,
     summaryCells,
+    showFooterBar,
     expandEnabled,
     onChangeSearch,
     loadingBarBind,
@@ -1402,6 +1449,7 @@ export function useDataTable<T>(
     resolvedPerPage,
     selectionEnabled,
     perPageSlotProps,
+    selectedSlotProps,
     paginationVariant,
     resolvedPageCount,
     selectionMultiple,

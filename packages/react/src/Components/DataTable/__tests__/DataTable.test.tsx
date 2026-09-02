@@ -161,6 +161,20 @@ test("it should set aria-sort when sorting is controlled", () => {
   ).toBe("descending");
 });
 
+test("it should show the selection summary in the footer", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      selection={["1"]}
+      getRowId={(row) => row.id}
+      onSelectionChange={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByText("1 of 2 row(s) selected.")).toBeTruthy();
+});
+
 test("it should toggle row selection", () => {
   const onSelectionChange = vi.fn();
 
@@ -192,7 +206,13 @@ test("it should render built-in pagination when page and pageCount are set", () 
     />,
   );
 
-  fireEvent.click(screen.getByRole("button", { name: "Page 2" }));
+  expect(screen.getByRole("button", { name: "First page" })).toHaveProperty(
+    "disabled",
+    true,
+  );
+  expect(screen.queryByRole("button", { name: /Page / })).toBeNull();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
   expect(onPageChange).toHaveBeenCalledWith(2);
 });
@@ -228,9 +248,7 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
     />,
   );
 
-  fireEvent.click(screen.getByRole("button", { name: "Page 2" }));
-
-  expect(onPageChange).toHaveBeenCalledWith(2);
+  expect(screen.getByRole("button", { name: "Next" })).toBeTruthy();
   expect(screen.getByRole("combobox")).toBeTruthy();
 });
 
@@ -261,7 +279,8 @@ test("it should render a custom perPage slot beside pagination", () => {
   );
 
   expect(screen.getByText("Page size")).toBeTruthy();
-  expect(screen.getByRole("button", { name: "Page 2" })).toBeTruthy();
+  expect(screen.getByText("Page 1 of 2")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Next" })).toBeTruthy();
   expect(screen.queryByRole("combobox")).toBeNull();
 });
 
@@ -1087,10 +1106,12 @@ test("it should call onPerPageChange from the built-in Select", async () => {
   expect(onPerPageChange).toHaveBeenCalledWith(25);
 });
 
-test("it should mark the controlled page as current", () => {
+test("it should show the current page in the footer status", () => {
   render(<DataTable page={2} rows={rows} pageCount={3} columns={columns} />);
 
-  expect(
-    screen.getByRole("button", { name: "Page 2" }).getAttribute("aria-current"),
-  ).toBe("page");
+  expect(screen.getByText("Page 2 of 3")).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Previous" })).toHaveProperty(
+    "disabled",
+    false,
+  );
 });

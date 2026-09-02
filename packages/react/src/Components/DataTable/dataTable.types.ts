@@ -12,6 +12,7 @@ import type {
   DataTableLoadingVariant,
   DataTablePaginationSlotProps,
   DataTablePerPageSlotProps,
+  DataTableSelectedSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -28,7 +29,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { CheckboxProps } from "@/Components/Checkbox/checkbox.types";
-import type { PaginationProps } from "@/Components/Pagination/pagination.types";
+import type { DataTablePaginationProps } from "@/Components/DataTable/dataTablePagination.types";
 import type { ProgressProps } from "@/Components/Progress/progress.types";
 import type { RadioProps } from "@/Components/Radio/radio.types";
 import type { SelectProps } from "@/Components/Select/select.types";
@@ -50,6 +51,7 @@ export type {
   DataTableLoadingVariant,
   DataTablePaginationSlotProps,
   DataTablePerPageSlotProps,
+  DataTableSelectedSlotProps,
   DataTableSelectionMode,
   DataTableSorting,
   DataTableStickyEdge,
@@ -213,6 +215,11 @@ export interface DataTableClasses {
   search?: string;
 
   /**
+   * Classes merged onto the selection summary in the chrome footer.
+   */
+  selected?: string;
+
+  /**
    * Classes merged onto the `<table>` element.
    */
   table?: string;
@@ -288,11 +295,13 @@ export interface DataTableCustomProps {
   loading?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Extra props for the built-in `Pagination`.
+   * Extra props for the built-in `DataTablePagination`.
    *
    * @default undefined
    */
-  pagination?: Partial<Omit<PaginationProps, "page" | "count" | "onChange">>;
+  pagination?: Partial<
+    Omit<DataTablePaginationProps, "page" | "count" | "onChange">
+  >;
 
   /**
    * Extra props for the built-in per-page `Select`.
@@ -335,6 +344,13 @@ export interface DataTableCustomProps {
    * @default undefined
    */
   search?: Partial<Omit<TextFieldProps, "value" | "onChange">>;
+
+  /**
+   * Props forwarded to the selection summary in the chrome footer.
+   *
+   * @default undefined
+   */
+  selected?: HTMLAttributes<HTMLDivElement>;
 
   /**
    * Props forwarded to the `<table>` element.
@@ -548,7 +564,7 @@ export interface DataTableOwnProps<T> {
 
   /**
    * `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`,
-   * `search`, `toolbar`, and `toolbarActions` regions.
+   * `search`, `selected`, `toolbar`, and `toolbarActions` regions.
    *
    * @default undefined
    */
@@ -585,7 +601,8 @@ export interface DataTableOwnProps<T> {
   totalCount?: number;
 
   /**
-   * Chrome treatment. Built-in Pagination follows the matching variant.
+   * Chrome treatment. `paginationSlotProps.variant` follows the table variant
+   * when the `pagination` slot renders numbered Pagination.
    *
    * @default "plain"
    */
@@ -604,7 +621,7 @@ export interface DataTableSlots<T = unknown> {
   expanded?: (row: T) => ReactNode;
 
   /**
-   * Region below the table, above pagination.
+   * Region below the table, above the chrome footer.
    */
   footer?: ReactNode;
 
@@ -622,8 +639,8 @@ export interface DataTableSlots<T = unknown> {
   loading?: ReactNode;
 
   /**
-   * Replaces the built-in numbered Pagination (no auto variant). A function
-   * receives page / count / `onPageChange`.
+   * Replaces the built-in DataTablePagination. A function receives page /
+   * count / `onPageChange`.
    */
   pagination?: ReactNode | ((props: DataTablePaginationSlotProps) => ReactNode);
 
@@ -637,6 +654,12 @@ export interface DataTableSlots<T = unknown> {
    * Replaces the toolbar search field.
    */
   search?: ReactNode;
+
+  /**
+   * Replaces the selection summary (`selected of total`). A function receives
+   * `selectedCount` / `totalCount`.
+   */
+  selected?: ReactNode | ((props: DataTableSelectedSlotProps) => ReactNode);
 
   /**
    * Leading toolbar region (left of Columns / Search).

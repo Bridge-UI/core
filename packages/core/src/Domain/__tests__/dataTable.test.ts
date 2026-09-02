@@ -21,6 +21,7 @@ import {
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
+  getDataTableFooterLayout,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
   getDataTablePaginationVariant,
@@ -30,6 +31,7 @@ import {
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
+  getDataTableSelectionTotal,
   getDataTableSortIcon,
   getDataTableSortLabel,
   getDataTableStickyInsets,
@@ -75,6 +77,50 @@ describe("getDataTablePaginationVariant", () => {
     expect(getDataTablePaginationVariant(undefined)).toBe("text");
     expect(getDataTablePaginationVariant("bordered")).toBe("outlined");
     expect(DATATABLE_PAGINATION_VARIANT.plain).toBe("text");
+  });
+});
+
+describe("getDataTableFooterLayout", () => {
+  test("it should stack clusters when they do not fit on one row", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: false,
+        showPager: true,
+        showPerPage: true,
+        showSelected: false,
+      }),
+    ).toEqual({ stack: true, justify: "center" });
+  });
+
+  test("it should pin a single pager cluster to the end", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: true,
+        showPager: true,
+        showPerPage: false,
+        showSelected: false,
+      }),
+    ).toEqual({ stack: false, justify: "end" });
+  });
+
+  test("it should spread selected and controls when they fit", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: true,
+        showPager: true,
+        showPerPage: true,
+        showSelected: true,
+      }),
+    ).toEqual({ stack: false, justify: "between" });
+  });
+});
+
+describe("getDataTableSelectionTotal", () => {
+  test("it should prefer totalCount over the filtered count", () => {
+    expect(
+      getDataTableSelectionTotal({ totalCount: 68, filteredCount: 10 }),
+    ).toBe(68);
+    expect(getDataTableSelectionTotal({ filteredCount: 10 })).toBe(10);
   });
 });
 

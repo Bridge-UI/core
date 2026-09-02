@@ -8,6 +8,8 @@
 import {
   PhBell,
   PhCalendarDots,
+  PhCaretDoubleLeft,
+  PhCaretDoubleRight,
   PhCaretDown,
   PhCaretLeft,
   PhCaretRight,
@@ -69,6 +71,8 @@ const icons = {
   download: PhDownloadSimple,
   chevronRight: PhCaretRight,
   chevronUpDown: PhCaretUpDown,
+  chevronsLeft: PhCaretDoubleLeft,
+  chevronsRight: PhCaretDoubleRight,
 } satisfies Record<SemanticIconName, unknown>;
 
 /**

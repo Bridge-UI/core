@@ -218,7 +218,7 @@ export interface PaginationOwnProps {
   hidePrevButton?: boolean;
 
   /**
-   * Numbered pages vs prev/next only.
+   * Numbered pages, or prev/next only.
    *
    * @default "numbered"
    */

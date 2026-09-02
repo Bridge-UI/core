@@ -8,6 +8,8 @@
 import {
   BellIcon,
   CalendarDotsIcon,
+  CaretDoubleLeftIcon,
+  CaretDoubleRightIcon,
   CaretDownIcon,
   CaretLeftIcon,
   CaretRightIcon,
@@ -69,6 +71,8 @@ const icons = {
   download: DownloadSimpleIcon,
   chevronRight: CaretRightIcon,
   chevronUpDown: CaretUpDownIcon,
+  chevronsLeft: CaretDoubleLeftIcon,
+  chevronsRight: CaretDoubleRightIcon,
 } satisfies Record<SemanticIconName, unknown>;
 
 /**

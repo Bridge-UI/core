@@ -54,6 +54,17 @@ export const DATATABLE_PAGINATION_VARIANT = {
   bordered: "outlined",
 } as const;
 
+/**
+ * Ringed square controls for DataTablePagination.
+ */
+export const DATATABLE_PAGINATION_ITEM_CLASS =
+  "ring-1 ring-inset ring-dark-300 text-dark-700 hover:bg-dark-500/5 dark:ring-dark-600 dark:text-dark-200 dark:hover:bg-dark-500/10";
+
+/**
+ * Isolated icon-button list spacing for DataTablePagination.
+ */
+export const DATATABLE_PAGINATION_LIST_CLASS = "gap-2";
+
 /** Default page size options for the built-in per-page Select. */
 export const DATATABLE_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const;
 
@@ -312,6 +323,66 @@ export function getDataTablePaginationVariant(
   tableVariant: string | undefined,
 ): DataTablePaginationVariant {
   return get(DATATABLE_PAGINATION_VARIANT, tableVariant ?? "plain") ?? "text";
+}
+
+/**
+ * Footer bar layout for selection / per-page / pager clusters.
+ */
+export type DataTableFooterLayout = {
+  /**
+   * `justify-*` alignment while clusters share a row (or when stacking).
+   */
+  justify: "end" | "start" | "center" | "between";
+
+  /**
+   * Whether footer clusters stack on separate rows.
+   */
+  stack: boolean;
+};
+
+/**
+ * Resolves flex alignment for the DataTable chrome footer.
+ */
+export function getDataTableFooterLayout(input: {
+  inline: boolean;
+  showPager: boolean;
+  showPerPage: boolean;
+  showSelected: boolean;
+}): DataTableFooterLayout {
+  const clusterCount =
+    Number(input.showSelected) +
+    Number(input.showPerPage) +
+    Number(input.showPager);
+  const stack = clusterCount >= 2 && !input.inline;
+
+  if (stack) {
+    return { stack: true, justify: "center" };
+  }
+
+  if (clusterCount >= 2) {
+    return { stack: false, justify: "between" };
+  }
+
+  if (input.showSelected) {
+    return { stack: false, justify: "start" };
+  }
+
+  return { stack: false, justify: "end" };
+}
+
+/**
+ * Total used in the selection summary (`selected of total`).
+ * Prefers `totalCount` (server), otherwise the filtered row count.
+ */
+export function getDataTableSelectionTotal(input: {
+  filteredCount: number;
+  totalCount?: number;
+}): number {
+  if (!isNil(input.totalCount)) {
+    return input.totalCount;
+  }
+
+  return input.filteredCount;
 }
 
 /**
@@ -596,11 +667,11 @@ export function sliceDataTablePage<T>(
 }
 
 /**
- * Slot props for the built-in numbered Pagination (or a custom `pagination` slot).
+ * Slot props for the built-in DataTablePagination (or a custom `pagination` slot).
  */
 export type DataTablePaginationSlotProps = {
   /**
-   * Total pages (`Pagination` `count`).
+   * Total pages (`DataTablePagination` `count`).
    */
   count: number;
 
@@ -638,6 +709,21 @@ export type DataTablePerPageSlotProps = {
    * Current page size.
    */
   perPage: number;
+};
+
+/**
+ * Slot props for the built-in selection summary (or a custom `selected` slot).
+ */
+export type DataTableSelectedSlotProps = {
+  /**
+   * Number of selected row ids.
+   */
+  selectedCount: number;
+
+  /**
+   * Dataset size used in the summary (`totalCount` or filtered rows).
+   */
+  totalCount: number;
 };
 
 /**
