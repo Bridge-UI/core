@@ -14,6 +14,7 @@ import type {
 } from "@/Components/DataTable/dataTable.types";
 import { DataTableColumnsMenu } from "@/Components/DataTable/DataTableColumnsMenu";
 import { DataTableFilterMenu } from "@/Components/DataTable/DataTableFilterMenu";
+import DataTablePagination from "@/Components/DataTable/DataTablePagination";
 import { DataTableSearch } from "@/Components/DataTable/DataTableSearch";
 import { DataTableSelection } from "@/Components/DataTable/DataTableSelection";
 import { DataTableSortButton } from "@/Components/DataTable/DataTableSortButton";
@@ -24,7 +25,6 @@ import {
 } from "@/Components/DataTable/hooks/useDataTable";
 import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
-import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
 import { Select } from "@/Components/Select";
 import {
@@ -135,10 +135,12 @@ function DataTableCellContent({
 }
 
 function DataTableLoadingSpin() {
+  const resolveMessage = useResolveMessage();
+
   return (
     <span
       role="status"
-      aria-label="Loading"
+      aria-label={resolveMessage("Loading")}
       className="relative inline-block size-5 animate-spin motion-reduce:animate-none"
     >
       <span className="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400" />
@@ -330,12 +332,14 @@ const DataTableExpandCell = memo(function DataTableExpandCell({
   onToggleExpand: (rowId: string, expanded: boolean) => void;
   rowId: string;
 }) {
+  const resolveMessage = useResolveMessage();
+
   return (
     <TableCell align={getCellAlign(cell)} {...getCellBind(cell)}>
       <button
         type="button"
-        aria-label="Expand row"
         aria-expanded={expanded}
+        aria-label={resolveMessage("Expand row")}
         onClick={() => {
           onToggleExpand(rowId, !expanded);
         }}
@@ -363,6 +367,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     emptyBind,
     showEmpty,
     frameBind,
+    showPager,
     tableProps,
     footerBind,
     loadingBar,
@@ -376,20 +381,23 @@ function DataTable<T>(props: DataTableProps<T>) {
     columnCount,
     showPerPage,
     showToolbar,
+    selectedBind,
+    showSelected,
     getHeadAlign,
     getCellAlign,
     onTogglePage,
     onToggleSort,
     summaryCells,
+    showFooterBar,
     expandEnabled,
     loadingBarBind,
     paginationBind,
     selectAllState,
-    showPagination,
     onChangeSearch,
     onToggleExpand,
     visibilityItems,
     perPageSlotProps,
+    selectedSlotProps,
     resolvedPageCount,
     selectionMultiple,
     visibilityEnabled,
@@ -402,6 +410,18 @@ function DataTable<T>(props: DataTableProps<T>) {
   const resolveMessage = useResolveMessage();
   const perPageCustom = merged.customProps?.perPage;
   const checkboxSize = merged.size === "lg" ? "md" : "sm";
+  const selectionSummary = resolveMessage(
+    "{{selected}} of {{total}} row(s) selected.",
+    selectedSlotProps.selectedCount,
+    {
+      total: selectedSlotProps.totalCount,
+      selected: selectedSlotProps.selectedCount,
+    },
+  );
+  const pageStatus = resolveMessage("Page {{page}} of {{count}}", {
+    page: paginationSlotProps.page,
+    count: paginationSlotProps.count,
+  });
 
   return (
     <div {...rootBind}>
@@ -618,21 +638,29 @@ function DataTable<T>(props: DataTableProps<T>) {
           <div {...footerBind}>{slots?.footer}</div>
         ) : null}
 
-        {showPagination ? (
+        {showFooterBar ? (
           <div {...paginationBind}>
+            {showSelected
+              ? renderDataTableSlot(
+                  slots?.selected,
+                  selectedSlotProps,
+                  <div {...selectedBind}>{selectionSummary}</div>,
+                )
+              : null}
+
             {showPerPage
               ? renderDataTableSlot(
                   slots?.perPage,
                   perPageSlotProps,
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400">
-                      {resolveMessage("Per page:")}
+                    <span className="text-sm whitespace-nowrap">
+                      {resolveMessage("Rows per page")}
                     </span>
                     <Select
                       size="sm"
                       hideErrorMessage
                       clearable={false}
-                      aria-label="Per page"
+                      aria-label={resolveMessage("Rows per page")}
                       {...perPageCustom}
                       overlay="menu"
                       value={perPageSlotProps.perPage}
@@ -672,19 +700,30 @@ function DataTable<T>(props: DataTableProps<T>) {
                 )
               : null}
 
-            {renderDataTableSlot(
-              slots?.pagination,
-              paginationSlotProps,
-              resolvedPageCount !== undefined ? (
-                <Pagination
-                  page={paginationSlotProps.page}
-                  count={paginationSlotProps.count}
-                  variant={paginationSlotProps.variant}
-                  {...merged.customProps?.pagination}
-                  onChange={paginationSlotProps.onPageChange}
-                />
-              ) : null,
-            )}
+            {showPager ? (
+              <div className="flex shrink-0 items-center gap-3">
+                {resolvedPageCount !== undefined &&
+                !hasNamedSlot(slots, "pagination") ? (
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {pageStatus}
+                  </span>
+                ) : null}
+
+                {renderDataTableSlot(
+                  slots?.pagination,
+                  paginationSlotProps,
+                  resolvedPageCount !== undefined ? (
+                    <DataTablePagination
+                      size="sm"
+                      page={paginationSlotProps.page}
+                      count={paginationSlotProps.count}
+                      {...merged.customProps?.pagination}
+                      onChange={paginationSlotProps.onPageChange}
+                    />
+                  ) : null,
+                )}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

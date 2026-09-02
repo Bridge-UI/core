@@ -46,11 +46,12 @@ import {
   getDataTableColumnFilterValues,
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
-  getDataTablePaginationVariant,
+  getDataTableFooterLayout,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
+  getDataTableSelectionTotal,
   getDataTableSortIcon,
   getDataTableStickyInsets,
   getDataTableStickyPing,
@@ -87,6 +88,7 @@ import {
   type DataTableFilters,
   type DataTablePaginationSlotProps,
   type DataTablePerPageSlotProps,
+  type DataTableSelectedSlotProps,
   type DataTableSorting,
   type DataTableStickyEdge,
   type DataTableStickyInset,
@@ -687,15 +689,6 @@ export function useDataTable<T>(
     return headerViews.value.length;
   });
 
-  const showPagination = computed(() => {
-    return (
-      Boolean(vueSlots.pagination) ||
-      Boolean(vueSlots.perPage) ||
-      serverPaged.value ||
-      clientPaged.value
-    );
-  });
-
   const showPerPage = computed(() => {
     return isDataTablePerPageEnabled(
       models.perPage.value,
@@ -714,12 +707,22 @@ export function useDataTable<T>(
     });
   });
 
-  const showEmpty = computed(() => {
-    return rowViews.value.length === 0;
+  const showSelected = computed(() => {
+    return selectionEnabled.value;
   });
 
-  const paginationVariant = computed(() => {
-    return getDataTablePaginationVariant(merged.value.variant);
+  const showPager = computed(() => {
+    return (
+      Boolean(vueSlots.pagination) || resolvedPageCount.value !== undefined
+    );
+  });
+
+  const showFooterBar = computed(() => {
+    return showSelected.value || showPager.value || showPerPage.value;
+  });
+
+  const showEmpty = computed(() => {
+    return rowViews.value.length === 0;
   });
 
   const rootBind = computed(() => {
@@ -1064,6 +1067,29 @@ export function useDataTable<T>(
     );
   });
 
+  const footerLayout = computed(() => {
+    return getDataTableFooterLayout({
+      showPager: showPager.value,
+      showPerPage: showPerPage.value,
+      inline: paginationInline.value,
+      showSelected: showSelected.value,
+    });
+  });
+
+  const selectedBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.selected,
+      {},
+      {
+        class: cn({
+          grow: !footerLayout.value.stack,
+          "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
+          [get(mergedClasses.value, "selected") ?? ""]: true,
+        }),
+      },
+    );
+  });
+
   const paginationBind = computed(() => {
     return mergePartBind(
       {},
@@ -1073,11 +1099,12 @@ export function useDataTable<T>(
         onVnodeUnmounted: onPaginationUnmounted,
         class: cn({
           "flex items-center gap-3 py-3 [&>*]:shrink-0": true,
-          "flex-col justify-center":
-            showPerPage.value && !paginationInline.value,
-          "flex-row": !showPerPage.value || paginationInline.value,
-          "justify-end": !showPerPage.value,
-          "justify-between": showPerPage.value && paginationInline.value,
+          "flex-col": footerLayout.value.stack,
+          "flex-row": !footerLayout.value.stack,
+          "justify-center": footerLayout.value.justify === "center",
+          "justify-end": footerLayout.value.justify === "end",
+          "justify-between": footerLayout.value.justify === "between",
+          "justify-start": footerLayout.value.justify === "start",
           "w-full": merged.value.full !== false,
           "w-0 min-w-full": merged.value.full === false,
           [get(mergedClasses.value, "pagination") ?? ""]: true,
@@ -1121,7 +1148,6 @@ export function useDataTable<T>(
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
     return {
       page: models.page.value ?? 1,
-      variant: paginationVariant.value,
       count: resolvedPageCount.value ?? 1,
       onPageChange: (nextPage) => {
         models.page.value = nextPage;
@@ -1137,6 +1163,16 @@ export function useDataTable<T>(
         resolvedPerPage.value,
         merged.value.perPageOptions,
       ),
+    };
+  });
+
+  const selectedSlotProps = computed((): DataTableSelectedSlotProps => {
+    return {
+      selectedCount: (models.selection.value ?? []).length,
+      totalCount: getDataTableSelectionTotal({
+        totalCount: merged.value.totalCount,
+        filteredCount: searchedRows.value.length,
+      }),
     };
   });
 
@@ -1270,6 +1306,7 @@ export function useDataTable<T>(
     emptyBind,
     showEmpty,
     frameBind,
+    showPager,
     tableProps,
     footerBind,
     showSearch,
@@ -1284,24 +1321,26 @@ export function useDataTable<T>(
     serverPaged,
     showPerPage,
     showToolbar,
+    selectedBind,
+    showSelected,
     getHeadAlign,
     getCellAlign,
     onTogglePage,
     onToggleSort,
     summaryCells,
+    showFooterBar,
     expandEnabled,
     onChangeSearch,
     loadingBarBind,
     paginationBind,
     selectAllState,
-    showPagination,
     onToggleExpand,
     visibilityItems,
     onChangePerPage,
     resolvedPerPage,
     selectionEnabled,
     perPageSlotProps,
-    paginationVariant,
+    selectedSlotProps,
     resolvedPageCount,
     selectionMultiple,
     visibilityEnabled,

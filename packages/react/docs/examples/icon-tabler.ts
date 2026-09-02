@@ -14,6 +14,8 @@ import {
   IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
   IconChevronUp,
   IconCircleCheck,
   IconCircleX,
@@ -69,6 +71,8 @@ const icons = {
   chevronDown: IconChevronDown,
   chevronLeft: IconChevronLeft,
   chevronRight: IconChevronRight,
+  chevronsLeft: IconChevronsLeft,
+  chevronsRight: IconChevronsRight,
 } satisfies Record<SemanticIconName, unknown>;
 
 /**

@@ -10,6 +10,8 @@
 // ** External Imports
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
+  faAnglesLeft,
+  faAnglesRight,
   faBell,
   faCalendarDays,
   faCheck,
@@ -117,7 +119,9 @@ const icons = {
   alert: faCircleExclamation,
   chevronDown: faChevronDown,
   chevronLeft: faChevronLeft,
+  chevronsLeft: faAnglesLeft,
   chevronRight: faChevronRight,
+  chevronsRight: faAnglesRight,
   warning: faTriangleExclamation,
 } satisfies Record<SemanticIconName, unknown>;
 

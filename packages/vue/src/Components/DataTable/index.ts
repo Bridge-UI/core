@@ -16,6 +16,7 @@ export type {
   DataTablePaginationSlotProps,
   DataTablePerPageSlotProps,
   DataTableProps,
+  DataTableSelectedSlotProps,
   DataTableSelectionMode,
   DataTableSlots,
   DataTableSorting,
@@ -23,3 +24,11 @@ export type {
   DataTableStickyHeader,
 } from "@/Components/DataTable/dataTable.types";
 export { default as DataTable } from "@/Components/DataTable/DataTable.vue";
+export type {
+  DataTablePaginationClasses,
+  DataTablePaginationCustomProps,
+  DataTablePaginationEmits,
+  DataTablePaginationOwnProps,
+  DataTablePaginationProps,
+  DataTablePaginationSlots,
+} from "@/Components/DataTable/dataTablePagination.types";

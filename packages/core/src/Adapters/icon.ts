@@ -41,6 +41,8 @@ export const SEMANTIC_ICON_NAMES = [
   "chevronDown",
   "chevronLeft",
   "chevronRight",
+  "chevronsLeft",
+  "chevronsRight",
   "chevronUpDown",
 ] as const;
 

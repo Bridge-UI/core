@@ -39,7 +39,13 @@ export function useI18nAdapter(): ComputedRef<undefined | I18nAdapter> {
 export function useResolveMessage() {
   const i18n = useI18nAdapter();
 
-  return (message: string, params?: MessageParams) => {
-    return resolveMessage(message, i18n.value, params);
-  };
+  function resolve(
+    message: string,
+    countOrParams?: number | MessageParams,
+    params?: MessageParams,
+  ): string {
+    return resolveMessage(message, i18n.value, countOrParams, params);
+  }
+
+  return resolve;
 }

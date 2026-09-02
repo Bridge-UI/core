@@ -75,7 +75,7 @@ test("it should show the toolbar search field", () => {
   cy.get('input[aria-label="Search"]').should("be.visible");
 });
 
-test("it should mark the current page in the pager", () => {
+test("it should mark the current page in the footer status", () => {
   cy.mount(
     <DataTable
       page={2}
@@ -85,7 +85,7 @@ test("it should mark the current page in the pager", () => {
     />,
   );
 
-  cy.get("button[aria-current='page']").should("contain", "2");
+  cy.contains("Page 2 of 3").should("be.visible");
 });
 
 test("it should set aria-sort on a sorted column", () => {
@@ -129,7 +129,9 @@ test("it should stack per-page and pagination when they overflow", () => {
     />,
   );
 
-  cy.contains("Per page:").closest(".gap-3").should("have.class", "flex-col");
+  cy.contains("Rows per page")
+    .closest(".gap-3")
+    .should("have.class", "flex-col");
 });
 
 test("it should keep per-page and pagination inline when they fit", () => {
@@ -144,7 +146,7 @@ test("it should keep per-page and pagination inline when they fit", () => {
     />,
   );
 
-  cy.contains("Per page:")
+  cy.contains("Rows per page")
     .closest(".gap-3")
     .should("have.class", "flex-row")
     .and("have.class", "justify-between");

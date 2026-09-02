@@ -26,19 +26,13 @@ import { DataTable } from "@bridge-ui/vue/Components/DataTable";
 
 ### Variants
 
-DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows the matching variant unless the `pagination` slot overrides it:
+DataTable chrome (`plain` / `ghost` / `bordered`). The built-in footer pager is first / previous / next / last and does not follow table variant:
 
 ```vue
 <DataTable :rows="users" variant="plain" :columns="columns" />
 <DataTable :rows="users" variant="ghost" :columns="columns" />
 <DataTable :rows="users" variant="bordered" :columns="columns" />
 ```
-
-| DataTable `variant` | Pagination `variant` |
-| ------------------- | -------------------- |
-| `plain`             | `text`               |
-| `ghost`             | `ghost`              |
-| `bordered`          | `outlined`           |
 
 `striped` is independent of variant:
 
@@ -66,7 +60,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 
 ### Selection + pagination
 
-Built-in Pagination when `page` is set with `page-count` or `total-count` (server fetch stays in the app). `page` + `per-page` without those totals slices `rows` locally. `per-page` also renders a Select (`per-page-options`, default 10 / 25 / 50 / 100). `#pagination` and `#perPage` replace each control:
+The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `per-page` is set (`per-page-options`, default 10 / 25 / 50 / 100), and a first / previous / next / last pager when `page` is set with `page-count` or `total-count` (server fetch stays in the app). `page` + `per-page` without those totals slices `rows` locally. `#selected`, `#pagination`, and `#perPage` replace each control:
 
 ```vue
 <DataTable
@@ -98,7 +92,7 @@ Client paging slices `rows`. Server paging with a total uses `total-count` inste
 />
 ```
 
-Slot replaces the built-in Pagination and/or per-page Select (`#pagination` / `#perPage`; slot props match the built-ins):
+Slot replaces the built-in footer controls (`#selected` / `#pagination` / `#perPage`; slot props match the built-ins):
 
 ```vue
 <DataTable :rows="users" :columns="columns" :get-row-id="(row) => row.id">
@@ -141,7 +135,7 @@ When `page` and `page-count` (or `total-count`) are set, DataTable does not sort
 
 ### Empty, loading, and footer
 
-Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above pagination:
+Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `#empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `#loading` replaces the indicator. `#footer` renders below the table, above the chrome footer:
 
 ```vue
 <DataTable :rows="[]" :columns="columns" :loading="isLoading">
@@ -180,7 +174,7 @@ const columns = [
 ];
 ```
 
-Table-level slots stay `empty` / `expanded` / `footer` / `item.{id}` / `item` / `loading` / `pagination` / `perPage` / `search` / `toolbar` / `toolbarActions`. `#item` is a catch-all when `#item.{id}` is not set.
+Table-level slots stay `empty` / `expanded` / `footer` / `item.{id}` / `item` / `loading` / `pagination` / `perPage` / `search` / `selected` / `toolbar` / `toolbarActions`. `#item` is a catch-all when `#item.{id}` is not set.
 
 ### Selection
 

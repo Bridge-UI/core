@@ -171,6 +171,32 @@ test("it should set aria-sort when sorting is controlled", () => {
   );
 });
 
+test("it should show the selection summary in the footer", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      selection: ["1"],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  expect(wrapper.text()).toContain("1 of 2 row(s) selected.");
+});
+
+test("it should pluralize the selection summary", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      selection: ["1", "2"],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  expect(wrapper.text()).toContain("2 of 2 row(s) selected.");
+});
+
 test("it should emit update:selection when a row is selected", async () => {
   const wrapper = mountDataTable({
     props: {
@@ -200,7 +226,12 @@ test("it should emit update:page when a page button is clicked", async () => {
     },
   });
 
-  await wrapper.find("button[aria-label='Page 2']").trigger("click");
+  expect(
+    wrapper.find("button[aria-label='First page']").attributes("disabled"),
+  ).toBeDefined();
+  expect(wrapper.find("button[aria-label^='Page ']").exists()).toBe(false);
+
+  await wrapper.find("button[aria-label='Next']").trigger("click");
 
   expect(wrapper.emitted("update:page")?.[0]).toEqual([2]);
 });
@@ -233,7 +264,7 @@ test("it should paginate from totalCount when pageCount is omitted", () => {
     },
   });
 
-  expect(wrapper.find("button[aria-label='Page 2']").exists()).toBe(true);
+  expect(wrapper.find("button[aria-label='Next']").exists()).toBe(true);
   expect(wrapper.find('[role="combobox"]').exists()).toBe(true);
 });
 
@@ -266,7 +297,8 @@ test("it should render a custom perPage slot beside pagination", () => {
   });
 
   expect(wrapper.text()).toContain("Page size");
-  expect(wrapper.find("button[aria-label='Page 2']").exists()).toBe(true);
+  expect(wrapper.text()).toContain("Page 1 of 2");
+  expect(wrapper.find("button[aria-label='Next']").exists()).toBe(true);
   expect(wrapper.find('[role="combobox"]').exists()).toBe(false);
 });
 
@@ -1064,14 +1096,15 @@ test("it should emit update:perPage from the built-in Select", async () => {
   expect(wrapper.emitted("update:perPage")?.[0]).toEqual([25]);
 });
 
-test("it should mark the controlled page as current", () => {
+test("it should show the current page in the footer status", () => {
   const wrapper = mountDataTable({
     props: { rows, page: 2, columns, pageCount: 3 },
   });
 
+  expect(wrapper.text()).toContain("Page 2 of 3");
   expect(
-    wrapper.find("button[aria-label='Page 2']").attributes("aria-current"),
-  ).toBe("page");
+    wrapper.find("button[aria-label='Previous']").attributes("disabled"),
+  ).toBeUndefined();
 });
 test("it should let an item slot override the column cell", () => {
   const wrapper = mountDataTable({

@@ -41,18 +41,20 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
- * Row gap in px between per-page and pagination (`gap-3`).
+ * Gap in px between chrome footer clusters (`gap-3`).
  */
 export const DATATABLE_PAGINATION_GAP_PX = 12;
 
 /**
- * Pagination variant that pairs with a DataTable chrome variant.
+ * Ringed square controls for DataTablePagination.
  */
-export const DATATABLE_PAGINATION_VARIANT = {
-  plain: "text",
-  ghost: "ghost",
-  bordered: "outlined",
-} as const;
+export const DATATABLE_PAGINATION_ITEM_CLASS =
+  "ring-1 ring-inset ring-dark-300 text-dark-700 hover:bg-dark-500/5 dark:ring-dark-600 dark:text-dark-200 dark:hover:bg-dark-500/10";
+
+/**
+ * Isolated icon-button list spacing for DataTablePagination.
+ */
+export const DATATABLE_PAGINATION_LIST_CLASS = "gap-2";
 
 /** Default page size options for the built-in per-page Select. */
 export const DATATABLE_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const;
@@ -290,12 +292,6 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
- * Pagination variant paired with a DataTable chrome variant.
- */
-export type DataTablePaginationVariant =
-  (typeof DATATABLE_PAGINATION_VARIANT)[keyof typeof DATATABLE_PAGINATION_VARIANT];
-
-/**
  * `aria-sort` value for a header cell.
  */
 export type DataTableAriaSort = "none" | "ascending" | "descending";
@@ -306,16 +302,67 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
 
 /**
- * Maps a DataTable chrome variant to the matching Pagination variant.
+ * Footer bar layout for selection / per-page / pager clusters.
  */
-export function getDataTablePaginationVariant(
-  tableVariant: string | undefined,
-): DataTablePaginationVariant {
-  return get(DATATABLE_PAGINATION_VARIANT, tableVariant ?? "plain") ?? "text";
+export type DataTableFooterLayout = {
+  /**
+   * `justify-*` alignment while clusters share a row (or when stacking).
+   */
+  justify: "end" | "start" | "center" | "between";
+
+  /**
+   * Whether footer clusters stack on separate rows.
+   */
+  stack: boolean;
+};
+
+/**
+ * Resolves flex alignment for the DataTable chrome footer.
+ */
+export function getDataTableFooterLayout(input: {
+  inline: boolean;
+  showPager: boolean;
+  showPerPage: boolean;
+  showSelected: boolean;
+}): DataTableFooterLayout {
+  const clusterCount =
+    Number(input.showSelected) +
+    Number(input.showPerPage) +
+    Number(input.showPager);
+  const stack = clusterCount >= 2 && !input.inline;
+
+  if (stack) {
+    return { stack: true, justify: "center" };
+  }
+
+  if (clusterCount >= 2) {
+    return { stack: false, justify: "between" };
+  }
+
+  if (input.showSelected) {
+    return { stack: false, justify: "start" };
+  }
+
+  return { stack: false, justify: "end" };
 }
 
 /**
- * Whether per-page and pagination fit on one row of `containerWidth`.
+ * Total used in the selection summary (`selected of total`).
+ * Prefers `totalCount` (server), otherwise the filtered row count.
+ */
+export function getDataTableSelectionTotal(input: {
+  filteredCount: number;
+  totalCount?: number;
+}): number {
+  if (!isNil(input.totalCount)) {
+    return input.totalCount;
+  }
+
+  return input.filteredCount;
+}
+
+/**
+ * Whether footer clusters fit on one row of `containerWidth`.
  */
 export function isDataTablePaginationInline(
   containerWidth: number,
@@ -343,8 +390,8 @@ function measureDataTablePaginationInline(container: HTMLElement): boolean {
 }
 
 /**
- * Watches the pagination bar and reports when per-page and pagination fit
- * on one row. Returns a disconnect callback.
+ * Watches the chrome footer and reports when selection, per-page, and pager
+ * fit on one row. Returns a disconnect callback.
  */
 export function observeDataTablePaginationInline(
   container: HTMLElement,
@@ -596,11 +643,11 @@ export function sliceDataTablePage<T>(
 }
 
 /**
- * Slot props for the built-in numbered Pagination (or a custom `pagination` slot).
+ * Slot props for the built-in chrome pager (or a custom `pagination` slot).
  */
 export type DataTablePaginationSlotProps = {
   /**
-   * Total pages (`Pagination` `count`).
+   * Total pages for the chrome pager.
    */
   count: number;
 
@@ -613,11 +660,6 @@ export type DataTablePaginationSlotProps = {
    * Current 1-based page.
    */
   page: number;
-
-  /**
-   * Pagination chrome paired with the table variant.
-   */
-  variant: DataTablePaginationVariant;
 };
 
 /**
@@ -638,6 +680,21 @@ export type DataTablePerPageSlotProps = {
    * Current page size.
    */
   perPage: number;
+};
+
+/**
+ * Slot props for the built-in selection summary (or a custom `selected` slot).
+ */
+export type DataTableSelectedSlotProps = {
+  /**
+   * Number of selected row ids.
+   */
+  selectedCount: number;
+
+  /**
+   * Dataset size used in the summary (`totalCount` or filtered rows).
+   */
+  totalCount: number;
 };
 
 /**

@@ -21,12 +21,12 @@ import type {
 import DataTableCellContent from "@/Components/DataTable/DataTableCellContent.vue";
 import DataTableColumnsMenu from "@/Components/DataTable/DataTableColumnsMenu.vue";
 import DataTableFilterMenu from "@/Components/DataTable/DataTableFilterMenu.vue";
+import DataTablePagination from "@/Components/DataTable/DataTablePagination.vue";
 import DataTableSearch from "@/Components/DataTable/DataTableSearch.vue";
 import DataTableSelection from "@/Components/DataTable/DataTableSelection.vue";
 import DataTableSortButton from "@/Components/DataTable/DataTableSortButton.vue";
 import { EmptyState } from "@/Components/EmptyState";
 import { Icon } from "@/Components/Icon";
-import { Pagination } from "@/Components/Pagination";
 import { Progress } from "@/Components/Progress";
 import { Select } from "@/Components/Select";
 import {
@@ -96,6 +96,7 @@ const {
   emptyBind,
   showEmpty,
   frameBind,
+  showPager,
   tableProps,
   footerBind,
   loadingBar,
@@ -109,20 +110,23 @@ const {
   columnCount,
   showPerPage,
   showToolbar,
+  selectedBind,
+  showSelected,
   getHeadAlign,
   getCellAlign,
   onTogglePage,
   onToggleSort,
   summaryCells,
+  showFooterBar,
   expandEnabled,
   loadingBarBind,
   paginationBind,
   selectAllState,
-  showPagination,
   onChangeSearch,
   onToggleExpand,
   visibilityItems,
   perPageSlotProps,
+  selectedSlotProps,
   resolvedPageCount,
   selectionMultiple,
   visibilityEnabled,
@@ -162,6 +166,24 @@ const checkboxSize = computed(() => {
   return merged.value.size === "lg" ? "md" : "sm";
 });
 
+const selectionSummary = computed(() => {
+  return resolveMessage(
+    "{{selected}} of {{total}} row(s) selected.",
+    selectedSlotProps.value.selectedCount,
+    {
+      total: selectedSlotProps.value.totalCount,
+      selected: selectedSlotProps.value.selectedCount,
+    },
+  );
+});
+
+const pageStatus = computed(() => {
+  return resolveMessage("Page {{page}} of {{count}}", {
+    page: paginationSlotProps.value.page,
+    count: paginationSlotProps.value.count,
+  });
+});
+
 function renderItemCell(
   row: { original: T },
   cell: { content: VNodeChild; id: string; value?: unknown },
@@ -189,6 +211,16 @@ const perPageSelectOptions = computed(() => {
     return { value, label: String(value) };
   });
 });
+
+function onPerPageSelect(value: unknown) {
+  const next = Number(value);
+
+  if (!Number.isFinite(next) || next < 1) {
+    return;
+  }
+
+  perPageSlotProps.value.onPerPageChange(next);
+}
 
 const perPageSelectCustom = computed(() => {
   const fromProps = merged.value.customProps?.perPage?.customProps;
@@ -363,9 +395,9 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
                     <button
                       type="button"
-                      aria-label="Expand row"
                       v-else-if="cell.isExpand"
                       :aria-expanded="row.expanded"
+                      :aria-label="resolveMessage('Expand row')"
                       v-on:click="onToggleExpand(row.id, !row.expanded)"
                       class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
                     >
@@ -441,7 +473,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           <slot name="loading" v-if="!loadingBar">
             <span
               role="status"
-              aria-label="Loading"
+              :aria-label="resolveMessage('Loading')"
               class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
             >
               <span
@@ -465,13 +497,17 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
         <slot name="footer" />
       </div>
 
-      <div v-if="showPagination" v-bind="paginationBind">
+      <div v-if="showFooterBar" v-bind="paginationBind">
+        <div v-if="showSelected" v-bind="selectedBind">
+          <slot name="selected" v-bind="selectedSlotProps">
+            {{ selectionSummary }}
+          </slot>
+        </div>
+
         <slot name="perPage" v-bind="perPageSlotProps" v-if="showPerPage">
           <div class="flex shrink-0 items-center gap-2">
-            <span
-              class="text-sm whitespace-nowrap text-dark-500 dark:text-dark-400"
-            >
-              {{ resolveMessage("Per page:") }}
+            <span class="text-sm whitespace-nowrap">
+              {{ resolveMessage("Rows per page") }}
             </span>
             <Select
               size="sm"
@@ -479,13 +515,11 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
               overlay="menu"
               :clearable="false"
               hide-error-message
-              aria-label="Per page"
               :options="perPageSelectOptions"
               :custom-props="perPageSelectCustom"
               :model-value="perPageSlotProps.perPage"
-              v-on:update:model-value="
-                (value) => perPageSlotProps.onPerPageChange(Number(value))
-              "
+              v-on:update:model-value="onPerPageSelect"
+              :aria-label="resolveMessage('Rows per page')"
               :classes="{
                 ...merged.customProps?.perPage?.classes,
                 root: cn('w-20', merged.customProps?.perPage?.classes?.root),
@@ -494,15 +528,27 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           </div>
         </slot>
 
-        <slot name="pagination" v-bind="paginationSlotProps">
-          <Pagination
-            v-model="paginationPage"
-            :count="resolvedPageCount"
-            v-if="resolvedPageCount !== undefined"
-            :variant="paginationSlotProps.variant"
-            v-bind="merged.customProps?.pagination"
-          />
-        </slot>
+        <div v-if="showPager" class="flex shrink-0 items-center gap-3">
+          <span
+            class="text-sm font-medium whitespace-nowrap"
+            v-if="
+              resolvedPageCount !== undefined &&
+              !hasNamedSlot(tableSlots, 'pagination')
+            "
+          >
+            {{ pageStatus }}
+          </span>
+
+          <slot name="pagination" v-bind="paginationSlotProps">
+            <DataTablePagination
+              size="sm"
+              v-bind="merged.customProps?.pagination"
+              v-model="paginationPage"
+              :count="resolvedPageCount"
+              v-if="resolvedPageCount !== undefined"
+            />
+          </slot>
+        </div>
       </div>
     </div>
   </div>

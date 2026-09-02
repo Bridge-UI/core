@@ -6,7 +6,6 @@ import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_PAGINATION_GAP_PX,
-  DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
@@ -21,15 +20,16 @@ import {
   getDataTableColumnTrack,
   getDataTableColumnWidthPx,
   getDataTableDefaultCellContent,
+  getDataTableFooterLayout,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
-  getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
   getDataTableResetHiddenColumnIds,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
   getDataTableSelectAllState,
+  getDataTableSelectionTotal,
   getDataTableSortIcon,
   getDataTableSortLabel,
   getDataTableStickyInsets,
@@ -67,14 +67,47 @@ import {
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
 
-describe("getDataTablePaginationVariant", () => {
-  test("it should map table chrome to pagination variants", () => {
-    expect(getDataTablePaginationVariant("plain")).toBe("text");
-    expect(getDataTablePaginationVariant("ghost")).toBe("ghost");
-    expect(getDataTablePaginationVariant("unknown")).toBe("text");
-    expect(getDataTablePaginationVariant(undefined)).toBe("text");
-    expect(getDataTablePaginationVariant("bordered")).toBe("outlined");
-    expect(DATATABLE_PAGINATION_VARIANT.plain).toBe("text");
+describe("getDataTableFooterLayout", () => {
+  test("it should stack clusters when they do not fit on one row", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: false,
+        showPager: true,
+        showPerPage: true,
+        showSelected: false,
+      }),
+    ).toEqual({ stack: true, justify: "center" });
+  });
+
+  test("it should pin a single pager cluster to the end", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: true,
+        showPager: true,
+        showPerPage: false,
+        showSelected: false,
+      }),
+    ).toEqual({ stack: false, justify: "end" });
+  });
+
+  test("it should spread selected and controls when they fit", () => {
+    expect(
+      getDataTableFooterLayout({
+        inline: true,
+        showPager: true,
+        showPerPage: true,
+        showSelected: true,
+      }),
+    ).toEqual({ stack: false, justify: "between" });
+  });
+});
+
+describe("getDataTableSelectionTotal", () => {
+  test("it should prefer totalCount over the filtered count", () => {
+    expect(
+      getDataTableSelectionTotal({ totalCount: 68, filteredCount: 10 }),
+    ).toBe(68);
+    expect(getDataTableSelectionTotal({ filteredCount: 10 })).toBe(10);
   });
 });
 

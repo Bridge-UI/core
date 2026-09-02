@@ -13,6 +13,8 @@ import {
   CalendarDaysIcon,
   CheckCircleIcon,
   CheckIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -67,8 +69,10 @@ const icons = {
   chevronDown: ChevronDownIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
-  warning: ExclamationTriangleIcon,
   chevronUpDown: ChevronUpDownIcon,
+  warning: ExclamationTriangleIcon,
+  chevronsLeft: ChevronDoubleLeftIcon,
+  chevronsRight: ChevronDoubleRightIcon,
 } satisfies Record<SemanticIconName, unknown>;
 
 /**

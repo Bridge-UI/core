@@ -27,19 +27,13 @@ import { DataTable } from "@bridge-ui/react/Components/DataTable";
 
 ### Variants
 
-DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows the matching variant unless `slots.pagination` overrides it:
+DataTable chrome (`plain` / `ghost` / `bordered`). The built-in footer pager is first / previous / next / last and does not follow table variant:
 
 ```tsx
 <DataTable rows={users} variant="plain" columns={columns} />
 <DataTable rows={users} variant="ghost" columns={columns} />
 <DataTable rows={users} columns={columns} variant="bordered" />
 ```
-
-| DataTable `variant` | Pagination `variant` |
-| ------------------- | -------------------- |
-| `plain`             | `text`               |
-| `ghost`             | `ghost`              |
-| `bordered`          | `outlined`           |
 
 `striped` is independent of variant:
 
@@ -67,7 +61,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in `Pagination` follows
 
 ### Selection + pagination
 
-Built-in Pagination when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `perPage` also renders a Select (`perPageOptions`, default 10 / 25 / 50 / 100). `slots.pagination` and `slots.perPage` replace each control:
+The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `perPage` is set (`perPageOptions`, default 10 / 25 / 50 / 100), and a first / previous / next / last pager when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `slots.selected`, `slots.pagination`, and `slots.perPage` replace each control:
 
 ```tsx
 <DataTable
@@ -105,7 +99,7 @@ Client paging slices `rows`. Server paging with a total uses `totalCount` instea
 />
 ```
 
-Slot replaces the built-in Pagination and/or per-page Select (`slots.pagination` / `slots.perPage`; functions receive the same props as the built-ins):
+Slot replaces the built-in footer controls (`slots.selected` / `slots.pagination` / `slots.perPage`; functions receive the same props as the built-ins):
 
 ```tsx
 <DataTable
@@ -159,7 +153,7 @@ When `page` and `pageCount` (or `totalCount`) are set, DataTable does not sort o
 
 ### Empty, loading, and footer
 
-Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above pagination:
+Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` icon and the i18n title `"No data"`. `slots.empty` replaces it. `loading` keeps the table visible. `loadingVariant="overlay"` (default) dims the table with a spin; `loadingVariant="bar"` dims the table and draws a progress line under the header. `slots.loading` replaces the indicator. `slots.footer` renders below the table, above the chrome footer:
 
 ```tsx
 <DataTable
@@ -211,7 +205,7 @@ Cell content is the column accessor (`row[id]`, or `accessor`) unless you overri
 }
 ```
 
-Table-level `slots` are `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`, `search`, `toolbar`, and `toolbarActions`. `slots.item[id]` overrides `columns[].cell` for that column.
+Table-level `slots` are `empty`, `expanded`, `footer`, `item`, `loading`, `pagination`, `perPage`, `search`, `selected`, `toolbar`, and `toolbarActions`. `slots.item[id]` overrides `columns[].cell` for that column.
 
 ### Selection
 
