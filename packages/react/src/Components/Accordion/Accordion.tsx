@@ -5,9 +5,9 @@ import { useAccordion } from "@/Components/Accordion/hooks/useAccordion";
 
 const accordionLibDefaults = {
   size: "md",
+  color: "dark",
   multiple: false,
   disabled: false,
-  color: "primary",
   variant: "default",
 } as const;
 

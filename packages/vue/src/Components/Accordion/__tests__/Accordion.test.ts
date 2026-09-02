@@ -75,6 +75,7 @@ test("it should render triggers and the expanded panel", () => {
     .find((region) => region.text().includes("Free returns"));
 
   expect(shipping?.attributes("aria-expanded")).toBe("true");
+  expect(shipping?.classes().join(" ")).not.toContain("text-primary");
   expect(collapsed?.attributes("aria-hidden")).toBe("true");
 });
 

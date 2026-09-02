@@ -1,6 +1,6 @@
 # Accordion
 
-Expandable sections for FAQs, settings groups, and stacked content. Single or multiple panels open at once. Compose with `AccordionItem`.
+Expandable sections for FAQs, settings groups, and stacked content. Single or multiple panels open at once. Compose with `AccordionItem`. Expanded items stay on the same quiet text color; `color` optionally accents the open trigger.
 
 ## Import
 

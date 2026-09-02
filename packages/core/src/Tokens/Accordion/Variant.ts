@@ -58,10 +58,9 @@ export const variantProps: AccordionVariant = {
   "default": {
     "item": "",
     "panel": "",
+    "root": "divide-y divide-dark-200 dark:divide-dark-700",
     "trigger":
-      "text-dark-700 hover:bg-dark-500/5 dark:text-dark-200 dark:hover:bg-dark-500/10",
-    "root":
-      "divide-y divide-dark-200 border-y border-dark-200 dark:divide-dark-700 dark:border-dark-700",
+      "text-dark-700 hover:text-dark-900 dark:text-dark-200 dark:hover:text-dark-50",
   },
   "separated": {
     "panel": "",

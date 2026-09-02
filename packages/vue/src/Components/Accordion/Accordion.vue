@@ -27,9 +27,9 @@ const { rootBind } = useAccordion(
   props,
   {
     size: "md",
+    color: "dark",
     multiple: false,
     disabled: false,
-    color: "primary",
     variant: "default",
   },
   model,

@@ -54,9 +54,9 @@ export interface AccordionOwnProps {
   classes?: AccordionClasses;
 
   /**
-   * Accent color for the expanded indicator and trigger.
+   * Optional text accent for the expanded trigger and indicator.
    *
-   * @default "primary"
+   * @default "dark"
    */
   color?: MergeProps<AccordionColor, AccordionColorOverrides>;
 
