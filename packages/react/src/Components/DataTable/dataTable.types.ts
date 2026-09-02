@@ -491,14 +491,14 @@ export interface DataTableOwnProps<T> {
   loadingVariant?: DataTableLoadingVariant;
 
   /**
-   * Controlled page for built-in numbered Pagination (1-based).
+   * Controlled page for the built-in chrome pager (1-based).
    *
    * @default undefined
    */
   page?: number;
 
   /**
-   * Total pages for built-in numbered Pagination. Use this or `totalCount`.
+   * Total pages for the built-in chrome pager. Use this or `totalCount`.
    *
    * @default undefined
    */
