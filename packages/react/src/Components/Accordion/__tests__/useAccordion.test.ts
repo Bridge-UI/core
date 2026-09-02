@@ -15,9 +15,9 @@ test("it should expose context defaults from useAccordion", () => {
       { defaultValue: "a" },
       {
         size: "md",
+        color: "dark",
         multiple: false,
         disabled: false,
-        color: "primary",
         variant: "default",
       },
     ),
@@ -34,9 +34,9 @@ test("it should normalize multiple defaultValue to an array", () => {
       { multiple: true, defaultValue: ["a", "b"] },
       {
         size: "md",
+        color: "dark",
         multiple: false,
         disabled: false,
-        color: "primary",
         variant: "default",
       },
     ),

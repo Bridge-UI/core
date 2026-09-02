@@ -12,9 +12,9 @@ import { useAccordion } from "@/Components/Accordion/composables/useAccordion";
 
 const libDefaults = {
   size: "md",
+  color: "dark",
   multiple: false,
   disabled: false,
-  color: "primary",
   variant: "default",
 } as const;
 

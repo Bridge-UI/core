@@ -10,11 +10,11 @@ import type { PaginationOwnProps } from "@/Components/Pagination/pagination.type
 const libDefaults = {
   size: "md",
   rounded: "md",
-  variant: "text",
+  color: "dark",
   disabled: false,
   siblingCount: 1,
+  variant: "ghost",
   mode: "numbered",
-  color: "primary",
   boundaryCount: 1,
   hideNextButton: false,
   hidePrevButton: false,

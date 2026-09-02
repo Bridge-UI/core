@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent uses the semantic `color` palette; inactive tabs use `dark-*`.
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. The selected tab uses a quiet surface from `variant`; `color` optionally tints selected text and the `line` / `solid` / `enclosed` indicator.
 
 ## Import
 
@@ -110,10 +110,10 @@ const [pkg, setPkg] = useState("bun");
 
 ### Variants
 
-`line` (default), `plain`, `pill`, `solid`, `enclosed`.
+`pill` (default), `line`, `plain`, `solid`, `enclosed`.
 
 ```tsx
-<Tabs variant="line" color="primary" defaultValue="one">
+<Tabs defaultValue="one">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -122,16 +122,7 @@ const [pkg, setPkg] = useState("bun");
   <TabPanel value="two">Second</TabPanel>
 </Tabs>
 
-<Tabs color="dark" variant="pill" defaultValue="one">
-  <TabList>
-    <Tab value="one">One</Tab>
-    <Tab value="two">Two</Tab>
-  </TabList>
-  <TabPanel value="one">First</TabPanel>
-  <TabPanel value="two">Second</TabPanel>
-</Tabs>
-
-<Tabs variant="solid" defaultValue="one">
+<Tabs variant="line" defaultValue="one">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -141,6 +132,15 @@ const [pkg, setPkg] = useState("bun");
 </Tabs>
 
 <Tabs variant="plain" defaultValue="one">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs variant="solid" defaultValue="one">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -193,8 +193,8 @@ const [pkg, setPkg] = useState("bun");
 | `defaultValue` | `string`                  | first registered tab |
 | `onChange`     | `(value: string) => void` | —                    |
 | `orientation`  | `TabsOrientation`         | `"horizontal"`       |
-| `variant`      | `TabsVariant`             | `"line"`             |
-| `color`        | `TabsColor`               | `"primary"`          |
+| `variant`      | `TabsVariant`             | `"pill"`             |
+| `color`        | `TabsColor`               | `"dark"`             |
 | `size`         | `TabsSize`                | `"md"`               |
 | `activation`   | `TabsActivation`          | `"automatic"`        |
 | `keepMounted`  | `boolean`                 | `true`               |

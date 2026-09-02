@@ -57,20 +57,20 @@ export const sizeProps: TabsSize = {
     "icon": "md",
     "gap": "gap-2",
     "panel": "pt-4 text-sm",
-    "tab": "px-3 py-3 text-sm font-medium",
+    "tab": "px-3 py-1.5 text-sm font-medium",
   },
   "sm": {
     "list": "",
     "icon": "sm",
     "gap": "gap-1.5",
     "panel": "pt-3 text-sm",
-    "tab": "px-2.5 py-2 text-xs font-medium",
+    "tab": "px-2.5 py-1 text-xs font-medium",
   },
   "lg": {
     "list": "",
     "icon": "lg",
     "gap": "gap-2.5",
     "panel": "pt-5 text-base",
-    "tab": "px-4 py-3.5 text-base font-medium",
+    "tab": "px-4 py-2 text-base font-medium",
   },
 };

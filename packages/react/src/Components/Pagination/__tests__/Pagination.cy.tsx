@@ -14,5 +14,5 @@ test("it should render outlined and ghost variants", () => {
   cy.get("ul").should("have.class", "rounded-md");
 
   cy.mount(<Pagination page={1} count={4} variant="ghost" />);
-  cy.get("ul").should("have.class", "gap-1");
+  cy.get("ul").should("have.class", "gap-2");
 });

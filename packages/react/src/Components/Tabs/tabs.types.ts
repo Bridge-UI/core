@@ -93,9 +93,9 @@ export interface TabsOwnProps {
   classes?: TabsClasses;
 
   /**
-   * Accent color for the selected tab.
+   * Optional text accent for the selected tab. Selected surface comes from `variant`.
    *
-   * @default "primary"
+   * @default "dark"
    */
   color?: MergeProps<TabsColor, TabsColorOverrides>;
 
@@ -152,7 +152,7 @@ export interface TabsOwnProps {
   /**
    * Visual style of the tab list / selected tab.
    *
-   * @default "line"
+   * @default "pill"
    */
   variant?: MergeProps<TabsVariant, TabsVariantOverrides>;
 }

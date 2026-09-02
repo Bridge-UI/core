@@ -56,6 +56,9 @@ test("it should render triggers and the expanded panel", () => {
   ).toBe("true");
   expect(screen.getByText("Delivery in 2–5 business days.")).toBeTruthy();
   expect(
+    screen.getByRole("button", { name: /Shipping/i }).className,
+  ).not.toContain("text-primary");
+  expect(
     screen
       .getByText("Free returns within 30 days.")
       .closest('[role="region"]')

@@ -112,8 +112,17 @@ test("it should apply visual variants", async () => {
   );
 
   await wrapper.setProps({ variant: "ghost" });
-  expect(wrapper.find("ul").classes()).toContain("gap-1");
-  expect(wrapper.find("button[aria-label='Next']").classes()).toContain("w-9");
+  expect(wrapper.find("ul").classes()).toContain("gap-2");
+  expect(
+    wrapper.find("button[aria-current='page']").classes().join(" "),
+  ).toContain("ring-1");
+  expect(wrapper.find("button[aria-label='Next']").text()).toContain("Next");
+  expect(wrapper.find("button[aria-label='Previous']").text()).toContain(
+    "Previous",
+  );
+  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
+    "gap-1.5",
+  );
   expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
     "rounded-md",
   );
@@ -123,9 +132,15 @@ test("it should apply visual variants", async () => {
     "rounded-lg",
   );
 
-  await wrapper.setProps({ variant: "text" });
-  expect(wrapper.find("ul").classes()).toContain("border-t");
-  expect(wrapper.find("button[aria-label='Next']").classes()).toContain(
-    "border-t-2",
-  );
+  await wrapper.setProps({ rounded: "md", variant: "text" });
+  expect(wrapper.find("ul").classes()).toContain("gap-2");
+  expect(
+    wrapper.find("button[aria-current='page']").classes().join(" "),
+  ).toContain("underline");
+  expect(
+    wrapper.find("button[aria-label='Page 2']").classes().join(" "),
+  ).toContain("rounded-md");
+  expect(
+    wrapper.find("button[aria-label='Page 2']").classes().join(" "),
+  ).toContain("hover:bg-dark-500/10");
 });

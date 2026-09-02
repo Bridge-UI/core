@@ -1,5 +1,6 @@
 /**
- * Per-orientation layout classes for tabs root, list, tab indicator, and panel.
+ * Per-orientation layout classes for tabs root, list, and panel.
+ * Chrome (hairline, indicator side) lives on the variant tokens.
  */
 export interface TabsOrientationItem {
   /**
@@ -18,7 +19,7 @@ export interface TabsOrientationItem {
   "root": string;
 
   /**
-   * Extra classes for each tab trigger (indicator side for vertical).
+   * Extra classes for each tab trigger.
    */
   "tab": string;
 }
@@ -49,11 +50,9 @@ export const orientationProps: TabsOrientation = {
     "list": "flex-row flex-wrap",
   },
   "vertical": {
+    "tab": "flex-none",
+    "list": "flex-col shrink-0",
     "panel": "flex-1 min-w-0 !pt-0 pl-0",
     "root": "flex flex-row items-start gap-4",
-    "list":
-      "flex-col shrink-0 border-b-0 border-r border-dark-200 dark:border-dark-700 divide-x-0 divide-y divide-dark-200 dark:divide-dark-700",
-    "tab":
-      "flex-none -mb-0 -mr-px after:inset-x-auto after:inset-y-0 after:left-auto after:right-0 after:-bottom-auto after:h-auto after:w-0.5 rounded-t-none rounded-l-md rounded-r-none",
   },
 };

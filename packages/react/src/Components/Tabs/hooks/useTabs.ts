@@ -144,6 +144,24 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
     return get(orientationClasses, merged.orientation);
   });
 
+  const isVertical = derived(() => {
+    return merged.orientation === "vertical";
+  });
+
+  const tabOrientation = derived(() => {
+    return cn({
+      [get(orientationItem, "tab") ?? ""]: true,
+      [get(variantItem, "tabVertical") ?? ""]: isVertical,
+    });
+  });
+
+  const listOrientation = derived(() => {
+    return cn({
+      [get(orientationItem, "list") ?? ""]: true,
+      [get(variantItem, "listVertical") ?? ""]: isVertical,
+    });
+  });
+
   const setSelected = useCallback(
     (next: string) => {
       if (disabledValues.includes(next)) {
@@ -246,39 +264,40 @@ export function useTabs(props: TabsProps, libDefaults: TabsLibDefaults) {
       orientation:
         (merged.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
-        tabSize: get(sizeItem, "tab"),
+        softFill: false,
         iconGap: get(sizeItem, "gap"),
+        tabSize: get(sizeItem, "tab"),
+        tabOrientation: tabOrientation,
         iconSize: get(sizeItem, "icon"),
         listSize: get(sizeItem, "list"),
+        listOrientation: listOrientation,
         panelSize: get(sizeItem, "panel"),
         tabVariant: get(variantItem, "tab"),
         listVariant: get(variantItem, "list"),
-        tabOrientation: get(orientationItem, "tab"),
         colorSelected: get(colorItem, "tabSelected"),
-        listOrientation: get(orientationItem, "list"),
         rootOrientation: get(orientationItem, "root"),
         panelOrientation: get(orientationItem, "panel"),
         tabVariantSelected: get(variantItem, "tabSelected"),
         colorSelectedSoft: get(colorItem, "tabSelectedSoft"),
-        softFill: merged.variant === "pill" || merged.variant === "solid",
       },
     };
   }, [
     tabsId,
-    selected,
     focusTab,
-    tabItems,
+    selected,
     sizeItem,
-    tabValues,
+    tabItems,
     colorItem,
-    setSelected,
+    tabValues,
     registerTab,
+    setSelected,
     variantItem,
     disabledValues,
-    registerTabItem,
-    merged.variant,
-    merged.activation,
+    tabOrientation,
+    listOrientation,
     orientationItem,
+    registerTabItem,
+    merged.activation,
     merged.keepMounted,
     merged.orientation,
   ]);

@@ -8,8 +8,8 @@ import type { TabsProps } from "@/Components/Tabs/tabs.types";
 
 const tabsLibDefaults = {
   size: "md",
-  variant: "line",
-  color: "primary",
+  color: "dark",
+  variant: "pill",
   keepMounted: true,
   activation: "automatic",
   orientation: "horizontal",

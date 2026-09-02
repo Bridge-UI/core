@@ -23,6 +23,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   PaginationEmits,
   PaginationOwnProps,
@@ -78,6 +79,7 @@ export function usePagination(
   model: Ref<number | undefined>,
   emit: SetupContext<PaginationEmits>["emit"],
 ) {
+  const resolveMessage = useResolveMessage();
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -254,15 +256,15 @@ export function usePagination(
     return merged.value.variant === "outlined";
   });
 
-  const isGhost = computed(() => {
-    return merged.value.variant === "ghost";
+  const isSpaced = computed(() => {
+    return merged.value.variant === "ghost" || merged.value.variant === "text";
   });
 
   const itemClass = computed(() => {
     return cn({
       [get(sizeItem.value, "item") ?? ""]: true,
       [get(variantItem.value, "item") ?? ""]: true,
-      [get(roundedItem.value, "item") ?? ""]: isGhost.value,
+      [get(roundedItem.value, "item") ?? ""]: isSpaced.value,
     });
   });
 
@@ -270,20 +272,14 @@ export function usePagination(
     return cn({
       [get(sizeItem.value, "itemIcon") ?? ""]: true,
       [get(variantItem.value, "item") ?? ""]: true,
-      [get(roundedItem.value, "item") ?? ""]: isGhost.value,
+      [get(roundedItem.value, "item") ?? ""]: isSpaced.value,
     });
   });
 
   const selectedClass = computed(() => {
-    const variant = merged.value.variant;
-
     return cn({
       [get(variantItem.value, "itemSelected") ?? ""]: true,
-      [get(colorItem.value, "itemSelectedFilled") ?? ""]:
-        variant === "outlined",
-      [get(colorItem.value, "itemSelectedAccent") ?? ""]:
-        variant === "text" || variant === "ghost",
-      [get(colorItem.value, "itemSelectedSoft") ?? ""]: variant === "ghost",
+      [get(colorItem.value, "itemSelectedAccent") ?? ""]: true,
     });
   });
 
@@ -329,12 +325,21 @@ export function usePagination(
     return false;
   };
 
+  const prevLabel = computed(() => {
+    return resolveMessage("Previous");
+  });
+
+  const nextLabel = computed(() => {
+    return resolveMessage("Next");
+  });
+
   const rootBind = computed(() => {
     const inherited = split.value.inheritedAttrs;
 
     return mergePartBind(customProps.value?.root, inherited, {
       "aria-label":
-        (inherited as { "aria-label"?: string })["aria-label"] ?? "Pagination",
+        (inherited as { "aria-label"?: string })["aria-label"] ??
+        resolveMessage("Pagination"),
       class: cn({
         [get(sizeItem.value, "root") ?? ""]: true,
         [get(mergedClasses.value, "root") ?? ""]: true,
@@ -403,7 +408,7 @@ export function usePagination(
         class: cn({
           [get(sizeItem.value, "ellipsis") ?? ""]: true,
           [get(variantItem.value, "ellipsis") ?? ""]: true,
-          [get(roundedItem.value, "item") ?? ""]: isGhost.value,
+          [get(roundedItem.value, "item") ?? ""]: isSpaced.value,
           [get(mergedClasses.value, "ellipsis") ?? ""]: true,
           "ml-0": isFirstOutlinedControl("ellipsis", index),
         }),
@@ -422,8 +427,8 @@ export function usePagination(
       {
         onClick: goPrevious,
         type: "button" as const,
-        "aria-label": "Previous",
         disabled: prevDisabled.value,
+        "aria-label": prevLabel.value,
         class: cn({
           [itemIconClass.value]: true,
           [get(mergedClasses.value, "prev") ?? ""]: true,
@@ -441,9 +446,9 @@ export function usePagination(
       {},
       {
         onClick: goNext,
-        "aria-label": "Next",
         type: "button" as const,
         disabled: nextDisabled.value,
+        "aria-label": nextLabel.value,
         class: cn({
           [itemIconClass.value]: true,
           [get(mergedClasses.value, "next") ?? ""]: true,
@@ -489,6 +494,8 @@ export function usePagination(
     listBind,
     prevBind,
     nextBind,
+    prevLabel,
+    nextLabel,
     getItemBind,
     prevIconBind,
     nextIconBind,

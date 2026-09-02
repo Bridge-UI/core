@@ -126,9 +126,9 @@ test("it should apply line underline classes with after content", () => {
   expect(tab.className).toContain("after:content-['']");
 });
 
-test("it should apply soft fill color classes for pill variant", () => {
+test("it should apply muted track and elevated pill classes", () => {
   render(
-    <Tabs color="dark" variant="pill" defaultValue="a">
+    <Tabs defaultValue="a">
       <TabList>
         <Tab value="a">Alpha</Tab>
       </TabList>
@@ -136,8 +136,13 @@ test("it should apply soft fill color classes for pill variant", () => {
     </Tabs>,
   );
 
+  expect(screen.getByRole("tablist").className).toContain("bg-dark-100");
+  expect(screen.getByRole("tablist").className).toContain("p-1");
   expect(screen.getByRole("tab", { name: "Alpha" }).className).toContain(
-    "bg-dark-",
+    "shadow-sm",
+  );
+  expect(screen.getByRole("tab", { name: "Alpha" }).className).toContain(
+    "bg-white",
   );
 });
 
@@ -157,5 +162,109 @@ test("it should lay out vertical tabs beside panels", () => {
 
   expect(list.className).toContain("flex-col");
   expect(root?.className).toContain("flex-row");
+  expect(tab.className).not.toContain("after:w-0.5");
+});
+
+test("it should move the line indicator to the side when vertical", () => {
+  render(
+    <Tabs variant="line" defaultValue="a" orientation="vertical">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const list = screen.getByRole("tablist");
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(list.className).toContain("border-r");
+  expect(tab.className).toContain("after:w-0.5");
+});
+
+test("it should weight the selected tab in the plain variant", () => {
+  render(
+    <Tabs variant="plain" defaultValue="a">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+        <Tab value="b">Beta</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  expect(screen.getByRole("tab", { name: "Alpha" }).className).toContain(
+    "font-semibold",
+  );
+  expect(screen.getByRole("tab", { name: "Beta" }).className).not.toContain(
+    "font-semibold",
+  );
+});
+
+test("it should fill and underline the selected tab in the solid variant", () => {
+  render(
+    <Tabs variant="solid" defaultValue="a">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(tab.className).toContain("bg-dark-100");
+  expect(tab.className).toContain("after:bg-current");
+  expect(tab.className).toContain("after:content-['']");
+});
+
+test("it should fill and underline the selected tab in the enclosed variant", () => {
+  render(
+    <Tabs defaultValue="a" variant="enclosed">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(tab.className).toContain("bg-dark-100");
+  expect(tab.className).toContain("after:bg-current");
+  expect(tab.className).toContain("after:content-['']");
+});
+
+test("it should move the solid indicator to the side when vertical", () => {
+  render(
+    <Tabs variant="solid" defaultValue="a" orientation="vertical">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const list = screen.getByRole("tablist");
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(list.className).toContain("border-r");
+  expect(tab.className).toContain("after:w-0.5");
+});
+
+test("it should move the enclosed indicator to the side when vertical", () => {
+  render(
+    <Tabs defaultValue="a" variant="enclosed" orientation="vertical">
+      <TabList>
+        <Tab value="a">Alpha</Tab>
+      </TabList>
+      <TabPanel value="a">Panel A</TabPanel>
+    </Tabs>,
+  );
+
+  const list = screen.getByRole("tablist");
+  const tab = screen.getByRole("tab", { name: "Alpha" });
+
+  expect(list.className).toContain("divide-y");
   expect(tab.className).toContain("after:w-0.5");
 });

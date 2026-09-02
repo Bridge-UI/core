@@ -155,9 +155,9 @@ export interface PaginationOwnProps {
   classes?: PaginationClasses;
 
   /**
-   * Selected page accent color.
+   * Optional text accent for the selected page. Selected surface comes from `variant`.
    *
-   * @default "primary"
+   * @default "dark"
    */
   color?: MergeProps<PaginationColor, PaginationColorOverrides>;
 
@@ -232,7 +232,7 @@ export interface PaginationOwnProps {
   page?: number;
 
   /**
-   * Control corner radius (`ghost` items / `outlined` group edges).
+   * Control corner radius (`ghost` / `text` items and `outlined` group edges).
    *
    * @default "md"
    */
@@ -262,7 +262,7 @@ export interface PaginationOwnProps {
   /**
    * Visual style of page / control buttons.
    *
-   * @default "text"
+   * @default "ghost"
    */
   variant?: MergeProps<PaginationVariant, PaginationVariantOverrides>;
 }

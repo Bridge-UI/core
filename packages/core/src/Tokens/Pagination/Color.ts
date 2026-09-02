@@ -1,20 +1,21 @@
 /**
  * Per-color selected-state classes for pagination.
  * Inactive controls use `dark-*` from the variant; these apply when selected.
+ * Selected surface comes from the variant; color tokens tint selected text.
  */
 export interface PaginationColorItem {
   /**
-   * Text / border accent for `text` and `ghost` selected pages.
+   * Text accent for the selected page.
    */
   "itemSelectedAccent": string;
 
   /**
-   * Solid fill for the selected page in `outlined`.
+   * Solid fill kept for token overrides. Default composition does not apply it.
    */
   "itemSelectedFilled": string;
 
   /**
-   * Soft background tint for the selected page in `ghost`.
+   * Soft background tint kept for token overrides. Default composition does not apply it.
    */
   "itemSelectedSoft": string;
 }
@@ -65,7 +66,7 @@ export interface PaginationColor {
 }
 
 /**
- * Default pagination color maps (selected only).
+ * Default pagination color maps (selected text only).
  */
 export const colorProps: PaginationColor = {
   "black": {
@@ -92,7 +93,7 @@ export const colorProps: PaginationColor = {
   "dark": {
     "itemSelectedSoft": "bg-dark-500/10 dark:bg-dark-500/20",
     "itemSelectedAccent":
-      "border-dark-700 text-dark-800 hover:border-dark-700 hover:text-dark-800 dark:border-dark-200 dark:text-dark-100 dark:hover:border-dark-200 dark:hover:text-dark-100",
+      "border-dark-800 text-dark-900 hover:border-dark-800 hover:text-dark-900 dark:border-dark-100 dark:text-dark-50 dark:hover:border-dark-100 dark:hover:text-dark-50",
     "itemSelectedFilled":
       "bg-dark-700 text-white ring-dark-700 hover:bg-dark-700 hover:text-white dark:bg-dark-200 dark:text-dark-900 dark:ring-dark-200 dark:hover:bg-dark-200 dark:hover:text-dark-900",
   },

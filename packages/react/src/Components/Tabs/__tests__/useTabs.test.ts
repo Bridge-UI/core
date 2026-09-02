@@ -15,8 +15,8 @@ test("it should expose context defaults from useTabs", () => {
       { defaultValue: "a" },
       {
         size: "md",
-        variant: "line",
-        color: "primary",
+        color: "dark",
+        variant: "pill",
         keepMounted: true,
         activation: "automatic",
         orientation: "horizontal",
