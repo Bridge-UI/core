@@ -781,15 +781,6 @@ export function useDataTable<T>(
     return headerViews.length;
   });
 
-  const showPagination = derived(() => {
-    return (
-      Boolean(slots?.pagination) ||
-      Boolean(slots?.perPage) ||
-      serverPaged ||
-      clientPaged
-    );
-  });
-
   const showSelected = derived(() => {
     return selectionEnabled;
   });
@@ -823,7 +814,7 @@ export function useDataTable<T>(
   });
 
   const showFooterBar = derived(() => {
-    return showSelected || showPagination || showPerPage;
+    return showSelected || showPager || showPerPage;
   });
 
   const showEmpty = derived(() => {
@@ -1025,9 +1016,9 @@ export function useDataTable<T>(
       merged.striped,
       merged.variant,
       stickyPing.end,
-      customProps?.head,
       merged.hoverable,
       stickyPing.start,
+      customProps?.head,
       merged.stickyHeader,
       stickyHeaderEnabled,
       merged.loadingVariant,
@@ -1065,9 +1056,9 @@ export function useDataTable<T>(
       merged.striped,
       merged.variant,
       stickyPing.end,
-      customProps?.cell,
       merged.hoverable,
       stickyPing.start,
+      customProps?.cell,
       merged.stickyHeader,
       stickyHeaderEnabled,
       merged.loadingVariant,
@@ -1436,7 +1427,6 @@ export function useDataTable<T>(
     loadingBarBind,
     paginationBind,
     selectAllState,
-    showPagination,
     onToggleExpand,
     visibilityItems,
     onChangePerPage,

@@ -75,7 +75,7 @@ test("it should expose table defaults from useDataTable", () => {
 
   expect(result.showEmpty.value).toBe(false);
   expect(result.rowViews.value).toHaveLength(1);
-  expect(result.showPagination.value).toBe(false);
+  expect(result.showFooterBar.value).toBe(false);
   expect(result.merged.value.variant).toBe("plain");
   expect(result.headerViews.value[0]?.id).toBe("name");
   expect(result.merged.value.selectionMode).toBe("multiple");
@@ -126,7 +126,8 @@ test("it should enable paging chrome when page and pageCount are set", () => {
   );
 
   expect(result.serverPaged.value).toBe(true);
-  expect(result.showPagination.value).toBe(true);
+  expect(result.showPager.value).toBe(true);
+  expect(result.showFooterBar.value).toBe(true);
 });
 
 test("it should show the footer bar when only perPage is set", () => {
@@ -140,7 +141,7 @@ test("it should show the footer bar when only perPage is set", () => {
 
   expect(result.showPerPage.value).toBe(true);
   expect(result.showFooterBar.value).toBe(true);
-  expect(result.showPagination.value).toBe(false);
+  expect(result.showPager.value).toBe(false);
 });
 
 test("it should slice rows when page and perPage are set without totals", () => {

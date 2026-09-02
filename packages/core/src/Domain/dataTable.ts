@@ -643,11 +643,11 @@ export function sliceDataTablePage<T>(
 }
 
 /**
- * Slot props for the built-in DataTablePagination (or a custom `pagination` slot).
+ * Slot props for the built-in chrome pager (or a custom `pagination` slot).
  */
 export type DataTablePaginationSlotProps = {
   /**
-   * Total pages (`DataTablePagination` `count`).
+   * Total pages for the chrome pager.
    */
   count: number;
 

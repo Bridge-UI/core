@@ -295,7 +295,7 @@ export interface DataTableCustomProps {
   loading?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Extra props for the built-in `DataTablePagination`.
+   * Extra props for the built-in chrome pager (first / previous / next / last).
    *
    * @default undefined
    */
@@ -638,8 +638,8 @@ export interface DataTableSlots<T = unknown> {
   loading?: ReactNode;
 
   /**
-   * Replaces the built-in DataTablePagination. A function receives page /
-   * count / `onPageChange`.
+   * Replaces the built-in chrome pager. A function receives page / count /
+   * `onPageChange`.
    */
   pagination?: ReactNode | ((props: DataTablePaginationSlotProps) => ReactNode);
 

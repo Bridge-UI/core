@@ -135,10 +135,12 @@ function DataTableCellContent({
 }
 
 function DataTableLoadingSpin() {
+  const resolveMessage = useResolveMessage();
+
   return (
     <span
       role="status"
-      aria-label="Loading"
+      aria-label={resolveMessage("Loading")}
       className="relative inline-block size-5 animate-spin motion-reduce:animate-none"
     >
       <span className="absolute inset-s-0 top-0 size-2 rounded-full bg-primary-500 opacity-30 dark:bg-primary-400" />
@@ -330,12 +332,14 @@ const DataTableExpandCell = memo(function DataTableExpandCell({
   onToggleExpand: (rowId: string, expanded: boolean) => void;
   rowId: string;
 }) {
+  const resolveMessage = useResolveMessage();
+
   return (
     <TableCell align={getCellAlign(cell)} {...getCellBind(cell)}>
       <button
         type="button"
-        aria-label="Expand row"
         aria-expanded={expanded}
+        aria-label={resolveMessage("Expand row")}
         onClick={() => {
           onToggleExpand(rowId, !expanded);
         }}

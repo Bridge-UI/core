@@ -689,15 +689,6 @@ export function useDataTable<T>(
     return headerViews.value.length;
   });
 
-  const showPagination = computed(() => {
-    return (
-      Boolean(vueSlots.pagination) ||
-      Boolean(vueSlots.perPage) ||
-      serverPaged.value ||
-      clientPaged.value
-    );
-  });
-
   const showPerPage = computed(() => {
     return isDataTablePerPageEnabled(
       models.perPage.value,
@@ -727,7 +718,7 @@ export function useDataTable<T>(
   });
 
   const showFooterBar = computed(() => {
-    return showSelected.value || showPagination.value || showPerPage.value;
+    return showSelected.value || showPager.value || showPerPage.value;
   });
 
   const showEmpty = computed(() => {
@@ -1342,7 +1333,6 @@ export function useDataTable<T>(
     loadingBarBind,
     paginationBind,
     selectAllState,
-    showPagination,
     onToggleExpand,
     visibilityItems,
     onChangePerPage,

@@ -395,9 +395,9 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
 
                     <button
                       type="button"
-                      aria-label="Expand row"
                       v-else-if="cell.isExpand"
                       :aria-expanded="row.expanded"
+                      :aria-label="resolveMessage('Expand row')"
                       v-on:click="onToggleExpand(row.id, !row.expanded)"
                       class="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15"
                     >
@@ -473,7 +473,7 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
           <slot name="loading" v-if="!loadingBar">
             <span
               role="status"
-              aria-label="Loading"
+              :aria-label="resolveMessage('Loading')"
               class="relative inline-block size-5 animate-spin motion-reduce:animate-none"
             >
               <span
