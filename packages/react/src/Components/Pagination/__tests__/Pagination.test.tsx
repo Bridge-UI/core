@@ -89,10 +89,20 @@ test("it should apply visual variants", () => {
     "cursor-pointer",
   );
 
+  expect(
+    screen.getByRole("button", { name: "Previous" }).textContent,
+  ).toContain("Previous");
+  expect(screen.getByRole("button", { name: "Next" }).textContent).toContain(
+    "Next",
+  );
+
   rerender(<Pagination page={1} count={3} variant="ghost" />);
-  expect(screen.getByRole("list").className).toContain("gap-1");
+  expect(screen.getByRole("list").className).toContain("gap-2");
+  expect(screen.getByRole("button", { name: "Page 1" }).className).toContain(
+    "ring-1",
+  );
   expect(screen.getByRole("button", { name: "Next" }).className).toContain(
-    "w-9",
+    "gap-1.5",
   );
   expect(screen.getByRole("button", { name: "Next" }).className).toContain(
     "rounded-md",
@@ -104,8 +114,14 @@ test("it should apply visual variants", () => {
   );
 
   rerender(<Pagination page={1} count={3} variant="text" />);
-  expect(screen.getByRole("list").className).toContain("border-t");
-  expect(screen.getByRole("button", { name: "Next" }).className).toContain(
-    "border-t-2",
+  expect(screen.getByRole("list").className).toContain("gap-2");
+  expect(screen.getByRole("button", { name: "Page 1" }).className).toContain(
+    "underline",
+  );
+  expect(screen.getByRole("button", { name: "Page 2" }).className).toContain(
+    "hover:bg-dark-500/10",
+  );
+  expect(screen.getByRole("button", { name: "Page 2" }).className).toContain(
+    "rounded-md",
   );
 });

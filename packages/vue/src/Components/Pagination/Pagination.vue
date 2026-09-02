@@ -30,6 +30,8 @@ const {
   listBind,
   prevBind,
   nextBind,
+  prevLabel,
+  nextLabel,
   getItemBind,
   prevIconBind,
   nextIconBind,
@@ -39,11 +41,11 @@ const {
   {
     size: "md",
     rounded: "md",
-    variant: "text",
+    color: "dark",
     disabled: false,
     siblingCount: 1,
+    variant: "ghost",
     mode: "numbered",
-    color: "primary",
     boundaryCount: 1,
     hideNextButton: false,
     hidePrevButton: false,
@@ -60,6 +62,7 @@ const {
         <button v-bind="prevBind">
           <slot name="prev">
             <Icon icon="chevronLeft" v-bind="prevIconBind" />
+            {{ prevLabel }}
           </slot>
         </button>
       </li>
@@ -82,6 +85,7 @@ const {
       <li v-if="showNext" class="contents">
         <button v-bind="nextBind">
           <slot name="next">
+            {{ nextLabel }}
             <Icon icon="chevronRight" v-bind="nextIconBind" />
           </slot>
         </button>

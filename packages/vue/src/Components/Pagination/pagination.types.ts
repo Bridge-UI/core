@@ -154,9 +154,9 @@ export interface PaginationOwnProps {
   classes?: PaginationClasses;
 
   /**
-   * Selected page accent color.
+   * Optional text accent for the selected page. Selected surface comes from `variant`.
    *
-   * @default "primary"
+   * @default "dark"
    */
   color?: MergeProps<PaginationColor, PaginationColorOverrides>;
 
@@ -247,7 +247,7 @@ export interface PaginationOwnProps {
   /**
    * Visual style of page / control buttons.
    *
-   * @default "text"
+   * @default "ghost"
    */
   variant?: MergeProps<PaginationVariant, PaginationVariantOverrides>;
 }

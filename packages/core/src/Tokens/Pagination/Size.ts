@@ -18,7 +18,7 @@ export interface PaginationSizeItem {
   "item": string;
 
   /**
-   * Classes for prev/next icon buttons (same footprint as `item`).
+   * Classes for prev/next controls (same height as `item`, grows with labels).
    */
   "itemIcon": string;
 
@@ -62,32 +62,32 @@ export const sizeProps: PaginationSize = {
     "root": "flex",
     "list": "flex list-none items-center p-0 m-0",
     "ellipsis":
-      "relative inline-flex h-9 min-w-9 items-center justify-center px-3 text-sm font-semibold text-dark-500 dark:text-dark-400",
-    "itemIcon":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-9 w-9 p-0 text-sm",
+      "relative inline-flex h-9 min-w-9 items-center justify-center px-3 text-sm font-medium text-dark-500 dark:text-dark-400",
     "item":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-9 min-w-9 px-3 text-sm",
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-9 min-w-9 px-3 text-sm",
+    "itemIcon":
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-9 gap-1.5 px-2.5 text-sm",
   },
   "sm": {
     "icon": "xs",
     "root": "flex",
     "list": "flex list-none items-center p-0 m-0",
     "ellipsis":
-      "relative inline-flex h-8 min-w-8 items-center justify-center px-2.5 text-xs font-semibold text-dark-500 dark:text-dark-400",
+      "relative inline-flex h-8 min-w-8 items-center justify-center px-2.5 text-xs font-medium text-dark-500 dark:text-dark-400",
     "itemIcon":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-8 w-8 p-0 text-xs",
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-8 gap-1 px-2 text-xs",
     "item":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-8 min-w-8 px-2.5 text-xs",
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-8 min-w-8 px-2.5 text-xs",
   },
   "lg": {
     "icon": "md",
     "root": "flex",
     "list": "flex list-none items-center p-0 m-0",
     "ellipsis":
-      "relative inline-flex h-10 min-w-10 items-center justify-center px-4 text-base font-semibold text-dark-500 dark:text-dark-400",
-    "itemIcon":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-10 w-10 p-0 text-base",
+      "relative inline-flex h-10 min-w-10 items-center justify-center px-4 text-base font-medium text-dark-500 dark:text-dark-400",
     "item":
-      "relative inline-flex items-center justify-center font-semibold transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-10 min-w-10 px-4 text-base",
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-10 min-w-10 px-4 text-base",
+    "itemIcon":
+      "relative inline-flex items-center justify-center font-medium transition-colors cursor-pointer focus:outline-none focus-visible:z-20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 h-10 gap-2 px-3 text-base",
   },
 };

@@ -6,12 +6,12 @@ import type { PaginationProps } from "@/Components/Pagination/pagination.types";
 const paginationLibDefaults = {
   size: "md",
   rounded: "md",
+  color: "dark",
   defaultPage: 1,
-  variant: "text",
   disabled: false,
   siblingCount: 1,
+  variant: "ghost",
   mode: "numbered",
-  color: "primary",
   boundaryCount: 1,
   hideNextButton: false,
   hidePrevButton: false,
@@ -27,6 +27,8 @@ function Pagination(props: PaginationProps) {
     listBind,
     prevBind,
     nextBind,
+    prevLabel,
+    nextLabel,
     getItemBind,
     prevIconBind,
     nextIconBind,
@@ -39,7 +41,12 @@ function Pagination(props: PaginationProps) {
         {showPrev ? (
           <li className="contents">
             <button {...prevBind}>
-              {slots?.prev ?? <Icon icon="chevronLeft" {...prevIconBind} />}
+              {slots?.prev ?? (
+                <>
+                  <Icon icon="chevronLeft" {...prevIconBind} />
+                  {prevLabel}
+                </>
+              )}
             </button>
           </li>
         ) : null}
@@ -63,7 +70,12 @@ function Pagination(props: PaginationProps) {
         {showNext ? (
           <li className="contents">
             <button {...nextBind}>
-              {slots?.next ?? <Icon icon="chevronRight" {...nextIconBind} />}
+              {slots?.next ?? (
+                <>
+                  {nextLabel}
+                  <Icon icon="chevronRight" {...nextIconBind} />
+                </>
+              )}
             </button>
           </li>
         ) : null}

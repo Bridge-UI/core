@@ -46,7 +46,7 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 
 ```vue
 <Table variant="plain" />
-<Pagination :count="12" v-model="page" variant="text" />
+<Pagination :count="12" v-model="page" variant="ghost" />
 
 <Table variant="ghost" />
 <Pagination :count="12" v-model="page" variant="ghost" />
@@ -57,7 +57,7 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 
 | Table `variant` | Pagination `variant` |
 | --------------- | -------------------- |
-| `plain`         | `text`               |
+| `plain`         | `ghost`              |
 | `ghost`         | `ghost`              |
 | `bordered`      | `outlined`           |
 

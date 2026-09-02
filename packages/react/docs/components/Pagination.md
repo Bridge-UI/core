@@ -1,6 +1,6 @@
 # Pagination
 
-Page controls for lists and tables: previous/next, page numbers, and a simple cursor-friendly prev/next mode.
+Page controls for lists and tables: previous/next with labels, page numbers, and a simple cursor-friendly prev/next mode. `Previous` and `Next` resolve through the i18n adapter.
 
 ## Import
 
@@ -25,9 +25,11 @@ const [page, setPage] = useState(1);
 
 ### Variants
 
+`ghost` (default), `text`, `outlined`.
+
 ```tsx
-<Pagination count={12} page={page} variant="text" onChange={setPage} />
 <Pagination count={12} page={page} variant="ghost" onChange={setPage} />
+<Pagination count={12} page={page} variant="text" onChange={setPage} />
 <Pagination count={12} page={page} variant="outlined" onChange={setPage} />
 ```
 

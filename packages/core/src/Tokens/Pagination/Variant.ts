@@ -1,6 +1,7 @@
 /**
  * Per-variant structural classes for the pagination list and controls.
- * Inactive text uses `dark-*`; selected accents come from color tokens.
+ * Inactive text uses `dark-*`; selected text comes from color tokens.
+ * Selected surface (ring, underline, fill) lives on `itemSelected`.
  * Corner radius comes from the `rounded` token (not hardcoded here).
  */
 export interface PaginationVariantItem {
@@ -15,7 +16,7 @@ export interface PaginationVariantItem {
   "item": string;
 
   /**
-   * Extra structural classes for the selected page (combine with color).
+   * Extra structural classes for the selected page (combine with color text).
    */
   "itemSelected": string;
 
@@ -28,24 +29,23 @@ export interface PaginationVariantItem {
 /**
  * Pagination visual variants.
  *
- * - `text` — top border underline on the active page (border-t style).
+ * - `ghost` — spaced outline buttons. Default.
  * - `outlined` — connected controls with shared ring borders.
- * - `ghost` — soft spaced buttons with rounded corners.
+ * - `text` — underline on the active page.
  */
 export interface PaginationVariant {
   /**
-   * Soft spaced buttons. Quiet option without connecting rings.
+   * Soft spaced buttons. Quiet option without connecting rings. Default.
    */
   "ghost": PaginationVariantItem;
 
   /**
-   * Connected ringed controls with a filled selected page. Default companion
-   * to dense table footers.
+   * Connected ringed controls with a quiet selected fill.
    */
   "outlined": PaginationVariantItem;
 
   /**
-   * Underline / border-top indicator on the active page. Default.
+   * Underline on the active page.
    */
   "text": PaginationVariantItem;
 }
@@ -54,23 +54,24 @@ export interface PaginationVariant {
  * Default pagination variant class maps.
  */
 export const variantProps: PaginationVariant = {
+  "text": {
+    "ellipsis": "",
+    "list": "gap-2",
+    "itemSelected": "underline underline-offset-4",
+    "item":
+      "text-dark-500 hover:bg-dark-500/10 hover:text-dark-800 dark:text-dark-400 dark:hover:bg-dark-500/15 dark:hover:text-dark-200",
+  },
   "ghost": {
     "ellipsis": "",
-    "list": "gap-1",
-    "itemSelected": "",
+    "list": "gap-2",
+    "itemSelected":
+      "bg-white ring-1 ring-inset ring-dark-400 dark:bg-dark-900 dark:ring-dark-500",
     "item":
       "text-dark-600 hover:bg-dark-500/10 hover:text-dark-800 dark:text-dark-400 dark:hover:bg-dark-500/15 dark:hover:text-dark-200",
   },
-  "text": {
-    "itemSelected": "",
-    "ellipsis": "border-t-2 border-transparent",
-    "list": "gap-0 border-t border-dark-200 dark:border-dark-700",
-    "item":
-      "rounded-none border-t-2 border-transparent -mt-px text-dark-500 hover:border-dark-300 hover:text-dark-700 dark:text-dark-400 dark:hover:border-dark-600 dark:hover:text-dark-200",
-  },
   "outlined": {
-    "itemSelected": "z-10",
-    "list": "isolate shadow-sm",
+    "list": "isolate",
+    "itemSelected": "z-10 bg-dark-100 dark:bg-dark-800",
     "ellipsis":
       "relative -ml-px rounded-none ring-1 ring-inset ring-dark-300 dark:ring-dark-600 text-dark-500 dark:text-dark-400",
     "item":

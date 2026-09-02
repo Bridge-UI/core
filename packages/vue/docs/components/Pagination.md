@@ -1,6 +1,6 @@
 # Pagination
 
-Page controls for lists and tables: previous/next, page numbers, and a simple cursor-friendly prev/next mode.
+Page controls for lists and tables: previous/next with labels, page numbers, and a simple cursor-friendly prev/next mode. `Previous` and `Next` resolve through the i18n adapter.
 
 ## Import
 
@@ -27,9 +27,11 @@ const page = ref(1);
 
 ### Variants
 
+`ghost` (default), `text`, `outlined`.
+
 ```vue
-<Pagination :count="12" v-model="page" variant="text" />
 <Pagination :count="12" v-model="page" variant="ghost" />
+<Pagination :count="12" v-model="page" variant="text" />
 <Pagination :count="12" v-model="page" variant="outlined" />
 ```
 

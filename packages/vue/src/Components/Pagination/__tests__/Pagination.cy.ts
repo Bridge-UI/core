@@ -21,5 +21,5 @@ test("it should render outlined and ghost variants", () => {
   cy.mount(Pagination, {
     props: { count: 4, modelValue: 1, variant: "ghost" },
   });
-  cy.get("ul").should("have.class", "gap-1");
+  cy.get("ul").should("have.class", "gap-2");
 });

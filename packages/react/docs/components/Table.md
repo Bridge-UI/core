@@ -46,7 +46,7 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 
 ```tsx
 <Table variant="plain">{/* … */}</Table>
-<Pagination count={12} page={page} variant="text" onChange={setPage} />
+<Pagination count={12} page={page} variant="ghost" onChange={setPage} />
 
 <Table variant="ghost">{/* … */}</Table>
 <Pagination count={12} page={page} variant="ghost" onChange={setPage} />
@@ -62,7 +62,7 @@ Same three chrome treatments as `DataTable`. Pair with `Pagination` under the ta
 
 | Table `variant` | Pagination `variant` |
 | --------------- | -------------------- |
-| `plain`         | `text`               |
+| `plain`         | `ghost`              |
 | `ghost`         | `ghost`              |
 | `bordered`      | `outlined`           |
 
