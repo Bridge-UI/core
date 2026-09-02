@@ -35,7 +35,7 @@ const [page, setPage] = useState(1);
 
 ### Rounded
 
-Applies to `ghost` item corners and the `outlined` group / edge controls.
+Applies to `ghost` and `text` item corners and the `outlined` group / edge controls.
 
 ```tsx
 <Pagination

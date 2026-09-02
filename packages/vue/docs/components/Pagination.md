@@ -37,7 +37,7 @@ const page = ref(1);
 
 ### Rounded
 
-Applies to `ghost` item corners and the `outlined` group / edge controls.
+Applies to `ghost` and `text` item corners and the `outlined` group / edge controls.
 
 ```vue
 <Pagination :count="12" rounded="lg" v-model="page" variant="ghost" />

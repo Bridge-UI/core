@@ -224,7 +224,7 @@ export interface PaginationOwnProps {
   modelValue?: number;
 
   /**
-   * Control corner radius (`ghost` items / `outlined` group edges).
+   * Control corner radius (`ghost` / `text` items and `outlined` group edges).
    *
    * @default "md"
    */
