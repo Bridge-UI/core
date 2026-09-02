@@ -1,15 +1,17 @@
 /**
  * Per-color selected-state classes for tabs.
  * Inactive tabs use `dark-*` from the variant; these apply when selected.
+ * Selected surface (fill, shadow, underline) comes from the variant.
  */
 export interface TabsColorItem {
   /**
-   * Text accent for the selected tab (also drives the underline via `currentColor`).
+   * Text accent for the selected tab (also drives `line` / `solid` / `enclosed`
+   * indicators via `currentColor`).
    */
   "tabSelected": string;
 
   /**
-   * Soft background fill for `pill` / `solid` selected tabs.
+   * Soft background fill kept for token overrides. Default composition does not apply it.
    */
   "tabSelectedSoft": string;
 }
@@ -60,7 +62,7 @@ export interface TabsColor {
 }
 
 /**
- * Default tabs color maps (selected only).
+ * Default tabs color maps (selected text only).
  * No `border-*` here — that would recolor `divide-x` in `enclosed`.
  */
 export const colorProps: TabsColor = {
@@ -72,7 +74,7 @@ export const colorProps: TabsColor = {
   "dark": {
     "tabSelectedSoft": "bg-dark-500/10 dark:bg-dark-500/20",
     "tabSelected":
-      "text-dark-800 hover:text-dark-800 dark:text-dark-100 dark:hover:text-dark-100",
+      "text-dark-900 hover:text-dark-900 dark:text-dark-50 dark:hover:text-dark-50",
   },
   "info": {
     "tabSelectedSoft": "bg-info-500/15 dark:bg-info-500/20",

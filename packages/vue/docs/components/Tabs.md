@@ -1,6 +1,6 @@
 # Tabs
 
-Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. Selected accent uses the semantic `color` palette; inactive tabs use `dark-*`.
+Organize related content into tabbed views. Use with `TabList`, `Tab`, and `TabPanel`. The selected tab uses a quiet surface from `variant`; `color` optionally tints selected text and the `line` / `solid` / `enclosed` indicator.
 
 ## Import
 
@@ -90,10 +90,10 @@ import { TabPanel } from "@bridge-ui/vue/Components/TabPanel";
 
 ### Variants
 
-`line` (default), `plain`, `pill`, `solid`, `enclosed`.
+`pill` (default), `line`, `plain`, `solid`, `enclosed`.
 
 ```vue
-<Tabs v-model="tab" variant="line" color="primary">
+<Tabs v-model="tab">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -102,7 +102,7 @@ import { TabPanel } from "@bridge-ui/vue/Components/TabPanel";
   <TabPanel value="two">Second</TabPanel>
 </Tabs>
 
-<Tabs color="dark" v-model="tab" variant="pill">
+<Tabs v-model="tab" variant="line">
   <TabList>
     <Tab value="one">One</Tab>
     <Tab value="two">Two</Tab>
@@ -152,11 +152,11 @@ import { TabPanel } from "@bridge-ui/vue/Components/TabPanel";
 | Prop          | Type              | Default        |
 | ------------- | ----------------- | -------------- |
 | `activation`  | `TabsActivation`  | `"automatic"`  |
-| `color`       | `TabsColor`       | `"primary"`    |
+| `color`       | `TabsColor`       | `"dark"`       |
 | `keepMounted` | `boolean`         | `true`         |
 | `orientation` | `TabsOrientation` | `"horizontal"` |
 | `size`        | `TabsSize`        | `"md"`         |
-| `variant`     | `TabsVariant`     | `"line"`       |
+| `variant`     | `TabsVariant`     | `"pill"`       |
 
 ### v-model
 

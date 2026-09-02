@@ -209,6 +209,24 @@ export function useTabs(
     return get(orientationClasses.value, merged.value.orientation);
   });
 
+  const isVertical = computed(() => {
+    return merged.value.orientation === "vertical";
+  });
+
+  const tabOrientation = computed(() => {
+    return cn({
+      [get(orientationItem.value, "tab") ?? ""]: true,
+      [get(variantItem.value, "tabVertical") ?? ""]: isVertical.value,
+    });
+  });
+
+  const listOrientation = computed(() => {
+    return cn({
+      [get(orientationItem.value, "list") ?? ""]: true,
+      [get(variantItem.value, "listVertical") ?? ""]: isVertical.value,
+    });
+  });
+
   const contextValue = computed((): TabsContextValue => {
     return {
       focusTab,
@@ -225,22 +243,21 @@ export function useTabs(
       orientation:
         (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
+        softFill: false,
         tabSize: get(sizeItem.value, "tab"),
         iconGap: get(sizeItem.value, "gap"),
+        tabOrientation: tabOrientation.value,
         iconSize: get(sizeItem.value, "icon"),
         listSize: get(sizeItem.value, "list"),
+        listOrientation: listOrientation.value,
         panelSize: get(sizeItem.value, "panel"),
         tabVariant: get(variantItem.value, "tab"),
         listVariant: get(variantItem.value, "list"),
-        tabOrientation: get(orientationItem.value, "tab"),
         colorSelected: get(colorItem.value, "tabSelected"),
-        listOrientation: get(orientationItem.value, "list"),
         rootOrientation: get(orientationItem.value, "root"),
         panelOrientation: get(orientationItem.value, "panel"),
         tabVariantSelected: get(variantItem.value, "tabSelected"),
         colorSelectedSoft: get(colorItem.value, "tabSelectedSoft"),
-        softFill:
-          merged.value.variant === "pill" || merged.value.variant === "solid",
       },
     };
   });

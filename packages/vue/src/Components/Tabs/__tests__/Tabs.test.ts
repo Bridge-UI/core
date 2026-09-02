@@ -195,9 +195,9 @@ test("it should apply line underline classes with after content", () => {
   expect(tab.classes().join(" ")).toContain("after:content-['']");
 });
 
-test("it should apply soft fill color classes for pill variant", () => {
+test("it should apply muted track and elevated pill classes", () => {
   const wrapper = mountTabs({
-    props: { color: "dark", modelValue: "a", variant: "pill" },
+    props: { modelValue: "a" },
     slots: {
       default: () => [
         h(TabList, null, {
@@ -208,8 +208,15 @@ test("it should apply soft fill color classes for pill variant", () => {
     },
   });
 
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "bg-dark-100",
+  );
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain("p-1");
   expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
-    "bg-dark-",
+    "shadow-sm",
+  );
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "bg-white",
   );
 });
 
@@ -227,10 +234,135 @@ test("it should lay out vertical tabs beside panels", () => {
   });
 
   expect(wrapper.classes().join(" ")).toContain("flex-row");
-  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).not.toContain(
     "after:w-0.5",
   );
   expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
     "flex-col",
+  );
+});
+
+test("it should move the line indicator to the side when vertical", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "line", orientation: "vertical" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "border-r",
+  );
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "after:w-0.5",
+  );
+});
+
+test("it should weight the selected tab in the plain variant", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "plain" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => [
+            h(Tab, { value: "a" }, { default: () => "Alpha" }),
+            h(Tab, { value: "b" }, { default: () => "Beta" }),
+          ],
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  const tabs = wrapper.findAll('[role="tab"]');
+
+  expect(tabs[0]?.classes().join(" ")).toContain("font-semibold");
+  expect(tabs[1]?.classes().join(" ")).not.toContain("font-semibold");
+});
+
+test("it should fill and underline the selected tab in the solid variant", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "solid" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  const tab = wrapper.find('[role="tab"]');
+
+  expect(tab.classes().join(" ")).toContain("bg-dark-100");
+  expect(tab.classes().join(" ")).toContain("after:bg-current");
+  expect(tab.classes().join(" ")).toContain("after:content-['']");
+});
+
+test("it should fill and underline the selected tab in the enclosed variant", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "enclosed" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  const tab = wrapper.find('[role="tab"]');
+
+  expect(tab.classes().join(" ")).toContain("bg-dark-100");
+  expect(tab.classes().join(" ")).toContain("after:bg-current");
+  expect(tab.classes().join(" ")).toContain("after:content-['']");
+});
+
+test("it should move the solid indicator to the side when vertical", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "solid", orientation: "vertical" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "border-r",
+  );
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "after:w-0.5",
+  );
+});
+
+test("it should move the enclosed indicator to the side when vertical", () => {
+  const wrapper = mountTabs({
+    props: { modelValue: "a", variant: "enclosed", orientation: "vertical" },
+    slots: {
+      default: () => [
+        h(TabList, null, {
+          default: () => h(Tab, { value: "a" }, { default: () => "Alpha" }),
+        }),
+        h(TabPanel, { value: "a" }, { default: () => "Panel A" }),
+      ],
+    },
+  });
+
+  expect(wrapper.find('[role="tablist"]').classes().join(" ")).toContain(
+    "divide-y",
+  );
+  expect(wrapper.find('[role="tab"]').classes().join(" ")).toContain(
+    "after:w-0.5",
   );
 });
