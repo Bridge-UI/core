@@ -13,6 +13,10 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
     specPattern: "src/**/*.cy.ts",
+    retries: {
+      runMode: 2,
+      openMode: 0,
+    },
     devServer: {
       bundler: "vite",
       framework: "vue",
