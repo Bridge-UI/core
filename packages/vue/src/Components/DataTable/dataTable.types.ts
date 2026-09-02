@@ -125,7 +125,7 @@ export interface DataTableClasses {
   loading?: string;
 
   /**
-   * Classes merged onto the pagination region.
+   * Classes merged onto the chrome footer (selection, per-page, pager).
    */
   pagination?: string;
 
@@ -574,8 +574,7 @@ export interface DataTableOwnProps<T> {
   totalCount?: number;
 
   /**
-   * Chrome treatment. `paginationSlotProps.variant` follows the table variant
-   * when the `pagination` slot renders numbered Pagination.
+   * Chrome treatment (`plain` / `ghost` / `bordered`).
    *
    * @default "plain"
    */
@@ -615,7 +614,7 @@ export interface DataTableSlots<T = unknown> {
 
   /**
    * Replaces the built-in DataTablePagination. Receives `page`, `count`,
-   * `variant`, and `onPageChange`.
+   * and `onPageChange`.
    */
   pagination?: Slot<DataTablePaginationSlotProps>;
 

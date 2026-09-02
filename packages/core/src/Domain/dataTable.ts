@@ -41,18 +41,9 @@ export const DATATABLE_CHROME_COLUMN_WIDTH_PX = 48;
 export const DATATABLE_STICKY_WIDTH_PX = 120;
 
 /**
- * Row gap in px between per-page and pagination (`gap-3`).
+ * Gap in px between chrome footer clusters (`gap-3`).
  */
 export const DATATABLE_PAGINATION_GAP_PX = 12;
-
-/**
- * Pagination variant that pairs with a DataTable chrome variant.
- */
-export const DATATABLE_PAGINATION_VARIANT = {
-  plain: "text",
-  ghost: "ghost",
-  bordered: "outlined",
-} as const;
 
 /**
  * Ringed square controls for DataTablePagination.
@@ -301,12 +292,6 @@ export type DataTableColumnBase<T> = {
 };
 
 /**
- * Pagination variant paired with a DataTable chrome variant.
- */
-export type DataTablePaginationVariant =
-  (typeof DATATABLE_PAGINATION_VARIANT)[keyof typeof DATATABLE_PAGINATION_VARIANT];
-
-/**
  * `aria-sort` value for a header cell.
  */
 export type DataTableAriaSort = "none" | "ascending" | "descending";
@@ -315,15 +300,6 @@ export type DataTableAriaSort = "none" | "ascending" | "descending";
  * Semantic icon for a sortable header given its `aria-sort`.
  */
 export type DataTableSortIcon = "chevronUp" | "chevronDown" | "chevronUpDown";
-
-/**
- * Maps a DataTable chrome variant to the matching Pagination variant.
- */
-export function getDataTablePaginationVariant(
-  tableVariant: string | undefined,
-): DataTablePaginationVariant {
-  return get(DATATABLE_PAGINATION_VARIANT, tableVariant ?? "plain") ?? "text";
-}
 
 /**
  * Footer bar layout for selection / per-page / pager clusters.
@@ -684,11 +660,6 @@ export type DataTablePaginationSlotProps = {
    * Current 1-based page.
    */
   page: number;
-
-  /**
-   * Pagination chrome paired with the table variant.
-   */
-  variant: DataTablePaginationVariant;
 };
 
 /**

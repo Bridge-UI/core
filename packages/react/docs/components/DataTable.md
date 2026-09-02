@@ -27,19 +27,13 @@ import { DataTable } from "@bridge-ui/react/Components/DataTable";
 
 ### Variants
 
-DataTable chrome (`plain` / `ghost` / `bordered`). Built-in footer pager is `DataTablePagination` (first / previous / next / last). `paginationSlotProps.variant` still follows the table variant when `slots.pagination` renders numbered Pagination:
+DataTable chrome (`plain` / `ghost` / `bordered`). The built-in footer pager is first / previous / next / last and does not follow table variant:
 
 ```tsx
 <DataTable rows={users} variant="plain" columns={columns} />
 <DataTable rows={users} variant="ghost" columns={columns} />
 <DataTable rows={users} columns={columns} variant="bordered" />
 ```
-
-| DataTable `variant` | Pagination `variant` |
-| ------------------- | -------------------- |
-| `plain`             | `text`               |
-| `ghost`             | `ghost`              |
-| `bordered`          | `outlined`           |
 
 `striped` is independent of variant:
 
@@ -67,7 +61,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in footer pager is `Dat
 
 ### Selection + pagination
 
-The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `perPage` is set (`perPageOptions`, default 10 / 25 / 50 / 100), and DataTablePagination when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `slots.selected`, `slots.pagination`, and `slots.perPage` replace each control:
+The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `perPage` is set (`perPageOptions`, default 10 / 25 / 50 / 100), and a first / previous / next / last pager when `page` is set with `pageCount` or `totalCount` (server fetch stays in the app). `page` + `perPage` without those totals slices `rows` locally. `slots.selected`, `slots.pagination`, and `slots.perPage` replace each control:
 
 ```tsx
 <DataTable

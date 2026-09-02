@@ -26,19 +26,13 @@ import { DataTable } from "@bridge-ui/vue/Components/DataTable";
 
 ### Variants
 
-DataTable chrome (`plain` / `ghost` / `bordered`). Built-in footer pager is `DataTablePagination` (first / previous / next / last). `paginationSlotProps.variant` still follows the table variant when the `pagination` slot renders numbered Pagination:
+DataTable chrome (`plain` / `ghost` / `bordered`). The built-in footer pager is first / previous / next / last and does not follow table variant:
 
 ```vue
 <DataTable :rows="users" variant="plain" :columns="columns" />
 <DataTable :rows="users" variant="ghost" :columns="columns" />
 <DataTable :rows="users" variant="bordered" :columns="columns" />
 ```
-
-| DataTable `variant` | Pagination `variant` |
-| ------------------- | -------------------- |
-| `plain`             | `text`               |
-| `ghost`             | `ghost`              |
-| `bordered`          | `outlined`           |
 
 `striped` is independent of variant:
 
@@ -66,7 +60,7 @@ DataTable chrome (`plain` / `ghost` / `bordered`). Built-in footer pager is `Dat
 
 ### Selection + pagination
 
-The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `per-page` is set (`per-page-options`, default 10 / 25 / 50 / 100), and DataTablePagination when `page` is set with `page-count` or `total-count` (server fetch stays in the app). `page` + `per-page` without those totals slices `rows` locally. `#selected`, `#pagination`, and `#perPage` replace each control:
+The chrome footer shows a selection summary when `selection` is bound, a per-page Select when `per-page` is set (`per-page-options`, default 10 / 25 / 50 / 100), and a first / previous / next / last pager when `page` is set with `page-count` or `total-count` (server fetch stays in the app). `page` + `per-page` without those totals slices `rows` locally. `#selected`, `#pagination`, and `#perPage` replace each control:
 
 ```vue
 <DataTable

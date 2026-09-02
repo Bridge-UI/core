@@ -60,7 +60,6 @@ test("it should expose table defaults from useDataTable", () => {
   expect(result.current.rowViews).toHaveLength(1);
   expect(result.current.showPagination).toBe(false);
   expect(result.current.merged.variant).toBe("plain");
-  expect(result.current.paginationVariant).toBe("text");
   expect(result.current.headerViews[0]?.id).toBe("name");
   expect(result.current.merged.selectionMode).toBe("multiple");
 });
@@ -82,14 +81,13 @@ test("it should enable selection views when selection is controlled", () => {
   expect(result.current.headerViews[0]?.isSelection).toBe(true);
 });
 
-test("it should map bordered chrome to outlined pagination", () => {
+test("it should enable paging chrome when page and pageCount are set", () => {
   const { result } = renderHook(() =>
     useDataTable(
       {
         columns,
         page: 1,
         pageCount: 3,
-        variant: "bordered",
         rows: [{ id: "1", name: "Ada" }],
       },
       libDefaults,
@@ -98,7 +96,24 @@ test("it should map bordered chrome to outlined pagination", () => {
 
   expect(result.current.serverPaged).toBe(true);
   expect(result.current.showPagination).toBe(true);
-  expect(result.current.paginationVariant).toBe("outlined");
+});
+
+test("it should show the footer bar when only perPage is set", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        columns,
+        perPage: 10,
+        onPerPageChange: vi.fn(),
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.showPerPage).toBe(true);
+  expect(result.current.showFooterBar).toBe(true);
+  expect(result.current.showPagination).toBe(false);
 });
 
 test("it should slice rows when page and perPage are set without totals", () => {

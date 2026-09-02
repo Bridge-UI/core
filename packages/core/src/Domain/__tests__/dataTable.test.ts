@@ -6,7 +6,6 @@ import {
   DATATABLE_CHROME_COLUMN_WIDTH_PX,
   DATATABLE_EXPAND_COLUMN_ID,
   DATATABLE_PAGINATION_GAP_PX,
-  DATATABLE_PAGINATION_VARIANT,
   DATATABLE_PER_PAGE_OPTIONS,
   DATATABLE_SELECTION_COLUMN_ID,
   DATATABLE_STICKY_WIDTH_PX,
@@ -24,7 +23,6 @@ import {
   getDataTableFooterLayout,
   getDataTableGridTemplate,
   getDataTableHiddenColumnIds,
-  getDataTablePaginationVariant,
   getDataTablePerPageOptions,
   getDataTablePerPageSelectOptions,
   getDataTableResetHiddenColumnIds,
@@ -68,17 +66,6 @@ import {
   toggleDataTableRowSelection,
   toggleDataTableSorting,
 } from "@/Domain/dataTable";
-
-describe("getDataTablePaginationVariant", () => {
-  test("it should map table chrome to pagination variants", () => {
-    expect(getDataTablePaginationVariant("plain")).toBe("text");
-    expect(getDataTablePaginationVariant("ghost")).toBe("ghost");
-    expect(getDataTablePaginationVariant("unknown")).toBe("text");
-    expect(getDataTablePaginationVariant(undefined)).toBe("text");
-    expect(getDataTablePaginationVariant("bordered")).toBe("outlined");
-    expect(DATATABLE_PAGINATION_VARIANT.plain).toBe("text");
-  });
-});
 
 describe("getDataTableFooterLayout", () => {
   test("it should stack clusters when they do not fit on one row", () => {

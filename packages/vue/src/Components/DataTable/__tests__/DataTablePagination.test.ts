@@ -3,7 +3,7 @@ import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
-import { DataTablePagination } from "@/Components/DataTable";
+import DataTablePagination from "@/Components/DataTable/DataTablePagination.vue";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -44,4 +44,28 @@ test("it should render first and last controls without page numbers", async () =
 
   expect(wrapper.emitted("change")?.[0]).toEqual([7]);
   expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([7]);
+});
+
+test("it should disable last and next on the last page", () => {
+  const wrapper = mountDataTablePagination({
+    props: { count: 7, modelValue: 7 },
+  });
+
+  expect(
+    wrapper.find("button[aria-label='Last page']").attributes("disabled"),
+  ).toBeDefined();
+  expect(
+    wrapper.find("button[aria-label='Next']").attributes("disabled"),
+  ).toBeDefined();
+});
+
+test("it should ignore clicks when disabled", async () => {
+  const wrapper = mountDataTablePagination({
+    props: { count: 7, modelValue: 3, disabled: true },
+  });
+
+  await wrapper.find("button[aria-label='Next']").trigger("click");
+
+  expect(wrapper.emitted("change")).toBeUndefined();
+  expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 });

@@ -50,7 +50,6 @@ import {
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
-  getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
@@ -824,15 +823,11 @@ export function useDataTable<T>(
   });
 
   const showFooterBar = derived(() => {
-    return showSelected || showPagination;
+    return showSelected || showPagination || showPerPage;
   });
 
   const showEmpty = derived(() => {
     return rowViews.length === 0;
-  });
-
-  const paginationVariant = derived(() => {
-    return getDataTablePaginationVariant(merged.variant);
   });
 
   const rootBind = useMemo(() => {
@@ -1320,13 +1315,12 @@ export function useDataTable<T>(
   const paginationSlotProps = useMemo((): DataTablePaginationSlotProps => {
     return {
       page: merged.page ?? 1,
-      variant: paginationVariant,
       count: resolvedPageCount ?? 1,
       onPageChange: (page) => {
         mergedRef.current.onPageChange?.(page);
       },
     };
-  }, [merged.page, paginationVariant, resolvedPageCount]);
+  }, [merged.page, resolvedPageCount]);
 
   const selectedSlotProps = useMemo((): DataTableSelectedSlotProps => {
     return {
@@ -1450,7 +1444,6 @@ export function useDataTable<T>(
     selectionEnabled,
     perPageSlotProps,
     selectedSlotProps,
-    paginationVariant,
     resolvedPageCount,
     selectionMultiple,
     visibilityEnabled,

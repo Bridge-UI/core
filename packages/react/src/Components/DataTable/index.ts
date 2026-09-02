@@ -23,7 +23,6 @@ export type {
   DataTableStickyEdge,
   DataTableStickyHeader,
 } from "@/Components/DataTable/dataTable.types";
-export { default as DataTablePagination } from "@/Components/DataTable/DataTablePagination";
 export type {
   DataTablePaginationCallbacks,
   DataTablePaginationClasses,
@@ -33,4 +32,3 @@ export type {
   DataTablePaginationSlots,
 } from "@/Components/DataTable/dataTablePagination.types";
 export { useDataTable } from "@/Components/DataTable/hooks/useDataTable";
-export { useDataTablePagination } from "@/Components/DataTable/hooks/useDataTablePagination";

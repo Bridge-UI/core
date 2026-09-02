@@ -184,6 +184,19 @@ test("it should show the selection summary in the footer", () => {
   expect(wrapper.text()).toContain("1 of 2 row(s) selected.");
 });
 
+test("it should pluralize the selection summary", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      selection: ["1", "2"],
+      getRowId: (row: User) => row.id,
+    },
+  });
+
+  expect(wrapper.text()).toContain("2 of 2 row(s) selected.");
+});
+
 test("it should emit update:selection when a row is selected", async () => {
   const wrapper = mountDataTable({
     props: {

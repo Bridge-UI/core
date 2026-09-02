@@ -167,10 +167,14 @@ const checkboxSize = computed(() => {
 });
 
 const selectionSummary = computed(() => {
-  return resolveMessage("{{selected}} of {{total}} row(s) selected.", {
-    total: selectedSlotProps.value.totalCount,
-    selected: selectedSlotProps.value.selectedCount,
-  });
+  return resolveMessage(
+    "{{selected}} of {{total}} row(s) selected.",
+    selectedSlotProps.value.selectedCount,
+    {
+      total: selectedSlotProps.value.totalCount,
+      selected: selectedSlotProps.value.selectedCount,
+    },
+  );
 });
 
 const pageStatus = computed(() => {
@@ -207,6 +211,16 @@ const perPageSelectOptions = computed(() => {
     return { value, label: String(value) };
   });
 });
+
+function onPerPageSelect(value: unknown) {
+  const next = Number(value);
+
+  if (!Number.isFinite(next) || next < 1) {
+    return;
+  }
+
+  perPageSlotProps.value.onPerPageChange(next);
+}
 
 const perPageSelectCustom = computed(() => {
   const fromProps = merged.value.customProps?.perPage?.customProps;
@@ -501,13 +515,11 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
               overlay="menu"
               :clearable="false"
               hide-error-message
-              aria-label="Rows per page"
               :options="perPageSelectOptions"
               :custom-props="perPageSelectCustom"
               :model-value="perPageSlotProps.perPage"
-              v-on:update:model-value="
-                (value) => perPageSlotProps.onPerPageChange(Number(value))
-              "
+              v-on:update:model-value="onPerPageSelect"
+              :aria-label="resolveMessage('Rows per page')"
               :classes="{
                 ...merged.customProps?.perPage?.classes,
                 root: cn('w-20', merged.customProps?.perPage?.classes?.root),

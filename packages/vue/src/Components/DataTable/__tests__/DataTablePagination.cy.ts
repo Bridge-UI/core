@@ -1,5 +1,5 @@
 // ** Local Imports
-import { DataTablePagination } from "@/Components/DataTable";
+import DataTablePagination from "@/Components/DataTable/DataTablePagination.vue";
 
 test("it should render first and last controls in the browser", () => {
   cy.mount(DataTablePagination, {

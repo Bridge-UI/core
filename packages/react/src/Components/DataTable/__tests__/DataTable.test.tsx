@@ -175,6 +175,20 @@ test("it should show the selection summary in the footer", () => {
   expect(screen.getByText("1 of 2 row(s) selected.")).toBeTruthy();
 });
 
+test("it should pluralize the selection summary", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      selection={["1", "2"]}
+      getRowId={(row) => row.id}
+      onSelectionChange={vi.fn()}
+    />,
+  );
+
+  expect(screen.getByText("2 of 2 row(s) selected.")).toBeTruthy();
+});
+
 test("it should toggle row selection", () => {
   const onSelectionChange = vi.fn();
 

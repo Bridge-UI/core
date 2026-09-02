@@ -47,7 +47,6 @@ import {
   getDataTableColumnSearch,
   getDataTableDefaultCellContent,
   getDataTableFooterLayout,
-  getDataTablePaginationVariant,
   getDataTablePerPageSelectOptions,
   getDataTableResolvedPageCount,
   getDataTableResolvedPerPage,
@@ -728,15 +727,11 @@ export function useDataTable<T>(
   });
 
   const showFooterBar = computed(() => {
-    return showSelected.value || showPagination.value;
+    return showSelected.value || showPagination.value || showPerPage.value;
   });
 
   const showEmpty = computed(() => {
     return rowViews.value.length === 0;
-  });
-
-  const paginationVariant = computed(() => {
-    return getDataTablePaginationVariant(merged.value.variant);
   });
 
   const rootBind = computed(() => {
@@ -1161,7 +1156,6 @@ export function useDataTable<T>(
   const paginationSlotProps = computed((): DataTablePaginationSlotProps => {
     return {
       page: models.page.value ?? 1,
-      variant: paginationVariant.value,
       count: resolvedPageCount.value ?? 1,
       onPageChange: (nextPage) => {
         models.page.value = nextPage;
@@ -1356,7 +1350,6 @@ export function useDataTable<T>(
     selectionEnabled,
     perPageSlotProps,
     selectedSlotProps,
-    paginationVariant,
     resolvedPageCount,
     selectionMultiple,
     visibilityEnabled,

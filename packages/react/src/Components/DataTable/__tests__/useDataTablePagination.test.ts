@@ -36,3 +36,12 @@ test("it should disable first and previous on the first page", () => {
   expect(result.current.firstBind.disabled).toBe(true);
   expect(result.current.prevBind.disabled).toBe(true);
 });
+
+test("it should disable last and next on the last page", () => {
+  const { result } = renderHook(() =>
+    useDataTablePagination({ page: 7, count: 7 }, libDefaults),
+  );
+
+  expect(result.current.lastBind.disabled).toBe(true);
+  expect(result.current.nextBind.disabled).toBe(true);
+});

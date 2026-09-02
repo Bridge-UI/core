@@ -77,7 +77,6 @@ test("it should expose table defaults from useDataTable", () => {
   expect(result.rowViews.value).toHaveLength(1);
   expect(result.showPagination.value).toBe(false);
   expect(result.merged.value.variant).toBe("plain");
-  expect(result.paginationVariant.value).toBe("text");
   expect(result.headerViews.value[0]?.id).toBe("name");
   expect(result.merged.value.selectionMode).toBe("multiple");
 });
@@ -106,12 +105,11 @@ test("it should enable selection views when selection is controlled", () => {
   expect(result.headerViews.value[0]?.isSelection).toBe(true);
 });
 
-test("it should map bordered chrome to outlined pagination", () => {
+test("it should enable paging chrome when page and pageCount are set", () => {
   const { result } = mountUseDataTable(
     {
       columns,
       pageCount: 3,
-      variant: "bordered",
       rows: [{ id: "1", name: "Ada" }],
     },
     {
@@ -129,7 +127,20 @@ test("it should map bordered chrome to outlined pagination", () => {
 
   expect(result.serverPaged.value).toBe(true);
   expect(result.showPagination.value).toBe(true);
-  expect(result.paginationVariant.value).toBe("outlined");
+});
+
+test("it should show the footer bar when only perPage is set", () => {
+  const { result } = mountUseDataTable(
+    {
+      columns,
+      rows: [{ id: "1", name: "Ada" }],
+    },
+    createModels({ perPage: ref(10) }),
+  );
+
+  expect(result.showPerPage.value).toBe(true);
+  expect(result.showFooterBar.value).toBe(true);
+  expect(result.showPagination.value).toBe(false);
 });
 
 test("it should slice rows when page and perPage are set without totals", () => {

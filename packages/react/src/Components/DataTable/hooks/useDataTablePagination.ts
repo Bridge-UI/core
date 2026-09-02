@@ -20,6 +20,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DataTablePaginationOwnProps,
   DataTablePaginationProps,
@@ -73,6 +74,8 @@ export function useDataTablePagination(
     libDefaults,
     props: componentProps,
   });
+
+  const resolveMessage = useResolveMessage();
 
   const isControlled = derived(() => {
     return props.page !== undefined;
@@ -166,13 +169,13 @@ export function useDataTablePagination(
 
   const rootBind = derived(() => {
     return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      "aria-label":
-        (rootInheritedAttrs as { "aria-label"?: string })["aria-label"] ??
-        "Pagination",
       className: cn({
         [get(sizeItem, "root") ?? ""]: true,
         [get(mergedClasses, "root") ?? ""]: true,
       }),
+      "aria-label":
+        (rootInheritedAttrs as { "aria-label"?: string })["aria-label"] ??
+        resolveMessage("Pagination"),
     });
   });
 
@@ -198,7 +201,7 @@ export function useDataTablePagination(
         onClick: goPrevious,
         disabled: prevDisabled,
         type: "button" as const,
-        "aria-label": "Previous",
+        "aria-label": resolveMessage("Previous"),
         className: cn({
           [itemIconClassName]: true,
           [get(mergedClasses, "prev") ?? ""]: true,
@@ -213,9 +216,9 @@ export function useDataTablePagination(
       {},
       {
         onClick: goNext,
-        "aria-label": "Next",
         disabled: nextDisabled,
         type: "button" as const,
+        "aria-label": resolveMessage("Next"),
         className: cn({
           [itemIconClassName]: true,
           [get(mergedClasses, "next") ?? ""]: true,
@@ -232,7 +235,7 @@ export function useDataTablePagination(
         onClick: goFirst,
         disabled: prevDisabled,
         type: "button" as const,
-        "aria-label": "First page",
+        "aria-label": resolveMessage("First page"),
         className: cn({
           [itemIconClassName]: true,
           [get(mergedClasses, "first") ?? ""]: true,
@@ -249,7 +252,7 @@ export function useDataTablePagination(
         onClick: goLast,
         disabled: nextDisabled,
         type: "button" as const,
-        "aria-label": "Last page",
+        "aria-label": resolveMessage("Last page"),
         className: cn({
           [itemIconClassName]: true,
           [get(mergedClasses, "last") ?? ""]: true,

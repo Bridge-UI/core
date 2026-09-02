@@ -408,6 +408,7 @@ function DataTable<T>(props: DataTableProps<T>) {
   const checkboxSize = merged.size === "lg" ? "md" : "sm";
   const selectionSummary = resolveMessage(
     "{{selected}} of {{total}} row(s) selected.",
+    selectedSlotProps.selectedCount,
     {
       total: selectedSlotProps.totalCount,
       selected: selectedSlotProps.selectedCount,
@@ -655,7 +656,7 @@ function DataTable<T>(props: DataTableProps<T>) {
                       size="sm"
                       hideErrorMessage
                       clearable={false}
-                      aria-label="Rows per page"
+                      aria-label={resolveMessage("Rows per page")}
                       {...perPageCustom}
                       overlay="menu"
                       value={perPageSlotProps.perPage}
