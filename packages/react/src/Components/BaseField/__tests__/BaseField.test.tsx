@@ -45,7 +45,7 @@ test("it should render a label when label prop is provided", () => {
 test("it should render a corner label when corner prop is provided", () => {
   render(<BaseFieldHarness corner="Optional" />);
 
-  expect(screen.getByText("Optional")).toBeTruthy();
+  expect(screen.getByText("Optional").tagName).toBe("LABEL");
 });
 
 test("it should render description when description prop is provided", () => {

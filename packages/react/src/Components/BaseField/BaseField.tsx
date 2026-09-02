@@ -2,6 +2,7 @@
 import type { ReactNode } from "react";
 
 // ** Local Imports
+import BaseFieldCorner from "@/Components/BaseField/BaseFieldCorner";
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/hooks/useBaseField";
 import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
@@ -20,7 +21,6 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
     groupBind,
     controlId,
     headerBind,
-    cornerBind,
     endSlotBind,
     invalidated,
     startSlotBind,
@@ -43,11 +43,7 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
         <div {...headerBind}>
           <BaseFieldLabel field={field} />
 
-          {hasSlotOrProp(slots, "corner", merged.corner) && (
-            <span {...cornerBind}>
-              {hasNamedSlot(slots, "corner") ? slots?.corner : merged.corner}
-            </span>
-          )}
+          <BaseFieldCorner field={field} />
         </div>
       )}
 

@@ -46,7 +46,8 @@ export interface FormFieldSizeItem {
   "padding": string;
 
   /**
-   * Typography for the error message below the control.
+   * Typography for description and error message below the control.
+   * One step smaller than the control text so helper copy stays secondary.
    */
   "text": string;
 
@@ -248,8 +249,8 @@ export interface FormFieldSize {
 export const sizeProps: FormFieldSize = {
   "xs": {
     "filled": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-7",
       "insetStart": "ps-2",
@@ -261,8 +262,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "outline": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-7",
       "insetStart": "ps-2",
@@ -274,8 +275,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "notched": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-7",
       "insetStart": "ps-2",
@@ -287,8 +288,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-tight pt-3 pb-2 w-full h-auto",
     },
     "underlined": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-7",
       "insetStart": "ps-2",
@@ -300,7 +301,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-tight py-1.5 w-full h-auto",
     },
     "stacked": {
-      "text": "text-xs",
+      "text": "text-2xs",
       "insetTop": "pt-1",
       "insetEnd": "pe-2",
       "insetStart": "ps-2",
@@ -315,78 +316,9 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs h-auto min-h-0 w-full py-1.5 leading-tight self-stretch",
     },
   },
-  "2xl": {
-    "filled": {
-      "text": "text-lg",
-      "padding": "px-4",
-      "insetEnd": "pe-4",
-      "container": "h-12",
-      "insetStart": "ps-4",
-      "containerTextarea": "min-h-32 h-auto",
-      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
-      "containerTextareaLikeInput": "min-h-12 h-auto",
-      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea":
-        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
-    },
-    "outline": {
-      "text": "text-lg",
-      "padding": "px-4",
-      "insetEnd": "pe-4",
-      "container": "h-12",
-      "insetStart": "ps-4",
-      "containerTextarea": "min-h-32 h-auto",
-      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
-      "containerTextareaLikeInput": "min-h-12 h-auto",
-      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea":
-        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
-    },
-    "underlined": {
-      "text": "text-lg",
-      "padding": "px-4",
-      "insetEnd": "pe-4",
-      "container": "h-12",
-      "insetStart": "ps-4",
-      "containerTextarea": "min-h-32 h-auto",
-      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
-      "containerTextareaLikeInput": "min-h-12 h-auto",
-      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea":
-        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
-    },
-    "notched": {
-      "text": "text-lg",
-      "padding": "px-4",
-      "insetEnd": "pe-4",
-      "container": "h-12",
-      "insetStart": "ps-4",
-      "containerTextarea": "min-h-32 h-auto",
-      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
-      "containerTextareaLikeInput": "min-h-12 h-auto",
-      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
-      "textarea":
-        "px-0 block text-lg min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
-    },
-    "stacked": {
-      "text": "text-lg",
-      "insetEnd": "pe-4",
-      "insetTop": "pt-1.5",
-      "insetStart": "ps-4",
-      "padding": "px-4 pt-1.5",
-      "controlRow": "min-h-10",
-      "container": "min-h-16 h-auto",
-      "textareaLikeInput": "py-1.25",
-      "containerTextarea": "min-h-36 h-auto",
-      "containerTextareaLikeInput": "min-h-16 h-auto",
-      "input": "px-0 text-lg h-auto min-h-0 w-full py-0 leading-normal",
-      "textarea":
-        "px-0 block text-lg h-auto min-h-0 w-full py-2 leading-normal self-stretch",
-    },
-  },
   "lg": {
     "filled": {
-      "text": "text-sm",
+      "text": "text-xs",
       "padding": "px-3",
       "insetEnd": "pe-3",
       "container": "h-10",
@@ -399,7 +331,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
-      "text": "text-sm",
+      "text": "text-xs",
       "padding": "px-3",
       "insetEnd": "pe-3",
       "container": "h-10",
@@ -412,7 +344,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
-      "text": "text-sm",
+      "text": "text-xs",
       "padding": "px-3",
       "insetEnd": "pe-3",
       "container": "h-10",
@@ -425,7 +357,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
-      "text": "text-sm",
+      "text": "text-xs",
       "padding": "px-3",
       "insetEnd": "pe-3",
       "container": "h-10",
@@ -438,7 +370,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
-      "text": "text-sm",
+      "text": "text-xs",
       "insetTop": "pt-1",
       "insetEnd": "pe-3",
       "insetStart": "ps-3",
@@ -453,10 +385,79 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm h-auto min-h-0 w-full py-2 leading-normal self-stretch",
     },
   },
+  "2xl": {
+    "filled": {
+      "padding": "px-4",
+      "insetEnd": "pe-4",
+      "text": "text-base",
+      "container": "h-12",
+      "insetStart": "ps-4",
+      "containerTextarea": "min-h-32 h-auto",
+      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
+      "containerTextareaLikeInput": "min-h-12 h-auto",
+      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+    },
+    "outline": {
+      "padding": "px-4",
+      "insetEnd": "pe-4",
+      "text": "text-base",
+      "container": "h-12",
+      "insetStart": "ps-4",
+      "containerTextarea": "min-h-32 h-auto",
+      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
+      "containerTextareaLikeInput": "min-h-12 h-auto",
+      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+    },
+    "underlined": {
+      "padding": "px-4",
+      "insetEnd": "pe-4",
+      "text": "text-base",
+      "container": "h-12",
+      "insetStart": "ps-4",
+      "containerTextarea": "min-h-32 h-auto",
+      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
+      "containerTextareaLikeInput": "min-h-12 h-auto",
+      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal py-2 w-full h-auto",
+    },
+    "notched": {
+      "padding": "px-4",
+      "insetEnd": "pe-4",
+      "text": "text-base",
+      "container": "h-12",
+      "insetStart": "ps-4",
+      "containerTextarea": "min-h-32 h-auto",
+      "textareaLikeInput": "py-[calc((3rem-1lh)/2)]",
+      "containerTextareaLikeInput": "min-h-12 h-auto",
+      "input": "px-0 text-lg py-0 h-full min-h-0 leading-normal",
+      "textarea":
+        "px-0 block text-lg min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
+    },
+    "stacked": {
+      "insetEnd": "pe-4",
+      "text": "text-base",
+      "insetTop": "pt-1.5",
+      "insetStart": "ps-4",
+      "padding": "px-4 pt-1.5",
+      "controlRow": "min-h-10",
+      "container": "min-h-16 h-auto",
+      "textareaLikeInput": "py-1.25",
+      "containerTextarea": "min-h-36 h-auto",
+      "containerTextareaLikeInput": "min-h-16 h-auto",
+      "input": "px-0 text-lg h-auto min-h-0 w-full py-0 leading-normal",
+      "textarea":
+        "px-0 block text-lg h-auto min-h-0 w-full py-2 leading-normal self-stretch",
+    },
+  },
   "sm": {
     "filled": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-8",
       "insetStart": "ps-2",
@@ -468,8 +469,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "outline": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-8",
       "insetStart": "ps-2",
@@ -481,8 +482,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "notched": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-8",
       "insetStart": "ps-2",
@@ -494,8 +495,8 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "underlined": {
-      "text": "text-xs",
       "padding": "px-2",
+      "text": "text-2xs",
       "insetEnd": "pe-2",
       "container": "h-8",
       "insetStart": "ps-2",
@@ -507,7 +508,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-xs min-h-0 leading-normal py-1.5 w-full h-auto",
     },
     "stacked": {
-      "text": "text-xs",
+      "text": "text-2xs",
       "insetTop": "pt-1",
       "insetEnd": "pe-2",
       "insetStart": "ps-2",
@@ -524,7 +525,7 @@ export const sizeProps: FormFieldSize = {
   },
   "md": {
     "filled": {
-      "text": "text-sm",
+      "text": "text-xs",
       "container": "h-9",
       "padding": "px-2.5",
       "insetEnd": "pe-2.5",
@@ -537,7 +538,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
-      "text": "text-sm",
+      "text": "text-xs",
       "container": "h-9",
       "padding": "px-2.5",
       "insetEnd": "pe-2.5",
@@ -550,7 +551,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
-      "text": "text-sm",
+      "text": "text-xs",
       "container": "h-9",
       "padding": "px-2.5",
       "insetEnd": "pe-2.5",
@@ -563,7 +564,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
-      "text": "text-sm",
+      "text": "text-xs",
       "container": "h-9",
       "padding": "px-2.5",
       "insetEnd": "pe-2.5",
@@ -576,7 +577,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-sm min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
-      "text": "text-sm",
+      "text": "text-xs",
       "insetTop": "pt-1",
       "insetEnd": "pe-2.5",
       "insetStart": "ps-2.5",
@@ -662,7 +663,7 @@ export const sizeProps: FormFieldSize = {
   },
   "xl": {
     "filled": {
-      "text": "text-base",
+      "text": "text-sm",
       "padding": "px-3.5",
       "container": "h-11",
       "insetEnd": "pe-3.5",
@@ -675,7 +676,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "outline": {
-      "text": "text-base",
+      "text": "text-sm",
       "padding": "px-3.5",
       "container": "h-11",
       "insetEnd": "pe-3.5",
@@ -688,7 +689,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "underlined": {
-      "text": "text-base",
+      "text": "text-sm",
       "padding": "px-3.5",
       "container": "h-11",
       "insetEnd": "pe-3.5",
@@ -701,7 +702,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-base min-h-0 leading-normal py-2 w-full h-auto",
     },
     "notched": {
-      "text": "text-base",
+      "text": "text-sm",
       "padding": "px-3.5",
       "container": "h-11",
       "insetEnd": "pe-3.5",
@@ -714,7 +715,7 @@ export const sizeProps: FormFieldSize = {
         "px-0 block text-base min-h-0 leading-normal pt-3 pb-2 w-full h-auto",
     },
     "stacked": {
-      "text": "text-base",
+      "text": "text-sm",
       "insetTop": "pt-1.5",
       "insetEnd": "pe-3.5",
       "insetStart": "ps-3.5",

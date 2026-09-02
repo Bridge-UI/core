@@ -3,6 +3,7 @@
 import { useSlots } from "vue";
 
 // ** Local Imports
+import FormFieldCorner from "@/Components/FormField/FormFieldCorner.vue";
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel.vue";
 import { type UseFormFieldReturn } from "@/Components/FormField/composables/useFormField";
 import { Icon } from "@/Components/Icon";
@@ -35,16 +36,11 @@ const slots = useSlots();
         </template>
       </FormFieldLabel>
 
-      <span
-        v-bind="api.cornerBind.value"
-        v-if="hasSlotOrProp(slots, 'corner', api.merged.value.corner)"
-      >
-        <slot name="corner" v-if="hasNamedSlot(slots, 'corner')" />
-
-        <template v-else-if="isPropPresent(api.merged.value.corner)">
-          {{ api.merged.value.corner }}
+      <FormFieldCorner :api="api">
+        <template #corner v-if="hasNamedSlot(slots, 'corner')">
+          <slot name="corner" />
         </template>
-      </span>
+      </FormFieldCorner>
     </div>
 
     <div v-bind="api.containerBind.value">

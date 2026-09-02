@@ -115,3 +115,20 @@ test("it should merge customProps.label into fieldLabelProps", () => {
     "text-orange-600",
   );
 });
+
+test("it should set htmlFor on fieldCornerProps to control id", () => {
+  const { result } = renderUseBaseField({
+    corner: "Optional",
+    controlId: "field-id",
+  });
+
+  expect(result.current.fieldCornerProps.htmlFor).toBe("field-id");
+});
+
+test("it should apply helper inset and tighter type on description bind", () => {
+  const { result } = renderUseBaseField({ description: "Helper" });
+
+  expect(result.current.descriptionBind.className).toContain("mt-1");
+  expect(result.current.descriptionBind.className).toContain("px-1");
+  expect(result.current.descriptionBind.className).toContain("text-xs");
+});
