@@ -9,6 +9,7 @@ export {
   resolveDefaultTimeZone,
   resolveIconSource,
   resolveMessage,
+  selectPluralMessage,
 } from "@/Adapters";
 export type {
   DateAdapter,

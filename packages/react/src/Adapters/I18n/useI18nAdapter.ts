@@ -34,7 +34,13 @@ export function useI18nAdapter(): undefined | I18nAdapter {
 export function useResolveMessage() {
   const i18n = useI18nAdapter();
 
-  return (message: string, params?: MessageParams) => {
-    return resolveMessage(message, i18n, params);
-  };
+  function resolve(
+    message: string,
+    countOrParams?: number | MessageParams,
+    params?: MessageParams,
+  ): string {
+    return resolveMessage(message, i18n, countOrParams, params);
+  }
+
+  return resolve;
 }

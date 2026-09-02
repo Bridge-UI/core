@@ -857,6 +857,7 @@ export {
   SEMANTIC_ICON_NAMES,
   interpolateMessage,
   resolveMessage,
+  selectPluralMessage,
   type I18nAdapter,
   type IconAdapter,
   type SemanticIconNameOverrides,

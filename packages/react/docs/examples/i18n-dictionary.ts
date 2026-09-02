@@ -5,15 +5,19 @@
  *
  * Source English strings are the lookup keys (same strings Bridge passes to
  * `resolveMessage`). Messages are keyed by locale; optional `setLocale` updates
- * the active locale used by `t`. `t` replaces `{{name}}` from `params`. For
- * pluralization, wrap i18next (or similar) instead.
+ * the active locale used by `t`. `t` replaces `{{name}}` from `params` and
+ * picks `|` plural forms when `count` is set (`one | other`).
  */
 
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 
 // ** Core Imports
-import { interpolateMessage, type I18nAdapter } from "@bridge-ui/core/Adapters";
+import {
+  interpolateMessage,
+  selectPluralMessage,
+  type I18nAdapter,
+} from "@bridge-ui/core/Adapters";
 
 // prettier-ignore
 const MESSAGES: Record<string, Record<string, string>> = {
@@ -21,15 +25,19 @@ const MESSAGES: Record<string, Record<string, string>> = {
   "pt-BR": {
     "OK": "OK",
     "Close": "Fechar",
-    "Reset": "Redefinir",
+    "Next": "Próxima",
     "Columns": "Colunas",
+    "Reset": "Redefinir",
     "Search": "Pesquisar",
     "No data": "Sem dados",
-    "Per page:": "Por página:",
+    "Previous": "Anterior",
+    "Pagination": "Paginação",
+    "Last page": "Última página",
     "Loading...": "Carregando...",
     "No options": "Nenhuma opção",
-    "Select row": "Selecionar linha",
+    "First page": "Primeira página",
     "Hide password": "Ocultar senha",
+    "Select row": "Selecionar linha",
     "Show password": "Mostrar senha",
     "Filter column": "Filtrar coluna",
     "Clear selection": "Limpar seleção",
@@ -39,10 +47,10 @@ const MESSAGES: Record<string, Record<string, string>> = {
     "Sort ascending": "Ordenar crescente",
     "Cancel sorting": "Cancelar ordenação",
     "Sort descending": "Ordenar decrescente",
-    "Select all rows": "Selecionar todas as linhas",
     "Select all items": "Selecionar todos os itens",
+    "Select all rows": "Selecionar todas as linhas",
     "Page {{page}} of {{count}}": "Página {{page}} de {{count}}",
-    "{{selected}} of {{total}} row(s) selected.": "{{selected}} de {{total}} linha(s) selecionada(s).",
+    "{{selected}} of {{total}} row(s) selected.": "{{selected}} de {{total}} linha selecionada. | {{selected}} de {{total}} linhas selecionadas.",
   },
 };
 
@@ -57,10 +65,13 @@ export function createDictionaryI18nAdapter(): I18nAdapter {
     setLocale(next) {
       locale = next;
     },
-    t(message, params) {
+    t(message, count, params) {
       const translated = get(MESSAGES, [locale, message], message);
+      const template = isNil(count)
+        ? translated
+        : selectPluralMessage(translated, count);
 
-      return interpolateMessage(translated, params);
+      return interpolateMessage(template, params);
     },
   };
 }

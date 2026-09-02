@@ -36,8 +36,8 @@ test("it should forward params to the adapter", () => {
   const seen: unknown[] = [];
 
   setI18nAdapterForTests({
-    t(message, params) {
-      seen.push({ params, message });
+    t(message, count, params) {
+      seen.push({ count, params, message });
 
       return message;
     },
@@ -46,6 +46,14 @@ test("it should forward params to the adapter", () => {
   const { result } = renderHook(() => useResolveMessage());
 
   result.current("{{count}} item", { count: 3 });
+  result.current("{{count}} item", 3);
 
-  expect(seen).toEqual([{ params: { count: 3 }, message: "{{count}} item" }]);
+  expect(seen).toEqual([
+    {
+      count: undefined,
+      params: { count: 3 },
+      message: "{{count}} item",
+    },
+    { count: 3, params: undefined, message: "{{count}} item" },
+  ]);
 });

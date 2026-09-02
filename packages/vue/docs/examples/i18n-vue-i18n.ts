@@ -3,12 +3,13 @@
  * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.i18n`.
  * Not published as an npm package.
  *
- * Passes Bridge source strings and `params` straight to `i18n.t`
- * (interpolation, pluralization, etc. stay in vue-i18n).
+ * Passes Bridge source strings, `count`, and `params` to `i18n.t`
+ * (interpolation and `|` pluralization stay in vue-i18n).
  * `setLocale` on the adapter is invoked by Bridge `setLocale`.
  */
 
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import type { Composer } from "vue-i18n";
 
 // ** Core Imports
@@ -23,12 +24,12 @@ export function createVueI18nAdapter(i18n: Composer): I18nAdapter {
     setLocale(locale) {
       i18n.locale.value = locale;
     },
-    t(message, params) {
-      if (params) {
-        return i18n.t(message, params);
+    t(message, count, params) {
+      if (isNil(count)) {
+        return params ? i18n.t(message, params) : i18n.t(message);
       }
 
-      return i18n.t(message);
+      return params ? i18n.t(message, count, params) : i18n.t(message, count);
     },
   };
 }
