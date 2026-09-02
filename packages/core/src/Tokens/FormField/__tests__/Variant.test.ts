@@ -6,8 +6,8 @@ import { variantProps as formFieldVariantProps } from "@/Tokens/FormField/Varian
 import { variantProps as otpFieldVariantProps } from "@/Tokens/OtpField/Variant";
 
 /**
- * Surfaces must use the semantic `dark-*` scale (zinc host) so theme remaps
- * that retarget `--color-dark-*` / zinc also recolor form chrome.
+ * Surfaces must use the semantic `dark-*` scale (slate host) so theme remaps
+ * that retarget `--color-dark-*` / slate also recolor form chrome.
  */
 function assertUsesSemanticDarkNeutral(classes: string) {
   expect(classes).not.toMatch(/(?:^|[\s:])(?:bg|ring|border|text)-gray-/);
