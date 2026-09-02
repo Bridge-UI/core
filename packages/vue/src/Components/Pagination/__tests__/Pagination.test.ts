@@ -132,11 +132,14 @@ test("it should apply visual variants", async () => {
     "rounded-lg",
   );
 
-  await wrapper.setProps({ variant: "text" });
+  await wrapper.setProps({ rounded: "md", variant: "text" });
   expect(wrapper.find("ul").classes()).toContain("gap-2");
   expect(
     wrapper.find("button[aria-current='page']").classes().join(" "),
   ).toContain("underline");
+  expect(
+    wrapper.find("button[aria-label='Page 2']").classes().join(" "),
+  ).toContain("rounded-md");
   expect(
     wrapper.find("button[aria-label='Page 2']").classes().join(" "),
   ).toContain("hover:bg-dark-500/10");

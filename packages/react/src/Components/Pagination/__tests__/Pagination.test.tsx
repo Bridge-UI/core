@@ -119,9 +119,9 @@ test("it should apply visual variants", () => {
     "underline",
   );
   expect(screen.getByRole("button", { name: "Page 2" }).className).toContain(
-    "hover:bg-dark-500/10",
+    "rounded-md",
   );
   expect(screen.getByRole("button", { name: "Page 2" }).className).toContain(
-    "rounded-md",
+    "hover:bg-dark-500/10",
   );
 });
