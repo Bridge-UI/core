@@ -369,10 +369,12 @@ export function useFormField(
       customProps?.errorMessage,
       {},
       cn({
-        "mt-2": true,
+        "mt-1": true,
         "min-h-[1lh]": reservesErrorMessageSpace,
         "text-error-600 dark:text-error-400": true,
         [sizeClasses?.text ?? ""]: true,
+        [sizeClasses?.insetStart ?? ""]: true,
+        [sizeClasses?.insetEnd ?? ""]: true,
         [mergedClasses.errorMessage ?? ""]: true,
       }),
     );
@@ -433,17 +435,17 @@ export function useFormField(
     );
   });
 
-  const cornerBind = derived(() => {
-    return mergePartBind(
-      customProps?.corner,
-      {},
-      cn({
-        "text-dark-500 dark:text-dark-400": !isNotched,
-        [sizeClasses?.text ?? ""]: true,
-        [variantClasses?.corner ?? ""]: isNotched,
-        [mergedClasses.corner ?? ""]: true,
-      }),
-    );
+  const fieldCornerProps = derived((): LabelProps => {
+    return mergeNestedComponentProps(customProps?.corner, {
+      size: merged.size,
+      htmlFor: controlId,
+      classes: {
+        root: cn({
+          [variantClasses?.corner ?? ""]: isNotched,
+          [mergedClasses.corner ?? ""]: true,
+        }),
+      },
+    });
   });
 
   const headerBind = derived(() => {
@@ -565,8 +567,10 @@ export function useFormField(
       customProps?.description,
       {},
       cn({
-        "mt-2 text-dark-500 dark:text-dark-400": true,
+        "mt-1 text-dark-500 dark:text-dark-400": true,
         [sizeClasses?.text ?? ""]: true,
+        [sizeClasses?.insetStart ?? ""]: true,
+        [sizeClasses?.insetEnd ?? ""]: true,
         [mergedClasses.description ?? ""]: true,
       }),
     );
@@ -604,7 +608,6 @@ export function useFormField(
     isNotched,
     isStacked,
     startBind,
-    cornerBind,
     headerBind,
     isDisabled,
     isReadonly,
@@ -619,6 +622,7 @@ export function useFormField(
     ariaDescribedBy,
     descriptionBind,
     stackedBodyBind,
+    fieldCornerProps,
     hasInsetLabelRow,
     insetLabelRowBind,
     stackedInputRowBind,

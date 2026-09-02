@@ -73,7 +73,7 @@ test("it should render a label when label prop is provided", () => {
 test("it should render corner text when corner prop is provided", () => {
   const wrapper = mountFormField({ corner: "Optional" });
 
-  expect(wrapper.text()).toContain("Optional");
+  expect(wrapper.find("label").text()).toContain("Optional");
 });
 
 test("it should render description when description prop is provided", () => {

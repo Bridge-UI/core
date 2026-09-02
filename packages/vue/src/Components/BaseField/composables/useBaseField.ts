@@ -215,16 +215,22 @@ export function useBaseField(
     );
   });
 
-  const cornerBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.corner,
-      {},
-      cn({
-        "text-dark-500 dark:text-dark-400": true,
-        [sizeClasses.value?.text ?? ""]: true,
-        [mergedClasses.value.corner ?? ""]: true,
-      }),
-    );
+  const fieldCornerProps = computed((): LabelProps => {
+    const resolveLabelFor =
+      options.labelHtmlFor ??
+      ((id: string) => {
+        return id;
+      });
+
+    return mergeNestedComponentProps(customProps.value?.corner, {
+      size: merged.value.size,
+      for: resolveLabelFor(controlId.value),
+      classes: {
+        root: cn({
+          [mergedClasses.value.corner ?? ""]: true,
+        }),
+      },
+    });
   });
 
   const groupBind = computed(() => {
@@ -272,7 +278,7 @@ export function useBaseField(
       customProps.value?.description,
       {},
       cn({
-        "mt-2 text-dark-500 dark:text-dark-400": true,
+        "mt-1 px-1 text-dark-500 dark:text-dark-400": true,
         [sizeClasses.value?.text ?? ""]: true,
         [mergedClasses.value.description ?? ""]: true,
       }),
@@ -284,7 +290,7 @@ export function useBaseField(
       customProps.value?.errorMessage,
       {},
       cn({
-        "mt-2": true,
+        "mt-1 px-1": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
         "text-error-600 dark:text-error-400": true,
         [sizeClasses.value?.text ?? ""]: true,
@@ -322,7 +328,6 @@ export function useBaseField(
     groupBind,
     controlId,
     headerBind,
-    cornerBind,
     isDisabled,
     isReadonly,
     sizeClasses,
@@ -333,6 +338,7 @@ export function useBaseField(
     ariaDescribedBy,
     fieldLabelProps,
     descriptionBind,
+    fieldCornerProps,
     showErrorMessageContent,
   };
 }

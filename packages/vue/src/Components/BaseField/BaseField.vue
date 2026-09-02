@@ -3,6 +3,7 @@
 import { computed, useSlots } from "vue";
 
 // ** Local Imports
+import BaseFieldCorner from "@/Components/BaseField/BaseFieldCorner.vue";
 import BaseFieldLabel from "@/Components/BaseField/BaseFieldLabel.vue";
 import type { BaseFieldSlots } from "@/Components/BaseField/baseField.types";
 import type { UseBaseFieldReturn } from "@/Components/BaseField/composables/useBaseField";
@@ -50,16 +51,11 @@ const showHeader = computed(() => {
         </template>
       </BaseFieldLabel>
 
-      <span
-        v-bind="api.cornerBind.value"
-        v-if="hasSlotOrProp(slots, 'corner', api.merged.value.corner)"
-      >
-        <slot name="corner" v-if="hasNamedSlot(slots, 'corner')" />
-
-        <template v-else-if="isPropPresent(api.merged.value.corner)">
-          {{ api.merged.value.corner }}
+      <BaseFieldCorner :api="api">
+        <template #corner v-if="hasNamedSlot(slots, 'corner')">
+          <slot name="corner" />
         </template>
-      </span>
+      </BaseFieldCorner>
     </div>
 
     <div v-bind="api.groupBind.value">

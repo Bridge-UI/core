@@ -85,9 +85,11 @@ export interface FormFieldCustomProps {
   container?: HTMLAttributes;
 
   /**
-   * Props forwarded to the corner label element.
+   * Props forwarded to the corner `Label` (content stays owned by `FormField`).
+   *
+   * @default undefined
    */
-  corner?: HTMLAttributes;
+  corner?: Partial<LabelProps>;
 
   /**
    * Props forwarded to the helper text below the control.

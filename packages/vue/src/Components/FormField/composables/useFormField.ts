@@ -371,10 +371,12 @@ export function useFormField(
       customProps.value?.errorMessage,
       {},
       cn({
-        "mt-2": true,
+        "mt-1": true,
         "min-h-[1lh]": reservesErrorMessageSpace.value,
         "text-error-600 dark:text-error-400": true,
         [sizeClasses.value?.text ?? ""]: true,
+        [sizeClasses.value?.insetStart ?? ""]: true,
+        [sizeClasses.value?.insetEnd ?? ""]: true,
         [mergedClasses.value.errorMessage ?? ""]: true,
       }),
     );
@@ -439,17 +441,17 @@ export function useFormField(
     );
   });
 
-  const cornerBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.corner,
-      {},
-      cn({
-        "text-dark-500 dark:text-dark-400": !isNotched.value,
-        [sizeClasses.value?.text ?? ""]: true,
-        [variantClasses.value?.corner ?? ""]: isNotched.value,
-        [mergedClasses.value.corner ?? ""]: true,
-      }),
-    );
+  const fieldCornerProps = computed((): LabelProps => {
+    return mergeNestedComponentProps(customProps.value?.corner, {
+      for: controlId.value,
+      size: merged.value.size,
+      classes: {
+        root: cn({
+          [variantClasses.value?.corner ?? ""]: isNotched.value,
+          [mergedClasses.value.corner ?? ""]: true,
+        }),
+      },
+    });
   });
 
   const insetLabelRowBind = computed(() => {
@@ -592,8 +594,10 @@ export function useFormField(
       customProps.value?.description,
       {},
       cn({
-        "mt-2 text-dark-500 dark:text-dark-400": true,
+        "mt-1 text-dark-500 dark:text-dark-400": true,
         [sizeClasses.value?.text ?? ""]: true,
+        [sizeClasses.value?.insetStart ?? ""]: true,
+        [sizeClasses.value?.insetEnd ?? ""]: true,
         [mergedClasses.value.description ?? ""]: true,
       }),
     );
@@ -612,7 +616,6 @@ export function useFormField(
     isNotched,
     isStacked,
     startBind,
-    cornerBind,
     headerBind,
     isDisabled,
     isReadonly,
@@ -627,6 +630,7 @@ export function useFormField(
     ariaDescribedBy,
     descriptionBind,
     stackedBodyBind,
+    fieldCornerProps,
     hasInsetLabelRow,
     insetLabelRowBind,
     stackedInputRowBind,

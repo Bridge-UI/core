@@ -59,6 +59,12 @@ test("it should resolve label for via labelHtmlFor option", () => {
   expect(api.fieldLabelProps.value.for).toBe("my-field-input");
 });
 
+test("it should set for on fieldCornerProps to control id", () => {
+  const { api } = mountUseBaseField({ controlId: "my-field" });
+
+  expect(api.fieldCornerProps.value.for).toBe("my-field");
+});
+
 test("it should expose group bind with role group", () => {
   const { api } = mountUseBaseField({ controlId: "field-id" });
 

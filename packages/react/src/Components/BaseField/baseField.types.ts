@@ -65,9 +65,11 @@ export interface BaseFieldClasses {
 
 export interface BaseFieldCustomProps {
   /**
-   * Props forwarded to the corner label element.
+   * Props forwarded to the corner `Label` (content stays owned by `BaseField`).
+   *
+   * @default undefined
    */
-  corner?: HTMLAttributes<HTMLSpanElement>;
+  corner?: Partial<Omit<LabelProps, "children">>;
 
   /**
    * Props forwarded to the helper text below the group.

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 // ** Local Imports
+import FormFieldCorner from "@/Components/FormField/FormFieldCorner";
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Icon } from "@/Components/Icon";
@@ -29,13 +30,7 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
             <div {...api.insetLabelRowBind}>
               <FormFieldLabel api={api} />
 
-              {hasSlotOrProp(api.slots, "corner", api.merged.corner) && (
-                <span {...api.cornerBind}>
-                  {hasNamedSlot(api.slots, "corner")
-                    ? api.slots?.corner
-                    : api.merged.corner}
-                </span>
-              )}
+              <FormFieldCorner api={api} />
             </div>
           )}
 

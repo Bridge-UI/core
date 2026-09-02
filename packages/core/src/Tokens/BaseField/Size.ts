@@ -5,7 +5,8 @@ export interface BaseFieldSizeItem {
   "group": string;
 
   /**
-   * Typography for label, corner, description, and error message.
+   * Typography for description and error message below the group.
+   * One step smaller than the Label scale so helper copy stays secondary.
    */
   "text": string;
 }
@@ -50,30 +51,30 @@ export interface BaseFieldSize {
 export const sizeProps: BaseFieldSize = {
   "md": {
     "group": "gap-2",
-    "text": "text-sm",
-  },
-  "2xl": {
-    "group": "gap-3",
-    "text": "text-lg",
-  },
-  "xs": {
     "text": "text-xs",
-    "group": "gap-1.5",
-  },
-  "sm": {
-    "text": "text-xs",
-    "group": "gap-1.5",
   },
   "lg": {
     "group": "gap-2",
-    "text": "text-base",
-  },
-  "2xs": {
-    "text": "text-xs",
-    "group": "gap-1.5",
+    "text": "text-sm",
   },
   "xl": {
+    "text": "text-sm",
     "group": "gap-2.5",
+  },
+  "2xl": {
+    "group": "gap-3",
     "text": "text-base",
+  },
+  "xs": {
+    "text": "text-2xs",
+    "group": "gap-1.5",
+  },
+  "sm": {
+    "text": "text-2xs",
+    "group": "gap-1.5",
+  },
+  "2xs": {
+    "text": "text-2xs",
+    "group": "gap-1.5",
   },
 };

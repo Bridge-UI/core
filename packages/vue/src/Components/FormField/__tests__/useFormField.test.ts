@@ -248,3 +248,48 @@ test("it should merge customProps.label into fieldLabelProps", () => {
 
   expect(fieldLabelProps.value.classes?.root).toContain("text-orange-600");
 });
+
+test("it should set for on fieldCornerProps to control id", () => {
+  const { controlId, fieldCornerProps } = mountUseFormField({
+    corner: "Optional",
+    controlId: "email-field",
+  });
+
+  expect(fieldCornerProps.value.for).toBe(controlId.value);
+});
+
+test("it should merge customProps.corner into fieldCornerProps", () => {
+  const { fieldCornerProps } = mountUseFormField({
+    corner: "Optional",
+    customProps: {
+      corner: {
+        classes: {
+          root: "text-orange-600",
+        },
+      },
+    },
+  });
+
+  expect(fieldCornerProps.value.classes?.root).toContain("text-orange-600");
+});
+
+test("it should apply helper inset and tighter type on description bind", () => {
+  const { descriptionBind } = mountUseFormField({ description: "Helper" });
+
+  expect(descriptionBind.value.class).toContain("mt-1");
+  expect(descriptionBind.value.class).toContain("text-xs");
+  expect(descriptionBind.value.class).toContain("ps-2.5");
+  expect(descriptionBind.value.class).toContain("pe-2.5");
+});
+
+test("it should apply helper inset and tighter type on error bind", () => {
+  const { errorBind } = mountUseFormField({
+    error: true,
+    errorMessage: "Required",
+  });
+
+  expect(errorBind.value.class).toContain("mt-1");
+  expect(errorBind.value.class).toContain("text-xs");
+  expect(errorBind.value.class).toContain("ps-2.5");
+  expect(errorBind.value.class).toContain("pe-2.5");
+});
