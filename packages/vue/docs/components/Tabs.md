@@ -111,6 +111,24 @@ import { TabPanel } from "@bridge-ui/vue/Components/TabPanel";
   <TabPanel value="two">Second</TabPanel>
 </Tabs>
 
+<Tabs v-model="tab" variant="plain">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
+<Tabs v-model="tab" variant="solid">
+  <TabList>
+    <Tab value="one">One</Tab>
+    <Tab value="two">Two</Tab>
+  </TabList>
+  <TabPanel value="one">First</TabPanel>
+  <TabPanel value="two">Second</TabPanel>
+</Tabs>
+
 <Tabs v-model="tab" variant="enclosed">
   <TabList>
     <Tab value="one">One</Tab>
