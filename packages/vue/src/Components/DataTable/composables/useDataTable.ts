@@ -1067,19 +1067,6 @@ export function useDataTable<T>(
     );
   });
 
-  const selectedBind = computed(() => {
-    return mergePartBind(
-      customProps.value?.selected,
-      {},
-      {
-        class: cn({
-          "min-w-0 flex-1 text-sm text-dark-500 dark:text-dark-400": true,
-          [get(mergedClasses.value, "selected") ?? ""]: true,
-        }),
-      },
-    );
-  });
-
   const footerLayout = computed(() => {
     return getDataTableFooterLayout({
       showPager: showPager.value,
@@ -1087,6 +1074,20 @@ export function useDataTable<T>(
       inline: paginationInline.value,
       showSelected: showSelected.value,
     });
+  });
+
+  const selectedBind = computed(() => {
+    return mergePartBind(
+      customProps.value?.selected,
+      {},
+      {
+        class: cn({
+          grow: !footerLayout.value.stack,
+          "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
+          [get(mergedClasses.value, "selected") ?? ""]: true,
+        }),
+      },
+    );
   });
 
   const paginationBind = computed(() => {

@@ -1143,19 +1143,6 @@ export function useDataTable<T>(
     );
   }, [customProps?.footer, merged.full, mergedClasses]);
 
-  const selectedBind = useMemo(() => {
-    return mergePartBind(
-      customProps?.selected,
-      {},
-      {
-        className: cn({
-          "min-w-0 flex-1 text-sm text-dark-500 dark:text-dark-400": true,
-          [get(mergedClasses, "selected") ?? ""]: true,
-        }),
-      },
-    );
-  }, [customProps?.selected, mergedClasses]);
-
   const footerLayout = useMemo(() => {
     return getDataTableFooterLayout({
       showPager,
@@ -1163,7 +1150,21 @@ export function useDataTable<T>(
       showSelected,
       inline: paginationInline,
     });
-  }, [paginationInline, showPager, showPerPage, showSelected]);
+  }, [showPager, showPerPage, showSelected, paginationInline]);
+
+  const selectedBind = useMemo(() => {
+    return mergePartBind(
+      customProps?.selected,
+      {},
+      {
+        className: cn({
+          grow: !footerLayout.stack,
+          "whitespace-nowrap text-sm text-dark-500 dark:text-dark-400": true,
+          [get(mergedClasses, "selected") ?? ""]: true,
+        }),
+      },
+    );
+  }, [mergedClasses, footerLayout.stack, customProps?.selected]);
 
   const paginationBind = useMemo(() => {
     return mergePartBind(

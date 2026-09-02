@@ -362,7 +362,7 @@ export function getDataTableSelectionTotal(input: {
 }
 
 /**
- * Whether per-page and pagination fit on one row of `containerWidth`.
+ * Whether footer clusters fit on one row of `containerWidth`.
  */
 export function isDataTablePaginationInline(
   containerWidth: number,
@@ -390,8 +390,8 @@ function measureDataTablePaginationInline(container: HTMLElement): boolean {
 }
 
 /**
- * Watches the pagination bar and reports when per-page and pagination fit
- * on one row. Returns a disconnect callback.
+ * Watches the chrome footer and reports when selection, per-page, and pager
+ * fit on one row. Returns a disconnect callback.
  */
 export function observeDataTablePaginationInline(
   container: HTMLElement,

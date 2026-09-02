@@ -81,6 +81,48 @@ test("it should enable selection views when selection is controlled", () => {
   expect(result.current.headerViews[0]?.isSelection).toBe(true);
 });
 
+test("it should keep the selection summary at content width", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        columns,
+        selection: [],
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.selectedBind.className).toContain("grow");
+  expect(result.current.selectedBind.className).not.toContain("flex-1");
+  expect(result.current.selectedBind.className).toContain("whitespace-nowrap");
+  expect(result.current.selectedBind.className.split(/\s+/)).not.toContain(
+    "min-w-0",
+  );
+});
+
+test("it should not grow the selection summary while footer clusters stack", () => {
+  const { result } = renderHook(() =>
+    useDataTable(
+      {
+        page: 1,
+        columns,
+        perPage: 10,
+        pageCount: 3,
+        selection: [],
+        rows: [{ id: "1", name: "Ada" }],
+      },
+      libDefaults,
+    ),
+  );
+
+  expect(result.current.paginationBind.className).toContain("flex-col");
+  expect(result.current.selectedBind.className).toContain("whitespace-nowrap");
+  expect(result.current.selectedBind.className.split(/\s+/)).not.toContain(
+    "grow",
+  );
+});
+
 test("it should enable paging chrome when page and pageCount are set", () => {
   const { result } = renderHook(() =>
     useDataTable(
