@@ -244,8 +244,8 @@ export function useTabs(
         (merged.value.orientation as "vertical" | "horizontal") ?? "horizontal",
       tokenClasses: {
         softFill: false,
-        tabSize: get(sizeItem.value, "tab"),
         iconGap: get(sizeItem.value, "gap"),
+        tabSize: get(sizeItem.value, "tab"),
         tabOrientation: tabOrientation.value,
         iconSize: get(sizeItem.value, "icon"),
         listSize: get(sizeItem.value, "list"),
