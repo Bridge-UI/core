@@ -11,7 +11,7 @@ export type {
   DateAdapterTimeOptions,
   NativeDateAdapterOptions,
 } from "@/Adapters/date";
-export { resolveMessage } from "@/Adapters/i18n";
+export { interpolateMessage, resolveMessage } from "@/Adapters/i18n";
 export type { I18nAdapter, MessageParams } from "@/Adapters/i18n";
 export {
   SEMANTIC_ICON_NAMES,

@@ -5,15 +5,15 @@
  *
  * Source English strings are the lookup keys (same strings Bridge passes to
  * `resolveMessage`). Messages are keyed by locale; optional `setLocale` updates
- * the active locale used by `t`. For replace / pluralization, wrap i18next (or
- * similar) instead.
+ * the active locale used by `t`. `t` replaces `{{name}}` from `params`. For
+ * pluralization, wrap i18next (or similar) instead.
  */
 
 // ** External Imports
 import { get } from "es-toolkit/compat";
 
 // ** Core Imports
-import type { I18nAdapter } from "@bridge-ui/core/Adapters";
+import { interpolateMessage, type I18nAdapter } from "@bridge-ui/core/Adapters";
 
 // prettier-ignore
 const MESSAGES: Record<string, Record<string, string>> = {
@@ -35,11 +35,14 @@ const MESSAGES: Record<string, Record<string, string>> = {
     "Clear selection": "Limpar seleção",
     "Decrement value": "Diminuir valor",
     "Increment value": "Aumentar valor",
+    "Rows per page": "Linhas por página",
     "Sort ascending": "Ordenar crescente",
     "Cancel sorting": "Cancelar ordenação",
     "Sort descending": "Ordenar decrescente",
     "Select all rows": "Selecionar todas as linhas",
     "Select all items": "Selecionar todos os itens",
+    "Page {{page}} of {{count}}": "Página {{page}} de {{count}}",
+    "{{selected}} of {{total}} row(s) selected.": "{{selected}} de {{total}} linha(s) selecionada(s).",
   },
 };
 
@@ -54,8 +57,10 @@ export function createDictionaryI18nAdapter(): I18nAdapter {
     setLocale(next) {
       locale = next;
     },
-    t(message) {
-      return get(MESSAGES, [locale, message], message);
+    t(message, params) {
+      const translated = get(MESSAGES, [locale, message], message);
+
+      return interpolateMessage(translated, params);
     },
   };
 }

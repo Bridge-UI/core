@@ -17,10 +17,11 @@ export type MessageParams = Record<
  * The source English string is the lookup key (gettext-style):
  * `t("Hide password")` → `"Ocultar senha"`.
  *
- * Interpolation and pluralization are handled by the adapter implementation,
- * not by Bridge core.
+ * Interpolation is the adapter’s job (i18next / vue-i18n, or
+ * `interpolateMessage` in a dictionary adapter). Without an adapter,
+ * `resolveMessage` still replaces `{{name}}` on the English source.
  *
- * Optional {@link setLocale} is called by Bridge `setLocale` so the app can
+ * Optional `setLocale` is called by Bridge `setLocale` so the app can
  * sync i18next / vue-i18n / multi-locale dictionaries in one place. Single-
  * locale adapters can omit it. Persistence stays in the app.
  *
@@ -41,7 +42,30 @@ export interface I18nAdapter {
 }
 
 /**
- * Resolves `message` through the adapter, or returns the source string.
+ * Replaces `{{name}}` tokens using `params`. Missing keys stay as the token.
+ */
+export function interpolateMessage(
+  template: string,
+  params?: MessageParams,
+): string {
+  if (isNil(params)) {
+    return template;
+  }
+
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
+    const value = params[key];
+
+    if (isNil(value)) {
+      return match;
+    }
+
+    return String(value);
+  });
+}
+
+/**
+ * Resolves `message` through the adapter. Without an adapter, returns the
+ * source string with `{{name}}` tokens replaced from `params`.
  */
 export function resolveMessage(
   message: string,
@@ -52,5 +76,5 @@ export function resolveMessage(
     return adapter.t(message, params);
   }
 
-  return message;
+  return interpolateMessage(message, params);
 }

@@ -855,6 +855,7 @@ export {
 export type { UseBreakpointOptions } from "@/Utils";
 export {
   SEMANTIC_ICON_NAMES,
+  interpolateMessage,
   resolveMessage,
   type I18nAdapter,
   type IconAdapter,

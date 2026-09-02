@@ -3,6 +3,7 @@ export {
   SEMANTIC_ICON_NAMES,
   createNativeDateAdapter,
   defaultNativeDateAdapter,
+  interpolateMessage,
   isSemanticIconName,
   isValidDate,
   resolveDefaultTimeZone,
