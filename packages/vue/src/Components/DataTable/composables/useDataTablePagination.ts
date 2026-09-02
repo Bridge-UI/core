@@ -22,6 +22,7 @@ import {
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
+  DataTablePaginationClasses,
   DataTablePaginationEmits,
   DataTablePaginationOwnProps,
   DataTablePaginationProps,
@@ -72,7 +73,7 @@ export function useDataTablePagination(
     });
   });
 
-  const { entry, merged } = useBridgeUIComponent<DataTablePaginationMerged>({
+  const { merged } = useBridgeUIComponent<DataTablePaginationMerged>({
     libDefaults,
     props: () => split.value.componentProps,
   });
@@ -85,10 +86,13 @@ export function useDataTablePagination(
     return model.value ?? 1;
   });
 
-  const mergedClasses = useBridgeUIMergedRegistryClasses({
-    entry,
-    props: () => split.value.componentProps,
-  });
+  const mergedClasses =
+    useBridgeUIMergedRegistryClasses<DataTablePaginationClasses>({
+      props: () => split.value.componentProps,
+      entry: computed(() => {
+        return undefined;
+      }),
+    });
 
   const sizeItem = computed(() => {
     return get(sizeProps, merged.value.size);
