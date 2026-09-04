@@ -114,7 +114,7 @@ const field = useBaseField(() => ({
 | `error`                  | `boolean`              | `false` | Invalid styling on the label and control group. Hides description when an error message is shown, unless `showDescriptionOnError`. |
 | `errorMessage`           | `string`               | —       | Error message below the control group.                                                                                             |
 | `field`                  | `UseBaseFieldReturn`   | —       | Pre-composed field chrome API from `useBaseField`. Used by `<BaseField :field="…" />`.                                             |
-| `hideErrorMessage`       | `boolean`              | `false` | Hides the error message row and reserved space.                                                                                    |
+| `hideErrorMessage`       | `boolean`              | `false` | When `true`, does not reserve the error row. That row is also omitted while a description is shown.                                |
 | `label`                  | `string`               | —       | Primary label above the control group.                                                                                             |
 | `readonly`               | `boolean`              | `false` | Read-only field control group.                                                                                                     |
 | `required`               | `boolean`              | `false` | Shows a required asterisk on the label.                                                                                            |

@@ -98,8 +98,8 @@ test("it should hide description when errorMessage is shown", () => {
     description: "Helper text",
   });
 
-  expect(wrapper.text()).not.toContain("Helper text");
   expect(wrapper.text()).toContain("Required");
+  expect(wrapper.text()).not.toContain("Helper text");
 });
 
 test("it should keep description on error when showDescriptionOnError is true", () => {

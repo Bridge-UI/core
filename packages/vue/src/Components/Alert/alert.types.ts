@@ -101,7 +101,7 @@ export interface AlertOwnProps {
   icon?: null | IconSource;
 
   /**
-   * The padding to apply to the alert.
+   * Root padding scale. Each token also sets body indent under the title row.
    *
    * @default "medium"
    */
@@ -122,7 +122,8 @@ export interface AlertOwnProps {
   shadow?: MergeProps<AlertShadow, AlertShadowOverrides>;
 
   /**
-   * The title to apply to the alert.
+   * Title in the heading row. When omitted, the default slot is used as the
+   * title.
    *
    * @default undefined
    */
@@ -143,7 +144,8 @@ export interface AlertSlots {
   action?: Slot<undefined>;
 
   /**
-   * Main body text below the title row.
+   * Body below the title row. Used as the title when `title` and the `title`
+   * slot are omitted.
    */
   default?: Slot<undefined>;
 
@@ -163,7 +165,8 @@ export interface AlertSlots {
   icon?: Slot<undefined>;
 
   /**
-   * The title of the alert.
+   * Title in the heading row. Takes precedence over the `title` prop and the
+   * default slot.
    */
   title?: Slot<undefined>;
 }

@@ -248,7 +248,8 @@ export interface FormFieldOwnProps {
   field?: UseFormFieldReturn;
 
   /**
-   * When `true`, does not reserve space below the control for error messages.
+   * When `true`, does not reserve the error row. That row is also omitted
+   * while a description is shown.
    *
    * @default false
    */

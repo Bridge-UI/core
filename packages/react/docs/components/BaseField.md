@@ -61,7 +61,7 @@ Props are consumed by `useBaseField`. `<BaseField />` accepts `field` (the hook 
 | `error`                  | `boolean`              | `false` | When `true`, applies invalid styling on the label and group. Hides description when an error message is shown, unless `showDescriptionOnError`. |
 | `errorMessage`           | `string`               | —       | Error message below the group.                                                                                                                  |
 | `field`                  | `UseBaseFieldReturn`   | —       | Pre-composed field API from a parent composable. Used by `<BaseField field={…} />`.                                                             |
-| `hideErrorMessage`       | `boolean`              | `false` | When `true`, does not reserve space below the group for error messages.                                                                         |
+| `hideErrorMessage`       | `boolean`              | `false` | When `true`, does not reserve the error row. That row is also omitted while a description is shown.                                             |
 | `label`                  | `string`               | —       | Primary label text above the group.                                                                                                             |
 | `readonly`               | `boolean`              | `false` | Whether the field is read-only.                                                                                                                 |
 | `required`               | `boolean`              | `false` | Shows a required asterisk on the label.                                                                                                         |

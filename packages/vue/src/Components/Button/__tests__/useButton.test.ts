@@ -64,6 +64,14 @@ test("it should set loading on merged when loading prop is true", () => {
   expect(merged.value.loading).toBe(true);
 });
 
+test("it should hide content and overlay the spinner when loading", () => {
+  const { contentBind, loadingWrapBind } = mountUseButton({ loading: true });
+
+  expect(contentBind.value.class).toContain("contents");
+  expect(contentBind.value.class).toContain("invisible");
+  expect(loadingWrapBind.value.class).toContain("absolute");
+});
+
 test("it should compute root class as a non-empty string", () => {
   const { rootBind } = mountUseButton();
 

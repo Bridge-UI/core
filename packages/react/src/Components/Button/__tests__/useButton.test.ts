@@ -66,6 +66,14 @@ test("it should be disabled when loading is true", () => {
   expect(result.current.rootAriaBusy).toBe(true);
 });
 
+test("it should hide content and overlay the spinner when loading", () => {
+  const { result } = renderUseButton({ loading: true });
+
+  expect(result.current.contentBind.className).toContain("contents");
+  expect(result.current.contentBind.className).toContain("invisible");
+  expect(result.current.loadingWrapBind.className).toContain("absolute");
+});
+
 test("it should keep startIcon in merged when set", () => {
   const { result } = renderUseButton({ startIcon: CircleAlert });
 

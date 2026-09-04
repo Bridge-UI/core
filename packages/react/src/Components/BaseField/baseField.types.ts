@@ -192,7 +192,8 @@ export interface BaseFieldOwnProps {
   field?: UseBaseFieldReturn;
 
   /**
-   * When `true`, does not reserve space below the group for error messages.
+   * When `true`, does not reserve the error row. That row is also omitted
+   * while a description is shown.
    *
    * @default false
    */
@@ -248,7 +249,8 @@ export interface BaseFieldSlots {
   corner?: ReactNode;
 
   /**
-   * Helper text below the group.
+   * Helper text below the group. Hidden when the field is invalid and an
+   * error message is shown, unless `showDescriptionOnError` is true.
    */
   description?: ReactNode;
 
