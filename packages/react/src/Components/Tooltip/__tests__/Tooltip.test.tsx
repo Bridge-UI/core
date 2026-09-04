@@ -39,7 +39,7 @@ test("it should open on pointer enter after openDelay", async () => {
     <Tooltip content="Save file" slots={{ trigger: <Button>Save</Button> }} />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   expect(screen.queryByRole("tooltip")).toBeNull();
 
@@ -59,7 +59,7 @@ test("it should open immediately when openDelay is 0", () => {
     />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   expect(screen.getByRole("tooltip").textContent).toContain("Save file");
 });
@@ -73,7 +73,7 @@ test("it should close on pointer leave", async () => {
     />,
   );
 
-  const trigger = screen.getByText("Save").parentElement!;
+  const trigger = screen.getByRole("button");
 
   fireEvent.pointerEnter(trigger);
   expect(screen.getByRole("tooltip")).toBeTruthy();
@@ -94,7 +94,7 @@ test("it should set aria-describedby on the trigger while open", () => {
     />,
   );
 
-  const trigger = screen.getByText("Save").parentElement!;
+  const trigger = screen.getByRole("button").parentElement!;
 
   fireEvent.pointerEnter(trigger);
 
@@ -169,7 +169,7 @@ test("it should not open when disabled", () => {
     />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   expect(screen.queryByRole("tooltip")).toBeNull();
 });
@@ -183,7 +183,7 @@ test("it should render the arrow by default", () => {
     />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   const tooltip = screen.getByRole("tooltip");
   const arrow = tooltip.querySelector("[aria-hidden='true']");
@@ -202,7 +202,7 @@ test("it should omit the arrow when arrow is false", () => {
     />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   const tooltip = screen.getByRole("tooltip");
 
@@ -218,7 +218,7 @@ test("it should close on Escape", async () => {
     />,
   );
 
-  const trigger = screen.getByText("Save").parentElement!;
+  const trigger = screen.getByRole("button");
 
   fireEvent.pointerEnter(trigger);
   expect(screen.getByRole("tooltip")).toBeTruthy();
@@ -239,7 +239,7 @@ test("it should apply dark content color by default", () => {
     />,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   expect(screen.getByRole("tooltip").classList.contains("bg-dark-900")).toBe(
     true,
@@ -257,7 +257,7 @@ test("it should prefer children over content prop", () => {
     </Tooltip>,
   );
 
-  fireEvent.pointerEnter(screen.getByText("Save").parentElement!);
+  fireEvent.pointerEnter(screen.getByRole("button"));
 
   expect(screen.getByTestId("custom-body").textContent).toBe("Custom body");
   expect(screen.getByRole("tooltip").textContent).not.toContain("Plain text");

@@ -23,6 +23,8 @@ import type { AlertOwnProps, AlertProps } from "@/Components/Alert/alert.types";
 import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
 import {
   derived,
+  hasNamedSlot,
+  hasSlotOrProp,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -86,8 +88,20 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     props: componentProps,
   });
 
+  const hasTitleContent = derived(() => {
+    return hasSlotOrProp(slots, "title", merged.title);
+  });
+
+  const hasTitle = derived(() => {
+    return (
+      !hasNamedSlot(slots, "header") && (Boolean(children) || hasTitleContent)
+    );
+  });
+
   const hasDefaultBody = derived(() => {
-    return Boolean(children);
+    return (
+      Boolean(children) && (hasTitleContent || hasNamedSlot(slots, "header"))
+    );
   });
 
   const colorClass = useMemo(() => {
@@ -146,7 +160,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       {},
       cn({
         "grow text-sm text-start": true,
-        [paddingClass ?? ""]: true,
+        [get(paddingClass, "body") ?? ""]: true,
         [get(colorClass, "text") ?? ""]: true,
         [get(mergedClasses, "body") ?? ""]: true,
       }),
@@ -170,7 +184,8 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
       customProps?.root,
       rootInheritedAttrs,
       cn({
-        "w-full flex flex-col p-4": true,
+        "w-full flex flex-col": true,
+        [get(paddingClass, "root") ?? ""]: true,
         [shadowClass ?? ""]: true,
         [roundedClass ?? ""]: true,
         [get(colorClass, "border") ?? ""]: true,
@@ -201,6 +216,7 @@ export function useAlert(props: AlertProps, libDefaults: AlertLibDefaults) {
     children,
     iconBind,
     rootBind,
+    hasTitle,
     titleBind,
     resolvedIcon,
     hasDefaultBody,

@@ -152,7 +152,8 @@ export interface BaseFieldOwnProps {
   customProps?: BaseFieldCustomProps;
 
   /**
-   * Helper text below the group (hidden when the field is invalid).
+   * Helper text below the group. Hidden when `error` is true and an error
+   * message is shown, unless `showDescriptionOnError` is true.
    *
    * @default undefined
    */
@@ -166,7 +167,9 @@ export interface BaseFieldOwnProps {
   disabled?: boolean;
 
   /**
-   * When `true`, applies invalid styling on the label and group.
+   * When `true`, applies invalid styling on the label and group. Hides
+   * description when an error message is shown, unless `showDescriptionOnError`
+   * is true.
    *
    * @default false
    */
@@ -189,7 +192,8 @@ export interface BaseFieldOwnProps {
   field?: UseBaseFieldReturn;
 
   /**
-   * When `true`, does not reserve space below the group for error messages.
+   * When `true`, does not reserve the error row. That row is also omitted
+   * while a description is shown.
    *
    * @default false
    */
@@ -217,6 +221,13 @@ export interface BaseFieldOwnProps {
   required?: boolean;
 
   /**
+   * When `true`, keeps the description visible while the field is invalid.
+   *
+   * @default false
+   */
+  showDescriptionOnError?: boolean;
+
+  /**
    * Label, corner, description, and error typography scale.
    *
    * @default "md"
@@ -238,7 +249,8 @@ export interface BaseFieldSlots {
   corner?: ReactNode;
 
   /**
-   * Helper text below the group.
+   * Helper text below the group. Hidden when the field is invalid and an
+   * error message is shown, unless `showDescriptionOnError` is true.
    */
   description?: ReactNode;
 

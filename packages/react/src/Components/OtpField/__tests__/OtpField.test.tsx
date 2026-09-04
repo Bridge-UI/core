@@ -8,6 +8,7 @@ afterEach(() => {
 
 // ** Local Imports
 import { OtpField } from "@/Components/OtpField";
+import { BridgeUIProvider } from "@/Provider";
 
 test("it should render the default number of pin inputs", () => {
   render(<OtpField aria-label="Code" />);
@@ -114,4 +115,20 @@ test("it should render end slot content", () => {
   );
 
   expect(screen.getByTestId("end-slot")).toBeTruthy();
+});
+
+test("it should apply color from BridgeUIProvider defaultProps", () => {
+  const { container } = render(
+    <BridgeUIProvider
+      components={{
+        OtpField: { defaultProps: { color: "success" } },
+      }}
+    >
+      <OtpField aria-label="Code" />
+    </BridgeUIProvider>,
+  );
+
+  expect(
+    container.querySelector(".focus-within\\:ring-success-600"),
+  ).not.toBeNull();
 });

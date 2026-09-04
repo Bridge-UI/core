@@ -231,7 +231,8 @@ export function useButton(
         [get(colorClasses.value, "focus") ?? ""]: true,
         [get(colorClasses.value, "selected") ?? ""]:
           merged.value.selected === true,
-        "relative z-10": merged.value.selected === true,
+        relative: true,
+        "z-10": merged.value.selected === true,
         "transition-all ease-in-out duration-200": true,
         "focus:ring-2": true,
         "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
@@ -280,6 +281,25 @@ export function useButton(
     );
   });
 
+  const loadingWrapBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      "pointer-events-none absolute inset-0 flex items-center justify-center",
+    );
+  });
+
+  const contentBind = computed(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        contents: true,
+        invisible: merged.value.loading,
+      }),
+    );
+  });
+
   const loadingIconBind = computed(() => {
     return mergePartBind(
       customProps.value?.loading,
@@ -300,12 +320,14 @@ export function useButton(
     rootHref,
     rootType,
     endIconBind,
+    contentBind,
     endSlotBind,
     rootAriaBusy,
     rootDisabled,
     startIconBind,
     startSlotBind,
     loadingIconBind,
+    loadingWrapBind,
     rootAriaDisabled,
   };
 }

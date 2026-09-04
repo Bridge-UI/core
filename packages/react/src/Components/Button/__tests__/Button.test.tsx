@@ -26,14 +26,15 @@ test("it should apply disabled attribute when disabled", () => {
   expect((button as HTMLButtonElement).disabled).toBe(true);
 });
 
-test("it should show loading spinner when loading", () => {
+test("it should keep label text in the DOM when loading", () => {
   const { container } = render(<Button loading>Saving</Button>);
 
   const button = screen.getByRole("button");
+  const label = screen.getByText("Saving");
 
-  expect(screen.queryByText("Saving")).toBeNull();
   expect(button.getAttribute("aria-busy")).toBe("true");
   expect(container.querySelector("svg.animate-spin")).not.toBeNull();
+  expect(label.closest("span")?.classList.contains("invisible")).toBe(true);
 });
 
 test("it should render text prop when children are not provided", () => {
@@ -49,10 +50,12 @@ test("it should prefer text prop over children", () => {
   expect(screen.getByRole("button", { name: "From prop" })).toBeTruthy();
 });
 
-test("it should replace text with spinner when loading", () => {
+test("it should keep text prop in the DOM when loading", () => {
   const { container } = render(<Button loading text="Saving" />);
 
-  expect(screen.queryByText("Saving")).toBeNull();
+  expect(
+    screen.getByText("Saving").closest("span")?.classList.contains("invisible"),
+  ).toBe(true);
   expect(container.querySelector("svg.animate-spin")).not.toBeNull();
 });
 

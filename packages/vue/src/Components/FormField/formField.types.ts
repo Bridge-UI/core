@@ -182,7 +182,8 @@ export interface FormFieldOwnProps {
   customProps?: FormFieldCustomProps;
 
   /**
-   * Helper text below the control (hidden when the field is invalid).
+   * Helper text below the control. Hidden when `error` is true and an error
+   * message is shown, unless `showDescriptionOnError` is true.
    *
    * @default undefined
    */
@@ -210,7 +211,8 @@ export interface FormFieldOwnProps {
   endIcon?: IconSource;
 
   /**
-   * When `true`, applies invalid styling on the label and hides description.
+   * When `true`, applies invalid styling on the label. Hides description when
+   * an error message is shown, unless `showDescriptionOnError` is true.
    *
    * @default false
    */
@@ -240,7 +242,8 @@ export interface FormFieldOwnProps {
   field?: UseFormFieldReturn;
 
   /**
-   * When `true`, does not reserve space below the control for error messages.
+   * When `true`, does not reserve the error row. That row is also omitted
+   * while a description is shown.
    *
    * @default false
    */
@@ -273,6 +276,13 @@ export interface FormFieldOwnProps {
    * @default "md"
    */
   rounded?: MergeProps<FormFieldRounded, FormFieldRoundedOverrides>;
+
+  /**
+   * When `true`, keeps the description visible while the field is invalid.
+   *
+   * @default false
+   */
+  showDescriptionOnError?: boolean;
 
   /**
    * When `true` and the field is invalid, shows an error icon at the inline end
@@ -330,7 +340,8 @@ export interface FormFieldSlots {
   default?: Slot<undefined>;
 
   /**
-   * Helper text below the control (hidden when the field is invalid).
+   * Helper text below the control. Hidden when the field is invalid and an
+   * error message is shown, unless `showDescriptionOnError` is true.
    */
   description?: Slot<undefined>;
 

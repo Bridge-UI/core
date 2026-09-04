@@ -18,14 +18,7 @@ const emit = defineEmits<OtpFieldEmits>();
 
 const model = defineModel<null | string | undefined>();
 
-const props = withDefaults(defineProps<OtpFieldOwnProps>(), {
-  length: 6,
-  size: "md",
-  rounded: "md",
-  type: "numeric",
-  color: "primary",
-  variant: "outline",
-});
+const props = defineProps<OtpFieldOwnProps>();
 
 const api = useOtpField(props, model, {
   onChange: (value) => emit("change", value),

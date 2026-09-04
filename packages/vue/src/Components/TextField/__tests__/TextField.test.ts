@@ -34,7 +34,7 @@ test("it should render description when description prop is provided", () => {
   expect(wrapper.text()).toContain("Helper text");
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   const wrapper = mount(TextField, {
     props: {
       error: true,
@@ -42,7 +42,7 @@ test("it should hide description when field is invalid", () => {
     },
   });
 
-  expect(wrapper.text()).not.toContain("Helper text");
+  expect(wrapper.text()).toContain("Helper text");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

@@ -25,6 +25,8 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
     invalidated,
     startSlotBind,
     descriptionBind,
+    showErrorMessageRow,
+    showDescriptionContent,
     showErrorMessageContent,
   } = field;
 
@@ -57,16 +59,15 @@ function BaseField({ field, children }: BaseFieldComponentProps) {
         {hasNamedSlot(slots, "end") && <div {...endSlotBind}>{slots?.end}</div>}
       </div>
 
-      {!invalidated &&
-        hasSlotOrProp(slots, "description", merged.description) && (
-          <p {...descriptionBind} id={`${controlId}-description`}>
-            {hasNamedSlot(slots, "description")
-              ? slots?.description
-              : merged.description}
-          </p>
-        )}
+      {showDescriptionContent && (
+        <p {...descriptionBind} id={`${controlId}-description`}>
+          {hasNamedSlot(slots, "description")
+            ? slots?.description
+            : merged.description}
+        </p>
+      )}
 
-      {!merged.hideErrorMessage && (
+      {showErrorMessageRow && (
         <p
           {...errorBind}
           id={`${controlId}-error`}

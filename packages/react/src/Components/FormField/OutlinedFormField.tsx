@@ -73,16 +73,15 @@ function OutlinedFormField({ api, children }: OutlinedFormFieldProps) {
         )}
       </div>
 
-      {!api.invalidated &&
-        hasSlotOrProp(api.slots, "description", api.merged.description) && (
-          <p {...api.descriptionBind} id={`${api.controlId}-description`}>
-            {hasNamedSlot(api.slots, "description")
-              ? api.slots?.description
-              : api.merged.description}
-          </p>
-        )}
+      {api.showDescriptionContent && (
+        <p {...api.descriptionBind} id={`${api.controlId}-description`}>
+          {hasNamedSlot(api.slots, "description")
+            ? api.slots?.description
+            : api.merged.description}
+        </p>
+      )}
 
-      {!api.merged.hideErrorMessage && (
+      {api.showErrorMessageRow && (
         <p
           {...api.errorBind}
           id={`${api.controlId}-error`}

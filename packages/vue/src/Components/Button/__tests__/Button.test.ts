@@ -22,13 +22,14 @@ test("it should apply disabled attribute when disabled", () => {
   expect(wrapper.find("button").attributes("disabled")).toBeDefined();
 });
 
-test("it should show loading spinner when loading", () => {
+test("it should keep label text in the DOM when loading", () => {
   const wrapper = mount(Button, {
     props: { loading: true },
     slots: { default: "Saving" },
   });
 
-  expect(wrapper.text()).not.toContain("Saving");
+  expect(wrapper.text()).toContain("Saving");
+  expect(wrapper.find("span.invisible").exists()).toBe(true);
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
   expect(wrapper.find("button").attributes("aria-busy")).toBe("true");
 });
@@ -50,12 +51,13 @@ test("it should prefer text prop over default slot", () => {
   expect(wrapper.text()).not.toContain("From slot");
 });
 
-test("it should replace text with spinner when loading", () => {
+test("it should keep text prop in the DOM when loading", () => {
   const wrapper = mount(Button, {
     props: { loading: true, text: "Saving" },
   });
 
-  expect(wrapper.text()).not.toContain("Saving");
+  expect(wrapper.text()).toContain("Saving");
+  expect(wrapper.find("span.invisible").exists()).toBe(true);
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
 });
 

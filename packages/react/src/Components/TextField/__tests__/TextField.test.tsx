@@ -36,10 +36,10 @@ test("it should render description when description prop is provided", () => {
   expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   render(<TextField error aria-label="Field" description="Helper text" />);
 
-  expect(screen.queryByText("Helper text")).toBeNull();
+  expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

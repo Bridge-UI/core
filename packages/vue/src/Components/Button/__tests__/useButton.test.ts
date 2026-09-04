@@ -64,6 +64,14 @@ test("it should set loading on merged when loading prop is true", () => {
   expect(merged.value.loading).toBe(true);
 });
 
+test("it should hide content and overlay the spinner when loading", () => {
+  const { contentBind, loadingWrapBind } = mountUseButton({ loading: true });
+
+  expect(contentBind.value.class).toContain("contents");
+  expect(contentBind.value.class).toContain("invisible");
+  expect(loadingWrapBind.value.class).toContain("absolute");
+});
+
 test("it should compute root class as a non-empty string", () => {
   const { rootBind } = mountUseButton();
 
@@ -182,13 +190,14 @@ test("it should render start icon when startIcon is set and not loading", () => 
   expect(wrapper.find("button svg").exists()).toBe(true);
 });
 
-test("it should hide start icon when loading", () => {
+test("it should keep start icon and label in the DOM when loading", () => {
   const wrapper = mount(Button, {
     slots: { default: "Label" },
     props: { loading: true, startIcon: CircleAlert },
   });
 
-  expect(wrapper.text()).not.toContain("Label");
+  expect(wrapper.text()).toContain("Label");
+  expect(wrapper.find("span.invisible").exists()).toBe(true);
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
 });
 

@@ -76,12 +76,27 @@ test("it should compute title classes with font-normal when no body", () => {
   expect(result.current.titleBind.className).toContain("font-normal");
 });
 
-test("it should compute title classes with font-semibold when body exists", () => {
+test("it should apply padding classes on the root", () => {
+  const { result } = renderUseAlert({ padding: "large" });
+
+  expect(result.current.rootBind.className).toContain("p-6");
+  expect(result.current.rootBind.className).not.toContain("p-4");
+});
+
+test("it should treat children as the title when title is omitted", () => {
+  const { result } = renderUseAlert({ children: "Only the title" });
+
+  expect(result.current.hasTitle).toBe(true);
+  expect(result.current.hasDefaultBody).toBe(false);
+});
+
+test("it should treat children as the body when title is set", () => {
   const { result } = renderUseAlert({
     title: "Test",
     children: "Body",
   });
 
+  expect(result.current.hasTitle).toBe(true);
   expect(result.current.hasDefaultBody).toBe(true);
   expect(result.current.titleBind.className).toContain("font-semibold");
 });

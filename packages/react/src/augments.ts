@@ -74,6 +74,7 @@ declare module "@bridge-ui/core/Config" {
         | "showFooter"
         | "showErrorIcon"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -196,6 +197,7 @@ declare module "@bridge-ui/core/Config" {
         | "showErrorIcon"
         | "controlVariant"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -212,6 +214,7 @@ declare module "@bridge-ui/core/Config" {
         | "rounded"
         | "variant"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -227,6 +230,7 @@ declare module "@bridge-ui/core/Config" {
         | "variant"
         | "showErrorIcon"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -275,6 +279,7 @@ declare module "@bridge-ui/core/Config" {
         | "showFooter"
         | "showErrorIcon"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -306,6 +311,7 @@ declare module "@bridge-ui/core/Config" {
         | "showStops"
         | "showTooltip"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -345,6 +351,7 @@ declare module "@bridge-ui/core/Config" {
         | "autosize"
         | "showErrorIcon"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }
@@ -360,6 +367,7 @@ declare module "@bridge-ui/core/Config" {
         | "variant"
         | "showErrorIcon"
         | "hideErrorMessage"
+        | "showDescriptionOnError"
       >
     >;
   }

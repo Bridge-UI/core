@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import type { AlertProps } from "@/Components/Alert";
 import { useAlert } from "@/Components/Alert";
 import { Icon } from "@/Components/Icon";
-import { hasNamedSlot, hasSlotOrProp } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 function Alert(props: AlertProps) {
   const {
@@ -15,6 +15,7 @@ function Alert(props: AlertProps) {
     children,
     iconBind,
     rootBind,
+    hasTitle,
     titleBind,
     resolvedIcon,
     hasDefaultBody,
@@ -30,7 +31,7 @@ function Alert(props: AlertProps) {
     <div {...rootBind}>
       {slots?.header}
 
-      {!slots?.header && hasSlotOrProp(slots, "title", merged.title) && (
+      {hasTitle && (
         <div className="flex justify-between items-start">
           <div className="flex items-start gap-x-3">
             {(slots?.icon || resolvedIcon) && (
@@ -44,7 +45,11 @@ function Alert(props: AlertProps) {
             )}
 
             <div {...titleBind}>
-              {hasNamedSlot(slots, "title") ? slots?.title : merged.title}
+              {hasNamedSlot(slots, "title")
+                ? slots?.title
+                : isPropPresent(merged.title)
+                  ? merged.title
+                  : children}
             </div>
           </div>
 

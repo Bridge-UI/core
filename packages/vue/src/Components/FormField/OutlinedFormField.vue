@@ -100,11 +100,8 @@ const slots = useSlots();
 
     <p
       v-bind="api.descriptionBind.value"
+      v-if="api.showDescriptionContent.value"
       :id="`${api.controlId.value}-description`"
-      v-if="
-        !api.invalidated.value &&
-        hasSlotOrProp(slots, 'description', api.merged.value.description)
-      "
     >
       <slot name="description" v-if="hasNamedSlot(slots, 'description')" />
 
@@ -116,7 +113,7 @@ const slots = useSlots();
     <p
       v-bind="api.errorBind.value"
       :id="`${api.controlId.value}-error`"
-      v-if="!api.merged.value.hideErrorMessage"
+      v-if="api.showErrorMessageRow.value"
       :aria-hidden="api.showErrorMessageContent.value ? undefined : true"
     >
       <template v-if="api.showErrorMessageContent.value">

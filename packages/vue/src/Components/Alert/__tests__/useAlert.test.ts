@@ -15,7 +15,10 @@ const libDefaults: Partial<AlertOwnProps> = {
   color: "primary",
 };
 
-function mountUseAlert(props: Partial<AlertOwnProps> = {}) {
+function mountUseAlert(
+  props: Partial<AlertOwnProps> = {},
+  slots: Record<string, unknown> = {},
+) {
   let result!: ReturnType<typeof useAlert>;
 
   const Wrapper = defineComponent({
@@ -26,7 +29,7 @@ function mountUseAlert(props: Partial<AlertOwnProps> = {}) {
     },
   });
 
-  mount(Wrapper);
+  mount(Wrapper, { slots });
 
   return result;
 }
@@ -77,10 +80,38 @@ test("it should include rounded classes when rounded is set", () => {
   expect(rootBind.value.class).toContain("rounded");
 });
 
+test("it should apply padding classes on the root", () => {
+  const { rootBind } = mountUseAlert({ padding: "large" });
+
+  expect(rootBind.value.class).toContain("p-6");
+  expect(rootBind.value.class).not.toContain("p-4");
+});
+
 test("it should compute title classes with font-normal when no body", () => {
   const { titleBind } = mountUseAlert({ title: "Test" });
 
   expect(titleBind.value.class).toContain("font-normal");
+});
+
+test("it should treat the default slot as the title when title is omitted", () => {
+  const { hasTitle, hasDefaultBody } = mountUseAlert(
+    {},
+    { default: () => "Only the title" },
+  );
+
+  expect(hasTitle.value).toBe(true);
+  expect(hasDefaultBody.value).toBe(false);
+});
+
+test("it should treat the default slot as the body when title is set", () => {
+  const { hasTitle, titleBind, hasDefaultBody } = mountUseAlert(
+    { title: "Test" },
+    { default: () => "Body" },
+  );
+
+  expect(hasTitle.value).toBe(true);
+  expect(hasDefaultBody.value).toBe(true);
+  expect(titleBind.value.class).toContain("font-semibold");
 });
 
 test("it should merge class into root bind", () => {

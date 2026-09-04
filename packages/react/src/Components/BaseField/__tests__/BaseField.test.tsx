@@ -54,10 +54,43 @@ test("it should render description when description prop is provided", () => {
   expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   render(<BaseFieldHarness error description="Helper text" />);
 
+  expect(screen.getByText("Helper text")).toBeTruthy();
+});
+
+test("it should hide description when errorMessage is shown", () => {
+  render(
+    <BaseFieldHarness
+      error
+      errorMessage="Required"
+      description="Helper text"
+    />,
+  );
+
+  expect(screen.getByText("Required")).toBeTruthy();
   expect(screen.queryByText("Helper text")).toBeNull();
+});
+
+test("it should keep description on error when showDescriptionOnError is true", () => {
+  render(
+    <BaseFieldHarness
+      error
+      showDescriptionOnError
+      errorMessage="Required"
+      description="Helper text"
+    />,
+  );
+
+  expect(screen.getByText("Required")).toBeTruthy();
+  expect(screen.getByText("Helper text")).toBeTruthy();
+});
+
+test("it should not reserve error space when description is present", () => {
+  const { container } = render(<BaseFieldHarness description="Helper text" />);
+
+  expect(container.querySelector('[id$="-error"]')).toBeNull();
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

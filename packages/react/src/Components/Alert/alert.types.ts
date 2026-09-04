@@ -72,7 +72,8 @@ export interface AlertCustomProps {
  */
 export interface AlertOwnProps {
   /**
-   * The children to render.
+   * Body below the title row. Used as the title when `title` and the `title`
+   * slot are omitted.
    *
    * @default undefined
    */
@@ -108,7 +109,7 @@ export interface AlertOwnProps {
   icon?: null | IconSource;
 
   /**
-   * The padding to apply to the alert.
+   * Root padding scale. Each token also sets body indent under the title row.
    *
    * @default "medium"
    */
@@ -136,7 +137,7 @@ export interface AlertOwnProps {
   slots?: AlertSlots;
 
   /**
-   * The title to apply to the alert.
+   * Title in the heading row. When omitted, `children` are used as the title.
    *
    * @default undefined
    */
@@ -172,7 +173,8 @@ export interface AlertSlots {
   icon?: ReactNode;
 
   /**
-   * The title of the alert.
+   * Title in the heading row. Takes precedence over the `title` prop and
+   * `children`.
    */
   title?: ReactNode;
 }

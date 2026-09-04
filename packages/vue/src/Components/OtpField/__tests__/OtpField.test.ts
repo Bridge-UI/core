@@ -1,9 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test, vi } from "vitest";
+import { h } from "vue";
 
 // ** Local Imports
 import { OtpField } from "@/Components/OtpField";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 test("it should render the default number of pin inputs", () => {
   const wrapper = mount(OtpField);
@@ -94,4 +96,19 @@ test("it should render end slot content", () => {
   });
 
   expect(wrapper.find('[data-testid="end-slot"]').exists()).toBe(true);
+});
+
+test("it should apply color from BridgeUIProvider defaultProps", () => {
+  const wrapper = mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(OtpField),
+    },
+    props: {
+      components: {
+        OtpField: { defaultProps: { color: "success" } },
+      },
+    },
+  });
+
+  expect(wrapper.html()).toContain("ring-success-600");
 });

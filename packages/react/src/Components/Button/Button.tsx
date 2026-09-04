@@ -19,12 +19,14 @@ function Button(props: ButtonProps) {
     rootHref,
     rootType,
     endIconBind,
+    contentBind,
     endSlotBind,
     rootAriaBusy,
     rootDisabled,
     startIconBind,
     startSlotBind,
     loadingIconBind,
+    loadingWrapBind,
     rootAriaDisabled,
   } = useButton(props, {
     size: "md",
@@ -47,52 +49,56 @@ function Button(props: ButtonProps) {
     },
     <Fragment>
       {merged.loading && (
-        <Icon icon="loader" size={merged.size} {...loadingIconBind} />
+        <span {...loadingWrapBind}>
+          <Icon icon="loader" size={merged.size} {...loadingIconBind} />
+        </span>
       )}
 
-      {!merged.loading && isMini && (
-        <Fragment>
-          {children ? (
-            children
-          ) : (
-            <Fragment>
-              {merged.icon && (
-                <Icon icon={merged.icon} size={merged.size} {...iconBind} />
-              )}
-            </Fragment>
-          )}
-        </Fragment>
-      )}
+      <span {...contentBind}>
+        {isMini && (
+          <Fragment>
+            {children ? (
+              children
+            ) : (
+              <Fragment>
+                {merged.icon && (
+                  <Icon icon={merged.icon} size={merged.size} {...iconBind} />
+                )}
+              </Fragment>
+            )}
+          </Fragment>
+        )}
 
-      {!merged.loading && !isMini && (
-        <Fragment>
-          {merged.startIcon ? (
-            <Icon
-              size={merged.size}
-              icon={merged.startIcon}
-              {...startIconBind}
-            />
-          ) : (
-            <Fragment>
-              {hasNamedSlot(slots, "start") && (
-                <div {...startSlotBind}>{slots?.start}</div>
-              )}
-            </Fragment>
-          )}
+        {!isMini && (
+          <Fragment>
+            {merged.startIcon ? (
+              <Icon
+                size={merged.size}
+                icon={merged.startIcon}
+                {...startIconBind}
+              />
+            ) : (
+              <Fragment>
+                {hasNamedSlot(slots, "start") && (
+                  <div {...startSlotBind}>{slots?.start}</div>
+                )}
+              </Fragment>
+            )}
 
-          {isPropPresent(merged.text) ? merged.text : children}
+            {isPropPresent(merged.text) ? merged.text : children}
 
-          {merged.endIcon ? (
-            <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />
-          ) : (
-            <Fragment>
-              {hasNamedSlot(slots, "end") && (
-                <div {...endSlotBind}>{slots?.end}</div>
-              )}
-            </Fragment>
-          )}
-        </Fragment>
-      )}
+            {merged.endIcon ? (
+              <Icon size={merged.size} icon={merged.endIcon} {...endIconBind} />
+            ) : (
+              <Fragment>
+                {hasNamedSlot(slots, "end") && (
+                  <div {...endSlotBind}>{slots?.end}</div>
+                )}
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+      </span>
     </Fragment>,
   );
 }

@@ -25,6 +25,7 @@ export type {
   AlertColor,
   AlertColorItem,
   AlertPadding,
+  AlertPaddingItem,
   AlertRounded,
   AlertShadow,
   AlertVariant,

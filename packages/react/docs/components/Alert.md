@@ -15,6 +15,8 @@ import { Alert } from "@bridge-ui/react/Components/Alert";
 ```tsx
 <Alert color="primary" title="Heads up" />
 
+<Alert color="success">Saved successfully.</Alert>
+
 <Alert color="error" title="Something went wrong">
   Please try again in a few minutes.
 </Alert>
@@ -94,16 +96,16 @@ import { Alert } from "@bridge-ui/react/Components/Alert";
 
 | Prop          | Type                 | Default   | Description                                                                                                           |
 | ------------- | -------------------- | --------- | --------------------------------------------------------------------------------------------------------------------- |
-| `children`    | `ReactNode`          | —         | The children to render.                                                                                               |
+| `children`    | `ReactNode`          | —         | Body below the title. Used as the title when `title` and the `title` slot are omitted.                                |
 | `classes`     | `AlertClasses`       | —         | The classes to apply to the alert.                                                                                    |
 | `color`       | `AlertColor`         | "primary" | The color to apply to the alert.                                                                                      |
 | `customProps` | `AlertCustomProps`   | —         | Extra props for internal parts (`icon`, `title`, `body`, etc.). Root HTML attributes stay on the component top level. |
 | `icon`        | `LucideIcon \| null` | —         | The icon to apply to the alert. Use `null` to omit the prop icon.                                                     |
-| `padding`     | `AlertPadding`       | "medium"  | The padding to apply to the alert.                                                                                    |
+| `padding`     | `AlertPadding`       | "medium"  | Root padding scale. Each token also sets body indent under the title row.                                             |
 | `rounded`     | `AlertRounded`       | "sm"      | The roundedness of the alert.                                                                                         |
 | `shadow`      | `AlertShadow`        | "sm"      | The shadow to apply to the alert.                                                                                     |
 | `slots`       | `AlertSlots`         | —         | The slots to apply to the alert.                                                                                      |
-| `title`       | `string`             | —         | The title to apply to the alert.                                                                                      |
+| `title`       | `string`             | —         | Title in the heading row. When omitted, `children` are used as the title.                                             |
 | `variant`     | `AlertVariant`       | "flat"    | The variant of the alert.                                                                                             |
 
 ## Accessibility

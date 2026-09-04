@@ -14,6 +14,7 @@ import type {
   AlertColor,
   AlertColorItem,
   AlertPadding,
+  AlertPaddingItem,
   AlertRounded,
   AlertShadow,
   AlertVariant,
@@ -455,7 +456,7 @@ export interface AlertConfigBase {
     variant: keyof AlertVariant;
   }>;
   tokens: Partial<{
-    padding: Record<string, string>;
+    padding: Record<string, AlertPaddingItem>;
     rounded: Record<string, string>;
     shadow: Record<string, string>;
     variant: Record<string, Record<string, AlertColorItem>>;
@@ -595,6 +596,7 @@ export interface ColorFieldConfigBase {
     format: "hex" | "hsl" | "rgb" | "hexa" | "hsla" | "rgba";
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     showSwatch: boolean;
@@ -672,6 +674,7 @@ export interface DateFieldConfigBase {
     multiple: boolean;
     range: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     size: keyof FormFieldSize;
@@ -719,6 +722,7 @@ export interface DateRangeFieldConfigBase {
     hideYears: boolean;
     orientation: "vertical" | "horizontal";
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     size: keyof FormFieldSize;
@@ -766,6 +770,7 @@ export interface DateTimeFieldConfigBase {
     hideYears: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     showSeconds: boolean;
@@ -812,6 +817,7 @@ export interface TimeFieldConfigBase {
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     showSeconds: boolean;
@@ -868,6 +874,7 @@ export interface TimeRangeFieldConfigBase {
     hideErrorMessage: boolean;
     interval: number;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     showSeconds: boolean;
@@ -913,6 +920,7 @@ export interface DateTimeRangeFieldConfigBase {
     interval: number;
     orientation: "vertical" | "horizontal";
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     showSeconds: boolean;
@@ -1081,6 +1089,7 @@ export interface NumberFieldConfigBase {
     controlVariant: keyof NumberFieldControlVariant;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
@@ -1101,6 +1110,7 @@ export interface OtpFieldConfigBase {
     hideErrorMessage: boolean;
     length: number;
     rounded: keyof OtpFieldRounded;
+    showDescriptionOnError: boolean;
     size: keyof OtpFieldSize;
     type: "numeric" | "alphanumeric";
     variant: keyof OtpFieldVariant;
@@ -1144,6 +1154,7 @@ export interface PasswordFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
@@ -1199,6 +1210,7 @@ export interface AutocompleteConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     size: keyof FormFieldSize;
@@ -1218,6 +1230,7 @@ export interface SelectConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     showFooter: boolean;
     size: keyof FormFieldSize;
@@ -1293,6 +1306,7 @@ export interface SliderConfigBase {
     max: number;
     min: number;
     rounded: keyof SliderRounded;
+    showDescriptionOnError: boolean;
     showStops: boolean;
     showTooltip: boolean;
     size: keyof SliderSize;
@@ -1371,6 +1385,7 @@ export interface TextareaConfigBase {
     hideErrorMessage: boolean;
     resize: keyof TextareaResize;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
@@ -1390,6 +1405,7 @@ export interface TextFieldConfigBase {
     color: keyof FormFieldColor;
     hideErrorMessage: boolean;
     rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;

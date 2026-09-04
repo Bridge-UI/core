@@ -25,8 +25,8 @@ test("it should show loading spinner when loading", () => {
     slots: { default: () => "Saving" },
   });
 
-  cy.get("svg.animate-spin").should("exist");
-  cy.get("button").should("not.contain.text", "Saving");
+  cy.get("svg.animate-spin").should("be.visible");
+  cy.get("button span.invisible").should("contain.text", "Saving");
   cy.get("button").should("have.attr", "aria-busy", "true");
 });
 
