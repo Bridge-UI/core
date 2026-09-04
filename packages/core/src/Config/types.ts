@@ -14,6 +14,7 @@ import type {
   AlertColor,
   AlertColorItem,
   AlertPadding,
+  AlertPaddingItem,
   AlertRounded,
   AlertShadow,
   AlertVariant,
@@ -455,7 +456,7 @@ export interface AlertConfigBase {
     variant: keyof AlertVariant;
   }>;
   tokens: Partial<{
-    padding: Record<string, string>;
+    padding: Record<string, AlertPaddingItem>;
     rounded: Record<string, string>;
     shadow: Record<string, string>;
     variant: Record<string, Record<string, AlertColorItem>>;

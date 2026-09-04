@@ -26,6 +26,23 @@ test("it should render body content via default slot", () => {
   expect(wrapper.text()).toContain("This is the body content");
 });
 
+test("it should use the default slot as the title when title is omitted", () => {
+  const wrapper = mount(Alert, {
+    slots: { default: "Only the title" },
+  });
+
+  expect(wrapper.text()).toContain("Only the title");
+  expect(wrapper.find(".grow").exists()).toBe(false);
+});
+
+test("it should apply padding token classes on the root", () => {
+  const wrapper = mount(Alert, {
+    props: { padding: "none", title: "Compact" },
+  });
+
+  expect(wrapper.find(".w-full").classes()).toContain("p-0");
+});
+
 test("it should render the default icon for error color", () => {
   const wrapper = mount(Alert, { props: { title: "Error", color: "error" } });
 

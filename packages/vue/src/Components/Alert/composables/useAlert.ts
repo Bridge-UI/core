@@ -22,6 +22,8 @@ import type { IconSource } from "@/Adapters/Icon";
 import type { AlertOwnProps, AlertProps } from "@/Components/Alert";
 import { alertDefaultIcons } from "@/Components/Alert/alertDefaultIcons";
 import {
+  hasNamedSlot,
+  hasSlotOrProp,
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
@@ -75,10 +77,28 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     props: () => split.value.componentProps,
   });
 
-  const hasDefaultBody = computed(() => {
+  const hasTitleContent = computed(() => {
+    return hasSlotOrProp(slots, "title", merged.value.title);
+  });
+
+  const hasDefaultSlot = computed(() => {
     const content = slots.default?.();
 
     return Boolean(content && content.length > 0);
+  });
+
+  const hasTitle = computed(() => {
+    return (
+      !hasNamedSlot(slots, "header") &&
+      (hasDefaultSlot.value || hasTitleContent.value)
+    );
+  });
+
+  const hasDefaultBody = computed(() => {
+    return (
+      hasDefaultSlot.value &&
+      (hasTitleContent.value || hasNamedSlot(slots, "header"))
+    );
   });
 
   const colorClass = computed(() => {
@@ -137,7 +157,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       {},
       cn({
         "grow text-sm text-start": true,
-        [paddingClass.value ?? ""]: true,
+        [get(paddingClass.value, "body") ?? ""]: true,
         [get(colorClass.value, "text") ?? ""]: true,
         [get(mergedClasses.value, "body") ?? ""]: true,
       }),
@@ -161,7 +181,8 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
       customProps.value?.root,
       split.value.inheritedAttrs,
       cn({
-        "w-full flex flex-col p-4": true,
+        "w-full flex flex-col": true,
+        [get(paddingClass.value, "root") ?? ""]: true,
         [shadowClass.value ?? ""]: true,
         [roundedClass.value ?? ""]: true,
         [get(colorClass.value, "border") ?? ""]: true,
@@ -191,6 +212,7 @@ export function useAlert(props: AlertOwnProps, libDefaults: AlertLibDefaults) {
     bodyBind,
     iconBind,
     rootBind,
+    hasTitle,
     titleBind,
     resolvedIcon,
     hasDefaultBody,

@@ -3,7 +3,7 @@
 import type { AlertOwnProps, AlertSlots } from "@/Components/Alert/alert.types";
 import { useAlert } from "@/Components/Alert/composables/useAlert";
 import Icon from "@/Components/Icon/Icon.vue";
-import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<AlertSlots>();
 
@@ -17,6 +17,7 @@ const {
   bodyBind,
   iconBind,
   rootBind,
+  hasTitle,
   titleBind,
   resolvedIcon,
   hasDefaultBody,
@@ -33,10 +34,7 @@ const {
   <div v-bind="rootBind">
     <slot name="header" v-if="hasNamedSlot(slots, 'header')" />
 
-    <div
-      class="flex justify-between items-start"
-      v-else-if="hasSlotOrProp(slots, 'title', merged.title)"
-    >
+    <div v-else-if="hasTitle" class="flex justify-between items-start">
       <div class="flex items-start gap-x-3">
         <slot name="icon" v-if="hasNamedSlot(slots, 'icon')" />
 
@@ -48,6 +46,8 @@ const {
           <template v-else-if="isPropPresent(merged.title)">
             {{ merged.title }}
           </template>
+
+          <slot v-else />
         </div>
       </div>
 

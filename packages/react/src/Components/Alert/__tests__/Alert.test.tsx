@@ -23,6 +23,21 @@ test("it should render body content via children", () => {
   expect(screen.getByText("This is the body content")).toBeTruthy();
 });
 
+test("it should use children as the title when title is omitted", () => {
+  render(<Alert>Only the title</Alert>);
+
+  expect(screen.getByText("Only the title")).toBeTruthy();
+  expect(screen.queryByText("Only the title")?.closest(".grow")).toBeNull();
+});
+
+test("it should apply padding token classes on the root", () => {
+  const { container } = render(<Alert padding="none" title="Compact" />);
+
+  expect(container.querySelector(".w-full")?.classList.contains("p-0")).toBe(
+    true,
+  );
+});
+
 test("it should render the default icon for error color", () => {
   const { container } = render(<Alert title="Error" color="error" />);
 
