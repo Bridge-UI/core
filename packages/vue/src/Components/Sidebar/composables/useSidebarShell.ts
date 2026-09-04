@@ -219,7 +219,7 @@ export function useSidebarShell(
       customProps.value?.content,
       {},
       cn({
-        "bridge-scroll-fade-y flex min-h-0 flex-1 flex-col overflow-y-auto": true,
+        "bridge-scroll-fade-y flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto": true,
         [get(mergedClasses.value, "content") ?? ""]: true,
       }),
     );

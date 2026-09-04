@@ -47,7 +47,7 @@ export function useSidebarList(
 
   const rootClassName = computed(() => {
     return cn({
-      "flex flex-col gap-1": true,
+      "flex min-w-0 flex-col gap-1 p-0": true,
       "px-2": props.nested !== true,
       "ml-3.5 translate-x-px border-l border-dark-200 py-0.5 pl-2.5 dark:border-dark-700":
         props.nested === true,

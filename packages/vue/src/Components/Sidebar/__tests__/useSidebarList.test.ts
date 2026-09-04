@@ -77,6 +77,7 @@ test("it should apply stacked nav chrome on the list root", async () => {
 
   await nextTick();
 
+  expect(rootClassName.value).toContain("p-0");
   expect(rootClassName.value).toContain("px-2");
   expect(rootClassName.value).toContain("gap-1");
 });
@@ -103,6 +104,7 @@ test("it should apply a nested start-edge guide line", async () => {
 
   expect(result.rootClassName.value).toContain("ml-3.5");
   expect(result.rootClassName.value).toContain("border-l");
+  expect(result.rootClassName.value).not.toContain("w-full");
 });
 
 test("it should hide nested lists when the icon rail is collapsed", async () => {

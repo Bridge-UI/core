@@ -51,6 +51,7 @@ test("it should apply stacked nav chrome on the list root", () => {
     wrapper: expandedIconWrapper,
   });
 
+  expect(result.current.rootClassName).toContain("p-0");
   expect(result.current.rootClassName).toContain("px-2");
   expect(result.current.rootClassName).toContain("gap-1");
 });
@@ -62,6 +63,7 @@ test("it should apply a nested start-edge guide line", () => {
 
   expect(result.current.rootClassName).toContain("ml-3.5");
   expect(result.current.rootClassName).toContain("border-l");
+  expect(result.current.rootClassName).not.toContain("w-full");
 });
 
 test("it should hide nested lists when the icon rail is collapsed", () => {
