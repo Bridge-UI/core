@@ -345,3 +345,41 @@ test("it should let TextField registry override FormField chrome", () => {
 
   expect(result.merged.value.variant).toBe("outline");
 });
+
+test("it should merge chrome, public, and instance classes on TextField", () => {
+  let result!: ReturnType<typeof useFormField>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useFormField(
+        { classes: { container: "instance-container" } },
+        libDefaults,
+        { componentName: "TextField" },
+      );
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        TextField: { classes: { root: "public-root" } },
+        FormField: {
+          classes: {
+            root: "chrome-root",
+            container: "chrome-container",
+          },
+        },
+      },
+    },
+  });
+
+  expect(result.rootBind.value.class).toContain("public-root");
+  expect(result.rootBind.value.class).not.toContain("chrome-root");
+  expect(result.containerBind.value.class).toContain("instance-container");
+  expect(result.containerBind.value.class).not.toContain("chrome-container");
+});
