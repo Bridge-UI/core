@@ -1,6 +1,6 @@
 # FormField
 
-> Building block for field chrome. Prefer public fields (`TextField`, `Select`, …) in apps; FormField remains exported for advanced composition. Not a `BridgeUIComponentsConfig` key — theme via the public parent (`components.TextField`, `components.Select`, …).
+> Building block for field chrome. Prefer public fields (`TextField`, `Select`, …) in apps; FormField remains exported for advanced composition. Theme all fields via `components.FormField`; override per public field (`components.TextField`, …).
 
 Form field chrome (label, adornments, error) used by TextField, Select, and other inputs.
 

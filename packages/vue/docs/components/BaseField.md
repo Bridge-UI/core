@@ -1,6 +1,6 @@
 # BaseField
 
-> Building block for composite field chrome. Prefer `OtpField` / `Slider` in apps; BaseField remains exported for advanced composition. Not a registry key — theme chrome via `tokens.baseField` on the public parent (e.g. `components.Slider.tokens.baseField`).
+> Building block for composite field chrome. Prefer `OtpField` / `Slider` in apps; BaseField remains exported for advanced composition. Theme shared chrome via `components.BaseField`.
 
 Shared vertical field chrome (label, corner, start/end slots, description,
 error message) for OtpField, Slider, and similar controls.

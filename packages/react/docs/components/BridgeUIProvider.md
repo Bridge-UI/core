@@ -81,7 +81,7 @@ const dates = createDayjsDateAdapter();
 
 Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.
 
-Merge order: instance props → `components.{Name}.defaultProps` → `formDefaults` → library defaults.
+Merge order: instance props → `components.{Name}.defaultProps` → chrome (`FormField` / `FormControl` / `BaseField` / `TimePanel`) → `formDefaults` → library defaults.
 
 Radio and Switch receive `size` only — their `rounded` stays shape-driven (`full`) unless overridden per component.
 
@@ -95,18 +95,25 @@ Radio and Switch receive `size` only — their `rounded` stays shape-driven (`fu
 </BridgeUIProvider>
 ```
 
-### Nested chrome tokens
+### Shared chrome
 
-Building blocks (`FormField`, `FormControl`, `BaseField`) are not registry keys. Theme chrome under the public parent. Dropdown tokens live on `components.Listbox`:
+`FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`.
 
 ```tsx
 <BridgeUIProvider
   components={{
-    Slider: {
+    FormField: {
+      defaultProps: {
+        variant: "filled",
+        color: "secondary",
+      },
+    },
+    TextField: {
+      defaultProps: { variant: "outline" },
+    },
+    BaseField: {
       tokens: {
-        baseField: {
-          size: { md: { text: "text-base", group: "gap-3" } },
-        },
+        size: { md: { text: "text-base", group: "gap-3" } },
       },
     },
     Checkbox: {
