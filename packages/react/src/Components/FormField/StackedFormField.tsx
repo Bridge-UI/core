@@ -5,7 +5,7 @@ import FormFieldCorner from "@/Components/FormField/FormFieldCorner";
 import FormFieldLabel from "@/Components/FormField/FormFieldLabel";
 import type { UseFormFieldReturn } from "@/Components/FormField/hooks/useFormField";
 import { Icon } from "@/Components/Icon";
-import { hasNamedSlot, hasSlotOrProp, isPropPresent } from "@/Utils";
+import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 type StackedFormFieldProps = {
   api: UseFormFieldReturn;
@@ -82,16 +82,15 @@ function StackedFormField({ api, children }: StackedFormFieldProps) {
         )}
       </div>
 
-      {!api.invalidated &&
-        hasSlotOrProp(api.slots, "description", api.merged.description) && (
-          <p {...api.descriptionBind} id={`${api.controlId}-description`}>
-            {hasNamedSlot(api.slots, "description")
-              ? api.slots?.description
-              : api.merged.description}
-          </p>
-        )}
+      {api.showDescriptionContent && (
+        <p {...api.descriptionBind} id={`${api.controlId}-description`}>
+          {hasNamedSlot(api.slots, "description")
+            ? api.slots?.description
+            : api.merged.description}
+        </p>
+      )}
 
-      {!api.merged.hideErrorMessage && (
+      {api.showErrorMessageRow && (
         <p
           {...api.errorBind}
           id={`${api.controlId}-error`}

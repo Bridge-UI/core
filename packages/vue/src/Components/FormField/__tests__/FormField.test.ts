@@ -82,13 +82,42 @@ test("it should render description when description prop is provided", () => {
   expect(wrapper.text()).toContain("Helper text");
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   const wrapper = mountFormField({
     error: true,
     description: "Helper text",
   });
 
+  expect(wrapper.text()).toContain("Helper text");
+});
+
+test("it should hide description when errorMessage is shown", () => {
+  const wrapper = mountFormField({
+    error: true,
+    errorMessage: "Required",
+    description: "Helper text",
+  });
+
   expect(wrapper.text()).not.toContain("Helper text");
+  expect(wrapper.text()).toContain("Required");
+});
+
+test("it should keep description on error when showDescriptionOnError is true", () => {
+  const wrapper = mountFormField({
+    error: true,
+    errorMessage: "Required",
+    description: "Helper text",
+    showDescriptionOnError: true,
+  });
+
+  expect(wrapper.text()).toContain("Required");
+  expect(wrapper.text()).toContain("Helper text");
+});
+
+test("it should not reserve error space when description is present", () => {
+  const wrapper = mountFormField({ description: "Helper text" });
+
+  expect(wrapper.find('[id$="-error"]').exists()).toBe(false);
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

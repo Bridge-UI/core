@@ -54,9 +54,22 @@ test("it should render description when description prop is provided", () => {
   expect(screen.getByText("Helper text")).toBeTruthy();
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   render(<BaseFieldHarness error description="Helper text" />);
 
+  expect(screen.getByText("Helper text")).toBeTruthy();
+});
+
+test("it should hide description when errorMessage is shown", () => {
+  render(
+    <BaseFieldHarness
+      error
+      errorMessage="Required"
+      description="Helper text"
+    />,
+  );
+
+  expect(screen.getByText("Required")).toBeTruthy();
   expect(screen.queryByText("Helper text")).toBeNull();
 });
 

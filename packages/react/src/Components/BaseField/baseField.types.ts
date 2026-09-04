@@ -152,7 +152,8 @@ export interface BaseFieldOwnProps {
   customProps?: BaseFieldCustomProps;
 
   /**
-   * Helper text below the group (hidden when the field is invalid).
+   * Helper text below the group. Hidden when `error` is true and an error
+   * message is shown, unless `showDescriptionOnError` is true.
    *
    * @default undefined
    */
@@ -166,7 +167,9 @@ export interface BaseFieldOwnProps {
   disabled?: boolean;
 
   /**
-   * When `true`, applies invalid styling on the label and group.
+   * When `true`, applies invalid styling on the label and group. Hides
+   * description when an error message is shown, unless `showDescriptionOnError`
+   * is true.
    *
    * @default false
    */
@@ -215,6 +218,13 @@ export interface BaseFieldOwnProps {
    * @default false
    */
   required?: boolean;
+
+  /**
+   * When `true`, keeps the description visible while the field is invalid.
+   *
+   * @default false
+   */
+  showDescriptionOnError?: boolean;
 
   /**
    * Label, corner, description, and error typography scale.

@@ -60,6 +60,7 @@ export const baseFieldBridgeKeys = [
   "description",
   "errorMessage",
   "hideErrorMessage",
+  "showDescriptionOnError",
 ] as const satisfies readonly (keyof Omit<BaseFieldOwnProps, "field">)[];
 
 type BaseFieldLibDefaults = LibDefaultsShape<
@@ -151,31 +152,44 @@ export function useBaseField(
   });
 
   const reservesErrorMessageSpace = computed(() => {
-    return !merged.value.hideErrorMessage;
+    return (
+      !merged.value.hideErrorMessage &&
+      !hasSlotOrProp(slots, "description", merged.value.description)
+    );
   });
 
   const showErrorMessageContent = computed(() => {
     return (
       invalidated.value &&
+      !merged.value.hideErrorMessage &&
       hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
     );
+  });
+
+  const showDescriptionContent = computed(() => {
+    if (!hasSlotOrProp(slots, "description", merged.value.description)) {
+      return false;
+    }
+
+    if (!showErrorMessageContent.value) {
+      return true;
+    }
+
+    return merged.value.showDescriptionOnError === true;
+  });
+
+  const showErrorMessageRow = computed(() => {
+    return showErrorMessageContent.value || reservesErrorMessageSpace.value;
   });
 
   const ariaDescribedBy = computed(() => {
     const ids: string[] = [];
 
-    if (
-      !invalidated.value &&
-      hasSlotOrProp(slots, "description", merged.value.description)
-    ) {
+    if (showDescriptionContent.value) {
       ids.push(`${controlId.value}-description`);
     }
 
-    if (
-      invalidated.value &&
-      !merged.value.hideErrorMessage &&
-      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
-    ) {
+    if (showErrorMessageContent.value) {
       ids.push(`${controlId.value}-error`);
     }
 
@@ -339,6 +353,8 @@ export function useBaseField(
     fieldLabelProps,
     descriptionBind,
     fieldCornerProps,
+    showErrorMessageRow,
+    showDescriptionContent,
     showErrorMessageContent,
   };
 }

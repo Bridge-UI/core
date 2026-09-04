@@ -92,7 +92,7 @@ test("it should not forward defaultValue to the native textarea", () => {
   expect(wrapper.find("textarea").attributes("defaultvalue")).toBeUndefined();
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   const wrapper = mount(Textarea, {
     props: {
       error: true,
@@ -100,7 +100,7 @@ test("it should hide description when field is invalid", () => {
     },
   });
 
-  expect(wrapper.text()).not.toContain("Helper text");
+  expect(wrapper.text()).toContain("Helper text");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

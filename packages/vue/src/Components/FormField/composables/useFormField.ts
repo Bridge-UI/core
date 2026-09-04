@@ -106,6 +106,7 @@ export const formFieldBridgeKeys = [
   "errorMessage",
   "showErrorIcon",
   "hideErrorMessage",
+  "showDescriptionOnError",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<
@@ -201,7 +202,10 @@ export function useFormField(
   });
 
   const reservesErrorMessageSpace = computed(() => {
-    return !merged.value.hideErrorMessage;
+    return (
+      !merged.value.hideErrorMessage &&
+      !hasSlotOrProp(slots, "description", merged.value.description)
+    );
   });
 
   const controlId = computed(() => {
@@ -213,8 +217,25 @@ export function useFormField(
   const showErrorMessageContent = computed(() => {
     return (
       invalidated.value &&
+      !merged.value.hideErrorMessage &&
       hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
     );
+  });
+
+  const showDescriptionContent = computed(() => {
+    if (!hasSlotOrProp(slots, "description", merged.value.description)) {
+      return false;
+    }
+
+    if (!showErrorMessageContent.value) {
+      return true;
+    }
+
+    return merged.value.showDescriptionOnError === true;
+  });
+
+  const showErrorMessageRow = computed(() => {
+    return showErrorMessageContent.value || reservesErrorMessageSpace.value;
   });
 
   const hasInsetLabelRow = computed(() => {
@@ -236,18 +257,11 @@ export function useFormField(
   const ariaDescribedBy = computed(() => {
     const ids: string[] = [];
 
-    if (
-      !invalidated.value &&
-      hasSlotOrProp(slots, "description", merged.value.description)
-    ) {
+    if (showDescriptionContent.value) {
       ids.push(`${controlId.value}-description`);
     }
 
-    if (
-      invalidated.value &&
-      !merged.value.hideErrorMessage &&
-      hasSlotOrProp(slots, "errorMessage", merged.value.errorMessage)
-    ) {
+    if (showErrorMessageContent.value) {
       ids.push(`${controlId.value}-error`);
     }
 
@@ -634,6 +648,8 @@ export function useFormField(
     hasInsetLabelRow,
     insetLabelRowBind,
     stackedInputRowBind,
+    showErrorMessageRow,
+    showDescriptionContent,
     showErrorMessageContent,
     reservesErrorMessageSpace,
   };

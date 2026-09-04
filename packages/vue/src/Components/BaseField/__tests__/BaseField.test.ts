@@ -70,13 +70,24 @@ test("it should render description when description prop is provided", () => {
   expect(wrapper.text()).toContain("Helper text");
 });
 
-test("it should hide description when field is invalid", () => {
+test("it should keep description when error is true without errorMessage", () => {
   const wrapper = mountBaseField({
     error: true,
     description: "Helper text",
   });
 
+  expect(wrapper.text()).toContain("Helper text");
+});
+
+test("it should hide description when errorMessage is shown", () => {
+  const wrapper = mountBaseField({
+    error: true,
+    errorMessage: "Required",
+    description: "Helper text",
+  });
+
   expect(wrapper.text()).not.toContain("Helper text");
+  expect(wrapper.text()).toContain("Required");
 });
 
 test("it should render error message when errorMessage prop is provided", () => {

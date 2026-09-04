@@ -102,6 +102,7 @@ export const formFieldBridgeKeys = [
   "errorMessage",
   "showErrorIcon",
   "hideErrorMessage",
+  "showDescriptionOnError",
 ] as const satisfies readonly (keyof FormFieldOwnProps)[];
 
 type FormFieldLibDefaults = LibDefaultsShape<
@@ -208,13 +209,34 @@ export function useFormField(
   });
 
   const reservesErrorMessageSpace = derived(() => {
-    return !merged.hideErrorMessage;
+    return (
+      !merged.hideErrorMessage &&
+      !hasSlotOrProp(slots, "description", merged.description)
+    );
   });
 
   const showErrorMessageContent = derived(() => {
     return (
-      invalidated && hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
+      invalidated &&
+      !merged.hideErrorMessage &&
+      hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
     );
+  });
+
+  const showDescriptionContent = derived(() => {
+    if (!hasSlotOrProp(slots, "description", merged.description)) {
+      return false;
+    }
+
+    if (!showErrorMessageContent) {
+      return true;
+    }
+
+    return merged.showDescriptionOnError === true;
+  });
+
+  const showErrorMessageRow = derived(() => {
+    return showErrorMessageContent || reservesErrorMessageSpace;
   });
 
   const hasInsetLabelRow = derived(() => {
@@ -236,18 +258,11 @@ export function useFormField(
   const ariaDescribedBy = derived(() => {
     const ids: string[] = [];
 
-    if (
-      !invalidated &&
-      hasSlotOrProp(slots, "description", merged.description)
-    ) {
+    if (showDescriptionContent) {
       ids.push(`${controlId}-description`);
     }
 
-    if (
-      invalidated &&
-      !merged.hideErrorMessage &&
-      hasSlotOrProp(slots, "errorMessage", merged.errorMessage)
-    ) {
+    if (showErrorMessageContent) {
       ids.push(`${controlId}-error`);
     }
 
@@ -626,6 +641,8 @@ export function useFormField(
     hasInsetLabelRow,
     insetLabelRowBind,
     stackedInputRowBind,
+    showErrorMessageRow,
+    showDescriptionContent,
     showErrorMessageContent,
     reservesErrorMessageSpace,
   };

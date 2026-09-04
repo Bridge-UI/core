@@ -103,23 +103,24 @@ const field = useBaseField(() => ({
 
 ## Props
 
-| Prop               | Type                   | Default | Description                                                                                  |
-| ------------------ | ---------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| `classes`          | `BaseFieldClasses`     | —       | Classes for the field chrome and control group layout.                                       |
-| `controlId`        | `string`               | auto    | Id for the control group and related labels.                                                 |
-| `corner`           | `string`               | —       | Secondary header text at the inline end.                                                     |
-| `customProps`      | `BaseFieldCustomProps` | —       | Extra props for internal parts (`root`, `group`, `label`, …).                                |
-| `description`      | `string`               | —       | Helper text below the control group (hidden when invalid).                                   |
-| `disabled`         | `boolean`              | `false` | Disables the field control group.                                                            |
-| `error`            | `boolean`              | `false` | Invalid styling on the label and control group.                                              |
-| `errorMessage`     | `string`               | —       | Error message below the control group.                                                       |
-| `field`            | `UseBaseFieldReturn`   | —       | Pre-composed field chrome API from `useBaseField`. Used by `<BaseField :field="…" />`.       |
-| `hideErrorMessage` | `boolean`              | `false` | Hides the error message row and reserved space.                                              |
-| `label`            | `string`               | —       | Primary label above the control group.                                                       |
-| `readonly`         | `boolean`              | `false` | Read-only field control group.                                                               |
-| `required`         | `boolean`              | `false` | Shows a required asterisk on the label.                                                      |
-| `size`             | `BaseFieldSize`        | `"md"`  | Label typography and control group gap scale.                                                |
-| `slots`            | `BaseFieldSlots`       | —       | `#label`, `#corner`, `#description`, `#errorMessage`, `#start`, `#end`, and default control. |
+| Prop                     | Type                   | Default | Description                                                                                                                        |
+| ------------------------ | ---------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `classes`                | `BaseFieldClasses`     | —       | Classes for the field chrome and control group layout.                                                                             |
+| `controlId`              | `string`               | auto    | Id for the control group and related labels.                                                                                       |
+| `corner`                 | `string`               | —       | Secondary header text at the inline end.                                                                                           |
+| `customProps`            | `BaseFieldCustomProps` | —       | Extra props for internal parts (`root`, `group`, `label`, …).                                                                      |
+| `description`            | `string`               | —       | Helper text below the control group. Hidden when `error` and an error message are set, unless `showDescriptionOnError`.            |
+| `disabled`               | `boolean`              | `false` | Disables the field control group.                                                                                                  |
+| `error`                  | `boolean`              | `false` | Invalid styling on the label and control group. Hides description when an error message is shown, unless `showDescriptionOnError`. |
+| `errorMessage`           | `string`               | —       | Error message below the control group.                                                                                             |
+| `field`                  | `UseBaseFieldReturn`   | —       | Pre-composed field chrome API from `useBaseField`. Used by `<BaseField :field="…" />`.                                             |
+| `hideErrorMessage`       | `boolean`              | `false` | Hides the error message row and reserved space.                                                                                    |
+| `label`                  | `string`               | —       | Primary label above the control group.                                                                                             |
+| `readonly`               | `boolean`              | `false` | Read-only field control group.                                                                                                     |
+| `required`               | `boolean`              | `false` | Shows a required asterisk on the label.                                                                                            |
+| `showDescriptionOnError` | `boolean`              | `false` | When `true`, keeps the description visible while the field is invalid.                                                             |
+| `size`                   | `BaseFieldSize`        | `"md"`  | Label typography and control group gap scale.                                                                                      |
+| `slots`                  | `BaseFieldSlots`       | —       | `#label`, `#corner`, `#description`, `#errorMessage`, `#start`, `#end`, and default control.                                       |
 
 ## Related components
 
