@@ -138,6 +138,44 @@ test("it should merge entry and props classes with props winning", () => {
   scope.stop();
 });
 
+test("it should merge chrome, public, and instance classes with later layers winning", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const chromeEntry = computed(() => {
+      return {
+        classes: {
+          icon: "chrome-icon",
+          root: "chrome-root",
+          label: "chrome-label",
+        },
+      };
+    });
+
+    const entry = computed(() => {
+      return {
+        classes: { icon: "public-icon", root: "public-root" },
+      };
+    });
+
+    const props = { classes: { root: "instance-root" } };
+
+    const result = useBridgeUIMergedRegistryClasses({
+      entry,
+      props,
+      chromeEntry,
+    });
+
+    expect(result.value).toEqual({
+      icon: "public-icon",
+      root: "instance-root",
+      label: "chrome-label",
+    });
+  });
+
+  scope.stop();
+});
+
 test("it should default showFooter to true for dialog overlays", () => {
   const result = mountUseFieldShowFooter({
     overlay: "modal",

@@ -1,9 +1,11 @@
 // ** External Imports
 import { renderHook } from "@testing-library/react";
+import { createElement } from "react";
 import { expect, test } from "vitest";
 
 // ** Local Imports
 import { useFormField, type FormFieldOwnProps } from "@/Components/FormField";
+import { BridgeUIProvider } from "@/Provider";
 
 const libDefaults = {
   size: "md",
@@ -258,4 +260,74 @@ test("it should apply helper inset and tighter type on error bind", () => {
   expect(result.current.errorBind.className).toContain("text-xs");
   expect(result.current.errorBind.className).toContain("ps-2.5");
   expect(result.current.errorBind.className).toContain("pe-2.5");
+});
+
+test("it should apply FormField registry defaultProps", () => {
+  const { result } = renderHook(() => useFormField({}, libDefaults), {
+    wrapper: ({ children }) => {
+      return createElement(BridgeUIProvider, {
+        children,
+        components: {
+          FormField: { defaultProps: { variant: "filled" } },
+        },
+      });
+    },
+  });
+
+  expect(result.current.merged.variant).toBe("filled");
+});
+
+test("it should let TextField registry override FormField chrome", () => {
+  const { result } = renderHook(
+    () => useFormField({}, libDefaults, { componentName: "TextField" }),
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            FormField: { defaultProps: { variant: "filled" } },
+            TextField: { defaultProps: { variant: "outline" } },
+          },
+        });
+      },
+    },
+  );
+
+  expect(result.current.merged.variant).toBe("outline");
+});
+
+test("it should merge chrome, public, and instance classes on TextField", () => {
+  const { result } = renderHook(
+    () =>
+      useFormField(
+        { classes: { container: "instance-container" } },
+        libDefaults,
+        { componentName: "TextField" },
+      ),
+    {
+      wrapper: ({ children }) => {
+        return createElement(BridgeUIProvider, {
+          children,
+          components: {
+            TextField: { classes: { root: "public-root" } },
+            FormField: {
+              classes: {
+                root: "chrome-root",
+                container: "chrome-container",
+              },
+            },
+          },
+        });
+      },
+    },
+  );
+
+  expect(result.current.rootBind.className).toContain("public-root");
+  expect(result.current.rootBind.className).not.toContain("chrome-root");
+  expect(result.current.containerBind.className).toContain(
+    "instance-container",
+  );
+  expect(result.current.containerBind.className).not.toContain(
+    "chrome-container",
+  );
 });

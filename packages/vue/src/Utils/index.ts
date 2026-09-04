@@ -21,6 +21,8 @@ import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
   createMergePartBind,
+  getBridgeUIChromeComponentName,
+  getBridgeUIRegistryDefaultProp,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
@@ -32,11 +34,18 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
   BridgeUIComponentsConfig[K]
 >;
 
+type BridgeUIRegistryChromeEntry = {
+  classes?: object;
+  defaultProps?: object;
+  tokens?: object;
+};
+
 export type UseBridgeUIComponentReturn<
   P extends object,
   K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 > = {
   bridge: ReturnType<typeof useBridgeUI>;
+  chromeEntry: ComputedRef<undefined | BridgeUIRegistryChromeEntry>;
   components: ComputedRef<null | BridgeUIComponentsConfig>;
   entry: ComputedRef<undefined | RegistryEntryFor<K>>;
   merged: ComputedRef<P>;
@@ -97,6 +106,17 @@ export function useBridgeUIComponent<
       undefined | RegistryEntryFor<K>;
   });
 
+  const chromeEntry = computed((): undefined | BridgeUIRegistryChromeEntry => {
+    const chromeName = getBridgeUIChromeComponentName(componentName);
+
+    if (!chromeName) {
+      return undefined;
+    }
+
+    return get(components.value, chromeName) as
+      undefined | BridgeUIRegistryChromeEntry;
+  });
+
   const merged = computed(() => {
     return mergePropsWithBridgeUIDefaults({
       libDefaults,
@@ -112,6 +132,7 @@ export function useBridgeUIComponent<
     bridge,
     merged,
     components,
+    chromeEntry,
   };
 }
 
@@ -131,13 +152,11 @@ export function useFieldShowFooter({
   const bridge = useBridgeUI();
 
   return computed(() => {
-    const registryShowFooter = componentName
-      ? (get(unref(bridge?.components), [
-          componentName,
-          "defaultProps",
-          "showFooter",
-        ]) as boolean | undefined)
-      : undefined;
+    const registryShowFooter = getBridgeUIRegistryDefaultProp<boolean>({
+      componentName,
+      prop: "showFooter",
+      components: unref(bridge?.components),
+    });
 
     return resolveFieldShowFooter(
       toValue(showFooter) ?? registryShowFooter,
@@ -162,30 +181,31 @@ export function usePickerFill({
   const bridge = useBridgeUI();
 
   return computed(() => {
-    const registryFill = componentName
-      ? (get(unref(bridge?.components), [
-          componentName,
-          "defaultProps",
-          "fill",
-        ]) as boolean | undefined)
-      : undefined;
+    const registryFill = getBridgeUIRegistryDefaultProp<boolean>({
+      prop: "fill",
+      componentName,
+      components: unref(bridge?.components),
+    });
 
     return resolvePickerFill(toValue(fill) ?? registryFill, toValue(overlay));
   });
 }
 
 /**
- * Merges `entry.classes` (Bridge provider) with `props.classes` (instance).
+ * Merges chrome `classes`, public registry `classes`, and instance `props.classes`.
  */
 export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
+  chromeEntry,
 }: {
+  chromeEntry?: ComputedRef<undefined | { classes?: object }>;
   entry: ComputedRef<undefined | { classes?: object }>;
   props: MaybeRefOrGetter<{ classes?: Partial<C> }>;
 }) {
   return computed(() => {
     return mergeBridgeUILayeredClasses(
+      get(chromeEntry?.value, "classes") as undefined | Partial<C>,
       get(entry.value, "classes") as undefined | Partial<C>,
       toValue(props).classes,
     );

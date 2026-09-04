@@ -49,11 +49,14 @@ export type FormFieldReservedSlotName = Exclude<
 export type FormFieldOptions = {
   /**
    * Public registry key that owns FormField chrome defaults/tokens.
+   * Defaults to `FormField`; public fields pass their own key so chrome
+   * cascades (`FormField` → `TextField`, …).
    */
   componentName?:
     | "Select"
     | "Textarea"
     | "DateField"
+    | "FormField"
     | "TextField"
     | "TimeField"
     | "ColorField"
@@ -137,12 +140,18 @@ export function useFormField(
     });
   });
 
-  const { merged, entry: bridgeFormField } = useBridgeUIComponent<
+  const registryName = options.componentName ?? "FormField";
+
+  const {
+    merged,
+    entry: bridgeFormField,
+    chromeEntry: bridgeFormFieldChrome,
+  } = useBridgeUIComponent<
     FormFieldMerged,
     NonNullable<FormFieldOptions["componentName"]>
   >({
     libDefaults,
-    componentName: options.componentName,
+    componentName: registryName,
     props: () => {
       return split.value.componentProps;
     },
@@ -158,6 +167,7 @@ export function useFormField(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
     entry: bridgeFormField,
+    chromeEntry: bridgeFormFieldChrome,
     props: () => split.value.componentProps,
   });
 
@@ -271,7 +281,10 @@ export function useFormField(
   const sizeClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeFormField.value?.tokens?.size,
+      get(bridgeFormFieldChrome.value ?? bridgeFormField.value, [
+        "tokens",
+        "size",
+      ]),
     );
 
     return get(classes, [merged.value.size, variantKey.value]);
@@ -280,7 +293,10 @@ export function useFormField(
   const colorPalette = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeFormField.value?.tokens?.color,
+      get(bridgeFormFieldChrome.value ?? bridgeFormField.value, [
+        "tokens",
+        "color",
+      ]),
     );
 
     return getColorToken({
@@ -293,7 +309,10 @@ export function useFormField(
   const roundedClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeFormField.value?.tokens?.rounded,
+      get(bridgeFormFieldChrome.value ?? bridgeFormField.value, [
+        "tokens",
+        "rounded",
+      ]),
     );
 
     return get(classes, merged.value.rounded);
@@ -302,7 +321,10 @@ export function useFormField(
   const variantClasses = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeFormField.value?.tokens?.variant,
+      get(bridgeFormFieldChrome.value ?? bridgeFormField.value, [
+        "tokens",
+        "variant",
+      ]),
     );
 
     return get(classes, variantKey.value);

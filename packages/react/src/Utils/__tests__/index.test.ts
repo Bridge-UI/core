@@ -128,6 +128,28 @@ test("it should merge entry and props classes with props winning", () => {
   expect(result.current).toEqual({ icon: "text-sm", root: "bg-blue-500" });
 });
 
+test("it should merge chrome, public, and instance classes with later layers winning", () => {
+  const { result } = renderHook(() =>
+    useBridgeUIMergedRegistryClasses({
+      props: { classes: { root: "instance-root" } },
+      entry: { classes: { icon: "public-icon", root: "public-root" } },
+      chromeEntry: {
+        classes: {
+          icon: "chrome-icon",
+          root: "chrome-root",
+          label: "chrome-label",
+        },
+      },
+    }),
+  );
+
+  expect(result.current).toEqual({
+    icon: "public-icon",
+    root: "instance-root",
+    label: "chrome-label",
+  });
+});
+
 test("it should default showFooter to true for dialog overlays", () => {
   const { result } = renderHook(() => {
     return useFieldShowFooter({

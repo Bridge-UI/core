@@ -45,11 +45,14 @@ export type FormFieldReservedSlotName = Exclude<
 export type FormFieldOptions = {
   /**
    * Public registry key that owns FormField chrome defaults/tokens.
+   * Defaults to `FormField`; public fields pass their own key so chrome
+   * cascades (`FormField` → `TextField`, …).
    */
   componentName?:
     | "Select"
     | "Textarea"
     | "DateField"
+    | "FormField"
     | "TextField"
     | "TimeField"
     | "ColorField"
@@ -130,13 +133,19 @@ export function useFormField(
     bridgeKeys: formFieldBridgeKeys,
   });
 
-  const { merged, entry: bridgeFormField } = useBridgeUIComponent<
+  const registryName = options.componentName ?? "FormField";
+
+  const {
+    merged,
+    entry: bridgeFormField,
+    chromeEntry: bridgeFormFieldChrome,
+  } = useBridgeUIComponent<
     FormFieldMerged,
     NonNullable<FormFieldOptions["componentName"]>
   >({
     libDefaults,
     props: componentProps,
-    componentName: options.componentName,
+    componentName: registryName,
   });
 
   const slots = derived(() => {
@@ -162,6 +171,7 @@ export function useFormField(
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormFieldClasses>({
     props: componentProps,
     entry: bridgeFormField,
+    chromeEntry: bridgeFormFieldChrome,
   });
 
   const invalidated = derived(() => {
@@ -272,16 +282,16 @@ export function useFormField(
   const sizeClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      bridgeFormField?.tokens?.size,
+      get(bridgeFormFieldChrome ?? bridgeFormField, ["tokens", "size"]),
     );
 
     return get(classes, [merged.size, merged.variant ?? "outline"]);
-  }, [merged.size, merged.variant, bridgeFormField?.tokens?.size]);
+  }, [merged.size, merged.variant, bridgeFormField, bridgeFormFieldChrome]);
 
   const colorPalette = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       colorProps,
-      bridgeFormField?.tokens?.color,
+      get(bridgeFormFieldChrome ?? bridgeFormField, ["tokens", "color"]),
     );
 
     return getColorToken({
@@ -289,25 +299,25 @@ export function useFormField(
       color: merged.color,
       invalid: invalidated,
     });
-  }, [invalidated, merged.color, bridgeFormField?.tokens?.color]);
+  }, [invalidated, merged.color, bridgeFormField, bridgeFormFieldChrome]);
 
   const roundedClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
-      bridgeFormField?.tokens?.rounded,
+      get(bridgeFormFieldChrome ?? bridgeFormField, ["tokens", "rounded"]),
     );
 
     return get(classes, merged.rounded);
-  }, [merged.rounded, bridgeFormField?.tokens?.rounded]);
+  }, [merged.rounded, bridgeFormField, bridgeFormFieldChrome]);
 
   const variantClasses = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
-      bridgeFormField?.tokens?.variant,
+      get(bridgeFormFieldChrome ?? bridgeFormField, ["tokens", "variant"]),
     );
 
     return get(classes, merged.variant ?? "outline");
-  }, [merged.variant, bridgeFormField?.tokens?.variant]);
+  }, [merged.variant, bridgeFormField, bridgeFormFieldChrome]);
 
   const containerColorFocus = derived(() => {
     if (isUnderlined) {

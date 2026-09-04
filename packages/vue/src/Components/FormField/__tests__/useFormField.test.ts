@@ -5,6 +5,7 @@ import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { useFormField, type FormFieldOwnProps } from "@/Components/FormField";
+import BridgeUIProvider from "@/Provider/BridgeUIProvider.vue";
 
 const libDefaults = {
   size: "md",
@@ -292,4 +293,93 @@ test("it should apply helper inset and tighter type on error bind", () => {
   expect(errorBind.value.class).toContain("text-xs");
   expect(errorBind.value.class).toContain("ps-2.5");
   expect(errorBind.value.class).toContain("pe-2.5");
+});
+
+test("it should apply FormField registry defaultProps", () => {
+  let result!: ReturnType<typeof useFormField>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useFormField({}, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        FormField: { defaultProps: { variant: "filled" } },
+      },
+    },
+  });
+
+  expect(result.merged.value.variant).toBe("filled");
+});
+
+test("it should let TextField registry override FormField chrome", () => {
+  let result!: ReturnType<typeof useFormField>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useFormField({}, libDefaults, { componentName: "TextField" });
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        FormField: { defaultProps: { variant: "filled" } },
+        TextField: { defaultProps: { variant: "outline" } },
+      },
+    },
+  });
+
+  expect(result.merged.value.variant).toBe("outline");
+});
+
+test("it should merge chrome, public, and instance classes on TextField", () => {
+  let result!: ReturnType<typeof useFormField>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useFormField(
+        { classes: { container: "instance-container" } },
+        libDefaults,
+        { componentName: "TextField" },
+      );
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        TextField: { classes: { root: "public-root" } },
+        FormField: {
+          classes: {
+            root: "chrome-root",
+            container: "chrome-container",
+          },
+        },
+      },
+    },
+  });
+
+  expect(result.rootBind.value.class).toContain("public-root");
+  expect(result.rootBind.value.class).not.toContain("chrome-root");
+  expect(result.containerBind.value.class).toContain("instance-container");
+  expect(result.containerBind.value.class).not.toContain("chrome-container");
 });

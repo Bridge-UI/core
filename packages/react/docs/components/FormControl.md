@@ -1,6 +1,6 @@
 # FormControl
 
-> Building block for toggle-row chrome. Prefer `Checkbox`, `Radio`, and `Switch` in apps; FormControl remains exported for advanced composition. Not a registry key — theme chrome via `tokens.formControl` on the public parent (e.g. `components.Checkbox.tokens.formControl`).
+> Building block for toggle-row chrome. Prefer `Checkbox`, `Radio`, and `Switch` in apps; FormControl remains exported for advanced composition. Theme shared chrome via `components.FormControl`; override per public control (`components.Checkbox`, …).
 
 Low-level form control chrome (labels, description, error) for Checkbox, Radio, and Switch.
 
