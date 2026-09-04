@@ -6,6 +6,7 @@ import {
   get,
   isNil,
   isString,
+  isUndefined,
   omit,
   pick,
   reduce,
@@ -55,10 +56,13 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "Checkbox",
   "OtpField",
   "Textarea",
+  "BaseField",
   "DateField",
+  "FormField",
   "TextField",
   "TimeField",
   "ColorField",
+  "FormControl",
   "NumberField",
   "Autocomplete",
   "DateTimeField",
@@ -69,15 +73,93 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
 
 /**
- * Form controls whose `rounded` is shape-driven (pill / circle).
- * They receive `formDefaults.size` but keep lib/registry `rounded`.
+ * Form controls that receive `formDefaults.size` but not `rounded`.
+ * Radio / Switch keep a shape-driven pill; BaseField / FormControl have no
+ * `rounded` prop.
  */
 export const BRIDGE_UI_FORM_SHAPE_ROUNDED_NAMES = [
   "Radio",
   "Switch",
+  "BaseField",
+  "FormControl",
 ] as const satisfies ReadonlyArray<
   (typeof BRIDGE_UI_FORM_COMPONENT_NAMES)[number]
 >;
+
+/**
+ * Public components that inherit chrome registry defaults (`FormField`,
+ * `FormControl`, `BaseField`, `TimePanel`) when their own entry omits a key.
+ */
+export const BRIDGE_UI_CHROME_FALLBACK = {
+  Select: "FormField",
+  Slider: "BaseField",
+  Radio: "FormControl",
+  Switch: "FormControl",
+  OtpField: "BaseField",
+  Textarea: "FormField",
+  DateField: "FormField",
+  TextField: "FormField",
+  TimeField: "FormField",
+  Checkbox: "FormControl",
+  ColorField: "FormField",
+  TimePicker: "TimePanel",
+  NumberField: "FormField",
+  Autocomplete: "FormField",
+  DateTimeField: "FormField",
+  PasswordField: "FormField",
+  DateRangeField: "FormField",
+  TimeRangeField: "FormField",
+  TimeRangePicker: "TimePanel",
+  DateTimeRangeField: "FormField",
+} as const satisfies Partial<
+  Record<keyof BridgeUIComponentsConfig, keyof BridgeUIComponentsConfig>
+>;
+
+/**
+ * Shared chrome registry key for `componentName`, when one exists.
+ */
+export function getBridgeUIChromeComponentName(
+  componentName?: keyof BridgeUIComponentsConfig,
+): undefined | keyof BridgeUIComponentsConfig {
+  if (isNil(componentName)) {
+    return undefined;
+  }
+
+  return get(BRIDGE_UI_CHROME_FALLBACK, componentName) as
+    undefined | keyof BridgeUIComponentsConfig;
+}
+
+/**
+ * Reads `defaultProps[prop]` from the public registry entry, then chrome.
+ */
+export function getBridgeUIRegistryDefaultProp<T>({
+  prop,
+  components,
+  componentName,
+}: {
+  componentName?: keyof BridgeUIComponentsConfig;
+  components: null | undefined | BridgeUIComponentsConfig;
+  prop: string;
+}): T | undefined {
+  if (isNil(componentName) || isNil(components)) {
+    return undefined;
+  }
+
+  const fromPublic = get(components, [componentName, "defaultProps", prop]) as
+    T | undefined;
+
+  if (!isUndefined(fromPublic)) {
+    return fromPublic;
+  }
+
+  const chromeName = getBridgeUIChromeComponentName(componentName);
+
+  if (isNil(chromeName)) {
+    return undefined;
+  }
+
+  return get(components, [chromeName, "defaultProps", prop]) as T | undefined;
+}
 
 /**
  * Props that must not be deep-merged (`toMerged` / `es-toolkit`).
@@ -93,7 +175,7 @@ const BRIDGE_UI_NON_MERGEABLE_PROP_KEYS = [
 
 /**
  * Picks density defaults from `formDefaults` when `componentName` is a form control.
- * Radio / Switch omit `rounded` so pill/circle shapes stay intact.
+ * Radio / Switch / BaseField / FormControl omit `rounded`.
  */
 export function resolveBridgeUIFormDefaults<
   K extends keyof BridgeUIComponentsConfig,
@@ -327,7 +409,8 @@ export function createMergeNestedComponentProps(
  * Merges props with Bridge UI defaults and registry defaults.
  *
  * Order (later wins): `libDefaults` → `formDefaults` (form components only) →
- * registry `defaultProps` → instance `props`.
+ * chrome registry `defaultProps` (`FormField`, `FormControl`, `BaseField`,
+ * `TimePanel`) → public registry `defaultProps` → instance `props`.
  */
 export function mergePropsWithBridgeUIDefaults<
   P extends object,
@@ -345,6 +428,12 @@ export function mergePropsWithBridgeUIDefaults<
   libDefaults?: Partial<P>;
   props: P;
 }): P {
+  const chromeName = getBridgeUIChromeComponentName(componentName);
+
+  const fromChrome = chromeName
+    ? (get(components, [chromeName, "defaultProps"]) as undefined | Partial<P>)
+    : undefined;
+
   const fromRegistry = componentName
     ? (get(components, [componentName, "defaultProps"]) as
         undefined | Partial<P>)
@@ -364,6 +453,7 @@ export function mergePropsWithBridgeUIDefaults<
   const merged = mergeBridgeUILayeredClasses<P>(
     omitNonMergeable(libDefaults),
     omitNonMergeable(fromFormDefaults),
+    omitNonMergeable(fromChrome),
     omitNonMergeable(fromRegistry),
     omitNonMergeable(props),
   );
@@ -372,6 +462,7 @@ export function mergePropsWithBridgeUIDefaults<
     ...merged,
     ...pick(libDefaults ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
     ...pick(fromFormDefaults ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
+    ...pick(fromChrome ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
     ...pick(fromRegistry ?? {}, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
     ...pick(props, [...BRIDGE_UI_NON_MERGEABLE_PROP_KEYS]),
   } as P;

@@ -66,8 +66,10 @@ type FormControlMerged = MergeLibDefaults<
 export type FormControlOptions = {
   /**
    * Public registry key that owns FormControl chrome defaults/tokens.
+   * Defaults to `FormControl`; Checkbox / Radio / Switch pass their own key
+   * so chrome cascades (`FormControl` → parent).
    */
-  componentName?: "Radio" | "Switch" | "Checkbox";
+  componentName?: "Radio" | "Switch" | "Checkbox" | "FormControl";
 };
 
 export function useFormControl(
@@ -89,12 +91,16 @@ export function useFormControl(
     });
   });
 
-  const { merged, entry: bridgeFormControl } = useBridgeUIComponent<
+  const {
+    merged,
+    entry: bridgeFormControl,
+    chromeEntry: bridgeFormControlChrome,
+  } = useBridgeUIComponent<
     FormControlMerged,
     NonNullable<FormControlOptions["componentName"]>
   >({
     libDefaults,
-    componentName: options.componentName,
+    componentName: options.componentName ?? "FormControl",
     props: () => {
       return split.value.componentProps;
     },
@@ -106,6 +112,7 @@ export function useFormControl(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<FormControlClasses>({
     entry: bridgeFormControl,
+    chromeEntry: bridgeFormControlChrome,
     props: () => split.value.componentProps,
   });
 

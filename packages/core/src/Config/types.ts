@@ -34,7 +34,7 @@ import type {
   BadgeSize,
   BadgeVariant,
 } from "@/Tokens/Badge";
-import type { BaseFieldSizeItem } from "@/Tokens/BaseField";
+import type { BaseFieldSize, BaseFieldSizeItem } from "@/Tokens/BaseField";
 import type { BreadcrumbSize, BreadcrumbSizeItem } from "@/Tokens/Breadcrumb";
 import type {
   ButtonColor,
@@ -360,6 +360,7 @@ export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
 export interface BadgeConfigOverrides {}
+export interface BaseFieldConfigOverrides {}
 export interface BreadcrumbConfigOverrides {}
 export interface BreadcrumbItemConfigOverrides {}
 export interface ButtonConfigOverrides {}
@@ -382,6 +383,8 @@ export interface DateTimeRangePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
 export interface EmptyStateConfigOverrides {}
+export interface FormControlConfigOverrides {}
+export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
 export interface LabelConfigOverrides {}
 export interface LinkConfigOverrides {}
@@ -494,6 +497,18 @@ export interface BadgeConfigBase {
   }>;
 }
 
+export interface BaseFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    hideErrorMessage: boolean;
+    showDescriptionOnError: boolean;
+    size: keyof BaseFieldSize;
+  }>;
+  tokens: Partial<{
+    size: Record<string, BaseFieldSizeItem>;
+  }>;
+}
+
 export interface BreadcrumbConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -603,12 +618,6 @@ export interface ColorFieldConfigBase {
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
   }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
 }
 
 export interface ColorPickerConfigBase {
@@ -682,12 +691,6 @@ export interface DateFieldConfigBase {
     timeZone: string;
     variant: keyof FormFieldVariant;
   }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
 }
 
 export interface DatePickerConfigBase {
@@ -729,12 +732,6 @@ export interface DateRangeFieldConfigBase {
     startOfWeek: number;
     timeZone: string;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -779,12 +776,6 @@ export interface DateTimeFieldConfigBase {
     timeZone: string;
     variant: keyof FormFieldVariant;
   }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
 }
 
 export interface DateTimePickerConfigBase {
@@ -824,12 +815,6 @@ export interface TimeFieldConfigBase {
     size: keyof FormFieldSize;
     timeZone: string;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -882,12 +867,6 @@ export interface TimeRangeFieldConfigBase {
     timeZone: string;
     variant: keyof FormFieldVariant;
   }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
 }
 
 export interface TimeRangePickerConfigBase {
@@ -928,12 +907,6 @@ export interface DateTimeRangeFieldConfigBase {
     startOfWeek: number;
     timeZone: string;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1082,6 +1055,33 @@ export interface EmptyStateConfigBase {
   }>;
 }
 
+export interface FormControlConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    hideErrorMessage: boolean;
+    size: keyof LabelSize;
+  }>;
+}
+
+export interface FormFieldConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    color: Record<string, FormFieldColorItem>;
+    rounded: Record<string, string>;
+    size: Record<string, FormFieldSizeItem>;
+    variant: Record<string, FormFieldVariantItem>;
+  }>;
+}
+
 export interface NumberFieldConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1095,11 +1095,7 @@ export interface NumberFieldConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
     controlVariant: Record<string, NumberFieldControlVariantItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1116,9 +1112,6 @@ export interface OtpFieldConfigBase {
     variant: keyof OtpFieldVariant;
   }>;
   tokens: Partial<{
-    baseField: Partial<{
-      size: Record<string, BaseFieldSizeItem>;
-    }>;
     color: Record<string, OtpFieldColorItem>;
     rounded: Record<string, OtpFieldRoundedItem>;
     size: Record<string, OtpFieldSizeItem>;
@@ -1158,12 +1151,6 @@ export interface PasswordFieldConfigBase {
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1216,12 +1203,6 @@ export interface AutocompleteConfigBase {
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
   }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
-  }>;
 }
 
 export interface SelectConfigBase {
@@ -1235,12 +1216,6 @@ export interface SelectConfigBase {
     showFooter: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1313,9 +1288,6 @@ export interface SliderConfigBase {
     step: number;
   }>;
   tokens: Partial<{
-    baseField: Partial<{
-      size: Record<string, BaseFieldSizeItem>;
-    }>;
     color: Record<string, SliderColorItem>;
     rounded: Record<string, string>;
     size: Record<string, SliderSizeItem>;
@@ -1391,11 +1363,7 @@ export interface TextareaConfigBase {
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
     resize: Record<string, string>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1409,12 +1377,6 @@ export interface TextFieldConfigBase {
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
     variant: keyof FormFieldVariant;
-  }>;
-  tokens: Partial<{
-    color: Record<string, FormFieldColorItem>;
-    rounded: Record<string, string>;
-    size: Record<string, FormFieldSizeItem>;
-    variant: Record<string, FormFieldVariantItem>;
   }>;
 }
 
@@ -1537,6 +1499,7 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Avatar: Partial<Overwrite<AvatarConfigBase, AvatarConfigOverrides>>;
   Badge: Partial<Overwrite<BadgeConfigBase, BadgeConfigOverrides>>;
+  BaseField: Partial<Overwrite<BaseFieldConfigBase, BaseFieldConfigOverrides>>;
   Breadcrumb: Partial<
     Overwrite<BreadcrumbConfigBase, BreadcrumbConfigOverrides>
   >;
@@ -1585,6 +1548,10 @@ export type BridgeUIComponentsConfig = Partial<{
   EmptyState: Partial<
     Overwrite<EmptyStateConfigBase, EmptyStateConfigOverrides>
   >;
+  FormControl: Partial<
+    Overwrite<FormControlConfigBase, FormControlConfigOverrides>
+  >;
+  FormField: Partial<Overwrite<FormFieldConfigBase, FormFieldConfigOverrides>>;
   Icon: Partial<Overwrite<IconConfigBase, IconConfigOverrides>>;
   Label: Partial<Overwrite<LabelConfigBase, LabelConfigOverrides>>;
   Link: Partial<Overwrite<LinkConfigBase, LinkConfigOverrides>>;

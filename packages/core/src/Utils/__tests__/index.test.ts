@@ -7,6 +7,8 @@ import {
   cn,
   createMergeNestedComponentProps,
   createMergePartBind,
+  getBridgeUIChromeComponentName,
+  getBridgeUIRegistryDefaultProp,
   getColorToken,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
@@ -244,6 +246,203 @@ test("it should apply formDefaults size 2xs to OtpField", () => {
   });
 
   expect(result).toEqual({ size: "2xs", rounded: "lg" });
+});
+
+test("it should apply FormField chrome defaultProps to TextField", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled", color: "secondary" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "TextField",
+    libDefaults: { color: "primary" as never, variant: "outline" as never },
+  });
+
+  expect(result).toEqual({ variant: "filled", color: "secondary" });
+});
+
+test("it should let TextField defaultProps override FormField chrome", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled" } },
+    TextField: { defaultProps: { variant: "outline" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "TextField",
+    libDefaults: { variant: "underline" as never },
+  });
+
+  expect(result).toEqual({ variant: "outline" });
+});
+
+test("it should let instance props override FormField chrome", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    components,
+    componentName: "TextField",
+    props: { variant: "stacked" as const },
+    libDefaults: { variant: "outline" as never },
+  });
+
+  expect(result).toEqual({ variant: "stacked" });
+});
+
+test("it should let FormField chrome override formDefaults", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { size: "sm" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "TextField",
+    formDefaults: { size: "lg" },
+    libDefaults: { size: "md" as never },
+  });
+
+  expect(result).toEqual({ size: "sm" });
+});
+
+test("it should apply FormField chrome when componentName is FormField", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "FormField",
+    libDefaults: { variant: "outline" as never },
+  });
+
+  expect(result).toEqual({ variant: "filled" });
+});
+
+test("it should apply FormControl chrome defaultProps to Checkbox", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormControl: { defaultProps: { hideErrorMessage: true } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "Checkbox",
+    libDefaults: { hideErrorMessage: false as never },
+  });
+
+  expect(result).toEqual({ hideErrorMessage: true });
+});
+
+test("it should apply BaseField chrome defaultProps to Slider", () => {
+  const components: BridgeUIComponentsConfig = {
+    BaseField: { defaultProps: { hideErrorMessage: true } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "Slider",
+    libDefaults: { hideErrorMessage: false as never },
+  });
+
+  expect(result).toEqual({ hideErrorMessage: true });
+});
+
+test("it should apply TimePanel chrome defaultProps to TimePicker", () => {
+  const components: BridgeUIComponentsConfig = {
+    TimePanel: { defaultProps: { interval: 15, color: "secondary" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "TimePicker",
+    libDefaults: { interval: 1 as never, color: "primary" as never },
+  });
+
+  expect(result).toEqual({ interval: 15, color: "secondary" });
+});
+
+test("it should not apply FormField chrome to Button", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled" } },
+  };
+
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components,
+    componentName: "Button",
+    libDefaults: { variant: "solid" as never },
+  });
+
+  expect(result).toEqual({ variant: "solid" });
+});
+
+test("it should apply formDefaults size but not rounded for BaseField and FormControl", () => {
+  const baseField = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "BaseField",
+    libDefaults: { size: "md" as never },
+    formDefaults: { size: "lg", rounded: "xl" },
+  });
+
+  expect(baseField).toEqual({ size: "lg" });
+
+  const formControl = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "FormControl",
+    libDefaults: { size: "md" as never },
+    formDefaults: { size: "sm", rounded: "md" },
+  });
+
+  expect(formControl).toEqual({ size: "sm" });
+});
+
+test("it should resolve chrome names for public field components", () => {
+  expect(getBridgeUIChromeComponentName("TextField")).toBe("FormField");
+  expect(getBridgeUIChromeComponentName("Checkbox")).toBe("FormControl");
+  expect(getBridgeUIChromeComponentName("Slider")).toBe("BaseField");
+  expect(getBridgeUIChromeComponentName("TimePicker")).toBe("TimePanel");
+  expect(getBridgeUIChromeComponentName("FormField")).toBeUndefined();
+  expect(getBridgeUIChromeComponentName("Button")).toBeUndefined();
+});
+
+test("it should read chrome defaultProps when the public entry omits the key", () => {
+  const components: BridgeUIComponentsConfig = {
+    FormField: { defaultProps: { variant: "filled" } },
+  };
+
+  expect(
+    getBridgeUIRegistryDefaultProp<string>({
+      components,
+      prop: "variant",
+      componentName: "DateField",
+    }),
+  ).toBe("filled");
+});
+
+test("it should prefer public defaultProps over chrome in getBridgeUIRegistryDefaultProp", () => {
+  const components: BridgeUIComponentsConfig = {
+    TimePanel: { defaultProps: { fill: true } },
+    TimePicker: { defaultProps: { fill: false } },
+  };
+
+  expect(
+    getBridgeUIRegistryDefaultProp<boolean>({
+      components,
+      prop: "fill",
+      componentName: "TimePicker",
+    }),
+  ).toBe(false);
 });
 
 test("it should handle undefined components gracefully", () => {

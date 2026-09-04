@@ -37,8 +37,10 @@ import {
 export type BaseFieldOptions = {
   /**
    * Public registry key that owns BaseField chrome defaults/tokens.
+   * Defaults to `BaseField`; Slider / OtpField pass their own key so chrome
+   * cascades (`BaseField` → parent).
    */
-  componentName?: "Slider" | "OtpField";
+  componentName?: "Slider" | "OtpField" | "BaseField";
 
   /**
    * Resolve `Label` `for` from `controlId`. Defaults to the control id itself.
@@ -100,12 +102,18 @@ export function useBaseField(
     });
   });
 
-  const { merged, entry: bridgeBaseField } = useBridgeUIComponent<
+  const registryName = options.componentName ?? "BaseField";
+
+  const {
+    merged,
+    entry: bridgeBaseField,
+    chromeEntry: bridgeBaseFieldChrome,
+  } = useBridgeUIComponent<
     BaseFieldMerged,
     NonNullable<BaseFieldOptions["componentName"]>
   >({
     libDefaults,
-    componentName: options.componentName,
+    componentName: registryName,
     props: () => {
       return split.value.componentProps;
     },
@@ -113,6 +121,7 @@ export function useBaseField(
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<BaseFieldClasses>({
     entry: bridgeBaseField,
+    chromeEntry: bridgeBaseFieldChrome,
     props: () => {
       return split.value.componentProps;
     },
@@ -143,9 +152,14 @@ export function useBaseField(
   });
 
   const sizeClasses = computed(() => {
+    const isChromeConsumer = registryName !== "BaseField";
+
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      get(bridgeBaseField.value, ["tokens", "baseField", "size"]),
+      get(bridgeBaseFieldChrome.value, ["tokens", "size"]),
+      isChromeConsumer
+        ? undefined
+        : get(bridgeBaseField.value, ["tokens", "size"]),
     );
 
     return get(classes, merged.value.size ?? "md");

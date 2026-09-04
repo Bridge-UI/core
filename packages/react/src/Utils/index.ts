@@ -13,6 +13,8 @@ import type { FormFieldSize, IconSize } from "@bridge-ui/core/Tokens";
 import {
   createMergeNestedComponentProps,
   createMergePartBind,
+  getBridgeUIChromeComponentName,
+  getBridgeUIRegistryDefaultProp,
   mergeBridgeUILayeredClasses,
   mergePropsWithBridgeUIDefaults,
 } from "@bridge-ui/core/Utils";
@@ -24,11 +26,18 @@ type RegistryEntryFor<K extends keyof BridgeUIComponentsConfig> = NonNullable<
   BridgeUIComponentsConfig[K]
 >;
 
+type BridgeUIRegistryChromeEntry = {
+  classes?: object;
+  defaultProps?: object;
+  tokens?: object;
+};
+
 export type UseBridgeUIComponentReturn<
   P extends object,
   K extends keyof BridgeUIComponentsConfig = keyof BridgeUIComponentsConfig,
 > = {
   bridge: ReturnType<typeof useBridgeUI>;
+  chromeEntry: undefined | BridgeUIRegistryChromeEntry;
   components: null | BridgeUIComponentsConfig;
   entry: undefined | RegistryEntryFor<K>;
   merged: P;
@@ -113,6 +122,12 @@ export function useBridgeUIComponent<
     ? (get(components, componentName) as undefined | RegistryEntryFor<K>)
     : undefined;
 
+  const chromeName = getBridgeUIChromeComponentName(componentName);
+
+  const chromeEntry = chromeName
+    ? (get(components, chromeName) as undefined | BridgeUIRegistryChromeEntry)
+    : undefined;
+
   const merged = useMemo(() => {
     return mergePropsWithBridgeUIDefaults({
       components,
@@ -134,6 +149,7 @@ export function useBridgeUIComponent<
     bridge,
     merged,
     components,
+    chromeEntry,
   };
 }
 
@@ -152,14 +168,11 @@ export function useFieldShowFooter({
 }): boolean {
   const bridge = useBridgeUI();
 
-  const registryShowFooter = componentName
-    ? (get(bridge, [
-        "components",
-        componentName,
-        "defaultProps",
-        "showFooter",
-      ]) as boolean | undefined)
-    : undefined;
+  const registryShowFooter = getBridgeUIRegistryDefaultProp<boolean>({
+    componentName,
+    prop: "showFooter",
+    components: bridge?.components,
+  });
 
   return resolveFieldShowFooter(showFooter ?? registryShowFooter, overlay);
 }
@@ -179,30 +192,34 @@ export function usePickerFill({
 }): boolean {
   const bridge = useBridgeUI();
 
-  const registryFill = componentName
-    ? (get(bridge, ["components", componentName, "defaultProps", "fill"]) as
-        boolean | undefined)
-    : undefined;
+  const registryFill = getBridgeUIRegistryDefaultProp<boolean>({
+    prop: "fill",
+    componentName,
+    components: bridge?.components,
+  });
 
   return resolvePickerFill(fill ?? registryFill, overlay);
 }
 
 /**
- * Merges `entry.classes` (Bridge provider) with `props.classes` (instance).
+ * Merges chrome `classes`, public registry `classes`, and instance `props.classes`.
  */
 export function useBridgeUIMergedRegistryClasses<C extends object>({
   entry,
   props,
+  chromeEntry,
 }: {
+  chromeEntry?: { classes?: object };
   entry?: { classes?: object };
   props: { classes?: Partial<C> };
 }) {
   return useMemo(() => {
     return mergeBridgeUILayeredClasses(
+      get(chromeEntry, "classes") as undefined | Partial<C>,
       get(entry, "classes") as undefined | Partial<C>,
       props.classes,
     );
-  }, [entry, props.classes]);
+  }, [entry, props.classes, chromeEntry]);
 }
 
 export function resolveFieldAdornmentIconSize(

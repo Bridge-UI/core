@@ -62,8 +62,10 @@ type BaseFieldMerged = MergeLibDefaults<
 export type BaseFieldOptions = {
   /**
    * Public registry key that owns BaseField chrome defaults/tokens.
+   * Defaults to `BaseField`; Slider / OtpField pass their own key so chrome
+   * cascades (`BaseField` → parent).
    */
-  componentName?: "Slider" | "OtpField";
+  componentName?: "Slider" | "OtpField" | "BaseField";
 
   /** Resolve Label htmlFor from controlId. Default: identity. */
   labelHtmlFor?: (controlId: string) => string;
@@ -96,13 +98,19 @@ export function useBaseField(
     bridgeKeys: baseFieldBridgeKeys,
   });
 
-  const { merged, entry: bridgeBaseField } = useBridgeUIComponent<
+  const registryName = options.componentName ?? "BaseField";
+
+  const {
+    merged,
+    entry: bridgeBaseField,
+    chromeEntry: bridgeBaseFieldChrome,
+  } = useBridgeUIComponent<
     BaseFieldMerged,
     NonNullable<BaseFieldOptions["componentName"]>
   >({
     libDefaults,
     props: componentProps,
-    componentName: options.componentName,
+    componentName: registryName,
   });
 
   const slots = derived(() => {
@@ -116,6 +124,7 @@ export function useBaseField(
   const mergedClasses = useBridgeUIMergedRegistryClasses<BaseFieldClasses>({
     props: componentProps,
     entry: bridgeBaseField,
+    chromeEntry: bridgeBaseFieldChrome,
   });
 
   const invalidated = derived(() => {
@@ -137,13 +146,16 @@ export function useBaseField(
   });
 
   const sizeClasses = useMemo(() => {
+    const isChromeConsumer = registryName !== "BaseField";
+
     const classes = mergeBridgeUILayeredClasses(
       sizeProps,
-      get(bridgeBaseField, ["tokens", "baseField", "size"]),
+      get(bridgeBaseFieldChrome, ["tokens", "size"]),
+      isChromeConsumer ? undefined : get(bridgeBaseField, ["tokens", "size"]),
     );
 
     return get(classes, merged.size ?? "md");
-  }, [merged.size, bridgeBaseField]);
+  }, [merged.size, registryName, bridgeBaseField, bridgeBaseFieldChrome]);
 
   const reservesErrorMessageSpace = derived(() => {
     return (
