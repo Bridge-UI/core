@@ -1,7 +1,5 @@
 // ** External Imports
-import { CircleAlert } from "lucide-react";
-
-import { Settings } from "lucide-react";
+import { CircleAlert, Settings } from "lucide-react";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
@@ -21,8 +19,8 @@ test("it should apply disabled attribute when disabled", () => {
 test("it should show loading spinner when loading", () => {
   cy.mount(<Button loading>Saving</Button>);
 
-  cy.get("svg.animate-spin").should("exist");
-  cy.get("button").should("not.contain.text", "Saving");
+  cy.get("svg.animate-spin").should("be.visible");
+  cy.get("button span.invisible").should("contain.text", "Saving");
   cy.get("button").should("have.attr", "aria-busy", "true");
 });
 

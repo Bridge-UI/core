@@ -229,7 +229,8 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
         [get(colorClasses, "hover") ?? ""]: true,
         [get(colorClasses, "focus") ?? ""]: true,
         [get(colorClasses, "selected") ?? ""]: merged.selected === true,
-        "relative z-10": merged.selected === true,
+        relative: true,
+        "z-10": merged.selected === true,
         "transition-all ease-in-out duration-200": true,
         "focus:ring-2": true,
         "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
@@ -278,6 +279,25 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     );
   });
 
+  const loadingWrapBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      "pointer-events-none absolute inset-0 flex items-center justify-center",
+    );
+  });
+
+  const contentBind = derived(() => {
+    return mergePartBind(
+      {},
+      {},
+      cn({
+        contents: true,
+        invisible: merged.loading,
+      }),
+    );
+  });
+
   const loadingIconBind = derived(() => {
     return mergePartBind(
       customProps?.loading,
@@ -300,12 +320,14 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
     rootHref,
     rootType,
     endIconBind,
+    contentBind,
     endSlotBind,
     rootAriaBusy,
     rootDisabled,
     startIconBind,
     startSlotBind,
     loadingIconBind,
+    loadingWrapBind,
     rootAriaDisabled,
   };
 }

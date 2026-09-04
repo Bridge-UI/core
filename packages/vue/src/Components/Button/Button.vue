@@ -28,12 +28,14 @@ const {
   rootHref,
   rootType,
   endIconBind,
+  contentBind,
   endSlotBind,
   rootAriaBusy,
   rootDisabled,
   startIconBind,
   startSlotBind,
   loadingIconBind,
+  loadingWrapBind,
   rootAriaDisabled,
 } = useButton(props, {
   size: "md",
@@ -55,50 +57,49 @@ const {
     :aria-busy="rootAriaBusy"
     :aria-disabled="rootAriaDisabled"
   >
-    <Icon
-      icon="loader"
-      :size="merged.size"
-      v-if="merged.loading"
-      v-bind="loadingIconBind"
-    />
+    <span v-if="merged.loading" v-bind="loadingWrapBind">
+      <Icon icon="loader" :size="merged.size" v-bind="loadingIconBind" />
+    </span>
 
-    <template v-else-if="isMini">
-      <slot v-if="hasNamedSlot(slots, 'default')" />
+    <span v-bind="contentBind">
+      <template v-if="isMini">
+        <slot v-if="hasNamedSlot(slots, 'default')" />
 
-      <Icon
-        v-bind="iconBind"
-        :icon="merged.icon"
-        :size="merged.size"
-        v-else-if="merged.icon"
-      />
-    </template>
+        <Icon
+          v-bind="iconBind"
+          :icon="merged.icon"
+          :size="merged.size"
+          v-else-if="merged.icon"
+        />
+      </template>
 
-    <template v-else>
-      <Icon
-        :size="merged.size"
-        v-bind="startIconBind"
-        v-if="merged.startIcon"
-        :icon="merged.startIcon"
-      />
+      <template v-else>
+        <Icon
+          :size="merged.size"
+          v-bind="startIconBind"
+          v-if="merged.startIcon"
+          :icon="merged.startIcon"
+        />
 
-      <div v-bind="startSlotBind" v-else-if="hasNamedSlot(slots, 'start')">
-        <slot name="start" />
-      </div>
+        <div v-bind="startSlotBind" v-else-if="hasNamedSlot(slots, 'start')">
+          <slot name="start" />
+        </div>
 
-      <template v-if="isPropPresent(merged.text)">{{ merged.text }}</template>
+        <template v-if="isPropPresent(merged.text)">{{ merged.text }}</template>
 
-      <slot v-else-if="hasNamedSlot(slots, 'default')" />
+        <slot v-else-if="hasNamedSlot(slots, 'default')" />
 
-      <Icon
-        :size="merged.size"
-        v-bind="endIconBind"
-        v-if="merged.endIcon"
-        :icon="merged.endIcon"
-      />
+        <Icon
+          :size="merged.size"
+          v-bind="endIconBind"
+          v-if="merged.endIcon"
+          :icon="merged.endIcon"
+        />
 
-      <div v-bind="endSlotBind" v-else-if="hasNamedSlot(slots, 'end')">
-        <slot name="end" />
-      </div>
-    </template>
+        <div v-bind="endSlotBind" v-else-if="hasNamedSlot(slots, 'end')">
+          <slot name="end" />
+        </div>
+      </template>
+    </span>
   </component>
 </template>

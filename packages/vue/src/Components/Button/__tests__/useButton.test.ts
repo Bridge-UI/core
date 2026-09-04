@@ -182,13 +182,14 @@ test("it should render start icon when startIcon is set and not loading", () => 
   expect(wrapper.find("button svg").exists()).toBe(true);
 });
 
-test("it should hide start icon when loading", () => {
+test("it should keep start icon and label in the DOM when loading", () => {
   const wrapper = mount(Button, {
     slots: { default: "Label" },
     props: { loading: true, startIcon: CircleAlert },
   });
 
-  expect(wrapper.text()).not.toContain("Label");
+  expect(wrapper.text()).toContain("Label");
+  expect(wrapper.find("span.invisible").exists()).toBe(true);
   expect(wrapper.find("svg.animate-spin").exists()).toBe(true);
 });
 
