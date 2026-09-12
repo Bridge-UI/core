@@ -125,7 +125,7 @@ export function useDateRangeField(props: DateRangeFieldProps) {
   });
 
   const clearable = derived(() => {
-    return dateOnly.clearable !== false;
+    return dateOnly.clearable === true;
   });
 
   const hasValue = derived(() => {

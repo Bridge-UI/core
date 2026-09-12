@@ -88,7 +88,7 @@ test("it should reflect selected value in display for single mode", async () => 
 });
 
 test("it should enable clear bind when value is set", async () => {
-  const { model, result } = mountUseAutocomplete();
+  const { model, result } = mountUseAutocomplete({ clearable: true });
 
   model.value = "active";
 

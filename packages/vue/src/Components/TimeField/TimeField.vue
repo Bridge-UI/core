@@ -33,8 +33,8 @@ const resolveMessage = useResolveMessage();
 const model = defineModel<null | TimeValue>();
 
 const props = withDefaults(defineProps<TimeFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showErrorIcon: true,
   showFooter: undefined,
 });

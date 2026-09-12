@@ -124,7 +124,7 @@ export interface DateFieldOwnProps extends Omit<
   /**
    * Whether the value can be cleared.
    *
-   * @default true
+   * @default false
    */
   clearable?: boolean;
 

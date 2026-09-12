@@ -119,7 +119,7 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
   });
 
   const clearable = derived(() => {
-    return timeOnly.clearable !== false;
+    return timeOnly.clearable === true;
   });
 
   const hasValue = derived(() => {

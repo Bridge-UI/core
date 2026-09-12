@@ -162,7 +162,7 @@ export interface SelectOwnProps extends Omit<FormFieldOwnProps, "field"> {
   /**
    * Whether the value can be cleared.
    *
-   * @default true
+   * @default false
    */
   clearable?: boolean;
 

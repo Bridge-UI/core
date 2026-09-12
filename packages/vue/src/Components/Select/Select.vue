@@ -41,7 +41,7 @@ const resolveMessage = useResolveMessage();
 const model = defineModel<null | SelectValue | SelectValue[]>();
 
 const props = withDefaults(defineProps<SelectOwnProps>(), {
-  clearable: true,
+  clearable: false,
   searchable: false,
   showErrorIcon: true,
   showFooter: undefined,

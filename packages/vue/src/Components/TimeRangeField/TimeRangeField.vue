@@ -33,8 +33,8 @@ const emit = defineEmits<TimeRangeFieldEmits>();
 const model = defineModel<null | TimeRangeValue>();
 
 const props = withDefaults(defineProps<TimeRangeFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showErrorIcon: true,
   showFooter: undefined,
 });

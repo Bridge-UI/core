@@ -108,6 +108,7 @@ test("it should clear the value when clear control is clicked", () => {
 
   render(
     <Autocomplete
+      clearable
       value="apple"
       options={options}
       aria-label="Fruit"
@@ -124,6 +125,7 @@ test("it should not show the clear control when readonly", () => {
   render(
     <Autocomplete
       readonly
+      clearable
       value="apple"
       options={options}
       aria-label="Fruit"

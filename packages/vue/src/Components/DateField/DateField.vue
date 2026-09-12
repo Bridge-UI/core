@@ -33,8 +33,8 @@ const resolveMessage = useResolveMessage();
 const model = defineModel<DatePickerModel>();
 
 const props = withDefaults(defineProps<DateFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showErrorIcon: true,
   showFooter: undefined,
 });

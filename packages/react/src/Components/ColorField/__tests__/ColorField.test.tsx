@@ -158,7 +158,7 @@ test("it should close the overlay after Apply when showFooter is set", () => {
 });
 
 test("it should show the clear control when a value is present", () => {
-  render(<ColorField defaultValue="#ea1212" />);
+  render(<ColorField clearable defaultValue="#ea1212" />);
 
   expect(screen.getByLabelText("Clear")).toBeTruthy();
 });
@@ -174,7 +174,12 @@ test("it should call onChange and onClear when the clear control is clicked", ()
   const onClear = vi.fn();
 
   render(
-    <ColorField onClear={onClear} onChange={onChange} defaultValue="#ea1212" />,
+    <ColorField
+      clearable
+      onClear={onClear}
+      onChange={onChange}
+      defaultValue="#ea1212"
+    />,
   );
 
   fireEvent.click(screen.getByLabelText("Clear"));

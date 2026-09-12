@@ -33,8 +33,8 @@ const emit = defineEmits<DateRangeFieldEmits>();
 const model = defineModel<null | DateRangeValue>();
 
 const props = withDefaults(defineProps<DateRangeFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showErrorIcon: true,
   showFooter: undefined,
 });

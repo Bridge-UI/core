@@ -55,6 +55,7 @@ test("it should call onChange and onClear when the clear control is clicked", ()
 
   render(
     <TimeRangeField
+      clearable
       onClear={onClear}
       onChange={onChange}
       defaultValue={[

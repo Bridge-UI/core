@@ -112,7 +112,7 @@ export function useTimeField(
   });
 
   const clearable = computed(() => {
-    return timeOnly.value.clearable !== false;
+    return timeOnly.value.clearable === true;
   });
 
   const hasValue = computed(() => {

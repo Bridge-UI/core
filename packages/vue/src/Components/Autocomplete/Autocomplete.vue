@@ -38,7 +38,7 @@ const model = defineModel<null | SelectValue | SelectValue[]>();
 
 const props = withDefaults(defineProps<AutocompleteOwnProps>(), {
   freeSolo: true,
-  clearable: true,
+  clearable: false,
   searchable: true,
   showErrorIcon: true,
   showFooter: undefined,

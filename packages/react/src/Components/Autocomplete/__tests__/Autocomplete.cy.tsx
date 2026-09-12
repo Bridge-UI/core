@@ -10,8 +10,10 @@ const options = [
 ];
 
 function AutocompleteDemo({
+  clearable,
   initialValue = "",
 }: {
+  clearable?: boolean;
   initialValue?: string | string[];
 }) {
   const [value, setValue] = useState(initialValue);
@@ -22,6 +24,7 @@ function AutocompleteDemo({
       value={value}
       options={options}
       onChange={setValue}
+      clearable={clearable}
     />
   );
 }
@@ -62,7 +65,7 @@ test("it should show the selected value", () => {
 });
 
 test("it should clear the selection", () => {
-  cy.mount(<AutocompleteDemo initialValue="apple" />);
+  cy.mount(<AutocompleteDemo clearable initialValue="apple" />);
 
   cy.get('[aria-label="Clear selection"]').click();
   cy.get('[role="combobox"]').should("have.value", "");

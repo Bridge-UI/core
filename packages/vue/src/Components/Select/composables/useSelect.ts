@@ -327,7 +327,7 @@ export function useSelect(
   });
 
   const clearable = computed(() => {
-    return selectMerged.value.clearable !== false;
+    return selectMerged.value.clearable === true;
   });
 
   const isAsync = computed(() => {

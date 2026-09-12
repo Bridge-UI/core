@@ -309,7 +309,7 @@ export function useAutocomplete(
   });
 
   const clearable = derived(() => {
-    return autocompleteMerged.clearable !== false;
+    return autocompleteMerged.clearable === true;
   });
 
   const isAsync = derived(() => {

@@ -77,7 +77,7 @@ Replaces Cancel / Apply on the nested picker. `apply()` commits and closes; `can
 | Prop              | Type                   | Default                                      | Description                                                                           |
 | ----------------- | ---------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `classes`         | `DateFieldClasses`     | —                                            | Classes for field / input regions.                                                    |
-| `clearable`       | `boolean`              | `true`                                       | Whether the value can be cleared.                                                     |
+| `clearable`       | `boolean`              | `false`                                      | Whether the value can be cleared.                                                     |
 | `customProps`     | `DateFieldCustomProps` | —                                            | Extra props for internal parts (`input`, `menu`, `modal`, `drawer`, `datePicker`, …). |
 | `defaultValue`    | `DatePickerModel`      | `null`                                       | Uncontrolled initial value.                                                           |
 | `defaultView`     | `CalendarView`         | `"date"`                                     | Initial calendar panel view.                                                          |
