@@ -22,7 +22,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -57,7 +56,6 @@ export function useListbox(
 ) {
   const attrs = useAttrs();
   const breakpoint = useBreakpoint();
-  const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
     return splitComponentProps<ListboxProps, typeof listboxBridgeKeys>({
@@ -218,13 +216,6 @@ export function useListbox(
     );
   });
 
-  const applyLabel = computed(() => {
-    return resolveMessage("Apply");
-  });
-  const cancelLabel = computed(() => {
-    return resolveMessage("Cancel");
-  });
-
   const applyButtonProps = computed(() => {
     return customProps.value?.applyButton;
   });
@@ -238,8 +229,6 @@ export function useListbox(
     scrollBind,
     footerBind,
     showFooter,
-    applyLabel,
-    cancelLabel,
     messageBind,
     surfaceBind,
     sizeClasses,

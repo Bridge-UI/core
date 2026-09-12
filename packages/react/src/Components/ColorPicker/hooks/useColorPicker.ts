@@ -554,8 +554,6 @@ export function useColorPicker(
     previewSwatchBind,
     handleSwatchClick,
     previewSwatchFillBind,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,

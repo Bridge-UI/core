@@ -1,4 +1,8 @@
 // ** Local Imports
+import type {
+  ActionFooterClasses,
+  ActionFooterProps,
+} from "@/Components/ActionFooter";
 import type { AlertClasses, AlertProps } from "@/Components/Alert";
 import type {
   AutocompleteClasses,
@@ -55,6 +59,16 @@ import type { TextareaClasses, TextareaProps } from "@/Components/Textarea";
 import type { TextFieldClasses, TextFieldProps } from "@/Components/TextField";
 
 declare module "@bridge-ui/core/Config" {
+  interface ActionFooterConfigOverrides {
+    classes: ActionFooterClasses;
+    defaultProps: Partial<
+      Pick<
+        ActionFooterProps,
+        "applyColor" | "cancelColor" | "applyVariant" | "cancelVariant"
+      >
+    >;
+  }
+
   interface AlertConfigOverrides {
     classes: AlertClasses;
     defaultProps: Partial<

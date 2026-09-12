@@ -65,4 +65,4 @@ Time panel tokens live on `components.TimePanel` (`color`, `rounded`).
 
 ## Related components
 
-TimePanel, TimeRangeField, TimePicker
+TimePanel, TimeRangeField, TimePicker, ActionFooter

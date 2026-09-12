@@ -5,6 +5,7 @@ Component reference and adapter samples for **React**. This folder ships with th
 ## Components
 
 - [Accordion](./components/Accordion.md)
+- [ActionFooter](./components/ActionFooter.md)
 - [Alert](./components/Alert.md)
 - [Autocomplete](./components/Autocomplete.md)
 - [Avatar](./components/Avatar.md)

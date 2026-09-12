@@ -97,7 +97,7 @@ Radio and Switch receive `size` only — their `rounded` stays shape-driven (`fu
 
 ### Shared chrome
 
-`FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`.
+`FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`. Cancel / Apply in pickers and listboxes live on `components.ActionFooter`.
 
 ```tsx
 <BridgeUIProvider
@@ -136,6 +136,22 @@ Radio and Switch receive `size` only — their `rounded` stays shape-driven (`fu
             secondary: "text-xs opacity-70",
           },
         },
+      },
+    },
+  }}
+>
+  <App />
+</BridgeUIProvider>
+```
+
+```tsx
+<BridgeUIProvider
+  components={{
+    ActionFooter: {
+      defaultProps: {
+        applyColor: "info",
+        cancelVariant: "flat",
+        cancelColor: "secondary",
       },
     },
   }}

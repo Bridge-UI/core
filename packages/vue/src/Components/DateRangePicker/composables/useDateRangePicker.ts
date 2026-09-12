@@ -22,7 +22,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DateRangePickerClasses,
   DateRangePickerEmits,
@@ -81,7 +80,6 @@ export function useDateRangePicker(
     apply: () => undefined,
     cancel: () => undefined,
   });
-  const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -229,12 +227,6 @@ export function useDateRangePicker(
     displayValue,
     handleCancel,
     handleCalendarChange,
-    applyLabel: computed(() => {
-      return resolveMessage("Apply");
-    }),
-    cancelLabel: computed(() => {
-      return resolveMessage("Cancel");
-    }),
     applyButtonProps: computed(() => {
       return customProps.value?.applyButton;
     }),

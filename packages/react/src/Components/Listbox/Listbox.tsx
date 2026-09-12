@@ -15,7 +15,7 @@ import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/hooks/useListbox";
@@ -76,8 +76,6 @@ function Listbox({
     scrollBind,
     footerBind,
     showFooter,
-    applyLabel,
-    cancelLabel,
     messageBind,
     surfaceBind,
     sizeClasses,
@@ -168,13 +166,13 @@ function Listbox({
     [onSelect],
   );
 
-  const handleFooterApply = useCallback(() => {
+  const handleApply = useCallback(() => {
     onApply?.();
 
     onShowChange?.(false);
   }, [onApply, onShowChange]);
 
-  const handleFooterCancel = useCallback(() => {
+  const handleCancel = useCallback(() => {
     onCancel?.();
 
     onShowChange?.(false);
@@ -348,29 +346,16 @@ function Listbox({
         {showFooter ? (
           <div {...footerBind}>
             {slots?.footer ? (
-              slots.footer({
-                apply: handleFooterApply,
-                cancel: handleFooterCancel,
-              })
+              slots.footer({ apply: handleApply, cancel: handleCancel })
             ) : (
-              <>
-                <Button
-                  variant="flat"
-                  color="secondary"
-                  onClick={handleFooterCancel}
-                  {...cancelButtonProps}
-                >
-                  {cancelLabel}
-                </Button>
-
-                <Button
-                  color="primary"
-                  onClick={handleFooterApply}
-                  {...applyButtonProps}
-                >
-                  {applyLabel}
-                </Button>
-              </>
+              <ActionFooter
+                onApply={handleApply}
+                onCancel={handleCancel}
+                customProps={{
+                  applyButton: applyButtonProps,
+                  cancelButton: cancelButtonProps,
+                }}
+              />
             )}
           </div>
         ) : null}

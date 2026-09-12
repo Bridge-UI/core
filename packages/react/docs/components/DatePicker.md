@@ -102,4 +102,4 @@ Calendar tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 
 ## Related components
 
-Calendar, DateField, DateRangePicker
+Calendar, DateField, DateRangePicker, ActionFooter

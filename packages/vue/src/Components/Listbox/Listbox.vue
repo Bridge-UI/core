@@ -16,7 +16,7 @@ import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import { useResolveMessage } from "@/Adapters/I18n";
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import { FieldOverlay } from "@/Components/FieldOverlay";
 import { List } from "@/Components/List";
 import { useListbox } from "@/Components/Listbox/composables/useListbox";
@@ -76,8 +76,6 @@ const {
   scrollBind,
   footerBind,
   showFooter,
-  applyLabel,
-  cancelLabel,
   messageBind,
   surfaceBind,
   sizeClasses,
@@ -265,13 +263,13 @@ const listBind = computed(() => {
   };
 });
 
-function handleFooterApply() {
+function handleApply() {
   emit("apply");
 
   open.value = false;
 }
 
-function handleFooterCancel() {
+function handleCancel() {
   emit("cancel");
 
   open.value = false;
@@ -347,27 +345,15 @@ function handleFooterCancel() {
       <slot name="afterOptions" v-if="hasNamedSlot(slots, 'afterOptions')" />
 
       <div v-if="showFooter" v-bind="footerBind">
-        <slot
-          name="footer"
-          :apply="handleFooterApply"
-          :cancel="handleFooterCancel"
-        >
-          <Button
-            variant="flat"
-            color="secondary"
-            v-bind="cancelButtonProps"
-            v-on:click="handleFooterCancel"
-          >
-            {{ cancelLabel }}
-          </Button>
-
-          <Button
-            color="primary"
-            v-bind="applyButtonProps"
-            v-on:click="handleFooterApply"
-          >
-            {{ applyLabel }}
-          </Button>
+        <slot name="footer" :apply="handleApply" :cancel="handleCancel">
+          <ActionFooter
+            v-on:apply="handleApply"
+            v-on:cancel="handleCancel"
+            :custom-props="{
+              applyButton: applyButtonProps,
+              cancelButton: cancelButtonProps,
+            }"
+          />
         </slot>
       </div>
     </div>
