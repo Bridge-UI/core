@@ -1,5 +1,5 @@
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import { Calendar } from "@/Components/Calendar";
 import type { DatePickerProps } from "@/Components/DatePicker/datePicker.types";
 import { useDatePicker } from "@/Components/DatePicker/hooks/useDatePicker";
@@ -10,9 +10,7 @@ function DatePicker(props: DatePickerProps) {
     rootBind,
     footerBind,
     showFooter,
-    applyLabel,
     handleApply,
-    cancelLabel,
     displayValue,
     handleCancel,
     applyButtonProps,
@@ -57,24 +55,14 @@ function DatePicker(props: DatePickerProps) {
           {props.slots?.footer ? (
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
-            <>
-              <Button
-                variant="flat"
-                color="secondary"
-                onClick={handleCancel}
-                {...cancelButtonProps}
-              >
-                {cancelLabel}
-              </Button>
-
-              <Button
-                color="primary"
-                onClick={handleApply}
-                {...applyButtonProps}
-              >
-                {applyLabel}
-              </Button>
-            </>
+            <ActionFooter
+              onApply={handleApply}
+              onCancel={handleCancel}
+              customProps={{
+                applyButton: applyButtonProps,
+                cancelButton: cancelButtonProps,
+              }}
+            />
           )}
         </div>
       )}

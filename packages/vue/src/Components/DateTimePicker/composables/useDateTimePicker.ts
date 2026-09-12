@@ -29,7 +29,6 @@ import {
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DateTimePickerClasses,
   DateTimePickerEmits,
@@ -104,7 +103,6 @@ export function useDateTimePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveMessage = useResolveMessage();
   const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
@@ -335,12 +333,6 @@ export function useDateTimePicker(
     handlePanelChange,
     handleCalendarChange,
     timePanelCustomProps,
-    applyLabel: computed(() => {
-      return resolveMessage("Apply");
-    }),
-    cancelLabel: computed(() => {
-      return resolveMessage("Cancel");
-    }),
     applyButtonProps: computed(() => {
       return customProps.value?.applyButton;
     }),

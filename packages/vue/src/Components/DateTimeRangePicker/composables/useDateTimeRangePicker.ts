@@ -28,7 +28,6 @@ import {
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DateTimeRangePickerClasses,
   DateTimeRangePickerEmits,
@@ -120,7 +119,6 @@ export function useDateTimeRangePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveMessage = useResolveMessage();
   const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
@@ -394,12 +392,6 @@ export function useDateTimeRangePicker(
     handleEndPanelChange,
     timePanelCustomProps,
     handleStartPanelChange,
-    applyLabel: computed(() => {
-      return resolveMessage("Apply");
-    }),
-    cancelLabel: computed(() => {
-      return resolveMessage("Cancel");
-    }),
     applyButtonProps: computed(() => {
       return customProps.value?.applyButton;
     }),

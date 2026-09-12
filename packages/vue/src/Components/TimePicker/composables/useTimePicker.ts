@@ -22,7 +22,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import type {
   TimePickerClasses,
@@ -79,7 +78,6 @@ export function useTimePicker(
     apply: () => undefined,
     cancel: () => undefined,
   });
-  const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
     return splitComponentProps<TimePickerOwnProps, typeof timePickerBridgeKeys>(
@@ -226,12 +224,6 @@ export function useTimePicker(
     displayValue,
     handleCancel,
     handlePanelChange,
-    applyLabel: computed(() => {
-      return resolveMessage("Apply");
-    }),
-    cancelLabel: computed(() => {
-      return resolveMessage("Cancel");
-    }),
     applyButtonProps: computed(() => {
       return customProps.value?.applyButton;
     }),

@@ -604,12 +604,6 @@ export function useColorPicker(
     swatchButtonClass,
     swatchSelectedClass,
     previewSwatchFillBind,
-    applyLabel: computed(() => {
-      return resolveMessage("Apply");
-    }),
-    cancelLabel: computed(() => {
-      return resolveMessage("Cancel");
-    }),
     applyButtonProps: computed(() => {
       return customProps.value?.applyButton;
     }),

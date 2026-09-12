@@ -2,7 +2,7 @@
 import { cn } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import type { ColorPickerProps } from "@/Components/ColorPicker/colorPicker.types";
 import { useColorPicker } from "@/Components/ColorPicker/hooks/useColorPicker";
 
@@ -16,12 +16,10 @@ function ColorPicker(props: ColorPickerProps) {
     showAlpha,
     swatchCss,
     footerBind,
-    applyLabel,
     showFooter,
     previewBind,
     contentBind,
     handleApply,
-    cancelLabel,
     swatchesBind,
     handleCancel,
     hueThumbBind,
@@ -119,24 +117,14 @@ function ColorPicker(props: ColorPickerProps) {
           {props.slots?.footer ? (
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
-            <>
-              <Button
-                variant="flat"
-                color="secondary"
-                onClick={handleCancel}
-                {...cancelButtonProps}
-              >
-                {cancelLabel}
-              </Button>
-
-              <Button
-                color="primary"
-                onClick={handleApply}
-                {...applyButtonProps}
-              >
-                {applyLabel}
-              </Button>
-            </>
+            <ActionFooter
+              onApply={handleApply}
+              onCancel={handleCancel}
+              customProps={{
+                applyButton: applyButtonProps,
+                cancelButton: cancelButtonProps,
+              }}
+            />
           )}
         </div>
       )}

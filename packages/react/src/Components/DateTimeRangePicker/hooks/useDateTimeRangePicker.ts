@@ -19,7 +19,6 @@ import {
 
 // ** Local Imports
 import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DateTimeRangePickerClasses,
   DateTimeRangePickerOwnProps,
@@ -103,7 +102,6 @@ export function useDateTimeRangePicker(
   libDefaults: DateTimeRangePickerLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveMessage = useResolveMessage();
   const overlayFooter = useFieldOverlayFooter();
   const resolveContext = useDateAdapterContext();
 
@@ -355,8 +353,6 @@ export function useDateTimeRangePicker(
     handleEndPanelChange,
     timePanelCustomProps,
     handleStartPanelChange,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,

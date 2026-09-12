@@ -306,8 +306,6 @@ export function useTimeRangePicker(
     handleEndChange,
     startDisplayValue,
     handleStartChange,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,

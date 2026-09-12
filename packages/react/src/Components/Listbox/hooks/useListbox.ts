@@ -23,7 +23,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   ListboxClasses,
   ListboxOwnProps,
@@ -69,7 +68,6 @@ export function useListbox(
   options: ListboxOptions = {},
 ) {
   const breakpoint = useBreakpoint();
-  const resolveMessage = useResolveMessage();
 
   const { componentProps } = splitComponentProps<
     ListboxProps,
@@ -237,8 +235,6 @@ export function useListbox(
     optionHoverClass,
     optionSelectedClass,
     optionHighlightedClass,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,
   };

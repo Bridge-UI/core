@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import { Divider } from "@/Components/Divider";
 import { TimePanel } from "@/Components/TimePanel";
 import { useTimeRangePicker } from "@/Components/TimeRangePicker/composables/useTimeRangePicker";
@@ -31,9 +31,7 @@ const {
   titlesBind,
   panelsBind,
   showFooter,
-  applyLabel,
   handleApply,
-  cancelLabel,
   titleGapBind,
   endTitleBind,
   handleCancel,
@@ -111,22 +109,14 @@ const {
 
     <div v-if="showFooter" v-bind="footerBind">
       <slot name="footer" :apply="handleApply" :cancel="handleCancel">
-        <Button
-          variant="flat"
-          color="secondary"
-          v-on:click="handleCancel"
-          v-bind="cancelButtonProps"
-        >
-          {{ cancelLabel }}
-        </Button>
-
-        <Button
-          color="primary"
-          v-bind="applyButtonProps"
-          v-on:click="handleApply"
-        >
-          {{ applyLabel }}
-        </Button>
+        <ActionFooter
+          v-on:apply="handleApply"
+          v-on:cancel="handleCancel"
+          :custom-props="{
+            applyButton: applyButtonProps,
+            cancelButton: cancelButtonProps,
+          }"
+        />
       </slot>
     </div>
   </div>

@@ -1,5 +1,5 @@
 // ** Local Imports
-import { Button } from "@/Components/Button";
+import { ActionFooter } from "@/Components/ActionFooter";
 import { CalendarRange } from "@/Components/CalendarRange";
 import type { DateTimeRangePickerProps } from "@/Components/DateTimeRangePicker/dateTimeRangePicker.types";
 import { useDateTimeRangePicker } from "@/Components/DateTimeRangePicker/hooks/useDateTimeRangePicker";
@@ -15,9 +15,7 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
     timeBind,
     footerBind,
     showFooter,
-    applyLabel,
     handleApply,
-    cancelLabel,
     contentBind,
     displayValue,
     handleCancel,
@@ -118,24 +116,14 @@ function DateTimeRangePicker(props: DateTimeRangePickerProps) {
           {props.slots?.footer ? (
             props.slots.footer({ apply: handleApply, cancel: handleCancel })
           ) : (
-            <>
-              <Button
-                variant="flat"
-                color="secondary"
-                onClick={handleCancel}
-                {...cancelButtonProps}
-              >
-                {cancelLabel}
-              </Button>
-
-              <Button
-                color="primary"
-                onClick={handleApply}
-                {...applyButtonProps}
-              >
-                {applyLabel}
-              </Button>
-            </>
+            <ActionFooter
+              onApply={handleApply}
+              onCancel={handleCancel}
+              customProps={{
+                applyButton: applyButtonProps,
+                cancelButton: cancelButtonProps,
+              }}
+            />
           )}
         </div>
       )}

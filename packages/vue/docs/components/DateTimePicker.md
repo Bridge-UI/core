@@ -75,4 +75,4 @@ Calendar tokens live on `components.Calendar`. Time panel tokens live on `compon
 
 ## Related components
 
-Calendar, TimePanel, DateTimeField, DatePicker
+Calendar, TimePanel, DateTimeField, DatePicker, ActionFooter

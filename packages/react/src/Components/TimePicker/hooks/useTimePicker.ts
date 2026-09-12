@@ -13,7 +13,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import type {
   TimePickerClasses,
@@ -62,7 +61,6 @@ export function useTimePicker(
   props: TimePickerProps,
   libDefaults: TimePickerLibDefaults,
 ) {
-  const resolveMessage = useResolveMessage();
   const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -193,8 +191,6 @@ export function useTimePicker(
     displayValue,
     handleCancel,
     handlePanelChange,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,

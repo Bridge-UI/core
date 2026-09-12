@@ -13,7 +13,6 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   DatePickerClasses,
   DatePickerOwnProps,
@@ -69,7 +68,6 @@ export function useDatePicker(
   props: DatePickerProps,
   libDefaults: DatePickerLibDefaults,
 ) {
-  const resolveMessage = useResolveMessage();
   const overlayFooter = useFieldOverlayFooter();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
@@ -191,8 +189,6 @@ export function useDatePicker(
     displayValue,
     handleCancel,
     handleCalendarChange,
-    applyLabel: resolveMessage("Apply"),
-    cancelLabel: resolveMessage("Cancel"),
     showFooter: Boolean(merged.showFooter),
     applyButtonProps: customProps?.applyButton,
     cancelButtonProps: customProps?.cancelButton,
