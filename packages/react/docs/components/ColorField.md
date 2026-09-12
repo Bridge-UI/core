@@ -68,7 +68,7 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | -------------- | ----------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `alpha`        | `boolean`               | —                                            | Shows the alpha slider. Unset: `true` for `hexa` / `rgba` / `hsla`.                |
 | `classes`      | `ColorFieldClasses`     | —                                            | Classes for field / input regions.                                                 |
-| `clearable`    | `boolean`               | `true`                                       | Whether the value can be cleared.                                                  |
+| `clearable`    | `boolean`               | `false`                                      | Whether the value can be cleared.                                                  |
 | `customProps`  | `ColorFieldCustomProps` | —                                            | Extra props for internal parts.                                                    |
 | `defaultValue` | `string \| null`        | `null`                                       | Uncontrolled initial value.                                                        |
 | `editable`     | `boolean`               | `false`                                      | Unlocks the input. Typed text is parsed on blur or Enter.                          |

@@ -130,7 +130,7 @@ export function useDateTimeRangeField(
   });
 
   const clearable = computed(() => {
-    return dateTimeOnly.value.clearable !== false;
+    return dateTimeOnly.value.clearable === true;
   });
 
   const hasValue = computed(() => {

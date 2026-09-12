@@ -190,6 +190,7 @@ test("it should clear the value when clear control is clicked", () => {
 
   render(
     <Select
+      clearable
       value="apple"
       options={options}
       aria-label="Fruit"
@@ -204,7 +205,13 @@ test("it should clear the value when clear control is clicked", () => {
 
 test("it should not show the clear control when readonly", () => {
   render(
-    <Select readonly value="apple" options={options} aria-label="Fruit" />,
+    <Select
+      readonly
+      clearable
+      value="apple"
+      options={options}
+      aria-label="Fruit"
+    />,
   );
 
   expect(screen.queryByLabelText("Clear selection")).toBeNull();

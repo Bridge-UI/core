@@ -126,7 +126,7 @@ test("it should pass color to the nested DatePicker", () => {
 });
 
 test("it should show the clear control when a value is present", () => {
-  render(<DateField defaultValue={new Date(2021, 4, 21)} />);
+  render(<DateField clearable defaultValue={new Date(2021, 4, 21)} />);
 
   expect(screen.getByLabelText("Clear")).toBeTruthy();
 });
@@ -143,6 +143,7 @@ test("it should call onChange and onClear when the clear control is clicked", ()
 
   render(
     <DateField
+      clearable
       onClear={onClear}
       onChange={onChange}
       defaultValue={new Date(2021, 4, 21)}

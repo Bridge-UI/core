@@ -30,8 +30,8 @@ const resolveMessage = useResolveMessage();
 const emit = defineEmits<ColorFieldEmits>();
 
 const props = withDefaults(defineProps<ColorFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showSwatch: true,
   showErrorIcon: true,
   showFooter: undefined,

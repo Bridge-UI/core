@@ -144,7 +144,7 @@ When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`fa
 | Prop                | Type                  | Default                                      | Description                                                                                             |
 | ------------------- | --------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `asyncData`         | `SelectAsyncData`     | —                                            | Remote data source. Implies `searchable`.                                                               |
-| `clearable`         | `boolean`             | `true`                                       | Whether the value can be cleared.                                                                       |
+| `clearable`         | `boolean`             | `false`                                      | Whether the value can be cleared.                                                                       |
 | `defaultValue`      | `SelectModel`         | —                                            | Initial value when uncontrolled.                                                                        |
 | `disableMaxHeight`  | `boolean`             | `false`                                      | When true, the dropdown options list is not height-limited. Forwarded to the internal `Listbox`.        |
 | `emptyMessage`      | `string`              | "No options"                                 | Message when the filtered list is empty.                                                                |

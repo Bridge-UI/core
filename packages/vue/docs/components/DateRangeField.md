@@ -49,7 +49,7 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | Prop              | Type                         | Default                                      | Description                                                                        |
 | ----------------- | ---------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `classes`         | `DateRangeFieldClasses`      | —                                            | Classes for field / input regions.                                                 |
-| `clearable`       | `boolean`                    | `true`                                       | Whether the value can be cleared.                                                  |
+| `clearable`       | `boolean`                    | `false`                                      | Whether the value can be cleared.                                                  |
 | `customProps`     | `DateRangeFieldCustomProps`  | —                                            | Extra props for internal parts.                                                    |
 | `defaultValue`    | `DateRangeValue \| null`     | `null`                                       | Uncontrolled initial value.                                                        |
 | `disableDates`    | `Date[]`                     | —                                            | Dates that cannot be selected.                                                     |

@@ -118,7 +118,7 @@ export function useColorField(
   });
 
   const clearable = computed(() => {
-    return colorOnly.value.clearable !== false;
+    return colorOnly.value.clearable === true;
   });
 
   const showSwatch = computed(() => {

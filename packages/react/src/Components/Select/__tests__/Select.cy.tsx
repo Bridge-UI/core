@@ -10,14 +10,22 @@ const options = [
 ];
 
 function SelectDemo({
+  clearable,
   initialValue = "",
 }: {
+  clearable?: boolean;
   initialValue?: string | string[];
 }) {
   const [value, setValue] = useState(initialValue);
 
   return (
-    <Select label="Fruit" value={value} options={options} onChange={setValue} />
+    <Select
+      label="Fruit"
+      value={value}
+      options={options}
+      onChange={setValue}
+      clearable={clearable}
+    />
   );
 }
 
@@ -57,7 +65,7 @@ test("it should show the selected value", () => {
 });
 
 test("it should clear the selection", () => {
-  cy.mount(<SelectDemo initialValue="apple" />);
+  cy.mount(<SelectDemo clearable initialValue="apple" />);
 
   cy.get('[aria-label="Clear selection"]').click();
   cy.get('[role="combobox"]').should("have.value", "");

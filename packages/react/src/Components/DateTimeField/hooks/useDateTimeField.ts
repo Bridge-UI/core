@@ -129,7 +129,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
   });
 
   const clearable = derived(() => {
-    return dateTimeOnly.clearable !== false;
+    return dateTimeOnly.clearable === true;
   });
 
   const hasValue = derived(() => {

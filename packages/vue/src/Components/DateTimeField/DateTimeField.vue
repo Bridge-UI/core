@@ -30,8 +30,8 @@ const resolveMessage = useResolveMessage();
 const emit = defineEmits<DateTimeFieldEmits>();
 
 const props = withDefaults(defineProps<DateTimeFieldOwnProps>(), {
-  clearable: true,
   fill: undefined,
+  clearable: false,
   showErrorIcon: true,
   showFooter: undefined,
 });

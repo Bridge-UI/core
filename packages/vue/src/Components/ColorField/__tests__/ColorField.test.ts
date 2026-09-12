@@ -199,6 +199,7 @@ test("it should emit change and clear when the clear control is clicked", async 
     props: {
       onClear,
       onChange,
+      clearable: true,
       defaultValue: "#ea1212",
     },
   });

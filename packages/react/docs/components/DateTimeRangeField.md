@@ -51,7 +51,7 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | ----------------- | ------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------------- |
 | `ampm`            | `boolean`                       | `false`                                      | Uses a 12-hour clock with an AM/PM column.                                         |
 | `classes`         | `DateTimeRangeFieldClasses`     | —                                            | Classes for field / input regions.                                                 |
-| `clearable`       | `boolean`                       | `true`                                       | Whether the value can be cleared.                                                  |
+| `clearable`       | `boolean`                       | `false`                                      | Whether the value can be cleared.                                                  |
 | `customProps`     | `DateTimeRangeFieldCustomProps` | —                                            | Extra props for internal parts.                                                    |
 | `defaultValue`    | `DateRangeValue \| null`        | `null`                                       | Uncontrolled initial value.                                                        |
 | `disableDates`    | `Date[]`                        | —                                            | Dates that cannot be selected.                                                     |

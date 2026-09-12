@@ -133,6 +133,7 @@ test("it should emit change and clear when the clear control is clicked", async 
     props: {
       onClear,
       onChange,
+      clearable: true,
       defaultValue: new Date(2021, 4, 21, 14, 30),
     },
   });

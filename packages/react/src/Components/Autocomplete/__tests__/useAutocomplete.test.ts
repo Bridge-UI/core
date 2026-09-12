@@ -63,7 +63,11 @@ test("it should reflect selected value in display for single mode", () => {
 });
 
 test("it should enable clear bind when value is set", () => {
-  const { result } = renderUseAutocomplete({ options, value: "apple" });
+  const { result } = renderUseAutocomplete({
+    options,
+    value: "apple",
+    clearable: true,
+  });
 
   expect(result.current.hasValue).toBe(true);
   expect(result.current.clearable).toBe(true);

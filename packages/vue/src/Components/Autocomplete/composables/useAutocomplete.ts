@@ -333,7 +333,7 @@ export function useAutocomplete(
   });
 
   const clearable = computed(() => {
-    return autocompleteMerged.value.clearable !== false;
+    return autocompleteMerged.value.clearable === true;
   });
 
   const isAsync = computed(() => {

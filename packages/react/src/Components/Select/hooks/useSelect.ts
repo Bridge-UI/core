@@ -309,7 +309,7 @@ export function useSelect(
   });
 
   const clearable = derived(() => {
-    return selectMerged.clearable !== false;
+    return selectMerged.clearable === true;
   });
 
   const isAsync = derived(() => {

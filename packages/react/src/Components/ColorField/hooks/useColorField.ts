@@ -135,7 +135,7 @@ export function useColorField(props: ColorFieldProps) {
   });
 
   const clearable = derived(() => {
-    return colorOnly.clearable !== false;
+    return colorOnly.clearable === true;
   });
 
   const showSwatch = derived(() => {

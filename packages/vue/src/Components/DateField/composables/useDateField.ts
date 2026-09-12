@@ -152,7 +152,7 @@ export function useDateField(
   });
 
   const clearable = computed(() => {
-    return dateOnly.value.clearable !== false;
+    return dateOnly.value.clearable === true;
   });
 
   const hasValue = computed(() => {

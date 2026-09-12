@@ -44,6 +44,7 @@ test("it should call onChange and onClear when the clear control is clicked", ()
 
   render(
     <DateTimeField
+      clearable
       onClear={onClear}
       onChange={onChange}
       defaultValue={new Date(2021, 4, 21, 9, 30)}
