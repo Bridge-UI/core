@@ -356,6 +356,7 @@ export interface BridgeUIGlobal {
 
 export interface AccordionConfigOverrides {}
 export interface AccordionItemConfigOverrides {}
+export interface ActionFooterConfigOverrides {}
 export interface AlertConfigOverrides {}
 export interface AutocompleteConfigOverrides {}
 export interface AvatarConfigOverrides {}
@@ -446,6 +447,16 @@ export interface AccordionItemConfigBase {
   classes: object;
   defaultProps: Partial<{
     disabled: boolean;
+  }>;
+}
+
+export interface ActionFooterConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    applyColor: keyof ButtonColor;
+    applyVariant: keyof ButtonVariant;
+    cancelColor: keyof ButtonColor;
+    cancelVariant: keyof ButtonVariant;
   }>;
 }
 
@@ -1492,6 +1503,9 @@ export type BridgeUIComponentsConfig = Partial<{
   Accordion: Partial<Overwrite<AccordionConfigBase, AccordionConfigOverrides>>;
   AccordionItem: Partial<
     Overwrite<AccordionItemConfigBase, AccordionItemConfigOverrides>
+  >;
+  ActionFooter: Partial<
+    Overwrite<ActionFooterConfigBase, ActionFooterConfigOverrides>
   >;
   Alert: Partial<Overwrite<AlertConfigBase, AlertConfigOverrides>>;
   Autocomplete: Partial<

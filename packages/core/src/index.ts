@@ -34,6 +34,7 @@ export {
 export type {
   AccordionConfigOverrides,
   AccordionItemConfigOverrides,
+  ActionFooterConfigOverrides,
   AlertConfigOverrides,
   AutocompleteConfigOverrides,
   AvatarConfigOverrides,

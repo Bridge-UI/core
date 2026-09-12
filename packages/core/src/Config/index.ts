@@ -10,6 +10,8 @@ export type {
   AccordionConfigOverrides,
   AccordionItemConfigBase,
   AccordionItemConfigOverrides,
+  ActionFooterConfigBase,
+  ActionFooterConfigOverrides,
   AlertConfigBase,
   AlertConfigOverrides,
   AutocompleteConfigBase,

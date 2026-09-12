@@ -44,6 +44,14 @@ export type {
   AccordionItemProps,
   AccordionItemSlots,
 } from "@/Components/AccordionItem";
+export { ActionFooter, useActionFooter } from "@/Components/ActionFooter";
+export type {
+  ActionFooterClasses,
+  ActionFooterCustomProps,
+  ActionFooterEmits,
+  ActionFooterOwnProps,
+  ActionFooterProps,
+} from "@/Components/ActionFooter";
 export { Alert, useAlert } from "@/Components/Alert";
 export type {
   AlertClasses,
