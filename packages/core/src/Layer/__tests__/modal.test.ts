@@ -8,6 +8,8 @@ import { afterEach, expect, test, vi } from "vitest";
 import {
   getLayerStackEntry,
   getLayerStackSnapshot,
+  hasHigherFocusTrap,
+  isFocusInHigherLayer,
   isLayerStackTop,
   LAYER_STACK_BASE_Z_INDEX,
   pushLayerStack,
@@ -296,6 +298,43 @@ test("it should return live z-index after sibling releases", () => {
   expect(getLayerStackEntry(inner.id)?.zIndex).toBe(
     LAYER_STACK_BASE_Z_INDEX + 1,
   );
+
+  inner.release();
+  outer.release();
+});
+
+test("it should treat focus in a higher layer as nested overlay focus", () => {
+  document.body.innerHTML = `
+    <div id="outer"><button type="button" id="outer-btn">Outer</button></div>
+    <div id="inner"><button type="button" id="inner-btn">Inner</button></div>
+  `;
+
+  const outerEl = document.getElementById("outer") as HTMLElement;
+  const innerEl = document.getElementById("inner") as HTMLElement;
+  const innerBtn = document.getElementById("inner-btn") as HTMLButtonElement;
+
+  const outer = pushLayerStack({ trapsFocus: true, container: outerEl });
+  const inner = pushLayerStack({ container: innerEl });
+
+  expect(hasHigherFocusTrap(inner.id)).toBe(false);
+  expect(hasHigherFocusTrap(outer.id)).toBe(false);
+  expect(isFocusInHigherLayer(innerBtn, inner.id)).toBe(false);
+  expect(isFocusInHigherLayer(innerBtn, outer.id)).toBe(true);
+
+  inner.setContainer(null);
+
+  expect(isFocusInHigherLayer(innerBtn, outer.id)).toBe(false);
+
+  inner.release();
+  outer.release();
+});
+
+test("it should detect a higher trapping layer", () => {
+  const outer = pushLayerStack({ trapsFocus: true });
+  const inner = pushLayerStack({ trapsFocus: true });
+
+  expect(hasHigherFocusTrap(inner.id)).toBe(false);
+  expect(hasHigherFocusTrap(outer.id)).toBe(true);
 
   inner.release();
   outer.release();

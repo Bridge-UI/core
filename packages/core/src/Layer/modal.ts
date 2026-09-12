@@ -31,11 +31,13 @@ export const LAYER_STACK_BASE_Z_INDEX = 1000;
 export const SCROLLBAR_COMPENSATION_VAR = "--bridge-scrollbar-compensation";
 
 type LayerStackEntry = {
+  container?: HTMLElement;
   id: LayerId;
   lockScroll?: boolean;
   onEscape?: () => void;
   order: number;
   scrollLockReleased?: boolean;
+  trapsFocus?: boolean;
 };
 
 const stack: LayerStackEntry[] = [];
@@ -73,6 +75,7 @@ export type LayerStackHandle = {
   order: number;
   release: () => void;
   releaseScrollLock: () => void;
+  setContainer: (container: null | HTMLElement) => void;
   zIndex: number;
 };
 
@@ -396,16 +399,74 @@ export function isLayerStackTop(id: LayerId): boolean {
 }
 
 /**
+ * Whether `target` is inside a layer stacked above `layerId`.
+ */
+export function isFocusInHigherLayer(target: Node, layerId: LayerId): boolean {
+  const current = stack.find((item) => item.id === layerId);
+
+  if (!current) {
+    return false;
+  }
+
+  return stack.some((entry) => {
+    if (entry.order <= current.order) {
+      return false;
+    }
+
+    return Boolean(entry.container?.contains(target));
+  });
+}
+
+/**
+ * Whether a focus-trapping layer is stacked above `layerId`.
+ */
+export function hasHigherFocusTrap(layerId: LayerId): boolean {
+  const current = stack.find((item) => item.id === layerId);
+
+  if (!current) {
+    return false;
+  }
+
+  return stack.some((entry) => {
+    return entry.trapsFocus === true && entry.order > current.order;
+  });
+}
+
+/**
+ * Focus-trap callbacks so nested overlays (Menu / Modal / Drawer) can hold
+ * focus without the parent layer stealing it.
+ */
+export function getLayerFocusTrapGuards(getLayerId: () => LayerId): {
+  allowOutsideFocus: (target: Node) => boolean;
+  shouldEnforce: () => boolean;
+} {
+  return {
+    shouldEnforce() {
+      const id = getLayerId();
+
+      return !id || !hasHigherFocusTrap(id);
+    },
+    allowOutsideFocus(target) {
+      const id = getLayerId();
+
+      return Boolean(id) && isFocusInHigherLayer(target, id);
+    },
+  };
+}
+
+/**
  * Registers a layer on the global stack (scroll lock + escape routing).
  * Pass `order` from {@link acquireLayerStackOrder} during render so parent/child
  * stacking matches visual order. Call `release()` when the layer closes.
  */
 export function pushLayerStack(
   options: {
+    container?: HTMLElement;
     id?: LayerId;
     lockScroll?: boolean;
     onEscape?: () => void;
     order?: number;
+    trapsFocus?: boolean;
   } = {},
 ): LayerStackHandle {
   const id = createLayerId(options.id);
@@ -417,6 +478,8 @@ export function pushLayerStack(
     order,
     lockScroll,
     onEscape: options.onEscape,
+    container: options.container,
+    trapsFocus: options.trapsFocus,
   });
 
   const level = getLayerStackOrderRank(id);
@@ -435,6 +498,13 @@ export function pushLayerStack(
     zIndex: LAYER_STACK_BASE_Z_INDEX + level,
     releaseScrollLock: () => {
       releaseLayerScrollLock(id);
+    },
+    setContainer: (container) => {
+      const entry = stack.find((item) => item.id === id);
+
+      if (entry) {
+        entry.container = container ?? undefined;
+      }
     },
     release: () => {
       const entry = stack.find((item) => item.id === id);

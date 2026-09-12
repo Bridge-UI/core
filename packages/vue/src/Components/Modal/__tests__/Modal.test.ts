@@ -11,6 +11,7 @@ import {
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
+import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 
 afterEach(async () => {
@@ -539,4 +540,58 @@ test("it should scroll inside panel when scroll is paper", () => {
   expect(panel?.className).toContain("bridge-scroll-fade-y");
   expect(panel?.className).toContain("bridge-hide-scrollbar");
   expect(panel?.className).toContain("max-h-[calc(100dvh-2rem)]");
+});
+
+test("it should keep focus inside the inner nested modal", async () => {
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(Modal, { modelValue: true, transition: "none" }, () => [
+          h("button", { type: "button", "aria-label": "Outer close" }, "X"),
+          h(Modal, { modelValue: true, transition: "none" }, () =>
+            h("button", { type: "button" }, "Inner action"),
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushPromises();
+
+  const inner = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Inner action",
+  ) as HTMLButtonElement;
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
+});
+
+test("it should keep focus inside a nested menu overlay", async () => {
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(Modal, { modelValue: true, transition: "none" }, () => [
+          h("button", { type: "button", "aria-label": "Close" }, "X"),
+          h(Menu, { modelValue: true }, () =>
+            h("button", { type: "button" }, "Pick"),
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushPromises();
+
+  const item = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Pick",
+  ) as HTMLButtonElement;
+
+  item.focus();
+
+  expect(document.activeElement).toBe(item);
 });

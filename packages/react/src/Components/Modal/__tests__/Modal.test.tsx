@@ -10,13 +10,16 @@ import {
 import { useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
-// ** Local Imports
-import { Card } from "@/Components/Card";
-import { Modal } from "@/Components/Modal";
+// ** Core Imports
 import {
   LAYER_STACK_BASE_Z_INDEX,
   resetLayerStackForTests,
 } from "@bridge-ui/core/Layer";
+
+// ** Local Imports
+import { Card } from "@/Components/Card";
+import { Menu } from "@/Components/Menu";
+import { Modal } from "@/Components/Modal";
 
 afterEach(() => {
   cleanup();
@@ -449,4 +452,42 @@ test("it should scroll inside panel when scroll is paper", () => {
   expect(panel?.className).toContain("bridge-scroll-fade-y");
   expect(panel?.className).toContain("bridge-hide-scrollbar");
   expect(panel?.className).toContain("max-h-[calc(100dvh-2rem)]");
+});
+
+test("it should keep focus inside the inner nested modal", () => {
+  render(
+    <Modal show transition="none">
+      <button type="button" aria-label="Outer close">
+        X
+      </button>
+      <Modal show transition="none">
+        <button type="button">Inner action</button>
+      </Modal>
+    </Modal>,
+  );
+
+  const inner = screen.getByRole("button", { name: "Inner action" });
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
+});
+
+test("it should keep focus inside a nested menu overlay", () => {
+  render(
+    <Modal show transition="none">
+      <button type="button" aria-label="Close">
+        X
+      </button>
+      <Menu show>
+        <button type="button">Pick</button>
+      </Menu>
+    </Modal>,
+  );
+
+  const item = screen.getByRole("button", { name: "Pick" });
+
+  item.focus();
+
+  expect(document.activeElement).toBe(item);
 });

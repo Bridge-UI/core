@@ -97,6 +97,69 @@ test("it should skip auto-focus and restore when disabled", () => {
   expect(document.activeElement?.id).toBe("trigger");
 });
 
+test("it should pull focus back when it leaves the container", () => {
+  document.body.innerHTML = `
+    <button type="button" id="outside">Outside</button>
+    <div id="container">
+      <button type="button" id="first">First</button>
+    </div>
+  `;
+
+  const container = document.getElementById("container") as HTMLElement;
+  const trap = createFocusTrap({ container });
+  const outside = document.getElementById("outside") as HTMLButtonElement;
+
+  outside.focus();
+
+  expect(document.activeElement?.id).toBe("first");
+
+  trap.release();
+});
+
+test("it should allow focus outside when allowOutsideFocus matches", () => {
+  document.body.innerHTML = `
+    <button type="button" id="outside">Outside</button>
+    <div id="container">
+      <button type="button" id="first">First</button>
+    </div>
+  `;
+
+  const outside = document.getElementById("outside") as HTMLButtonElement;
+  const container = document.getElementById("container") as HTMLElement;
+  const trap = createFocusTrap({
+    container,
+    allowOutsideFocus: (target) => target === outside,
+  });
+
+  outside.focus();
+
+  expect(document.activeElement?.id).toBe("outside");
+
+  trap.release();
+});
+
+test("it should skip enforce when shouldEnforce returns false", () => {
+  document.body.innerHTML = `
+    <button type="button" id="outside">Outside</button>
+    <div id="container">
+      <button type="button" id="first">First</button>
+    </div>
+  `;
+
+  const container = document.getElementById("container") as HTMLElement;
+  const trap = createFocusTrap({
+    container,
+    shouldEnforce: () => false,
+  });
+  const outside = document.getElementById("outside") as HTMLButtonElement;
+
+  outside.focus();
+
+  expect(document.activeElement?.id).toBe("outside");
+
+  trap.release();
+});
+
 test("it should navigate focusable elements with Focusable", () => {
   document.body.innerHTML = `
     <div id="container">

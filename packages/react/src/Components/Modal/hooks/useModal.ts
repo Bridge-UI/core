@@ -14,6 +14,7 @@ import {
 import {
   acquireLayerStackOrder,
   countModalTransitionLayers,
+  getLayerFocusTrapGuards,
   getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
@@ -385,30 +386,6 @@ export function useModal(
   }, [show]);
 
   useLayoutEffect(() => {
-    if (!active || transitionState !== "open" || !panelRef.current) {
-      releaseFocusTrap();
-
-      return;
-    }
-
-    releaseFocusTrap();
-    focusTrapRef.current = createFocusTrap({
-      container: panelRef.current,
-      disableAutoFocus: !merged.autoFocus,
-      disableEnforceFocus: merged.disableEnforceFocus,
-      disableRestoreFocus: merged.disableRestoreFocus,
-    });
-
-    return releaseFocusTrap;
-  }, [
-    active,
-    transitionState,
-    merged.autoFocus,
-    merged.disableEnforceFocus,
-    merged.disableRestoreFocus,
-  ]);
-
-  useLayoutEffect(() => {
     if (!active || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
@@ -427,8 +404,10 @@ export function useModal(
 
     const handle = pushLayerStack({
       id: stackId,
+      trapsFocus: true,
       onEscape: handleEscape,
       order: stackOrderRef.current,
+      container: panelRef.current ?? undefined,
       lockScroll: merged.disableScrollLock !== true,
     });
 
@@ -450,6 +429,32 @@ export function useModal(
     merged.persistent,
     merged.closeOnEscape,
     merged.disableScrollLock,
+  ]);
+
+  useLayoutEffect(() => {
+    if (!active || transitionState !== "open" || !panelRef.current) {
+      releaseFocusTrap();
+
+      return;
+    }
+
+    stackHandleRef.current?.setContainer(panelRef.current);
+    releaseFocusTrap();
+    focusTrapRef.current = createFocusTrap({
+      container: panelRef.current,
+      disableAutoFocus: !merged.autoFocus,
+      disableEnforceFocus: merged.disableEnforceFocus,
+      disableRestoreFocus: merged.disableRestoreFocus,
+      ...getLayerFocusTrapGuards(() => layerStackIdRef.current),
+    });
+
+    return releaseFocusTrap;
+  }, [
+    active,
+    transitionState,
+    merged.autoFocus,
+    merged.disableEnforceFocus,
+    merged.disableRestoreFocus,
   ]);
 
   useEffect(() => {

@@ -7,6 +7,7 @@ import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { ColorField } from "@/Components/ColorField";
+import { Modal } from "@/Components/Modal";
 
 afterEach(() => {
   cleanup();
@@ -186,4 +187,25 @@ test("it should call onChange and onClear when the clear control is clicked", ()
 
   expect(onChange).toHaveBeenCalledWith(null);
   expect(onClear).toHaveBeenCalled();
+});
+
+test("it should not steal modal focus when the picker is focused", () => {
+  render(
+    <Modal show transition="none">
+      <button type="button" aria-label="Close">
+        X
+      </button>
+      <ColorField defaultValue="#ff0000" />
+    </Modal>,
+  );
+
+  fireEvent.focus(screen.getByRole("textbox"));
+
+  const slider = screen.getByRole("slider", {
+    name: "Saturation and brightness",
+  });
+
+  slider.focus();
+
+  expect(document.activeElement).toBe(slider);
 });

@@ -19,6 +19,7 @@ import {
   DRAWER_LEAVE_FALLBACK_MS,
   getDrawerOverlayTransitionClass,
   getDrawerPanelTransitionClass,
+  getLayerFocusTrapGuards,
   getLayerStackEntry,
   hasDrawerTransition,
   LAYER_STACK_BASE_Z_INDEX,
@@ -359,12 +360,14 @@ export function useDrawer(
       return;
     }
 
+    stackHandle?.setContainer(panelRef.value);
     releaseFocusTrap();
     focusTrap = createFocusTrap({
       container: panelRef.value,
       disableAutoFocus: !merged.value.autoFocus,
       disableEnforceFocus: merged.value.disableEnforceFocus,
       disableRestoreFocus: merged.value.disableRestoreFocus,
+      ...getLayerFocusTrapGuards(() => layerStackId.value),
     });
   }
 
@@ -579,9 +582,11 @@ export function useDrawer(
         }
 
         stackHandle = pushLayerStack({
+          trapsFocus: true,
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
+          container: panelRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 

@@ -418,6 +418,8 @@ export function useMenu(
       return;
     }
 
+    stackHandle?.setContainer(next);
+
     void nextTick(() => {
       syncPositionable();
       syncAutoFocus();
@@ -534,6 +536,7 @@ export function useMenu(
         stackHandle = pushLayerStack({
           order: stackOrder,
           onEscape: handleEscape,
+          container: contentRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 
@@ -543,6 +546,7 @@ export function useMenu(
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
 
         void nextTick(() => {
+          stackHandle?.setContainer(contentRef.value);
           syncPositionable();
           syncAutoFocus();
           attachPointerListener();
@@ -577,6 +581,7 @@ export function useMenu(
 
   watch([show, () => merged.value.disableAutoFocus], () => {
     void nextTick(() => {
+      stackHandle?.setContainer(contentRef.value);
       syncAutoFocus();
     });
   });
