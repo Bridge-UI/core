@@ -433,8 +433,8 @@ export function hasHigherFocusTrap(layerId: LayerId): boolean {
 }
 
 /**
- * Focus-trap callbacks so nested overlays (Menu / Modal / Drawer) can hold
- * focus without the parent layer stealing it.
+ * Focus-trap callbacks so nested overlays (Menu / Modal / Drawer / Snackbar)
+ * can hold focus without the parent layer stealing it.
  */
 export function getLayerFocusTrapGuards(getLayerId: () => LayerId): {
   allowOutsideFocus: (target: Node) => boolean;

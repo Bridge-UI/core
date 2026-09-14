@@ -19,6 +19,10 @@ export type FocusableHandle = {
 
 /**
  * Options for the focus trap.
+ *
+ * `allowOutsideFocus` lets portaled overlays (Menu, Snackbar) keep focus
+ * outside `container`. `shouldEnforce` returning `false` pauses the trap
+ * while a nested Modal / Drawer is open.
  */
 export type FocusTrapOptions = {
   allowOutsideFocus?: (target: Node) => boolean;
