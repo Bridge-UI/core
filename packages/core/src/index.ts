@@ -259,6 +259,7 @@ export {
   resolveStartOfWeek,
   rgbaToHsva,
   rowMatchesDataTableColumnSearch,
+  rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
   saturationValueFromPointer,
   scrollSelectedTimeItemsIntoView,

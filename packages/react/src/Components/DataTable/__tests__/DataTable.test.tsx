@@ -467,6 +467,7 @@ test("it should call onColumnSearchChange when a column search is applied", () =
     <DataTable
       rows={rows}
       columnSearch={{}}
+      showSearch={false}
       onColumnSearchChange={onColumnSearchChange}
       columns={[
         {
@@ -634,7 +635,7 @@ test("it should truncate ellipsis cells", () => {
   expect(screen.getByText("Ada Lovelace").className).toContain("text-ellipsis");
 });
 
-test("it should show the ellipsis tooltip on the first pointer enter", () => {
+test("it should show the ellipsis tooltip on the first pointer enter", async () => {
   render(
     <DataTable
       rows={rows}
@@ -651,7 +652,83 @@ test("it should show the ellipsis tooltip on the first pointer enter", () => {
 
   fireEvent.pointerEnter(screen.getByText("Ada Lovelace").parentElement!);
 
-  expect(screen.getByRole("tooltip").textContent).toContain("Ada Lovelace");
+  const tooltip = await waitFor(() => {
+    const node = screen.getByRole("tooltip");
+
+    expect(node.style.position).toBe("fixed");
+
+    return node;
+  });
+
+  expect(tooltip.textContent).toContain("Ada Lovelace");
+  expect(tooltip.style.top.length).toBeGreaterThan(0);
+});
+
+test("it should show search and columns controls without a binding", () => {
+  render(<DataTable rows={rows} columns={columns} />);
+
+  expect(screen.getByRole("button", { name: "Columns" })).toBeTruthy();
+  expect(screen.getByRole("textbox", { name: "Search" })).toBeTruthy();
+});
+
+test("it should hide search and columns controls when disabled", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      showSearch={false}
+      showColumnVisibility={false}
+    />,
+  );
+
+  expect(screen.queryByRole("button", { name: "Columns" })).toBeNull();
+  expect(screen.queryByRole("textbox", { name: "Search" })).toBeNull();
+});
+
+test("it should filter rows from the toolbar search without a search binding", () => {
+  render(<DataTable rows={rows} columns={columns} />);
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search" }), {
+    target: { value: "Ada" },
+  });
+
+  expect(screen.getByText("Ada Lovelace")).toBeTruthy();
+  expect(screen.queryByText("Alan Turing")).toBeNull();
+});
+
+test("it should search only searchable columns from the toolbar", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row) => row.role },
+      ]}
+    />,
+  );
+
+  fireEvent.change(screen.getByRole("textbox", { name: "Search" }), {
+    target: { value: "Engineer" },
+  });
+
+  expect(screen.queryByText("Ada Lovelace")).toBeNull();
+  expect(screen.queryByText("Alan Turing")).toBeNull();
+});
+
+test("it should hide a column without a hiddenColumns binding", () => {
+  render(<DataTable rows={rows} columns={columns} columnsOverlay="menu" />);
+
+  fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));
+
+  expect(document.querySelector("thead")?.textContent).toContain("Name");
+  expect(document.querySelector("thead")?.textContent).not.toContain("Role");
+  expect(screen.queryByText("Engineer")).toBeNull();
 });
 
 test("it should hide columns listed in hiddenColumns", () => {
@@ -1036,8 +1113,8 @@ test("it should pin built-in pagination to the end", () => {
     <DataTable page={1} rows={rows} pageCount={2} columns={columns} />,
   );
 
-  expect(container.querySelector(".justify-end")).toBeTruthy();
-  expect(container.querySelector(".justify-between")).toBeNull();
+  expect(container.querySelector(".py-3.justify-end")).toBeTruthy();
+  expect(container.querySelector(".py-3.justify-between")).toBeNull();
 });
 
 test("it should spread per-page and pagination across the footer", () => {
@@ -1051,10 +1128,10 @@ test("it should spread per-page and pagination across the footer", () => {
     />,
   );
 
-  expect(container.querySelector(".justify-end")).toBeNull();
+  expect(container.querySelector(".py-3.justify-end")).toBeNull();
   expect(
-    container.querySelector(".justify-between") ??
-      container.querySelector(".flex-col"),
+    container.querySelector(".py-3.justify-between") ??
+      container.querySelector(".py-3.flex-col"),
   ).toBeTruthy();
 });
 

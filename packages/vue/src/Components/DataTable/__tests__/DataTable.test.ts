@@ -492,6 +492,7 @@ test("it should emit update:columnSearch when a column search is applied", async
     props: {
       rows,
       columnSearch: {},
+      showSearch: false,
       columns: [
         {
           id: "name",
@@ -664,9 +665,13 @@ test("it should show the ellipsis tooltip on the first pointer enter", async () 
   await wrapper.get(".block.min-w-0.w-full.max-w-full").trigger("pointerenter");
   await flushPromises();
 
-  expect(
-    document.body.querySelector('[role="tooltip"]')?.textContent,
-  ).toContain("Ada Lovelace");
+  const tooltip = document.body.querySelector(
+    '[role="tooltip"]',
+  ) as null | HTMLElement;
+
+  expect(tooltip?.style.position).toBe("fixed");
+  expect(tooltip?.style.top.length).toBeGreaterThan(0);
+  expect(tooltip?.textContent).toContain("Ada Lovelace");
 });
 
 test("it should hide columns listed in hiddenColumns", () => {
@@ -808,8 +813,85 @@ test("it should render toolbarActions beside search", () => {
     },
   });
 
-  expect(wrapper.get("button").text()).toBe("Print");
+  expect(
+    wrapper.findAll("button").some((button) => button.text() === "Print"),
+  ).toBe(true);
   expect(wrapper.get('input[aria-label="Search"]').exists()).toBe(true);
+});
+
+test("it should show search and columns controls without v-model", () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+  });
+
+  expect(wrapper.get('[aria-label="Columns"]').exists()).toBe(true);
+  expect(wrapper.get('input[aria-label="Search"]').exists()).toBe(true);
+});
+
+test("it should hide search and columns controls when disabled", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns,
+      showSearch: false,
+      showColumnVisibility: false,
+    },
+  });
+
+  expect(wrapper.find('[aria-label="Columns"]').exists()).toBe(false);
+  expect(wrapper.find('input[aria-label="Search"]').exists()).toBe(false);
+});
+
+test("it should filter rows from the toolbar search without v-model:search", async () => {
+  const wrapper = mountDataTable({
+    props: { rows, columns },
+  });
+
+  await wrapper.get('input[aria-label="Search"]').setValue("Ada");
+  await flushPromises();
+
+  expect(wrapper.text()).toContain("Ada Lovelace");
+  expect(wrapper.text()).not.toContain("Alan Turing");
+});
+
+test("it should search only searchable columns from the toolbar", async () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "name",
+          header: "Name",
+          searchable: true,
+          cell: (row: User) => row.name,
+        },
+        { id: "role", header: "Role", cell: (row: User) => row.role },
+      ],
+    },
+  });
+
+  await wrapper.get('input[aria-label="Search"]').setValue("Engineer");
+  await flushPromises();
+
+  expect(wrapper.text()).not.toContain("Alan Turing");
+  expect(wrapper.text()).not.toContain("Ada Lovelace");
+});
+
+test("it should hide a column without v-model:hidden-columns", async () => {
+  const wrapper = mountDataTable({
+    attachTo: document.body,
+    props: { rows, columns, columnsOverlay: "menu" },
+  });
+
+  await wrapper.get('[aria-label="Columns"]').trigger("click");
+  await flushPromises();
+
+  findOverlayCheckbox("Role")?.click();
+  await flushPromises();
+
+  expect(wrapper.text()).toContain("Name");
+  expect(wrapper.text()).not.toContain("Role");
+  expect(wrapper.text()).not.toContain("Engineer");
 });
 
 test("it should emit update:search from the toolbar search", async () => {
@@ -1033,8 +1115,8 @@ test("it should pin built-in pagination to the end", () => {
     },
   });
 
-  expect(wrapper.find(".justify-end").exists()).toBe(true);
-  expect(wrapper.find(".justify-between").exists()).toBe(false);
+  expect(wrapper.find(".py-3.justify-end").exists()).toBe(true);
+  expect(wrapper.find(".py-3.justify-between").exists()).toBe(false);
 });
 
 test("it should spread per-page and pagination across the footer", () => {
@@ -1048,10 +1130,10 @@ test("it should spread per-page and pagination across the footer", () => {
     },
   });
 
-  expect(wrapper.find(".justify-end").exists()).toBe(false);
+  expect(wrapper.find(".py-3.justify-end").exists()).toBe(false);
   expect(
-    wrapper.find(".justify-between").exists() ||
-      wrapper.find(".flex-col").exists(),
+    wrapper.find(".py-3.justify-between").exists() ||
+      wrapper.find(".py-3.flex-col").exists(),
   ).toBe(true);
 });
 

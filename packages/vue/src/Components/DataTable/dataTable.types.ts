@@ -375,7 +375,8 @@ export interface DataTableOwnProps<T> {
 
   /**
    * Controlled per-column text search: column id → query. Set `searchable`
-   * on a column to show the field in that header's filter menu.
+   * on a column to show the field in that header's filter menu and include
+   * it in the toolbar search.
    *
    * @default undefined
    */
@@ -443,7 +444,7 @@ export interface DataTableOwnProps<T> {
   getRowId?: (row: T) => string;
 
   /**
-   * Controlled hidden column ids.
+   * Controlled hidden column ids. Omit to let the table own visibility.
    *
    * @default undefined
    */
@@ -515,8 +516,9 @@ export interface DataTableOwnProps<T> {
   rows?: T[];
 
   /**
-   * Controlled toolbar search query. Filters visible columns client-side,
-   * or emits `update:search` only when server-paged.
+   * Controlled toolbar search query. Omit to let the table own the query.
+   * Filters `searchable` columns client-side, or all visible columns when
+   * none are `searchable`. Server-paged tables emit only.
    *
    * @default undefined
    */
@@ -535,6 +537,22 @@ export interface DataTableOwnProps<T> {
    * @default "multiple"
    */
   selectionMode?: DataTableSelectionMode;
+
+  /**
+   * Show the column visibility toolbar button. The table keeps hidden ids
+   * internally when `hiddenColumns` is unset.
+   *
+   * @default true
+   */
+  showColumnVisibility?: boolean;
+
+  /**
+   * Show the toolbar search field. The table keeps the query internally
+   * when `search` is unset.
+   *
+   * @default true
+   */
+  showSearch?: boolean;
 
   /**
    * Cell padding / type scale.

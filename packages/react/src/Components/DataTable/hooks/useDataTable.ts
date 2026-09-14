@@ -72,10 +72,10 @@ import {
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
-  matchDataTableSearch,
   observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
+  rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
   selectionToRowSelection,
   setDataTableColumnFilter,
@@ -137,6 +137,7 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "showSearch",
   "totalCount",
   "customProps",
   "columnSearch",
@@ -156,6 +157,7 @@ const dataTableBridgeKeys = [
   "columnsShowFooter",
   "onSelectionChange",
   "onColumnSearchChange",
+  "showColumnVisibility",
   "onHiddenColumnsChange",
 ] as const satisfies readonly (
   | "onPageChange"
@@ -376,6 +378,37 @@ export function useDataTable<T>(
     }
   }, []);
 
+  const [uncontrolledSearch, setUncontrolledSearch] = useState("");
+  const uncontrolledSearchRef = useRef(uncontrolledSearch);
+  uncontrolledSearchRef.current = uncontrolledSearch;
+
+  const resolvedSearch = derived(() => {
+    return merged.search !== undefined ? merged.search : uncontrolledSearch;
+  });
+
+  const [uncontrolledHiddenColumns, setUncontrolledHiddenColumns] =
+    useState<string[]>(EMPTY_IDS);
+  const uncontrolledHiddenColumnsRef = useRef(uncontrolledHiddenColumns);
+  uncontrolledHiddenColumnsRef.current = uncontrolledHiddenColumns;
+
+  const applySearch = useCallback((query: string) => {
+    mergedRef.current.onSearchChange?.(query);
+
+    if (mergedRef.current.search === undefined) {
+      uncontrolledSearchRef.current = query;
+      setUncontrolledSearch(query);
+    }
+  }, []);
+
+  const applyHiddenColumns = useCallback((ids: string[]) => {
+    mergedRef.current.onHiddenColumnsChange?.(ids);
+
+    if (mergedRef.current.hiddenColumns === undefined) {
+      uncontrolledHiddenColumnsRef.current = ids;
+      setUncontrolledHiddenColumns(ids);
+    }
+  }, []);
+
   const rootInheritedAttrs = useMemo(() => {
     return omit(inheritedAttrs, ["children"]);
   }, [inheritedAttrs]);
@@ -405,7 +438,9 @@ export function useDataTable<T>(
   });
 
   const hiddenColumns = derived(() => {
-    return merged.hiddenColumns ?? EMPTY_IDS;
+    return merged.hiddenColumns !== undefined
+      ? merged.hiddenColumns
+      : uncontrolledHiddenColumns;
   });
 
   const expandedIds = derived(() => {
@@ -439,6 +474,7 @@ export function useDataTable<T>(
     return isDataTableVisibilityEnabled(
       merged.hiddenColumns,
       merged.onHiddenColumnsChange !== undefined,
+      merged.showColumnVisibility ?? true,
     );
   });
 
@@ -603,7 +639,7 @@ export function useDataTable<T>(
       return tableRowModelRows;
     }
 
-    const query = merged.search ?? "";
+    const query = resolvedSearch;
 
     return tableRowModelRows.filter((row) => {
       if (
@@ -617,26 +653,18 @@ export function useDataTable<T>(
         return false;
       }
 
-      if (query.trim().length === 0) {
-        return true;
-      }
-
-      return columns.some((column) => {
-        if (hiddenColumns.includes(column.id)) {
-          return false;
-        }
-
-        return matchDataTableSearch(
-          getDataTableColumnAccessor(row.original, column),
-          query,
-        );
-      });
+      return rowMatchesDataTableToolbarSearch(
+        row.original,
+        columns,
+        query,
+        hiddenColumns,
+      );
     });
   }, [
     columns,
     serverPaged,
     hiddenColumns,
-    merged.search,
+    resolvedSearch,
     tableRowModelRows,
     merged.columnSearch,
   ]);
@@ -1240,6 +1268,8 @@ export function useDataTable<T>(
       merged.search,
       merged.onSearchChange !== undefined,
       slots?.search !== undefined,
+      columns.some(isDataTableColumnSearchable),
+      merged.showSearch ?? true,
     );
   });
 
@@ -1296,13 +1326,16 @@ export function useDataTable<T>(
     }
   }, []);
 
-  const onChangeSearch = useCallback((query: string) => {
-    mergedRef.current.onSearchChange?.(query);
+  const onChangeSearch = useCallback(
+    (query: string) => {
+      applySearch(query);
 
-    if (mergedRef.current.page !== 1) {
-      mergedRef.current.onPageChange?.(1);
-    }
-  }, []);
+      if (mergedRef.current.page !== 1) {
+        mergedRef.current.onPageChange?.(1);
+      }
+    },
+    [applySearch],
+  );
 
   const paginationSlotProps = useMemo((): DataTablePaginationSlotProps => {
     return {
@@ -1375,21 +1408,26 @@ export function useDataTable<T>(
 
   const onToggleColumnVisibility = useCallback(
     (columnId: string, hide: boolean) => {
-      mergedRef.current.onHiddenColumnsChange?.(
+      applyHiddenColumns(
         toggleDataTableColumnVisibility(
-          mergedRef.current.hiddenColumns ?? [],
+          mergedRef.current.hiddenColumns !== undefined
+            ? (mergedRef.current.hiddenColumns ?? [])
+            : uncontrolledHiddenColumnsRef.current,
           columnId,
           hide,
           map(columns, "id"),
         ),
       );
     },
-    [columns],
+    [applyHiddenColumns, columns],
   );
 
-  const onHiddenColumnsChange = useCallback((ids: string[]) => {
-    mergedRef.current.onHiddenColumnsChange?.(ids);
-  }, []);
+  const onHiddenColumnsChange = useCallback(
+    (ids: string[]) => {
+      applyHiddenColumns(ids);
+    },
+    [applyHiddenColumns],
+  );
 
   return {
     slots,
@@ -1442,6 +1480,7 @@ export function useDataTable<T>(
     onCommitColumnFilter,
     onHiddenColumnsChange,
     onToggleColumnVisibility,
+    searchValue: resolvedSearch,
     loadingBar: merged.loadingVariant === "bar",
   };
 }

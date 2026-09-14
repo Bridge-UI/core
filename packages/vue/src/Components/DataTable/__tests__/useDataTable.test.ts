@@ -74,9 +74,11 @@ test("it should expose table defaults from useDataTable", () => {
   });
 
   expect(result.showEmpty.value).toBe(false);
+  expect(result.showSearch.value).toBe(true);
   expect(result.rowViews.value).toHaveLength(1);
   expect(result.showFooterBar.value).toBe(false);
   expect(result.merged.value.variant).toBe("plain");
+  expect(result.visibilityEnabled.value).toBe(true);
   expect(result.headerViews.value[0]?.id).toBe("name");
   expect(result.merged.value.selectionMode).toBe("multiple");
 });
@@ -406,6 +408,20 @@ test("it should write search and reset page from onChangeSearch", () => {
   expect(models.search.value).toBe("Ada");
 });
 
+test("it should write search without a search binding", () => {
+  const models = createModels();
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onChangeSearch("Ada");
+
+  expect(models.search.value).toBe("Ada");
+  expect(result.rowViews.value).toHaveLength(1);
+  expect(result.rowViews.value[0]?.original.name).toBe("Ada");
+});
+
 test("it should write perPage and reset page from onChangePerPage", () => {
   const models = createModels({ page: ref(2), perPage: ref(10) });
   const { result } = mountUseDataTable(
@@ -456,4 +472,19 @@ test("it should write hiddenColumns from onToggleColumnVisibility", () => {
   result.onToggleColumnVisibility("role", true);
 
   expect(models.hiddenColumns.value).toEqual(["role"]);
+});
+
+test("it should write hiddenColumns without a hiddenColumns binding", () => {
+  const models = createModels();
+  const { result } = mountUseDataTable(
+    { rows: people, columns: peopleColumns },
+    models,
+  );
+
+  result.onToggleColumnVisibility("role", true);
+
+  expect(models.hiddenColumns.value).toEqual(["role"]);
+  expect(result.headerViews.value.some((header) => header.id === "role")).toBe(
+    false,
+  );
 });

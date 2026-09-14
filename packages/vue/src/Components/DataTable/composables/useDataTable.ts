@@ -69,10 +69,10 @@ import {
   isDataTableStickyHeader,
   isDataTableStickyHeaderBoxed,
   isDataTableVisibilityEnabled,
-  matchDataTableSearch,
   observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
+  rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
   selectionToRowSelection,
   setDataTableColumnFilter,
@@ -134,6 +134,7 @@ const dataTableBridgeKeys = [
   "hoverable",
   "pageCount",
   "selection",
+  "showSearch",
   "totalCount",
   "customProps",
   "columnSearch",
@@ -145,6 +146,7 @@ const dataTableBridgeKeys = [
   "loadingVariant",
   "perPageOptions",
   "columnsShowFooter",
+  "showColumnVisibility",
 ] as const satisfies readonly (keyof DataTableOwnProps<unknown>)[];
 
 type DataTableLibDefaults = LibDefaultsShape<
@@ -346,6 +348,7 @@ export function useDataTable<T>(
     return isDataTableVisibilityEnabled(
       models.hiddenColumns.value,
       attrs["onUpdate:hiddenColumns"] !== undefined,
+      merged.value.showColumnVisibility ?? true,
     );
   });
 
@@ -529,20 +532,12 @@ export function useDataTable<T>(
         return false;
       }
 
-      if (query.trim().length === 0) {
-        return true;
-      }
-
-      return columns.value.some((column) => {
-        if (hidden.includes(column.id)) {
-          return false;
-        }
-
-        return matchDataTableSearch(
-          getDataTableColumnAccessor(row.original, column),
-          query,
-        );
-      });
+      return rowMatchesDataTableToolbarSearch(
+        row.original,
+        columns.value,
+        query,
+        hidden,
+      );
     });
   });
 
@@ -1286,6 +1281,8 @@ export function useDataTable<T>(
       models.search.value,
       instance?.vnode.props?.["onUpdate:search"] !== undefined,
       vueSlots.search !== undefined,
+      columns.value.some(isDataTableColumnSearchable),
+      merged.value.showSearch ?? true,
     );
   });
 

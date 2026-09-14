@@ -57,9 +57,11 @@ test("it should expose table defaults from useDataTable", () => {
   );
 
   expect(result.current.showEmpty).toBe(false);
+  expect(result.current.showSearch).toBe(true);
   expect(result.current.rowViews).toHaveLength(1);
   expect(result.current.showFooterBar).toBe(false);
   expect(result.current.merged.variant).toBe("plain");
+  expect(result.current.visibilityEnabled).toBe(true);
   expect(result.current.headerViews[0]?.id).toBe("name");
   expect(result.current.merged.selectionMode).toBe("multiple");
 });
@@ -429,6 +431,20 @@ test("it should emit search and reset page from onChangeSearch", () => {
   expect(onSearchChange).toHaveBeenCalledWith("Ada");
 });
 
+test("it should filter row views from onChangeSearch when search is uncontrolled", () => {
+  const { result } = renderHook(() =>
+    useDataTable({ rows: people, columns: peopleColumns }, libDefaults),
+  );
+
+  act(() => {
+    result.current.onChangeSearch("Alan");
+  });
+
+  expect(result.current.searchValue).toBe("Alan");
+  expect(result.current.rowViews).toHaveLength(1);
+  expect(result.current.rowViews[0]?.original.name).toBe("Alan");
+});
+
 test("it should emit perPage and reset page from onChangePerPage", () => {
   const onPageChange = vi.fn();
   const onPerPageChange = vi.fn();
@@ -517,4 +533,18 @@ test("it should emit onHiddenColumnsChange from onToggleColumnVisibility", () =>
   });
 
   expect(onHiddenColumnsChange).toHaveBeenCalledWith(["role"]);
+});
+
+test("it should hide columns from onToggleColumnVisibility when uncontrolled", () => {
+  const { result } = renderHook(() =>
+    useDataTable({ rows: people, columns: peopleColumns }, libDefaults),
+  );
+
+  act(() => {
+    result.current.onToggleColumnVisibility("role", true);
+  });
+
+  expect(
+    result.current.headerViews.some((header) => header.id === "role"),
+  ).toBe(false);
 });

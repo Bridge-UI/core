@@ -63,7 +63,6 @@ test("it should render the columns toolbar control", () => {
   cy.mount(DataTable, {
     props: {
       columns,
-      hiddenColumns: [],
       rows: [{ id: "1", name: "Ada Lovelace" }],
     },
   });
@@ -75,7 +74,6 @@ test("it should show the toolbar search field", () => {
   cy.mount(DataTable, {
     props: {
       columns,
-      search: "",
       rows: [{ id: "1", name: "Ada Lovelace" }],
     },
   });

@@ -92,6 +92,7 @@ export {
   observeDataTablePaginationInline,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
+  rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
   selectionToRowSelection,
   setDataTableColumnFilter,
