@@ -405,6 +405,10 @@ export function useMenu(
     });
   }
 
+  function syncLayerContainer() {
+    stackHandle?.setContainer(contentRef.value);
+  }
+
   function setContentRef(element: null | Element | ComponentPublicInstance) {
     const next = resolveVnodeRefElement(element);
 
@@ -413,12 +417,11 @@ export function useMenu(
     }
 
     contentRef.value = next;
+    syncLayerContainer();
 
     if (!next) {
       return;
     }
-
-    stackHandle?.setContainer(next);
 
     void nextTick(() => {
       syncPositionable();
@@ -546,7 +549,7 @@ export function useMenu(
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
 
         void nextTick(() => {
-          stackHandle?.setContainer(contentRef.value);
+          syncLayerContainer();
           syncPositionable();
           syncAutoFocus();
           attachPointerListener();
@@ -581,7 +584,6 @@ export function useMenu(
 
   watch([show, () => merged.value.disableAutoFocus], () => {
     void nextTick(() => {
-      stackHandle?.setContainer(contentRef.value);
       syncAutoFocus();
     });
   });
