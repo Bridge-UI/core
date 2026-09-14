@@ -8,6 +8,7 @@ import {
   toValue,
   useAttrs,
   watch,
+  type ComponentPublicInstance,
   type Ref,
 } from "vue";
 
@@ -47,6 +48,7 @@ import type {
 import { snackbarDefaultIcons } from "@/Components/Snackbar/snackbarDefaultIcons";
 import {
   mergePartBind,
+  resolveVnodeRefElement,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
@@ -140,6 +142,8 @@ export function useSnackbar(
   const progressActive = ref(false);
 
   const progressTransitionMsRef = ref(0);
+
+  const panelRef = ref<null | HTMLElement>(null);
 
   const stackZIndex = ref(LAYER_STACK_BASE_Z_INDEX);
 
@@ -479,6 +483,11 @@ export function useSnackbar(
     }
   }
 
+  function setPanelRef(element: null | Element | ComponentPublicInstance) {
+    panelRef.value = resolveVnodeRefElement(element);
+    stackHandle?.setContainer(panelRef.value);
+  }
+
   watch(
     [rendered, isPortaled],
     ([isRendered, portaled]) => {
@@ -493,6 +502,7 @@ export function useSnackbar(
           order: stackOrder,
           lockScroll: false,
           id: options.stackId,
+          container: panelRef.value ?? undefined,
           onEscape: () => {
             requestClose();
           },
@@ -502,6 +512,10 @@ export function useSnackbar(
         stackZIndex.value = stackHandle.zIndex;
         syncZIndex();
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
+
+        void nextTick(() => {
+          stackHandle?.setContainer(panelRef.value);
+        });
       } else {
         unsubscribeLayerStack?.();
         unsubscribeLayerStack = null;
@@ -644,6 +658,7 @@ export function useSnackbar(
     isPortaled,
     portalBind,
     contentBind,
+    setPanelRef,
     showProgress,
     progressBind,
     requestClose,

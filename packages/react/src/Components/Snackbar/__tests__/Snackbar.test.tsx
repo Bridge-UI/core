@@ -12,14 +12,15 @@ import { afterEach, expect, test, vi } from "vitest";
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
+// ** Local Imports
+import { Modal } from "@/Components/Modal";
+import { Snackbar } from "@/Components/Snackbar";
+
 afterEach(() => {
   resetLayerStackForTests();
   document.body.innerHTML = "";
   document.body.style.overflow = "";
 });
-
-// ** Local Imports
-import { Snackbar } from "@/Components/Snackbar";
 
 test("it should not render when show is false", () => {
   render(<Snackbar show={false} title="Hidden" duration={false} />);
@@ -281,4 +282,23 @@ test("it should not reset shared state when a replaced snackbar finishes leaving
     expect(document.body.textContent).toContain("Snack B");
     expect(document.body.textContent).not.toContain("Snack A");
   });
+});
+
+test("it should not steal modal focus when a snackbar action is focused", () => {
+  render(
+    <>
+      <Modal show transition="none">
+        <button type="button">Modal action</button>
+      </Modal>
+      <Snackbar show title="Toast" duration={false} transition="none" />
+    </>,
+  );
+
+  const snackbarClose = document.body.querySelector(
+    '[data-snackbar-part="panel"] button',
+  ) as HTMLButtonElement;
+
+  snackbarClose.focus();
+
+  expect(document.activeElement).toBe(snackbarClose);
 });
