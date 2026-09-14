@@ -386,6 +386,8 @@ export function useTooltip(
     [
       show,
       mounted,
+      triggerRef,
+      contentRef,
       () => props.anchorEl,
       () => merged.value.arrow,
       () => merged.value.offset,
@@ -402,7 +404,7 @@ export function useTooltip(
       await nextTick();
       syncPositionable();
     },
-    { flush: "post" },
+    { flush: "post", immediate: true },
   );
 
   watch(

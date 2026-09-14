@@ -200,6 +200,25 @@ test("it should position with anchorEl when provided", async () => {
   ).toContain("From anchor");
 });
 
+test("it should position when mounted already open", async () => {
+  mountTooltip({
+    props: { modelValue: true, content: "Save file" },
+    slots: {
+      trigger: () => h(Button, null, () => "Save"),
+    },
+  });
+
+  await flushPromises();
+
+  const tooltip = document.body.querySelector(
+    '[role="tooltip"]',
+  ) as null | HTMLElement;
+
+  expect(tooltip?.style.position).toBe("fixed");
+  expect(tooltip?.textContent).toContain("Save file");
+  expect(tooltip?.style.top.length).toBeGreaterThan(0);
+});
+
 test("it should not open when disabled", async () => {
   const wrapper = mountTooltip({
     props: { openDelay: 0, disabled: true, content: "Hidden" },
