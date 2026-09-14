@@ -104,7 +104,7 @@ export function DataTableFilterMenu({
         }}
         className={cn({
           "inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm leading-none hover:bg-dark-500/10 dark:hover:bg-dark-500/15": true,
-          "text-primary-600": active,
+          "bg-dark-500/10 dark:bg-dark-500/15": active,
         })}
       >
         <Icon size="sm" icon="filter" />
