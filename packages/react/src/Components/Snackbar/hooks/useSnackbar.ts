@@ -139,6 +139,8 @@ export function useSnackbar(
 
   const progressTransitionMsRef = useRef(0);
 
+  const panelRef = useRef<HTMLDivElement>(null);
+
   const [rendered, setRendered] = useState(show);
 
   const stackOrderRef = useRef<null | number>(null);
@@ -470,6 +472,7 @@ export function useSnackbar(
     const handle = pushLayerStack({
       id: stackId,
       lockScroll: false,
+      container: panelRef.current ?? undefined,
       order: stackOrderRef.current ?? undefined,
       onEscape: () => {
         requestClose();
@@ -478,6 +481,7 @@ export function useSnackbar(
 
     stackHandleRef.current = handle;
     layerStackIdRef.current = handle.id;
+    handle.setContainer(panelRef.current);
     setStackZIndex(handle.zIndex);
 
     return () => {
@@ -533,6 +537,7 @@ export function useSnackbar(
       customProps?.root,
       {
         ...rootInheritedAttrs,
+        ref: panelRef,
         "data-snackbar-part": "panel",
         "data-state": transitionState,
         onMouseEnter: pauseDismissTimer,

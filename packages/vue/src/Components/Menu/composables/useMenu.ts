@@ -405,6 +405,10 @@ export function useMenu(
     });
   }
 
+  function syncLayerContainer() {
+    stackHandle?.setContainer(contentRef.value);
+  }
+
   function setContentRef(element: null | Element | ComponentPublicInstance) {
     const next = resolveVnodeRefElement(element);
 
@@ -413,6 +417,7 @@ export function useMenu(
     }
 
     contentRef.value = next;
+    syncLayerContainer();
 
     if (!next) {
       return;
@@ -534,6 +539,7 @@ export function useMenu(
         stackHandle = pushLayerStack({
           order: stackOrder,
           onEscape: handleEscape,
+          container: contentRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 
@@ -543,6 +549,7 @@ export function useMenu(
         unsubscribeLayerStack = subscribeLayerStack(syncZIndex);
 
         void nextTick(() => {
+          syncLayerContainer();
           syncPositionable();
           syncAutoFocus();
           attachPointerListener();

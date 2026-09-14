@@ -19,12 +19,18 @@ export type FocusableHandle = {
 
 /**
  * Options for the focus trap.
+ *
+ * `allowOutsideFocus` lets portaled overlays (Menu, Snackbar) keep focus
+ * outside `container`. `shouldEnforce` returning `false` pauses the trap
+ * while a nested Modal / Drawer is open.
  */
 export type FocusTrapOptions = {
+  allowOutsideFocus?: (target: Node) => boolean;
   container: HTMLElement;
   disableAutoFocus?: boolean;
   disableEnforceFocus?: boolean;
   disableRestoreFocus?: boolean;
+  shouldEnforce?: () => boolean;
 };
 
 /**
@@ -152,7 +158,9 @@ export function createFocusTrap(options: FocusTrapOptions): FocusTrap {
 
   const {
     container,
+    shouldEnforce,
     disableAutoFocus,
+    allowOutsideFocus,
     disableEnforceFocus,
     disableRestoreFocus,
   } = options;
@@ -175,9 +183,17 @@ export function createFocusTrap(options: FocusTrapOptions): FocusTrap {
       return;
     }
 
+    if (shouldEnforce && !shouldEnforce()) {
+      return;
+    }
+
     const target = event.target;
 
     if (!(target instanceof Node) || container.contains(target)) {
+      return;
+    }
+
+    if (allowOutsideFocus?.(target)) {
       return;
     }
 

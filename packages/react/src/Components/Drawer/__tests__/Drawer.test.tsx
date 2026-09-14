@@ -424,3 +424,22 @@ test("it should not scroll inside panel when scroll is body", () => {
 
   expect(panel?.className).not.toContain("overflow-y-auto");
 });
+
+test("it should keep focus inside the inner nested drawer", () => {
+  render(
+    <Drawer show transition="none">
+      <button type="button" aria-label="Outer close">
+        X
+      </button>
+      <Drawer show transition="none">
+        <button type="button">Inner action</button>
+      </Drawer>
+    </Drawer>,
+  );
+
+  const inner = screen.getByRole("button", { name: "Inner action" });
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
+});

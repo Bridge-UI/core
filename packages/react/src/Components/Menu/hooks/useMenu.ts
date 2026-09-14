@@ -431,14 +431,6 @@ export function useMenu(
   ]);
 
   useLayoutEffect(() => {
-    if (!show || merged.disableAutoFocus || !contentRef.current) {
-      return;
-    }
-
-    createFocusable(contentRef.current).focusFirst();
-  }, [show, merged.disableAutoFocus]);
-
-  useLayoutEffect(() => {
     if (!show || stackOrderRef.current === null) {
       stackHandleRef.current?.release();
       stackHandleRef.current = null;
@@ -459,6 +451,7 @@ export function useMenu(
     const handle = pushLayerStack({
       onEscape: handleEscape,
       order: stackOrderRef.current,
+      container: contentRef.current ?? undefined,
       lockScroll: merged.disableScrollLock !== true,
     });
 
@@ -474,6 +467,20 @@ export function useMenu(
       layerStackIdRef.current = "";
     };
   }, [show, merged.persistent, merged.closeOnEscape, merged.disableScrollLock]);
+
+  useLayoutEffect(() => {
+    if (!show || !mounted) {
+      return;
+    }
+
+    stackHandleRef.current?.setContainer(contentRef.current);
+
+    if (merged.disableAutoFocus || !contentRef.current) {
+      return;
+    }
+
+    createFocusable(contentRef.current).focusFirst();
+  }, [show, mounted, merged.disableAutoFocus]);
 
   useEffect(() => {
     if (!show) {

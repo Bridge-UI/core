@@ -1,12 +1,13 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
-import { ref } from "vue";
+import { defineComponent, h, ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
+import { Modal } from "@/Components/Modal";
 import { Snackbar } from "@/Components/Snackbar";
 
 afterEach(async () => {
@@ -354,4 +355,35 @@ test("it should not reset shared state when a replaced snackbar finishes leaving
 
   expect(document.body.textContent).toContain("Snack B");
   expect(document.body.textContent).not.toContain("Snack A");
+});
+
+test("it should not steal modal focus when a snackbar action is focused", async () => {
+  const App = defineComponent({
+    setup() {
+      return () => [
+        h(Modal, { modelValue: true, transition: "none" }, () =>
+          h("button", { type: "button" }, "Modal action"),
+        ),
+        h(Snackbar, {
+          title: "Toast",
+          duration: false,
+          modelValue: true,
+          transition: "none",
+        }),
+      ];
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper as ReturnType<typeof mount<typeof Snackbar>>);
+  await flushPromises();
+
+  const snackbarClose = document.body.querySelector(
+    '[data-snackbar-part="panel"] button',
+  ) as HTMLButtonElement;
+
+  snackbarClose.focus();
+
+  expect(document.activeElement).toBe(snackbarClose);
 });

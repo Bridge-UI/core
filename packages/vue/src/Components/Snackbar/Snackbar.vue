@@ -44,6 +44,7 @@ const {
   isPortaled,
   portalBind,
   contentBind,
+  setPanelRef,
   showProgress,
   progressBind,
   resolvedIcon,
@@ -105,6 +106,7 @@ const teleportTarget = computed(() => {
     <div v-bind="portalBind" v-if="rendered && isPortaled">
       <div class="w-full max-w-sm pointer-events-auto">
         <div
+          :ref="setPanelRef"
           v-bind="panelBind"
           :class="cn(panelBind.class, { flex: hasRight })"
         >
@@ -183,6 +185,7 @@ const teleportTarget = computed(() => {
     </div>
 
     <div
+      :ref="setPanelRef"
       v-bind="panelBind"
       v-else-if="rendered"
       :class="cn(panelBind.class, { flex: hasRight })"

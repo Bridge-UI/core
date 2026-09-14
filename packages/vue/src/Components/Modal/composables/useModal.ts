@@ -16,6 +16,7 @@ import {
 import {
   acquireLayerStackOrder,
   countModalTransitionLayers,
+  getLayerFocusTrapGuards,
   getLayerStackEntry,
   getModalOverlayTransitionClass,
   getModalPanelTransitionClass,
@@ -329,12 +330,14 @@ export function useModal(
       return;
     }
 
+    stackHandle?.setContainer(panelRef.value);
     releaseFocusTrap();
     focusTrap = createFocusTrap({
       container: panelRef.value,
       disableAutoFocus: !merged.value.autoFocus,
       disableEnforceFocus: merged.value.disableEnforceFocus,
       disableRestoreFocus: merged.value.disableRestoreFocus,
+      ...getLayerFocusTrapGuards(() => layerStackId.value),
     });
   }
 
@@ -527,9 +530,11 @@ export function useModal(
         stackOrder = acquireLayerStackOrder();
 
         stackHandle = pushLayerStack({
+          trapsFocus: true,
           order: stackOrder,
           id: options.stackId,
           onEscape: handleEscape,
+          container: panelRef.value ?? undefined,
           lockScroll: merged.value.disableScrollLock !== true,
         });
 

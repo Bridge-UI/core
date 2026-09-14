@@ -1,12 +1,14 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test, vi } from "vitest";
+import { defineComponent, h } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { ColorField } from "@/Components/ColorField";
+import { Modal } from "@/Components/Modal";
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -251,4 +253,33 @@ test("it should close the overlay after Apply when showFooter is set", async () 
   expect(onApply).toHaveBeenCalledTimes(1);
   expect(onChange).toHaveBeenCalledWith("#ea1212");
   expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test("it should not steal modal focus when the picker is focused", async () => {
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(Modal, { modelValue: true, transition: "none" }, () => [
+          h("button", { type: "button", "aria-label": "Close" }, "X"),
+          h(ColorField, { defaultValue: "#ff0000" }),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+
+  const input = document.body.querySelector("input");
+
+  input?.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
+  await flushPromises();
+
+  const slider = document.body.querySelector(
+    '[aria-label="Saturation and brightness"]',
+  ) as null | HTMLElement;
+
+  slider?.focus();
+
+  expect(document.activeElement).toBe(slider);
 });
