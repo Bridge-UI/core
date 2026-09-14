@@ -471,3 +471,30 @@ test("it should assign LAYER_STACK_BASE_Z_INDEX as the base z-index", () => {
 
   expect(Number(root?.style.zIndex)).toBe(LAYER_STACK_BASE_Z_INDEX);
 });
+
+test("it should keep focus inside the inner nested drawer", async () => {
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(Drawer, { modelValue: true, transition: "none" }, () => [
+          h("button", { type: "button", "aria-label": "Outer close" }, "X"),
+          h(Drawer, { modelValue: true, transition: "none" }, () =>
+            h("button", { type: "button" }, "Inner action"),
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushPromises();
+
+  const inner = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Inner action",
+  ) as HTMLButtonElement;
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
+});

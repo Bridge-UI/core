@@ -18,6 +18,7 @@ import {
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
+import { Drawer } from "@/Components/Drawer";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 
@@ -490,4 +491,23 @@ test("it should keep focus inside a nested menu overlay", () => {
   item.focus();
 
   expect(document.activeElement).toBe(item);
+});
+
+test("it should keep focus inside a nested drawer overlay", () => {
+  render(
+    <Modal show transition="none">
+      <button type="button" aria-label="Close">
+        X
+      </button>
+      <Drawer show transition="none">
+        <button type="button">Drawer action</button>
+      </Drawer>
+    </Modal>,
+  );
+
+  const inner = screen.getByRole("button", { name: "Drawer action" });
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
 });

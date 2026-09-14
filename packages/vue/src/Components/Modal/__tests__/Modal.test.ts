@@ -11,6 +11,7 @@ import {
 
 // ** Local Imports
 import { Card } from "@/Components/Card";
+import { Drawer } from "@/Components/Drawer";
 import { Menu } from "@/Components/Menu";
 import { Modal } from "@/Components/Modal";
 
@@ -594,4 +595,31 @@ test("it should keep focus inside a nested menu overlay", async () => {
   item.focus();
 
   expect(document.activeElement).toBe(item);
+});
+
+test("it should keep focus inside a nested drawer overlay", async () => {
+  const App = defineComponent({
+    setup() {
+      return () =>
+        h(Modal, { modelValue: true, transition: "none" }, () => [
+          h("button", { type: "button", "aria-label": "Close" }, "X"),
+          h(Drawer, { modelValue: true, transition: "none" }, () =>
+            h("button", { type: "button" }, "Drawer action"),
+          ),
+        ]);
+    },
+  });
+
+  const wrapper = mount(App, { attachTo: document.body });
+
+  mountedWrappers.push(wrapper);
+  await flushPromises();
+
+  const inner = Array.from(document.body.querySelectorAll("button")).find(
+    (node) => node.textContent === "Drawer action",
+  ) as HTMLButtonElement;
+
+  inner.focus();
+
+  expect(document.activeElement).toBe(inner);
 });
