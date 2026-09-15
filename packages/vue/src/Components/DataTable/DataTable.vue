@@ -68,10 +68,12 @@ const props = withDefaults(
     loading: false,
     striped: false,
     hoverable: false,
+    showSearch: false,
     stickyHeader: false,
     filterOverlay: "auto",
     columnsOverlay: "auto",
     loadingVariant: "overlay",
+    showColumnVisibility: false,
     columnsShowFooter: undefined,
   },
 );

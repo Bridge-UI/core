@@ -230,7 +230,7 @@ Set `sortable` on a column to show a sort button in that header, matching the fi
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`filterMultiple={false}`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
-Set `searchable` on a column to add a text field in that same overlay. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+Set `searchable` on a column to add a text field in that same overlay, and to include the column in the toolbar search. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
 
 Column filters open in a `FieldOverlay`. Default `filterOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
 
@@ -340,7 +340,7 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 ### Column visibility
 
-Pass `hiddenColumns` and/or `onHiddenColumnsChange` to show a **Columns** icon in the toolbar. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
+The toolbar **Columns** icon is hidden by default. Pass `showColumnVisibility` to show it with internal state, or bind `hiddenColumns` when the app needs the ids. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
 
@@ -350,15 +350,31 @@ When unset, `columnsShowFooter` is `true` for `modal` / `drawer` (`false` for `m
 <DataTable
   rows={users}
   columns={columns}
-  hiddenColumns={hidden}
+  showColumnVisibility
   columnsOverlay="drawer"
+/>
+```
+
+Bind the ids when the app needs them:
+
+```tsx
+<DataTable
+  rows={users}
+  columns={columns}
+  hiddenColumns={hidden}
   onHiddenColumnsChange={setHidden}
 />
 ```
 
 ### Search
 
-Pass `search` and/or `onSearchChange` to show a search field in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+The toolbar search field is hidden by default. Pass `showSearch` to show it with internal state, or bind `search` when the app needs the query. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only.
+
+```tsx
+<DataTable showSearch rows={users} columns={columns} />
+```
+
+Bind the query when the app needs it:
 
 ```tsx
 <DataTable

@@ -372,6 +372,7 @@ function DataTable<T>(props: DataTableProps<T>) {
     footerBind,
     loadingBar,
     showSearch,
+    searchValue,
     getHeadBind,
     headerViews,
     loadingBind,
@@ -446,8 +447,8 @@ function DataTable<T>(props: DataTableProps<T>) {
             {showSearch
               ? (slots?.search ?? (
                   <DataTableSearch
+                    value={searchValue}
                     onChange={onChangeSearch}
-                    value={merged.search ?? ""}
                     fieldProps={merged.customProps?.search}
                   />
                 ))

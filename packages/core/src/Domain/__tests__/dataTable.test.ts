@@ -52,6 +52,7 @@ import {
   matchDataTableSearch,
   resolveDataTableRowId,
   rowMatchesDataTableColumnSearch,
+  rowMatchesDataTableToolbarSearch,
   rowSelectionToIds,
   selectionToRowSelection,
   setDataTableColumnFilter,
@@ -309,12 +310,42 @@ describe("matchDataTableSearch", () => {
   });
 });
 
+describe("rowMatchesDataTableToolbarSearch", () => {
+  const row = { name: "Ada", role: "Engineer" };
+  const columns = [{ id: "name", searchable: true }, { id: "role" }];
+
+  test("it should search searchable columns when any exist", () => {
+    expect(rowMatchesDataTableToolbarSearch(row, columns, "Ada")).toBe(true);
+    expect(rowMatchesDataTableToolbarSearch(row, columns, "Engineer")).toBe(
+      false,
+    );
+  });
+
+  test("it should search all visible columns when none are searchable", () => {
+    expect(
+      rowMatchesDataTableToolbarSearch(
+        row,
+        [{ id: "name" }, { id: "role" }],
+        "Engineer",
+      ),
+    ).toBe(true);
+  });
+
+  test("it should skip hidden columns", () => {
+    expect(
+      rowMatchesDataTableToolbarSearch(row, columns, "Ada", ["name"]),
+    ).toBe(false);
+  });
+});
+
 describe("isDataTableSearchEnabled", () => {
-  test("it should enable when search, a handler, or a slot is present", () => {
+  test("it should enable when search, a handler, a slot, or showSearch is set", () => {
     expect(isDataTableSearchEnabled("", false, false)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, true, false)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, false, true)).toBe(true);
     expect(isDataTableSearchEnabled(undefined, false, false)).toBe(false);
+    expect(isDataTableSearchEnabled(undefined, false, false, true)).toBe(true);
+    expect(isDataTableSearchEnabled("", false, false, false)).toBe(true);
   });
 });
 
@@ -431,6 +462,9 @@ describe("toggleDataTableColumnVisibility", () => {
   test("it should hide a column and keep one visible", () => {
     expect(DATATABLE_EXPAND_COLUMN_ID).toBe("__bridge-expand");
     expect(isDataTableVisibilityEnabled([], true)).toBe(true);
+    expect(isDataTableVisibilityEnabled(undefined, false)).toBe(false);
+    expect(isDataTableVisibilityEnabled(undefined, false, true)).toBe(true);
+    expect(isDataTableVisibilityEnabled([], true, false)).toBe(true);
     expect(isDataTableExpandEnabled(undefined, false, true)).toBe(true);
     expect(
       toggleDataTableColumnVisibility([], "role", true, ["name", "role"]),

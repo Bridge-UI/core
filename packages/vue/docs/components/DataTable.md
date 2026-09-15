@@ -198,7 +198,7 @@ Set `sortable` on a column to show a sort button in that header, matching the fi
 
 Set `filters` on a column to show a funnel in that header. The panel uses checkboxes (`filterMultiple`, default) or radios (`:filter-multiple="false"`), and **Select all items** for multiple filters. Nested `children` render as a group in the same panel. **OK** commits; **Reset** clears the draft (commit on **OK**); closing without **OK** discards it.
 
-Set `searchable` on a column to add a text field in that same overlay. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
+Set `searchable` on a column to add a text field in that same overlay, and to include the column in the toolbar search. Queries are stored in `columnSearch` (column id → string), not used to filter the option list.
 
 Column filters open in a `FieldOverlay`. Default `filter-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell:
 
@@ -300,7 +300,7 @@ const columns = [
 
 ### Column visibility
 
-Pass `hiddenColumns` and/or listen to `update:hiddenColumns` to show a **Columns** icon in the toolbar. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
+The toolbar **Columns** icon is hidden by default. Pass `show-column-visibility` to show it with internal state, or bind `hiddenColumns` when the app needs the ids. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 The panel opens in a `FieldOverlay`. Default `columns-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
 
@@ -310,14 +310,26 @@ When unset, `columns-show-footer` is `true` for `modal` / `drawer` (`false` for 
 <DataTable
   :rows="users"
   :columns="columns"
+  show-column-visibility
   columns-overlay="drawer"
-  v-model:hidden-columns="hidden"
 />
+```
+
+Bind the ids when the app needs them:
+
+```vue
+<DataTable :rows="users" :columns="columns" v-model:hidden-columns="hidden" />
 ```
 
 ### Search
 
-Pass `search` and/or listen to `update:search` to show a search field in the toolbar. Client-side tables filter visible columns; server-paged tables emit the query only.
+The toolbar search field is hidden by default. Pass `show-search` to show it with internal state, or bind `search` when the app needs the query. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only.
+
+```vue
+<DataTable show-search :rows="users" :columns="columns" />
+```
+
+Bind the query when the app needs it:
 
 ```vue
 <DataTable :rows="users" :columns="columns" v-model:search="search" />

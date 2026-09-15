@@ -55,7 +55,7 @@ test("it should render the columns toolbar control", () => {
   cy.mount(
     <DataTable
       columns={columns}
-      hiddenColumns={[]}
+      showColumnVisibility
       rows={[{ id: "1", name: "Ada Lovelace" }]}
     />,
   );
@@ -66,7 +66,7 @@ test("it should render the columns toolbar control", () => {
 test("it should show the toolbar search field", () => {
   cy.mount(
     <DataTable
-      search=""
+      showSearch
       columns={columns}
       rows={[{ id: "1", name: "Ada Lovelace" }]}
     />,

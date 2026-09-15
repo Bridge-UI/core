@@ -268,8 +268,9 @@ export type DataTableColumnBase<T> = {
   id: string;
 
   /**
-   * When true, the header filter menu includes a text search for this column.
-   * The query is stored in `columnSearch[id]`, not used to filter menu options.
+   * When true, the header filter menu includes a text search for this column,
+   * and the toolbar search includes this column. The per-column query is
+   * stored in `columnSearch[id]`, not used to filter menu options.
    *
    * @default false
    */
@@ -758,7 +759,7 @@ export function resolveDataTableRowId<T>(
  */
 export function getDataTableColumnAccessor<T>(
   row: T,
-  column: DataTableColumnBase<T>,
+  column: Pick<DataTableColumnBase<T>, "id" | "accessor">,
 ): unknown {
   if (column.accessor) {
     return column.accessor(row);
@@ -782,13 +783,21 @@ export function getDataTableDefaultCellContent(
 
 /**
  * Whether the toolbar search control should render.
+ * `true` shows it with internal state when `search` is unbound. Otherwise it
+ * shows when `search` is bound, a change handler is set, or a search slot is
+ * set.
  */
 export function isDataTableSearchEnabled(
   search: string | undefined,
   hasChangeHandler: boolean,
   hasSlot: boolean,
+  showSearch?: boolean,
 ): boolean {
-  return !isNil(search) || hasChangeHandler || hasSlot;
+  if (hasSlot || showSearch === true) {
+    return true;
+  }
+
+  return !isNil(search) || hasChangeHandler;
 }
 
 /**
@@ -1030,11 +1039,18 @@ export function isDataTableExpandEnabled(
 
 /**
  * Whether the columns menu should render.
+ * `true` shows it with internal state when `hiddenColumns` is unbound.
+ * Otherwise it shows when `hiddenColumns` is bound or a change handler is set.
  */
 export function isDataTableVisibilityEnabled(
   hiddenColumns: string[] | undefined,
   hasVisibilityHandler: boolean,
+  showColumnVisibility?: boolean,
 ): boolean {
+  if (showColumnVisibility === true) {
+    return true;
+  }
+
   return hiddenColumns !== undefined || hasVisibilityHandler;
 }
 
@@ -1245,6 +1261,38 @@ export function isDataTableColumnSearched(
   columnId: string,
 ): boolean {
   return getDataTableColumnSearch(columnSearch, columnId).trim().length > 0;
+}
+
+/**
+ * Whether `row` matches the toolbar search query. Columns with `searchable`
+ * are searched when any exist; otherwise every visible column is searched.
+ * Hidden columns are skipped.
+ */
+export function rowMatchesDataTableToolbarSearch<T>(
+  row: T,
+  columns: Array<
+    Pick<DataTableColumnBase<T>, "id" | "accessor" | "searchable">
+  >,
+  query: string,
+  hiddenColumns?: string[],
+): boolean {
+  if (query.trim().length === 0) {
+    return true;
+  }
+
+  const hidden = hiddenColumns ?? [];
+  const searchableColumns = columns.filter((column) => {
+    return isDataTableColumnSearchable(column);
+  });
+  const pool = searchableColumns.length > 0 ? searchableColumns : columns;
+
+  return pool.some((column) => {
+    if (hidden.includes(column.id)) {
+      return false;
+    }
+
+    return matchDataTableSearch(getDataTableColumnAccessor(row, column), query);
+  });
 }
 
 /**
