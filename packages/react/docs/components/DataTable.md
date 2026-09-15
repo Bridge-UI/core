@@ -340,14 +340,19 @@ Client-side filtering applies when the table is not server-paged (`page` + `page
 
 ### Column visibility
 
-The toolbar **Columns** icon is shown by default. The table owns hidden ids until you bind `hiddenColumns`. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible. Pass `showColumnVisibility={false}` to hide the control.
+The toolbar **Columns** icon is hidden by default. Pass `showColumnVisibility` to show it with internal state, or bind `hiddenColumns` when the app needs the ids. `hideable={false}` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 The panel opens in a `FieldOverlay`. Default `columnsOverlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
 
 When unset, `columnsShowFooter` is `true` for `modal` / `drawer` (`false` for `menu`). Reset restores hideable columns; OK commits and closes. Closing without OK discards.
 
 ```tsx
-<DataTable rows={users} columns={columns} columnsOverlay="drawer" />
+<DataTable
+  rows={users}
+  columns={columns}
+  showColumnVisibility
+  columnsOverlay="drawer"
+/>
 ```
 
 Bind the ids when the app needs them:
@@ -363,10 +368,10 @@ Bind the ids when the app needs them:
 
 ### Search
 
-The toolbar search field is shown by default. The table owns the query until you bind `search`. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only. Pass `showSearch={false}` to hide the field.
+The toolbar search field is hidden by default. Pass `showSearch` to show it with internal state, or bind `search` when the app needs the query. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only.
 
 ```tsx
-<DataTable rows={users} columns={columns} />
+<DataTable showSearch rows={users} columns={columns} />
 ```
 
 Bind the query when the app needs it:
@@ -382,7 +387,7 @@ Bind the query when the app needs it:
 
 ### Toolbar
 
-`slots.toolbar` is the leading region (left). `slots.toolbarActions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled (both on by default).
+`slots.toolbar` is the leading region (left). `slots.toolbarActions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled.
 
 ```tsx
 <DataTable

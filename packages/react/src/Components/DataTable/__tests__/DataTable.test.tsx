@@ -467,7 +467,6 @@ test("it should call onColumnSearchChange when a column search is applied", () =
     <DataTable
       rows={rows}
       columnSearch={{}}
-      showSearch={false}
       onColumnSearchChange={onColumnSearchChange}
       columns={[
         {
@@ -664,29 +663,24 @@ test("it should show the ellipsis tooltip on the first pointer enter", async () 
   expect(tooltip.style.top.length).toBeGreaterThan(0);
 });
 
-test("it should show search and columns controls without a binding", () => {
-  render(<DataTable rows={rows} columns={columns} />);
+test("it should show search and columns controls when show props are set", () => {
+  render(
+    <DataTable showSearch rows={rows} columns={columns} showColumnVisibility />,
+  );
 
   expect(screen.getByRole("button", { name: "Columns" })).toBeTruthy();
   expect(screen.getByRole("textbox", { name: "Search" })).toBeTruthy();
 });
 
-test("it should hide search and columns controls when disabled", () => {
-  render(
-    <DataTable
-      rows={rows}
-      columns={columns}
-      showSearch={false}
-      showColumnVisibility={false}
-    />,
-  );
+test("it should hide search and columns controls by default", () => {
+  render(<DataTable rows={rows} columns={columns} />);
 
   expect(screen.queryByRole("button", { name: "Columns" })).toBeNull();
   expect(screen.queryByRole("textbox", { name: "Search" })).toBeNull();
 });
 
 test("it should filter rows from the toolbar search without a search binding", () => {
-  render(<DataTable rows={rows} columns={columns} />);
+  render(<DataTable showSearch rows={rows} columns={columns} />);
 
   fireEvent.change(screen.getByRole("textbox", { name: "Search" }), {
     target: { value: "Ada" },
@@ -699,6 +693,7 @@ test("it should filter rows from the toolbar search without a search binding", (
 test("it should search only searchable columns from the toolbar", () => {
   render(
     <DataTable
+      showSearch
       rows={rows}
       columns={[
         {
@@ -721,7 +716,14 @@ test("it should search only searchable columns from the toolbar", () => {
 });
 
 test("it should hide a column without a hiddenColumns binding", () => {
-  render(<DataTable rows={rows} columns={columns} columnsOverlay="menu" />);
+  render(
+    <DataTable
+      rows={rows}
+      columns={columns}
+      showColumnVisibility
+      columnsOverlay="menu"
+    />,
+  );
 
   fireEvent.click(screen.getAllByRole("button", { name: "Columns" })[0]!);
   fireEvent.click(screen.getByRole("checkbox", { name: "Role" }));

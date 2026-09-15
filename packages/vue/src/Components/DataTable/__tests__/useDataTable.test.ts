@@ -74,11 +74,11 @@ test("it should expose table defaults from useDataTable", () => {
   });
 
   expect(result.showEmpty.value).toBe(false);
-  expect(result.showSearch.value).toBe(true);
+  expect(result.showSearch.value).toBe(false);
   expect(result.rowViews.value).toHaveLength(1);
   expect(result.showFooterBar.value).toBe(false);
   expect(result.merged.value.variant).toBe("plain");
-  expect(result.visibilityEnabled.value).toBe(true);
+  expect(result.visibilityEnabled.value).toBe(false);
   expect(result.headerViews.value[0]?.id).toBe("name");
   expect(result.merged.value.selectionMode).toBe("multiple");
 });

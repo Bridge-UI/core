@@ -57,11 +57,11 @@ test("it should expose table defaults from useDataTable", () => {
   );
 
   expect(result.current.showEmpty).toBe(false);
-  expect(result.current.showSearch).toBe(true);
+  expect(result.current.showSearch).toBe(false);
   expect(result.current.rowViews).toHaveLength(1);
   expect(result.current.showFooterBar).toBe(false);
   expect(result.current.merged.variant).toBe("plain");
-  expect(result.current.visibilityEnabled).toBe(true);
+  expect(result.current.visibilityEnabled).toBe(false);
   expect(result.current.headerViews[0]?.id).toBe("name");
   expect(result.current.merged.selectionMode).toBe("multiple");
 });
@@ -433,7 +433,10 @@ test("it should emit search and reset page from onChangeSearch", () => {
 
 test("it should filter row views from onChangeSearch when search is uncontrolled", () => {
   const { result } = renderHook(() =>
-    useDataTable({ rows: people, columns: peopleColumns }, libDefaults),
+    useDataTable(
+      { rows: people, showSearch: true, columns: peopleColumns },
+      libDefaults,
+    ),
   );
 
   act(() => {
@@ -537,7 +540,10 @@ test("it should emit onHiddenColumnsChange from onToggleColumnVisibility", () =>
 
 test("it should hide columns from onToggleColumnVisibility when uncontrolled", () => {
   const { result } = renderHook(() =>
-    useDataTable({ rows: people, columns: peopleColumns }, libDefaults),
+    useDataTable(
+      { rows: people, columns: peopleColumns, showColumnVisibility: true },
+      libDefaults,
+    ),
   );
 
   act(() => {

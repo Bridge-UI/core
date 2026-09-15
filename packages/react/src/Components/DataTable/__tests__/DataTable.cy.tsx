@@ -53,7 +53,11 @@ test("it should render radios in single selection mode", () => {
 
 test("it should render the columns toolbar control", () => {
   cy.mount(
-    <DataTable columns={columns} rows={[{ id: "1", name: "Ada Lovelace" }]} />,
+    <DataTable
+      columns={columns}
+      showColumnVisibility
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+    />,
   );
 
   cy.get('button[aria-label="Columns"]').should("be.visible");
@@ -61,7 +65,11 @@ test("it should render the columns toolbar control", () => {
 
 test("it should show the toolbar search field", () => {
   cy.mount(
-    <DataTable columns={columns} rows={[{ id: "1", name: "Ada Lovelace" }]} />,
+    <DataTable
+      showSearch
+      columns={columns}
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+    />,
   );
 
   cy.get('input[aria-label="Search"]').should("be.visible");

@@ -783,29 +783,21 @@ export function getDataTableDefaultCellContent(
 
 /**
  * Whether the toolbar search control should render.
- * `showSearch: false` hides it unless a search slot is set. `showSearch: true`
- * shows it with internal state when `search` is unbound.
+ * `true` shows it with internal state when `search` is unbound. Otherwise it
+ * shows when `search` is bound, a change handler is set, or a search slot is
+ * set.
  */
 export function isDataTableSearchEnabled(
   search: string | undefined,
   hasChangeHandler: boolean,
   hasSlot: boolean,
-  hasSearchableColumn = false,
   showSearch?: boolean,
 ): boolean {
-  if (hasSlot) {
+  if (hasSlot || showSearch === true) {
     return true;
   }
 
-  if (showSearch === false) {
-    return false;
-  }
-
-  if (showSearch === true) {
-    return true;
-  }
-
-  return !isNil(search) || hasChangeHandler || hasSearchableColumn;
+  return !isNil(search) || hasChangeHandler;
 }
 
 /**
@@ -1047,18 +1039,14 @@ export function isDataTableExpandEnabled(
 
 /**
  * Whether the columns menu should render.
- * `showColumnVisibility: false` hides it. `showColumnVisibility: true` shows
- * it with internal state when `hiddenColumns` is unbound.
+ * `true` shows it with internal state when `hiddenColumns` is unbound.
+ * Otherwise it shows when `hiddenColumns` is bound or a change handler is set.
  */
 export function isDataTableVisibilityEnabled(
   hiddenColumns: string[] | undefined,
   hasVisibilityHandler: boolean,
   showColumnVisibility?: boolean,
 ): boolean {
-  if (showColumnVisibility === false) {
-    return false;
-  }
-
   if (showColumnVisibility === true) {
     return true;
   }

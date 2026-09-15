@@ -474,7 +474,7 @@ export function useDataTable<T>(
     return isDataTableVisibilityEnabled(
       merged.hiddenColumns,
       merged.onHiddenColumnsChange !== undefined,
-      merged.showColumnVisibility ?? true,
+      merged.showColumnVisibility,
     );
   });
 
@@ -1268,8 +1268,7 @@ export function useDataTable<T>(
       merged.search,
       merged.onSearchChange !== undefined,
       slots?.search !== undefined,
-      columns.some(isDataTableColumnSearchable),
-      merged.showSearch ?? true,
+      merged.showSearch,
     );
   });
 

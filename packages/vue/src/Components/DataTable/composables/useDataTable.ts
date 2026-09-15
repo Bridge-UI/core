@@ -348,7 +348,7 @@ export function useDataTable<T>(
     return isDataTableVisibilityEnabled(
       models.hiddenColumns.value,
       attrs["onUpdate:hiddenColumns"] !== undefined,
-      merged.value.showColumnVisibility ?? true,
+      merged.value.showColumnVisibility,
     );
   });
 
@@ -1281,8 +1281,7 @@ export function useDataTable<T>(
       models.search.value,
       instance?.vnode.props?.["onUpdate:search"] !== undefined,
       vueSlots.search !== undefined,
-      columns.value.some(isDataTableColumnSearchable),
-      merged.value.showSearch ?? true,
+      merged.value.showSearch,
     );
   });
 

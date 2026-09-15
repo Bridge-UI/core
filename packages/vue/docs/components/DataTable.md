@@ -300,14 +300,19 @@ const columns = [
 
 ### Column visibility
 
-The toolbar **Columns** icon is shown by default. The table owns hidden ids until you bind `hiddenColumns`. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible. Pass `:show-column-visibility="false"` to hide the control.
+The toolbar **Columns** icon is hidden by default. Pass `show-column-visibility` to show it with internal state, or bind `hiddenColumns` when the app needs the ids. `hideable: false` keeps a column out of the toggle (or disabled). At least one column stays visible.
 
 The panel opens in a `FieldOverlay`. Default `columns-overlay` is `auto` (`menu` on desktop, `drawer` on mobile). Pass `menu`, `modal`, or `drawer` to pin a shell.
 
 When unset, `columns-show-footer` is `true` for `modal` / `drawer` (`false` for `menu`). Reset restores hideable columns; OK commits and closes. Closing without OK discards.
 
 ```vue
-<DataTable :rows="users" :columns="columns" columns-overlay="drawer" />
+<DataTable
+  :rows="users"
+  :columns="columns"
+  show-column-visibility
+  columns-overlay="drawer"
+/>
 ```
 
 Bind the ids when the app needs them:
@@ -318,10 +323,10 @@ Bind the ids when the app needs them:
 
 ### Search
 
-The toolbar search field is shown by default. The table owns the query until you bind `search`. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only. Pass `:show-search="false"` to hide the field.
+The toolbar search field is hidden by default. Pass `show-search` to show it with internal state, or bind `search` when the app needs the query. Client-side tables filter columns with `searchable`; if none are set, every visible column is matched. Server-paged tables emit the query only.
 
 ```vue
-<DataTable :rows="users" :columns="columns" />
+<DataTable show-search :rows="users" :columns="columns" />
 ```
 
 Bind the query when the app needs it:
@@ -332,10 +337,10 @@ Bind the query when the app needs it:
 
 ### Toolbar
 
-`#toolbar` is the leading region (left). `#toolbar-actions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled (both on by default).
+`#toolbar` is the leading region (left). `#toolbar-actions` sits in the end cluster beside Columns and Search. The toolbar shows when either slot is set, or when Columns / Search are enabled.
 
 ```vue
-<DataTable :rows="users" :columns="columns">
+<DataTable :rows="users" :columns="columns" v-model:search="search">
   <template #toolbar-actions>
     <Button v-on:click="onPrint">Print</Button>
   </template>

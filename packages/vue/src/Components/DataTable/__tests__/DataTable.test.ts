@@ -492,7 +492,6 @@ test("it should emit update:columnSearch when a column search is applied", async
     props: {
       rows,
       columnSearch: {},
-      showSearch: false,
       columns: [
         {
           id: "name",
@@ -819,23 +818,23 @@ test("it should render toolbarActions beside search", () => {
   expect(wrapper.get('input[aria-label="Search"]').exists()).toBe(true);
 });
 
-test("it should show search and columns controls without v-model", () => {
+test("it should show search and columns controls when show props are set", () => {
   const wrapper = mountDataTable({
-    props: { rows, columns },
+    props: {
+      rows,
+      columns,
+      showSearch: true,
+      showColumnVisibility: true,
+    },
   });
 
   expect(wrapper.get('[aria-label="Columns"]').exists()).toBe(true);
   expect(wrapper.get('input[aria-label="Search"]').exists()).toBe(true);
 });
 
-test("it should hide search and columns controls when disabled", () => {
+test("it should hide search and columns controls by default", () => {
   const wrapper = mountDataTable({
-    props: {
-      rows,
-      columns,
-      showSearch: false,
-      showColumnVisibility: false,
-    },
+    props: { rows, columns },
   });
 
   expect(wrapper.find('[aria-label="Columns"]').exists()).toBe(false);
@@ -844,7 +843,7 @@ test("it should hide search and columns controls when disabled", () => {
 
 test("it should filter rows from the toolbar search without v-model:search", async () => {
   const wrapper = mountDataTable({
-    props: { rows, columns },
+    props: { rows, columns, showSearch: true },
   });
 
   await wrapper.get('input[aria-label="Search"]').setValue("Ada");
@@ -858,6 +857,7 @@ test("it should search only searchable columns from the toolbar", async () => {
   const wrapper = mountDataTable({
     props: {
       rows,
+      showSearch: true,
       columns: [
         {
           id: "name",
@@ -880,7 +880,12 @@ test("it should search only searchable columns from the toolbar", async () => {
 test("it should hide a column without v-model:hidden-columns", async () => {
   const wrapper = mountDataTable({
     attachTo: document.body,
-    props: { rows, columns, columnsOverlay: "menu" },
+    props: {
+      rows,
+      columns,
+      columnsOverlay: "menu",
+      showColumnVisibility: true,
+    },
   });
 
   await wrapper.get('[aria-label="Columns"]').trigger("click");

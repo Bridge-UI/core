@@ -539,18 +539,20 @@ export interface DataTableOwnProps<T> {
   selectionMode?: DataTableSelectionMode;
 
   /**
-   * Show the column visibility toolbar button. The table keeps hidden ids
-   * internally when `hiddenColumns` is unset.
+   * Show the column visibility toolbar button without a `hiddenColumns`
+   * binding. The table keeps hidden ids internally when `hiddenColumns` is
+   * unset. Bind `hiddenColumns` to show the control as controlled.
    *
-   * @default true
+   * @default false
    */
   showColumnVisibility?: boolean;
 
   /**
-   * Show the toolbar search field. The table keeps the query internally
-   * when `search` is unset.
+   * Show the toolbar search field without a `search` binding. The table
+   * keeps the query internally when `search` is unset. Bind `search` to
+   * show the field as controlled.
    *
-   * @default true
+   * @default false
    */
   showSearch?: boolean;
 
