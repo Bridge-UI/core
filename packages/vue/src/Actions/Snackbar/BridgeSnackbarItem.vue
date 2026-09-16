@@ -72,10 +72,6 @@ const hasTrailing = computed(() => {
       () =>
         completeLayerHide(api.entries.value, entry.id, false, api.removeEntry)
     "
-    v-on:show-change="
-      (show) =>
-        completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
-    "
   >
     <template #actions v-if="hasInlineActions">
       <BridgeSnackbarAction

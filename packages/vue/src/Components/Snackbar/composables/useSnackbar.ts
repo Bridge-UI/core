@@ -20,6 +20,8 @@ import {
   hasSnackbarTransition,
   LAYER_STACK_BASE_Z_INDEX,
   pushLayerStack,
+  resolveEffectiveSnackbarTransition,
+  SNACKBAR_LEAVE_FALLBACK_MS,
   subscribeLayerStack,
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
@@ -155,6 +157,8 @@ export function useSnackbar(
 
   let stackHandle: null | LayerStackHandle = null;
 
+  let leaveFallbackTimeout: null | ReturnType<typeof setTimeout> = null;
+
   let unsubscribeLayerStack: null | (() => void) = null;
 
   const split = computed(() => {
@@ -196,8 +200,9 @@ export function useSnackbar(
 
   const effectiveTransition = computed((): keyof SnackbarTransition => {
     const value = merged.value.transition ?? "none";
+    const token = value in snackbarTransitionProps ? value : "none";
 
-    return value in snackbarTransitionProps ? value : "none";
+    return resolveEffectiveSnackbarTransition(token);
   });
 
   const transitionEnabled = computed(() => {
@@ -286,6 +291,13 @@ export function useSnackbar(
     }
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeout !== null) {
+      clearTimeout(leaveFallbackTimeout);
+      leaveFallbackTimeout = null;
+    }
+  }
+
   function setShow(next: boolean) {
     if (!next) {
       options.onClose?.();
@@ -306,6 +318,7 @@ export function useSnackbar(
     pendingLeave.value = false;
     transitionState.value = "closed";
     clearDismissTimer();
+    clearLeaveFallback();
 
     if (show.value) {
       setShow(false);
@@ -327,10 +340,16 @@ export function useSnackbar(
     }
 
     transitionState.value = "closed";
+    clearLeaveFallback();
+    leaveFallbackTimeout = setTimeout(() => {
+      leaveFallbackTimeout = null;
+      finishLeave();
+    }, SNACKBAR_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
     pendingLeave.value = false;
+    clearLeaveFallback();
 
     if (!transitionEnabled.value) {
       transitionState.value = "open";
@@ -348,17 +367,11 @@ export function useSnackbar(
   }
 
   function requestClose() {
-    if (!transitionEnabled.value) {
-      setShow(false);
-
+    if (!show.value) {
       return;
     }
 
-    if (!rendered.value) {
-      return;
-    }
-
-    startLeave();
+    setShow(false);
   }
 
   function startDismissTimer(ms: number) {
@@ -402,7 +415,11 @@ export function useSnackbar(
   }
 
   function handlePanelTransitionEnd(event: TransitionEvent) {
-    if (!rendered.value || transitionState.value !== "closed") {
+    if (
+      !pendingLeave.value ||
+      !rendered.value ||
+      transitionState.value !== "closed"
+    ) {
       return;
     }
 
@@ -531,6 +548,7 @@ export function useSnackbar(
 
   onBeforeUnmount(() => {
     clearDismissTimer();
+    clearLeaveFallback();
     unsubscribeLayerStack?.();
     unsubscribeLayerStack = null;
     stackHandle?.release();

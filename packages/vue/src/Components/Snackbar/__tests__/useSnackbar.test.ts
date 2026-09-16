@@ -88,6 +88,19 @@ test("it should set show to false when requestClose is invoked", () => {
   expect(show.value).toBe(false);
 });
 
+test("it should set show to false immediately when the slide transition is enabled", () => {
+  const show = ref(true);
+
+  const { result } = mountUseSnackbar(
+    { duration: false, transition: "slide" },
+    show,
+  );
+
+  result.requestClose();
+
+  expect(show.value).toBe(false);
+});
+
 test("it should apply fade transition classes on panel when transition is slide", () => {
   const { result } = mountUseSnackbar({ duration: false, transition: "slide" });
 

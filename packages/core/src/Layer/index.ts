@@ -57,8 +57,10 @@ export {
 } from "@/Layer/registry";
 export { mergeLayerShellProps } from "@/Layer/shell";
 export {
+  SNACKBAR_LEAVE_FALLBACK_MS,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  resolveEffectiveSnackbarTransition,
   usesTrailingSnackbarActions,
 } from "@/Layer/snackbar";
 export type { LayerId } from "@/Layer/types";
