@@ -7,8 +7,12 @@ import {
 import { useContext, useEffect } from "react";
 
 // ** Local Imports
-import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
+import {
+  dialogActionHosts,
+  useRegisterActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeDialogHostProps } from "@/Actions/Dialog/bridgeDialog.types";
+import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
 import { useBridgeDialogController } from "@/Actions/Dialog/createBridgeDialogController";
 import { resolveBridgeDialogFooter } from "@/Actions/Dialog/resolveBridgeDialogFooter";
 import { Card } from "@/Components/Card";
@@ -21,6 +25,8 @@ export function BridgeDialogHost({ modal, children }: BridgeDialogHostProps) {
   const parentApi = useContext(BridgeDialogContext);
 
   const api = useBridgeDialogController();
+
+  useRegisterActionHost(dialogActionHosts, api);
 
   useEffect(() => {
     if (parentApi && process.env.NODE_ENV !== "production") {

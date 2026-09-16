@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { computed, inject } from "vue";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { drawerActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeDrawerApi } from "@/Actions/Drawer/bridgeDrawer.types";
 import { BRIDGE_DRAWER_INJECTION_KEY } from "@/Actions/Drawer/bridgeDrawerInjectionKey";
 
@@ -15,7 +18,9 @@ export class BridgeDrawerHostMissingError extends Error {
 }
 
 export function useDrawerAction(): BridgeDrawerApi {
-  const api = inject(BRIDGE_DRAWER_INJECTION_KEY, null);
+  const api = drawerActionHosts.resolve(
+    inject(BRIDGE_DRAWER_INJECTION_KEY, null),
+  );
 
   if (!api) {
     throw new BridgeDrawerHostMissingError();

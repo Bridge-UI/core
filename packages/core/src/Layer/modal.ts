@@ -3,6 +3,7 @@ import { maxBy, remove } from "es-toolkit/array";
 import { get, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
+import { resetActionHostRegistriesForTests } from "@/Layer/actionHost";
 import { resetOpenMenuLayersForTests } from "@/Layer/menu";
 import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
@@ -537,6 +538,7 @@ export function resetLayerStackForTests() {
 
   resetLayerIdCounterForTests();
   resetOpenMenuLayersForTests();
+  resetActionHostRegistriesForTests();
 
   if (hasDocument()) {
     writeBodyScrollLockStyles(document.body, {

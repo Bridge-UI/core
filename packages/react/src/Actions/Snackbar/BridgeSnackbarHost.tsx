@@ -17,8 +17,12 @@ import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
+import {
+  snackbarActionHosts,
+  useRegisterActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
 import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
@@ -39,6 +43,8 @@ export function BridgeSnackbarHost({
   const parentApi = useContext(BridgeSnackbarContext);
 
   const api = useBridgeSnackbarController({ max, timeout });
+
+  useRegisterActionHost(snackbarActionHosts, api);
 
   const bridge = useBridgeUI();
 

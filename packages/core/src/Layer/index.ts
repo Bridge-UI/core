@@ -1,5 +1,10 @@
 // ** Exports
 export {
+  createActionHostRegistry,
+  resetActionHostRegistriesForTests,
+} from "@/Layer/actionHost";
+export type { ActionHostRegistry } from "@/Layer/actionHost";
+export {
   DRAWER_LEAVE_FALLBACK_MS,
   countDrawerTransitionLayers,
   getDrawerOverlayTransitionClass,

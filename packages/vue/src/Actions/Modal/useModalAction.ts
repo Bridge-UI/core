@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { computed, inject } from "vue";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { modalActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeModalApi } from "@/Actions/Modal/bridgeModal.types";
 import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
 
@@ -15,7 +18,9 @@ export class BridgeModalHostMissingError extends Error {
 }
 
 export function useModalAction(): BridgeModalApi {
-  const api = inject(BRIDGE_MODAL_INJECTION_KEY, null);
+  const api = modalActionHosts.resolve(
+    inject(BRIDGE_MODAL_INJECTION_KEY, null),
+  );
 
   if (!api) {
     throw new BridgeModalHostMissingError();

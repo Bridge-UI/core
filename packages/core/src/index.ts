@@ -376,6 +376,7 @@ export {
   completeLayerHide,
   countDrawerTransitionLayers,
   countModalTransitionLayers,
+  createActionHostRegistry,
   createLayerId,
   createOpenLayerEntry,
   findLayerEntry,
@@ -400,6 +401,7 @@ export {
   mergeLayerShellProps,
   pushLayerStack,
   removeLayer,
+  resetActionHostRegistriesForTests,
   resetLayerIdCounterForTests,
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
@@ -413,6 +415,7 @@ export {
   usesTrailingSnackbarActions,
 } from "@/Layer";
 export type {
+  ActionHostRegistry,
   LayerId,
   LayerStackHandle,
   LayerStackSnapshotEntry,

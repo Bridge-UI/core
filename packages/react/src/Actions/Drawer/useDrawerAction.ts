@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { useContext, useMemo, useRef } from "react";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { drawerActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeDrawerApi } from "@/Actions/Drawer/bridgeDrawer.types";
 import { BridgeDrawerContext } from "@/Actions/Drawer/BridgeDrawerContext";
 
@@ -15,7 +18,7 @@ export class BridgeDrawerHostMissingError extends Error {
 }
 
 export function useDrawerAction(): BridgeDrawerApi {
-  const api = useContext(BridgeDrawerContext);
+  const api = drawerActionHosts.resolve(useContext(BridgeDrawerContext));
 
   const apiRef = useRef(api);
 

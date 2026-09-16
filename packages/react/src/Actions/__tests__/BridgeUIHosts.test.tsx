@@ -3,13 +3,15 @@ import { render, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
 import { afterEach, expect, test } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
 import { BridgeUIHosts } from "@/Actions/BridgeUIHosts";
 import { useDialogAction } from "@/Actions/Dialog";
 import { useDrawerAction } from "@/Actions/Drawer";
 import { useModalAction } from "@/Actions/Modal";
 import { useSnackbarAction } from "@/Actions/Snackbar";
-import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 afterEach(() => {
   resetLayerStackForTests();
@@ -65,5 +67,42 @@ test("it should mount modal, dialog, drawer, and snackbar imperatives", async ()
     expect(document.body.textContent).toContain("Drawer");
     expect(document.body.textContent).toContain("Confirm");
     expect(document.body.textContent).toContain("Are you sure?");
+  });
+});
+
+function Draft() {
+  const snackbar = useSnackbarAction();
+
+  useEffect(() => {
+    snackbar.open({
+      duration: false,
+      transition: "none",
+      title: "From modal",
+    });
+  }, [snackbar]);
+
+  return <p>Draft</p>;
+}
+
+function OpenDraftModal() {
+  const modal = useModalAction();
+
+  useEffect(() => {
+    modal.open({ component: Draft, modal: { transition: "none" } });
+  }, [modal]);
+
+  return null;
+}
+
+test("it should open a snackbar from modal content opened via action", async () => {
+  render(
+    <BridgeUIHosts>
+      <OpenDraftModal />
+    </BridgeUIHosts>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Draft");
+    expect(document.body.textContent).toContain("From modal");
   });
 });

@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { useContext, useMemo, useRef } from "react";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { snackbarActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeSnackbarApi } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
 
@@ -17,7 +20,7 @@ export class BridgeSnackbarHostMissingError extends Error {
 }
 
 export function useSnackbarAction(): BridgeSnackbarApi {
-  const api = useContext(BridgeSnackbarContext);
+  const api = snackbarActionHosts.resolve(useContext(BridgeSnackbarContext));
 
   const apiRef = useRef(api);
 

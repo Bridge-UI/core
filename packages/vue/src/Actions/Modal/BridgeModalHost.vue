@@ -8,6 +8,10 @@ import {
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
+import {
+  modalActionHosts,
+  registerActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
 import { BRIDGE_MODAL_INJECTION_KEY } from "@/Actions/Modal/bridgeModalInjectionKey";
 import { createBridgeModalApi } from "@/Actions/Modal/createBridgeModalApi";
@@ -25,6 +29,8 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 }
 
 const api = createBridgeModalApi();
+
+registerActionHost(modalActionHosts, api);
 
 const modalEntries = computed(() => {
   return api.entries.value;

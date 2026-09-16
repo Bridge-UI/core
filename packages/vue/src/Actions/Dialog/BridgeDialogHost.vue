@@ -3,6 +3,10 @@
 import { computed, inject, provide } from "vue";
 
 // ** Local Imports
+import {
+  dialogActionHosts,
+  registerActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeDialogHostProps } from "@/Actions/Dialog/bridgeDialog.types";
 import { BRIDGE_DIALOG_INJECTION_KEY } from "@/Actions/Dialog/bridgeDialogInjectionKey";
 import BridgeDialogItem from "@/Actions/Dialog/BridgeDialogItem.vue";
@@ -20,6 +24,8 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 }
 
 const api = createBridgeDialogApi();
+
+registerActionHost(dialogActionHosts, api);
 
 const dialogEntries = computed(() => {
   return api.entries.value;

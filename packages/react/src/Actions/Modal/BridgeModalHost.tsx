@@ -7,8 +7,12 @@ import {
 import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports
-import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
+import {
+  modalActionHosts,
+  useRegisterActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeModalHostProps } from "@/Actions/Modal/bridgeModal.types";
+import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
 import { useBridgeModalController } from "@/Actions/Modal/createBridgeModalController";
 import { Modal } from "@/Components/Modal";
 
@@ -18,6 +22,8 @@ const NESTED_HOST_WARNING =
 export function BridgeModalHost({ modal, children }: BridgeModalHostProps) {
   const parentApi = useContext(BridgeModalContext);
   const api = useBridgeModalController();
+
+  useRegisterActionHost(modalActionHosts, api);
 
   useEffect(() => {
     if (parentApi && process.env.NODE_ENV !== "production") {

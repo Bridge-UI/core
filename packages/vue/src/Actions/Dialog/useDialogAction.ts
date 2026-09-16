@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { computed, inject } from "vue";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { dialogActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeDialogApi } from "@/Actions/Dialog/bridgeDialog.types";
 import { BRIDGE_DIALOG_INJECTION_KEY } from "@/Actions/Dialog/bridgeDialogInjectionKey";
 
@@ -15,7 +18,9 @@ export class BridgeDialogHostMissingError extends Error {
 }
 
 export function useDialogAction(): BridgeDialogApi {
-  const api = inject(BRIDGE_DIALOG_INJECTION_KEY, null);
+  const api = dialogActionHosts.resolve(
+    inject(BRIDGE_DIALOG_INJECTION_KEY, null),
+  );
 
   if (!api) {
     throw new BridgeDialogHostMissingError();
