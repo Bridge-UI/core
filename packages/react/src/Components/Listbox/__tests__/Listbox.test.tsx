@@ -300,8 +300,8 @@ test("it should match List item type on default md options", async () => {
   expect(label.className).toContain("text-sm");
   expect(option.className).toContain("text-sm");
   expect(label.className).toContain("font-medium");
-  expect(label.className).toContain("leading-none");
-  expect(option.className).toContain("leading-none");
+  expect(label.className).toContain("leading-normal");
+  expect(option.className).not.toContain("leading-none");
 });
 
 test("it should render section headers from entries", async () => {

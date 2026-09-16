@@ -172,6 +172,8 @@ test("it should return default size as md", () => {
   expect(result.current.sizeClasses?.primary).toContain("text-sm");
   expect(result.current.messageBind.className).toContain("text-sm");
   expect(result.current.sizeClasses?.primary).toContain("font-medium");
+  expect(result.current.sizeClasses?.primary).toContain("leading-normal");
+  expect(result.current.sizeClasses?.option).not.toContain("leading-none");
 });
 
 test("it should bump size classes on dialog overlays", () => {

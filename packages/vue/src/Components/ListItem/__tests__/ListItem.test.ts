@@ -125,3 +125,15 @@ test("it should apply divider border on the root item", () => {
 
   expect(wrapper.classes().join(" ")).toContain("border-b");
 });
+
+test("it should keep primary text from clipping truncated glyphs", () => {
+  const wrapper = mount(ListItem, {
+    props: { primary: "Configurações" },
+  });
+
+  const primary = wrapper.find("span");
+
+  expect(primary.classes()).toContain("truncate");
+  expect(primary.classes()).toContain("leading-normal");
+  expect(primary.classes()).not.toContain("leading-none");
+});

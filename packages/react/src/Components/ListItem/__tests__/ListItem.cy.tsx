@@ -53,3 +53,16 @@ test("it should disable interaction when disabled is true", () => {
   cy.get('[role="button"]').should("have.attr", "tabindex", "-1");
   cy.get('[role="button"]').should("have.attr", "aria-disabled", "true");
 });
+
+test("it should keep primary text from clipping truncated glyphs", () => {
+  cy.mount(<ListItem primary="Configurações" />);
+
+  cy.contains("Configurações")
+    .should("have.class", "leading-normal")
+    .and("not.have.class", "leading-none")
+    .then(($el) => {
+      const node = $el[0];
+
+      expect(node.scrollHeight).to.be.at.most(node.clientHeight + 1);
+    });
+});
