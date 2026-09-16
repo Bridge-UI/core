@@ -1,12 +1,6 @@
 // ** External Imports
 import { remove } from "es-toolkit/array";
-import {
-  findLast,
-  isEmpty,
-  isFunction,
-  isNil,
-  isPlainObject,
-} from "es-toolkit/compat";
+import { findLast, isEmpty, isNil, isPlainObject } from "es-toolkit/compat";
 
 // ** Local Imports
 import type {
@@ -15,8 +9,6 @@ import type {
   LayerRegistryEntry,
   LayerUpdatePatch,
 } from "@/Layer/types";
-
-let fallbackIdCounter = 0;
 
 /**
  * Invokes `onClose` and hides every visible entry.
@@ -71,7 +63,27 @@ export function closeTopLayer<T extends LayerRegistryEntry>(entries: T[]): T[] {
 }
 
 /**
- * Creates a layer id via `crypto.randomUUID()` when available.
+ * RFC 4122 version-4 UUID via `Math.random()` (opaque layer keys, not secrets).
+ */
+function createRandomUuid(): LayerId {
+  const bytes = new Uint8Array(16);
+
+  for (let index = 0; index < bytes.length; index += 1) {
+    bytes[index] = Math.floor(Math.random() * 256);
+  }
+
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+
+  const hex = Array.from(bytes, (byte) => {
+    return byte.toString(16).padStart(2, "0");
+  }).join("");
+
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+/**
+ * Creates a layer id (UUID v4).
  * When `assigned` is provided (e.g. BridgeModalHost), that value is used as-is.
  */
 export function createLayerId(assigned?: LayerId): LayerId {
@@ -79,13 +91,7 @@ export function createLayerId(assigned?: LayerId): LayerId {
     return assigned;
   }
 
-  if (isFunction(globalThis.crypto?.randomUUID)) {
-    return globalThis.crypto.randomUUID();
-  }
-
-  fallbackIdCounter += 1;
-
-  return `layer-${fallbackIdCounter}`;
+  return createRandomUuid();
 }
 
 /**
@@ -149,13 +155,6 @@ export function removeLayer<T extends LayerRegistryEntry>(
   remove(next, (entry) => entry.id === id);
 
   return next;
-}
-
-/**
- * Resets the fallback id counter. For tests only.
- */
-export function resetLayerIdCounterForTests() {
-  fallbackIdCounter = 0;
 }
 
 /**

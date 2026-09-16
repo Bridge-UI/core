@@ -49,7 +49,6 @@ export {
   hideLayer,
   isLayerMounted,
   removeLayer,
-  resetLayerIdCounterForTests,
   syncLayerShow,
   trimLayersToMax,
   updateLayer,

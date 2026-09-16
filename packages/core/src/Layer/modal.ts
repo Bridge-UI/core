@@ -5,7 +5,7 @@ import { get, isNil } from "es-toolkit/compat";
 // ** Local Imports
 import { resetActionHostRegistriesForTests } from "@/Layer/actionHost";
 import { resetOpenMenuLayersForTests } from "@/Layer/menu";
-import { createLayerId, resetLayerIdCounterForTests } from "@/Layer/registry";
+import { createLayerId } from "@/Layer/registry";
 import type { LayerId } from "@/Layer/types";
 import { hasDocument, hasWindow } from "@/Runtime/env";
 import {
@@ -536,7 +536,6 @@ export function resetLayerStackForTests() {
   scrollLockCount = 0;
   savedBodyScrollLockStyles = null;
 
-  resetLayerIdCounterForTests();
   resetOpenMenuLayersForTests();
   resetActionHostRegistriesForTests();
 

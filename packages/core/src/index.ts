@@ -403,7 +403,6 @@ export {
   pushLayerStack,
   removeLayer,
   resetActionHostRegistriesForTests,
-  resetLayerIdCounterForTests,
   resetLayerStackForTests,
   resetOpenMenuLayersForTests,
   resolveEffectiveDrawerTransition,
