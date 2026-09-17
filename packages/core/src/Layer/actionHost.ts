@@ -1,8 +1,14 @@
+// ** External Imports
+import { isNil, last } from "es-toolkit/compat";
+
 /**
  * Registry of mounted action hosts. Overlay content (modal / drawer / dialog)
  * is rendered as a sibling of inner hosts, so provide/inject and React context
  * do not reach it. {@link ActionHostRegistry.resolve} falls back to the last
  * registered host when the call site is outside the host tree.
+ *
+ * Sibling hosts of the same type: overlay content outside any inject tree
+ * resolves to the last mounted host, not the host that opened the overlay.
  */
 export type ActionHostRegistry<T> = {
   /**
@@ -30,11 +36,11 @@ export function createActionHostRegistry<T>(): ActionHostRegistry<T> {
 
   return {
     resolve(injected) {
-      if (injected) {
+      if (!isNil(injected)) {
         return injected;
       }
 
-      return hosts[hosts.length - 1];
+      return last(hosts);
     },
     register(api) {
       hosts.push(api);
