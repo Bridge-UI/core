@@ -8,6 +8,10 @@ import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import {
+  registerActionHost,
+  snackbarActionHosts,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
 import { BRIDGE_SNACKBAR_INJECTION_KEY } from "@/Actions/Snackbar/bridgeSnackbarInjectionKey";
 import BridgeSnackbarItem from "@/Actions/Snackbar/BridgeSnackbarItem.vue";
@@ -31,6 +35,8 @@ const api = createBridgeSnackbarApi({
   max: props.max,
   timeout: props.timeout,
 });
+
+registerActionHost(snackbarActionHosts, api);
 
 const bridge = useBridgeUI();
 

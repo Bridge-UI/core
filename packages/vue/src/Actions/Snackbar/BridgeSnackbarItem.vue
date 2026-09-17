@@ -1,5 +1,8 @@
 <script setup lang="ts">
 // ** External Imports
+import { computed } from "vue";
+
+// ** Core Imports
 import {
   completeLayerHide,
   invokeLayerDismiss,
@@ -7,7 +10,6 @@ import {
   usesTrailingSnackbarActions,
 } from "@bridge-ui/core/Layer";
 import type { SnackbarColor } from "@bridge-ui/core/Tokens";
-import { computed } from "vue";
 
 // ** Local Imports
 import BridgeSnackbarAction from "@/Actions/Snackbar/BridgeSnackbarAction.vue";
@@ -71,10 +73,6 @@ const hasTrailing = computed(() => {
     v-on:leave-complete="
       () =>
         completeLayerHide(api.entries.value, entry.id, false, api.removeEntry)
-    "
-    v-on:show-change="
-      (show) =>
-        completeLayerHide(api.entries.value, entry.id, show, api.removeEntry)
     "
   >
     <template #actions v-if="hasInlineActions">

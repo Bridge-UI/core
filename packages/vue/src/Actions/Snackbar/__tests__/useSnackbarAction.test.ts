@@ -2,7 +2,7 @@
 import { flushPromises, mount } from "@vue/test-utils";
 import { isString } from "es-toolkit/compat";
 import { afterEach, expect, test, vi } from "vitest";
-import { defineComponent, h, nextTick } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 
 // ** Core Imports
 import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
@@ -13,6 +13,7 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
+import { Menu } from "@/Components/Menu";
 import { defineHeadlessComponent } from "@/Utils";
 
 afterEach(() => {
@@ -287,6 +288,84 @@ test("it should auto-dismiss snackbars", async () => {
   await vi.waitUntil(() => !document.body.textContent?.includes("Timed out"), {
     timeout: 500,
   });
+});
+
+test("it should remove slide snackbars when transitionend never fires", async () => {
+  const Consumer = defineHeadlessComponent(() => {
+    const snackbar = useSnackbarAction();
+
+    snackbar.open({
+      title: "Timed out",
+      transition: "slide",
+    });
+  });
+
+  mount(BridgeSnackbarHost, {
+    props: { timeout: 50 },
+    attachTo: document.body,
+    slots: { default: () => h(Consumer) },
+  });
+
+  await flushPromises();
+  await nextTick();
+
+  expect(document.body.textContent).toContain("Timed out");
+
+  await vi.waitUntil(() => !document.body.textContent?.includes("Timed out"), {
+    timeout: 1000,
+  });
+});
+
+test("it should not revive dismissed snackbars when a menu opens", async () => {
+  const menuOpen = ref(false);
+
+  const Consumer = defineComponent({
+    setup() {
+      const snackbar = useSnackbarAction();
+
+      snackbar.open({
+        title: "Timed out",
+        transition: "slide",
+      });
+
+      return () =>
+        h(
+          Menu,
+          {
+            modelValue: menuOpen.value,
+            "onUpdate:modelValue": (value: boolean) => {
+              menuOpen.value = value;
+            },
+          },
+          {
+            trigger: () => h("button", { type: "button" }, "Open menu"),
+            default: () =>
+              h("button", { type: "button", role: "menuitem" }, "Item"),
+          },
+        );
+    },
+  });
+
+  mount(BridgeSnackbarHost, {
+    props: { timeout: 50 },
+    attachTo: document.body,
+    slots: { default: () => h(Consumer) },
+  });
+
+  await flushPromises();
+  await nextTick();
+
+  expect(document.body.textContent).toContain("Timed out");
+
+  await vi.waitUntil(() => !document.body.textContent?.includes("Timed out"), {
+    timeout: 1000,
+  });
+
+  menuOpen.value = true;
+  await flushPromises();
+  await nextTick();
+
+  expect(document.body.textContent).not.toContain("Timed out");
 });
 
 test("it should override host timeout", async () => {

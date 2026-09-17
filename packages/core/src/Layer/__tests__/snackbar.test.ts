@@ -5,6 +5,7 @@ import { describe, expect, test } from "vitest";
 import {
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  resolveEffectiveSnackbarTransition,
   usesTrailingSnackbarActions,
 } from "@/Layer/snackbar";
 
@@ -21,6 +22,12 @@ describe("hasSnackbarTransition", () => {
 
   test("it should return true for slide", () => {
     expect(hasSnackbarTransition("slide")).toBe(true);
+  });
+});
+
+describe("resolveEffectiveSnackbarTransition", () => {
+  test("it should return none when transition is none", () => {
+    expect(resolveEffectiveSnackbarTransition("none")).toBe("none");
   });
 });
 

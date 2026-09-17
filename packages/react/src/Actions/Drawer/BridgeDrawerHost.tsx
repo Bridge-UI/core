@@ -1,14 +1,20 @@
 // ** External Imports
+import { createElement, useContext, useEffect } from "react";
+
+// ** Core Imports
 import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core/Layer";
-import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports
-import { BridgeDrawerContext } from "@/Actions/Drawer/BridgeDrawerContext";
+import {
+  drawerActionHosts,
+  useRegisterActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeDrawerHostProps } from "@/Actions/Drawer/bridgeDrawer.types";
+import { BridgeDrawerContext } from "@/Actions/Drawer/BridgeDrawerContext";
 import { useBridgeDrawerController } from "@/Actions/Drawer/createBridgeDrawerController";
 import { Drawer } from "@/Components/Drawer";
 
@@ -18,6 +24,8 @@ const NESTED_HOST_WARNING =
 export function BridgeDrawerHost({ drawer, children }: BridgeDrawerHostProps) {
   const parentApi = useContext(BridgeDrawerContext);
   const api = useBridgeDrawerController();
+
+  useRegisterActionHost(drawerActionHosts, api);
 
   useEffect(() => {
     if (parentApi && process.env.NODE_ENV !== "production") {

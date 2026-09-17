@@ -17,6 +17,8 @@ import {
   hasSnackbarTransition,
   LAYER_STACK_BASE_Z_INDEX,
   pushLayerStack,
+  resolveEffectiveSnackbarTransition,
+  SNACKBAR_LEAVE_FALLBACK_MS,
   subscribeLayerStack,
   type LayerStackHandle,
 } from "@bridge-ui/core/Layer";
@@ -155,6 +157,10 @@ export function useSnackbar(
 
   const timerRef = useRef<null | ReturnType<typeof setTimeout>>(null);
 
+  const leaveFallbackTimeoutRef = useRef<null | ReturnType<typeof setTimeout>>(
+    null,
+  );
+
   const [stackZIndex, setStackZIndex] = useState(LAYER_STACK_BASE_Z_INDEX);
 
   const [transitionState, setTransitionState] = useState<"open" | "closed">(
@@ -198,8 +204,9 @@ export function useSnackbar(
 
   const effectiveTransition = useMemo((): keyof SnackbarTransition => {
     const value = merged.transition ?? "none";
+    const token = value in snackbarTransitionProps ? value : "none";
 
-    return value in snackbarTransitionProps ? value : "none";
+    return resolveEffectiveSnackbarTransition(token);
   }, [merged.transition]);
 
   const transitionEnabled = derived(() => {
@@ -291,6 +298,13 @@ export function useSnackbar(
     }
   }
 
+  function clearLeaveFallback() {
+    if (leaveFallbackTimeoutRef.current !== null) {
+      clearTimeout(leaveFallbackTimeoutRef.current);
+      leaveFallbackTimeoutRef.current = null;
+    }
+  }
+
   function setShow(next: boolean) {
     if (!next) {
       onClose?.();
@@ -307,6 +321,7 @@ export function useSnackbar(
     pendingLeaveRef.current = false;
     setTransitionState("closed");
     clearDismissTimer();
+    clearLeaveFallback();
 
     if (show) {
       setShow(false);
@@ -328,10 +343,16 @@ export function useSnackbar(
     }
 
     setTransitionState("closed");
+    clearLeaveFallback();
+    leaveFallbackTimeoutRef.current = setTimeout(() => {
+      leaveFallbackTimeoutRef.current = null;
+      finishLeave();
+    }, SNACKBAR_LEAVE_FALLBACK_MS);
   }
 
   function scheduleOpen() {
     pendingLeaveRef.current = false;
+    clearLeaveFallback();
 
     if (!transitionEnabled) {
       setTransitionState("open");
@@ -347,17 +368,11 @@ export function useSnackbar(
   }
 
   function requestClose() {
-    if (!transitionEnabled) {
-      setShow(false);
-
+    if (!show) {
       return;
     }
 
-    if (!rendered) {
-      return;
-    }
-
-    startLeave();
+    setShow(false);
   }
 
   function startDismissTimer(ms: number) {
@@ -401,7 +416,7 @@ export function useSnackbar(
   }
 
   function handlePanelTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
-    if (!rendered || transitionState !== "closed") {
+    if (!pendingLeaveRef.current || !rendered || transitionState !== "closed") {
       return;
     }
 
@@ -430,6 +445,15 @@ export function useSnackbar(
 
     startLeave();
   }, [show]);
+
+  useEffect(() => {
+    return () => {
+      if (leaveFallbackTimeoutRef.current !== null) {
+        clearTimeout(leaveFallbackTimeoutRef.current);
+        leaveFallbackTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!show || !rendered || durationMs <= 0) {

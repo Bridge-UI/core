@@ -1,14 +1,14 @@
 // ** External Imports
-import {
-  completeLayerHide,
-  invokeLayerDismiss,
-  mergeLayerShellProps,
-} from "@bridge-ui/core/Layer";
 import { get } from "es-toolkit/compat";
 import { useContext, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core/Layer";
 import {
   hasDocument,
   resolveModalPortalElement,
@@ -17,8 +17,12 @@ import { snackbarPositionProps } from "@bridge-ui/core/Tokens";
 import { cn, mergeBridgeUILayeredClasses } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
+import {
+  snackbarActionHosts,
+  useRegisterActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeSnackbarHostProps } from "@/Actions/Snackbar/bridgeSnackbar.types";
+import { BridgeSnackbarContext } from "@/Actions/Snackbar/BridgeSnackbarContext";
 import { useBridgeSnackbarController } from "@/Actions/Snackbar/createBridgeSnackbarController";
 import { resolveBridgeSnackbarSlots } from "@/Actions/Snackbar/resolveBridgeSnackbarSlots";
 import { Snackbar } from "@/Components/Snackbar";
@@ -39,6 +43,8 @@ export function BridgeSnackbarHost({
   const parentApi = useContext(BridgeSnackbarContext);
 
   const api = useBridgeSnackbarController({ max, timeout });
+
+  useRegisterActionHost(snackbarActionHosts, api);
 
   const bridge = useBridgeUI();
 
@@ -98,12 +104,11 @@ export function BridgeSnackbarHost({
               {...snackbarProps}
               teleportTo={false}
               onClose={() => invokeLayerDismiss(api.entries, entryId)}
-              onLeaveComplete={() => {
-                completeLayerHide(api.entries, entryId, false, api.removeEntry);
-              }}
               onShowChange={(show) => {
                 api.syncShow(entryId, show);
-                completeLayerHide(api.entries, entryId, show, api.removeEntry);
+              }}
+              onLeaveComplete={() => {
+                completeLayerHide(api.entries, entryId, false, api.removeEntry);
               }}
               slots={resolveBridgeSnackbarSlots(
                 {

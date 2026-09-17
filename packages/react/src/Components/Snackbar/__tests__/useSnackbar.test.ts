@@ -98,6 +98,25 @@ test("it should call onShowChange when requestClose is invoked", async () => {
   expect(onShowChange).toHaveBeenCalledWith(false);
 });
 
+test("it should call onShowChange immediately when the slide transition is enabled", async () => {
+  const onShowChange = vi.fn();
+
+  const { result } = renderUseSnackbar(
+    { duration: false, transition: "slide" },
+    { show: true, onShowChange },
+  );
+
+  await waitFor(() => {
+    expect(result.current.rendered).toBe(true);
+  });
+
+  act(() => {
+    result.current.requestClose();
+  });
+
+  expect(onShowChange).toHaveBeenCalledWith(false);
+});
+
 test("it should call onClose when requestClose is invoked", async () => {
   const onClose = vi.fn();
 

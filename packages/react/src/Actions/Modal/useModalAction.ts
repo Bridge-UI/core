@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { useContext, useMemo, useRef } from "react";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { modalActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeModalApi } from "@/Actions/Modal/bridgeModal.types";
 import { BridgeModalContext } from "@/Actions/Modal/BridgeModalContext";
 
@@ -15,7 +18,7 @@ export class BridgeModalHostMissingError extends Error {
 }
 
 export function useModalAction(): BridgeModalApi {
-  const api = useContext(BridgeModalContext);
+  const api = modalActionHosts.resolve(useContext(BridgeModalContext));
 
   const apiRef = useRef(api);
 

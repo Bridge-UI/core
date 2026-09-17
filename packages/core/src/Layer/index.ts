@@ -1,5 +1,10 @@
 // ** Exports
 export {
+  createActionHostRegistry,
+  resetActionHostRegistriesForTests,
+} from "@/Layer/actionHost";
+export type { ActionHostRegistry } from "@/Layer/actionHost";
+export {
   DRAWER_LEAVE_FALLBACK_MS,
   countDrawerTransitionLayers,
   getDrawerOverlayTransitionClass,
@@ -44,7 +49,6 @@ export {
   hideLayer,
   isLayerMounted,
   removeLayer,
-  resetLayerIdCounterForTests,
   syncLayerShow,
   trimLayersToMax,
   updateLayer,
@@ -52,8 +56,10 @@ export {
 } from "@/Layer/registry";
 export { mergeLayerShellProps } from "@/Layer/shell";
 export {
+  SNACKBAR_LEAVE_FALLBACK_MS,
   getSnackbarTransitionClass,
   hasSnackbarTransition,
+  resolveEffectiveSnackbarTransition,
   usesTrailingSnackbarActions,
 } from "@/Layer/snackbar";
 export type { LayerId } from "@/Layer/types";

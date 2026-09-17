@@ -1,8 +1,11 @@
 // ** External Imports
-import { getLayerCount } from "@bridge-ui/core/Layer";
 import { useContext, useMemo, useRef } from "react";
 
+// ** Core Imports
+import { getLayerCount } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
+import { dialogActionHosts } from "@/Actions/actionHostRegistry";
 import type { BridgeDialogApi } from "@/Actions/Dialog/bridgeDialog.types";
 import { BridgeDialogContext } from "@/Actions/Dialog/BridgeDialogContext";
 
@@ -15,7 +18,7 @@ export class BridgeDialogHostMissingError extends Error {
 }
 
 export function useDialogAction(): BridgeDialogApi {
-  const api = useContext(BridgeDialogContext);
+  const api = dialogActionHosts.resolve(useContext(BridgeDialogContext));
 
   const apiRef = useRef(api);
 

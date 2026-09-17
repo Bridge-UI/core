@@ -1,13 +1,19 @@
 <script setup lang="ts">
 // ** External Imports
+import { computed, inject, provide } from "vue";
+
+// ** Core Imports
 import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core/Layer";
-import { computed, inject, provide } from "vue";
 
 // ** Local Imports
+import {
+  drawerActionHosts,
+  registerActionHost,
+} from "@/Actions/actionHostRegistry";
 import type { BridgeDrawerHostProps } from "@/Actions/Drawer/bridgeDrawer.types";
 import { BRIDGE_DRAWER_INJECTION_KEY } from "@/Actions/Drawer/bridgeDrawerInjectionKey";
 import { createBridgeDrawerApi } from "@/Actions/Drawer/createBridgeDrawerApi";
@@ -25,6 +31,8 @@ if (parentApi && process.env.NODE_ENV !== "production") {
 }
 
 const api = createBridgeDrawerApi();
+
+registerActionHost(drawerActionHosts, api);
 
 const drawerEntries = computed(() => {
   return api.entries.value;
