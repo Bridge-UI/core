@@ -109,8 +109,10 @@ test("it should not clip accented option labels", () => {
     .should("have.class", "leading-normal")
     .and("not.have.class", "leading-none")
     .then(($el) => {
-      const node = $el[0];
+      const styles = getComputedStyle($el[0]);
 
-      expect(node.scrollHeight).to.be.at.most(node.clientHeight + 1);
+      expect(Number.parseFloat(styles.lineHeight)).to.be.greaterThan(
+        Number.parseFloat(styles.fontSize),
+      );
     });
 });

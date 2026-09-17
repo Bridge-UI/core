@@ -131,9 +131,11 @@ test("it should keep primary text from clipping truncated glyphs", () => {
     props: { primary: "Configurações" },
   });
 
-  const primary = wrapper.find("span");
+  const primary = wrapper.findAll("span").find((node) => {
+    return node.text() === "Configurações";
+  });
 
-  expect(primary.classes()).toContain("truncate");
-  expect(primary.classes()).toContain("leading-normal");
-  expect(primary.classes()).not.toContain("leading-none");
+  expect(primary?.classes()).toContain("truncate");
+  expect(primary?.classes()).toContain("leading-normal");
+  expect(primary?.classes()).not.toContain("leading-none");
 });
