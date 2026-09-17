@@ -83,3 +83,36 @@ test("it should show empty message when there are no options", () => {
 
   cy.contains("No options").should("be.visible");
 });
+
+test("it should not clip accented option labels", () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          anchorEl={anchorRef}
+          listboxId="cy-listbox"
+          options={[
+            { value: "en", label: "Inglês" },
+            { value: "pt", label: "Português" },
+          ]}
+        />
+      </div>
+    );
+  }
+
+  cy.mount(<Host />);
+
+  cy.contains("span", "Português")
+    .should("have.class", "leading-normal")
+    .and("not.have.class", "leading-none")
+    .then(($el) => {
+      const styles = getComputedStyle($el[0]);
+
+      expect(Number.parseFloat(styles.lineHeight)).to.be.greaterThan(
+        Number.parseFloat(styles.fontSize),
+      );
+    });
+});

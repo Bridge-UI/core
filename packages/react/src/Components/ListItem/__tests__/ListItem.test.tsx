@@ -84,3 +84,13 @@ test("it should apply divider border on the root item", () => {
 
   expect(root?.className.includes("border-b")).toBe(true);
 });
+
+test("it should keep primary text from clipping truncated glyphs", () => {
+  render(<ListItem primary="Configurações" />);
+
+  const primary = screen.getByText("Configurações");
+
+  expect(primary.className).toContain("truncate");
+  expect(primary.className).toContain("leading-normal");
+  expect(primary.className).not.toContain("leading-none");
+});

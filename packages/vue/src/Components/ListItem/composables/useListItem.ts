@@ -312,7 +312,6 @@ export function useListItem(
           [get(mergedClasses.value, "interactive") ?? ""]: true,
           [listboxContext.value?.sizeClasses?.option ?? ""]:
             isListboxOption.value,
-          "leading-none": true,
         }),
       },
     );
@@ -320,7 +319,7 @@ export function useListItem(
 
   const rowClass = computed(() => {
     return cn({
-      "flex w-full min-w-0 items-center gap-x-2 leading-none": true,
+      "flex w-full min-w-0 items-center gap-x-2": true,
       "rounded-md text-dark-900 dark:text-dark-100": !isInteractiveRow.value,
       "px-2": !isInteractiveRow.value,
       "py-1.5": !isInteractiveRow.value && !isDense.value,
@@ -359,7 +358,7 @@ export function useListItem(
         [listboxContext.value?.sizeClasses?.primary ?? ""]:
           isListboxOption.value,
         [get(mergedClasses.value, "primary") ?? ""]: true,
-        "leading-none": true,
+        "leading-normal": true,
       }),
     );
   });
@@ -369,7 +368,7 @@ export function useListItem(
       customProps.value?.secondary,
       {},
       cn({
-        "mt-0.5 block truncate text-xs text-dark-500 dark:text-dark-400": true,
+        "mt-0.5 block truncate text-xs leading-normal text-dark-500 dark:text-dark-400": true,
         [listboxContext.value?.sizeClasses?.secondary ?? ""]:
           isListboxOption.value,
         [get(mergedClasses.value, "secondary") ?? ""]: true,

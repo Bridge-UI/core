@@ -76,3 +76,31 @@ test("it should show loading progress bar and text when loading", () => {
   cy.get('[role="progressbar"]').should("be.visible");
   cy.contains("Loading...").should("be.visible");
 });
+
+test("it should not clip accented option labels", () => {
+  const anchor = document.createElement("div");
+  document.body.appendChild(anchor);
+
+  cy.mount(Listbox, {
+    props: {
+      modelValue: true,
+      anchorEl: anchor,
+      listboxId: "cy-listbox",
+      options: [
+        { value: "en", label: "Inglês" },
+        { value: "pt", label: "Português" },
+      ],
+    },
+  });
+
+  cy.contains("span", "Português")
+    .should("have.class", "leading-normal")
+    .and("not.have.class", "leading-none")
+    .then(($el) => {
+      const styles = getComputedStyle($el[0]);
+
+      expect(Number.parseFloat(styles.lineHeight)).to.be.greaterThan(
+        Number.parseFloat(styles.fontSize),
+      );
+    });
+});

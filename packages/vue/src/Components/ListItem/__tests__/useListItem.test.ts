@@ -213,3 +213,11 @@ test("it should apply divider border on root bind", () => {
 
   expect(rootBind.value.class).toContain("border-b");
 });
+
+test("it should keep primary line-height from clipping truncated glyphs", () => {
+  const { primaryBind } = mountUseListItem({ primary: "Configurações" });
+
+  expect(primaryBind.value.class).toContain("truncate");
+  expect(primaryBind.value.class).toContain("leading-normal");
+  expect(primaryBind.value.class).not.toContain("leading-none");
+});
