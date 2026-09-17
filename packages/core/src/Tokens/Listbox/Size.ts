@@ -87,8 +87,8 @@ export const sizeProps: ListboxSize = {
   "md": {
     "panel": {
       "check": "size-4",
-      "secondary": "mt-0.5 text-xs",
       "option": "px-2 py-2 text-sm",
+      "secondary": "mt-0.5 text-xs",
       "message": "px-2 py-3 text-sm",
       "primary": "text-sm font-medium leading-normal",
     },
@@ -167,8 +167,8 @@ export const sizeProps: ListboxSize = {
   "lg": {
     "menu": {
       "check": "size-4",
-      "secondary": "mt-0.5 text-xs",
       "option": "px-2 py-2 text-sm",
+      "secondary": "mt-0.5 text-xs",
       "message": "px-2 py-3 text-sm",
       "primary": "text-sm font-medium leading-normal",
     },
