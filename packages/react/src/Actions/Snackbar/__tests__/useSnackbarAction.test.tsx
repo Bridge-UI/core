@@ -1,7 +1,13 @@
 // ** External Imports
-import { act, render, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { isString } from "es-toolkit/compat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -13,6 +19,8 @@ import {
   BridgeSnackbarHostMissingError,
   useSnackbarAction,
 } from "@/Actions/Snackbar";
+import { Menu } from "@/Components/Menu";
+
 afterEach(() => {
   vi.useRealTimers();
   resetLayerStackForTests();
@@ -301,6 +309,81 @@ test("it should auto-dismiss snackbars", async () => {
     },
     { timeout: 500 },
   );
+});
+
+test("it should remove slide snackbars when transitionend never fires", async () => {
+  render(
+    <BridgeSnackbarHost timeout={50}>
+      <RunOnMount
+        onMount={(snackbar) => {
+          snackbar.open({
+            title: "Timed out",
+            transition: "slide",
+          });
+        }}
+      />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Timed out");
+  });
+
+  await waitFor(
+    () => {
+      expect(document.body.textContent).not.toContain("Timed out");
+    },
+    { timeout: 1000 },
+  );
+});
+
+test("it should not revive dismissed snackbars when a menu opens", async () => {
+  function Consumer() {
+    const snackbar = useSnackbarAction();
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    useEffect(() => {
+      snackbar.open({
+        title: "Timed out",
+        transition: "slide",
+      });
+    }, [snackbar]);
+
+    return (
+      <Menu
+        show={menuOpen}
+        onShowChange={setMenuOpen}
+        slots={{
+          trigger: <span>Open menu</span>,
+        }}
+      >
+        <button type="button" role="menuitem">
+          Item
+        </button>
+      </Menu>
+    );
+  }
+
+  render(
+    <BridgeSnackbarHost timeout={50}>
+      <Consumer />
+    </BridgeSnackbarHost>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Timed out");
+  });
+
+  await waitFor(
+    () => {
+      expect(document.body.textContent).not.toContain("Timed out");
+    },
+    { timeout: 1000 },
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+
+  expect(document.body.textContent).not.toContain("Timed out");
 });
 
 test("it should override host timeout", async () => {

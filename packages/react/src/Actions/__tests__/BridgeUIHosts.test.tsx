@@ -106,3 +106,40 @@ test("it should open a snackbar from modal content opened via action", async () 
     expect(document.body.textContent).toContain("From modal");
   });
 });
+
+function Panel() {
+  const snackbar = useSnackbarAction();
+
+  useEffect(() => {
+    snackbar.open({
+      duration: false,
+      transition: "none",
+      title: "From drawer",
+    });
+  }, [snackbar]);
+
+  return <p>Panel</p>;
+}
+
+function OpenPanelDrawer() {
+  const drawer = useDrawerAction();
+
+  useEffect(() => {
+    drawer.open({ component: Panel, drawer: { transition: "none" } });
+  }, [drawer]);
+
+  return null;
+}
+
+test("it should open a snackbar from drawer content opened via action", async () => {
+  render(
+    <BridgeUIHosts>
+      <OpenPanelDrawer />
+    </BridgeUIHosts>,
+  );
+
+  await waitFor(() => {
+    expect(document.body.textContent).toContain("Panel");
+    expect(document.body.textContent).toContain("From drawer");
+  });
+});
