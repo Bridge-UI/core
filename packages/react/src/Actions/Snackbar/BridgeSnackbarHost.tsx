@@ -1,14 +1,14 @@
 // ** External Imports
-import {
-  completeLayerHide,
-  invokeLayerDismiss,
-  mergeLayerShellProps,
-} from "@bridge-ui/core/Layer";
 import { get } from "es-toolkit/compat";
 import { useContext, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // ** Core Imports
+import {
+  completeLayerHide,
+  invokeLayerDismiss,
+  mergeLayerShellProps,
+} from "@bridge-ui/core/Layer";
 import {
   hasDocument,
   resolveModalPortalElement,

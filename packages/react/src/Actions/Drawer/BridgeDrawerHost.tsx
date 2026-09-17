@@ -1,10 +1,12 @@
 // ** External Imports
+import { createElement, useContext, useEffect } from "react";
+
+// ** Core Imports
 import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core/Layer";
-import { createElement, useContext, useEffect } from "react";
 
 // ** Local Imports
 import {

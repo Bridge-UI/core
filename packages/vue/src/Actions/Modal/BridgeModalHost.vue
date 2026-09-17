@@ -1,11 +1,13 @@
 <script setup lang="ts">
 // ** External Imports
+import { computed, inject, provide } from "vue";
+
+// ** Core Imports
 import {
   completeLayerHide,
   invokeLayerDismiss,
   mergeLayerShellProps,
 } from "@bridge-ui/core/Layer";
-import { computed, inject, provide } from "vue";
 
 // ** Local Imports
 import {
