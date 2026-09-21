@@ -230,15 +230,9 @@ const perPageSelectCustom = computed(() => {
   return {
     ...fromProps,
     listbox: {
+      matchWidth: true,
       showCheckmark: false,
       ...fromProps?.listbox,
-      customProps: {
-        ...fromProps?.listbox?.customProps,
-        menu: {
-          matchWidth: true,
-          ...fromProps?.listbox?.customProps?.menu,
-        },
-      },
     },
   };
 });

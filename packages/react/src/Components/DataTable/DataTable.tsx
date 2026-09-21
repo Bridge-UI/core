@@ -684,16 +684,9 @@ function DataTable<T>(props: DataTableProps<T>) {
                       customProps={{
                         ...perPageCustom?.customProps,
                         listbox: {
+                          matchWidth: true,
                           showCheckmark: false,
                           ...perPageCustom?.customProps?.listbox,
-                          customProps: {
-                            ...perPageCustom?.customProps?.listbox?.customProps,
-                            menu: {
-                              matchWidth: true,
-                              ...perPageCustom?.customProps?.listbox
-                                ?.customProps?.menu,
-                            },
-                          },
                         },
                       }}
                     />
