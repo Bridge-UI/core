@@ -236,6 +236,9 @@ const overlayCustomProps = computed(() => {
       placement: props.placement,
       disableAutoFocus: props.disableAutoFocus,
       ...(!isNil(props.rounded) ? { rounded: props.rounded } : {}),
+      ...(!isNil(merged.value.matchWidth)
+        ? { matchWidth: merged.value.matchWidth }
+        : {}),
       ...menuProps.value,
     },
   };

@@ -336,3 +336,36 @@ test("it should apply registry tokens.rounded overrides", () => {
 
   expect(result.surfaceBind.value).toContain("rounded-none");
 });
+
+test("it should keep matchWidth from props on merged listbox", () => {
+  const { merged } = mountUseListbox({ matchWidth: true });
+
+  expect(merged.value.matchWidth).toBe(true);
+});
+
+test("it should apply registry defaultProps.matchWidth", () => {
+  let result!: ReturnType<typeof useListbox>;
+
+  const Consumer = defineComponent({
+    setup() {
+      result = useListbox(baseProps, libDefaults);
+
+      return () => h("div");
+    },
+  });
+
+  mount(BridgeUIProvider, {
+    slots: {
+      default: () => h(Consumer),
+    },
+    props: {
+      components: {
+        Listbox: {
+          defaultProps: { matchWidth: true },
+        },
+      },
+    },
+  });
+
+  expect(result.merged.value.matchWidth).toBe(true);
+});

@@ -41,6 +41,7 @@ export const listboxBridgeKeys = [
   "error",
   "classes",
   "maxHeight",
+  "matchWidth",
   "showFooter",
   "customProps",
   "disableMaxHeight",

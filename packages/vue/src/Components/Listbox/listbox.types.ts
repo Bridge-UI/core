@@ -297,6 +297,14 @@ export interface ListboxOwnProps {
   loadingMessage?: string;
 
   /**
+   * When true, the menu panel width matches the anchor (typically the field).
+   * Only applies when the overlay resolves to `menu`. Forwarded to `Menu`.
+   *
+   * @default false
+   */
+  matchWidth?: boolean;
+
+  /**
    * Tailwind max-height class for the options scroll area (e.g. `max-h-80`).
    * Dialog overlays (`modal` / `drawer`) default to `max-h-[min(60dvh,28rem)]`
    * when unset; menus default to `max-h-60`.
