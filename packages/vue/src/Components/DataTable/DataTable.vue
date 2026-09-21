@@ -304,10 +304,10 @@ const DataTableChild = (childProps: { node?: VNodeChild }) => {
                 />
 
                 <div
+                  class="flex w-full min-w-0 items-center gap-1.5"
                   v-else-if="!header.isSelection && !header.isExpand"
-                  class="flex w-full min-w-0 items-center gap-1.5 leading-none"
                 >
-                  <span class="min-w-0 truncate leading-none">
+                  <span class="min-w-0 truncate leading-normal">
                     <DataTableChild :node="header.header" />
                   </span>
 

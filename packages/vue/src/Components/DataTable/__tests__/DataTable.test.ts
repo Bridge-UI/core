@@ -1234,3 +1234,27 @@ test("it should let a catch-all item slot override the column cell", () => {
   expect(wrapper.text()).toContain("Slot Ada Lovelace");
   expect(wrapper.text()).not.toContain("Cell Ada Lovelace");
 });
+
+test("it should keep header text from clipping truncated glyphs", () => {
+  const wrapper = mountDataTable({
+    props: {
+      rows,
+      columns: [
+        {
+          id: "tags",
+          header: "Tags",
+          cell: () => null,
+          filters: [{ label: "A", value: "a" }],
+        },
+      ],
+    },
+  });
+
+  const header = wrapper.findAll("span").find((node) => {
+    return node.text() === "Tags";
+  });
+
+  expect(header?.classes()).toContain("truncate");
+  expect(header?.classes()).toContain("leading-normal");
+  expect(header?.classes()).not.toContain("leading-none");
+});
