@@ -995,6 +995,7 @@ export interface ListboxConfigBase {
   classes: object;
   defaultProps: Partial<{
     color: keyof ListboxColor;
+    matchWidth: boolean;
     rounded: keyof ListboxRounded;
     showFooter: boolean;
     size: keyof ListboxSize;
