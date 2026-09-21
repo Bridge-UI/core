@@ -25,6 +25,7 @@ function Calendar(props: CalendarProps) {
     headerBind,
     navIconBind,
     setViewDate,
+    granularity,
     handleChange,
     yearPageSize,
     yearPageStart,
@@ -138,8 +139,15 @@ function Calendar(props: CalendarProps) {
             {...shared}
             year={viewYear}
             value={viewMonth}
+            range={merged.range}
+            multiple={merged.multiple}
             onChange={handleMonthSelect}
+            previewDate={props.previewDate}
+            disableDates={merged.disableDates}
+            disableYears={merged.disableYears}
             disableMonths={merged.disableMonths}
+            onPreviewDateChange={props.onPreviewDateChange}
+            selection={granularity === "month" ? value : undefined}
           />
         )}
 
@@ -147,10 +155,16 @@ function Calendar(props: CalendarProps) {
           <CalendarYear
             {...shared}
             value={viewYear}
+            range={merged.range}
             pageSize={yearPageSize}
             startYear={yearPageStart}
+            multiple={merged.multiple}
             onChange={handleYearSelect}
+            previewDate={props.previewDate}
+            disableDates={merged.disableDates}
             disableYears={merged.disableYears}
+            onPreviewDateChange={props.onPreviewDateChange}
+            selection={granularity === "year" ? value : undefined}
           />
         )}
       </div>

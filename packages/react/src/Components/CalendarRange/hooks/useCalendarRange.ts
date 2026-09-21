@@ -5,7 +5,14 @@ import { useMemo, useState } from "react";
 // ** Core Imports
 import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
+  applyDateSelection,
+  calendarPanelViewFromGranularity,
+  isCalendarMonthPanelHidden,
+  isCalendarYearPanelHidden,
   isDateRangeValue,
+  normalizeDateToGranularity,
+  resolveCalendarPanelView,
+  type CalendarView,
   type DatePickerModel,
   type DateRangeValue,
 } from "@bridge-ui/core/Domain";
@@ -25,7 +32,6 @@ import type {
   CalendarRangeClasses,
   CalendarRangeOwnProps,
   CalendarRangeProps,
-  CalendarRangeView,
 } from "@/Components/CalendarRange/calendarRange.types";
 import {
   derived,
@@ -50,6 +56,8 @@ const calendarRangeBridgeKeys = [
   "hideYears",
   "hideMonths",
   "customProps",
+  "defaultView",
+  "granularity",
   "orientation",
   "previewDate",
   "startOfWeek",
@@ -154,8 +162,16 @@ export function useCalendarRange(
       return merged.defaultValue ?? null;
     });
 
-  const [uncontrolledView, setUncontrolledView] =
-    useState<CalendarRangeView>("date");
+  const [uncontrolledView, setUncontrolledView] = useState<CalendarView>(() => {
+    const granularity = merged.granularity ?? "day";
+
+    return resolveCalendarPanelView({
+      granularity,
+      hideYears: merged.hideYears,
+      hideMonths: merged.hideMonths,
+      view: merged.defaultView ?? calendarPanelViewFromGranularity(granularity),
+    });
+  });
 
   const [uncontrolledViewDate, setUncontrolledViewDate] = useState(() => {
     return adapter.startOfMonth(
@@ -186,16 +202,17 @@ export function useCalendarRange(
     return uncontrolledValue;
   });
 
-  const view = derived((): CalendarRangeView => {
-    if (uncontrolledView === "year" && merged.hideYears) {
-      return "date";
-    }
+  const granularity = derived(() => {
+    return merged.granularity ?? "day";
+  });
 
-    if (uncontrolledView === "month" && merged.hideMonths) {
-      return "date";
-    }
-
-    return uncontrolledView;
+  const view = derived((): CalendarView => {
+    return resolveCalendarPanelView({
+      granularity,
+      view: uncontrolledView,
+      hideYears: merged.hideYears,
+      hideMonths: merged.hideMonths,
+    });
   });
 
   const viewDate = derived(() => {
@@ -259,7 +276,7 @@ export function useCalendarRange(
     return Math.max(1, viewYear - Math.floor(yearPageSize / 2));
   });
 
-  const setView = (next: CalendarRangeView) => {
+  const setView = (next: CalendarView) => {
     setUncontrolledView(next);
   };
 
@@ -310,6 +327,11 @@ export function useCalendarRange(
       return;
     }
 
+    if (view === "month") {
+      setViewDate(adapter.addYears(viewDate, -1, context));
+      return;
+    }
+
     setViewDate(adapter.addMonths(viewDate, -1, context));
   };
 
@@ -319,24 +341,52 @@ export function useCalendarRange(
       return;
     }
 
+    if (view === "month") {
+      setViewDate(adapter.addYears(viewDate, 1, context));
+      return;
+    }
+
     setViewDate(adapter.addMonths(viewDate, 1, context));
   };
 
   /**
-   * Jumps to the date panels on today's month without changing the selection.
+   * Jumps to today's month on the commit panel without changing the selection.
    */
   const goToToday = () => {
     const today = adapter.startOfMonth(adapter.now(context), context);
 
     setYearPageStart(null);
     setViewDate(today);
-    setView("date");
+    setView(calendarPanelViewFromGranularity(granularity));
   };
 
   const handleYearSelect = (year: number) => {
     setYearPageStart(null);
-    setViewDate(adapter.setYear(viewDate, year, context));
-    setView(merged.hideMonths ? "date" : "month");
+    const nextDate = adapter.setYear(viewDate, year, context);
+    setViewDate(nextDate);
+
+    if (granularity === "year") {
+      handleChange(
+        applyDateSelection({
+          value,
+          adapter,
+          context,
+          granularity,
+          mode: "range",
+          next: normalizeDateToGranularity(nextDate, "year", adapter, context),
+        }),
+      );
+      return;
+    }
+
+    setView(
+      isCalendarMonthPanelHidden({
+        granularity,
+        hideMonths: merged.hideMonths,
+      })
+        ? calendarPanelViewFromGranularity(granularity)
+        : "month",
+    );
   };
 
   const openMonthView = () => {
@@ -344,7 +394,23 @@ export function useCalendarRange(
   };
 
   const handleMonthSelect = (month: number) => {
-    setViewDate(adapter.setMonth(viewDate, month, context));
+    const nextDate = adapter.setMonth(viewDate, month, context);
+    setViewDate(nextDate);
+
+    if (granularity === "month") {
+      handleChange(
+        applyDateSelection({
+          value,
+          adapter,
+          context,
+          granularity,
+          mode: "range",
+          next: normalizeDateToGranularity(nextDate, "month", adapter, context),
+        }),
+      );
+      return;
+    }
+
     setView("date");
   };
 
@@ -520,12 +586,20 @@ export function useCalendarRange(
       return resolveMessage("Previous years");
     }
 
+    if (view === "month") {
+      return resolveMessage("Previous year");
+    }
+
     return resolveMessage("Previous month");
   });
 
   const nextNavLabel = derived(() => {
     if (view === "year") {
       return resolveMessage("Next years");
+    }
+
+    if (view === "month") {
+      return resolveMessage("Next year");
     }
 
     return resolveMessage("Next month");
@@ -586,7 +660,12 @@ export function useCalendarRange(
       onClick: openYearView,
       type: "button" as const,
       "aria-label": resolveMessage("Select year"),
-      disabled: merged.disabled || merged.hideYears,
+      disabled:
+        merged.disabled ||
+        isCalendarYearPanelHidden({
+          granularity,
+          hideYears: merged.hideYears,
+        }),
     });
   });
 
@@ -595,7 +674,12 @@ export function useCalendarRange(
       ...selectorBind,
       type: "button" as const,
       "aria-label": resolveMessage("Select month"),
-      disabled: merged.disabled || merged.hideMonths,
+      disabled:
+        merged.disabled ||
+        isCalendarMonthPanelHidden({
+          granularity,
+          hideMonths: merged.hideMonths,
+        }),
     });
 
     return {
@@ -608,8 +692,13 @@ export function useCalendarRange(
     const bind = mergePartBind(customProps?.selector, undefined, {
       ...selectorBind,
       type: "button" as const,
-      disabled: merged.disabled || merged.hideMonths,
       "aria-label": resolveMessage("Select end month"),
+      disabled:
+        merged.disabled ||
+        isCalendarMonthPanelHidden({
+          granularity,
+          hideMonths: merged.hideMonths,
+        }),
     });
 
     return {
@@ -639,6 +728,7 @@ export function useCalendarRange(
     endViewDate,
     previewDate,
     setViewDate,
+    granularity,
     handleChange,
     yearPageSize,
     endMonthLabel,
@@ -660,8 +750,14 @@ export function useCalendarRange(
     handlePreviewDateChange,
     handleStartViewDateChange,
     navIconBind: customProps?.navIcon,
-    showYearSelector: !merged.hideYears,
     yearPageStart: resolvedYearPageStart,
-    showMonthSelector: !merged.hideMonths,
+    showYearSelector: !isCalendarYearPanelHidden({
+      granularity,
+      hideYears: merged.hideYears,
+    }),
+    showMonthSelector: !isCalendarMonthPanelHidden({
+      granularity,
+      hideMonths: merged.hideMonths,
+    }),
   };
 }

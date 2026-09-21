@@ -31,6 +31,7 @@ function CalendarRange(props: CalendarRangeProps) {
     endViewDate,
     previewDate,
     navIconBind,
+    granularity,
     handleChange,
     yearPageSize,
     endMonthLabel,
@@ -228,10 +229,16 @@ function CalendarRange(props: CalendarRangeProps) {
           <div className={monthYearBind}>
             <CalendarMonth
               {...shared}
+              range
               year={monthPanelYear}
               value={monthPanelValue}
+              previewDate={previewDate}
               onChange={handleMonthSelect}
+              disableDates={merged.disableDates}
+              disableYears={merged.disableYears}
               disableMonths={merged.disableMonths}
+              onPreviewDateChange={handlePreviewDateChange}
+              selection={granularity === "month" ? value : undefined}
               classes={{
                 month: "min-h-0",
                 grid: "h-full auto-rows-fr",
@@ -245,11 +252,16 @@ function CalendarRange(props: CalendarRangeProps) {
           <div className={monthYearBind}>
             <CalendarYear
               {...shared}
+              range
               value={viewYear}
               pageSize={yearPageSize}
               startYear={yearPageStart}
+              previewDate={previewDate}
               onChange={handleYearSelect}
+              disableDates={merged.disableDates}
               disableYears={merged.disableYears}
+              onPreviewDateChange={handlePreviewDateChange}
+              selection={granularity === "year" ? value : undefined}
               classes={{
                 year: "min-h-0",
                 grid: "h-full auto-rows-fr",

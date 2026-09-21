@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  CalendarView,
   DisableDatesInput,
   DisableTimesInput,
   FieldOverlayMode,
@@ -11,7 +12,6 @@ import type {
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { CalendarView } from "@/Components/Calendar";
 import type {
   DateTimePickerCustomProps,
   DateTimePickerSlots,

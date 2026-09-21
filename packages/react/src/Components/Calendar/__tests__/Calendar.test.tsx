@@ -105,20 +105,20 @@ test("it should paginate years with nav arrows on the year panel", () => {
   expect(screen.getByRole("button", { name: "2036" })).toBeTruthy();
 });
 
-test("it should change month with nav arrows on the month panel", () => {
+test("it should change year with nav arrows on the month panel", () => {
   render(<Calendar viewDate={new Date(2021, 4, 1)} />);
 
   fireEvent.click(screen.getByRole("button", { name: "Select month" }));
-  fireEvent.click(screen.getByRole("button", { name: "Next month" }));
+  fireEvent.click(screen.getByRole("button", { name: "Next year" }));
 
   expect(
     screen
       .getByRole("button", { name: "Select month" })
       .textContent?.toLowerCase(),
-  ).toContain("june");
+  ).toContain("may");
   expect(
     screen.getByRole("button", { name: "Select year" }).textContent,
-  ).toContain("2021");
+  ).toContain("2022");
 });
 
 test("it should keep the today button on year and month panels", () => {
@@ -234,4 +234,49 @@ test("it should open on the selected value month after menu remount", () => {
   expect(
     screen.getByRole("button", { name: "Select month" }).textContent,
   ).toMatch(/july/i);
+});
+
+test("it should open on the month panel and commit a month-start date", () => {
+  const onChange = vi.fn();
+
+  render(
+    <Calendar
+      granularity="month"
+      onChange={onChange}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
+
+  expect(screen.getByRole("button", { name: /january/i })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "21" })).toBeNull();
+
+  fireEvent.click(screen.getByRole("button", { name: /march/i }));
+
+  const selected = onChange.mock.calls[0]?.[0] as Date;
+
+  expect(selected.getFullYear()).toBe(2021);
+  expect(selected.getMonth()).toBe(2);
+  expect(selected.getDate()).toBe(1);
+});
+
+test("it should open on the year panel and commit January 1", () => {
+  const onChange = vi.fn();
+
+  render(
+    <Calendar
+      granularity="year"
+      onChange={onChange}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
+
+  expect(screen.getByRole("button", { name: "2021" })).toBeTruthy();
+
+  fireEvent.click(screen.getByRole("button", { name: "2018" }));
+
+  const selected = onChange.mock.calls[0]?.[0] as Date;
+
+  expect(selected.getFullYear()).toBe(2018);
+  expect(selected.getMonth()).toBe(0);
+  expect(selected.getDate()).toBe(1);
 });

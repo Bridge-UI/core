@@ -133,3 +133,9 @@ test("it should stack panels when orientation is vertical", () => {
   expect(rootBind.value.class.split(/\s+/)).not.toContain("w-72");
   expect(monthsBind.value.class).not.toContain("justify-between");
 });
+
+test("it should open on the month view when granularity is month", () => {
+  const { view } = mountUseCalendarRange({ granularity: "month" });
+
+  expect(view.value).toBe("month");
+});

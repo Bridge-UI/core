@@ -3,6 +3,7 @@ import type { InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  CalendarView,
   DisableDatesInput,
   DisableTimesInput,
   FieldOverlayFooterSlotProps,
@@ -12,7 +13,6 @@ import type {
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { CalendarView } from "@/Components/Calendar/calendar.types";
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 import type { DateTimePickerCustomProps } from "@/Components/DateTimePicker/dateTimePicker.types";
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";

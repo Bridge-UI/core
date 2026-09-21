@@ -191,3 +191,27 @@ test("it should not change month when selecting an outside day on the end panel"
     screen.getByRole("button", { name: "Select end month" }).textContent,
   ).toMatch(/june/i);
 });
+
+test("it should commit a month range from month tiles", () => {
+  const onChange = vi.fn();
+
+  render(
+    <CalendarRange
+      granularity="month"
+      onChange={onChange}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: /march/i }));
+  fireEvent.click(screen.getByRole("button", { name: /june/i }));
+
+  const range = onChange.mock.calls.at(-1)?.[0] as [Date, Date];
+
+  expect(range[0].getFullYear()).toBe(2021);
+  expect(range[0].getMonth()).toBe(2);
+  expect(range[0].getDate()).toBe(1);
+  expect(range[1].getFullYear()).toBe(2021);
+  expect(range[1].getMonth()).toBe(5);
+  expect(range[1].getDate()).toBe(1);
+});

@@ -3,6 +3,7 @@ import type { HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  CalendarView,
   DisableDatesInput,
   DisableTimesInput,
   FieldOverlayFooterSlotProps,
@@ -13,7 +14,6 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button/button.types";
-import type { CalendarView } from "@/Components/Calendar/calendar.types";
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 
 export interface DateTimePickerColorOverrides {}

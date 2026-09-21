@@ -42,6 +42,7 @@ const {
   headerBind,
   navIconBind,
   setViewDate,
+  granularity,
   handleChange,
   yearPageSize,
   yearPageStart,
@@ -146,19 +147,32 @@ function chevronClass(open: boolean) {
         v-bind="shared"
         :year="viewYear"
         :value="viewMonth"
+        :range="merged.range"
+        :multiple="merged.multiple"
         v-else-if="view === 'month'"
         v-on:change="handleMonthSelect"
+        :preview-date="props.previewDate"
+        :disable-dates="merged.disableDates"
+        :disable-years="merged.disableYears"
         :disable-months="merged.disableMonths"
+        :selection="granularity === 'month' ? value : undefined"
+        v-on:preview-date-change="emit('previewDateChange', $event)"
       />
 
       <CalendarYear
         v-bind="shared"
         :value="viewYear"
+        :range="merged.range"
         :page-size="yearPageSize"
         :start-year="yearPageStart"
         v-else-if="view === 'year'"
+        :multiple="merged.multiple"
         v-on:change="handleYearSelect"
+        :preview-date="props.previewDate"
+        :disable-dates="merged.disableDates"
         :disable-years="merged.disableYears"
+        :selection="granularity === 'year' ? value : undefined"
+        v-on:preview-date-change="emit('previewDateChange', $event)"
       />
     </div>
   </div>

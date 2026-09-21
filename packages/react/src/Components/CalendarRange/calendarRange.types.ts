@@ -3,6 +3,8 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  CalendarGranularity,
+  CalendarView,
   DateRangeValue,
   DisableDatesInput,
   StartOfWeek,
@@ -17,7 +19,10 @@ import type { IconProps } from "@/Components/Icon";
 export interface CalendarRangeColorOverrides {}
 export interface CalendarRangeRoundedOverrides {}
 
-export type CalendarRangeView = "date" | "year" | "month";
+/**
+ * Panel view for `CalendarRange`. Same as {@link CalendarView}.
+ */
+export type CalendarRangeView = CalendarView;
 
 /**
  * Dual calendar arrangement for date range panels.
@@ -258,6 +263,14 @@ export interface CalendarRangeOwnProps {
   defaultValue?: null | DateRangeValue;
 
   /**
+   * Uncontrolled initial panel view. Clamped so it is not deeper than
+   * `granularity`. When unset, opens on the panel that matches `granularity`.
+   *
+   * @default matches `granularity` (`"date"` when `granularity` is `"day"`)
+   */
+  defaultView?: CalendarView;
+
+  /**
    * Disables the calendar range.
    *
    * @default false
@@ -299,6 +312,14 @@ export interface CalendarRangeOwnProps {
    * @default false
    */
   fill?: boolean;
+
+  /**
+   * Deepest selectable calendar panel. `"month"` commits the first day of that
+   * month; `"year"` commits January 1. The stored model stays a `Date`.
+   *
+   * @default "day"
+   */
+  granularity?: CalendarGranularity;
 
   /**
    * Hides the shared month selector and month panel.

@@ -3,6 +3,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  CalendarView,
   DisableDatesInput,
   DisableTimesInput,
   FieldOverlayFooterSlotProps,
@@ -13,7 +14,6 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
 import type { ButtonOwnProps } from "@/Components/Button";
-import type { CalendarView } from "@/Components/Calendar";
 import type { CalendarDateSlots } from "@/Components/CalendarDate";
 
 export interface DateTimePickerColorOverrides {}
