@@ -137,6 +137,20 @@ When unset, `showFooter` defaults to `true` for `modal` / `drawer` overlays (`fa
 />
 ```
 
+### Match field width
+
+```vue
+<Select
+  label="Country"
+  :options="countries"
+  :custom-props="{
+    listbox: { matchWidth: true },
+  }"
+/>
+```
+
+Set `components.Listbox.defaultProps.matchWidth` on `createBridgeUI` to apply this to every Select / Autocomplete menu.
+
 ## Props
 
 ### Select-specific

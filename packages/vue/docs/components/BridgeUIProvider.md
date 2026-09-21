@@ -99,7 +99,7 @@ app.use(
 
 ### Shared chrome
 
-`FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`. Cancel / Apply in pickers and listboxes live on `components.ActionFooter`.
+`FormField`, `FormControl`, `BaseField`, and `TimePanel` are registry keys. Set them once to theme a family; a public entry still overrides `defaultProps`. Chrome tokens live on the shared key (`components.FormField.tokens`, `components.BaseField.tokens`). Dropdown tokens live on `components.Listbox`. Set `components.Listbox.defaultProps.matchWidth` so Select / Autocomplete menus match the field width. Cancel / Apply in pickers and listboxes live on `components.ActionFooter`.
 
 ```ts
 app.use(
@@ -140,6 +140,18 @@ app.use(
             },
           },
         },
+      },
+    },
+  }),
+);
+```
+
+```ts
+app.use(
+  createBridgeUI({
+    components: {
+      Listbox: {
+        defaultProps: { matchWidth: true },
       },
     },
   }),
