@@ -35,6 +35,21 @@ import { DateField } from "@bridge-ui/react/Components/DateField";
 <DateField range label="Trip" value={range} onChange={setRange} />
 ```
 
+### Granularity
+
+Month and year pick the same `Date` model, committing the first day of that unit. The field formats without a day.
+
+```tsx
+<DateField label="Month" granularity="month" />
+
+<DateField
+  label="Year"
+  value={year}
+  granularity="year"
+  onChange={setYear}
+/>
+```
+
 ### Overlay
 
 ```tsx
@@ -88,32 +103,33 @@ Replaces Cancel / Apply on the nested picker. `apply()` commits and closes; `can
 
 ### DateField-specific
 
-| Prop              | Type                   | Default                                      | Description                                                                           |
-| ----------------- | ---------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `classes`         | `DateFieldClasses`     | —                                            | Classes for field / input regions.                                                    |
-| `clearable`       | `boolean`              | `false`                                      | Whether the value can be cleared.                                                     |
-| `customProps`     | `DateFieldCustomProps` | —                                            | Extra props for internal parts (`input`, `menu`, `modal`, `drawer`, `datePicker`, …). |
-| `defaultValue`    | `DatePickerModel`      | `null`                                       | Uncontrolled initial value.                                                           |
-| `defaultView`     | `CalendarView`         | `"date"`                                     | Initial calendar panel view.                                                          |
-| `disableDates`    | `Date[]`               | —                                            | Dates that cannot be selected.                                                        |
-| `disableMonths`   | `number[]`             | —                                            | Month indexes that cannot be selected.                                                |
-| `disableYears`    | `number[]`             | —                                            | Years that cannot be selected.                                                        |
-| `editable`        | `boolean`              | `false`                                      | Unlocks the input. Does not parse or commit typed text.                               |
-| `fill`            | `boolean`              | —                                            | Fills the overlay width. Unset: `true` for `drawer`, `false` for `menu` / `modal`.    |
-| `hideMonths`      | `boolean`              | `false`                                      | Hides month navigation / panel.                                                       |
-| `hideOutsideDays` | `boolean`              | `false`                                      | Hides days that fall outside the displayed month.                                     |
-| `hideWeekdays`    | `boolean`              | `false`                                      | Hides weekday labels.                                                                 |
-| `hideYears`       | `boolean`              | `false`                                      | Hides year navigation / panel.                                                        |
-| `maxDate`         | `Date`                 | —                                            | Latest selectable date.                                                               |
-| `minDate`         | `Date`                 | —                                            | Earliest selectable date.                                                             |
-| `multiple`        | `boolean`              | `false`                                      | Allows selecting multiple dates.                                                      |
-| `overlay`         | `FieldOverlayMode`     | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                  |
-| `range`           | `boolean`              | `false`                                      | Selects a date range.                                                                 |
-| `showFooter`      | `boolean`              | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.                                            |
-| `slots`           | `DateFieldSlots`       | —                                            | Named slots (`FormField` slots + calendar `day` + footer).                            |
-| `startOfWeek`     | `StartOfWeek`          | `0`                                          | First day of the week.                                                                |
-| `timeZone`        | `string`               | —                                            | IANA time zone.                                                                       |
-| `value`           | `DatePickerModel`      | —                                            | Controlled value.                                                                     |
+| Prop              | Type                         | Default                                      | Description                                                                           |
+| ----------------- | ---------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `classes`         | `DateFieldClasses`           | —                                            | Classes for field / input regions.                                                    |
+| `clearable`       | `boolean`                    | `false`                                      | Whether the value can be cleared.                                                     |
+| `customProps`     | `DateFieldCustomProps`       | —                                            | Extra props for internal parts (`input`, `menu`, `modal`, `drawer`, `datePicker`, …). |
+| `defaultValue`    | `DatePickerModel`            | `null`                                       | Uncontrolled initial value.                                                           |
+| `defaultView`     | `CalendarView`               | matches `granularity`                        | Initial calendar panel. Clamped so it is not deeper than `granularity`.               |
+| `disableDates`    | `Date[]`                     | —                                            | Dates that cannot be selected.                                                        |
+| `disableMonths`   | `number[]`                   | —                                            | Month indexes that cannot be selected.                                                |
+| `disableYears`    | `number[]`                   | —                                            | Years that cannot be selected.                                                        |
+| `editable`        | `boolean`                    | `false`                                      | Unlocks the input. Does not parse or commit typed text.                               |
+| `fill`            | `boolean`                    | —                                            | Fills the overlay width. Unset: `true` for `drawer`, `false` for `menu` / `modal`.    |
+| `granularity`     | `"day" \| "month" \| "year"` | `"day"`                                      | Deepest selectable panel. Month and year commit as a `Date`.                          |
+| `hideMonths`      | `boolean`                    | `false`                                      | Hides month navigation / panel. Ignored when `granularity` is `"month"`.              |
+| `hideOutsideDays` | `boolean`                    | `false`                                      | Hides days that fall outside the displayed month.                                     |
+| `hideWeekdays`    | `boolean`                    | `false`                                      | Hides weekday labels.                                                                 |
+| `hideYears`       | `boolean`                    | `false`                                      | Hides year navigation / panel. Ignored when `granularity` is `"year"`.                |
+| `maxDate`         | `Date`                       | —                                            | Latest selectable date.                                                               |
+| `minDate`         | `Date`                       | —                                            | Earliest selectable date.                                                             |
+| `multiple`        | `boolean`                    | `false`                                      | Allows selecting multiple dates.                                                      |
+| `overlay`         | `FieldOverlayMode`           | `"auto"`                                     | Overlay shell: `menu`, `modal`, `drawer`, or `auto`.                                  |
+| `range`           | `boolean`                    | `false`                                      | Selects a date range.                                                                 |
+| `showFooter`      | `boolean`                    | `false` (`true` for modal/drawer when unset) | Shows Cancel / Apply on the nested picker.                                            |
+| `slots`           | `DateFieldSlots`             | —                                            | Named slots (`FormField` slots + calendar `day` + footer).                            |
+| `startOfWeek`     | `StartOfWeek`                | `0`                                          | First day of the week.                                                                |
+| `timeZone`        | `string`                     | —                                            | IANA time zone.                                                                       |
+| `value`           | `DatePickerModel`            | —                                            | Controlled value.                                                                     |
 
 ### Binding
 

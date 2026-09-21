@@ -183,18 +183,6 @@ export function createLuxonDateAdapter(
       });
     },
 
-    format: (date, context) => {
-      if (!isValid(date)) {
-        return "";
-      }
-
-      return toDateTime(date, context).toLocaleString({
-        day: "2-digit",
-        year: "numeric",
-        month: "2-digit",
-      });
-    },
-
     isSameTime: (a, b, context) => {
       const left = toDateTime(a, context);
       const right = toDateTime(b, context);
@@ -282,6 +270,31 @@ export function createLuxonDateAdapter(
       }
 
       return fromDateTime(parsed.startOf("day"));
+    },
+
+    format: (date, context, options) => {
+      if (!isValid(date)) {
+        return "";
+      }
+
+      const granularity = options?.granularity ?? "day";
+
+      if (granularity === "year") {
+        return toDateTime(date, context).toLocaleString({ year: "numeric" });
+      }
+
+      if (granularity === "month") {
+        return toDateTime(date, context).toLocaleString({
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      return toDateTime(date, context).toLocaleString({
+        day: "2-digit",
+        year: "numeric",
+        month: "2-digit",
+      });
     },
   };
 

@@ -20,6 +20,8 @@ import { Calendar } from "@bridge-ui/react/Components/Calendar";
   onChange={setDate}
 />
 
+<Calendar granularity="month" />
+
 <Calendar
   range
   value={range}
@@ -58,36 +60,37 @@ import { Calendar } from "@bridge-ui/react/Components/Calendar";
 
 ## Props
 
-| Prop              | Type                  | Default     | Description                                               |
-| ----------------- | --------------------- | ----------- | --------------------------------------------------------- |
-| `classes`         | `CalendarClasses`     | —           | Classes for calendar regions.                             |
-| `color`           | `CalendarColor`       | `"primary"` | Accent color for tiles.                                   |
-| `customProps`     | `CalendarCustomProps` | —           | Extra props for internal parts.                           |
-| `defaultValue`    | `DatePickerModel`     | `null`      | Uncontrolled initial value.                               |
-| `defaultView`     | `CalendarView`        | `"date"`    | Uncontrolled initial panel view.                          |
-| `disabled`        | `boolean`             | `false`     | Disables the calendar.                                    |
-| `disableDates`    | `Date[]`              | —           | Dates that cannot be selected.                            |
-| `disableMonths`   | `number[]`            | —           | Month indexes (`0`–`11`) that cannot be selected.         |
-| `disableYears`    | `number[]`            | —           | Years that cannot be selected.                            |
-| `error`           | `boolean`             | `false`     | Applies the error color palette to tiles.                 |
-| `fill`            | `boolean`             | `false`     | Fills the container width.                                |
-| `hideMonths`      | `boolean`             | `false`     | Hides the month selector and month panel.                 |
-| `hideOutsideDays` | `boolean`             | `false`     | Hides days that fall outside the displayed month.         |
-| `hideWeekdays`    | `boolean`             | `false`     | Hides weekday labels on the date panel.                   |
-| `hideYears`       | `boolean`             | `false`     | Hides the year selector and year panel.                   |
-| `maxDate`         | `Date`                | —           | Latest selectable date.                                   |
-| `minDate`         | `Date`                | —           | Earliest selectable date.                                 |
-| `multiple`        | `boolean`             | `false`     | Allows selecting multiple dates.                          |
-| `previewDate`     | `Date \| null`        | —           | Controlled range-preview hover date.                      |
-| `range`           | `boolean`             | `false`     | Selects a start/end date range.                           |
-| `readOnly`        | `boolean`             | `false`     | Prevents selection.                                       |
-| `rounded`         | `CalendarRounded`     | `"md"`      | Border radius of tiles and chrome.                        |
-| `slots`           | `CalendarDateSlots`   | —           | Named slots forwarded to `CalendarDate` (`day`).          |
-| `startOfWeek`     | `StartOfWeek`         | `0`         | First day of the week (`0` = Sunday).                     |
-| `timeZone`        | `string`              | —           | IANA time zone.                                           |
-| `value`           | `DatePickerModel`     | —           | Controlled selection model.                               |
-| `view`            | `CalendarView`        | —           | Controlled panel view. Pair with `onViewChange`.          |
-| `viewDate`        | `Date`                | —           | Controlled displayed month. Pair with `onViewDateChange`. |
+| Prop              | Type                         | Default               | Description                                                                        |
+| ----------------- | ---------------------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| `classes`         | `CalendarClasses`            | —                     | Classes for calendar regions.                                                      |
+| `color`           | `CalendarColor`              | `"primary"`           | Accent color for tiles.                                                            |
+| `customProps`     | `CalendarCustomProps`        | —                     | Extra props for internal parts.                                                    |
+| `defaultValue`    | `DatePickerModel`            | `null`                | Uncontrolled initial value.                                                        |
+| `defaultView`     | `CalendarView`               | matches `granularity` | Uncontrolled initial panel. Clamped so it is not deeper than `granularity`.        |
+| `disabled`        | `boolean`                    | `false`               | Disables the calendar.                                                             |
+| `disableDates`    | `Date[]`                     | —                     | Dates that cannot be selected.                                                     |
+| `disableMonths`   | `number[]`                   | —                     | Month indexes (`0`–`11`) that cannot be selected.                                  |
+| `disableYears`    | `number[]`                   | —                     | Years that cannot be selected.                                                     |
+| `error`           | `boolean`                    | `false`               | Applies the error color palette to tiles.                                          |
+| `fill`            | `boolean`                    | `false`               | Fills the container width.                                                         |
+| `granularity`     | `"day" \| "month" \| "year"` | `"day"`               | Deepest selectable panel. Month and year commit as a `Date`.                       |
+| `hideMonths`      | `boolean`                    | `false`               | Hides the month selector and month panel. Ignored when `granularity` is `"month"`. |
+| `hideOutsideDays` | `boolean`                    | `false`               | Hides days that fall outside the displayed month.                                  |
+| `hideWeekdays`    | `boolean`                    | `false`               | Hides weekday labels on the date panel.                                            |
+| `hideYears`       | `boolean`                    | `false`               | Hides the year selector and year panel. Ignored when `granularity` is `"year"`.    |
+| `maxDate`         | `Date`                       | —                     | Latest selectable date.                                                            |
+| `minDate`         | `Date`                       | —                     | Earliest selectable date.                                                          |
+| `multiple`        | `boolean`                    | `false`               | Allows selecting multiple dates.                                                   |
+| `previewDate`     | `Date \| null`               | —                     | Controlled range-preview hover date.                                               |
+| `range`           | `boolean`                    | `false`               | Selects a start/end date range.                                                    |
+| `readOnly`        | `boolean`                    | `false`               | Prevents selection.                                                                |
+| `rounded`         | `CalendarRounded`            | `"md"`                | Border radius of tiles and chrome.                                                 |
+| `slots`           | `CalendarDateSlots`          | —                     | Named slots forwarded to `CalendarDate` (`day`).                                   |
+| `startOfWeek`     | `StartOfWeek`                | `0`                   | First day of the week (`0` = Sunday).                                              |
+| `timeZone`        | `string`                     | —                     | IANA time zone.                                                                    |
+| `value`           | `DatePickerModel`            | —                     | Controlled selection model.                                                        |
+| `view`            | `CalendarView`               | —                     | Controlled panel view. Pair with `onViewChange`.                                   |
+| `viewDate`        | `Date`                       | —                     | Controlled displayed month. Pair with `onViewDateChange`.                          |
 
 Calendar chrome tokens live on `components.Calendar` (`color`, `day`, `rounded`).
 

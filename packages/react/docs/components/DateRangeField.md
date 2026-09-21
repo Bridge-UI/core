@@ -21,6 +21,8 @@ import { DateRangeField } from "@bridge-ui/react/Components/DateRangeField";
   onChange={setRange}
 />
 
+<DateRangeField label="Period" granularity="month" />
+
 <DateRangeField
   error
   label="Dates"
@@ -60,15 +62,17 @@ The input is read-only by default (picker only). Set `editable` to unlock typing
 | `clearable`       | `boolean`                    | `false`                                      | Whether the value can be cleared.                                                  |
 | `customProps`     | `DateRangeFieldCustomProps`  | —                                            | Extra props for internal parts.                                                    |
 | `defaultValue`    | `DateRangeValue \| null`     | `null`                                       | Uncontrolled initial value.                                                        |
+| `defaultView`     | `CalendarView`               | matches `granularity`                        | Initial calendar panel. Clamped so it is not deeper than `granularity`.            |
 | `disableDates`    | `Date[]`                     | —                                            | Dates that cannot be selected.                                                     |
 | `disableMonths`   | `number[]`                   | —                                            | Month indexes that cannot be selected.                                             |
 | `disableYears`    | `number[]`                   | —                                            | Years that cannot be selected.                                                     |
 | `editable`        | `boolean`                    | `false`                                      | Unlocks the input. Does not parse or commit typed text.                            |
 | `fill`            | `boolean`                    | —                                            | Fills the overlay width. Unset: `true` for `drawer`, `false` for `menu` / `modal`. |
-| `hideMonths`      | `boolean`                    | `false`                                      | Hides month navigation / panel.                                                    |
+| `granularity`     | `"day" \| "month" \| "year"` | `"day"`                                      | Deepest selectable panel. Month and year commit as a `Date`.                       |
+| `hideMonths`      | `boolean`                    | `false`                                      | Hides month navigation / panel. Ignored when `granularity` is `"month"`.           |
 | `hideOutsideDays` | `boolean`                    | `false`                                      | Hides days that fall outside the displayed month.                                  |
 | `hideWeekdays`    | `boolean`                    | `false`                                      | Hides weekday labels.                                                              |
-| `hideYears`       | `boolean`                    | `false`                                      | Hides year navigation / panel.                                                     |
+| `hideYears`       | `boolean`                    | `false`                                      | Hides year navigation / panel. Ignored when `granularity` is `"year"`.             |
 | `maxDate`         | `Date`                       | —                                            | Latest selectable date.                                                            |
 | `minDate`         | `Date`                       | —                                            | Earliest selectable date.                                                          |
 | `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"`                               | Dual calendar layout. Mobile `drawer` / `modal` default to `vertical` when unset.  |
