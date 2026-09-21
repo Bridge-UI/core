@@ -151,3 +151,30 @@ test("it should keep per-page and pagination inline when they fit", () => {
     .should("have.class", "flex-row")
     .and("have.class", "justify-between");
 });
+
+test("it should keep header text from clipping truncated glyphs", () => {
+  cy.mount(
+    <DataTable
+      rows={[{ id: "1", name: "Ada Lovelace" }]}
+      columns={[
+        {
+          id: "tags",
+          header: "Tags",
+          cell: (row) => row.name,
+          filters: [{ label: "A", value: "a" }],
+        },
+      ]}
+    />,
+  );
+
+  cy.contains("Tags")
+    .should("have.class", "leading-normal")
+    .and("not.have.class", "leading-none")
+    .then(($el) => {
+      const styles = getComputedStyle($el[0]);
+
+      expect(Number.parseFloat(styles.lineHeight)).to.be.greaterThan(
+        Number.parseFloat(styles.fontSize),
+      );
+    });
+});

@@ -212,8 +212,8 @@ const DataTableHeadCell = memo(function DataTableHeadCell({
 
   return (
     <TableHead align={getHeadAlign(header)} {...getHeadBind(header)}>
-      <div className="flex w-full min-w-0 items-center gap-1.5 leading-none">
-        <span className="min-w-0 truncate leading-none">{header.header}</span>
+      <div className="flex w-full min-w-0 items-center gap-1.5">
+        <span className="min-w-0 truncate leading-normal">{header.header}</span>
 
         {header.sortable ? (
           <DataTableSortButton

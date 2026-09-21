@@ -269,6 +269,9 @@ function Listbox({
           placement,
           disableAutoFocus,
           ...(!isNil(rounded) ? { rounded } : {}),
+          ...(!isNil(merged.matchWidth)
+            ? { matchWidth: merged.matchWidth }
+            : {}),
           ...menuProps,
         },
       }}

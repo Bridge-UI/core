@@ -365,3 +365,54 @@ test("it should render a custom footer slot and close on apply", async () => {
   expect(onApply).toHaveBeenCalled();
   expect(wrapper.emitted("apply")).toBeTruthy();
 });
+
+test("it should keep the menu content-sized when matchWidth is unset", async () => {
+  mountListbox({
+    props: {
+      overlay: "menu",
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-max");
+  expect(panel?.className).not.toContain("w-full");
+});
+
+test("it should stretch the menu to the anchor when matchWidth is set", async () => {
+  mountListbox({
+    props: {
+      overlay: "menu",
+      matchWidth: true,
+      modelValue: true,
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-full");
+  expect(panel?.className).not.toContain("w-max");
+});
+
+test("it should let customProps.menu override matchWidth", async () => {
+  mountListbox({
+    props: {
+      overlay: "menu",
+      matchWidth: true,
+      modelValue: true,
+      customProps: { menu: { matchWidth: false } },
+    },
+  });
+
+  await flushPromises();
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-max");
+  expect(panel?.className).not.toContain("w-full");
+});

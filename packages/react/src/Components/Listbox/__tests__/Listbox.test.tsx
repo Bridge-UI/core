@@ -540,3 +540,93 @@ test("it should render a custom footer slot and close on apply", async () => {
   expect(onApply).toHaveBeenCalled();
   expect(onShowChange).toHaveBeenCalledWith(false);
 });
+
+test("it should keep the menu content-sized when matchWidth is unset", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          overlay="menu"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="match-width-default"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-max");
+  expect(panel?.className).not.toContain("w-full");
+});
+
+test("it should stretch the menu to the anchor when matchWidth is set", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          matchWidth
+          overlay="menu"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="match-width-listbox"
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-full");
+  expect(panel?.className).not.toContain("w-max");
+});
+
+test("it should let customProps.menu override matchWidth", async () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          matchWidth
+          overlay="menu"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="match-width-override"
+          customProps={{ menu: { matchWidth: false } }}
+        />
+      </div>
+    );
+  }
+
+  render(<Host />);
+
+  await waitFor(() => {
+    expect(screen.getByRole("listbox")).toBeTruthy();
+  });
+
+  const panel = document.body.querySelector('[role="menu"]');
+
+  expect(panel?.className).toContain("w-max");
+  expect(panel?.className).not.toContain("w-full");
+});

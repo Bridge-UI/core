@@ -116,3 +116,28 @@ test("it should not clip accented option labels", () => {
       );
     });
 });
+
+test("it should stretch the menu to the anchor when matchWidth is set", () => {
+  function Host() {
+    const anchorRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <div ref={anchorRef}>
+        <Listbox
+          show
+          matchWidth
+          overlay="menu"
+          options={options}
+          anchorEl={anchorRef}
+          listboxId="cy-listbox"
+        />
+      </div>
+    );
+  }
+
+  cy.mount(<Host />);
+
+  cy.get('[role="menu"]')
+    .should("have.class", "w-full")
+    .and("not.have.class", "w-max");
+});

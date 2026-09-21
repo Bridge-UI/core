@@ -1208,3 +1208,25 @@ test("it should show the current page in the footer status", () => {
     false,
   );
 });
+
+test("it should keep header text from clipping truncated glyphs", () => {
+  render(
+    <DataTable
+      rows={rows}
+      columns={[
+        {
+          id: "tags",
+          header: "Tags",
+          cell: () => null,
+          filters: [{ label: "A", value: "a" }],
+        },
+      ]}
+    />,
+  );
+
+  const header = screen.getByText("Tags");
+
+  expect(header.className).toContain("truncate");
+  expect(header.className).toContain("leading-normal");
+  expect(header.className).not.toContain("leading-none");
+});
