@@ -37,6 +37,18 @@ export type DateAdapterTimeOptions = {
 };
 
 /**
+ * Options for {@link DateAdapter.format}.
+ */
+export type DateAdapterFormatOptions = {
+  /**
+   * Calendar unit to format. `"month"` omits the day; `"year"` is the year only.
+   *
+   * @default "day"
+   */
+  granularity?: "day" | "year" | "month";
+};
+
+/**
  * Pluggable date library for Bridge UI calendars and pickers.
  * Apps may replace the native default via `BridgeUIProvider` `global.dates`.
  *
@@ -74,7 +86,11 @@ export interface DateAdapter<TDate = Date> {
   /**
    * Formats `date` for display (e.g. DateField text).
    */
-  format: (date: TDate, context?: DateAdapterContext) => string;
+  format: (
+    date: TDate,
+    context?: DateAdapterContext,
+    options?: DateAdapterFormatOptions,
+  ) => string;
 
   /**
    * Formats the time-of-day portion of `date` (e.g. TimeField text).
@@ -538,22 +554,6 @@ export function createNativeDateAdapter(
       );
     },
 
-    format: (date, context) => {
-      if (!isValidDate(date)) {
-        return "";
-      }
-
-      const locale = resolveLocale(context);
-      const timeZone = resolveTimeZone(context);
-
-      return new Intl.DateTimeFormat(locale, {
-        timeZone,
-        day: "2-digit",
-        year: "numeric",
-        month: "2-digit",
-      }).format(date);
-    },
-
     endOfMonth: (date, context) => {
       const parts = getParts(date, context);
       const daysInMonth = new Date(
@@ -681,6 +681,38 @@ export function createNativeDateAdapter(
       const parts = getParts(parsed, context);
 
       return fromParts(parts.year, parts.month, parts.day, context);
+    },
+
+    format: (date, context, options) => {
+      if (!isValidDate(date)) {
+        return "";
+      }
+
+      const locale = resolveLocale(context);
+      const timeZone = resolveTimeZone(context);
+      const granularity = options?.granularity ?? "day";
+
+      if (granularity === "year") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          year: "numeric",
+        }).format(date);
+      }
+
+      if (granularity === "month") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          month: "long",
+          year: "numeric",
+        }).format(date);
+      }
+
+      return new Intl.DateTimeFormat(locale, {
+        timeZone,
+        day: "2-digit",
+        year: "numeric",
+        month: "2-digit",
+      }).format(date);
     },
 
     parseTime: (value, context, timeOptions) => {

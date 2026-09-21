@@ -651,6 +651,7 @@ export interface CalendarConfigBase {
   defaultProps: Partial<{
     color: keyof CalendarColor;
     fill: boolean;
+    granularity: "day" | "year" | "month";
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -686,6 +687,7 @@ export interface DateFieldConfigBase {
     color: keyof FormFieldColor;
     editable: boolean;
     fill: boolean;
+    granularity: "day" | "year" | "month";
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -710,6 +712,7 @@ export interface DatePickerConfigBase {
     color: keyof CalendarColor;
     error: boolean;
     fill: boolean;
+    granularity: "day" | "year" | "month";
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;
@@ -729,6 +732,7 @@ export interface DateRangeFieldConfigBase {
     color: keyof FormFieldColor;
     editable: boolean;
     fill: boolean;
+    granularity: "day" | "year" | "month";
     hideErrorMessage: boolean;
     hideMonths: boolean;
     hideOutsideDays: boolean;
@@ -752,6 +756,7 @@ export interface DateRangePickerConfigBase {
     color: keyof CalendarColor;
     error: boolean;
     fill: boolean;
+    granularity: "day" | "year" | "month";
     hideMonths: boolean;
     hideOutsideDays: boolean;
     hideWeekdays: boolean;

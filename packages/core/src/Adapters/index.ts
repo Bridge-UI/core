@@ -8,6 +8,7 @@ export {
 export type {
   DateAdapter,
   DateAdapterContext,
+  DateAdapterFormatOptions,
   DateAdapterTimeOptions,
   NativeDateAdapterOptions,
 } from "@/Adapters/date";

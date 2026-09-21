@@ -5,10 +5,19 @@ import { describe, expect, test } from "vitest";
 import { createNativeDateAdapter } from "@/Adapters/date";
 import {
   applyDateSelection,
+  calendarPanelViewFromGranularity,
+  clampCalendarPanelView,
+  dateFromYear,
+  dateFromYearMonth,
+  formatDatePickerModel,
+  isCalendarMonthPanelHidden,
+  isCalendarYearPanelHidden,
   isDateDisabled,
   isDateInRangePreview,
   isDateSelected,
+  normalizeDateToGranularity,
   resolveCalendarDayInteractionState,
+  resolveCalendarPanelView,
   resolveDatePickerMode,
   resolveStartOfWeek,
   sortDateRangeValue,
@@ -106,6 +115,20 @@ describe("applyDateSelection", () => {
 
     expect(nextRange).toEqual([restart, restart]);
   });
+
+  test("it should commit month-start dates at month granularity", () => {
+    const midMonth = adapter.parse("2021-05-21")!;
+
+    expect(
+      applyDateSelection({
+        adapter,
+        value: null,
+        next: midMonth,
+        mode: "single",
+        granularity: "month",
+      }),
+    ).toEqual(adapter.parse("2021-05-01"));
+  });
 });
 
 describe("isDateDisabled / isDateSelected", () => {
@@ -152,6 +175,38 @@ describe("isDateDisabled / isDateSelected", () => {
         date: day,
         mode: "range",
         value: [adapter.parse("2021-05-10")!, adapter.parse("2021-05-25")!],
+      }),
+    ).toBe(true);
+  });
+
+  test("it should compare min and max at month granularity", () => {
+    const march = adapter.parse("2021-03-20")!;
+
+    expect(
+      isDateDisabled(march, {
+        adapter,
+        granularity: "month",
+        maxDate: adapter.parse("2021-03-15")!,
+      }),
+    ).toBe(false);
+
+    expect(
+      isDateDisabled(adapter.parse("2021-04-01")!, {
+        adapter,
+        granularity: "month",
+        maxDate: adapter.parse("2021-03-15")!,
+      }),
+    ).toBe(true);
+  });
+
+  test("it should select a whole month from a mid-month value", () => {
+    expect(
+      isDateSelected({
+        adapter,
+        mode: "single",
+        granularity: "month",
+        date: adapter.parse("2021-05-01")!,
+        value: adapter.parse("2021-05-21")!,
       }),
     ).toBe(true);
   });
@@ -228,5 +283,87 @@ describe("resolveCalendarDayInteractionState / isDateInRangePreview", () => {
         value: [start, previewDate],
       }),
     ).toBe(false);
+  });
+});
+
+describe("calendar granularity", () => {
+  test("it should map granularity to the commit panel", () => {
+    expect(calendarPanelViewFromGranularity("day")).toBe("date");
+    expect(calendarPanelViewFromGranularity("month")).toBe("month");
+    expect(calendarPanelViewFromGranularity("year")).toBe("year");
+  });
+
+  test("it should clamp views deeper than granularity", () => {
+    expect(clampCalendarPanelView("date", "month")).toBe("month");
+    expect(clampCalendarPanelView("month", "year")).toBe("year");
+    expect(clampCalendarPanelView("year", "month")).toBe("year");
+  });
+
+  test("it should keep the commit panel visible when hide flags match granularity", () => {
+    expect(
+      resolveCalendarPanelView({
+        view: "month",
+        hideMonths: true,
+        granularity: "month",
+      }),
+    ).toBe("month");
+
+    expect(
+      resolveCalendarPanelView({
+        view: "year",
+        hideYears: true,
+        granularity: "year",
+      }),
+    ).toBe("year");
+
+    expect(isCalendarMonthPanelHidden({ hideMonths: true })).toBe(true);
+    expect(
+      isCalendarMonthPanelHidden({
+        hideMonths: true,
+        granularity: "month",
+      }),
+    ).toBe(false);
+    expect(
+      isCalendarYearPanelHidden({
+        hideYears: true,
+        granularity: "year",
+      }),
+    ).toBe(false);
+  });
+
+  test("it should normalize dates on commit", () => {
+    const mid = adapter.parse("2021-05-21")!;
+
+    expect(normalizeDateToGranularity(mid, "month", adapter)).toEqual(
+      adapter.parse("2021-05-01"),
+    );
+    expect(normalizeDateToGranularity(mid, "year", adapter)).toEqual(
+      adapter.parse("2021-01-01"),
+    );
+    expect(dateFromYearMonth({ adapter, month: 4, year: 2021 })).toEqual(
+      adapter.parse("2021-05-01"),
+    );
+    expect(dateFromYear({ adapter, year: 2021 })).toEqual(
+      adapter.parse("2021-01-01"),
+    );
+  });
+
+  test("it should format picker models at month and year granularity", () => {
+    const may = adapter.parse("2021-05-21")!;
+
+    expect(
+      formatDatePickerModel(may, adapter, { locale: "en-US" }, "month"),
+    ).toBe("May 2021");
+    expect(
+      formatDatePickerModel(may, adapter, { locale: "en-US" }, "year"),
+    ).toBe("2021");
+    expect(
+      formatDatePickerModel(
+        [adapter.parse("2021-05-01")!, adapter.parse("2021-09-01")!],
+        adapter,
+        { locale: "en-US" },
+        "month",
+      ),
+    ).toMatch(/May 2021.+Sep(tember)? 2021/);
   });
 });
