@@ -254,3 +254,16 @@ test("it should close the overlay after Cancel when showFooter is set", async ()
     ),
   ).toBe(false);
 });
+
+test("it should format both ends at month granularity", () => {
+  const wrapper = mountDateRangeField({
+    props: {
+      granularity: "month",
+      modelValue: [new Date(2021, 8, 20), new Date(2022, 2, 5)],
+    },
+  });
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "September 2021 – March 2022",
+  );
+});

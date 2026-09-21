@@ -304,3 +304,17 @@ test("it should close the modal overlay from a custom footer apply", () => {
   expect(onChange).toHaveBeenCalled();
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });
+
+test("it should format the input at month granularity", () => {
+  render(<DateField granularity="month" value={new Date(2021, 8, 20)} />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).value).toBe(
+    "September 2021",
+  );
+});
+
+test("it should format the input at year granularity", () => {
+  render(<DateField granularity="year" value={new Date(2021, 8, 20)} />);
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).value).toBe("2021");
+});

@@ -58,6 +58,7 @@ const {
       :time-zone="merged.timeZone"
       :hide-years="merged.hideYears"
       :hide-months="merged.hideMonths"
+      :granularity="merged.granularity"
       v-on:change="handleCalendarChange"
       :default-view="merged.defaultView"
       :start-of-week="merged.startOfWeek"

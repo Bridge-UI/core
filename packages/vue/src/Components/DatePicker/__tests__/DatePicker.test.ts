@@ -79,3 +79,21 @@ test("it should render a custom footer slot and commit on apply", async () => {
   await save?.trigger("click");
   expect(wrapper.emitted("change")).toBeTruthy();
 });
+
+test("it should commit a month-start date when granularity is month", async () => {
+  const wrapper = mount(DatePicker, {
+    props: { granularity: "month", defaultValue: new Date(2021, 4, 1) },
+  });
+
+  const march = wrapper
+    .findAll("button")
+    .find((node) => /march/i.test(node.text()));
+
+  await march?.trigger("click");
+
+  const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(selected.getFullYear()).toBe(2021);
+  expect(selected.getMonth()).toBe(2);
+  expect(selected.getDate()).toBe(1);
+});

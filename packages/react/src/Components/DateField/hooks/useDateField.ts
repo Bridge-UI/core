@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from "react";
 // ** Core Imports
 import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isDateRangeValue,
+  formatDatePickerModel,
   resolveDatePickerMode,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
@@ -53,6 +53,7 @@ const dateFieldBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "granularity",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -61,26 +62,6 @@ const dateFieldBridgeKeys = [
   "disableMonths",
   "hideOutsideDays",
 ] as const satisfies readonly (keyof DateFieldOwnProps)[];
-
-function formatModel(
-  value: DatePickerModel,
-  adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
-): string {
-  if (isNil(value)) {
-    return "";
-  }
-
-  if (isDateRangeValue(value)) {
-    return `${adapter.format(value[0], context)} – ${adapter.format(value[1], context)}`;
-  }
-
-  if (isArray(value)) {
-    return value.map((entry) => adapter.format(entry, context)).join(", ");
-  }
-
-  return adapter.format(value, context);
-}
 
 function hasDateFieldValue(value: DatePickerModel): boolean {
   if (isNil(value)) {
@@ -275,7 +256,12 @@ export function useDateField(props: DateFieldProps) {
   });
 
   const displayText = derived(() => {
-    return formatModel(modelValue, adapter, context);
+    return formatDatePickerModel(
+      modelValue,
+      adapter,
+      context,
+      dateOnly.granularity ?? "day",
+    );
   });
 
   const commitValue = useCallback(

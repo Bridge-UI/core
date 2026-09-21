@@ -159,3 +159,16 @@ test("it should close the overlay after Cancel when showFooter is set", () => {
   expect(onChange).not.toHaveBeenCalled();
   expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
 });
+
+test("it should format both ends at month granularity", () => {
+  render(
+    <DateRangeField
+      granularity="month"
+      value={[new Date(2021, 8, 20), new Date(2022, 2, 5)]}
+    />,
+  );
+
+  expect((screen.getByRole("textbox") as HTMLInputElement).value).toBe(
+    "September 2021 – March 2022",
+  );
+});

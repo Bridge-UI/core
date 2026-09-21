@@ -85,6 +85,8 @@ function DateRangeField(props: DateRangeFieldProps) {
           color={formField.merged.color}
           disabled={formField.isDisabled}
           hideMonths={dateOnly.hideMonths}
+          granularity={dateOnly.granularity}
+          defaultView={dateOnly.defaultView}
           startOfWeek={dateOnly.startOfWeek}
           rounded={formField.merged.rounded}
           disableDates={dateOnly.disableDates}
