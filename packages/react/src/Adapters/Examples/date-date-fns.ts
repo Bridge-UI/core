@@ -1,10 +1,6 @@
 /**
- * Example date-fns date adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.dates`.
- * Not published as an npm package.
- *
- * Requires `date-fns`. Values stay as native `Date` (date-fns default).
- * For IANA zones, prefer the Luxon or Day.js samples.
+ * date-fns adapter (`TDate = Date`). Wire via `BridgeUIProvider` `global.dates`.
+ * Requires the optional `date-fns` peer. For IANA zones, prefer Luxon or Day.js.
  */
 
 // ** External Imports

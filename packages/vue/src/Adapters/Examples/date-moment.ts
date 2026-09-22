@@ -1,9 +1,6 @@
 /**
- * Example Moment.js date adapter for `@bridge-ui/react`.
- * Copy into your app or wire via `BridgeUIProvider` `global.dates`.
- * Not published as an npm package.
- *
- * Requires `moment` and `moment-timezone` (IANA zones via `moment.tz`).
+ * Moment adapter (`TDate = Date`). Wire via `BridgeUIProvider` / `createBridgeUI`
+ * `global.dates`. Requires the optional `moment` and `moment-timezone` peers.
  */
 
 // ** External Imports

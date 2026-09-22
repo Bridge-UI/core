@@ -1,7 +1,6 @@
 /**
- * Example Phosphor Icons adapter for `@bridge-ui/react`.
- * Copy into your app or wire via `BridgeUIProvider` `global.icons`.
- * Not published as an npm package.
+ * Phosphor Icons adapter. Wire via `BridgeUIProvider` `global.icons`.
+ * Requires the optional `@phosphor-icons/react` peer.
  */
 
 // ** External Imports

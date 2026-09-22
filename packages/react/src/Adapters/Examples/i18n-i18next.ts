@@ -1,10 +1,8 @@
 /**
- * Example i18next adapter for `@bridge-ui/react`.
- * Copy into your app or wire via `BridgeUIProvider` `global.i18n`.
- * Not published as an npm package.
+ * i18next adapter. Wire via `BridgeUIProvider` `global.i18n`.
+ * Requires the optional `i18next` peer (uses the default instance).
  *
- * Uses the default i18next instance. Passes Bridge source strings, `count`,
- * and `params` to `i18n.t` (interpolation and pluralization stay in i18next).
+ * Passes Bridge source strings, `count`, and `params` to `i18n.t`.
  * `setLocale` syncs via `i18n.changeLanguage`.
  */
 

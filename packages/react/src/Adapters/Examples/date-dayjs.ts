@@ -1,9 +1,7 @@
 /**
- * Example Day.js date adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.dates`.
- * Not published as an npm package.
- *
- * Requires `dayjs`. Loads `utc`, `timezone`, and `customParseFormat` plugins.
+ * Day.js adapter (`TDate = Date`). Wire via `BridgeUIProvider` `global.dates`.
+ * Requires the optional `dayjs` peer. Loads `utc`, `timezone`, and
+ * `customParseFormat` plugins.
  */
 
 // ** External Imports

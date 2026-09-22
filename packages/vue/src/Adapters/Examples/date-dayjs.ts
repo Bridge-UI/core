@@ -1,14 +1,15 @@
 /**
- * Example Moment.js date adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.dates`.
- * Not published as an npm package.
- *
- * Requires `moment` and `moment-timezone` (IANA zones via `moment.tz`).
+ * Day.js adapter (`TDate = Date`). Wire via `BridgeUIProvider` / `createBridgeUI`
+ * `global.dates`. Requires the optional `dayjs` peer. Loads `utc`, `timezone`,
+ * and `customParseFormat` plugins.
  */
 
 // ** External Imports
+import dayjs, { type Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { clamp, isNil, isString, range } from "es-toolkit/compat";
-import moment, { type Moment } from "moment-timezone";
 
 // ** Core Imports
 import type {
@@ -17,10 +18,14 @@ import type {
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(customParseFormat);
+
 /**
- * Options for {@link createMomentDateAdapter}.
+ * Options for {@link createDayjsDateAdapter}.
  */
-export type MomentDateAdapterOptions = {
+export type DayjsDateAdapterOptions = {
   /**
    * Default locale when context omits `locale`.
    *
@@ -37,10 +42,10 @@ export type MomentDateAdapterOptions = {
 };
 
 /**
- * Builds a Moment-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
+ * Builds a Day.js-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
  */
-export function createMomentDateAdapter(
-  options: MomentDateAdapterOptions = {},
+export function createDayjsDateAdapter(
+  options: DayjsDateAdapterOptions = {},
 ): DateAdapter<Date> {
   const resolveLocale = (context?: DateAdapterContext) => {
     return context?.locale ?? options.locale;
@@ -50,10 +55,10 @@ export function createMomentDateAdapter(
     return context?.timeZone ?? options.timeZone;
   };
 
-  const toMoment = (date: Date, context?: DateAdapterContext): Moment => {
+  const toDayjs = (date: Date, context?: DateAdapterContext): Dayjs => {
     const locale = resolveLocale(context);
     const zone = resolveZone(context);
-    let value = isNil(zone) ? moment(date) : moment.tz(date, zone);
+    let value = isNil(zone) ? dayjs(date) : dayjs(date).tz(zone);
 
     if (!isNil(locale)) {
       value = value.locale(locale);
@@ -62,7 +67,7 @@ export function createMomentDateAdapter(
     return value;
   };
 
-  const fromMoment = (value: Moment): Date => {
+  const fromDayjs = (value: Dayjs): Date => {
     return value.toDate();
   };
 
@@ -71,108 +76,95 @@ export function createMomentDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
-    getDay: (date, context) => toMoment(date, context).day(),
+    getDay: (date, context) => toDayjs(date, context).day(),
 
-    getDate: (date, context) => toMoment(date, context).date(),
+    getDate: (date, context) => toDayjs(date, context).date(),
 
-    getYear: (date, context) => toMoment(date, context).year(),
+    getYear: (date, context) => toDayjs(date, context).year(),
 
-    getHours: (date, context) => toMoment(date, context).hour(),
+    getHours: (date, context) => toDayjs(date, context).hour(),
+
+    getMonth: (date, context) => toDayjs(date, context).month(),
 
     isAfter: (a, b, context) => adapter.isBefore(b, a, context),
 
-    getMonth: (date, context) => toMoment(date, context).month(),
+    getMinutes: (date, context) => toDayjs(date, context).minute(),
 
-    getMinutes: (date, context) => toMoment(date, context).minute(),
-
-    getSeconds: (date, context) => toMoment(date, context).second(),
-
-    isSameDay: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "day");
-    },
+    getSeconds: (date, context) => toDayjs(date, context).second(),
 
     setDate: (date, day, context) => {
-      return fromMoment(toMoment(date, context).clone().date(day));
-    },
-
-    isSameYear: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "year");
+      return fromDayjs(toDayjs(date, context).date(day));
     },
 
     setYear: (date, year, context) => {
-      return fromMoment(toMoment(date, context).clone().year(year));
+      return fromDayjs(toDayjs(date, context).year(year));
     },
 
     startOfDay: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().startOf("day"));
+      return fromDayjs(toDayjs(date, context).startOf("day"));
     },
 
     endOfMonth: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().endOf("month"));
-    },
-
-    isSameMonth: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "month");
+      return fromDayjs(toDayjs(date, context).endOf("month"));
     },
 
     setMonth: (date, month, context) => {
-      return fromMoment(toMoment(date, context).clone().month(month));
+      return fromDayjs(toDayjs(date, context).month(month));
     },
 
     startOfMonth: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().startOf("month"));
+      return fromDayjs(toDayjs(date, context).startOf("month"));
+    },
+
+    isSameDay: (a, b, context) => {
+      return toDayjs(a, context).isSame(toDayjs(b, context), "day");
+    },
+
+    isSameYear: (a, b, context) => {
+      return toDayjs(a, context).isSame(toDayjs(b, context), "year");
+    },
+
+    isSameMonth: (a, b, context) => {
+      return toDayjs(a, context).isSame(toDayjs(b, context), "month");
     },
 
     addDays: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "days"));
+      return fromDayjs(toDayjs(date, context).add(amount, "day"));
     },
 
     addYears: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "years"));
+      return fromDayjs(toDayjs(date, context).add(amount, "year"));
     },
 
     addMonths: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "months"));
+      return fromDayjs(toDayjs(date, context).add(amount, "month"));
     },
 
     setHours: (date, hours, context) => {
-      return fromMoment(
-        toMoment(date, context)
-          .clone()
-          .hour(clamp(hours, 0, 23)),
-      );
+      return fromDayjs(toDayjs(date, context).hour(clamp(hours, 0, 23)));
     },
 
     setMinutes: (date, minutes, context) => {
-      return fromMoment(
-        toMoment(date, context)
-          .clone()
-          .minute(clamp(minutes, 0, 59)),
-      );
+      return fromDayjs(toDayjs(date, context).minute(clamp(minutes, 0, 59)));
     },
 
     setSeconds: (date, seconds, context) => {
-      return fromMoment(
-        toMoment(date, context)
-          .clone()
-          .second(clamp(seconds, 0, 59)),
-      );
+      return fromDayjs(toDayjs(date, context).second(clamp(seconds, 0, 59)));
     },
 
     isBefore: (a, b, context) => {
-      return toMoment(a, context)
-        .clone()
+      return toDayjs(a, context)
         .startOf("day")
-        .isBefore(toMoment(b, context).clone().startOf("day"));
+        .isBefore(toDayjs(b, context).startOf("day"));
     },
 
     parseTime: (value, context, timeOptions) => {
-      return parseTimeWithMoment({
+      return parseTimeWithDayjs({
         value,
         adapter,
         context,
-        toMoment,
-        fromMoment,
+        toDayjs,
+        fromDayjs,
         timeOptions,
       });
     },
@@ -188,8 +180,8 @@ export function createMomentDateAdapter(
     },
 
     isSameTime: (a, b, context) => {
-      const left = toMoment(a, context);
-      const right = toMoment(b, context);
+      const left = toDayjs(a, context);
+      const right = toDayjs(b, context);
 
       return (
         left.hour() === right.hour() &&
@@ -201,13 +193,13 @@ export function createMomentDateAdapter(
     now: (context) => {
       const zone = resolveZone(context);
       const locale = resolveLocale(context);
-      let value = isNil(zone) ? moment() : moment.tz(zone);
+      let value = isNil(zone) ? dayjs() : dayjs().tz(zone);
 
       if (!isNil(locale)) {
         value = value.locale(locale);
       }
 
-      return fromMoment(value);
+      return fromDayjs(value);
     },
 
     getWeekdayNames: (context) => {
@@ -231,13 +223,13 @@ export function createMomentDateAdapter(
 
       const trimmed = value.trim();
       const zone = resolveZone(context);
-      const parsed = isNil(zone) ? moment(trimmed) : moment.tz(trimmed, zone);
+      const parsed = isNil(zone) ? dayjs(trimmed) : dayjs.tz(trimmed, zone);
 
       if (!parsed.isValid()) {
         return null;
       }
 
-      return fromMoment(parsed.startOf("day"));
+      return fromDayjs(parsed.startOf("day"));
     },
 
     getCalendarDays: (view, startOfWeek, context) => {
@@ -307,15 +299,15 @@ export function createMomentDateAdapter(
   return adapter;
 }
 
-function parseTimeWithMoment(input: {
+function parseTimeWithDayjs(input: {
   adapter: DateAdapter<Date>;
   context?: DateAdapterContext;
-  fromMoment: (value: Moment) => Date;
+  fromDayjs: (value: Dayjs) => Date;
   timeOptions?: DateAdapterTimeOptions;
-  toMoment: (date: Date, context?: DateAdapterContext) => Moment;
+  toDayjs: (date: Date, context?: DateAdapterContext) => Dayjs;
   value: string;
 }): Date | null {
-  const { value, adapter, context, toMoment, fromMoment, timeOptions } = input;
+  const { value, adapter, context, toDayjs, fromDayjs, timeOptions } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;
@@ -331,17 +323,16 @@ function parseTimeWithMoment(input: {
     : showSeconds
       ? "H:mm:ss"
       : "H:mm";
-  const parsed = moment(trimmed, format, true);
+  const parsed = dayjs(trimmed, format, true);
 
   if (!parsed.isValid()) {
     return null;
   }
 
-  const base = toMoment(adapter.now(context), context);
+  const base = toDayjs(adapter.now(context), context);
 
-  return fromMoment(
+  return fromDayjs(
     base
-      .clone()
       .hour(parsed.hour())
       .minute(parsed.minute())
       .second(showSeconds ? parsed.second() : 0)

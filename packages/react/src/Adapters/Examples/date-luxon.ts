@@ -1,9 +1,6 @@
 /**
- * Example Luxon date adapter for `@bridge-ui/react`.
- * Copy into your app or wire via `BridgeUIProvider` `global.dates`.
- * Not published as an npm package.
- *
- * Requires `luxon`. Strong IANA time-zone support via `DateTime.setZone`.
+ * Luxon adapter (`TDate = Date`). Wire via `BridgeUIProvider` `global.dates`.
+ * Requires the optional `luxon` peer. IANA zones via `DateTime.setZone`.
  */
 
 // ** External Imports

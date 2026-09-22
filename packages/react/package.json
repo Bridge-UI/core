@@ -54,6 +54,10 @@
       "import": "./dist/Adapters/I18n/index.js",
       "types": "./dist/Adapters/I18n/index.d.ts"
     },
+    "./Adapters/Examples/*": {
+      "import": "./dist/Adapters/Examples/*.js",
+      "types": "./dist/Adapters/Examples/*.d.ts"
+    },
     "./Actions": {
       "import": "./dist/Actions/index.js",
       "types": "./dist/Actions/index.d.ts"
@@ -80,12 +84,64 @@
     "docs"
   ],
   "peerDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/react-fontawesome": "^3.0.0",
+    "@heroicons/react": "^2.2.0",
+    "@phosphor-icons/react": "^2.1.0",
+    "@tabler/icons-react": "^3.0.0",
     "@tanstack/react-table": "^8.21.0",
+    "date-fns": "^4.0.0",
+    "dayjs": "^1.11.0",
+    "i18next": "^26.0.0",
+    "lucide-react": "^0.400.0 || ^1.0.0",
+    "luxon": "^3.0.0",
+    "moment": "^2.30.0",
+    "moment-timezone": "^0.5.0 || ^0.6.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
+    "@fortawesome/fontawesome-svg-core": {
+      "optional": true
+    },
+    "@fortawesome/free-solid-svg-icons": {
+      "optional": true
+    },
+    "@fortawesome/react-fontawesome": {
+      "optional": true
+    },
+    "@heroicons/react": {
+      "optional": true
+    },
+    "@phosphor-icons/react": {
+      "optional": true
+    },
+    "@tabler/icons-react": {
+      "optional": true
+    },
     "@tanstack/react-table": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "dayjs": {
+      "optional": true
+    },
+    "i18next": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    },
+    "luxon": {
+      "optional": true
+    },
+    "moment": {
+      "optional": true
+    },
+    "moment-timezone": {
       "optional": true
     }
   },

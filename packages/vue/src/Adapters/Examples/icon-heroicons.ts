@@ -1,7 +1,6 @@
 /**
- * Example Heroicons adapter for `@bridge-ui/vue` (24px outline).
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
- * Not published as an npm package.
+ * Heroicons (24px outline) adapter. Wire via `BridgeUIProvider` / `createBridgeUI`
+ * `global.icons`. Requires the optional `@heroicons/vue` peer.
  */
 
 // ** External Imports

@@ -1,7 +1,6 @@
 /**
- * Example Phosphor Icons adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
- * Not published as an npm package.
+ * Phosphor Icons adapter. Wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
+ * Requires the optional `@phosphor-icons/vue` peer.
  */
 
 // ** External Imports

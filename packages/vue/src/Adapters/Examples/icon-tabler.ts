@@ -1,7 +1,6 @@
 /**
- * Example Tabler Icons adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
- * Not published as an npm package.
+ * Tabler Icons adapter. Wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
+ * Requires the optional `@tabler/icons-vue` peer.
  */
 
 // ** External Imports

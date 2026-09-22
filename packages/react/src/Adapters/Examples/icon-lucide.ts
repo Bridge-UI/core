@@ -1,10 +1,10 @@
 /**
- * Example Lucide icon adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.icons`.
- * Not published as an npm package.
+ * Lucide icon adapter. Wire via `BridgeUIProvider` `global.icons`.
+ * Requires the optional `lucide-react` peer.
  */
 
 // ** External Imports
+import { get } from "es-toolkit/compat";
 import {
   Bell,
   Calendar,
@@ -36,8 +36,7 @@ import {
   TriangleAlert,
   User,
   X,
-} from "@lucide/vue";
-import { get } from "es-toolkit/compat";
+} from "lucide-react";
 
 // ** Core Imports
 import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";

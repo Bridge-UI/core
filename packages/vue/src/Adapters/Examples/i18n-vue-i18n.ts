@@ -1,11 +1,9 @@
 /**
- * Example vue-i18n adapter for `@bridge-ui/vue`.
- * Copy into your app or wire via `BridgeUIProvider` / `createBridgeUI` `global.i18n`.
- * Not published as an npm package.
+ * vue-i18n adapter. Wire via `BridgeUIProvider` / `createBridgeUI` `global.i18n`.
+ * Requires the optional `vue-i18n` peer.
  *
- * Passes Bridge source strings, `count`, and `params` to `i18n.t`
- * (interpolation and `|` pluralization stay in vue-i18n).
- * `setLocale` on the adapter is invoked by Bridge `setLocale`.
+ * Passes Bridge source strings, `count`, and `params` to `i18n.t`.
+ * Pass `vueI18n.global` (composition mode) or the result of `useI18n()`.
  */
 
 // ** External Imports

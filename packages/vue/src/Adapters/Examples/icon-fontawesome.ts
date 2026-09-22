@@ -1,10 +1,11 @@
 /**
- * Example Font Awesome 6 (free solid) adapter for `@bridge-ui/react`.
- * Copy into your app or wire via `BridgeUIProvider` `global.icons`.
- * Not published as an npm package.
+ * Font Awesome 6 (free solid) adapter. Wire via `BridgeUIProvider` /
+ * `createBridgeUI` `global.icons`. Requires optional
+ * `@fortawesome/vue-fontawesome`, `@fortawesome/fontawesome-svg-core`, and
+ * `@fortawesome/free-solid-svg-icons`.
  *
  * Font Awesome exports icon definitions, not SVG components. This adapter
- * `normalize`s them so `<Icon icon={faCoffee} />` works without a manual wrap.
+ * `normalize`s them so `<Icon :icon="faCoffee" />` works without a manual wrap.
  */
 
 // ** External Imports
@@ -40,14 +41,9 @@ import {
   faUser,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { get, isArray, isObject, isString, omit } from "es-toolkit/compat";
-import {
-  createElement,
-  type ComponentPropsWithoutRef,
-  type ComponentType,
-  type SVGAttributes,
-} from "react";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { get, isArray, isObject, isString } from "es-toolkit/compat";
+import { defineComponent, h, type Component } from "vue";
 
 // ** Core Imports
 import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";
@@ -58,14 +54,7 @@ declare module "@bridge-ui/core/Adapters" {
   }
 }
 
-type FontAwesomeIconBind = Omit<
-  ComponentPropsWithoutRef<typeof FontAwesomeIcon>,
-  "icon"
->;
-
-type FaIconComponent = ComponentType<SVGAttributes<SVGSVGElement>>;
-
-const faIconCache = new WeakMap<IconDefinition, FaIconComponent>();
+const faIconCache = new WeakMap<IconDefinition, Component>();
 
 /**
  * Returns whether `value` looks like a Font Awesome {@link IconDefinition}.
@@ -80,25 +69,25 @@ function isIconDefinition(value: unknown): value is IconDefinition {
 }
 
 /**
- * Wraps a Font Awesome icon definition as a React SVG component.
- * Prefer `<Icon icon={faCoffee} />` with this adapter — `normalize` calls this.
+ * Wraps a Font Awesome icon definition as a Vue SVG component.
+ * Prefer `<Icon :icon="faCoffee" />` with this adapter — `normalize` calls this.
  * Results are cached so repeated resolves keep a stable component identity.
  */
-export function wrapFaIcon(icon: IconDefinition): FaIconComponent {
+export function wrapFaIcon(icon: IconDefinition): Component {
   const cached = faIconCache.get(icon);
 
   if (cached) {
     return cached;
   }
 
-  function FaIcon(props: SVGAttributes<SVGSVGElement>) {
-    // SVG `mask` / `transform` clash with Font Awesome's own prop types.
-    const rest = omit(props, ["mask", "transform"]) as FontAwesomeIconBind;
+  const FaIcon = defineComponent({
+    inheritAttrs: false,
+    name: `FaIcon(${icon.iconName})`,
+    setup(_, { attrs }) {
+      return () => h(FontAwesomeIcon, { ...attrs, icon });
+    },
+  });
 
-    return createElement(FontAwesomeIcon, { ...rest, icon });
-  }
-
-  FaIcon.displayName = `FaIcon(${icon.iconName})`;
   faIconCache.set(icon, FaIcon);
 
   return FaIcon;

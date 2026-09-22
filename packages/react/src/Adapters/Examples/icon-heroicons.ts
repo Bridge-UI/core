@@ -1,7 +1,6 @@
 /**
- * Example Heroicons adapter for `@bridge-ui/react` (24px outline).
- * Copy into your app or wire via `BridgeUIProvider` `global.icons`.
- * Not published as an npm package.
+ * Heroicons (24px outline) adapter. Wire via `BridgeUIProvider` `global.icons`.
+ * Requires the optional `@heroicons/react` peer.
  */
 
 // ** External Imports
