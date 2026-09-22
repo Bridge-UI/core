@@ -227,3 +227,35 @@ test("it should open on the year panel and commit January 1", async () => {
   expect(selected.getMonth()).toBe(0);
   expect(selected.getDate()).toBe(1);
 });
+
+test("it should not mark the focused month selected when the value is empty", () => {
+  const wrapper = mount(Calendar, {
+    props: { granularity: "month", viewDate: new Date(2021, 4, 1) },
+  });
+
+  const may = wrapper
+    .findAll("button")
+    .find(
+      (node) =>
+        !node.attributes("aria-label")?.startsWith("Select") &&
+        /may/i.test(node.text()),
+    );
+
+  expect(may?.attributes("aria-pressed")).toBe("false");
+});
+
+test("it should not mark the focused year selected when the value is empty", () => {
+  const wrapper = mount(Calendar, {
+    props: { granularity: "year", viewDate: new Date(2021, 4, 1) },
+  });
+
+  const year = wrapper
+    .findAll("button")
+    .find(
+      (node) =>
+        !node.attributes("aria-label")?.startsWith("Select") &&
+        node.text() === "2021",
+    );
+
+  expect(year?.attributes("aria-pressed")).toBe("false");
+});

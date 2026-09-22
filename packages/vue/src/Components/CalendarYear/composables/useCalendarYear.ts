@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
@@ -162,7 +162,7 @@ export function useCalendarYear(
   });
 
   const isCommitPanel = computed(() => {
-    return !isNil(merged.value.selection);
+    return !isUndefined(merged.value.selection);
   });
 
   const uncontrolledPreview = ref<Date | null>(null);

@@ -35,3 +35,20 @@ test("it should mark the selected year", () => {
 
   expect(result.current.years.some((cell) => cell.selected)).toBe(true);
 });
+
+test("it should not mark a year selected when selection is null", () => {
+  const { result } = renderUseCalendarYear({ value: 2021, selection: null });
+
+  expect(result.current.years.some((cell) => cell.selected)).toBe(false);
+});
+
+test("it should mark the year from the selection model on the commit panel", () => {
+  const { result } = renderUseCalendarYear({
+    value: 2021,
+    selection: new Date(2018, 0, 1),
+  });
+
+  const selected = result.current.years.find((cell) => cell.selected);
+
+  expect(selected?.year).toBe(2018);
+});

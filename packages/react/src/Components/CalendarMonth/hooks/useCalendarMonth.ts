@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
+import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
@@ -136,7 +136,7 @@ export function useCalendarMonth(
   });
 
   const isCommitPanel = derived(() => {
-    return !isNil(merged.selection);
+    return !isUndefined(merged.selection);
   });
 
   const [uncontrolledPreview, setUncontrolledPreview] = useState<Date | null>(

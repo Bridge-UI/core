@@ -280,3 +280,19 @@ test("it should open on the year panel and commit January 1", () => {
   expect(selected.getMonth()).toBe(0);
   expect(selected.getDate()).toBe(1);
 });
+
+test("it should not mark the focused month selected when the value is empty", () => {
+  render(<Calendar granularity="month" viewDate={new Date(2021, 4, 1)} />);
+
+  expect(
+    screen.getByRole("button", { name: /may/i }).getAttribute("aria-pressed"),
+  ).toBe("false");
+});
+
+test("it should not mark the focused year selected when the value is empty", () => {
+  render(<Calendar granularity="year" viewDate={new Date(2021, 4, 1)} />);
+
+  expect(
+    screen.getByRole("button", { name: "2021" }).getAttribute("aria-pressed"),
+  ).toBe("false");
+});
