@@ -22,8 +22,8 @@ export function setI18nAdapterForTests(adapter: undefined | I18nAdapter) {
 
 /**
  * Returns the active i18n adapter from {@link BridgeUIProvider}.
- * When unset, {@link useResolveMessage} returns the English source string
- * (see `packages/vue/docs/examples`).
+ * When unset, {@link useResolveMessage} returns the English source string.
+ * Ready adapters: `@bridge-ui/vue/Adapters/Examples`.
  */
 export function useI18nAdapter(): ComputedRef<undefined | I18nAdapter> {
   const bridge = useBridgeUI();

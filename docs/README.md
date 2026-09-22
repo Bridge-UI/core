@@ -10,24 +10,24 @@ Markdown reference for **React** and **Vue**. Docs live **inside each package** 
 
 - Index: [`packages/react/docs/`](../packages/react/docs/)
 - Components: [`packages/react/docs/components/`](../packages/react/docs/components/)
-- Adapter examples: [`packages/react/docs/examples/`](../packages/react/docs/examples/)
+- Adapters: `@bridge-ui/react/Adapters/Examples/{date,icon,i18n}-*`
 
 ```bash
 npm install @bridge-ui/react
 npx bridge-ui-react-ai install
 ```
 
-Docs are linked into the app as `.ai/docs/` (including `components/` and `examples/`).
+Docs are linked into the app as `.ai/docs/` (including `components/`).
 
 ## Vue (`@bridge-ui/vue`)
 
 - Index: [`packages/vue/docs/`](../packages/vue/docs/)
 - Components: [`packages/vue/docs/components/`](../packages/vue/docs/components/)
-- Adapter examples: [`packages/vue/docs/examples/`](../packages/vue/docs/examples/)
+- Adapters: `@bridge-ui/vue/Adapters/Examples/{date,icon,i18n}-*`
 
 ```bash
 npm install @bridge-ui/vue
 npx bridge-ui-vue-ai install
 ```
 
-Docs are linked into the app as `.ai/docs/` (including `components/` and `examples/`).
+Docs are linked into the app as `.ai/docs/` (including `components/`).

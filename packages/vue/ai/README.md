@@ -2,7 +2,7 @@
 
 Consumer guidelines and Agent Skills for `@bridge-ui/vue`.
 
-Component **examples live in** [`../docs/components/`](../docs/components/). Adapter samples: [`../docs/examples/`](../docs/examples/). Skills only route agents to those pages.
+Component **examples live in** [`../docs/components/`](../docs/components/). Adapter factories: `@bridge-ui/vue/Adapters/Examples/{date,icon,i18n}-*`. Skills only route agents to those pages.
 
 ```bash
 npx bridge-ui-vue-ai install

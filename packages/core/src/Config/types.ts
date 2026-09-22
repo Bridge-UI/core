@@ -281,8 +281,9 @@ export interface BridgeUIGlobal {
   /**
    * Date adapter used by calendars and pickers (`format`, `parse`, calendar math).
    * When omitted, Bridge falls back to the native `Date` adapter.
-   * See `packages/{react,vue}/docs/examples` for dayjs / date-fns / luxon /
-   * moment samples (not shipped).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
+   * date library next to the Bridge package.
    *
    * @default undefined
    */
@@ -309,7 +310,8 @@ export interface BridgeUIGlobal {
    * (`"Close"`, `"Hide password"`, …). Source English text is the lookup key.
    * When omitted, `resolveMessage` returns the source string.
    * Optional `setLocale` is invoked by Bridge `setLocale`.
-   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/i18n-dictionary`, `i18n-i18next`, `i18n-vue-i18n`).
    *
    * @default undefined
    */
@@ -318,7 +320,8 @@ export interface BridgeUIGlobal {
   /**
    * Icon adapter used to resolve semantic icon names.
    * Required when components use semantic names (`"clear"`, `"check"`, …).
-   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/icon-lucide`, `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`).
    *
    * @default undefined
    */

@@ -11,9 +11,7 @@
 ## Docs (per package)
 
 - packages/react/docs/components/
-- packages/react/docs/examples/
 - packages/vue/docs/components/
-- packages/vue/docs/examples/
 - docs/README.md — monorepo index
 - docs/RELEASE.md — release guide
 
