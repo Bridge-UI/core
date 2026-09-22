@@ -16,6 +16,7 @@ export interface BridgeUIContextValue {
   setGlobal: (patch: Partial<BridgeUIGlobal>) => void;
   setLocale: (locale: string) => void;
   setTheme: (theme: string) => void;
+  setTimeZone: (timeZone: string) => void;
 }
 
 export const BridgeUIContext = createContext<null | BridgeUIContextValue>(null);
