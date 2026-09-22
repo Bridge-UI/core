@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   isDateRangeValue,
   resolveFieldOverlay,
@@ -22,7 +22,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimeRangeFieldCustomProps,
   DateTimeRangeFieldEmits,
@@ -74,7 +74,7 @@ const dateTimeRangeFieldBridgeKeys = [
 function formatDateTimeRange(
   value: null | DateRangeValue,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  context?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -102,7 +102,6 @@ export function useDateTimeRangeField(
   const slots = useSlots();
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const containerRef = ref<null | HTMLElement>(null);
@@ -121,8 +120,8 @@ export function useDateTimeRangeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(dateTimeOnly.value.timeZone);
+  const context = computed((): string | undefined => {
+    return dateTimeOnly.value.timeZone;
   });
 
   const modelValue = computed(() => {

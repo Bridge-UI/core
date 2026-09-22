@@ -3,7 +3,6 @@ import { get, isNumber, omit } from "es-toolkit/compat";
 import { useMemo } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   buildHourOptions,
   buildMinuteOptions,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   TimePanelClasses,
   TimePanelOwnProps,
@@ -91,7 +90,6 @@ export function useTimePanel(
   libDefaults: TimePanelLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     TimePanelProps,
@@ -122,8 +120,8 @@ export function useTimePanel(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const roundedClass = useMemo(() => {

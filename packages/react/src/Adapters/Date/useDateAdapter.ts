@@ -2,7 +2,6 @@
 import {
   defaultNativeDateAdapter,
   type DateAdapter,
-  type DateAdapterContext,
 } from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
@@ -20,29 +19,17 @@ export function setDateAdapterForTests(adapter: undefined | DateAdapter) {
 /**
  * Returns the active date adapter from {@link BridgeUIProvider}.
  * Falls back to {@link defaultNativeDateAdapter} when unset.
+ *
+ * Syncs Bridge `locale` / `timeZone` onto the adapter. Per-component
+ * `timeZone` still overrides via the method argument.
  */
 export function useDateAdapter(): DateAdapter {
   const bridge = useBridgeUI();
+  const adapter =
+    bridge?.global.dates ?? dateAdapterForTests ?? defaultNativeDateAdapter;
 
-  return (
-    bridge?.global.dates ?? dateAdapterForTests ?? defaultNativeDateAdapter
-  );
-}
+  adapter.setLocale?.(bridge?.global.locale);
+  adapter.setTimeZone?.(bridge?.global.timeZone);
 
-/**
- * Returns a builder for {@link DateAdapterContext} from Bridge global config.
- * Locale always comes from the provider — calendar / date components never
- * accept a `locale` prop. Only `timeZone` may be overridden per instance.
- */
-export function useDateAdapterContext(): (
-  timeZone?: string,
-) => DateAdapterContext {
-  const bridge = useBridgeUI();
-
-  return (timeZone) => {
-    return {
-      locale: bridge?.global.locale,
-      timeZone: timeZone ?? bridge?.global.timeZone,
-    };
-  };
+  return adapter;
 }

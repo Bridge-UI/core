@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   resolveFieldOverlay,
   resolveFieldPickerClassName,
@@ -20,7 +20,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import {
   formFieldBridgeKeys,
   useFormField,
@@ -61,7 +61,7 @@ const timeFieldBridgeKeys = [
 function formatTimeValue(
   value: null | TimeValue,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  context?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -84,7 +84,6 @@ export function useTimeField(
   const slots = useSlots();
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const containerRef = ref<null | HTMLElement>(null);
@@ -103,8 +102,8 @@ export function useTimeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(timeOnly.value.timeZone);
+  const context = computed((): string | undefined => {
+    return timeOnly.value.timeZone;
   });
 
   const modelValue = computed(() => {

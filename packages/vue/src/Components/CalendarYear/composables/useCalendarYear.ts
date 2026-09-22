@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYear,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarYearClasses,
   CalendarYearOwnProps,
@@ -94,7 +93,6 @@ export function useCalendarYear(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -133,8 +131,8 @@ export function useCalendarYear(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const pageSize = computed(() => {

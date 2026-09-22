@@ -12,7 +12,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   combineDateAndTime,
   type DateRangeValue,
@@ -27,7 +27,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimeRangePickerClasses,
   DateTimeRangePickerEmits,
@@ -94,7 +94,7 @@ type DateTimeRangePickerMerged = MergeLibDefaults<
 function sortDateTimeRangeValue(
   value: DateRangeValue,
   adapter: DateAdapter,
-  context?: DateAdapterContext,
+  context?: string,
 ): DateRangeValue {
   const [start, end] = value;
 
@@ -119,7 +119,6 @@ export function useDateTimeRangePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -162,8 +161,8 @@ export function useDateTimeRangePicker(
     return toValue(props);
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const isControlled = computed(() => {

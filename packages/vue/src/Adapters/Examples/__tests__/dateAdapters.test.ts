@@ -1,8 +1,11 @@
 // ** External Imports
-import { describe, expect, test } from "vitest";
+import dayjs from "dayjs";
+import moment from "moment-timezone";
+import { describe, expect, test, vi } from "vitest";
 
 // ** Core Imports
 import type { DateAdapter } from "@bridge-ui/core/Adapters";
+import { copyDateWallClock } from "@bridge-ui/core/Domain";
 
 // ** Local Imports
 import { createDateFnsDateAdapter } from "@/Adapters/Examples/date-date-fns";
@@ -25,12 +28,13 @@ describe.each(adapters)("%s date adapter", (_name, adapter) => {
     expect(adapter.getYear(date!)).toBe(2021);
     expect(adapter.getMonth(date!)).toBe(4);
     expect(adapter.getDate(date!)).toBe(21);
-    expect(
-      adapter.format(date!, { locale: "en-US" }, { granularity: "month" }),
-    ).toBe("May 2021");
-    expect(
-      adapter.format(date!, { locale: "en-US" }, { granularity: "year" }),
-    ).toBe("2021");
+    adapter.setLocale?.("en-US");
+    expect(adapter.format(date!, undefined, { granularity: "month" })).toBe(
+      "May 2021",
+    );
+    expect(adapter.format(date!, undefined, { granularity: "year" })).toBe(
+      "2021",
+    );
   });
 
   test("it should add days months and years", () => {
@@ -48,4 +52,81 @@ describe.each(adapters)("%s date adapter", (_name, adapter) => {
     expect(adapter.getHours(parsed!)).toBe(14);
     expect(adapter.getMinutes(parsed!)).toBe(30);
   });
+});
+
+const zonedAdapters: [string, DateAdapter][] = [
+  ["dayjs", createDayjsDateAdapter()],
+  ["luxon", createLuxonDateAdapter()],
+  ["moment", createMomentDateAdapter()],
+];
+
+describe.each(zonedAdapters)("%s date adapter time zones", (_name, adapter) => {
+  const saoPaulo = "America/Sao_Paulo";
+
+  test("it should treat Sao Paulo wall clock as a UTC instant", () => {
+    let date = adapter.parse("2024-01-15", saoPaulo)!;
+
+    date = adapter.setHours(date, 15, saoPaulo);
+    date = adapter.setMinutes(date, 0, saoPaulo);
+    date = adapter.setSeconds(date, 0, saoPaulo);
+
+    expect(date.toISOString()).toBe("2024-01-15T18:00:00.000Z");
+    expect(adapter.getHours(date, saoPaulo)).toBe(15);
+  });
+
+  test("it should copy Sao Paulo wall clock into UTC without converting", () => {
+    let date = adapter.parse("2024-01-15", saoPaulo)!;
+
+    date = adapter.setHours(date, 15, saoPaulo);
+    date = adapter.setMinutes(date, 0, saoPaulo);
+    date = adapter.setSeconds(date, 0, saoPaulo);
+
+    const value = copyDateWallClock({
+      date,
+      adapter,
+      toTimeZone: "UTC",
+      fromTimeZone: saoPaulo,
+    });
+
+    expect(value.toISOString()).toBe("2024-01-15T15:00:00.000Z");
+  });
+
+  test("it should keep UTC wall clock when the field zone is UTC", () => {
+    let date = adapter.parse("2024-01-15", "UTC")!;
+
+    date = adapter.setHours(date, 15, "UTC");
+    date = adapter.setMinutes(date, 0, "UTC");
+    date = adapter.setSeconds(date, 0, "UTC");
+
+    expect(adapter.getHours(date, "UTC")).toBe(15);
+    expect(date.toISOString()).toBe("2024-01-15T15:00:00.000Z");
+  });
+});
+
+test("it should map Bridge locales to dayjs locale ids", () => {
+  const locale = vi.spyOn(dayjs.prototype, "locale");
+  const adapter = createDayjsDateAdapter({
+    "en-US": "en",
+    "pt-BR": "pt-br",
+  });
+
+  adapter.setLocale?.("pt-BR");
+  adapter.now();
+
+  expect(locale.mock.calls.some((call) => call[0] === "pt-br")).toBe(true);
+  locale.mockRestore();
+});
+
+test("it should map Bridge locales to moment locale ids", () => {
+  const locale = vi.spyOn(moment.prototype, "locale");
+  const adapter = createMomentDateAdapter({
+    "en-US": "en",
+    "pt-BR": "pt-br",
+  });
+
+  adapter.setLocale?.("pt-BR");
+  adapter.now();
+
+  expect(locale.mock.calls.some((call) => call[0] === "pt-br")).toBe(true);
+  locale.mockRestore();
 });

@@ -4,7 +4,6 @@ import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isTimeRangeValue,
   resolveFieldOverlay,
@@ -15,7 +14,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
 import {
   formFieldBridgeKeys,
@@ -57,7 +56,7 @@ const timeRangeFieldBridgeKeys = [
 function formatTimeRange(
   value: null | TimeRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
+  context?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -71,7 +70,6 @@ function formatTimeRange(
 export function useTimeRangeField(props: TimeRangeFieldProps) {
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
   const {
@@ -114,8 +112,8 @@ export function useTimeRangeField(props: TimeRangeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(timeOnly.timeZone);
+  const context = derived((): string | undefined => {
+    return timeOnly.timeZone;
   });
 
   const clearable = derived(() => {

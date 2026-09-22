@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYear,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarYearClasses,
   CalendarYearOwnProps,
@@ -91,7 +90,6 @@ export function useCalendarYear(
   libDefaults: CalendarYearLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarYearProps,
@@ -122,8 +120,8 @@ export function useCalendarYear(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const pageSize = derived(() => {

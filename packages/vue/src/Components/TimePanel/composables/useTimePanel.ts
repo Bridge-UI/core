@@ -3,7 +3,6 @@ import { get, isNumber, omit } from "es-toolkit/compat";
 import { computed, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   buildHourOptions,
   buildMinuteOptions,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   TimePanelClasses,
   TimePanelOwnProps,
@@ -94,7 +93,6 @@ export function useTimePanel(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<TimePanelOwnProps, typeof timePanelBridgeKeys>({
@@ -127,8 +125,8 @@ export function useTimePanel(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const roundedClass = computed(() => {

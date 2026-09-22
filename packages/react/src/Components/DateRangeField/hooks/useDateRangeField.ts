@@ -4,7 +4,6 @@ import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   formatDatePickerModel,
   resolveFieldOverlay,
@@ -16,7 +15,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateRangeFieldCustomProps,
   DateRangeFieldOwnProps,
@@ -65,7 +64,6 @@ const dateRangeFieldBridgeKeys = [
 export function useDateRangeField(props: DateRangeFieldProps) {
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
   const {
@@ -110,8 +108,8 @@ export function useDateRangeField(props: DateRangeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(dateOnly.timeZone);
+  const context = derived((): string | undefined => {
+    return dateOnly.timeZone;
   });
 
   const clearable = derived(() => {

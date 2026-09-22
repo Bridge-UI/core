@@ -168,6 +168,7 @@ export type {
   IsDateDisabledOptions,
   StartOfWeek,
 } from "@/Domain/date";
+export { copyDateWallClock } from "@/Domain/dateTimeZone";
 export {
   getNumberFieldStepper,
   resolveNumberFieldStepperIconSize,

@@ -17,7 +17,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import { useFieldOverlayFooter } from "@/Components/FieldOverlay/FieldOverlayContext";
 import type {
@@ -72,7 +72,6 @@ export function useTimeRangePicker(
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
   const overlayFooter = useFieldOverlayFooter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     TimeRangePickerProps,
@@ -106,7 +105,7 @@ export function useTimeRangePicker(
     });
 
   const context = derived(() => {
-    return resolveContext(merged.timeZone);
+    return merged.timeZone;
   });
 
   const isControlled = derived(() => {

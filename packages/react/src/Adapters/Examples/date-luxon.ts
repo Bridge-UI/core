@@ -10,50 +10,29 @@ import { DateTime, Info } from "luxon";
 // ** Core Imports
 import type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
 /**
- * Options for {@link createLuxonDateAdapter}.
- */
-export type LuxonDateAdapterOptions = {
-  /**
-   * Default locale when context omits `locale`.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
-   * Default IANA time zone when context omits `timeZone`.
-   *
-   * @default undefined (system local zone)
-   */
-  timeZone?: string;
-};
-
-/**
  * Builds a Luxon-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
+ * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
+ * {@link DateAdapter.setTimeZone}.
  */
-export function createLuxonDateAdapter(
-  options: LuxonDateAdapterOptions = {},
-): DateAdapter<Date> {
-  const resolveLocale = (context?: DateAdapterContext) => {
-    return context?.locale ?? options.locale;
-  };
+export function createLuxonDateAdapter(): DateAdapter<Date> {
+  let locale: string | undefined;
+  let timeZone: string | undefined;
 
-  const resolveZone = (context?: DateAdapterContext) => {
-    return context?.timeZone ?? options.timeZone;
-  };
+  const resolveLocale = () => locale;
 
-  const toDateTime = (date: Date, context?: DateAdapterContext): DateTime => {
-    const locale = resolveLocale(context);
-    const zone = resolveZone(context);
+  const resolveZone = (override?: string) => override ?? timeZone;
+
+  const toDateTime = (date: Date, zone?: string): DateTime => {
+    const locale = resolveLocale();
+    const resolvedZone = resolveZone(zone);
     let value = DateTime.fromJSDate(date);
 
-    if (!isNil(zone)) {
-      value = value.setZone(zone);
+    if (!isNil(resolvedZone)) {
+      value = value.setZone(resolvedZone);
     }
 
     if (!isNil(locale)) {
@@ -72,6 +51,14 @@ export function createLuxonDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
+    setLocale: (next) => {
+      locale = next;
+    },
+
+    setTimeZone: (next) => {
+      timeZone = next;
+    },
+
     getDate: (date, context) => toDateTime(date, context).day,
 
     getYear: (date, context) => toDateTime(date, context).year,
@@ -132,8 +119,8 @@ export function createLuxonDateAdapter(
       return fromDateTime(toDateTime(date, context).plus({ months: amount }));
     },
 
-    getMonthNames: (context) => {
-      const locale = resolveLocale(context) ?? "en-US";
+    getMonthNames: () => {
+      const locale = resolveLocale() ?? "en-US";
 
       return Info.months("long", { locale });
     },
@@ -173,11 +160,19 @@ export function createLuxonDateAdapter(
       return parseTimeWithLuxon({
         value,
         adapter,
-        context,
         toDateTime,
         timeOptions,
         fromDateTime,
+        timeZone: context,
       });
+    },
+
+    getWeekdayNames: () => {
+      const locale = resolveLocale() ?? "en-US";
+      // Luxon weekdays are Monday-first; Bridge expects Sunday → Saturday.
+      const names = Info.weekdays("short", { locale });
+
+      return [names[6]!, ...names.slice(0, 6)];
     },
 
     isSameTime: (a, b, context) => {
@@ -191,17 +186,9 @@ export function createLuxonDateAdapter(
       );
     },
 
-    getWeekdayNames: (context) => {
-      const locale = resolveLocale(context) ?? "en-US";
-      // Luxon weekdays are Monday-first; Bridge expects Sunday → Saturday.
-      const names = Info.weekdays("short", { locale });
-
-      return [names[6]!, ...names.slice(0, 6)];
-    },
-
     now: (context) => {
       const zone = resolveZone(context);
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       let value: DateTime = DateTime.now();
 
       if (!isNil(zone)) {
@@ -250,8 +237,8 @@ export function createLuxonDateAdapter(
 
       const trimmed = value.trim();
       const iso = DateTime.fromISO(trimmed, {
+        locale: resolveLocale(),
         zone: resolveZone(context),
-        locale: resolveLocale(context),
       });
 
       if (iso.isValid) {
@@ -300,14 +287,20 @@ export function createLuxonDateAdapter(
 
 function parseTimeWithLuxon(input: {
   adapter: DateAdapter<Date>;
-  context?: DateAdapterContext;
   fromDateTime: (value: DateTime) => Date;
   timeOptions?: DateAdapterTimeOptions;
-  toDateTime: (date: Date, context?: DateAdapterContext) => DateTime;
+  timeZone?: string;
+  toDateTime: (date: Date, timeZone?: string) => DateTime;
   value: string;
 }): Date | null {
-  const { value, adapter, context, toDateTime, timeOptions, fromDateTime } =
-    input;
+  const {
+    value,
+    adapter,
+    toDateTime,
+    timeOptions,
+    fromDateTime,
+    timeZone: context,
+  } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;

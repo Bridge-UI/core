@@ -5,7 +5,6 @@ import { computed, type ComputedRef } from "vue";
 import {
   defaultNativeDateAdapter,
   type DateAdapter,
-  type DateAdapterContext,
 } from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
@@ -23,33 +22,22 @@ export function setDateAdapterForTests(adapter: undefined | DateAdapter) {
 /**
  * Returns the active date adapter from {@link BridgeUIProvider}.
  * Falls back to {@link defaultNativeDateAdapter} when unset.
+ *
+ * Syncs Bridge `locale` / `timeZone` onto the adapter. Per-component
+ * `timeZone` still overrides via the method argument.
  */
 export function useDateAdapter(): ComputedRef<DateAdapter> {
   const bridge = useBridgeUI();
 
   return computed(() => {
-    return (
+    const adapter =
       bridge?.global.value.dates ??
       dateAdapterForTests ??
-      defaultNativeDateAdapter
-    );
+      defaultNativeDateAdapter;
+
+    adapter.setLocale?.(bridge?.global.value.locale);
+    adapter.setTimeZone?.(bridge?.global.value.timeZone);
+
+    return adapter;
   });
-}
-
-/**
- * Returns a builder for {@link DateAdapterContext} from Bridge global config.
- * Locale always comes from the provider — calendar / date components never
- * accept a `locale` prop. Only `timeZone` may be overridden per instance.
- */
-export function useDateAdapterContext(): (
-  timeZone?: string,
-) => DateAdapterContext {
-  const bridge = useBridgeUI();
-
-  return (timeZone) => {
-    return {
-      locale: bridge?.global.value.locale,
-      timeZone: timeZone ?? bridge?.global.value.timeZone,
-    };
-  };
 }

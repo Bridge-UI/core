@@ -3,7 +3,6 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
@@ -26,7 +25,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarRangeClasses,
@@ -82,7 +81,7 @@ type CalendarRangeMerged = MergeLibDefaults<
 function resolveFocusDate(
   value: null | DateRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
+  context?: string,
 ): Date {
   if (isNil(value)) {
     return adapter.now(context);
@@ -105,7 +104,6 @@ export function useCalendarRange(
 ) {
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarRangeProps,
@@ -141,8 +139,8 @@ export function useCalendarRange(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const isValueControlled = derived(() => {
@@ -180,9 +178,9 @@ export function useCalendarRange(
         : resolveFocusDate(
             props.value ?? merged.defaultValue ?? null,
             adapter,
-            resolveContext(merged.timeZone),
+            merged.timeZone,
           ),
-      resolveContext(merged.timeZone),
+      merged.timeZone,
     );
   });
 
@@ -249,13 +247,13 @@ export function useCalendarRange(
   });
 
   const monthLabel = derived(() => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
     return names[adapter.getMonth(viewDate, context)] ?? "";
   });
 
   const endMonthLabel = derived(() => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
     return names[adapter.getMonth(endViewDate, context)] ?? "";
   });

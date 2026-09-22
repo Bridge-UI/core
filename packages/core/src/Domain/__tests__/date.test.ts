@@ -351,17 +351,16 @@ describe("calendar granularity", () => {
   test("it should format picker models at month and year granularity", () => {
     const may = adapter.parse("2021-05-21")!;
 
-    expect(
-      formatDatePickerModel(may, adapter, { locale: "en-US" }, "month"),
-    ).toBe("May 2021");
-    expect(
-      formatDatePickerModel(may, adapter, { locale: "en-US" }, "year"),
-    ).toBe("2021");
+    adapter.setLocale?.("en-US");
+    expect(formatDatePickerModel(may, adapter, undefined, "month")).toBe(
+      "May 2021",
+    );
+    expect(formatDatePickerModel(may, adapter, undefined, "year")).toBe("2021");
     expect(
       formatDatePickerModel(
         [adapter.parse("2021-05-01")!, adapter.parse("2021-09-01")!],
         adapter,
-        { locale: "en-US" },
+        undefined,
         "month",
       ),
     ).toMatch(/May 2021.+Sep(tember)? 2021/);

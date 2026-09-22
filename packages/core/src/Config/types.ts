@@ -284,6 +284,8 @@ export interface BridgeUIGlobal {
    * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
    * (`Adapters/Examples/date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
    * date library next to the Bridge package.
+   * Optional `setLocale` / `setTimeZone` are synced from Bridge `setLocale` /
+   * `setTimeZone`. Per-component `timeZone` still overrides on adapter methods.
    *
    * @default undefined
    */
@@ -350,7 +352,9 @@ export interface BridgeUIGlobal {
 
   /**
    * Default IANA time zone for date adapters and pickers.
+   * `setTimeZone` updates this value and calls optional `dates.setTimeZone`.
    * Override per component with the `timeZone` prop.
+   * v-model `Date` stays a UTC instant; wrap the model to store wall-clock fields.
    *
    * @default Intl.DateTimeFormat().resolvedOptions().timeZone
    */

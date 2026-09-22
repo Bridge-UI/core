@@ -10,7 +10,6 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   isDateDisabled,
@@ -37,7 +36,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
   CalendarDateDayCell,
@@ -96,7 +95,6 @@ export function useCalendarDate(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -136,8 +134,8 @@ export function useCalendarDate(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const mode = computed(() => {
@@ -242,7 +240,7 @@ export function useCalendarDate(
   });
 
   const weekdays = computed(() => {
-    const names = adapter.value.getWeekdayNames(context.value);
+    const names = adapter.value.getWeekdayNames();
     const start = startOfWeek.value;
 
     return Array.from({ length: 7 }, (_, index) => {

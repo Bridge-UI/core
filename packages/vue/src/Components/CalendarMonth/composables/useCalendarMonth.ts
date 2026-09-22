@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYearMonth,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
   CalendarMonthOwnProps,
@@ -92,7 +91,6 @@ export function useCalendarMonth(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -131,8 +129,8 @@ export function useCalendarMonth(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const year = computed(() => {
@@ -186,7 +184,7 @@ export function useCalendarMonth(
   });
 
   const months = computed((): CalendarMonthCell[] => {
-    const names = adapter.value.getMonthNames(context.value);
+    const names = adapter.value.getMonthNames();
 
     return names.map((label, month) => {
       const date = dateFromYearMonth({

@@ -10,50 +10,53 @@ import moment, { type Moment } from "moment-timezone";
 // ** Core Imports
 import type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
 /**
- * Options for {@link createMomentDateAdapter}.
+ * Maps Bridge locales (`en-US`, `pt-BR`) to Moment locale ids (`en`, `pt-br`).
+ * Import matching `moment/locale/*` files in the app.
  */
-export type MomentDateAdapterOptions = {
-  /**
-   * Default locale when context omits `locale`.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
-   * Default IANA time zone when context omits `timeZone`.
-   *
-   * @default undefined (system local zone)
-   */
-  timeZone?: string;
-};
+export type MomentDateAdapterLocales = Record<string, string>;
 
 /**
  * Builds a Moment-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
+ * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
+ * {@link DateAdapter.setTimeZone}.
+ *
+ * `setLocale` still receives Bridge tags. Unmapped `en-US` becomes `en`; other
+ * tags are lowercased (`pt-BR` → `pt-br`) unless {@link MomentDateAdapterLocales}
+ * has an entry.
  */
 export function createMomentDateAdapter(
-  options: MomentDateAdapterOptions = {},
+  locales: MomentDateAdapterLocales = {},
 ): DateAdapter<Date> {
-  const resolveLocale = (context?: DateAdapterContext) => {
-    return context?.locale ?? options.locale;
+  let locale: string | undefined;
+  let timeZone: string | undefined;
+
+  const resolveLocale = () => locale;
+
+  const resolveLibraryLocale = () => {
+    if (isNil(locale)) {
+      return undefined;
+    }
+
+    return (
+      locales[locale] ?? (locale === "en-US" ? "en" : locale.toLowerCase())
+    );
   };
 
-  const resolveZone = (context?: DateAdapterContext) => {
-    return context?.timeZone ?? options.timeZone;
-  };
+  const resolveZone = (override?: string) => override ?? timeZone;
 
-  const toMoment = (date: Date, context?: DateAdapterContext): Moment => {
-    const locale = resolveLocale(context);
-    const zone = resolveZone(context);
-    let value = isNil(zone) ? moment(date) : moment.tz(date, zone);
+  const toMoment = (date: Date, zone?: string): Moment => {
+    const libraryLocale = resolveLibraryLocale();
+    const resolvedZone = resolveZone(zone);
+    let value = isNil(resolvedZone)
+      ? moment(date)
+      : moment.tz(date, resolvedZone);
 
-    if (!isNil(locale)) {
-      value = value.locale(locale);
+    if (!isNil(libraryLocale)) {
+      value = value.locale(libraryLocale);
     }
 
     return value;
@@ -68,6 +71,14 @@ export function createMomentDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
+    setLocale: (next) => {
+      locale = next;
+    },
+
+    setTimeZone: (next) => {
+      timeZone = next;
+    },
+
     getDay: (date, context) => toMoment(date, context).day(),
 
     getDate: (date, context) => toMoment(date, context).date(),
@@ -167,15 +178,15 @@ export function createMomentDateAdapter(
       return parseTimeWithMoment({
         value,
         adapter,
-        context,
         toMoment,
         fromMoment,
         timeOptions,
+        timeZone: context,
       });
     },
 
-    getMonthNames: (context) => {
-      const locale = resolveLocale(context);
+    getMonthNames: () => {
+      const locale = resolveLocale();
 
       return range(12).map((month) => {
         return new Intl.DateTimeFormat(locale, { month: "long" }).format(
@@ -197,18 +208,18 @@ export function createMomentDateAdapter(
 
     now: (context) => {
       const zone = resolveZone(context);
-      const locale = resolveLocale(context);
+      const libraryLocale = resolveLibraryLocale();
       let value = isNil(zone) ? moment() : moment.tz(zone);
 
-      if (!isNil(locale)) {
-        value = value.locale(locale);
+      if (!isNil(libraryLocale)) {
+        value = value.locale(libraryLocale);
       }
 
       return fromMoment(value);
     },
 
-    getWeekdayNames: (context) => {
-      const locale = resolveLocale(context);
+    getWeekdayNames: () => {
+      const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
 
@@ -254,7 +265,7 @@ export function createMomentDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveZone(context);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
@@ -273,7 +284,7 @@ export function createMomentDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveZone(context);
       const granularity = options?.granularity ?? "day";
 
@@ -306,13 +317,20 @@ export function createMomentDateAdapter(
 
 function parseTimeWithMoment(input: {
   adapter: DateAdapter<Date>;
-  context?: DateAdapterContext;
   fromMoment: (value: Moment) => Date;
   timeOptions?: DateAdapterTimeOptions;
-  toMoment: (date: Date, context?: DateAdapterContext) => Moment;
+  timeZone?: string;
+  toMoment: (date: Date, timeZone?: string) => Moment;
   value: string;
 }): Date | null {
-  const { value, adapter, context, toMoment, fromMoment, timeOptions } = input;
+  const {
+    value,
+    adapter,
+    toMoment,
+    fromMoment,
+    timeOptions,
+    timeZone: context,
+  } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;

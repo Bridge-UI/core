@@ -3,7 +3,6 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   isDateDisabled,
@@ -30,7 +29,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
   CalendarDateDayCell,
@@ -86,7 +85,6 @@ export function useCalendarDate(
   libDefaults: CalendarDateLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarDateProps,
@@ -122,8 +120,8 @@ export function useCalendarDate(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const mode = derived(() => {
@@ -214,7 +212,7 @@ export function useCalendarDate(
   });
 
   const weekdays = derived(() => {
-    const names = adapter.getWeekdayNames(context);
+    const names = adapter.getWeekdayNames();
     const start = startOfWeek;
 
     return Array.from({ length: 7 }, (_, index) => {

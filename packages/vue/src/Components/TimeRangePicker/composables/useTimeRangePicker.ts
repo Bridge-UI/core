@@ -26,7 +26,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import type {
@@ -87,7 +87,6 @@ export function useTimeRangePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -132,7 +131,7 @@ export function useTimeRangePicker(
   });
 
   const context = computed(() => {
-    return resolveContext(merged.value.timeZone);
+    return merged.value.timeZone;
   });
 
   const isControlled = computed(() => {

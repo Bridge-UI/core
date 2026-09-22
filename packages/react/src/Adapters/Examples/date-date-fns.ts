@@ -39,43 +39,21 @@ import { clamp, isNil, isString, range } from "es-toolkit/compat";
 // ** Core Imports
 import type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
 /**
- * Options for {@link createDateFnsDateAdapter}.
- */
-export type DateFnsDateAdapterOptions = {
-  /**
-   * Default locale when context omits `locale`.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
-   * Default IANA time zone when context omits `timeZone`.
-   * Used for `format` / `formatTime` via `Intl` (date-fns itself is local).
-   *
-   * @default undefined
-   */
-  timeZone?: string;
-};
-
-/**
  * Builds a date-fns-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
+ * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
+ * {@link DateAdapter.setTimeZone}.
  */
-export function createDateFnsDateAdapter(
-  options: DateFnsDateAdapterOptions = {},
-): DateAdapter<Date> {
-  const resolveLocale = (context?: DateAdapterContext) => {
-    return context?.locale ?? options.locale;
-  };
+export function createDateFnsDateAdapter(): DateAdapter<Date> {
+  let locale: string | undefined;
+  let timeZone: string | undefined;
 
-  const resolveTimeZone = (context?: DateAdapterContext) => {
-    return context?.timeZone ?? options.timeZone;
-  };
+  const resolveLocale = () => locale;
+
+  const resolveTimeZone = (override?: string) => override ?? timeZone;
 
   const isValidDate = (date: Date) => {
     return date instanceof Date && isValid(date);
@@ -118,9 +96,17 @@ export function createDateFnsDateAdapter(
 
     addDays: (date, amount) => addDays(date, amount),
 
+    setLocale: (next) => {
+      locale = next;
+    },
+
     addYears: (date, amount) => addYears(date, amount),
 
     addMonths: (date, amount) => addMonths(date, amount),
+
+    setTimeZone: (next) => {
+      timeZone = next;
+    },
 
     isAfter: (a, b) => isAfter(startOfDay(a), startOfDay(b)),
 
@@ -132,15 +118,6 @@ export function createDateFnsDateAdapter(
 
     setSeconds: (date, seconds) => setSeconds(date, clamp(seconds, 0, 59)),
 
-    parseTime: (value, context, timeOptions) => {
-      return parseTimeWithDateFns({
-        value,
-        adapter,
-        context,
-        timeOptions,
-      });
-    },
-
     isSameTime: (a, b) => {
       return (
         getHours(a) === getHours(b) &&
@@ -149,8 +126,17 @@ export function createDateFnsDateAdapter(
       );
     },
 
-    getMonthNames: (context) => {
-      const locale = resolveLocale(context);
+    parseTime: (value, context, timeOptions) => {
+      return parseTimeWithDateFns({
+        value,
+        adapter,
+        timeOptions,
+        timeZone: context,
+      });
+    },
+
+    getMonthNames: () => {
+      const locale = resolveLocale();
 
       return range(12).map((month) => {
         return new Intl.DateTimeFormat(locale, { month: "long" }).format(
@@ -159,8 +145,8 @@ export function createDateFnsDateAdapter(
       });
     },
 
-    getWeekdayNames: (context) => {
-      const locale = resolveLocale(context);
+    getWeekdayNames: () => {
+      const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
 
@@ -207,7 +193,7 @@ export function createDateFnsDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveTimeZone(context);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
@@ -226,7 +212,7 @@ export function createDateFnsDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveTimeZone(context);
       const granularity = options?.granularity ?? "day";
 
@@ -263,11 +249,11 @@ export function createDateFnsDateAdapter(
 
 function parseTimeWithDateFns(input: {
   adapter: DateAdapter<Date>;
-  context?: DateAdapterContext;
   timeOptions?: DateAdapterTimeOptions;
+  timeZone?: string;
   value: string;
 }): Date | null {
-  const { value, adapter, context, timeOptions } = input;
+  const { value, adapter, timeOptions, timeZone: context } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;

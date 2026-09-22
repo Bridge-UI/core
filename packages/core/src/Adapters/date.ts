@@ -2,22 +2,6 @@
 import { clamp, isNil, isString, range } from "es-toolkit/compat";
 
 /**
- * Locale / time zone context forwarded to adapter methods.
- * Components pass `BridgeUIGlobal.locale` / `timeZone` (or prop overrides).
- */
-export type DateAdapterContext = {
-  /**
-   * BCP 47 locale (e.g. `"en-US"`, `"pt-BR"`).
-   */
-  locale?: string;
-
-  /**
-   * IANA time zone (e.g. `"UTC"`, `"America/Sao_Paulo"`).
-   */
-  timeZone?: string;
-};
-
-/**
  * Options for {@link DateAdapter.formatTime} / {@link DateAdapter.parseTime}.
  */
 export type DateAdapterTimeOptions = {
@@ -52,43 +36,39 @@ export type DateAdapterFormatOptions = {
  * Pluggable date library for Bridge UI calendars and pickers.
  * Apps may replace the native default via `BridgeUIProvider` `global.dates`.
  *
+ * Locale and the default IANA zone live on the adapter (`setLocale` /
+ * `setTimeZone`), synced from Bridge global. Per-component `timeZone` is an
+ * optional override on methods that need a calendar day.
+ *
  * @typeParam TDate - Temporal value type (`Date` for the native adapter).
  */
 export interface DateAdapter<TDate = Date> {
   /**
    * Adds calendar days to `date`.
    */
-  addDays: (date: TDate, amount: number, context?: DateAdapterContext) => TDate;
+  addDays: (date: TDate, amount: number, timeZone?: string) => TDate;
 
   /**
    * Adds calendar months to `date`.
    */
-  addMonths: (
-    date: TDate,
-    amount: number,
-    context?: DateAdapterContext,
-  ) => TDate;
+  addMonths: (date: TDate, amount: number, timeZone?: string) => TDate;
 
   /**
    * Adds calendar years to `date`.
    */
-  addYears: (
-    date: TDate,
-    amount: number,
-    context?: DateAdapterContext,
-  ) => TDate;
+  addYears: (date: TDate, amount: number, timeZone?: string) => TDate;
 
   /**
    * Last instant of the month containing `date` (local / zoned day).
    */
-  endOfMonth: (date: TDate, context?: DateAdapterContext) => TDate;
+  endOfMonth: (date: TDate, timeZone?: string) => TDate;
 
   /**
    * Formats `date` for display (e.g. DateField text).
    */
   format: (
     date: TDate,
-    context?: DateAdapterContext,
+    timeZone?: string,
     options?: DateAdapterFormatOptions,
   ) => string;
 
@@ -97,7 +77,7 @@ export interface DateAdapter<TDate = Date> {
    */
   formatTime: (
     date: TDate,
-    context?: DateAdapterContext,
+    timeZone?: string,
     options?: DateAdapterTimeOptions,
   ) => string;
 
@@ -108,93 +88,93 @@ export interface DateAdapter<TDate = Date> {
   getCalendarDays: (
     view: TDate,
     startOfWeek: number,
-    context?: DateAdapterContext,
+    timeZone?: string,
   ) => TDate[];
 
   /**
    * Day of month `1`–`31`.
    */
-  getDate: (date: TDate, context?: DateAdapterContext) => number;
+  getDate: (date: TDate, timeZone?: string) => number;
 
   /**
    * Weekday `0` (Sunday) – `6` (Saturday).
    */
-  getDay: (date: TDate, context?: DateAdapterContext) => number;
+  getDay: (date: TDate, timeZone?: string) => number;
 
   /**
    * Hours `0`–`23` (wall clock in `timeZone` when set).
    */
-  getHours: (date: TDate, context?: DateAdapterContext) => number;
+  getHours: (date: TDate, timeZone?: string) => number;
 
   /**
    * Minutes `0`–`59`.
    */
-  getMinutes: (date: TDate, context?: DateAdapterContext) => number;
+  getMinutes: (date: TDate, timeZone?: string) => number;
 
   /**
    * Month `0` (January) – `11` (December).
    */
-  getMonth: (date: TDate, context?: DateAdapterContext) => number;
+  getMonth: (date: TDate, timeZone?: string) => number;
 
   /**
    * Localized full month names (index `0` = January).
    */
-  getMonthNames: (context?: DateAdapterContext) => string[];
+  getMonthNames: () => string[];
 
   /**
    * Seconds `0`–`59`.
    */
-  getSeconds: (date: TDate, context?: DateAdapterContext) => number;
+  getSeconds: (date: TDate, timeZone?: string) => number;
 
   /**
    * Localized short weekday names, ordered Sunday → Saturday.
    */
-  getWeekdayNames: (context?: DateAdapterContext) => string[];
+  getWeekdayNames: () => string[];
 
   /**
    * Full year (e.g. `2021`).
    */
-  getYear: (date: TDate, context?: DateAdapterContext) => number;
+  getYear: (date: TDate, timeZone?: string) => number;
 
   /**
    * Whether `a` is after `b` (day precision when used with calendar dates).
    */
-  isAfter: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isAfter: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Whether `a` is before `b` (day precision when used with calendar dates).
    */
-  isBefore: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isBefore: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Whether `a` and `b` fall on the same calendar day.
    */
-  isSameDay: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isSameDay: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Whether `a` and `b` fall in the same calendar month.
    */
-  isSameMonth: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isSameMonth: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Whether `a` and `b` share the same hour, minute, and second.
    */
-  isSameTime: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isSameTime: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Whether `a` and `b` fall in the same calendar year.
    */
-  isSameYear: (a: TDate, b: TDate, context?: DateAdapterContext) => boolean;
+  isSameYear: (a: TDate, b: TDate, timeZone?: string) => boolean;
 
   /**
    * Current instant (respects `timeZone` when the adapter supports it).
    */
-  now: (context?: DateAdapterContext) => TDate;
+  now: (timeZone?: string) => TDate;
 
   /**
    * Parses typed / serialized text into a date, or `null` when invalid.
    */
-  parse: (value: string, context?: DateAdapterContext) => null | TDate;
+  parse: (value: string, timeZone?: string) => null | TDate;
 
   /**
    * Parses a time string (`HH:mm`, `HH:mm:ss`, `h:mm a`, or `h:mm:ss a`) into a
@@ -203,77 +183,62 @@ export interface DateAdapter<TDate = Date> {
    */
   parseTime: (
     value: string,
-    context?: DateAdapterContext,
+    timeZone?: string,
     options?: DateAdapterTimeOptions,
   ) => null | TDate;
 
   /**
    * Sets the day of month.
    */
-  setDate: (date: TDate, day: number, context?: DateAdapterContext) => TDate;
+  setDate: (date: TDate, day: number, timeZone?: string) => TDate;
 
   /**
    * Sets the hour (`0`–`23`), preserving calendar day, minutes, and seconds.
    */
-  setHours: (date: TDate, hours: number, context?: DateAdapterContext) => TDate;
+  setHours: (date: TDate, hours: number, timeZone?: string) => TDate;
+
+  /**
+   * Called by Bridge `setLocale` to sync the adapter’s active locale.
+   * Optional for single-locale adapters.
+   */
+  setLocale?: (locale: string) => void;
 
   /**
    * Sets the minute (`0`–`59`), preserving calendar day, hours, and seconds.
    */
-  setMinutes: (
-    date: TDate,
-    minutes: number,
-    context?: DateAdapterContext,
-  ) => TDate;
+  setMinutes: (date: TDate, minutes: number, timeZone?: string) => TDate;
 
   /**
    * Sets the month (`0`–`11`).
    */
-  setMonth: (date: TDate, month: number, context?: DateAdapterContext) => TDate;
+  setMonth: (date: TDate, month: number, timeZone?: string) => TDate;
 
   /**
    * Sets the second (`0`–`59`), preserving calendar day, hours, and minutes.
    */
-  setSeconds: (
-    date: TDate,
-    seconds: number,
-    context?: DateAdapterContext,
-  ) => TDate;
+  setSeconds: (date: TDate, seconds: number, timeZone?: string) => TDate;
+
+  /**
+   * Called by Bridge `setTimeZone` to sync the adapter’s default IANA zone.
+   * Per-component `timeZone` still overrides via the method argument.
+   */
+  setTimeZone?: (timeZone: string) => void;
 
   /**
    * Sets the full year.
    */
-  setYear: (date: TDate, year: number, context?: DateAdapterContext) => TDate;
+  setYear: (date: TDate, year: number, timeZone?: string) => TDate;
 
   /**
    * Start of the calendar day containing `date`.
    */
-  startOfDay: (date: TDate, context?: DateAdapterContext) => TDate;
+  startOfDay: (date: TDate, timeZone?: string) => TDate;
 
   /**
    * First day of the month containing `date`.
    */
-  startOfMonth: (date: TDate, context?: DateAdapterContext) => TDate;
+  startOfMonth: (date: TDate, timeZone?: string) => TDate;
 }
-
-/**
- * Options for {@link createNativeDateAdapter}.
- */
-export type NativeDateAdapterOptions = {
-  /**
-   * Default locale when context omits `locale`.
-   *
-   * @default undefined (runtime default locale)
-   */
-  locale?: string;
-
-  /**
-   * Default IANA time zone when context omits `timeZone`.
-   *
-   * @default undefined (environment local zone for getters that need it)
-   */
-  timeZone?: string;
-};
 
 type DateParts = {
   day: number;
@@ -304,22 +269,21 @@ export function isValidDate(value: unknown): value is Date {
  * Calendar math uses local fields when `timeZone` is unset; with `timeZone`, day
  * parts go through `Intl` (`formatToParts`). Full zone conversion for exotic
  * offsets is best handled by a dayjs / luxon adapter.
+ * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
+ * {@link DateAdapter.setTimeZone}.
  */
-export function createNativeDateAdapter(
-  options: NativeDateAdapterOptions = {},
-): DateAdapter<Date> {
-  const resolveLocale = (context?: DateAdapterContext) => {
-    return context?.locale ?? options.locale;
-  };
+export function createNativeDateAdapter(): DateAdapter<Date> {
+  let locale: string | undefined;
+  let timeZone: string | undefined;
 
-  const resolveTimeZone = (context?: DateAdapterContext) => {
-    return context?.timeZone ?? options.timeZone;
-  };
+  const resolveLocale = () => locale;
 
-  const getParts = (date: Date, context?: DateAdapterContext): DateParts => {
-    const timeZone = resolveTimeZone(context);
+  const resolveTimeZone = (override?: string) => override ?? timeZone;
 
-    if (isNil(timeZone)) {
+  const getParts = (date: Date, zone?: string): DateParts => {
+    const resolvedZone = resolveTimeZone(zone);
+
+    if (isNil(resolvedZone)) {
       return {
         day: date.getDate(),
         hours: date.getHours(),
@@ -332,7 +296,6 @@ export function createNativeDateAdapter(
     }
 
     const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone,
       day: "numeric",
       year: "numeric",
       hour: "numeric",
@@ -341,6 +304,7 @@ export function createNativeDateAdapter(
       hourCycle: "h23",
       minute: "numeric",
       second: "numeric",
+      timeZone: resolvedZone,
     }).formatToParts(date);
 
     const year = Number(parts.find((part) => part.type === "year")?.value);
@@ -360,23 +324,39 @@ export function createNativeDateAdapter(
     year: number,
     month: number,
     day: number,
-    context?: DateAdapterContext,
+    zone?: string,
     hours = 0,
     minutes = 0,
     seconds = 0,
   ): Date => {
-    const timeZone = resolveTimeZone(context);
+    const resolvedZone = resolveTimeZone(zone);
 
-    if (isNil(timeZone)) {
+    if (isNil(resolvedZone)) {
       return new Date(year, month, day, hours, minutes, seconds, 0);
     }
 
-    return zonedDateTime(year, month, day, hours, minutes, seconds, timeZone);
+    return zonedDateTime(
+      year,
+      month,
+      day,
+      hours,
+      minutes,
+      seconds,
+      resolvedZone,
+    );
   };
 
   const adapter: DateAdapter<Date> = {
-    now: (_context) => {
+    now: (_zone) => {
       return new Date();
+    },
+
+    setLocale: (next) => {
+      locale = next;
+    },
+
+    setTimeZone: (next) => {
+      timeZone = next;
     },
 
     getDate: (date, context) => getParts(date, context).day,
@@ -438,6 +418,15 @@ export function createNativeDateAdapter(
       );
     },
 
+    getMonthNames: () => {
+      const locale = resolveLocale();
+      const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
+
+      return range(12).map((month) => {
+        return formatter.format(new Date(2021, month, 1));
+      });
+    },
+
     setDate: (date, day, context) => {
       const parts = getParts(date, context);
 
@@ -489,15 +478,6 @@ export function createNativeDateAdapter(
         left.minutes === right.minutes &&
         left.seconds === right.seconds
       );
-    },
-
-    getMonthNames: (context) => {
-      const locale = resolveLocale(context);
-      const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
-
-      return range(12).map((month) => {
-        return formatter.format(new Date(2021, month, 1));
-      });
     },
 
     isBefore: (a, b, context) => {
@@ -588,8 +568,8 @@ export function createNativeDateAdapter(
       );
     },
 
-    getWeekdayNames: (context) => {
-      const locale = resolveLocale(context);
+    getWeekdayNames: () => {
+      const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       // 2021-01-03 is a known Sunday in local construction.
       const sunday = new Date(2021, 0, 3);
@@ -620,7 +600,7 @@ export function createNativeDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveTimeZone(context);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
@@ -688,7 +668,7 @@ export function createNativeDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveTimeZone(context);
       const granularity = options?.granularity ?? "day";
 

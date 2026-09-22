@@ -3,7 +3,6 @@ import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
@@ -26,7 +25,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarClasses,
@@ -81,7 +80,7 @@ type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
 function resolveFocusDate(
   value: DatePickerModel,
   adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
+  context?: string,
 ): Date {
   if (isNil(value)) {
     return adapter.now(context);
@@ -104,7 +103,6 @@ export function useCalendar(
 ) {
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarProps,
@@ -141,8 +139,8 @@ export function useCalendar(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const mode = derived(() => {
@@ -244,7 +242,7 @@ export function useCalendar(
   });
 
   const monthLabel = derived(() => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
     return names[adapter.getMonth(viewDate, context)] ?? "";
   });

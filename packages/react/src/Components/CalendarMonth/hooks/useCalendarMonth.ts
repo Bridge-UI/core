@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYearMonth,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
   CalendarMonthOwnProps,
@@ -89,7 +88,6 @@ export function useCalendarMonth(
   libDefaults: CalendarMonthLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarMonthProps,
@@ -120,8 +118,8 @@ export function useCalendarMonth(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const year = derived(() => {
@@ -174,7 +172,7 @@ export function useCalendarMonth(
   });
 
   const months = derived((): CalendarMonthCell[] => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
     return names.map((label, month) => {
       const date = dateFromYearMonth({

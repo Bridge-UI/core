@@ -14,7 +14,6 @@ import { clamp, isNil, isString, range } from "es-toolkit/compat";
 // ** Core Imports
 import type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
@@ -23,45 +22,49 @@ dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
 
 /**
- * Options for {@link createDayjsDateAdapter}.
+ * Maps Bridge locales (`en-US`, `pt-BR`) to Day.js locale ids (`en`, `pt-br`).
+ * Import matching `dayjs/locale/*` files in the app.
  */
-export type DayjsDateAdapterOptions = {
-  /**
-   * Default locale when context omits `locale`.
-   *
-   * @default undefined
-   */
-  locale?: string;
-
-  /**
-   * Default IANA time zone when context omits `timeZone`.
-   *
-   * @default undefined (system local zone)
-   */
-  timeZone?: string;
-};
+export type DayjsDateAdapterLocales = Record<string, string>;
 
 /**
  * Builds a Day.js-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
+ * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
+ * {@link DateAdapter.setTimeZone}.
+ *
+ * `setLocale` still receives Bridge tags. Unmapped `en-US` becomes `en`; other
+ * tags are lowercased (`pt-BR` → `pt-br`) unless {@link DayjsDateAdapterLocales}
+ * has an entry.
  */
 export function createDayjsDateAdapter(
-  options: DayjsDateAdapterOptions = {},
+  locales: DayjsDateAdapterLocales = {},
 ): DateAdapter<Date> {
-  const resolveLocale = (context?: DateAdapterContext) => {
-    return context?.locale ?? options.locale;
+  let locale: string | undefined;
+  let timeZone: string | undefined;
+
+  const resolveLocale = () => locale;
+
+  const resolveLibraryLocale = () => {
+    if (isNil(locale)) {
+      return undefined;
+    }
+
+    return (
+      locales[locale] ?? (locale === "en-US" ? "en" : locale.toLowerCase())
+    );
   };
 
-  const resolveZone = (context?: DateAdapterContext) => {
-    return context?.timeZone ?? options.timeZone;
-  };
+  const resolveZone = (override?: string) => override ?? timeZone;
 
-  const toDayjs = (date: Date, context?: DateAdapterContext): Dayjs => {
-    const locale = resolveLocale(context);
-    const zone = resolveZone(context);
-    let value = isNil(zone) ? dayjs(date) : dayjs(date).tz(zone);
+  const toDayjs = (date: Date, zone?: string): Dayjs => {
+    const libraryLocale = resolveLibraryLocale();
+    const resolvedZone = resolveZone(zone);
+    let value = isNil(resolvedZone)
+      ? dayjs(date)
+      : dayjs(date).tz(resolvedZone);
 
-    if (!isNil(locale)) {
-      value = value.locale(locale);
+    if (!isNil(libraryLocale)) {
+      value = value.locale(libraryLocale);
     }
 
     return value;
@@ -76,6 +79,14 @@ export function createDayjsDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
+    setLocale: (next) => {
+      locale = next;
+    },
+
+    setTimeZone: (next) => {
+      timeZone = next;
+    },
+
     getDay: (date, context) => toDayjs(date, context).day(),
 
     getDate: (date, context) => toDayjs(date, context).date(),
@@ -162,15 +173,15 @@ export function createDayjsDateAdapter(
       return parseTimeWithDayjs({
         value,
         adapter,
-        context,
         toDayjs,
         fromDayjs,
         timeOptions,
+        timeZone: context,
       });
     },
 
-    getMonthNames: (context) => {
-      const locale = resolveLocale(context);
+    getMonthNames: () => {
+      const locale = resolveLocale();
 
       return range(12).map((month) => {
         return new Intl.DateTimeFormat(locale, { month: "long" }).format(
@@ -192,18 +203,18 @@ export function createDayjsDateAdapter(
 
     now: (context) => {
       const zone = resolveZone(context);
-      const locale = resolveLocale(context);
+      const libraryLocale = resolveLibraryLocale();
       let value = isNil(zone) ? dayjs() : dayjs().tz(zone);
 
-      if (!isNil(locale)) {
-        value = value.locale(locale);
+      if (!isNil(libraryLocale)) {
+        value = value.locale(libraryLocale);
       }
 
       return fromDayjs(value);
     },
 
-    getWeekdayNames: (context) => {
-      const locale = resolveLocale(context);
+    getWeekdayNames: () => {
+      const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
 
@@ -249,7 +260,7 @@ export function createDayjsDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveZone(context);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
@@ -268,7 +279,7 @@ export function createDayjsDateAdapter(
         return "";
       }
 
-      const locale = resolveLocale(context);
+      const locale = resolveLocale();
       const timeZone = resolveZone(context);
       const granularity = options?.granularity ?? "day";
 
@@ -301,13 +312,20 @@ export function createDayjsDateAdapter(
 
 function parseTimeWithDayjs(input: {
   adapter: DateAdapter<Date>;
-  context?: DateAdapterContext;
   fromDayjs: (value: Dayjs) => Date;
   timeOptions?: DateAdapterTimeOptions;
-  toDayjs: (date: Date, context?: DateAdapterContext) => Dayjs;
+  timeZone?: string;
+  toDayjs: (date: Date, timeZone?: string) => Dayjs;
   value: string;
 }): Date | null {
-  const { value, adapter, context, toDayjs, fromDayjs, timeOptions } = input;
+  const {
+    value,
+    adapter,
+    toDayjs,
+    fromDayjs,
+    timeOptions,
+    timeZone: context,
+  } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;

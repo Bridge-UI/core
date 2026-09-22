@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
@@ -33,7 +33,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarRangeClasses,
@@ -87,7 +87,7 @@ type CalendarRangeMerged = MergeLibDefaults<
 function resolveFocusDate(
   value: null | DateRangeValue,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  context?: string,
 ): Date {
   if (isNil(value)) {
     return adapter.now(context);
@@ -116,7 +116,6 @@ export function useCalendarRange(
   const attrs = useAttrs();
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -156,8 +155,8 @@ export function useCalendarRange(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const context = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const propsValue = computed(() => {
@@ -261,13 +260,13 @@ export function useCalendarRange(
   });
 
   const monthLabel = computed(() => {
-    const names = adapter.value.getMonthNames(context.value);
+    const names = adapter.value.getMonthNames();
 
     return names[adapter.value.getMonth(viewDate.value, context.value)] ?? "";
   });
 
   const endMonthLabel = computed(() => {
-    const names = adapter.value.getMonthNames(context.value);
+    const names = adapter.value.getMonthNames();
 
     return (
       names[adapter.value.getMonth(endViewDate.value, context.value)] ?? ""

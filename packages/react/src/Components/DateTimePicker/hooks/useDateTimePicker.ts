@@ -3,7 +3,6 @@ import { get, isArray, isNil, omit } from "es-toolkit/compat";
 import { useEffect, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   combineDateAndTime,
   type DatePickerModel,
@@ -18,7 +17,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimePickerClasses,
   DateTimePickerOwnProps,
@@ -86,7 +85,6 @@ export function useDateTimePicker(
 ) {
   const adapter = useDateAdapter();
   const overlayFooter = useFieldOverlayFooter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     DateTimePickerProps,
@@ -120,8 +118,8 @@ export function useDateTimePicker(
     },
   );
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const context = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const isControlled = derived(() => {
