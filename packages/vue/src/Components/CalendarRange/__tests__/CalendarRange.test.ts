@@ -264,3 +264,34 @@ test("it should emit a month range from month tiles", async () => {
   expect(range[1].getMonth()).toBe(5);
   expect(range[1].getDate()).toBe(1);
 });
+
+test("it should emit a year range from year tiles", async () => {
+  const onChange = vi.fn();
+
+  mountCalendarRange({
+    props: {
+      onChange,
+      granularity: "year",
+      viewDate: new Date(2021, 4, 1),
+    },
+  });
+
+  Array.from(document.body.querySelectorAll("button"))
+    .find((node) => node.textContent === "2018")
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  Array.from(document.body.querySelectorAll("button"))
+    .find((node) => node.textContent === "2021")
+    ?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  const range = onChange.mock.calls.at(-1)?.[0] as [Date, Date];
+
+  expect(range[0].getDate()).toBe(1);
+  expect(range[1].getDate()).toBe(1);
+  expect(range[0].getMonth()).toBe(0);
+  expect(range[1].getMonth()).toBe(0);
+  expect(range[0].getFullYear()).toBe(2018);
+  expect(range[1].getFullYear()).toBe(2021);
+});

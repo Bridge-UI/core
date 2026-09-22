@@ -97,3 +97,19 @@ test("it should commit a month-start date when granularity is month", async () =
   expect(selected.getMonth()).toBe(2);
   expect(selected.getDate()).toBe(1);
 });
+
+test("it should commit January 1 when granularity is year", async () => {
+  const wrapper = mount(DatePicker, {
+    props: { granularity: "year", defaultValue: new Date(2021, 4, 1) },
+  });
+
+  const year = wrapper.findAll("button").find((node) => node.text() === "2018");
+
+  await year?.trigger("click");
+
+  const selected = wrapper.emitted("change")?.[0]?.[0] as Date;
+
+  expect(selected.getDate()).toBe(1);
+  expect(selected.getMonth()).toBe(0);
+  expect(selected.getFullYear()).toBe(2018);
+});

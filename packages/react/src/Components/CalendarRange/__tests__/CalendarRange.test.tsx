@@ -215,3 +215,27 @@ test("it should commit a month range from month tiles", () => {
   expect(range[1].getMonth()).toBe(5);
   expect(range[1].getDate()).toBe(1);
 });
+
+test("it should commit a year range from year tiles", () => {
+  const onChange = vi.fn();
+
+  render(
+    <CalendarRange
+      granularity="year"
+      onChange={onChange}
+      viewDate={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "2018" }));
+  fireEvent.click(screen.getByRole("button", { name: "2021" }));
+
+  const range = onChange.mock.calls.at(-1)?.[0] as [Date, Date];
+
+  expect(range[0].getDate()).toBe(1);
+  expect(range[1].getDate()).toBe(1);
+  expect(range[0].getMonth()).toBe(0);
+  expect(range[1].getMonth()).toBe(0);
+  expect(range[0].getFullYear()).toBe(2018);
+  expect(range[1].getFullYear()).toBe(2021);
+});

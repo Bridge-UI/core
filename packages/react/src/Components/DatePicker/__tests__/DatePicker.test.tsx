@@ -103,3 +103,23 @@ test("it should commit a month-start date when granularity is month", () => {
   expect(selected.getMonth()).toBe(2);
   expect(selected.getDate()).toBe(1);
 });
+
+test("it should commit January 1 when granularity is year", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DatePicker
+      granularity="year"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "2018" }));
+
+  const selected = onChange.mock.calls[0]?.[0] as Date;
+
+  expect(selected.getDate()).toBe(1);
+  expect(selected.getMonth()).toBe(0);
+  expect(selected.getFullYear()).toBe(2018);
+});
