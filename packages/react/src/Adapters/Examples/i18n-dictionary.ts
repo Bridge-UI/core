@@ -2,8 +2,9 @@
  * In-memory dictionary i18n adapter. Wire via `BridgeUIProvider` `global.i18n`.
  *
  * Source English strings are the lookup keys. Messages are keyed by locale;
- * `setLocale` updates the locale used by `t`. `t` replaces `{{name}}` from
- * `params` and picks `|` plural forms when `count` is set (`one | other`).
+ * `setLocale` updates the locale used by `t` (Bridge `setLocale` syncs it).
+ * `t` replaces `{{name}}` from `params` and picks `|` plural forms when
+ * `count` is set (`one | other`).
  */
 
 // ** External Imports
@@ -22,31 +23,42 @@ import {
 export type DictionaryI18nMessages = Record<string, Record<string, string>>;
 
 /**
- * Options for {@link createDictionaryI18nAdapter}.
- */
-export type DictionaryI18nAdapterOptions = {
-  /**
-   * Initial locale used by `t` until `setLocale`.
-   *
-   * @default "en-US"
-   */
-  locale?: string;
-
-  /**
-   * Locale-keyed message map. Unknown keys fall back to the source string.
-   *
-   * @default {@link defaultDictionaryI18nMessages}
-   */
-  messages?: DictionaryI18nMessages;
-};
-
-/**
- * Default chrome-string dictionary (`pt-BR` translations; `en-US` is empty so
- * source English is used).
+ * Default chrome-string dictionary (`en-US` and `pt-BR`).
  */
 // prettier-ignore
 export const defaultDictionaryI18nMessages: DictionaryI18nMessages = {
-  "en-US": {},
+  "en-US": {
+    "OK": "OK",
+    "Next": "Next",
+    "Close": "Close",
+    "Reset": "Reset",
+    "Search": "Search",
+    "Columns": "Columns",
+    "Loading": "Loading",
+    "No data": "No data",
+    "Previous": "Previous",
+    "Last page": "Last page",
+    "Loading...": "Loading...",
+    "No options": "No options",
+    "Pagination": "Pagination",
+    "Expand row": "Expand row",
+    "First page": "First page",
+    "Select row": "Select row",
+    "Hide password": "Hide password",
+    "Show password": "Show password",
+    "Filter column": "Filter column",
+    "Rows per page": "Rows per page",
+    "Sort ascending": "Sort ascending",
+    "Cancel sorting": "Cancel sorting",
+    "Clear selection": "Clear selection",
+    "Decrement value": "Decrement value",
+    "Increment value": "Increment value",
+    "Select all rows": "Select all rows",
+    "Sort descending": "Sort descending",
+    "Select all items": "Select all items",
+    "Page {{page}} of {{count}}": "Page {{page}} of {{count}}",
+    "{{selected}} of {{total}} row(s) selected.": "{{selected}} of {{total}} row selected. | {{selected}} of {{total}} rows selected.",
+  },
   "pt-BR": {
     "OK": "OK",
     "Close": "Fechar",
@@ -84,19 +96,21 @@ export const defaultDictionaryI18nMessages: DictionaryI18nMessages = {
 /**
  * Builds a locale-keyed dictionary {@link I18nAdapter} for Bridge chrome strings.
  * Unknown locales / messages fall back to the English source string.
+ * Locale starts as `"en-US"` until {@link I18nAdapter.setLocale}.
  */
-export function createDictionaryI18nAdapter(
-  options: DictionaryI18nAdapterOptions = {},
-): I18nAdapter {
-  const messages = options.messages ?? defaultDictionaryI18nMessages;
-  let locale = options.locale ?? "en-US";
+export function createDictionaryI18nAdapter(): I18nAdapter {
+  let locale = "en-US";
 
   return {
     setLocale(next) {
       locale = next;
     },
     t(message, count, params) {
-      const translated = get(messages, [locale, message], message);
+      const translated = get(
+        defaultDictionaryI18nMessages,
+        [locale, message],
+        message,
+      );
       const template = isNil(count)
         ? translated
         : selectPluralMessage(translated, count);
