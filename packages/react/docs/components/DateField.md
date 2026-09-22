@@ -45,8 +45,8 @@ Month and year pick the same `Date` model, committing the first day of that unit
 <DateField
   label="Year"
   value={year}
-  granularity="year"
   onChange={setYear}
+  granularity="year"
 />
 ```
 
