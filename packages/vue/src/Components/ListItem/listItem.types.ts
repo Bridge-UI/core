@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes, Slot, VNode } from "vue";
+import type { AnchorHTMLAttributes, HTMLAttributes, Slot, VNode } from "vue";
 
 // ** Core Imports
 import type { ListboxValue } from "@bridge-ui/core/Domain";
@@ -63,9 +63,9 @@ export interface ListItemCustomProps {
   end?: HTMLAttributes;
 
   /**
-   * Props forwarded to the interactive wrapper.
+   * Props forwarded to the interactive wrapper (`a` when `href` is set).
    */
-  interactive?: HTMLAttributes;
+  interactive?: AnchorHTMLAttributes;
 
   /**
    * Props forwarded to the primary text.
@@ -94,7 +94,8 @@ export interface ListItemCustomProps {
 }
 
 /**
- * List row.
+ * List row. Set `interactive` for clickable rows, or `href` for a link.
+ * Use `role="menuitem"` inside menus or `role="option"` in selects.
  */
 export interface ListItemOwnProps {
   /**
@@ -140,7 +141,16 @@ export interface ListItemOwnProps {
   divider?: boolean;
 
   /**
+   * URL for the interactive wrapper. Renders an anchor so hover shows the
+   * address and middle-click opens a new tab.
+   *
+   * @default undefined
+   */
+  href?: string;
+
+  /**
    * When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.
+   * Implied when `href` is set.
    *
    * @default false
    */
@@ -154,7 +164,14 @@ export interface ListItemOwnProps {
   primary?: string;
 
   /**
-   * ARIA role for the interactive wrapper.
+   * Relationship of the linked URL. Forwarded to the anchor when `href` is set.
+   *
+   * @default undefined
+   */
+  rel?: string;
+
+  /**
+   * ARIA role for the interactive wrapper. Omitted when `href` is set.
    *
    * @default "button"
    */
@@ -181,6 +198,13 @@ export interface ListItemOwnProps {
    * @default Check
    */
   selectedIcon?: null | IconSource;
+
+  /**
+   * Where to open the URL. Forwarded to the anchor when `href` is set.
+   *
+   * @default undefined
+   */
+  target?: string;
 
   /**
    * When set inside a `Listbox`, registers this row as a selectable option.

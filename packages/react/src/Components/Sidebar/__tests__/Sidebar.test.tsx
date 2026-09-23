@@ -297,3 +297,23 @@ test("it should hide ListSection when the icon rail is collapsed", () => {
 
   expect(screen.queryByText("Application")).toBeNull();
 });
+
+test("it should render SidebarListItem as a link when href is set", () => {
+  render(
+    <SidebarProvider defaultOpen={false}>
+      <Sidebar collapsible="icon">
+        <SidebarList>
+          <SidebarListItem href="/home" primary="Home" />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  const link = screen.getByRole("link", { name: "Home" });
+
+  expect(link.getAttribute("href")).toBe("/home");
+  expect(link.getAttribute("aria-label")).toBe("Home");
+});

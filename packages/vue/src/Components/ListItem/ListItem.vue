@@ -38,6 +38,7 @@ const {
   primaryBind,
   hasSecondary,
   secondaryBind,
+  interactiveTag,
   interactiveBind,
   selectedIconBind,
   resolvedSelectedIcon,
@@ -50,7 +51,11 @@ const rootTag = computed(() => {
 
 <template>
   <component :is="rootTag" v-bind="rootBind">
-    <div v-if="interactiveBind" v-bind="interactiveBind">
+    <component
+      :is="interactiveTag"
+      v-if="interactiveBind"
+      v-bind="interactiveBind"
+    >
       <div :class="rowClass">
         <div v-bind="startBind" v-if="hasNamedSlot(slots, 'start')">
           <slot name="start" />
@@ -86,7 +91,7 @@ const rootTag = computed(() => {
           />
         </div>
       </div>
-    </div>
+    </component>
 
     <div v-else :class="rowClass">
       <div v-bind="startBind" v-if="hasNamedSlot(slots, 'start')">

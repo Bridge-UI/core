@@ -65,6 +65,29 @@ test("it should not render a selected icon when selectedIcon is null", () => {
   expect(container.querySelector("svg")).toBeNull();
 });
 
+test("it should render an anchor when href is set", () => {
+  const { container } = render(
+    <ListItem href="/inbox" target="_blank" primary="Inbox" rel="noreferrer" />,
+  );
+
+  const link = screen.getByRole("link", { name: "Inbox" });
+
+  expect(link.tagName).toBe("A");
+  expect(link.getAttribute("rel")).toBe("noreferrer");
+  expect(link.getAttribute("href")).toBe("/inbox");
+  expect(link.getAttribute("target")).toBe("_blank");
+  expect(container.querySelector("li > a")).toBe(link);
+});
+
+test("it should omit href when the link is disabled", () => {
+  render(<ListItem disabled href="/archive" primary="Archive" />);
+
+  const link = screen.getByText("Archive").closest("a");
+
+  expect(link?.getAttribute("href")).toBeNull();
+  expect(link?.getAttribute("aria-disabled")).toBe("true");
+});
+
 test("it should disable interaction when disabled is true", () => {
   const { container } = render(
     <ListItem disabled interactive primary="Disabled" />,

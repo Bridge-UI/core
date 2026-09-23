@@ -197,6 +197,40 @@ test("it should suppress the selected icon from BridgeUIProvider when null", () 
   expect(resolvedSelectedIcon.value).toBeNull();
 });
 
+test("it should expose an anchor bind when href is set", () => {
+  const { interactiveTag, interactiveBind } = mountUseListItem({
+    href: "/inbox",
+    target: "_blank",
+    primary: "Inbox",
+    rel: "noreferrer",
+  });
+
+  expect(interactiveTag.value).toBe("a");
+  expect(interactiveBind.value?.rel).toBe("noreferrer");
+  expect(interactiveBind.value?.href).toBe("/inbox");
+  expect(interactiveBind.value?.role).toBeUndefined();
+  expect(interactiveBind.value?.target).toBe("_blank");
+  expect(interactiveBind.value?.tabindex).toBeUndefined();
+  expect(interactiveBind.value?.class).toContain("no-underline");
+});
+
+test("it should omit the link url when disabled", () => {
+  const { interactiveTag, interactiveBind } = mountUseListItem({
+    href: "/inbox",
+    disabled: true,
+    target: "_blank",
+    primary: "Inbox",
+    rel: "noreferrer",
+  });
+
+  expect(interactiveTag.value).toBe("a");
+  expect(interactiveBind.value?.rel).toBeUndefined();
+  expect(interactiveBind.value?.href).toBeUndefined();
+  expect(interactiveBind.value?.target).toBeUndefined();
+  expect(interactiveBind.value?.tabindex).toBe(-1);
+  expect(interactiveBind.value?.["aria-disabled"]).toBe(true);
+});
+
 test("it should disable interaction when disabled is true", () => {
   const { interactiveBind } = mountUseListItem({
     disabled: true,

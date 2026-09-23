@@ -35,10 +35,13 @@ import {
 
 const listItemBridgeKeys = [
   "as",
+  "rel",
+  "href",
   "role",
   "dense",
   "slots",
   "value",
+  "target",
   "classes",
   "divider",
   "primary",
@@ -173,7 +176,11 @@ export function useListItem(
   });
 
   const isListboxOption = !isNil(listboxOption);
-  const isInteractiveRow = Boolean(merged.interactive || isListboxOption);
+  const isLink = Boolean(merged.href) && !isListboxOption;
+  const isInteractiveRow = Boolean(
+    merged.interactive || isListboxOption || isLink,
+  );
+  const interactiveTag = isLink ? "a" : "div";
 
   const resolvedSelectedIcon = useMemo((): null | IconSource => {
     if (isListboxOption) {
@@ -225,15 +232,19 @@ export function useListItem(
       return null;
     }
 
-    return mergePartBind(
+    const bind = mergePartBind(
       customProps?.interactive,
       {},
       {
-        role: isListboxOption ? "option" : merged.role,
         "aria-disabled": merged.disabled ? true : undefined,
-        tabIndex: merged.disabled || isListboxOption ? -1 : 0,
+        rel: isLink && !merged.disabled ? merged.rel : undefined,
+        href: isLink && !merged.disabled ? merged.href : undefined,
+        target: isLink && !merged.disabled ? merged.target : undefined,
         "aria-selected": isListboxOption ? listboxSelected : undefined,
+        role: isListboxOption ? "option" : isLink ? undefined : merged.role,
         "data-selected": merged.selected || listboxSelected ? true : undefined,
+        tabIndex:
+          merged.disabled || isListboxOption ? -1 : isLink ? undefined : 0,
         onMouseDown: isListboxOption
           ? (event: MouseEvent) => {
               event.preventDefault();
@@ -248,6 +259,7 @@ export function useListItem(
           : undefined,
         className: cn({
           "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "no-underline": isLink,
           "cursor-pointer select-none": !merged.disabled,
           "px-2": !isListboxOption,
           "py-1.5": !isListboxOption && !isDense,
@@ -274,6 +286,17 @@ export function useListItem(
         }),
       },
     );
+
+    if (!isLink || !merged.disabled) {
+      return bind;
+    }
+
+    return {
+      ...bind,
+      rel: undefined,
+      href: undefined,
+      target: undefined,
+    };
   });
 
   const rowClassName = derived(() => {
@@ -399,6 +422,7 @@ export function useListItem(
     hasSecondary,
     secondaryBind,
     primaryContent,
+    interactiveTag,
     interactiveBind,
     secondaryContent,
     selectedIconBind,

@@ -41,6 +41,17 @@ Mount `SidebarProvider` around the app shell (`Sidebar` and `SidebarInset` as si
 </SidebarProvider>
 ```
 
+### Links
+
+`href` renders the row as an anchor. The browser shows the URL on hover, and middle-click opens a new tab.
+
+```vue
+<SidebarList>
+  <SidebarListItem href="/home" primary="Home" />
+  <SidebarListItem href="/settings" primary="Settings" />
+</SidebarList>
+```
+
 ### Header and footer
 
 Put brand and account rows in `#header` / `#footer`. `SidebarList` collapses those rows to the start avatar. The end chevron hides while collapsed. Header and footer lists use `classes.root` `p-0` because those slots are already padded.
@@ -249,7 +260,7 @@ Same as `List`, plus `icon-only`. Sets `icon-only` when the icon rail is collaps
 
 ## Props (`SidebarListItem`)
 
-Same as `ListItem`, plus `tooltip` / `tooltip-placement`. Applies compact nav chrome. Tooltips only show while the icon rail is collapsed (`primary`, or `tooltip` to override).
+Same as `ListItem` (including `href`), plus `tooltip` / `tooltip-placement`. Applies compact nav chrome. Tooltips only show while the icon rail is collapsed (`primary`, or `tooltip` to override). A collapsed link keeps `href` on the anchor.
 
 ## `useSidebar`
 

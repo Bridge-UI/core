@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes, ReactNode } from "react";
+import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type { ListboxValue } from "@bridge-ui/core/Domain";
@@ -63,9 +63,9 @@ export interface ListItemCustomProps {
   end?: HTMLAttributes<HTMLDivElement>;
 
   /**
-   * Props forwarded to the interactive wrapper.
+   * Props forwarded to the interactive wrapper (`a` when `href` is set).
    */
-  interactive?: HTMLAttributes<HTMLDivElement>;
+  interactive?: AnchorHTMLAttributes<HTMLAnchorElement>;
 
   /**
    * Props forwarded to the primary text.
@@ -94,8 +94,8 @@ export interface ListItemCustomProps {
 }
 
 /**
- * List row. Set `interactive` for
- * clickable rows; use `role="menuitem"` inside menus or `role="option"` in selects.
+ * List row. Set `interactive` for clickable rows, or `href` for a link.
+ * Use `role="menuitem"` inside menus or `role="option"` in selects.
  */
 export interface ListItemOwnProps {
   /**
@@ -148,7 +148,16 @@ export interface ListItemOwnProps {
   divider?: boolean;
 
   /**
+   * URL for the interactive wrapper. Renders an anchor so hover shows the
+   * address and middle-click opens a new tab.
+   *
+   * @default undefined
+   */
+  href?: string;
+
+  /**
    * When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.
+   * Implied when `href` is set.
    *
    * @default false
    */
@@ -162,7 +171,15 @@ export interface ListItemOwnProps {
   primary?: ReactNode;
 
   /**
-   * ARIA role for the interactive wrapper. Common values: `menuitem`, `option`, `button`.
+   * Relationship of the linked URL. Forwarded to the anchor when `href` is set.
+   *
+   * @default undefined
+   */
+  rel?: string;
+
+  /**
+   * ARIA role for the interactive wrapper. Omitted when `href` is set.
+   * Common values: `menuitem`, `option`, `button`.
    *
    * @default "button"
    */
@@ -196,6 +213,13 @@ export interface ListItemOwnProps {
    * @default undefined
    */
   slots?: ListItemSlots;
+
+  /**
+   * Where to open the URL. Forwarded to the anchor when `href` is set.
+   *
+   * @default undefined
+   */
+  target?: string;
 
   /**
    * When set inside a `Listbox`, registers this row as a selectable option.

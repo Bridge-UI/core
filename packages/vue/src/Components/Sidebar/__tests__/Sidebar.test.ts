@@ -376,3 +376,37 @@ test("it should hide ListSection when the icon rail is collapsed", async () => {
 
   expect(wrapper.text()).not.toContain("Application");
 });
+
+test("it should render SidebarListItem as a link when href is set", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: false },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "icon" },
+          {
+            default: () =>
+              h(SidebarList, null, {
+                default: () =>
+                  h(SidebarListItem, {
+                    href: "/home",
+                    primary: "Home",
+                  }),
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  const link = wrapper.get("a");
+
+  expect(link.attributes("href")).toBe("/home");
+  expect(link.attributes("aria-label")).toBe("Home");
+});

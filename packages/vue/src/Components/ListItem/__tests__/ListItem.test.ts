@@ -102,6 +102,39 @@ test("it should not render a selected icon when selectedIcon is null", () => {
   expect(wrapper.find("svg").exists()).toBe(false);
 });
 
+test("it should render an anchor when href is set", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      href: "/inbox",
+      target: "_blank",
+      primary: "Inbox",
+      rel: "noreferrer",
+    },
+  });
+
+  const link = wrapper.get("a");
+
+  expect(link.attributes("rel")).toBe("noreferrer");
+  expect(link.attributes("href")).toBe("/inbox");
+  expect(link.attributes("target")).toBe("_blank");
+  expect(wrapper.element.tagName).toBe("LI");
+});
+
+test("it should omit href when the link is disabled", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      disabled: true,
+      href: "/archive",
+      primary: "Archive",
+    },
+  });
+
+  const link = wrapper.get("a");
+
+  expect(link.attributes("href")).toBeUndefined();
+  expect(link.attributes("aria-disabled")).toBe("true");
+});
+
 test("it should disable interaction when disabled is true", () => {
   const wrapper = mount(ListItem, {
     props: {

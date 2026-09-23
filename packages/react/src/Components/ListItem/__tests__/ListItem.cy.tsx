@@ -47,6 +47,17 @@ test("it should not render a selected icon when selectedIcon is null", () => {
   cy.get("svg").should("not.exist");
 });
 
+test("it should render an anchor when href is set", () => {
+  cy.mount(
+    <ListItem href="/inbox" target="_blank" primary="Inbox" rel="noreferrer" />,
+  );
+
+  cy.get("li > a")
+    .should("have.attr", "rel", "noreferrer")
+    .and("have.attr", "href", "/inbox")
+    .and("have.attr", "target", "_blank");
+});
+
 test("it should disable interaction when disabled is true", () => {
   cy.mount(<ListItem disabled interactive primary="Disabled" />);
 

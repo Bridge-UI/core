@@ -41,9 +41,12 @@ import {
 
 const listItemBridgeKeys = [
   "as",
+  "rel",
+  "href",
   "role",
   "dense",
   "value",
+  "target",
   "classes",
   "divider",
   "primary",
@@ -245,8 +248,18 @@ export function useListItem(
     });
   });
 
+  const isLink = computed(() => {
+    return Boolean(merged.value.href) && !isListboxOption.value;
+  });
+
   const isInteractiveRow = computed(() => {
-    return Boolean(merged.value.interactive || isListboxOption.value);
+    return Boolean(
+      merged.value.interactive || isListboxOption.value || isLink.value,
+    );
+  });
+
+  const interactiveTag = computed(() => {
+    return isLink.value ? "a" : "div";
   });
 
   const interactiveBind = computed(() => {
@@ -254,23 +267,42 @@ export function useListItem(
       return null;
     }
 
-    return mergePartBind(
+    const bind = mergePartBind(
       customProps.value?.interactive,
       {},
       {
         "aria-disabled": merged.value.disabled ? true : undefined,
-        role: isListboxOption.value ? "option" : merged.value.role,
-        tabindex: merged.value.disabled || isListboxOption.value ? -1 : 0,
+        rel:
+          isLink.value && !merged.value.disabled ? merged.value.rel : undefined,
         "data-selected":
           merged.value.selected || listboxSelected.value ? true : undefined,
         "aria-selected": isListboxOption.value
           ? listboxSelected.value
           : undefined,
+        href:
+          isLink.value && !merged.value.disabled
+            ? merged.value.href
+            : undefined,
+        target:
+          isLink.value && !merged.value.disabled
+            ? merged.value.target
+            : undefined,
+        role: isListboxOption.value
+          ? "option"
+          : isLink.value
+            ? undefined
+            : merged.value.role,
         onMousedown: isListboxOption.value
           ? (event: MouseEvent) => {
               event.preventDefault();
             }
           : undefined,
+        tabindex:
+          merged.value.disabled || isListboxOption.value
+            ? -1
+            : isLink.value
+              ? undefined
+              : 0,
         onClick: isListboxOption.value
           ? () => {
               if (listboxOption.value) {
@@ -280,6 +312,7 @@ export function useListItem(
           : undefined,
         class: cn({
           "flex w-full min-w-0 items-center gap-x-2 rounded-md text-left text-sm text-dark-900 outline-hidden transition-colors dark:text-dark-100": true,
+          "no-underline": isLink.value,
           "cursor-pointer select-none": !merged.value.disabled,
           "px-2": !isListboxOption.value,
           "py-1.5": !isListboxOption.value && !isDense.value,
@@ -315,6 +348,17 @@ export function useListItem(
         }),
       },
     );
+
+    if (!isLink.value || !merged.value.disabled) {
+      return bind;
+    }
+
+    return {
+      ...bind,
+      rel: undefined,
+      href: undefined,
+      target: undefined,
+    };
   });
 
   const rowClass = computed(() => {
@@ -414,6 +458,7 @@ export function useListItem(
     primaryBind,
     hasSecondary,
     secondaryBind,
+    interactiveTag,
     interactiveBind,
     selectedIconBind,
     resolvedSelectedIcon,
