@@ -1,13 +1,39 @@
 // ** External Imports
 import { expect, test, vi } from "vitest";
-import { computed, effectScope } from "vue";
+import { computed, createApp, defineComponent, effectScope, h } from "vue";
 
 // ** Core Imports
-import { createNativeDateAdapter } from "@bridge-ui/core/Adapters";
+import {
+  createNativeDateAdapter,
+  defaultNativeDateAdapter,
+  type DateAdapter,
+} from "@bridge-ui/core/Adapters";
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@bridge-ui/core/Config";
 
 // ** Local Imports
+import { useDateAdapter } from "@/Adapters/Date";
+import type { BridgeUIContextApi } from "@/Provider/bridgeUITypes";
 import { createBridgeUIApi } from "@/Provider/createBridgeUIApi";
+import { BRIDGE_UI_INJECTION_KEY } from "@/Provider/injectionKey";
+
+function readDateAdapter(api: BridgeUIContextApi): DateAdapter {
+  let adapter: undefined | DateAdapter;
+
+  const App = defineComponent({
+    setup() {
+      adapter = useDateAdapter().value;
+
+      return () => h("div");
+    },
+  });
+
+  const app = createApp(App);
+
+  app.provide(BRIDGE_UI_INJECTION_KEY, api);
+  app.mount(document.createElement("div"));
+
+  return adapter!;
+}
 
 function createDefaultOptionsRef() {
   return computed(() => {
@@ -178,6 +204,42 @@ test("it should call date adapter setTimeZone when setTimeZone is used", () => {
 
     expect(api.global.value.timeZone).toBe("UTC");
     expect(setTimeZone).toHaveBeenCalledWith("UTC");
+  });
+
+  scope.stop();
+});
+
+test("it should keep a native date adapter per provider", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const probe = new Date("2024-01-15T15:00:00.000Z");
+    const utcApi = createBridgeUIApi(
+      undefined,
+      computed(() => {
+        return {
+          components: {},
+          global: { timeZone: "UTC" },
+        };
+      }),
+    );
+    const saoPauloApi = createBridgeUIApi(
+      undefined,
+      computed(() => {
+        return {
+          components: {},
+          global: { timeZone: "America/Sao_Paulo" },
+        };
+      }),
+    );
+    const utc = readDateAdapter(utcApi);
+    const saoPaulo = readDateAdapter(saoPauloApi);
+
+    expect(utc).not.toBe(saoPaulo);
+    expect(utc).not.toBe(defaultNativeDateAdapter);
+    expect(utc).toBe(utcApi.nativeDates);
+    expect(utc.getHours(probe)).toBe(15);
+    expect(saoPaulo.getHours(probe)).toBe(12);
   });
 
   scope.stop();

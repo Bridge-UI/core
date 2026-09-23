@@ -1,7 +1,9 @@
 /**
  * date-fns adapter (`TDate = Date`). Wire via `BridgeUIProvider` / `createBridgeUI`
- * `global.dates`. Requires the optional `date-fns` peer. For IANA zones, prefer
- * Luxon or Day.js.
+ * `global.dates`. Requires the optional `date-fns` peer.
+ *
+ * `timeZone` is ignored. Calendar math and formatting use the local calendar.
+ * Prefer the native adapter, Luxon, or Day.js for IANA zones.
  */
 
 // ** External Imports
@@ -45,16 +47,15 @@ import type {
 
 /**
  * Builds a date-fns-backed {@link DateAdapter} (`TDate = Date`) for Bridge calendars.
- * Locale and default IANA zone start unset until {@link DateAdapter.setLocale} /
- * {@link DateAdapter.setTimeZone}.
+ * Locale stays unset until {@link DateAdapter.setLocale}.
+ *
+ * `timeZone` arguments are ignored. Formatting uses the same local calendar as
+ * `getDate` / `getHours`.
  */
 export function createDateFnsDateAdapter(): DateAdapter<Date> {
   let locale: string | undefined;
-  let timeZone: string | undefined;
 
   const resolveLocale = () => locale;
-
-  const resolveTimeZone = (override?: string) => override ?? timeZone;
 
   const isValidDate = (date: Date) => {
     return date instanceof Date && isValid(date);
@@ -71,10 +72,6 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
 
     getDay(date) {
       return getDay(date);
-    },
-
-    setTimeZone(next) {
-      timeZone = next;
     },
 
     getDate(date) {
@@ -227,6 +224,23 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       return isValidDate(parsed) ? startOfDay(parsed) : null;
     },
 
+    formatTime(date, _timeZone, timeOptions) {
+      if (!isValidDate(date)) {
+        return "";
+      }
+
+      const locale = resolveLocale();
+      const ampm = timeOptions?.ampm === true;
+      const showSeconds = timeOptions?.showSeconds === true;
+
+      return new Intl.DateTimeFormat(locale, {
+        hour12: ampm,
+        hour: "2-digit",
+        minute: "2-digit",
+        ...(showSeconds ? { second: "2-digit" as const } : {}),
+      }).format(date);
+    },
+
     getCalendarDays(view, startOfWeek, timeZone) {
       const monthStart = adapter.startOfMonth(view, timeZone);
       const weekday = adapter.getDay(monthStart, timeZone);
@@ -239,37 +253,16 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       });
     },
 
-    formatTime(date, timeZone, timeOptions) {
+    format(date, _timeZone, options) {
       if (!isValidDate(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const zone = resolveTimeZone(timeZone);
-      const ampm = timeOptions?.ampm === true;
-      const showSeconds = timeOptions?.showSeconds === true;
-
-      return new Intl.DateTimeFormat(locale, {
-        hour12: ampm,
-        timeZone: zone,
-        hour: "2-digit",
-        minute: "2-digit",
-        ...(showSeconds ? { second: "2-digit" as const } : {}),
-      }).format(date);
-    },
-
-    format(date, timeZone, options) {
-      if (!isValidDate(date)) {
-        return "";
-      }
-
-      const locale = resolveLocale();
-      const zone = resolveTimeZone(timeZone);
       const granularity = options?.granularity ?? "day";
 
       if (granularity === "year") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
@@ -277,14 +270,12 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       if (granularity === "month") {
         return new Intl.DateTimeFormat(locale, {
           month: "long",
-          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
-      if (!isNil(zone) || !isNil(locale)) {
+      if (!isNil(locale)) {
         return new Intl.DateTimeFormat(locale, {
-          timeZone: zone,
           day: "2-digit",
           year: "numeric",
           month: "2-digit",

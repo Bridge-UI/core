@@ -3,6 +3,7 @@ import { toMerged } from "es-toolkit/object";
 import { useCallback, useContext, useMemo, useState } from "react";
 
 // ** Core Imports
+import { createNativeDateAdapter } from "@bridge-ui/core/Adapters";
 import {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
@@ -28,6 +29,8 @@ function useBridgeUIContextValue(
 
   const [componentsPatch, setComponentsPatch] =
     useState<BridgeUIComponentsConfig>({});
+
+  const [nativeDates] = useState(createNativeDateAdapter);
 
   const baseGlobal = useMemo(() => {
     return mergeBridgeUIGlobal({
@@ -81,17 +84,17 @@ function useBridgeUIContextValue(
     (locale: string) => {
       setGlobal({ locale });
       global.i18n?.setLocale?.(locale);
-      global.dates?.setLocale?.(locale);
+      (global.dates ?? nativeDates).setLocale?.(locale);
     },
-    [setGlobal, global.i18n, global.dates],
+    [setGlobal, nativeDates, global.i18n, global.dates],
   );
 
   const setTimeZone = useCallback(
     (timeZone: string) => {
       setGlobal({ timeZone });
-      global.dates?.setTimeZone?.(timeZone);
+      (global.dates ?? nativeDates).setTimeZone?.(timeZone);
     },
-    [setGlobal, global.dates],
+    [setGlobal, nativeDates, global.dates],
   );
 
   const setDirection = useCallback(
@@ -117,6 +120,7 @@ function useBridgeUIContextValue(
       setGlobal,
       setLocale,
       components,
+      nativeDates,
       setTimeZone,
       setDirection,
       setComponents,
@@ -127,6 +131,7 @@ function useBridgeUIContextValue(
     setGlobal,
     setLocale,
     components,
+    nativeDates,
     setTimeZone,
     setDirection,
     setComponents,

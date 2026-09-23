@@ -62,11 +62,11 @@ app.use(
 
 ### Date adapter
 
-Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, Bridge uses `createNativeDateAdapter`. Ready adapters: `@bridge-ui/vue/Adapters/Examples/date-dayjs` (and `date-date-fns`, `date-luxon`, `date-moment`). Install the matching date library next to `@bridge-ui/vue`. `setTimeZone` updates Bridge `timeZone` and calls optional `dates.setTimeZone`.
+Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, each provider creates its own native `Date` adapter. Ready adapters: `@bridge-ui/vue/Adapters/Examples/date-dayjs` (and `date-date-fns`, `date-luxon`, `date-moment`). Install the matching date library next to `@bridge-ui/vue`. `setTimeZone` updates Bridge `timeZone` and calls optional `dates.setTimeZone`.
 
 Bridge locales stay `en-US` / `pt-BR`. Native, Luxon, and date-fns already use those tags. Day.js and Moment want ids like `en` / `pt-br` — pass that map to the factory and import the matching locale files.
 
-Day.js IANA zones need `utc` and `timezone` extended in the app. Without `dayjs.tz`, `timeZone` is ignored. The adapter loads `customParseFormat` itself. Moment IANA zones need `moment-timezone` imported in the app. Without `moment.tz`, `timeZone` is ignored.
+Day.js IANA zones need `utc` and `timezone` extended in the app. Without `dayjs.tz`, `timeZone` is ignored. The adapter loads `customParseFormat` itself. Moment IANA zones need `moment-timezone` imported in the app. Without `moment.tz`, `timeZone` is ignored. date-fns ignores `timeZone` and keeps the local calendar. Use the native adapter, Luxon, or Day.js when a picker needs an IANA zone.
 
 ```ts
 import dayjs from "dayjs";

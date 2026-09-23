@@ -280,7 +280,7 @@ export interface BridgeUIGlobal {
 
   /**
    * Date adapter used by calendars and pickers (`format`, `parse`, calendar math).
-   * When omitted, Bridge falls back to the native `Date` adapter.
+   * When omitted, each provider creates its own native `Date` adapter.
    * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
    * (`Adapters/Examples/date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
    * date library next to the Bridge package.
