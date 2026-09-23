@@ -26,10 +26,30 @@ test("it should update locale theme direction and timeZone via aliases", () => {
     result.current.setTimeZone("America/Sao_Paulo");
   });
 
-  expect(result.current.global.locale).toBe("pt-BR");
   expect(result.current.global.theme).toBe("dark");
+  expect(result.current.global.locale).toBe("pt-BR");
   expect(result.current.global.direction).toBe("rtl");
   expect(result.current.global.timeZone).toBe("America/Sao_Paulo");
+});
+
+test("it should call date adapter setLocale when setLocale is used", () => {
+  const setLocale = vi.fn();
+  const dates = {
+    ...createNativeDateAdapter(),
+    setLocale,
+  };
+
+  const { result } = renderHook(() => useBridgeUI()!, {
+    wrapper: ({ children }) =>
+      createElement(BridgeUIProvider, { children, global: { dates } }),
+  });
+
+  act(() => {
+    result.current.setLocale("pt-BR");
+  });
+
+  expect(result.current.global.locale).toBe("pt-BR");
+  expect(setLocale).toHaveBeenCalledWith("pt-BR");
 });
 
 test("it should call date adapter setTimeZone when setTimeZone is used", () => {

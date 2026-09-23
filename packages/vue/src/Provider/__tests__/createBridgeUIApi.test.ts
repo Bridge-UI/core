@@ -121,8 +121,8 @@ test("it should update locale theme direction and timeZone via aliases", () => {
     api.setDirection("rtl");
     api.setTimeZone("America/Sao_Paulo");
 
-    expect(api.global.value.locale).toBe("pt-BR");
     expect(api.global.value.theme).toBe("dark");
+    expect(api.global.value.locale).toBe("pt-BR");
     expect(api.global.value.direction).toBe("rtl");
     expect(api.global.value.timeZone).toBe("America/Sao_Paulo");
   });
