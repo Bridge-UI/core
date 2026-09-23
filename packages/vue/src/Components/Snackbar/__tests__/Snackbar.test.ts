@@ -206,7 +206,7 @@ test("it should render the progress bar by default", async () => {
   const panel = document.body.querySelector('[data-snackbar-part="panel"]');
   const progress = panel?.querySelector(":scope > .h-0\\.5");
 
-  expect(progress?.className).toContain("bg-primary-500");
+  expect(progress?.className).toContain("bg-primary-800");
 });
 
 test("it should auto-dismiss after the default duration", async () => {
