@@ -5,6 +5,7 @@ import { findLast, isNil, isUndefined, omit } from "es-toolkit/compat";
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
+import type { RichTextEditorAdapter } from "@/Adapters/richText";
 import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
@@ -14,14 +15,16 @@ import { BRIDGE_UI_DEFAULT_GLOBAL } from "@/Config/types";
 import { mergeBridgeUILayeredClasses } from "@/Utils";
 
 /** Adapter keys that must replace-on-write instead of deep-merging. */
-const GLOBAL_ADAPTER_KEYS = ["i18n", "dates", "icons"] as const;
+const GLOBAL_ADAPTER_KEYS = ["i18n", "dates", "icons", "richText"] as const;
 
 /**
  * Drops adapter fields so deep-merge does not combine adapter objects.
  */
 function omitGlobalAdapters(
   value: undefined | Partial<BridgeUIGlobal>,
-): undefined | Omit<Partial<BridgeUIGlobal>, "i18n" | "dates" | "icons"> {
+):
+  | undefined
+  | Omit<Partial<BridgeUIGlobal>, "i18n" | "dates" | "icons" | "richText"> {
   if (isNil(value)) {
     return value;
   }
@@ -31,7 +34,8 @@ function omitGlobalAdapters(
 
 /**
  * Merges the base and partials into a single object.
- * `dates`, `icons`, and `i18n` are replace-on-write (last defined adapter wins).
+ * `dates`, `icons`, `i18n`, and `richText` are replace-on-write
+ * (last defined adapter wins).
  */
 export function mergeBridgeUIGlobal({
   base,
@@ -63,6 +67,17 @@ export function mergeBridgeUIGlobal({
     },
   )?.i18n;
 
+  const richText = findLast(
+    layers,
+    (
+      layer,
+    ): layer is Partial<BridgeUIGlobal> & {
+      richText: RichTextEditorAdapter;
+    } => {
+      return !isNil(layer) && !isUndefined(layer.richText);
+    },
+  )?.richText;
+
   const merged = mergeBridgeUILayeredClasses(
     omitGlobalAdapters(base) as BridgeUIGlobal,
     ...partials.map(omitGlobalAdapters),
@@ -84,6 +99,12 @@ export function mergeBridgeUIGlobal({
     delete merged.i18n;
   } else {
     merged.i18n = i18n;
+  }
+
+  if (isUndefined(richText)) {
+    delete merged.richText;
+  } else {
+    merged.richText = richText;
   }
 
   return merged;
