@@ -260,7 +260,7 @@ Same as `List`, plus `icon-only`. Sets `icon-only` when the icon rail is collaps
 
 ## Props (`SidebarListItem`)
 
-Same as `ListItem` (including `href`), plus `tooltip` / `tooltip-placement`. Applies compact nav chrome. Tooltips only show while the icon rail is collapsed (`primary`, or `tooltip` to override). A collapsed link keeps `href` on the anchor.
+Same as `ListItem` (including `href` and `link-as`), plus `tooltip` / `tooltip-placement`. Applies compact nav chrome. Tooltips only show while the icon rail is collapsed (`primary`, or `tooltip` to override). A collapsed link keeps `href` on the anchor. `link-as` replaces that anchor and leaves the row root as `li` or `div`.
 
 ## `useSidebar`
 

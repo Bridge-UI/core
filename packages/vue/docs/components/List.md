@@ -83,7 +83,7 @@ Selected rows show a check icon by default. Customize it with `selectedIcon` on 
 
 ### Link
 
-Set `href` to render the row as an anchor. The browser shows the URL on hover, and middle-click opens a new tab. `target` and `rel` are forwarded to that anchor. A disabled item keeps the styles but drops the URL.
+Set `href` to render the row as an anchor. The browser shows the URL on hover, and middle-click opens a new tab. `target` and `rel` are forwarded to that anchor. `link-as` replaces that anchor. A disabled item keeps the styles but drops the URL.
 
 ```vue
 <List>
@@ -147,24 +147,25 @@ With the default `as="li"`, sticky styles apply on the section root. The list (o
 
 ## Props (`ListItem`)
 
-| Prop           | Type                                 | Default  | Description                                                                                                     |
-| -------------- | ------------------------------------ | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                                                       |
-| `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                                               |
-| `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                                              |
-| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.                                     |
-| `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                                                       |
-| `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                                                |
-| `href`         | `string`                             | —        | URL for the interactive wrapper. Renders an anchor so hover shows the address and middle-click opens a new tab. |
-| `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper. Implied when `href` is set.      |
-| `primary`      | `string`                             | —        | Primary label text.                                                                                             |
-| `rel`          | `string`                             | —        | Relationship of the linked URL. Forwarded to the anchor when `href` is set.                                     |
-| `role`         | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Omitted when `href` is set.                                              |
-| `secondary`    | `string`                             | —        | Secondary/description text below the primary line.                                                              |
-| `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                                                     |
-| `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `#end`.                                  |
-| `target`       | `string`                             | —        | Where to open the URL. Forwarded to the anchor when `href` is set.                                              |
-| `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.                              |
+| Prop           | Type                                 | Default  | Description                                                                                                        |
+| -------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `as`           | `"div" \| "li"`                      | "li"     | The element to render as.                                                                                          |
+| `classes`      | `ListItemClasses`                    | —        | The classes to apply to the item.                                                                                  |
+| `customProps`  | `ListItemCustomProps`                | —        | Props forwarded to each item part.                                                                                 |
+| `dense`        | `boolean`                            | —        | Compact vertical padding. Inherits `dense` from parent `List` when omitted.                                        |
+| `disabled`     | `boolean`                            | `false`  | When true, the item is not interactive and appears muted.                                                          |
+| `divider`      | `boolean`                            | `false`  | When true, renders a bottom divider on the item.                                                                   |
+| `href`         | `string`                             | —        | URL for the interactive wrapper. Renders an anchor so hover shows the address and middle-click opens a new tab.    |
+| `interactive`  | `boolean`                            | `false`  | When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper. Implied when `href` is set.         |
+| `linkAs`       | `string \| Component`                | —        | Component rendered in place of the interactive `<a>`. The root stays `as` (`li` or `div`). Ignored while disabled. |
+| `primary`      | `string`                             | —        | Primary label text.                                                                                                |
+| `rel`          | `string`                             | —        | Relationship of the linked URL. Forwarded to the anchor when `href` is set.                                        |
+| `role`         | `"button" \| "menuitem" \| "option"` | "button" | ARIA role for the interactive wrapper. Omitted when `href` is set.                                                 |
+| `secondary`    | `string`                             | —        | Secondary/description text below the primary line.                                                                 |
+| `selected`     | `boolean`                            | `false`  | When true, highlights the item as selected.                                                                        |
+| `selectedIcon` | `null \| LucideIcon`                 | `Check`  | Icon shown when `selected` is true. Use `null` to hide it. Replaced by `#end`.                                     |
+| `target`       | `string`                             | —        | Where to open the URL. Forwarded to the anchor when `href` is set.                                                 |
+| `value`        | `ListboxValue`                       | —        | When set inside a `Select` / `Listbox`, registers this row as a selectable option.                                 |
 
 ## Props (`ListSection`)
 
