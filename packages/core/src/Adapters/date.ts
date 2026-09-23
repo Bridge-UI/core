@@ -775,7 +775,7 @@ export function createNativeDateAdapter(): DateAdapter<Date> {
 }
 
 /**
- * Shared native adapter instance used when `global.dates` is omitted.
+ * Shared native adapter instance used outside a provider.
  */
 export const defaultNativeDateAdapter: DateAdapter<Date> =
   createNativeDateAdapter();

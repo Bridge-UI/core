@@ -2,6 +2,7 @@
 import { createContext, type ReactNode } from "react";
 
 // ** Core Imports
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import type {
   BridgeUIComponentsConfig,
   BridgeUIGlobal,
@@ -11,6 +12,7 @@ import type {
 export interface BridgeUIContextValue {
   components: BridgeUIComponentsConfig;
   global: BridgeUIGlobal;
+  nativeDates: DateAdapter;
   setComponents: (patch: BridgeUIComponentsConfig) => void;
   setDirection: (direction: Direction) => void;
   setGlobal: (patch: Partial<BridgeUIGlobal>) => void;

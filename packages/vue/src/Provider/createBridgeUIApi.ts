@@ -3,6 +3,7 @@ import { toMerged } from "es-toolkit/object";
 import { computed, shallowRef, type ComputedRef } from "vue";
 
 // ** Core Imports
+import { createNativeDateAdapter } from "@bridge-ui/core/Adapters";
 import {
   BRIDGE_UI_DEFAULT_GLOBAL,
   mergeBridgeUIComponents,
@@ -25,6 +26,8 @@ export function createBridgeUIApi(
   const globalPatch = shallowRef<Partial<BridgeUIGlobal>>({});
 
   const componentsPatch = shallowRef<BridgeUIComponentsConfig>({});
+
+  const nativeDates = createNativeDateAdapter();
 
   const baseGlobal = computed(() => {
     return mergeBridgeUIGlobal({
@@ -72,12 +75,12 @@ export function createBridgeUIApi(
   function setLocale(locale: string) {
     setGlobal({ locale });
     global.value.i18n?.setLocale?.(locale);
-    global.value.dates?.setLocale?.(locale);
+    (global.value.dates ?? nativeDates).setLocale?.(locale);
   }
 
   function setTimeZone(timeZone: string) {
     setGlobal({ timeZone });
-    global.value.dates?.setTimeZone?.(timeZone);
+    (global.value.dates ?? nativeDates).setTimeZone?.(timeZone);
   }
 
   function setDirection(direction: Direction) {
@@ -97,6 +100,7 @@ export function createBridgeUIApi(
     setGlobal,
     setLocale,
     components,
+    nativeDates,
     setTimeZone,
     setDirection,
     setComponents,

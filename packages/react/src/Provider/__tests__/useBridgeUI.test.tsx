@@ -4,9 +4,13 @@ import { createElement, type ReactNode } from "react";
 import { afterEach, expect, test, vi } from "vitest";
 
 // ** Core Imports
-import { createNativeDateAdapter } from "@bridge-ui/core/Adapters";
+import {
+  createNativeDateAdapter,
+  defaultNativeDateAdapter,
+} from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
+import { useDateAdapter } from "@/Adapters/Date";
 import { BridgeUIProvider } from "@/Provider/BridgeUIProvider";
 import { useBridgeUI } from "@/Provider/useBridgeUI";
 
@@ -70,4 +74,29 @@ test("it should call date adapter setTimeZone when setTimeZone is used", () => {
 
   expect(result.current.global.timeZone).toBe("UTC");
   expect(setTimeZone).toHaveBeenCalledWith("UTC");
+});
+
+test("it should keep a native date adapter per provider", () => {
+  const probe = new Date("2024-01-15T15:00:00.000Z");
+
+  const { result: utc } = renderHook(() => useDateAdapter(), {
+    wrapper: ({ children }) =>
+      createElement(BridgeUIProvider, {
+        children,
+        global: { timeZone: "UTC" },
+      }),
+  });
+
+  const { result: saoPaulo } = renderHook(() => useDateAdapter(), {
+    wrapper: ({ children }) =>
+      createElement(BridgeUIProvider, {
+        children,
+        global: { timeZone: "America/Sao_Paulo" },
+      }),
+  });
+
+  expect(utc.current).not.toBe(saoPaulo.current);
+  expect(utc.current).not.toBe(defaultNativeDateAdapter);
+  expect(utc.current.getHours(probe)).toBe(15);
+  expect(saoPaulo.current.getHours(probe)).toBe(12);
 });

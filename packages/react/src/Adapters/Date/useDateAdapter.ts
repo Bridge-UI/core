@@ -18,15 +18,19 @@ export function setDateAdapterForTests(adapter: undefined | DateAdapter) {
 
 /**
  * Returns the active date adapter from {@link BridgeUIProvider}.
- * Falls back to {@link defaultNativeDateAdapter} when unset.
+ * Uses `global.dates` when set, otherwise the provider-owned native adapter.
+ * Outside a provider, falls back to {@link defaultNativeDateAdapter}.
  *
- * Syncs Bridge `locale` / `timeZone` onto the adapter. Per-component
+ * Syncs Bridge `locale` / `timeZone` onto that adapter. Per-component
  * `timeZone` still overrides via the method argument.
  */
 export function useDateAdapter(): DateAdapter {
   const bridge = useBridgeUI();
   const adapter =
-    bridge?.global.dates ?? dateAdapterForTests ?? defaultNativeDateAdapter;
+    bridge?.global.dates ??
+    dateAdapterForTests ??
+    bridge?.nativeDates ??
+    defaultNativeDateAdapter;
 
   if (bridge) {
     adapter.setLocale?.(bridge.global.locale);
