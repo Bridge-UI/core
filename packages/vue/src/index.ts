@@ -15,6 +15,10 @@ export type {
   SemanticIconName,
 } from "@/Adapters/Icon";
 export {
+  setRichTextAdapterForTests,
+  useRichTextAdapter,
+} from "@/Adapters/RichText";
+export {
   ACCORDION_INJECTION_KEY,
   Accordion,
   useAccordion,
@@ -572,6 +576,19 @@ export type {
   RadioSizeOverrides,
   RadioSlots,
 } from "@/Components/Radio";
+export { RichTextEditor, useRichTextEditor } from "@/Components/RichTextEditor";
+export type {
+  RichTextEditorClasses,
+  RichTextEditorColorOverrides,
+  RichTextEditorCustomProps,
+  RichTextEditorEmits,
+  RichTextEditorOwnProps,
+  RichTextEditorProps,
+  RichTextEditorRoundedOverrides,
+  RichTextEditorSizeOverrides,
+  RichTextEditorSlots,
+  RichTextEditorVariantOverrides,
+} from "@/Components/RichTextEditor";
 export { Select, SelectOption } from "@/Components/Select";
 export type {
   SelectAsyncData,
