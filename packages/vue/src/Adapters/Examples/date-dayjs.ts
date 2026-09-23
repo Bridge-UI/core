@@ -1,14 +1,14 @@
 /**
  * Day.js adapter (`TDate = Date`). Wire via `BridgeUIProvider` / `createBridgeUI`
- * `global.dates`. Requires the optional `dayjs` peer. Loads `utc`, `timezone`,
- * and `customParseFormat` plugins.
+ * `global.dates`. Requires the optional `dayjs` peer and loads `customParseFormat`.
+ *
+ * Extend `utc` and `timezone` in the app for IANA zones. Without `dayjs.tz`,
+ * `timeZone` arguments are ignored.
  */
 
 // ** External Imports
 import dayjs, { type Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import { clamp, isNil, isString, range } from "es-toolkit/compat";
 
 // ** Core Imports
@@ -17,9 +17,33 @@ import type {
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
+
+type ZonedDayjs = Dayjs & {
+  tz?: (timezone: string) => Dayjs;
+};
+
+const dayjsTz = dayjs as typeof dayjs & {
+  tz?: (date: string, timezone: string) => Dayjs;
+};
+
+/** Applies `zone` when the app extended Day.js with `utc` and `timezone`. */
+function withDayjsZone(value: Dayjs, zone?: string): Dayjs {
+  if (isNil(zone)) {
+    return value;
+  }
+
+  return (value as ZonedDayjs).tz?.(zone) ?? value;
+}
+
+/** Parses `value` in `zone` when `dayjs.tz` is available. */
+function parseDayjsInZone(value: string, zone?: string): Dayjs {
+  if (isNil(zone)) {
+    return dayjs(value);
+  }
+
+  return dayjsTz.tz?.(value, zone) ?? dayjs(value);
+}
 
 /**
  * Maps Bridge locales (`en-US`, `pt-BR`) to Day.js locale ids (`en`, `pt-br`).
@@ -35,6 +59,9 @@ export type DayjsDateAdapterLocales = Record<string, string>;
  * `setLocale` still receives Bridge tags. Unmapped `en-US` becomes `en`; other
  * tags are lowercased (`pt-BR` → `pt-br`) unless {@link DayjsDateAdapterLocales}
  * has an entry.
+ *
+ * Extend `utc` and `timezone` in the app for IANA zones. Without `dayjs.tz`,
+ * `timeZone` arguments are ignored.
  */
 export function createDayjsDateAdapter(
   locales: DayjsDateAdapterLocales = {},
@@ -59,9 +86,7 @@ export function createDayjsDateAdapter(
   const toDayjs = (date: Date, zone?: string): Dayjs => {
     const libraryLocale = resolveLibraryLocale();
     const resolvedZone = resolveZone(zone);
-    let value = isNil(resolvedZone)
-      ? dayjs(date)
-      : dayjs(date).tz(resolvedZone);
+    let value = withDayjsZone(dayjs(date), resolvedZone);
 
     if (!isNil(libraryLocale)) {
       value = value.locale(libraryLocale);
@@ -79,108 +104,124 @@ export function createDayjsDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
-    setLocale: (next) => {
+    setLocale(next) {
       locale = next;
     },
 
-    setTimeZone: (next) => {
+    setTimeZone(next) {
       timeZone = next;
     },
 
-    getDay: (date, context) => toDayjs(date, context).day(),
-
-    getDate: (date, context) => toDayjs(date, context).date(),
-
-    getYear: (date, context) => toDayjs(date, context).year(),
-
-    getHours: (date, context) => toDayjs(date, context).hour(),
-
-    getMonth: (date, context) => toDayjs(date, context).month(),
-
-    isAfter: (a, b, context) => adapter.isBefore(b, a, context),
-
-    getMinutes: (date, context) => toDayjs(date, context).minute(),
-
-    getSeconds: (date, context) => toDayjs(date, context).second(),
-
-    setDate: (date, day, context) => {
-      return fromDayjs(toDayjs(date, context).date(day));
+    getDay(date, timeZone) {
+      return toDayjs(date, timeZone).day();
     },
 
-    setYear: (date, year, context) => {
-      return fromDayjs(toDayjs(date, context).year(year));
+    getDate(date, timeZone) {
+      return toDayjs(date, timeZone).date();
     },
 
-    startOfDay: (date, context) => {
-      return fromDayjs(toDayjs(date, context).startOf("day"));
+    getYear(date, timeZone) {
+      return toDayjs(date, timeZone).year();
     },
 
-    endOfMonth: (date, context) => {
-      return fromDayjs(toDayjs(date, context).endOf("month"));
+    getHours(date, timeZone) {
+      return toDayjs(date, timeZone).hour();
     },
 
-    setMonth: (date, month, context) => {
-      return fromDayjs(toDayjs(date, context).month(month));
+    getMonth(date, timeZone) {
+      return toDayjs(date, timeZone).month();
     },
 
-    startOfMonth: (date, context) => {
-      return fromDayjs(toDayjs(date, context).startOf("month"));
+    isAfter(a, b, timeZone) {
+      return adapter.isBefore(b, a, timeZone);
     },
 
-    isSameDay: (a, b, context) => {
-      return toDayjs(a, context).isSame(toDayjs(b, context), "day");
+    getMinutes(date, timeZone) {
+      return toDayjs(date, timeZone).minute();
     },
 
-    isSameYear: (a, b, context) => {
-      return toDayjs(a, context).isSame(toDayjs(b, context), "year");
+    getSeconds(date, timeZone) {
+      return toDayjs(date, timeZone).second();
     },
 
-    isSameMonth: (a, b, context) => {
-      return toDayjs(a, context).isSame(toDayjs(b, context), "month");
+    setDate(date, day, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).date(day));
     },
 
-    addDays: (date, amount, context) => {
-      return fromDayjs(toDayjs(date, context).add(amount, "day"));
+    setYear(date, year, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).year(year));
     },
 
-    addYears: (date, amount, context) => {
-      return fromDayjs(toDayjs(date, context).add(amount, "year"));
+    startOfDay(date, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).startOf("day"));
     },
 
-    addMonths: (date, amount, context) => {
-      return fromDayjs(toDayjs(date, context).add(amount, "month"));
+    endOfMonth(date, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).endOf("month"));
     },
 
-    setHours: (date, hours, context) => {
-      return fromDayjs(toDayjs(date, context).hour(clamp(hours, 0, 23)));
+    setMonth(date, month, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).month(month));
     },
 
-    setMinutes: (date, minutes, context) => {
-      return fromDayjs(toDayjs(date, context).minute(clamp(minutes, 0, 59)));
+    startOfMonth(date, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).startOf("month"));
     },
 
-    setSeconds: (date, seconds, context) => {
-      return fromDayjs(toDayjs(date, context).second(clamp(seconds, 0, 59)));
+    isSameDay(a, b, timeZone) {
+      return toDayjs(a, timeZone).isSame(toDayjs(b, timeZone), "day");
     },
 
-    isBefore: (a, b, context) => {
-      return toDayjs(a, context)
+    isSameYear(a, b, timeZone) {
+      return toDayjs(a, timeZone).isSame(toDayjs(b, timeZone), "year");
+    },
+
+    addDays(date, amount, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).add(amount, "day"));
+    },
+
+    isSameMonth(a, b, timeZone) {
+      return toDayjs(a, timeZone).isSame(toDayjs(b, timeZone), "month");
+    },
+
+    addYears(date, amount, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).add(amount, "year"));
+    },
+
+    addMonths(date, amount, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).add(amount, "month"));
+    },
+
+    setHours(date, hours, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).hour(clamp(hours, 0, 23)));
+    },
+
+    setMinutes(date, minutes, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).minute(clamp(minutes, 0, 59)));
+    },
+
+    setSeconds(date, seconds, timeZone) {
+      return fromDayjs(toDayjs(date, timeZone).second(clamp(seconds, 0, 59)));
+    },
+
+    isBefore(a, b, timeZone) {
+      return toDayjs(a, timeZone)
         .startOf("day")
-        .isBefore(toDayjs(b, context).startOf("day"));
+        .isBefore(toDayjs(b, timeZone).startOf("day"));
     },
 
-    parseTime: (value, context, timeOptions) => {
+    parseTime(value, timeZone, timeOptions) {
       return parseTimeWithDayjs({
         value,
         adapter,
         toDayjs,
+        timeZone,
         fromDayjs,
         timeOptions,
-        timeZone: context,
       });
     },
 
-    getMonthNames: () => {
+    getMonthNames() {
       const locale = resolveLocale();
 
       return range(12).map((month) => {
@@ -190,9 +231,9 @@ export function createDayjsDateAdapter(
       });
     },
 
-    isSameTime: (a, b, context) => {
-      const left = toDayjs(a, context);
-      const right = toDayjs(b, context);
+    isSameTime(a, b, timeZone) {
+      const left = toDayjs(a, timeZone);
+      const right = toDayjs(b, timeZone);
 
       return (
         left.hour() === right.hour() &&
@@ -201,10 +242,10 @@ export function createDayjsDateAdapter(
       );
     },
 
-    now: (context) => {
-      const zone = resolveZone(context);
+    now(timeZone) {
+      const zone = resolveZone(timeZone);
       const libraryLocale = resolveLibraryLocale();
-      let value = isNil(zone) ? dayjs() : dayjs().tz(zone);
+      let value = withDayjsZone(dayjs(), zone);
 
       if (!isNil(libraryLocale)) {
         value = value.locale(libraryLocale);
@@ -213,7 +254,23 @@ export function createDayjsDateAdapter(
       return fromDayjs(value);
     },
 
-    getWeekdayNames: () => {
+    parse(value, timeZone) {
+      if (!isString(value) || value.trim() === "") {
+        return null;
+      }
+
+      const trimmed = value.trim();
+      const zone = resolveZone(timeZone);
+      const parsed = parseDayjsInZone(trimmed, zone);
+
+      if (!parsed.isValid()) {
+        return null;
+      }
+
+      return fromDayjs(parsed.startOf("day"));
+    },
+
+    getWeekdayNames() {
       const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
@@ -227,79 +284,63 @@ export function createDayjsDateAdapter(
       });
     },
 
-    parse: (value, context) => {
-      if (!isString(value) || value.trim() === "") {
-        return null;
-      }
-
-      const trimmed = value.trim();
-      const zone = resolveZone(context);
-      const parsed = isNil(zone) ? dayjs(trimmed) : dayjs.tz(trimmed, zone);
-
-      if (!parsed.isValid()) {
-        return null;
-      }
-
-      return fromDayjs(parsed.startOf("day"));
-    },
-
-    getCalendarDays: (view, startOfWeek, context) => {
-      const monthStart = adapter.startOfMonth(view, context);
-      const weekday = adapter.getDay(monthStart, context);
+    getCalendarDays(view, startOfWeek, timeZone) {
+      const monthStart = adapter.startOfMonth(view, timeZone);
+      const weekday = adapter.getDay(monthStart, timeZone);
       const normalizedStart = ((startOfWeek % 7) + 7) % 7;
       const leading = (weekday - normalizedStart + 7) % 7;
-      const gridStart = adapter.addDays(monthStart, -leading, context);
+      const gridStart = adapter.addDays(monthStart, -leading, timeZone);
 
       return range(42).map((index) => {
-        return adapter.addDays(gridStart, index, context);
+        return adapter.addDays(gridStart, index, timeZone);
       });
     },
 
-    formatTime: (date, context, timeOptions) => {
+    formatTime(date, timeZone, timeOptions) {
       if (!isValid(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveZone(context);
+      const zone = resolveZone(timeZone);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
 
       return new Intl.DateTimeFormat(locale, {
-        timeZone,
         hour12: ampm,
+        timeZone: zone,
         hour: "2-digit",
         minute: "2-digit",
         ...(showSeconds ? { second: "2-digit" as const } : {}),
       }).format(date);
     },
 
-    format: (date, context, options) => {
+    format(date, timeZone, options) {
       if (!isValid(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveZone(context);
+      const zone = resolveZone(timeZone);
       const granularity = options?.granularity ?? "day";
 
       if (granularity === "year") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
       if (granularity === "month") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
           month: "long",
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
       return new Intl.DateTimeFormat(locale, {
-        timeZone,
+        timeZone: zone,
         day: "2-digit",
         year: "numeric",
         month: "2-digit",
@@ -318,14 +359,7 @@ function parseTimeWithDayjs(input: {
   toDayjs: (date: Date, timeZone?: string) => Dayjs;
   value: string;
 }): Date | null {
-  const {
-    value,
-    adapter,
-    toDayjs,
-    fromDayjs,
-    timeOptions,
-    timeZone: context,
-  } = input;
+  const { value, adapter, toDayjs, timeZone, fromDayjs, timeOptions } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;
@@ -347,7 +381,7 @@ function parseTimeWithDayjs(input: {
     return null;
   }
 
-  const base = toDayjs(adapter.now(context), context);
+  const base = toDayjs(adapter.now(timeZone), timeZone);
 
   return fromDayjs(
     base

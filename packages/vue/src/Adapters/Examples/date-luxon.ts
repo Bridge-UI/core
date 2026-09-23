@@ -52,123 +52,139 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
   };
 
   const adapter: DateAdapter<Date> = {
-    setLocale: (next) => {
+    setLocale(next) {
       locale = next;
     },
 
-    setTimeZone: (next) => {
+    setTimeZone(next) {
       timeZone = next;
     },
 
-    getDate: (date, context) => toDateTime(date, context).day,
-
-    getYear: (date, context) => toDateTime(date, context).year,
-
-    getHours: (date, context) => toDateTime(date, context).hour,
-
-    isAfter: (a, b, context) => adapter.isBefore(b, a, context),
-
-    getMinutes: (date, context) => toDateTime(date, context).minute,
-
-    getSeconds: (date, context) => toDateTime(date, context).second,
-
-    getMonth: (date, context) => toDateTime(date, context).month - 1,
-
-    getDay: (date, context) => toDateTime(date, context).weekday % 7,
-
-    startOfDay: (date, context) => {
-      return fromDateTime(toDateTime(date, context).startOf("day"));
+    getDate(date, timeZone) {
+      return toDateTime(date, timeZone).day;
     },
 
-    setDate: (date, day, context) => {
-      return fromDateTime(toDateTime(date, context).set({ day }));
+    getYear(date, timeZone) {
+      return toDateTime(date, timeZone).year;
     },
 
-    setYear: (date, year, context) => {
-      return fromDateTime(toDateTime(date, context).set({ year }));
+    getHours(date, timeZone) {
+      return toDateTime(date, timeZone).hour;
     },
 
-    startOfMonth: (date, context) => {
-      return fromDateTime(toDateTime(date, context).startOf("month"));
+    isAfter(a, b, timeZone) {
+      return adapter.isBefore(b, a, timeZone);
     },
 
-    isSameDay: (a, b, context) => {
-      return toDateTime(a, context).hasSame(toDateTime(b, context), "day");
+    getMinutes(date, timeZone) {
+      return toDateTime(date, timeZone).minute;
     },
 
-    isSameYear: (a, b, context) => {
-      return toDateTime(a, context).hasSame(toDateTime(b, context), "year");
+    getSeconds(date, timeZone) {
+      return toDateTime(date, timeZone).second;
     },
 
-    isSameMonth: (a, b, context) => {
-      return toDateTime(a, context).hasSame(toDateTime(b, context), "month");
+    getMonth(date, timeZone) {
+      return toDateTime(date, timeZone).month - 1;
     },
 
-    addDays: (date, amount, context) => {
-      return fromDateTime(toDateTime(date, context).plus({ days: amount }));
+    getDay(date, timeZone) {
+      return toDateTime(date, timeZone).weekday % 7;
     },
 
-    addYears: (date, amount, context) => {
-      return fromDateTime(toDateTime(date, context).plus({ years: amount }));
+    startOfDay(date, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).startOf("day"));
     },
 
-    setMonth: (date, month, context) => {
-      return fromDateTime(toDateTime(date, context).set({ month: month + 1 }));
+    setDate(date, day, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).set({ day }));
     },
 
-    addMonths: (date, amount, context) => {
-      return fromDateTime(toDateTime(date, context).plus({ months: amount }));
+    setYear(date, year, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).set({ year }));
     },
 
-    getMonthNames: () => {
+    startOfMonth(date, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).startOf("month"));
+    },
+
+    isSameDay(a, b, timeZone) {
+      return toDateTime(a, timeZone).hasSame(toDateTime(b, timeZone), "day");
+    },
+
+    isSameYear(a, b, timeZone) {
+      return toDateTime(a, timeZone).hasSame(toDateTime(b, timeZone), "year");
+    },
+
+    isSameMonth(a, b, timeZone) {
+      return toDateTime(a, timeZone).hasSame(toDateTime(b, timeZone), "month");
+    },
+
+    addDays(date, amount, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).plus({ days: amount }));
+    },
+
+    addYears(date, amount, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).plus({ years: amount }));
+    },
+
+    getMonthNames() {
       const locale = resolveLocale() ?? "en-US";
 
       return Info.months("long", { locale });
     },
 
-    endOfMonth: (date, context) => {
+    setMonth(date, month, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).set({ month: month + 1 }));
+    },
+
+    addMonths(date, amount, timeZone) {
+      return fromDateTime(toDateTime(date, timeZone).plus({ months: amount }));
+    },
+
+    endOfMonth(date, timeZone) {
       return fromDateTime(
-        toDateTime(date, context).endOf("month").startOf("second"),
+        toDateTime(date, timeZone).endOf("month").startOf("second"),
       );
     },
 
-    setHours: (date, hours, context) => {
+    setHours(date, hours, timeZone) {
       return fromDateTime(
-        toDateTime(date, context).set({ hour: clamp(hours, 0, 23) }),
+        toDateTime(date, timeZone).set({ hour: clamp(hours, 0, 23) }),
       );
     },
 
-    isBefore: (a, b, context) => {
+    isBefore(a, b, timeZone) {
       return (
-        toDateTime(a, context).startOf("day") <
-        toDateTime(b, context).startOf("day")
+        toDateTime(a, timeZone).startOf("day") <
+        toDateTime(b, timeZone).startOf("day")
       );
     },
 
-    setMinutes: (date, minutes, context) => {
+    setMinutes(date, minutes, timeZone) {
       return fromDateTime(
-        toDateTime(date, context).set({ minute: clamp(minutes, 0, 59) }),
+        toDateTime(date, timeZone).set({ minute: clamp(minutes, 0, 59) }),
       );
     },
 
-    setSeconds: (date, seconds, context) => {
+    setSeconds(date, seconds, timeZone) {
       return fromDateTime(
-        toDateTime(date, context).set({ second: clamp(seconds, 0, 59) }),
+        toDateTime(date, timeZone).set({ second: clamp(seconds, 0, 59) }),
       );
     },
 
-    parseTime: (value, context, timeOptions) => {
+    parseTime(value, timeZone, timeOptions) {
       return parseTimeWithLuxon({
         value,
         adapter,
+        timeZone,
         toDateTime,
         timeOptions,
         fromDateTime,
-        timeZone: context,
       });
     },
 
-    getWeekdayNames: () => {
+    getWeekdayNames() {
       const locale = resolveLocale() ?? "en-US";
       // Luxon weekdays are Monday-first; Bridge expects Sunday → Saturday.
       const names = Info.weekdays("short", { locale });
@@ -176,9 +192,9 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       return [names[6]!, ...names.slice(0, 6)];
     },
 
-    isSameTime: (a, b, context) => {
-      const left = toDateTime(a, context);
-      const right = toDateTime(b, context);
+    isSameTime(a, b, timeZone) {
+      const left = toDateTime(a, timeZone);
+      const right = toDateTime(b, timeZone);
 
       return (
         left.hour === right.hour &&
@@ -187,8 +203,8 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       );
     },
 
-    now: (context) => {
-      const zone = resolveZone(context);
+    now(timeZone) {
+      const zone = resolveZone(timeZone);
       const locale = resolveLocale();
       let value: DateTime = DateTime.now();
 
@@ -203,7 +219,7 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       return fromDateTime(value);
     },
 
-    formatTime: (date, context, timeOptions) => {
+    formatTime(date, timeZone, timeOptions) {
       if (!isValid(date)) {
         return "";
       }
@@ -211,7 +227,7 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
 
-      return toDateTime(date, context).toLocaleString({
+      return toDateTime(date, timeZone).toLocaleString({
         hour: "2-digit",
         minute: "2-digit",
         hourCycle: ampm ? "h12" : "h23",
@@ -219,19 +235,19 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       });
     },
 
-    getCalendarDays: (view, startOfWeek, context) => {
-      const monthStart = adapter.startOfMonth(view, context);
-      const weekday = adapter.getDay(monthStart, context);
+    getCalendarDays(view, startOfWeek, timeZone) {
+      const monthStart = adapter.startOfMonth(view, timeZone);
+      const weekday = adapter.getDay(monthStart, timeZone);
       const normalizedStart = ((startOfWeek % 7) + 7) % 7;
       const leading = (weekday - normalizedStart + 7) % 7;
-      const gridStart = adapter.addDays(monthStart, -leading, context);
+      const gridStart = adapter.addDays(monthStart, -leading, timeZone);
 
       return range(42).map((index) => {
-        return adapter.addDays(gridStart, index, context);
+        return adapter.addDays(gridStart, index, timeZone);
       });
     },
 
-    parse: (value, context) => {
+    parse(value, timeZone) {
       if (!isString(value) || value.trim() === "") {
         return null;
       }
@@ -239,7 +255,7 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       const trimmed = value.trim();
       const iso = DateTime.fromISO(trimmed, {
         locale: resolveLocale(),
-        zone: resolveZone(context),
+        zone: resolveZone(timeZone),
       });
 
       if (iso.isValid) {
@@ -247,7 +263,7 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       }
 
       const parsed = DateTime.fromJSDate(new Date(trimmed), {
-        zone: resolveZone(context),
+        zone: resolveZone(timeZone),
       });
 
       if (!parsed.isValid) {
@@ -257,7 +273,7 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       return fromDateTime(parsed.startOf("day"));
     },
 
-    format: (date, context, options) => {
+    format(date, timeZone, options) {
       if (!isValid(date)) {
         return "";
       }
@@ -265,17 +281,17 @@ export function createLuxonDateAdapter(): DateAdapter<Date> {
       const granularity = options?.granularity ?? "day";
 
       if (granularity === "year") {
-        return toDateTime(date, context).toLocaleString({ year: "numeric" });
+        return toDateTime(date, timeZone).toLocaleString({ year: "numeric" });
       }
 
       if (granularity === "month") {
-        return toDateTime(date, context).toLocaleString({
+        return toDateTime(date, timeZone).toLocaleString({
           month: "long",
           year: "numeric",
         });
       }
 
-      return toDateTime(date, context).toLocaleString({
+      return toDateTime(date, timeZone).toLocaleString({
         day: "2-digit",
         year: "numeric",
         month: "2-digit",
@@ -294,14 +310,8 @@ function parseTimeWithLuxon(input: {
   toDateTime: (date: Date, timeZone?: string) => DateTime;
   value: string;
 }): Date | null {
-  const {
-    value,
-    adapter,
-    toDateTime,
-    timeOptions,
-    fromDateTime,
-    timeZone: context,
-  } = input;
+  const { value, adapter, timeZone, toDateTime, timeOptions, fromDateTime } =
+    input;
 
   if (!isString(value) || value.trim() === "") {
     return null;
@@ -323,7 +333,7 @@ function parseTimeWithLuxon(input: {
     return null;
   }
 
-  const base = toDateTime(adapter.now(context), context);
+  const base = toDateTime(adapter.now(timeZone), timeZone);
 
   return fromDateTime(
     base.set({

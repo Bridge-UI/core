@@ -61,65 +61,124 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
   };
 
   const adapter: DateAdapter<Date> = {
-    now: () => new Date(),
+    now() {
+      return new Date();
+    },
 
-    getDay: (date) => getDay(date),
-
-    getDate: (date) => getDate(date),
-
-    getYear: (date) => getYear(date),
-
-    getMonth: (date) => getMonth(date),
-
-    getHours: (date) => getHours(date),
-
-    isSameDay: (a, b) => isSameDay(a, b),
-
-    getMinutes: (date) => getMinutes(date),
-
-    getSeconds: (date) => getSeconds(date),
-
-    isSameYear: (a, b) => isSameYear(a, b),
-
-    startOfDay: (date) => startOfDay(date),
-
-    endOfMonth: (date) => endOfMonth(date),
-
-    isSameMonth: (a, b) => isSameMonth(a, b),
-
-    startOfMonth: (date) => startOfMonth(date),
-
-    setDate: (date, day) => setDate(date, day),
-
-    setYear: (date, year) => setYear(date, year),
-
-    setMonth: (date, month) => setMonth(date, month),
-
-    addDays: (date, amount) => addDays(date, amount),
-
-    setLocale: (next) => {
+    setLocale(next) {
       locale = next;
     },
 
-    addYears: (date, amount) => addYears(date, amount),
+    getDay(date) {
+      return getDay(date);
+    },
 
-    addMonths: (date, amount) => addMonths(date, amount),
-
-    setTimeZone: (next) => {
+    setTimeZone(next) {
       timeZone = next;
     },
 
-    isAfter: (a, b) => isAfter(startOfDay(a), startOfDay(b)),
+    getDate(date) {
+      return getDate(date);
+    },
 
-    isBefore: (a, b) => isBefore(startOfDay(a), startOfDay(b)),
+    getYear(date) {
+      return getYear(date);
+    },
 
-    setHours: (date, hours) => setHours(date, clamp(hours, 0, 23)),
+    getMonth(date) {
+      return getMonth(date);
+    },
 
-    setMinutes: (date, minutes) => setMinutes(date, clamp(minutes, 0, 59)),
+    getHours(date) {
+      return getHours(date);
+    },
 
-    setSeconds: (date, seconds) => setSeconds(date, clamp(seconds, 0, 59)),
+    isSameDay(a, b) {
+      return isSameDay(a, b);
+    },
 
-    isSameTime: (a, b) => {
+    getMinutes(date) {
+      return getMinutes(date);
+    },
+
+    getSeconds(date) {
+      return getSeconds(date);
+    },
+
+    isSameYear(a, b) {
+      return isSameYear(a, b);
+    },
+
+    startOfDay(date) {
+      return startOfDay(date);
+    },
+
+    endOfMonth(date) {
+      return endOfMonth(date);
+    },
+
+    isSameMonth(a, b) {
+      return isSameMonth(a, b);
+    },
+
+    startOfMonth(date) {
+      return startOfMonth(date);
+    },
+
+    setDate(date, day) {
+      return setDate(date, day);
+    },
+
+    setYear(date, year) {
+      return setYear(date, year);
+    },
+
+    setMonth(date, month) {
+      return setMonth(date, month);
+    },
+
+    addDays(date, amount) {
+      return addDays(date, amount);
+    },
+
+    addYears(date, amount) {
+      return addYears(date, amount);
+    },
+
+    addMonths(date, amount) {
+      return addMonths(date, amount);
+    },
+
+    isAfter(a, b) {
+      return isAfter(startOfDay(a), startOfDay(b));
+    },
+
+    isBefore(a, b) {
+      return isBefore(startOfDay(a), startOfDay(b));
+    },
+
+    setHours(date, hours) {
+      return setHours(date, clamp(hours, 0, 23));
+    },
+
+    setMinutes(date, minutes) {
+      return setMinutes(date, clamp(minutes, 0, 59));
+    },
+
+    setSeconds(date, seconds) {
+      return setSeconds(date, clamp(seconds, 0, 59));
+    },
+
+    parseTime(value, timeZone, timeOptions) {
+      return parseTimeWithDateFns({
+        value,
+        adapter,
+        timeZone,
+        timeOptions,
+      });
+    },
+
+    isSameTime(a, b) {
       return (
         getHours(a) === getHours(b) &&
         getMinutes(a) === getMinutes(b) &&
@@ -127,16 +186,7 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       );
     },
 
-    parseTime: (value, context, timeOptions) => {
-      return parseTimeWithDateFns({
-        value,
-        adapter,
-        timeOptions,
-        timeZone: context,
-      });
-    },
-
-    getMonthNames: () => {
+    getMonthNames() {
       const locale = resolveLocale();
 
       return range(12).map((month) => {
@@ -146,7 +196,7 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       });
     },
 
-    getWeekdayNames: () => {
+    getWeekdayNames() {
       const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
@@ -160,7 +210,7 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       });
     },
 
-    parse: (value) => {
+    parse(value) {
       if (!isString(value) || value.trim() === "") {
         return null;
       }
@@ -177,64 +227,64 @@ export function createDateFnsDateAdapter(): DateAdapter<Date> {
       return isValidDate(parsed) ? startOfDay(parsed) : null;
     },
 
-    getCalendarDays: (view, startOfWeek, context) => {
-      const monthStart = adapter.startOfMonth(view, context);
-      const weekday = adapter.getDay(monthStart, context);
+    getCalendarDays(view, startOfWeek, timeZone) {
+      const monthStart = adapter.startOfMonth(view, timeZone);
+      const weekday = adapter.getDay(monthStart, timeZone);
       const normalizedStart = ((startOfWeek % 7) + 7) % 7;
       const leading = (weekday - normalizedStart + 7) % 7;
-      const gridStart = adapter.addDays(monthStart, -leading, context);
+      const gridStart = adapter.addDays(monthStart, -leading, timeZone);
 
       return range(42).map((index) => {
-        return adapter.addDays(gridStart, index, context);
+        return adapter.addDays(gridStart, index, timeZone);
       });
     },
 
-    formatTime: (date, context, timeOptions) => {
+    formatTime(date, timeZone, timeOptions) {
       if (!isValidDate(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveTimeZone(context);
+      const zone = resolveTimeZone(timeZone);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
 
       return new Intl.DateTimeFormat(locale, {
-        timeZone,
         hour12: ampm,
+        timeZone: zone,
         hour: "2-digit",
         minute: "2-digit",
         ...(showSeconds ? { second: "2-digit" as const } : {}),
       }).format(date);
     },
 
-    format: (date, context, options) => {
+    format(date, timeZone, options) {
       if (!isValidDate(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveTimeZone(context);
+      const zone = resolveTimeZone(timeZone);
       const granularity = options?.granularity ?? "day";
 
       if (granularity === "year") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
       if (granularity === "month") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
           month: "long",
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
-      if (!isNil(timeZone) || !isNil(locale)) {
+      if (!isNil(zone) || !isNil(locale)) {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
+          timeZone: zone,
           day: "2-digit",
           year: "numeric",
           month: "2-digit",
@@ -254,7 +304,7 @@ function parseTimeWithDateFns(input: {
   timeZone?: string;
   value: string;
 }): Date | null {
-  const { value, adapter, timeOptions, timeZone: context } = input;
+  const { value, adapter, timeZone, timeOptions } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;
@@ -270,13 +320,13 @@ function parseTimeWithDateFns(input: {
     : showSeconds
       ? "H:mm:ss"
       : "H:mm";
-  const parsed = parse(trimmed, pattern, adapter.now(context));
+  const parsed = parse(trimmed, pattern, adapter.now(timeZone));
 
   if (!isValid(parsed)) {
     return null;
   }
 
-  const base = adapter.now(context);
+  const base = adapter.now(timeZone);
 
   return setSeconds(
     setMinutes(setHours(base, getHours(parsed)), getMinutes(parsed)),

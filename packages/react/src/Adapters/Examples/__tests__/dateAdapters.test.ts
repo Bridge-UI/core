@@ -1,6 +1,9 @@
 // ** External Imports
 import dayjs from "dayjs";
-import moment from "moment-timezone";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import moment from "moment";
+import "moment-timezone";
 import { describe, expect, test, vi } from "vitest";
 
 // ** Core Imports
@@ -12,6 +15,9 @@ import { createDateFnsDateAdapter } from "@/Adapters/Examples/date-date-fns";
 import { createDayjsDateAdapter } from "@/Adapters/Examples/date-dayjs";
 import { createLuxonDateAdapter } from "@/Adapters/Examples/date-luxon";
 import { createMomentDateAdapter } from "@/Adapters/Examples/date-moment";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const adapters: [string, DateAdapter][] = [
   ["date-fns", createDateFnsDateAdapter()],
@@ -25,9 +31,9 @@ describe.each(adapters)("%s date adapter", (_name, adapter) => {
     const date = adapter.parse("2021-05-21");
 
     expect(date).not.toBeNull();
-    expect(adapter.getYear(date!)).toBe(2021);
-    expect(adapter.getMonth(date!)).toBe(4);
     expect(adapter.getDate(date!)).toBe(21);
+    expect(adapter.getMonth(date!)).toBe(4);
+    expect(adapter.getYear(date!)).toBe(2021);
     adapter.setLocale?.("en-US");
     expect(adapter.format(date!, undefined, { granularity: "month" })).toBe(
       "May 2021",

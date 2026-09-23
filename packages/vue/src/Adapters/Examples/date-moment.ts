@@ -1,17 +1,46 @@
 /**
  * Moment adapter (`TDate = Date`). Wire via `BridgeUIProvider` / `createBridgeUI`
- * `global.dates`. Requires the optional `moment` and `moment-timezone` peers.
+ * `global.dates`. Requires the optional `moment` peer.
+ *
+ * Import `moment-timezone` in the app for IANA zones. Without `moment.tz`,
+ * `timeZone` arguments are ignored.
  */
 
 // ** External Imports
 import { clamp, isNil, isString, range } from "es-toolkit/compat";
-import moment, { type Moment } from "moment-timezone";
+import moment, { type Moment } from "moment";
 
 // ** Core Imports
 import type {
   DateAdapter,
   DateAdapterTimeOptions,
 } from "@bridge-ui/core/Adapters";
+
+type MomentTz = Moment & {
+  tz?: (timezone: string) => Moment;
+};
+
+const momentTz = moment as typeof moment & {
+  tz?: (input: Date | string, timezone: string) => Moment;
+};
+
+/** Converts `value` when the app imported `moment-timezone`. */
+function withMomentZone(value: Moment, zone?: string): Moment {
+  if (isNil(zone)) {
+    return value;
+  }
+
+  return (value as MomentTz).tz?.(zone) ?? value;
+}
+
+/** Parses `value` in `zone` when `moment.tz` is available. */
+function parseMomentInZone(value: string, zone?: string): Moment {
+  if (isNil(zone) || typeof momentTz.tz !== "function") {
+    return moment(value);
+  }
+
+  return momentTz.tz(value, zone);
+}
 
 /**
  * Maps Bridge locales (`en-US`, `pt-BR`) to Moment locale ids (`en`, `pt-br`).
@@ -27,6 +56,9 @@ export type MomentDateAdapterLocales = Record<string, string>;
  * `setLocale` still receives Bridge tags. Unmapped `en-US` becomes `en`; other
  * tags are lowercased (`pt-BR` → `pt-br`) unless {@link MomentDateAdapterLocales}
  * has an entry.
+ *
+ * Import `moment-timezone` in the app for IANA zones. Without `moment.tz`,
+ * `timeZone` arguments are ignored.
  */
 export function createMomentDateAdapter(
   locales: MomentDateAdapterLocales = {},
@@ -51,9 +83,7 @@ export function createMomentDateAdapter(
   const toMoment = (date: Date, zone?: string): Moment => {
     const libraryLocale = resolveLibraryLocale();
     const resolvedZone = resolveZone(zone);
-    let value = isNil(resolvedZone)
-      ? moment(date)
-      : moment.tz(date, resolvedZone);
+    let value = withMomentZone(moment(date), resolvedZone);
 
     if (!isNil(libraryLocale)) {
       value = value.locale(libraryLocale);
@@ -71,121 +101,137 @@ export function createMomentDateAdapter(
   };
 
   const adapter: DateAdapter<Date> = {
-    setLocale: (next) => {
+    setLocale(next) {
       locale = next;
     },
 
-    setTimeZone: (next) => {
+    setTimeZone(next) {
       timeZone = next;
     },
 
-    getDay: (date, context) => toMoment(date, context).day(),
-
-    getDate: (date, context) => toMoment(date, context).date(),
-
-    getYear: (date, context) => toMoment(date, context).year(),
-
-    getHours: (date, context) => toMoment(date, context).hour(),
-
-    isAfter: (a, b, context) => adapter.isBefore(b, a, context),
-
-    getMonth: (date, context) => toMoment(date, context).month(),
-
-    getMinutes: (date, context) => toMoment(date, context).minute(),
-
-    getSeconds: (date, context) => toMoment(date, context).second(),
-
-    isSameDay: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "day");
+    getDay(date, timeZone) {
+      return toMoment(date, timeZone).day();
     },
 
-    setDate: (date, day, context) => {
-      return fromMoment(toMoment(date, context).clone().date(day));
+    getDate(date, timeZone) {
+      return toMoment(date, timeZone).date();
     },
 
-    isSameYear: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "year");
+    getYear(date, timeZone) {
+      return toMoment(date, timeZone).year();
     },
 
-    setYear: (date, year, context) => {
-      return fromMoment(toMoment(date, context).clone().year(year));
+    getHours(date, timeZone) {
+      return toMoment(date, timeZone).hour();
     },
 
-    startOfDay: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().startOf("day"));
+    isAfter(a, b, timeZone) {
+      return adapter.isBefore(b, a, timeZone);
     },
 
-    endOfMonth: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().endOf("month"));
+    getMonth(date, timeZone) {
+      return toMoment(date, timeZone).month();
     },
 
-    isSameMonth: (a, b, context) => {
-      return toMoment(a, context).isSame(toMoment(b, context), "month");
+    getMinutes(date, timeZone) {
+      return toMoment(date, timeZone).minute();
     },
 
-    setMonth: (date, month, context) => {
-      return fromMoment(toMoment(date, context).clone().month(month));
+    getSeconds(date, timeZone) {
+      return toMoment(date, timeZone).second();
     },
 
-    startOfMonth: (date, context) => {
-      return fromMoment(toMoment(date, context).clone().startOf("month"));
+    setDate(date, day, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().date(day));
     },
 
-    addDays: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "days"));
+    isSameDay(a, b, timeZone) {
+      return toMoment(a, timeZone).isSame(toMoment(b, timeZone), "day");
     },
 
-    addYears: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "years"));
+    setYear(date, year, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().year(year));
     },
 
-    addMonths: (date, amount, context) => {
-      return fromMoment(toMoment(date, context).clone().add(amount, "months"));
+    isSameYear(a, b, timeZone) {
+      return toMoment(a, timeZone).isSame(toMoment(b, timeZone), "year");
     },
 
-    setHours: (date, hours, context) => {
+    startOfDay(date, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().startOf("day"));
+    },
+
+    endOfMonth(date, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().endOf("month"));
+    },
+
+    isSameMonth(a, b, timeZone) {
+      return toMoment(a, timeZone).isSame(toMoment(b, timeZone), "month");
+    },
+
+    setMonth(date, month, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().month(month));
+    },
+
+    startOfMonth(date, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().startOf("month"));
+    },
+
+    addDays(date, amount, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().add(amount, "days"));
+    },
+
+    addYears(date, amount, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().add(amount, "years"));
+    },
+
+    addMonths(date, amount, timeZone) {
+      return fromMoment(toMoment(date, timeZone).clone().add(amount, "months"));
+    },
+
+    setHours(date, hours, timeZone) {
       return fromMoment(
-        toMoment(date, context)
+        toMoment(date, timeZone)
           .clone()
           .hour(clamp(hours, 0, 23)),
       );
     },
 
-    setMinutes: (date, minutes, context) => {
+    setMinutes(date, minutes, timeZone) {
       return fromMoment(
-        toMoment(date, context)
+        toMoment(date, timeZone)
           .clone()
           .minute(clamp(minutes, 0, 59)),
       );
     },
 
-    setSeconds: (date, seconds, context) => {
+    setSeconds(date, seconds, timeZone) {
       return fromMoment(
-        toMoment(date, context)
+        toMoment(date, timeZone)
           .clone()
           .second(clamp(seconds, 0, 59)),
       );
     },
 
-    isBefore: (a, b, context) => {
-      return toMoment(a, context)
+    isBefore(a, b, timeZone) {
+      return toMoment(a, timeZone)
         .clone()
         .startOf("day")
-        .isBefore(toMoment(b, context).clone().startOf("day"));
+        .isBefore(toMoment(b, timeZone).clone().startOf("day"));
     },
 
-    parseTime: (value, context, timeOptions) => {
+    parseTime(value, timeZone, timeOptions) {
       return parseTimeWithMoment({
         value,
         adapter,
         toMoment,
+        timeZone,
         fromMoment,
         timeOptions,
-        timeZone: context,
       });
     },
 
-    getMonthNames: () => {
+    getMonthNames() {
       const locale = resolveLocale();
 
       return range(12).map((month) => {
@@ -195,9 +241,9 @@ export function createMomentDateAdapter(
       });
     },
 
-    isSameTime: (a, b, context) => {
-      const left = toMoment(a, context);
-      const right = toMoment(b, context);
+    isSameTime(a, b, timeZone) {
+      const left = toMoment(a, timeZone);
+      const right = toMoment(b, timeZone);
 
       return (
         left.hour() === right.hour() &&
@@ -206,10 +252,10 @@ export function createMomentDateAdapter(
       );
     },
 
-    now: (context) => {
-      const zone = resolveZone(context);
+    now(timeZone) {
+      const zone = resolveZone(timeZone);
       const libraryLocale = resolveLibraryLocale();
-      let value = isNil(zone) ? moment() : moment.tz(zone);
+      let value = withMomentZone(moment(), zone);
 
       if (!isNil(libraryLocale)) {
         value = value.locale(libraryLocale);
@@ -218,7 +264,23 @@ export function createMomentDateAdapter(
       return fromMoment(value);
     },
 
-    getWeekdayNames: () => {
+    parse(value, timeZone) {
+      if (!isString(value) || value.trim() === "") {
+        return null;
+      }
+
+      const trimmed = value.trim();
+      const zone = resolveZone(timeZone);
+      const parsed = parseMomentInZone(trimmed, zone);
+
+      if (!parsed.isValid()) {
+        return null;
+      }
+
+      return fromMoment(parsed.startOf("day"));
+    },
+
+    getWeekdayNames() {
       const locale = resolveLocale();
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const sunday = new Date(2021, 0, 3);
@@ -232,79 +294,63 @@ export function createMomentDateAdapter(
       });
     },
 
-    parse: (value, context) => {
-      if (!isString(value) || value.trim() === "") {
-        return null;
-      }
-
-      const trimmed = value.trim();
-      const zone = resolveZone(context);
-      const parsed = isNil(zone) ? moment(trimmed) : moment.tz(trimmed, zone);
-
-      if (!parsed.isValid()) {
-        return null;
-      }
-
-      return fromMoment(parsed.startOf("day"));
-    },
-
-    getCalendarDays: (view, startOfWeek, context) => {
-      const monthStart = adapter.startOfMonth(view, context);
-      const weekday = adapter.getDay(monthStart, context);
+    getCalendarDays(view, startOfWeek, timeZone) {
+      const monthStart = adapter.startOfMonth(view, timeZone);
+      const weekday = adapter.getDay(monthStart, timeZone);
       const normalizedStart = ((startOfWeek % 7) + 7) % 7;
       const leading = (weekday - normalizedStart + 7) % 7;
-      const gridStart = adapter.addDays(monthStart, -leading, context);
+      const gridStart = adapter.addDays(monthStart, -leading, timeZone);
 
       return range(42).map((index) => {
-        return adapter.addDays(gridStart, index, context);
+        return adapter.addDays(gridStart, index, timeZone);
       });
     },
 
-    formatTime: (date, context, timeOptions) => {
+    formatTime(date, timeZone, timeOptions) {
       if (!isValid(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveZone(context);
+      const zone = resolveZone(timeZone);
       const ampm = timeOptions?.ampm === true;
       const showSeconds = timeOptions?.showSeconds === true;
 
       return new Intl.DateTimeFormat(locale, {
-        timeZone,
         hour12: ampm,
+        timeZone: zone,
         hour: "2-digit",
         minute: "2-digit",
         ...(showSeconds ? { second: "2-digit" as const } : {}),
       }).format(date);
     },
 
-    format: (date, context, options) => {
+    format(date, timeZone, options) {
       if (!isValid(date)) {
         return "";
       }
 
       const locale = resolveLocale();
-      const timeZone = resolveZone(context);
+      const zone = resolveZone(timeZone);
       const granularity = options?.granularity ?? "day";
 
       if (granularity === "year") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
       if (granularity === "month") {
         return new Intl.DateTimeFormat(locale, {
-          timeZone,
           month: "long",
+          timeZone: zone,
           year: "numeric",
         }).format(date);
       }
 
       return new Intl.DateTimeFormat(locale, {
-        timeZone,
+        timeZone: zone,
         day: "2-digit",
         year: "numeric",
         month: "2-digit",
@@ -323,14 +369,7 @@ function parseTimeWithMoment(input: {
   toMoment: (date: Date, timeZone?: string) => Moment;
   value: string;
 }): Date | null {
-  const {
-    value,
-    adapter,
-    toMoment,
-    fromMoment,
-    timeOptions,
-    timeZone: context,
-  } = input;
+  const { value, adapter, toMoment, timeZone, fromMoment, timeOptions } = input;
 
   if (!isString(value) || value.trim() === "") {
     return null;
@@ -352,7 +391,7 @@ function parseTimeWithMoment(input: {
     return null;
   }
 
-  const base = toMoment(adapter.now(context), context);
+  const base = toMoment(adapter.now(timeZone), timeZone);
 
   return fromMoment(
     base
