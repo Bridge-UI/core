@@ -15,6 +15,7 @@ const {
   slots,
   merged,
   rootRel,
+  rootTag,
   rootBind,
   rootHref,
   rootTarget,
@@ -29,7 +30,8 @@ const {
 </script>
 
 <template>
-  <a
+  <component
+    :is="rootTag"
     :rel="rootRel"
     :href="rootHref"
     v-bind="rootBind"
@@ -55,5 +57,5 @@ const {
       :icon="merged.rightIcon"
       v-else-if="merged.rightIcon"
     />
-  </a>
+  </component>
 </template>

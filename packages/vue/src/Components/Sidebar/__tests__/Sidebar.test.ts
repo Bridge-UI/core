@@ -14,6 +14,26 @@ import {
   SidebarTrigger,
 } from "@/Components/Sidebar";
 
+const RouterLinkStub = defineComponent({
+  name: "RouterLinkStub",
+  props: {
+    href: String,
+  },
+  setup(props, { attrs, slots }) {
+    return () => {
+      return h(
+        "a",
+        {
+          ...attrs,
+          href: props.href,
+          "data-testid": "router-link",
+        },
+        slots.default?.(),
+      );
+    };
+  },
+});
+
 const AppShell = defineComponent({
   props: {
     side: {
@@ -409,4 +429,44 @@ test("it should render SidebarListItem as a link when href is set", async () => 
 
   expect(link.attributes("href")).toBe("/home");
   expect(link.attributes("aria-label")).toBe("Home");
+});
+
+test("it should render SidebarListItem linkAs inside the list root", async () => {
+  const wrapper = mount(SidebarProvider, {
+    props: { defaultOpen: true },
+    slots: {
+      default: () => [
+        h(
+          Sidebar,
+          { collapsible: "none" },
+          {
+            default: () =>
+              h(SidebarList, null, {
+                default: () =>
+                  h(SidebarListItem, {
+                    href: "/transactions",
+                    linkAs: RouterLinkStub,
+                    primary: "Transactions",
+                  }),
+              }),
+          },
+        ),
+        h(SidebarInset, null, {
+          default: () => h(SidebarTrigger),
+        }),
+      ],
+    },
+  });
+
+  await nextTick();
+
+  const link = wrapper.get("[data-testid='router-link']");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.element.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.attributes("href")).toBe("/transactions");
+  expect(link.classes()).toContain("no-underline");
+  expect(link.element.parentElement?.tagName).toBe("LI");
 });

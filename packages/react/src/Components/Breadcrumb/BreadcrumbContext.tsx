@@ -1,5 +1,10 @@
 // ** External Imports
-import { createContext, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  type ElementType,
+  type ReactNode,
+} from "react";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
@@ -9,6 +14,11 @@ import type { IconProps } from "@/Components/Icon";
  * Shared breadcrumb chrome for `BreadcrumbItem` children.
  */
 export type BreadcrumbContextValue = {
+  /**
+   * Default component for navigating crumbs. Item `linkAs` wins.
+   */
+  linkAs?: ElementType;
+
   /**
    * Separator icon when no custom separator slot is set.
    */

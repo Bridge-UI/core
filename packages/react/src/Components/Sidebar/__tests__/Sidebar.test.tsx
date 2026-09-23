@@ -1,5 +1,6 @@
 // ** External Imports
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
@@ -12,6 +13,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
+
+function RouterLinkStub({
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
+  return (
+    <a data-testid="router-link" {...props}>
+      {children}
+    </a>
+  );
+}
 
 afterEach(() => {
   cleanup();
@@ -316,4 +328,33 @@ test("it should render SidebarListItem as a link when href is set", () => {
 
   expect(link.getAttribute("href")).toBe("/home");
   expect(link.getAttribute("aria-label")).toBe("Home");
+});
+
+test("it should render SidebarListItem linkAs inside the list root", () => {
+  render(
+    <SidebarProvider defaultOpen>
+      <Sidebar collapsible="none">
+        <SidebarList>
+          <SidebarListItem
+            href="/transactions"
+            primary="Transactions"
+            linkAs={RouterLinkStub}
+          />
+        </SidebarList>
+      </Sidebar>
+      <SidebarInset>
+        <SidebarTrigger />
+      </SidebarInset>
+    </SidebarProvider>,
+  );
+
+  const link = screen.getByTestId("router-link");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.getAttribute("href")).toBe("/transactions");
+  expect(link.className).toContain("no-underline");
+  expect(link.parentElement?.tagName).toBe("LI");
 });

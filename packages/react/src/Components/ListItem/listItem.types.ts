@@ -1,5 +1,10 @@
 // ** External Imports
-import type { AnchorHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+import type {
+  AnchorHTMLAttributes,
+  ElementType,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 
 // ** Core Imports
 import type { ListboxValue } from "@bridge-ui/core/Domain";
@@ -162,6 +167,14 @@ export interface ListItemOwnProps {
    * @default false
    */
   interactive?: boolean;
+
+  /**
+   * Component rendered in place of the interactive `<a>`.
+   * The root stays `as` (`li` or `div`). Ignored while disabled.
+   *
+   * @default undefined
+   */
+  linkAs?: ElementType;
 
   /**
    * Primary label text. Use `children` or `slots.primary` for custom markup.

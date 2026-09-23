@@ -1,11 +1,31 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { defineComponent } from "vue";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
+
+const RouterLinkStub = defineComponent({
+  name: "RouterLinkStub",
+  props: {
+    href: String,
+  },
+  setup(props, { attrs, slots }) {
+    return () => {
+      return h(
+        "a",
+        {
+          ...attrs,
+          href: props.href,
+          "data-testid": "router-link",
+        },
+        slots.default?.(),
+      );
+    };
+  },
+});
 
 test("it should render primary text from the primary prop", () => {
   const wrapper = mount(ListItem, {
@@ -171,4 +191,51 @@ test("it should keep primary text from clipping truncated glyphs", () => {
   expect(primary?.classes()).toContain("truncate");
   expect(primary?.classes()).toContain("leading-normal");
   expect(primary?.classes()).not.toContain("leading-none");
+});
+
+test("it should render linkAs inside the list item root", () => {
+  const wrapper = mount(ListItem, {
+    props: { href: "/inbox", primary: "Inbox", linkAs: RouterLinkStub },
+  });
+
+  const link = wrapper.get("[data-testid='router-link']");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.element.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.attributes("href")).toBe("/inbox");
+  expect(link.classes()).toContain("no-underline");
+  expect(wrapper.element.tagName).toBe("LI");
+  expect(link.element.parentElement?.tagName).toBe("LI");
+});
+
+test("it should keep a div root when as is div and linkAs is set", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      as: "div",
+      href: "/inbox",
+      primary: "Inbox",
+      linkAs: RouterLinkStub,
+    },
+  });
+
+  const link = wrapper.get("[data-testid='router-link']");
+
+  expect(wrapper.element.tagName).toBe("DIV");
+  expect(link.element.parentElement?.tagName).toBe("DIV");
+});
+
+test("it should keep a native anchor when linkAs is set and the item is disabled", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      disabled: true,
+      href: "/archive",
+      primary: "Archive",
+      linkAs: RouterLinkStub,
+    },
+  });
+
+  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
+  expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });

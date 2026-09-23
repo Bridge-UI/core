@@ -33,6 +33,7 @@ const linkBridgeKeys = [
   "href",
   "size",
   "color",
+  "linkAs",
   "classes",
   "disabled",
   "external",
@@ -86,6 +87,14 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   const mergedClasses = useBridgeUIMergedRegistryClasses<LinkClasses>({
     entry: bridgeLink,
     props: componentProps,
+  });
+
+  const rootTag = derived(() => {
+    if (merged.disabled || merged.linkAs == null) {
+      return "a";
+    }
+
+    return merged.linkAs;
   });
 
   const rootAriaDisabled = derived(() => {
@@ -182,6 +191,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
     slots,
     merged,
     rootRel,
+    rootTag,
     children,
     rootBind,
     rootHref,

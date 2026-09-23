@@ -1,5 +1,5 @@
 // ** External Imports
-import type { ComputedRef, InjectionKey, VNodeChild } from "vue";
+import type { Component, ComputedRef, InjectionKey, VNodeChild } from "vue";
 
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
@@ -9,6 +9,11 @@ import type { IconProps } from "@/Components/Icon";
  * Shared breadcrumb chrome for `BreadcrumbItem` descendants.
  */
 export type BreadcrumbContextValue = {
+  /**
+   * Default component for navigating crumbs. Item `linkAs` wins.
+   */
+  linkAs?: string | Component;
+
   /**
    * Separator icon when no custom separator slot is set.
    */

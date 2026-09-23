@@ -1,11 +1,31 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
-import { h } from "vue";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { Breadcrumb } from "@/Components/Breadcrumb";
 import { BreadcrumbItem } from "@/Components/BreadcrumbItem";
+
+const RouterLinkStub = defineComponent({
+  name: "RouterLinkStub",
+  props: {
+    href: String,
+  },
+  setup(props, { attrs, slots }) {
+    return () => {
+      return h(
+        "a",
+        {
+          ...attrs,
+          href: props.href,
+          "data-testid": "router-link",
+        },
+        slots.default?.(),
+      );
+    };
+  },
+});
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -94,4 +114,23 @@ test("it should render an icon-only crumb with aria-label", () => {
 
   expect(wrapper.find("a[aria-label='Home']").exists()).toBe(true);
   expect(wrapper.find("a[aria-label='Home']").text()).toBe("");
+});
+
+test("it should pass linkAs to crumbs rendered from items", () => {
+  const wrapper = mountBreadcrumb({
+    props: {
+      linkAs: RouterLinkStub,
+      items: [
+        { href: "/", label: "Home" },
+        { current: true, label: "Settings" },
+      ],
+    },
+  });
+
+  const link = wrapper.get("[data-testid='router-link']");
+
+  expect(link.attributes("href")).toBe("/");
+  expect(link.classes()).toContain("font-medium");
+  expect(wrapper.findAll("[data-testid='router-link']")).toHaveLength(1);
+  expect(wrapper.get("[aria-current='page']").element.tagName).toBe("SPAN");
 });

@@ -22,6 +22,7 @@ const breadcrumbItemBridgeKeys = [
   "as",
   "href",
   "slots",
+  "linkAs",
   "classes",
   "current",
   "endIcon",
@@ -78,11 +79,17 @@ export function useBreadcrumbItem(props: BreadcrumbItemProps) {
       return "span" as const;
     }
 
-    if (merged.as) {
+    if (merged.as === "button" || merged.as === "span") {
       return merged.as;
     }
 
-    return merged.href != null ? ("a" as const) : ("span" as const);
+    const isAnchor = merged.as === "a" || merged.href != null;
+
+    if (!isAnchor) {
+      return "span" as const;
+    }
+
+    return merged.linkAs ?? breadcrumb.linkAs ?? ("a" as const);
   });
 
   const linkInheritedAttrs = derived(() => {

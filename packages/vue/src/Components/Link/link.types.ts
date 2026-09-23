@@ -1,5 +1,10 @@
 // ** External Imports
-import type { AnchorHTMLAttributes, HTMLAttributes, Slot } from "vue";
+import type {
+  AnchorHTMLAttributes,
+  Component,
+  HTMLAttributes,
+  Slot,
+} from "vue";
 
 // ** Core Imports
 import type {
@@ -46,7 +51,7 @@ export interface LinkCustomProps {
   rightIcon?: Partial<Omit<IconProps, "icon">>;
 
   /**
-   * Props forwarded to the root `<a>`.
+   * Props forwarded to the root element (`a`, or `linkAs` when set).
    */
   root?: HTMLAttributes;
 }
@@ -101,6 +106,15 @@ export interface LinkOwnProps {
    * @default undefined
    */
   leftIcon?: IconSource;
+
+  /**
+   * Component rendered in place of the navigating `<a>`.
+   * Receives `href` and the same attributes the anchor would.
+   * Ignored while disabled.
+   *
+   * @default undefined
+   */
+  linkAs?: string | Component;
 
   /**
    * The icon to display after the link text.

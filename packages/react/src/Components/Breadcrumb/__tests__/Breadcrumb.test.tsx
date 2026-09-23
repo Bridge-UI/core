@@ -1,10 +1,22 @@
 // ** External Imports
 import { cleanup, render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { Breadcrumb } from "@/Components/Breadcrumb";
 import { BreadcrumbItem } from "@/Components/BreadcrumbItem";
+
+function RouterLinkStub({
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
+  return (
+    <a data-testid="router-link" {...props}>
+      {children}
+    </a>
+  );
+}
 
 afterEach(() => {
   cleanup();
@@ -86,4 +98,23 @@ test("it should use a custom separator slot", () => {
   );
 
   expect(screen.getAllByTestId("sep").length).toBeGreaterThan(0);
+});
+
+test("it should pass linkAs to crumbs rendered from items", () => {
+  render(
+    <Breadcrumb
+      linkAs={RouterLinkStub}
+      items={[
+        { href: "/", label: "Home" },
+        { current: true, label: "Settings" },
+      ]}
+    />,
+  );
+
+  const link = screen.getByTestId("router-link");
+
+  expect(link.getAttribute("href")).toBe("/");
+  expect(link.className).toContain("font-medium");
+  expect(screen.queryAllByTestId("router-link")).toHaveLength(1);
+  expect(screen.getByText("Settings").tagName).toBe("SPAN");
 });

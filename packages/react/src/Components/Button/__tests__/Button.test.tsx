@@ -1,6 +1,7 @@
 // ** External Imports
 import { cleanup, render, screen } from "@testing-library/react";
 import { CircleAlert } from "lucide-react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 afterEach(() => {
@@ -9,6 +10,17 @@ afterEach(() => {
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
+
+function RouterLinkStub({
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
+  return (
+    <a data-testid="router-link" {...props}>
+      {children}
+    </a>
+  );
+}
 
 test("it should render a button with children", () => {
   render(<Button>Click me</Button>);
@@ -209,4 +221,46 @@ test("it should mark the button as pressed when selected", () => {
 
   expect(button.getAttribute("aria-pressed")).toBe("true");
   expect(button.classList.contains("bg-primary-400/25")).toBe(true);
+});
+
+test("it should render linkAs with href and anchor classes", () => {
+  render(
+    <Button href="/settings" linkAs={RouterLinkStub}>
+      Settings
+    </Button>,
+  );
+
+  const link = screen.getByTestId("router-link");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.getAttribute("href")).toBe("/settings");
+  expect(link.className).toContain("inline-flex");
+});
+
+test("it should ignore linkAs when as is button", () => {
+  render(
+    <Button as="button" href="/settings" linkAs={RouterLinkStub}>
+      Settings
+    </Button>,
+  );
+
+  expect(screen.getByRole("button", { name: "Settings" })).toBeTruthy();
+  expect(screen.queryByTestId("router-link")).toBeNull();
+});
+
+test("it should keep a native anchor when linkAs is set and the button is disabled", () => {
+  render(
+    <Button disabled href="/settings" linkAs={RouterLinkStub}>
+      Settings
+    </Button>,
+  );
+
+  const anchor = screen.getByText("Settings").closest("a");
+
+  expect(screen.queryByTestId("router-link")).toBeNull();
+  expect(anchor?.tagName).toBe("A");
+  expect(anchor?.getAttribute("href")).toBeNull();
 });

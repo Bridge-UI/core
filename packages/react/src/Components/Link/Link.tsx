@@ -12,6 +12,7 @@ function Link(props: LinkProps) {
     slots,
     merged,
     rootRel,
+    rootTag,
     children,
     rootBind,
     rootHref,
@@ -25,8 +26,10 @@ function Link(props: LinkProps) {
     underline: "hover",
   });
 
+  const Root = rootTag;
+
   return (
-    <a
+    <Root
       {...rootBind}
       rel={rootRel}
       href={rootHref}
@@ -58,7 +61,7 @@ function Link(props: LinkProps) {
           ) : null}
         </Fragment>
       )}
-    </a>
+    </Root>
   );
 }
 

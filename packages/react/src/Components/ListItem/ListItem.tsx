@@ -59,15 +59,13 @@ function ListItem(props: ListItemProps) {
 
   const row = <ListItemRow {...listItemState} />;
 
-  const content = listItemState.interactiveBind ? (
-    listItemState.interactiveTag === "a" ? (
-      <a {...listItemState.interactiveBind}>{row}</a>
-    ) : (
-      <div {...listItemState.interactiveBind}>{row}</div>
-    )
-  ) : (
-    row
-  );
+  const content = listItemState.interactiveBind
+    ? createElement(
+        listItemState.interactiveTag,
+        listItemState.interactiveBind,
+        row,
+      )
+    : row;
 
   return createElement(
     listItemState.merged.as ?? "li",

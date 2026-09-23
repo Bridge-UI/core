@@ -37,6 +37,7 @@ const buttonBridgeKeys = [
   "size",
   "text",
   "color",
+  "linkAs",
   "classes",
   "density",
   "endIcon",
@@ -103,11 +104,32 @@ export function useButton(
   });
 
   const tag = computed(() => {
-    return merged.value.as ?? "button";
+    const explicitAs = split.value.componentProps.as;
+    const linkAs = merged.value.linkAs;
+    const blocked = Boolean(merged.value.disabled || merged.value.loading);
+
+    if (explicitAs === "button" || explicitAs === "span") {
+      return explicitAs;
+    }
+
+    const anchorByDefault =
+      explicitAs === "a" ||
+      (explicitAs == null &&
+        (merged.value.as === "a" || Boolean(linkAs && merged.value.href)));
+
+    if (!anchorByDefault) {
+      return merged.value.as ?? "button";
+    }
+
+    if (blocked || linkAs == null) {
+      return "a";
+    }
+
+    return linkAs;
   });
 
   const isAnchor = computed(() => {
-    return tag.value === "a";
+    return tag.value !== "button" && tag.value !== "span";
   });
 
   const isButton = computed(() => {

@@ -21,6 +21,7 @@ import {
 const breadcrumbItemBridgeKeys = [
   "as",
   "href",
+  "linkAs",
   "classes",
   "current",
   "endIcon",
@@ -80,11 +81,17 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
       return "span" as const;
     }
 
-    if (merged.value.as) {
+    if (merged.value.as === "button" || merged.value.as === "span") {
       return merged.value.as;
     }
 
-    return merged.value.href != null ? ("a" as const) : ("span" as const);
+    const isAnchor = merged.value.as === "a" || merged.value.href != null;
+
+    if (!isAnchor) {
+      return "span" as const;
+    }
+
+    return merged.value.linkAs ?? breadcrumb.value.linkAs ?? ("a" as const);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses({

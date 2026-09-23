@@ -30,6 +30,7 @@ const breadcrumbBridgeKeys = [
   "size",
   "items",
   "slots",
+  "linkAs",
   "classes",
   "maxItems",
   "separator",
@@ -105,6 +106,7 @@ export function useBreadcrumb(
 
   const contextValue = useMemo((): BreadcrumbContextValue => {
     return {
+      linkAs: merged.linkAs,
       separator: merged.separator,
       separatorSlot: slots?.separator,
       separatorIconProps: customProps?.separator,
@@ -119,6 +121,7 @@ export function useBreadcrumb(
     };
   }, [
     customProps?.separator,
+    merged.linkAs,
     merged.separator,
     mergedClasses,
     sizeItem,

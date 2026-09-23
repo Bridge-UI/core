@@ -38,6 +38,7 @@ const buttonBridgeKeys = [
   "size",
   "text",
   "color",
+  "linkAs",
   "classes",
   "density",
   "endIcon",
@@ -108,11 +109,32 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const tag = derived(() => {
-    return merged.as ?? "button";
+    const explicitAs = componentProps.as;
+    const linkAs = merged.linkAs;
+    const blocked = Boolean(merged.disabled || merged.loading);
+
+    if (explicitAs === "button" || explicitAs === "span") {
+      return explicitAs;
+    }
+
+    const anchorByDefault =
+      explicitAs === "a" ||
+      (explicitAs == null &&
+        (merged.as === "a" || Boolean(linkAs && merged.href)));
+
+    if (!anchorByDefault) {
+      return merged.as ?? "button";
+    }
+
+    if (blocked || linkAs == null) {
+      return "a";
+    }
+
+    return linkAs;
   });
 
   const isAnchor = derived(() => {
-    return tag === "a";
+    return tag !== "button" && tag !== "span";
   });
 
   const isButton = derived(() => {

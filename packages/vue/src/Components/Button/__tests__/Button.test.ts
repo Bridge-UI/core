@@ -2,9 +2,30 @@
 import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
+
+const RouterLinkStub = defineComponent({
+  name: "RouterLinkStub",
+  props: {
+    href: String,
+  },
+  setup(props, { attrs, slots }) {
+    return () => {
+      return h(
+        "a",
+        {
+          ...attrs,
+          href: props.href,
+          "data-testid": "router-link",
+        },
+        slots.default?.(),
+      );
+    };
+  },
+});
 
 test("it should render a button with default slot content", () => {
   const wrapper = mount(Button, { slots: { default: "Click me" } });
@@ -231,4 +252,40 @@ test("it should mark the button as pressed when selected", () => {
 
   expect(wrapper.find("button").attributes("aria-pressed")).toBe("true");
   expect(wrapper.find("button").classes()).toContain("bg-primary-400/25");
+});
+
+test("it should render linkAs with href and anchor classes", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Settings" },
+    props: { href: "/settings", linkAs: RouterLinkStub },
+  });
+
+  const link = wrapper.get("[data-testid='router-link']");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.element.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.attributes("href")).toBe("/settings");
+  expect(link.classes()).toContain("inline-flex");
+});
+
+test("it should ignore linkAs when as is button", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Settings" },
+    props: { as: "button", href: "/settings", linkAs: RouterLinkStub },
+  });
+
+  expect(wrapper.find("button").exists()).toBe(true);
+  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
+});
+
+test("it should keep a native anchor when linkAs is set and the button is disabled", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Settings" },
+    props: { disabled: true, href: "/settings", linkAs: RouterLinkStub },
+  });
+
+  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
+  expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });
