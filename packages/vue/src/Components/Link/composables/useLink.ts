@@ -32,6 +32,7 @@ const linkBridgeKeys = [
   "href",
   "size",
   "color",
+  "linkAs",
   "classes",
   "disabled",
   "external",
@@ -79,6 +80,14 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
 
   const isDisabled = computed(() => {
     return Boolean(merged.value.disabled);
+  });
+
+  const rootTag = computed(() => {
+    if (isDisabled.value || merged.value.linkAs == null) {
+      return "a";
+    }
+
+    return merged.value.linkAs;
   });
 
   const rootAriaDisabled = computed(() => {
@@ -175,6 +184,7 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
     slots,
     merged,
     rootRel,
+    rootTag,
     rootBind,
     rootHref,
     rootTarget,

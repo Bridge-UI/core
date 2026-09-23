@@ -1,5 +1,10 @@
 // ** External Imports
-import type { HTMLAttributes, OlHTMLAttributes, ReactNode } from "react";
+import type {
+  ElementType,
+  HTMLAttributes,
+  OlHTMLAttributes,
+  ReactNode,
+} from "react";
 
 // ** Core Imports
 import type { BreadcrumbSize } from "@bridge-ui/core/Tokens";
@@ -103,6 +108,15 @@ export interface BreadcrumbOwnProps {
    * @default undefined
    */
   items?: BreadcrumbItemData[];
+
+  /**
+   * Default component rendered in place of navigating crumb anchors.
+   * Applies to crumbs from `items` and to child `BreadcrumbItem`s that omit their own `linkAs`.
+   * The item's `linkAs` wins when both are set.
+   *
+   * @default undefined
+   */
+  linkAs?: ElementType;
 
   /**
    * Collapse middle crumbs when the list exceeds this count (`items` API).

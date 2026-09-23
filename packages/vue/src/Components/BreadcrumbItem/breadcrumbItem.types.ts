@@ -1,5 +1,5 @@
 // ** External Imports
-import type { HTMLAttributes, Slot } from "vue";
+import type { Component, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
@@ -158,6 +158,15 @@ export interface BreadcrumbItemOwnProps {
    * @default undefined
    */
   href?: string;
+
+  /**
+   * Component rendered in place of the navigating crumb `<a>`.
+   * Wins over `linkAs` on the parent `Breadcrumb`.
+   * Ignored when `current`, `disabled`, `as="button"`, or `as="span"`.
+   *
+   * @default undefined
+   */
+  linkAs?: string | Component;
 
   /**
    * Icon at the inline start.

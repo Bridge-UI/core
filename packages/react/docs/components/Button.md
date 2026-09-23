@@ -67,29 +67,40 @@ import { Button } from "@bridge-ui/react/Components/Button";
 </Button>
 ```
 
+### Router link
+
+`linkAs` with `href` renders a link. `as="button"` and `as="span"` ignore it.
+
+```tsx
+<Button href="/settings" linkAs={AppLink}>
+  Settings
+</Button>
+```
+
 ## Props
 
-| Prop          | Type                        | Default   | Description                                                                                                                         |
-| ------------- | --------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `as`          | `"a" \| "span" \| "button"` | "button"  | The element to render as.                                                                                                           |
-| `children`    | `ReactNode`                 | —         | The children to apply to the button.                                                                                                |
-| `classes`     | `ButtonClasses`             | —         | The classes to apply to the button.                                                                                                 |
-| `color`       | `ButtonColor`               | "primary" | The color to apply to the button.                                                                                                   |
-| `customProps` | `ButtonCustomProps`         | —         | Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.). Root HTML attributes stay on the component top level. |
-| `density`     | `ButtonDensity`             | "default" | The density of the button.                                                                                                          |
-| `disabled`    | `boolean`                   | `false`   | Whether the button is disabled.                                                                                                     |
-| `endIcon`     | `LucideIcon`                | —         | Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).                                                       |
-| `full`        | `boolean`                   | `false`   | Whether the button is full width.                                                                                                   |
-| `href`        | `string`                    | —         | The href to apply to the button.                                                                                                    |
-| `icon`        | `LucideIcon`                | —         | Icon for mini density (replaces label and start/end icons).                                                                         |
-| `loading`     | `boolean`                   | `false`   | Whether the button is loading.                                                                                                      |
-| `rounded`     | `ButtonRounded`             | "md"      | The roundedness of the button.                                                                                                      |
-| `selected`    | `boolean`                   | `false`   | Whether the button is in a selected / pressed state.                                                                                |
-| `size`        | `ButtonSize`                | "md"      | The size of the button.                                                                                                             |
-| `slots`       | `ButtonSlots`               | —         | The slots to apply to the button.                                                                                                   |
-| `startIcon`   | `LucideIcon`                | —         | Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).                                                     |
-| `text`        | `string`                    | —         | Label text when `children` is not provided.                                                                                         |
-| `variant`     | `ButtonVariant`             | "solid"   | The variant of the button.                                                                                                          |
+| Prop          | Type                        | Default   | Description                                                                                                                                                                    |
+| ------------- | --------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `as`          | `"a" \| "span" \| "button"` | "button"  | The element to render as.                                                                                                                                                      |
+| `children`    | `ReactNode`                 | —         | The children to apply to the button.                                                                                                                                           |
+| `classes`     | `ButtonClasses`             | —         | The classes to apply to the button.                                                                                                                                            |
+| `color`       | `ButtonColor`               | "primary" | The color to apply to the button.                                                                                                                                              |
+| `customProps` | `ButtonCustomProps`         | —         | Extra props for internal parts (`startIcon`, `endIcon`, slot wrappers, etc.). Root HTML attributes stay on the component top level.                                            |
+| `density`     | `ButtonDensity`             | "default" | The density of the button.                                                                                                                                                     |
+| `disabled`    | `boolean`                   | `false`   | Whether the button is disabled.                                                                                                                                                |
+| `endIcon`     | `LucideIcon`                | —         | Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).                                                                                                  |
+| `full`        | `boolean`                   | `false`   | Whether the button is full width.                                                                                                                                              |
+| `href`        | `string`                    | —         | The href to apply to the button.                                                                                                                                               |
+| `icon`        | `LucideIcon`                | —         | Icon for mini density (replaces label and start/end icons).                                                                                                                    |
+| `linkAs`      | `ElementType`               | —         | Component rendered in place of the navigating `<a>`. With `href` and no `as`, this renders a link. `as="button"` and `as="span"` ignore it. Ignored while disabled or loading. |
+| `loading`     | `boolean`                   | `false`   | Whether the button is loading.                                                                                                                                                 |
+| `rounded`     | `ButtonRounded`             | "md"      | The roundedness of the button.                                                                                                                                                 |
+| `selected`    | `boolean`                   | `false`   | Whether the button is in a selected / pressed state.                                                                                                                           |
+| `size`        | `ButtonSize`                | "md"      | The size of the button.                                                                                                                                                        |
+| `slots`       | `ButtonSlots`               | —         | The slots to apply to the button.                                                                                                                                              |
+| `startIcon`   | `LucideIcon`                | —         | Icon at the **inline start** (physical left in `ltr`, physical right in `rtl`).                                                                                                |
+| `text`        | `string`                    | —         | Label text when `children` is not provided.                                                                                                                                    |
+| `variant`     | `ButtonVariant`             | "solid"   | The variant of the button.                                                                                                                                                     |
 
 ## Related components
 

@@ -2,6 +2,7 @@
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  ElementType,
   HTMLAttributes,
   ReactNode,
 } from "react";
@@ -168,6 +169,15 @@ export interface BreadcrumbItemOwnProps {
    * @default undefined
    */
   href?: string;
+
+  /**
+   * Component rendered in place of the navigating crumb `<a>`.
+   * Wins over `linkAs` on the parent `Breadcrumb`.
+   * Ignored when `current`, `disabled`, `as="button"`, or `as="span"`.
+   *
+   * @default undefined
+   */
+  linkAs?: ElementType;
 
   /**
    * Custom start / end / separator adornments.

@@ -41,6 +41,7 @@ const listItemBridgeKeys = [
   "dense",
   "slots",
   "value",
+  "linkAs",
   "target",
   "classes",
   "divider",
@@ -180,7 +181,12 @@ export function useListItem(
   const isInteractiveRow = Boolean(
     merged.interactive || isListboxOption || isLink,
   );
-  const interactiveTag = isLink ? "a" : "div";
+  const interactiveTag =
+    isLink && !merged.disabled && merged.linkAs != null
+      ? merged.linkAs
+      : isLink
+        ? "a"
+        : "div";
 
   const resolvedSelectedIcon = useMemo((): null | IconSource => {
     if (isListboxOption) {

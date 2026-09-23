@@ -2,9 +2,30 @@
 import { Info } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
+import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { Link } from "@/Components/Link";
+
+const RouterLinkStub = defineComponent({
+  name: "RouterLinkStub",
+  props: {
+    href: String,
+  },
+  setup(props, { attrs, slots }) {
+    return () => {
+      return h(
+        "a",
+        {
+          ...attrs,
+          href: props.href,
+          "data-testid": "router-link",
+        },
+        slots.default?.(),
+      );
+    };
+  },
+});
 
 test("it should render as an anchor with default slot content", () => {
   const wrapper = mount(Link, {
@@ -103,4 +124,31 @@ test("it should forward customProps to icon sub-parts", () => {
   });
 
   expect(wrapper.find("#link-left-icon").exists()).toBe(true);
+});
+
+test("it should render linkAs with href and anchor classes", () => {
+  const wrapper = mount(Link, {
+    slots: { default: "Documentation" },
+    props: { href: "/docs", linkAs: RouterLinkStub },
+  });
+
+  const link = wrapper.get("[data-testid='router-link']");
+  const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+
+  link.element.dispatchEvent(event);
+
+  expect(event.defaultPrevented).toBe(false);
+  expect(link.attributes("href")).toBe("/docs");
+  expect(link.classes()).toContain("font-medium");
+  expect(link.text()).toContain("Documentation");
+});
+
+test("it should keep a native anchor when linkAs is set and the link is disabled", () => {
+  const wrapper = mount(Link, {
+    slots: { default: "Disabled" },
+    props: { href: "/docs", disabled: true, linkAs: RouterLinkStub },
+  });
+
+  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
+  expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });

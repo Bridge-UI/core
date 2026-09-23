@@ -1,5 +1,11 @@
 // ** External Imports
-import type { AnchorHTMLAttributes, HTMLAttributes, Slot, VNode } from "vue";
+import type {
+  AnchorHTMLAttributes,
+  Component,
+  HTMLAttributes,
+  Slot,
+  VNode,
+} from "vue";
 
 // ** Core Imports
 import type { ListboxValue } from "@bridge-ui/core/Domain";
@@ -155,6 +161,14 @@ export interface ListItemOwnProps {
    * @default false
    */
   interactive?: boolean;
+
+  /**
+   * Component rendered in place of the interactive `<a>`.
+   * The root stays `as` (`li` or `div`). Ignored while disabled.
+   *
+   * @default undefined
+   */
+  linkAs?: string | Component;
 
   /**
    * Primary label text.

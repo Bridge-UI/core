@@ -46,6 +46,7 @@ const listItemBridgeKeys = [
   "role",
   "dense",
   "value",
+  "linkAs",
   "target",
   "classes",
   "divider",
@@ -259,7 +260,15 @@ export function useListItem(
   });
 
   const interactiveTag = computed(() => {
-    return isLink.value ? "a" : "div";
+    if (!isLink.value) {
+      return "div";
+    }
+
+    if (merged.value.disabled || merged.value.linkAs == null) {
+      return "a";
+    }
+
+    return merged.value.linkAs;
   });
 
   const interactiveBind = computed(() => {

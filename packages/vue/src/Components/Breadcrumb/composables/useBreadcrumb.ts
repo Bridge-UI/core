@@ -31,6 +31,7 @@ import {
 const breadcrumbBridgeKeys = [
   "size",
   "items",
+  "linkAs",
   "classes",
   "maxItems",
   "separator",
@@ -99,6 +100,7 @@ export function useBreadcrumb(
 
   const contextValue = computed((): BreadcrumbContextValue => {
     return {
+      linkAs: merged.value.linkAs,
       separator: merged.value.separator,
       separatorIconProps: customProps.value?.separator,
       separatorClass: get(mergedClasses.value, "separator"),

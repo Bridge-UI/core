@@ -2,6 +2,7 @@
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  ElementType,
   HTMLAttributes,
   ReactNode,
 } from "react";
@@ -168,6 +169,15 @@ export interface ButtonOwnProps {
    * @default undefined
    */
   icon?: IconSource;
+
+  /**
+   * Component rendered in place of the navigating `<a>`.
+   * With `href` and no `as`, this renders a link. `as="button"` and `as="span"` ignore it.
+   * Ignored while disabled or loading.
+   *
+   * @default undefined
+   */
+  linkAs?: ElementType;
 
   /**
    * Whether the button is loading.

@@ -2,6 +2,7 @@
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
+  Component,
   HTMLAttributes,
   Slot,
 } from "vue";
@@ -161,6 +162,15 @@ export interface ButtonOwnProps {
    * @default undefined
    */
   icon?: IconSource;
+
+  /**
+   * Component rendered in place of the navigating `<a>`.
+   * With `href` and no `as`, this renders a link. `as="button"` and `as="span"` ignore it.
+   * Ignored while disabled or loading.
+   *
+   * @default undefined
+   */
+  linkAs?: string | Component;
 
   /**
    * Whether the button is loading.
