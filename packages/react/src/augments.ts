@@ -46,6 +46,10 @@ import type {
 } from "@/Components/PasswordField";
 import type { ProgressClasses, ProgressProps } from "@/Components/Progress";
 import type { RadioClasses, RadioProps } from "@/Components/Radio";
+import type {
+  RichTextEditorClasses,
+  RichTextEditorProps,
+} from "@/Components/RichTextEditor";
 import type { SelectClasses, SelectProps } from "@/Components/Select";
 import type {
   SidebarClasses,
@@ -274,6 +278,23 @@ declare module "@bridge-ui/core/Config" {
     classes: RadioClasses;
     defaultProps: Partial<
       Pick<RadioProps, "size" | "color" | "rounded" | "hideErrorMessage">
+    >;
+  }
+
+  interface RichTextEditorConfigOverrides {
+    classes: RichTextEditorClasses;
+    defaultProps: Partial<
+      Pick<
+        RichTextEditorProps,
+        | "size"
+        | "color"
+        | "format"
+        | "rounded"
+        | "variant"
+        | "showErrorIcon"
+        | "hideErrorMessage"
+        | "showDescriptionOnError"
+      >
     >;
   }
 
