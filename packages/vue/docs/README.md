@@ -36,6 +36,7 @@ Component reference for **Vue**. This folder ships with the npm package.
 - [Divider](./components/Divider.md)
 - [Drawer](./components/Drawer.md)
 - [EmptyState](./components/EmptyState.md)
+- [FileUpload](./components/FileUpload.md)
 - [FormControl](./components/FormControl.md)
 - [FormField](./components/FormField.md)
 - [I18n](./components/I18n.md)
