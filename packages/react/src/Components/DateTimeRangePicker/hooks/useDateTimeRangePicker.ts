@@ -86,11 +86,11 @@ type DateTimeRangePickerMerged = MergeLibDefaults<
 function sortDateTimeRangeValue(
   value: DateRangeValue,
   adapter: DateAdapter,
-  context?: string,
+  timeZone?: string,
 ): DateRangeValue {
   const [start, end] = value;
 
-  if (adapter.isAfter(start, end, context)) {
+  if (adapter.isAfter(start, end, timeZone)) {
     return [end, start];
   }
 
@@ -135,7 +135,7 @@ export function useDateTimeRangePicker(
       entry: bridgeDateTimeRangePicker,
     });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -199,21 +199,21 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.now(context);
+    const now = adapter.now(timeZone);
     const start = combineDateAndTime(
       next[0],
       displayValue?.[0] ?? now,
       adapter,
-      context,
+      timeZone,
     );
     const end = combineDateAndTime(
       next[1],
       displayValue?.[1] ?? now,
       adapter,
-      context,
+      timeZone,
     );
 
-    applyNext(sortDateTimeRangeValue([start, end], adapter, context));
+    applyNext(sortDateTimeRangeValue([start, end], adapter, timeZone));
   };
 
   const handleStartPanelChange = (next: null | TimeValue) => {
@@ -223,16 +223,16 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.now(context);
+    const now = adapter.now(timeZone);
     const start = combineDateAndTime(
       displayValue?.[0] ?? now,
       next,
       adapter,
-      context,
+      timeZone,
     );
     const end = displayValue?.[1] ?? now;
 
-    applyNext(sortDateTimeRangeValue([start, end], adapter, context));
+    applyNext(sortDateTimeRangeValue([start, end], adapter, timeZone));
   };
 
   const handleEndPanelChange = (next: null | TimeValue) => {
@@ -242,16 +242,16 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.now(context);
+    const now = adapter.now(timeZone);
     const start = displayValue?.[0] ?? now;
     const end = combineDateAndTime(
       displayValue?.[1] ?? now,
       next,
       adapter,
-      context,
+      timeZone,
     );
 
-    applyNext(sortDateTimeRangeValue([start, end], adapter, context));
+    applyNext(sortDateTimeRangeValue([start, end], adapter, timeZone));
   };
 
   const handleApply = () => {

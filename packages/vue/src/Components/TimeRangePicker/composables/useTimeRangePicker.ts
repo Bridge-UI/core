@@ -130,7 +130,7 @@ export function useTimeRangePicker(
     return toValue(props);
   });
 
-  const context = computed(() => {
+  const timeZone = computed(() => {
     return merged.value.timeZone;
   });
 
@@ -164,11 +164,11 @@ export function useTimeRangePicker(
   });
 
   const startDisplayValue = computed((): TimeValue => {
-    return displayValue.value?.[0] ?? adapter.value.now(context.value);
+    return displayValue.value?.[0] ?? adapter.value.now(timeZone.value);
   });
 
   const endDisplayValue = computed((): TimeValue => {
-    return displayValue.value?.[1] ?? adapter.value.now(context.value);
+    return displayValue.value?.[1] ?? adapter.value.now(timeZone.value);
   });
 
   const commitValue = (next: null | TimeRangeValue) => {
@@ -180,7 +180,7 @@ export function useTimeRangePicker(
   };
 
   const applyRange = (next: TimeRangeValue) => {
-    const sorted = sortTimeRangeValue(next, adapter.value, context.value);
+    const sorted = sortTimeRangeValue(next, adapter.value, timeZone.value);
 
     if (merged.value.showFooter) {
       draftValue.value = sorted;
@@ -196,7 +196,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const end = displayValue.value?.[1] ?? adapter.value.now(context.value);
+    const end = displayValue.value?.[1] ?? adapter.value.now(timeZone.value);
 
     applyRange([next, end]);
   };
@@ -206,7 +206,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const start = displayValue.value?.[0] ?? adapter.value.now(context.value);
+    const start = displayValue.value?.[0] ?? adapter.value.now(timeZone.value);
 
     applyRange([start, next]);
   };

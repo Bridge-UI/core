@@ -68,7 +68,7 @@ const dateTimeRangeFieldBridgeKeys = [
 function formatDateTimeRange(
   value: null | DateRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context?: string,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -77,9 +77,9 @@ function formatDateTimeRange(
   }
 
   const start =
-    `${adapter.format(value[0], context)} ${adapter.formatTime(value[0], context, { ampm, showSeconds })}`.trim();
+    `${adapter.format(value[0], timeZone)} ${adapter.formatTime(value[0], timeZone, { ampm, showSeconds })}`.trim();
   const end =
-    `${adapter.format(value[1], context)} ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`.trim();
+    `${adapter.format(value[1], timeZone)} ${adapter.formatTime(value[1], timeZone, { ampm, showSeconds })}`.trim();
 
   return `${start} – ${end}`;
 }
@@ -131,7 +131,7 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return dateTimeOnly.timeZone;
   });
 
@@ -241,7 +241,7 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     return formatDateTimeRange(
       modelValue,
       adapter,
-      context,
+      timeZone,
       dateTimeOnly.ampm,
       dateTimeOnly.showSeconds,
     );

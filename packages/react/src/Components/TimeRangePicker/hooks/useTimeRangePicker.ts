@@ -104,7 +104,7 @@ export function useTimeRangePicker(
       entry: bridgeTimeRangePicker,
     });
 
-  const context = derived(() => {
+  const timeZone = derived(() => {
     return merged.timeZone;
   });
 
@@ -134,11 +134,11 @@ export function useTimeRangePicker(
   });
 
   const startDisplayValue = derived((): TimeValue => {
-    return displayValue?.[0] ?? adapter.now(context);
+    return displayValue?.[0] ?? adapter.now(timeZone);
   });
 
   const endDisplayValue = derived((): TimeValue => {
-    return displayValue?.[1] ?? adapter.now(context);
+    return displayValue?.[1] ?? adapter.now(timeZone);
   });
 
   const commitValue = (next: null | TimeRangeValue) => {
@@ -150,7 +150,7 @@ export function useTimeRangePicker(
   };
 
   const applyRange = (next: TimeRangeValue) => {
-    const sorted = sortTimeRangeValue(next, adapter, context);
+    const sorted = sortTimeRangeValue(next, adapter, timeZone);
 
     if (merged.showFooter) {
       setDraftValue(sorted);
@@ -166,7 +166,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const end = displayValue?.[1] ?? adapter.now(context);
+    const end = displayValue?.[1] ?? adapter.now(timeZone);
 
     applyRange([next, end]);
   };
@@ -176,7 +176,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const start = displayValue?.[0] ?? adapter.now(context);
+    const start = displayValue?.[0] ?? adapter.now(timeZone);
 
     applyRange([start, next]);
   };

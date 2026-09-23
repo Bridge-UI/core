@@ -35,8 +35,10 @@ export function useDateAdapter(): ComputedRef<DateAdapter> {
       dateAdapterForTests ??
       defaultNativeDateAdapter;
 
-    adapter.setLocale?.(bridge?.global.value.locale);
-    adapter.setTimeZone?.(bridge?.global.value.timeZone);
+    if (bridge) {
+      adapter.setLocale?.(bridge.global.value.locale);
+      adapter.setTimeZone?.(bridge.global.value.timeZone);
+    }
 
     return adapter;
   });

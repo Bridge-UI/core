@@ -80,10 +80,10 @@ type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
 function resolveFocusDate(
   value: DatePickerModel,
   adapter: ReturnType<typeof useDateAdapter>,
-  context?: string,
+  timeZone?: string,
 ): Date {
   if (isNil(value)) {
-    return adapter.now(context);
+    return adapter.now(timeZone);
   }
 
   if (isDateRangeValue(value)) {
@@ -91,7 +91,7 @@ function resolveFocusDate(
   }
 
   if (isArray(value)) {
-    return value[0] ?? adapter.now(context);
+    return value[0] ?? adapter.now(timeZone);
   }
 
   return value;
@@ -139,7 +139,7 @@ export function useCalendar(
     props: componentProps,
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -187,10 +187,10 @@ export function useCalendar(
       : resolveFocusDate(
           props.value ?? merged.defaultValue ?? null,
           adapter,
-          context,
+          timeZone,
         );
 
-    return adapter.startOfMonth(focus, context);
+    return adapter.startOfMonth(focus, timeZone);
   });
 
   const yearPageSize = 15;
@@ -238,21 +238,21 @@ export function useCalendar(
   }, [merged.rounded, bridgeCalendar?.tokens?.rounded]);
 
   const yearLabel = derived(() => {
-    return String(adapter.getYear(viewDate, context));
+    return String(adapter.getYear(viewDate, timeZone));
   });
 
   const monthLabel = derived(() => {
     const names = adapter.getMonthNames();
 
-    return names[adapter.getMonth(viewDate, context)] ?? "";
+    return names[adapter.getMonth(viewDate, timeZone)] ?? "";
   });
 
   const viewYear = derived(() => {
-    return adapter.getYear(viewDate, context);
+    return adapter.getYear(viewDate, timeZone);
   });
 
   const viewMonth = derived(() => {
-    return adapter.getMonth(viewDate, context);
+    return adapter.getMonth(viewDate, timeZone);
   });
 
   const resolvedYearPageStart = derived(() => {
@@ -277,7 +277,7 @@ export function useCalendar(
   };
 
   const setViewDate = (next: Date) => {
-    const normalized = adapter.startOfMonth(next, context);
+    const normalized = adapter.startOfMonth(next, timeZone);
 
     if (!isViewDateControlled) {
       setUncontrolledViewDate(normalized);
@@ -301,11 +301,11 @@ export function useCalendar(
     }
 
     if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, -1, context));
+      setViewDate(adapter.addYears(viewDate, -1, timeZone));
       return;
     }
 
-    setViewDate(adapter.addMonths(viewDate, -1, context));
+    setViewDate(adapter.addMonths(viewDate, -1, timeZone));
   };
 
   const goToNext = () => {
@@ -315,18 +315,18 @@ export function useCalendar(
     }
 
     if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, 1, context));
+      setViewDate(adapter.addYears(viewDate, 1, timeZone));
       return;
     }
 
-    setViewDate(adapter.addMonths(viewDate, 1, context));
+    setViewDate(adapter.addMonths(viewDate, 1, timeZone));
   };
 
   /**
    * Jumps to today's month on the commit panel without changing the selection.
    */
   const goToToday = () => {
-    const today = adapter.startOfMonth(adapter.now(context), context);
+    const today = adapter.startOfMonth(adapter.now(timeZone), timeZone);
 
     setYearPageStart(null);
     setViewDate(today);
@@ -335,7 +335,7 @@ export function useCalendar(
 
   const handleYearSelect = (year: number) => {
     setYearPageStart(null);
-    const nextDate = adapter.setYear(viewDate, year, context);
+    const nextDate = adapter.setYear(viewDate, year, timeZone);
     setViewDate(nextDate);
 
     if (granularity === "year") {
@@ -344,9 +344,9 @@ export function useCalendar(
           mode,
           value,
           adapter,
-          context,
+          timeZone,
           granularity,
-          next: normalizeDateToGranularity(nextDate, "year", adapter, context),
+          next: normalizeDateToGranularity(nextDate, "year", adapter, timeZone),
         }),
       );
       return;
@@ -363,7 +363,7 @@ export function useCalendar(
   };
 
   const handleMonthSelect = (month: number) => {
-    const nextDate = adapter.setMonth(viewDate, month, context);
+    const nextDate = adapter.setMonth(viewDate, month, timeZone);
     setViewDate(nextDate);
 
     if (granularity === "month") {
@@ -372,9 +372,14 @@ export function useCalendar(
           mode,
           value,
           adapter,
-          context,
+          timeZone,
           granularity,
-          next: normalizeDateToGranularity(nextDate, "month", adapter, context),
+          next: normalizeDateToGranularity(
+            nextDate,
+            "month",
+            adapter,
+            timeZone,
+          ),
         }),
       );
       return;
@@ -559,7 +564,7 @@ export function useCalendar(
     mode,
     value,
     merged,
-    context,
+    timeZone,
     rootBind,
     viewDate,
     viewYear,

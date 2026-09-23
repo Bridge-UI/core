@@ -131,7 +131,7 @@ export function useCalendarYear(
     }),
   });
 
-  const context = computed((): string | undefined => {
+  const timeZone = computed((): string | undefined => {
     return merged.value.timeZone;
   });
 
@@ -146,7 +146,7 @@ export function useCalendarYear(
 
     const focusYear =
       merged.value.value ??
-      adapter.value.getYear(adapter.value.now(context.value), context.value);
+      adapter.value.getYear(adapter.value.now(timeZone.value), timeZone.value);
     const offset = Math.floor(pageSize.value / 2);
 
     return Math.max(1, focusYear - offset);
@@ -201,7 +201,7 @@ export function useCalendarYear(
       const date = dateFromYear({
         year,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
       });
       const disabled =
         Boolean(merged.value.disabled) ||
@@ -209,7 +209,7 @@ export function useCalendarYear(
           ? isDateDisabled(date, {
               granularity: "year",
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableDates: merged.value.disableDates,
@@ -218,7 +218,7 @@ export function useCalendarYear(
           : isYearDisabled({
               year,
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableYears: merged.value.disableYears,
@@ -230,7 +230,7 @@ export function useCalendarYear(
             mode: mode.value,
             granularity: "year",
             adapter: adapter.value,
-            context: context.value,
+            timeZone: timeZone.value,
             value: merged.value.selection ?? null,
           })
         : !isNil(merged.value.value) && merged.value.value === year;
@@ -242,7 +242,7 @@ export function useCalendarYear(
           date,
           granularity: "year",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           previewDate: previewDate.value,
           value: merged.value.selection ?? null,
         });
@@ -289,7 +289,7 @@ export function useCalendarYear(
       end,
       "year",
       adapter.value,
-      context.value,
+      timeZone.value,
     );
   });
 
@@ -301,7 +301,7 @@ export function useCalendarYear(
     const date = dateFromYear({
       year,
       adapter: adapter.value,
-      context: context.value,
+      timeZone: timeZone.value,
     });
 
     if (isCommitPanel.value) {
@@ -309,7 +309,7 @@ export function useCalendarYear(
         isDateDisabled(date, {
           granularity: "year",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           maxDate: merged.value.maxDate,
           minDate: merged.value.minDate,
           disableDates: merged.value.disableDates,
@@ -322,7 +322,7 @@ export function useCalendarYear(
       isYearDisabled({
         year,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
         maxDate: merged.value.maxDate,
         minDate: merged.value.minDate,
         disableYears: merged.value.disableYears,

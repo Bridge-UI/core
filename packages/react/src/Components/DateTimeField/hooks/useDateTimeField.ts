@@ -65,7 +65,7 @@ const dateTimeFieldBridgeKeys = [
 function formatDateTimeValue(
   value: Date | null,
   adapter: ReturnType<typeof useDateAdapter>,
-  context?: string,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -73,7 +73,7 @@ function formatDateTimeValue(
     return "";
   }
 
-  return `${adapter.format(value, context)} ${adapter.formatTime(value, context, { ampm, showSeconds })}`.trim();
+  return `${adapter.format(value, timeZone)} ${adapter.formatTime(value, timeZone, { ampm, showSeconds })}`.trim();
 }
 
 export function useDateTimeField(props: DateTimeFieldProps) {
@@ -122,7 +122,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return dateTimeOnly.timeZone;
   });
 
@@ -252,7 +252,7 @@ export function useDateTimeField(props: DateTimeFieldProps) {
     return formatDateTimeValue(
       modelValue,
       adapter,
-      context,
+      timeZone,
       dateTimeOnly.ampm,
       dateTimeOnly.showSeconds,
     );

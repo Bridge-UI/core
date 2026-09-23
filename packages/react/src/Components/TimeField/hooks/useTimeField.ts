@@ -55,7 +55,7 @@ const timeFieldBridgeKeys = [
 function formatTimeValue(
   value: null | TimeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context?: string,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -63,7 +63,7 @@ function formatTimeValue(
     return "";
   }
 
-  return adapter.formatTime(value, context, { ampm, showSeconds });
+  return adapter.formatTime(value, timeZone, { ampm, showSeconds });
 }
 
 export function useTimeField(props: TimeFieldProps) {
@@ -112,7 +112,7 @@ export function useTimeField(props: TimeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return timeOnly.timeZone;
   });
 
@@ -233,7 +233,7 @@ export function useTimeField(props: TimeFieldProps) {
     return formatTimeValue(
       modelValue,
       adapter,
-      context,
+      timeZone,
       timeOnly.ampm,
       timeOnly.showSeconds,
     );

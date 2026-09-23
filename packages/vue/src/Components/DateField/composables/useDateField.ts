@@ -106,7 +106,7 @@ export function useDateField(
     return split.value.componentProps;
   });
 
-  const context = computed((): string | undefined => {
+  const timeZone = computed((): string | undefined => {
     return dateOnly.value.timeZone;
   });
   const mode = computed(() => {
@@ -248,7 +248,7 @@ export function useDateField(
     return formatDatePickerModel(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       dateOnly.value.granularity ?? "day",
     );
   });

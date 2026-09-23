@@ -129,14 +129,14 @@ export function useCalendarMonth(
     }),
   });
 
-  const context = computed((): string | undefined => {
+  const timeZone = computed((): string | undefined => {
     return merged.value.timeZone;
   });
 
   const year = computed(() => {
     return (
       merged.value.year ??
-      adapter.value.getYear(adapter.value.now(context.value), context.value)
+      adapter.value.getYear(adapter.value.now(timeZone.value), timeZone.value)
     );
   });
 
@@ -191,7 +191,7 @@ export function useCalendarMonth(
         month,
         year: year.value,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
       });
       const disabled =
         Boolean(merged.value.disabled) ||
@@ -199,7 +199,7 @@ export function useCalendarMonth(
           ? isDateDisabled(date, {
               granularity: "month",
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableDates: merged.value.disableDates,
@@ -210,7 +210,7 @@ export function useCalendarMonth(
               month,
               year: year.value,
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableMonths: merged.value.disableMonths,
@@ -222,7 +222,7 @@ export function useCalendarMonth(
             mode: mode.value,
             granularity: "month",
             adapter: adapter.value,
-            context: context.value,
+            timeZone: timeZone.value,
             value: merged.value.selection ?? null,
           })
         : !isNil(merged.value.value) && merged.value.value === month;
@@ -234,7 +234,7 @@ export function useCalendarMonth(
           date,
           granularity: "month",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           previewDate: previewDate.value,
           value: merged.value.selection ?? null,
         });
@@ -281,7 +281,7 @@ export function useCalendarMonth(
       end,
       "month",
       adapter.value,
-      context.value,
+      timeZone.value,
     );
   });
 
@@ -294,7 +294,7 @@ export function useCalendarMonth(
       month,
       year: year.value,
       adapter: adapter.value,
-      context: context.value,
+      timeZone: timeZone.value,
     });
 
     if (isCommitPanel.value) {
@@ -302,7 +302,7 @@ export function useCalendarMonth(
         isDateDisabled(date, {
           granularity: "month",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           maxDate: merged.value.maxDate,
           minDate: merged.value.minDate,
           disableDates: merged.value.disableDates,
@@ -317,7 +317,7 @@ export function useCalendarMonth(
         month,
         year: year.value,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
         maxDate: merged.value.maxDate,
         minDate: merged.value.minDate,
         disableMonths: merged.value.disableMonths,

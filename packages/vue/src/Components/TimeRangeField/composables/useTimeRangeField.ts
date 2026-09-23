@@ -62,7 +62,7 @@ const timeRangeFieldBridgeKeys = [
 function formatTimeRange(
   value: null | TimeRangeValue,
   adapter: DateAdapter,
-  context?: string,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -70,7 +70,7 @@ function formatTimeRange(
     return "";
   }
 
-  return `${adapter.formatTime(value[0], context, { ampm, showSeconds })} – ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`;
+  return `${adapter.formatTime(value[0], timeZone, { ampm, showSeconds })} – ${adapter.formatTime(value[1], timeZone, { ampm, showSeconds })}`;
 }
 
 /**
@@ -103,7 +103,7 @@ export function useTimeRangeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): string | undefined => {
+  const timeZone = computed((): string | undefined => {
     return timeOnly.value.timeZone;
   });
 
@@ -219,7 +219,7 @@ export function useTimeRangeField(
     return formatTimeRange(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       timeOnly.value.ampm,
       timeOnly.value.showSeconds,
     );

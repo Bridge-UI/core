@@ -118,7 +118,7 @@ export function useDateTimePicker(
     },
   );
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -173,9 +173,9 @@ export function useDateTimePicker(
 
     const combined = combineDateAndTime(
       next,
-      displayValue ?? adapter.now(context),
+      displayValue ?? adapter.now(timeZone),
       adapter,
-      context,
+      timeZone,
     );
 
     applyNext(combined);
@@ -189,10 +189,10 @@ export function useDateTimePicker(
     }
 
     const combined = combineDateAndTime(
-      displayValue ?? adapter.now(context),
+      displayValue ?? adapter.now(timeZone),
       next,
       adapter,
-      context,
+      timeZone,
     );
 
     applyNext(combined);

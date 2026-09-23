@@ -120,7 +120,7 @@ export function useDateField(props: DateFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return dateOnly.timeZone;
   });
 
@@ -257,7 +257,7 @@ export function useDateField(props: DateFieldProps) {
     return formatDatePickerModel(
       modelValue,
       adapter,
-      context,
+      timeZone,
       dateOnly.granularity ?? "day",
     );
   });

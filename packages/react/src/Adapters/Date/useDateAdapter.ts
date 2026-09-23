@@ -28,8 +28,10 @@ export function useDateAdapter(): DateAdapter {
   const adapter =
     bridge?.global.dates ?? dateAdapterForTests ?? defaultNativeDateAdapter;
 
-  adapter.setLocale?.(bridge?.global.locale);
-  adapter.setTimeZone?.(bridge?.global.timeZone);
+  if (bridge) {
+    adapter.setLocale?.(bridge.global.locale);
+    adapter.setTimeZone?.(bridge.global.timeZone);
+  }
 
   return adapter;
 }

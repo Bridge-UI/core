@@ -120,7 +120,7 @@ export function useCalendarYear(
     props: componentProps,
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -134,7 +134,7 @@ export function useCalendarYear(
     }
 
     const focusYear =
-      merged.value ?? adapter.getYear(adapter.now(context), context);
+      merged.value ?? adapter.getYear(adapter.now(timeZone), timeZone);
     const offset = Math.floor(pageSize / 2);
 
     return Math.max(1, focusYear - offset);
@@ -188,13 +188,13 @@ export function useCalendarYear(
   const years = derived((): CalendarYearCell[] => {
     return Array.from({ length: pageSize }, (_, index) => {
       const year = startYear + index;
-      const date = dateFromYear({ year, adapter, context });
+      const date = dateFromYear({ year, adapter, timeZone });
       const disabled =
         Boolean(merged.disabled) ||
         (isCommitPanel
           ? isDateDisabled(date, {
               adapter,
-              context,
+              timeZone,
               granularity: "year",
               maxDate: merged.maxDate,
               minDate: merged.minDate,
@@ -204,7 +204,7 @@ export function useCalendarYear(
           : isYearDisabled({
               year,
               adapter,
-              context,
+              timeZone,
               maxDate: merged.maxDate,
               minDate: merged.minDate,
               disableYears: merged.disableYears,
@@ -215,7 +215,7 @@ export function useCalendarYear(
             date,
             mode,
             adapter,
-            context,
+            timeZone,
             granularity: "year",
             value: merged.selection ?? null,
           })
@@ -227,7 +227,7 @@ export function useCalendarYear(
         isDateInRangePreview({
           date,
           adapter,
-          context,
+          timeZone,
           previewDate,
           granularity: "year",
           value: merged.selection ?? null,
@@ -270,7 +270,7 @@ export function useCalendarYear(
 
     const [start, end] = merged.selection;
 
-    return isSameAtGranularity(start, end, "year", adapter, context);
+    return isSameAtGranularity(start, end, "year", adapter, timeZone);
   });
 
   const selectYear = (year: number) => {
@@ -278,13 +278,13 @@ export function useCalendarYear(
       return;
     }
 
-    const date = dateFromYear({ year, adapter, context });
+    const date = dateFromYear({ year, adapter, timeZone });
 
     if (isCommitPanel) {
       if (
         isDateDisabled(date, {
           adapter,
-          context,
+          timeZone,
           granularity: "year",
           maxDate: merged.maxDate,
           minDate: merged.minDate,
@@ -298,7 +298,7 @@ export function useCalendarYear(
       isYearDisabled({
         year,
         adapter,
-        context,
+        timeZone,
         maxDate: merged.maxDate,
         minDate: merged.minDate,
         disableYears: merged.disableYears,

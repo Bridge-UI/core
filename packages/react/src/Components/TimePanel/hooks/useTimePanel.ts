@@ -120,7 +120,7 @@ export function useTimePanel(
     props: componentProps,
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -147,16 +147,20 @@ export function useTimePanel(
   });
 
   const displayDate = derived(() => {
-    const base = merged.value ?? adapter.now(context);
+    const base = merged.value ?? adapter.now(timeZone);
     const minutes = snapMinutes(
-      adapter.getMinutes(base, context),
+      adapter.getMinutes(base, timeZone),
       merged.interval,
     );
-    const seconds = merged.showSeconds ? adapter.getSeconds(base, context) : 0;
-    let next = adapter.setHours(base, adapter.getHours(base, context), context);
+    const seconds = merged.showSeconds ? adapter.getSeconds(base, timeZone) : 0;
+    let next = adapter.setHours(
+      base,
+      adapter.getHours(base, timeZone),
+      timeZone,
+    );
 
-    next = adapter.setMinutes(next, minutes, context);
-    next = adapter.setSeconds(next, seconds, context);
+    next = adapter.setMinutes(next, minutes, timeZone);
+    next = adapter.setSeconds(next, seconds, timeZone);
 
     return next;
   });
@@ -174,7 +178,7 @@ export function useTimePanel(
   });
 
   const meridiem = derived(() => {
-    return toMeridiem(adapter.getHours(displayDate, context));
+    return toMeridiem(adapter.getHours(displayDate, timeZone));
   });
 
   const isItemDisabled = (candidate: Date) => {
@@ -182,7 +186,7 @@ export function useTimePanel(
       Boolean(merged.disabled) ||
       isTimeDisabled(candidate, {
         adapter,
-        context,
+        timeZone,
         maxTime: merged.maxTime,
         minTime: merged.minTime,
         disableTimes: merged.disableTimes,
@@ -204,57 +208,57 @@ export function useTimePanel(
 
   const selectHour = (hour: number) => {
     const hours24 = merged.ampm ? to24Hour(hour, meridiem) : hour;
-    let next = adapter.setHours(displayDate, hours24, context);
+    let next = adapter.setHours(displayDate, hours24, timeZone);
 
     next = adapter.setMinutes(
       next,
-      adapter.getMinutes(displayDate, context),
-      context,
+      adapter.getMinutes(displayDate, timeZone),
+      timeZone,
     );
 
     commitTime(next);
   };
 
   const selectMinute = (minute: number) => {
-    const next = adapter.setMinutes(displayDate, minute, context);
+    const next = adapter.setMinutes(displayDate, minute, timeZone);
 
     commitTime(next);
   };
 
   const selectSecond = (second: number) => {
-    const next = adapter.setSeconds(displayDate, second, context);
+    const next = adapter.setSeconds(displayDate, second, timeZone);
 
     commitTime(next);
   };
 
   const selectMeridiem = (nextMeridiem: "AM" | "PM") => {
-    const hour12 = to12Hour(adapter.getHours(displayDate, context));
+    const hour12 = to12Hour(adapter.getHours(displayDate, timeZone));
     const hours24 = to24Hour(hour12, nextMeridiem);
-    let next = adapter.setHours(displayDate, hours24, context);
+    let next = adapter.setHours(displayDate, hours24, timeZone);
 
     next = adapter.setMinutes(
       next,
-      adapter.getMinutes(displayDate, context),
-      context,
+      adapter.getMinutes(displayDate, timeZone),
+      timeZone,
     );
 
     commitTime(next);
   };
 
   const hourItems = derived((): TimePanelItem[] => {
-    const selectedHour24 = adapter.getHours(displayDate, context);
+    const selectedHour24 = adapter.getHours(displayDate, timeZone);
     const selectedHour = merged.ampm
       ? to12Hour(selectedHour24)
       : selectedHour24;
 
     return hours.map((hour) => {
       const hours24 = merged.ampm ? to24Hour(hour, meridiem) : hour;
-      let candidate = adapter.setHours(displayDate, hours24, context);
+      let candidate = adapter.setHours(displayDate, hours24, timeZone);
 
       candidate = adapter.setMinutes(
         candidate,
-        adapter.getMinutes(displayDate, context),
-        context,
+        adapter.getMinutes(displayDate, timeZone),
+        timeZone,
       );
 
       const disabled = isItemDisabled(candidate);
@@ -276,10 +280,10 @@ export function useTimePanel(
   });
 
   const minuteItems = derived((): TimePanelItem[] => {
-    const selectedMinute = adapter.getMinutes(displayDate, context);
+    const selectedMinute = adapter.getMinutes(displayDate, timeZone);
 
     return minutes.map((minute) => {
-      const candidate = adapter.setMinutes(displayDate, minute, context);
+      const candidate = adapter.setMinutes(displayDate, minute, timeZone);
       const disabled = isItemDisabled(candidate);
       const selected = minute === selectedMinute;
       const state = resolveCalendarDayInteractionState({
@@ -303,10 +307,10 @@ export function useTimePanel(
       return [];
     }
 
-    const selectedSecond = adapter.getSeconds(displayDate, context);
+    const selectedSecond = adapter.getSeconds(displayDate, timeZone);
 
     return seconds.map((second) => {
-      const candidate = adapter.setSeconds(displayDate, second, context);
+      const candidate = adapter.setSeconds(displayDate, second, timeZone);
       const disabled = isItemDisabled(candidate);
       const selected = second === selectedSecond;
       const state = resolveCalendarDayInteractionState({
@@ -331,14 +335,14 @@ export function useTimePanel(
     }
 
     return (["AM", "PM"] as const).map((entry) => {
-      const hour12 = to12Hour(adapter.getHours(displayDate, context));
+      const hour12 = to12Hour(adapter.getHours(displayDate, timeZone));
       const hours24 = to24Hour(hour12, entry);
-      let candidate = adapter.setHours(displayDate, hours24, context);
+      let candidate = adapter.setHours(displayDate, hours24, timeZone);
 
       candidate = adapter.setMinutes(
         candidate,
-        adapter.getMinutes(displayDate, context),
-        context,
+        adapter.getMinutes(displayDate, timeZone),
+        timeZone,
       );
 
       const disabled = isItemDisabled(candidate);

@@ -120,7 +120,7 @@ export function useCalendarDate(
     props: componentProps,
   });
 
-  const context = derived((): string | undefined => {
+  const timeZone = derived((): string | undefined => {
     return merged.timeZone;
   });
 
@@ -153,7 +153,7 @@ export function useCalendarDate(
     return (
       props.viewDate ??
       merged.viewDate ??
-      adapter.startOfMonth(adapter.now(context), context)
+      adapter.startOfMonth(adapter.now(timeZone), timeZone)
     );
   });
 
@@ -221,15 +221,15 @@ export function useCalendarDate(
   });
 
   const days = derived((): CalendarDateDayCell[] => {
-    const grid = adapter.getCalendarDays(viewDate, startOfWeek, context);
-    const today = adapter.now(context);
+    const grid = adapter.getCalendarDays(viewDate, startOfWeek, timeZone);
+    const today = adapter.now(timeZone);
 
     return grid.map((date) => {
       const disabled =
         Boolean(merged.disabled) ||
         isDateDisabled(date, {
           adapter,
-          context,
+          timeZone,
           maxDate: merged.maxDate,
           minDate: merged.minDate,
           disableDates: merged.disableDates,
@@ -242,7 +242,7 @@ export function useCalendarDate(
         mode,
         value,
         adapter,
-        context,
+        timeZone,
       });
 
       const preview =
@@ -251,7 +251,7 @@ export function useCalendarDate(
           date,
           value,
           adapter,
-          context,
+          timeZone,
           previewDate,
         });
 
@@ -266,10 +266,10 @@ export function useCalendarDate(
         state,
         preview,
         selected,
-        label: String(adapter.getDate(date, context)),
+        label: String(adapter.getDate(date, timeZone)),
         disabled: disabled || Boolean(merged.readOnly),
-        today: adapter.isSameDay(date, today, context),
-        outside: !adapter.isSameMonth(date, viewDate, context),
+        today: adapter.isSameDay(date, today, timeZone),
+        outside: !adapter.isSameMonth(date, viewDate, timeZone),
       };
     });
   });
@@ -282,7 +282,7 @@ export function useCalendarDate(
     if (
       isDateDisabled(date, {
         adapter,
-        context,
+        timeZone,
         maxDate: merged.maxDate,
         minDate: merged.minDate,
         disableDates: merged.disableDates,
@@ -297,7 +297,7 @@ export function useCalendarDate(
       mode,
       value,
       adapter,
-      context,
+      timeZone,
       next: date,
     });
 
@@ -327,7 +327,7 @@ export function useCalendarDate(
 
     const [start, end] = value;
 
-    return adapter.isSameDay(start, end, context);
+    return adapter.isSameDay(start, end, timeZone);
   });
 
   const rootBind = derived(() => {
@@ -408,7 +408,7 @@ export function useCalendarDate(
     mode,
     value,
     merged,
-    context,
+    timeZone,
     rootBind,
     gridBind,
     weekdays,

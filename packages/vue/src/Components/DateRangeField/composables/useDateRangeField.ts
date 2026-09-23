@@ -93,7 +93,7 @@ export function useDateRangeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): string | undefined => {
+  const timeZone = computed((): string | undefined => {
     return dateOnly.value.timeZone;
   });
 
@@ -200,7 +200,7 @@ export function useDateRangeField(
     return formatDatePickerModel(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       dateOnly.value.granularity ?? "day",
     );
   });
