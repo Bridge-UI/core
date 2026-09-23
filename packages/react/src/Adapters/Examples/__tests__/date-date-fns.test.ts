@@ -37,3 +37,20 @@ test("it should parse 24h times", () => {
   expect(adapter.getHours(parsed!)).toBe(14);
   expect(adapter.getMinutes(parsed!)).toBe(30);
 });
+
+test("it should format on the same local day when timeZone is set", () => {
+  const zoned = createDateFnsDateAdapter();
+  const date = new Date("2024-01-15T02:00:00.000Z");
+  const day = zoned.getDate(date);
+
+  zoned.setLocale?.("en-US");
+
+  expect(zoned.getDate(date, "Pacific/Kiritimati")).toBe(day);
+  expect(zoned.getHours(date, "Pacific/Kiritimati")).toBe(zoned.getHours(date));
+  expect(zoned.formatTime(date, "Pacific/Kiritimati")).toBe(
+    zoned.formatTime(date),
+  );
+  expect(zoned.format(date, "Pacific/Kiritimati")).toContain(
+    String(day).padStart(2, "0"),
+  );
+});
