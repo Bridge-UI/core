@@ -66,10 +66,18 @@ Provide `global.dates` to replace the native `Date` adapter used by calendars an
 
 Bridge locales stay `en-US` / `pt-BR`. Native, Luxon, and date-fns already use those tags. Day.js and Moment want ids like `en` / `pt-br` — pass that map to the factory and import the matching locale files.
 
+Day.js IANA zones need `utc` and `timezone` extended in the app. Without `dayjs.tz`, `timeZone` is ignored. The adapter loads `customParseFormat` itself. Moment IANA zones need `moment-timezone` imported in the app. Without `moment.tz`, `timeZone` is ignored.
+
 ```ts
+import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { createBridgeUI } from "@bridge-ui/vue";
 import { createDayjsDateAdapter } from "@bridge-ui/vue/Adapters/Examples/date-dayjs";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const dates = createDayjsDateAdapter({
   "en-US": "en",
@@ -81,6 +89,16 @@ app.use(
     global: { dates },
   }),
 );
+```
+
+```ts
+import "moment-timezone";
+import { createMomentDateAdapter } from "@bridge-ui/vue/Adapters/Examples/date-moment";
+
+const dates = createMomentDateAdapter({
+  "en-US": "en",
+  "pt-BR": "pt-br",
+});
 ```
 
 ### Form density defaults
