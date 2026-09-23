@@ -194,26 +194,6 @@ export function createDateFnsDateAdapter(
       return isValidDate(parsed) ? startOfDay(parsed) : null;
     },
 
-    format: (date, context) => {
-      if (!isValidDate(date)) {
-        return "";
-      }
-
-      const locale = resolveLocale(context);
-      const timeZone = resolveTimeZone(context);
-
-      if (!isNil(timeZone) || !isNil(locale)) {
-        return new Intl.DateTimeFormat(locale, {
-          timeZone,
-          day: "2-digit",
-          year: "numeric",
-          month: "2-digit",
-        }).format(date);
-      }
-
-      return formatDate(date, "P");
-    },
-
     getCalendarDays: (view, startOfWeek, context) => {
       const monthStart = adapter.startOfMonth(view, context);
       const weekday = adapter.getDay(monthStart, context);
@@ -243,6 +223,42 @@ export function createDateFnsDateAdapter(
         minute: "2-digit",
         ...(showSeconds ? { second: "2-digit" as const } : {}),
       }).format(date);
+    },
+
+    format: (date, context, options) => {
+      if (!isValidDate(date)) {
+        return "";
+      }
+
+      const locale = resolveLocale(context);
+      const timeZone = resolveTimeZone(context);
+      const granularity = options?.granularity ?? "day";
+
+      if (granularity === "year") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          year: "numeric",
+        }).format(date);
+      }
+
+      if (granularity === "month") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          month: "long",
+          year: "numeric",
+        }).format(date);
+      }
+
+      if (!isNil(timeZone) || !isNil(locale)) {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          day: "2-digit",
+          year: "numeric",
+          month: "2-digit",
+        }).format(date);
+      }
+
+      return formatDate(date, "P");
     },
   };
 

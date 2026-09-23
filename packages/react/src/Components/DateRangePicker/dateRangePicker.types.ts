@@ -3,6 +3,8 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
 import type {
+  CalendarGranularity,
+  CalendarView,
   DateRangeValue,
   DisableDatesInput,
   FieldOverlayFooterSlotProps,
@@ -118,6 +120,14 @@ export interface DateRangePickerOwnProps {
   defaultValue?: null | DateRangeValue;
 
   /**
+   * Initial calendar panel view. Clamped so it is not deeper than `granularity`.
+   * When unset, opens on the panel that matches `granularity`.
+   *
+   * @default matches `granularity` (`"date"` when `granularity` is `"day"`)
+   */
+  defaultView?: CalendarView;
+
+  /**
    * Disables the picker.
    *
    * @default false
@@ -159,6 +169,14 @@ export interface DateRangePickerOwnProps {
    * @default false
    */
   fill?: boolean;
+
+  /**
+   * Deepest selectable calendar panel. `"month"` commits the first day of that
+   * month; `"year"` commits January 1. The stored model stays a `Date`.
+   *
+   * @default "day"
+   */
+  granularity?: CalendarGranularity;
 
   /**
    * Hides month navigation / panel.

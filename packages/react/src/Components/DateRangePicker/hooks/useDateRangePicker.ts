@@ -42,6 +42,8 @@ const dateRangePickerBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "defaultView",
+  "granularity",
   "orientation",
   "startOfWeek",
   "defaultValue",

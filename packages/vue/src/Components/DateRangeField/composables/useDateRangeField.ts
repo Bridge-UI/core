@@ -10,9 +10,9 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isDateRangeValue,
+  formatDatePickerModel,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
   resolveRangePickerOrientation,
@@ -55,6 +55,8 @@ const dateRangeFieldBridgeKeys = [
   "hideMonths",
   "showFooter",
   "customProps",
+  "defaultView",
+  "granularity",
   "orientation",
   "startOfWeek",
   "defaultValue",
@@ -64,18 +66,6 @@ const dateRangeFieldBridgeKeys = [
   "disableMonths",
   "hideOutsideDays",
 ] as const satisfies readonly (keyof DateRangeFieldOwnProps)[];
-
-function formatRange(
-  value: null | DateRangeValue,
-  adapter: DateAdapter,
-  context: DateAdapterContext,
-): string {
-  if (isNil(value) || !isDateRangeValue(value)) {
-    return "";
-  }
-
-  return `${adapter.format(value[0], context)} – ${adapter.format(value[1], context)}`;
-}
 
 export function useDateRangeField(
   props: DateRangeFieldOwnProps,
@@ -209,7 +199,12 @@ export function useDateRangeField(
   );
 
   const displayText = computed(() => {
-    return formatRange(modelValue.value, adapter.value, context.value);
+    return formatDatePickerModel(
+      modelValue.value,
+      adapter.value,
+      context.value,
+      dateOnly.value.granularity ?? "day",
+    );
   });
 
   const showClearIcon = computed(() => {

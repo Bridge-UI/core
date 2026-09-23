@@ -8,7 +8,7 @@ export type {
   CalendarProps,
   CalendarRoundedOverrides,
   CalendarSlots,
-  CalendarView,
 } from "@/Components/Calendar/calendar.types";
 export { default as Calendar } from "@/Components/Calendar/Calendar.vue";
 export { useCalendar } from "@/Components/Calendar/composables/useCalendar";
+export type { CalendarGranularity, CalendarView } from "@bridge-ui/core/Domain";

@@ -1,12 +1,19 @@
 // ** External Imports
-import { get, isNil, omit } from "es-toolkit/compat";
-import { useMemo } from "react";
+import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
+import { useMemo, useState } from "react";
 
 // ** Core Imports
 import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
+  dateFromYearMonth,
+  isDateDisabled,
+  isDateInRangePreview,
+  isDateRangeValue,
+  isDateSelected,
   isMonthDisabled,
+  isSameAtGranularity,
   resolveCalendarDayInteractionState,
+  resolveDatePickerMode,
 } from "@bridge-ui/core/Domain";
 import {
   calendarColorProps as colorProps,
@@ -39,15 +46,21 @@ const calendarMonthBridgeKeys = [
   "year",
   "color",
   "error",
+  "range",
   "value",
   "classes",
   "maxDate",
   "minDate",
   "rounded",
   "disabled",
+  "multiple",
   "readOnly",
   "timeZone",
+  "selection",
   "customProps",
+  "previewDate",
+  "disableDates",
+  "disableYears",
   "disableMonths",
 ] as const satisfies readonly (keyof CalendarMonthOwnProps)[];
 
@@ -62,9 +75,11 @@ type CalendarMonthMerged = MergeLibDefaults<
 >;
 
 export type CalendarMonthCell = {
+  date: Date;
   disabled: boolean;
   label: string;
   month: number;
+  preview: boolean;
   selected: boolean;
   state: ReturnType<typeof resolveCalendarDayInteractionState>;
 };
@@ -98,7 +113,7 @@ export function useCalendarMonth(
   });
 
   const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["onChange"]);
+    return omit(inheritedAttrs, ["onChange", "onPreviewDateChange"]);
   });
 
   const mergedClasses = useBridgeUIMergedRegistryClasses<CalendarMonthClasses>({
@@ -111,6 +126,29 @@ export function useCalendarMonth(
 
   const year = derived(() => {
     return merged.year ?? adapter.getYear(adapter.now(context), context);
+  });
+
+  const mode = derived(() => {
+    return resolveDatePickerMode({
+      range: merged.range,
+      multiple: merged.multiple,
+    });
+  });
+
+  const isCommitPanel = derived(() => {
+    return !isUndefined(merged.selection);
+  });
+
+  const [uncontrolledPreview, setUncontrolledPreview] = useState<Date | null>(
+    null,
+  );
+
+  const previewDate = derived(() => {
+    if (!isNil(props.previewDate)) {
+      return props.previewDate;
+    }
+
+    return uncontrolledPreview;
   });
 
   const roundedClass = useMemo(() => {
@@ -139,19 +177,57 @@ export function useCalendarMonth(
     const names = adapter.getMonthNames(context);
 
     return names.map((label, month) => {
+      const date = dateFromYearMonth({
+        year,
+        month,
+        adapter,
+        context,
+      });
       const disabled =
         Boolean(merged.disabled) ||
-        isMonthDisabled({
-          year,
-          month,
+        (isCommitPanel
+          ? isDateDisabled(date, {
+              adapter,
+              context,
+              granularity: "month",
+              maxDate: merged.maxDate,
+              minDate: merged.minDate,
+              disableDates: merged.disableDates,
+              disableYears: merged.disableYears,
+              disableMonths: merged.disableMonths,
+            })
+          : isMonthDisabled({
+              year,
+              month,
+              adapter,
+              context,
+              maxDate: merged.maxDate,
+              minDate: merged.minDate,
+              disableMonths: merged.disableMonths,
+            }));
+
+      const selected = isCommitPanel
+        ? isDateSelected({
+            date,
+            mode,
+            adapter,
+            context,
+            granularity: "month",
+            value: merged.selection ?? null,
+          })
+        : !isNil(merged.value) && merged.value === month;
+
+      const preview =
+        isCommitPanel &&
+        mode === "range" &&
+        isDateInRangePreview({
+          date,
           adapter,
           context,
-          maxDate: merged.maxDate,
-          minDate: merged.minDate,
-          disableMonths: merged.disableMonths,
+          previewDate,
+          granularity: "month",
+          value: merged.selection ?? null,
         });
-
-      const selected = !isNil(merged.value) && merged.value === month;
 
       const state = resolveCalendarDayInteractionState({
         disabled,
@@ -160,13 +236,37 @@ export function useCalendarMonth(
       });
 
       return {
+        date,
         label,
         month,
         state,
+        preview,
         selected,
         disabled: disabled || Boolean(merged.readOnly),
       };
     });
+  });
+
+  const setPreview = (date: Date | null) => {
+    if (isNil(props.previewDate)) {
+      setUncontrolledPreview(date);
+    }
+
+    props.onPreviewDateChange?.(date);
+  };
+
+  const canPreviewRange = derived(() => {
+    if (
+      !isCommitPanel ||
+      mode !== "range" ||
+      !isDateRangeValue(merged.selection)
+    ) {
+      return false;
+    }
+
+    const [start, end] = merged.selection;
+
+    return isSameAtGranularity(start, end, "month", adapter, context);
   });
 
   const selectMonth = (month: number) => {
@@ -174,7 +274,29 @@ export function useCalendarMonth(
       return;
     }
 
-    if (
+    const date = dateFromYearMonth({
+      year,
+      month,
+      adapter,
+      context,
+    });
+
+    if (isCommitPanel) {
+      if (
+        isDateDisabled(date, {
+          adapter,
+          context,
+          granularity: "month",
+          maxDate: merged.maxDate,
+          minDate: merged.minDate,
+          disableDates: merged.disableDates,
+          disableYears: merged.disableYears,
+          disableMonths: merged.disableMonths,
+        })
+      ) {
+        return;
+      }
+    } else if (
       isMonthDisabled({
         year,
         month,
@@ -189,6 +311,10 @@ export function useCalendarMonth(
     }
 
     props.onChange?.(month);
+
+    if (mode === "range") {
+      setPreview(null);
+    }
   };
 
   const rootBind = derived(() => {
@@ -207,6 +333,11 @@ export function useCalendarMonth(
       customProps?.grid,
       {
         role: "grid",
+        onMouseLeave: () => {
+          if (canPreviewRange) {
+            setPreview(null);
+          }
+        },
       },
       cn({
         "grid grid-cols-3 gap-2": true,
@@ -225,6 +356,12 @@ export function useCalendarMonth(
         disabled: cell.disabled,
         "aria-pressed": cell.selected,
         onClick: () => selectMonth(cell.month),
+        "data-preview": cell.preview ? "" : undefined,
+        onMouseEnter: () => {
+          if (canPreviewRange && !cell.disabled) {
+            setPreview(cell.date);
+          }
+        },
       },
       cn({
         "cursor-pointer px-2 py-4 text-xs uppercase transition-all duration-150 ease-in-out outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed": true,

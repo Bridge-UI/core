@@ -481,3 +481,23 @@ test("it should close the modal overlay from a custom footer apply", async () =>
   expect(onChange).toHaveBeenCalled();
   expect(document.body.querySelector('[role="dialog"]')).toBeNull();
 });
+
+test("it should format the input at month granularity", () => {
+  const wrapper = mountDateField({
+    props: { granularity: "month", modelValue: new Date(2021, 8, 20) },
+  });
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "September 2021",
+  );
+});
+
+test("it should format the input at year granularity", () => {
+  const wrapper = mountDateField({
+    props: { granularity: "year", modelValue: new Date(2021, 8, 20) },
+  });
+
+  expect((wrapper.find("input").element as HTMLInputElement).value).toBe(
+    "2021",
+  );
+});

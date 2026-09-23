@@ -19,6 +19,8 @@ import { DateRangePicker } from "@bridge-ui/vue/Components/DateRangePicker";
 
 <DateRangePicker v-model="range" />
 
+<DateRangePicker granularity="month" />
+
 <DateRangePicker orientation="vertical" />
 
 <DateRangePicker show-footer v-model="range" v-on:cancel="() => {}" />
@@ -26,32 +28,34 @@ import { DateRangePicker } from "@bridge-ui/vue/Components/DateRangePicker";
 
 ## Props
 
-| Prop              | Type                         | Default        | Description                                                        |
-| ----------------- | ---------------------------- | -------------- | ------------------------------------------------------------------ |
-| `classes`         | `DateRangePickerClasses`     | —              | Classes for picker regions.                                        |
-| `color`           | `CalendarColor`              | `"primary"`    | Accent color.                                                      |
-| `customProps`     | `DateRangePickerCustomProps` | —              | Extra props for internal parts.                                    |
-| `defaultValue`    | `DateRangeValue \| null`     | `null`         | Uncontrolled initial value.                                        |
-| `disabled`        | `boolean`                    | `false`        | Disables the picker.                                               |
-| `disableDates`    | `Date[]`                     | —              | Dates that cannot be selected.                                     |
-| `disableMonths`   | `number[]`                   | —              | Month indexes that cannot be selected.                             |
-| `disableYears`    | `number[]`                   | —              | Years that cannot be selected.                                     |
-| `error`           | `boolean`                    | `false`        | Applies the error color palette to tiles.                          |
-| `fill`            | `boolean`                    | `false`        | Fills the container width.                                         |
-| `hideMonths`      | `boolean`                    | `false`        | Hides month navigation / panel.                                    |
-| `hideOutsideDays` | `boolean`                    | `false`        | Hides days that fall outside the displayed month.                  |
-| `hideWeekdays`    | `boolean`                    | `false`        | Hides weekday labels.                                              |
-| `hideYears`       | `boolean`                    | `false`        | Hides year navigation / panel.                                     |
-| `maxDate`         | `Date`                       | —              | Latest selectable date.                                            |
-| `minDate`         | `Date`                       | —              | Earliest selectable date.                                          |
-| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"` | Dual calendar layout: side-by-side or stacked.                     |
-| `readOnly`        | `boolean`                    | `false`        | Prevents selection.                                                |
-| `rounded`         | `CalendarRounded`            | `"md"`         | Border radius of calendar tiles and chrome.                        |
-| `showFooter`      | `boolean`                    | `false`        | Shows Cancel / Apply. Selection is draft until Apply.              |
-| `slots`           | `DateRangePickerSlots`       | —              | Named slots (`day` on the calendars, `footer` for Cancel / Apply). |
-| `startOfWeek`     | `StartOfWeek`                | `0`            | First day of the week.                                             |
-| `timeZone`        | `string`                     | —              | IANA time zone.                                                    |
-| `value`           | `DateRangeValue \| null`     | —              | Controlled value (`[start, end]`).                                 |
+| Prop              | Type                         | Default               | Description                                                              |
+| ----------------- | ---------------------------- | --------------------- | ------------------------------------------------------------------------ |
+| `classes`         | `DateRangePickerClasses`     | —                     | Classes for picker regions.                                              |
+| `color`           | `CalendarColor`              | `"primary"`           | Accent color.                                                            |
+| `customProps`     | `DateRangePickerCustomProps` | —                     | Extra props for internal parts.                                          |
+| `defaultValue`    | `DateRangeValue \| null`     | `null`                | Uncontrolled initial value.                                              |
+| `defaultView`     | `CalendarView`               | matches `granularity` | Initial calendar panel. Clamped so it is not deeper than `granularity`.  |
+| `disabled`        | `boolean`                    | `false`               | Disables the picker.                                                     |
+| `disableDates`    | `Date[]`                     | —                     | Dates that cannot be selected.                                           |
+| `disableMonths`   | `number[]`                   | —                     | Month indexes that cannot be selected.                                   |
+| `disableYears`    | `number[]`                   | —                     | Years that cannot be selected.                                           |
+| `error`           | `boolean`                    | `false`               | Applies the error color palette to tiles.                                |
+| `fill`            | `boolean`                    | `false`               | Fills the container width.                                               |
+| `granularity`     | `"day" \| "month" \| "year"` | `"day"`               | Deepest selectable panel. Month and year commit as a `Date`.             |
+| `hideMonths`      | `boolean`                    | `false`               | Hides month navigation / panel. Ignored when `granularity` is `"month"`. |
+| `hideOutsideDays` | `boolean`                    | `false`               | Hides days that fall outside the displayed month.                        |
+| `hideWeekdays`    | `boolean`                    | `false`               | Hides weekday labels.                                                    |
+| `hideYears`       | `boolean`                    | `false`               | Hides year navigation / panel. Ignored when `granularity` is `"year"`.   |
+| `maxDate`         | `Date`                       | —                     | Latest selectable date.                                                  |
+| `minDate`         | `Date`                       | —                     | Earliest selectable date.                                                |
+| `orientation`     | `"horizontal" \| "vertical"` | `"horizontal"`        | Dual calendar layout: side-by-side or stacked.                           |
+| `readOnly`        | `boolean`                    | `false`               | Prevents selection.                                                      |
+| `rounded`         | `CalendarRounded`            | `"md"`                | Border radius of calendar tiles and chrome.                              |
+| `showFooter`      | `boolean`                    | `false`               | Shows Cancel / Apply. Selection is draft until Apply.                    |
+| `slots`           | `DateRangePickerSlots`       | —                     | Named slots (`day` on the calendars, `footer` for Cancel / Apply).       |
+| `startOfWeek`     | `StartOfWeek`                | `0`                   | First day of the week.                                                   |
+| `timeZone`        | `string`                     | —                     | IANA time zone.                                                          |
+| `value`           | `DateRangeValue \| null`     | —                     | Controlled value (`[start, end]`).                                       |
 
 ### v-model
 

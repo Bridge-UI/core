@@ -43,3 +43,19 @@ test("it should mark the selected month", () => {
 
   expect(months.value[4]?.selected).toBe(true);
 });
+
+test("it should not mark a month selected when selection is null", () => {
+  const { months } = mountUseCalendarMonth({ value: 4, selection: null });
+
+  expect(months.value.some((cell) => cell.selected)).toBe(false);
+});
+
+test("it should mark the month from the selection model on the commit panel", () => {
+  const { months } = mountUseCalendarMonth({
+    value: 4,
+    selection: new Date(2021, 2, 1),
+  });
+
+  expect(months.value[2]?.selected).toBe(true);
+  expect(months.value[4]?.selected).toBe(false);
+});

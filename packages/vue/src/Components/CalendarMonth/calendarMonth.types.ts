@@ -2,6 +2,10 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from "vue";
 
 // ** Core Imports
+import type {
+  DatePickerModel,
+  DisableDatesInput,
+} from "@bridge-ui/core/Domain";
 import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
@@ -53,6 +57,11 @@ export interface CalendarMonthEmits {
    * Emitted when a month is selected (`0`–`11`).
    */
   change: [month: number];
+
+  /**
+   * Emitted when the range preview hover date changes.
+   */
+  previewDateChange: [date: Date | null];
 }
 
 export interface CalendarMonthOwnProps {
@@ -85,11 +94,26 @@ export interface CalendarMonthOwnProps {
   disabled?: boolean;
 
   /**
+   * Dates that cannot be selected. Compared at month precision when `selection`
+   * is set.
+   *
+   * @default undefined
+   */
+  disableDates?: DisableDatesInput;
+
+  /**
    * Month indexes (`0`–`11`) that cannot be selected.
    *
    * @default undefined
    */
   disableMonths?: number[];
+
+  /**
+   * Years that cannot be selected.
+   *
+   * @default undefined
+   */
+  disableYears?: number[];
 
   /**
    * When `true`, applies the error color palette to tiles.
@@ -113,6 +137,27 @@ export interface CalendarMonthOwnProps {
   minDate?: Date;
 
   /**
+   * Allows selecting multiple months when this panel is the commit view.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
+   * Controlled range-preview hover date.
+   *
+   * @default undefined
+   */
+  previewDate?: Date | null;
+
+  /**
+   * Selects a month range when this panel is the commit view.
+   *
+   * @default false
+   */
+  range?: boolean;
+
+  /**
    * Prevents selection while keeping tiles visible.
    *
    * @default false
@@ -125,6 +170,14 @@ export interface CalendarMonthOwnProps {
    * @default "md"
    */
   rounded?: MergeProps<CalendarRounded, CalendarMonthRoundedOverrides>;
+
+  /**
+   * Date selection model used to highlight tiles when this panel is the commit
+   * view. `value` stays the focused month index.
+   *
+   * @default undefined
+   */
+  selection?: DatePickerModel;
 
   /**
    * IANA time zone.

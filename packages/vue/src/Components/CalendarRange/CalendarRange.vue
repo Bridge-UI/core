@@ -47,6 +47,7 @@ const {
   endViewDate,
   previewDate,
   navIconBind,
+  granularity,
   handleChange,
   yearPageSize,
   endMonthLabel,
@@ -293,10 +294,16 @@ function chevronClass(open: boolean) {
       <div :class="monthYearBind" v-if="view === 'month'">
         <CalendarMonth
           v-bind="shared"
+          range
           :year="monthPanelYear"
           :value="monthPanelValue"
+          :preview-date="previewDate"
           v-on:change="handleMonthSelect"
+          :disable-dates="merged.disableDates"
+          :disable-years="merged.disableYears"
           :disable-months="merged.disableMonths"
+          v-on:preview-date-change="handlePreviewDateChange"
+          :selection="granularity === 'month' ? value : undefined"
           :classes="{
             root: 'h-full min-h-0 flex-1',
             grid: 'h-full auto-rows-fr',
@@ -308,11 +315,16 @@ function chevronClass(open: boolean) {
       <div :class="monthYearBind" v-else-if="view === 'year'">
         <CalendarYear
           v-bind="shared"
+          range
           :value="viewYear"
           :page-size="yearPageSize"
           :start-year="yearPageStart"
+          :preview-date="previewDate"
           v-on:change="handleYearSelect"
+          :disable-dates="merged.disableDates"
           :disable-years="merged.disableYears"
+          v-on:preview-date-change="handlePreviewDateChange"
+          :selection="granularity === 'year' ? value : undefined"
           :classes="{
             root: 'h-full min-h-0 flex-1',
             grid: 'h-full auto-rows-fr',

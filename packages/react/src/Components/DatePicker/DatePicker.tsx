@@ -40,6 +40,7 @@ function DatePicker(props: DatePickerProps) {
         hideYears={merged.hideYears}
         hideMonths={merged.hideMonths}
         onChange={handleCalendarChange}
+        granularity={merged.granularity}
         defaultView={merged.defaultView}
         startOfWeek={merged.startOfWeek}
         disableDates={merged.disableDates}

@@ -2,6 +2,10 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from "vue";
 
 // ** Core Imports
+import type {
+  DatePickerModel,
+  DisableDatesInput,
+} from "@bridge-ui/core/Domain";
 import type { CalendarColor, CalendarRounded } from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
@@ -53,6 +57,11 @@ export interface CalendarYearEmits {
    * Emitted when a year is selected.
    */
   change: [year: number];
+
+  /**
+   * Emitted when the range preview hover date changes.
+   */
+  previewDateChange: [date: Date | null];
 }
 
 export interface CalendarYearOwnProps {
@@ -85,6 +94,14 @@ export interface CalendarYearOwnProps {
   disabled?: boolean;
 
   /**
+   * Dates that cannot be selected. Compared at year precision when `selection`
+   * is set.
+   *
+   * @default undefined
+   */
+  disableDates?: DisableDatesInput;
+
+  /**
    * Years that cannot be selected.
    *
    * @default undefined
@@ -113,11 +130,32 @@ export interface CalendarYearOwnProps {
   minDate?: Date;
 
   /**
+   * Allows selecting multiple years when this panel is the commit view.
+   *
+   * @default false
+   */
+  multiple?: boolean;
+
+  /**
    * How many years to show per page.
    *
    * @default 15
    */
   pageSize?: number;
+
+  /**
+   * Controlled range-preview hover date.
+   *
+   * @default undefined
+   */
+  previewDate?: Date | null;
+
+  /**
+   * Selects a year range when this panel is the commit view.
+   *
+   * @default false
+   */
+  range?: boolean;
 
   /**
    * Prevents selection while keeping tiles visible.
@@ -132,6 +170,14 @@ export interface CalendarYearOwnProps {
    * @default "md"
    */
   rounded?: MergeProps<CalendarRounded, CalendarYearRoundedOverrides>;
+
+  /**
+   * Date selection model used to highlight tiles when this panel is the commit
+   * view. `value` stays the focused year.
+   *
+   * @default undefined
+   */
+  selection?: DatePickerModel;
 
   /**
    * First year of the visible page. Defaults around `value` / current year.

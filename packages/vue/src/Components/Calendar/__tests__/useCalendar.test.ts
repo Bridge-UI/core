@@ -62,3 +62,18 @@ test("it should expose month and year labels", () => {
   expect(viewMonth.value).toBe(4);
   expect(monthLabel.value.toLowerCase()).toContain("may");
 });
+
+test("it should open on the month view when granularity is month", () => {
+  const { view } = mountUseCalendar({ granularity: "month" });
+
+  expect(view.value).toBe("month");
+});
+
+test("it should clamp defaultView so it is not deeper than granularity", () => {
+  const { view } = mountUseCalendar({
+    granularity: "year",
+    defaultView: "date",
+  });
+
+  expect(view.value).toBe("year");
+});

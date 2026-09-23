@@ -10,9 +10,9 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
-  isDateRangeValue,
+  formatDatePickerModel,
   resolveDatePickerMode,
   resolveFieldOverlay,
   resolveFieldPickerClassName,
@@ -58,6 +58,7 @@ const dateFieldBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "granularity",
   "startOfWeek",
   "defaultValue",
   "disableDates",
@@ -66,26 +67,6 @@ const dateFieldBridgeKeys = [
   "disableMonths",
   "hideOutsideDays",
 ] as const satisfies readonly (keyof DateFieldOwnProps)[];
-
-function formatModel(
-  value: DatePickerModel,
-  adapter: DateAdapter,
-  context: DateAdapterContext,
-): string {
-  if (isNil(value)) {
-    return "";
-  }
-
-  if (isDateRangeValue(value)) {
-    return `${adapter.format(value[0], context)} – ${adapter.format(value[1], context)}`;
-  }
-
-  if (isArray(value)) {
-    return value.map((entry) => adapter.format(entry, context)).join(", ");
-  }
-
-  return adapter.format(value, context);
-}
 
 function hasDateFieldValue(value: DatePickerModel): boolean {
   if (isNil(value)) {
@@ -266,7 +247,12 @@ export function useDateField(
   });
 
   const displayText = computed(() => {
-    return formatModel(modelValue.value, adapter.value, context.value);
+    return formatDatePickerModel(
+      modelValue.value,
+      adapter.value,
+      context.value,
+      dateOnly.value.granularity ?? "day",
+    );
   });
 
   function commitValue(next: DatePickerModel) {

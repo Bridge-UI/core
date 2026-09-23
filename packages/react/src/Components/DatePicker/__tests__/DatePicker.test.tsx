@@ -83,3 +83,43 @@ test("it should render a custom footer slot and commit on apply", () => {
   fireEvent.click(screen.getByRole("button", { name: "Save" }));
   expect(onChange).toHaveBeenCalled();
 });
+
+test("it should commit a month-start date when granularity is month", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DatePicker
+      granularity="month"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: /march/i }));
+
+  const selected = onChange.mock.calls[0]?.[0] as Date;
+
+  expect(selected.getFullYear()).toBe(2021);
+  expect(selected.getMonth()).toBe(2);
+  expect(selected.getDate()).toBe(1);
+});
+
+test("it should commit January 1 when granularity is year", () => {
+  const onChange = vi.fn();
+
+  render(
+    <DatePicker
+      granularity="year"
+      onChange={onChange}
+      defaultValue={new Date(2021, 4, 1)}
+    />,
+  );
+
+  fireEvent.click(screen.getByRole("button", { name: "2018" }));
+
+  const selected = onChange.mock.calls[0]?.[0] as Date;
+
+  expect(selected.getDate()).toBe(1);
+  expect(selected.getMonth()).toBe(0);
+  expect(selected.getFullYear()).toBe(2018);
+});

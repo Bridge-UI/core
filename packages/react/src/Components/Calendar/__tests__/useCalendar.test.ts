@@ -68,3 +68,18 @@ test("it should update viewDate when selecting year and month without onViewDate
   expect(result.current.viewMonth).toBe(2);
   expect(result.current.view).toBe("date");
 });
+
+test("it should open on the month view when granularity is month", () => {
+  const { result } = renderUseCalendar({ granularity: "month" });
+
+  expect(result.current.view).toBe("month");
+});
+
+test("it should clamp defaultView so it is not deeper than granularity", () => {
+  const { result } = renderUseCalendar({
+    granularity: "year",
+    defaultView: "date",
+  });
+
+  expect(result.current.view).toBe("year");
+});

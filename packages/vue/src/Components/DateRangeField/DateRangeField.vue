@@ -117,6 +117,8 @@ const {
       v-on:cancel="handlePickerCancel"
       :hide-years="dateOnly.hideYears"
       :hide-months="dateOnly.hideMonths"
+      :granularity="dateOnly.granularity"
+      :default-view="dateOnly.defaultView"
       :error="formField.invalidated.value"
       :color="formField.merged.value.color"
       :start-of-week="dateOnly.startOfWeek"

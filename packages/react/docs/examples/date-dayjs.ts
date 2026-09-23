@@ -204,22 +204,6 @@ export function createDayjsDateAdapter(
       return fromDayjs(value);
     },
 
-    format: (date, context) => {
-      if (!isValid(date)) {
-        return "";
-      }
-
-      const locale = resolveLocale(context);
-      const timeZone = resolveZone(context);
-
-      return new Intl.DateTimeFormat(locale, {
-        timeZone,
-        day: "2-digit",
-        year: "numeric",
-        month: "2-digit",
-      }).format(date);
-    },
-
     getWeekdayNames: (context) => {
       const locale = resolveLocale(context);
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
@@ -278,6 +262,38 @@ export function createDayjsDateAdapter(
         hour: "2-digit",
         minute: "2-digit",
         ...(showSeconds ? { second: "2-digit" as const } : {}),
+      }).format(date);
+    },
+
+    format: (date, context, options) => {
+      if (!isValid(date)) {
+        return "";
+      }
+
+      const locale = resolveLocale(context);
+      const timeZone = resolveZone(context);
+      const granularity = options?.granularity ?? "day";
+
+      if (granularity === "year") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          year: "numeric",
+        }).format(date);
+      }
+
+      if (granularity === "month") {
+        return new Intl.DateTimeFormat(locale, {
+          timeZone,
+          month: "long",
+          year: "numeric",
+        }).format(date);
+      }
+
+      return new Intl.DateTimeFormat(locale, {
+        timeZone,
+        day: "2-digit",
+        year: "numeric",
+        month: "2-digit",
       }).format(date);
     },
   };

@@ -19,6 +19,12 @@ describe("createNativeDateAdapter", () => {
     expect(adapter.getYear(date!)).toBe(2021);
     expect(adapter.getMonth(date!)).toBe(4);
     expect(adapter.getDate(date!)).toBe(21);
+    expect(
+      adapter.format(date!, { locale: "en-US" }, { granularity: "month" }),
+    ).toBe("May 2021");
+    expect(
+      adapter.format(date!, { locale: "en-US" }, { granularity: "year" }),
+    ).toBe("2021");
   });
 
   test("it should detect same day / month / year", () => {

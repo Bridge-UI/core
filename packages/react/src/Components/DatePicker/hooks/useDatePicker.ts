@@ -45,6 +45,7 @@ const datePickerBridgeKeys = [
   "showFooter",
   "customProps",
   "defaultView",
+  "granularity",
   "startOfWeek",
   "defaultValue",
   "disableDates",

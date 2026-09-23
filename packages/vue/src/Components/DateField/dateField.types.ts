@@ -3,6 +3,8 @@ import type { InputHTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
+  CalendarGranularity,
+  CalendarView,
   DatePickerModel,
   DisableDatesInput,
   FieldOverlayFooterSlotProps,
@@ -12,7 +14,6 @@ import type {
 import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type { CalendarView } from "@/Components/Calendar/calendar.types";
 import type { CalendarDateDayCell } from "@/Components/CalendarDate/calendarDate.types";
 import type { DatePickerCustomProps } from "@/Components/DatePicker/datePicker.types";
 import type { DrawerOwnProps } from "@/Components/Drawer/drawer.types";
@@ -135,9 +136,10 @@ export interface DateFieldOwnProps extends Omit<
   defaultValue?: DatePickerModel;
 
   /**
-   * Initial calendar panel view.
+   * Initial calendar panel view. Clamped so it is not deeper than `granularity`.
+   * When unset, opens on the panel that matches `granularity`.
    *
-   * @default "date"
+   * @default matches `granularity` (`"date"` when `granularity` is `"day"`)
    */
   defaultView?: CalendarView;
 
@@ -179,6 +181,14 @@ export interface DateFieldOwnProps extends Omit<
    * @default undefined
    */
   fill?: boolean;
+
+  /**
+   * Deepest selectable calendar panel. `"month"` commits the first day of that
+   * month; `"year"` commits January 1. The stored model stays a `Date`.
+   *
+   * @default "day"
+   */
+  granularity?: CalendarGranularity;
 
   /**
    * Hides month navigation / panel.

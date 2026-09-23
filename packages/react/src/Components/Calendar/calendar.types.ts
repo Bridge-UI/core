@@ -3,6 +3,8 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from "react";
 
 // ** Core Imports
 import type {
+  CalendarGranularity,
+  CalendarView,
   DatePickerModel,
   DisableDatesInput,
   StartOfWeek,
@@ -16,8 +18,6 @@ import type { IconProps } from "@/Components/Icon";
 
 export interface CalendarColorOverrides {}
 export interface CalendarRoundedOverrides {}
-
-export type CalendarView = "date" | "year" | "month";
 
 export interface CalendarClasses {
   /**
@@ -163,9 +163,10 @@ export interface CalendarOwnProps {
   defaultValue?: DatePickerModel;
 
   /**
-   * Uncontrolled initial panel view.
+   * Uncontrolled initial panel view. Clamped so it is not deeper than
+   * `granularity`. When unset, opens on the panel that matches `granularity`.
    *
-   * @default "date"
+   * @default matches `granularity` (`"date"` when `granularity` is `"day"`)
    */
   defaultView?: CalendarView;
 
@@ -211,6 +212,14 @@ export interface CalendarOwnProps {
    * @default false
    */
   fill?: boolean;
+
+  /**
+   * Deepest selectable calendar panel. `"month"` commits the first day of that
+   * month; `"year"` commits January 1. The stored model stays a `Date`.
+   *
+   * @default "day"
+   */
+  granularity?: CalendarGranularity;
 
   /**
    * Hides the month selector and month panel.
@@ -318,8 +327,7 @@ export interface CalendarOwnProps {
   value?: DatePickerModel;
 
   /**
-   * Controlled panel view (`date` / `month` / `year`). Pair with `onViewChange`.
-   * Without a change handler, the prop is used as the initial view only.
+   * Controlled panel view. Pair with `onViewChange`.
    *
    * @default undefined
    */
