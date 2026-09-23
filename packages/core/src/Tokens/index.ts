@@ -171,10 +171,12 @@ export type {
   EmptyStateSizeItem,
 } from "@/Tokens/EmptyState";
 export {
+  roundedProps as fileUploadRoundedProps,
   sizeProps as fileUploadSizeProps,
   variantProps as fileUploadVariantProps,
 } from "@/Tokens/FileUpload";
 export type {
+  FileUploadRounded,
   FileUploadSize,
   FileUploadSizeItem,
   FileUploadVariant,

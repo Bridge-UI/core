@@ -12,7 +12,9 @@ import {
 
 const libDefaults = {
   size: "md",
+  rounded: "md",
   multiple: false,
+  color: "primary",
   variant: "button",
 } as const satisfies Partial<FileUploadOwnProps>;
 
@@ -54,6 +56,39 @@ test("it should default buttonLabel based on multiple", () => {
 
   expect(single.result.current.buttonLabel).toBe("Choose file");
   expect(multi.result.current.buttonLabel).toBe("Choose files");
+});
+
+test("it should default color to primary", () => {
+  const { result } = renderUseFileUpload();
+
+  expect(result.current.merged.color).toBe("primary");
+});
+
+test("it should default rounded to md", () => {
+  const { result } = renderUseFileUpload();
+
+  expect(result.current.merged.rounded).toBe("md");
+});
+
+test("it should override color when prop is passed", () => {
+  const { result } = renderUseFileUpload({ color: "secondary" });
+
+  expect(result.current.merged.color).toBe("secondary");
+});
+
+test("it should override rounded when prop is passed", () => {
+  const { result } = renderUseFileUpload({ rounded: "xl" });
+
+  expect(result.current.merged.rounded).toBe("xl");
+});
+
+test("it should apply rounded class on dropzoneBind", () => {
+  const { result } = renderUseFileUpload({
+    rounded: "xl",
+    variant: "dropzone",
+  });
+
+  expect(String(result.current.dropzoneBind.className)).toContain("rounded-xl");
 });
 
 test("it should hide the picker when a single file is selected", () => {

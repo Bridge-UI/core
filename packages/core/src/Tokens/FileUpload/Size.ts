@@ -81,11 +81,11 @@ export const sizeProps: FileUploadSize = {
     "title":
       "m-0 truncate text-sm font-medium text-dark-900 dark:text-dark-100",
     "dropzone":
-      "flex min-h-36 w-full flex-col items-center justify-center gap-1.5 rounded-lg px-6 py-10 text-center",
+      "flex min-h-36 w-full flex-col items-center justify-center gap-1.5 px-6 py-10 text-center",
     "item":
-      "flex w-full items-center gap-3 rounded-xl border border-dark-200 bg-white px-2.5 py-2 dark:border-dark-700 dark:bg-dark-900",
+      "flex w-full items-center gap-3 border border-dark-200 bg-white px-2.5 py-2 dark:border-dark-700 dark:bg-dark-900",
     "media":
-      "flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-5",
+      "flex size-10 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-5",
   },
   "lg": {
     "list": "mt-4 flex flex-col gap-2.5",
@@ -96,11 +96,11 @@ export const sizeProps: FileUploadSize = {
     "title":
       "m-0 truncate text-base font-medium text-dark-900 dark:text-dark-100",
     "dropzone":
-      "flex min-h-44 w-full flex-col items-center justify-center gap-2 rounded-xl px-8 py-14 text-center",
+      "flex min-h-44 w-full flex-col items-center justify-center gap-2 px-8 py-14 text-center",
     "item":
-      "flex w-full items-center gap-3 rounded-2xl border border-dark-200 bg-white px-3 py-2.5 dark:border-dark-700 dark:bg-dark-900",
+      "flex w-full items-center gap-3 border border-dark-200 bg-white px-3 py-2.5 dark:border-dark-700 dark:bg-dark-900",
     "media":
-      "flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-6",
+      "flex size-12 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-6",
   },
   "sm": {
     "list": "mt-2 flex flex-col gap-1.5",
@@ -112,10 +112,10 @@ export const sizeProps: FileUploadSize = {
     "description":
       "m-0 truncate text-[0.65rem] text-dark-500 dark:text-dark-400",
     "dropzone":
-      "flex min-h-28 w-full flex-col items-center justify-center gap-1 rounded-md px-4 py-6 text-center",
+      "flex min-h-28 w-full flex-col items-center justify-center gap-1 px-4 py-6 text-center",
     "item":
-      "flex w-full items-center gap-2 rounded-lg border border-dark-200 bg-white px-2 py-1.5 dark:border-dark-700 dark:bg-dark-900",
+      "flex w-full items-center gap-2 border border-dark-200 bg-white px-2 py-1.5 dark:border-dark-700 dark:bg-dark-900",
     "media":
-      "flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-md bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-4",
+      "flex size-8 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-4",
   },
 };

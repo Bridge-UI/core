@@ -23,7 +23,9 @@ const model = defineModel<File[] | undefined>();
 
 const props = withDefaults(defineProps<FileUploadOwnProps>(), {
   size: "md",
+  rounded: "md",
   multiple: false,
+  color: "primary",
   variant: "button",
 });
 
@@ -60,7 +62,9 @@ const {
   props,
   {
     size: "md",
+    rounded: "md",
     multiple: false,
+    color: "primary",
     variant: "button",
   },
   files,
@@ -145,6 +149,8 @@ function onTriggerKeyDown(event: KeyboardEvent) {
           v-else
           type="button"
           :size="merged.size"
+          :color="merged.color"
+          :rounded="merged.rounded"
           :disabled="merged.disabled"
           v-on:click="openFileDialog"
         >
@@ -184,7 +190,9 @@ function onTriggerKeyDown(event: KeyboardEvent) {
               type="button"
               variant="flat"
               density="mini"
+              :color="merged.color"
               v-on:click="item.remove"
+              :rounded="merged.rounded"
               :disabled="merged.disabled"
               :aria-label="`Remove ${item.file.name}`"
             />

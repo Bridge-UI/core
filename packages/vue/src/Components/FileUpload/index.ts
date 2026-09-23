@@ -2,11 +2,13 @@
 export { useFileUpload } from "@/Components/FileUpload/composables/useFileUpload";
 export type {
   FileUploadClasses,
+  FileUploadColorOverrides,
   FileUploadCustomProps,
   FileUploadEmits,
   FileUploadItemSlotProps,
   FileUploadOwnProps,
   FileUploadProps,
+  FileUploadRoundedOverrides,
   FileUploadSizeOverrides,
   FileUploadSlots,
   FileUploadVariantOverrides,

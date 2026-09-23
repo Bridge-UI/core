@@ -17,7 +17,7 @@ import {
 
 function makeFile(
   name: string,
-  options: { size?: number; type?: string; } = {},
+  options: { size?: number; type?: string } = {},
 ): File {
   const { size = 0, type = "" } = options;
   const buffer = size > 0 ? new Uint8Array(size) : undefined;

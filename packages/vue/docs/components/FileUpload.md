@@ -31,6 +31,40 @@ Once a file is chosen, the trigger hides and the selection shows as one attachme
 <FileUpload v-model="files" />
 ```
 
+### Color
+
+```vue
+<FileUpload color="secondary" label="Attachments" />
+```
+
+Theme default via registry:
+
+```ts
+createBridgeUI({
+  components: {
+    FileUpload: {
+      defaultProps: { color: "secondary" },
+    },
+  },
+});
+```
+
+### Rounded
+
+```vue
+<FileUpload rounded="xl" label="Attachments" />
+```
+
+Shared with other form controls via `global.formDefaults`:
+
+```ts
+createBridgeUI({
+  global: {
+    formDefaults: { size: "lg", rounded: "md" },
+  },
+});
+```
+
 ### Dropzone
 
 ```vue

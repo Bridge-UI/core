@@ -21,6 +21,7 @@ import {
   removeFileAtIndex,
 } from "@bridge-ui/core/Domain";
 import {
+  fileUploadRoundedProps as roundedProps,
   fileUploadSizeProps as sizeProps,
   fileUploadVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
@@ -45,12 +46,14 @@ import {
 
 const fileUploadBridgeKeys = [
   "size",
+  "color",
   "error",
   "label",
   "title",
   "accept",
   "classes",
   "maxSize",
+  "rounded",
   "variant",
   "disabled",
   "maxFiles",
@@ -66,7 +69,7 @@ const fileUploadBridgeKeys = [
 
 type FileUploadLibDefaults = LibDefaultsShape<
   FileUploadOwnProps,
-  "size" | "variant" | "multiple"
+  "size" | "color" | "rounded" | "variant" | "multiple"
 >;
 
 type FileUploadMerged = MergeLibDefaults<
@@ -158,6 +161,15 @@ export function useFileUpload(
     );
 
     return get(classes, merged.value.size);
+  });
+
+  const roundedClass = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeFileUpload.value?.tokens?.rounded,
+    );
+
+    return get(classes, merged.value.rounded);
   });
 
   const variantItem = computed(() => {
@@ -411,6 +423,7 @@ export function useFileUpload(
       },
       cn({
         [get(sizeItem.value, "dropzone") ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
         [get(variantItem.value, "surface") ?? ""]: true,
         [get(variantItem.value, "dragging") ?? ""]: dragging.value,
         "cursor-pointer": !isDisabled.value && canAddMore.value,
@@ -437,6 +450,7 @@ export function useFileUpload(
       {},
       cn({
         [get(sizeItem.value, "item") ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
         [get(mergedClasses.value, "item") ?? ""]: true,
       }),
     );
@@ -448,6 +462,7 @@ export function useFileUpload(
       {},
       cn({
         [get(sizeItem.value, "media") ?? ""]: true,
+        [roundedClass.value ?? ""]: true,
         [get(mergedClasses.value, "media") ?? ""]: true,
       }),
     );

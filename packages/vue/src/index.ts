@@ -386,11 +386,13 @@ export type {
 export { FileUpload, useFileUpload } from "@/Components/FileUpload";
 export type {
   FileUploadClasses,
+  FileUploadColorOverrides,
   FileUploadCustomProps,
   FileUploadEmits,
   FileUploadItemSlotProps,
   FileUploadOwnProps,
   FileUploadProps,
+  FileUploadRoundedOverrides,
   FileUploadSizeOverrides,
   FileUploadSlots,
   FileUploadVariantOverrides,

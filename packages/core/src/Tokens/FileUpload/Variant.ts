@@ -18,7 +18,7 @@ export interface FileUploadVariantItem {
  */
 export interface FileUploadVariant {
   /**
-   * Compact button trigger inside FormField chrome.
+   * Compact button trigger (hidden once a single file is selected).
    */
   "button": FileUploadVariantItem;
 

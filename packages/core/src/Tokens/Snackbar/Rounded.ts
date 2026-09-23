@@ -32,7 +32,8 @@ export interface SnackbarRounded {
   "4xl": SnackbarRoundedItem;
 
   /**
-   * Full width or fully rounded token.
+   * Panel-max radius (`rounded-panel-full`).
+   * Caps extreme rounding so snackbars do not become stadium-shaped.
    */
   "full": SnackbarRoundedItem;
 
@@ -114,8 +115,8 @@ export const roundedProps: SnackbarRounded = {
     "tr": "rounded-tr-none",
   },
   "full": {
-    "base": "rounded-full",
-    "br": "rounded-br-full",
-    "tr": "rounded-tr-full",
+    "base": "rounded-panel-full",
+    "br": "rounded-br-panel-full",
+    "tr": "rounded-tr-panel-full",
   },
 };

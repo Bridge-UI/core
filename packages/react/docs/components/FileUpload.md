@@ -18,8 +18,8 @@ import { FileUpload } from "@bridge-ui/react/Components/FileUpload";
 <FileUpload
   label="Attachments"
   accept="image/*,.pdf"
-  description="PDF or images up to 5 MB."
   onChange={(files) => setFiles(files)}
+  description="PDF or images up to 5 MB."
 />
 ```
 
@@ -31,14 +31,52 @@ Once a file is chosen, the trigger hides and the selection shows as one attachme
 <FileUpload value={files} onChange={setFiles} />
 ```
 
+### Color
+
+```tsx
+<FileUpload color="secondary" label="Attachments" />
+```
+
+Theme default via registry:
+
+```tsx
+<BridgeUIProvider
+  components={{
+    FileUpload: {
+      defaultProps: { color: "secondary" },
+    },
+  }}
+>
+  …
+</BridgeUIProvider>
+```
+
+### Rounded
+
+```tsx
+<FileUpload rounded="xl" label="Attachments" />
+```
+
+Shared with other form controls via `global.formDefaults`:
+
+```tsx
+<BridgeUIProvider
+  global={{
+    formDefaults: { size: "lg", rounded: "md" },
+  }}
+>
+  …
+</BridgeUIProvider>
+```
+
 ### Dropzone
 
 ```tsx
 <FileUpload
   multiple
   accept="image/*"
-  onChange={setFiles}
   variant="dropzone"
+  onChange={setFiles}
   title="Drop images here"
   description="or click to browse"
 />

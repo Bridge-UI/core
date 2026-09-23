@@ -2,10 +2,17 @@
 import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 // ** Core Imports
-import type { FileUploadSize, FileUploadVariant } from "@bridge-ui/core/Tokens";
+import type {
+  ButtonColor,
+  FileUploadRounded,
+  FileUploadSize,
+  FileUploadVariant,
+} from "@bridge-ui/core/Tokens";
 import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 
 export interface FileUploadSizeOverrides {}
+export interface FileUploadColorOverrides {}
+export interface FileUploadRoundedOverrides {}
 export interface FileUploadVariantOverrides {}
 
 export interface FileUploadCallbacks {
@@ -186,38 +193,6 @@ export interface FileUploadItemSlotProps {
   sizeLabel: string;
 }
 
-export interface FileUploadSlots {
-  /**
-   * Replaces helper text below the picker / list.
-   */
-  description?: ReactNode;
-
-  /**
-   * Replaces the default dropzone title / description copy.
-   */
-  dropzone?: ReactNode;
-
-  /**
-   * Replaces validation / error text.
-   */
-  errorMessage?: ReactNode;
-
-  /**
-   * Replaces the default file card (media + title + meta + remove).
-   */
-  item?: (props: FileUploadItemSlotProps) => ReactNode;
-
-  /**
-   * Replaces the optional field label.
-   */
-  label?: ReactNode;
-
-  /**
-   * Replaces the default button-variant trigger.
-   */
-  trigger?: ReactNode;
-}
-
 /**
  * File picker with optional dropzone. Selected files always render as the same
  * attachment-style cards whether `multiple` is on or off — there is no FormField
@@ -244,6 +219,13 @@ export interface FileUploadOwnProps {
    * @default undefined
    */
   classes?: FileUploadClasses;
+
+  /**
+   * Color forwarded to the trigger and remove `Button`s.
+   *
+   * @default "primary"
+   */
+  color?: MergeProps<ButtonColor, FileUploadColorOverrides>;
 
   /**
    * Extra props for internal parts (`input`, `dropzone`, `list`, `item`, …).
@@ -325,6 +307,13 @@ export interface FileUploadOwnProps {
   required?: boolean;
 
   /**
+   * Border radius for the dropzone, file cards, and media.
+   *
+   * @default "md"
+   */
+  rounded?: MergeProps<FileUploadRounded, FileUploadRoundedOverrides>;
+
+  /**
    * Density / dropzone and card scale.
    *
    * @default "md"
@@ -358,6 +347,38 @@ export interface FileUploadOwnProps {
    * @default "button"
    */
   variant?: MergeProps<FileUploadVariant, FileUploadVariantOverrides>;
+}
+
+export interface FileUploadSlots {
+  /**
+   * Replaces helper text below the picker / list.
+   */
+  description?: ReactNode;
+
+  /**
+   * Replaces the default dropzone title / description copy.
+   */
+  dropzone?: ReactNode;
+
+  /**
+   * Replaces validation / error text.
+   */
+  errorMessage?: ReactNode;
+
+  /**
+   * Replaces the default file card (media + title + meta + remove).
+   */
+  item?: (props: FileUploadItemSlotProps) => ReactNode;
+
+  /**
+   * Replaces the optional field label.
+   */
+  label?: ReactNode;
+
+  /**
+   * Replaces the default button-variant trigger.
+   */
+  trigger?: ReactNode;
 }
 
 export type FileUploadProps = MergeHtmlProps<

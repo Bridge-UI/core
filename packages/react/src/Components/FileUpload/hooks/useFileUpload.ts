@@ -23,6 +23,7 @@ import {
   removeFileAtIndex,
 } from "@bridge-ui/core/Domain";
 import {
+  fileUploadRoundedProps as roundedProps,
   fileUploadSizeProps as sizeProps,
   fileUploadVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
@@ -48,6 +49,7 @@ import {
 
 const fileUploadBridgeKeys = [
   "size",
+  "color",
   "error",
   "label",
   "title",
@@ -55,6 +57,7 @@ const fileUploadBridgeKeys = [
   "accept",
   "classes",
   "maxSize",
+  "rounded",
   "variant",
   "disabled",
   "maxFiles",
@@ -71,7 +74,7 @@ const fileUploadBridgeKeys = [
 
 type FileUploadLibDefaults = LibDefaultsShape<
   FileUploadOwnProps,
-  "size" | "variant" | "multiple"
+  "size" | "color" | "rounded" | "variant" | "multiple"
 >;
 
 type FileUploadMerged = MergeLibDefaults<
@@ -174,6 +177,15 @@ export function useFileUpload(
     return get(classes, merged.size);
   }, [merged.size, bridgeFileUpload?.tokens?.size]);
 
+  const roundedClass = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      roundedProps,
+      bridgeFileUpload?.tokens?.rounded,
+    );
+
+    return get(classes, merged.rounded);
+  }, [merged.rounded, bridgeFileUpload?.tokens?.rounded]);
+
   const variantItem = useMemo(() => {
     const classes = mergeBridgeUILayeredClasses(
       variantProps,
@@ -217,7 +229,7 @@ export function useFileUpload(
         setValidationError(undefined);
       }
     },
-    [isControlled, props],
+    [props, isControlled],
   );
 
   const applyIncoming = useCallback(
@@ -236,12 +248,12 @@ export function useFileUpload(
       commitFiles(result.accepted, result.rejected.length);
     },
     [
-      commitFiles,
       files,
       isDisabled,
+      commitFiles,
       merged.accept,
-      merged.maxFiles,
       merged.maxSize,
+      merged.maxFiles,
       merged.multiple,
     ],
   );
@@ -276,7 +288,7 @@ export function useFileUpload(
       props.onChange?.(next);
       setValidationError(undefined);
     },
-    [files, isControlled, isDisabled, props],
+    [files, props, isDisabled, isControlled],
   );
 
   const handleInputChange = useCallback(
@@ -350,7 +362,7 @@ export function useFileUpload(
 
       applyIncoming(filesFromFileList(event.dataTransfer.files));
     },
-    [applyIncoming, canAddMore, isDisabled, isDropzone],
+    [canAddMore, isDisabled, isDropzone, applyIncoming],
   );
 
   const handleDropzoneKeyDown = useCallback(
@@ -465,6 +477,7 @@ export function useFileUpload(
       },
       cn({
         [get(sizeItem, "dropzone") ?? ""]: true,
+        [roundedClass ?? ""]: true,
         [get(variantItem, "surface") ?? ""]: true,
         [get(variantItem, "dragging") ?? ""]: dragging,
         "cursor-pointer": !isDisabled && canAddMore,
@@ -492,11 +505,12 @@ export function useFileUpload(
         { key: `${files[index]?.name}-${index}` },
         cn({
           [get(sizeItem, "item") ?? ""]: true,
+          [roundedClass ?? ""]: true,
           [get(mergedClasses, "item") ?? ""]: true,
         }),
       );
     },
-    [customProps?.item, files, mergedClasses, sizeItem],
+    [customProps?.item, files, mergedClasses, roundedClass, sizeItem],
   );
 
   const mediaBind = derived(() => {
@@ -505,6 +519,7 @@ export function useFileUpload(
       {},
       cn({
         [get(sizeItem, "media") ?? ""]: true,
+        [roundedClass ?? ""]: true,
         [get(mergedClasses, "media") ?? ""]: true,
       }),
     );

@@ -365,10 +365,12 @@ export { FileUpload, useFileUpload } from "@/Components/FileUpload";
 export type {
   FileUploadCallbacks,
   FileUploadClasses,
+  FileUploadColorOverrides,
   FileUploadCustomProps,
   FileUploadItemSlotProps,
   FileUploadOwnProps,
   FileUploadProps,
+  FileUploadRoundedOverrides,
   FileUploadSizeOverrides,
   FileUploadSlots,
   FileUploadVariantOverrides,

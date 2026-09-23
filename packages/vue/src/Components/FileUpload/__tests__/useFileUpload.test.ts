@@ -9,7 +9,9 @@ import type { FileUploadOwnProps } from "@/Components/FileUpload/fileUpload.type
 
 const libDefaults = {
   size: "md",
+  rounded: "md",
   multiple: false,
+  color: "primary",
   variant: "button",
 } as const satisfies Partial<FileUploadOwnProps>;
 
@@ -73,6 +75,39 @@ test("it should default buttonLabel based on multiple", () => {
 
   expect(single.buttonLabel.value).toBe("Choose file");
   expect(multi.buttonLabel.value).toBe("Choose files");
+});
+
+test("it should default color to primary", () => {
+  const result = mountUseFileUpload();
+
+  expect(result.merged.value.color).toBe("primary");
+});
+
+test("it should default rounded to md", () => {
+  const result = mountUseFileUpload();
+
+  expect(result.merged.value.rounded).toBe("md");
+});
+
+test("it should override color when prop is passed", () => {
+  const result = mountUseFileUpload({ color: "secondary" });
+
+  expect(result.merged.value.color).toBe("secondary");
+});
+
+test("it should override rounded when prop is passed", () => {
+  const result = mountUseFileUpload({ rounded: "xl" });
+
+  expect(result.merged.value.rounded).toBe("xl");
+});
+
+test("it should apply rounded class on dropzoneBind", () => {
+  const result = mountUseFileUpload({
+    rounded: "xl",
+    variant: "dropzone",
+  });
+
+  expect(String(result.dropzoneBind.value.class)).toContain("rounded-xl");
 });
 
 test("it should expose dropzoneBind role button", () => {

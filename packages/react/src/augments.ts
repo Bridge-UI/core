@@ -167,7 +167,10 @@ declare module "@bridge-ui/core/Config" {
   interface FileUploadConfigOverrides {
     classes: FileUploadClasses;
     defaultProps: Partial<
-      Pick<FileUploadProps, "size" | "variant" | "multiple">
+      Pick<
+        FileUploadProps,
+        "size" | "color" | "rounded" | "variant" | "multiple"
+      >
     >;
   }
 

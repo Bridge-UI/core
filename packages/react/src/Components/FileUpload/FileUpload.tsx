@@ -33,7 +33,9 @@ function FileUpload(props: FileUploadProps) {
     resolvedErrorMessage,
   } = useFileUpload(props, {
     size: "md",
+    rounded: "md",
     multiple: false,
+    color: "primary",
     variant: "button",
   });
 
@@ -78,7 +80,9 @@ function FileUpload(props: FileUploadProps) {
                   type="button"
                   variant="flat"
                   density="mini"
+                  color={merged.color}
                   onClick={item.remove}
+                  rounded={merged.rounded}
                   disabled={merged.disabled}
                   aria-label={`Remove ${item.file.name}`}
                 />
@@ -147,7 +151,9 @@ function FileUpload(props: FileUploadProps) {
               <Button
                 type="button"
                 size={merged.size}
+                color={merged.color}
                 onClick={openFileDialog}
+                rounded={merged.rounded}
                 disabled={merged.disabled}
               >
                 {buttonLabel}

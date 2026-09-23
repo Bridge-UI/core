@@ -7,7 +7,7 @@ import { FileUpload } from "@/Components/FileUpload";
 
 function makeFile(
   name: string,
-  options: { size?: number; type?: string; } = {},
+  options: { size?: number; type?: string } = {},
 ) {
   const { size = 4, type = "text/plain" } = options;
   const buffer = new Uint8Array(size);
