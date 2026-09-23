@@ -10,7 +10,6 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   formatDatePickerModel,
   resolveFieldOverlay,
@@ -22,7 +21,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateRangeFieldCustomProps,
   DateRangeFieldEmits,
@@ -76,7 +75,6 @@ export function useDateRangeField(
   const slots = useSlots();
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const containerRef = ref<null | HTMLElement>(null);
@@ -95,8 +93,8 @@ export function useDateRangeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(dateOnly.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return dateOnly.value.timeZone;
   });
 
   const modelValue = computed(() => {
@@ -202,7 +200,7 @@ export function useDateRangeField(
     return formatDatePickerModel(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       dateOnly.value.granularity ?? "day",
     );
   });

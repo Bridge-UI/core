@@ -19,12 +19,13 @@ describe("createNativeDateAdapter", () => {
     expect(adapter.getYear(date!)).toBe(2021);
     expect(adapter.getMonth(date!)).toBe(4);
     expect(adapter.getDate(date!)).toBe(21);
-    expect(
-      adapter.format(date!, { locale: "en-US" }, { granularity: "month" }),
-    ).toBe("May 2021");
-    expect(
-      adapter.format(date!, { locale: "en-US" }, { granularity: "year" }),
-    ).toBe("2021");
+    adapter.setLocale?.("en-US");
+    expect(adapter.format(date!, undefined, { granularity: "month" })).toBe(
+      "May 2021",
+    );
+    expect(adapter.format(date!, undefined, { granularity: "year" })).toBe(
+      "2021",
+    );
   });
 
   test("it should detect same day / month / year", () => {
@@ -80,16 +81,25 @@ describe("createNativeDateAdapter", () => {
     ).toBe(true);
   });
 
+  test("it should format month names after setLocale", () => {
+    const zoned = createNativeDateAdapter();
+
+    zoned.setLocale?.("en-US");
+    expect(zoned.getMonthNames()[4]).toBe("May");
+    zoned.setLocale?.("pt-BR");
+    expect(zoned.getMonthNames()[4]?.toLowerCase()).toContain("mai");
+  });
+
   test("it should format and parse times", () => {
     const date = adapter.setSeconds(
       adapter.setMinutes(adapter.setHours(adapter.now(), 9), 5),
       0,
     );
 
-    expect(adapter.formatTime(date, { locale: "en-US" })).toMatch(/09:05|9:05/);
-    expect(
-      adapter.formatTime(date, { locale: "en-US" }, { showSeconds: true }),
-    ).toMatch(/09:05:00|9:05:00/);
+    expect(adapter.formatTime(date)).toMatch(/09:05|9:05/);
+    expect(adapter.formatTime(date, undefined, { showSeconds: true })).toMatch(
+      /09:05:00|9:05:00/,
+    );
     expect(adapter.parseTime("14:30")).not.toBeNull();
     expect(adapter.getHours(adapter.parseTime("14:30")!)).toBe(14);
     expect(
@@ -107,6 +117,22 @@ describe("createNativeDateAdapter", () => {
         adapter.parseTime("14:30:45", undefined, { showSeconds: true })!,
       ),
     ).toBe(45);
+  });
+
+  test("it should treat Sao Paulo wall clock as a UTC instant", () => {
+    const zoned = createNativeDateAdapter();
+
+    zoned.setTimeZone?.("America/Sao_Paulo");
+
+    let date = zoned.parse("2024-01-15", "America/Sao_Paulo")!;
+
+    date = zoned.setHours(date, 15, "America/Sao_Paulo");
+    date = zoned.setMinutes(date, 0, "America/Sao_Paulo");
+    date = zoned.setSeconds(date, 0, "America/Sao_Paulo");
+
+    expect(zoned.getHours(date, "America/Sao_Paulo")).toBe(15);
+    expect(date.toISOString()).toBe("2024-01-15T18:00:00.000Z");
+    expect(zoned.formatTime(date, "America/Sao_Paulo")).toMatch(/15:00/);
   });
 });
 

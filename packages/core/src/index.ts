@@ -13,7 +13,6 @@ export {
 } from "@/Adapters";
 export type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterFormatOptions,
   DateAdapterTimeOptions,
   I18nAdapter,
@@ -22,7 +21,6 @@ export type {
   IconSourceValue,
   IconSourceValueOverrides,
   MessageParams,
-  NativeDateAdapterOptions,
   SemanticIconName,
   SemanticIconNameOverrides,
 } from "@/Adapters";
@@ -149,6 +147,7 @@ export {
   colorsEqual,
   combineDateAndTime,
   commitFreeSoloValue,
+  copyDateWallClock,
   createSelectAsyncSearch,
   dateFromYear,
   dateFromYearMonth,

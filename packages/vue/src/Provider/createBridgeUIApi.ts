@@ -72,6 +72,12 @@ export function createBridgeUIApi(
   function setLocale(locale: string) {
     setGlobal({ locale });
     global.value.i18n?.setLocale?.(locale);
+    global.value.dates?.setLocale?.(locale);
+  }
+
+  function setTimeZone(timeZone: string) {
+    setGlobal({ timeZone });
+    global.value.dates?.setTimeZone?.(timeZone);
   }
 
   function setDirection(direction: Direction) {
@@ -91,6 +97,7 @@ export function createBridgeUIApi(
     setGlobal,
     setLocale,
     components,
+    setTimeZone,
     setDirection,
     setComponents,
   };

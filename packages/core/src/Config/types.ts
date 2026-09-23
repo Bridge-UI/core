@@ -281,8 +281,11 @@ export interface BridgeUIGlobal {
   /**
    * Date adapter used by calendars and pickers (`format`, `parse`, calendar math).
    * When omitted, Bridge falls back to the native `Date` adapter.
-   * See `packages/{react,vue}/docs/examples` for dayjs / date-fns / luxon /
-   * moment samples (not shipped).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/date-dayjs`, `date-date-fns`, `date-luxon`, `date-moment`). Install the matching
+   * date library next to the Bridge package.
+   * Optional `setLocale` / `setTimeZone` are synced from Bridge `setLocale` /
+   * `setTimeZone`. Per-component `timeZone` still overrides on adapter methods.
    *
    * @default undefined
    */
@@ -309,7 +312,8 @@ export interface BridgeUIGlobal {
    * (`"Close"`, `"Hide password"`, …). Source English text is the lookup key.
    * When omitted, `resolveMessage` returns the source string.
    * Optional `setLocale` is invoked by Bridge `setLocale`.
-   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/i18n-dictionary`, `i18n-i18next`, `i18n-vue-i18n`).
    *
    * @default undefined
    */
@@ -318,7 +322,8 @@ export interface BridgeUIGlobal {
   /**
    * Icon adapter used to resolve semantic icon names.
    * Required when components use semantic names (`"clear"`, `"check"`, …).
-   * See `packages/{react,vue}/examples` for samples (not shipped as packages).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/icon-lucide`, `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`).
    *
    * @default undefined
    */
@@ -347,7 +352,9 @@ export interface BridgeUIGlobal {
 
   /**
    * Default IANA time zone for date adapters and pickers.
+   * `setTimeZone` updates this value and calls optional `dates.setTimeZone`.
    * Override per component with the `timeZone` prop.
+   * v-model `Date` stays a UTC instant; wrap the model to store wall-clock fields.
    *
    * @default Intl.DateTimeFormat().resolvedOptions().timeZone
    */

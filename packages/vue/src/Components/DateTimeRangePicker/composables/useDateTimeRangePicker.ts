@@ -12,7 +12,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   combineDateAndTime,
   type DateRangeValue,
@@ -27,7 +27,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimeRangePickerClasses,
   DateTimeRangePickerEmits,
@@ -94,11 +94,11 @@ type DateTimeRangePickerMerged = MergeLibDefaults<
 function sortDateTimeRangeValue(
   value: DateRangeValue,
   adapter: DateAdapter,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): DateRangeValue {
   const [start, end] = value;
 
-  if (adapter.isAfter(start, end, context)) {
+  if (adapter.isAfter(start, end, timeZone)) {
     return [end, start];
   }
 
@@ -119,7 +119,6 @@ export function useDateTimeRangePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -162,8 +161,8 @@ export function useDateTimeRangePicker(
     return toValue(props);
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const isControlled = computed(() => {
@@ -228,22 +227,22 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.value.now(context.value);
+    const now = adapter.value.now(timeZone.value);
     const start = combineDateAndTime(
       next[0],
       displayValue.value?.[0] ?? now,
       adapter.value,
-      context.value,
+      timeZone.value,
     );
     const end = combineDateAndTime(
       next[1],
       displayValue.value?.[1] ?? now,
       adapter.value,
-      context.value,
+      timeZone.value,
     );
 
     applyNext(
-      sortDateTimeRangeValue([start, end], adapter.value, context.value),
+      sortDateTimeRangeValue([start, end], adapter.value, timeZone.value),
     );
   };
 
@@ -254,17 +253,17 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.value.now(context.value);
+    const now = adapter.value.now(timeZone.value);
     const start = combineDateAndTime(
       displayValue.value?.[0] ?? now,
       next,
       adapter.value,
-      context.value,
+      timeZone.value,
     );
     const end = displayValue.value?.[1] ?? now;
 
     applyNext(
-      sortDateTimeRangeValue([start, end], adapter.value, context.value),
+      sortDateTimeRangeValue([start, end], adapter.value, timeZone.value),
     );
   };
 
@@ -275,17 +274,17 @@ export function useDateTimeRangePicker(
       return;
     }
 
-    const now = adapter.value.now(context.value);
+    const now = adapter.value.now(timeZone.value);
     const start = displayValue.value?.[0] ?? now;
     const end = combineDateAndTime(
       displayValue.value?.[1] ?? now,
       next,
       adapter.value,
-      context.value,
+      timeZone.value,
     );
 
     applyNext(
-      sortDateTimeRangeValue([start, end], adapter.value, context.value),
+      sortDateTimeRangeValue([start, end], adapter.value, timeZone.value),
     );
   };
 

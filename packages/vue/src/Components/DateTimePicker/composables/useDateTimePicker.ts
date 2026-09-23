@@ -12,7 +12,6 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   combineDateAndTime,
   isDateRangeValue,
@@ -28,7 +27,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimePickerClasses,
   DateTimePickerEmits,
@@ -103,7 +102,6 @@ export function useDateTimePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -147,8 +145,8 @@ export function useDateTimePicker(
     return toValue(props);
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const isControlled = computed(() => {
@@ -205,9 +203,9 @@ export function useDateTimePicker(
 
     const combined = combineDateAndTime(
       next,
-      displayValue.value ?? adapter.value.now(context.value),
+      displayValue.value ?? adapter.value.now(timeZone.value),
       adapter.value,
-      context.value,
+      timeZone.value,
     );
 
     applyCombined(combined);
@@ -221,10 +219,10 @@ export function useDateTimePicker(
     }
 
     const combined = combineDateAndTime(
-      displayValue.value ?? adapter.value.now(context.value),
+      displayValue.value ?? adapter.value.now(timeZone.value),
       next,
       adapter.value,
-      context.value,
+      timeZone.value,
     );
 
     applyCombined(combined);

@@ -26,7 +26,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import { FIELD_OVERLAY_INJECTION_KEY } from "@/Components/FieldOverlay/fieldOverlayInjectionKey";
 import type {
@@ -87,7 +87,6 @@ export function useTimeRangePicker(
     cancel: () => undefined,
   });
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
   const resolveMessage = useResolveMessage();
 
   const split = computed(() => {
@@ -131,8 +130,8 @@ export function useTimeRangePicker(
     return toValue(props);
   });
 
-  const context = computed(() => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed(() => {
+    return merged.value.timeZone;
   });
 
   const isControlled = computed(() => {
@@ -165,11 +164,11 @@ export function useTimeRangePicker(
   });
 
   const startDisplayValue = computed((): TimeValue => {
-    return displayValue.value?.[0] ?? adapter.value.now(context.value);
+    return displayValue.value?.[0] ?? adapter.value.now(timeZone.value);
   });
 
   const endDisplayValue = computed((): TimeValue => {
-    return displayValue.value?.[1] ?? adapter.value.now(context.value);
+    return displayValue.value?.[1] ?? adapter.value.now(timeZone.value);
   });
 
   const commitValue = (next: null | TimeRangeValue) => {
@@ -181,7 +180,7 @@ export function useTimeRangePicker(
   };
 
   const applyRange = (next: TimeRangeValue) => {
-    const sorted = sortTimeRangeValue(next, adapter.value, context.value);
+    const sorted = sortTimeRangeValue(next, adapter.value, timeZone.value);
 
     if (merged.value.showFooter) {
       draftValue.value = sorted;
@@ -197,7 +196,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const end = displayValue.value?.[1] ?? adapter.value.now(context.value);
+    const end = displayValue.value?.[1] ?? adapter.value.now(timeZone.value);
 
     applyRange([next, end]);
   };
@@ -207,7 +206,7 @@ export function useTimeRangePicker(
       return;
     }
 
-    const start = displayValue.value?.[0] ?? adapter.value.now(context.value);
+    const start = displayValue.value?.[0] ?? adapter.value.now(timeZone.value);
 
     applyRange([start, next]);
   };

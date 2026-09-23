@@ -28,7 +28,7 @@ npx bridge-ui-react-ai install
 npx bridge-ui-vue-ai install
 ```
 
-Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/` (adapter samples in `docs/examples/`). This folder only keeps the [docs index](./README.md) and this release guide.
+Component docs live in `packages/react/docs/components/` and `packages/vue/docs/components/`. Adapter factories ship as package subpaths (`@bridge-ui/react/Adapters/Examples/...`, `@bridge-ui/vue/Adapters/Examples/...`). This folder only keeps the [docs index](./README.md) and this release guide.
 
 ## Prerequisites
 

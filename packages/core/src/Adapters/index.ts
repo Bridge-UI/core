@@ -7,10 +7,8 @@ export {
 } from "@/Adapters/date";
 export type {
   DateAdapter,
-  DateAdapterContext,
   DateAdapterFormatOptions,
   DateAdapterTimeOptions,
-  NativeDateAdapterOptions,
 } from "@/Adapters/date";
 export {
   interpolateMessage,

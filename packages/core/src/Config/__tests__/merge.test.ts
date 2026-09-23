@@ -71,7 +71,7 @@ test("it should replace icons adapters instead of deep-merging them", () => {
 
 test("it should replace dates adapters instead of deep-merging them", () => {
   const first = createNativeDateAdapter();
-  const second = createNativeDateAdapter({ locale: "pt-BR" });
+  const second = createNativeDateAdapter();
 
   const result = mergeBridgeUIGlobal({
     partials: [{ dates: second }],

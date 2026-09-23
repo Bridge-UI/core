@@ -4,7 +4,6 @@ import type { ChangeEvent, FocusEvent, KeyboardEvent, MouseEvent } from "react";
 import { useCallback, useRef, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   isDateRangeValue,
   resolveFieldOverlay,
@@ -16,7 +15,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimeRangeFieldCustomProps,
   DateTimeRangeFieldOwnProps,
@@ -69,7 +68,7 @@ const dateTimeRangeFieldBridgeKeys = [
 function formatDateTimeRange(
   value: null | DateRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -78,9 +77,9 @@ function formatDateTimeRange(
   }
 
   const start =
-    `${adapter.format(value[0], context)} ${adapter.formatTime(value[0], context, { ampm, showSeconds })}`.trim();
+    `${adapter.format(value[0], timeZone)} ${adapter.formatTime(value[0], timeZone, { ampm, showSeconds })}`.trim();
   const end =
-    `${adapter.format(value[1], context)} ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`.trim();
+    `${adapter.format(value[1], timeZone)} ${adapter.formatTime(value[1], timeZone, { ampm, showSeconds })}`.trim();
 
   return `${start} – ${end}`;
 }
@@ -88,7 +87,6 @@ function formatDateTimeRange(
 export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
   const containerRef = useRef<null | HTMLElement>(null);
 
   const {
@@ -133,8 +131,8 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     return uncontrolledValue;
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(dateTimeOnly.timeZone);
+  const timeZone = derived((): string | undefined => {
+    return dateTimeOnly.timeZone;
   });
 
   const clearable = derived(() => {
@@ -243,7 +241,7 @@ export function useDateTimeRangeField(props: DateTimeRangeFieldProps) {
     return formatDateTimeRange(
       modelValue,
       adapter,
-      context,
+      timeZone,
       dateTimeOnly.ampm,
       dateTimeOnly.showSeconds,
     );

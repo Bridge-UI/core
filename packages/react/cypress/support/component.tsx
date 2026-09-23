@@ -2,8 +2,8 @@
 import { mount } from "cypress/react";
 
 // ** Local Imports
+import { createLucideIconAdapter } from "@/Adapters/Examples/icon-lucide";
 import { setIconAdapterForTests } from "@/Adapters/Icon/useIconAdapter";
-import { createLucideIconAdapter } from "@examples/icon-lucide";
 import "./component.css";
 
 setIconAdapterForTests(createLucideIconAdapter());

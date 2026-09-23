@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   isTimeRangeValue,
   resolveFieldOverlay,
@@ -21,7 +21,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import {
   formFieldBridgeKeys,
   useFormField,
@@ -62,7 +62,7 @@ const timeRangeFieldBridgeKeys = [
 function formatTimeRange(
   value: null | TimeRangeValue,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -70,7 +70,7 @@ function formatTimeRange(
     return "";
   }
 
-  return `${adapter.formatTime(value[0], context, { ampm, showSeconds })} – ${adapter.formatTime(value[1], context, { ampm, showSeconds })}`;
+  return `${adapter.formatTime(value[0], timeZone, { ampm, showSeconds })} – ${adapter.formatTime(value[1], timeZone, { ampm, showSeconds })}`;
 }
 
 /**
@@ -85,7 +85,6 @@ export function useTimeRangeField(
   const slots = useSlots();
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const containerRef = ref<null | HTMLElement>(null);
@@ -104,8 +103,8 @@ export function useTimeRangeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(timeOnly.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return timeOnly.value.timeZone;
   });
 
   const modelValue = computed(() => {
@@ -220,7 +219,7 @@ export function useTimeRangeField(
     return formatTimeRange(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       timeOnly.value.ampm,
       timeOnly.value.showSeconds,
     );

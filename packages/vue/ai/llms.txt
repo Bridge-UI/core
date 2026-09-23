@@ -17,7 +17,6 @@ npx bridge-ui-vue-ai install
 - ai/skills/*/SKILL.md
 - docs/README.md
 - docs/components/*.md
-- docs/examples/*
 
 After install:
 
@@ -25,7 +24,7 @@ After install:
 - .ai/AGENTS.md (full guide)
 - llms.txt
 - .ai/guidelines/
-- .ai/docs/ (components + examples)
+- .ai/docs/ (components)
 - .cursor/skills/bridge-ui-*
 
 ## Imports
@@ -35,4 +34,7 @@ After install:
 - `@bridge-ui/vue/Provider`
 - `@bridge-ui/vue/Actions`
 - `@bridge-ui/vue/theme.css`
+- `@bridge-ui/vue/Adapters/Examples/{date-date-fns,date-dayjs,date-luxon,date-moment}`
+- `@bridge-ui/vue/Adapters/Examples/{icon-lucide,icon-heroicons,icon-tabler,icon-phosphor,icon-fontawesome}`
+- `@bridge-ui/vue/Adapters/Examples/{i18n-dictionary,i18n-vue-i18n}`
 - `@bridge-ui/vue/docs/components/{Name}.md`

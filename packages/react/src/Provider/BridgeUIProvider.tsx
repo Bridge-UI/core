@@ -81,8 +81,17 @@ function useBridgeUIContextValue(
     (locale: string) => {
       setGlobal({ locale });
       global.i18n?.setLocale?.(locale);
+      global.dates?.setLocale?.(locale);
     },
-    [setGlobal, global.i18n],
+    [setGlobal, global.i18n, global.dates],
+  );
+
+  const setTimeZone = useCallback(
+    (timeZone: string) => {
+      setGlobal({ timeZone });
+      global.dates?.setTimeZone?.(timeZone);
+    },
+    [setGlobal, global.dates],
   );
 
   const setDirection = useCallback(
@@ -108,6 +117,7 @@ function useBridgeUIContextValue(
       setGlobal,
       setLocale,
       components,
+      setTimeZone,
       setDirection,
       setComponents,
     };
@@ -117,6 +127,7 @@ function useBridgeUIContextValue(
     setGlobal,
     setLocale,
     components,
+    setTimeZone,
     setDirection,
     setComponents,
   ]);

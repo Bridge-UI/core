@@ -20,21 +20,31 @@ function collectLibEntries(dir: string) {
       const path = join(currentDir, name);
 
       if (statSync(path).isDirectory()) {
+        if (name === "__tests__") {
+          continue;
+        }
+
         walk(path);
         continue;
       }
 
-      if (name !== "index.ts") {
+      const rel = relative(dir, path).replaceAll("\\", "/");
+      const withoutExt = rel.replace(/\.tsx?$/, "");
+
+      if (withoutExt === "index" || rel.includes(".test.")) {
         continue;
       }
 
-      const rel = relative(dir, path).replace(/\.ts$/, "");
+      const isIndex = name === "index.ts";
+      const isExampleAdapter =
+        name.endsWith(".ts") &&
+        relative(dir, currentDir).replaceAll("\\", "/") === "Adapters/Examples";
 
-      if (rel === "index") {
+      if (!isIndex && !isExampleAdapter) {
         continue;
       }
 
-      entries[rel.replaceAll("\\", "/")] = path;
+      entries[withoutExt] = path;
     }
   }
 
@@ -76,11 +86,24 @@ export default defineConfig({
       external: [
         "vue",
         "clsx",
+        "luxon",
+        "dayjs",
+        /^dayjs\//,
+        "moment",
+        "date-fns",
+        "vue-i18n",
         /^es-toolkit/,
         "@lucide/vue",
         "tailwind-merge",
+        "moment-timezone",
         /^@bridge-ui\/core/,
+        /^@heroicons\/vue/,
+        "@tabler/icons-vue",
         "@tanstack/vue-table",
+        "@phosphor-icons/vue",
+        "@fortawesome/vue-fontawesome",
+        "@fortawesome/free-solid-svg-icons",
+        "@fortawesome/fontawesome-svg-core",
       ],
     },
   },

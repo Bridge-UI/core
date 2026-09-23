@@ -3,7 +3,6 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
@@ -26,7 +25,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarRangeClasses,
@@ -82,10 +81,10 @@ type CalendarRangeMerged = MergeLibDefaults<
 function resolveFocusDate(
   value: null | DateRangeValue,
   adapter: ReturnType<typeof useDateAdapter>,
-  context: DateAdapterContext,
+  timeZone?: string,
 ): Date {
   if (isNil(value)) {
-    return adapter.now(context);
+    return adapter.now(timeZone);
   }
 
   return value[0];
@@ -105,7 +104,6 @@ export function useCalendarRange(
 ) {
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarRangeProps,
@@ -141,8 +139,8 @@ export function useCalendarRange(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const timeZone = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const isValueControlled = derived(() => {
@@ -180,9 +178,9 @@ export function useCalendarRange(
         : resolveFocusDate(
             props.value ?? merged.defaultValue ?? null,
             adapter,
-            resolveContext(merged.timeZone),
+            merged.timeZone,
           ),
-      resolveContext(merged.timeZone),
+      merged.timeZone,
     );
   });
 
@@ -224,7 +222,7 @@ export function useCalendarRange(
   });
 
   const endViewDate = derived(() => {
-    return adapter.addMonths(viewDate, 1, context);
+    return adapter.addMonths(viewDate, 1, timeZone);
   });
 
   const previewDate = derived(() => {
@@ -245,27 +243,27 @@ export function useCalendarRange(
   }, [merged.rounded, bridgeCalendar?.tokens?.rounded]);
 
   const yearLabel = derived(() => {
-    return String(adapter.getYear(viewDate, context));
+    return String(adapter.getYear(viewDate, timeZone));
   });
 
   const monthLabel = derived(() => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
-    return names[adapter.getMonth(viewDate, context)] ?? "";
+    return names[adapter.getMonth(viewDate, timeZone)] ?? "";
   });
 
   const endMonthLabel = derived(() => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
-    return names[adapter.getMonth(endViewDate, context)] ?? "";
+    return names[adapter.getMonth(endViewDate, timeZone)] ?? "";
   });
 
   const viewYear = derived(() => {
-    return adapter.getYear(viewDate, context);
+    return adapter.getYear(viewDate, timeZone);
   });
 
   const viewMonth = derived(() => {
-    return adapter.getMonth(viewDate, context);
+    return adapter.getMonth(viewDate, timeZone);
   });
 
   const resolvedYearPageStart = derived(() => {
@@ -286,7 +284,7 @@ export function useCalendarRange(
   };
 
   const setViewDate = (next: Date) => {
-    const normalized = adapter.startOfMonth(next, context);
+    const normalized = adapter.startOfMonth(next, timeZone);
 
     if (!isViewDateControlled) {
       setUncontrolledViewDate(normalized);
@@ -300,7 +298,7 @@ export function useCalendarRange(
   };
 
   const handleEndViewDateChange = (next: Date) => {
-    setViewDate(adapter.addMonths(next, -1, context));
+    setViewDate(adapter.addMonths(next, -1, timeZone));
   };
 
   const handleChange = (next: DatePickerModel) => {
@@ -328,11 +326,11 @@ export function useCalendarRange(
     }
 
     if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, -1, context));
+      setViewDate(adapter.addYears(viewDate, -1, timeZone));
       return;
     }
 
-    setViewDate(adapter.addMonths(viewDate, -1, context));
+    setViewDate(adapter.addMonths(viewDate, -1, timeZone));
   };
 
   const goToNext = () => {
@@ -342,18 +340,18 @@ export function useCalendarRange(
     }
 
     if (view === "month") {
-      setViewDate(adapter.addYears(viewDate, 1, context));
+      setViewDate(adapter.addYears(viewDate, 1, timeZone));
       return;
     }
 
-    setViewDate(adapter.addMonths(viewDate, 1, context));
+    setViewDate(adapter.addMonths(viewDate, 1, timeZone));
   };
 
   /**
    * Jumps to today's month on the commit panel without changing the selection.
    */
   const goToToday = () => {
-    const today = adapter.startOfMonth(adapter.now(context), context);
+    const today = adapter.startOfMonth(adapter.now(timeZone), timeZone);
 
     setYearPageStart(null);
     setViewDate(today);
@@ -362,7 +360,7 @@ export function useCalendarRange(
 
   const handleYearSelect = (year: number) => {
     setYearPageStart(null);
-    const nextDate = adapter.setYear(viewDate, year, context);
+    const nextDate = adapter.setYear(viewDate, year, timeZone);
     setViewDate(nextDate);
 
     if (granularity === "year") {
@@ -370,10 +368,10 @@ export function useCalendarRange(
         applyDateSelection({
           value,
           adapter,
-          context,
+          timeZone,
           granularity,
           mode: "range",
-          next: normalizeDateToGranularity(nextDate, "year", adapter, context),
+          next: normalizeDateToGranularity(nextDate, "year", adapter, timeZone),
         }),
       );
       return;
@@ -394,7 +392,7 @@ export function useCalendarRange(
   };
 
   const handleMonthSelect = (month: number) => {
-    const nextDate = adapter.setMonth(viewDate, month, context);
+    const nextDate = adapter.setMonth(viewDate, month, timeZone);
     setViewDate(nextDate);
 
     if (granularity === "month") {
@@ -402,10 +400,15 @@ export function useCalendarRange(
         applyDateSelection({
           value,
           adapter,
-          context,
+          timeZone,
           granularity,
           mode: "range",
-          next: normalizeDateToGranularity(nextDate, "month", adapter, context),
+          next: normalizeDateToGranularity(
+            nextDate,
+            "month",
+            adapter,
+            timeZone,
+          ),
         }),
       );
       return;

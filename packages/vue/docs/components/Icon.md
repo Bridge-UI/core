@@ -2,7 +2,7 @@
 
 Renders an icon from a semantic name (via the icon adapter) or a concrete icon component, with design-system sizing.
 
-Semantic names require an icon adapter on `BridgeUIProvider` / `createBridgeUI` (`global.icons`). Bridge only defines the `IconAdapter` interface — copy an example from `packages/vue/docs/examples/`.
+Semantic names require an icon adapter on `BridgeUIProvider` / `createBridgeUI` (`global.icons`). Import a ready adapter from `@bridge-ui/vue/Adapters/Examples/icon-*` and install the matching icon library.
 
 ## Import
 
@@ -26,7 +26,7 @@ import { Info } from "@lucide/vue";
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createLucideIconAdapter } from "@examples/icon-lucide";
+import { createLucideIconAdapter } from "@bridge-ui/vue/Adapters/Examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
 
@@ -41,15 +41,15 @@ app.use(
 <Icon size="md" icon="info" />
 ```
 
-Other ready examples (same `create*IconAdapter()` shape):
+Other ready adapters (same `create*IconAdapter()` shape):
 
-| File                  | Library                     |
-| --------------------- | --------------------------- |
-| `icon-lucide.ts`      | Lucide                      |
-| `icon-heroicons.ts`   | Heroicons (24 outline)      |
-| `icon-tabler.ts`      | Tabler Icons                |
-| `icon-phosphor.ts`    | Phosphor Icons              |
-| `icon-fontawesome.ts` | Font Awesome 6 (free solid) |
+| Import                                              | Library                     | Peer                           |
+| --------------------------------------------------- | --------------------------- | ------------------------------ |
+| `@bridge-ui/vue/Adapters/Examples/icon-lucide`      | Lucide                      | `@lucide/vue`                  |
+| `@bridge-ui/vue/Adapters/Examples/icon-heroicons`   | Heroicons (24 outline)      | `@heroicons/vue`               |
+| `@bridge-ui/vue/Adapters/Examples/icon-tabler`      | Tabler Icons                | `@tabler/icons-vue`            |
+| `@bridge-ui/vue/Adapters/Examples/icon-phosphor`    | Phosphor Icons              | `@phosphor-icons/vue`          |
+| `@bridge-ui/vue/Adapters/Examples/icon-fontawesome` | Font Awesome 6 (free solid) | `@fortawesome/vue-fontawesome` |
 
 ### Font Awesome definitions
 
@@ -58,7 +58,7 @@ With the Font Awesome adapter, pass definitions directly — `normalize` wraps t
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { createFontAwesomeIconAdapter } from "@examples/icon-fontawesome";
+import { createFontAwesomeIconAdapter } from "@bridge-ui/vue/Adapters/Examples/icon-fontawesome";
 
 const icons = createFontAwesomeIconAdapter();
 
@@ -74,7 +74,7 @@ app.use(
 <Icon icon="info" />
 ```
 
-The example also exports `wrapFaIcon` if you need a component outside `<Icon />`.
+The adapter also exports `wrapFaIcon` if you need a component outside `<Icon />`.
 
 ## Props
 

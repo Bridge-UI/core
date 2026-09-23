@@ -3,6 +3,7 @@ import { expect, test, vi } from "vitest";
 import { computed, effectScope } from "vue";
 
 // ** Core Imports
+import { createNativeDateAdapter } from "@bridge-ui/core/Adapters";
 import { BRIDGE_UI_DEFAULT_GLOBAL } from "@bridge-ui/core/Config";
 
 // ** Local Imports
@@ -109,7 +110,7 @@ test("it should update global via setGlobal", () => {
   scope.stop();
 });
 
-test("it should update locale theme and direction via aliases", () => {
+test("it should update locale theme direction and timeZone via aliases", () => {
   const scope = effectScope();
 
   scope.run(() => {
@@ -118,10 +119,65 @@ test("it should update locale theme and direction via aliases", () => {
     api.setLocale("pt-BR");
     api.setTheme("dark");
     api.setDirection("rtl");
+    api.setTimeZone("America/Sao_Paulo");
 
-    expect(api.global.value.locale).toBe("pt-BR");
     expect(api.global.value.theme).toBe("dark");
+    expect(api.global.value.locale).toBe("pt-BR");
     expect(api.global.value.direction).toBe("rtl");
+    expect(api.global.value.timeZone).toBe("America/Sao_Paulo");
+  });
+
+  scope.stop();
+});
+
+test("it should call date adapter setLocale when setLocale is used", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const setLocale = vi.fn();
+    const dates = {
+      ...createNativeDateAdapter(),
+      setLocale,
+    };
+    const optionsRef = computed(() => {
+      return {
+        components: {},
+        global: { dates },
+      };
+    });
+
+    const api = createBridgeUIApi(undefined, optionsRef);
+
+    api.setLocale("pt-BR");
+
+    expect(setLocale).toHaveBeenCalledWith("pt-BR");
+  });
+
+  scope.stop();
+});
+
+test("it should call date adapter setTimeZone when setTimeZone is used", () => {
+  const scope = effectScope();
+
+  scope.run(() => {
+    const setTimeZone = vi.fn();
+    const dates = {
+      ...createNativeDateAdapter(),
+      setTimeZone,
+    };
+    const optionsRef = computed(() => {
+      return {
+        components: {},
+        global: { dates },
+      };
+    });
+
+    const api = createBridgeUIApi(undefined, optionsRef);
+
+    api.setTimeZone("UTC");
+
+    expect(api.global.value.timeZone).toBe("UTC");
+    expect(setTimeZone).toHaveBeenCalledWith("UTC");
   });
 
   scope.stop();

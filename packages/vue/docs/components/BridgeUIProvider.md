@@ -28,11 +28,11 @@ import { BridgeUIProvider, useBridgeUI } from "@bridge-ui/vue";
 
 ### Icon adapter
 
-Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready samples in `packages/vue/docs/examples/` (Lucide, Heroicons, Tabler, Phosphor, Font Awesome).
+Provide `global.icons` when using semantic icon names (`"clear"`, `"check"`, …). Optional `normalize` converts library-native values (e.g. Font Awesome definitions) so `<Icon :icon="faCoffee" />` works. Ready adapters: `@bridge-ui/vue/Adapters/Examples/icon-lucide` (and `icon-heroicons`, `icon-tabler`, `icon-phosphor`, `icon-fontawesome`). Install the matching icon library next to `@bridge-ui/vue`.
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createLucideIconAdapter } from "@examples/icon-lucide";
+import { createLucideIconAdapter } from "@bridge-ui/vue/Adapters/Examples/icon-lucide";
 
 const icons = createLucideIconAdapter();
 
@@ -45,11 +45,11 @@ app.use(
 
 ### i18n adapter
 
-Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next / dictionary). Persistence (localStorage, backend) stays in the app. Ready samples in `packages/vue/docs/examples/` (dictionary, vue-i18n). See [I18n](./I18n.md).
+Provide `global.i18n` to translate Bridge chrome strings (`"Close"`, `"Hide password"`, …). Lookup is gettext-style (source English text is the key). Without an adapter, the source string is used. `setLocale` updates Bridge `locale` and calls optional `i18n.setLocale` (vue-i18n / i18next / dictionary). Persistence (localStorage, backend) stays in the app. Ready adapters: `@bridge-ui/vue/Adapters/Examples/i18n-dictionary` and `Adapters/Examples/i18n-vue-i18n`. See [I18n](./I18n.md).
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createDictionaryI18nAdapter } from "@examples/i18n-dictionary";
+import { createDictionaryI18nAdapter } from "@bridge-ui/vue/Adapters/Examples/i18n-dictionary";
 
 const i18n = createDictionaryI18nAdapter();
 
@@ -62,19 +62,43 @@ app.use(
 
 ### Date adapter
 
-Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, Bridge uses `createNativeDateAdapter`. Ready samples in `packages/vue/docs/examples/` (Day.js, date-fns, Luxon, Moment).
+Provide `global.dates` to replace the native `Date` adapter used by calendars and pickers. Without one, Bridge uses `createNativeDateAdapter`. Ready adapters: `@bridge-ui/vue/Adapters/Examples/date-dayjs` (and `date-date-fns`, `date-luxon`, `date-moment`). Install the matching date library next to `@bridge-ui/vue`. `setTimeZone` updates Bridge `timeZone` and calls optional `dates.setTimeZone`.
+
+Bridge locales stay `en-US` / `pt-BR`. Native, Luxon, and date-fns already use those tags. Day.js and Moment want ids like `en` / `pt-br` — pass that map to the factory and import the matching locale files.
+
+Day.js IANA zones need `utc` and `timezone` extended in the app. Without `dayjs.tz`, `timeZone` is ignored. The adapter loads `customParseFormat` itself. Moment IANA zones need `moment-timezone` imported in the app. Without `moment.tz`, `timeZone` is ignored.
 
 ```ts
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { createBridgeUI } from "@bridge-ui/vue";
-import { createDayjsDateAdapter } from "@examples/date-dayjs";
+import { createDayjsDateAdapter } from "@bridge-ui/vue/Adapters/Examples/date-dayjs";
 
-const dates = createDayjsDateAdapter();
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+const dates = createDayjsDateAdapter({
+  "en-US": "en",
+  "pt-BR": "pt-br",
+});
 
 app.use(
   createBridgeUI({
     global: { dates },
   }),
 );
+```
+
+```ts
+import "moment-timezone";
+import { createMomentDateAdapter } from "@bridge-ui/vue/Adapters/Examples/date-moment";
+
+const dates = createMomentDateAdapter({
+  "en-US": "en",
+  "pt-BR": "pt-br",
+});
 ```
 
 ### Form density defaults
@@ -177,24 +201,26 @@ app.use(
 ### Runtime updates
 
 ```ts
-const { setLocale, setTheme, setDirection, setGlobal } = useBridgeUI()!;
+const { setLocale, setTheme, setDirection, setTimeZone, setGlobal } =
+  useBridgeUI()!;
 
 setTheme("dark");
 setLocale("pt-BR"); // also calls global.i18n.setLocale when present
 setDirection("rtl");
+setTimeZone("America/Sao_Paulo"); // UI wall clock; v-model Date is a UTC instant
 setGlobal({ mobileBreakpoint: "md" });
 ```
 
 ## Props
 
-| Prop         | Type                       | Default | Description                                                                                                 |
-| ------------ | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
-| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                      |
-| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults` |
+| Prop         | Type                       | Default | Description                                                                                                             |
+| ------------ | -------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `components` | `BridgeUIComponentsConfig` | —       | Per-component defaults                                                                                                  |
+| `global`     | `Partial<BridgeUIGlobal>`  | —       | `theme`, `locale`, `direction`, `timeZone`, `mobileBreakpoint`, `breakpoints`, `icons`, `i18n`, `dates`, `formDefaults` |
 
 App content is passed via the **default slot** (see Usage above).
 
-**useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setDirection`
+**useBridgeUI():** `global`, `components`, `setGlobal`, `setComponents`, `setLocale`, `setTheme`, `setTimeZone`, `setDirection`
 
 ## Related components
 

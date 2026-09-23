@@ -2,7 +2,7 @@
 import { isArray, isFunction, isNil } from "es-toolkit/compat";
 
 // ** Local Imports
-import type { DateAdapter, DateAdapterContext } from "@/Adapters/date";
+import type { DateAdapter } from "@/Adapters/date";
 
 /**
  * Inclusive date range tuple used when `range` is enabled.
@@ -183,18 +183,18 @@ export function dateFromYearMonth<TDate>({
   year,
   month,
   adapter,
-  context,
+  timeZone,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   month: number;
+  timeZone?: string;
   year: number;
 }): TDate {
-  const origin = adapter.startOfMonth(adapter.now(context), context);
+  const origin = adapter.startOfMonth(adapter.now(timeZone), timeZone);
 
   return adapter.startOfMonth(
-    adapter.setMonth(adapter.setYear(origin, year, context), month, context),
-    context,
+    adapter.setMonth(adapter.setYear(origin, year, timeZone), month, timeZone),
+    timeZone,
   );
 }
 
@@ -204,16 +204,16 @@ export function dateFromYearMonth<TDate>({
 export function dateFromYear<TDate>({
   year,
   adapter,
-  context,
+  timeZone,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
+  timeZone?: string;
   year: number;
 }): TDate {
   return dateFromYearMonth({
     year,
     adapter,
-    context,
+    timeZone,
     month: 0,
   });
 }
@@ -225,21 +225,21 @@ function granularityKey<TDate>(
   date: TDate,
   granularity: CalendarGranularity,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): number {
-  const year = adapter.getYear(date, context);
+  const year = adapter.getYear(date, timeZone);
 
   if (granularity === "year") {
     return year;
   }
 
-  const month = adapter.getMonth(date, context);
+  const month = adapter.getMonth(date, timeZone);
 
   if (granularity === "month") {
     return year * 12 + month;
   }
 
-  return year * 10_000 + month * 100 + adapter.getDate(date, context);
+  return year * 10_000 + month * 100 + adapter.getDate(date, timeZone);
 }
 
 /**
@@ -250,11 +250,11 @@ export function isSameAtGranularity<TDate>(
   b: TDate,
   granularity: CalendarGranularity,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): boolean {
   return (
-    granularityKey(a, granularity, adapter, context) ===
-    granularityKey(b, granularity, adapter, context)
+    granularityKey(a, granularity, adapter, timeZone) ===
+    granularityKey(b, granularity, adapter, timeZone)
   );
 }
 
@@ -266,11 +266,11 @@ export function isBeforeAtGranularity<TDate>(
   b: TDate,
   granularity: CalendarGranularity,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): boolean {
   return (
-    granularityKey(a, granularity, adapter, context) <
-    granularityKey(b, granularity, adapter, context)
+    granularityKey(a, granularity, adapter, timeZone) <
+    granularityKey(b, granularity, adapter, timeZone)
   );
 }
 
@@ -282,11 +282,11 @@ export function isAfterAtGranularity<TDate>(
   b: TDate,
   granularity: CalendarGranularity,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): boolean {
   return (
-    granularityKey(a, granularity, adapter, context) >
-    granularityKey(b, granularity, adapter, context)
+    granularityKey(a, granularity, adapter, timeZone) >
+    granularityKey(b, granularity, adapter, timeZone)
   );
 }
 
@@ -297,14 +297,14 @@ export function normalizeDateToGranularity<TDate>(
   date: TDate,
   granularity: CalendarGranularity = DEFAULT_CALENDAR_GRANULARITY,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): TDate {
   if (granularity === "year") {
-    return adapter.startOfMonth(adapter.setMonth(date, 0, context), context);
+    return adapter.startOfMonth(adapter.setMonth(date, 0, timeZone), timeZone);
   }
 
   if (granularity === "month") {
-    return adapter.startOfMonth(date, context);
+    return adapter.startOfMonth(date, timeZone);
   }
 
   return date;
@@ -317,7 +317,7 @@ export function normalizeDatePickerModel<TDate>(
   value: DatePickerModel<TDate>,
   granularity: CalendarGranularity = DEFAULT_CALENDAR_GRANULARITY,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): DatePickerModel<TDate> {
   if (isNil(value)) {
     return value;
@@ -326,21 +326,21 @@ export function normalizeDatePickerModel<TDate>(
   if (isDateRangeValue(value)) {
     return sortDateRangeValue(
       [
-        normalizeDateToGranularity(value[0], granularity, adapter, context),
-        normalizeDateToGranularity(value[1], granularity, adapter, context),
+        normalizeDateToGranularity(value[0], granularity, adapter, timeZone),
+        normalizeDateToGranularity(value[1], granularity, adapter, timeZone),
       ],
       adapter,
-      context,
+      timeZone,
     );
   }
 
   if (isArray(value)) {
     return value.map((entry) => {
-      return normalizeDateToGranularity(entry, granularity, adapter, context);
+      return normalizeDateToGranularity(entry, granularity, adapter, timeZone);
     });
   }
 
-  return normalizeDateToGranularity(value, granularity, adapter, context);
+  return normalizeDateToGranularity(value, granularity, adapter, timeZone);
 }
 
 /**
@@ -349,7 +349,7 @@ export function normalizeDatePickerModel<TDate>(
 export function formatDatePickerModel<TDate>(
   value: DatePickerModel<TDate>,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
   granularity: CalendarGranularity = DEFAULT_CALENDAR_GRANULARITY,
 ): string {
   if (isNil(value)) {
@@ -357,7 +357,7 @@ export function formatDatePickerModel<TDate>(
   }
 
   const formatDate = (date: TDate) => {
-    return adapter.format(date, context, { granularity });
+    return adapter.format(date, timeZone, { granularity });
   };
 
   if (isDateRangeValue(value)) {
@@ -377,11 +377,11 @@ export function formatDatePickerModel<TDate>(
 export function sortDateRangeValue<TDate>(
   value: DateRangeValue<TDate>,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): DateRangeValue<TDate> {
   const [start, end] = value;
 
-  if (adapter.isAfter(start, end, context)) {
+  if (adapter.isAfter(start, end, timeZone)) {
     return [end, start];
   }
 
@@ -399,13 +399,13 @@ export type DisableDatesInput<TDate = Date> =
  */
 export type IsDateDisabledOptions<TDate = Date> = {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   disableDates?: DisableDatesInput<TDate>;
   disableMonths?: number[];
   disableYears?: number[];
   granularity?: CalendarGranularity;
   maxDate?: TDate;
   minDate?: TDate;
+  timeZone?: string;
 };
 
 /**
@@ -415,9 +415,9 @@ export function isDateDisabled<TDate>(
   date: TDate,
   {
     adapter,
-    context,
     maxDate,
     minDate,
+    timeZone,
     disableDates,
     disableYears,
     disableMonths,
@@ -426,20 +426,20 @@ export function isDateDisabled<TDate>(
 ): boolean {
   if (
     !isNil(minDate) &&
-    isBeforeAtGranularity(date, minDate, granularity, adapter, context)
+    isBeforeAtGranularity(date, minDate, granularity, adapter, timeZone)
   ) {
     return true;
   }
 
   if (
     !isNil(maxDate) &&
-    isAfterAtGranularity(date, maxDate, granularity, adapter, context)
+    isAfterAtGranularity(date, maxDate, granularity, adapter, timeZone)
   ) {
     return true;
   }
 
-  const year = adapter.getYear(date, context);
-  const month = adapter.getMonth(date, context);
+  const year = adapter.getYear(date, timeZone);
+  const month = adapter.getMonth(date, timeZone);
 
   if (!isNil(disableYears) && disableYears.includes(year)) {
     return true;
@@ -464,7 +464,7 @@ export function isDateDisabled<TDate>(
   const list = isArray(disableDates) ? disableDates : [disableDates];
 
   return list.some((entry) => {
-    return isSameAtGranularity(date, entry, granularity, adapter, context);
+    return isSameAtGranularity(date, entry, granularity, adapter, timeZone);
   });
 }
 
@@ -477,15 +477,15 @@ export function isMonthDisabled({
   maxDate,
   minDate,
   adapter,
-  context,
+  timeZone,
   disableMonths,
 }: {
   adapter: DateAdapter;
-  context?: DateAdapterContext;
   disableMonths?: number[];
   maxDate?: Date;
   minDate?: Date;
   month: number;
+  timeZone?: string;
   year: number;
 }): boolean {
   if (!isNil(disableMonths) && disableMonths.includes(month)) {
@@ -493,8 +493,8 @@ export function isMonthDisabled({
   }
 
   if (!isNil(minDate)) {
-    const minYear = adapter.getYear(minDate, context);
-    const minMonth = adapter.getMonth(minDate, context);
+    const minYear = adapter.getYear(minDate, timeZone);
+    const minMonth = adapter.getMonth(minDate, timeZone);
 
     if (year < minYear || (year === minYear && month < minMonth)) {
       return true;
@@ -502,8 +502,8 @@ export function isMonthDisabled({
   }
 
   if (!isNil(maxDate)) {
-    const maxYear = adapter.getYear(maxDate, context);
-    const maxMonth = adapter.getMonth(maxDate, context);
+    const maxYear = adapter.getYear(maxDate, timeZone);
+    const maxMonth = adapter.getMonth(maxDate, timeZone);
 
     if (year > maxYear || (year === maxYear && month > maxMonth)) {
       return true;
@@ -519,27 +519,27 @@ export function isMonthDisabled({
 export function isYearDisabled({
   year,
   adapter,
-  context,
   maxDate,
   minDate,
+  timeZone,
   disableYears,
 }: {
   adapter: DateAdapter;
-  context?: DateAdapterContext;
   disableYears?: number[];
   maxDate?: Date;
   minDate?: Date;
+  timeZone?: string;
   year: number;
 }): boolean {
   if (!isNil(disableYears) && disableYears.includes(year)) {
     return true;
   }
 
-  if (!isNil(minDate) && year < adapter.getYear(minDate, context)) {
+  if (!isNil(minDate) && year < adapter.getYear(minDate, timeZone)) {
     return true;
   }
 
-  if (!isNil(maxDate) && year > adapter.getYear(maxDate, context)) {
+  if (!isNil(maxDate) && year > adapter.getYear(maxDate, timeZone)) {
     return true;
   }
 
@@ -554,21 +554,21 @@ export function applyDateSelection<TDate>({
   next,
   value,
   adapter,
-  context,
+  timeZone,
   granularity = DEFAULT_CALENDAR_GRANULARITY,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   granularity?: CalendarGranularity;
   mode: DatePickerMode;
   next: TDate;
+  timeZone?: string;
   value: DatePickerModel<TDate>;
 }): DatePickerModel<TDate> {
   const committed = normalizeDateToGranularity(
     next,
     granularity,
     adapter,
-    context,
+    timeZone,
   );
 
   if (mode === "single") {
@@ -578,7 +578,7 @@ export function applyDateSelection<TDate>({
   if (mode === "multiple") {
     const current = isArray(value) ? ([...value] as TDate[]) : [];
     const index = current.findIndex((entry) =>
-      isSameAtGranularity(entry, committed, granularity, adapter, context),
+      isSameAtGranularity(entry, committed, granularity, adapter, timeZone),
     );
 
     if (index >= 0) {
@@ -595,8 +595,8 @@ export function applyDateSelection<TDate>({
   const [start, end] = value as DateRangeValue<TDate>;
 
   // Same start/end means the range is incomplete (waiting for the end unit).
-  if (isSameAtGranularity(start, end, granularity, adapter, context)) {
-    return sortDateRangeValue([start, committed], adapter, context);
+  if (isSameAtGranularity(start, end, granularity, adapter, timeZone)) {
+    return sortDateRangeValue([start, committed], adapter, timeZone);
   }
 
   // Completed range: start a new selection.
@@ -611,14 +611,14 @@ export function isDateSelected<TDate>({
   mode,
   value,
   adapter,
-  context,
+  timeZone,
   granularity = DEFAULT_CALENDAR_GRANULARITY,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   date: TDate;
   granularity?: CalendarGranularity;
   mode: DatePickerMode;
+  timeZone?: string;
   value: DatePickerModel<TDate>;
 }): boolean {
   if (isNil(value)) {
@@ -626,23 +626,23 @@ export function isDateSelected<TDate>({
   }
 
   if (mode === "single" && !isArray(value)) {
-    return isSameAtGranularity(value, date, granularity, adapter, context);
+    return isSameAtGranularity(value, date, granularity, adapter, timeZone);
   }
 
   if (mode === "multiple" && isArray(value)) {
     return value.some((entry) => {
-      return isSameAtGranularity(entry, date, granularity, adapter, context);
+      return isSameAtGranularity(entry, date, granularity, adapter, timeZone);
     });
   }
 
   if (mode === "range" && isDateRangeValue(value)) {
-    const [start, end] = sortDateRangeValue(value, adapter, context);
+    const [start, end] = sortDateRangeValue(value, adapter, timeZone);
 
     return (
-      isSameAtGranularity(date, end, granularity, adapter, context) ||
-      isSameAtGranularity(date, start, granularity, adapter, context) ||
-      (isAfterAtGranularity(date, start, granularity, adapter, context) &&
-        isBeforeAtGranularity(date, end, granularity, adapter, context))
+      isSameAtGranularity(date, end, granularity, adapter, timeZone) ||
+      isSameAtGranularity(date, start, granularity, adapter, timeZone) ||
+      (isAfterAtGranularity(date, start, granularity, adapter, timeZone) &&
+        isBeforeAtGranularity(date, end, granularity, adapter, timeZone))
     );
   }
 
@@ -656,24 +656,24 @@ export function isDateRangeEndpoint<TDate>({
   date,
   value,
   adapter,
-  context,
+  timeZone,
   granularity = DEFAULT_CALENDAR_GRANULARITY,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   date: TDate;
   granularity?: CalendarGranularity;
+  timeZone?: string;
   value: DatePickerModel<TDate>;
 }): boolean {
   if (!isDateRangeValue(value)) {
     return false;
   }
 
-  const [start, end] = sortDateRangeValue(value, adapter, context);
+  const [start, end] = sortDateRangeValue(value, adapter, timeZone);
 
   return (
-    isSameAtGranularity(date, end, granularity, adapter, context) ||
-    isSameAtGranularity(date, start, granularity, adapter, context)
+    isSameAtGranularity(date, end, granularity, adapter, timeZone) ||
+    isSameAtGranularity(date, start, granularity, adapter, timeZone)
   );
 }
 
@@ -720,15 +720,15 @@ export function isDateInRangePreview<TDate>({
   date,
   value,
   adapter,
-  context,
+  timeZone,
   previewDate,
   granularity = DEFAULT_CALENDAR_GRANULARITY,
 }: {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   date: TDate;
   granularity?: CalendarGranularity;
   previewDate?: null | TDate;
+  timeZone?: string;
   value: DatePickerModel<TDate>;
 }): boolean {
   if (isNil(previewDate) || !isDateRangeValue(value)) {
@@ -738,17 +738,21 @@ export function isDateInRangePreview<TDate>({
   const [start, end] = value;
 
   // Preview only while the range is incomplete (start === end).
-  if (!isSameAtGranularity(start, end, granularity, adapter, context)) {
+  if (!isSameAtGranularity(start, end, granularity, adapter, timeZone)) {
     return false;
   }
 
-  const [from, to] = sortDateRangeValue([start, previewDate], adapter, context);
+  const [from, to] = sortDateRangeValue(
+    [start, previewDate],
+    adapter,
+    timeZone,
+  );
 
   return (
-    isSameAtGranularity(date, to, granularity, adapter, context) ||
-    isSameAtGranularity(date, from, granularity, adapter, context) ||
-    (isAfterAtGranularity(date, from, granularity, adapter, context) &&
-      isBeforeAtGranularity(date, to, granularity, adapter, context))
+    isSameAtGranularity(date, to, granularity, adapter, timeZone) ||
+    isSameAtGranularity(date, from, granularity, adapter, timeZone) ||
+    (isAfterAtGranularity(date, from, granularity, adapter, timeZone) &&
+      isBeforeAtGranularity(date, to, granularity, adapter, timeZone))
   );
 }
 

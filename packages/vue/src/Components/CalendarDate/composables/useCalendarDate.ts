@@ -10,7 +10,6 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   isDateDisabled,
@@ -37,7 +36,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
   CalendarDateDayCell,
@@ -96,7 +95,6 @@ export function useCalendarDate(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -136,8 +134,8 @@ export function useCalendarDate(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const mode = computed(() => {
@@ -179,8 +177,8 @@ export function useCalendarDate(
     propsValue.value.viewDate ??
       merged.value.viewDate ??
       adapter.value.startOfMonth(
-        adapter.value.now(context.value),
-        context.value,
+        adapter.value.now(timeZone.value),
+        timeZone.value,
       ),
   );
 
@@ -242,7 +240,7 @@ export function useCalendarDate(
   });
 
   const weekdays = computed(() => {
-    const names = adapter.value.getWeekdayNames(context.value);
+    const names = adapter.value.getWeekdayNames();
     const start = startOfWeek.value;
 
     return Array.from({ length: 7 }, (_, index) => {
@@ -254,16 +252,16 @@ export function useCalendarDate(
     const grid = adapter.value.getCalendarDays(
       viewDate.value,
       startOfWeek.value,
-      context.value,
+      timeZone.value,
     );
-    const today = adapter.value.now(context.value);
+    const today = adapter.value.now(timeZone.value);
 
     return grid.map((date) => {
       const disabled =
         Boolean(merged.value.disabled) ||
         isDateDisabled(date, {
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           maxDate: merged.value.maxDate,
           minDate: merged.value.minDate,
           disableDates: merged.value.disableDates,
@@ -276,7 +274,7 @@ export function useCalendarDate(
         mode: mode.value,
         value: value.value,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
       });
 
       const preview =
@@ -285,7 +283,7 @@ export function useCalendarDate(
           date,
           value: value.value,
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           previewDate: previewDate.value,
         });
 
@@ -301,12 +299,12 @@ export function useCalendarDate(
         preview,
         selected,
         disabled: disabled || Boolean(merged.value.readOnly),
-        label: String(adapter.value.getDate(date, context.value)),
-        today: adapter.value.isSameDay(date, today, context.value),
+        label: String(adapter.value.getDate(date, timeZone.value)),
+        today: adapter.value.isSameDay(date, today, timeZone.value),
         outside: !adapter.value.isSameMonth(
           date,
           viewDate.value,
-          context.value,
+          timeZone.value,
         ),
       };
     });
@@ -320,7 +318,7 @@ export function useCalendarDate(
     if (
       isDateDisabled(date, {
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
         maxDate: merged.value.maxDate,
         minDate: merged.value.minDate,
         disableDates: merged.value.disableDates,
@@ -336,7 +334,7 @@ export function useCalendarDate(
       mode: mode.value,
       value: value.value,
       adapter: adapter.value,
-      context: context.value,
+      timeZone: timeZone.value,
     });
 
     if (!isControlled.value) {
@@ -365,7 +363,7 @@ export function useCalendarDate(
 
     const [start, end] = value.value;
 
-    return adapter.value.isSameDay(start, end, context.value);
+    return adapter.value.isSameDay(start, end, timeZone.value);
   });
 
   const rootBind = computed(() => {
@@ -455,7 +453,7 @@ export function useCalendarDate(
     mode,
     value,
     merged,
-    context,
+    timeZone,
     rootBind,
     gridBind,
     weekdays,

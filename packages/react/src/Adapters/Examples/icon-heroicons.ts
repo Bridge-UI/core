@@ -1,0 +1,86 @@
+/**
+ * Heroicons (24px outline) adapter. Wire via `BridgeUIProvider` `global.icons`.
+ * Requires the optional `@heroicons/react` peer.
+ */
+
+// ** External Imports
+import {
+  ArrowDownTrayIcon,
+  ArrowPathIcon,
+  Bars3Icon,
+  BellIcon,
+  CalendarDaysIcon,
+  CheckCircleIcon,
+  CheckIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpDownIcon,
+  ChevronUpIcon,
+  ClockIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  FunnelIcon,
+  InboxIcon,
+  InformationCircleIcon,
+  MagnifyingGlassIcon,
+  MinusIcon,
+  PlusIcon,
+  SwatchIcon,
+  UserIcon,
+  ViewColumnsIcon,
+  XCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { get } from "es-toolkit/compat";
+
+// ** Core Imports
+import type { IconAdapter, SemanticIconName } from "@bridge-ui/core/Adapters";
+
+const icons = {
+  eye: EyeIcon,
+  bell: BellIcon,
+  user: UserIcon,
+  plus: PlusIcon,
+  inbox: InboxIcon,
+  clear: XMarkIcon,
+  check: CheckIcon,
+  clock: ClockIcon,
+  minus: MinusIcon,
+  error: XCircleIcon,
+  filter: FunnelIcon,
+  palette: SwatchIcon,
+  eyeOff: EyeSlashIcon,
+  panelLeft: Bars3Icon,
+  loader: ArrowPathIcon,
+  success: CheckCircleIcon,
+  chevronUp: ChevronUpIcon,
+  columns: ViewColumnsIcon,
+  calendar: CalendarDaysIcon,
+  download: ArrowDownTrayIcon,
+  search: MagnifyingGlassIcon,
+  info: InformationCircleIcon,
+  alert: ExclamationCircleIcon,
+  chevronDown: ChevronDownIcon,
+  chevronLeft: ChevronLeftIcon,
+  chevronRight: ChevronRightIcon,
+  chevronUpDown: ChevronUpDownIcon,
+  warning: ExclamationTriangleIcon,
+  chevronsLeft: ChevronDoubleLeftIcon,
+  chevronsRight: ChevronDoubleRightIcon,
+} satisfies Record<SemanticIconName, unknown>;
+
+/**
+ * Builds a Heroicons-backed {@link IconAdapter} for Bridge semantic icon names.
+ */
+export function createHeroiconsIconAdapter(): IconAdapter {
+  return {
+    resolve(name) {
+      return get(icons, name);
+    },
+  };
+}

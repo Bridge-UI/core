@@ -1,6 +1,6 @@
 # @bridge-ui/react — docs
 
-Component reference and adapter samples for **React**. This folder ships with the npm package.
+Component reference for **React**. This folder ships with the npm package.
 
 ## Components
 
@@ -80,12 +80,18 @@ Component reference and adapter samples for **React**. This folder ships with th
 
 - [Scroll utilities](./ScrollUtilities.md)
 
-## Examples (adapters)
+## Adapters
 
-- [`examples/i18n-dictionary.ts`](./examples/i18n-dictionary.ts)
-- [`examples/i18n-i18next.ts`](./examples/i18n-i18next.ts)
-- [`examples/icon-fontawesome.ts`](./examples/icon-fontawesome.ts)
-- [`examples/icon-heroicons.ts`](./examples/icon-heroicons.ts)
-- [`examples/icon-lucide.ts`](./examples/icon-lucide.ts)
-- [`examples/icon-phosphor.ts`](./examples/icon-phosphor.ts)
-- [`examples/icon-tabler.ts`](./examples/icon-tabler.ts)
+Import from a subpath and install the matching optional peer. They are **not** re-exported from `@bridge-ui/react`.
+
+- `@bridge-ui/react/Adapters/Examples/date-date-fns`
+- `@bridge-ui/react/Adapters/Examples/date-dayjs`
+- `@bridge-ui/react/Adapters/Examples/date-luxon`
+- `@bridge-ui/react/Adapters/Examples/date-moment`
+- `@bridge-ui/react/Adapters/Examples/icon-lucide`
+- `@bridge-ui/react/Adapters/Examples/icon-heroicons`
+- `@bridge-ui/react/Adapters/Examples/icon-tabler`
+- `@bridge-ui/react/Adapters/Examples/icon-phosphor`
+- `@bridge-ui/react/Adapters/Examples/icon-fontawesome`
+- `@bridge-ui/react/Adapters/Examples/i18n-dictionary`
+- `@bridge-ui/react/Adapters/Examples/i18n-i18next`

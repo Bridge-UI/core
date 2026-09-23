@@ -1,6 +1,6 @@
 # @bridge-ui/vue — docs
 
-Component reference and adapter samples for **Vue**. This folder ships with the npm package.
+Component reference for **Vue**. This folder ships with the npm package.
 
 ## Components
 
@@ -80,12 +80,18 @@ Component reference and adapter samples for **Vue**. This folder ships with the 
 
 - [Scroll utilities](./ScrollUtilities.md)
 
-## Examples (adapters)
+## Adapters
 
-- [`examples/i18n-dictionary.ts`](./examples/i18n-dictionary.ts)
-- [`examples/i18n-vue-i18n.ts`](./examples/i18n-vue-i18n.ts)
-- [`examples/icon-fontawesome.ts`](./examples/icon-fontawesome.ts)
-- [`examples/icon-heroicons.ts`](./examples/icon-heroicons.ts)
-- [`examples/icon-lucide.ts`](./examples/icon-lucide.ts)
-- [`examples/icon-phosphor.ts`](./examples/icon-phosphor.ts)
-- [`examples/icon-tabler.ts`](./examples/icon-tabler.ts)
+Import from a subpath and install the matching optional peer. They are **not** re-exported from `@bridge-ui/vue`.
+
+- `@bridge-ui/vue/Adapters/Examples/date-date-fns`
+- `@bridge-ui/vue/Adapters/Examples/date-dayjs`
+- `@bridge-ui/vue/Adapters/Examples/date-luxon`
+- `@bridge-ui/vue/Adapters/Examples/date-moment`
+- `@bridge-ui/vue/Adapters/Examples/icon-lucide`
+- `@bridge-ui/vue/Adapters/Examples/icon-heroicons`
+- `@bridge-ui/vue/Adapters/Examples/icon-tabler`
+- `@bridge-ui/vue/Adapters/Examples/icon-phosphor`
+- `@bridge-ui/vue/Adapters/Examples/icon-fontawesome`
+- `@bridge-ui/vue/Adapters/Examples/i18n-dictionary`
+- `@bridge-ui/vue/Adapters/Examples/i18n-vue-i18n`

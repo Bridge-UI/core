@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { computed, ref, toValue, useAttrs, type MaybeRefOrGetter } from "vue";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYearMonth,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
   CalendarMonthOwnProps,
@@ -92,7 +91,6 @@ export function useCalendarMonth(
 ) {
   const attrs = useAttrs();
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<
@@ -131,14 +129,14 @@ export function useCalendarMonth(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const year = computed(() => {
     return (
       merged.value.year ??
-      adapter.value.getYear(adapter.value.now(context.value), context.value)
+      adapter.value.getYear(adapter.value.now(timeZone.value), timeZone.value)
     );
   });
 
@@ -186,14 +184,14 @@ export function useCalendarMonth(
   });
 
   const months = computed((): CalendarMonthCell[] => {
-    const names = adapter.value.getMonthNames(context.value);
+    const names = adapter.value.getMonthNames();
 
     return names.map((label, month) => {
       const date = dateFromYearMonth({
         month,
         year: year.value,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
       });
       const disabled =
         Boolean(merged.value.disabled) ||
@@ -201,7 +199,7 @@ export function useCalendarMonth(
           ? isDateDisabled(date, {
               granularity: "month",
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableDates: merged.value.disableDates,
@@ -212,7 +210,7 @@ export function useCalendarMonth(
               month,
               year: year.value,
               adapter: adapter.value,
-              context: context.value,
+              timeZone: timeZone.value,
               maxDate: merged.value.maxDate,
               minDate: merged.value.minDate,
               disableMonths: merged.value.disableMonths,
@@ -224,7 +222,7 @@ export function useCalendarMonth(
             mode: mode.value,
             granularity: "month",
             adapter: adapter.value,
-            context: context.value,
+            timeZone: timeZone.value,
             value: merged.value.selection ?? null,
           })
         : !isNil(merged.value.value) && merged.value.value === month;
@@ -236,7 +234,7 @@ export function useCalendarMonth(
           date,
           granularity: "month",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           previewDate: previewDate.value,
           value: merged.value.selection ?? null,
         });
@@ -283,7 +281,7 @@ export function useCalendarMonth(
       end,
       "month",
       adapter.value,
-      context.value,
+      timeZone.value,
     );
   });
 
@@ -296,7 +294,7 @@ export function useCalendarMonth(
       month,
       year: year.value,
       adapter: adapter.value,
-      context: context.value,
+      timeZone: timeZone.value,
     });
 
     if (isCommitPanel.value) {
@@ -304,7 +302,7 @@ export function useCalendarMonth(
         isDateDisabled(date, {
           granularity: "month",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           maxDate: merged.value.maxDate,
           minDate: merged.value.minDate,
           disableDates: merged.value.disableDates,
@@ -319,7 +317,7 @@ export function useCalendarMonth(
         month,
         year: year.value,
         adapter: adapter.value,
-        context: context.value,
+        timeZone: timeZone.value,
         maxDate: merged.value.maxDate,
         minDate: merged.value.minDate,
         disableMonths: merged.value.disableMonths,

@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   calendarPanelViewFromGranularity,
@@ -33,7 +33,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import { useResolveMessage } from "@/Adapters/I18n";
 import type {
   CalendarClasses,
@@ -86,10 +86,10 @@ type CalendarMerged = MergeLibDefaults<CalendarOwnProps, CalendarLibDefaults>;
 function resolveFocusDate(
   value: DatePickerModel,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  timeZone?: string,
 ): Date {
   if (isNil(value)) {
-    return adapter.now(context);
+    return adapter.now(timeZone);
   }
 
   if (isDateRangeValue(value)) {
@@ -97,7 +97,7 @@ function resolveFocusDate(
   }
 
   if (isArray(value)) {
-    return value[0] ?? adapter.now(context);
+    return value[0] ?? adapter.now(timeZone);
   }
 
   return value;
@@ -115,7 +115,6 @@ export function useCalendar(
   const attrs = useAttrs();
   const adapter = useDateAdapter();
   const resolveMessage = useResolveMessage();
-  const resolveContext = useDateAdapterContext();
 
   const split = computed(() => {
     return splitComponentProps<CalendarOwnProps, typeof calendarBridgeKeys>({
@@ -153,8 +152,8 @@ export function useCalendar(
     }),
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(merged.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return merged.value.timeZone;
   });
 
   const mode = computed(() => {
@@ -214,9 +213,9 @@ export function useCalendar(
         : resolveFocusDate(
             propsValue.value.value ?? merged.value.defaultValue ?? null,
             adapter.value,
-            context.value,
+            timeZone.value,
           ),
-      context.value,
+      timeZone.value,
     ),
   );
 
@@ -257,21 +256,21 @@ export function useCalendar(
   });
 
   const yearLabel = computed(() => {
-    return String(adapter.value.getYear(viewDate.value, context.value));
+    return String(adapter.value.getYear(viewDate.value, timeZone.value));
   });
 
   const monthLabel = computed(() => {
-    const names = adapter.value.getMonthNames(context.value);
+    const names = adapter.value.getMonthNames();
 
-    return names[adapter.value.getMonth(viewDate.value, context.value)] ?? "";
+    return names[adapter.value.getMonth(viewDate.value, timeZone.value)] ?? "";
   });
 
   const viewYear = computed(() => {
-    return adapter.value.getYear(viewDate.value, context.value);
+    return adapter.value.getYear(viewDate.value, timeZone.value);
   });
 
   const viewMonth = computed(() => {
-    return adapter.value.getMonth(viewDate.value, context.value);
+    return adapter.value.getMonth(viewDate.value, timeZone.value);
   });
 
   const resolvedYearPageStart = computed(() => {
@@ -308,7 +307,7 @@ export function useCalendar(
   };
 
   const setViewDate = (next: Date) => {
-    const normalized = adapter.value.startOfMonth(next, context.value);
+    const normalized = adapter.value.startOfMonth(next, timeZone.value);
 
     if (!isViewDateControlled.value) {
       uncontrolledViewDate.value = normalized;
@@ -335,11 +334,11 @@ export function useCalendar(
     }
 
     if (view.value === "month") {
-      setViewDate(adapter.value.addYears(viewDate.value, -1, context.value));
+      setViewDate(adapter.value.addYears(viewDate.value, -1, timeZone.value));
       return;
     }
 
-    setViewDate(adapter.value.addMonths(viewDate.value, -1, context.value));
+    setViewDate(adapter.value.addMonths(viewDate.value, -1, timeZone.value));
   };
 
   const goToNext = () => {
@@ -349,11 +348,11 @@ export function useCalendar(
     }
 
     if (view.value === "month") {
-      setViewDate(adapter.value.addYears(viewDate.value, 1, context.value));
+      setViewDate(adapter.value.addYears(viewDate.value, 1, timeZone.value));
       return;
     }
 
-    setViewDate(adapter.value.addMonths(viewDate.value, 1, context.value));
+    setViewDate(adapter.value.addMonths(viewDate.value, 1, timeZone.value));
   };
 
   /**
@@ -361,8 +360,8 @@ export function useCalendar(
    */
   const goToToday = () => {
     const today = adapter.value.startOfMonth(
-      adapter.value.now(context.value),
-      context.value,
+      adapter.value.now(timeZone.value),
+      timeZone.value,
     );
 
     yearPageStart.value = null;
@@ -372,7 +371,11 @@ export function useCalendar(
 
   const handleYearSelect = (year: number) => {
     yearPageStart.value = null;
-    const nextDate = adapter.value.setYear(viewDate.value, year, context.value);
+    const nextDate = adapter.value.setYear(
+      viewDate.value,
+      year,
+      timeZone.value,
+    );
     setViewDate(nextDate);
 
     if (granularity.value === "year") {
@@ -382,12 +385,12 @@ export function useCalendar(
           value: value.value,
           granularity: "year",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           next: normalizeDateToGranularity(
             nextDate,
             "year",
             adapter.value,
-            context.value,
+            timeZone.value,
           ),
         }),
       );
@@ -408,7 +411,7 @@ export function useCalendar(
     const nextDate = adapter.value.setMonth(
       viewDate.value,
       month,
-      context.value,
+      timeZone.value,
     );
     setViewDate(nextDate);
 
@@ -419,12 +422,12 @@ export function useCalendar(
           value: value.value,
           granularity: "month",
           adapter: adapter.value,
-          context: context.value,
+          timeZone: timeZone.value,
           next: normalizeDateToGranularity(
             nextDate,
             "month",
             adapter.value,
-            context.value,
+            timeZone.value,
           ),
         }),
       );
@@ -644,8 +647,8 @@ export function useCalendar(
     value,
     merged,
     shared,
-    context,
     showNav,
+    timeZone,
     rootBind,
     viewDate,
     viewYear,

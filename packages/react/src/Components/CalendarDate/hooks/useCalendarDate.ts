@@ -3,7 +3,6 @@ import { get, isNil, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   applyDateSelection,
   isDateDisabled,
@@ -30,7 +29,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarDateClasses,
   CalendarDateDayCell,
@@ -86,7 +85,6 @@ export function useCalendarDate(
   libDefaults: CalendarDateLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarDateProps,
@@ -122,8 +120,8 @@ export function useCalendarDate(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const timeZone = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const mode = derived(() => {
@@ -155,7 +153,7 @@ export function useCalendarDate(
     return (
       props.viewDate ??
       merged.viewDate ??
-      adapter.startOfMonth(adapter.now(context), context)
+      adapter.startOfMonth(adapter.now(timeZone), timeZone)
     );
   });
 
@@ -214,7 +212,7 @@ export function useCalendarDate(
   });
 
   const weekdays = derived(() => {
-    const names = adapter.getWeekdayNames(context);
+    const names = adapter.getWeekdayNames();
     const start = startOfWeek;
 
     return Array.from({ length: 7 }, (_, index) => {
@@ -223,15 +221,15 @@ export function useCalendarDate(
   });
 
   const days = derived((): CalendarDateDayCell[] => {
-    const grid = adapter.getCalendarDays(viewDate, startOfWeek, context);
-    const today = adapter.now(context);
+    const grid = adapter.getCalendarDays(viewDate, startOfWeek, timeZone);
+    const today = adapter.now(timeZone);
 
     return grid.map((date) => {
       const disabled =
         Boolean(merged.disabled) ||
         isDateDisabled(date, {
           adapter,
-          context,
+          timeZone,
           maxDate: merged.maxDate,
           minDate: merged.minDate,
           disableDates: merged.disableDates,
@@ -244,7 +242,7 @@ export function useCalendarDate(
         mode,
         value,
         adapter,
-        context,
+        timeZone,
       });
 
       const preview =
@@ -253,7 +251,7 @@ export function useCalendarDate(
           date,
           value,
           adapter,
-          context,
+          timeZone,
           previewDate,
         });
 
@@ -268,10 +266,10 @@ export function useCalendarDate(
         state,
         preview,
         selected,
-        label: String(adapter.getDate(date, context)),
+        label: String(adapter.getDate(date, timeZone)),
         disabled: disabled || Boolean(merged.readOnly),
-        today: adapter.isSameDay(date, today, context),
-        outside: !adapter.isSameMonth(date, viewDate, context),
+        today: adapter.isSameDay(date, today, timeZone),
+        outside: !adapter.isSameMonth(date, viewDate, timeZone),
       };
     });
   });
@@ -284,7 +282,7 @@ export function useCalendarDate(
     if (
       isDateDisabled(date, {
         adapter,
-        context,
+        timeZone,
         maxDate: merged.maxDate,
         minDate: merged.minDate,
         disableDates: merged.disableDates,
@@ -299,7 +297,7 @@ export function useCalendarDate(
       mode,
       value,
       adapter,
-      context,
+      timeZone,
       next: date,
     });
 
@@ -329,7 +327,7 @@ export function useCalendarDate(
 
     const [start, end] = value;
 
-    return adapter.isSameDay(start, end, context);
+    return adapter.isSameDay(start, end, timeZone);
   });
 
   const rootBind = derived(() => {
@@ -410,7 +408,7 @@ export function useCalendarDate(
     mode,
     value,
     merged,
-    context,
+    timeZone,
     rootBind,
     gridBind,
     weekdays,

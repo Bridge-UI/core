@@ -19,21 +19,31 @@ function collectLibEntries(dir: string) {
       const path = join(currentDir, name);
 
       if (statSync(path).isDirectory()) {
+        if (name === "__tests__") {
+          continue;
+        }
+
         walk(path);
         continue;
       }
 
-      if (name !== "index.ts") {
+      const rel = relative(dir, path).replaceAll("\\", "/");
+      const withoutExt = rel.replace(/\.tsx?$/, "");
+
+      if (withoutExt === "index" || rel.includes(".test.")) {
         continue;
       }
 
-      const rel = relative(dir, path).replace(/\.ts$/, "");
+      const isIndex = name === "index.ts";
+      const isExampleAdapter =
+        name.endsWith(".ts") &&
+        relative(dir, currentDir).replaceAll("\\", "/") === "Adapters/Examples";
 
-      if (rel === "index") {
+      if (!isIndex && !isExampleAdapter) {
         continue;
       }
 
-      entries[rel.replaceAll("\\", "/")] = path;
+      entries[withoutExt] = path;
     }
   }
 
@@ -72,14 +82,27 @@ export default defineConfig({
       },
       external: [
         "clsx",
+        "luxon",
+        "dayjs",
+        /^dayjs\//,
         "react",
+        "moment",
+        "i18next",
+        "date-fns",
         "react-dom",
         /^es-toolkit/,
         "lucide-react",
         "tailwind-merge",
+        "moment-timezone",
         "react/jsx-runtime",
         /^@bridge-ui\/core/,
+        /^@heroicons\/react/,
+        "@tabler/icons-react",
         "@tanstack/react-table",
+        "@phosphor-icons/react",
+        "@fortawesome/react-fontawesome",
+        "@fortawesome/free-solid-svg-icons",
+        "@fortawesome/fontawesome-svg-core",
       ],
     },
   },

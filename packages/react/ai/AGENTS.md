@@ -13,7 +13,7 @@ npx bridge-ui-react-ai install
 
 - Guidelines: `.ai/guidelines/core.md`
 - Component docs: `.ai/docs/components/` (index: `.ai/docs/README.md`)
-- Adapter samples: `.ai/docs/examples/`
+- Adapter factories: `@bridge-ui/react/Adapters/Examples/{date,icon,i18n}-*`
 - Skills (on demand) under `.cursor/skills/`:
   - `bridge-ui-setup`
   - `bridge-ui-components`

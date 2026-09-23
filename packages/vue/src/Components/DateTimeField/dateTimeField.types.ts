@@ -288,9 +288,9 @@ export interface DateTimeFieldOwnProps extends Omit<
   startOfWeek?: number | StartOfWeek;
 
   /**
-   * IANA time zone.
+   * IANA time zone for the UI wall clock. The v-model `Date` is a UTC instant.
    *
-   * @default undefined
+   * @default Bridge `global.timeZone`
    */
   timeZone?: string;
 }

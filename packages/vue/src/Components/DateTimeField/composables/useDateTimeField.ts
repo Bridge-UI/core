@@ -10,7 +10,7 @@ import {
 } from "vue";
 
 // ** Core Imports
-import type { DateAdapter, DateAdapterContext } from "@bridge-ui/core/Adapters";
+import type { DateAdapter } from "@bridge-ui/core/Adapters";
 import {
   resolveFieldOverlay,
   resolveFieldPickerClassName,
@@ -19,7 +19,7 @@ import { listboxColorProps } from "@bridge-ui/core/Tokens";
 import { cn, splitComponentProps } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   DateTimeFieldCustomProps,
   DateTimeFieldEmits,
@@ -71,7 +71,7 @@ const dateTimeFieldBridgeKeys = [
 function formatDateTimeValue(
   value: Date | null,
   adapter: DateAdapter,
-  context: DateAdapterContext,
+  timeZone?: string,
   ampm?: boolean,
   showSeconds?: boolean,
 ): string {
@@ -79,7 +79,7 @@ function formatDateTimeValue(
     return "";
   }
 
-  return `${adapter.format(value, context)} ${adapter.formatTime(value, context, { ampm, showSeconds })}`.trim();
+  return `${adapter.format(value, timeZone)} ${adapter.formatTime(value, timeZone, { ampm, showSeconds })}`.trim();
 }
 
 /**
@@ -94,7 +94,6 @@ export function useDateTimeField(
   const slots = useSlots();
   const adapter = useDateAdapter();
   const breakpoint = useBreakpoint();
-  const resolveContext = useDateAdapterContext();
 
   const open = ref(false);
   const containerRef = ref<null | HTMLElement>(null);
@@ -113,8 +112,8 @@ export function useDateTimeField(
     return split.value.componentProps;
   });
 
-  const context = computed((): DateAdapterContext => {
-    return resolveContext(dateTimeOnly.value.timeZone);
+  const timeZone = computed((): string | undefined => {
+    return dateTimeOnly.value.timeZone;
   });
 
   const modelValue = computed(() => {
@@ -243,7 +242,7 @@ export function useDateTimeField(
     return formatDateTimeValue(
       modelValue.value,
       adapter.value,
-      context.value,
+      timeZone.value,
       dateTimeOnly.value.ampm,
       dateTimeOnly.value.showSeconds,
     );

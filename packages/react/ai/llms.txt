@@ -17,7 +17,6 @@ npx bridge-ui-react-ai install
 - ai/skills/*/SKILL.md
 - docs/README.md
 - docs/components/*.md
-- docs/examples/*
 
 After install:
 
@@ -25,7 +24,7 @@ After install:
 - .ai/AGENTS.md (full guide)
 - llms.txt
 - .ai/guidelines/
-- .ai/docs/ (components + examples)
+- .ai/docs/ (components)
 - .cursor/skills/bridge-ui-*
 
 ## Imports
@@ -35,4 +34,7 @@ After install:
 - `@bridge-ui/react/Provider`
 - `@bridge-ui/react/Actions`
 - `@bridge-ui/react/theme.css`
+- `@bridge-ui/react/Adapters/Examples/{date-date-fns,date-dayjs,date-luxon,date-moment}`
+- `@bridge-ui/react/Adapters/Examples/{icon-lucide,icon-heroicons,icon-tabler,icon-phosphor,icon-fontawesome}`
+- `@bridge-ui/react/Adapters/Examples/{i18n-dictionary,i18n-i18next}`
 - `@bridge-ui/react/docs/components/{Name}.md`

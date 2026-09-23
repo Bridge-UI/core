@@ -10,7 +10,7 @@ import {
 } from "es-toolkit/compat";
 
 // ** Local Imports
-import type { DateAdapter, DateAdapterContext } from "@/Adapters/date";
+import type { DateAdapter } from "@/Adapters/date";
 
 /**
  * Public time-of-day value for TimePicker / TimeField (`Date` wall clock).
@@ -33,10 +33,10 @@ export type DisableTimesInput<TDate = Date> =
  */
 export type IsTimeDisabledOptions<TDate = Date> = {
   adapter: DateAdapter<TDate>;
-  context?: DateAdapterContext;
   disableTimes?: DisableTimesInput<TDate>;
   maxTime?: TDate;
   minTime?: TDate;
+  timeZone?: string;
 };
 
 /**
@@ -103,10 +103,10 @@ export function toMeridiem(hours24: number): "AM" | "PM" {
 export function timeToMinutes<TDate>(
   value: TDate,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): number {
   return (
-    adapter.getHours(value, context) * 60 + adapter.getMinutes(value, context)
+    adapter.getHours(value, timeZone) * 60 + adapter.getMinutes(value, timeZone)
   );
 }
 
@@ -116,11 +116,11 @@ export function timeToMinutes<TDate>(
 export function timeToSeconds<TDate>(
   value: TDate,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): number {
   return (
-    timeToMinutes(value, adapter, context) * 60 +
-    adapter.getSeconds(value, context)
+    timeToMinutes(value, adapter, timeZone) * 60 +
+    adapter.getSeconds(value, timeZone)
   );
 }
 
@@ -131,14 +131,14 @@ export function isTimeDisabled<TDate>(
   candidate: TDate,
   options: IsTimeDisabledOptions<TDate>,
 ): boolean {
-  const { adapter, context, minTime, maxTime, disableTimes } = options;
-  const seconds = timeToSeconds(candidate, adapter, context);
+  const { adapter, minTime, maxTime, timeZone, disableTimes } = options;
+  const seconds = timeToSeconds(candidate, adapter, timeZone);
 
-  if (!isNil(minTime) && seconds < timeToSeconds(minTime, adapter, context)) {
+  if (!isNil(minTime) && seconds < timeToSeconds(minTime, adapter, timeZone)) {
     return true;
   }
 
-  if (!isNil(maxTime) && seconds > timeToSeconds(maxTime, adapter, context)) {
+  if (!isNil(maxTime) && seconds > timeToSeconds(maxTime, adapter, timeZone)) {
     return true;
   }
 
@@ -152,7 +152,7 @@ export function isTimeDisabled<TDate>(
 
   if (isArray(disableTimes)) {
     return disableTimes.some((entry) => {
-      return adapter.isSameTime(candidate, entry, context);
+      return adapter.isSameTime(candidate, entry, timeZone);
     });
   }
 
@@ -182,25 +182,25 @@ export function normalizeTimeValue<TDate>(
     adapter: DateAdapter<TDate>;
     ampm?: boolean;
     base?: TDate;
-    context?: DateAdapterContext;
     interval?: TimeInterval;
     showSeconds?: boolean;
+    timeZone?: string;
   },
 ): null | TDate {
-  const { adapter, context, interval = 1, showSeconds = false } = options;
+  const { adapter, timeZone, interval = 1, showSeconds = false } = options;
 
   if (isNil(value)) {
     return null;
   }
 
-  const base = options.base ?? adapter.now(context);
-  const hours = adapter.getHours(value, context);
-  const minutes = snapMinutes(adapter.getMinutes(value, context), interval);
-  const seconds = showSeconds ? adapter.getSeconds(value, context) : 0;
-  let next = adapter.setHours(base, hours, context);
+  const base = options.base ?? adapter.now(timeZone);
+  const hours = adapter.getHours(value, timeZone);
+  const minutes = snapMinutes(adapter.getMinutes(value, timeZone), interval);
+  const seconds = showSeconds ? adapter.getSeconds(value, timeZone) : 0;
+  let next = adapter.setHours(base, hours, timeZone);
 
-  next = adapter.setMinutes(next, minutes, context);
-  next = adapter.setSeconds(next, seconds, context);
+  next = adapter.setMinutes(next, minutes, timeZone);
+  next = adapter.setSeconds(next, seconds, timeZone);
 
   return next;
 }
@@ -213,15 +213,15 @@ export function combineDateAndTime<TDate>(
   datePart: TDate,
   timePart: TDate,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): TDate {
-  const hours = adapter.getHours(timePart, context);
-  const minutes = adapter.getMinutes(timePart, context);
-  const seconds = adapter.getSeconds(timePart, context);
-  let next = adapter.setHours(datePart, hours, context);
+  const hours = adapter.getHours(timePart, timeZone);
+  const minutes = adapter.getMinutes(timePart, timeZone);
+  const seconds = adapter.getSeconds(timePart, timeZone);
+  let next = adapter.setHours(datePart, hours, timeZone);
 
-  next = adapter.setMinutes(next, minutes, context);
-  next = adapter.setSeconds(next, seconds, context);
+  next = adapter.setMinutes(next, minutes, timeZone);
+  next = adapter.setSeconds(next, seconds, timeZone);
 
   return next;
 }
@@ -237,13 +237,13 @@ export type TimeRangeValue<TDate = Date> = [TDate, TDate];
 export function sortTimeRangeValue<TDate>(
   value: TimeRangeValue<TDate>,
   adapter: DateAdapter<TDate>,
-  context?: DateAdapterContext,
+  timeZone?: string,
 ): TimeRangeValue<TDate> {
   const [start, end] = value;
 
   if (
-    timeToSeconds(start, adapter, context) <=
-    timeToSeconds(end, adapter, context)
+    timeToSeconds(start, adapter, timeZone) <=
+    timeToSeconds(end, adapter, timeZone)
   ) {
     return value;
   }

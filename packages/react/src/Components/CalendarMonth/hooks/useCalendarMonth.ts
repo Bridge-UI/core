@@ -3,7 +3,6 @@ import { get, isNil, isUndefined, omit } from "es-toolkit/compat";
 import { useMemo, useState } from "react";
 
 // ** Core Imports
-import type { DateAdapterContext } from "@bridge-ui/core/Adapters";
 import {
   dateFromYearMonth,
   isDateDisabled,
@@ -29,7 +28,7 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import { useDateAdapter, useDateAdapterContext } from "@/Adapters/Date";
+import { useDateAdapter } from "@/Adapters/Date";
 import type {
   CalendarMonthClasses,
   CalendarMonthOwnProps,
@@ -89,7 +88,6 @@ export function useCalendarMonth(
   libDefaults: CalendarMonthLibDefaults,
 ) {
   const adapter = useDateAdapter();
-  const resolveContext = useDateAdapterContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CalendarMonthProps,
@@ -120,12 +118,12 @@ export function useCalendarMonth(
     props: componentProps,
   });
 
-  const context = derived((): DateAdapterContext => {
-    return resolveContext(merged.timeZone);
+  const timeZone = derived((): string | undefined => {
+    return merged.timeZone;
   });
 
   const year = derived(() => {
-    return merged.year ?? adapter.getYear(adapter.now(context), context);
+    return merged.year ?? adapter.getYear(adapter.now(timeZone), timeZone);
   });
 
   const mode = derived(() => {
@@ -174,21 +172,21 @@ export function useCalendarMonth(
   });
 
   const months = derived((): CalendarMonthCell[] => {
-    const names = adapter.getMonthNames(context);
+    const names = adapter.getMonthNames();
 
     return names.map((label, month) => {
       const date = dateFromYearMonth({
         year,
         month,
         adapter,
-        context,
+        timeZone,
       });
       const disabled =
         Boolean(merged.disabled) ||
         (isCommitPanel
           ? isDateDisabled(date, {
               adapter,
-              context,
+              timeZone,
               granularity: "month",
               maxDate: merged.maxDate,
               minDate: merged.minDate,
@@ -200,7 +198,7 @@ export function useCalendarMonth(
               year,
               month,
               adapter,
-              context,
+              timeZone,
               maxDate: merged.maxDate,
               minDate: merged.minDate,
               disableMonths: merged.disableMonths,
@@ -211,7 +209,7 @@ export function useCalendarMonth(
             date,
             mode,
             adapter,
-            context,
+            timeZone,
             granularity: "month",
             value: merged.selection ?? null,
           })
@@ -223,7 +221,7 @@ export function useCalendarMonth(
         isDateInRangePreview({
           date,
           adapter,
-          context,
+          timeZone,
           previewDate,
           granularity: "month",
           value: merged.selection ?? null,
@@ -266,7 +264,7 @@ export function useCalendarMonth(
 
     const [start, end] = merged.selection;
 
-    return isSameAtGranularity(start, end, "month", adapter, context);
+    return isSameAtGranularity(start, end, "month", adapter, timeZone);
   });
 
   const selectMonth = (month: number) => {
@@ -278,14 +276,14 @@ export function useCalendarMonth(
       year,
       month,
       adapter,
-      context,
+      timeZone,
     });
 
     if (isCommitPanel) {
       if (
         isDateDisabled(date, {
           adapter,
-          context,
+          timeZone,
           granularity: "month",
           maxDate: merged.maxDate,
           minDate: merged.minDate,
@@ -301,7 +299,7 @@ export function useCalendarMonth(
         year,
         month,
         adapter,
-        context,
+        timeZone,
         maxDate: merged.maxDate,
         minDate: merged.minDate,
         disableMonths: merged.disableMonths,
