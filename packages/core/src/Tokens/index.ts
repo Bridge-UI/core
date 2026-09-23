@@ -171,6 +171,16 @@ export type {
   EmptyStateSizeItem,
 } from "@/Tokens/EmptyState";
 export {
+  sizeProps as fileUploadSizeProps,
+  variantProps as fileUploadVariantProps,
+} from "@/Tokens/FileUpload";
+export type {
+  FileUploadSize,
+  FileUploadSizeItem,
+  FileUploadVariant,
+  FileUploadVariantItem,
+} from "@/Tokens/FileUpload";
+export {
   colorProps as formFieldColorProps,
   roundedProps as formFieldRoundedProps,
   sizeProps as formFieldSizeProps,

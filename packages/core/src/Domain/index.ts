@@ -170,6 +170,24 @@ export type {
 } from "@/Domain/date";
 export { copyDateWallClock } from "@/Domain/dateTimeZone";
 export {
+  fileMatchesAccept,
+  fileWithinMaxSize,
+  filesFromFileList,
+  filterFileUploadSelection,
+  formatFileMeta,
+  formatFileSize,
+  getFileTypeLabel,
+  isImageFile,
+  mergeFileUploadSelection,
+  removeFileAtIndex,
+} from "@/Domain/fileUpload";
+export type {
+  FileUploadFilterOptions,
+  FileUploadFilterResult,
+  FileUploadRejectReason,
+  FileUploadRejectedFile,
+} from "@/Domain/fileUpload";
+export {
   getNumberFieldStepper,
   resolveNumberFieldStepperIconSize,
 } from "@/Domain/numberField";
