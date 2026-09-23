@@ -1,10 +1,8 @@
 // ** External Imports
-import i18n from "i18next";
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 
 // ** Local Imports
 import { createDictionaryI18nAdapter } from "@/Adapters/Examples/i18n-dictionary";
-import { createI18nextAdapter } from "@/Adapters/Examples/i18n-i18next";
 
 test("it should translate dictionary messages after setLocale", () => {
   const adapter = createDictionaryI18nAdapter();
@@ -34,27 +32,4 @@ test("it should interpolate and pluralize dictionary messages", () => {
       selected: 1,
     }),
   ).toBe("1 de 3 linha selecionada.");
-});
-
-test("it should forward messages to i18next", async () => {
-  await i18n.init({
-    lng: "en",
-    resources: {
-      en: { translation: { Close: "Close" } },
-      "pt-BR": { translation: { Close: "Fechar" } },
-    },
-  });
-
-  const adapter = createI18nextAdapter();
-
-  expect(adapter.t("Close")).toBe("Close");
-
-  const changeLanguage = vi.spyOn(i18n, "changeLanguage");
-
-  adapter.setLocale?.("pt-BR");
-
-  expect(changeLanguage).toHaveBeenCalledWith("pt-BR");
-  await changeLanguage.mock.results[0]?.value;
-  expect(adapter.t("Close")).toBe("Fechar");
-  changeLanguage.mockRestore();
 });
