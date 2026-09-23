@@ -23,6 +23,10 @@ import type {
   EmptyStateClasses,
   EmptyStateProps,
 } from "@/Components/EmptyState";
+import type {
+  FileUploadClasses,
+  FileUploadProps,
+} from "@/Components/FileUpload";
 import type { IconProps } from "@/Components/Icon";
 import type { LabelClasses, LabelProps } from "@/Components/Label";
 import type { LinkClasses, LinkProps } from "@/Components/Link";
@@ -157,6 +161,13 @@ declare module "@bridge-ui/core/Config" {
     classes: EmptyStateClasses;
     defaultProps: Partial<
       Pick<EmptyStateProps, "size" | "align" | "titleAs" | "mediaDecorative">
+    >;
+  }
+
+  interface FileUploadConfigOverrides {
+    classes: FileUploadClasses;
+    defaultProps: Partial<
+      Pick<FileUploadProps, "size" | "variant" | "multiple">
     >;
   }
 
