@@ -1,4 +1,5 @@
 // ** External Imports
+import { isNil } from "es-toolkit/compat";
 import type { ComponentPropsWithoutRef, ElementType } from "react";
 
 const linkAsReservedProps = [
@@ -44,12 +45,12 @@ export function resolveLinkAsProps(
   linkProps: object | undefined,
   rendered: unknown,
 ): undefined | Record<string, unknown> {
-  if (linkAs == null || linkProps == null || rendered !== linkAs) {
+  if (isNil(linkAs) || isNil(linkProps) || rendered !== linkAs) {
     return undefined;
   }
 
-  const source = linkProps as Record<string, unknown>;
   const forwarded: Record<string, unknown> = {};
+  const source = linkProps as Record<string, unknown>;
 
   for (const key of Object.keys(source)) {
     if (linkAsReservedPropSet.has(key)) {

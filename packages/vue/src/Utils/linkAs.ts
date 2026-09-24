@@ -1,5 +1,11 @@
 // ** External Imports
-import type { AllowedComponentProps, Component, VNodeProps } from "vue";
+import { isNil } from "es-toolkit/compat";
+import type {
+  AllowedComponentProps,
+  Component,
+  ComponentInstance,
+  VNodeProps,
+} from "vue";
 
 /**
  * Tag or component accepted by `linkAs`.
@@ -20,21 +26,11 @@ type LinkAsReservedProp = (typeof linkAsReservedProps)[number];
 const linkAsReservedPropSet = new Set<string>(linkAsReservedProps);
 
 /**
- * `$props` of a component constructor, or the first argument of a function component.
+ * Props of a component passed to `linkAs`. String tags have none.
  */
-type VueComponentProps<T> = T extends new (
-  // Constructor args vary; only `$props` is read.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...args: any[]
-) => { $props: infer Props }
-  ? Props
-  : T extends (
-        props: infer Props,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ...args: any[]
-      ) => unknown
-    ? Props
-    : Record<never, never>;
+type VueComponentProps<T> = T extends string
+  ? Record<never, never>
+  : ComponentInstance<T>["$props"];
 
 /**
  * `href` of `T`, or `string` when `T` is still the default tag.
@@ -68,12 +64,12 @@ export function resolveLinkAsProps(
   linkProps: object | undefined,
   rendered: unknown,
 ): undefined | Record<string, unknown> {
-  if (linkAs == null || linkProps == null || rendered !== linkAs) {
+  if (isNil(linkAs) || isNil(linkProps) || rendered !== linkAs) {
     return undefined;
   }
 
-  const source = linkProps as Record<string, unknown>;
   const forwarded: Record<string, unknown> = {};
+  const source = linkProps as Record<string, unknown>;
 
   for (const key of Object.keys(source)) {
     if (linkAsReservedPropSet.has(key)) {
