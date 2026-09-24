@@ -23,13 +23,13 @@ test("it should apply rounded-md by default", () => {
   );
 });
 
-test("it should apply rounded-full when rounded is full", () => {
+test("it should apply rounded-panel-full when rounded is full", () => {
   const { container } = render(
     <Skeleton rounded="full" className="h-10 w-10" />,
   );
 
   expect(
-    container.querySelector("div")?.classList.contains("rounded-full"),
+    container.querySelector("div")?.classList.contains("rounded-panel-full"),
   ).toBe(true);
 });
 
