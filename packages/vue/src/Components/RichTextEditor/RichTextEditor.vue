@@ -68,10 +68,10 @@ const {
 
         <div v-else v-bind="toolbarBind">
           <Button
-            v-bind="getToolbarButtonBind(tool)"
             :key="tool"
             v-for="tool in tools"
             v-on:click="runTool(tool)"
+            v-bind="getToolbarButtonBind(tool)"
           />
         </div>
       </template>
