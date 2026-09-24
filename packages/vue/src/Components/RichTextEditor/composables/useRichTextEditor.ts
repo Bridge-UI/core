@@ -1,0 +1,527 @@
+// ** External Imports
+import { get, isNil, omit } from "es-toolkit/compat";
+import {
+  computed,
+  onBeforeUnmount,
+  ref,
+  useAttrs,
+  useSlots,
+  watch,
+  type Ref,
+  type SetupContext,
+} from "vue";
+
+// ** Core Imports
+import {
+  DEFAULT_RICH_TEXT_TOOLS,
+  RICH_TEXT_TOOL_ICONS,
+  RICH_TEXT_TOOL_LABELS,
+  richTextValuesEqual,
+  type RichTextEditorHandle,
+  type RichTextFormat,
+  type RichTextTool,
+  type RichTextValue,
+} from "@bridge-ui/core/Adapters";
+import { richTextEditorSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
+import {
+  cn,
+  mergeBridgeUILayeredClasses,
+  splitComponentProps,
+  type LibDefaultsShape,
+  type MergeLibDefaults,
+} from "@bridge-ui/core/Utils";
+
+// ** Local Imports
+import { useResolveMessage } from "@/Adapters/I18n";
+import { useRichTextAdapter } from "@/Adapters/RichText";
+import type { ButtonOwnProps } from "@/Components/Button/button.types";
+import {
+  formFieldBridgeKeys,
+  useFormField,
+} from "@/Components/FormField/composables/useFormField";
+import type { FormFieldOwnProps } from "@/Components/FormField/formField.types";
+import type {
+  RichTextEditorCustomProps,
+  RichTextEditorEmits,
+  RichTextEditorOwnProps,
+} from "@/Components/RichTextEditor/richTextEditor.types";
+import {
+  mergePartBind,
+  useBridgeUIComponent,
+  useBridgeUIMergedRegistryClasses,
+} from "@/Utils";
+
+const richTextEditorBridgeKeys = [
+  "tools",
+  "format",
+  "classes",
+  "readOnly",
+  "customProps",
+  "placeholder",
+  "defaultValue",
+] as const satisfies readonly (keyof RichTextEditorOwnProps)[];
+
+type RichTextEditorRegistryProps = Pick<
+  RichTextEditorOwnProps,
+  "size" | "color" | "tools" | "format" | "classes" | "rounded" | "variant"
+>;
+
+type RichTextEditorLibDefaults = LibDefaultsShape<
+  RichTextEditorRegistryProps,
+  "size" | "color" | "format" | "rounded" | "variant"
+>;
+
+type RichTextEditorMerged = MergeLibDefaults<
+  RichTextEditorRegistryProps,
+  RichTextEditorLibDefaults
+>;
+
+/**
+ * Composes FormField chrome + rich-text adapter surface for Vue.
+ */
+export function useRichTextEditor(
+  props: RichTextEditorOwnProps,
+  model: Ref<undefined | RichTextValue>,
+  emit: SetupContext<RichTextEditorEmits>["emit"],
+  contentRef: Ref<null | undefined | HTMLDivElement>,
+) {
+  const attrs = useAttrs();
+  const slots = useSlots();
+  const resolveMessage = useResolveMessage();
+  const adapter = useRichTextAdapter();
+
+  const linkHref = ref("");
+  const selectionTick = ref(0);
+  const hostRef = ref<null | HTMLDivElement>(null);
+  const linkAnchor = ref<null | HTMLElement>(null);
+  const handleRef = ref<null | RichTextEditorHandle>(null);
+
+  const split = computed(() => {
+    return splitComponentProps<
+      RichTextEditorOwnProps & Record<string, unknown>,
+      typeof richTextEditorBridgeKeys
+    >({
+      bridgeKeys: richTextEditorBridgeKeys,
+      props: { ...props, ...attrs } as RichTextEditorOwnProps &
+        Record<string, unknown>,
+    });
+  });
+
+  const rteOnly = computed(() => {
+    return split.value.componentProps;
+  });
+
+  const formFieldSplit = computed(() => {
+    return splitComponentProps<
+      Omit<FormFieldOwnProps, "field">,
+      typeof formFieldBridgeKeys
+    >({
+      bridgeKeys: formFieldBridgeKeys,
+      props: omit(split.value.inheritedAttrs, [
+        "class",
+        "onUpdate:modelValue",
+      ]) as Omit<FormFieldOwnProps, "field">,
+    });
+  });
+
+  const formFieldCustom = computed(() => {
+    return formFieldSplit.value.componentProps;
+  });
+
+  const formFieldInherited = computed(() => {
+    return formFieldSplit.value.inheritedAttrs;
+  });
+
+  const formFieldOnlyCustom = computed(() => {
+    const {
+      content: _content,
+      toolbar: _toolbar,
+      toolbarButton: _toolbarButton,
+      ...rest
+    } = (rteOnly.value.customProps ?? {}) as RichTextEditorCustomProps;
+
+    return rest;
+  });
+
+  const toolbarButtonCustom = computed(() => {
+    return rteOnly.value.customProps?.toolbarButton;
+  });
+
+  const registryProps = computed((): RichTextEditorRegistryProps => {
+    return {
+      tools: rteOnly.value.tools,
+      format: rteOnly.value.format,
+      classes: rteOnly.value.classes,
+      size: formFieldCustom.value.size,
+      color: formFieldCustom.value.color,
+      rounded: formFieldCustom.value.rounded,
+      variant: formFieldCustom.value.variant,
+    };
+  });
+
+  const { merged: rteMerged, entry: bridgeRichText } = useBridgeUIComponent<
+    RichTextEditorMerged,
+    "RichTextEditor"
+  >({
+    componentName: "RichTextEditor",
+    props: () => registryProps.value,
+    libDefaults: {
+      size: "md",
+      rounded: "md",
+      format: "html",
+      color: "primary",
+      variant: "outline",
+    },
+  });
+
+  const mergedClasses = useBridgeUIMergedRegistryClasses({
+    entry: bridgeRichText,
+    props: () => registryProps.value,
+  });
+
+  const format = computed((): RichTextFormat => {
+    return rteMerged.value.format ?? "html";
+  });
+
+  const tools = computed((): RichTextTool[] => {
+    return [
+      ...(rteOnly.value.tools ??
+        rteMerged.value.tools ??
+        DEFAULT_RICH_TEXT_TOOLS),
+    ];
+  });
+
+  const isReadOnly = computed(() => {
+    return (
+      rteOnly.value.readOnly === true || formFieldCustom.value.readonly === true
+    );
+  });
+
+  const showToolbar = computed(() => {
+    return (
+      !(isReadOnly.value || formFieldCustom.value.disabled === true) &&
+      tools.value.length > 0
+    );
+  });
+
+  const sizeToken = computed(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      sizeProps,
+      bridgeRichText.value?.tokens?.size,
+    );
+
+    return get(
+      classes,
+      formFieldCustom.value.size ?? rteMerged.value.size ?? "md",
+    );
+  });
+
+  const formField = useFormField(
+    () => ({
+      ...formFieldInherited.value,
+      ...formFieldCustom.value,
+      classes: mergedClasses.value,
+      customProps: formFieldOnlyCustom.value,
+      readonly: isReadOnly.value || formFieldCustom.value.readonly,
+    }),
+    {
+      size: "md",
+      rounded: "md",
+      color: "primary",
+      variant: "outline",
+      showErrorIcon: true,
+    },
+    {
+      control: () => "textarea",
+      componentName: "RichTextEditor",
+    },
+  );
+
+  const toolbarColor = computed(() => {
+    if (formField.invalidated.value) {
+      return "error";
+    }
+
+    return formField.merged.value.color ?? "primary";
+  });
+
+  function isToolbarButtonDisabled(tool: RichTextTool) {
+    if (formField.isDisabled.value) {
+      return true;
+    }
+
+    if (isReadOnly.value) {
+      return true;
+    }
+
+    if (!(handleRef.value?.can(tool) ?? true)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function bumpSelection() {
+    selectionTick.value += 1;
+  }
+
+  function closeLinkEditor() {
+    linkHref.value = "";
+    linkAnchor.value = null;
+  }
+
+  function confirmLink() {
+    const href = linkHref.value.trim();
+
+    if (href.length === 0) {
+      return;
+    }
+
+    handleRef.value?.run("link", { href });
+    bumpSelection();
+    closeLinkEditor();
+  }
+
+  function onToolClick(tool: RichTextTool, event: MouseEvent) {
+    const handle = handleRef.value;
+
+    if (isNil(handle)) {
+      return;
+    }
+
+    if (tool === "link") {
+      if (handle.isActive("link")) {
+        handle.run("link");
+        bumpSelection();
+        closeLinkEditor();
+        return;
+      }
+
+      const anchor = event.currentTarget;
+
+      if (anchor instanceof HTMLElement) {
+        linkHref.value = "";
+        linkAnchor.value = anchor;
+      }
+
+      return;
+    }
+
+    handle.run(tool);
+    bumpSelection();
+  }
+
+  const linkOpen = computed({
+    get() {
+      return !isNil(linkAnchor.value);
+    },
+    set(open: boolean) {
+      if (!open) {
+        closeLinkEditor();
+      }
+    },
+  });
+
+  const canConfirmLink = computed(() => {
+    return linkHref.value.trim().length > 0;
+  });
+
+  const linkUrlLabel = computed(() => {
+    return resolveMessage("URL");
+  });
+
+  watch(showToolbar, (visible) => {
+    if (!visible) {
+      closeLinkEditor();
+    }
+  });
+
+  function destroyHandle() {
+    handleRef.value?.destroy();
+    handleRef.value = null;
+
+    const host = hostRef.value;
+
+    if (!isNil(host)) {
+      host.remove();
+      hostRef.value = null;
+    }
+  }
+
+  function mountAdapter() {
+    destroyHandle();
+
+    const surface = contentRef.value;
+    const richText = adapter.value;
+
+    if (isNil(surface)) {
+      return;
+    }
+
+    if (isNil(richText)) {
+      throw new Error(
+        "[BridgeUI] RichTextEditor requires BridgeUIProvider global.richText. See packages/{react,vue}/Adapters/Examples/rich-text-tiptap.",
+      );
+    }
+
+    // Host is outside Vue's VNode children so TipTap DOM survives patches.
+    const host = document.createElement("div");
+    host.className = "flex min-h-0 min-w-0 w-full flex-1 flex-col outline-none";
+    surface.appendChild(host);
+    hostRef.value = host;
+
+    handleRef.value = richText.mount({
+      element: host,
+      tools: tools.value,
+      value: model.value,
+      format: format.value,
+      readOnly: isReadOnly.value,
+      id: formField.controlId.value,
+      ariaReadonly: isReadOnly.value,
+      onSelectionChange: bumpSelection,
+      disabled: formField.isDisabled.value,
+      placeholder: rteOnly.value.placeholder,
+      ariaDisabled: formField.isDisabled.value,
+      ariaInvalid: formField.invalidated.value,
+      ariaDescribedBy: formField.ariaDescribedBy.value,
+      onChange: (next) => {
+        model.value = next;
+        emit("update:modelValue", next);
+      },
+    });
+  }
+
+  watch(
+    [format, adapter, contentRef],
+    () => {
+      mountAdapter();
+    },
+    { flush: "post" },
+  );
+
+  watch(
+    () => model.value,
+    (next) => {
+      const handle = handleRef.value;
+
+      if (isNil(handle) || next === undefined) {
+        return;
+      }
+
+      if (!richTextValuesEqual(handle.getValue(), next)) {
+        handle.setValue(next);
+      }
+    },
+  );
+
+  watch(
+    () => formField.isDisabled.value,
+    (disabled) => {
+      handleRef.value?.setDisabled(disabled);
+    },
+  );
+
+  watch(isReadOnly, (readOnly) => {
+    handleRef.value?.setReadOnly(readOnly);
+  });
+
+  watch(
+    [
+      isReadOnly,
+      () => rteOnly.value.placeholder,
+      () => formField.controlId.value,
+      () => formField.isDisabled.value,
+      () => formField.invalidated.value,
+      () => formField.ariaDescribedBy.value,
+    ],
+    () => {
+      handleRef.value?.setA11y({
+        id: formField.controlId.value,
+        ariaReadonly: isReadOnly.value,
+        placeholder: rteOnly.value.placeholder,
+        ariaDisabled: formField.isDisabled.value,
+        ariaInvalid: formField.invalidated.value,
+        ariaDescribedBy: formField.ariaDescribedBy.value,
+      });
+    },
+  );
+
+  onBeforeUnmount(() => {
+    destroyHandle();
+  });
+
+  const toolbarBind = computed(() => {
+    return mergePartBind(
+      rteOnly.value.customProps?.toolbar,
+      {
+        role: "toolbar",
+        "aria-label": resolveMessage("Formatting"),
+      },
+      cn({
+        [sizeToken.value?.toolbar ?? ""]: true,
+        [mergedClasses.value.toolbar ?? ""]: true,
+      }),
+    );
+  });
+
+  const contentBind = computed(() => {
+    return mergePartBind(
+      rteOnly.value.customProps?.content,
+      {},
+      cn({
+        "min-w-0 flex-1": true,
+        [sizeToken.value?.content ?? ""]: true,
+        [mergedClasses.value.content ?? ""]: true,
+        [mergedClasses.value.input ?? ""]: true,
+      }),
+    );
+  });
+
+  function getToolbarButtonBind(tool: RichTextTool): ButtonOwnProps {
+    // Touch selection tick so toolbar pressed state updates.
+    void selectionTick.value;
+
+    const handle = handleRef.value;
+    const label = resolveMessage(RICH_TEXT_TOOL_LABELS[tool]);
+
+    return mergePartBind(
+      toolbarButtonCustom.value,
+      {
+        type: "button",
+        density: "mini",
+        variant: "flat",
+        "aria-label": label,
+        color: toolbarColor.value,
+        icon: RICH_TEXT_TOOL_ICONS[tool],
+        disabled: isToolbarButtonDisabled(tool),
+        size: formField.merged.value.size ?? "md",
+        selected: handle?.isActive(tool) ?? false,
+        rounded: formField.merged.value.rounded ?? "md",
+      },
+      cn({
+        [sizeToken.value?.toolbarButton ?? ""]: true,
+        [mergedClasses.value.toolbarButton ?? ""]: true,
+      }),
+    ) as ButtonOwnProps;
+  }
+
+  return {
+    slots,
+    tools,
+    format,
+    linkHref,
+    linkOpen,
+    formField,
+    linkAnchor,
+    isReadOnly,
+    contentBind,
+    confirmLink,
+    onToolClick,
+    toolbarBind,
+    showToolbar,
+    linkUrlLabel,
+    canConfirmLink,
+    closeLinkEditor,
+    getToolbarButtonBind,
+  };
+}

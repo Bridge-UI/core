@@ -52,6 +52,7 @@ Component reference for **React**. This folder ships with the npm package.
 - [PasswordField](./components/PasswordField.md)
 - [Progress](./components/Progress.md)
 - [Radio](./components/Radio.md)
+- [RichTextEditor](./components/RichTextEditor.md)
 - [Select](./components/Select.md)
 - [Sidebar](./components/Sidebar.md)
 - [Skeleton](./components/Skeleton.md)
@@ -96,3 +97,4 @@ Import from a subpath and install the matching optional peer. They are **not** r
 - `@bridge-ui/react/Adapters/Examples/icon-fontawesome`
 - `@bridge-ui/react/Adapters/Examples/i18n-dictionary`
 - `@bridge-ui/react/Adapters/Examples/i18n-i18next`
+- `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`

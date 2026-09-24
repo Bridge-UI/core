@@ -54,6 +54,10 @@
       "import": "./dist/Adapters/I18n/index.js",
       "types": "./dist/Adapters/I18n/index.d.ts"
     },
+    "./Adapters/RichText": {
+      "import": "./dist/Adapters/RichText/index.js",
+      "types": "./dist/Adapters/RichText/index.d.ts"
+    },
     "./Adapters/Examples/*": {
       "import": "./dist/Adapters/Examples/*.js",
       "types": "./dist/Adapters/Examples/*.d.ts"
@@ -92,6 +96,12 @@
     "@phosphor-icons/vue": "^2.2.0",
     "@tabler/icons-vue": "^3.0.0",
     "@tanstack/vue-table": "^8.21.0",
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-underline": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
     "date-fns": "^4.0.0",
     "dayjs": "^1.11.0",
     "luxon": "^3.0.0",
@@ -125,6 +135,24 @@
     "@tanstack/vue-table": {
       "optional": true
     },
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "@tiptap/extension-placeholder": {
+      "optional": true
+    },
+    "@tiptap/extension-underline": {
+      "optional": true
+    },
+    "@tiptap/extension-link": {
+      "optional": true
+    },
     "date-fns": {
       "optional": true
     },
@@ -146,6 +174,7 @@
   },
   "dependencies": {
     "@bridge-ui/core": "^0.11.0",
+    "@tailwindcss/typography": "^0.5.19",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.50.0",
     "tailwind-merge": "^3.6.0"
@@ -170,6 +199,12 @@
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-table": "^8.21.3",
+    "@tiptap/core": "^3.31.3",
+    "@tiptap/extension-link": "^3.31.3",
+    "@tiptap/extension-placeholder": "^3.31.3",
+    "@tiptap/extension-underline": "^3.31.3",
+    "@tiptap/pm": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "@types/luxon": "^3.7.4",
     "@types/node": "^24.13.3",
     "@vue/language-core": "^3.3.9",

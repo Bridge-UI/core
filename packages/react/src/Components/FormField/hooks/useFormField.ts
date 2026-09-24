@@ -61,6 +61,7 @@ export type FormFieldOptions = {
     | "DateTimeField"
     | "PasswordField"
     | "DateRangeField"
+    | "RichTextEditor"
     | "TimeRangeField"
     | "DateTimeRangeField";
 

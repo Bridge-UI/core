@@ -307,6 +307,15 @@ export type {
   RadioSize,
 } from "@/Tokens/Radio";
 export {
+  roundedProps as richTextEditorRoundedProps,
+  sizeProps as richTextEditorSizeProps,
+} from "@/Tokens/RichTextEditor";
+export type {
+  RichTextEditorRounded,
+  RichTextEditorSize,
+  RichTextEditorSizeItem,
+} from "@/Tokens/RichTextEditor";
+export {
   collapsibleProps as sidebarCollapsibleProps,
   sideProps as sidebarSideProps,
   variantProps as sidebarVariantProps,

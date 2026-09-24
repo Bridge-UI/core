@@ -2,6 +2,7 @@
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
+import type { RichTextEditorAdapter, RichTextTool } from "@/Adapters/richText";
 import type {
   AccordionColor,
   AccordionColorItem,
@@ -164,6 +165,7 @@ import type {
   RadioRounded,
   RadioSize,
 } from "@/Tokens/Radio";
+import type { RichTextEditorSizeItem } from "@/Tokens/RichTextEditor";
 import type {
   SidebarCollapsible,
   SidebarCollapsibleItem,
@@ -351,6 +353,16 @@ export interface BridgeUIGlobal {
   mobileBreakpoint: string;
 
   /**
+   * Rich-text engine adapter used by `RichTextEditor`.
+   * Required when mounting `RichTextEditor` (no native default in core).
+   * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
+   * (`Adapters/Examples/rich-text-tiptap`).
+   *
+   * @default undefined
+   */
+  richText?: RichTextEditorAdapter;
+
+  /**
    * Global theme.
    *
    * @default "light"
@@ -416,6 +428,7 @@ export interface PaginationConfigOverrides {}
 export interface PasswordFieldConfigOverrides {}
 export interface ProgressConfigOverrides {}
 export interface RadioConfigOverrides {}
+export interface RichTextEditorConfigOverrides {}
 export interface SelectConfigOverrides {}
 export interface SidebarConfigOverrides {}
 export interface SkeletonConfigOverrides {}
@@ -1295,6 +1308,25 @@ export interface ProgressConfigBase {
   }>;
 }
 
+export interface RichTextEditorConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof FormFieldColor;
+    format: "html" | "json";
+    hideErrorMessage: boolean;
+    rounded: keyof FormFieldRounded;
+    showDescriptionOnError: boolean;
+    showErrorIcon: boolean;
+    size: keyof FormFieldSize;
+    tools: RichTextTool[];
+    variant: keyof FormFieldVariant;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    size: Record<string, RichTextEditorSizeItem>;
+  }>;
+}
+
 export interface SidebarConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1629,6 +1661,9 @@ export type BridgeUIComponentsConfig = Partial<{
   >;
   Progress: Partial<Overwrite<ProgressConfigBase, ProgressConfigOverrides>>;
   Radio: Partial<Overwrite<RadioConfigBase, RadioConfigOverrides>>;
+  RichTextEditor: Partial<
+    Overwrite<RichTextEditorConfigBase, RichTextEditorConfigOverrides>
+  >;
   Select: Partial<Overwrite<SelectConfigBase, SelectConfigOverrides>>;
   Sidebar: Partial<Overwrite<SidebarConfigBase, SidebarConfigOverrides>>;
   Skeleton: Partial<Overwrite<SkeletonConfigBase, SkeletonConfigOverrides>>;

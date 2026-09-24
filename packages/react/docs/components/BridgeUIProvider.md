@@ -101,6 +101,23 @@ const dates = createMomentDateAdapter({
 </BridgeUIProvider>
 ```
 
+### Rich-text adapter
+
+Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapter: `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`. Install the TipTap peers next to `@bridge-ui/react`.
+
+```ts
+import { BridgeUIProvider } from "@bridge-ui/react";
+import { createTiptapRichTextAdapter } from "@bridge-ui/react/Adapters/Examples/rich-text-tiptap";
+
+const richText = createTiptapRichTextAdapter();
+```
+
+```tsx
+<BridgeUIProvider global={{ richText }}>
+  <App />
+</BridgeUIProvider>
+```
+
 ### Form density defaults
 
 Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, FileUpload, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.

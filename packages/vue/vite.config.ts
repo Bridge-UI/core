@@ -93,6 +93,7 @@ export default defineConfig({
         "date-fns",
         "vue-i18n",
         /^es-toolkit/,
+        /^@tiptap\//,
         "@lucide/vue",
         "tailwind-merge",
         "moment-timezone",

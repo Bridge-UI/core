@@ -69,6 +69,7 @@ export const BRIDGE_UI_FORM_COMPONENT_NAMES = [
   "DateTimeField",
   "PasswordField",
   "DateRangeField",
+  "RichTextEditor",
   "TimeRangeField",
   "DateTimeRangeField",
 ] as const satisfies ReadonlyArray<keyof BridgeUIComponentsConfig>;
@@ -109,6 +110,7 @@ export const BRIDGE_UI_CHROME_FALLBACK = {
   DateTimeField: "FormField",
   PasswordField: "FormField",
   DateRangeField: "FormField",
+  RichTextEditor: "FormField",
   TimeRangeField: "FormField",
   TimeRangePicker: "TimePanel",
   DateTimeRangeField: "FormField",

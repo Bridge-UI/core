@@ -91,6 +91,7 @@ export default defineConfig({
         "date-fns",
         "react-dom",
         /^es-toolkit/,
+        /^@tiptap\//,
         "lucide-react",
         "tailwind-merge",
         "moment-timezone",
