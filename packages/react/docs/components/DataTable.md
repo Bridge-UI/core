@@ -176,7 +176,7 @@ Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` ic
 />
 ```
 
-Install `@tanstack/react-table` next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
+Install `@tanstack/react-table` v9 next to `@bridge-ui/react` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
 
 ### Columns
 

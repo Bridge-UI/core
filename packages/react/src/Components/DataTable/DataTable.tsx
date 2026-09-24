@@ -358,7 +358,9 @@ const DataTableExpandCell = memo(function DataTableExpandCell({
   );
 });
 
-function DataTable<T>(props: DataTableProps<T>) {
+function DataTable<T extends Record<string, unknown>>(
+  props: DataTableProps<T>,
+) {
   const {
     slots,
     merged,

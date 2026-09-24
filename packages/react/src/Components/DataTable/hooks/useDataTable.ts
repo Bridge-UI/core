@@ -1,15 +1,22 @@
 // ** External Imports
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
+  useTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnVisibilityState,
   type OnChangeFn,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
 } from "@tanstack/react-table";
 import {
   compact,
@@ -275,9 +282,21 @@ const chromeColumn = {
 const EMPTY_ROWS: never[] = [];
 const EMPTY_COLUMNS: never[] = [];
 const EMPTY_IDS: string[] = [];
-const dataTableCoreRowModel = getCoreRowModel();
-const dataTableSortedRowModel = getSortedRowModel();
-const dataTableFilteredRowModel = getFilteredRowModel();
+const dataTableFeatures = tableFeatures({
+  rowSortingFeature,
+  rowSelectionFeature,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns: {
+    text: sortFn_text,
+    datetime: sortFn_datetime,
+    alphanumeric: sortFn_alphanumeric,
+  },
+});
+
+type DataTableFeatures = typeof dataTableFeatures;
 
 function getDataTableHeadAlign(header: {
   align?: DataTableColumn<unknown>["align"];
@@ -327,7 +346,7 @@ function getDataTableColumnLayoutStyle(
   };
 }
 
-export function useDataTable<T>(
+export function useDataTable<T extends Record<string, unknown>>(
   props: DataTableProps<T>,
   libDefaults: DataTableLibDefaults,
 ) {
@@ -527,7 +546,7 @@ export function useDataTable<T>(
     return selectionToRowSelection(merged.selection);
   }, [merged.selection]);
 
-  const columnVisibility = useMemo((): VisibilityState => {
+  const columnVisibility = useMemo((): ColumnVisibilityState => {
     return fromPairs(
       hiddenColumns.map((id) => {
         return [id, false];
@@ -544,8 +563,8 @@ export function useDataTable<T>(
     };
   }, [columnFilters, columnVisibility, rowSelection, sortingState]);
 
-  const columnDefs = useMemo((): ColumnDef<T>[] => {
-    const defs: ColumnDef<T>[] = columns.map((column) => {
+  const columnDefs = useMemo((): ColumnDef<DataTableFeatures, T>[] => {
+    const defs: ColumnDef<DataTableFeatures, T>[] = columns.map((column) => {
       return {
         id: column.id,
         enableSorting: column.sortable === true,
@@ -614,7 +633,7 @@ export function useDataTable<T>(
     [applySorting],
   );
 
-  const table = useReactTable({
+  const table = useTable({
     getRowId,
     data: rows,
     onSortingChange,
@@ -623,13 +642,11 @@ export function useDataTable<T>(
     onRowSelectionChange,
     manualSorting: serverPaged,
     enableSortingRemoval: true,
+    features: dataTableFeatures,
     manualFiltering: serverPaged,
     enableHiding: visibilityEnabled,
     enableRowSelection: selectionEnabled,
-    getCoreRowModel: dataTableCoreRowModel,
     enableMultiRowSelection: selectionMultiple,
-    getSortedRowModel: serverPaged ? undefined : dataTableSortedRowModel,
-    getFilteredRowModel: serverPaged ? undefined : dataTableFilteredRowModel,
   });
 
   const tableRowModelRows = table.getRowModel().rows;

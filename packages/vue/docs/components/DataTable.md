@@ -153,7 +153,7 @@ Empty rows render `EmptyState` at the table `size`, with the semantic `inbox` ic
 />
 ```
 
-Install `@tanstack/vue-table` next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
+Install `@tanstack/vue-table` v9 next to `@bridge-ui/vue` when you use `DataTable`. The public API stays `columns` / `rows` / `sorting` / `selection` / `filters` / `columnSearch` / `hiddenColumns` / `search` / `expanded` — the table engine is not exported.
 
 ### Columns
 

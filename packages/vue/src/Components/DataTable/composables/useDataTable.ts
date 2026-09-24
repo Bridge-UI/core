@@ -1,14 +1,21 @@
 // ** External Imports
 import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useVueTable,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
+  tableFeatures,
+  useTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnVisibilityState,
   type RowSelectionState,
   type SortingState,
-  type VisibilityState,
 } from "@tanstack/vue-table";
 import {
   compact,
@@ -252,11 +259,23 @@ const chromeColumn = {
 const EMPTY_ROWS: never[] = [];
 const EMPTY_COLUMNS: never[] = [];
 const EMPTY_IDS: string[] = [];
-const dataTableCoreRowModel = getCoreRowModel();
-const dataTableSortedRowModel = getSortedRowModel();
-const dataTableFilteredRowModel = getFilteredRowModel();
+const dataTableFeatures = tableFeatures({
+  rowSortingFeature,
+  rowSelectionFeature,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns: {
+    text: sortFn_text,
+    datetime: sortFn_datetime,
+    alphanumeric: sortFn_alphanumeric,
+  },
+});
 
-export function useDataTable<T>(
+type DataTableFeatures = typeof dataTableFeatures;
+
+export function useDataTable<T extends Record<string, unknown>>(
   props: DataTableOwnProps<T>,
   libDefaults: DataTableLibDefaults,
   models: DataTableModels,
@@ -405,7 +424,7 @@ export function useDataTable<T>(
     return models.hiddenColumns.value ?? EMPTY_IDS;
   });
 
-  const columnVisibility = computed((): VisibilityState => {
+  const columnVisibility = computed((): ColumnVisibilityState => {
     return fromPairs(
       hiddenColumns.value.map((id) => {
         return [id, false];
@@ -413,33 +432,35 @@ export function useDataTable<T>(
     );
   });
 
-  const columnDefs = computed((): ColumnDef<T>[] => {
-    const defs: ColumnDef<T>[] = columns.value.map((column) => {
-      return {
-        id: column.id,
-        enableSorting: column.sortable === true,
-        enableHiding: column.hideable !== false,
-        enableColumnFilter: isDataTableColumnFilterable(column),
-        header: () => {
-          return column.header;
-        },
-        cell: (info) => {
-          return column.cell?.(info.row.original) ?? null;
-        },
-        accessorFn: (row) => {
-          return getDataTableColumnAccessor(row, column);
-        },
-        filterFn: (row, columnId, filterValue) => {
-          const values = isArray(filterValue) ? filterValue : [];
+  const columnDefs = computed((): ColumnDef<DataTableFeatures, T>[] => {
+    const defs: ColumnDef<DataTableFeatures, T>[] = columns.value.map(
+      (column) => {
+        return {
+          id: column.id,
+          enableSorting: column.sortable === true,
+          enableHiding: column.hideable !== false,
+          enableColumnFilter: isDataTableColumnFilterable(column),
+          header: () => {
+            return column.header;
+          },
+          cell: (info) => {
+            return column.cell?.(info.row.original) ?? null;
+          },
+          accessorFn: (row) => {
+            return getDataTableColumnAccessor(row, column);
+          },
+          filterFn: (row, columnId, filterValue) => {
+            const values = isArray(filterValue) ? filterValue : [];
 
-          if (isEmpty(values)) {
-            return true;
-          }
+            if (isEmpty(values)) {
+              return true;
+            }
 
-          return values.includes(String(row.getValue(columnId) ?? ""));
-        },
-      };
-    });
+            return values.includes(String(row.getValue(columnId) ?? ""));
+          },
+        };
+      },
+    );
 
     return compact([
       selectionEnabled.value
@@ -452,10 +473,10 @@ export function useDataTable<T>(
     ]);
   });
 
-  const table = useVueTable({
+  const table = useTable({
     data: rows,
     enableSortingRemoval: true,
-    getCoreRowModel: dataTableCoreRowModel,
+    features: dataTableFeatures,
     get columns() {
       return columnDefs.value;
     },
@@ -474,14 +495,8 @@ export function useDataTable<T>(
     get enableMultiRowSelection() {
       return selectionMultiple.value;
     },
-    get getSortedRowModel() {
-      return serverPaged.value ? undefined : dataTableSortedRowModel;
-    },
-    getRowId: (row, index) => {
+    getRowId: (row: T, index: number) => {
       return resolveDataTableRowId(row, index, merged.value.getRowId);
-    },
-    get getFilteredRowModel() {
-      return serverPaged.value ? undefined : dataTableFilteredRowModel;
     },
     onRowSelectionChange: (updater) => {
       const next = isFunction(updater) ? updater(rowSelection.value) : updater;
