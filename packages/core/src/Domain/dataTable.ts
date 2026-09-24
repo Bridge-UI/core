@@ -1117,7 +1117,7 @@ export function toggleDataTableRowExpansion(
  */
 export function selectionToRowSelection(
   ids: string[] | undefined,
-): Record<string, boolean> {
+): Record<string, true> {
   return fromPairs((ids ?? []).map((id) => [id, true]));
 }
 

@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 // ** External Imports
 import { computed, useId, useSlots, type VNodeChild } from "vue";
 

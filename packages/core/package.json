@@ -75,8 +75,8 @@
   "dependencies": {
     "@floating-ui/dom": "^1.8.0",
     "clsx": "^2.1.1",
-    "es-toolkit": "^1.50.0",
-    "tailwind-merge": "^3.6.0"
+    "es-toolkit": "^1.52.0",
+    "tailwind-merge": "^3.7.0"
   },
   "scripts": {
     "build": "vite build",
@@ -85,7 +85,7 @@
     "test:run": "vitest run"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.6.2",
     "typescript": "^6.0.3"
   }
 }
