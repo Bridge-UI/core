@@ -287,7 +287,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       );
     }
 
-    // Host is outside React's child fiber so TipTap/Quill DOM survives re-renders
+    // Host is outside React's child fiber so TipTap DOM survives re-renders
     // and FormField chrome class updates without React wiping `.ProseMirror`.
     const host = document.createElement("div");
     host.className = "min-h-0 min-w-0 flex-1 outline-none";

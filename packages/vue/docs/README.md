@@ -98,4 +98,3 @@ Import from a subpath and install the matching optional peer. They are **not** r
 - `@bridge-ui/vue/Adapters/Examples/i18n-dictionary`
 - `@bridge-ui/vue/Adapters/Examples/i18n-vue-i18n`
 - `@bridge-ui/vue/Adapters/Examples/rich-text-tiptap`
-- `@bridge-ui/vue/Adapters/Examples/rich-text-quill`

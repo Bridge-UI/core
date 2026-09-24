@@ -316,7 +316,7 @@ export function useRichTextEditor(
       );
     }
 
-    // Host is outside Vue's VNode children so TipTap/Quill DOM survives patches.
+    // Host is outside Vue's VNode children so TipTap DOM survives patches.
     const host = document.createElement("div");
     host.className = "min-h-0 min-w-0 flex-1 outline-none";
     surface.appendChild(host);

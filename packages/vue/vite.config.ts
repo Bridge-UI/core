@@ -94,8 +94,6 @@ export default defineConfig({
         "vue-i18n",
         /^es-toolkit/,
         /^@tiptap\//,
-        "quill",
-        /^quill\//,
         "@lucide/vue",
         "tailwind-merge",
         "moment-timezone",

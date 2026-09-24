@@ -356,7 +356,7 @@ export interface BridgeUIGlobal {
    * Rich-text engine adapter used by `RichTextEditor`.
    * Required when mounting `RichTextEditor` (no native default in core).
    * Ready adapters ship from `@bridge-ui/react` / `@bridge-ui/vue`
-   * (`Adapters/Examples/rich-text-tiptap`, `rich-text-quill`).
+   * (`Adapters/Examples/rich-text-tiptap`).
    *
    * @default undefined
    */

@@ -92,8 +92,6 @@ export default defineConfig({
         "react-dom",
         /^es-toolkit/,
         /^@tiptap\//,
-        "quill",
-        /^quill\//,
         "lucide-react",
         "tailwind-merge",
         "moment-timezone",

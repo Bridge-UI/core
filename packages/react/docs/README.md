@@ -98,4 +98,3 @@ Import from a subpath and install the matching optional peer. They are **not** r
 - `@bridge-ui/react/Adapters/Examples/i18n-dictionary`
 - `@bridge-ui/react/Adapters/Examples/i18n-i18next`
 - `@bridge-ui/react/Adapters/Examples/rich-text-tiptap`
-- `@bridge-ui/react/Adapters/Examples/rich-text-quill`

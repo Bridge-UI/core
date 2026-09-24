@@ -103,12 +103,11 @@ const dates = createMomentDateAdapter({
 
 ### Rich-text adapter
 
-Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapters: `@bridge-ui/vue/Adapters/Examples/rich-text-tiptap` and `Adapters/Examples/rich-text-quill`. Install the matching editor peers next to `@bridge-ui/vue`.
+Provide `global.richText` when using `RichTextEditor`. There is no native default — mounting without an adapter throws. Ready adapter: `@bridge-ui/vue/Adapters/Examples/rich-text-tiptap`. Install the TipTap peers next to `@bridge-ui/vue`.
 
 ```ts
 import { createBridgeUI } from "@bridge-ui/vue";
 import { createTiptapRichTextAdapter } from "@bridge-ui/vue/Adapters/Examples/rich-text-tiptap";
-// or: import { createQuillRichTextAdapter } from "@bridge-ui/vue/Adapters/Examples/rich-text-quill";
 
 const richText = createTiptapRichTextAdapter();
 

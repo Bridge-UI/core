@@ -12,12 +12,11 @@ import { RichTextEditor } from "@bridge-ui/react/Components/RichTextEditor";
 
 ## Adapter
 
-Provide `global.richText` on `BridgeUIProvider`. Ready adapters:
+Provide `global.richText` on `BridgeUIProvider`. Ready adapter:
 
 ```ts
 import { BridgeUIProvider } from "@bridge-ui/react";
 import { createTiptapRichTextAdapter } from "@bridge-ui/react/Adapters/Examples/rich-text-tiptap";
-// or: import { createQuillRichTextAdapter } from "@bridge-ui/react/Adapters/Examples/rich-text-quill";
 
 const richText = createTiptapRichTextAdapter();
 ```
@@ -28,12 +27,11 @@ const richText = createTiptapRichTextAdapter();
 </BridgeUIProvider>
 ```
 
-| Adapter                              | Peer(s)                                                                                                                                       | Notes                                                               |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/extension-link` | Default recommendation; ProseMirror JSON                            |
-| `Adapters/Examples/rich-text-quill`  | `quill`                                                                                                                                       | Quill Delta JSON; no snow theme; import `quill/dist/quill.core.css` |
+| Adapter                              | Peer(s)                                                                                                                                       | Notes                             |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/extension-link` | Shipped example; ProseMirror JSON |
 
-Stick to one engine per app — TipTap JSON and Quill Delta are not interchangeable.
+Custom engines can implement `RichTextEditorAdapter` and pass them via `global.richText`.
 
 ## Examples
 
