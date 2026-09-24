@@ -1,5 +1,6 @@
 // ** External Imports
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { isObject } from "es-toolkit/compat";
 import { expect, test } from "vitest";
 
 // ** Core Imports
@@ -23,6 +24,6 @@ test("it should wrap Font Awesome definitions via normalize", () => {
   const adapter = createFontAwesomeIconAdapter();
   const wrapped = adapter.normalize?.(faCoffee);
 
+  expect(isObject(wrapped)).toBe(true);
   expect(wrapped).toBe(wrapFaIcon(faCoffee));
-  expect(typeof wrapped).toBe("object");
 });

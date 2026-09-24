@@ -3,6 +3,9 @@
  * Avoids pulling TipTap into Vitest / Cypress component suites.
  */
 
+// ** External Imports
+import { isNil, isString } from "es-toolkit/compat";
+
 // ** Core Imports
 import {
   applyRichTextEditableA11y,
@@ -12,6 +15,18 @@ import {
   type RichTextTool,
   type RichTextValue,
 } from "@bridge-ui/core/Adapters";
+
+function htmlFromValue(value: undefined | RichTextValue): string {
+  if (isString(value)) {
+    return value;
+  }
+
+  if (isNil(value)) {
+    return "";
+  }
+
+  return isString(value.html) ? value.html : "";
+}
 
 /**
  * Creates a lightweight {@link RichTextEditorAdapter} for tests.
@@ -36,14 +51,7 @@ export function createMockRichTextAdapter(): RichTextEditorAdapter {
         options.onSelectionChange?.();
       };
 
-      if (typeof options.value === "string") {
-        element.innerHTML = options.value;
-      } else if (options.value && typeof options.value === "object") {
-        const html = (options.value as { html?: string }).html;
-        element.innerHTML = typeof html === "string" ? html : "";
-      } else {
-        element.innerHTML = "";
-      }
+      element.innerHTML = htmlFromValue(options.value);
 
       applyRichTextEditableA11y(element, options);
       syncEditable();
@@ -78,6 +86,9 @@ export function createMockRichTextAdapter(): RichTextEditorAdapter {
           readOnly = next;
           syncEditable();
         },
+        setValue: (value: RichTextValue) => {
+          element.innerHTML = htmlFromValue(value);
+        },
         destroy: () => {
           element.removeEventListener("input", onInput);
           element.contentEditable = "false";
@@ -98,15 +109,6 @@ export function createMockRichTextAdapter(): RichTextEditorAdapter {
           }
 
           options.onSelectionChange?.();
-        },
-        setValue: (value: RichTextValue) => {
-          if (typeof value === "string") {
-            element.innerHTML = value;
-            return;
-          }
-
-          const html = (value as { html?: string }).html;
-          element.innerHTML = typeof html === "string" ? html : "";
         },
       };
     },
