@@ -82,12 +82,14 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   const resolveMessage = useResolveMessage();
   const adapter = useRichTextAdapter();
 
-  const surfaceRef = useRef<null | HTMLDivElement>(null);
-  const hostRef = useRef<null | HTMLDivElement>(null);
-  const handleRef = useRef<null | RichTextEditorHandle>(null);
-  const onChangeRef = useRef(props.onChange);
-  const [surfaceEl, setSurfaceEl] = useState<null | HTMLDivElement>(null);
   const [, setSelectionTick] = useState(0);
+  const onChangeRef = useRef(props.onChange);
+  const [linkHref, setLinkHref] = useState("");
+  const hostRef = useRef<null | HTMLDivElement>(null);
+  const surfaceRef = useRef<null | HTMLDivElement>(null);
+  const handleRef = useRef<null | RichTextEditorHandle>(null);
+  const [linkAnchor, setLinkAnchor] = useState<null | HTMLElement>(null);
+  const [surfaceEl, setSurfaceEl] = useState<null | HTMLDivElement>(null);
 
   onChangeRef.current = props.onChange;
 
@@ -250,6 +252,29 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     setSelectionTick((tick) => tick + 1);
   }, []);
 
+  const closeLinkEditor = useCallback(() => {
+    setLinkHref("");
+    setLinkAnchor(null);
+  }, []);
+
+  const confirmLink = useCallback(() => {
+    const href = linkHref.trim();
+
+    if (href.length === 0) {
+      return;
+    }
+
+    handleRef.current?.run("link", { href });
+    bumpSelection();
+    closeLinkEditor();
+  }, [linkHref, bumpSelection, closeLinkEditor]);
+
+  useEffect(() => {
+    if (!showToolbar) {
+      closeLinkEditor();
+    }
+  }, [showToolbar, closeLinkEditor]);
+
   useLayoutEffect(() => {
     if (isNil(surfaceEl)) {
       return;
@@ -378,26 +403,26 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       const onClick = (event: MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
 
-        if (isNil(handle)) {
+        const current = handleRef.current;
+
+        if (isNil(current)) {
           return;
         }
 
         if (tool === "link") {
-          if (handle.isActive("link")) {
-            handle.run("link");
-          } else {
-            const href = window.prompt(resolveMessage("URL"));
-
-            if (!isNil(href) && href.length > 0) {
-              handle.run("link", { href });
-            }
+          if (current.isActive("link")) {
+            current.run("link");
+            bumpSelection();
+            closeLinkEditor();
+            return;
           }
 
-          bumpSelection();
+          setLinkHref("");
+          setLinkAnchor(event.currentTarget);
           return;
         }
 
-        handle.run(tool);
+        current.run(tool);
         bumpSelection();
       };
 
@@ -415,6 +440,9 @@ export function useRichTextEditor(props: RichTextEditorProps) {
           disabled: isToolbarButtonDisabled(tool),
           rounded: formField.merged.rounded ?? "md",
           selected: handle?.isActive(tool) ?? false,
+          onMouseDown: (event: MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+          },
         },
         cn({
           [sizeToken?.toolbarButton ?? ""]: true,
@@ -426,6 +454,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       toolbarColor,
       bumpSelection,
       resolveMessage,
+      closeLinkEditor,
       toolbarButtonCustom,
       formField.merged.size,
       isToolbarButtonDisabled,
@@ -435,15 +464,25 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     ],
   );
 
+  const canConfirmLink = linkHref.trim().length > 0;
+  const linkUrlLabel = resolveMessage("URL");
+
   return {
     slots,
     tools,
     format,
+    linkHref,
     formField,
+    linkAnchor,
     isReadOnly,
     contentBind,
+    confirmLink,
     toolbarBind,
     showToolbar,
+    setLinkHref,
+    linkUrlLabel,
+    canConfirmLink,
+    closeLinkEditor,
     getToolbarButtonBind,
   };
 }

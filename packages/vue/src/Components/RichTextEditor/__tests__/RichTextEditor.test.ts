@@ -1,9 +1,18 @@
 // ** External Imports
 import { flushPromises, mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
+
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
 
 // ** Local Imports
 import { RichTextEditor } from "@/Components/RichTextEditor";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  resetLayerStackForTests();
+  document.body.innerHTML = "";
+});
 
 test("it should render a contenteditable surface", async () => {
   const wrapper = mount(RichTextEditor);
@@ -107,4 +116,96 @@ test("it should emit update:modelValue when content is edited", async () => {
   await flushPromises();
 
   expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+});
+
+test("it should apply a link from the url field", async () => {
+  const prompt = vi.fn();
+
+  vi.stubGlobal("prompt", prompt);
+  const wrapper = mount(RichTextEditor, { attachTo: document.body });
+
+  await flushPromises();
+  await wrapper.get('[aria-label="Link"]').trigger("click");
+  await flushPromises();
+
+  const url = document.body.querySelector(
+    'input[aria-label="URL"]',
+  ) as HTMLInputElement;
+
+  expect(url).not.toBeNull();
+  expect(prompt).not.toHaveBeenCalled();
+
+  url.value = "https://example.com";
+  url.dispatchEvent(new Event("input", { bubbles: true }));
+  await flushPromises();
+
+  const apply = [...document.body.querySelectorAll("button")].find((button) => {
+    return button.textContent === "Apply";
+  });
+
+  apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('input[aria-label="URL"]')).toBeNull();
+  expect(wrapper.get('[aria-label="Link"]').attributes("aria-pressed")).toBe(
+    "true",
+  );
+
+  wrapper.unmount();
+});
+
+test("it should leave the link unset when the url field is cancelled", async () => {
+  const wrapper = mount(RichTextEditor, { attachTo: document.body });
+
+  await flushPromises();
+  await wrapper.get('[aria-label="Link"]').trigger("click");
+  await flushPromises();
+
+  const cancel = [...document.body.querySelectorAll("button")].find(
+    (button) => {
+      return button.textContent === "Cancel";
+    },
+  );
+
+  cancel?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+
+  expect(document.body.querySelector('input[aria-label="URL"]')).toBeNull();
+  expect(wrapper.get('[aria-label="Link"]').attributes("aria-pressed")).toBe(
+    "false",
+  );
+
+  wrapper.unmount();
+});
+
+test("it should remove an active link from the toolbar", async () => {
+  const wrapper = mount(RichTextEditor, { attachTo: document.body });
+
+  await flushPromises();
+  await wrapper.get('[aria-label="Link"]').trigger("click");
+  await flushPromises();
+
+  const url = document.body.querySelector(
+    'input[aria-label="URL"]',
+  ) as HTMLInputElement;
+
+  url.value = "https://example.com";
+  url.dispatchEvent(new Event("input", { bubbles: true }));
+  await flushPromises();
+
+  const apply = [...document.body.querySelectorAll("button")].find((button) => {
+    return button.textContent === "Apply";
+  });
+
+  apply?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  await flushPromises();
+  await wrapper.get('[aria-label="Link"]').trigger("click");
+  await flushPromises();
+
+  expect(document.body.querySelector('input[aria-label="URL"]')).toBeNull();
+  expect(wrapper.get('[aria-label="Link"]').attributes("aria-pressed")).toBe(
+    "false",
+  );
+
+  wrapper.unmount();
 });

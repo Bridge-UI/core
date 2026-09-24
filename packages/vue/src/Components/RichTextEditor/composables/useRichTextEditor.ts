@@ -90,9 +90,11 @@ export function useRichTextEditor(
   const resolveMessage = useResolveMessage();
   const adapter = useRichTextAdapter();
 
-  const handleRef = ref<null | RichTextEditorHandle>(null);
-  const hostRef = ref<null | HTMLDivElement>(null);
+  const linkHref = ref("");
   const selectionTick = ref(0);
+  const hostRef = ref<null | HTMLDivElement>(null);
+  const linkAnchor = ref<null | HTMLElement>(null);
+  const handleRef = ref<null | RichTextEditorHandle>(null);
 
   const split = computed(() => {
     return splitComponentProps<
@@ -263,6 +265,77 @@ export function useRichTextEditor(
     selectionTick.value += 1;
   }
 
+  function closeLinkEditor() {
+    linkHref.value = "";
+    linkAnchor.value = null;
+  }
+
+  function confirmLink() {
+    const href = linkHref.value.trim();
+
+    if (href.length === 0) {
+      return;
+    }
+
+    handleRef.value?.run("link", { href });
+    bumpSelection();
+    closeLinkEditor();
+  }
+
+  function onToolClick(tool: RichTextTool, event: MouseEvent) {
+    const handle = handleRef.value;
+
+    if (isNil(handle)) {
+      return;
+    }
+
+    if (tool === "link") {
+      if (handle.isActive("link")) {
+        handle.run("link");
+        bumpSelection();
+        closeLinkEditor();
+        return;
+      }
+
+      const anchor = event.currentTarget;
+
+      if (anchor instanceof HTMLElement) {
+        linkHref.value = "";
+        linkAnchor.value = anchor;
+      }
+
+      return;
+    }
+
+    handle.run(tool);
+    bumpSelection();
+  }
+
+  const linkOpen = computed({
+    get() {
+      return !isNil(linkAnchor.value);
+    },
+    set(open: boolean) {
+      if (!open) {
+        closeLinkEditor();
+      }
+    },
+  });
+
+  const canConfirmLink = computed(() => {
+    return linkHref.value.trim().length > 0;
+  });
+
+  const linkUrlLabel = computed(() => {
+    return resolveMessage("URL");
+  });
+
+  watch(showToolbar, (visible) => {
+    if (!visible) {
+      closeLinkEditor();
+    }
+  });
+
   function destroyHandle() {
     handleRef.value?.destroy();
     handleRef.value = null;
@@ -432,42 +505,23 @@ export function useRichTextEditor(
     ) as ButtonOwnProps;
   }
 
-  function runTool(tool: RichTextTool) {
-    const handle = handleRef.value;
-
-    if (isNil(handle)) {
-      return;
-    }
-
-    if (tool === "link") {
-      if (handle.isActive("link")) {
-        handle.run("link");
-      } else {
-        const href = window.prompt(resolveMessage("URL"));
-
-        if (!isNil(href) && href.length > 0) {
-          handle.run("link", { href });
-        }
-      }
-
-      bumpSelection();
-      return;
-    }
-
-    handle.run(tool);
-    bumpSelection();
-  }
-
   return {
     slots,
     tools,
     format,
-    runTool,
+    linkHref,
+    linkOpen,
     formField,
+    linkAnchor,
     isReadOnly,
     contentBind,
+    confirmLink,
+    onToolClick,
     toolbarBind,
     showToolbar,
+    linkUrlLabel,
+    canConfirmLink,
+    closeLinkEditor,
     getToolbarButtonBind,
   };
 }

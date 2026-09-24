@@ -6,17 +6,20 @@ import { ref, useTemplateRef } from "vue";
 import type { RichTextValue } from "@bridge-ui/core/Adapters";
 
 // ** Local Imports
+import { ActionFooter } from "@/Components/ActionFooter";
 import { Button } from "@/Components/Button";
 import {
   FORM_FIELD_CHROME_SLOT_NAMES,
   FormField,
 } from "@/Components/FormField";
+import { Menu } from "@/Components/Menu";
 import { useRichTextEditor } from "@/Components/RichTextEditor/composables/useRichTextEditor";
 import type {
   RichTextEditorEmits,
   RichTextEditorOwnProps,
   RichTextEditorSlots,
 } from "@/Components/RichTextEditor/richTextEditor.types";
+import { TextField } from "@/Components/TextField";
 import { hasNamedSlot, presentSlotNames, useOptionalModel } from "@/Utils";
 
 defineSlots<RichTextEditorSlots>();
@@ -40,11 +43,18 @@ const value = useOptionalModel(model, uncontrolledValue);
 const {
   slots,
   tools,
-  runTool,
+  linkHref,
+  linkOpen,
   formField,
+  linkAnchor,
   contentBind,
+  confirmLink,
+  onToolClick,
   toolbarBind,
   showToolbar,
+  linkUrlLabel,
+  canConfirmLink,
+  closeLinkEditor,
   getToolbarButtonBind,
 } = useRichTextEditor(props, value, emit, contentRef);
 </script>
@@ -70,13 +80,36 @@ const {
           <Button
             :key="tool"
             v-for="tool in tools"
-            v-on:click="runTool(tool)"
+            v-on:mousedown.prevent
             v-bind="getToolbarButtonBind(tool)"
+            v-on:click="onToolClick(tool, $event)"
           />
         </div>
       </template>
 
       <div ref="content" v-bind="contentBind" />
     </div>
+
+    <Menu v-model="linkOpen" :anchor-el="linkAnchor" placement="bottom-start">
+      <div class="flex items-center gap-1 p-1.5">
+        <TextField
+          size="sm"
+          type="url"
+          class="w-44"
+          v-model="linkHref"
+          autocomplete="off"
+          :aria-label="linkUrlLabel"
+          :placeholder="linkUrlLabel"
+        />
+        <ActionFooter
+          v-on:apply="confirmLink"
+          v-on:cancel="closeLinkEditor"
+          :custom-props="{
+            applyButton: { size: 'sm', disabled: !canConfirmLink },
+            cancelButton: { size: 'sm' },
+          }"
+        />
+      </div>
+    </Menu>
   </FormField>
 </template>

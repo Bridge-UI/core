@@ -2,11 +2,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Core Imports
+import { resetLayerStackForTests } from "@bridge-ui/core/Layer";
+
 // ** Local Imports
 import { RichTextEditor } from "@/Components/RichTextEditor";
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
+  resetLayerStackForTests();
 });
 
 test("it should render a contenteditable surface", () => {
@@ -108,4 +113,58 @@ test("it should set aria-describedby when description is shown", () => {
   expect(screen.getByRole("textbox").getAttribute("aria-describedby")).toBe(
     "rte-field-description",
   );
+});
+
+test("it should apply a link from the url field", () => {
+  const prompt = vi.fn();
+
+  vi.stubGlobal("prompt", prompt);
+
+  render(<RichTextEditor aria-label="Description" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Link" }));
+
+  expect(prompt).not.toHaveBeenCalled();
+  expect(screen.getByRole("textbox", { name: "URL" })).toBeTruthy();
+
+  fireEvent.change(screen.getByRole("textbox", { name: "URL" }), {
+    target: { value: "https://example.com" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+
+  expect(screen.queryByRole("textbox", { name: "URL" })).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Link" }).getAttribute("aria-pressed"),
+  ).toBe("true");
+});
+
+test("it should leave the link unset when the url field is cancelled", () => {
+  render(<RichTextEditor aria-label="Description" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Link" }));
+  fireEvent.change(screen.getByRole("textbox", { name: "URL" }), {
+    target: { value: "https://example.com" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+
+  expect(screen.queryByRole("textbox", { name: "URL" })).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Link" }).getAttribute("aria-pressed"),
+  ).toBe("false");
+});
+
+test("it should remove an active link from the toolbar", () => {
+  render(<RichTextEditor aria-label="Description" />);
+
+  fireEvent.click(screen.getByRole("button", { name: "Link" }));
+  fireEvent.change(screen.getByRole("textbox", { name: "URL" }), {
+    target: { value: "https://example.com" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+  fireEvent.click(screen.getByRole("button", { name: "Link" }));
+
+  expect(screen.queryByRole("textbox", { name: "URL" })).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Link" }).getAttribute("aria-pressed"),
+  ).toBe("false");
 });
