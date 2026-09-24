@@ -464,8 +464,8 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     ],
   );
 
-  const canConfirmLink = linkHref.trim().length > 0;
   const linkUrlLabel = resolveMessage("URL");
+  const canConfirmLink = linkHref.trim().length > 0;
 
   return {
     slots,

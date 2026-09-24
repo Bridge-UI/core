@@ -54,36 +54,42 @@ function RichTextEditor(props: RichTextEditorProps) {
           }
         }}
       >
-        <div className="flex items-center gap-1 p-1.5">
-          <TextField
-            size="sm"
-            type="url"
-            value={linkHref}
-            className="w-44"
-            autoComplete="off"
-            aria-label={linkUrlLabel}
-            placeholder={linkUrlLabel}
-            onChange={(event) => {
-              const target = event.target;
+        <div className="flex w-64 flex-col">
+          <div className="p-1.5">
+            <TextField
+              size="sm"
+              type="url"
+              value={linkHref}
+              hideErrorMessage
+              className="w-full"
+              autoComplete="off"
+              aria-label={linkUrlLabel}
+              placeholder={linkUrlLabel}
+              onChange={(event) => {
+                const target = event.target;
 
-              if (!(target instanceof HTMLInputElement)) {
-                return;
-              }
+                if (!(target instanceof HTMLInputElement)) {
+                  return;
+                }
 
-              setLinkHref(target.value);
-            }}
-          />
-          <ActionFooter
-            onApply={confirmLink}
-            onCancel={closeLinkEditor}
-            customProps={{
-              cancelButton: { size: "sm" },
-              applyButton: {
-                size: "sm",
-                disabled: !canConfirmLink,
-              },
-            }}
-          />
+                setLinkHref(target.value);
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40">
+            <ActionFooter
+              onApply={confirmLink}
+              onCancel={closeLinkEditor}
+              customProps={{
+                cancelButton: { size: "sm" },
+                applyButton: {
+                  size: "sm",
+                  disabled: !canConfirmLink,
+                },
+              }}
+            />
+          </div>
         </div>
       </Menu>
     </FormField>

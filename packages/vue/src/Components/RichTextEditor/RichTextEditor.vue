@@ -91,24 +91,32 @@ const {
     </div>
 
     <Menu v-model="linkOpen" :anchor-el="linkAnchor" placement="bottom-start">
-      <div class="flex items-center gap-1 p-1.5">
-        <TextField
-          size="sm"
-          type="url"
-          class="w-44"
-          v-model="linkHref"
-          autocomplete="off"
-          :aria-label="linkUrlLabel"
-          :placeholder="linkUrlLabel"
-        />
-        <ActionFooter
-          v-on:apply="confirmLink"
-          v-on:cancel="closeLinkEditor"
-          :custom-props="{
-            applyButton: { size: 'sm', disabled: !canConfirmLink },
-            cancelButton: { size: 'sm' },
-          }"
-        />
+      <div class="flex w-64 flex-col">
+        <div class="p-1.5">
+          <TextField
+            size="sm"
+            type="url"
+            class="w-full"
+            v-model="linkHref"
+            autocomplete="off"
+            hide-error-message
+            :aria-label="linkUrlLabel"
+            :placeholder="linkUrlLabel"
+          />
+        </div>
+
+        <div
+          class="flex items-center justify-end gap-2 border-t border-dark-100 bg-dark-50 px-3 py-2 dark:border-dark-800 dark:bg-dark-950/40"
+        >
+          <ActionFooter
+            v-on:apply="confirmLink"
+            v-on:cancel="closeLinkEditor"
+            :custom-props="{
+              cancelButton: { size: 'sm' },
+              applyButton: { size: 'sm', disabled: !canConfirmLink },
+            }"
+          />
+        </div>
       </div>
     </Menu>
   </FormField>
