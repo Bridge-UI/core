@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { useMemo } from "react";
+import { useMemo, type ElementType } from "react";
 
 // ** Core Imports
 import { collapseBreadcrumbItems } from "@bridge-ui/core/Domain";
@@ -42,17 +42,17 @@ type BreadcrumbLibDefaults = LibDefaultsShape<
   "size" | "separator"
 >;
 
-type BreadcrumbMerged = MergeLibDefaults<
-  BreadcrumbOwnProps,
+type BreadcrumbMerged<T extends ElementType = "a"> = MergeLibDefaults<
+  BreadcrumbOwnProps<T>,
   BreadcrumbLibDefaults
 >;
 
-export function useBreadcrumb(
-  props: BreadcrumbProps,
+export function useBreadcrumb<T extends ElementType = "a">(
+  props: BreadcrumbProps<T>,
   libDefaults: BreadcrumbLibDefaults,
 ) {
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    BreadcrumbProps,
+    BreadcrumbProps<T>,
     typeof breadcrumbBridgeKeys
   >({
     props,
@@ -60,7 +60,7 @@ export function useBreadcrumb(
   });
 
   const { merged, entry: bridgeBreadcrumb } = useBridgeUIComponent<
-    BreadcrumbMerged,
+    BreadcrumbMerged<T>,
     "Breadcrumb"
   >({
     libDefaults,

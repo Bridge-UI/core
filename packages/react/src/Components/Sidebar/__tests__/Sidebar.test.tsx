@@ -1,6 +1,6 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
@@ -13,17 +13,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
-
-function RouterLinkStub({
-  children,
-  ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
-  return (
-    <a data-testid="router-link" {...props}>
-      {children}
-    </a>
-  );
-}
 
 afterEach(() => {
   cleanup();
@@ -97,8 +86,8 @@ test("it should keep expanded state when collapsible is none", () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Toggle sidebar" }));
 
-  expect(container.querySelector('[data-state="expanded"]')).not.toBeNull();
   expect(container.querySelector('[data-state="collapsed"]')).toBeNull();
+  expect(container.querySelector('[data-state="expanded"]')).not.toBeNull();
 });
 
 test("it should render header and footer slots", () => {
@@ -118,8 +107,8 @@ test("it should render header and footer slots", () => {
     </SidebarProvider>,
   );
 
-  expect(screen.getByText("Brand")).toBeTruthy();
   expect(screen.getByText("User")).toBeTruthy();
+  expect(screen.getByText("Brand")).toBeTruthy();
 });
 
 test("it should mark the trigger as expanded by default", () => {
@@ -244,8 +233,8 @@ test("it should collapse header rows with secondary to a square hit", () => {
 
   const item = screen.getByRole("button", { name: "Acme Inc" });
 
-  expect(item.className).toContain("size-8");
   expect(item.className).toContain("p-0");
+  expect(item.className).toContain("size-8");
   expect(item.className).not.toMatch(/\bpx-4\b/);
 });
 
@@ -265,9 +254,9 @@ test("it should apply nav chrome on SidebarList and SidebarListItem", () => {
 
   const item = screen.getByRole("button", { name: "Home" });
 
-  expect(container.querySelector("ul")?.className).toContain("gap-1");
   expect(item.className).toContain("min-h-8");
   expect(item.className).toContain("rounded-lg");
+  expect(container.querySelector("ul")?.className).toContain("gap-1");
 });
 
 test("it should hide nested SidebarList when the icon rail is collapsed", () => {
@@ -337,8 +326,9 @@ test("it should render SidebarListItem linkAs inside the list root", () => {
         <SidebarList>
           <SidebarListItem
             href="/transactions"
+            linkAs={InertiaLink}
             primary="Transactions"
-            linkAs={RouterLinkStub}
+            linkProps={{ onBefore: () => false }}
           />
         </SidebarList>
       </Sidebar>
@@ -348,13 +338,13 @@ test("it should render SidebarListItem linkAs inside the list root", () => {
     </SidebarProvider>,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("link", { name: "Transactions" });
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
-  expect(link.getAttribute("href")).toBe("/transactions");
-  expect(link.className).toContain("no-underline");
+  expect(event.defaultPrevented).toBe(true);
   expect(link.parentElement?.tagName).toBe("LI");
+  expect(link.className).toContain("no-underline");
+  expect(link.getAttribute("href")).toBe("/transactions");
 });

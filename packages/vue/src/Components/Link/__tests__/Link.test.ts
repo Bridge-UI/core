@@ -1,31 +1,11 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { Info } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { Link } from "@/Components/Link";
-
-const RouterLinkStub = defineComponent({
-  name: "RouterLinkStub",
-  props: {
-    href: String,
-  },
-  setup(props, { attrs, slots }) {
-    return () => {
-      return h(
-        "a",
-        {
-          ...attrs,
-          href: props.href,
-          "data-testid": "router-link",
-        },
-        slots.default?.(),
-      );
-    };
-  },
-});
 
 test("it should render as an anchor with default slot content", () => {
   const wrapper = mount(Link, {
@@ -129,26 +109,45 @@ test("it should forward customProps to icon sub-parts", () => {
 test("it should render linkAs with href and anchor classes", () => {
   const wrapper = mount(Link, {
     slots: { default: "Documentation" },
-    props: { href: "/docs", linkAs: RouterLinkStub },
+    props: {
+      href: "/docs",
+      linkAs: InertiaLink,
+      linkProps: { onBefore: () => false },
+    },
   });
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("a");
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.element.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
+  expect(event.defaultPrevented).toBe(true);
   expect(link.attributes("href")).toBe("/docs");
-  expect(link.classes()).toContain("font-medium");
   expect(link.text()).toContain("Documentation");
+  expect(link.classes()).toContain("font-medium");
+});
+
+test("it should forward linkProps to linkAs", () => {
+  const wrapper = mount(Link, {
+    slots: { default: "Logout" },
+    props: {
+      href: "/logout",
+      linkAs: InertiaLink,
+      linkProps: { method: "post" },
+    },
+  });
+
+  const link = wrapper.get("button");
+
+  expect(link.element.tagName).toBe("BUTTON");
+  expect(link.attributes("type")).toBe("button");
 });
 
 test("it should keep a native anchor when linkAs is set and the link is disabled", () => {
   const wrapper = mount(Link, {
     slots: { default: "Disabled" },
-    props: { href: "/docs", disabled: true, linkAs: RouterLinkStub },
+    props: { href: "/docs", disabled: true, linkAs: InertiaLink },
   });
 
-  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
   expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });

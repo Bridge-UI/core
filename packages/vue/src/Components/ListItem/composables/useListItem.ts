@@ -38,6 +38,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps, type LinkAsTag } from "@/Utils/linkAs";
 
 const listItemBridgeKeys = [
   "as",
@@ -53,6 +54,7 @@ const listItemBridgeKeys = [
   "primary",
   "disabled",
   "selected",
+  "linkProps",
   "secondary",
   "customProps",
   "interactive",
@@ -61,10 +63,13 @@ const listItemBridgeKeys = [
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role">;
 
-type ListItemMerged = MergeLibDefaults<ListItemOwnProps, ListItemLibDefaults>;
+type ListItemMerged<T extends LinkAsTag = "a"> = MergeLibDefaults<
+  ListItemOwnProps<T>,
+  ListItemLibDefaults
+>;
 
-export function useListItem(
-  props: ListItemOwnProps,
+export function useListItem<T extends LinkAsTag = "a">(
+  props: ListItemOwnProps<T>,
   libDefaults: ListItemLibDefaults,
   slots: ReturnType<typeof useSlots>,
 ) {
@@ -75,14 +80,14 @@ export function useListItem(
   const hasListboxContext = !isNil(listboxContextRef);
 
   const split = computed(() => {
-    return splitComponentProps<ListItemProps, typeof listItemBridgeKeys>({
+    return splitComponentProps<ListItemProps<T>, typeof listItemBridgeKeys>({
       props: { ...attrs, ...props },
       bridgeKeys: listItemBridgeKeys,
     });
   });
 
   const { merged, entry: bridgeListItem } = useBridgeUIComponent<
-    ListItemMerged,
+    ListItemMerged<T>,
     "ListItem"
   >({
     libDefaults,
@@ -278,7 +283,11 @@ export function useListItem(
 
     const bind = mergePartBind(
       customProps.value?.interactive,
-      {},
+      resolveLinkAsProps(
+        merged.value.linkAs,
+        merged.value.linkProps,
+        interactiveTag.value,
+      ),
       {
         "aria-disabled": merged.value.disabled ? true : undefined,
         rel:

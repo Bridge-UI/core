@@ -17,6 +17,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps, type LinkAsTag } from "@/Utils/linkAs";
 
 const breadcrumbItemBridgeKeys = [
   "as",
@@ -26,11 +27,14 @@ const breadcrumbItemBridgeKeys = [
   "current",
   "endIcon",
   "disabled",
+  "linkProps",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof BreadcrumbItemOwnProps)[];
 
-export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
+export function useBreadcrumbItem<T extends LinkAsTag = "a">(
+  props: BreadcrumbItemOwnProps<T>,
+) {
   const attrs = useAttrs();
   const slots = useSlots();
 
@@ -44,7 +48,7 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
 
   const split = computed(() => {
     return splitComponentProps<
-      BreadcrumbItemProps,
+      BreadcrumbItemProps<T>,
       typeof breadcrumbItemBridgeKeys
     >({
       props: { ...attrs, ...props },
@@ -53,7 +57,7 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
   });
 
   const { merged, entry: bridgeBreadcrumbItem } = useBridgeUIComponent<
-    BreadcrumbItemOwnProps,
+    BreadcrumbItemOwnProps<T>,
     "BreadcrumbItem"
   >({
     componentName: "BreadcrumbItem",
@@ -151,18 +155,30 @@ export function useBreadcrumbItem(props: BreadcrumbItemOwnProps) {
       ? customProps.value?.current
       : customProps.value?.link;
 
-    return mergePartBind(partProps, linkInheritedAttrs.value, {
-      "aria-disabled": disabled.value || undefined,
-      "aria-current": isCurrent ? ("page" as const) : undefined,
-      href: !isCurrent && !disabled.value ? merged.value.href : undefined,
-      class: cn({
-        [isCurrent
-          ? (breadcrumb.value.tokenClasses.current ?? "")
-          : (breadcrumb.value.tokenClasses.link ?? "")]: true,
-        [get(mergedClasses.value, isCurrent ? "current" : "link") ?? ""]: true,
-        "pointer-events-none opacity-50": disabled.value && !isCurrent,
-      }),
-    });
+    return mergePartBind(
+      partProps,
+      {
+        ...linkInheritedAttrs.value,
+        ...resolveLinkAsProps(
+          merged.value.linkAs ?? breadcrumb.value.linkAs,
+          merged.value.linkProps,
+          crumbAs.value,
+        ),
+      },
+      {
+        "aria-disabled": disabled.value || undefined,
+        "aria-current": isCurrent ? ("page" as const) : undefined,
+        href: !isCurrent && !disabled.value ? merged.value.href : undefined,
+        class: cn({
+          [isCurrent
+            ? (breadcrumb.value.tokenClasses.current ?? "")
+            : (breadcrumb.value.tokenClasses.link ?? "")]: true,
+          [get(mergedClasses.value, isCurrent ? "current" : "link") ?? ""]:
+            true,
+          "pointer-events-none opacity-50": disabled.value && !isCurrent,
+        }),
+      },
+    );
   });
 
   const startIconBind = computed(() => {

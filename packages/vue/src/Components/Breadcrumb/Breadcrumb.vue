@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'a'">
 // ** Local Imports
 import type {
   BreadcrumbOwnProps,
@@ -6,12 +6,13 @@ import type {
 } from "@/Components/Breadcrumb/breadcrumb.types";
 import { useBreadcrumb } from "@/Components/Breadcrumb/composables/useBreadcrumb";
 import { BreadcrumbItem } from "@/Components/BreadcrumbItem";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<BreadcrumbSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = withDefaults(defineProps<BreadcrumbOwnProps>(), {
+const props = withDefaults(defineProps<BreadcrumbOwnProps<T>>(), {
   separator: "chevronRight",
 });
 
@@ -40,9 +41,11 @@ const { rootBind, listBind, collapsedItems, hasDefaultSlot } = useBreadcrumb(
             v-else
             :as="entry.item.as"
             :href="entry.item.href"
+            :link-as="props.linkAs"
             :current="entry.item.current"
             :end-icon="entry.item.endIcon"
             :disabled="entry.item.disabled"
+            :link-props="entry.item.linkProps"
             :start-icon="entry.item.startIcon"
           >
             {{ entry.item.label }}

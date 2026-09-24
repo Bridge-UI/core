@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'button'">
 // ** External Imports
 import { useSlots } from "vue";
 
@@ -10,12 +10,13 @@ import type {
 import { useButton } from "@/Components/Button/composables/useButton";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<ButtonSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ButtonOwnProps>();
+const props = defineProps<ButtonOwnProps<T>>();
 
 const slots = useSlots();
 
@@ -26,7 +27,6 @@ const {
   iconBind,
   rootBind,
   rootHref,
-  rootType,
   endIconBind,
   contentBind,
   endSlotBind,
@@ -52,7 +52,6 @@ const {
     :is="tag"
     :href="rootHref"
     v-bind="rootBind"
-    :type="rootType"
     :disabled="rootDisabled"
     :aria-busy="rootAriaBusy"
     :aria-disabled="rootAriaDisabled"

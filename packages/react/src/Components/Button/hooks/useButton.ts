@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, includes, isNil, omit } from "es-toolkit/compat";
-import { useMemo } from "react";
+import { useMemo, type ElementType } from "react";
 
 // ** Core Imports
 import {
@@ -29,6 +29,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps } from "@/Utils/linkAs";
 
 const buttonBridgeKeys = [
   "as",
@@ -47,6 +48,7 @@ const buttonBridgeKeys = [
   "variant",
   "disabled",
   "selected",
+  "linkProps",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
@@ -56,13 +58,19 @@ type ButtonLibDefaults = LibDefaultsShape<
   "as" | "size" | "color" | "density" | "rounded" | "variant"
 >;
 
-type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
+type ButtonMerged<T extends ElementType = "button"> = MergeLibDefaults<
+  ButtonOwnProps<T>,
+  ButtonLibDefaults
+>;
 
-export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
+export function useButton<T extends ElementType = "button">(
+  props: ButtonProps<T>,
+  libDefaults: ButtonLibDefaults,
+) {
   const group = useButtonGroupContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    ButtonProps,
+    ButtonProps<T>,
     typeof buttonBridgeKeys
   >({
     props,
@@ -79,7 +87,7 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   };
 
   const { merged, entry: bridgeButton } = useBridgeUIComponent<
-    ButtonMerged,
+    ButtonMerged<T>,
     "Button"
   >({
     libDefaults,
@@ -234,33 +242,41 @@ export function useButton(props: ButtonProps, libDefaults: ButtonLibDefaults) {
   });
 
   const rootBind = derived(() => {
-    return mergePartBind(customProps?.root, rootInheritedAttrs, {
-      "aria-pressed": isNil(merged.selected) ? undefined : merged.selected,
-      className: cn({
-        "inline-flex items-center justify-center": true,
-        "cursor-pointer outline-none outline-hidden": true,
-        "shrink-0": isMini,
-        [sizeClass ?? ""]: true,
-        [roundedClass ?? ""]: true,
-        "h-auto": isMini && !isNil(group) && group?.density !== "mini",
-        "border border-transparent": !isNil(group) && variantKey !== "outline",
-        "w-full": !isMini && merged.full,
-        "w-fit": !isMini && !merged.full,
-        "group hover:shadow-xs": !isMini,
-        [get(colorClasses, "base") ?? ""]: true,
-        [get(colorClasses, "hover") ?? ""]: true,
-        [get(colorClasses, "focus") ?? ""]: true,
-        [get(colorClasses, "selected") ?? ""]: merged.selected === true,
-        relative: true,
-        "z-10": merged.selected === true,
-        "transition-all ease-in-out duration-200": true,
-        "focus:ring-2": true,
-        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
-        "disabled:opacity-80 disabled:cursor-not-allowed": true,
-        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
-        [mergedClasses.root ?? ""]: true,
-      }),
-    });
+    return mergePartBind(
+      customProps?.root,
+      {
+        ...rootInheritedAttrs,
+        ...resolveLinkAsProps(merged.linkAs, merged.linkProps, tag),
+      },
+      {
+        "aria-pressed": isNil(merged.selected) ? undefined : merged.selected,
+        className: cn({
+          "inline-flex items-center justify-center": true,
+          "cursor-pointer outline-none outline-hidden": true,
+          "shrink-0": isMini,
+          [sizeClass ?? ""]: true,
+          [roundedClass ?? ""]: true,
+          "h-auto": isMini && !isNil(group) && group?.density !== "mini",
+          "border border-transparent":
+            !isNil(group) && variantKey !== "outline",
+          "w-full": !isMini && merged.full,
+          "w-fit": !isMini && !merged.full,
+          "group hover:shadow-xs": !isMini,
+          [get(colorClasses, "base") ?? ""]: true,
+          [get(colorClasses, "hover") ?? ""]: true,
+          [get(colorClasses, "focus") ?? ""]: true,
+          [get(colorClasses, "selected") ?? ""]: merged.selected === true,
+          relative: true,
+          "z-10": merged.selected === true,
+          "transition-all ease-in-out duration-200": true,
+          "focus:ring-2": true,
+          "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
+          "disabled:opacity-80 disabled:cursor-not-allowed": true,
+          "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+          [mergedClasses.root ?? ""]: true,
+        }),
+      },
+    );
   });
 
   const endIconBind = derived(() => {

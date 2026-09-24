@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'a'">
 // ** Local Imports
 import type {
   BreadcrumbItemOwnProps,
@@ -7,12 +7,13 @@ import type {
 import { useBreadcrumbItem } from "@/Components/BreadcrumbItem/composables/useBreadcrumbItem";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<BreadcrumbItemSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = withDefaults(defineProps<BreadcrumbItemOwnProps>(), {
+const props = withDefaults(defineProps<BreadcrumbItemOwnProps<T>>(), {
   current: false,
   disabled: false,
 });

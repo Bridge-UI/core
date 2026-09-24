@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'a'">
 // ** External Imports
 import { computed, useSlots } from "vue";
 
@@ -10,6 +10,7 @@ import type {
   ListItemSlots,
 } from "@/Components/ListItem/listItem.types";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<ListItemSlots>();
 
@@ -17,7 +18,7 @@ const slots = useSlots();
 
 defineOptions({ inheritAttrs: false });
 
-const props = withDefaults(defineProps<ListItemOwnProps>(), {
+const props = withDefaults(defineProps<ListItemOwnProps<T>>(), {
   as: "li",
   role: "button",
   divider: false,

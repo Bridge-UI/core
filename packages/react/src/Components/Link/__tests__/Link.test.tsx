@@ -1,7 +1,7 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/react";
 import { cleanup, render, screen } from "@testing-library/react";
 import { ExternalLink, Info } from "lucide-react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 afterEach(() => {
@@ -10,17 +10,6 @@ afterEach(() => {
 
 // ** Local Imports
 import { Link } from "@/Components/Link";
-
-function RouterLinkStub({
-  children,
-  ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
-  return (
-    <a data-testid="router-link" {...props}>
-      {children}
-    </a>
-  );
-}
 
 test("it should render as an anchor with children", () => {
   render(<Link href="/docs">Documentation</Link>);
@@ -120,30 +109,47 @@ test("it should forward customProps to icon sub-parts", () => {
 
 test("it should render linkAs with href and anchor classes", () => {
   render(
-    <Link href="/docs" linkAs={RouterLinkStub}>
+    <Link
+      href="/docs"
+      linkAs={InertiaLink}
+      linkProps={{ onBefore: () => false }}
+    >
       Documentation
     </Link>,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("link", { name: "Documentation" });
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
+  expect(event.defaultPrevented).toBe(true);
   expect(link.getAttribute("href")).toBe("/docs");
   expect(link.className).toContain("font-medium");
   expect(link.textContent).toContain("Documentation");
 });
 
+test("it should forward linkProps to linkAs", () => {
+  render(
+    <Link href="/logout" linkAs={InertiaLink} linkProps={{ method: "post" }}>
+      Logout
+    </Link>,
+  );
+
+  const link = screen.getByRole("button", { name: "Logout" });
+
+  expect(link.tagName).toBe("BUTTON");
+  expect(link.getAttribute("type")).toBe("button");
+});
+
 test("it should keep a native anchor when linkAs is set and the link is disabled", () => {
   render(
-    <Link disabled href="/docs" linkAs={RouterLinkStub}>
+    <Link disabled href="/docs" linkAs={InertiaLink}>
       Disabled
     </Link>,
   );
 
-  expect(screen.queryByTestId("router-link")).toBeNull();
-  expect(screen.getByText("Disabled").getAttribute("href")).toBeNull();
+  expect(screen.queryByRole("link")).toBeNull();
   expect(screen.getByText("Disabled").tagName).toBe("A");
+  expect(screen.getByText("Disabled").getAttribute("href")).toBeNull();
 });

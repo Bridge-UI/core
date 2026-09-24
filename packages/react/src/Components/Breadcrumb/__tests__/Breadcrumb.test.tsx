@@ -1,22 +1,11 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/react";
 import { cleanup, render, screen } from "@testing-library/react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { Breadcrumb } from "@/Components/Breadcrumb";
 import { BreadcrumbItem } from "@/Components/BreadcrumbItem";
-
-function RouterLinkStub({
-  children,
-  ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
-  return (
-    <a data-testid="router-link" {...props}>
-      {children}
-    </a>
-  );
-}
 
 afterEach(() => {
   cleanup();
@@ -71,10 +60,10 @@ test("it should collapse middle items when maxItems is set", () => {
     />,
   );
 
-  expect(screen.getByRole("link", { name: "Home" })).toBeTruthy();
-  expect(screen.queryByRole("link", { name: "A" })).toBeNull();
   expect(screen.getByText("…")).toBeTruthy();
   expect(screen.getByText("Page")).toBeTruthy();
+  expect(screen.queryByRole("link", { name: "A" })).toBeNull();
+  expect(screen.getByRole("link", { name: "Home" })).toBeTruthy();
 });
 
 test("it should render an icon-only crumb with aria-label", () => {
@@ -85,8 +74,8 @@ test("it should render an icon-only crumb with aria-label", () => {
     </Breadcrumb>,
   );
 
-  expect(screen.getByRole("link", { name: "Home" })).toBeTruthy();
   expect(screen.queryByText("Home")).toBeNull();
+  expect(screen.getByRole("link", { name: "Home" })).toBeTruthy();
 });
 
 test("it should use a custom separator slot", () => {
@@ -103,18 +92,19 @@ test("it should use a custom separator slot", () => {
 test("it should pass linkAs to crumbs rendered from items", () => {
   render(
     <Breadcrumb
-      linkAs={RouterLinkStub}
+      linkAs={InertiaLink}
       items={[
-        { href: "/", label: "Home" },
+        { href: "/", label: "Home", linkProps: { method: "post" } },
         { current: true, label: "Settings" },
       ]}
     />,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("button", { name: "Home" });
 
-  expect(link.getAttribute("href")).toBe("/");
+  expect(link.tagName).toBe("BUTTON");
   expect(link.className).toContain("font-medium");
-  expect(screen.queryAllByTestId("router-link")).toHaveLength(1);
+  expect(link.getAttribute("type")).toBe("button");
+  expect(screen.getAllByRole("button")).toHaveLength(1);
   expect(screen.getByText("Settings").tagName).toBe("SPAN");
 });

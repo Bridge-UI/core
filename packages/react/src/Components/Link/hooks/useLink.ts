@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, omit } from "es-toolkit/compat";
-import { useMemo } from "react";
+import { useMemo, type ElementType } from "react";
 
 // ** Core Imports
 import {
@@ -28,6 +28,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps } from "@/Utils/linkAs";
 
 const linkBridgeKeys = [
   "href",
@@ -38,6 +39,7 @@ const linkBridgeKeys = [
   "disabled",
   "external",
   "leftIcon",
+  "linkProps",
   "rightIcon",
   "underline",
   "customProps",
@@ -48,11 +50,17 @@ type LinkLibDefaults = LibDefaultsShape<
   "size" | "color" | "underline"
 >;
 
-type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;
+type LinkMerged<T extends ElementType = "a"> = MergeLibDefaults<
+  LinkOwnProps<T>,
+  LinkLibDefaults
+>;
 
-export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
+export function useLink<T extends ElementType = "a">(
+  props: LinkProps<T>,
+  libDefaults: LinkLibDefaults,
+) {
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    LinkProps,
+    LinkProps<T>,
     typeof linkBridgeKeys
   >({
     props,
@@ -60,7 +68,7 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   });
 
   const { merged, entry: bridgeLink } = useBridgeUIComponent<
-    LinkMerged,
+    LinkMerged<T>,
     "Link"
   >({
     libDefaults,
@@ -151,7 +159,10 @@ export function useLink(props: LinkProps, libDefaults: LinkLibDefaults) {
   const rootBind = derived(() => {
     return mergePartBind(
       customProps?.root,
-      rootInheritedAttrs,
+      {
+        ...rootInheritedAttrs,
+        ...resolveLinkAsProps(merged.linkAs, merged.linkProps, rootTag),
+      },
       cn({
         "inline-flex items-center gap-x-1 font-medium": true,
         "transition-colors duration-200": true,

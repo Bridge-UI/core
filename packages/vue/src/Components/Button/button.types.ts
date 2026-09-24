@@ -2,7 +2,6 @@
 import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
-  Component,
   HTMLAttributes,
   Slot,
 } from "vue";
@@ -20,6 +19,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { LinkAsTag, LinkHref, LinkPropsOf } from "@/Utils/linkAs";
 
 export interface ButtonSizeOverrides {}
 export interface ButtonColorOverrides {}
@@ -91,7 +91,7 @@ export interface ButtonCustomProps {
   startIcon?: Partial<Omit<IconProps, "icon">>;
 }
 
-export interface ButtonOwnProps {
+export interface ButtonOwnProps<T extends LinkAsTag = "button"> {
   /**
    * The element to render as.
    *
@@ -151,10 +151,11 @@ export interface ButtonOwnProps {
 
   /**
    * The href to apply to the button.
+   * When `linkAs` is set, this also accepts that component's `href`.
    *
    * @default undefined
    */
-  href?: string;
+  href?: LinkHref<T, "button">;
 
   /**
    * Icon for mini density (replaces label and start/end icons).
@@ -170,7 +171,15 @@ export interface ButtonOwnProps {
    *
    * @default undefined
    */
-  linkAs?: string | Component;
+  linkAs?: T;
+
+  /**
+   * Props forwarded to `linkAs` (`method`, `replace`, `prefetch`, and so on).
+   * Checked against that component. Ignored while `linkAs` is not rendered.
+   *
+   * @default undefined
+   */
+  linkProps?: LinkPropsOf<T, "button">;
 
   /**
    * Whether the button is loading.
@@ -239,7 +248,7 @@ export interface ButtonSlots {
   start?: Slot<undefined>;
 }
 
-export type ButtonProps =
-  | MergeHtmlProps<ButtonOwnProps & { as: "span" }, HTMLAttributes>
-  | MergeHtmlProps<ButtonOwnProps & { as: "a" }, AnchorHTMLAttributes>
-  | MergeHtmlProps<ButtonOwnProps & { as?: "button" }, ButtonHTMLAttributes>;
+export type ButtonProps<T extends LinkAsTag = "button"> =
+  | MergeHtmlProps<ButtonOwnProps<T> & { as: "span" }, HTMLAttributes>
+  | MergeHtmlProps<ButtonOwnProps<T> & { as: "a" }, AnchorHTMLAttributes>
+  | MergeHtmlProps<ButtonOwnProps<T> & { as?: "button" }, ButtonHTMLAttributes>;

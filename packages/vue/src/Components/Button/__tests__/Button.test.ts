@@ -1,31 +1,11 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { CircleAlert } from "@lucide/vue";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { defineComponent, h } from "vue";
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
-
-const RouterLinkStub = defineComponent({
-  name: "RouterLinkStub",
-  props: {
-    href: String,
-  },
-  setup(props, { attrs, slots }) {
-    return () => {
-      return h(
-        "a",
-        {
-          ...attrs,
-          href: props.href,
-          "data-testid": "router-link",
-        },
-        slots.default?.(),
-      );
-    };
-  },
-});
 
 test("it should render a button with default slot content", () => {
   const wrapper = mount(Button, { slots: { default: "Click me" } });
@@ -257,35 +237,54 @@ test("it should mark the button as pressed when selected", () => {
 test("it should render linkAs with href and anchor classes", () => {
   const wrapper = mount(Button, {
     slots: { default: "Settings" },
-    props: { href: "/settings", linkAs: RouterLinkStub },
+    props: {
+      href: "/settings",
+      linkAs: InertiaLink,
+      linkProps: { onBefore: () => false },
+    },
   });
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("a");
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.element.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
-  expect(link.attributes("href")).toBe("/settings");
+  expect(event.defaultPrevented).toBe(true);
   expect(link.classes()).toContain("inline-flex");
+  expect(link.attributes("href")).toBe("/settings");
+});
+
+test("it should forward linkProps to linkAs", () => {
+  const wrapper = mount(Button, {
+    slots: { default: "Logout" },
+    props: {
+      href: "/logout",
+      linkAs: InertiaLink,
+      linkProps: { method: "post" },
+    },
+  });
+
+  const link = wrapper.get("button");
+
+  expect(link.element.tagName).toBe("BUTTON");
+  expect(link.attributes("type")).toBe("button");
 });
 
 test("it should ignore linkAs when as is button", () => {
   const wrapper = mount(Button, {
     slots: { default: "Settings" },
-    props: { as: "button", href: "/settings", linkAs: RouterLinkStub },
+    props: { as: "button", href: "/settings", linkAs: InertiaLink },
   });
 
+  expect(wrapper.find("a").exists()).toBe(false);
   expect(wrapper.find("button").exists()).toBe(true);
-  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
 });
 
 test("it should keep a native anchor when linkAs is set and the button is disabled", () => {
   const wrapper = mount(Button, {
     slots: { default: "Settings" },
-    props: { disabled: true, href: "/settings", linkAs: RouterLinkStub },
+    props: { disabled: true, href: "/settings", linkAs: InertiaLink },
   });
 
-  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
   expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });

@@ -1,22 +1,11 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/react";
 import { cleanup, render, screen } from "@testing-library/react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
-
-function RouterLinkStub({
-  children,
-  ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
-  return (
-    <a data-testid="router-link" {...props}>
-      {children}
-    </a>
-  );
-}
 
 afterEach(() => {
   cleanup();
@@ -85,9 +74,9 @@ test("it should render an anchor when href is set", () => {
   const link = screen.getByRole("link", { name: "Inbox" });
 
   expect(link.tagName).toBe("A");
-  expect(link.getAttribute("rel")).toBe("noreferrer");
   expect(link.getAttribute("href")).toBe("/inbox");
   expect(link.getAttribute("target")).toBe("_blank");
+  expect(link.getAttribute("rel")).toBe("noreferrer");
   expect(container.querySelector("li > a")).toBe(link);
 });
 
@@ -132,27 +121,49 @@ test("it should keep primary text from clipping truncated glyphs", () => {
 
 test("it should render linkAs inside the list item root", () => {
   const { container } = render(
-    <ListItem href="/inbox" primary="Inbox" linkAs={RouterLinkStub} />,
+    <ListItem
+      href="/inbox"
+      primary="Inbox"
+      linkAs={InertiaLink}
+      linkProps={{ onBefore: () => false }}
+    />,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("link", { name: "Inbox" });
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
+  expect(event.defaultPrevented).toBe(true);
+  expect(link.parentElement?.tagName).toBe("LI");
   expect(link.getAttribute("href")).toBe("/inbox");
   expect(link.className).toContain("no-underline");
   expect(container.firstElementChild?.tagName).toBe("LI");
+});
+
+test("it should forward linkProps to linkAs", () => {
+  render(
+    <ListItem
+      href="/inbox"
+      primary="Inbox"
+      linkAs={InertiaLink}
+      linkProps={{ method: "post" }}
+    />,
+  );
+
+  const link = screen.getByRole("button", { name: "Inbox" });
+
+  expect(link.tagName).toBe("BUTTON");
   expect(link.parentElement?.tagName).toBe("LI");
+  expect(link.getAttribute("type")).toBe("button");
 });
 
 test("it should keep a div root when as is div and linkAs is set", () => {
   const { container } = render(
-    <ListItem as="div" href="/inbox" primary="Inbox" linkAs={RouterLinkStub} />,
+    <ListItem as="div" href="/inbox" primary="Inbox" linkAs={InertiaLink} />,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("link", { name: "Inbox" });
 
   expect(container.firstElementChild?.tagName).toBe("DIV");
   expect(link.parentElement?.tagName).toBe("DIV");
@@ -164,12 +175,12 @@ test("it should keep a native anchor when linkAs is set and the item is disabled
       disabled
       href="/archive"
       primary="Archive"
-      linkAs={RouterLinkStub}
+      linkAs={InertiaLink}
     />,
   );
 
   const anchor = screen.getByText("Archive").closest("a");
 
-  expect(screen.queryByTestId("router-link")).toBeNull();
+  expect(screen.queryByRole("link")).toBeNull();
   expect(anchor?.getAttribute("href")).toBeNull();
 });

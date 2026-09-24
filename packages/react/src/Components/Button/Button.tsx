@@ -1,5 +1,5 @@
 // ** External Imports
-import { createElement, Fragment } from "react";
+import { createElement, Fragment, type ElementType } from "react";
 
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button";
@@ -7,7 +7,7 @@ import { useButton } from "@/Components/Button";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
 
-function Button(props: ButtonProps) {
+function Button<T extends ElementType = "button">(props: ButtonProps<T>) {
   const {
     tag,
     slots,

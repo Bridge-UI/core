@@ -1,10 +1,5 @@
 // ** External Imports
-import type {
-  AnchorHTMLAttributes,
-  Component,
-  HTMLAttributes,
-  Slot,
-} from "vue";
+import type { AnchorHTMLAttributes, HTMLAttributes, Slot } from "vue";
 
 // ** Core Imports
 import type {
@@ -17,6 +12,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { LinkAsTag, LinkHref, LinkPropsOf } from "@/Utils/linkAs";
 
 export interface LinkSizeOverrides {}
 export interface LinkColorOverrides {}
@@ -56,7 +52,7 @@ export interface LinkCustomProps {
   root?: HTMLAttributes;
 }
 
-export interface LinkOwnProps {
+export interface LinkOwnProps<T extends LinkAsTag = "a"> {
   /**
    * The classes to apply to the link.
    *
@@ -95,10 +91,11 @@ export interface LinkOwnProps {
 
   /**
    * The URL the link points to.
+   * When `linkAs` is set, this also accepts that component's `href`.
    *
    * @default undefined
    */
-  href?: string;
+  href?: LinkHref<T, "a">;
 
   /**
    * The icon to display before the link text.
@@ -109,12 +106,20 @@ export interface LinkOwnProps {
 
   /**
    * Component rendered in place of the navigating `<a>`.
-   * Receives `href` and the same attributes the anchor would.
+   * Receives `href`, `linkProps`, and the same attributes the anchor would.
    * Ignored while disabled.
    *
    * @default undefined
    */
-  linkAs?: string | Component;
+  linkAs?: T;
+
+  /**
+   * Props forwarded to `linkAs` (`method`, `replace`, `prefetch`, and so on).
+   * Checked against that component. Ignored while `linkAs` is not rendered.
+   *
+   * @default undefined
+   */
+  linkProps?: LinkPropsOf<T, "a">;
 
   /**
    * The icon to display after the link text.
@@ -155,4 +160,7 @@ export interface LinkSlots {
   prepend?: Slot<undefined>;
 }
 
-export type LinkProps = MergeHtmlProps<LinkOwnProps, AnchorHTMLAttributes>;
+export type LinkProps<T extends LinkAsTag = "a"> = MergeHtmlProps<
+  LinkOwnProps<T>,
+  AnchorHTMLAttributes
+>;

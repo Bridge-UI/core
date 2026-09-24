@@ -20,7 +20,6 @@ import {
 import type {
   ButtonClasses,
   ButtonOwnProps,
-  ButtonProps,
 } from "@/Components/Button/button.types";
 import { BUTTON_GROUP_INJECTION_KEY } from "@/Components/ButtonGroup/buttonGroupInjectionKey";
 import {
@@ -28,6 +27,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps, type LinkAsTag } from "@/Utils/linkAs";
 
 const buttonBridgeKeys = [
   "as",
@@ -46,6 +46,7 @@ const buttonBridgeKeys = [
   "variant",
   "disabled",
   "selected",
+  "linkProps",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof ButtonOwnProps)[];
@@ -55,17 +56,20 @@ type ButtonLibDefaults = LibDefaultsShape<
   "as" | "size" | "color" | "density" | "rounded" | "variant"
 >;
 
-type ButtonMerged = MergeLibDefaults<ButtonOwnProps, ButtonLibDefaults>;
+type ButtonMerged<T extends LinkAsTag = "button"> = MergeLibDefaults<
+  ButtonOwnProps<T>,
+  ButtonLibDefaults
+>;
 
-export function useButton(
-  props: ButtonOwnProps,
+export function useButton<T extends LinkAsTag = "button">(
+  props: ButtonOwnProps<T>,
   libDefaults: ButtonLibDefaults,
 ) {
   const attrs = useAttrs();
   const groupContext = inject(BUTTON_GROUP_INJECTION_KEY, null);
 
   const split = computed(() => {
-    return splitComponentProps<ButtonProps, typeof buttonBridgeKeys>({
+    return splitComponentProps<ButtonOwnProps<T>, typeof buttonBridgeKeys>({
       bridgeKeys: buttonBridgeKeys,
       props: { ...attrs, ...props },
     });
@@ -86,7 +90,7 @@ export function useButton(
   });
 
   const { merged, entry: bridgeButton } = useBridgeUIComponent<
-    ButtonMerged,
+    ButtonMerged<T>,
     "Button"
   >({
     libDefaults,
@@ -229,40 +233,57 @@ export function useButton(
   });
 
   const rootBind = computed(() => {
-    return mergePartBind(customProps.value?.root, split.value.inheritedAttrs, {
-      "aria-pressed": isNil(merged.value.selected)
-        ? undefined
-        : merged.value.selected,
-      class: cn({
-        "inline-flex items-center justify-center": true,
-        "cursor-pointer outline-none outline-hidden": true,
-        "shrink-0": isMini.value,
-        [sizeClass.value ?? ""]: true,
-        [roundedClass.value ?? ""]: true,
-        "h-auto":
-          isMini.value &&
-          !isNil(groupContext) &&
-          groupContext.value?.density !== "mini",
-        "border border-transparent":
-          !isNil(groupContext) && variantKey.value !== "outline",
-        "w-full": !isMini.value && merged.value.full,
-        "w-fit": !isMini.value && !merged.value.full,
-        "group hover:shadow-xs": !isMini.value,
-        [get(colorClasses.value, "base") ?? ""]: true,
-        [get(colorClasses.value, "hover") ?? ""]: true,
-        [get(colorClasses.value, "focus") ?? ""]: true,
-        [get(colorClasses.value, "selected") ?? ""]:
-          merged.value.selected === true,
-        relative: true,
-        "z-10": merged.value.selected === true,
-        "transition-all ease-in-out duration-200": true,
-        "focus:ring-2": true,
-        "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
-        "disabled:opacity-80 disabled:cursor-not-allowed": true,
-        "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
-        [mergedClasses.value.root ?? ""]: true,
-      }),
-    });
+    const bind = mergePartBind(
+      customProps.value?.root,
+      {
+        ...split.value.inheritedAttrs,
+        ...resolveLinkAsProps(
+          merged.value.linkAs,
+          merged.value.linkProps,
+          tag.value,
+        ),
+      },
+      {
+        "aria-pressed": isNil(merged.value.selected)
+          ? undefined
+          : merged.value.selected,
+        class: cn({
+          "inline-flex items-center justify-center": true,
+          "cursor-pointer outline-none outline-hidden": true,
+          "shrink-0": isMini.value,
+          [sizeClass.value ?? ""]: true,
+          [roundedClass.value ?? ""]: true,
+          "h-auto":
+            isMini.value &&
+            !isNil(groupContext) &&
+            groupContext.value?.density !== "mini",
+          "border border-transparent":
+            !isNil(groupContext) && variantKey.value !== "outline",
+          "w-full": !isMini.value && merged.value.full,
+          "w-fit": !isMini.value && !merged.value.full,
+          "group hover:shadow-xs": !isMini.value,
+          [get(colorClasses.value, "base") ?? ""]: true,
+          [get(colorClasses.value, "hover") ?? ""]: true,
+          [get(colorClasses.value, "focus") ?? ""]: true,
+          [get(colorClasses.value, "selected") ?? ""]:
+            merged.value.selected === true,
+          relative: true,
+          "z-10": merged.value.selected === true,
+          "transition-all ease-in-out duration-200": true,
+          "focus:ring-2": true,
+          "focus:ring-offset-background-white dark:focus:ring-offset-background-dark": true,
+          "disabled:opacity-80 disabled:cursor-not-allowed": true,
+          "aria-disabled:opacity-80 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none": true,
+          [mergedClasses.value.root ?? ""]: true,
+        }),
+      },
+    );
+
+    if (rootType.value == null) {
+      return bind;
+    }
+
+    return { ...bind, type: rootType.value };
   });
 
   const endIconBind = computed(() => {

@@ -1,5 +1,5 @@
 // ** External Imports
-import { createElement } from "react";
+import { createElement, type ElementType } from "react";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -52,7 +52,7 @@ function ListItemRow({
   );
 }
 
-function ListItem(props: ListItemProps) {
+function ListItem<T extends ElementType = "a">(props: ListItemProps<T>) {
   const listItemState = useListItem(props, {
     role: "button",
   });

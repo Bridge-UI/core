@@ -1,5 +1,5 @@
 // ** External Imports
-import { createElement, Fragment } from "react";
+import { createElement, Fragment, type ElementType } from "react";
 
 // ** Local Imports
 import type { BreadcrumbItemProps } from "@/Components/BreadcrumbItem/breadcrumbItem.types";
@@ -7,7 +7,9 @@ import { useBreadcrumbItem } from "@/Components/BreadcrumbItem/hooks/useBreadcru
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot } from "@/Utils";
 
-function BreadcrumbItem(props: BreadcrumbItemProps) {
+function BreadcrumbItem<T extends ElementType = "a">(
+  props: BreadcrumbItemProps<T>,
+) {
   const {
     slots,
     merged,
