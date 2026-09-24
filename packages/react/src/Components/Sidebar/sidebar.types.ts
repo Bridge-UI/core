@@ -1,5 +1,10 @@
 // ** External Imports
-import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
+import type {
+  ButtonHTMLAttributes,
+  ElementType,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 
 // ** Core Imports
 import type { PositionPlacement } from "@bridge-ui/core/Runtime";
@@ -321,4 +326,5 @@ export type SidebarListProps = ListProps & SidebarListOwnProps;
  * `ListItem` bound to the nearest `Sidebar`. Shows `primary` in a tooltip
  * when the icon rail is collapsed.
  */
-export type SidebarListItemProps = ListItemProps & SidebarListItemOwnProps;
+export type SidebarListItemProps<T extends ElementType = "a"> =
+  ListItemProps<T> & SidebarListItemOwnProps;

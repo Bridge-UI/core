@@ -1,31 +1,12 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent } from "vue";
 
 // ** Local Imports
 import { List } from "@/Components/List";
 import { ListItem } from "@/Components/ListItem";
-
-const RouterLinkStub = defineComponent({
-  name: "RouterLinkStub",
-  props: {
-    href: String,
-  },
-  setup(props, { attrs, slots }) {
-    return () => {
-      return h(
-        "a",
-        {
-          ...attrs,
-          href: props.href,
-          "data-testid": "router-link",
-        },
-        slots.default?.(),
-      );
-    };
-  },
-});
 
 test("it should render primary text from the primary prop", () => {
   const wrapper = mount(ListItem, {
@@ -134,10 +115,10 @@ test("it should render an anchor when href is set", () => {
 
   const link = wrapper.get("a");
 
-  expect(link.attributes("rel")).toBe("noreferrer");
+  expect(wrapper.element.tagName).toBe("LI");
   expect(link.attributes("href")).toBe("/inbox");
   expect(link.attributes("target")).toBe("_blank");
-  expect(wrapper.element.tagName).toBe("LI");
+  expect(link.attributes("rel")).toBe("noreferrer");
 });
 
 test("it should omit href when the link is disabled", () => {
@@ -195,18 +176,40 @@ test("it should keep primary text from clipping truncated glyphs", () => {
 
 test("it should render linkAs inside the list item root", () => {
   const wrapper = mount(ListItem, {
-    props: { href: "/inbox", primary: "Inbox", linkAs: RouterLinkStub },
+    props: {
+      href: "/inbox",
+      primary: "Inbox",
+      linkAs: InertiaLink,
+      linkProps: { onBefore: () => false },
+    },
   });
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("a");
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.element.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
+  expect(event.defaultPrevented).toBe(true);
+  expect(wrapper.element.tagName).toBe("LI");
   expect(link.attributes("href")).toBe("/inbox");
   expect(link.classes()).toContain("no-underline");
-  expect(wrapper.element.tagName).toBe("LI");
+  expect(link.element.parentElement?.tagName).toBe("LI");
+});
+
+test("it should forward linkProps to linkAs", () => {
+  const wrapper = mount(ListItem, {
+    props: {
+      href: "/inbox",
+      primary: "Inbox",
+      linkAs: InertiaLink,
+      linkProps: { method: "post" },
+    },
+  });
+
+  const link = wrapper.get("button");
+
+  expect(link.element.tagName).toBe("BUTTON");
+  expect(link.attributes("type")).toBe("button");
   expect(link.element.parentElement?.tagName).toBe("LI");
 });
 
@@ -216,11 +219,11 @@ test("it should keep a div root when as is div and linkAs is set", () => {
       as: "div",
       href: "/inbox",
       primary: "Inbox",
-      linkAs: RouterLinkStub,
+      linkAs: InertiaLink,
     },
   });
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("a");
 
   expect(wrapper.element.tagName).toBe("DIV");
   expect(link.element.parentElement?.tagName).toBe("DIV");
@@ -232,10 +235,9 @@ test("it should keep a native anchor when linkAs is set and the item is disabled
       disabled: true,
       href: "/archive",
       primary: "Archive",
-      linkAs: RouterLinkStub,
+      linkAs: InertiaLink,
     },
   });
 
-  expect(wrapper.find("[data-testid='router-link']").exists()).toBe(false);
   expect(wrapper.get("a").attributes("href")).toBeUndefined();
 });

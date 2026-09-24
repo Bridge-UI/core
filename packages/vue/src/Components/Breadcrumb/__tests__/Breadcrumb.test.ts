@@ -1,31 +1,12 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { flushPromises, mount } from "@vue/test-utils";
 import { afterEach, expect, test } from "vitest";
-import { defineComponent, h } from "vue";
+import { h } from "vue";
 
 // ** Local Imports
 import { Breadcrumb } from "@/Components/Breadcrumb";
 import { BreadcrumbItem } from "@/Components/BreadcrumbItem";
-
-const RouterLinkStub = defineComponent({
-  name: "RouterLinkStub",
-  props: {
-    href: String,
-  },
-  setup(props, { attrs, slots }) {
-    return () => {
-      return h(
-        "a",
-        {
-          ...attrs,
-          href: props.href,
-          "data-testid": "router-link",
-        },
-        slots.default?.(),
-      );
-    };
-  },
-});
 
 afterEach(async () => {
   while (mountedWrappers.length > 0) {
@@ -58,9 +39,9 @@ test("it should render a nav list with crumbs", () => {
     },
   });
 
-  expect(wrapper.find("nav[aria-label='Breadcrumb']").exists()).toBe(true);
   expect(wrapper.find("a[href='/']").text()).toContain("Home");
   expect(wrapper.find("[aria-current='page']").text()).toContain("Avatar");
+  expect(wrapper.find("nav[aria-label='Breadcrumb']").exists()).toBe(true);
 });
 
 test("it should render from items data", () => {
@@ -92,8 +73,8 @@ test("it should collapse middle items when maxItems is set", () => {
     },
   });
 
-  expect(wrapper.text()).toContain("Home");
   expect(wrapper.text()).toContain("…");
+  expect(wrapper.text()).toContain("Home");
   expect(wrapper.text()).toContain("Page");
   expect(wrapper.text()).not.toContain("A");
 });
@@ -112,25 +93,26 @@ test("it should render an icon-only crumb with aria-label", () => {
     },
   });
 
-  expect(wrapper.find("a[aria-label='Home']").exists()).toBe(true);
   expect(wrapper.find("a[aria-label='Home']").text()).toBe("");
+  expect(wrapper.find("a[aria-label='Home']").exists()).toBe(true);
 });
 
 test("it should pass linkAs to crumbs rendered from items", () => {
   const wrapper = mountBreadcrumb({
     props: {
-      linkAs: RouterLinkStub,
+      linkAs: InertiaLink,
       items: [
-        { href: "/", label: "Home" },
+        { href: "/", label: "Home", linkProps: { method: "post" } },
         { current: true, label: "Settings" },
       ],
     },
   });
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("button");
 
-  expect(link.attributes("href")).toBe("/");
+  expect(link.element.tagName).toBe("BUTTON");
+  expect(link.attributes("type")).toBe("button");
   expect(link.classes()).toContain("font-medium");
-  expect(wrapper.findAll("[data-testid='router-link']")).toHaveLength(1);
+  expect(wrapper.findAll("button")).toHaveLength(1);
   expect(wrapper.get("[aria-current='page']").element.tagName).toBe("SPAN");
 });

@@ -1,6 +1,6 @@
 // ** External Imports
 import { get, isNil, isNull, omit } from "es-toolkit/compat";
-import { useEffect, useMemo, type MouseEvent } from "react";
+import { useEffect, useMemo, type ElementType, type MouseEvent } from "react";
 
 // ** Core Imports
 import {
@@ -32,6 +32,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps } from "@/Utils/linkAs";
 
 const listItemBridgeKeys = [
   "as",
@@ -48,6 +49,7 @@ const listItemBridgeKeys = [
   "primary",
   "disabled",
   "selected",
+  "linkProps",
   "secondary",
   "customProps",
   "interactive",
@@ -56,17 +58,20 @@ const listItemBridgeKeys = [
 
 type ListItemLibDefaults = LibDefaultsShape<ListItemOwnProps, "role">;
 
-type ListItemMerged = MergeLibDefaults<ListItemOwnProps, ListItemLibDefaults>;
+type ListItemMerged<T extends ElementType = "a"> = MergeLibDefaults<
+  ListItemOwnProps<T>,
+  ListItemLibDefaults
+>;
 
-export function useListItem(
-  props: ListItemProps,
+export function useListItem<T extends ElementType = "a">(
+  props: ListItemProps<T>,
   libDefaults: ListItemLibDefaults,
 ) {
   const listContext = useListContext();
   const listboxContext = useListboxContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    ListItemProps,
+    ListItemProps<T>,
     typeof listItemBridgeKeys
   >({
     props,
@@ -74,7 +79,7 @@ export function useListItem(
   });
 
   const { merged, entry: bridgeListItem } = useBridgeUIComponent<
-    ListItemMerged,
+    ListItemMerged<T>,
     "ListItem"
   >({
     libDefaults,
@@ -240,7 +245,7 @@ export function useListItem(
 
     const bind = mergePartBind(
       customProps?.interactive,
-      {},
+      resolveLinkAsProps(merged.linkAs, merged.linkProps, interactiveTag),
       {
         "aria-disabled": merged.disabled ? true : undefined,
         rel: isLink && !merged.disabled ? merged.rel : undefined,

@@ -69,11 +69,11 @@ import { Button } from "@bridge-ui/react/Components/Button";
 
 ### Router link
 
-`linkAs` with `href` renders a link. `as="button"` and `as="span"` ignore it.
+`linkAs` with `href` renders a link. `as="button"` and `as="span"` ignore it. `linkProps` is checked against `linkAs` and forwarded to it.
 
 ```tsx
-<Button href="/settings" linkAs={AppLink}>
-  Settings
+<Button href="/logout" linkAs={AppLink} linkProps={{ method: "post" }}>
+  Logout
 </Button>
 ```
 
@@ -90,9 +90,10 @@ import { Button } from "@bridge-ui/react/Components/Button";
 | `disabled`    | `boolean`                   | `false`   | Whether the button is disabled.                                                                                                                                                |
 | `endIcon`     | `LucideIcon`                | —         | Icon at the **inline end** (physical right in `ltr`, physical left in `rtl`).                                                                                                  |
 | `full`        | `boolean`                   | `false`   | Whether the button is full width.                                                                                                                                              |
-| `href`        | `string`                    | —         | The href to apply to the button.                                                                                                                                               |
+| `href`        | `string`                    | —         | The href to apply to the button. When `linkAs` is set, this also accepts that component's `href`.                                                                              |
 | `icon`        | `LucideIcon`                | —         | Icon for mini density (replaces label and start/end icons).                                                                                                                    |
 | `linkAs`      | `ElementType`               | —         | Component rendered in place of the navigating `<a>`. With `href` and no `as`, this renders a link. `as="button"` and `as="span"` ignore it. Ignored while disabled or loading. |
+| `linkProps`   | props of `linkAs`           | —         | Props forwarded to `linkAs`. Checked against that component. Ignored while `linkAs` is not rendered.                                                                           |
 | `loading`     | `boolean`                   | `false`   | Whether the button is loading.                                                                                                                                                 |
 | `rounded`     | `ButtonRounded`             | "md"      | The roundedness of the button.                                                                                                                                                 |
 | `selected`    | `boolean`                   | `false`   | Whether the button is in a selected / pressed state.                                                                                                                           |

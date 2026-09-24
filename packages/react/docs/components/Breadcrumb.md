@@ -82,11 +82,16 @@ Omit the label and set `aria-label` for assistive tech.
 
 ### Router link
 
-`linkAs` replaces navigating crumb anchors. It applies to `items` and to child crumbs that omit their own `linkAs`. The current crumb stays a non-link.
+`linkAs` replaces navigating crumb anchors. It applies to `items` and to child crumbs that omit their own `linkAs`. The current crumb stays a non-link. `items[].linkProps` is checked against this `linkAs`. On a child `BreadcrumbItem`, set `linkAs` on that crumb for `linkProps` to be checked against it.
 
 ```tsx
 <Breadcrumb linkAs={AppLink}>
   <BreadcrumbItem href="/">Home</BreadcrumbItem>
   <BreadcrumbItem current>Settings</BreadcrumbItem>
 </Breadcrumb>
+
+<Breadcrumb
+  linkAs={AppLink}
+  items={[{ href: "/", label: "Home", linkProps: { replace: true } }]}
+/>
 ```

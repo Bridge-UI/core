@@ -27,6 +27,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 const breadcrumbBridgeKeys = [
   "size",
@@ -43,27 +44,29 @@ type BreadcrumbLibDefaults = LibDefaultsShape<
   "size" | "separator"
 >;
 
-type BreadcrumbMerged = MergeLibDefaults<
-  BreadcrumbOwnProps,
+type BreadcrumbMerged<T extends LinkAsTag = "a"> = MergeLibDefaults<
+  BreadcrumbOwnProps<T>,
   BreadcrumbLibDefaults
 >;
 
-export function useBreadcrumb(
-  props: BreadcrumbOwnProps,
+export function useBreadcrumb<T extends LinkAsTag = "a">(
+  props: BreadcrumbOwnProps<T>,
   libDefaults: BreadcrumbLibDefaults,
 ) {
   const attrs = useAttrs();
   const slots = useSlots();
 
   const split = computed(() => {
-    return splitComponentProps<BreadcrumbProps, typeof breadcrumbBridgeKeys>({
-      props: { ...attrs, ...props },
-      bridgeKeys: breadcrumbBridgeKeys,
-    });
+    return splitComponentProps<BreadcrumbProps<T>, typeof breadcrumbBridgeKeys>(
+      {
+        props: { ...attrs, ...props },
+        bridgeKeys: breadcrumbBridgeKeys,
+      },
+    );
   });
 
   const { merged, entry: bridgeBreadcrumb } = useBridgeUIComponent<
-    BreadcrumbMerged,
+    BreadcrumbMerged<T>,
     "Breadcrumb"
   >({
     libDefaults,

@@ -75,11 +75,16 @@ Omit the label and set `aria-label` for assistive tech.
 
 ### Router link
 
-`link-as` replaces navigating crumb anchors. It applies to `items` and to child crumbs that omit their own `link-as`. The current crumb stays a non-link.
+`link-as` replaces navigating crumb anchors. It applies to `items` and to child crumbs that omit their own `link-as`. The current crumb stays a non-link. `items[].linkProps` is checked against this `link-as`. On a child `BreadcrumbItem`, set `link-as` on that crumb for `link-props` to be checked against it.
 
 ```vue
 <Breadcrumb :link-as="AppLink">
   <BreadcrumbItem href="/">Home</BreadcrumbItem>
   <BreadcrumbItem current>Settings</BreadcrumbItem>
 </Breadcrumb>
+
+<Breadcrumb
+  :link-as="AppLink"
+  :items="[{ href: '/', label: 'Home', linkProps: { replace: true } }]"
+/>
 ```

@@ -13,6 +13,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { LinkHref, LinkPropsOf } from "@/Utils/linkAs";
 
 export interface ListItemClasses {
   /**
@@ -102,7 +103,7 @@ export interface ListItemCustomProps {
  * List row. Set `interactive` for clickable rows, or `href` for a link.
  * Use `role="menuitem"` inside menus or `role="option"` in selects.
  */
-export interface ListItemOwnProps {
+export interface ListItemOwnProps<T extends ElementType = "a"> {
   /**
    * The element to render as.
    *
@@ -155,10 +156,11 @@ export interface ListItemOwnProps {
   /**
    * URL for the interactive wrapper. Renders an anchor so hover shows the
    * address and middle-click opens a new tab.
+   * When `linkAs` is set, this also accepts that component's `href`.
    *
    * @default undefined
    */
-  href?: string;
+  href?: LinkHref<T, "a">;
 
   /**
    * When true, applies hover/focus styles and `tabIndex={0}` on the inner wrapper.
@@ -174,7 +176,15 @@ export interface ListItemOwnProps {
    *
    * @default undefined
    */
-  linkAs?: ElementType;
+  linkAs?: T;
+
+  /**
+   * Props forwarded to `linkAs` (`method`, `replace`, `prefetch`, and so on).
+   * Checked against that component. Ignored while `linkAs` is not rendered.
+   *
+   * @default undefined
+   */
+  linkProps?: LinkPropsOf<T, "a">;
 
   /**
    * Primary label text. Use `children` or `slots.primary` for custom markup.
@@ -264,7 +274,7 @@ export interface ListItemSlots {
   start?: ReactNode;
 }
 
-export type ListItemProps = MergeHtmlProps<
-  ListItemOwnProps,
+export type ListItemProps<T extends ElementType = "a"> = MergeHtmlProps<
+  ListItemOwnProps<T>,
   HTMLAttributes<HTMLLIElement>
 >;

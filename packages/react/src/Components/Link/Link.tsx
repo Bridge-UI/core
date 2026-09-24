@@ -1,5 +1,5 @@
 // ** External Imports
-import { Fragment } from "react";
+import { Fragment, type ElementType } from "react";
 
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
@@ -7,7 +7,7 @@ import type { LinkProps } from "@/Components/Link";
 import { useLink } from "@/Components/Link";
 import { hasNamedSlot } from "@/Utils";
 
-function Link(props: LinkProps) {
+function Link<T extends ElementType = "a">(props: LinkProps<T>) {
   const {
     slots,
     merged,

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'a'">
 // ** External Imports
 import { computed, useAttrs, useSlots } from "vue";
 
@@ -15,12 +15,13 @@ import { useSidebarListItem } from "@/Components/Sidebar/composables/useSidebarL
 import type { SidebarListItemOwnProps } from "@/Components/Sidebar/sidebar.types";
 import Tooltip from "@/Components/Tooltip/Tooltip.vue";
 import { hasNamedSlot } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<ListItemSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<ListItemOwnProps & SidebarListItemOwnProps>();
+const props = defineProps<ListItemOwnProps<T> & SidebarListItemOwnProps>();
 
 const attrs = useAttrs();
 const slots = useSlots();

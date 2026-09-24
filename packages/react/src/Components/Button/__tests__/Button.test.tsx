@@ -1,7 +1,7 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/react";
 import { cleanup, render, screen } from "@testing-library/react";
 import { CircleAlert } from "lucide-react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { afterEach, expect, test } from "vitest";
 
 afterEach(() => {
@@ -10,17 +10,6 @@ afterEach(() => {
 
 // ** Local Imports
 import { Button } from "@/Components/Button";
-
-function RouterLinkStub({
-  children,
-  ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { children?: ReactNode }) {
-  return (
-    <a data-testid="router-link" {...props}>
-      {children}
-    </a>
-  );
-}
 
 test("it should render a button with children", () => {
   render(<Button>Click me</Button>);
@@ -225,42 +214,59 @@ test("it should mark the button as pressed when selected", () => {
 
 test("it should render linkAs with href and anchor classes", () => {
   render(
-    <Button href="/settings" linkAs={RouterLinkStub}>
+    <Button
+      href="/settings"
+      linkAs={InertiaLink}
+      linkProps={{ onBefore: () => false }}
+    >
       Settings
     </Button>,
   );
 
-  const link = screen.getByTestId("router-link");
+  const link = screen.getByRole("link", { name: "Settings" });
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
-  expect(link.getAttribute("href")).toBe("/settings");
+  expect(event.defaultPrevented).toBe(true);
   expect(link.className).toContain("inline-flex");
+  expect(link.getAttribute("href")).toBe("/settings");
+});
+
+test("it should forward linkProps to linkAs", () => {
+  render(
+    <Button href="/logout" linkAs={InertiaLink} linkProps={{ method: "post" }}>
+      Logout
+    </Button>,
+  );
+
+  const link = screen.getByRole("button", { name: "Logout" });
+
+  expect(link.tagName).toBe("BUTTON");
+  expect(link.getAttribute("type")).toBe("button");
 });
 
 test("it should ignore linkAs when as is button", () => {
   render(
-    <Button as="button" href="/settings" linkAs={RouterLinkStub}>
+    <Button as="button" href="/settings" linkAs={InertiaLink}>
       Settings
     </Button>,
   );
 
   expect(screen.getByRole("button", { name: "Settings" })).toBeTruthy();
-  expect(screen.queryByTestId("router-link")).toBeNull();
+  expect(screen.queryByRole("link")).toBeNull();
 });
 
 test("it should keep a native anchor when linkAs is set and the button is disabled", () => {
   render(
-    <Button disabled href="/settings" linkAs={RouterLinkStub}>
+    <Button disabled href="/settings" linkAs={InertiaLink}>
       Settings
     </Button>,
   );
 
   const anchor = screen.getByText("Settings").closest("a");
 
-  expect(screen.queryByTestId("router-link")).toBeNull();
   expect(anchor?.tagName).toBe("A");
+  expect(screen.queryByRole("link")).toBeNull();
   expect(anchor?.getAttribute("href")).toBeNull();
 });

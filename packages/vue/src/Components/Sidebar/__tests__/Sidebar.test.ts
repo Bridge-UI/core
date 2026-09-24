@@ -1,4 +1,5 @@
 // ** External Imports
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 import { defineComponent, h, nextTick } from "vue";
@@ -13,26 +14,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/Components/Sidebar";
-
-const RouterLinkStub = defineComponent({
-  name: "RouterLinkStub",
-  props: {
-    href: String,
-  },
-  setup(props, { attrs, slots }) {
-    return () => {
-      return h(
-        "a",
-        {
-          ...attrs,
-          href: props.href,
-          "data-testid": "router-link",
-        },
-        slots.default?.(),
-      );
-    };
-  },
-});
 
 const AppShell = defineComponent({
   props: {
@@ -68,9 +49,9 @@ const AppShell = defineComponent({
 test("it should render the sidebar aside and main inset", () => {
   const wrapper = mount(AppShell);
 
-  expect(wrapper.find("aside").exists()).toBe(true);
   expect(wrapper.text()).toContain("Home");
   expect(wrapper.text()).toContain("Main");
+  expect(wrapper.find("aside").exists()).toBe(true);
 });
 
 test("it should render the default toggle icon on the trigger", () => {
@@ -141,8 +122,8 @@ test("it should render header and footer slots", () => {
     },
   });
 
-  expect(wrapper.text()).toContain("Brand");
   expect(wrapper.text()).toContain("User");
+  expect(wrapper.text()).toContain("Brand");
 });
 
 test("it should mark the trigger as expanded by default", async () => {
@@ -283,8 +264,8 @@ test("it should collapse header rows with secondary to a square hit", async () =
 
   const item = wrapper.get('[aria-label="Acme Inc"]');
 
-  expect(item.classes()).toContain("size-8");
   expect(item.classes()).toContain("p-0");
+  expect(item.classes()).toContain("size-8");
   expect(item.classes()).not.toContain("px-4");
 });
 
@@ -313,9 +294,9 @@ test("it should apply nav chrome on SidebarList and SidebarListItem", async () =
 
   const home = wrapper.get('ul [role="button"]');
 
-  expect(wrapper.find("ul").classes()).toContain("gap-1");
   expect(home.classes()).toContain("min-h-8");
   expect(home.classes()).toContain("rounded-lg");
+  expect(wrapper.find("ul").classes()).toContain("gap-1");
 });
 
 test("it should hide nested SidebarList when the icon rail is collapsed", async () => {
@@ -444,9 +425,10 @@ test("it should render SidebarListItem linkAs inside the list root", async () =>
               h(SidebarList, null, {
                 default: () =>
                   h(SidebarListItem, {
+                    linkAs: InertiaLink,
                     href: "/transactions",
-                    linkAs: RouterLinkStub,
                     primary: "Transactions",
+                    linkProps: { onBefore: () => false },
                   }),
               }),
           },
@@ -460,13 +442,13 @@ test("it should render SidebarListItem linkAs inside the list root", async () =>
 
   await nextTick();
 
-  const link = wrapper.get("[data-testid='router-link']");
+  const link = wrapper.get("a");
   const event = new MouseEvent("click", { bubbles: true, cancelable: true });
 
   link.element.dispatchEvent(event);
 
-  expect(event.defaultPrevented).toBe(false);
-  expect(link.attributes("href")).toBe("/transactions");
+  expect(event.defaultPrevented).toBe(true);
   expect(link.classes()).toContain("no-underline");
+  expect(link.attributes("href")).toBe("/transactions");
   expect(link.element.parentElement?.tagName).toBe("LI");
 });

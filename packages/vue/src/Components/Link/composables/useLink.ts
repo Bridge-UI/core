@@ -17,16 +17,13 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
-import type {
-  LinkClasses,
-  LinkOwnProps,
-  LinkProps,
-} from "@/Components/Link/link.types";
+import type { LinkClasses, LinkOwnProps } from "@/Components/Link/link.types";
 import {
   mergePartBind,
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps, type LinkAsTag } from "@/Utils/linkAs";
 
 const linkBridgeKeys = [
   "href",
@@ -37,6 +34,7 @@ const linkBridgeKeys = [
   "disabled",
   "external",
   "leftIcon",
+  "linkProps",
   "rightIcon",
   "underline",
   "customProps",
@@ -47,21 +45,27 @@ type LinkLibDefaults = LibDefaultsShape<
   "size" | "color" | "underline"
 >;
 
-type LinkMerged = MergeLibDefaults<LinkOwnProps, LinkLibDefaults>;
+type LinkMerged<T extends LinkAsTag = "a"> = MergeLibDefaults<
+  LinkOwnProps<T>,
+  LinkLibDefaults
+>;
 
-export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
+export function useLink<T extends LinkAsTag = "a">(
+  props: LinkOwnProps<T>,
+  libDefaults: LinkLibDefaults,
+) {
   const attrs = useAttrs();
   const slots = useSlots();
 
   const split = computed(() => {
-    return splitComponentProps<LinkProps, typeof linkBridgeKeys>({
+    return splitComponentProps<LinkOwnProps<T>, typeof linkBridgeKeys>({
       bridgeKeys: linkBridgeKeys,
       props: { ...attrs, ...props },
     });
   });
 
   const { merged, entry: bridgeLink } = useBridgeUIComponent<
-    LinkMerged,
+    LinkMerged<T>,
     "Link"
   >({
     libDefaults,
@@ -144,7 +148,14 @@ export function useLink(props: LinkOwnProps, libDefaults: LinkLibDefaults) {
   const rootBind = computed(() => {
     return mergePartBind(
       customProps.value?.root,
-      split.value.inheritedAttrs,
+      {
+        ...split.value.inheritedAttrs,
+        ...resolveLinkAsProps(
+          merged.value.linkAs,
+          merged.value.linkProps,
+          rootTag.value,
+        ),
+      },
       cn({
         "inline-flex items-center gap-x-1 font-medium": true,
         "transition-colors duration-200": true,

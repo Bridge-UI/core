@@ -1,3 +1,6 @@
+// ** External Imports
+import type { ElementType } from "react";
+
 // ** Local Imports
 import type { BreadcrumbProps } from "@/Components/Breadcrumb/breadcrumb.types";
 import { BreadcrumbContext } from "@/Components/Breadcrumb/BreadcrumbContext";
@@ -9,7 +12,7 @@ const breadcrumbLibDefaults = {
   separator: "chevronRight",
 } as const;
 
-function Breadcrumb(props: BreadcrumbProps) {
+function Breadcrumb<T extends ElementType = "a">(props: BreadcrumbProps<T>) {
   const { children, rootBind, listBind, contextValue, collapsedItems } =
     useBreadcrumb(props, breadcrumbLibDefaults);
 
@@ -37,9 +40,11 @@ function Breadcrumb(props: BreadcrumbProps) {
                     as={item.as}
                     href={item.href}
                     key={entry.index}
+                    linkAs={props.linkAs}
                     current={item.current}
                     endIcon={item.endIcon}
                     disabled={item.disabled}
+                    linkProps={item.linkProps}
                     startIcon={item.startIcon}
                   >
                     {item.label}

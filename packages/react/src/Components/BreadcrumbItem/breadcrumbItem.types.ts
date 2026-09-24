@@ -13,6 +13,7 @@ import type { MergeHtmlProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { IconSource } from "@/Adapters/Icon";
 import type { IconProps } from "@/Components/Icon";
+import type { LinkHref, LinkPropsOf } from "@/Utils/linkAs";
 
 export interface BreadcrumbItemClasses {
   /**
@@ -113,7 +114,7 @@ export interface BreadcrumbItemSlots {
 /**
  * One breadcrumb crumb. Must be used inside `Breadcrumb`.
  */
-export interface BreadcrumbItemOwnProps {
+export interface BreadcrumbItemOwnProps<T extends ElementType = "a"> {
   /**
    * Element to render for the interactive crumb.
    *
@@ -165,10 +166,11 @@ export interface BreadcrumbItemOwnProps {
 
   /**
    * Link target when rendered as an anchor.
+   * When `linkAs` is set, this also accepts that component's `href`.
    *
    * @default undefined
    */
-  href?: string;
+  href?: LinkHref<T, "a">;
 
   /**
    * Component rendered in place of the navigating crumb `<a>`.
@@ -177,7 +179,16 @@ export interface BreadcrumbItemOwnProps {
    *
    * @default undefined
    */
-  linkAs?: ElementType;
+  linkAs?: T;
+
+  /**
+   * Props forwarded to `linkAs` (`method`, `replace`, `prefetch`, and so on).
+   * Checked against that component. Set `linkAs` on this crumb for the check
+   * to use this component; a parent `linkAs` still renders when this is omitted.
+   *
+   * @default undefined
+   */
+  linkProps?: LinkPropsOf<T, "a">;
 
   /**
    * Custom start / end / separator adornments.
@@ -194,7 +205,7 @@ export interface BreadcrumbItemOwnProps {
   startIcon?: IconSource;
 }
 
-export type BreadcrumbItemProps = MergeHtmlProps<
-  BreadcrumbItemOwnProps,
+export type BreadcrumbItemProps<T extends ElementType = "a"> = MergeHtmlProps<
+  BreadcrumbItemOwnProps<T>,
   HTMLAttributes<HTMLLIElement>
 >;

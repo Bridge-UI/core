@@ -1,5 +1,6 @@
 // ** External Imports
 import { get, omit, pick } from "es-toolkit/compat";
+import type { ElementType } from "react";
 
 // ** Core Imports
 import type { IconSize } from "@bridge-ui/core/Tokens";
@@ -17,6 +18,7 @@ import {
   useBridgeUIComponent,
   useBridgeUIMergedRegistryClasses,
 } from "@/Utils";
+import { resolveLinkAsProps } from "@/Utils/linkAs";
 
 const breadcrumbItemBridgeKeys = [
   "as",
@@ -27,15 +29,18 @@ const breadcrumbItemBridgeKeys = [
   "current",
   "endIcon",
   "disabled",
+  "linkProps",
   "startIcon",
   "customProps",
 ] as const satisfies readonly (keyof BreadcrumbItemOwnProps)[];
 
-export function useBreadcrumbItem(props: BreadcrumbItemProps) {
+export function useBreadcrumbItem<T extends ElementType = "a">(
+  props: BreadcrumbItemProps<T>,
+) {
   const breadcrumb = useBreadcrumbContext();
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
-    BreadcrumbItemProps,
+    BreadcrumbItemProps<T>,
     typeof breadcrumbItemBridgeKeys
   >({
     props,
@@ -43,7 +48,7 @@ export function useBreadcrumbItem(props: BreadcrumbItemProps) {
   });
 
   const { merged, entry: bridgeBreadcrumbItem } = useBridgeUIComponent<
-    BreadcrumbItemOwnProps,
+    BreadcrumbItemOwnProps<T>,
     "BreadcrumbItem"
   >({
     props: componentProps,
@@ -152,18 +157,29 @@ export function useBreadcrumbItem(props: BreadcrumbItemProps) {
     const isCurrent = current;
     const partProps = isCurrent ? customProps?.current : customProps?.link;
 
-    return mergePartBind(partProps, linkInheritedAttrs, {
-      "aria-disabled": disabled || undefined,
-      href: !isCurrent && !disabled ? merged.href : undefined,
-      "aria-current": isCurrent ? ("page" as const) : undefined,
-      className: cn({
-        [isCurrent
-          ? (breadcrumb.tokenClasses.current ?? "")
-          : (breadcrumb.tokenClasses.link ?? "")]: true,
-        [get(mergedClasses, isCurrent ? "current" : "link") ?? ""]: true,
-        "pointer-events-none opacity-50": disabled && !isCurrent,
-      }),
-    });
+    return mergePartBind(
+      partProps,
+      {
+        ...linkInheritedAttrs,
+        ...resolveLinkAsProps(
+          merged.linkAs ?? breadcrumb.linkAs,
+          merged.linkProps,
+          crumbAs,
+        ),
+      },
+      {
+        "aria-disabled": disabled || undefined,
+        href: !isCurrent && !disabled ? merged.href : undefined,
+        "aria-current": isCurrent ? ("page" as const) : undefined,
+        className: cn({
+          [isCurrent
+            ? (breadcrumb.tokenClasses.current ?? "")
+            : (breadcrumb.tokenClasses.link ?? "")]: true,
+          [get(mergedClasses, isCurrent ? "current" : "link") ?? ""]: true,
+          "pointer-events-none opacity-50": disabled && !isCurrent,
+        }),
+      },
+    );
   });
 
   const startIconBind = derived(() => {

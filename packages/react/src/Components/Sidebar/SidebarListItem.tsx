@@ -1,3 +1,6 @@
+// ** External Imports
+import type { ElementType } from "react";
+
 // ** Core Imports
 import { cn } from "@bridge-ui/core/Utils";
 
@@ -7,13 +10,13 @@ import { useSidebarListItem } from "@/Components/Sidebar/hooks/useSidebarListIte
 import type { SidebarListItemProps } from "@/Components/Sidebar/sidebar.types";
 import { Tooltip } from "@/Components/Tooltip";
 
-function SidebarListItem({
+function SidebarListItem<T extends ElementType = "a">({
   classes,
   customProps,
   tooltip: tooltipProp,
   tooltipPlacement: tooltipPlacementProp,
   ...props
-}: SidebarListItemProps) {
+}: SidebarListItemProps<T>) {
   const { tooltip, itemClasses, accessibleName, tooltipPlacement } =
     useSidebarListItem({
       tooltip: tooltipProp,

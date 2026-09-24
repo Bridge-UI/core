@@ -1,15 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends LinkAsTag = 'a'">
 // ** Local Imports
 import { Icon } from "@/Components/Icon";
 import { useLink } from "@/Components/Link/composables/useLink";
 import type { LinkOwnProps, LinkSlots } from "@/Components/Link/link.types";
 import { hasNamedSlot } from "@/Utils";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 defineSlots<LinkSlots>();
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<LinkOwnProps>();
+const props = defineProps<LinkOwnProps<T>>();
 
 const {
   slots,

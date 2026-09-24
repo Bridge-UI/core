@@ -13,6 +13,7 @@ import type { MergeHtmlProps, MergeProps } from "@bridge-ui/core/Utils";
 // ** Local Imports
 import type { ListProps } from "@/Components/List/list.types";
 import type { ListItemProps } from "@/Components/ListItem/listItem.types";
+import type { LinkAsTag } from "@/Utils/linkAs";
 
 export interface SidebarSideOverrides {}
 export interface SidebarVariantOverrides {}
@@ -305,4 +306,5 @@ export type SidebarListProps = ListProps & SidebarListOwnProps;
  * `ListItem` bound to the nearest `Sidebar`. Shows `primary` in a tooltip
  * when the icon rail is collapsed.
  */
-export type SidebarListItemProps = ListItemProps & SidebarListItemOwnProps;
+export type SidebarListItemProps<T extends LinkAsTag = "a"> = ListItemProps<T> &
+  SidebarListItemOwnProps;
