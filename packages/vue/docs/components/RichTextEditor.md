@@ -58,7 +58,7 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 ### JSON document
 
 ```vue
-<RichTextEditor format="json" v-model="doc" label="Body" />
+<RichTextEditor label="Body" format="json" v-model="doc" />
 ```
 
 `v-model` is a JSON object when `format="json"` (not a stringified blob).
@@ -73,14 +73,15 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 
 ### RichTextEditor-specific
 
-| Prop          | Type                        | Default           | Description                                            |
-| ------------- | --------------------------- | ----------------- | ------------------------------------------------------ |
-| `format`      | `"html" \| "json"`          | `"html"`          | Controlled value shape.                                |
-| `modelValue`  | `string \| RichTextJSON`    | —                 | Bound with `v-model`.                                  |
-| `placeholder` | `string`                    | —                 | Empty-state hint in the content area.                  |
-| `readOnly`    | `boolean`                   | `false`           | View-only surface; hides the toolbar.                  |
-| `tools`       | `RichTextTool[]`            | all default tools | Which toolbar actions to show.                         |
-| `customProps` | `RichTextEditorCustomProps` | —                 | Extra props for `content`, `toolbar`, `toolbarButton`. |
+| Prop           | Type                        | Default           | Description                                            |
+| -------------- | --------------------------- | ----------------- | ------------------------------------------------------ |
+| `format`       | `"html" \| "json"`          | `"html"`          | Controlled value shape.                                |
+| `defaultValue` | `string \| RichTextJSON`    | —                 | Initial value when `v-model` is not bound.             |
+| `modelValue`   | `string \| RichTextJSON`    | —                 | Bound with `v-model`.                                  |
+| `placeholder`  | `string`                    | —                 | Empty-state hint in the content area.                  |
+| `readOnly`     | `boolean`                   | `false`           | View-only surface; hides the toolbar.                  |
+| `tools`        | `RichTextTool[]`            | all default tools | Which toolbar actions to show.                         |
+| `customProps`  | `RichTextEditorCustomProps` | —                 | Extra props for `content`, `toolbar`, `toolbarButton`. |
 
 ### Inherited from FormField
 

@@ -39,9 +39,9 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 
 ```tsx
 <RichTextEditor
-  label="Description"
   value={html}
   onChange={setHtml}
+  label="Description"
   placeholder="Write a short description…"
 />
 ```
@@ -50,8 +50,8 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 
 ```tsx
 <RichTextEditor
-  label="Comment"
   value={html}
+  label="Comment"
   onChange={setHtml}
   tools={["bold", "italic", "link", "bulletList"]}
 />
@@ -60,7 +60,7 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 ### JSON document
 
 ```tsx
-<RichTextEditor format="json" label="Body" value={doc} onChange={setDoc} />
+<RichTextEditor value={doc} label="Body" format="json" onChange={setDoc} />
 ```
 
 `value` / `onChange` are a JSON object when `format="json"` (not a stringified blob).
@@ -68,7 +68,7 @@ Custom engines can implement `RichTextEditorAdapter` and pass them via `global.r
 ### Read-only
 
 ```tsx
-<RichTextEditor readOnly label="Preview" value={html} />
+<RichTextEditor readOnly value={html} label="Preview" />
 ```
 
 ## Props
