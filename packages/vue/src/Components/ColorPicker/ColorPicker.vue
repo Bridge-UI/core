@@ -11,9 +11,9 @@ import type {
 } from "@/Components/ColorPicker/colorPicker.types";
 import { useColorPicker } from "@/Components/ColorPicker/composables/useColorPicker";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<ColorPickerSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorPickerOwnProps>(), {
   showFooter: undefined,

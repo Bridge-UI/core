@@ -14,11 +14,11 @@ import { hasNamedSlot, isPropPresent } from "@/Utils";
 
 defineSlots<ChipSlots>();
 
-defineOptions({ inheritAttrs: false });
-
 const slots = useSlots();
 
 const emit = defineEmits<ChipEmits>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ChipOwnProps>(), {
   size: "md",

@@ -5,9 +5,9 @@ import { useAvatar } from "@/Components/Avatar";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot } from "@/Utils";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<AvatarSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<AvatarOwnProps>();
 

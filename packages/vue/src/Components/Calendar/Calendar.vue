@@ -18,13 +18,13 @@ import CalendarMonth from "@/Components/CalendarMonth/CalendarMonth.vue";
 import CalendarYear from "@/Components/CalendarYear/CalendarYear.vue";
 import { Icon } from "@/Components/Icon";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<CalendarSlots>();
 
-const props = defineProps<CalendarOwnProps>();
+defineOptions({ inheritAttrs: false });
 
 const emit = defineEmits<CalendarEmits>();
+
+const props = defineProps<CalendarOwnProps>();
 
 const {
   view,

@@ -9,9 +9,9 @@ import type {
   DatePickerSlots,
 } from "@/Components/DatePicker/datePicker.types";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<DatePickerSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<DatePickerOwnProps>(), {
   showFooter: undefined,

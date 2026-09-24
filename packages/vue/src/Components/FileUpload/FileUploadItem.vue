@@ -12,9 +12,9 @@ import { FILE_UPLOAD_KEY } from "@/Components/FileUpload/fileUploadInjectionKey"
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot } from "@/Utils";
 
-defineOptions({ inheritAttrs: false });
-
 defineSlots<FileUploadItemSlots>();
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<FileUploadItemSlotProps>();
 
