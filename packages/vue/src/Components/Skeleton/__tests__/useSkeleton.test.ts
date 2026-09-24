@@ -71,10 +71,10 @@ test("it should apply class after classes.root in root bind", () => {
   expect(rootBind.value.class).not.toContain("h-4");
 });
 
-test("it should apply rounded-full class when rounded is full", () => {
+test("it should apply rounded-panel-full class when rounded is full", () => {
   const { rootBind } = mountUseSkeleton({ rounded: "full" });
 
-  expect(rootBind.value.class).toContain("rounded-full");
+  expect(rootBind.value.class).toContain("rounded-panel-full");
 });
 
 test("it should apply pulse animation classes", () => {

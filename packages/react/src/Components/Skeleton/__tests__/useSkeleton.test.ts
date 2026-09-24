@@ -66,10 +66,10 @@ test("it should apply className after classes.root in rootBind", () => {
   expect(result.current.rootBind.className).not.toContain("h-4");
 });
 
-test("it should apply rounded-full class when rounded is full", () => {
+test("it should apply rounded-panel-full class when rounded is full", () => {
   const { result } = renderUseSkeleton({ rounded: "full" });
 
-  expect(result.current.rootBind.className).toContain("rounded-full");
+  expect(result.current.rootBind.className).toContain("rounded-panel-full");
 });
 
 test("it should apply pulse animation classes", () => {

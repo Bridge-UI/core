@@ -89,6 +89,13 @@ import type {
   EmptyStateSizeItem,
 } from "@/Tokens/EmptyState";
 import type {
+  FileUploadRounded,
+  FileUploadSize,
+  FileUploadSizeItem,
+  FileUploadVariant,
+  FileUploadVariantItem,
+} from "@/Tokens/FileUpload";
+import type {
   FormFieldColor,
   FormFieldColorItem,
   FormFieldRounded,
@@ -391,6 +398,7 @@ export interface DateTimeRangePickerConfigOverrides {}
 export interface DividerConfigOverrides {}
 export interface DrawerConfigOverrides {}
 export interface EmptyStateConfigOverrides {}
+export interface FileUploadConfigOverrides {}
 export interface FormControlConfigOverrides {}
 export interface FormFieldConfigOverrides {}
 export interface IconConfigOverrides {}
@@ -1079,6 +1087,22 @@ export interface EmptyStateConfigBase {
   }>;
 }
 
+export interface FileUploadConfigBase {
+  classes: object;
+  defaultProps: Partial<{
+    color: keyof ButtonColor;
+    multiple: boolean;
+    rounded: keyof FileUploadRounded;
+    size: keyof FileUploadSize;
+    variant: keyof FileUploadVariant;
+  }>;
+  tokens: Partial<{
+    rounded: Record<string, string>;
+    size: Record<string, FileUploadSizeItem>;
+    variant: Record<string, FileUploadVariantItem>;
+  }>;
+}
+
 export interface FormControlConfigBase {
   classes: object;
   defaultProps: Partial<{
@@ -1574,6 +1598,9 @@ export type BridgeUIComponentsConfig = Partial<{
   Drawer: Partial<Overwrite<DrawerConfigBase, DrawerConfigOverrides>>;
   EmptyState: Partial<
     Overwrite<EmptyStateConfigBase, EmptyStateConfigOverrides>
+  >;
+  FileUpload: Partial<
+    Overwrite<FileUploadConfigBase, FileUploadConfigOverrides>
   >;
   FormControl: Partial<
     Overwrite<FormControlConfigBase, FormControlConfigOverrides>

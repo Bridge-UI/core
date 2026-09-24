@@ -103,7 +103,7 @@ const dates = createMomentDateAdapter({
 
 ### Form density defaults
 
-Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.
+Set `global.formDefaults` to apply shared `size` / `rounded` to form controls (TextField, Select, Checkbox, FileUpload, Slider, OtpField, …). Does not affect Button, Progress, Modal, etc.
 
 Merge order: instance props → `components.{Name}.defaultProps` → chrome (`FormField` / `FormControl` / `BaseField` / `TimePanel`) → `formDefaults` → library defaults.
 

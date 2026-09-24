@@ -361,6 +361,20 @@ export type {
   FieldOverlayOwnProps,
   FieldOverlayProps,
 } from "@/Components/FieldOverlay";
+export { FileUpload, useFileUpload } from "@/Components/FileUpload";
+export type {
+  FileUploadCallbacks,
+  FileUploadClasses,
+  FileUploadColorOverrides,
+  FileUploadCustomProps,
+  FileUploadItemSlotProps,
+  FileUploadOwnProps,
+  FileUploadProps,
+  FileUploadRoundedOverrides,
+  FileUploadSizeOverrides,
+  FileUploadSlots,
+  FileUploadVariantOverrides,
+} from "@/Components/FileUpload";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,

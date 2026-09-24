@@ -214,6 +214,18 @@ test("it should ignore formDefaults for non-form components", () => {
   expect(result).toEqual({ size: "md", rounded: "full" });
 });
 
+test("it should apply formDefaults to FileUpload", () => {
+  const result = mergePropsWithBridgeUIDefaults({
+    props: {},
+    components: null,
+    componentName: "FileUpload",
+    formDefaults: { size: "lg", rounded: "xl" },
+    libDefaults: { size: "md" as never, rounded: "md" as never },
+  });
+
+  expect(result).toEqual({ size: "lg", rounded: "xl" });
+});
+
 test("it should apply formDefaults size but not rounded for Radio and Switch", () => {
   const radio = mergePropsWithBridgeUIDefaults({
     props: {},

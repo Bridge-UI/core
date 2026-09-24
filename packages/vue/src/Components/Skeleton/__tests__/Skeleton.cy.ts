@@ -7,12 +7,12 @@ test("it should render with default props", () => {
   cy.get("div").should("exist").and("have.class", "rounded-md");
 });
 
-test("it should apply rounded-full", () => {
+test("it should apply rounded-panel-full", () => {
   cy.mount(Skeleton, {
     props: { rounded: "full", class: "h-10 w-10" },
   });
 
-  cy.get("div").should("have.class", "rounded-full");
+  cy.get("div").should("have.class", "rounded-panel-full");
 });
 
 test("it should merge custom class", () => {

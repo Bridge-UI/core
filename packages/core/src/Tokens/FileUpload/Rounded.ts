@@ -1,7 +1,7 @@
 /**
- * Border radius tokens for calendar day / month / year tiles and chrome.
+ * Border radius tokens for FileUpload dropzone, cards, and media.
  */
-export interface CalendarRounded {
+export interface FileUploadRounded {
   /**
    * Border radius classes for the `2xl` token.
    */
@@ -19,7 +19,7 @@ export interface CalendarRounded {
 
   /**
    * Panel-max radius (`rounded-panel-full`).
-   * Caps extreme rounding so calendars do not become stadium-shaped.
+   * Caps extreme rounding so dropzones and cards do not become stadium-shaped.
    */
   "full": string;
 
@@ -34,7 +34,7 @@ export interface CalendarRounded {
   "md": string;
 
   /**
-   * No border radius.
+   * No effect (empty token).
    */
   "none": string;
 
@@ -54,7 +54,10 @@ export interface CalendarRounded {
   "xs": string;
 }
 
-export const roundedProps: CalendarRounded = {
+/**
+ * Default border radius classes for FileUpload surfaces.
+ */
+export const roundedProps: FileUploadRounded = {
   "xs": "rounded-xs",
   "sm": "rounded-sm",
   "md": "rounded-md",
