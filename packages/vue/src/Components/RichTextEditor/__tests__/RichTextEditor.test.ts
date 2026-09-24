@@ -1,12 +1,14 @@
 // ** External Imports
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { expect, test } from "vitest";
 
 // ** Local Imports
 import { RichTextEditor } from "@/Components/RichTextEditor";
 
-test("it should render a contenteditable surface", () => {
+test("it should render a contenteditable surface", async () => {
   const wrapper = mount(RichTextEditor);
+
+  await flushPromises();
 
   expect(wrapper.find('[role="textbox"]').exists()).toBe(true);
 });
@@ -35,8 +37,10 @@ test("it should render error message when errorMessage prop is provided", () => 
   expect(wrapper.text()).toContain("Required");
 });
 
-test("it should set aria-invalid when error is set", () => {
+test("it should set aria-invalid when error is set", async () => {
   const wrapper = mount(RichTextEditor, { props: { error: true } });
+
+  await flushPromises();
 
   expect(wrapper.find('[role="textbox"]').attributes("aria-invalid")).toBe(
     "true",
@@ -76,14 +80,14 @@ test("it should emit update:modelValue when content is edited", async () => {
     },
   });
 
-  await wrapper.vm.$nextTick();
+  await flushPromises();
 
   const surface = wrapper.find('[role="textbox"]');
   expect(surface.attributes("contenteditable")).toBe("true");
 
   surface.element.innerHTML = "<p>Updated</p>";
   await surface.trigger("input");
-  await wrapper.vm.$nextTick();
+  await flushPromises();
 
   expect(wrapper.emitted("update:modelValue")).toBeTruthy();
 });

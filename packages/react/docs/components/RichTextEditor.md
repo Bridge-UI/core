@@ -28,10 +28,10 @@ const richText = createTiptapRichTextAdapter();
 </BridgeUIProvider>
 ```
 
-| Adapter                              | Peer(s)                                                                                                                                       | Notes                                                           |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/extension-link` | Default recommendation; ProseMirror JSON                        |
-| `Adapters/Examples/rich-text-quill`  | `quill`                                                                                                                                       | Quill Delta JSON; import `quill/dist/quill.core.css` in the app |
+| Adapter                              | Peer(s)                                                                                                                                       | Notes                                                               |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `Adapters/Examples/rich-text-tiptap` | `@tiptap/core`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/extension-link` | Default recommendation; ProseMirror JSON                            |
+| `Adapters/Examples/rich-text-quill`  | `quill`                                                                                                                                       | Quill Delta JSON; no snow theme; import `quill/dist/quill.core.css` |
 
 Stick to one engine per app — TipTap JSON and Quill Delta are not interchangeable.
 

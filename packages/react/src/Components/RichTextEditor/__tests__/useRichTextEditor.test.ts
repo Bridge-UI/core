@@ -38,10 +38,10 @@ test("it should use textarea control tokens via FormField", () => {
   expect(result.current.formField.control).toBe("textarea");
 });
 
-test("it should set aria-invalid on content when error is true", () => {
+test("it should mark FormField invalidated when error is true", () => {
   const { result } = renderHook(() => useRichTextEditor({ error: true }));
 
-  expect(result.current.contentBind["aria-invalid"]).toBe(true);
+  expect(result.current.formField.invalidated).toBe(true);
 });
 
 test("it should build toolbar button binds for a tool", () => {
@@ -50,6 +50,29 @@ test("it should build toolbar button binds for a tool", () => {
   const bind = result.current.getToolbarButtonBind("bold");
 
   expect(bind.density).toBe("mini");
+  expect(bind.size).toBe("md");
+  expect(bind.color).toBe("primary");
   expect(bind["aria-label"]).toBe("Bold");
   expect(bind.icon).toBe("bold");
+});
+
+test("it should pass color and size to toolbar buttons", () => {
+  const { result } = renderHook(() =>
+    useRichTextEditor({ size: "sm", color: "info" }),
+  );
+
+  const bind = result.current.getToolbarButtonBind("bold");
+
+  expect(bind.color).toBe("info");
+  expect(bind.size).toBe("sm");
+});
+
+test("it should use error color on toolbar buttons when invalidated", () => {
+  const { result } = renderHook(() =>
+    useRichTextEditor({ error: true, color: "info" }),
+  );
+
+  const bind = result.current.getToolbarButtonBind("bold");
+
+  expect(bind.color).toBe("error");
 });

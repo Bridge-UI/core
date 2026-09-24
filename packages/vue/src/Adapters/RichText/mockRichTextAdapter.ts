@@ -3,6 +3,9 @@
  * Avoids pulling TipTap into Vitest / Cypress component suites.
  */
 
+// ** External Imports
+import { isNil } from "es-toolkit/compat";
+
 // ** Core Imports
 import type {
   RichTextEditorAdapter,
@@ -11,6 +14,45 @@ import type {
   RichTextTool,
   RichTextValue,
 } from "@bridge-ui/core/Adapters";
+
+/**
+ * Applies Bridge a11y attributes to the mock editable host.
+ */
+function applyEditableA11y(
+  editable: HTMLElement,
+  options: RichTextMountOptions,
+): void {
+  if (!isNil(options.id) && options.id.length > 0) {
+    editable.id = options.id;
+  }
+
+  editable.setAttribute("role", "textbox");
+  editable.setAttribute("aria-multiline", "true");
+
+  if (options.ariaReadonly === true) {
+    editable.setAttribute("aria-readonly", "true");
+  } else {
+    editable.removeAttribute("aria-readonly");
+  }
+
+  if (options.ariaDisabled === true) {
+    editable.setAttribute("aria-disabled", "true");
+  } else {
+    editable.removeAttribute("aria-disabled");
+  }
+
+  if (options.ariaInvalid === true) {
+    editable.setAttribute("aria-invalid", "true");
+  } else {
+    editable.removeAttribute("aria-invalid");
+  }
+
+  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
+    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  } else {
+    editable.removeAttribute("aria-describedby");
+  }
+}
 
 /**
  * Creates a lightweight {@link RichTextEditorAdapter} for tests.
@@ -44,7 +86,7 @@ export function createMockRichTextAdapter(): RichTextEditorAdapter {
         element.innerHTML = "";
       }
 
-      element.setAttribute("role", "textbox");
+      applyEditableA11y(element, options);
       syncEditable();
 
       const onInput = () => {

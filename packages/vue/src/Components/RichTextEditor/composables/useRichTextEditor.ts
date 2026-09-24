@@ -116,6 +116,7 @@ export function useRichTextEditor(
   const adapter = useRichTextAdapter();
 
   const handleRef = ref<null | RichTextEditorHandle>(null);
+  const hostRef = ref<null | HTMLDivElement>(null);
   const selectionTick = ref(0);
 
   const split = computed(() => {
@@ -259,6 +260,30 @@ export function useRichTextEditor(
     },
   );
 
+  const toolbarColor = computed(() => {
+    if (formField.invalidated.value) {
+      return "error";
+    }
+
+    return formField.merged.value.color ?? "primary";
+  });
+
+  function isToolbarButtonDisabled(tool: RichTextTool) {
+    if (formField.isDisabled.value) {
+      return true;
+    }
+
+    if (isReadOnly.value) {
+      return true;
+    }
+
+    if (!(handleRef.value?.can(tool) ?? true)) {
+      return true;
+    }
+
+    return false;
+  }
+
   function bumpSelection() {
     selectionTick.value += 1;
   }
@@ -266,15 +291,22 @@ export function useRichTextEditor(
   function destroyHandle() {
     handleRef.value?.destroy();
     handleRef.value = null;
+
+    const host = hostRef.value;
+
+    if (!isNil(host)) {
+      host.remove();
+      hostRef.value = null;
+    }
   }
 
   function mountAdapter() {
     destroyHandle();
 
-    const element = contentRef.value;
+    const surface = contentRef.value;
     const richText = adapter.value;
 
-    if (isNil(element)) {
+    if (isNil(surface)) {
       return;
     }
 
@@ -284,15 +316,26 @@ export function useRichTextEditor(
       );
     }
 
+    // Host is outside Vue's VNode children so TipTap/Quill DOM survives patches.
+    const host = document.createElement("div");
+    host.className = "min-h-0 min-w-0 flex-1 outline-none";
+    surface.appendChild(host);
+    hostRef.value = host;
+
     handleRef.value = richText.mount({
-      element,
+      element: host,
       tools: tools.value,
       value: model.value,
       format: format.value,
       readOnly: isReadOnly.value,
+      id: formField.controlId.value,
+      ariaReadonly: isReadOnly.value,
       onSelectionChange: bumpSelection,
       disabled: formField.isDisabled.value,
       placeholder: rteOnly.value.placeholder,
+      ariaDisabled: formField.isDisabled.value,
+      ariaInvalid: formField.invalidated.value,
+      ariaDescribedBy: formField.ariaDescribedBy.value,
       onChange: (next) => {
         model.value = next;
         emit("update:modelValue", next);
@@ -355,15 +398,7 @@ export function useRichTextEditor(
   const contentBind = computed(() => {
     return mergePartBind(
       rteOnly.value.customProps?.content,
-      {
-        role: "textbox",
-        "aria-multiline": true,
-        id: formField.controlId.value,
-        "aria-readonly": isReadOnly.value || undefined,
-        "aria-describedby": formField.ariaDescribedBy.value,
-        "aria-disabled": formField.isDisabled.value || undefined,
-        "aria-invalid": formField.invalidated.value || undefined,
-      },
+      {},
       cn({
         "min-w-0 flex-1": true,
         [sizeToken.value?.content ?? ""]: true,
@@ -387,12 +422,12 @@ export function useRichTextEditor(
         density: "mini",
         variant: "flat",
         "aria-label": label,
+        color: toolbarColor.value,
         icon: RICH_TEXT_TOOL_ICONS[tool],
+        disabled: isToolbarButtonDisabled(tool),
+        size: formField.merged.value.size ?? "md",
         selected: handle?.isActive(tool) ?? false,
-        disabled:
-          formField.isDisabled.value ||
-          isReadOnly.value ||
-          !(handle?.can(tool) ?? true),
+        rounded: formField.merged.value.rounded ?? "md",
       },
       cn({
         [sizeToken.value?.toolbarButton ?? ""]: true,

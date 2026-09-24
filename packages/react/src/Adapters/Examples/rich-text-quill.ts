@@ -3,7 +3,7 @@
  * Requires the optional `quill` peer.
  *
  * Framework-agnostic: uses Quill against a host DOM node (Bridge owns the
- * toolbar — Quill’s built-in toolbar is disabled).
+ * toolbar — Quill’s built-in toolbar is disabled; no snow/bubble theme).
  *
  * Apps should import Quill core styles once (e.g. `quill/dist/quill.core.css`).
  * JSON format uses Quill’s Delta (`{ ops: [...] }`), not TipTap/ProseMirror JSON.
@@ -37,6 +37,45 @@ function readValue(quill: Quill, format: RichTextFormat): RichTextValue {
   }
 
   return quill.getSemanticHTML();
+}
+
+/**
+ * Applies Bridge a11y attributes to the engine's editable root.
+ */
+function applyEditableA11y(
+  editable: HTMLElement,
+  options: RichTextMountOptions,
+): void {
+  if (!isNil(options.id) && options.id.length > 0) {
+    editable.id = options.id;
+  }
+
+  editable.setAttribute("role", "textbox");
+  editable.setAttribute("aria-multiline", "true");
+
+  if (options.ariaReadonly === true) {
+    editable.setAttribute("aria-readonly", "true");
+  } else {
+    editable.removeAttribute("aria-readonly");
+  }
+
+  if (options.ariaDisabled === true) {
+    editable.setAttribute("aria-disabled", "true");
+  } else {
+    editable.removeAttribute("aria-disabled");
+  }
+
+  if (options.ariaInvalid === true) {
+    editable.setAttribute("aria-invalid", "true");
+  } else {
+    editable.removeAttribute("aria-invalid");
+  }
+
+  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
+    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  } else {
+    editable.removeAttribute("aria-describedby");
+  }
 }
 
 /**
@@ -202,9 +241,11 @@ export function createQuillRichTextAdapter(): RichTextEditorAdapter {
     mount(options: RichTextMountOptions): RichTextEditorHandle {
       let disabled = options.disabled === true;
       let readOnly = options.readOnly === true;
+      let destroyed = false;
 
+      // No snow/bubble theme — Bridge owns the toolbar; avoid Quill chrome
+      // rewriting the host and stealing focus on init.
       const quill = new Quill(options.element, {
-        theme: "snow",
         readOnly: disabled || readOnly,
         placeholder: options.placeholder ?? "",
         modules: {
@@ -212,12 +253,18 @@ export function createQuillRichTextAdapter(): RichTextEditorAdapter {
         },
       });
 
+      if (!isNil(options.id) && options.id.length > 0) {
+        quill.root.id = options.id;
+      }
+
+      applyEditableA11y(quill.root as HTMLElement, options);
+
       if (!isNil(options.value)) {
         writeValue(quill, options.format, options.value);
       }
 
       const onTextChange = (_delta: unknown, _old: unknown, source: string) => {
-        if (source === "silent") {
+        if (source === "silent" || destroyed) {
           return;
         }
 
@@ -225,7 +272,9 @@ export function createQuillRichTextAdapter(): RichTextEditorAdapter {
       };
 
       const onSelectionChange = () => {
-        options.onSelectionChange?.();
+        if (!destroyed) {
+          options.onSelectionChange?.();
+        }
       };
 
       quill.on("text-change", onTextChange);
@@ -236,31 +285,45 @@ export function createQuillRichTextAdapter(): RichTextEditorAdapter {
       };
 
       return {
-        focus: () => {
-          quill.focus();
-        },
-        blur: () => {
-          (quill.root as HTMLElement).blur();
-        },
         getValue: () => {
           return readValue(quill, options.format);
         },
+        focus: () => {
+          if (!destroyed) {
+            quill.focus();
+          }
+        },
         isActive: (tool: RichTextTool) => {
-          return isToolActive(quill, tool);
+          return !destroyed && isToolActive(quill, tool);
+        },
+        blur: () => {
+          if (!destroyed) {
+            (quill.root as HTMLElement).blur();
+          }
+        },
+        setValue: (value: RichTextValue) => {
+          if (!destroyed) {
+            writeValue(quill, options.format, value);
+          }
         },
         setDisabled: (next: boolean) => {
+          if (destroyed) {
+            return;
+          }
+
           disabled = next;
           syncEditable();
         },
         setReadOnly: (next: boolean) => {
+          if (destroyed) {
+            return;
+          }
+
           readOnly = next;
           syncEditable();
         },
-        setValue: (value: RichTextValue) => {
-          writeValue(quill, options.format, value);
-        },
         can: (tool: RichTextTool) => {
-          if (disabled || readOnly) {
+          if (destroyed || disabled || readOnly) {
             return false;
           }
 
@@ -268,20 +331,25 @@ export function createQuillRichTextAdapter(): RichTextEditorAdapter {
           return true;
         },
         run: (tool: RichTextTool, payload?: RichTextToolPayload) => {
-          if (disabled || readOnly) {
+          if (destroyed || disabled || readOnly) {
             return;
           }
 
           runTool(quill, tool, payload);
         },
         destroy: () => {
+          if (destroyed) {
+            return;
+          }
+
+          destroyed = true;
           quill.off("text-change", onTextChange);
           quill.off("selection-change", onSelectionChange);
           quill.disable();
 
           // Quill wraps the host; clear so remounts start clean.
           options.element.innerHTML = "";
-          options.element.classList.remove("ql-container", "ql-snow");
+          options.element.classList.remove("ql-container", "ql-disabled");
         },
       };
     },

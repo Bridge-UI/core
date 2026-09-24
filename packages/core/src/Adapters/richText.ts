@@ -58,6 +58,26 @@ export type RichTextToolPayload = {
  */
 export type RichTextMountOptions = {
   /**
+   * `aria-describedby` on the editable root.
+   */
+  ariaDescribedBy?: string;
+
+  /**
+   * `aria-disabled` on the editable root.
+   */
+  ariaDisabled?: boolean;
+
+  /**
+   * `aria-invalid` on the editable root.
+   */
+  ariaInvalid?: boolean;
+
+  /**
+   * `aria-readonly` on the editable root.
+   */
+  ariaReadonly?: boolean;
+
+  /**
    * Disable editing and command execution.
    */
   disabled?: boolean;
@@ -71,6 +91,12 @@ export type RichTextMountOptions = {
    * Document format for `value` / `onChange` / handle get/set.
    */
   format: RichTextFormat;
+
+  /**
+   * Optional `id` applied to the editable root (for FormField label association).
+   * Prefer the contenteditable node, not a non-editable wrapper.
+   */
+  id?: string;
 
   /**
    * Called whenever the document changes.

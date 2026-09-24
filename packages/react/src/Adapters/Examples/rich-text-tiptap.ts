@@ -36,6 +36,45 @@ function readValue(editor: Editor, format: RichTextFormat): RichTextValue {
 }
 
 /**
+ * Applies Bridge a11y attributes to the engine's editable root.
+ */
+function applyEditableA11y(
+  editable: HTMLElement,
+  options: RichTextMountOptions,
+): void {
+  if (!isNil(options.id) && options.id.length > 0) {
+    editable.id = options.id;
+  }
+
+  editable.setAttribute("role", "textbox");
+  editable.setAttribute("aria-multiline", "true");
+
+  if (options.ariaReadonly === true) {
+    editable.setAttribute("aria-readonly", "true");
+  } else {
+    editable.removeAttribute("aria-readonly");
+  }
+
+  if (options.ariaDisabled === true) {
+    editable.setAttribute("aria-disabled", "true");
+  } else {
+    editable.removeAttribute("aria-disabled");
+  }
+
+  if (options.ariaInvalid === true) {
+    editable.setAttribute("aria-invalid", "true");
+  } else {
+    editable.removeAttribute("aria-invalid");
+  }
+
+  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
+    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  } else {
+    editable.removeAttribute("aria-describedby");
+  }
+}
+
+/**
  * Maps a Bridge tool id to TipTap `isActive` / command names.
  */
 function isToolActive(editor: Editor, tool: RichTextTool): boolean {
@@ -71,33 +110,34 @@ function isToolActive(editor: Editor, tool: RichTextTool): boolean {
 
 /**
  * Whether `tool` can run in the current editor state.
+ * Must not call `.focus()` — capability checks run on every toolbar render.
  */
 function canRunTool(editor: Editor, tool: RichTextTool): boolean {
   switch (tool) {
     case "bold":
-      return editor.can().chain().focus().toggleBold().run();
+      return editor.can().toggleBold();
     case "italic":
-      return editor.can().chain().focus().toggleItalic().run();
+      return editor.can().toggleItalic();
     case "underline":
-      return editor.can().chain().focus().toggleUnderline().run();
+      return editor.can().toggleUnderline();
     case "strike":
-      return editor.can().chain().focus().toggleStrike().run();
+      return editor.can().toggleStrike();
     case "link":
       return true;
     case "bulletList":
-      return editor.can().chain().focus().toggleBulletList().run();
+      return editor.can().toggleBulletList();
     case "orderedList":
-      return editor.can().chain().focus().toggleOrderedList().run();
+      return editor.can().toggleOrderedList();
     case "heading1":
-      return editor.can().chain().focus().toggleHeading({ level: 1 }).run();
+      return editor.can().toggleHeading({ level: 1 });
     case "heading2":
-      return editor.can().chain().focus().toggleHeading({ level: 2 }).run();
+      return editor.can().toggleHeading({ level: 2 });
     case "heading3":
-      return editor.can().chain().focus().toggleHeading({ level: 3 }).run();
+      return editor.can().toggleHeading({ level: 3 });
     case "blockquote":
-      return editor.can().chain().focus().toggleBlockquote().run();
+      return editor.can().toggleBlockquote();
     case "codeBlock":
-      return editor.can().chain().focus().toggleCodeBlock().run();
+      return editor.can().toggleCodeBlock();
     default:
       return false;
   }
@@ -175,8 +215,10 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
     mount(options: RichTextMountOptions): RichTextEditorHandle {
       let disabled = options.disabled === true;
       let readOnly = options.readOnly === true;
+      let destroyed = false;
 
       const editor = new Editor({
+        autofocus: false,
         element: options.element,
         editable: !disabled && !readOnly,
         onSelectionUpdate: () => {
@@ -198,45 +240,72 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
         ],
       });
 
+      if (!isNil(options.id) && options.id.length > 0) {
+        editor.view.dom.id = options.id;
+      }
+
+      applyEditableA11y(editor.view.dom, options);
+
       return {
-        destroy: () => {
-          editor.destroy();
-        },
-        blur: () => {
-          editor.commands.blur();
-        },
-        focus: () => {
-          editor.commands.focus();
-        },
         getValue: () => {
           return readValue(editor, options.format);
         },
+        blur: () => {
+          if (!destroyed) {
+            editor.commands.blur();
+          }
+        },
+        focus: () => {
+          if (!destroyed) {
+            editor.commands.focus();
+          }
+        },
         isActive: (tool: RichTextTool) => {
-          return isToolActive(editor, tool);
+          return !destroyed && isToolActive(editor, tool);
         },
-        setDisabled: (next: boolean) => {
-          disabled = next;
-          editor.setEditable(!disabled && !readOnly, false);
-        },
-        setReadOnly: (next: boolean) => {
-          readOnly = next;
-          editor.setEditable(!disabled && !readOnly, false);
+        destroy: () => {
+          if (destroyed) {
+            return;
+          }
+
+          destroyed = true;
+          editor.destroy();
         },
         can: (tool: RichTextTool) => {
-          if (disabled || readOnly) {
+          if (destroyed || disabled || readOnly) {
             return false;
           }
 
           return canRunTool(editor, tool);
         },
+        setDisabled: (next: boolean) => {
+          if (destroyed) {
+            return;
+          }
+
+          disabled = next;
+          editor.setEditable(!disabled && !readOnly, false);
+        },
+        setReadOnly: (next: boolean) => {
+          if (destroyed) {
+            return;
+          }
+
+          readOnly = next;
+          editor.setEditable(!disabled && !readOnly, false);
+        },
         run: (tool: RichTextTool, payload?: RichTextToolPayload) => {
-          if (disabled || readOnly) {
+          if (destroyed || disabled || readOnly) {
             return;
           }
 
           runTool(editor, tool, payload);
         },
         setValue: (value: RichTextValue) => {
+          if (destroyed) {
+            return;
+          }
+
           const next =
             options.format === "html" ? (isString(value) ? value : "") : value;
 

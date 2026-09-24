@@ -3,6 +3,7 @@ import { get, isNil, isString, omit } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -107,10 +108,11 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   const resolveMessage = useResolveMessage();
   const adapter = useRichTextAdapter();
 
-  const contentRef = useRef<null | HTMLDivElement>(null);
+  const surfaceRef = useRef<null | HTMLDivElement>(null);
+  const hostRef = useRef<null | HTMLDivElement>(null);
   const handleRef = useRef<null | RichTextEditorHandle>(null);
   const onChangeRef = useRef(props.onChange);
-  const [contentEl, setContentEl] = useState<null | HTMLDivElement>(null);
+  const [surfaceEl, setSurfaceEl] = useState<null | HTMLDivElement>(null);
   const [, setSelectionTick] = useState(0);
 
   onChangeRef.current = props.onChange;
@@ -243,12 +245,39 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     },
   );
 
+  const toolbarColor = derived(() => {
+    if (formField.invalidated) {
+      return "error";
+    }
+
+    return formField.merged.color ?? "primary";
+  });
+
+  const isToolbarButtonDisabled = useCallback(
+    (tool: RichTextTool) => {
+      if (formField.isDisabled) {
+        return true;
+      }
+
+      if (isReadOnly) {
+        return true;
+      }
+
+      if (!(handleRef.current?.can(tool) ?? true)) {
+        return true;
+      }
+
+      return false;
+    },
+    [formField.isDisabled, isReadOnly],
+  );
+
   const bumpSelection = useCallback(() => {
     setSelectionTick((tick) => tick + 1);
   }, []);
 
-  useEffect(() => {
-    if (isNil(contentEl)) {
+  useLayoutEffect(() => {
+    if (isNil(surfaceEl)) {
       return;
     }
 
@@ -258,15 +287,27 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       );
     }
 
+    // Host is outside React's child fiber so TipTap/Quill DOM survives re-renders
+    // and FormField chrome class updates without React wiping `.ProseMirror`.
+    const host = document.createElement("div");
+    host.className = "min-h-0 min-w-0 flex-1 outline-none";
+    surfaceEl.appendChild(host);
+    hostRef.current = host;
+
     const handle = adapter.mount({
       tools,
       format,
+      element: host,
       value: valueProp,
-      element: contentEl,
       readOnly: isReadOnly,
+      id: formField.controlId,
+      ariaReadonly: isReadOnly,
       disabled: formField.isDisabled,
       placeholder: rteOnly.placeholder,
       onSelectionChange: bumpSelection,
+      ariaDisabled: formField.isDisabled,
+      ariaInvalid: formField.invalidated,
+      ariaDescribedBy: formField.ariaDescribedBy,
       onChange: (next) => {
         onChangeRef.current?.(next);
       },
@@ -277,9 +318,11 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     return () => {
       handle.destroy();
       handleRef.current = null;
+      hostRef.current = null;
+      host.remove();
     };
-    // Mount once per host / adapter / format; controlled value syncs below.
-  }, [adapter, contentEl, format, bumpSelection]);
+    // Mount once per surface / adapter / format; controlled value syncs below.
+  }, [adapter, surfaceEl, format, bumpSelection]);
 
   useEffect(() => {
     const handle = handleRef.current;
@@ -301,9 +344,9 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     handleRef.current?.setReadOnly(isReadOnly);
   }, [isReadOnly]);
 
-  const contentRefCallback = useCallback((element: null | HTMLDivElement) => {
-    contentRef.current = element;
-    setContentEl(element);
+  const surfaceRefCallback = useCallback((element: null | HTMLDivElement) => {
+    surfaceRef.current = element;
+    setSurfaceEl(element);
   }, []);
 
   const toolbarBind = derived((): HTMLAttributes<HTMLDivElement> => {
@@ -324,14 +367,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     return mergePartBind(
       rteOnly.customProps?.content,
       {
-        role: "textbox",
-        "aria-multiline": true,
-        ref: contentRefCallback,
-        id: formField.controlId,
-        "aria-readonly": isReadOnly || undefined,
-        "aria-describedby": formField.ariaDescribedBy,
-        "aria-disabled": formField.isDisabled || undefined,
-        "aria-invalid": formField.invalidated || undefined,
+        ref: surfaceRefCallback,
       },
       cn({
         "min-w-0 flex-1": true,
@@ -381,10 +417,12 @@ export function useRichTextEditor(props: RichTextEditorProps) {
           density: "mini",
           variant: "flat",
           "aria-label": label,
+          color: toolbarColor,
           icon: RICH_TEXT_TOOL_ICONS[tool],
+          size: formField.merged.size ?? "md",
+          disabled: isToolbarButtonDisabled(tool),
+          rounded: formField.merged.rounded ?? "md",
           selected: handle?.isActive(tool) ?? false,
-          disabled:
-            formField.isDisabled || isReadOnly || !(handle?.can(tool) ?? true),
         },
         cn({
           [sizeToken?.toolbarButton ?? ""]: true,
@@ -394,12 +432,14 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     },
     [
       bumpSelection,
-      formField.isDisabled,
-      isReadOnly,
+      formField.merged.rounded,
+      formField.merged.size,
+      isToolbarButtonDisabled,
       mergedClasses.toolbarButton,
       resolveMessage,
       sizeToken?.toolbarButton,
       toolbarButtonCustom,
+      toolbarColor,
     ],
   );
 
