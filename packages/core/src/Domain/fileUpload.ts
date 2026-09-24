@@ -1,3 +1,6 @@
+// ** External Imports
+import { clamp, isNil } from "es-toolkit/compat";
+
 /**
  * Reason a file was rejected by FileUpload validation.
  */
@@ -64,7 +67,7 @@ export type FileUploadFilterResult = {
  * Converts a `FileList` (or nullish) into a plain `File[]`.
  */
 export function filesFromFileList(list: null | FileList | undefined): File[] {
-  if (list == null || list.length === 0) {
+  if (isNil(list) || list.length === 0) {
     return [];
   }
 
@@ -76,7 +79,7 @@ export function filesFromFileList(list: null | FileList | undefined): File[] {
  * Empty / missing `accept` accepts every file.
  */
 export function fileMatchesAccept(file: File, accept?: string): boolean {
-  if (accept == null || accept.trim() === "") {
+  if (isNil(accept) || accept.trim() === "") {
     return true;
   }
 
@@ -112,7 +115,7 @@ export function fileMatchesAccept(file: File, accept?: string): boolean {
  * Missing / non-positive `maxSize` accepts every file.
  */
 export function fileWithinMaxSize(file: File, maxSize?: number): boolean {
-  if (maxSize == null || maxSize <= 0) {
+  if (isNil(maxSize) || maxSize <= 0) {
     return true;
   }
 
@@ -131,9 +134,11 @@ export function formatFileSize(bytes: number): string {
     return `${Math.round(bytes)} B`;
   }
 
-  const units = ["GB", "KB", "MB", "TB"] as const;
-  let value = bytes / 1024;
+  // eslint-disable-next-line perfectionist/sort-arrays -- KB → TB scale order
+  const units = ["KB", "MB", "GB", "TB"] as const;
+
   let unitIndex = 0;
+  let value = bytes / 1024;
 
   while (value >= 1024 && unitIndex < units.length - 1) {
     value /= 1024;
@@ -216,8 +221,8 @@ export function filterFileUploadSelection(
   }
 
   const remaining =
-    maxFiles != null && maxFiles > 0
-      ? Math.max(0, maxFiles - current.length)
+    !isNil(maxFiles) && maxFiles > 0
+      ? clamp(maxFiles - current.length, 0, maxFiles)
       : Number.POSITIVE_INFINITY;
 
   for (const file of incoming) {

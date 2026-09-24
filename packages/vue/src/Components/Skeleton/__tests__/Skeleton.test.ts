@@ -21,12 +21,12 @@ test("it should apply rounded-md by default", () => {
   expect(wrapper.find("div").classes()).toContain("rounded-md");
 });
 
-test("it should apply rounded-full when rounded is full", () => {
+test("it should apply rounded-panel-full when rounded is full", () => {
   const wrapper = mount(Skeleton, {
     props: { rounded: "full", class: "h-10 w-10" },
   });
 
-  expect(wrapper.find("div").classes()).toContain("rounded-full");
+  expect(wrapper.find("div").classes()).toContain("rounded-panel-full");
 });
 
 test("it should merge class with root classes", () => {
