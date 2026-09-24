@@ -65,4 +65,29 @@ describe("createTiptapRichTextAdapter", () => {
 
     handle.destroy();
   });
+
+  test("it should update aria-invalid after mount", () => {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+
+    const adapter = createTiptapRichTextAdapter();
+    const handle = adapter.mount({
+      element: host,
+      format: "html",
+      tools: ["bold"],
+      value: "<p></p>",
+      onChange: () => {},
+    });
+
+    const textbox = host.querySelector("[role='textbox']");
+
+    expect(textbox?.getAttribute("role")).toBe("textbox");
+    expect(textbox?.getAttribute("aria-invalid")).toBeNull();
+
+    handle.setA11y({ ariaInvalid: true });
+
+    expect(textbox?.getAttribute("aria-invalid")).toBe("true");
+
+    handle.destroy();
+  });
 });

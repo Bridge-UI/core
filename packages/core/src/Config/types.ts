@@ -2,7 +2,7 @@
 import type { DateAdapter } from "@/Adapters/date";
 import type { I18nAdapter } from "@/Adapters/i18n";
 import type { IconAdapter } from "@/Adapters/icon";
-import type { RichTextEditorAdapter } from "@/Adapters/richText";
+import type { RichTextEditorAdapter, RichTextTool } from "@/Adapters/richText";
 import type {
   AccordionColor,
   AccordionColorItem,
@@ -1318,6 +1318,7 @@ export interface RichTextEditorConfigBase {
     showDescriptionOnError: boolean;
     showErrorIcon: boolean;
     size: keyof FormFieldSize;
+    tools: RichTextTool[];
     variant: keyof FormFieldVariant;
   }>;
   tokens: Partial<{

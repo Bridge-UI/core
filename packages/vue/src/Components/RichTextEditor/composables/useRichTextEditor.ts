@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, isString, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   computed,
   onBeforeUnmount,
@@ -16,6 +16,7 @@ import {
   DEFAULT_RICH_TEXT_TOOLS,
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
+  richTextValuesEqual,
   type RichTextEditorHandle,
   type RichTextFormat,
   type RichTextTool,
@@ -74,32 +75,6 @@ type RichTextEditorMerged = MergeLibDefaults<
   RichTextEditorRegistryProps,
   RichTextEditorLibDefaults
 >;
-
-/**
- * Compares controlled values for sync (HTML string or JSON document).
- */
-function richTextValuesEqual(
-  a: undefined | RichTextValue,
-  b: undefined | RichTextValue,
-): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (isNil(a) || isNil(b)) {
-    return false;
-  }
-
-  if (isString(a) || isString(b)) {
-    return a === b;
-  }
-
-  try {
-    return JSON.stringify(a) === JSON.stringify(b);
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Composes FormField chrome + rich-text adapter surface for Vue.
@@ -318,7 +293,7 @@ export function useRichTextEditor(
 
     // Host is outside Vue's VNode children so TipTap DOM survives patches.
     const host = document.createElement("div");
-    host.className = "min-h-0 min-w-0 flex-1 outline-none";
+    host.className = "flex min-h-0 min-w-0 w-full flex-1 flex-col outline-none";
     surface.appendChild(host);
     hostRef.value = host;
 
@@ -344,7 +319,7 @@ export function useRichTextEditor(
   }
 
   watch(
-    [contentRef, adapter, format],
+    [format, adapter, contentRef],
     () => {
       mountAdapter();
     },
@@ -376,6 +351,27 @@ export function useRichTextEditor(
   watch(isReadOnly, (readOnly) => {
     handleRef.value?.setReadOnly(readOnly);
   });
+
+  watch(
+    [
+      isReadOnly,
+      () => rteOnly.value.placeholder,
+      () => formField.controlId.value,
+      () => formField.isDisabled.value,
+      () => formField.invalidated.value,
+      () => formField.ariaDescribedBy.value,
+    ],
+    () => {
+      handleRef.value?.setA11y({
+        id: formField.controlId.value,
+        ariaReadonly: isReadOnly.value,
+        placeholder: rteOnly.value.placeholder,
+        ariaDisabled: formField.isDisabled.value,
+        ariaInvalid: formField.invalidated.value,
+        ariaDescribedBy: formField.ariaDescribedBy.value,
+      });
+    },
+  );
 
   onBeforeUnmount(() => {
     destroyHandle();

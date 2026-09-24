@@ -11,18 +11,33 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
-import { isNil, isString } from "es-toolkit/compat";
+import { get, isNil, isString } from "es-toolkit/compat";
 
 // ** Core Imports
-import type {
-  RichTextEditorAdapter,
-  RichTextEditorHandle,
-  RichTextFormat,
-  RichTextMountOptions,
-  RichTextTool,
-  RichTextToolPayload,
-  RichTextValue,
+import {
+  applyRichTextEditableA11y,
+  type RichTextEditorAdapter,
+  type RichTextEditorHandle,
+  type RichTextFormat,
+  type RichTextMountOptions,
+  type RichTextTool,
+  type RichTextToolPayload,
+  type RichTextValue,
 } from "@bridge-ui/core/Adapters";
+
+/**
+ * Editable classes for this engine. Placeholder chrome stays here so core
+ * tokens are not coupled to ProseMirror.
+ */
+const TIPTAP_EDITABLE_CLASS = [
+  "flex-1",
+  "outline-none",
+  "[&_p.is-editor-empty:first-child::before]:h-0",
+  "[&_p.is-editor-empty:first-child::before]:float-left",
+  "[&_p.is-editor-empty:first-child::before]:text-dark-400",
+  "[&_p.is-editor-empty:first-child::before]:pointer-events-none",
+  "[&_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
+].join(" ");
 
 /**
  * Reads the current document in the mount `format`.
@@ -36,76 +51,91 @@ function readValue(editor: Editor, format: RichTextFormat): RichTextValue {
 }
 
 /**
- * Applies Bridge a11y attributes to the engine's editable root.
+ * Updates the TipTap placeholder and refreshes empty-state decorations.
  */
-function applyEditableA11y(
-  editable: HTMLElement,
-  options: RichTextMountOptions,
-): void {
-  if (!isNil(options.id) && options.id.length > 0) {
-    editable.id = options.id;
+function setTiptapPlaceholder(editor: Editor, placeholder: string): void {
+  const extension = editor.extensionManager.extensions.find((item) => {
+    return item.name === "placeholder";
+  });
+
+  if (isNil(extension) || extension.options.placeholder === placeholder) {
+    return;
   }
 
-  editable.setAttribute("role", "textbox");
-  editable.setAttribute("aria-multiline", "true");
-
-  if (options.ariaReadonly === true) {
-    editable.setAttribute("aria-readonly", "true");
-  } else {
-    editable.removeAttribute("aria-readonly");
-  }
-
-  if (options.ariaDisabled === true) {
-    editable.setAttribute("aria-disabled", "true");
-  } else {
-    editable.removeAttribute("aria-disabled");
-  }
-
-  if (options.ariaInvalid === true) {
-    editable.setAttribute("aria-invalid", "true");
-  } else {
-    editable.removeAttribute("aria-invalid");
-  }
-
-  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
-    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
-  } else {
-    editable.removeAttribute("aria-describedby");
-  }
+  extension.options.placeholder = placeholder;
+  editor.view.dispatch(editor.state.tr);
 }
+
+const TOOL_IS_ACTIVE: Record<RichTextTool, (editor: Editor) => boolean> = {
+  bold: (editor) => editor.isActive("bold"),
+  link: (editor) => editor.isActive("link"),
+  italic: (editor) => editor.isActive("italic"),
+  strike: (editor) => editor.isActive("strike"),
+  codeBlock: (editor) => editor.isActive("codeBlock"),
+  underline: (editor) => editor.isActive("underline"),
+  blockquote: (editor) => editor.isActive("blockquote"),
+  bulletList: (editor) => editor.isActive("bulletList"),
+  orderedList: (editor) => editor.isActive("orderedList"),
+  heading1: (editor) => editor.isActive("heading", { level: 1 }),
+  heading2: (editor) => editor.isActive("heading", { level: 2 }),
+  heading3: (editor) => editor.isActive("heading", { level: 3 }),
+};
+
+const TOOL_CAN_RUN: Record<RichTextTool, (editor: Editor) => boolean> = {
+  link: () => true,
+  bold: (editor) => editor.can().toggleBold(),
+  italic: (editor) => editor.can().toggleItalic(),
+  strike: (editor) => editor.can().toggleStrike(),
+  codeBlock: (editor) => editor.can().toggleCodeBlock(),
+  underline: (editor) => editor.can().toggleUnderline(),
+  blockquote: (editor) => editor.can().toggleBlockquote(),
+  bulletList: (editor) => editor.can().toggleBulletList(),
+  orderedList: (editor) => editor.can().toggleOrderedList(),
+  heading1: (editor) => editor.can().toggleHeading({ level: 1 }),
+  heading2: (editor) => editor.can().toggleHeading({ level: 2 }),
+  heading3: (editor) => editor.can().toggleHeading({ level: 3 }),
+};
+
+const TOOL_RUN: Record<
+  RichTextTool,
+  (editor: Editor, payload?: RichTextToolPayload) => void
+> = {
+  bold: (editor) => editor.chain().focus().toggleBold().run(),
+  italic: (editor) => editor.chain().focus().toggleItalic().run(),
+  strike: (editor) => editor.chain().focus().toggleStrike().run(),
+  codeBlock: (editor) => editor.chain().focus().toggleCodeBlock().run(),
+  underline: (editor) => editor.chain().focus().toggleUnderline().run(),
+  blockquote: (editor) => editor.chain().focus().toggleBlockquote().run(),
+  bulletList: (editor) => editor.chain().focus().toggleBulletList().run(),
+  orderedList: (editor) => editor.chain().focus().toggleOrderedList().run(),
+  heading1: (editor) =>
+    editor.chain().focus().toggleHeading({ level: 1 }).run(),
+  heading2: (editor) =>
+    editor.chain().focus().toggleHeading({ level: 2 }).run(),
+  heading3: (editor) =>
+    editor.chain().focus().toggleHeading({ level: 3 }).run(),
+  link: (editor, payload) => {
+    if (!isNil(payload?.href) && payload.href.length > 0) {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: payload.href })
+        .run();
+      return;
+    }
+
+    if (editor.isActive("link")) {
+      editor.chain().focus().unsetLink().run();
+    }
+  },
+};
 
 /**
  * Maps a Bridge tool id to TipTap `isActive` / command names.
  */
 function isToolActive(editor: Editor, tool: RichTextTool): boolean {
-  switch (tool) {
-    case "bold":
-      return editor.isActive("bold");
-    case "italic":
-      return editor.isActive("italic");
-    case "underline":
-      return editor.isActive("underline");
-    case "strike":
-      return editor.isActive("strike");
-    case "link":
-      return editor.isActive("link");
-    case "bulletList":
-      return editor.isActive("bulletList");
-    case "orderedList":
-      return editor.isActive("orderedList");
-    case "heading1":
-      return editor.isActive("heading", { level: 1 });
-    case "heading2":
-      return editor.isActive("heading", { level: 2 });
-    case "heading3":
-      return editor.isActive("heading", { level: 3 });
-    case "blockquote":
-      return editor.isActive("blockquote");
-    case "codeBlock":
-      return editor.isActive("codeBlock");
-    default:
-      return false;
-  }
+  return get(TOOL_IS_ACTIVE, tool, () => false)(editor);
 }
 
 /**
@@ -113,34 +143,7 @@ function isToolActive(editor: Editor, tool: RichTextTool): boolean {
  * Must not call `.focus()` — capability checks run on every toolbar render.
  */
 function canRunTool(editor: Editor, tool: RichTextTool): boolean {
-  switch (tool) {
-    case "bold":
-      return editor.can().toggleBold();
-    case "italic":
-      return editor.can().toggleItalic();
-    case "underline":
-      return editor.can().toggleUnderline();
-    case "strike":
-      return editor.can().toggleStrike();
-    case "link":
-      return true;
-    case "bulletList":
-      return editor.can().toggleBulletList();
-    case "orderedList":
-      return editor.can().toggleOrderedList();
-    case "heading1":
-      return editor.can().toggleHeading({ level: 1 });
-    case "heading2":
-      return editor.can().toggleHeading({ level: 2 });
-    case "heading3":
-      return editor.can().toggleHeading({ level: 3 });
-    case "blockquote":
-      return editor.can().toggleBlockquote();
-    case "codeBlock":
-      return editor.can().toggleCodeBlock();
-    default:
-      return false;
-  }
+  return get(TOOL_CAN_RUN, tool, () => false)(editor);
 }
 
 /**
@@ -151,60 +154,7 @@ function runTool(
   tool: RichTextTool,
   payload?: RichTextToolPayload,
 ): void {
-  switch (tool) {
-    case "bold":
-      editor.chain().focus().toggleBold().run();
-      return;
-    case "italic":
-      editor.chain().focus().toggleItalic().run();
-      return;
-    case "underline":
-      editor.chain().focus().toggleUnderline().run();
-      return;
-    case "strike":
-      editor.chain().focus().toggleStrike().run();
-      return;
-    case "link": {
-      if (!isNil(payload?.href) && payload.href.length > 0) {
-        editor
-          .chain()
-          .focus()
-          .extendMarkRange("link")
-          .setLink({ href: payload.href })
-          .run();
-        return;
-      }
-
-      if (editor.isActive("link")) {
-        editor.chain().focus().unsetLink().run();
-      }
-
-      return;
-    }
-    case "bulletList":
-      editor.chain().focus().toggleBulletList().run();
-      return;
-    case "orderedList":
-      editor.chain().focus().toggleOrderedList().run();
-      return;
-    case "heading1":
-      editor.chain().focus().toggleHeading({ level: 1 }).run();
-      return;
-    case "heading2":
-      editor.chain().focus().toggleHeading({ level: 2 }).run();
-      return;
-    case "heading3":
-      editor.chain().focus().toggleHeading({ level: 3 }).run();
-      return;
-    case "blockquote":
-      editor.chain().focus().toggleBlockquote().run();
-      return;
-    case "codeBlock":
-      editor.chain().focus().toggleCodeBlock().run();
-      return;
-    default:
-      return;
-  }
+  get(TOOL_RUN, tool, () => undefined)(editor, payload);
 }
 
 /**
@@ -224,6 +174,11 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
         onSelectionUpdate: () => {
           options.onSelectionChange?.();
         },
+        editorProps: {
+          attributes: {
+            class: TIPTAP_EDITABLE_CLASS,
+          },
+        },
         onUpdate: ({ editor: next }) => {
           options.onChange(readValue(next, options.format));
         },
@@ -240,11 +195,7 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
         ],
       });
 
-      if (!isNil(options.id) && options.id.length > 0) {
-        editor.view.dom.id = options.id;
-      }
-
-      applyEditableA11y(editor.view.dom, options);
+      applyRichTextEditableA11y(editor.view.dom, options);
 
       return {
         getValue: () => {
@@ -300,6 +251,14 @@ export function createTiptapRichTextAdapter(): RichTextEditorAdapter {
           }
 
           runTool(editor, tool, payload);
+        },
+        setA11y: (next) => {
+          if (destroyed) {
+            return;
+          }
+
+          applyRichTextEditableA11y(editor.view.dom, next);
+          setTiptapPlaceholder(editor, next.placeholder ?? "");
         },
         setValue: (value: RichTextValue) => {
           if (destroyed) {

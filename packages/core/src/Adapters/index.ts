@@ -34,9 +34,12 @@ export {
   RICH_TEXT_TOOLS,
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
+  applyRichTextEditableA11y,
   isRichTextTool,
+  richTextValuesEqual,
 } from "@/Adapters/richText";
 export type {
+  RichTextA11yOptions,
   RichTextEditorAdapter,
   RichTextEditorHandle,
   RichTextFormat,

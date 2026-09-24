@@ -2,12 +2,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 
+// ** Local Imports
+import { RichTextEditor } from "@/Components/RichTextEditor";
+
 afterEach(() => {
   cleanup();
 });
-
-// ** Local Imports
-import { RichTextEditor } from "@/Components/RichTextEditor";
 
 test("it should render a contenteditable surface", () => {
   render(<RichTextEditor aria-label="Description" />);
@@ -37,6 +37,16 @@ test("it should render error message when errorMessage prop is provided", () => 
 
 test("it should set aria-invalid when error is set", () => {
   render(<RichTextEditor error aria-label="Description" />);
+
+  expect(screen.getByRole("textbox").getAttribute("aria-invalid")).toBe("true");
+});
+
+test("it should update aria-invalid when error changes", () => {
+  const view = render(<RichTextEditor aria-label="Description" />);
+
+  expect(screen.getByRole("textbox").getAttribute("aria-invalid")).toBeNull();
+
+  view.rerender(<RichTextEditor error aria-label="Description" />);
 
   expect(screen.getByRole("textbox").getAttribute("aria-invalid")).toBe("true");
 });

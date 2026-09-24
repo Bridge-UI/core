@@ -110,8 +110,8 @@ export const BRIDGE_UI_CHROME_FALLBACK = {
   DateTimeField: "FormField",
   PasswordField: "FormField",
   DateRangeField: "FormField",
-  TimeRangeField: "FormField",
   RichTextEditor: "FormField",
+  TimeRangeField: "FormField",
   TimeRangePicker: "TimePanel",
   DateTimeRangeField: "FormField",
 } as const satisfies Partial<

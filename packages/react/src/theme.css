@@ -4,6 +4,7 @@
 
 @source "./Actions";
 @source "./Components";
+@source "./Adapters/Examples";
 @source "../../core/dist/Tokens";
 
 /* Emitted for JS (`useBreakpoint`) — Tailwind otherwise omits unused --breakpoint-* vars. */

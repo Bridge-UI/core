@@ -1,3 +1,6 @@
+// ** External Imports
+import { isNil, isString } from "es-toolkit/compat";
+
 /**
  * Toolbar actions Bridge knows about (v1).
  */
@@ -130,6 +133,41 @@ export type RichTextMountOptions = {
 };
 
 /**
+ * Accessibility and placeholder updates applied after mount.
+ */
+export type RichTextA11yOptions = {
+  /**
+   * `aria-describedby` on the editable root.
+   */
+  ariaDescribedBy?: string;
+
+  /**
+   * `aria-disabled` on the editable root.
+   */
+  ariaDisabled?: boolean;
+
+  /**
+   * `aria-invalid` on the editable root.
+   */
+  ariaInvalid?: boolean;
+
+  /**
+   * `aria-readonly` on the editable root.
+   */
+  ariaReadonly?: boolean;
+
+  /**
+   * Optional `id` on the editable root (FormField label association).
+   */
+  id?: string;
+
+  /**
+   * Empty-state hint in the content area.
+   */
+  placeholder?: string;
+};
+
+/**
  * Per-editor handle returned by {@link RichTextEditorAdapter.mount}.
  */
 export interface RichTextEditorHandle {
@@ -167,6 +205,11 @@ export interface RichTextEditorHandle {
    * Runs a toolbar command (toggle mark, set link, …).
    */
   run: (tool: RichTextTool, payload?: RichTextToolPayload) => void;
+
+  /**
+   * Updates a11y attributes and the empty-state placeholder after mount.
+   */
+  setA11y: (options: RichTextA11yOptions) => void;
 
   /**
    * Updates the disabled flag after mount.
@@ -255,11 +298,75 @@ export const RICH_TEXT_TOOL_ICONS: Record<RichTextTool, string> = {
 };
 
 /**
+ * Applies Bridge a11y attributes to the engine's editable root.
+ */
+export function applyRichTextEditableA11y(
+  editable: HTMLElement,
+  options: RichTextA11yOptions,
+): void {
+  if (!isNil(options.id) && options.id.length > 0) {
+    editable.id = options.id;
+  }
+
+  editable.setAttribute("role", "textbox");
+  editable.setAttribute("aria-multiline", "true");
+
+  if (options.ariaReadonly === true) {
+    editable.setAttribute("aria-readonly", "true");
+  } else {
+    editable.removeAttribute("aria-readonly");
+  }
+
+  if (options.ariaDisabled === true) {
+    editable.setAttribute("aria-disabled", "true");
+  } else {
+    editable.removeAttribute("aria-disabled");
+  }
+
+  if (options.ariaInvalid === true) {
+    editable.setAttribute("aria-invalid", "true");
+  } else {
+    editable.removeAttribute("aria-invalid");
+  }
+
+  if (!isNil(options.ariaDescribedBy) && options.ariaDescribedBy.length > 0) {
+    editable.setAttribute("aria-describedby", options.ariaDescribedBy);
+  } else {
+    editable.removeAttribute("aria-describedby");
+  }
+}
+
+/**
  * Returns whether `value` is a known {@link RichTextTool}.
  */
 export function isRichTextTool(value: unknown): value is RichTextTool {
   return (
-    typeof value === "string" &&
-    (RICH_TEXT_TOOLS as readonly string[]).includes(value)
+    isString(value) && (RICH_TEXT_TOOLS as readonly string[]).includes(value)
   );
+}
+
+/**
+ * Compares controlled values for sync (HTML string or JSON document).
+ */
+export function richTextValuesEqual(
+  a: undefined | RichTextValue,
+  b: undefined | RichTextValue,
+): boolean {
+  if (a === b) {
+    return true;
+  }
+
+  if (isNil(a) || isNil(b)) {
+    return false;
+  }
+
+  if (isString(a) || isString(b)) {
+    return a === b;
+  }
+
+  try {
+    return JSON.stringify(a) === JSON.stringify(b);
+  } catch {
+    return false;
+  }
 }

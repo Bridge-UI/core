@@ -47,6 +47,23 @@ test("it should set aria-invalid when error is set", async () => {
   );
 });
 
+test("it should update aria-invalid when error changes", async () => {
+  const wrapper = mount(RichTextEditor);
+
+  await flushPromises();
+
+  expect(
+    wrapper.find('[role="textbox"]').attributes("aria-invalid"),
+  ).toBeUndefined();
+
+  await wrapper.setProps({ error: true });
+  await flushPromises();
+
+  expect(wrapper.find('[role="textbox"]').attributes("aria-invalid")).toBe(
+    "true",
+  );
+});
+
 test("it should render toolbar buttons for default tools", () => {
   const wrapper = mount(RichTextEditor);
 

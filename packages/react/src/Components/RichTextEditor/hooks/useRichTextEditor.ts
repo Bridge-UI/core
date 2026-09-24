@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, isNil, isString, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
@@ -16,10 +16,10 @@ import {
   DEFAULT_RICH_TEXT_TOOLS,
   RICH_TEXT_TOOL_ICONS,
   RICH_TEXT_TOOL_LABELS,
+  richTextValuesEqual,
   type RichTextEditorHandle,
   type RichTextFormat,
   type RichTextTool,
-  type RichTextValue,
 } from "@bridge-ui/core/Adapters";
 import { richTextEditorSizeProps as sizeProps } from "@bridge-ui/core/Tokens";
 import {
@@ -77,32 +77,6 @@ type RichTextEditorMerged = MergeLibDefaults<
   RichTextEditorRegistryProps,
   RichTextEditorLibDefaults
 >;
-
-/**
- * Compares controlled values for sync (HTML string or JSON document).
- */
-function richTextValuesEqual(
-  a: undefined | RichTextValue,
-  b: undefined | RichTextValue,
-): boolean {
-  if (a === b) {
-    return true;
-  }
-
-  if (isNil(a) || isNil(b)) {
-    return false;
-  }
-
-  if (isString(a) || isString(b)) {
-    return a === b;
-  }
-
-  try {
-    return JSON.stringify(a) === JSON.stringify(b);
-  } catch {
-    return false;
-  }
-}
 
 export function useRichTextEditor(props: RichTextEditorProps) {
   const resolveMessage = useResolveMessage();
@@ -165,13 +139,13 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       variant: formFieldCustom.variant,
     };
   }, [
+    rteOnly.tools,
+    rteOnly.format,
+    rteOnly.classes,
+    formFieldCustom.size,
     formFieldCustom.color,
     formFieldCustom.rounded,
-    formFieldCustom.size,
     formFieldCustom.variant,
-    rteOnly.classes,
-    rteOnly.format,
-    rteOnly.tools,
   ]);
 
   const { merged: rteMerged, entry: bridgeRichText } = useBridgeUIComponent<
@@ -269,7 +243,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
 
       return false;
     },
-    [formField.isDisabled, isReadOnly],
+    [isReadOnly, formField.isDisabled],
   );
 
   const bumpSelection = useCallback(() => {
@@ -290,7 +264,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     // Host is outside React's child fiber so TipTap DOM survives re-renders
     // and FormField chrome class updates without React wiping `.ProseMirror`.
     const host = document.createElement("div");
-    host.className = "min-h-0 min-w-0 flex-1 outline-none";
+    host.className = "flex min-h-0 min-w-0 w-full flex-1 flex-col outline-none";
     surfaceEl.appendChild(host);
     hostRef.current = host;
 
@@ -322,7 +296,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       host.remove();
     };
     // Mount once per surface / adapter / format; controlled value syncs below.
-  }, [adapter, surfaceEl, format, bumpSelection]);
+  }, [format, adapter, surfaceEl, bumpSelection]);
 
   useEffect(() => {
     const handle = handleRef.current;
@@ -334,7 +308,7 @@ export function useRichTextEditor(props: RichTextEditorProps) {
     if (!richTextValuesEqual(handle.getValue(), valueProp)) {
       handle.setValue(valueProp);
     }
-  }, [valueProp, format]);
+  }, [format, valueProp]);
 
   useEffect(() => {
     handleRef.current?.setDisabled(formField.isDisabled);
@@ -343,6 +317,24 @@ export function useRichTextEditor(props: RichTextEditorProps) {
   useEffect(() => {
     handleRef.current?.setReadOnly(isReadOnly);
   }, [isReadOnly]);
+
+  useEffect(() => {
+    handleRef.current?.setA11y({
+      id: formField.controlId,
+      ariaReadonly: isReadOnly,
+      placeholder: rteOnly.placeholder,
+      ariaDisabled: formField.isDisabled,
+      ariaInvalid: formField.invalidated,
+      ariaDescribedBy: formField.ariaDescribedBy,
+    });
+  }, [
+    isReadOnly,
+    formField.controlId,
+    formField.isDisabled,
+    rteOnly.placeholder,
+    formField.invalidated,
+    formField.ariaDescribedBy,
+  ]);
 
   const surfaceRefCallback = useCallback((element: null | HTMLDivElement) => {
     surfaceRef.current = element;
@@ -431,15 +423,15 @@ export function useRichTextEditor(props: RichTextEditorProps) {
       ) as ButtonProps;
     },
     [
+      toolbarColor,
       bumpSelection,
-      formField.merged.rounded,
+      resolveMessage,
+      toolbarButtonCustom,
       formField.merged.size,
       isToolbarButtonDisabled,
-      mergedClasses.toolbarButton,
-      resolveMessage,
       sizeToken?.toolbarButton,
-      toolbarButtonCustom,
-      toolbarColor,
+      formField.merged.rounded,
+      mergedClasses.toolbarButton,
     ],
   );
 
