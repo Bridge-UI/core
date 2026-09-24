@@ -1,5 +1,5 @@
 // ** External Imports
-import { get, omit } from "es-toolkit/compat";
+import { get, isNil, omit } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
@@ -602,10 +602,10 @@ export function useFileUpload(
         value,
         metaLabel: formatFileMeta(value),
         isImage: isImageUploadValue(value),
-        sizeLabel: formatFileSize(value.size),
         remove: () => {
           removeAt(index);
         },
+        sizeLabel: isNil(value.size) ? "" : formatFileSize(value.size),
         previewUrl: getFileUploadPreviewUrl(value, previewUrls[index]),
       };
     });

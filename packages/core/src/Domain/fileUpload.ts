@@ -8,8 +8,8 @@ export type FileUploadRejectReason = "accept" | "maxSize" | "maxFiles";
 
 /**
  * Attachment already stored on the server. Not a browser `File`.
- * `name`, `size`, and `type` match `File`. `url` is the remote location.
- * Extra fields on the object are ignored.
+ * Only `name` is required. `size` and `type` match `File` when known.
+ * `url` is the remote location. Extra fields on the object are ignored.
  */
 export type FileUploadRemote = {
   /**
@@ -18,9 +18,9 @@ export type FileUploadRemote = {
   name: string;
 
   /**
-   * Size in bytes. Same as `File.size`.
+   * Size in bytes. Same as `File.size`. Omitted from the card when missing.
    */
-  size: number;
+  size?: number;
 
   /**
    * MIME type. Same as `File.type`. Used for the type label and image preview.
@@ -361,7 +361,13 @@ export function getFileTypeLabel(file: {
  * Metadata line for a file card (e.g. `PNG · 820 KB`).
  */
 export function formatFileMeta(file: FileUploadValue): string {
-  return `${getFileTypeLabel(file)} · ${formatFileSize(file.size)}`;
+  const typeLabel = getFileTypeLabel(file);
+
+  if (isNil(file.size)) {
+    return typeLabel;
+  }
+
+  return `${typeLabel} · ${formatFileSize(file.size)}`;
 }
 
 /**

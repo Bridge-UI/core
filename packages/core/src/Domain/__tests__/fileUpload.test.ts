@@ -279,6 +279,10 @@ describe("getFileUploadItemKey", () => {
 });
 
 describe("formatFileMeta remote", () => {
+  test("it should omit the size when a remote attachment has only a name", () => {
+    expect(formatFileMeta({ name: "Diploma.pdf" })).toBe("PDF");
+  });
+
   test("it should format a remote attachment from its name and size", () => {
     expect(formatFileMeta({ size: 946 * 1024, name: "Diploma.pdf" })).toBe(
       "PDF · 946 KB",

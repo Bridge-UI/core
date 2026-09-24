@@ -1,6 +1,6 @@
 # FileUpload
 
-File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, the model is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or a remote attachment `{ name, size, type?, url? }` already stored on the server. Bridge does not upload.
+File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, the model is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or a remote attachment `{ name, size?, type?, url? }` already stored on the server. Bridge does not upload.
 
 Selected files always render as the same attachment-style cards whether you pick one file or many — there is no FormField input shell for the single-file case. Optional `label` / `description` / `error` sit above or below as flat chrome.
 

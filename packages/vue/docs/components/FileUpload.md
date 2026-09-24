@@ -1,6 +1,6 @@
 # FileUpload
 
-File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, `v-model` is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or a remote attachment `{ name, size, type?, url? }` already stored on the server. Bridge does not upload.
+File selection with an optional drag-and-drop surface (`variant="dropzone"`). Without `multiple`, `v-model` is one item or `null`. With `multiple`, it is a list. Each item is a browser `File`, or a remote attachment `{ name, size?, type?, url? }` already stored on the server. Bridge does not upload.
 
 Selected files always render as the same attachment-style cards whether you pick one file or many — there is no FormField input shell for the single-file case. Optional `label` / `description` / `error` sit above or below as flat chrome.
 
@@ -148,11 +148,11 @@ The `start` and `end` slots on `FileUpload` do the same thing for the default li
 
 ### v-model
 
-| Prop / Event        | Type                                             | Default | Description                                                                                           |
-| ------------------- | ------------------------------------------------ | ------- | ----------------------------------------------------------------------------------------------------- |
-| `modelValue`        | `null \| FileUploadValue` or `FileUploadValue[]` | —       | One item when `multiple` is false, a list when it is true. A `File` or `{ name, size, type?, url? }`. |
-| `update:modelValue` | `(value) => void`                                | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`.                          |
-| `remove`            | `(value, index) => void`                         | —       | Emitted with the removed `File` or remote item and its index.                                         |
+| Prop / Event        | Type                                             | Default | Description                                                                                            |
+| ------------------- | ------------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------ |
+| `modelValue`        | `null \| FileUploadValue` or `FileUploadValue[]` | —       | One item when `multiple` is false, a list when it is true. A `File` or `{ name, size?, type?, url? }`. |
+| `update:modelValue` | `(value) => void`                                | —       | Emitted when `v-model` should update. Listen with `v-on:update:model-value`.                           |
+| `remove`            | `(value, index) => void`                         | —       | Emitted with the removed `File` or remote item and its index.                                          |
 
 ## Related components
 

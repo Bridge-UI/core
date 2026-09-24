@@ -1,5 +1,5 @@
 // ** External Imports
-import { get } from "es-toolkit/compat";
+import { get, isNil } from "es-toolkit/compat";
 import {
   computed,
   onUnmounted,
@@ -555,10 +555,10 @@ export function useFileUpload(
         value,
         metaLabel: formatFileMeta(value),
         isImage: isImageUploadValue(value),
-        sizeLabel: formatFileSize(value.size),
         remove: () => {
           removeAt(index);
         },
+        sizeLabel: isNil(value.size) ? "" : formatFileSize(value.size),
         previewUrl: getFileUploadPreviewUrl(value, previewUrls.value[index]),
       };
     });
