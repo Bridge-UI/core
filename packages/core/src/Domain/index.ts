@@ -171,21 +171,31 @@ export type {
 export { copyDateWallClock } from "@/Domain/dateTimeZone";
 export {
   fileMatchesAccept,
+  fileUploadItemsFromModel,
+  fileUploadModelFromItems,
   fileWithinMaxSize,
   filesFromFileList,
   filterFileUploadSelection,
   formatFileMeta,
   formatFileSize,
   getFileTypeLabel,
+  getFileUploadItemKey,
+  getFileUploadPreviewUrl,
+  isFileUploadRemote,
   isImageFile,
+  isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
 } from "@/Domain/fileUpload";
 export type {
   FileUploadFilterOptions,
   FileUploadFilterResult,
+  FileUploadMergeResult,
+  FileUploadModel,
   FileUploadRejectReason,
   FileUploadRejectedFile,
+  FileUploadRemote,
+  FileUploadValue,
 } from "@/Domain/fileUpload";
 export {
   getNumberFieldStepper,

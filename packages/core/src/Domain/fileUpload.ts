@@ -1,10 +1,48 @@
 // ** External Imports
-import { clamp, isNil } from "es-toolkit/compat";
+import { clamp, isArray, isNil } from "es-toolkit/compat";
 
 /**
  * Reason a file was rejected by FileUpload validation.
  */
 export type FileUploadRejectReason = "accept" | "maxSize" | "maxFiles";
+
+/**
+ * Attachment already stored on the server. Not a browser `File`.
+ * `name`, `size`, and `type` match `File`. `url` is the remote location.
+ * Extra fields on the object are ignored.
+ */
+export type FileUploadRemote = {
+  /**
+   * File name shown on the card. Same as `File.name`.
+   */
+  name: string;
+
+  /**
+   * Size in bytes. Same as `File.size`.
+   */
+  size: number;
+
+  /**
+   * MIME type. Same as `File.type`. Used for the type label and image preview.
+   */
+  type?: string;
+
+  /**
+   * Remote location. Image preview when the item is an image.
+   */
+  url?: string;
+};
+
+/**
+ * A newly picked `File` or a remote attachment already on the server.
+ */
+export type FileUploadValue = File | FileUploadRemote;
+
+/**
+ * Bound FileUpload selection.
+ * One item or `null` when `multiple` is false, a list when `multiple` is true.
+ */
+export type FileUploadModel = null | FileUploadValue | FileUploadValue[];
 
 /**
  * A file rejected by {@link filterFileUploadSelection}.
@@ -62,6 +100,99 @@ export type FileUploadFilterResult = {
    */
   rejected: FileUploadRejectedFile[];
 };
+
+/**
+ * Next selection after merging validated incoming files into the current list.
+ */
+export type FileUploadMergeResult = {
+  /**
+   * Next selection. Replaces the current list when `multiple` is false.
+   */
+  accepted: FileUploadValue[];
+
+  /**
+   * Incoming files that failed validation.
+   */
+  rejected: FileUploadRejectedFile[];
+};
+
+const IMAGE_EXTENSIONS = new Set([
+  "bmp",
+  "gif",
+  "ico",
+  "jpg",
+  "png",
+  "svg",
+  "tif",
+  "apng",
+  "avif",
+  "heic",
+  "heif",
+  "jpeg",
+  "tiff",
+  "webp",
+]);
+
+/**
+ * Reads a FileUpload model as a list.
+ * A single item becomes a one-element list. An array is kept only when `multiple` is true.
+ */
+export function fileUploadItemsFromModel(
+  model: undefined | FileUploadModel,
+  multiple = false,
+): FileUploadValue[] {
+  if (multiple) {
+    return isArray(model) ? model : [];
+  }
+
+  if (isNil(model) || isArray(model)) {
+    return [];
+  }
+
+  return [model];
+}
+
+/**
+ * Writes a FileUpload list back to the public model.
+ * Single mode returns the first item, or `null` when the list is empty.
+ */
+export function fileUploadModelFromItems(
+  items: FileUploadValue[],
+  multiple = false,
+): FileUploadModel {
+  if (multiple) {
+    return items;
+  }
+
+  return items[0] ?? null;
+}
+
+/**
+ * Returns whether `value` is a remote attachment (not a browser `File`).
+ */
+export function isFileUploadRemote(
+  value: FileUploadValue,
+): value is FileUploadRemote {
+  return !(value instanceof File);
+}
+
+function fileExtension(name: string): string {
+  const path = name.split(/[?#]/)[0] ?? "";
+  const base = path.split("/").pop() ?? path;
+  const dot = base.lastIndexOf(".");
+
+  if (dot <= 0 || dot >= base.length - 1) {
+    return "";
+  }
+
+  return base.slice(dot + 1).toLowerCase();
+}
+
+function hasImageExtension(name: string): boolean {
+  const extension = fileExtension(name);
+
+  return extension !== "" && IMAGE_EXTENSIONS.has(extension);
+}
 
 /**
  * Converts a `FileList` (or nullish) into a plain `File[]`.
@@ -158,9 +289,58 @@ export function isImageFile(file: File): boolean {
 }
 
 /**
+ * Returns whether `value` can show an image preview.
+ * Uses the MIME type (`File.type` or remote `type`), then the extension of `name` or `url`.
+ */
+export function isImageUploadValue(value: FileUploadValue): boolean {
+  if ((value.type || "").toLowerCase().startsWith("image/")) {
+    return true;
+  }
+
+  if (isFileUploadRemote(value)) {
+    return hasImageExtension(value.name) || hasImageExtension(value.url ?? "");
+  }
+
+  return false;
+}
+
+/**
+ * Preview URL for an upload item.
+ * Remote images use `url`. Browser images use `objectUrl`.
+ */
+export function getFileUploadPreviewUrl(
+  value: FileUploadValue,
+  objectUrl?: string,
+): string | undefined {
+  if (!isImageUploadValue(value)) {
+    return undefined;
+  }
+
+  if (isFileUploadRemote(value)) {
+    return value.url;
+  }
+
+  return objectUrl;
+}
+
+/**
+ * List key from the file name and index.
+ * A `File` and a remote item are told apart by object identity, not by an id.
+ */
+export function getFileUploadItemKey(
+  value: FileUploadValue,
+  index: number,
+): string {
+  return `${value.name}-${index}`;
+}
+
+/**
  * Short type label from the file name extension or MIME subtype (e.g. `PDF`).
  */
-export function getFileTypeLabel(file: File): string {
+export function getFileTypeLabel(file: {
+  name: string;
+  type?: string;
+}): string {
   const name = file.name.trim();
   const dot = name.lastIndexOf(".");
 
@@ -180,17 +360,19 @@ export function getFileTypeLabel(file: File): string {
 /**
  * Metadata line for a file card (e.g. `PNG · 820 KB`).
  */
-export function formatFileMeta(file: File): string {
+export function formatFileMeta(file: FileUploadValue): string {
   return `${getFileTypeLabel(file)} · ${formatFileSize(file.size)}`;
 }
 
 /**
  * Filters `incoming` against accept / maxSize / maxFiles relative to `current`.
+ * `accept` and `maxSize` apply only to incoming `File`s. Remote items already
+ * in `current` are not revalidated, and they count toward `maxFiles`.
  * When `multiple` is false, only the first valid incoming file is kept and
  * it replaces the current selection.
  */
 export function filterFileUploadSelection(
-  current: File[],
+  current: FileUploadValue[],
   incoming: File[],
   options: FileUploadFilterOptions = {},
 ): FileUploadFilterResult {
@@ -248,13 +430,13 @@ export function filterFileUploadSelection(
 }
 
 /**
- * Builds the next controlled file list from `current` and validated `incoming`.
+ * Builds the next controlled list from `current` and validated `incoming`.
  */
 export function mergeFileUploadSelection(
-  current: File[],
+  current: FileUploadValue[],
   incoming: File[],
   options: FileUploadFilterOptions = {},
-): FileUploadFilterResult {
+): FileUploadMergeResult {
   const filtered = filterFileUploadSelection(current, incoming, options);
 
   if (!options.multiple) {
@@ -268,12 +450,12 @@ export function mergeFileUploadSelection(
 }
 
 /**
- * Removes the file at `index` from `files` (immutable).
+ * Removes the item at `index` from `items` (immutable).
  */
-export function removeFileAtIndex(files: File[], index: number): File[] {
-  if (index < 0 || index >= files.length) {
-    return files;
+export function removeFileAtIndex<T>(items: T[], index: number): T[] {
+  if (index < 0 || index >= items.length) {
+    return items;
   }
 
-  return files.filter((_, i) => i !== index);
+  return items.filter((_, i) => i !== index);
 }

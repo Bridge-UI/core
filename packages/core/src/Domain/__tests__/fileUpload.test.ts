@@ -4,15 +4,22 @@ import { describe, expect, test } from "vitest";
 // ** Local Imports
 import {
   fileMatchesAccept,
+  fileUploadItemsFromModel,
+  fileUploadModelFromItems,
   fileWithinMaxSize,
   filesFromFileList,
   filterFileUploadSelection,
   formatFileMeta,
   formatFileSize,
   getFileTypeLabel,
+  getFileUploadItemKey,
+  getFileUploadPreviewUrl,
+  isFileUploadRemote,
   isImageFile,
+  isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
+  type FileUploadRemote,
 } from "@/Domain/fileUpload";
 
 function makeFile(
@@ -203,6 +210,167 @@ describe("mergeFileUploadSelection", () => {
     });
 
     expect(result.accepted).toEqual([next]);
+  });
+});
+
+describe("isFileUploadRemote", () => {
+  test("it should treat a plain attachment as remote and a File as local", () => {
+    const remote: FileUploadRemote = {
+      size: 10,
+      name: "Diploma.pdf",
+    };
+
+    expect(isFileUploadRemote(remote)).toBe(true);
+    expect(isFileUploadRemote(makeFile("a.txt"))).toBe(false);
+  });
+});
+
+describe("isImageUploadValue", () => {
+  test("it should use the MIME type, then the file extension", () => {
+    const remote: FileUploadRemote = {
+      size: 10,
+      name: "photo.png",
+      url: "https://cdn.example/photo.png?token=1",
+    };
+    const typed: FileUploadRemote = {
+      size: 10,
+      name: "blob",
+      type: "image/png",
+      url: "https://cdn.example/blob",
+    };
+
+    expect(isImageUploadValue(makeFile("a.png", { type: "image/png" }))).toBe(
+      true,
+    );
+    expect(isImageUploadValue(typed)).toBe(true);
+    expect(isImageUploadValue(remote)).toBe(true);
+    expect(isImageUploadValue({ size: 10, name: "Diploma.pdf" })).toBe(false);
+  });
+});
+
+describe("getFileUploadPreviewUrl", () => {
+  test("it should use the remote url for images and the object url for a File", () => {
+    const remote: FileUploadRemote = {
+      size: 10,
+      name: "photo.png",
+      url: "https://cdn.example/photo.png",
+    };
+    const file = makeFile("a.png", { type: "image/png" });
+
+    expect(getFileUploadPreviewUrl(remote)).toBe(
+      "https://cdn.example/photo.png",
+    );
+    expect(getFileUploadPreviewUrl(file, "blob:preview")).toBe("blob:preview");
+    expect(
+      getFileUploadPreviewUrl({ size: 10, name: "Diploma.pdf" }),
+    ).toBeUndefined();
+  });
+});
+
+describe("getFileUploadItemKey", () => {
+  test("it should use the file name plus index", () => {
+    const file = makeFile("a.txt");
+
+    expect(getFileUploadItemKey({ size: 10, name: "Diploma.pdf" }, 0)).toBe(
+      "Diploma.pdf-0",
+    );
+    expect(getFileUploadItemKey(file, 2)).toBe("a.txt-2");
+  });
+});
+
+describe("formatFileMeta remote", () => {
+  test("it should format a remote attachment from its name and size", () => {
+    expect(formatFileMeta({ size: 946 * 1024, name: "Diploma.pdf" })).toBe(
+      "PDF · 946 KB",
+    );
+  });
+
+  test("it should fall back to the MIME subtype when the name has no extension", () => {
+    expect(
+      formatFileMeta({
+        size: 10,
+        name: "blob",
+        type: "application/pdf",
+      }),
+    ).toBe("PDF · 10 B");
+  });
+});
+
+describe("filterFileUploadSelection remote", () => {
+  test("it should count remote items toward maxFiles without revalidating them", () => {
+    const remote: FileUploadRemote = {
+      size: 999999,
+      name: "old.exe",
+    };
+    const next = makeFile("a.png", { size: 4, type: "image/png" });
+    const blocked = filterFileUploadSelection([remote], [next], {
+      maxFiles: 1,
+      maxSize: 10,
+      multiple: true,
+      accept: "image/*",
+    });
+
+    expect(blocked.accepted).toEqual([]);
+    expect(blocked.rejected).toEqual([{ file: next, reason: "maxFiles" }]);
+
+    const allowed = filterFileUploadSelection([remote], [next], {
+      maxFiles: 2,
+      maxSize: 10,
+      multiple: true,
+      accept: "image/*",
+    });
+
+    expect(allowed.accepted).toEqual([next]);
+  });
+});
+
+describe("mergeFileUploadSelection remote", () => {
+  test("it should keep remote items when appending a new file", () => {
+    const remote: FileUploadRemote = {
+      size: 10,
+      name: "Diploma.pdf",
+    };
+    const next = makeFile("a.png", { type: "image/png" });
+    const result = mergeFileUploadSelection([remote], [next], {
+      multiple: true,
+    });
+
+    expect(result.accepted).toEqual([remote, next]);
+  });
+});
+
+describe("fileUploadItemsFromModel", () => {
+  test("it should read one item when multiple is false", () => {
+    const file = makeFile("a.txt");
+
+    expect(fileUploadItemsFromModel(null, false)).toEqual([]);
+    expect(fileUploadItemsFromModel([file], false)).toEqual([]);
+    expect(fileUploadItemsFromModel(file, false)).toEqual([file]);
+    expect(fileUploadItemsFromModel(undefined, false)).toEqual([]);
+  });
+
+  test("it should read a list when multiple is true", () => {
+    const file = makeFile("a.txt");
+
+    expect(fileUploadItemsFromModel(null, true)).toEqual([]);
+    expect(fileUploadItemsFromModel(file, true)).toEqual([]);
+    expect(fileUploadItemsFromModel([file], true)).toEqual([file]);
+  });
+});
+
+describe("fileUploadModelFromItems", () => {
+  test("it should write one item or null when multiple is false", () => {
+    const file = makeFile("a.txt");
+
+    expect(fileUploadModelFromItems([], false)).toBeNull();
+    expect(fileUploadModelFromItems([file], false)).toBe(file);
+  });
+
+  test("it should write the list when multiple is true", () => {
+    const file = makeFile("a.txt");
+
+    expect(fileUploadModelFromItems([], true)).toEqual([]);
+    expect(fileUploadModelFromItems([file], true)).toEqual([file]);
   });
 });
 

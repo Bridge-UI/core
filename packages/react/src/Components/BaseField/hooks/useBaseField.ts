@@ -62,10 +62,10 @@ type BaseFieldMerged = MergeLibDefaults<
 export type BaseFieldOptions = {
   /**
    * Public registry key that owns BaseField chrome defaults/tokens.
-   * Defaults to `BaseField`; Slider / OtpField pass their own key so chrome
-   * cascades (`BaseField` → parent).
+   * Defaults to `BaseField`; Slider / OtpField / FileUpload pass their own key
+   * so chrome cascades (`BaseField` → parent).
    */
-  componentName?: "Slider" | "OtpField" | "BaseField";
+  componentName?: "Slider" | "OtpField" | "BaseField" | "FileUpload";
 
   /** Resolve Label htmlFor from controlId. Default: identity. */
   labelHtmlFor?: (controlId: string) => string;

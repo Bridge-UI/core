@@ -90,6 +90,8 @@ import type {
   EmptyStateSizeItem,
 } from "@/Tokens/EmptyState";
 import type {
+  FileUploadColor,
+  FileUploadColorItem,
   FileUploadRounded,
   FileUploadSize,
   FileUploadSizeItem,
@@ -1103,13 +1105,14 @@ export interface EmptyStateConfigBase {
 export interface FileUploadConfigBase {
   classes: object;
   defaultProps: Partial<{
-    color: keyof ButtonColor;
+    color: keyof FileUploadColor;
     multiple: boolean;
     rounded: keyof FileUploadRounded;
     size: keyof FileUploadSize;
     variant: keyof FileUploadVariant;
   }>;
   tokens: Partial<{
+    color: Record<string, FileUploadColorItem>;
     rounded: Record<string, string>;
     size: Record<string, FileUploadSizeItem>;
     variant: Record<string, FileUploadVariantItem>;

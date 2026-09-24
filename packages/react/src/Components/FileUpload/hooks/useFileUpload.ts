@@ -3,7 +3,6 @@ import { get, omit } from "es-toolkit/compat";
 import {
   useCallback,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -16,13 +15,22 @@ import {
 // ** Core Imports
 import {
   filesFromFileList,
+  fileUploadItemsFromModel,
+  fileUploadModelFromItems,
   formatFileMeta,
   formatFileSize,
+  getFileUploadItemKey,
+  getFileUploadPreviewUrl,
+  isFileUploadRemote,
   isImageFile,
+  isImageUploadValue,
   mergeFileUploadSelection,
   removeFileAtIndex,
+  type FileUploadModel,
+  type FileUploadValue,
 } from "@bridge-ui/core/Domain";
 import {
+  fileUploadColorProps as colorProps,
   fileUploadRoundedProps as roundedProps,
   fileUploadSizeProps as sizeProps,
   fileUploadVariantProps as variantProps,
@@ -36,6 +44,8 @@ import {
 } from "@bridge-ui/core/Utils";
 
 // ** Local Imports
+import type { BaseFieldCustomProps } from "@/Components/BaseField/baseField.types";
+import { useBaseField } from "@/Components/BaseField/hooks/useBaseField";
 import type {
   FileUploadOwnProps,
   FileUploadProps,
@@ -86,7 +96,6 @@ export function useFileUpload(
   props: FileUploadProps,
   libDefaults: FileUploadLibDefaults,
 ) {
-  const autoId = useId();
   const inputRef = useRef<null | HTMLInputElement>(null);
   const dragDepthRef = useRef(0);
 
@@ -107,14 +116,17 @@ export function useFileUpload(
     componentName: "FileUpload",
   });
 
-  const [uncontrolledFiles, setUncontrolledFiles] = useState<File[]>(
-    () => props.defaultValue ?? [],
+  const [uncontrolledModel, setUncontrolledModel] = useState<FileUploadModel>(
+    () => props.defaultValue ?? null,
   );
   const [dragging, setDragging] = useState(false);
   const [validationError, setValidationError] = useState<string | undefined>();
 
   const isControlled = props.value !== undefined;
-  const files = isControlled ? (props.value ?? []) : uncontrolledFiles;
+  const boundModel = isControlled ? (props.value ?? null) : uncontrolledModel;
+  const files = useMemo(() => {
+    return fileUploadItemsFromModel(boundModel, Boolean(merged.multiple));
+  }, [boundModel, merged.multiple]);
 
   const slots = derived(() => {
     return props.slots;
@@ -130,10 +142,6 @@ export function useFileUpload(
 
   const isDisabled = derived(() => {
     return Boolean(merged.disabled);
-  });
-
-  const controlId = derived(() => {
-    return `bridge-file-upload-${autoId}`;
   });
 
   const canAddMore = derived(() => {
@@ -195,9 +203,63 @@ export function useFileUpload(
     return get(classes, merged.variant);
   }, [merged.variant, bridgeFileUpload?.tokens?.variant]);
 
+  const colorItem = useMemo(() => {
+    const classes = mergeBridgeUILayeredClasses(
+      colorProps,
+      bridgeFileUpload?.tokens?.color,
+    );
+
+    return get(classes, merged.color);
+  }, [merged.color, bridgeFileUpload?.tokens?.color]);
+
+  const baseField = useBaseField(
+    {
+      ...omit(inheritedAttrs, ["slots"]),
+      error: showError,
+      size: componentProps.size,
+      label: componentProps.label,
+      disabled: componentProps.disabled,
+      required: componentProps.required,
+      errorMessage: resolvedErrorMessage,
+      description: isDropzone ? undefined : componentProps.description,
+      slots: {
+        label: slots?.label,
+        errorMessage: slots?.errorMessage,
+        description: isDropzone ? undefined : slots?.description,
+      },
+      customProps: {
+        root: customProps?.root,
+        description: customProps?.description,
+        errorMessage: customProps?.errorMessage,
+        label: customProps?.label as BaseFieldCustomProps["label"],
+      },
+      classes: {
+        root: componentProps.classes?.root,
+        label: componentProps.classes?.label,
+        description: componentProps.classes?.description,
+        errorMessage: componentProps.classes?.errorMessage,
+      },
+    },
+    {
+      error: false,
+      hideErrorMessage: false,
+      size: libDefaults.size ?? "md",
+    },
+    {
+      componentName: "FileUpload",
+      labelHtmlFor: (id) => {
+        return `${id}-input`;
+      },
+    },
+  );
+
   const previewUrls = useMemo(() => {
-    return files.map((file) => {
-      return isImageFile(file) ? URL.createObjectURL(file) : undefined;
+    return files.map((value) => {
+      if (isFileUploadRemote(value) || !isImageFile(value)) {
+        return undefined;
+      }
+
+      return URL.createObjectURL(value);
     });
   }, [files]);
 
@@ -211,13 +273,25 @@ export function useFileUpload(
     };
   }, [previewUrls]);
 
-  const commitFiles = useCallback(
-    (next: File[], rejectedCount: number) => {
+  const publishModel = useCallback(
+    (next: FileUploadValue[]) => {
+      const model = fileUploadModelFromItems(next, Boolean(merged.multiple));
+
       if (!isControlled) {
-        setUncontrolledFiles(next);
+        setUncontrolledModel(model);
       }
 
-      props.onChange?.(next);
+      const onChange = props.onChange as
+        undefined | ((value: FileUploadModel) => void);
+
+      onChange?.(model);
+    },
+    [props, isControlled, merged.multiple],
+  );
+
+  const commitFiles = useCallback(
+    (next: FileUploadValue[], rejectedCount: number) => {
+      publishModel(next);
 
       if (rejectedCount > 0) {
         setValidationError(
@@ -229,7 +303,7 @@ export function useFileUpload(
         setValidationError(undefined);
       }
     },
-    [props, isControlled],
+    [publishModel],
   );
 
   const applyIncoming = useCallback(
@@ -280,15 +354,11 @@ export function useFileUpload(
 
       const next = removeFileAtIndex(files, index);
 
-      if (!isControlled) {
-        setUncontrolledFiles(next);
-      }
-
+      publishModel(next);
       props.onRemove?.(file, index);
-      props.onChange?.(next);
       setValidationError(undefined);
     },
-    [files, props, isDisabled, isControlled],
+    [files, props, isDisabled, publishModel],
   );
 
   const handleInputChange = useCallback(
@@ -377,22 +447,6 @@ export function useFileUpload(
     [openFileDialog],
   );
 
-  const rootInheritedAttrs = derived(() => {
-    return omit(inheritedAttrs, ["slots", "className"]);
-  });
-
-  const rootBind = derived(() => {
-    return mergePartBind(
-      customProps?.root,
-      rootInheritedAttrs,
-      cn({
-        "flex w-full flex-col": true,
-        [get(mergedClasses, "root") ?? ""]: true,
-        [inheritedAttrs.className ?? ""]: true,
-      }),
-    );
-  });
-
   const inputBind = derived(() => {
     return mergePartBind(
       customProps?.input,
@@ -400,53 +454,16 @@ export function useFileUpload(
       {
         type: "file",
         tabIndex: -1,
-        id: controlId,
         "aria-hidden": true,
         accept: merged.accept,
         multiple: merged.multiple,
         onChange: handleInputChange,
+        id: `${baseField.controlId}-input`,
         disabled: isDisabled || !canAddMore,
         className: cn({
           "sr-only": true,
         }),
       },
-    );
-  });
-
-  const labelBind = derived(() => {
-    return mergePartBind(
-      customProps?.label,
-      {
-        htmlFor: controlId,
-      },
-      cn({
-        "mb-1 inline-flex items-center gap-1 text-sm font-medium text-dark-800 dark:text-dark-200": true,
-        [get(mergedClasses, "label") ?? ""]: true,
-      }),
-    );
-  });
-
-  const descriptionBind = derived(() => {
-    return mergePartBind(
-      customProps?.description,
-      {},
-      cn({
-        "mt-1 text-sm text-dark-500 dark:text-dark-400": true,
-        [get(mergedClasses, "description") ?? ""]: true,
-      }),
-    );
-  });
-
-  const errorBind = derived(() => {
-    return mergePartBind(
-      customProps?.errorMessage,
-      {
-        role: "alert",
-      },
-      cn({
-        "mt-1 text-sm text-error-600 dark:text-error-400": true,
-        [get(mergedClasses, "errorMessage") ?? ""]: true,
-      }),
     );
   });
 
@@ -479,7 +496,7 @@ export function useFileUpload(
         [get(sizeItem, "dropzone") ?? ""]: true,
         [roundedClass ?? ""]: true,
         [get(variantItem, "surface") ?? ""]: true,
-        [get(variantItem, "dragging") ?? ""]: dragging,
+        [get(colorItem, "dragging") ?? ""]: dragging,
         "cursor-pointer": !isDisabled && canAddMore,
         "pointer-events-none opacity-60": isDisabled || !canAddMore,
         [get(mergedClasses, "dropzone") ?? ""]: true,
@@ -500,9 +517,11 @@ export function useFileUpload(
 
   const getItemBind = useCallback(
     (index: number) => {
+      const value = files[index];
+
       return mergePartBind(
         customProps?.item,
-        { key: `${files[index]?.name}-${index}` },
+        { key: value ? getFileUploadItemKey(value, index) : String(index) },
         cn({
           [get(sizeItem, "item") ?? ""]: true,
           [roundedClass ?? ""]: true,
@@ -577,17 +596,17 @@ export function useFileUpload(
   });
 
   const fileItems = derived(() => {
-    return files.map((file, index) => {
+    return files.map((value, index) => {
       return {
-        file,
         index,
-        isImage: isImageFile(file),
-        previewUrl: previewUrls[index],
-        metaLabel: formatFileMeta(file),
-        sizeLabel: formatFileSize(file.size),
+        value,
+        metaLabel: formatFileMeta(value),
+        isImage: isImageUploadValue(value),
+        sizeLabel: formatFileSize(value.size),
         remove: () => {
           removeAt(index);
         },
+        previewUrl: getFileUploadPreviewUrl(value, previewUrls[index]),
       };
     });
   });
@@ -597,14 +616,11 @@ export function useFileUpload(
     slots,
     merged,
     dragging,
-    rootBind,
     listBind,
-    labelBind,
+    baseField,
     inputBind,
-    errorBind,
     mediaBind,
     titleBind,
-    controlId,
     fileItems,
     showError,
     isDropzone,
@@ -618,7 +634,6 @@ export function useFileUpload(
     buttonLabel,
     dropzoneBind,
     openFileDialog,
-    descriptionBind,
     validationError,
     itemDescriptionBind,
     resolvedErrorMessage,
