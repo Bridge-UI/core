@@ -1,3 +1,6 @@
+// ** External Imports
+import { clamp, floor, isNil } from "es-toolkit/compat";
+
 /** Default number of OTP digit slots. */
 export const DEFAULT_OTP_LENGTH = 6;
 
@@ -42,11 +45,11 @@ export function isOtpCharAllowed(char: string, type: OtpInputType): boolean {
  * Clamps `length` to a positive integer (minimum 1).
  */
 export function resolveOtpLength(length?: number): number {
-  if (length == null || !Number.isFinite(length)) {
+  if (isNil(length) || !Number.isFinite(length)) {
     return DEFAULT_OTP_LENGTH;
   }
 
-  return Math.max(1, Math.floor(length));
+  return clamp(floor(length), 1, Number.POSITIVE_INFINITY);
 }
 
 /**
@@ -57,7 +60,7 @@ export function normalizeOtpValue(
   length: number,
   type: OtpInputType,
 ): string {
-  if (value == null || value === "") {
+  if (isNil(value) || value === "") {
     return "";
   }
 
@@ -148,9 +151,10 @@ export function applyOtpPaste(options: {
   type: OtpInputType;
 }): OtpDigitsUpdate {
   const { type, index, digits, pasted } = options;
-  const length = digits.length;
+
   const next = [...digits];
-  const start = Math.min(Math.max(index, 0), length - 1);
+  const length = digits.length;
+  const start = clamp(index, 0, length - 1);
   const normalized = normalizeOtpValue(pasted, length - start, type);
 
   if (normalized.length === 0) {
