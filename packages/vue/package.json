@@ -178,6 +178,7 @@
   },
   "dependencies": {
     "@bridge-ui/core": "^0.11.0",
+    "@tailwindcss/typography": "^0.5.19",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.50.0",
     "tailwind-merge": "^3.6.0"

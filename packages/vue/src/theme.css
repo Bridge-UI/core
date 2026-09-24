@@ -1,5 +1,7 @@
 @import "@bridge-ui/core/utilities.css";
 
+@plugin "@tailwindcss/typography";
+
 @source "./Actions";
 @source "./Components";
 @source "../../core/dist/Tokens";
