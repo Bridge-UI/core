@@ -3,7 +3,7 @@ name: bridge-ui-forms
 description: >-
   Build forms with Bridge UI Vue — TextField, Textarea, PasswordField,
   NumberField, OtpField, Select, Autocomplete, Slider, Checkbox, Radio,
-  Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
+  Rating, Switch, DateField, DatePicker, DateRangeField, DateRangePicker, TimeField,
   TimePicker, TimeRangeField, TimeRangePicker, DateTimeField, DateTimePicker,
   DateTimeRangeField, DateTimeRangePicker, ColorField, ColorPicker, FormField,
   FormControl, BaseField.
@@ -28,7 +28,7 @@ Controlled fields: **`v-model` / `modelValue`**. Never React `value`/`onChange`.
 | Slider                    | `.ai/docs/components/Slider.md`                                       |
 | Select                    | `.ai/docs/components/Select.md`                                       |
 | Autocomplete              | `.ai/docs/components/Autocomplete.md`                                 |
-| Checkbox / radio / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Switch.md`            |
+| Checkbox / radio / rating / switch | `.ai/docs/components/Checkbox.md`, `Radio.md`, `Rating.md`, `Switch.md` |
 | Date                      | `.ai/docs/components/DateField.md`, `DatePicker.md`                   |
 | Date range                | `.ai/docs/components/DateRangeField.md`, `DateRangePicker.md`         |
 | Time                      | `.ai/docs/components/TimeField.md`, `TimePicker.md`                   |

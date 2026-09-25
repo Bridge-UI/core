@@ -1,8 +1,8 @@
 # FormControl
 
-> Building block for toggle-row chrome. Prefer `Checkbox`, `Radio`, and `Switch` in apps; FormControl remains exported for advanced composition. Theme shared chrome via `components.FormControl`; override per public control (`components.Checkbox`, …).
+> Building block for toggle-row chrome. Prefer `Checkbox`, `Radio`, `Rating`, and `Switch` in apps; FormControl remains exported for advanced composition. Theme shared chrome via `components.FormControl`; override per public control (`components.Checkbox`, …).
 
-Low-level form control chrome (labels, description, error) for Checkbox, Radio, and Switch.
+Low-level form control chrome (labels, description, error) for Checkbox, Radio, Rating, and Switch.
 
 Control tokens stay on the parent (`tokens.color`, …).
 
@@ -63,4 +63,4 @@ import { FormControl } from "@bridge-ui/vue";
 
 ## Related components
 
-Checkbox, Radio, Switch, Label
+Checkbox, Radio, Rating, Switch, Label
