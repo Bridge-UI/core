@@ -38,6 +38,7 @@ export const SEMANTIC_ICON_NAMES = [
   "search",
   "columns",
   "palette",
+  "refresh",
   "success",
   "warning",
   "calendar",

@@ -2,6 +2,7 @@
 import { get, isNil } from "es-toolkit/compat";
 import {
   computed,
+  getCurrentInstance,
   onUnmounted,
   ref,
   useAttrs,
@@ -16,8 +17,10 @@ import {
   filesFromFileList,
   fileUploadItemsFromModel,
   fileUploadModelFromItems,
-  formatFileMeta,
   formatFileSize,
+  formatFileUploadStatusLabel,
+  getFileUploadBrowserFile,
+  getFileUploadItemState,
   getFileUploadPreviewUrl,
   isFileUploadRemote,
   isImageUploadValue,
@@ -28,8 +31,10 @@ import {
 } from "@bridge-ui/core/Domain";
 import {
   fileUploadColorProps as colorProps,
+  fileUploadOrientationProps as orientationProps,
   fileUploadRoundedProps as roundedProps,
   fileUploadSizeProps as sizeProps,
+  fileUploadStateProps as stateProps,
   fileUploadVariantProps as variantProps,
 } from "@bridge-ui/core/Tokens";
 import {
@@ -73,13 +78,14 @@ const fileUploadBridgeKeys = [
   "buttonLabel",
   "customProps",
   "description",
+  "orientation",
   "defaultValue",
   "errorMessage",
 ] as const satisfies readonly (keyof FileUploadProps)[];
 
 type FileUploadLibDefaults = LibDefaultsShape<
   FileUploadOwnProps<boolean>,
-  "size" | "color" | "rounded" | "variant" | "multiple"
+  "size" | "color" | "rounded" | "variant" | "multiple" | "orientation"
 >;
 
 type FileUploadMerged = MergeLibDefaults<
@@ -93,10 +99,12 @@ export function useFileUpload(
   model: WritableComputedRef<FileUploadModel>,
   emit: {
     (event: "remove", value: FileUploadValue, index: number): void;
+    (event: "retry", value: FileUploadValue, index: number): void;
     (event: "update:modelValue", value: FileUploadModel): void;
   },
 ) {
   const attrs = useAttrs();
+  const instance = getCurrentInstance();
   const slots = useSlots();
   const inputRef = ref<null | HTMLInputElement>(null);
   const dragDepth = ref(0);
@@ -220,6 +228,24 @@ export function useFileUpload(
     return get(classes, merged.value.size);
   });
 
+  const orientationItems = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      orientationProps,
+      bridgeFileUpload.value?.tokens?.orientation,
+    );
+  });
+
+  const orientationItem = computed(() => {
+    return get(orientationItems.value, merged.value.orientation);
+  });
+
+  const stateItems = computed(() => {
+    return mergeBridgeUILayeredClasses(
+      stateProps,
+      bridgeFileUpload.value?.tokens?.state,
+    );
+  });
+
   const roundedClass = computed(() => {
     const classes = mergeBridgeUILayeredClasses(
       roundedProps,
@@ -257,11 +283,17 @@ export function useFileUpload(
       }
 
       previewUrls.value = next.map((value) => {
-        if (isFileUploadRemote(value) || !isImageUploadValue(value)) {
+        const browserFile = getFileUploadBrowserFile(value);
+
+        if (!browserFile || !isImageUploadValue(value)) {
           return undefined;
         }
 
-        return URL.createObjectURL(value);
+        if (isFileUploadRemote(value) && value.url) {
+          return undefined;
+        }
+
+        return URL.createObjectURL(browserFile);
       });
     },
     { immediate: true },
@@ -333,6 +365,26 @@ export function useFileUpload(
     );
     emit("remove", file, index);
     validationError.value = undefined;
+  }
+
+  function retryAt(index: number) {
+    if (isDisabled.value) {
+      return;
+    }
+
+    const file = files.value[index];
+
+    if (!file) {
+      return;
+    }
+
+    emit("retry", file, index);
+  }
+
+  function hasRetryListener() {
+    const vnodeProps = instance?.vnode.props;
+
+    return Boolean(vnodeProps && "onRetry" in vnodeProps);
   }
 
   function handleInputChange(event: Event) {
@@ -467,22 +519,32 @@ export function useFileUpload(
     return mergePartBind(
       customProps.value?.list,
       {},
-      cn({
-        [get(sizeItem.value, "list") ?? ""]: true,
-        [get(mergedClasses.value, "list") ?? ""]: true,
-      }),
+      cn(
+        get(sizeItem.value, "list"),
+        get(orientationItem.value, "list"),
+        get(mergedClasses.value, "list"),
+      ),
     );
   });
 
-  function getItemBind(_index: number) {
+  function getItemBind(index: number) {
+    const value = files.value[index];
+    const state = value ? getFileUploadItemState(value) : undefined;
+    const stateItem = state ? get(stateItems.value, state) : undefined;
+
     return mergePartBind(
       customProps.value?.item,
-      {},
-      cn({
-        [get(sizeItem.value, "item") ?? ""]: true,
-        [roundedClass.value ?? ""]: true,
-        [get(mergedClasses.value, "item") ?? ""]: true,
-      }),
+      {
+        "data-orientation": merged.value.orientation,
+        ...(state ? { "data-state": state } : {}),
+      },
+      cn(
+        get(sizeItem.value, "item"),
+        roundedClass.value,
+        get(orientationItem.value, "item"),
+        stateItem ? get(stateItem, "item") : undefined,
+        get(mergedClasses.value, "item"),
+      ),
     );
   }
 
@@ -490,11 +552,12 @@ export function useFileUpload(
     return mergePartBind(
       customProps.value?.media,
       {},
-      cn({
-        [get(sizeItem.value, "media") ?? ""]: true,
-        [roundedClass.value ?? ""]: true,
-        [get(mergedClasses.value, "media") ?? ""]: true,
-      }),
+      cn(
+        get(sizeItem.value, "media"),
+        roundedClass.value,
+        get(orientationItem.value, "media"),
+        get(mergedClasses.value, "media"),
+      ),
     );
   });
 
@@ -502,10 +565,11 @@ export function useFileUpload(
     return mergePartBind(
       customProps.value?.content,
       {},
-      cn({
-        [get(sizeItem.value, "content") ?? ""]: true,
-        [get(mergedClasses.value, "content") ?? ""]: true,
-      }),
+      cn(
+        get(sizeItem.value, "content"),
+        get(orientationItem.value, "content"),
+        get(mergedClasses.value, "content"),
+      ),
     );
   });
 
@@ -534,10 +598,11 @@ export function useFileUpload(
     return mergePartBind(
       customProps.value?.actions,
       {},
-      cn({
-        [get(sizeItem.value, "actions") ?? ""]: true,
-        [get(mergedClasses.value, "actions") ?? ""]: true,
-      }),
+      cn(
+        get(sizeItem.value, "actions"),
+        get(orientationItem.value, "actions"),
+        get(mergedClasses.value, "actions"),
+      ),
     );
   });
 
@@ -554,13 +619,18 @@ export function useFileUpload(
       return {
         index,
         value,
-        metaLabel: formatFileMeta(value),
         isImage: isImageUploadValue(value),
+        metaLabel: formatFileUploadStatusLabel(value),
         remove: () => {
           removeAt(index);
         },
         sizeLabel: isNil(value.size) ? "" : formatFileSize(value.size),
         previewUrl: getFileUploadPreviewUrl(value, previewUrls.value[index]),
+        retry: hasRetryListener()
+          ? () => {
+              retryAt(index);
+            }
+          : undefined,
       };
     });
   });
@@ -580,6 +650,7 @@ export function useFileUpload(
     isDisabled,
     showPicker,
     canAddMore,
+    stateItems,
     actionsBind,
     contentBind,
     triggerBind,
@@ -588,6 +659,7 @@ export function useFileUpload(
     dropzoneBind,
     openFileDialog,
     validationError,
+    orientationItems,
     itemDescriptionBind,
     resolvedErrorMessage,
     inputRef: inputRef as Ref<null | HTMLInputElement>,

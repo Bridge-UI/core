@@ -5,6 +5,7 @@ import type { HTMLAttributes, InputHTMLAttributes, Slot } from "vue";
 import type { FileUploadModel, FileUploadValue } from "@bridge-ui/core/Domain";
 import type {
   FileUploadColor,
+  FileUploadOrientation,
   FileUploadRounded,
   FileUploadSize,
   FileUploadVariant,
@@ -15,6 +16,7 @@ export interface FileUploadSizeOverrides {}
 export interface FileUploadColorOverrides {}
 export interface FileUploadRoundedOverrides {}
 export interface FileUploadVariantOverrides {}
+export interface FileUploadOrientationOverrides {}
 
 export interface FileUploadClasses {
   /**
@@ -152,6 +154,11 @@ export interface FileUploadEmits {
   remove: [value: FileUploadValue, index: number];
 
   /**
+   * Emitted when retry is pressed on an item whose `state` is `error`.
+   */
+  retry: [value: FileUploadValue, index: number];
+
+  /**
    * Emitted when the selection changes (`v-model`).
    * One item or `null` when `multiple` is false, a list when it is true.
    */
@@ -183,6 +190,11 @@ export interface FileUploadItemSlotProps {
    * Removes this item from the selection.
    */
   remove: () => void;
+
+  /**
+   * Retries this item. Set when the parent listens for `retry`.
+   */
+  retry?: () => void;
 
   /**
    * Formatted file size for display.
@@ -330,6 +342,16 @@ export interface FileUploadOwnProps<Multiple extends boolean = false> {
   multiple?: Multiple;
 
   /**
+   * Lay each card's media beside the name, or stacked above it.
+   *
+   * @default "horizontal"
+   */
+  orientation?: MergeProps<
+    FileUploadOrientation,
+    FileUploadOrientationOverrides
+  >;
+
+  /**
    * Marks the field as required (asterisk on the label).
    *
    * @default false
@@ -420,6 +442,7 @@ export interface FileUploadSlots {
 }
 
 export type {
+  FileUploadItemState,
   FileUploadModel,
   FileUploadRemote,
   FileUploadValue,
@@ -482,10 +505,5 @@ export type FileUploadMultipleProps = MergeHtmlProps<
    */
   modelValue?: FileUploadValue[];
 };
-
-export type FileUploadItemProps = MergeHtmlProps<
-  FileUploadItemSlotProps,
-  HTMLAttributes
->;
 
 export type FileUploadProps = FileUploadSingleProps | FileUploadMultipleProps;

@@ -5,11 +5,12 @@ export type {
   FileUploadColorOverrides,
   FileUploadCustomProps,
   FileUploadEmits,
-  FileUploadItemProps,
   FileUploadItemSlotProps,
   FileUploadItemSlots,
+  FileUploadItemState,
   FileUploadListSlotProps,
   FileUploadModel,
+  FileUploadOrientationOverrides,
   FileUploadOwnProps,
   FileUploadProps,
   FileUploadRemote,
@@ -20,4 +21,3 @@ export type {
   FileUploadVariantOverrides,
 } from "@/Components/FileUpload/fileUpload.types";
 export { default as FileUpload } from "@/Components/FileUpload/FileUpload.vue";
-export { default as FileUploadItem } from "@/Components/FileUpload/FileUploadItem.vue";

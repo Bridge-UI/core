@@ -1,6 +1,12 @@
 // ** External Imports
 import { createContext, useContext, type HTMLAttributes } from "react";
 
+// ** Core Imports
+import type {
+  FileUploadOrientation,
+  FileUploadState,
+} from "@bridge-ui/core/Tokens";
+
 // ** Local Imports
 import type { ButtonProps } from "@/Components/Button";
 
@@ -44,9 +50,29 @@ export type FileUploadItemContextValue = {
   mediaBind: HTMLAttributes<HTMLDivElement>;
 
   /**
+   * Field orientation. Cards inherit it unless they pass their own.
+   */
+  orientation: string;
+
+  /**
+   * Merged orientation tokens, including registry overrides.
+   */
+  orientationItems: Partial<FileUploadOrientation>;
+
+  /**
    * Radius forwarded to the card and the remove button.
    */
   rounded?: ButtonProps["rounded"];
+
+  /**
+   * Field size. `xs` hides the default type · size line.
+   */
+  size: string;
+
+  /**
+   * Merged upload-state tokens, including registry overrides.
+   */
+  stateItems: Partial<FileUploadState>;
 
   /**
    * Props for the file name.

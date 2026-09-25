@@ -8,13 +8,13 @@ import { getFileUploadItemKey } from "@bridge-ui/core/Domain";
 // ** Local Imports
 import BaseField from "@/Components/BaseField/BaseField";
 import { Button } from "@/Components/Button";
-import FileUploadContext from "@/Components/FileUpload/FileUploadContext";
-import FileUploadItem from "@/Components/FileUpload/FileUploadItem";
 import type {
   FileUploadItemSlotProps,
   FileUploadProps,
 } from "@/Components/FileUpload/fileUpload.types";
+import FileUploadContext from "@/Components/FileUpload/FileUploadContext";
 import { useFileUpload } from "@/Components/FileUpload/hooks/useFileUpload";
+import { FileUploadItem } from "@/Components/FileUploadItem";
 import { Icon } from "@/Components/Icon";
 import { hasNamedSlot, isPropPresent } from "@/Utils";
 
@@ -46,6 +46,7 @@ function FileUpload(props: FileUploadProps) {
     fileItems,
     isDropzone,
     showPicker,
+    stateItems,
     actionsBind,
     contentBind,
     triggerBind,
@@ -53,6 +54,7 @@ function FileUpload(props: FileUploadProps) {
     buttonLabel,
     dropzoneBind,
     openFileDialog,
+    orientationItems,
     itemDescriptionBind,
   } = useFileUpload(props, {
     size: "md",
@@ -60,6 +62,7 @@ function FileUpload(props: FileUploadProps) {
     multiple: false,
     color: "primary",
     variant: "button",
+    orientation: "horizontal",
   });
 
   const fileList = hasNamedSlot(slots, "list") ? (
@@ -98,12 +101,16 @@ function FileUpload(props: FileUploadProps) {
       value={{
         mediaBind,
         titleBind,
+        stateItems,
         actionsBind,
         contentBind,
         getItemBind,
+        orientationItems,
+        size: merged.size,
         color: merged.color,
         rounded: merged.rounded,
         disabled: merged.disabled,
+        orientation: merged.orientation,
         descriptionBind: itemDescriptionBind,
       }}
     >

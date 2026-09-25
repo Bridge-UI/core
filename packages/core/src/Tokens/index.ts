@@ -174,16 +174,22 @@ export type {
 } from "@/Tokens/EmptyState";
 export {
   colorProps as fileUploadColorProps,
+  orientationProps as fileUploadOrientationProps,
   roundedProps as fileUploadRoundedProps,
   sizeProps as fileUploadSizeProps,
+  stateProps as fileUploadStateProps,
   variantProps as fileUploadVariantProps,
 } from "@/Tokens/FileUpload";
 export type {
   FileUploadColor,
   FileUploadColorItem,
+  FileUploadOrientation,
+  FileUploadOrientationItem,
   FileUploadRounded,
   FileUploadSize,
   FileUploadSizeItem,
+  FileUploadState,
+  FileUploadStateItem,
   FileUploadVariant,
   FileUploadVariantItem,
 } from "@/Tokens/FileUpload";

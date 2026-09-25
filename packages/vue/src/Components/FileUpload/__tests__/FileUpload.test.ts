@@ -1,10 +1,11 @@
 // ** External Imports
 import { mount } from "@vue/test-utils";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { h } from "vue";
 
 // ** Local Imports
-import { FileUpload, FileUploadItem } from "@/Components/FileUpload";
+import { FileUpload } from "@/Components/FileUpload";
+import { FileUploadItem } from "@/Components/FileUploadItem";
 import { createBridgeUI } from "@/Provider/createBridgeUI";
 
 function makeFile(
@@ -263,6 +264,84 @@ test("it should reuse FileUploadItem inside the list slot", () => {
   expect(wrapper.text()).toContain("Handle");
   expect(wrapper.text()).toContain("note.txt");
   expect(wrapper.find('[aria-label="Remove note.txt"]').exists()).toBe(true);
+});
+
+test("it should render upload states on the file card", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      onRetry: () => undefined,
+      modelValue: {
+        progress: 64,
+        state: "uploading",
+        name: "financial-model.xlsx",
+      },
+    },
+  });
+
+  expect(wrapper.text()).toContain("Uploading · 64%");
+  expect(wrapper.text()).toContain("financial-model.xlsx");
+});
+
+test("it should retry a failed upload", async () => {
+  const onRetry = vi.fn();
+  const modelValue = {
+    state: "error" as const,
+    name: "financial-model.xlsx",
+  };
+  const wrapper = mount(FileUpload, {
+    props: { onRetry, modelValue },
+  });
+
+  expect(wrapper.text()).toContain("Upload failed. Try again.");
+
+  await wrapper
+    .get('[aria-label="Retry financial-model.xlsx"]')
+    .trigger("click");
+
+  expect(onRetry).toHaveBeenCalledWith(modelValue, 0);
+});
+
+test("it should hide the meta line at size xs", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      size: "xs",
+      modelValue: makeFile("notes.pdf", {
+        size: 1200,
+        type: "application/pdf",
+      }),
+    },
+  });
+
+  expect(wrapper.text()).toContain("notes.pdf");
+  expect(wrapper.text()).not.toContain("PDF");
+});
+
+test("it should lay vertical cards in a row", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      orientation: "vertical",
+      modelValue: makeFile("notes.pdf", {
+        size: 12,
+        type: "application/pdf",
+      }),
+    },
+  });
+
+  expect(wrapper.find("ul").classes()).toContain("flex-row");
+  expect(wrapper.find("li").classes()).toContain("flex-col");
+});
+
+test("it should replace the meta line with a custom description", () => {
+  const wrapper = mount(FileUpload, {
+    props: {
+      modelValue: {
+        name: "research-summary.pdf",
+        description: "Open preview dialog",
+      },
+    },
+  });
+
+  expect(wrapper.text()).toContain("Open preview dialog");
 });
 
 test("it should color the dropzone from the color prop while dragging", async () => {

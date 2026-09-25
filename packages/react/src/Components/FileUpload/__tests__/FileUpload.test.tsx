@@ -7,7 +7,8 @@ afterEach(() => {
 });
 
 // ** Local Imports
-import { FileUpload, FileUploadItem } from "@/Components/FileUpload";
+import { FileUpload } from "@/Components/FileUpload";
+import { FileUploadItem } from "@/Components/FileUploadItem";
 import { BridgeUIProvider } from "@/Provider";
 
 function makeFile(
@@ -264,6 +265,79 @@ test("it should color the dropzone from the color prop while dragging", () => {
   expect(zone.className).toContain("bg-success-50");
   expect(zone.className).toContain("border-success-500");
   expect(zone.className).not.toContain("border-primary-500");
+});
+
+test("it should render upload states on the file card", () => {
+  render(
+    <FileUpload
+      onRetry={() => undefined}
+      value={{
+        progress: 64,
+        state: "uploading",
+        name: "financial-model.xlsx",
+      }}
+    />,
+  );
+
+  expect(screen.getByText("Uploading · 64%")).toBeTruthy();
+  expect(screen.getByText("financial-model.xlsx").className).toContain(
+    "animate-pulse",
+  );
+});
+
+test("it should retry a failed upload", () => {
+  const onRetry = vi.fn();
+  const value = {
+    state: "error" as const,
+    name: "financial-model.xlsx",
+  };
+
+  render(<FileUpload value={value} onRetry={onRetry} />);
+
+  expect(screen.getByText("Upload failed. Try again.")).toBeTruthy();
+
+  fireEvent.click(
+    screen.getByRole("button", { name: "Retry financial-model.xlsx" }),
+  );
+
+  expect(onRetry).toHaveBeenCalledWith(value, 0);
+});
+
+test("it should hide the meta line at size xs", () => {
+  render(
+    <FileUpload
+      size="xs"
+      value={makeFile("notes.pdf", { size: 1200, type: "application/pdf" })}
+    />,
+  );
+
+  expect(screen.getByText("notes.pdf")).toBeTruthy();
+  expect(screen.queryByText(/PDF/)).toBeNull();
+});
+
+test("it should lay vertical cards in a row", () => {
+  const { container } = render(
+    <FileUpload
+      orientation="vertical"
+      value={makeFile("notes.pdf", { size: 12, type: "application/pdf" })}
+    />,
+  );
+
+  expect(container.querySelector("ul")?.className).toContain("flex-row");
+  expect(container.querySelector("li")?.className).toContain("flex-col");
+});
+
+test("it should replace the meta line with a custom description", () => {
+  render(
+    <FileUpload
+      value={{
+        name: "research-summary.pdf",
+        description: "Open preview dialog",
+      }}
+    />,
+  );
+
+  expect(screen.getByText("Open preview dialog")).toBeTruthy();
 });
 
 test("it should color the dropzone from the registry color while dragging", () => {

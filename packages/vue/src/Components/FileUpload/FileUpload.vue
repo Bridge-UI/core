@@ -20,7 +20,7 @@ import type {
   FileUploadSlots,
 } from "@/Components/FileUpload/fileUpload.types";
 import { FILE_UPLOAD_KEY } from "@/Components/FileUpload/fileUploadInjectionKey";
-import FileUploadItem from "@/Components/FileUpload/FileUploadItem.vue";
+import FileUploadItem from "@/Components/FileUploadItem/FileUploadItem.vue";
 import { Icon } from "@/Components/Icon";
 import {
   hasNamedSlot,
@@ -61,6 +61,7 @@ const {
   fileItems,
   isDropzone,
   showPicker,
+  stateItems,
   actionsBind,
   contentBind,
   triggerBind,
@@ -68,6 +69,7 @@ const {
   buttonLabel,
   dropzoneBind,
   openFileDialog,
+  orientationItems,
   itemDescriptionBind,
 } = useFileUpload(
   props as FileUploadOwnProps<boolean>,
@@ -77,6 +79,7 @@ const {
     multiple: false,
     color: "primary",
     variant: "button",
+    orientation: "horizontal",
   },
   selection as WritableComputedRef<FileUploadModel>,
   emit,
@@ -87,13 +90,17 @@ provide(
   computed(() => {
     return {
       getItemBind,
+      size: merged.value.size,
       color: merged.value.color,
       mediaBind: mediaBind.value,
       titleBind: titleBind.value,
+      stateItems: stateItems.value,
       rounded: merged.value.rounded,
       actionsBind: actionsBind.value,
       contentBind: contentBind.value,
       disabled: merged.value.disabled,
+      orientation: merged.value.orientation,
+      orientationItems: orientationItems.value,
       descriptionBind: itemDescriptionBind.value,
     };
   }),

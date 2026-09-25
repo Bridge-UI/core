@@ -5,6 +5,7 @@ import type { HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import type { FileUploadModel, FileUploadValue } from "@bridge-ui/core/Domain";
 import type {
   FileUploadColor,
+  FileUploadOrientation,
   FileUploadRounded,
   FileUploadSize,
   FileUploadVariant,
@@ -15,12 +16,18 @@ export interface FileUploadSizeOverrides {}
 export interface FileUploadColorOverrides {}
 export interface FileUploadRoundedOverrides {}
 export interface FileUploadVariantOverrides {}
+export interface FileUploadOrientationOverrides {}
 
 export interface FileUploadCallbacks {
   /**
    * Callback when an item is removed from the list.
    */
   onRemove?: (value: FileUploadValue, index: number) => void;
+
+  /**
+   * Callback when retry is pressed on an item whose `state` is `error`.
+   */
+  onRetry?: (value: FileUploadValue, index: number) => void;
 }
 
 export interface FileUploadClasses {
@@ -152,15 +159,6 @@ export interface FileUploadCustomProps {
   trigger?: HTMLAttributes<HTMLDivElement>;
 }
 
-export interface FileUploadItemOwnProps extends FileUploadItemSlotProps {
-  /**
-   * Leading and trailing content for this card.
-   *
-   * @default undefined
-   */
-  slots?: FileUploadItemSlots;
-}
-
 export interface FileUploadItemSlotProps {
   /**
    * Index in the current selection.
@@ -186,6 +184,11 @@ export interface FileUploadItemSlotProps {
    * Removes this item from the selection.
    */
   remove: () => void;
+
+  /**
+   * Retries this item. Set when `onRetry` is passed.
+   */
+  retry?: () => void;
 
   /**
    * Formatted file size for display.
@@ -331,6 +334,16 @@ export interface FileUploadOwnProps {
   multiple?: boolean;
 
   /**
+   * Lay each card's media beside the name, or stacked above it.
+   *
+   * @default "horizontal"
+   */
+  orientation?: MergeProps<
+    FileUploadOrientation,
+    FileUploadOrientationOverrides
+  >;
+
+  /**
    * Marks the field as required (asterisk on the label).
    *
    * @default false
@@ -429,6 +442,7 @@ export interface FileUploadSlots {
 }
 
 export type {
+  FileUploadItemState,
   FileUploadModel,
   FileUploadRemote,
   FileUploadValue,
@@ -510,11 +524,6 @@ export type FileUploadMultipleProps = MergeHtmlProps<
     value?: FileUploadValue[];
   },
   FileUploadDomProps
->;
-
-export type FileUploadItemProps = MergeHtmlProps<
-  FileUploadItemOwnProps,
-  HTMLAttributes<HTMLLIElement>
 >;
 
 export type FileUploadProps = FileUploadSingleProps | FileUploadMultipleProps;

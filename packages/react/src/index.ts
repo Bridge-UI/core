@@ -388,22 +388,18 @@ export type {
   FieldOverlayOwnProps,
   FieldOverlayProps,
 } from "@/Components/FieldOverlay";
-export {
-  FileUpload,
-  FileUploadItem,
-  useFileUpload,
-} from "@/Components/FileUpload";
+export { FileUpload, useFileUpload } from "@/Components/FileUpload";
 export type {
   FileUploadCallbacks,
   FileUploadClasses,
   FileUploadColorOverrides,
   FileUploadCustomProps,
-  FileUploadItemOwnProps,
-  FileUploadItemProps,
   FileUploadItemSlotProps,
   FileUploadItemSlots,
+  FileUploadItemState,
   FileUploadListSlotProps,
   FileUploadModel,
+  FileUploadOrientationOverrides,
   FileUploadOwnProps,
   FileUploadProps,
   FileUploadRemote,
@@ -413,6 +409,11 @@ export type {
   FileUploadValue,
   FileUploadVariantOverrides,
 } from "@/Components/FileUpload";
+export { FileUploadItem, useFileUploadItem } from "@/Components/FileUploadItem";
+export type {
+  FileUploadItemOwnProps,
+  FileUploadItemProps,
+} from "@/Components/FileUploadItem";
 export { FormControl, useFormControl } from "@/Components/FormControl";
 export type {
   FormControlClasses,

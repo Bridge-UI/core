@@ -66,6 +66,11 @@ export interface FileUploadSize {
    * Small size token.
    */
   "sm": FileUploadSizeItem;
+
+  /**
+   * Extra-small size token. The default type · size line is hidden.
+   */
+  "xs": FileUploadSizeItem;
 }
 
 /**
@@ -101,6 +106,22 @@ export const sizeProps: FileUploadSize = {
       "flex w-full items-center gap-3 border border-dark-200 bg-white px-3 py-2.5 dark:border-dark-700 dark:bg-dark-900",
     "media":
       "flex size-12 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-6",
+  },
+  "xs": {
+    "list": "mt-1.5 flex flex-col gap-1",
+    "trigger": "inline-flex items-center",
+    "content": "flex min-w-0 flex-1 flex-col",
+    "actions": "ms-auto flex shrink-0 items-center gap-0.5",
+    "title":
+      "m-0 truncate text-xs font-medium text-dark-900 dark:text-dark-100",
+    "description":
+      "m-0 truncate text-[0.65rem] text-dark-500 dark:text-dark-400",
+    "dropzone":
+      "flex min-h-24 w-full flex-col items-center justify-center gap-1 px-3 py-5 text-center",
+    "item":
+      "flex w-full items-center gap-1.5 border border-dark-200 bg-white px-1.5 py-1 dark:border-dark-700 dark:bg-dark-900",
+    "media":
+      "flex size-6 shrink-0 items-center justify-center overflow-hidden bg-dark-100 text-dark-500 dark:bg-dark-800 dark:text-dark-400 [&_img]:size-full [&_img]:object-cover [&_svg]:size-3.5",
   },
   "sm": {
     "list": "mt-2 flex flex-col gap-1.5",
