@@ -121,11 +121,11 @@ export function useCarousel(
   props: CarouselProps,
   libDefaults: CarouselLibDefaults,
 ) {
-  const resolveMessage = useResolveMessage();
   const reactId = useId();
-  const carouselId = `bridge-carousel${reactId.replace(/:/g, "")}`;
   const counterRef = useRef(0);
+  const resolveMessage = useResolveMessage();
   const seenIndexRef = useRef<null | number>(null);
+  const carouselId = `bridge-carousel${reactId.replace(/:/g, "")}`;
   const swipeStart = useRef<null | {
     pointerId: number;
     x: number;
@@ -363,29 +363,53 @@ export function useCarousel(
     );
   }, [slideCount, activeIndex, resolveMessage]);
 
-  const showControls =
-    getCarouselMaxIndex(slideCount, merged.slidesPerView, merged.align) > 0;
-  const showIndicators = merged.indicators !== false && slideCount > 1;
-  const prevDisabled = !canMoveCarousel(
-    activeIndex,
-    slideCount,
-    -1,
-    merged.loop,
-    merged.slidesPerView,
-    merged.align,
-  );
-  const nextDisabled = !canMoveCarousel(
-    activeIndex,
-    slideCount,
-    1,
-    merged.loop,
-    merged.slidesPerView,
-    merged.align,
-  );
-  const vertical = merged.orientation === "vertical";
-  const rtl = !vertical && inheritedAttrs.dir === "rtl";
-  const prevKey = vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
-  const nextKey = vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
+  const showControls = derived(() => {
+    return (
+      getCarouselMaxIndex(slideCount, merged.slidesPerView, merged.align) > 0
+    );
+  });
+
+  const showIndicators = derived(() => {
+    return merged.indicators !== false && slideCount > 1;
+  });
+
+  const prevDisabled = derived(() => {
+    return !canMoveCarousel(
+      activeIndex,
+      slideCount,
+      -1,
+      merged.loop,
+      merged.slidesPerView,
+      merged.align,
+    );
+  });
+
+  const nextDisabled = derived(() => {
+    return !canMoveCarousel(
+      activeIndex,
+      slideCount,
+      1,
+      merged.loop,
+      merged.slidesPerView,
+      merged.align,
+    );
+  });
+
+  const vertical = derived(() => {
+    return merged.orientation === "vertical";
+  });
+
+  const rtl = derived(() => {
+    return !vertical && inheritedAttrs.dir === "rtl";
+  });
+
+  const prevKey = derived(() => {
+    return vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
+  });
+
+  const nextKey = derived(() => {
+    return vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
+  });
 
   const rootInheritedAttrs = derived(() => {
     return omit(inheritedAttrs, [...rootEventKeys]);

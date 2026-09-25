@@ -32,15 +32,27 @@ const carouselSlideBridgeKeys = [
 export function useCarouselSlide(props: CarouselSlideProps) {
   const carousel = useCarouselContext();
   const resolveMessage = useResolveMessage();
-  const index = carousel.takeIndex();
-  const selected = index === carousel.activeIndex;
-  const inView = isCarouselSlideInView(
-    index,
-    carousel.activeIndex,
-    carousel.slidesPerView,
-    carousel.align,
-  );
-  const slideId = getCarouselSlideId(carousel.id, index);
+
+  const index = derived(() => {
+    return carousel.takeIndex();
+  });
+
+  const selected = derived(() => {
+    return index === carousel.activeIndex;
+  });
+
+  const inView = derived(() => {
+    return isCarouselSlideInView(
+      index,
+      carousel.activeIndex,
+      carousel.slidesPerView,
+      carousel.align,
+    );
+  });
+
+  const slideId = derived(() => {
+    return getCarouselSlideId(carousel.id, index);
+  });
 
   const { componentProps, inheritedAttrs } = splitComponentProps<
     CarouselSlideProps,

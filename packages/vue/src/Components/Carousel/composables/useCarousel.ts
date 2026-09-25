@@ -380,6 +380,48 @@ export function useCarousel(
     return merged.value.indicators !== false && slideIds.value.length > 1;
   });
 
+  const vertical = computed(() => {
+    return merged.value.orientation === "vertical";
+  });
+
+  const rtl = computed(() => {
+    return !vertical.value && split.value.inheritedAttrs.dir === "rtl";
+  });
+
+  const prevKey = computed(() => {
+    return vertical.value ? "ArrowUp" : rtl.value ? "ArrowRight" : "ArrowLeft";
+  });
+
+  const nextKey = computed(() => {
+    return vertical.value
+      ? "ArrowDown"
+      : rtl.value
+        ? "ArrowLeft"
+        : "ArrowRight";
+  });
+
+  const prevDisabled = computed(() => {
+    return !canMoveCarousel(
+      activeIndex.value,
+      slideIds.value.length,
+      -1,
+      merged.value.loop === true,
+      merged.value.slidesPerView,
+      merged.value.align,
+    );
+  });
+
+  const nextDisabled = computed(() => {
+    return !canMoveCarousel(
+      activeIndex.value,
+      slideIds.value.length,
+      1,
+      merged.value.loop === true,
+      merged.value.slidesPerView,
+      merged.value.align,
+    );
+  });
+
   const indicatorIndexes = computed(() => {
     return slideIds.value.map((_, index) => index);
   });
@@ -452,20 +494,11 @@ export function useCarousel(
         userBlur?.(event);
       },
       onKeydown: (event: KeyboardEvent) => {
-        const vertical = merged.value.orientation === "vertical";
-        const rtl = !vertical && split.value.inheritedAttrs.dir === "rtl";
-        const prevKey = vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
-        const nextKey = vertical
-          ? "ArrowDown"
-          : rtl
-            ? "ArrowLeft"
-            : "ArrowRight";
-
         if (!isEditableTarget(event.target)) {
-          if (event.key === nextKey) {
+          if (event.key === nextKey.value) {
             event.preventDefault();
             go(1);
-          } else if (event.key === prevKey) {
+          } else if (event.key === prevKey.value) {
             event.preventDefault();
             go(-1);
           } else if (event.key === "Home") {
@@ -506,8 +539,7 @@ export function useCarousel(
         class: cn({
           [get(sizeItem.value, "viewport") ?? ""]: true,
           [get(mergedClasses.value, "viewport") ?? ""]: true,
-          [get(sizeItem.value, "viewportVertical") ?? ""]:
-            merged.value.orientation === "vertical",
+          [get(sizeItem.value, "viewportVertical") ?? ""]: vertical.value,
         }),
         onPointerdown: (event: PointerEvent) => {
           if (!(event.pointerType === "mouse" && event.button !== 0)) {
@@ -526,14 +558,12 @@ export function useCarousel(
           swipeStart.value = null;
 
           if (start && start.pointerId === event.pointerId) {
-            const vertical = merged.value.orientation === "vertical";
-
             const direction = resolveCarouselSwipeDirection(
               event.clientX - start.x,
               event.clientY - start.y,
               {
+                rtl: rtl.value,
                 orientation: merged.value.orientation,
-                rtl: !vertical && split.value.inheritedAttrs.dir === "rtl",
               },
             );
 
@@ -557,17 +587,14 @@ export function useCarousel(
         class: cn({
           [get(sizeItem.value, "track") ?? ""]: true,
           [get(mergedClasses.value, "track") ?? ""]: true,
-          [get(sizeItem.value, "trackVertical") ?? ""]:
-            merged.value.orientation === "vertical",
+          [get(sizeItem.value, "trackVertical") ?? ""]: vertical.value,
         }),
         style: getCarouselTrackStyle(activeIndex.value, {
+          rtl: rtl.value,
           gap: merged.value.gap,
           align: merged.value.align,
           orientation: merged.value.orientation,
           slidesPerView: merged.value.slidesPerView,
-          rtl:
-            merged.value.orientation !== "vertical" &&
-            split.value.inheritedAttrs.dir === "rtl",
         }),
       },
     );
@@ -582,8 +609,7 @@ export function useCarousel(
         class: cn({
           [get(sizeItem.value, "controls") ?? ""]: true,
           [get(mergedClasses.value, "controls") ?? ""]: true,
-          [get(sizeItem.value, "controlsVertical") ?? ""]:
-            merged.value.orientation === "vertical",
+          [get(sizeItem.value, "controlsVertical") ?? ""]: vertical.value,
         }),
       },
     );
@@ -596,6 +622,7 @@ export function useCarousel(
       {
         "data-part": "prev",
         type: "button" as const,
+        disabled: prevDisabled.value,
         onClick: () => {
           go(-1);
         },
@@ -605,14 +632,6 @@ export function useCarousel(
           [get(mergedClasses.value, "prev") ?? ""]: true,
           [get(mergedClasses.value, "control") ?? ""]: true,
         }),
-        disabled: !canMoveCarousel(
-          activeIndex.value,
-          slideIds.value.length,
-          -1,
-          merged.value.loop === true,
-          merged.value.slidesPerView,
-          merged.value.align,
-        ),
       },
     );
   });
@@ -624,6 +643,7 @@ export function useCarousel(
       {
         "data-part": "next",
         type: "button" as const,
+        disabled: nextDisabled.value,
         "aria-label": resolveMessage("Next slide"),
         onClick: () => {
           go(1);
@@ -633,14 +653,6 @@ export function useCarousel(
           [get(mergedClasses.value, "next") ?? ""]: true,
           [get(mergedClasses.value, "control") ?? ""]: true,
         }),
-        disabled: !canMoveCarousel(
-          activeIndex.value,
-          slideIds.value.length,
-          1,
-          merged.value.loop === true,
-          merged.value.slidesPerView,
-          merged.value.align,
-        ),
       },
     );
   });
@@ -652,10 +664,7 @@ export function useCarousel(
       {
         "aria-hidden": true,
         size: iconSize.value,
-        class:
-          merged.value.orientation === "vertical"
-            ? undefined
-            : "rtl:rotate-180",
+        class: vertical.value ? undefined : "rtl:rotate-180",
       },
     );
   });
@@ -667,10 +676,7 @@ export function useCarousel(
       {
         "aria-hidden": true,
         size: iconSize.value,
-        class:
-          merged.value.orientation === "vertical"
-            ? undefined
-            : "rtl:rotate-180",
+        class: vertical.value ? undefined : "rtl:rotate-180",
       },
     );
   });
@@ -733,15 +739,11 @@ export function useCarousel(
   }
 
   const prevIcon = computed(() => {
-    return merged.value.orientation === "vertical"
-      ? "chevronUp"
-      : "chevronLeft";
+    return vertical.value ? "chevronUp" : "chevronLeft";
   });
 
   const nextIcon = computed(() => {
-    return merged.value.orientation === "vertical"
-      ? "chevronDown"
-      : "chevronRight";
+    return vertical.value ? "chevronDown" : "chevronRight";
   });
 
   return {
